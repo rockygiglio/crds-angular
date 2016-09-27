@@ -1,7 +1,7 @@
 export default ngModule => {
-    ngModule.run(addDatePicker);
+    ngModule.run(addCRDSDatePicker);
 
-    function addDatePicker(formlyConfig) {
+    function addCRDSDatePicker(formlyConfig) {
         var attributes = [
             'date-disabled',
             'custom-class',
@@ -44,7 +44,7 @@ export default ngModule => {
         });
 
         formlyConfig.setType({
-            name: 'datepicker',
+            name: 'crdsDatepicker',
             template: require('./templates/datepicker.html'),
             wrapper: ['formlyBuilderHasError', 'formlyBuilderLabel'],
             defaultOptions: {

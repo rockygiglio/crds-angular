@@ -1,7 +1,7 @@
 export default ngModule => {
-    ngModule.run(addProfilePicture);
+    ngModule.run(addCRDSProfilePicture);
 
-    function addProfilePicture(formlyConfig) {
+    function addCRDSProfilePicture(formlyConfig) {
         var ngModelAttrs = {};
 
         // bindings
@@ -14,8 +14,8 @@ export default ngModule => {
         });
 
         formlyConfig.setType({
-            name: 'profilePicture',
-            template: require('./templates/profilePicture.html'),
+            name: 'crdsProfilePicture',
+            template: require('./templates/crds-profilePicture.html'),
             wrapper: ['formlyBuilderHasError'],
             defaultOptions: {
                 ngModelAttrs: ngModelAttrs,

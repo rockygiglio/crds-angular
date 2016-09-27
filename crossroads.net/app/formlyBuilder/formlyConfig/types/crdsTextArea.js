@@ -1,9 +1,9 @@
 export default ngModule => {
-    ngModule.config(addFormlyBuilderTextarea);
+    ngModule.config(addCRDSTextarea);
 
-    function addFormlyBuilderTextarea(formlyConfigProvider) {
+    function addCRDSTextarea(formlyConfigProvider) {
         formlyConfigProvider.setType({
-            name: 'formlyBuilderTextarea',
+            name: 'crdsTextArea',
             template: '<textarea class="form-control" ng-model="model[options.key]"></textarea>',
             wrapper: ['formlyBuilderHasError', 'formlyBuilderLabel'],
             defaultOptions: {

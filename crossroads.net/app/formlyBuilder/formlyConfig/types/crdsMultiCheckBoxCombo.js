@@ -1,10 +1,10 @@
 export default ngModule => {
-    ngModule.run(addCheckboxType);
+    ngModule.run(addCRDSCheckboxCombo);
 
-    function addCheckboxType(formlyConfig) {
+    function addCRDSCheckboxCombo(formlyConfig) {
         formlyConfig.setType({
-            name: 'multiCheckBoxCombo',
-            template: require('./templates/multiCheckBoxCombo.html'),
+            name: 'crdsMultiCheckBoxCombo',
+            template: require('./templates/crds-multiCheckBoxCombo.html'),
             wrapper: ['formlyBuilderLabel', 'formlyBuilderHasError'],
             apiCheck: check => ({
                 templateOptions: {
