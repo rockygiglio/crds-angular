@@ -51,7 +51,7 @@ export default class CurrentSeriesController {
     this.response = response;
 
     if (this.response !== undefined) {
-      this.title = response.title;
+      this.title       = response.title;
       this.description = response.description;
       this.startDate   = response.startDate;
       this.endDate     = response.endDate;
