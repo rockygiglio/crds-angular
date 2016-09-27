@@ -14,3 +14,5 @@ export default angular
 import landing from './landing';
 import countdown from './countdown';
 import streamingReminder from './streaming_reminder';
+import currentSeries from './current_series';
+import currentSeriesModal from './current_series_modal';
