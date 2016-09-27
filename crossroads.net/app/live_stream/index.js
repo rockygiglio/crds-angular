@@ -14,3 +14,6 @@ export default angular
 import landing from './landing';
 import countdown from './countdown';
 import streamingReminder from './streaming_reminder';
+
+// import socialSharing from 'social_sharing';
+import socialSharing from '../../core/components/social_sharing';
