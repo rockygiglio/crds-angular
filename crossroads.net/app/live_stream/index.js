@@ -13,7 +13,9 @@ export default angular
 
 import landing from './landing';
 import stream from './stream';
+import streamVideojs from './stream_videojs';
 import streamspotPlayer from './streamspot_player'
+import videojsPlayer from './videojs_player'
 import countdown from './countdown';
 import contentCard from './content_card';
 import streamingReminder from './streaming_reminder';
