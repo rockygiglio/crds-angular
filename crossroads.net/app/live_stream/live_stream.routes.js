@@ -15,5 +15,16 @@ export default function LiveStreamRouter($httpProvider, $stateProvider) {
         }
       }
     })
+    .state('livestream', {
+      parent: 'noHeaderOrFooter',
+      url: '/live-v1/stream',
+      template: '<stream></stream>',
+      data: {
+        meta: {
+          title: 'Live',
+          description: ''
+        }
+      }
+    })
   ;
 }
