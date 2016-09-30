@@ -6,7 +6,7 @@ export default class StreamingController {
     this.streamspotService = StreamspotService;
     this.rootScope = $rootScope;
 
-    this.inProgress     = true;
+    this.inProgress     = false;
     this.numberOfPeople = 2;
     this.displayCounter = true;
     this.countSubmit    = false;
@@ -15,8 +15,8 @@ export default class StreamingController {
     this.redirectText   = 'Go Back';
 
     this.rootScope.$on('isBroadcasting', (e, inProgress) => {
-      // this.inProgress = inProgress;
-      // window.location.href = '/live';
+      this.inProgress = inProgress;
+      window.location.href = '/live';
     });
 
 
