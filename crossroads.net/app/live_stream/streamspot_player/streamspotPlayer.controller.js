@@ -11,7 +11,6 @@ export default class StreamspotPlayerController {
 
   $onInit() {
     this.streamspotService.getBroadcaster().then((response) => {
-      console.log(response);
       if ( response.success === true && response.data.broadcaster !== undefined ) {
 
         let playerSrc = this.setPlayerSrc(response.data.broadcaster);
