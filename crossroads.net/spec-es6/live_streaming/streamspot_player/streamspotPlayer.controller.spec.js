@@ -7,14 +7,13 @@ describe('Streaming Reminder Controller', () => {
   let fixture,
       response,
       rootScope,
-      httpBackend;
+      StreamspotService;
 
   beforeEach(angular.mock.module(constants.MODULES.LIVE_STREAM));
 
   beforeEach(inject(function ($injector) {
     StreamspotService = $injector.get('StreamspotService');
     rootScope = $injector.get('$rootScope');
-    httpBackend = $injector.get('$httpBackend');
     fixture = new StreamspotPlayerController(StreamspotService, rootScope);
 
     response = {
@@ -143,8 +142,12 @@ describe('Streaming Reminder Controller', () => {
   }));
 
   it('should set the iframe src', () => {
+    let id = '1adb55de';
+    if ( StreamspotService.ssid === 'crossr30e3' ) {
+      id = '2887fba1';
+    }
     let src = fixture.setPlayerSrc(response.data.broadcaster);
 
-    expect(src).toBe('https://player2.streamspot.com/?playerId=2887fba1')
+    expect(src).toBe(`https://player2.streamspot.com/?playerId=${id}`)
   });
 })
