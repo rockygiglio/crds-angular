@@ -3,7 +3,7 @@ import constants from 'crds-constants';
 import StreamspotPlayerController from '../../../app/live_stream/streamspot_player/streamspotPlayer.controller';
 import StreamspotService from '../../../app/live_stream/services/streamspot.service';
 
-describe('Streaming Reminder Controller', () => {
+describe('Streampost player', () => {
   let fixture,
       response,
       rootScope,
@@ -144,7 +144,7 @@ describe('Streaming Reminder Controller', () => {
 
   it('should set the iframe src', () => {
     let id = '1adb55de';
-    if ( StreamspotService.ssid === 'crossr30e3' ) {
+    if ( fixture.streamspotService.ssid === 'crossr30e3' ) {
       id = '2887fba1';
     }
 
