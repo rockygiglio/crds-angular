@@ -5,9 +5,9 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
 {
     public interface IParticipantRepository
     {
-        Participant GetParticipant(int contactId);
+        MpParticipant GetParticipant(int contactId);
         List<MpResponse> GetParticipantResponses(int participantId);
-        Participant GetParticipantRecord(string token);
+        MpParticipant GetParticipantRecord(string token);
         void UpdateParticipant(Dictionary<string, object> getDictionary);
         int CreateParticipantRecord(int contactId);
     }

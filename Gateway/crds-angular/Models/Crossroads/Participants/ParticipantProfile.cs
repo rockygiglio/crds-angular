@@ -6,13 +6,13 @@ namespace crds_angular.Models.Crossroads.Participants
     {
         protected override void Configure()
         {
-            AutoMapper.Mapper.CreateMap<Participant, MinistryPlatform.Translation.Models.People.MpParticipant>()
-                .ForMember(dest => dest.Contact_ID, opts => opts.MapFrom(src => src.ContactId))
-                .ForMember(dest => dest.Display_Name, opts => opts.MapFrom(src => src.DisplayName))
-                .ForMember(dest => dest.Email_Address, opts => opts.MapFrom(src => src.EmailAddress))
-                .ForMember(dest => dest.Participant_ID, opts => opts.MapFrom(src => src.ParticipantId))
-                .ForMember(dest => dest.Attendance_Start_Date, opts => opts.MapFrom(src => src.AttendanceStart))
-                .ForMember(dest => dest.Approved_Small_Group_Leader, opts => opts.MapFrom(src => src.ApprovedSmallGroupLeader));
+            AutoMapper.Mapper.CreateMap<MpParticipant, MinistryPlatform.Translation.Models.MpParticipant>()
+                .ForMember(dest => dest.ContactId, opts => opts.MapFrom(src => src.ContactId))
+                .ForMember(dest => dest.DisplayName, opts => opts.MapFrom(src => src.DisplayName))
+                .ForMember(dest => dest.EmailAddress, opts => opts.MapFrom(src => src.EmailAddress))
+                .ForMember(dest => dest.ParticipantId, opts => opts.MapFrom(src => src.ParticipantId))
+                .ForMember(dest => dest.AttendanceStart, opts => opts.MapFrom(src => src.AttendanceStart))
+                .ForMember(dest => dest.ApprovedSmallGroupLeader, opts => opts.MapFrom(src => src.ApprovedSmallGroupLeader));
         }
     }
 }

@@ -18,11 +18,11 @@ namespace crds_angular.Services.Interfaces
                                        int? toGroupParticipantId,
                                        GroupDTO group,
                                        int emailTemplateId,
-                                       Participant toParticipant = null,
+                                       MpParticipant toParticipant = null,
                                        string subjectTemplateContentBlockTitle = null,
                                        string emailTemplateContentBlockTitle = null,
                                        string message = null,
-                                       Participant fromParticipant = null);
+                                       MpParticipant fromParticipant = null);
 
         MyGroup VerifyCurrentUserIsGroupLeader(string token, int groupId);
 	    void SendAllGroupParticipantsEmail(string token, int groupId, int groupTypeId, string subject, string message);

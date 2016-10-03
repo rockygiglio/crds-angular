@@ -347,7 +347,7 @@ namespace MinistryPlatform.Translation.Repositories
                 if (System.ServiceModel.Web.WebOperationContext.Current != null)
                 {
                     System.ServiceModel.Web.WebOperationContext.Current.OutgoingRequest.Headers.Add("Authorization", "Bearer " + token);
-                    Impersonate();
+                    Impersonate(token);
                 }
 
                 result = ministryPlatformFunc(_platformServiceClient);
@@ -362,7 +362,7 @@ namespace MinistryPlatform.Translation.Repositories
                 if (System.ServiceModel.Web.WebOperationContext.Current != null)
                 {
                     System.ServiceModel.Web.WebOperationContext.Current.OutgoingRequest.Headers.Add("Authorization", "Bearer " + token);
-                    Impersonate();
+                    Impersonate(token);
                 }
                 ministryPlatformFunc(_platformServiceClient);
             }
@@ -373,9 +373,14 @@ namespace MinistryPlatform.Translation.Repositories
         /// to a GUID of a User, and if set, all requests to MP will act as though that user is executing them, rather than the actual
         /// authenticated user.  This looks at the <see cref="ImpersonatedUserGuid"/> ThreadLocal to see if there is a user to impersonate.
         /// </summary>
-        private void Impersonate()
+        private void Impersonate(string currentToken)
         {
             if (!ImpersonatedUserGuid.HasValue())
+            {
+                return;
+            }
+
+            if (ImpersonatedUserGuid.GetToken() != currentToken)
             {
                 return;
             }

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Models.EventReservations;
-using Participant = MinistryPlatform.Translation.Models.People.Participant;
+using Participant = MinistryPlatform.Translation.Models.MpParticipant;
 
 namespace MinistryPlatform.Translation.Repositories.Interfaces
 {
