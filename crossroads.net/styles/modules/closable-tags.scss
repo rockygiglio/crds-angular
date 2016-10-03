@@ -1,0 +1,12 @@
+closable-tag {
+  display: inline-block;
+
+  background-color: $gray-lighter;
+  padding: $padding-small-vertical $padding-small-horizontal;
+  border-radius: 10px;
+
+  svg {
+    width: 10px;
+    margin-left: 5px;
+  }
+}

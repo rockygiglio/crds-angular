@@ -8,6 +8,16 @@
       <span class="team-name" ng-class="{'text-muted': team.pastDeadline}">{{::team.name}}</span>
       <span ng-show="team.pastDeadline" class="badge word-badge">Signup Closed</span>
       <div class="name-btns">
+        <!-- TEAM BUTTON -->
+        <button type="button"
+                class="btn btn normal-type"
+                ng-class="{'active': showTeamTab }"
+                ng-click="toggleTeamPanel()"
+                stop-event>
+          Team <span class="badge">4</span>
+        </button>
+
+        <!-- Member buttons -->
         <button type="button"
           ng-click="togglePanel(member)"
           ng-repeat="member in team.members"
@@ -20,13 +30,43 @@
             <svg-icon icon="minus-circle" ng-show="!member.serveRsvp.attending"> </svg-icon>
           </span>
         </button>
+
       </div><!--/pull-right-->
     </div><!--/panel-heading-->
 
     <!-- TODO: Pull this out into it's own directive so that each form doesn't share scope? -->
     <form name="teamForm" >
     <div class="panel-collapse collapse" collapse="isCollapsed">
-      <div class="panel-body soft-half-bottom">
+      <div ng-if="showTeamTab" class="panel-body soft-half-bottom">
+        <h5>Confirmed Team Members</h5>
+        <div class="row push-half-bottom">
+          <div class="col-sm-4">
+            <strong>Service Member</strong>
+          </div>
+          <div class="col-sm-8">
+            <closable-tag name="Don Whitman" on-click="memberClicked()" on-close="memberRemoved()" class="push-half-left mobile-push-half-bottom"></closable-tag>
+          </div>
+        </div>
+        <div class="row push-half-bottom">
+          <div class="col-sm-4">
+            <strong>Service Setup</strong>
+          </div>
+          <div class="col-sm-8">
+            <closable-tag name="Dave Groben" on-click="memberClicked()" on-close="memberRemoved()" class="push-half-left mobile-push-half-bottom"></closable-tag>
+            <closable-tag name="Denny Smyth" on-click="memberClicked()" on-close="memberRemoved()" class="push-half-left mobile-push-half-bottom"></closable-tag>
+            <closable-tag name="Andy Jones" on-click="memberClicked()" on-close="memberRemoved()" class="push-half-left mobile-push-half-bottom"></closable-tag>
+          </div>
+        </div>
+        <div class="row push-half-bottom">
+          <div class="col-sm-4">
+            <strong>Not Available</strong>
+          </div>
+          <div class="col-sm-8">
+            <closable-tag name="Jimmy McCarthy" on-click="memberClicked()" on-close="memberRemoved()" class="push-half-left mobile-push-half-bottom"></closable-tag>
+          </div>
+        </div>
+      </div>
+      <div ng-if="showMemberTab" class="panel-body soft-half-bottom">
         <div class="alert alert-info" role="alert" ng-show="team.pastDeadline" dynamic-content="passedDeadlineMsg(team.pastDeadlineMessage) | html">
         </div>
         <p class="flush-bottom">Editing sign up for {{currentMember.name}} {{currentMember.lastName}}
@@ -146,18 +186,18 @@
               </div><!--/ng-show-->
             </div> <!--/ng-show-->
           </div><!--/col-sm-4-->
-          <div class="col-sm-12 serve-save soft-half-top">
-            <a href="mailto:{{ ::team.primaryContact }}" class="pull-left">
-              <svg viewBox="0 0 32 32" class="icon icon-mail5 icon-xlarge icon-subtle" tooltip-placement="right" tooltip="Email Team Leader">
-                <use xlink:href="#mail5"></use>
-              </svg>
-            </a>
-            <button class="btn btn-standard" ng-disabled="team.pastDeadline" ng-click="cancel()">Cancel</button>
-            <button class="btn btn-primary" ng-disabled="team.pastDeadline" ng-class="{disabled: buttonState()}" ng-click="saveRsvp()">
-              <span ng-if="processing">Saving...</span>
-              <span ng-if="!processing">Save</span>
-            </button>
-          </div><!--/col-sm-12-->
+          <!--<div class="col-sm-12 serve-save soft-half-top">-->
+            <!--<a href="mailto:{{ ::team.primaryContact }}" class="pull-left">-->
+              <!--<svg viewBox="0 0 32 32" class="icon icon-mail5 icon-xlarge icon-subtle" tooltip-placement="right" tooltip="Email Team Leader">-->
+                <!--<use xlink:href="#mail5"></use>-->
+              <!--</svg>-->
+            <!--</a>-->
+            <!--<button class="btn btn-standard" ng-disabled="team.pastDeadline" ng-click="cancel()">Cancel</button>-->
+            <!--<button class="btn btn-primary" ng-disabled="team.pastDeadline" ng-class="{disabled: buttonState()}" ng-click="saveRsvp()">-->
+              <!--<span ng-if="processing">Saving...</span>-->
+              <!--<span ng-if="!processing">Save</span>-->
+            <!--</button>-->
+          <!--</div>&lt;!&ndash;/col-sm-12&ndash;&gt;-->
         </div><!--/row-->
       </div><!--/panel-body-->
     </div><!--/panel-collapse-->

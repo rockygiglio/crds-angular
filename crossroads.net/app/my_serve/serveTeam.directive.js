@@ -44,6 +44,7 @@
       scope.changeToDate = changeToDate;
       scope.currentActiveTab = null;
       scope.currentMember = null;
+      scope.showTeamTab = false;
       scope.datesDisabled = true;
       scope.dateOptions = {
         formatYear: 'yy',
@@ -84,6 +85,13 @@
       scope.showEdit = false;
       scope.showIcon = showIcon;
       scope.togglePanel = togglePanel;
+      scope.toggleTeamPanel = toggleTeamPanel;
+      scope.memberClicked = memberClicked;
+      scope.memberRemoved = memberRemoved;
+
+      // TODO DEBUG REMOVE
+      scope.isCollapsed = false;
+      scope.showTeamTab = true;
 
       //////////////////////////////////////
 
@@ -322,7 +330,7 @@
       }
 
       function passedDeadlineMsg(id) {
-        return _.result(_.find($rootScope.MESSAGES, 'id', id), 'content');
+        // return _.result(_.find($rootScope.MESSAGES, 'id', id), 'content');
       }
 
       function populateDates() {
@@ -522,7 +530,25 @@
         }
       }
 
+      function toggleTeamPanel() {
+        scope.showMemberTab = false;
+
+        console.debug('toggle team panel');
+        if (scope.showTeamTab) {
+          scope.isCollapsed = true;
+          scope.showTeamTab = false;
+        } else {
+          scope.isCollapsed = false;
+          scope.showTeamTab = true;
+        }
+
+        scope.currentActiveTab = null;
+      }
+
       function togglePanel(member) {
+        scope.showTeamTab = false;
+        scope.showMemberTab = true;
+
         if (!scope.isCollapsed && (scope.currentMember === member || member === null)) {
           scope.isCollapsed = true;
           scope.currentActiveTab = null;
@@ -551,6 +577,14 @@
             max: r.maximum
           });
         });
+      }
+
+      function memberClicked() {
+        console.debug("Member clicked");
+      }
+
+      function memberRemoved() {
+        console.debug("Member removed");
       }
     }
   }
