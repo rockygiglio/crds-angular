@@ -95,76 +95,14 @@ describe('CMSService', () => {
       httpBackend.flush();
     })
 
-    fit('retrieves the last series as current series when an active series is not available', () => {
-      let series = {
-        "series": [
-          {
-            "id": 236,
-            "title": "Together",
-            "description": "<p class=\"ng-scope\"><span id=\"docs-internal-guid-63f12df6-2cd6-144b-b591-c6bb136663ed\">Spend more time together<\/span><\/p><p><span>\u00a0<\/span><\/p>",
-            "startDate": moment().subtract('days', 14).format('YYYY-MM-DD'),
-            "endDate": moment().subtract('days', 7).format('YYYY-MM-DD'),
-            "trailerLink": "https:\/\/www.youtube.com\/watch?v=NYJ8c81AQJw",
-            "version": "1",
-            "messages": [
-              {
-                "id": 3803,
-                "title": "Why we are better together",
-                "description": "<p><span>Life is better Together.<\/span><\/p>",
-                "date": moment().add('days', 2).format('YYYY-MM-DD'),
-                "series": 236
-              }
-            ],
-            "created": moment().subtract('days', 7),
-            "className": "Series"
-          },
-          {
-            "id": 235,
-            "title": "Business of Success",
-            "description": "<p class=\"ng-scope\"><span id=\"docs-internal-guid-63f12df6-2cd6-144b-b591-c6bb136663ed\">Get business. Get success<\/span><\/p><p><span>\u00a0<\/span><\/p>",
-            "startDate": moment().subtract('months', 1).format('YYYY-MM-DD'),
-            "endDate": moment().subtract('days', 7).format('YYYY-MM-DD'),
-            "trailerLink": "https:\/\/www.youtube.com\/watch?v=NYJ8c81AQJw",
-            "version": "1",
-            "messages": [
-              {
-                "id": 3802,
-                "title": "Find you business",
-                "description": "<p><span>Find business opportunities all around you<\/span><\/p>",
-                "date": moment().subtract('days', 14).format('YYYY-MM-DD'),
-                "series": 235
-              }
-            ],
-            "created": moment().subtract('months', 1),
-            "className": "Series"
-          },
-          {
-            "id": 234,
-            "title": "Following Christ",
-            "description": "<p class=\"ng-scope\"><span id=\"docs-internal-guid-63f12df6-2cd6-144b-b591-c6bb136663ed\">Ways to follow Christ in everyday life<\/span><\/p><p><span>\u00a0<\/span><\/p>",
-            "startDate": moment().subtract('months', 3).format('YYYY-MM-DD'),
-            "endDate": moment().subtract('months', 1).format('YYYY-MM-DD'),
-            "trailerLink": "https:\/\/www.youtube.com\/watch?v=NYJ8c81AQJw",
-            "version": "1",
-            "messages": [
-              {
-                "id": 3801,
-                "title": "Christlike Attributes",
-                "description": "<p><span>Ways to better emulate Christ in your everyday life<\/span><\/p>",
-                "date": moment().subtract('months', 2).format('YYYY-MM-DD'),
-                "series": 234
-              }
-            ],
-            "created": moment().subtract('months', 3),
-            "className": "Series"
-          }
-        ]
-      }
-
-
+    it('returns undefined when there is no current series', () => {
+      // If an array of Series objects is provided in this test, then the mocked GET request will always return a response,
+      // even though that is not the behavior when you submit a GET request to the CMS and there is no current series.
+      // When there is no current series, then the response should be an empty array.
+      let series = {"series": []}
       let todaysDate = moment().format('YYYY-MM-DD');
       fixture.getCurrentSeries().then(response => {
-        expect(response.title).toBe('Foobar')
+        expect(response).toBe(undefined)
       });
       httpBackend.expectGET(`${endpoint}/series?endDate__GreaterThanOrEqual=${todaysDate}&endDate__sort=ASC`).respond(200, series);
       httpBackend.flush();
