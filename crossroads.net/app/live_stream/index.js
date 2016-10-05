@@ -13,7 +13,8 @@ export default angular
 
 import landing from './landing';
 import stream from './stream';
-import streamspotPlayer from './streamspot_player'
+import contentCard from './content_card';
+import streamspotPlayer from './streamspot_player';
 import countdown from './countdown';
 import streamingReminder from './streaming_reminder';
 
