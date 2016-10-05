@@ -17,17 +17,15 @@ Param (
   [Parameter(Mandatory=$true)]
   [string]$StorageCred,
   [Parameter(Mandatory=$true)]
-  [string] $MPUser,
-  [Parameter(Mandatory=$true)]
-  [string] $MPAdmin,
-  [Parameter(Mandatory=$true)]
   [string] $InternalServerName,
   [Parameter(Mandatory=$true)]
   [string] $ExternalServerName,
   [Parameter(Mandatory=$true)]
   [string] $ApplicationTitle,
   [Parameter(Mandatory=$true)]
-  [string] $ApiPassword
+  [string] $ApiPassword,
+  [Parameter(Mandatory=$true)]
+  [string] $InternalDBServerName
 )
 
 $backupDateStamp = Get-Date -format 'yyyyMMdd';
@@ -120,7 +118,7 @@ DECLARE @applicationTitle varchar(30) = '$ApplicationTitle';
 DECLARE @dbLoginUser varchar(50) = '$MPUser';
 
 -- The user which will be running the Windows scheduled tasks from the WEB server
-DECLARE @scheduledTasksUser varchar(50) = '$MPAdmin';
+DECLARE @scheduledTasksUser varchar(50) = '$InternalServerName/MPAdmin';
 
 -- The domain GUID - set this to NEWID() when setting up a new domain, but use a previous value for an existing domain
 -- DECLARE @domainGuid = NEWID();
@@ -226,15 +224,15 @@ END;
 
 USE MinistryPlatform;
 
-CREATE USER [$MPUser] FOR LOGIN [$MPUser];
-ALTER ROLE [db_accessadmin] ADD MEMBER [$MPUser];
-ALTER ROLE [db_backupoperator] ADD MEMBER [$MPUser];
-ALTER ROLE [db_datareader] ADD MEMBER [$MPUser];
-ALTER ROLE [db_datawriter] ADD MEMBER [$MPUser];
-ALTER ROLE [db_ddladmin] ADD MEMBER [$MPUser];
-ALTER ROLE [db_executor] ADD MEMBER [$MPUser];
-ALTER ROLE [db_owner] ADD MEMBER [$MPUser];
-ALTER ROLE [db_securityadmin] ADD MEMBER [$MPUser];
+CREATE USER [$InternalDBServerName\MPUser] FOR LOGIN [$InternalDBServerName\MPUser];
+ALTER ROLE [db_accessadmin] ADD MEMBER [$InternalDBServerName\MPUser];
+ALTER ROLE [db_backupoperator] ADD MEMBER [$InternalDBServerName\MPUser];
+ALTER ROLE [db_datareader] ADD MEMBER [$InternalDBServerName\MPUser];
+ALTER ROLE [db_datawriter] ADD MEMBER [$InternalDBServerName\MPUser];
+ALTER ROLE [db_ddladmin] ADD MEMBER [$InternalDBServerName\MPUser];
+ALTER ROLE [db_executor] ADD MEMBER [$InternalDBServerName\MPUser];
+ALTER ROLE [db_owner] ADD MEMBER [$InternalDBServerName\MPUser];
+ALTER ROLE [db_securityadmin] ADD MEMBER [$InternalDBServerName\MPUser];
 
 
 -- TODO: Verify that mapped users works
@@ -246,27 +244,27 @@ exec sp_change_users_login @Action='update_one', @UserNamePattern='MigrateUser',
 -- TODO: Review, Rework, and determine plan for mapping users
 Use MinistryPlatform
 
-CREATE USER [MP-DEMO-DB\CRDSAdmin] FOR LOGIN [MP-DEMO-DB\CRDSAdmin];
+CREATE USER [$InternalDBServerName\CRDSAdmin] FOR LOGIN [$InternalDBServerName\CRDSAdmin];
 
-ALTER ROLE [db_accessadmin] ADD MEMBER [MP-DEMO-DB\CRDSAdmin];
-ALTER ROLE [db_backupoperator] ADD MEMBER [MP-DEMO-DB\CRDSAdmin];
-ALTER ROLE [db_datareader] ADD MEMBER [MP-DEMO-DB\CRDSAdmin];
-ALTER ROLE [db_datawriter] ADD MEMBER [MP-DEMO-DB\CRDSAdmin];
-ALTER ROLE [db_ddladmin] ADD MEMBER [MP-DEMO-DB\CRDSAdmin];
-ALTER ROLE [db_executor] ADD MEMBER [MP-DEMO-DB\CRDSAdmin];
-ALTER ROLE [db_owner] ADD MEMBER [MP-DEMO-DB\CRDSAdmin];
-ALTER ROLE [db_securityadmin] ADD MEMBER [MP-DEMO-DB\CRDSAdmin];
+ALTER ROLE [db_accessadmin] ADD MEMBER [$InternalDBServerName\CRDSAdmin];
+ALTER ROLE [db_backupoperator] ADD MEMBER [$InternalDBServerName\CRDSAdmin];
+ALTER ROLE [db_datareader] ADD MEMBER [$InternalDBServerName\CRDSAdmin];
+ALTER ROLE [db_datawriter] ADD MEMBER [$InternalDBServerName\CRDSAdmin];
+ALTER ROLE [db_ddladmin] ADD MEMBER [$InternalDBServerName\CRDSAdmin];
+ALTER ROLE [db_executor] ADD MEMBER [$InternalDBServerName\CRDSAdmin];
+ALTER ROLE [db_owner] ADD MEMBER [$InternalDBServerName\CRDSAdmin];
+ALTER ROLE [db_securityadmin] ADD MEMBER [$InternalDBServerName\CRDSAdmin];
 
-CREATE USER [MP-DEMO-DB\MPAdmin] FOR LOGIN [MP-DEMO-DB\MPAdmin];
+CREATE USER [$InternalDBServerName\MPAdmin] FOR LOGIN [$InternalDBServerName\MPAdmin];
 
-ALTER ROLE [db_accessadmin] ADD MEMBER [MP-DEMO-DB\MPAdmin];
-ALTER ROLE [db_backupoperator] ADD MEMBER [MP-DEMO-DB\MPAdmin];
-ALTER ROLE [db_datareader] ADD MEMBER [MP-DEMO-DB\MPAdmin];
-ALTER ROLE [db_datawriter] ADD MEMBER [MP-DEMO-DB\MPAdmin];
-ALTER ROLE [db_ddladmin] ADD MEMBER [MP-DEMO-DB\MPAdmin];
-ALTER ROLE [db_executor] ADD MEMBER [MP-DEMO-DB\MPAdmin];
-ALTER ROLE [db_owner] ADD MEMBER [MP-DEMO-DB\MPAdmin];
-ALTER ROLE [db_securityadmin] ADD MEMBER [MP-DEMO-DB\MPAdmin];
+ALTER ROLE [db_accessadmin] ADD MEMBER [$InternalDBServerName\MPAdmin];
+ALTER ROLE [db_backupoperator] ADD MEMBER [$InternalDBServerName\MPAdmin];
+ALTER ROLE [db_datareader] ADD MEMBER [$InternalDBServerName\MPAdmin];
+ALTER ROLE [db_datawriter] ADD MEMBER [$InternalDBServerName\MPAdmin];
+ALTER ROLE [db_ddladmin] ADD MEMBER [$InternalDBServerName\MPAdmin];
+ALTER ROLE [db_executor] ADD MEMBER [$InternalDBServerName\MPAdmin];
+ALTER ROLE [db_owner] ADD MEMBER [$InternalDBServerName\MPAdmin];
+ALTER ROLE [db_securityadmin] ADD MEMBER [$InternalDBServerName\MPAdmin];
 
 ALTER AUTHORIZATION ON DATABASE::$DBName to sa;
 "@;
