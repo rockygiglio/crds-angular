@@ -12,7 +12,7 @@
         <button type="button"
                 class="btn btn normal-type"
                 ng-class="{'active': showTeamTab }"
-                ng-click="toggleTeamPanel()"
+                ng-click="togglePanel({})"
                 stop-event>
           Team <span class="badge">4</span>
         </button>
@@ -38,33 +38,7 @@
     <form name="teamForm" >
     <div class="panel-collapse collapse" collapse="isCollapsed">
       <div ng-if="showTeamTab" class="panel-body soft-half-bottom">
-        <h5>Confirmed Team Members</h5>
-        <div class="row push-half-bottom">
-          <div class="col-sm-4">
-            <strong>Service Member</strong>
-          </div>
-          <div class="col-sm-8">
-            <closable-tag name="Don Whitman" on-click="memberClicked()" on-close="memberRemoved()" class="push-half-left mobile-push-half-bottom"></closable-tag>
-          </div>
-        </div>
-        <div class="row push-half-bottom">
-          <div class="col-sm-4">
-            <strong>Service Setup</strong>
-          </div>
-          <div class="col-sm-8">
-            <closable-tag name="Dave Groben" on-click="memberClicked()" on-close="memberRemoved()" class="push-half-left mobile-push-half-bottom"></closable-tag>
-            <closable-tag name="Denny Smyth" on-click="memberClicked()" on-close="memberRemoved()" class="push-half-left mobile-push-half-bottom"></closable-tag>
-            <closable-tag name="Andy Jones" on-click="memberClicked()" on-close="memberRemoved()" class="push-half-left mobile-push-half-bottom"></closable-tag>
-          </div>
-        </div>
-        <div class="row push-half-bottom">
-          <div class="col-sm-4">
-            <strong>Not Available</strong>
-          </div>
-          <div class="col-sm-8">
-            <closable-tag name="Jimmy McCarthy" on-click="memberClicked()" on-close="memberRemoved()" class="push-half-left mobile-push-half-bottom"></closable-tag>
-          </div>
-        </div>
+        <serve-team-members></serve-team-members>
       </div>
       <div ng-if="showMemberTab" class="panel-body soft-half-bottom">
         <div class="alert alert-info" role="alert" ng-show="team.pastDeadline" dynamic-content="passedDeadlineMsg(team.pastDeadlineMessage) | html">

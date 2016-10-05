@@ -12,6 +12,9 @@
   require('./closable-tag/closableTag.html');
   app.component('closableTag', require('./closable-tag/closableTag.component')());
 
+  require('./serve_team_members/serveTeamMembers.html');
+  app.component('serveTeamMembers', require('./serve_team_members/serveTeamMembers.component')());
+
   app.factory('filterState', require('./filterState.service.js'));
   app.controller('MyServeController', require('./myserve.controller'));
 
