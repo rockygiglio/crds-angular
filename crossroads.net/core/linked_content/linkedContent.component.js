@@ -13,7 +13,7 @@ export default function LinkedContentComponent() {
     bindToController: true,
     bindings: {
       href: '@',
-      traget: '@',
+      target: '@',
       title: '@',
       class: '@',
       background: '@'
