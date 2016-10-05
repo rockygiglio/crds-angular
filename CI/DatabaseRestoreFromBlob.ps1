@@ -236,6 +236,38 @@ ALTER ROLE [db_executor] ADD MEMBER [$MPUser];
 ALTER ROLE [db_owner] ADD MEMBER [$MPUser];
 ALTER ROLE [db_securityadmin] ADD MEMBER [$MPUser];
 
+
+-- TODO: Verify that mapped users works
+exec sp_change_users_login @Action='update_one', @UserNamePattern='ApiUser', @LoginName='ApiUser'
+exec sp_change_users_login @Action='update_one', @UserNamePattern='EcheckAgent', @LoginName='EcheckAgent'
+exec sp_change_users_login @Action='update_one', @UserNamePattern='MigrateUser', @LoginName='MigrateUser'
+
+
+-- TODO: Review, Rework, and determine plan for mapping users
+Use MinistryPlatform
+
+CREATE USER [MP-DEMO-DB\CRDSAdmin] FOR LOGIN [MP-DEMO-DB\CRDSAdmin];
+
+ALTER ROLE [db_accessadmin] ADD MEMBER [MP-DEMO-DB\CRDSAdmin];
+ALTER ROLE [db_backupoperator] ADD MEMBER [MP-DEMO-DB\CRDSAdmin];
+ALTER ROLE [db_datareader] ADD MEMBER [MP-DEMO-DB\CRDSAdmin];
+ALTER ROLE [db_datawriter] ADD MEMBER [MP-DEMO-DB\CRDSAdmin];
+ALTER ROLE [db_ddladmin] ADD MEMBER [MP-DEMO-DB\CRDSAdmin];
+ALTER ROLE [db_executor] ADD MEMBER [MP-DEMO-DB\CRDSAdmin];
+ALTER ROLE [db_owner] ADD MEMBER [MP-DEMO-DB\CRDSAdmin];
+ALTER ROLE [db_securityadmin] ADD MEMBER [MP-DEMO-DB\CRDSAdmin];
+
+CREATE USER [MP-DEMO-DB\MPAdmin] FOR LOGIN [MP-DEMO-DB\MPAdmin];
+
+ALTER ROLE [db_accessadmin] ADD MEMBER [MP-DEMO-DB\MPAdmin];
+ALTER ROLE [db_backupoperator] ADD MEMBER [MP-DEMO-DB\MPAdmin];
+ALTER ROLE [db_datareader] ADD MEMBER [MP-DEMO-DB\MPAdmin];
+ALTER ROLE [db_datawriter] ADD MEMBER [MP-DEMO-DB\MPAdmin];
+ALTER ROLE [db_ddladmin] ADD MEMBER [MP-DEMO-DB\MPAdmin];
+ALTER ROLE [db_executor] ADD MEMBER [MP-DEMO-DB\MPAdmin];
+ALTER ROLE [db_owner] ADD MEMBER [MP-DEMO-DB\MPAdmin];
+ALTER ROLE [db_securityadmin] ADD MEMBER [MP-DEMO-DB\MPAdmin];
+
 ALTER AUTHORIZATION ON DATABASE::$DBName to sa;
 "@;
 
