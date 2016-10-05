@@ -15,7 +15,7 @@ export default class LandingController {
     this.cmsService
       .getRecentMessages(4)
       .then((pastWeekends) => {
-        this.pastWeekends = pastWeekends.map((event, i, pastWeekends) => {
+        this.pastWeekends = pastWeekends.map((event, i) => {
           if (typeof event.series !== "undefined") {
             let title = this.filter('replaceNonAlphaNumeric')(event.title);
 
