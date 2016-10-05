@@ -311,11 +311,11 @@ namespace MinistryPlatform.Translation.Repositories
             }).ToList();
         }
 
-        public IEnumerable<MinistryPlatform.Translation.Models.People.Participant> EventParticipants(string token, int eventId)
+        public IEnumerable<MinistryPlatform.Translation.Models.MpParticipant> EventParticipants(string token, int eventId)
         {
             return
                 _ministryPlatformService.GetSubpageViewRecords("EventParticipantSubpageRegisteredView", eventId, token)
-                    .Select(person => new MinistryPlatform.Translation.Models.People.Participant()
+                    .Select(person => new MinistryPlatform.Translation.Models.MpParticipant()
                     {
                         ParticipantId = person.ToInt("Participant_ID"),
                         ContactId = person.ToInt("Contact_ID"),
