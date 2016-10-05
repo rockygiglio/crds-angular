@@ -18,7 +18,6 @@ export default class CurrentSeriesController {
 
   $onInit() {
     this.cmsService.getCurrentSeries().then((response) => {
-      console.log(response);
       this.parseData(response);
       if (response === undefined) {
         this.cmsService.getLastSeries().then((response) => {
