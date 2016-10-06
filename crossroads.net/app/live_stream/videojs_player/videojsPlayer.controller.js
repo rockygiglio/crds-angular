@@ -28,7 +28,6 @@ export default class VideojsPlayerController {
         var broadcaster = response.data.broadcaster;
 
         if ( broadcaster.players === undefined || broadcaster.players.length === 0 ) {
-          console.log('Error getting player from broadcast.');
           return false;
         }
 
@@ -89,13 +88,6 @@ export default class VideojsPlayerController {
         if ( broadcaster.isBroadcasting === true || this.debug ) {
           this.playerInit(broadcaster);
         }
-        else {
-          console.log('No broadcast available.');
-        }
-
-      }
-      else {
-        console.log('StreamSpot API Failure!');
       }
     })
   }
