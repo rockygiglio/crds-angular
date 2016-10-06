@@ -16,7 +16,9 @@ export default class StreamingController {
 
     this.rootScope.$on('isBroadcasting', (e, inProgress) => {
       this.inProgress = inProgress;
-      window.location.href = '/live';
+      if (this.inProgress === false) {
+        window.location.href = '/live';
+      }
     });
     
     this.cmsService
