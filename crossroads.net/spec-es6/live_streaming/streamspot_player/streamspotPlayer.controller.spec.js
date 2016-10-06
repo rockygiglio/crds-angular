@@ -7,14 +7,13 @@ describe('Streamspot Player', () => {
   let fixture,
       response,
       rootScope,
-      httpBackend;
+      StreamspotService;
 
   beforeEach(angular.mock.module(constants.MODULES.LIVE_STREAM));
 
   beforeEach(inject(function ($injector) {
     StreamspotService = $injector.get('StreamspotService');
     rootScope = $injector.get('$rootScope');
-    httpBackend = $injector.get('$httpBackend');
     fixture = new StreamspotPlayerController(StreamspotService, rootScope);
 
     response = {
