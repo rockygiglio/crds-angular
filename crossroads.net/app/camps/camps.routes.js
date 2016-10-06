@@ -1,9 +1,9 @@
-export default function CampRoutes($stateProvider, $urlMatcherFactory) {
+export default function CampRoutes($stateProvider) {
 
-  $urlMatcherFactory.strictMode(false);
+  //$urlMatcherFactory.strictMode(false);
 
   $stateProvider
-    .state('summercamp', {
+    .state('Summercamp', {
       parent: 'noSideBar',
       url: '/camps/summercamp',
       template:'<summer-camp></summer-camp>',

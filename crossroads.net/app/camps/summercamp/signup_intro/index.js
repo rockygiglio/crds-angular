@@ -1,8 +1,8 @@
 import signupIntroComponent from './signup_intro.component';
-import CONSTANTS from 'crds-constants';
+import constants from '../../../constants';
 import html from './signup_intro.html';
 
 export default angular.
-  module(CONSTANTS.MODULES.CAMPS)
+  module(constants.MODULES.CAMPS)
     .component('signupIntroComponent', signupIntroComponent())
   ;

@@ -4,7 +4,6 @@ require('./childcare');
 require('./mp_tools');
 require('./group_tool');
 require('./live_stream');
-
 require('ui-select/dist/select.css');
 
 (function() {
@@ -28,7 +27,8 @@ require('ui-select/dist/select.css');
       constants.MODULES.PROFILE,
       constants.MODULES.SEARCH,
       constants.MODULES.SIGNUP,
-      constants.MODULES.TRIPS
+      constants.MODULES.TRIPS,
+      constants.MODULES.CAMPS
    ]);
 
   angular.module(constants.MODULES.CROSSROADS)

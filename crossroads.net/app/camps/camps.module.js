@@ -1,4 +1,5 @@
-import signupIntroComponent from './summercamp/signup_intro/signup_intro.component';
+//import signupIntroComponent from './summercamp/signup_intro/signup_intro.component';
+import SummercampComponent from'./summercamp/summercamp.component'
 import CampRoutes from './camps.routes';
 import constants from '../constants';
 
@@ -7,6 +8,6 @@ var campsModule = angular.module(constants.MODULES.CAMPS, ['crossroads.core', 'c
   //.component('SignupIntroComponent', signupIntroComponent)
   ;
 
-require('./summercamp')
+require('./summercamp');
 
 export default campsModule;
