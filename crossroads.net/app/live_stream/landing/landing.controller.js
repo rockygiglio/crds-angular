@@ -1,7 +1,6 @@
-var WOW = require('wow.js/dist/wow.min.js');
+let WOW = require('wow.js/dist/wow.min.js');
 
 export default class LandingController {
-  /*@ngIneject*/
   constructor(CMSService, $filter) {
 
     this.cmsService = CMSService;

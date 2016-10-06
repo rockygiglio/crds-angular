@@ -15,7 +15,7 @@
           <use xlink:href="#logo" xmlns:xlink="http://www.w3.org/1999/xlink"></use>
         </svg>
       </a>
-      <a ng-click="stream.goBack()" class="pull-right" data-dismiss="modal" href="#"><span class="glyphicon glyphicon-remove"></span></a>
+      <a href="/live-v1" class="pull-right" data-dismiss="modal" ><span class="glyphicon glyphicon-remove"></span></a>
     </header>
     <section>
       <div class="container">
@@ -30,65 +30,9 @@
       <header class="clearfix">
         <h2>don't miss</h2>
       </header>
-      <content-card ng-reflect-content="[object Object]" ng-reflect-animate="false">
-        <article class="crds-card fadeInUp" ng-reflect-raw-class="[object Object]" ng-reflect-initial-classes="crds-card fadeInUp"
-          data-wow-delay="100">
-          <figure>
-            <linked-content class="imgix-fluid-bg img-background" _nghost-vdw-4="" ng-reflect-href="https://www.crossroads.net/groups"
-              ng-reflect-target="_blank" ng-reflect-class="imgix-fluid-bg img-background" ng-reflect-background="https://s3.amazonaws.com/crds-cms-uploads/Uploads/Group-TitleSlide-4x3.jpg">
-              <a _ngcontent-vdw-4="" ng-reflect-raw-class="[object Object]" class="linked-content imgix-fluid-bg img-background" ng-reflect-initial-classes="linked-content imgix-fluid-bg img-background"
-                ng-reflect-href="https://www.crossroads.net/groups" href="https://www.crossroads.net/groups" ng-reflect-title=""
-                title="" ng-reflect-target="_blank" target="_blank" data-src="//crds-cms-uploads.imgix.net/Uploads/Group-TitleSlide-4x3.jpg"
-                style="background-image: url(&quot;https://crds-cms-uploads.imgix.net/Uploads/Group-TitleSlide-4x3.jpg?dpr=2&amp;ixjsv=2.2.3&amp;q=50&amp;w=240&quot;);">
 
-              </a>
-            </linked-content>
-            <figcaption>
-              <linked-content _nghost-vdw-4="" ng-reflect-href="https://www.crossroads.net/groups" ng-reflect-target="_blank" ng-reflect-title="Join a Group">
-                <a _ngcontent-vdw-4="" ng-reflect-raw-class="[object Object]" class="linked-content" ng-reflect-initial-classes="linked-content "
-                  ng-reflect-href="https://www.crossroads.net/groups" href="https://www.crossroads.net/groups" ng-reflect-title="Join a Group"
-                  title="Join a Group" ng-reflect-target="_blank" target="_blank">
-                  Join a Group
-                </a>
-              </linked-content>
-            </figcaption>
-          </figure>
-          <section>
+      <content-card ng-repeat="event in stream.dontMiss" content="event"></content-card>
 
-            <p>From dude groups on a back porch, Bible studies in the home, family groups on playgrounds, business groups in
-              a conference room or adventure groups out on a trail, God is just waiting to move in our lives&nbsp;wherever
-              we are.</p>
-          </section>
-        </article>
-      </content-card>
-      <content-card ng-reflect-content="[object Object]" ng-reflect-animate="false">
-        <article class="crds-card fadeInUp" ng-reflect-raw-class="[object Object]" ng-reflect-initial-classes="crds-card fadeInUp"
-          data-wow-delay="200">
-          <figure>
-            <linked-content class="imgix-fluid-bg img-background" _nghost-vdw-4="" ng-reflect-href="http://crossroadsgo.net/" ng-reflect-target="_blank"
-              ng-reflect-class="imgix-fluid-bg img-background" ng-reflect-background="https://s3.amazonaws.com/crds-cms-uploads/Uploads/gosomehwere.jpg">
-              <a _ngcontent-vdw-4="" ng-reflect-raw-class="[object Object]" class="linked-content imgix-fluid-bg img-background" ng-reflect-initial-classes="linked-content imgix-fluid-bg img-background"
-                ng-reflect-href="http://crossroadsgo.net/" href="http://crossroadsgo.net/" ng-reflect-title="" title="" ng-reflect-target="_blank"
-                target="_blank" data-src="//crds-cms-uploads.imgix.net/Uploads/gosomehwere.jpg" style="background-image: url(&quot;https://crds-cms-uploads.imgix.net/Uploads/gosomehwere.jpg?dpr=2&amp;ixjsv=2.2.3&amp;q=50&amp;w=240&quot;);">
-
-              </a>
-            </linked-content>
-            <figcaption>
-              <linked-content _nghost-vdw-4="" ng-reflect-href="http://crossroadsgo.net/" ng-reflect-target="_blank" ng-reflect-title="Go Somewhere">
-                <a _ngcontent-vdw-4="" ng-reflect-raw-class="[object Object]" class="linked-content" ng-reflect-initial-classes="linked-content "
-                  ng-reflect-href="http://crossroadsgo.net/" href="http://crossroadsgo.net/" ng-reflect-title="Go Somewhere"
-                  title="Go Somewhere" ng-reflect-target="_blank" target="_blank">
-                  Go Somewhere
-                </a>
-              </linked-content>
-            </figcaption>
-          </figure>
-          <section>
-
-            <p>GO trip signups are live! You can now view all the trips and sign up to GO Somewhere in 2017.</p>
-          </section>
-        </article>
-      </content-card>
     </section>
     <section class="participate digital-program bg">
       <div class="row">
@@ -96,34 +40,17 @@
         <header class="clearfix">
           <h2>be the church</h2>
         </header>
-        <article class="promo">
+
+        <article class="promo" ng-repeat="promo in stream.beTheChurch">
           <figure>
-            <linked-content target="_blank" _nghost-vdw-4="" ng-reflect-href="javascript:;" ng-reflect-target="_blank">
-              <a _ngcontent-vdw-4="" ng-reflect-raw-class="[object Object]" class="linked-content unclickable" ng-reflect-initial-classes="linked-content "
-                ng-reflect-href="#" href="#" ng-reflect-title="" title="" ng-reflect-target="_blank" target="_blank">
-
-                <img alt="" class="img-responsive" ng-reflect-src="https://s3.amazonaws.com/crds-cms-uploads/Uploads/Screen-Shot-2016-08-26-at-11.30.39-AM.png"
-                  src="https://s3.amazonaws.com/crds-cms-uploads/Uploads/Screen-Shot-2016-08-26-at-11.30.39-AM.png" ng-reflect-title="Be a Giver"
-                  title="Be a Giver">
-
-              </a>
+            <linked-content href="{{ promo.url }}" target="_blank">
+              <img ng-src="{{ promo.image }}" alt="" class="img-responsive"  title="{{ promo.title }}">
             </linked-content>
           </figure>
           <section>
-            <h3 ng-reflect-title="Be a Giver" title="Be a Giver">
-              <linked-content target="_blank" _nghost-vdw-4="" ng-reflect-href="javascript:;" ng-reflect-target="_blank">
-                <a _ngcontent-vdw-4="" ng-reflect-raw-class="[object Object]" class="linked-content unclickable" ng-reflect-initial-classes="linked-content "
-                  ng-reflect-href="#" href="#" ng-reflect-title="" title="" ng-reflect-target="_blank" target="_blank">
-                  Be a Giver
-                </a>
-              </linked-content>
-            </h3>
-            <div>
-              <p><span>Everything we're experiencing today is funded by a team of people just&nbsp;</span><span>like you who believe in investing in your growth and changing the world</span><span>. You can join the team and</span><span>&nbsp;start funding today.&nbsp;</span></p>
-              <p><a class="btn btn-primary" href="http://crossroads.net/give" target="_blank">Give</a></p>
-            </div>
+            <h3 title="{{ promo.title }}"><linked-content href="{{ promo.url }}" target="_blank">{{ promo.title | truncate: 38 }}</linked-content></h3>
+            <div ng-bind-html="promo.description"></div>
           </section>
-          <hr>
         </article>
 
       </div>
