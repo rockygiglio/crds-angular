@@ -25,7 +25,8 @@ export default class LandingController {
         let title = this.filter('replaceNonAlphaNumeric')(event.title);
 
         event.delay = i * 100;
-        event.subtitle = event.title
+        event.subtitle = event.title;
+        
         if (event.number === 0) {
           event.number++;
         }
