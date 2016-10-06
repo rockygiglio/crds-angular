@@ -18,6 +18,6 @@ import countdownHeader from './countdown_header';
 import countdown from './countdown';
 import contentCard from './content_card';
 import streamingReminder from './streaming_reminder';
-
-// import socialSharing from 'social_sharing';
+import currentSeries from './current_series';
+import currentSeriesModal from './current_series_modal';
 import socialSharing from '../../core/components/social_sharing';
