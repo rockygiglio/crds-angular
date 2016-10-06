@@ -8,7 +8,7 @@ export default function LandingComponent() {
     restrict: 'E',
     templateUrl: 'landing/landing.html',
     controller: controller,
-    controllerAs: 'stream',
+    controllerAs: 'landing',
     bindToController: true
   }
 
