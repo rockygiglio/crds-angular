@@ -11,14 +11,15 @@ export default angular
   .service('ReminderService', ReminderService)
   ;
 
+import contentCard from './content_card';
+import countdown from './countdown';
+import countdownHeader from './countdown_header';
 import landing from './landing';
 import stream from './stream';
 import streamVideojs from './stream_videojs';
+import streamingReminder from './streaming_reminder';
 import streamspotPlayer from './streamspot_player'
 import videojsPlayer from './videojs_player'
-import countdown from './countdown';
-import contentCard from './content_card';
-import streamingReminder from './streaming_reminder';
 
 // import socialSharing from 'social_sharing';
 import socialSharing from '../../core/components/social_sharing';
