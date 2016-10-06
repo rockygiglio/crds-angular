@@ -13,7 +13,6 @@ export default class StreamingController {
     this.countSubmit    = false;
     this.dontMiss       = [];
     this.beTheChurch    = []
-    this.redirectText   = 'Go Back';
 
     this.rootScope.$on('isBroadcasting', (e, inProgress) => {
       // this.inProgress = inProgress;

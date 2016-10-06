@@ -26,11 +26,10 @@ export default class StreamspotPlayerController {
   }
 
   setPlayerSrc(broadcaster) {
-    let id = '1adb55de',
+    let id = __STREAMSPOT_PLAYER_ID__,
         defaultPlayer;
 
     if ( broadcaster.players === undefined || broadcaster.players.length === 0 ) {
-      console.log('Error getting player from broadcast.');
       return false;
     }
 
@@ -46,14 +45,9 @@ export default class StreamspotPlayerController {
     }
 
     if ( broadcaster.isBroadcasting === true || this.debug ) {
-
-      if ( this.streamspotService.ssid === 'crossr30e3' ) {
-        id = '2887fba1';
-      }
       return `https://player2.streamspot.com/?playerId=${id}`;
     }
     else {
-      console.log('No broadcast available.');
       return false;
     }
   }
