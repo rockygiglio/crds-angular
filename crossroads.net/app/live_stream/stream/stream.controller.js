@@ -12,12 +12,7 @@ export default class StreamingController {
     this.displayCounter = true;
     this.countSubmit    = false;
     this.dontMiss       = [];
-    this.beTheChurch    = []
-
-    this.rootScope.$on('isBroadcasting', (e, inProgress) => {
-      // this.inProgress = inProgress;
-      // window.location.href = '/live';
-    });
+    this.beTheChurch    = [];
 
     this.cmsService
         .getDigitalProgram()
