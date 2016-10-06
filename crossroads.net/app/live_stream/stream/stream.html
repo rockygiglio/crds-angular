@@ -1,13 +1,4 @@
 <div class="live-stream" ng-if="stream.inProgress">
-
-  <div class="pushdown-container" ng-if="stream.displayCounter">
-    <div class="container">
-      <div class="iframe-wrapper">
-        <iframe allowfullscreen="" frameborder="0" height="100" id="slider-iframe" src="//crossroads-media.s3.amazonaws.com/documents/crds-live-slider/index.html" width="800"></iframe>
-      </div>
-      <a class="pull-right btn-dismiss" href="#" ng-click="stream.displayCounter = false">Dismiss</a>
-    </div>
-  </div>
   <div class="dark-bg">
     <header class="container clearfix">
       <a class="navbar-brand logo pull-left" href="http://crossroads.net">
@@ -22,6 +13,34 @@
         <streamspot-player></streamspot-player>
       </div>
     </section>
+  </div>
+
+  <div class="container cr-reskin">
+    <div class="roll-call">
+      <div class="btn-group" role="group" aria-label="...">
+        <button type="button" class="btn btn-primary">
+          <svg viewBox="0 0 32 32" class="icon minus">
+            <use xlink:href="#minus"></use>
+          </svg>
+        </button>
+        <button type="button" class="btn btn-primary">
+          <svg viewBox="0 0 32 32" class="icon plus">
+            <use xlink:href="#plus"></use>
+          </svg>
+        </button>
+      </div>
+      <strong>0 people</strong> are watching from <input type="text" placeholder="zip code">
+      <a href="#" class="btn btn-primary btn-geolocate">
+        <svg viewBox="0 0 32 32" class="icon crosshairs">
+          <use xlink:href="#crosshairs"></use>
+        </svg>
+      </a>
+
+      <footer>
+        <a href="#" class="btn btn-standard-dark">Submit Roll Call</a><br>
+        <a href="#" class="btn btn-link">Dismiss</a>
+      </footer>
+    </div>
   </div>
 
   <div class="container digital-program-container">
