@@ -32,7 +32,7 @@ var bootstrap:any = require('bootstrap');
 declare var _: any;
 
 @Component({
-  selector: 'streaming',
+  selector: 'streaming-ng2',
   directives: [
     MODAL_DIRECTIVES,
     DynamicContentNg2Component, 

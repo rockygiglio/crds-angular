@@ -56,14 +56,14 @@ export default class StreamspotService {
   }
 
   getEventsByDate() {
-      return _.chain(this.parseEvents())
-        .groupBy('dayOfYear')
-        .value();
+    return _.chain(this.parseEvents())
+      .groupBy('dayOfYear')
+      .value();
   }
 
   get(url) {
     return this.resource(url, {}, { get: { method: 'GET', headers: this.headers } })
-      .get().map(response => response.json());
+      .get().$promise;
   }
 
   getBroadcaster() {

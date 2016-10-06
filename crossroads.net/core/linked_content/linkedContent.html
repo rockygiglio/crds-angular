@@ -1,0 +1,8 @@
+<a href="{{ content.href }}" 
+   ng-click="content.onClick()" 
+   class="linked-content {{ content.class }}" 
+   title="{{ content.title }}" 
+   target="{{ content.target }}" 
+   style="background-image: url({{ content.sce.trustAsResourceUrl(content.background) }})">
+  <ng-transclude></ng-transclude>
+</a>
