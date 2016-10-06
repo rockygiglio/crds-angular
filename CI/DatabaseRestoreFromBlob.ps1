@@ -25,7 +25,13 @@ Param (
   [Parameter(Mandatory=$true)]
   [string] $ApiPassword,
   [Parameter(Mandatory=$true)]
-  [string] $InternalDBServerName
+  [string] $InternalDBServerName,
+  [Parameter(Mandatory=$true)]
+  [string] $DomainGuid,
+  [Parameter(Mandatory=$true)]
+  [string] $EmailServer,
+  [Parameter(Mandatory=$true)]
+  [string] $EmailUserName
 )
 
 $backupDateStamp = Get-Date -format 'yyyyMMdd';
@@ -122,9 +128,9 @@ DECLARE @scheduledTasksUser varchar(50) = '$InternalServerName/MPAdmin';
 
 -- The domain GUID - set this to NEWID() when setting up a new domain, but use a previous value for an existing domain
 -- DECLARE @domainGuid = NEWID();
-DECLARE @domainGuid UNIQUEIDENTIFIER = CAST('8B6242C9-EA32-40F7-97A2-E2BB3524CED2' AS UNIQUEIDENTIFIER);
+DECLARE @domainGuid UNIQUEIDENTIFIER = CAST('$DomainGuid' AS UNIQUEIDENTIFIER);
 
-USE $DBName;
+USE [$DBName];
 
 SELECT * FROM dp_Domains;
 
@@ -140,6 +146,32 @@ UPDATE [dbo].[dp_Domains]
       ,[Max_Secured_Users] = null;
 
 SELECT * FROM dp_Domains;
+
+
+-- Update Mobile Tools settings
+USE [$DBName]
+
+CREATE TABLE #NewConfigSettings (Application_Code VARCHAR(500), Key_Name VARCHAR(500), [Value] VARCHAR(500))
+
+INSERT INTO #NewConfigSettings 
+	(Application_Code, Key_Name, Value) 
+	VALUES
+	('MOBILETOOLS', 'EmailServer', '$EmailServer'),
+	('MOBILETOOLS', 'EmailMode', 'SMTP'),
+	('MOBILETOOLS', 'EmailServerPort', '3000'),
+	('MOBILETOOLS', 'EmailUserName', '$EmailUserName'),
+	('MOBILETOOLS', 'EmailPassword', 'ShouldNotMatter')
+
+UPDATE s
+		SET s.Value = new.Value
+	FROM dp_Configuration_Settings s
+		INNER JOIN #NewConfigSettings new ON 
+			new.Application_Code = s.Application_Code AND
+			new.Key_Name = s.Key_Name
+	WHERE s.Value != new.Value
+
+DROP TABLE #NewConfigSettings
+
 
 -- The following Scripts are necessary to enable the application to work with the database.
 -- Please don't adjust anything by the Database Name in these scripts.
@@ -222,7 +254,7 @@ BEGIN
 
 END;
 
-USE MinistryPlatform;
+USE [$DBName];
 
 CREATE USER [$InternalDBServerName\MPUser] FOR LOGIN [$InternalDBServerName\MPUser];
 ALTER ROLE [db_accessadmin] ADD MEMBER [$InternalDBServerName\MPUser];
@@ -242,7 +274,7 @@ exec sp_change_users_login @Action='update_one', @UserNamePattern='MigrateUser',
 
 
 -- TODO: Review, Rework, and determine plan for mapping users
-Use MinistryPlatform
+USE [$DBName]
 
 CREATE USER [$InternalDBServerName\CRDSAdmin] FOR LOGIN [$InternalDBServerName\CRDSAdmin];
 
