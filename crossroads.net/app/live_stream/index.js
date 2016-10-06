@@ -11,11 +11,11 @@ export default angular
   .service('ReminderService', ReminderService)
   ;
 
-import landing from './landing';
-import countdown from './countdown';
-import streamingReminder from './streaming_reminder';
 import contentCard from './content_card';
-
-
-// import socialSharing from 'social_sharing';
+import countdown from './countdown';
+import countdownHeader from './countdown_header';
+import currentSeries from './current_series';
+import currentSeriesModal from './current_series_modal';
+import landing from './landing';
+import streamingReminder from './streaming_reminder';
 import socialSharing from '../../core/components/social_sharing';
