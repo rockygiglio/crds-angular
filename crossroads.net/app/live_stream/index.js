@@ -14,6 +14,7 @@ export default angular
 import landing from './landing';
 import stream from './stream';
 import streamspotPlayer from './streamspot_player'
+import countdownHeader from './countdown_header';
 import countdown from './countdown';
 import contentCard from './content_card';
 import streamingReminder from './streaming_reminder';
