@@ -16,8 +16,8 @@ export default class StreamVideojsController {
     this.redirectText   = 'Go Back';
 
     this.rootScope.$on('isBroadcasting', (e, inProgress) => {
-      // this.inProgress = inProgress;
-      // window.location.href = '/live';
+      this.inProgress = inProgress;
+      window.location.href = '/live';
     });
 
     this.cmsService
@@ -49,6 +49,7 @@ export default class StreamVideojsController {
         } else {
           feature.image = 'https://crds-cms-uploads.imgix.net/content/images/register-bg.jpg'
         }
+        
         if (feature.section === 1 ) {
           this.dontMiss.push(feature)
         } else if (feature.section === 2 ) {
