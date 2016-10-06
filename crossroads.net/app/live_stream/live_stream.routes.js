@@ -4,9 +4,9 @@ export default function LiveStreamRouter($httpProvider, $stateProvider) {
   $httpProvider.defaults.useXDomain = true;
 
   $stateProvider
-    .state('live-v1', {
+    .state('live', {
       parent: 'screenWidth',
-      url: '/live-v1',
+      url: '/live',
       template: '<landing></landing>',
       data: {
         meta: {
@@ -17,7 +17,7 @@ export default function LiveStreamRouter($httpProvider, $stateProvider) {
     })
     .state('livestream', {
       parent: 'noHeaderOrFooter',
-      url: '/live-v1/stream',
+      url: '/live/stream',
       template: '<stream></stream>',
       data: {
         meta: {
