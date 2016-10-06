@@ -1,4 +1,4 @@
-var WOW = require('wow.js/dist/wow.min.js');
+let WOW = require('wow.js/dist/wow.min.js');
 
 export default class LandingController {
   /*@ngInject*/
