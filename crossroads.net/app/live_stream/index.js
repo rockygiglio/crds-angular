@@ -15,6 +15,7 @@ import landing from './landing';
 import stream from './stream';
 import contentCard from './content_card';
 import streamspotPlayer from './streamspot_player';
+import countdownHeader from './countdown_header';
 import countdown from './countdown';
 import streamingReminder from './streaming_reminder';
 
