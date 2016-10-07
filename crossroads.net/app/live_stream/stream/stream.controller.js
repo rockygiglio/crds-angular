@@ -15,7 +15,13 @@ export default class StreamingController {
     this.beTheChurch    = [];
 
     var debug = false;
-    var params = $location.search();
+    var location = $location;
+
+    if ( $location != undefined ) {
+      var params = $location.search();
+      debug = params.debug;
+    }
+    
     if ( debug === "true" ) {
       this.inProgress = true;
     }
