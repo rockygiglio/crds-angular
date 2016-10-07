@@ -1,27 +1,14 @@
-<h5>Confirmed Team Members</h5>
-<div class="row push-half-bottom">
-  <div class="col-sm-4">
-    <strong>Service Member</strong>
+<h4 class="">Confirmed Team Members</h4>
+<div ng-repeat="role in serveTeamMembers.allMembers" class="row serve-role-members">
+  <div class="col-sm-3 soft-half-top">
+    <strong>{{role.name}}</strong>
   </div>
-  <div class="col-sm-8">
-    <closable-tag name="Don Whitman" on-click="memberClicked()" on-close="memberRemoved()" class="push-half-left mobile-push-half-bottom"></closable-tag>
-  </div>
-</div>
-<div class="row push-half-bottom">
-  <div class="col-sm-4">
-    <strong>Service Setup</strong>
-  </div>
-  <div class="col-sm-8">
-    <closable-tag name="Dave Groben" on-click="memberClicked()" on-close="memberRemoved()" class="push-half-left mobile-push-half-bottom"></closable-tag>
-    <closable-tag name="Denny Smyth" on-click="memberClicked()" on-close="memberRemoved()" class="push-half-left mobile-push-half-bottom"></closable-tag>
-    <closable-tag name="Andy Jones" on-click="memberClicked()" on-close="memberRemoved()" class="push-half-left mobile-push-half-bottom"></closable-tag>
-  </div>
-</div>
-<div class="row push-half-bottom">
-  <div class="col-sm-4">
-    <strong>Not Available</strong>
-  </div>
-  <div class="col-sm-8">
-    <closable-tag name="Jimmy McCarthy" on-click="memberClicked()" on-close="memberRemoved()" class="push-half-left mobile-push-half-bottom"></closable-tag>
+  <div class="col-sm-9 soft-half-top">
+    <closable-tag ng-repeat="member in role.members"
+                  name="member.name"
+                  on-click="serveTeamMembers.memberClicked(member)"
+                  on-close="serveTeamMembers.memberRemoved(member)"
+                  class="push-half-right push-half-bottom"></closable-tag>
+    <span ng-if="role.members.length == 0">None</span>
   </div>
 </div>
