@@ -38,8 +38,8 @@ BEGIN
 	          N'cr_Product_Rules' , -- Table_Name - nvarchar(50)
 	          N'ProductRule_ID' , -- Primary_Key - nvarchar(50)
 	          NULL , -- Display_Search - bit
-	          N'cr_Product_Rules.Product_ID,cr_Product_Rules.Gender_ID,cr_Product_Rules.Congregation_ID,cr_Product_Rules.MaxQuantity,cr_Product_Rules.WaitListQuantity' , -- Default_Field_List - nvarchar(2000)
-	          N'cr_Product_Rules.Product_ID' , -- Selected_Record_Expression - nvarchar(255)
+	          N'Product_ID_Table.Product_Name,Gender_ID_Table.Gender,Congregation_ID_Table.Congregation_Name,cr_Product_Rules.MaxQuantity as Max_Quantity,cr_Product_Rules.WaitListQuantity AS Waitlist_Quantity' , -- Default_Field_List - nvarchar(2000)
+	          N'Product_ID_Table.Product_Name' , -- Selected_Record_Expression - nvarchar(255)
 	          NULL , -- Filter_Clause - nvarchar(500)
 	          NULL , -- Start_Date_Field - nvarchar(50)
 	          NULL , -- End_Date_Field - nvarchar(50)
