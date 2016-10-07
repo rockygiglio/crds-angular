@@ -84,8 +84,8 @@
       scope.showEdit = false;
       scope.showIcon = showIcon;
       scope.togglePanel = togglePanel;
-      scope.memberClicked = memberClicked;
-      scope.memberRemoved = memberRemoved;
+      scope.memberClick = memberClick;
+      scope.memberRemove = memberRemove;
 
       //
       // !!!!!!
@@ -561,12 +561,12 @@
         });
       }
 
-      function memberClicked() {
-        console.debug("Member clicked");
+      function memberClick($member) {
+        console.debug("serve team member clicked", $member);
       }
 
-      function memberRemoved() {
-        console.debug("Member removed");
+      function memberRemove($member) {
+        console.debug("serve team member removed", $member);
       }
     }
   }

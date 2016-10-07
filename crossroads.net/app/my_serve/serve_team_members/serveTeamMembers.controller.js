@@ -24,4 +24,14 @@ export default class ServeTeamMembersController {
       },
     ];
   }
+
+  memberClick(member) {
+    console.debug('member click', member);
+    this.onMemberClick({ $member: member });
+  }
+
+  memberRemove(member) {
+    console.debug('member remove', member);
+    this.onMemberRemove({ $member: member });
+  }
 }

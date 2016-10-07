@@ -6,8 +6,8 @@
   <div class="col-sm-9 soft-half-top">
     <closable-tag ng-repeat="member in role.members"
                   name="member.name"
-                  on-click="serveTeamMembers.memberClicked(member)"
-                  on-close="serveTeamMembers.memberRemoved(member)"
+                  on-click="serveTeamMembers.memberClick(member)"
+                  on-close="serveTeamMembers.memberRemove(member)"
                   class="push-half-right push-half-bottom"></closable-tag>
     <span ng-if="role.members.length == 0">None</span>
   </div>
