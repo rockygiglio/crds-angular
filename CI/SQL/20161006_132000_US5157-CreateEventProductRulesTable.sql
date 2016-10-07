@@ -12,7 +12,8 @@ BEGIN
 CREATE TABLE [dbo].[cr_Event_Product_Rules](
 	[EventProductRule_ID] [INT] IDENTITY(1,1) NOT NULL,
 	[Event_ID] [INT] NOT NULL,
-	[RemaininCapacity] [INT] NOT NULL,
+	[ProductRule_ID] [INT] NOT NULL,
+	[RemainingCapacity] [INT] NOT NULL,
 	[RemainingWaitlistCapacity] [INT] NOT NULL,
 	[Domain_ID] [INT] NOT NULL,
  CONSTRAINT [PK_cr_Event_Product_Rules] PRIMARY KEY CLUSTERED 
@@ -40,6 +41,12 @@ REFERENCES [dbo].[dp_Domains] ([Domain_ID])
 ALTER TABLE [dbo].[cr_Event_Product_Rules] CHECK CONSTRAINT [FK_cr_Event_Product_Rules_dp_Domains]
 
 -------------------------------------------------------------
+
+ALTER TABLE [dbo].[cr_Event_Product_Rules]  WITH CHECK ADD  CONSTRAINT [FK_cr_Event_Product_Rules_Product_Rules] FOREIGN KEY([ProductRule_ID])
+REFERENCES [dbo].[cr_Product_Rules] ([ProductRule_ID])
+
+
+ALTER TABLE [dbo].[cr_Event_Product_Rules] CHECK CONSTRAINT [FK_cr_Event_Product_Rules_Product_Rules]
 
 
 END
