@@ -37,7 +37,7 @@ BEGIN
 	          N'cr_Medical_Information_Medications' , -- Table_Name - nvarchar(50)
 	          N'MedicalInformationMedication_ID' , -- Primary_Key - nvarchar(50)
 	          NULL , -- Display_Search - bit
-	          N'cr_Medical_Information_Medications.MedicalInformationMedication_ID,cr_Medical_Information_Medications.MedicalInformation_ID,cr_Medical_Information_Medications.Medication_ID,cr_Medical_Information_Medications.DosageTime,cr_Medical_Information_Medications.DosageAmount' , -- Default_Field_List - nvarchar(2000)
+	          N'cr_Medical_Information_Medications.MedicalInformationMedication_ID as Medical_Information_Medication_ID,cr_Medical_Information_Medications.MedicalInformation_ID AS Medical_Information_ID,cr_Medical_Information_Medications.Medication_ID,cr_Medical_Information_Medications.DosageTime AS Dosage_Time,cr_Medical_Information_Medications.DosageAmount AS Dosage_Amount' , -- Default_Field_List - nvarchar(2000)
 	          N'cr_Medical_Information_Medications.MedicalInformationMedication_ID' , -- Selected_Record_Expression - nvarchar(255)
 	          NULL , -- Filter_Clause - nvarchar(500)
 	          NULL , -- Start_Date_Field - nvarchar(50)

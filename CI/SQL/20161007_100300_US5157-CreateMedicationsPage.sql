@@ -37,7 +37,7 @@ BEGIN
 	          N'cr_Medications' , -- Table_Name - nvarchar(50)
 	          N'Medication_ID' , -- Primary_Key - nvarchar(50)
 	          NULL , -- Display_Search - bit
-	          N'cr_Medications.Medication_ID,cr_Medications.MedicationName,cr_Medications.MedicationType' , -- Default_Field_List - nvarchar(2000)
+	          N'cr_Medications.Medication_ID,cr_Medications.MedicationName AS Medication_Name,cr_Medications.MedicationType AS Medication_Type' , -- Default_Field_List - nvarchar(2000)
 	          N'cr_Medications.Medication_ID' , -- Selected_Record_Expression - nvarchar(255)
 	          NULL , -- Filter_Clause - nvarchar(500)
 	          NULL , -- Start_Date_Field - nvarchar(50)
@@ -60,4 +60,3 @@ BEGIN
 	INSERT INTO [dbo].[dp_Page_Section_Pages](Page_ID,Page_Section_ID) VALUES(@PageID, @PageSectionID)
 END
 GO
-

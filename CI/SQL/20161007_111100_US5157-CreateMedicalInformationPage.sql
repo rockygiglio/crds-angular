@@ -37,7 +37,7 @@ BEGIN
 	          N'cr_Medical_Information' , -- Table_Name - nvarchar(50)
 	          N'MedicalInformation_ID' , -- Primary_Key - nvarchar(50)
 	          NULL , -- Display_Search - bit
-	          N'cr_Medical_Information.MedicalInformation_ID,cr_Medical_Information.InsuranceCompany,cr_Medical_Information.PolicyHolderName,cr_Medical_Information.PhysicianName,cr_Medical_Information.PhysicianPhone,cr_Medical_Information.Waiver_ID' , -- Default_Field_List - nvarchar(2000)
+	          N'cr_Medical_Information.MedicalInformation_ID AS Medical_Information_ID,cr_Medical_Information.InsuranceCompany AS Insurance_Company,cr_Medical_Information.PolicyHolderName AS Policy_Holder,cr_Medical_Information.PhysicianName as Physician_Name,cr_Medical_Information.PhysicianPhone AS Physician_Phone,cr_Medical_Information.Waiver_ID' , -- Default_Field_List - nvarchar(2000)
 	          N'cr_Medical_Information.MedicalInformation_ID' , -- Selected_Record_Expression - nvarchar(255)
 	          NULL , -- Filter_Clause - nvarchar(500)
 	          NULL , -- Start_Date_Field - nvarchar(50)
@@ -60,4 +60,3 @@ BEGIN
 	INSERT INTO [dbo].[dp_Page_Section_Pages](Page_ID,Page_Section_ID) VALUES(@PageID, @PageSectionID)
 END
 GO
-
