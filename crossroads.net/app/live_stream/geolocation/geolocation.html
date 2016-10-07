@@ -1,4 +1,4 @@
-<div class="container cr-reskin">
+<div class="container cr-reskin" ng-hide="geolocation.dismiss">
   <div class="roll-call">
     <div class="btn-group" role="group" aria-label="...">
       <button type="button" class="btn btn-primary" ng-click="geolocation.subtract()">
@@ -12,15 +12,20 @@
         </svg>
       </button>
     </div>
-    <strong>{{ geolocation.count }} {{ geolocation.subject }}</strong> {{ geolocation.verb }} watching from <input type="text" placeholder="zip code">
-    <button href="#" class="btn btn-primary btn-geolocate" ng-click="geolocation.requestLocation()">
-      <svg viewBox="0 0 32 32" class="icon crosshairs">
+    <strong>{{ geolocation.location.count }} {{ geolocation.subject }}</strong> {{ geolocation.verb }} watching from <input type="text" placeholder="zip code" ng-model="geolocation.location.zipcode">
+    <button class="btn btn-primary btn-geolocate" ng-if="!geolocation.isLocating" ng-click="geolocation.requestLocation()">
+      <svg viewBox="0 0 32 32" class="icon crosshairs" >
         <use xlink:href="#crosshairs"></use>
+      </svg>
+    </button>
+    <button disabled="disabled" class="btn btn-primary btn-geolocate" ng-if="geolocation.isLocating">    
+      <svg viewBox="0 0 32 32" class="icon icon-preloader loading">
+        <use xlink:href="#preloader"></use>
       </svg>
     </button>
 
     <footer>
-      <a href="#" class="btn btn-standard-dark">Submit Roll Call</a><br>
+      <a ng-click="geolocation.submit()" class="btn btn-standard-dark">Submit Roll Call</a><br>
       <a href="#" class="btn btn-link">Dismiss</a>
     </footer>
   </div>
