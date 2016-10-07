@@ -1,26 +1,25 @@
 let WOW = require('wow.js/dist/wow.min.js');
 
-export default class StreamingController {
+export default class StreamVideojsController {
   /*@ngInject*/
   constructor(CMSService, StreamspotService, $rootScope) {
     this.cmsService        = CMSService;
     this.streamspotService = StreamspotService;
     this.rootScope = $rootScope;
 
-    this.inProgress     = false;
+    this.inProgress     = true;
     this.numberOfPeople = 2;
     this.displayCounter = true;
     this.countSubmit    = false;
     this.dontMiss       = [];
-    this.beTheChurch    = [];
+    this.beTheChurch    = []
+    this.redirectText   = 'Go Back';
 
     this.rootScope.$on('isBroadcasting', (e, inProgress) => {
       this.inProgress = inProgress;
-      if (this.inProgress === false) {
-        window.location.href = '/live';
-      }
+      window.location.href = '/live';
     });
-    
+
     this.cmsService
         .getDigitalProgram()
         .then((data) => {
@@ -50,6 +49,7 @@ export default class StreamingController {
         } else {
           feature.image = 'https://crds-cms-uploads.imgix.net/content/images/register-bg.jpg'
         }
+        
         if (feature.section === 1 ) {
           this.dontMiss.push(feature)
         } else if (feature.section === 2 ) {

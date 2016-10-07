@@ -3,7 +3,7 @@ import constants from 'crds-constants';
 import StreamspotPlayerController from '../../../app/live_stream/streamspot_player/streamspotPlayer.controller';
 import StreamspotService from '../../../app/live_stream/services/streamspot.service';
 
-describe('Streampost player', () => {
+describe('Streamspot Player', () => {
   let fixture,
       response,
       rootScope,
