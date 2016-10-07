@@ -4,5 +4,5 @@ import html from './signup_intro.html';
 
 export default angular.
   module(constants.MODULES.CAMPS)
-    .component('signupIntroComponent', signupIntroComponent())
+    .component('signupIntro', signupIntroComponent)
   ;
