@@ -12,7 +12,8 @@ IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[cr
 BEGIN
 CREATE TABLE [dbo].[cr_Waivers](
 	[Waiver_ID] [int] IDENTITY(1,1) NOT NULL,
-	[WaiverText] [nvarchar](MAX) NOT NULL,
+	[Waiver_Name] [nvarchar](100) NOT NULL,
+	[Waiver_Text] [nvarchar](MAX) NOT NULL,
 	[Domain_ID] [int] NOT NULL,
  CONSTRAINT [PK_cr_Waivers] PRIMARY KEY CLUSTERED 
 (

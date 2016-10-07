@@ -15,6 +15,7 @@ CREATE TABLE [dbo].[cr_Event_Participant_Waivers](
 	[Waiver_ID] [int] NOT NULL,
 	[Event_Participant_ID] [int] NOT NULL,
 	[Accepted] [bit] NOT NULL DEFAULT 0,
+	[Signee] [int] NULL,
 	[Domain_ID] [int] NOT NULL,
  CONSTRAINT [PK_cr_Event_Participant_Waivers] PRIMARY KEY CLUSTERED 
 (
@@ -40,6 +41,15 @@ GO
 
 IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_Event_Participant_Waivers_Event_Participants]') AND parent_object_id = OBJECT_ID(N'[dbo].[cr_Event_Participant_Waivers]'))
 ALTER TABLE [dbo].[cr_Event_Participant_Waivers] CHECK CONSTRAINT [FK_Event_Participant_Waivers_Event_Participants]
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_Event_Participant_Waivers_Contacts]') AND parent_object_id = OBJECT_ID(N'[dbo].[cr_Event_Participant_Waivers]'))
+ALTER TABLE [dbo].[cr_Event_Participant_Waivers]  WITH CHECK ADD  CONSTRAINT [FK_Event_Participant_Waivers_Contacts] FOREIGN KEY([Signee])
+REFERENCES [dbo].[Contacts] ([Contact_ID])
+GO
+
+IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_Event_Participant_Waivers_Contacts]') AND parent_object_id = OBJECT_ID(N'[dbo].[cr_Event_Participant_Waivers]'))
+ALTER TABLE [dbo].[cr_Event_Participant_Waivers] CHECK CONSTRAINT [FK_Event_Participant_Waivers_Contacts]
 GO
 
 IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_Event_Participant_Waivers_Domains]') AND parent_object_id = OBJECT_ID(N'[dbo].[cr_Event_Participant_Waivers]'))
