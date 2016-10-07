@@ -674,6 +674,20 @@ streaming, landing {
     padding-top: 1em;
     padding-bottom: 1em;
     background: #000;
+
+    header > a:hover,
+    header > a:focus {
+      transition: color 0.5s ease;
+      text-decoration: none;
+      > svg {
+        transition: fill 0.5s ease;
+      }
+      &, .icon {
+        color: $gray-light !important;
+        fill: $gray-light;
+      }
+    }
+
     .video-player {
       margin: 0 auto;
     }
