@@ -27,5 +27,5 @@ cms_services_module.factory('PageById', function ($resource, $location) {
         return $resource(__CMS_ENDPOINT__ + '/api/Page/?id=:id&STAGE=:stage', { id: '@_id', stage: stageParam }, { cache: false });
     }
 
-    return $resource(__CMS_ENDPOINT__ + '/api/Page/?id=:id', { url: '@_id' }, { cache: true });
+    return $resource(__CMS_ENDPOINT__ + '/api/Page/?id=:id', { id: '@_id' }, { cache: true });
 })
