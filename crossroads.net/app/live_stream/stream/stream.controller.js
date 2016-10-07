@@ -2,9 +2,10 @@ let WOW = require('wow.js/dist/wow.min.js');
 
 export default class StreamingController {
   /*@ngInject*/
-  constructor(CMSService, StreamspotService, $rootScope) {
+  constructor(CMSService, StreamspotService, GeolocationService, $rootScope) {
     this.cmsService        = CMSService;
     this.streamspotService = StreamspotService;
+    this.geolocationService = GeolocationService;
     this.rootScope = $rootScope;
 
     this.inProgress     = false;
@@ -13,10 +14,14 @@ export default class StreamingController {
     this.countSubmit    = false;
     this.dontMiss       = [];
     this.beTheChurch    = [];
+    this.debug          = true; // if true, will bypass redirect
 
     this.rootScope.$on('isBroadcasting', (e, inProgress) => {
       this.inProgress = inProgress;
-      if (this.inProgress === false) {
+      if (this.debug) {
+        this.inProgress = this.debug;
+      }
+      if (!this.debug && this.inProgress === false) {
         window.location.href = '/live';
       }
     });
@@ -30,6 +35,7 @@ export default class StreamingController {
     new WOW({
       mobile: false
     }).init();
+    this.open();
   }
 
   sortDigitalProgram(data) {
@@ -59,7 +65,7 @@ export default class StreamingController {
     })
   }
 
-  goBack() {
-    window.location.href = '/live-v1';
+  open() {
+    this.geolocationService.open();
   }
 }
