@@ -1,17 +1,15 @@
 export default function CampRoutes($stateProvider) {
 
-  //$urlMatcherFactory.strictMode(false);
-
   $stateProvider
-    .state('Summercamp', {
+    .state('crossroads-camp', {
       parent: 'noSideBar',
-      url: '/camps/summercamp',
-      template:'<summer-camp></summer-camp>',
+      url: '/camps/:campId',
+      template:'<crossroads-camp></crossroads-camp>',
       data: {
         isProtected: true,
         meta: {
           title: 'Camp Signup',
-          description: 'Select your child you want to signup for a camp'
+          description: 'Join us for camp!'
         }
       },
       resolve: {
@@ -19,6 +17,5 @@ export default function CampRoutes($stateProvider) {
         $cookies: '$cookies',
         $stateParams: '$stateParams'
       }
-        
   });
-}   
+}

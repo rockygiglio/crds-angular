@@ -1,0 +1,7 @@
+<preloader full-screen='false' ng-show='!camperInfo.viewReady'> </preloader>
+<div ng-show='camperInfo.viewReady'> 
+  <h1> Tell us about the camper </h1>
+  <formly-form model="camperInfo.formData" fields="camperInfo.camperInfoFields">
+      <button type="submit" class="btn btn-default" ng-click="camperInfo.submit()">Submit</button>
+  </formly-form>
+</div>
