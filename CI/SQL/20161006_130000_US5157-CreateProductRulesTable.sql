@@ -45,5 +45,11 @@ REFERENCES [dbo].[Products] ([Product_ID])
 
 ALTER TABLE [dbo].[cr_Product_Rules] CHECK CONSTRAINT [FK_cr_Product_Rules_Products]
 
+ALTER TABLE [dbo].[cr_Product_Rules]  WITH CHECK ADD  CONSTRAINT [FK_cr_Product_Rules_dp_Domains] FOREIGN KEY([Domain_ID])
+REFERENCES [dbo].[dp_Domains] ([Domain_ID])
+
+
+ALTER TABLE [dbo].[cr_Product_Rules] CHECK CONSTRAINT [FK_cr_Product_Rules_dp_Domains]
+
 END
 

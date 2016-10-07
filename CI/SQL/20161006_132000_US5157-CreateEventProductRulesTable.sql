@@ -31,6 +31,16 @@ ALTER TABLE [dbo].[cr_Event_Product_Rules] CHECK CONSTRAINT [FK_cr_Event_Product
 
 -------------------------------------------------------------
 
+-------------------------------------------------------------
+
+ALTER TABLE [dbo].[cr_Event_Product_Rules]  WITH CHECK ADD  CONSTRAINT [FK_cr_Event_Product_Rules_dp_Domains] FOREIGN KEY([Domain_ID])
+REFERENCES [dbo].[dp_Domains] ([Domain_ID])
+
+
+ALTER TABLE [dbo].[cr_Event_Product_Rules] CHECK CONSTRAINT [FK_cr_Event_Product_Rules_dp_Domains]
+
+-------------------------------------------------------------
+
 
 END
 
