@@ -52,4 +52,11 @@
       margin-left: 0.125em;
     }
   }
+
+  @media (max-width: $screen-sm-min) {
+    span {
+      display: block;
+    }
+  }
+
 }

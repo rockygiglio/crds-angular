@@ -12,7 +12,7 @@
         </svg>
       </button>
     </div>
-    <strong>{{ geolocation.location.count }} {{ geolocation.subject }}</strong> {{ geolocation.verb }} watching from <input type="text" placeholder="zip code" ng-model="geolocation.location.zipcode">
+    <strong>{{ geolocation.location.count }} {{ geolocation.subject }}</strong> <span>{{ geolocation.verb }} watching from</span> <input type="text" placeholder="zip code" ng-model="geolocation.location.zipcode">
     <button class="btn btn-primary btn-geolocate" ng-if="!geolocation.isLocating" ng-click="geolocation.requestLocation()">
       <svg viewBox="0 0 32 32" class="icon crosshairs" >
         <use xlink:href="#crosshairs"></use>
