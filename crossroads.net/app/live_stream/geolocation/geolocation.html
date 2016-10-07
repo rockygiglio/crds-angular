@@ -12,16 +12,16 @@
         </svg>
       </button>
     </div>
-    <strong>{{ geolocation.count }} {{ geolocation.subject }}</strong> {{ geolocation.verb }} watching from <input type="text" placeholder="zip code">
+    <strong>{{ geolocation.count }} {{ geolocation.subject }}</strong> <span>{{ geolocation.verb }} watching from</span> <input type="text" placeholder="zip code">
     <button href="#" class="btn btn-primary btn-geolocate" ng-click="geolocation.requestLocation()">
       <svg viewBox="0 0 32 32" class="icon crosshairs">
         <use xlink:href="#crosshairs"></use>
       </svg>
     </button>
-
     <footer>
       <a href="#" class="btn btn-standard-dark">Submit Roll Call</a><br>
-      <a href="#" class="btn btn-link">Dismiss</a>
+      <a href="#" class="btn btn-link" ng-click="geolocation.close()">Dismiss</a>
+      <ng-transclude></ng-transclude>
     </footer>
   </div>
 </div>

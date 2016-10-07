@@ -9,6 +9,7 @@ export default function GeolocationComponent() {
     templateUrl: 'geolocation/geolocation.html',
     controller: controller,
     controllerAs: 'geolocation',
+    transclude: true,
     bindToController: true
   }
 
