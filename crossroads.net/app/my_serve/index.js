@@ -1,27 +1,38 @@
-'use strict()';
-(function(){
-  require('./myserve.html');
-  require('./one_time_serve_mockup.html');
-  require('./event_registration_mockup.html');
-  require('./event_registration_mockup_desired.html');
+import CONSTANTS from 'crds-constants';
 
-  var app = angular.module('crossroads');
+import './myserve.html';
+import './one_time_serve_mockup.html';
+import './event_registration_mockup.html';
+import './event_registration_mockup_desired.html';
+import './serveTabs.html';
+import './serveTeam.html';
+import './refine/refineList.html';
+import './refine/serveModalContent.html';
 
-  require('./capacity.service');
+import OpportunityCapacityService from './capacity.service';
+import FilterStateService from  './filterState.service.js';
 
-  app.factory('filterState', require('./filterState.service.js'));
-  app.controller('MyServeController', require('./myserve.controller'));
+import MyServeController from './myserve.controller';
+import ServeModalController from './refine/serveModal.controller';
 
-  require('./serveTabs.html');
-  app.directive('serveTabs', require('./serveTabs.directive'));
+import ServeTabsDirective from './serveTabs.directive';
+import ServeTeamDirective from './serveTeam.directive';
+import RefineListDirective from './refine/refineList.directive';
 
-  require('./serveTeam.html');
-  app.directive('serveTeam', require('./serveTeam.directive'));
+import myServeRouter from './my_serve.routes';
 
-  require('./refine/refineList.html');
-  app.directive('refineList', require('./refine/refineList.directive'));
+export default angular
+  .module(CONSTANTS.MODULES.MY_SERVE, [ CONSTANTS.MODULES.CORE, CONSTANTS.MODULES.COMMON ])
 
-  require('./refine/serveModalContent.html');
-  app.controller('ServeModalController', require('./refine/serveModal.controller'));
+  .config(myServeRouter)
 
-})();
+  .factory('ServeTeamFilterState', FilterStateService)
+  .factory('OpportunityCapacityService', OpportunityCapacityService)
+
+  .controller('MyServeController', MyServeController)
+  .controller('ServeModalController', ServeModalController)
+
+  .directive('serveTabs', ServeTabsDirective)
+  .directive('serveTeam', ServeTeamDirective)
+  .directive('serveTeamRefineList', RefineListDirective)
+;
