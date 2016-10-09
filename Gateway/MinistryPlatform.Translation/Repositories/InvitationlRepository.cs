@@ -103,7 +103,7 @@ namespace MinistryPlatform.Translation.Repositories
             
                 var dictionary = new Dictionary<string, object>();
                 dictionary.Add("Invitation_ID", invitation.InvitationId);
-                dictionary.Add("Invitation_GUID", invitationGuid);
+                dictionary.Add("Invitation_GUID", new Guid(invitationGuid));
                 dictionary.Add("Invitation_Used", true);
 
                 _ministryPlatformService.UpdateRecord(_invitationPageId, dictionary, token);
