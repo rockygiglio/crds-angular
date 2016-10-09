@@ -176,7 +176,10 @@ namespace crds_angular.Services
                             //team already in collection
                             if (!team.PastDeadline)
                             {
-                                team.PastDeadline = (record.EventStartDateTime.AddDays(0 - record.OpportunitySignUpDeadline) < DateTime.Today);
+                                if (record.OpportunitySignUpDeadline != null)
+                                {
+                                    team.PastDeadline = (record.EventStartDateTime.AddDays(0 - record.OpportunitySignUpDeadline.Value) < DateTime.Today);
+                                }
                             }
                             var member = team.Members.SingleOrDefault(m => m.ContactId == record.ContactId);
                             if (member == null)
@@ -792,8 +795,8 @@ namespace crds_angular.Services
                 Members = new List<TeamMember> {NewTeamMember(record)},
                 Name = record.GroupName,
                 PrimaryContact = record.GroupPrimaryContactEmail,
-                PastDeadline = (record.EventStartDateTime.AddDays(0 - record.OpportunitySignUpDeadline) < DateTime.Today),
-                PastDeadlineMessage = record.DeadlinePassedMessage
+                PastDeadline = (record.OpportunitySignUpDeadline != null) && (record.EventStartDateTime.AddDays(0 - record.OpportunitySignUpDeadline.Value) < DateTime.Today),
+                PastDeadlineMessage = record.DeadlinePassedMessage.Value
             };
         }
 
