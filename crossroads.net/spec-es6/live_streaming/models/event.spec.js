@@ -56,7 +56,7 @@ describe('Live Stream Event', () => {
     })
   })
 
-  fdescribe('formatting', () => {
+  describe('formatting', () => {
     it('formats the start time according to the user timezone', () => {
       let formattedCurrentTimeLess1Hour = moment().tz(moment.tz.guess()).subtract(1, 'hour').format('h:mma z');
 
