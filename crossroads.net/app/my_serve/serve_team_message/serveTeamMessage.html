@@ -1,6 +1,6 @@
 <form role='form' name='serveTeamMessageForm' ng-submit='serveTeamMessage.submit(serveTeamMessageForm)' novalidate>
   <div class='row'>
-    <div class='col-md-6 col-md-offset-3'>
+    <div class='col-md-8 col-md-offset-2'>
 
       <h1 class="page-header">Send Message</h1>
 
@@ -41,7 +41,7 @@
 
       <div class='form-group'>
         <label for='subject' class='control-label'>Subject</label>
-        <input type='text' id='subject' name='subject' class='form-control' placeholder="Placeholder Subject">
+        <input type='text' id='subject' name='subject' class='form-control'>
       </div>
 
       <div class='form-group' ng-class='{"has-error": serveTeamMessageForm.$submitted && serveTeamMessageForm.emailMessage.$invalid}'>
