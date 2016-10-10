@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Crossroads.Utilities.Interfaces;
+using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 
 namespace MinistryPlatform.Translation.Repositories
@@ -21,7 +22,7 @@ namespace MinistryPlatform.Translation.Repositories
             _apiUserRepository = apiUserRepository;
         }
 
-        public List<MpCampEvent> GetCampEvent(int eventId)
+        public List<MpCampEvent> GetCampEventDetails(int eventId)
         {
             var apiToken = _apiUserRepository.GetToken();
             var parms = new Dictionary<string, object> { { "Event_ID", eventId }, { "Domain_ID", 1 } };
