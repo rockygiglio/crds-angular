@@ -43,13 +43,12 @@ namespace crds_angular.Services
                 campEventInfo.RegistrationStartDate = record.RegistrationStartDate;
                 campEventInfo.ProgramId = record.ProgramId;
             }
-
             return campEventInfo;
         }
 
         public void SaveCampReservation(CampReservationDTO campReservation)
         {
-            //
+
         }
     }
 }

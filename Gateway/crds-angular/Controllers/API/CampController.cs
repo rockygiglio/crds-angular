@@ -27,7 +27,7 @@ namespace crds_angular.Controllers.API
         }
 
         [ResponseType(typeof (CampDTO))]
-        [Route("api/camps/{contactid}/{eventid}")]
+        [Route("api/camps/{eventid}")]
         [AcceptVerbs("GET")]
         public IHttpActionResult GetCampEventDetails(int contactId, int eventId)
         {
@@ -46,14 +46,14 @@ namespace crds_angular.Controllers.API
             });
         }
 
-        [Route("api/camps/save")]
+        [Route("api/camps/{eventid}")]
         [AcceptVerbs("POST")]
         public IHttpActionResult SaveCampReservation([FromBody] CampReservationDTO campReservation)
         {
             if (!ModelState.IsValid)
             {
                 var errors = ModelState.Values.SelectMany(val => val.Errors).Aggregate("", (current, err) => current + err.Exception.Message);
-                var dataError = new ApiErrorDto("Camp Application Data Invalid", new InvalidOperationException("Invalid Camp Application Data" + errors));
+                var dataError = new ApiErrorDto("Camper Application data Invalid", new InvalidOperationException("Invalid Camper Application Data" + errors));
                 throw new HttpResponseException(dataError.HttpResponseMessage);
             }
 
@@ -67,7 +67,7 @@ namespace crds_angular.Controllers.API
                
                 catch (Exception e)
                 {
-                    var apiError = new ApiErrorDto("Childcare-SaveRsvp failed", e);
+                    var apiError = new ApiErrorDto("Camp Reservation failed", e);
                     throw new HttpResponseException(apiError.HttpResponseMessage);
                 }
             });
