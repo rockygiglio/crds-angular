@@ -5,11 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 using crds_angular.Models.Crossroads.Camp;
 using crds_angular.Services.Interfaces;
+using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 
 namespace crds_angular.Services
 {
-    class CampService : ICampService
+    public class CampService : ICampService
     {
         private readonly IContactRepository _contactService;
         private readonly ICampRepository _campService;
@@ -46,8 +47,20 @@ namespace crds_angular.Services
             return campEventInfo;
         }
 
-        public void SaveCampReservation(CampReservationDTO campReservation)
+        public void SaveCampReservation(CampReservationDTO campReservation, int eventId)
         {
+            var minorContact = new MpMinorContact
+            {
+                FirstName = campReservation.FirstName,
+                LastName = campReservation.LastName,
+                MiddleName = campReservation.MiddleName,
+                BirthDate = campReservation.BirthDate,
+                Gender = campReservation.Gender,
+                PreferredName = campReservation.PreferredName,
+                SchoolAttending = campReservation.SchoolAttending
+            };
+
+            var contactId = _campService.CreateMinorContact(minorContact);    
 
         }
     }

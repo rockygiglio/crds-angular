@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
 using System.Threading.Tasks;
 using Crossroads.Utilities.Interfaces;
@@ -29,6 +30,11 @@ namespace MinistryPlatform.Translation.Repositories
             var campEventData = _ministryPlatformRest.UsingAuthenticationToken(apiToken).GetFromStoredProc<MpCampEvent>(_configurationWrapper.GetConfigValue("CampEventStoredProc"), parms);
             var campEvent = campEventData.FirstOrDefault() ?? new List<MpCampEvent>();
             return campEvent;
+        }
+
+        public int CreateMinorContact(MpMinorContact minorContact)
+        {
+            return 0;
         }
     }
 }

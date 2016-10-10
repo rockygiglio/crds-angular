@@ -10,5 +10,6 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
     public interface ICampRepository
     {
         List<MpCampEvent> GetCampEventDetails(int eventId);
+        int CreateMinorContact(MpMinorContact minorContact);
     }
 }
