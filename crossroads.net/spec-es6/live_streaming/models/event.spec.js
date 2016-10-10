@@ -55,4 +55,12 @@ describe('Live Stream Event', () => {
       expect(pastEvent.isBroadcasting()).toBe(false);
     })
   })
+
+  fdescribe('formatting', () => {
+    it('formats the start time according to the user timezone', () => {
+      let formattedCurrentTimeLess1Hour = moment().tz(moment.tz.guess()).subtract(1, 'hour').format('h:mma z');
+
+      expect(currentEvent.formatToLocalTZ(currentEvent.start)).toBe(formattedCurrentTimeLess1Hour);
+    })
+  })
 })
