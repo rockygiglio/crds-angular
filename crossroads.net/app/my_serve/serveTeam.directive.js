@@ -9,7 +9,7 @@
     '$log',
     'Session',
     'ServeOpportunities',
-    'Capacity',
+    'OpportunityCapacityService',
     '$modal',
     'growl'
   ];
