@@ -15,14 +15,14 @@
           <div dynamic-content="$root.MESSAGES.streamingReminderStreamSelect.content | html"></div>
           
           <a class="btn btn-date-select" href="#" ng-click="reminder.setDay(false)" ng-if="reminder.model.day">
-            <i class="glyphicon glyphicon-calendar"></i>&nbsp;&nbsp;{{ reminder.model.day }}&nbsp;&nbsp;
+            <i class="glyphicon glyphicon-calendar"></i>&nbsp;&nbsp;{{ reminder.getInitialAnnouncementDate()}}&nbsp;&nbsp;
             <i class="glyphicon glyphicon-chevron-down"></i>
           </a>
 
           <div ng-hide="reminder.model.day">
             <div data-toggle="buttons">
               <label class="btn btn-lg btn-date-select" ng-repeat="date in reminder.uniqueDates()" ng-click="reminder.setDay(date)">
-                <input name="day" autocomplete="off" type="radio" ng-model="reminder.model.day" value="{{date.start.format(reminder.dateFormats.display)}}"> {{date.start.format(reminder.dateFormats.display)}}
+                <input name="day" autocomplete="off" type="radio" ng-model="reminder.model.day" value="{{date.start.format(reminder.dateFormats.display)}}"> {{date.formatToLocalTzDate(date.start)}}
               </label>
             </div>
             <div class="alert alert-danger" ng-if="reminder.dateTimeError" dynamic-content="$root.MESSAGES.streamingLandingDateTimeError.content | html"></div>
@@ -32,7 +32,7 @@
             <div dynamic-content="$root.MESSAGES.streamingReminderLabelTime.content | html"></div>
             <div data-toggle="buttons">
               <label class="btn btn-sm btn-time-select" ng-repeat="event in reminder.selectedDate(reminder.model.day)" ng-click="reminder.setTime(event)">
-                <input name="time" autocomplete="off" type="radio" ng-model="reminder.model.time"> {{event.formatToLocalTZ(event.start)}}
+                <input name="time" autocomplete="off" type="radio" ng-model="reminder.model.time"> {{event.formatToLocalTzTime(event.start)}}
               </label>
             </div>
             <div class="alert alert-danger" ng-if="reminder.dateTimeError" dynamic-content="$root.MESSAGES.streamingLandingDateTimeError.content | html"></div>
