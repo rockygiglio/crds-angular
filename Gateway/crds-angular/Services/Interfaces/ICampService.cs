@@ -4,7 +4,7 @@ namespace crds_angular.Services.Interfaces
 {
     public interface ICampService
     {
-        CampDTO GetCampEventDetails(int cotactId, int eventId);
+        CampDTO GetCampEventDetails(int eventId);
         void SaveCampReservation(CampReservationDTO campReservation);
     }
 }

@@ -9,7 +9,7 @@ using MinistryPlatform.Translation.Repositories.Interfaces;
 
 namespace crds_angular.Services
 {
-    class CampService : ICampService
+    public class CampService : ICampService
     {
         private readonly IContactRepository _contactService;
         private readonly ICampRepository _campService;
@@ -28,7 +28,7 @@ namespace crds_angular.Services
             _crdsEventService = crdsEventService;
         }
 
-        public CampDTO GetCampEventDetails(int contactId, int eventId)
+        public CampDTO GetCampEventDetails(int eventId)
         {
             var campEvent = _campService.GetCampEventDetails(eventId);
             var campEventInfo = new CampDTO();
