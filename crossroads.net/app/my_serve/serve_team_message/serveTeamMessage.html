@@ -8,21 +8,37 @@
         <label class='control-label'>To</label>
         <div class="radio" ng-repeat="team in serveTeamMessage.teams">
           <label>
-            <input type='radio' name='teamRadio' value='{{team.name}}'>
-            {{team.name}}
+            <input type='radio' name='teamRadio' ng-model='serveTeamMessage.selection'>
+            {{team.name}} <span ng-if="team.count > 0"> ({{team.count}} people)</span><span ng-if="team.isLeader"> (Team Leader)</span>
           </label>
         </div>
         <div class="radio">
           <label>
-            <input type='radio' name='teamRadio' value=''>
+            <input type='radio' name='teamRadio' value='-1' ng-model='serveTeamMessage.selection'>
             Individual Team Members
           </label>
         </div>
+
+        <div ng-if="serveTeamMessage.selection == -1">
+          <tags-input
+            ng-model="serveTeamMessage.individuals"
+            display-property="name"
+            placeholder="Search for a team member"
+          >
+
+            <auto-complete
+              source="serveTeamMessage.loadIndividuals($query)"
+              display-property="name"
+              min-length="1"
+            ></auto-complete>
+          </tags-input>
+        </div>
+
       </div>
 
       <div class='form-group'>
         <label for='subject' class='control-label'>Subject</label>
-        <input type='text' id='subject' name='subject' class='form-control'>
+        <input type='text' id='subject' name='subject' class='form-control' placeholder="Placeholder Subject">
       </div>
 
       <div class='form-group' ng-class='{"has-error": serveTeamMessageForm.$submitted && serveTeamMessageForm.emailMessage.$invalid}'>

@@ -22,7 +22,12 @@ import RefineListDirective from './refine/refineList.directive';
 import myServeRouter from './my_serve.routes';
 
 export default angular
-  .module(CONSTANTS.MODULES.MY_SERVE, [ CONSTANTS.MODULES.CORE, CONSTANTS.MODULES.COMMON ])
+  .module(CONSTANTS.MODULES.MY_SERVE, [
+    'ngTagsInput',
+
+    CONSTANTS.MODULES.CORE,
+    CONSTANTS.MODULES.COMMON
+  ])
 
   .config(myServeRouter)
 
