@@ -9,14 +9,17 @@ export default class ServeTeamMessageController {
     // TODO !!! REPLACE MOCK DATA
     this.teams = [
       {
+        id: 1,
         name: 'FI Oakley Coffee Team',
         count: 43
       },
       {
+        id: 2,
         name: 'FI Florence Info Center Team',
         count: 37
       },
       {
+        id: 3,
         name: 'Wes Donaldson',
         isLeader: true
       }

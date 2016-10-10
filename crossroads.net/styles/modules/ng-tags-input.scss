@@ -1,7 +1,7 @@
 tags-input {
   .tags {
     border-radius: $input-border-radius;
-    height: $input-height-base;
+    min-height: $input-height-base;
     padding: $padding-base-vertical ($padding-base-horizontal/2);
     appearance: none;
 
@@ -24,6 +24,20 @@ tags-input {
 
       .remove-button {
         color: $gray-darker;
+      }
+
+      &.selected {
+        background: $brand-danger;
+      }
+    }
+  }
+
+  .autocomplete {
+    .suggestion-item {
+      border-bottom: solid 1px $input-border;
+
+      &:last-child {
+        border-bottom: none;
       }
     }
   }

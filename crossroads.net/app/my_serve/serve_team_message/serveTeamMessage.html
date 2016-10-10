@@ -8,7 +8,7 @@
         <label class='control-label'>To</label>
         <div class="radio" ng-repeat="team in serveTeamMessage.teams">
           <label>
-            <input type='radio' name='teamRadio' ng-model='serveTeamMessage.selection'>
+            <input type='radio' name='teamRadio' value='{{team.id}}' ng-model='serveTeamMessage.selection'>
             {{team.name}} <span ng-if="team.count > 0"> ({{team.count}} people)</span><span ng-if="team.isLeader"> (Team Leader)</span>
           </label>
         </div>
@@ -19,17 +19,20 @@
           </label>
         </div>
 
-        <div ng-if="serveTeamMessage.selection == -1">
+        <div ng-if="serveTeamMessage.selection == -1" class="push-half-left">
           <tags-input
             ng-model="serveTeamMessage.individuals"
             display-property="name"
             placeholder="Search for a team member"
+            addFromAutocompleteOnly="true"
+            replace-spaces-with-dashes='false'
           >
 
             <auto-complete
               source="serveTeamMessage.loadIndividuals($query)"
               display-property="name"
               min-length="1"
+              template='serve_team_message/serveTeamMessageAutocomplete.html'
             ></auto-complete>
           </tags-input>
         </div>
