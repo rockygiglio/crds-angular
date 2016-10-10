@@ -148,6 +148,32 @@ namespace crds_angular.Services
             return qualifiedServers;
         }
 
+        private List<ServingDay> SetRSVPYesCount(List<ServingDay> servingDays)
+        {
+
+            foreach (var day in servingDays)
+            {
+                foreach (var time in day.ServeTimes)
+                {
+                    foreach (var serveTeam in time.ServingTeams)
+                    {
+                        //Get distinct list of opportunities comma separated 
+                        var Opportunities = 
+                        (
+                            from member in serveTeam.Members
+                            from role in member.Roles
+                            select role.RoleId
+                        ).Distinct().ToList();
+
+                        serveTeam.RsvpYesCount = _groupParticipantService.getRSVPYesCountForOpportunities(Opportunities);
+
+                    }
+                }
+            }
+
+            return servingDays;
+        }
+
         public List<ServingDay> GetServingDays(string token, int contactId, long from, long to)
         {
             var family = GetImmediateFamilyParticipants(token);
@@ -220,7 +246,7 @@ namespace crds_angular.Services
                 }
             }
 
-            return servingDays;
+            return SetRSVPYesCount(servingDays);
         }
 
         public Capacity OpportunityCapacity(int opportunityId, int eventId, int? minNeeded, int? maxNeeded)

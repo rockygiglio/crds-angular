@@ -34,6 +34,9 @@ namespace crds_angular.Models.Crossroads.Serve
 
         [JsonProperty(PropertyName = "pastDeadlineMessage")]
         public int PastDeadlineMessage { get; set; }
+
+        [JsonProperty(PropertyName = "rsvpYesCount")]
+        public int RsvpYesCount { get; set; }
         
         public ServingTeam()
         {

@@ -14,7 +14,7 @@
                 ng-class="{'active':isActiveTab(team.name) }"
                 ng-click="togglePanel(team)"
                 stop-event>
-          Team <span class="badge badge-success" ng-if="team.count > 0">{{team.count}}</span>
+          Team <span class="badge badge-success" ng-if="team.rsvpYesCount > 0">{{team.rsvpYesCount}}</span>
         </button>
 
         <!-- Member buttons -->
@@ -162,18 +162,18 @@
             </div> <!--/ng-show-->
           </div><!--/col-sm-4-->
 
-          <!--<div class="col-sm-12 serve-save soft-half-top">-->
-            <!--<a href="mailto:{{ ::team.primaryContact }}" class="pull-left">-->
-              <!--<svg viewBox="0 0 32 32" class="icon icon-mail5 icon-xlarge icon-subtle" tooltip-placement="right" tooltip="Email Team Leader">-->
-                <!--<use xlink:href="#mail5"></use>-->
-              <!--</svg>-->
-            <!--</a>-->
-            <!--<button class="btn btn-standard" ng-disabled="team.pastDeadline" ng-click="cancel()">Cancel</button>-->
-            <!--<button class="btn btn-primary" ng-disabled="team.pastDeadline" ng-class="{disabled: buttonState()}" ng-click="saveRsvp()">-->
-              <!--<span ng-if="processing">Saving...</span>-->
-              <!--<span ng-if="!processing">Save</span>-->
-            <!--</button>-->
-          <!--</div>&lt;!&ndash;/col-sm-12&ndash;&gt;-->
+          <div class="col-sm-12 serve-save soft-half-top">
+            <a href="mailto:{{ ::team.primaryContact }}" class="pull-left">
+              <svg viewBox="0 0 32 32" class="icon icon-mail5 icon-xlarge icon-subtle" tooltip-placement="right" tooltip="Email Team Leader">
+                <use xlink:href="#mail5"></use>
+              </svg>
+            </a>
+            <button class="btn btn-standard" ng-disabled="team.pastDeadline" ng-click="cancel()">Cancel</button>
+            <button class="btn btn-primary" ng-disabled="team.pastDeadline" ng-class="{disabled: buttonState()}" ng-click="saveRsvp()">
+              <span ng-if="processing">Saving...</span>
+              <span ng-if="!processing">Save</span>
+            </button>
+          </div>
         </div><!--/row-->
 
       </div><!--/panel-body-->

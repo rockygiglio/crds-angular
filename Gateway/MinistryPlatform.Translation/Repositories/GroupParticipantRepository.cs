@@ -78,5 +78,17 @@ namespace MinistryPlatform.Translation.Repositories
                 .ThenBy(g => g.ParticipantNickname)
                 .ToList();
         }
+
+        public int getRSVPYesCountForOpportunities(List<int> opportunities)
+        {
+            string commaSeparated = string.Join(",", opportunities.Select(o => o.ToString()).ToArray());
+
+            string searchString = $"Opportunity_ID in ({commaSeparated}) AND Response_Result_ID = 1";
+            List<string> columns = new List<string>();
+            columns.Add("Count(*) as RsvpYesCount");
+            var opportunityResponse = _ministryPlatformRest.UsingAuthenticationToken(_apiUserService.GetToken()).Search<MpResponse>(MpRestEncode(searchString), columns)[0];
+            
+            return opportunityResponse.RsvpYesCount.Value;
+        }
     }
 }
