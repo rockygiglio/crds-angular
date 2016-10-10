@@ -1,11 +1,11 @@
 /*@ngInject*/
 class CampController {
-    constructor(){
-      this.viewReady = false;
-    }
+  constructor(){
+    this.viewReady = false;
+  }
 
-    $onInit() {
-      this.viewReady = true;
-    }
+  $onInit() {
+    this.viewReady = true;
+  }
 }
 export default CampController;
