@@ -26,5 +26,16 @@ export default function LiveStreamRouter($httpProvider, $stateProvider) {
         }
       }
     })
+    .state('livestream-videojs', {
+      parent: 'noHeaderOrFooter',
+      url: '/live-v1/videojs',
+      template: '<stream-videojs></stream-videojs>',
+      data: {
+        meta: {
+          title: 'Live',
+          description: ''
+        }
+      }
+    })
   ;
 }
