@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Net;
 using Crossroads.Utilities.Extensions;
 using Crossroads.Utilities.Interfaces;
 using MinistryPlatform.Translation.Extensions;
@@ -17,17 +18,20 @@ namespace MinistryPlatform.Translation.Repositories
         private readonly IConfigurationWrapper _configurationWrapper;
         private readonly IMinistryPlatformService _ministryPlatformService;
         private readonly IApiUserRepository _apiUserService;
+        private readonly IMinistryPlatformRestRepository _ministryPlatformRest;
 
         public GroupParticipantRepository(IDbConnection dbConnection,
                                        IConfigurationWrapper configurationWrapper,
                                        IMinistryPlatformService ministryPlatformService,
-                                       IApiUserRepository apiUserService)
+                                       IApiUserRepository apiUserService,
+                                       IMinistryPlatformRestRepository ministryPlatformRest)
 
         {
             _dbConnection = dbConnection;
             _configurationWrapper = configurationWrapper;
             _ministryPlatformService = ministryPlatformService;
             _apiUserService = apiUserService;
+            _ministryPlatformRest = ministryPlatformRest;
         }
 
         public int Get(int groupId, int participantId)
@@ -38,8 +42,52 @@ namespace MinistryPlatform.Translation.Repositories
             return groupParticipant != null ? groupParticipant.ToInt("Group_Participant_ID") : 0;
         }
 
+        public List<MpGroupServingParticipant> GetServingGroupsRest(List<int> participants, long from, long to, int loggedInContactId)
+        {
+            var defaultDeadlinePassedMessage = _configurationWrapper.GetConfigIntValue("DefaultDeadlinePassedMessage");
+            var searchFilter = "(";
+
+            for (int i = 0; i <= participants.Count-1; i++)
+            {
+                searchFilter += (i == participants.Count - 1) 
+                    ? "(Participant_ID=" + participants[i]+")" 
+                    : "(Participant_ID=" + participants[i] + ") OR ";
+            }
+     
+            var fromDate = from == 0 ? DateTime.Today : from.FromUnixTime();
+            var toDate = to == 0 ? DateTime.Today.AddDays(29) : to.FromUnixTime();
+
+            searchFilter += $") AND Event_Start_Date >= '{fromDate:yyyy-MM-dd}' AND Event_Start_Date <= '{toDate:yyyy-MM-dd}' "+
+                "AND Event_Start_Date >= Participant_Start_Date AND (Event_Start_Date <= Participant_End_Date OR Participant_End_Date IS NULL)";
+
+            //(Participant_ID = 7537153 OR Participant_ID = 7554224) AND EVENT_START_DATE >= GETDATE()
+            var groupServingParticipants =  _ministryPlatformRest.UsingAuthenticationToken(_apiUserService.GetToken()).Search<MpGroupServingParticipant>(MpRestEncode(searchFilter), null
+                ,MpRestEncode("EVENT_START_DATE ASC"));
+            groupServingParticipants.ForEach(p => p.RowNumber = groupServingParticipants.IndexOf(p)+1);
+
+            groupServingParticipants.Where(p => p.ContactId == loggedInContactId).All(c => c.LoggedInUser = true);
+
+            foreach (var mpGroupServingParticipant in groupServingParticipants.Where(p => p.DeadlinePassedMessage == null))
+            {
+                mpGroupServingParticipant.DeadlinePassedMessage = defaultDeadlinePassedMessage;
+            }
+
+            return groupServingParticipants.OrderBy(g => g.EventStartDateTime)
+                .ThenBy(g => g.GroupName)
+                .ThenBy(g => g.LoggedInUser == false)
+                .ThenBy(g => g.ParticipantNickname)
+                .ToList();
+        }
+
+        private string MpRestEncode(string data)
+        {
+            return WebUtility.UrlEncode(data)?.Replace("+", "%20");
+        }
+
         public List<MpGroupServingParticipant> GetServingParticipants(List<int> participants, long from, long to, int loggedInContactId)
         {
+
+            return GetServingGroupsRest(participants, from, to, loggedInContactId);
             var connection = _dbConnection;
             try
             {
@@ -63,8 +111,8 @@ namespace MinistryPlatform.Translation.Repositories
                     participant.GroupRoleId = reader.GetInt32(reader.GetOrdinal("Group_Role_ID"));
                     participant.DomainId = reader.GetInt32(reader.GetOrdinal("Domain_ID"));
                     participant.EventId = reader.GetInt32(reader.GetOrdinal("Event_ID"));
-                    participant.EventStartDateTime = (DateTime) reader["Event_Start_Date"];
-                    participant.EventTitle = reader.GetString(reader.GetOrdinal("Event_Title"));                   
+                    participant.EventStartDateTime = (DateTime)reader["Event_Start_Date"];
+                    participant.EventTitle = reader.GetString(reader.GetOrdinal("Event_Title"));
                     participant.Room = SafeString(reader, "Room");
                     participant.GroupId = reader.GetInt32(reader.GetOrdinal("Group_ID"));
                     participant.GroupName = reader.GetString(reader.GetOrdinal("Group_Name"));
@@ -87,6 +135,8 @@ namespace MinistryPlatform.Translation.Repositories
                     participant.LoggedInUser = loggedInUser;
                     groupServingParticipants.Add(participant);
                 }
+
+                string Test = "test";
                 return
                     groupServingParticipants.OrderBy(g => g.EventStartDateTime)
                         .ThenBy(g => g.GroupName)
