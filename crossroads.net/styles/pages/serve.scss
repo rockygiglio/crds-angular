@@ -113,7 +113,8 @@
         }
 
         &.active {
-          background: $brand-secondary;
+          //background: $brand-secondary;
+          background-color: $cr-grey;
           color: #fff;
           box-shadow: none;
 
@@ -132,6 +133,9 @@
           vertical-align: baseline;
         }
 
+        .badge.badge-success {
+          background-color: $brand-success;
+        }
       }
     }
   }
@@ -164,4 +168,8 @@
     padding-left: $panel-body-padding;
     padding-right: $panel-body-padding;
   }
+}
+
+.serve-role-members {
+  min-height: 62px;
 }
