@@ -45,5 +45,32 @@ namespace crds_angular.Controllers.API
                 }
             });
         }
+
+        [Route("api/camps/save")]
+        [AcceptVerbs("POST")]
+        public IHttpActionResult SaveCampReservation([FromBody] CampReservationDTO campReservation)
+        {
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState.Values.SelectMany(val => val.Errors).Aggregate("", (current, err) => current + err.Exception.Message);
+                var dataError = new ApiErrorDto("Camp Application Data Invalid", new InvalidOperationException("Invalid Camp Application Data" + errors));
+                throw new HttpResponseException(dataError.HttpResponseMessage);
+            }
+
+            return Authorized(token =>
+            {
+                try
+                {
+                    _campService.SaveCampReservation(campReservation);
+                    return Ok();
+                }
+               
+                catch (Exception e)
+                {
+                    var apiError = new ApiErrorDto("Childcare-SaveRsvp failed", e);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+            });
+        }
     }
 }

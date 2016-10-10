@@ -46,5 +46,10 @@ namespace crds_angular.Services
 
             return campEventInfo;
         }
+
+        public void SaveCampReservation(CampReservationDTO campReservation)
+        {
+            //
+        }
     }
 }
