@@ -58,8 +58,13 @@ namespace MinistryPlatform.Translation.Models
         [JsonProperty(PropertyName = "Shift_Start")]
         public TimeSpan? OpportunityShiftStart { get; set; }
 
+        private int opportunitySignUpDeadLine;
+
         [JsonProperty(PropertyName = "Sign_Up_Deadline")]
-        public int? OpportunitySignUpDeadline { get; set; }
+        public int? OpportunitySignUpDeadline {
+            get { return opportunitySignUpDeadLine; }
+            set { opportunitySignUpDeadLine = (value != null) ? Convert.ToInt32(value) : 0; }
+        }
 
         [JsonProperty(PropertyName = "Deadline_Passed_Message_ID")]
         public int? DeadlinePassedMessage { get; set; }

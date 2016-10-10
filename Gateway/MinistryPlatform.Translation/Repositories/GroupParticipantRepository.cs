@@ -61,8 +61,7 @@ namespace MinistryPlatform.Translation.Repositories
                 "AND Event_Start_Date >= Participant_Start_Date AND (Event_Start_Date <= Participant_End_Date OR Participant_End_Date IS NULL)";
 
             //(Participant_ID = 7537153 OR Participant_ID = 7554224) AND EVENT_START_DATE >= GETDATE()
-            var groupServingParticipants =  _ministryPlatformRest.UsingAuthenticationToken(_apiUserService.GetToken()).Search<MpGroupServingParticipant>(MpRestEncode(searchFilter), null
-                ,MpRestEncode("EVENT_START_DATE ASC"));
+            var groupServingParticipants =  _ministryPlatformRest.UsingAuthenticationToken(_apiUserService.GetToken()).Search<MpGroupServingParticipant>(MpRestEncode(searchFilter));
             groupServingParticipants.ForEach(p => p.RowNumber = groupServingParticipants.IndexOf(p)+1);
 
             groupServingParticipants.Where(p => p.ContactId == loggedInContactId).All(c => c.LoggedInUser = true);
