@@ -12,8 +12,6 @@ export default class Event {
     return new Event(title, start, end);
   }
 
-  // When an event gets created, the timezone is explicitly getting set as America/New York
-  // Do we want this set as UTC and then convert to user's TZ when displayed on modal?
   constructor(title, start, end) {
     this.title     = title;
     this.start     = moment.tz(start, 'YYYY-MM-DD H:mm:ss', 'America/New_York');
