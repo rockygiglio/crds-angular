@@ -34,22 +34,20 @@ export default class Event {
     return JSON.stringify(this);
   }
 
-  formatToLocalTzDate(eventStartTimeEstString) {
-    let reminderDateFormat = 'dddd, MMMM Do';
-    let userTimeZone = moment.tz.guess();
-    let userLocalTzStartDate = moment(eventStartTimeEstString).tz(userTimeZone).format(reminderDateFormat);
-    return userLocalTzStartDate;
-  }
-
-
-  formatToLocalTzTime(eventStartTimeEstString) {
+  formatToLocalTZTime(eventStartTime) {
     let reminderTimeFormat = 'h:mma z';
     let userTimeZone = moment.tz.guess();
-    let userLocalTzStartTime = moment(eventStartTimeEstString).tz(userTimeZone).format(reminderTimeFormat);
+    let userLocalTzStartTime = moment(eventStartTime).tz(userTimeZone).format(reminderTimeFormat);
     return userLocalTzStartTime;
   }
 
-  //Format general date time (that we know to be in EST) to user's local date
+  formatToLocalTZDate(eventStartTime) {
+    let reminderTimeFormat = 'dddd, MMMM Do';
+    let userTimeZone = moment.tz.guess();
+    let userLocalTzStartTime = moment(eventStartTime).tz(userTimeZone).format(reminderTimeFormat);
+    return userLocalTzStartTime;
+  }
+
   formatGeneralDateTimeToLocalDate(generalDateTime) {
     let startDateInUsTz = generalDateTime.tz('America/New_York').format();
     let userTz = moment.tz.guess();
