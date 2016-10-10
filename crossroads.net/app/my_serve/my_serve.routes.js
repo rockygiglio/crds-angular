@@ -25,6 +25,18 @@ export default function MyServeRouter($httpProvider, $stateProvider) {
         }
       }
     })
+    .state('serve-signup.message', {
+      parent: 'noSideBar',
+      url: '/serve-signup/message',
+      template: '<serve-team-message></serve-team-message>',
+      data: {
+        isProtected: true,
+        meta: {
+          title: 'Send Message',
+          description: ''
+        }
+      }
+    })
 
   ;
 }

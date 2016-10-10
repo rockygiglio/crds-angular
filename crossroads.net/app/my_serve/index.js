@@ -36,3 +36,9 @@ export default angular
   .directive('serveTeam', ServeTeamDirective)
   .directive('serveTeamRefineList', RefineListDirective)
 ;
+
+//
+// Module sub-components
+//
+
+import './serve_team_message';
