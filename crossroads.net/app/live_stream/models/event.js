@@ -33,4 +33,11 @@ export default class Event {
   json() {
     return JSON.stringify(this);
   }
+
+  formatToLocalTZ(eventStartTimeEstString) {
+    let reminderTimeFormat = 'h:mma z';
+    let userTimeZone = moment.tz.guess();
+    let userLocalTzStartTime = moment(eventStartTimeEstString).tz(userTimeZone).format(reminderTimeFormat);
+    return userLocalTzStartTime;
+  }
 }
