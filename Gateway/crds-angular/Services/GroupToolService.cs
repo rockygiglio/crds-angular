@@ -402,7 +402,7 @@ namespace crds_angular.Services
                     // make sure the person isn't already in a group
                     var groupParticipants = _groupRepository.GetGroupParticipants(groupId, true);
 
-                    if (groupParticipants.Any())
+                    if (groupParticipants.Any(p => p.ParticipantId == participant.ParticipantId))
                     {
                         // mark as used here, too, because of exception flow
                         _invitationRepository.MarkInvitationAsUsed(invitationGuid);
