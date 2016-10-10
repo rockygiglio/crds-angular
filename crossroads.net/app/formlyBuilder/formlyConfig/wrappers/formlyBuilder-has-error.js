@@ -7,4 +7,4 @@ export default ngModule => {
             template: require('./templates/formlyBuilder-has-error.html')
         });
     }
-}
+};
