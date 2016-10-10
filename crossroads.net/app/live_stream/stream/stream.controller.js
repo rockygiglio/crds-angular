@@ -60,6 +60,6 @@ export default class StreamingController {
   }
 
   goBack() {
-    window.location.href = '/live-v1';
+    window.location.href = '/live';
   }
 }
