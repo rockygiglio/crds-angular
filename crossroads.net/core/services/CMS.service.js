@@ -26,7 +26,7 @@
           allActiveSeries.some(series => {
             let seriesStart = moment(series.startDate, 'YYYY-MM-DD');
             let seriesEnd   = moment(series.endDate, 'YYYY-MM-DD')
-            if ( seriesStart <= todaysDate && seriesEnd <= todaysDate) {
+            if ( seriesStart <= todaysDate && seriesEnd >= todaysDate) {
               currentSeries = series;
               return true;
             }
