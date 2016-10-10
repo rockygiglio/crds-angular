@@ -37,7 +37,7 @@ BEGIN
 	          N'cr_Event_Product_Rules' , -- Table_Name - nvarchar(50)
 	          N'EventProductRule_ID' , -- Primary_Key - nvarchar(50)
 	          NULL , -- Display_Search - bit
-	          N'Event_ID_Table.Event_Title,ProductRule_ID,cr_Event_Product_Rules.RemainingCapacity AS Remaining_Capacity, cr_Event_Product_Rules.RemainingWaitlistCapacity AS Remaining_Waitlist_Capacity' , -- Default_Field_List - nvarchar(2000)
+	          N'Event_ID_Table.Event_Title,ProductRule_ID_Table.Product_Rule_Name,cr_Event_Product_Rules.RemainingCapacity AS Remaining_Capacity, cr_Event_Product_Rules.RemainingWaitlistCapacity AS Remaining_Waitlist_Capacity' , -- Default_Field_List - nvarchar(2000)
 	          N'Event_ID_Table.Event_Title' , -- Selected_Record_Expression - nvarchar(255)
 	          NULL , -- Filter_Clause - nvarchar(500)
 	          NULL , -- Start_Date_Field - nvarchar(50)
