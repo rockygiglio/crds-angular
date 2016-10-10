@@ -1,3 +1,5 @@
+import moment from 'moment';
+import 'moment-timezone';
 
 export default class ReminderService {
   constructor($http, $modal) {
