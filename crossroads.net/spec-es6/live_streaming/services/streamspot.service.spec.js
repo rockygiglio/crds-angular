@@ -56,36 +56,36 @@ describe('Live Streaming Streamspot Service', () => {
   });
 
   describe('Events', () => {
-    // it('should get events', () => {
-    //   httpBackend.expectGET(eventsEndpoint).respond(200, events);
-    //   httpBackend.flush();
-    // })
+    it('should get events', () => {
+      httpBackend.expectGET(eventsEndpoint).respond(200, events);
+      httpBackend.flush();
+    })
 
-    // it('should return upcoming events', () => {
-    //   httpBackend.expectGET(eventsEndpoint).respond(200, events);
+    it('should return upcoming events', () => {
+      httpBackend.expectGET(eventsEndpoint).respond(200, events);
 
-    //   httpBackend.flush();
+      httpBackend.flush();
 
-    //   expect(service.parseEvents() instanceof Array).toBeTruthy();
+      expect(service.parseEvents() instanceof Array).toBeTruthy();
 
-    //   let titles = service.parseEvents().map((event) => { return event.title });
-    //   expect(titles).not.toContain('Saturday Rehearsal Done')
+      let titles = service.parseEvents().map((event) => { return event.title });
+      expect(titles).not.toContain('Saturday Rehearsal Done')
 
-    //   expect(_.first(service.parseEvents()).title).toBe('Saturday Rehearsal Broadcasting');
+      expect(_.first(service.parseEvents()).title).toBe('Saturday Rehearsal Broadcasting');
       
-    // });
+    });
 
-    // it('should return events, grouped by DOY', () => {
-    //   httpBackend.expectGET(eventsEndpoint).respond(200, events);
-    //   httpBackend.flush();
-    //   let results = service.getEventsByDate();
+    it('should return events, grouped by DOY', () => {
+      httpBackend.expectGET(eventsEndpoint).respond(200, events);
+      httpBackend.flush();
+      let results = service.getEventsByDate();
 
-    //   let idx = parseInt(Object.keys(results)[0]);
-    //   let event = _.first(results[idx]);
+      let idx = parseInt(Object.keys(results)[0]);
+      let event = _.first(results[idx]);
 
-    //   expect(event instanceof Object).toBeTruthy();
-    //   expect(idx).toEqual(jasmine.any(Number));
-    //   expect(event.title).toBe('Saturday Rehearsal Broadcasting');
-    // });
+      expect(event instanceof Object).toBeTruthy();
+      expect(idx).toEqual(jasmine.any(Number));
+      expect(event.title).toBe('Saturday Rehearsal Broadcasting');
+    });
   })
 })
