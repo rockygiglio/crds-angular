@@ -3,7 +3,7 @@ export default class ServeTeamMessageController {
   constructor() {
     console.debug('Serve Team Message controller');
     this.processing = false;
-    this.selection = -1;
+    this.selection = null;
     this.individuals = [];
 
     // TODO !!! REPLACE MOCK DATA
