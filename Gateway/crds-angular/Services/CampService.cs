@@ -29,7 +29,7 @@ namespace crds_angular.Services
             _crdsEventService = crdsEventService;
         }
 
-        public CampDTO GetCampEventDetails(int contactId, int eventId)
+        public CampDTO GetCampEventDetails(int eventId)
         {
             var campEvent = _campService.GetCampEventDetails(eventId);
             var campEventInfo = new CampDTO();

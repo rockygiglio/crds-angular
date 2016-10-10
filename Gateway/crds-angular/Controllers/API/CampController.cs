@@ -29,13 +29,13 @@ namespace crds_angular.Controllers.API
         [ResponseType(typeof (CampDTO))]
         [Route("api/camps/{eventid}")]
         [AcceptVerbs("GET")]
-        public IHttpActionResult GetCampEventDetails(int contactId, int eventId)
+        public IHttpActionResult GetCampEventDetails(int eventId)
         {
             return Authorized(token =>
             {
                 try
                 {
-                    var campEventInfo = _campService.GetCampEventDetails(contactId, eventId);
+                    var campEventInfo = _campService.GetCampEventDetails(eventId);
                     return Ok(campEventInfo);
                 }
                 catch (Exception exception)

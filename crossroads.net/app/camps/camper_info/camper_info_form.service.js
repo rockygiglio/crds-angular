@@ -101,10 +101,10 @@ class CamperInfoForm {
               options: []
             },
             controller: /* @ngInject */ function ($scope, LookupService) {
-              $scope.to.loading = LookupService.Genders.query().$promise.then(function (response) {
+              $scope.to.loading = LookupService.Genders.query().$promise.then((response) => {
                 $scope.to.options = response;
                 return response;
-              });
+              }).catch((err) =>  console.error(err));
             }
           }
         ]
