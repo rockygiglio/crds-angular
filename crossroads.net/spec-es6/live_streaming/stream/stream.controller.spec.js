@@ -8,6 +8,7 @@ describe('Stream Controller', () => {
   let fixture,
       rootScope,
       cmsService,
+      location,
       streamspotService,
       httpBackend,
       results;
@@ -18,7 +19,8 @@ describe('Stream Controller', () => {
     StreamspotService = $injector.get('StreamspotService');
     rootScope = $injector.get('$rootScope');
     cmsService = $injector.get('CMSService');
-    fixture = new StreamController(cmsService, StreamspotService, rootScope);
+    location = $injector.get('$location');
+    fixture = new StreamController(cmsService, StreamspotService, rootScope, location);
 
     results = [
       {
