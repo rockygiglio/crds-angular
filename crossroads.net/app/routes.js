@@ -390,7 +390,7 @@
             }
           }
         })
-        .state('live', {
+        .state('live-ng2', {
           parent: 'screenWidth',
           url: '/live',
           template: '<streaming></streaming>',
@@ -401,7 +401,7 @@
             }
           }
         })
-        .state('livestream', {
+        .state('livestream-ng2', {
           parent: 'noHeaderOrFooter',
           url: '/live/stream',
           template: '<streaming-video></streaming-video>',
@@ -412,7 +412,7 @@
             }
           }
         })
-        .state('livestreamvjs', {
+        .state('livestreamvjs-ng2', {
           parent: 'noHeaderOrFooter',
           url: '/live/videojs',
           template: '<videojs-landing></videojs-landing>',
