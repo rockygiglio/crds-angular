@@ -1,4 +1,4 @@
-/*@ngInject*/
+/* @ngInject */
 class CampController {
   constructor(){
     this.viewReady = false;

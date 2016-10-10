@@ -1,4 +1,4 @@
-/*@ngInject*/
+/* @ngInject */
 class CamperInfoController {
   constructor(LookupService, CamperInfoForm, $rootScope) {
     this.viewReady = false;
