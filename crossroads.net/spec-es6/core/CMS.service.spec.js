@@ -86,8 +86,11 @@ describe('CMSService', () => {
         ]
       }
 
+      let baseTime = new Date(2016, 9, 1); // set to 10/1/2016 - month appears to be 0 based index however
+      jasmine.clock().mockDate(baseTime);
 
-      let todaysDate = moment().format('YYYY-MM-DD');
+      let todaysDate = moment(baseTime).format('YYYY-MM-DD');
+
       fixture.getCurrentSeries().then(response => {
         expect(response.title).toBe('Together')
       });
@@ -106,6 +109,7 @@ describe('CMSService', () => {
       });
       httpBackend.expectGET(`${endpoint}/series?endDate__GreaterThanOrEqual=${todaysDate}&endDate__sort=ASC`).respond(200, series);
       httpBackend.flush();
+      jasmine.clock().mockDate();
     })
 
 
