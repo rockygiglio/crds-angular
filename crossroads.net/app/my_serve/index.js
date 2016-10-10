@@ -41,4 +41,6 @@ export default angular
 // Module sub-components
 //
 
+import './closable-tag';
+import './serve_team_members';
 import './serve_team_message';
