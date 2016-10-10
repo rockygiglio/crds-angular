@@ -35,8 +35,8 @@ describe('CMSService', () => {
             "id": 236,
             "title": "Together",
             "description": "<p class=\"ng-scope\"><span id=\"docs-internal-guid-63f12df6-2cd6-144b-b591-c6bb136663ed\">Spend more time together<\/span><\/p><p><span>\u00a0<\/span><\/p>",
-            "startDate": moment(baseTime).subtract('days', 7).format('YYYY-MM-DD'),
-            "endDate": moment(baseTime).add('days', 7).format('YYYY-MM-DD'),
+            "startDate": "2016-09-30 11:30:00",
+            "endDate": "2016-10-02 12:30:00",
             "trailerLink": "https:\/\/www.youtube.com\/watch?v=NYJ8c81AQJw",
             "version": "1",
             "messages": [
@@ -55,8 +55,8 @@ describe('CMSService', () => {
             "id": 235,
             "title": "Business of Success",
             "description": "<p class=\"ng-scope\"><span id=\"docs-internal-guid-63f12df6-2cd6-144b-b591-c6bb136663ed\">Get business. Get success<\/span><\/p><p><span>\u00a0<\/span><\/p>",
-            "startDate": moment(baseTime).subtract('months', 1).format('YYYY-MM-DD'),
-            "endDate": moment(baseTime).subtract('days', 7).format('YYYY-MM-DD'),
+            "startDate": "2016-09-01 11:30:00",
+            "endDate": "2016-09-02 12:30:00",
             "trailerLink": "https:\/\/www.youtube.com\/watch?v=NYJ8c81AQJw",
             "version": "1",
             "messages": [
@@ -75,8 +75,8 @@ describe('CMSService', () => {
             "id": 234,
             "title": "Following Christ",
             "description": "<p class=\"ng-scope\"><span id=\"docs-internal-guid-63f12df6-2cd6-144b-b591-c6bb136663ed\">Ways to follow Christ in everyday life<\/span><\/p><p><span>\u00a0<\/span><\/p>",
-            "startDate": moment(baseTime).subtract('months', 3).format('YYYY-MM-DD'),
-            "endDate": moment(baseTime).subtract('months', 1).format('YYYY-MM-DD'),
+            "startDate": "2016-7-08 11:30:00",
+            "endDate": "2016-7-08 12:30:00",
             "trailerLink": "https:\/\/www.youtube.com\/watch?v=NYJ8c81AQJw",
             "version": "1",
             "messages": [
@@ -95,7 +95,7 @@ describe('CMSService', () => {
       }
 
       fixture.getCurrentSeries().then(response => {
-        expect(response.title).toBe('Business of Success')
+        expect(response.title).toBe('Together')
       });
       httpBackend.expectGET(`${endpoint}/series?endDate__GreaterThanOrEqual=${todaysDate}&endDate__sort=ASC`).respond(200, series);
       httpBackend.flush();
