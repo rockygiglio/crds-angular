@@ -27,8 +27,8 @@ describe('CMSService', () => {
             "id": 236,
             "title": "Together",
             "description": "<p class=\"ng-scope\"><span id=\"docs-internal-guid-63f12df6-2cd6-144b-b591-c6bb136663ed\">Spend more time together<\/span><\/p><p><span>\u00a0<\/span><\/p>",
-            "startDate": moment().subtract('days', 7).format('YYYY-MM-DD'),
-            "endDate": moment().add('days', 7).format('YYYY-MM-DD'),
+            "startDate": "2016-09-30 11:30:00",
+            "endDate": "2016-10-02 12:30:00",
             "trailerLink": "https:\/\/www.youtube.com\/watch?v=NYJ8c81AQJw",
             "version": "1",
             "messages": [
@@ -47,8 +47,8 @@ describe('CMSService', () => {
             "id": 235,
             "title": "Business of Success",
             "description": "<p class=\"ng-scope\"><span id=\"docs-internal-guid-63f12df6-2cd6-144b-b591-c6bb136663ed\">Get business. Get success<\/span><\/p><p><span>\u00a0<\/span><\/p>",
-            "startDate": moment().subtract('months', 1).format('YYYY-MM-DD'),
-            "endDate": moment().subtract('days', 7).format('YYYY-MM-DD'),
+            "startDate": "2016-09-01 11:30:00",
+            "endDate": "2016-09-02 12:30:00",
             "trailerLink": "https:\/\/www.youtube.com\/watch?v=NYJ8c81AQJw",
             "version": "1",
             "messages": [
@@ -67,8 +67,8 @@ describe('CMSService', () => {
             "id": 234,
             "title": "Following Christ",
             "description": "<p class=\"ng-scope\"><span id=\"docs-internal-guid-63f12df6-2cd6-144b-b591-c6bb136663ed\">Ways to follow Christ in everyday life<\/span><\/p><p><span>\u00a0<\/span><\/p>",
-            "startDate": moment().subtract('months', 3).format('YYYY-MM-DD'),
-            "endDate": moment().subtract('months', 1).format('YYYY-MM-DD'),
+            "startDate": "2016-7-08 11:30:00",
+            "endDate": "2016-7-08 12:30:00",
             "trailerLink": "https:\/\/www.youtube.com\/watch?v=NYJ8c81AQJw",
             "version": "1",
             "messages": [
@@ -92,7 +92,7 @@ describe('CMSService', () => {
       let todaysDate = moment(baseTime).format('YYYY-MM-DD');
 
       fixture.getCurrentSeries().then(response => {
-        //expect(response.title).toBe('Together')
+        expect(response.title).toBe('Together')
       });
       httpBackend.expectGET(`${endpoint}/series?endDate__GreaterThanOrEqual=${todaysDate}&endDate__sort=ASC`).respond(200, series);
       httpBackend.flush();
@@ -111,9 +111,6 @@ describe('CMSService', () => {
       httpBackend.flush();
       jasmine.clock().mockDate();
     })
-
-
-
 
     it('should use HTTP call to obtain nearest series', () => {
       let series = {"series":[{"id":318,"title":"Series A","description":"<p><span>asdf2</span></p>","startDate":"2016-08-30","endDate":"2016-08-31","trailerLink":null,"version":"5","messages":[{"id":3879,"title":"test1","description":"<p>test1</p>","date":"2016-09-14","version":"1","series":318,"tags":[{"id":33,"title":"all","series":[194,205,5],"messages":[3579,3578,3588,3640,3879],"created":"2015-09-23T11:52:06-04:00","className":"Tag"}],"created":"2016-09-14T17:03:48-04:00","className":"Message"},{"id":3881,"title":"test2","description":"<p>test2</p>","date":"2016-09-14","version":"1","series":318,"created":"2016-09-14T17:08:34-04:00","className":"Message"},{"id":3882,"title":"test3","description":"<p>test3</p>","date":"2016-12-14","version":"1","series":318,"created":"2016-09-14T17:22:50-04:00","className":"Message"}],"created":"2016-08-30T11:35:43-04:00","className":"Series"}]}
