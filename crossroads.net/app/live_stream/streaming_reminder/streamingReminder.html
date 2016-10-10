@@ -32,7 +32,7 @@
             <div dynamic-content="$root.MESSAGES.streamingReminderLabelTime.content | html"></div>
             <div data-toggle="buttons">
               <label class="btn btn-sm btn-time-select" ng-repeat="event in reminder.selectedDate(reminder.model.day)" ng-click="reminder.setTime(event)">
-                <input name="time" autocomplete="off" type="radio" ng-model="reminder.model.time"> {{event.start.format(reminder.dateFormats.time)}}
+                <input name="time" autocomplete="off" type="radio" ng-model="reminder.model.time"> {{event.formatToLocalTZ(event.start)}}
               </label>
             </div>
             <div class="alert alert-danger" ng-if="reminder.dateTimeError" dynamic-content="$root.MESSAGES.streamingLandingDateTimeError.content | html"></div>
