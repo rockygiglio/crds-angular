@@ -6,7 +6,7 @@ namespace MinistryPlatform.Translation.Models
     [MpRestApiTable(Name = "MpRecordID")]
     public class MpRecordID
     {
-        [JsonProperty(PropertyName = "Record_ID")]
+        [JsonProperty(PropertyName = "RecordID")]
         public int RecordId { get; set; }
 
     }
