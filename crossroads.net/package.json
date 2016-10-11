@@ -127,6 +127,8 @@
     "moment-timezone": "^0.5.4",
     "ng-cache-loader": "0.0.8",
     "ng-table": "^1.0.0",
+    "ng-tags-input": "^3.1.1",
+    "ng2-bs3-modal": "^0.7.0",
     "plangular-3": "^3.1.2",
     "ui-select": "^0.17.1",
     "video.js": "5.11.7",
