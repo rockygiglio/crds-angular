@@ -39,7 +39,7 @@
   }
 
   .label {
-    margin-left: 5px;
+    //margin-left: 5px;
   }
 
   &.serve-opp-listing-expired {
@@ -146,9 +146,13 @@
 }
 
 .serve-save {
-  border-top: 1px solid $panel-inner-border;
   text-align: right;
 }
+
+.serve-members {
+  border-top: 1px solid $panel-inner-border;
+}
+
 .serve-childcare {
   border-top: 1px solid $panel-inner-border;
   text-align: left;
