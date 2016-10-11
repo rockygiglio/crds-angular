@@ -1,4 +1,3 @@
-import StreamStatus from '../models/stream-status';
 import CONSTANTS from 'crds-constants';
 
 export default class StreamStatusService {

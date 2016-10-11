@@ -1,7 +1,10 @@
 let WOW = require('wow.js/dist/wow.min.js');
 
 export default class LandingController {
-  constructor(CMSService, $filter) {
+  constructor(CMSService, $filter, StreamStatusService) {
+
+    this.streamStatus = StreamStatusService.getStatus();
+    console.log(this.streamStatus);
 
     this.cmsService = CMSService;
     this.filter = $filter;

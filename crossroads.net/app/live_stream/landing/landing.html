@@ -1,6 +1,20 @@
 <div class="wrapper" id="wrapper">
   <countdown-header></countdown-header>
 
+  <!--TESTING----------------------------------->
+  <div ng-if = "landing.streamStatus == 'Off'" style = "background-color:RED;">
+    STREAM IS OFF
+  </div>
+
+  <div ng-if = "landing.streamStatus == 'Live'"  style = "background-color:GREEN;">
+    STREAM IS LIVE
+  </div>
+
+  <div ng-if = "landing.streamStatus == 'Upcoming'"  style = "background-color:YELLOW;">
+    STREAM IS UPCOMING
+  </div>
+  <!--TESTING----------------------------------->
+
   <section id="intro" class="intro imgix-fluid-bg crds-hero" data-src="//crds-cms-uploads.imgix.net/content/images/streaming--anywhere-hero.jpg?w=1&crop=faces&fit=crop">
     <div class="wow fadeInUp">
       <div dynamic-content="$root.MESSAGES.streamingLandingIntro.content | html"></div>
