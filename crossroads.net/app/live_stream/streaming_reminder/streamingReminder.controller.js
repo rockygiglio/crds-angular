@@ -2,10 +2,11 @@ import Reminder from '../models/reminder';
 
 
 export default class StreamingReminderController {
-  constructor($modalInstance, StreamspotService, ReminderService) {
+  constructor($modalInstance, StreamspotService, ReminderService, Session) {
     this.modalInstance = $modalInstance;
     this.streamspotService = StreamspotService;
     this.reminderService = ReminderService;
+    this.Session = Session;
 
     this.streamspotService.events.then((response) => {
       this.upcoming = response;
@@ -30,6 +31,13 @@ export default class StreamingReminderController {
       display: 'dddd, MMMM Do',
       time: 'h:mma z'
     };
+
+    // If the user is logged in, open the modal to the desired location
+    if (this.session.isActive()) {
+      this.setUserDefaults();
+      this.model.email = getUserEmail();
+      this.model.phone = getUserPhone();
+    } 
   }
 
   validate(form) {
@@ -98,6 +106,19 @@ export default class StreamingReminderController {
       .groupBy((event) => event.start.format(this.dateFormats.key))
       .value()
     ;
+  }
+
+  setUserDefaults() {
+    var userId = Session.exists('userId');
+    
+  }
+
+  setUserEmail() {
+
+  }
+
+  setUserPhone() {
+
   }
 
   selectedDate(date) {
