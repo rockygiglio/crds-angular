@@ -48,7 +48,7 @@ export default class Event {
     return userLocalTzStartTime;
   }
 
-  formatGeneralDateTimeToLocalDate(generalDateTime) {
+  static formatGeneralDateTimeToLocalDate(generalDateTime) {
     let startDateInUsTz = generalDateTime.tz('America/New_York').format();
     let userTz = moment.tz.guess();
     let dateFormat = 'MM/DD/YYYY';

@@ -60,7 +60,7 @@ describe('Live Stream Event', () => {
     it('formats date to short date style according to user timezone', () => {
       let formattedCurrentDate = moment().tz(moment.tz.guess()).format('MM/DD/YYYY');
 
-      expect(currentEvent.formatGeneralDateTimeToLocalDate(currentEvent.start)).toBe(formattedCurrentDate);
+      expect(Event.formatGeneralDateTimeToLocalDate(currentEvent.start)).toBe(formattedCurrentDate);
 
     })
 

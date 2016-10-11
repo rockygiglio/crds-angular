@@ -114,8 +114,7 @@ export default class StreamingReminderController {
     this.model.day = day;
     
     if (day) {
-      let event = new Event();
-      this.model.day = event.formatGeneralDateTimeToLocalDate(day.start);
+      this.model.day = Event.formatGeneralDateTimeToLocalDate(day.start);
     } else {
       this.model.time = '';
     }
