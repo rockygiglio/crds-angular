@@ -32,7 +32,7 @@ namespace MinistryPlatform.Translation.Repositories
             return campEvent;
         }
 
-        public List<MpMinorContact> CreateMinorContact(MpMinorContact minorContact)
+        public List<int> CreateMinorContact(MpMinorContact minorContact)
         {
             var storedProc = _configurationWrapper.GetConfigValue("CreateContactStoredProc");
             var apiToken = _apiUserRepository.GetToken();
@@ -48,9 +48,9 @@ namespace MinistryPlatform.Translation.Repositories
                 {"@HouseholdId", minorContact.HouseholdId },
                 {"@HouseholdPosition", minorContact.HouseholdPositionId }
              };
-             var result = _ministryPlatformRest.UsingAuthenticationToken(apiToken).GetFromStoredProc<MpMinorContact>(storedProc, fields);
-             var newMinorContact = result.FirstOrDefault() ?? new List<MpMinorContact>();
-             return newMinorContact;
+             var result = _ministryPlatformRest.UsingAuthenticationToken(apiToken).GetFromStoredProc<int>(storedProc, fields);
+             var newMinorContactId = result.FirstOrDefault() ?? new List<int>();
+             return newMinorContactId;
         }
 
         public Result<int> AddAsCampParticipant(int contactId, int eventId)
