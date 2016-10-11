@@ -55,7 +55,10 @@
                         redirectFlag = true;
                         return PageById.get({id: ContentPageService.page.linkTo}).$promise;
                       }
-                    }
+                    } else if (ContentPageService.page.pageType === "AngularRedirectPage") {
+                        $state.go(ContentPageService.page.angularRoute);
+                        return ;
+                    } 
 
                     return originalPromise;
                   }
