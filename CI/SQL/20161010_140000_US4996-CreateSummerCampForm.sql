@@ -13,16 +13,12 @@ BEGIN
 	--Create form fields
 	SET IDENTITY_INSERT dbo.Form_Fields ON
 	INSERT INTO dbo.Form_Fields(Form_Field_ID, Field_Order ,Field_Label ,Field_Type_ID ,Field_Values ,Required ,Form_ID ,Domain_ID ,Placement_Required) VALUES  (1501, 1 , N'Current Grade' , 1 , N'' , 1 , @FormId , 1 , 0)
-	INSERT INTO dbo.Form_Fields(Form_Field_ID, Field_Order ,Field_Label ,Field_Type_ID ,Field_Values ,Required ,Form_ID ,Domain_ID ,Placement_Required) VALUES  (1502, 2 , N'School Currently Attending' , 1 , N'' , 1 , @FormId , 1 , 0)
-	INSERT INTO dbo.Form_Fields(Form_Field_ID, Field_Order ,Field_Label ,Field_Type_ID ,Field_Values ,Required ,Form_ID ,Domain_ID ,Placement_Required) VALUES  (1503, 3 , N'Anticipated Grade During Camp' , 1 , N'' , 1 , @FormId , 1 , 0)
-	INSERT INTO dbo.Form_Fields(Form_Field_ID, Field_Order ,Field_Label ,Field_Type_ID ,Field_Values ,Required ,Form_ID ,Domain_ID ,Placement_Required) VALUES  (1504, 4 , N'School Attending Next School Year' , 1 , N'' , 1 , @FormId , 1 , 0)
-	INSERT INTO dbo.Form_Fields(Form_Field_ID, Field_Order ,Field_Label ,Field_Type_ID ,Field_Values ,Required ,Form_ID ,Domain_ID ,Placement_Required) VALUES  (1505, 5 , N'Preferred Roommate First and Last Name' , 1 , N'' , 1 , @FormId , 1 , 0)
+	INSERT INTO dbo.Form_Fields(Form_Field_ID, Field_Order ,Field_Label ,Field_Type_ID ,Field_Values ,Required ,Form_ID ,Domain_ID ,Placement_Required) VALUES  (1503, 2 , N'Anticipated Grade During Camp' , 1 , N'' , 1 , @FormId , 1 , 0)
+	INSERT INTO dbo.Form_Fields(Form_Field_ID, Field_Order ,Field_Label ,Field_Type_ID ,Field_Values ,Required ,Form_ID ,Domain_ID ,Placement_Required) VALUES  (1504, 3 , N'School Attending Next School Year' , 1 , N'' , 1 , @FormId , 1 , 0)
+	INSERT INTO dbo.Form_Fields(Form_Field_ID, Field_Order ,Field_Label ,Field_Type_ID ,Field_Values ,Required ,Form_ID ,Domain_ID ,Placement_Required) VALUES  (1505, 4 , N'Preferred Roommate First and Last Name' , 1 , N'' , 1 , @FormId , 1 , 0)
 	SET IDENTITY_INSERT dbo.Form_Fields OFF
 END
 
 GO
---SELECT * FROM  Forms WHERE Form_ID = 28
---SELECT * FROM  Form_Fields WHERE Form_ID = 28
 
---DELETE  Forms WHERE Form_ID = 28
---DELETE  Form_Fields WHERE Form_ID = 28
+
