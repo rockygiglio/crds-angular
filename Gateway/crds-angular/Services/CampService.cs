@@ -31,6 +31,7 @@ namespace crds_angular.Services
             foreach (var record in campEvent)
             {
                 campEventInfo.EventId = record.EventId;
+                campEventInfo.EventTitle = record.EventTitle;
                 campEventInfo.EventType = record.EventType;
                 campEventInfo.StartDate = record.StartDate;
                 campEventInfo.EndDate = record.EndDate;
