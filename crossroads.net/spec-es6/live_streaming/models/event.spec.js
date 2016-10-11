@@ -56,7 +56,7 @@ describe('Live Stream Event', () => {
     })
   })
 
-  fdescribe('formatting', () => {
+  describe('formatting', () => {
     it('formats date to short date style according to user timezone', () => {
       let formattedCurrentDate = moment().tz(moment.tz.guess()).format('MM/DD/YYYY');
 
