@@ -9,7 +9,9 @@ class CampService {
   getCampInfo(campId) {
     return this.campResource.get({ campId }, (campInfo) => {
       this.campInfo = campInfo;
-    }, (err) => {
+    },
+
+    (err) => {
       console.log(err);
     }).$promise;
   }
