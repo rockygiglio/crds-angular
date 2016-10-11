@@ -31,6 +31,7 @@ namespace crds_angular.Services
             foreach (var record in campEvent)
             {
                 campEventInfo.EventId = record.EventId;
+                campEventInfo.EventTitle = record.EventTitle;
                 campEventInfo.EventType = record.EventType;
                 campEventInfo.StartDate = record.StartDate;
                 campEventInfo.EndDate = record.EndDate;
@@ -58,13 +59,8 @@ namespace crds_angular.Services
                 HouseholdPositionId = 2
             };
 
-            var newMinorContact = _campService.CreateMinorContact(minorContact);
-            int contactId = 0;
-            foreach (var contact in newMinorContact)
-            {
-                contactId = contact.ContactId;
-            }
-              
+            var newMinorContactId = _campService.CreateMinorContact(minorContact);
+            int contactId = newMinorContactId[0]; 
             _campService.AddAsCampParticipant(contactId, eventId);
         }
     }

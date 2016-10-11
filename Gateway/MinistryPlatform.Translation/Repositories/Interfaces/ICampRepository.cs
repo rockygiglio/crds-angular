@@ -11,7 +11,7 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
     public interface ICampRepository
     {
         List<MpCampEvent> GetCampEventDetails(int eventId);
-        List<MpMinorContact> CreateMinorContact(MpMinorContact minorContact);
-        Result<MpEventParticipant> AddAsCampParticipant(int contactId, int eventId);
+        List<int> CreateMinorContact(MpMinorContact minorContact);
+        Result<int> AddAsCampParticipant(int contactId, int eventId);
     }
 }
