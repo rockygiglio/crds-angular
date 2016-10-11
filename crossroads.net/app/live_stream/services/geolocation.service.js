@@ -23,15 +23,15 @@ export default class GeolocationService {
 
   saveLocation(location) {
     this.answered    = true;
-    this.hasLocation = true;
-    // let deferred = this.q.defer();
-    let saved = localStorage.setItem('crds-geolocation', JSON.stringify(location));
+    localStorage.setItem('crds-geolocation', JSON.stringify(location));
 
-    // if (saved) {
-    //   deferred.resolve('done');
-    // }
-
-    // return deferred.promise;
+    dataLayer.push({
+      event:   'geolocation',
+      count:   location.count,
+      lat:     location.lat,
+      lng:     location.lng,
+      zipcode: location.zipcode
+    });
   }
 
   retrieveZipcode(location) {

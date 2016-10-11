@@ -86,7 +86,7 @@ export default class GeolocationController {
    * FORM FUNCTIONALITY
    ***********************/
   submit() {
-    // this.locationService.saveLocation(this.location);
+    this.locationService.saveLocation(this.location);
     this.success = true; 
     setTimeout(() => {
       this.dismiss = true;
