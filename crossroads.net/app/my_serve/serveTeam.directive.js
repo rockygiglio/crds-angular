@@ -86,13 +86,7 @@
       scope.togglePanel = togglePanel;
       scope.memberClick = memberClick;
       scope.memberRemove = memberRemove;
-
-      //
-      // !!!!!!
-      // TODO REMOVE TEST DATA FOR TEAM IMPLEMENTATION
-      //
-      scope.team.count = Math.floor(Math.random()*10);
-
+      
       //////////////////////////////////////
 
       function allowProfileEdit() {

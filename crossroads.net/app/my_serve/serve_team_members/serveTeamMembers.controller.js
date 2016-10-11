@@ -1,6 +1,7 @@
 export default class ServeTeamMembersController {
   constructor() {
     console.debug('Construct ServeTeamMembersController');
+    this.team = {};
     //
     // !!!!
     // TODO REMOVE TEMP TEAM DATA
@@ -23,6 +24,12 @@ export default class ServeTeamMembersController {
         members: [ { name: 'Jimmy McCarthy' }]
       },
     ];
+  }
+
+  $onInit()
+  {
+    debugger;
+    this.team;
   }
 
   memberClick(member) {
