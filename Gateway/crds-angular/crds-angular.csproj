@@ -371,6 +371,8 @@
     <Compile Include="Models\Json\PasswordReset.cs" />
     <Compile Include="Models\Json\ResetTokenStatus.cs" />
     <Compile Include="Models\MailChimp\BulkEmailSubscriberOptDTO.cs" />
+    <Compile Include="Models\MpRsvpYesMembers.cs" />
+    <Compile Include="Models\RsvpYesMembers.cs" />
     <Compile Include="Processors\SendTextMessageJob.cs" />
     <Compile Include="Services\AddressService.cs" />
     <Compile Include="Services\BulkEmailSyncService.cs" />

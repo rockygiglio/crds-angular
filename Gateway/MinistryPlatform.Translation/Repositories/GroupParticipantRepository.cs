@@ -79,16 +79,16 @@ namespace MinistryPlatform.Translation.Repositories
                 .ToList();
         }
 
-        public int getRSVPYesCountForOpportunities(List<int> opportunities)
+        public List<MpRsvpYesMember> GetRsvpYesMembers(int groupId, int eventId)
         {
-            string commaSeparated = string.Join(",", opportunities.Select(o => o.ToString()).ToArray());
+            const string COLUMNS = "Responses.opportunity_id,Responses.participant_id,Responses.event_id,opportunity_ID_Table.Opportunity_Title, opportunity_ID_Table.Group_Role_ID, Participant_ID_Table_Contact_ID_Table.NickName, Participant_ID_Table_Contact_ID_table.Last_Name";
+            string search = $"Responses.Response_result_id = 1 and Responses.Event_ID = {eventId} And Opportunity_ID_Table.Add_To_Group = {groupId}";
 
-            string searchString = $"Opportunity_ID in ({commaSeparated}) AND Response_Result_ID = 1";
-            List<string> columns = new List<string>();
-            columns.Add("Count(*) as RsvpYesCount");
-            var opportunityResponse = _ministryPlatformRest.UsingAuthenticationToken(_apiUserService.GetToken()).Search<MpResponse>(MpRestEncode(searchString), columns)[0];
-            
-            return opportunityResponse.RsvpYesCount.Value;
+            var opportunityResponse = _ministryPlatformRest.UsingAuthenticationToken(_apiUserService.GetToken()).Search<MpRsvpYesMember>(MpRestEncode(search), MpRestEncode(COLUMNS));
+
+            return opportunityResponse;
         }
+
+
     }
 }

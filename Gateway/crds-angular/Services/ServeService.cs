@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using AutoMapper;
 using crds_angular.Enum;
+using crds_angular.Models;
 using crds_angular.Models.Crossroads;
 using crds_angular.Models.Crossroads.Opportunity;
 using crds_angular.Models.Crossroads.Serve;
@@ -148,31 +149,6 @@ namespace crds_angular.Services
             return qualifiedServers;
         }
 
-        private List<ServingDay> SetRSVPYesCount(List<ServingDay> servingDays)
-        {
-
-            foreach (var day in servingDays)
-            {
-                foreach (var time in day.ServeTimes)
-                {
-                    foreach (var serveTeam in time.ServingTeams)
-                    {
-                        //Get distinct list of opportunities comma separated 
-                        var Opportunities = 
-                        (
-                            from member in serveTeam.Members
-                            from role in member.Roles
-                            select role.RoleId
-                        ).Distinct().ToList();
-
-                        serveTeam.RsvpYesCount = _groupParticipantService.getRSVPYesCountForOpportunities(Opportunities);
-
-                    }
-                }
-            }
-
-            return servingDays;
-        }
 
         public List<ServingDay> GetServingDays(string token, int contactId, long from, long to)
         {
@@ -242,11 +218,14 @@ namespace crds_angular.Services
                     servingDay.Date = record.EventStartDateTime;
                     servingDay.ServeTimes = new List<ServingTime> {NewServingTime(record)};
 
+                    var mpRsvpYesMembers = Mapper.Map<RsvpYesMembers>(_groupParticipantService.GetRsvpYesMembers(record.GroupId, record.EventId));
+
+                    servingDay.ServeTimes[0].ServingTeams[0].RsvpYesMembers.Add(mpRsvpYesMembers);
                     servingDays.Add(servingDay);
                 }
             }
 
-            return SetRSVPYesCount(servingDays);
+            return servingDays;
         }
 
         public Capacity OpportunityCapacity(int opportunityId, int eventId, int? minNeeded, int? maxNeeded)
