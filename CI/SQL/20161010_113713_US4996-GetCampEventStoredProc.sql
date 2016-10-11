@@ -20,8 +20,12 @@ BEGIN
 	-- interfering with SELECT statements.
 	SET NOCOUNT ON;
 
+	DECLARE @Event_Type_ID INT;
+
+	SET @Event_Type_ID = (SELECT Event_Type_ID FROM Event_Types WHERE Event_Type = 'Camp');
 	
 	SELECT e.Event_ID
+	       , e.Event_Title
 	       , e.Event_Type_ID
 		   , e.Event_Start_Date
 		   , e.Event_End_Date
@@ -31,7 +35,7 @@ BEGIN
 		   , e.Registration_End
 
     FROM Events e
-	WHERE e.Event_ID = @Event_ID 
+	WHERE e.Event_ID = @Event_ID AND e.Event_Type_ID = @Event_Type_ID
 
 END
 GO

@@ -14,7 +14,7 @@ using MinistryPlatform.Translation.Models;
 
 namespace crds_angular.Controllers.API
 {
-    class CampController: MPAuth
+    public class CampController: MPAuth
     {
         private readonly ICampService _campService;
         private readonly IEventService _eventService;
@@ -29,13 +29,13 @@ namespace crds_angular.Controllers.API
         [ResponseType(typeof (CampDTO))]
         [Route("api/camps/{eventid}")]
         [AcceptVerbs("GET")]
-        public IHttpActionResult GetCampEventDetails(int contactId, int eventId)
+        public IHttpActionResult GetCampEventDetails(int eventId)
         {
             return Authorized(token =>
             {
                 try
                 {
-                    var campEventInfo = _campService.GetCampEventDetails(contactId, eventId);
+                    var campEventInfo = _campService.GetCampEventDetails(eventId);
                     return Ok(campEventInfo);
                 }
                 catch (Exception exception)
@@ -48,7 +48,7 @@ namespace crds_angular.Controllers.API
 
         [Route("api/camps/{eventid}")]
         [AcceptVerbs("POST")]
-        public IHttpActionResult SaveCampReservation([FromBody] CampReservationDTO campReservation)
+        public IHttpActionResult SaveCampReservation([FromBody] CampReservationDTO campReservation, int eventId)
         {
             if (!ModelState.IsValid)
             {
@@ -61,7 +61,7 @@ namespace crds_angular.Controllers.API
             {
                 try
                 {
-                    _campService.SaveCampReservation(campReservation);
+                    _campService.SaveCampReservation(campReservation, eventId, token);
                     return Ok();
                 }
                

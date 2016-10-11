@@ -14,6 +14,9 @@ namespace MinistryPlatform.Translation.Models
         [JsonProperty(PropertyName = "Event_ID")]
         public int EventId { get; set; }
 
+        [JsonProperty(PropertyName = "Event_Title")]
+        public int EventTitle { get; set; }
+
         [JsonProperty(PropertyName = "Event_Start_Date")]
         public DateTime StartDate { get; set; }
 
