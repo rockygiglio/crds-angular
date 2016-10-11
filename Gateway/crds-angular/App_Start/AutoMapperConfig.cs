@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web.ClientServices.Providers;
 using AutoMapper;
+using crds_angular.Models;
 using crds_angular.Models.Crossroads;
 using crds_angular.Models.Crossroads.Attribute;
 using crds_angular.Models.Crossroads.Events;
@@ -298,6 +299,8 @@ namespace crds_angular.App_Start
             Mapper.CreateMap<MpInquiry, Inquiry>();
             Mapper.CreateMap<ObjectAttributeDTO, MpAttribute>();
             Mapper.CreateMap<MpAttribute, ObjectAttributeDTO>();
+            Mapper.CreateMap<RsvpYesMembers, MpRsvpYesMember>();
+            Mapper.CreateMap<MpRsvpYesMember, RsvpYesMembers>();
         }
     }
 }

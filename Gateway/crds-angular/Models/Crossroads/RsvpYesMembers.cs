@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
-namespace crds_angular.Models
+namespace crds_angular.Models.Crossroads
 {
     public class RsvpYesMembers
     {
@@ -17,7 +13,7 @@ namespace crds_angular.Models
         [JsonProperty(PropertyName = "Opportunity_ID")]
         public long Opportunity { get; set; }
 
-        [JsonProperty(PropertyName = "Group_Role_Id")]
+        [JsonProperty(PropertyName = "Group_Role_ID")]
         public int GroupRoleId { get; set; }
 
         [JsonProperty(PropertyName = "NickName")]

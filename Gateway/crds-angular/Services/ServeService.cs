@@ -101,17 +101,17 @@ namespace crds_angular.Services
             var contactRelationships =
                 _contactRelationshipService.GetMyImmediateFamilyRelationships(contactId, token).ToList();
             var family = contactRelationships.Select(contact => new FamilyMember
-            {
-                ContactId = contact.Contact_Id,
-                Email = contact.Email_Address,
-                LastName = contact.Last_Name,
-                LoggedInUser = false,
-                ParticipantId = contact.Participant_Id,
-                PreferredName = contact.Preferred_Name,
-                RelationshipId = contact.Relationship_Id,
-                Age = contact.Age,
-                HighSchoolGraduationYear = contact.HighSchoolGraduationYear
-            }).ToList();
+                                                     {
+                                                         ContactId = contact.Contact_Id,
+                                                         Email = contact.Email_Address,
+                                                         LastName = contact.Last_Name,
+                                                         LoggedInUser = false,
+                                                         ParticipantId = contact.Participant_Id,
+                                                         PreferredName = contact.Preferred_Name,
+                                                         RelationshipId = contact.Relationship_Id,
+                                                         Age = contact.Age,
+                                                         HighSchoolGraduationYear = contact.HighSchoolGraduationYear
+                                                     }).ToList();
 
             relationships.AddRange(family);
 
@@ -132,7 +132,7 @@ namespace crds_angular.Services
             foreach (var participant in immediateFamilyParticipants)
             {
                 var membership = _groupService.ParticipantQualifiedServerGroupMember(groupId, participant.ParticipantId);
-                
+
                 var opportunityResponse = _opportunityService.GetMyOpportunityResponses(participant.ContactId,
                                                                                         opportunityId);
                 var qualifiedServer = new QualifiedServerDto();
@@ -201,6 +201,10 @@ namespace crds_angular.Services
                         else
                         {
                             time.ServingTeams.Add(NewServingTeam(record));
+                            var rsvpYesMembers = Mapper.Map<List<RsvpYesMembers>>(_groupParticipantService.GetRsvpYesMembers(record.GroupId, record.EventId));
+                            var firstOrDefault = time.ServingTeams.FirstOrDefault(t => t.GroupId == record.GroupId);
+                            if (firstOrDefault != null)
+                                firstOrDefault.RsvpYesMembers = rsvpYesMembers;
                         }
                     }
                     else
@@ -218,9 +222,8 @@ namespace crds_angular.Services
                     servingDay.Date = record.EventStartDateTime;
                     servingDay.ServeTimes = new List<ServingTime> {NewServingTime(record)};
 
-                    var mpRsvpYesMembers = Mapper.Map<RsvpYesMembers>(_groupParticipantService.GetRsvpYesMembers(record.GroupId, record.EventId));
-
-                    servingDay.ServeTimes[0].ServingTeams[0].RsvpYesMembers.Add(mpRsvpYesMembers);
+                    var mpRsvpYesMembers = Mapper.Map<List<RsvpYesMembers>>(_groupParticipantService.GetRsvpYesMembers(record.GroupId, record.EventId));
+                    servingDay.ServeTimes[0].ServingTeams[0].RsvpYesMembers = mpRsvpYesMembers;
                     servingDays.Add(servingDay);
                 }
             }

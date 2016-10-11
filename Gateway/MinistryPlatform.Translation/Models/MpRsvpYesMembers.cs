@@ -16,8 +16,8 @@ namespace MinistryPlatform.Translation.Models
         [JsonProperty(PropertyName = "Opportunity_ID")]
         public long Opportunity { get; set; }
 
-        [JsonProperty(PropertyName = "Group_Role_Id")]
-        public int RoleId { get; set; }
+        [JsonProperty(PropertyName = "Group_Role_ID")]
+        public int GroupRoleId { get; set; }
 
         [JsonProperty(PropertyName = "NickName")]
         public string Name { get; set; }
