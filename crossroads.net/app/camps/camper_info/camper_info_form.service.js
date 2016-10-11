@@ -1,7 +1,9 @@
 /* ngInject */
 class CamperInfoForm {
-  constructor(LookupService) {
+  constructor(CampsService, LookupService) {
+    this.campsService = CampsService;
     this.lookupService = LookupService;
+
     this.formModel =  {
       firstName: null,
       lastName: null,
@@ -17,9 +19,10 @@ class CamperInfoForm {
     };
   }
 
-  save() {
+  save(campId) {
     console.log(this.formModel);
     // save the camper info fields and return a promise
+    return this.campsService.campResource.save({campId}, this.formModel).$promise;
   }
 
   getModel() {

@@ -1,19 +1,3 @@
-function getCampInfo(CampsService, $stateParams, $q) {
-  let id = $stateParams.campId;
-  let deferred = $q.defer();
-  let info = CampsService.getCampInfo(id);
-
-  info.$promise.then((cInfo) => {
-    CampsService.campInfo = cInfo;
-    deferred.resolve();
-  }, (err) => {
-    console.error(err)
-    deferred.reject();
-  });
-
-  return deferred.promise;
-}
-
 export default function CampRoutes($stateProvider) {
 
   $stateProvider
@@ -32,9 +16,12 @@ export default function CampRoutes($stateProvider) {
         loggedin: crds_utilities.checkLoggedin,
         campsService: 'CampsService',
         getCampInfo: getCampInfo,
-        $q: '$q',
-        $cookies: '$cookies',
         $stateParams: '$stateParams'
       }
   });
+}
+
+function getCampInfo(CampsService, $stateParams) {
+  let id = $stateParams.campId;
+  return CampsService.getCampInfo(id);
 }
