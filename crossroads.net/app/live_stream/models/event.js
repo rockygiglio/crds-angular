@@ -33,4 +33,27 @@ export default class Event {
   json() {
     return JSON.stringify(this);
   }
+
+  formatToLocalTZTime(eventStartTime) {
+    let reminderTimeFormat = 'h:mma z';
+    let userTimeZone = moment.tz.guess();
+    let userLocalTzStartTime = moment(eventStartTime).tz(userTimeZone).format(reminderTimeFormat);
+    return userLocalTzStartTime;
+  }
+
+  formatToLocalTZDate(eventStartTime) {
+    let reminderTimeFormat = 'dddd, MMMM Do';
+    let userTimeZone = moment.tz.guess();
+    let userLocalTzStartTime = moment(eventStartTime).tz(userTimeZone).format(reminderTimeFormat);
+    return userLocalTzStartTime;
+  }
+
+  static formatGeneralDateTimeToLocalDate(generalDateTime) {
+    let startDateInUsTz = generalDateTime.tz('America/New_York').format();
+    let userTz = moment.tz.guess();
+    let dateFormat = 'MM/DD/YYYY';
+    let startDateInLocalTz = moment(startDateInUsTz).tz(userTz).format(dateFormat);
+
+    return startDateInLocalTz;
+  }
 }

@@ -390,7 +390,7 @@
             }
           }
         })
-        .state('live', {
+        .state('live-ng2', {
           parent: 'screenWidth',
           url: '/live',
           template: '<streaming></streaming>',
@@ -401,7 +401,7 @@
             }
           }
         })
-        .state('livestream', {
+        .state('livestream-ng2', {
           parent: 'noHeaderOrFooter',
           url: '/live/stream',
           template: '<streaming-video></streaming-video>',
@@ -412,7 +412,7 @@
             }
           }
         })
-        .state('livestreamvjs', {
+        .state('livestreamvjs-ng2', {
           parent: 'noHeaderOrFooter',
           url: '/live/videojs',
           template: '<videojs-landing></videojs-landing>',
@@ -455,29 +455,6 @@
           parent: 'noSideBar',
           url: '/event-registration-desired',
           templateUrl: 'my_serve/event_registration_mockup_desired.html'
-        })
-        .state('serve-signup', {
-          parent: 'noSideBar',
-          url: '/serve-signup',
-          controller: 'MyServeController as serve',
-          templateUrl: 'my_serve/myserve.html',
-          data: {
-            isProtected: true,
-            meta: {
-              title: 'Signup to Serve',
-              description: ''
-            }
-          },
-          resolve: {
-            loggedin: crds_utilities.checkLoggedin,
-            ServeOpportunities: 'ServeOpportunities',
-            $cookies: '$cookies',
-            Groups: function(ServeOpportunities, $cookies) {
-              return ServeOpportunities.ServeDays.query({
-                id: $cookies.get('userId')
-              }).$promise;
-            }
-          }
         })
         .state('styleguide', {
           parent: 'noHeaderOrFooter',
