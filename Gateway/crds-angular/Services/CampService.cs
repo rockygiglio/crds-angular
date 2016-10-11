@@ -47,8 +47,9 @@ namespace crds_angular.Services
             return campEventInfo;
         }
 
-        public void SaveCampReservation(CampReservationDTO campReservation, int eventId)
+        public void SaveCampReservation(CampReservationDTO campReservation, int eventId, string token)
         {
+            var parentContact = _contactService.GetMyProfile(token);
             var minorContact = new MpMinorContact
             {
                 FirstName = campReservation.FirstName,
@@ -57,11 +58,19 @@ namespace crds_angular.Services
                 BirthDate = campReservation.BirthDate,
                 Gender = campReservation.Gender,
                 PreferredName = campReservation.PreferredName,
-                SchoolAttending = campReservation.SchoolAttending
+                SchoolAttending = campReservation.SchoolAttending,
+                HouseholdId = parentContact.Household_ID,
+                HouseholdPositionId = 2
             };
 
-            var contactId = _campService.CreateMinorContact(minorContact);    
-
+            var newMinorContact = _campService.CreateMinorContact(minorContact);
+            int contactId = 0;
+            foreach (var contact in newMinorContact)
+            {
+                contactId = contact.ContactId;
+            }
+              
+            _campService.AddAsCampParticipant(contactId, eventId);
         }
     }
 }

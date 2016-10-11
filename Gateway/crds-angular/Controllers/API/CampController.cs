@@ -61,7 +61,7 @@ namespace crds_angular.Controllers.API
             {
                 try
                 {
-                    _campService.SaveCampReservation(campReservation, eventId);
+                    _campService.SaveCampReservation(campReservation, eventId, token);
                     return Ok();
                 }
                

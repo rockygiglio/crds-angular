@@ -9,6 +9,9 @@ namespace MinistryPlatform.Translation.Models
 {
     public class MpMinorContact
     {
+        [JsonProperty(PropertyName = "Contact_ID")]
+        public int ContactId { get; set; }
+
         [JsonProperty(PropertyName = "First_Name")]
         public string FirstName { get; set; }
 
