@@ -1,4 +1,3 @@
-
 import constants from 'crds-constants';
 import StreamingReminderController from '../../../app/live_stream/streaming_reminder/streamingReminder.controller';
 import Reminder from '../../../app/live_stream/models/reminder';
@@ -18,7 +17,8 @@ describe('Streaming Reminder Controller', () => {
       httpBackend;
 
   const reminderEndpoint = `${__API_ENDPOINT__}`;
-
+  
+  let baseTime = new Date(2016, 9, 1); // set to 10/1/2016 - month appears to be 0 based index however
 
   modalInstance = {
     close: jasmine.createSpy('modalInstance.close'),
@@ -36,19 +36,21 @@ describe('Streaming Reminder Controller', () => {
     httpBackend = $injector.get('$httpBackend');
     fixture = new StreamingReminderController(modalInstance, StreamspotService, ReminderService);
 
+    jasmine.clock().mockDate(baseTime);
+
     current = {
-      "start": moment().tz(moment.tz.guess()).add(1, 'hour').format('YYYY-MM-DD H:mm:ss'),
-      "end": moment().tz(moment.tz.guess()).add(2, 'hour').format('YYYY-MM-DD H:mm:ss'),
+      "start": moment(baseTime).tz(moment.tz.guess()).add(1, 'hour').format('YYYY-MM-DD H:mm:ss'),
+      "end": moment(baseTime).tz(moment.tz.guess()).add(2, 'hour').format('YYYY-MM-DD H:mm:ss'),
       "title": "Current Month"
     },
     future = {
-      "start": moment().tz(moment.tz.guess()).add(1, 'month').format('YYYY-MM-DD H:mm:ss'),
-      "end": moment().tz(moment.tz.guess()).add(1, 'month').add(1, 'hour').format('YYYY-MM-DD H:mm:ss'),
+      "start": moment(baseTime).tz(moment.tz.guess()).add(1, 'month').format('YYYY-MM-DD H:mm:ss'),
+      "end": moment(baseTime).tz(moment.tz.guess()).add(1, 'month').add(1, 'hour').format('YYYY-MM-DD H:mm:ss'),
       "title": "Future Month"
     };
     futureDuplicate = {
-      "start": moment().tz(moment.tz.guess()).add(1, 'month').add(2, 'hour').format('YYYY-MM-DD H:mm:ss'),
-      "end": moment().tz(moment.tz.guess()).add(1, 'month').add(3, 'hour').format('YYYY-MM-DD H:mm:ss'),
+      "start": moment(baseTime).tz(moment.tz.guess()).add(1, 'month').add(2, 'hour').format('YYYY-MM-DD H:mm:ss'),
+      "end": moment(baseTime).tz(moment.tz.guess()).add(1, 'month').add(3, 'hour').format('YYYY-MM-DD H:mm:ss'),
       "title": "Future Duplicate Month"
     };
 
@@ -61,25 +63,29 @@ describe('Streaming Reminder Controller', () => {
     fixture.upcoming.push(futureDuplicateEvent);
   }));
 
+  afterEach(() => {
+    jasmine.clock().mockDate();
+  });
+
   it('should return next date', () => {
     expect(fixture.nextDate()).toBe(currentEvent.start.format('MM/DD/YYYY'));
   });
-  // it('should return unique dates', () => {
-  //   let uniqueDates = fixture.uniqueDates();
-  //   expect(uniqueDates instanceof Array).toBe(true);
-  //   expect(uniqueDates.length).toBe(2);
-  //   expect(uniqueDates[0].title).toBe('Current Month');
-  //   expect(uniqueDates[1].title).toBe('Future Month');
-  // });
-  // it('should group dates', () => {
-  //   let grouped = fixture.groupedDates(),
-  //       keys    = Object.keys(grouped);
+  it('should return unique dates', () => {
+    let uniqueDates = fixture.uniqueDates();
+    expect(uniqueDates instanceof Array).toBe(true);
+    expect(uniqueDates.length).toBe(2);
+    expect(uniqueDates[0].title).toBe('Current Month');
+    expect(uniqueDates[1].title).toBe('Future Month');
+  });
+  it('should group dates', () => {
+    let grouped = fixture.groupedDates(),
+        keys    = Object.keys(grouped);
 
-  //   expect(keys.length).toBe(2);
-  //   expect(keys).toContain(currentEvent.start.format('MM/DD/YYYY'));
-  //   expect(keys).toContain(futureEvent.start.format('MM/DD/YYYY'));
-  //   expect(keys).toContain(futureDuplicateEvent.start.format('MM/DD/YYYY'));
-  // });
+    expect(keys.length).toBe(2);
+    expect(keys).toContain(currentEvent.start.format('MM/DD/YYYY'));
+    expect(keys).toContain(futureEvent.start.format('MM/DD/YYYY'));
+    expect(keys).toContain(futureDuplicateEvent.start.format('MM/DD/YYYY'));
+  });
   it('should set day', () => {
     fixture.setDay(currentEvent);
     expect(fixture.model.day).toBe(currentEvent.start.format('MM/DD/YYYY'));

@@ -58,7 +58,7 @@
                     } else if (ContentPageService.page.pageType === "AngularRedirectPage") {
                         $state.go(ContentPageService.page.angularRoute);
                         return ;
-                    } 
+                    }
 
                     return originalPromise;
                   }

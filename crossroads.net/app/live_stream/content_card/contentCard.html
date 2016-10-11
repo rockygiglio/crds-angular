@@ -6,7 +6,7 @@
     </figcaption>
   </figure>
   <section>
-    <h3 ng-if="contentCard.content.subtitle">{{ contentCard.content.subtitle | truncate: 38 }}</h3>
+    <h3 ng-if="contentCard.content.subtitle" ng-bind-html="contentCard.content.subtitle | truncate: 38"></h3>
     <p>{{ contentCard.content.description | htmlToPlainText }}</p>
   </section>
 </article>
