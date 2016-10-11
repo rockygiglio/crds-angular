@@ -18,7 +18,7 @@ export default function CampRoutes($stateProvider) {
         getCampInfo: getCampInfo,
         $stateParams: '$stateParams'
       }
-  });
+    });
 }
 
 function getCampInfo(CampsService, $stateParams) {
