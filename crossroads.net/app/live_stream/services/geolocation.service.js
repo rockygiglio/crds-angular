@@ -1,22 +1,38 @@
 import Geolocation from '../models/geolocation';
 
 export default class GeolocationService {
-  constructor($http, $modal) {
-    this.http = $http;
+  constructor($http, $modal, $q, $rootScope) {
+    this.http  = $http;
     this.modal = $modal;
-    this.haveLocation = this.hasLocation();
+    this.q     = $q;
+    this.rootScope = $rootScope;
+
+    this.hasAnswered    = localStorage.getItem('crds-geolocation') !== null;
+    this.answered       = false;
+    this.modalDismissed = false;
   }
 
   showModal() {
-    return !this.haveLocation;
+    return !this.hasLocation();
   }
 
   showBanner() {
-    return this.haveLocation;
+    // dismissed the modal w/o answering
+    // OR you have previously answered
+    return (this.modalDismissed && this.answered === false) || (this.hasAnswered && this.showModal() === false);
   }
 
   saveLocation(location) {
-    localStorage.setItem('crds-geolocation', JSON.stringify(location));
+    this.answered    = true;
+    this.hasLocation = true;
+    // let deferred = this.q.defer();
+    let saved = localStorage.setItem('crds-geolocation', JSON.stringify(location));
+
+    // if (saved) {
+    //   deferred.resolve('done');
+    // }
+
+    // return deferred.promise;
   }
 
   hasLocation() {
@@ -32,17 +48,14 @@ export default class GeolocationService {
 
     return location;
   }
-  
-  open(options) {
-    if (this.showModal()) {
-      this.modal.open({
-        template: '<button aria-label="Close" class="close" ng-click="geolocation.close()" type="button"> <span aria-hidden="true">×</span> </button><geolocation><p>(This stuff helps us figure out how many fruitcakes to make come December)</p></geolocation>',
-        controller: 'GeolocationController',
-        controllerAs: 'geolocation',
-        openedClass: 'geolocation-modal',
-        backdrop: 'static',
-        size: 'lg'
-      });
-    }
+
+  success() {
+    this.rootScope.$broadcast('geolocationModalDismiss');
   }
+
+  dismissed() {
+    this.modalDismissed = true;
+    this.rootScope.$broadcast('geolocationModalDismiss')
+  }
+  
 }

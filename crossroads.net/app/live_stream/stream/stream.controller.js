@@ -2,11 +2,12 @@ let WOW = require('wow.js/dist/wow.min.js');
 
 export default class StreamingController {
   /*@ngInject*/
-  constructor(CMSService, StreamspotService, GeolocationService, $rootScope) {
-    this.cmsService        = CMSService;
-    this.streamspotService = StreamspotService;
+  constructor(CMSService, StreamspotService, GeolocationService, $rootScope, $modal) {
+    this.cmsService         = CMSService;
+    this.streamspotService  = StreamspotService;
     this.geolocationService = GeolocationService;
-    this.rootScope = $rootScope;
+    this.rootScope          = $rootScope;
+    this.modal              = $modal;
 
     this.inProgress     = false;
     this.numberOfPeople = 2;
@@ -35,7 +36,8 @@ export default class StreamingController {
     new WOW({
       mobile: false
     }).init();
-    this.open();
+
+    this.openGeolocationModal();
   }
 
   sortDigitalProgram(data) {
@@ -65,7 +67,20 @@ export default class StreamingController {
     })
   }
 
-  open() {
-    this.geolocationService.open();
+  showGeolocationBanner() {
+    return this.geolocationService.showBanner();
+  }
+
+  openGeolocationModal() {
+    if (this.geolocationService.showModal()) {
+      this.modalInstance = this.modal.open({
+        templateUrl: 'geolocation_modal/geolocationModal.html',
+        controller: 'GeolocationModalController',
+        controllerAs: 'geolocationModal',
+        openedClass: 'geolocation-modal',
+        backdrop: 'static',
+        size: 'lg'
+      });
+    }
   }
 }

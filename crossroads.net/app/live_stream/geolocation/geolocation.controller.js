@@ -1,4 +1,4 @@
-import geolocation from '../models/geolocation';
+import Geolocation from '../models/geolocation';
 
 export default class GeolocationController {
   constructor(GoogleMapsService, GeolocationService) {
@@ -9,23 +9,18 @@ export default class GeolocationController {
     this.subject = 'people';
     this.verb    = 'are';
 
-    this.isLocating = false;
-    
-    this.options = {
-      enableHighAccuracy: true,
-      timeout: 50000,
-      maximumAge: 0
-    }
-
+    this.isLocating    = false;
+    this.locationError = false;
     this.dismiss = false;
 
     this.location = this.locationService.getLocation() || Geolocation.blank();
+
   }
 
   add() {
     let count = this.location.count;
     count += 1;
-    this.setContent(count);
+    this.setCount(count);
   }
 
   subtract() {
@@ -34,10 +29,10 @@ export default class GeolocationController {
       count -= 1;
     }
 
-    this.setContent(count);
+    this.setCount(count);
   }
 
-  setContent(count) {
+  setCount(count) {
     this.location.count = count;
 
     if (this.count === 1) {
@@ -56,7 +51,12 @@ export default class GeolocationController {
     if (this.isLocating === false) {
       this.location.zipcode = '';
       this.isLocating = true;
-      navigator.geolocation.getCurrentPosition(this.getCoords.bind(this), this.coordError, this.options);
+      let options = {
+        enableHighAccuracy: true,
+        timeout: 50000,
+        maximumAge: 0
+      }
+      navigator.geolocation.getCurrentPosition(this.getCoords.bind(this), this.setLocationError.bind(this), options);
 
     }
   }
@@ -68,18 +68,34 @@ export default class GeolocationController {
     // set zip code
     this.mapsService.retrieveZipcode(this.location.lat, this.location.lng).then((result) => {
       this.isLocating = false;
-      this.zipcode = result;
+      this.location.zipcode = result;
+    }, (error) => {
+      this.setLocationError(error);
     })
   }
 
-  locationError(error) {
+  setLocationError(error) {
     console.error(error);
-    this.isLocating = false;
+    this.isLocating    = false;
+    this.locationError = true;
   }
 
+  /***********************
+   * FORM FUNCTIONALITY
+   ***********************/
   submit() {
-    this.locationService.saveLocation(this.location);
-    this.dismiss = true;
+    // this.locationService.saveLocation(this.location);
+    this.success = true;
+    // this.locationService.saveLocation(this.location).then((result) => {
+    //   this.success = true;
+    // });
   }
 
+  dismissed() {
+    this.locationService.dismissed();
+  }
+
+  error() {
+    return false;
+  }
 }

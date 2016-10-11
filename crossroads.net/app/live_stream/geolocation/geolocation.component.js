@@ -10,7 +10,10 @@ export default function GeolocationComponent() {
     controller: controller,
     controllerAs: 'geolocation',
     transclude: true,
-    bindToController: true
+    bindToController: true,
+    bindings: {
+      isModal: '<'
+    },
   }
 
   return geolocationComponent;

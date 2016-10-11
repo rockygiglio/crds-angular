@@ -21,6 +21,7 @@ import countdownHeader from './countdown_header';
 import currentSeries from './current_series';
 import currentSeriesModal from './current_series_modal';
 import geolocation from './geolocation';
+import geolocationModal from './geolocation_modal';
 import landing from './landing';
 import stream from './stream';
 import streamVideojs from './stream_videojs';
