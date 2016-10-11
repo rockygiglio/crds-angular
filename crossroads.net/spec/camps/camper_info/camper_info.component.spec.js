@@ -7,19 +7,33 @@ describe('Camper Info Component', () => {
   let $componentController,
       $httpBackend,
       camperInfo,
-      camperInfoForm;
+      camperInfoForm,
+      q,
+      stateParams,
+      rootScope;
 
   const endpoint = window.__env__['CRDS_API_ENDPOINT'] + 'api';
+  const eventId = 12323;
 
   beforeEach(angular.mock.module(constants.MODULES.CAMPS));
 
-  beforeEach(inject((_$componentController_, _$httpBackend_, _CamperInfoForm_) => {
+  beforeEach(inject((_$componentController_, _$httpBackend_, _CamperInfoForm_, _$q_, _$stateParams_, _$rootScope_) => {
     $componentController = _$componentController_;
     camperInfoForm = _CamperInfoForm_;
     $httpBackend = _$httpBackend_;
+    q = _$q_;
+    stateParams = _$stateParams_;
+    rootScope = _$rootScope_.$new();
+    rootScope.MESSAGES = {
+      successfullRegistration: {content: 'success'},
+      generalError: {content: 'error'}
+    };
 
     spyOn(camperInfoForm, 'getFields').and.callThrough();
     spyOn(camperInfoForm, 'getModel').and.callThrough();
+    spyOn(rootScope, '$emit').and.callThrough();
+
+    stateParams.campId = eventId;
 
     var bindings = {};
     camperInfo = $componentController('camperInfo', null, bindings);
@@ -41,7 +55,17 @@ describe('Camper Info Component', () => {
     expect(camperInfo.model).toBeDefined();
   });
 
-  it('should validate and submit the form to the service', () => {
+  it('should successfully save the form', () => {
+    camperInfo.infoForm = { $valid: true };
 
+    spyOn(camperInfoForm, 'save').and.callFake((data) => {
+      console.log('called faked with', data);
+      var deferred = q.defer();
+      deferred.resolve('success!');
+      return deferred.promise;
+    });
+    camperInfo.submit();
+    rootScope.$apply(); // must be called to resolve the promise
+    expect(camperInfoForm.save).toHaveBeenCalledWith(eventId);
   });
 });

@@ -2,13 +2,18 @@
 class CampService {
   constructor($resource) {
     this.resource = $resource;
-    this.camp = $resource(__API_ENDPOINT__ + 'api/camps/:eventId');
+    this.campResource = $resource(__API_ENDPOINT__ + 'api/camps/:campId');
     this.campInfo = {};
   }
 
-  getCampInfo(eventId) {
-    return this.camp.get({ eventId });
+  getCampInfo(campId) {
+    return this.campResource.get({ campId }, (campInfo) => {
+      this.campInfo = campInfo;
+    }, (err) => {
+      console.log(err);
+    }).$promise;
   }
+
 }
 
 export default CampService;

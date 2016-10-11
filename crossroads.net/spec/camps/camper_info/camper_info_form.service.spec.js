@@ -19,6 +19,11 @@ describe('Camper Info Form Service', () => {
     httpBackend = _$httpBackend_;
   }));
 
+  afterEach(() => {
+    httpBackend.verifyNoOutstandingExpectation();
+    httpBackend.verifyNoOutstandingRequest();
+  });
+
   it('should get an array of data', () => {
     var fields = camperInfoForm.getFields();
     expect(fields).toBeDefined();
@@ -26,7 +31,16 @@ describe('Camper Info Form Service', () => {
   });
 
   it('should save the form and return a promise', () => {
+    var campId = 12345;
+    // create some fake data from the form...
+    camperInfoForm.formModel.firstName = 'Matthew';
+    camperInfoForm.formModel.lastName = 'Silber';
+    camperInfoForm.formModel.middleName = 'M';
+    camperInfoForm.formModel.prefferedName = 'Matt';
 
+    httpBackend.expectPOST(`${endpoint}/camps/${campId}`, camperInfoForm.formModel).respond(200);
+    camperInfoForm.save(campId);
+    httpBackend.flush();
   });
 
   it('should setup the form model', () => {
