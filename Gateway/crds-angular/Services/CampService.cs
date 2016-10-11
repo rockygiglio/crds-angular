@@ -59,8 +59,8 @@ namespace crds_angular.Services
                 HouseholdPositionId = 2
             };
 
-            var newMinorContactId = _campService.CreateMinorContact(minorContact);
-            int contactId = newMinorContactId[0]; 
+            var newMinorContact = _campService.CreateMinorContact(minorContact);
+            int contactId = newMinorContact[0].RecordId;
             _campService.AddAsCampParticipant(contactId, eventId);
         }
     }

@@ -33,7 +33,7 @@ BEGIN
 					1
 				)	 
 			END
-	SELECT SCOPE_IDENTITY()
+	SELECT SCOPE_IDENTITY() AS Record_ID
 			
 END
 GO
