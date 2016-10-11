@@ -126,9 +126,8 @@ export default class StreamingReminderController {
 
 
   getInitialAnnouncementDate(){
-    var event = new Event();
-
-    var firstEventStartDate = this.uniqueDates()[0].start;
+    let event = new Event(),
+        firstEventStartDate = this.uniqueDates()[0].start;
 
     return event.formatGeneralDateTimeToLocalDate(firstEventStartDate);
   }
