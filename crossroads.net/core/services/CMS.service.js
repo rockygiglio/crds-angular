@@ -12,12 +12,12 @@
     vm.http = $http;
 
     vm.url = `${__CMS_ENDPOINT__}api`;
+
+    vm.todaysDate = moment().format('YYYY-MM-DD');
     
     vm.getCurrentSeries = function() {
 
-      let todaysDate = moment();
-
-      let currentSeriesAPIAddress = `${this.url}/series?endDate__GreaterThanOrEqual=${todaysDate.format('YYYY-MM-DD')}&endDate__sort=ASC`
+      let currentSeriesAPIAddress = `${this.url}/series?endDate__GreaterThanOrEqual=${vm.todaysDate}&endDate__sort=ASC`
       return vm.http.get(encodeURI(currentSeriesAPIAddress))
         .then((response) => {
           let currentSeries;
@@ -25,8 +25,7 @@
 
           allActiveSeries.some(series => {
             let seriesStart = moment(series.startDate, 'YYYY-MM-DD');
-            let seriesEnd   = moment(series.endDate, 'YYYY-MM-DD')
-            if ( seriesStart <= todaysDate && seriesEnd >= todaysDate) {
+            if (seriesStart.isBefore(vm.todaysDate) || seriesStart.isSame(vm.todaysDate)) {
               currentSeries = series;
               return true;
             }
@@ -43,15 +42,13 @@
     }
 
     vm.getNearestSeries = function() {
-      let todaysDate = moment().format('YYYY-MM-DD');
-      let nearestSeriesAPIAddress = `${this.url}/series?startDate__GreaterThanOrEqual=${todaysDate}&startDate__sort=ASC&__limit[]=1`
+      let nearestSeriesAPIAddress = `${this.url}/series?startDate__GreaterThanOrEqual=${vm.todaysDate}&startDate__sort=ASC&__limit[]=1`
       return vm.http.get(nearestSeriesAPIAddress)
               .then(rsp => { return _.first(rsp.data.series) });
     }
 
     vm.getLastSeries = function() {
-      let todaysDate = moment().format('YYYY-MM-DD');
-      let nearestSeriesAPIAddress = `${this.url}/series?endDate__LessThanOrEqual=${todaysDate}&endDate__sort=DESC&__limit[]=1`
+      let nearestSeriesAPIAddress = `${this.url}/series?endDate__LessThanOrEqual=${vm.todaysDate}&endDate__sort=DESC&__limit[]=1`
       return vm.http.get(nearestSeriesAPIAddress)
               .then(rsp => { return _.first(rsp.data.series) });
     }
@@ -62,8 +59,7 @@
     }
 
     vm.getRecentMessages = function(limit) {
-      let todaysDate = moment().format('YYYY-MM-DD');
-      return vm.http.get(`${this.url}/messages?date__LessThanOrEqual=${todaysDate}&date__sort=DESC&ID__sort=DESC&SeriesID__GreaterThan=0&__limit[]=${limit}`)
+      return vm.http.get(`${this.url}/messages?date__LessThanOrEqual=${vm.todaysDate}&date__sort=DESC&ID__sort=DESC&SeriesID__GreaterThan=0&__limit[]=${limit}`)
                       .then(rsp => {return rsp.data.messages});
     }
 
@@ -83,9 +79,9 @@
     }
 
     vm.dateSortMethod = function(a,b) {
-      if (moment(a.startDate, 'YYYY-MM-DD') < moment(b.startDate, 'YYYY-MM-DD'))
+      if (moment(a.startDate, 'YYYY-MM-DD').isBefore( moment(b.startDate, 'YYYY-MM-DD')) )
         return -1;
-      if (moment(a.startDate, 'YYYY-MM-DD') > moment(b.startDate, 'YYYY-MM-DD'))
+      if (moment(a.startDate, 'YYYY-MM-DD').isAfter( moment(b.startDate, 'YYYY-MM-DD')) )
         return 1;
       return 0;
     }

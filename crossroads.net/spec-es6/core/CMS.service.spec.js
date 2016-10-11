@@ -15,7 +15,7 @@ describe('CMSService', () => {
     http        = $injector.get('$http');
     httpBackend = $injector.get('$httpBackend');
     fixture = new CMSService(http);
-
+    fixture.todaysDate = todaysDate;
     jasmine.clock().mockDate(baseTime);
     
   }))
