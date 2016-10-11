@@ -1,20 +1,19 @@
 import Geolocation from '../models/geolocation';
+import CONSTANTS from '../../constants';
 
 export default class GeolocationController {
-  constructor(GoogleMapsService, GeolocationService) {
-    this.mapsService     = GoogleMapsService;
+  constructor(GeolocationService) {
     this.locationService = GeolocationService;
     
     this.count   = 0;
     this.subject = 'people';
     this.verb    = 'are';
 
-    this.isLocating    = false;
-    this.locationError = false;
-    this.dismiss = false;
+    this.isLocating     = false;
+    this.locationError  = false;
+    this.dismiss        = false;
 
     this.location = this.locationService.getLocation() || Geolocation.blank();
-
   }
 
   add() {
@@ -32,10 +31,14 @@ export default class GeolocationController {
     this.setCount(count);
   }
 
+  submitEnabled() {
+    return this.location.count > 0 || this.location.zipcode !== '';
+  }
+
   setCount(count) {
     this.location.count = count;
 
-    if (this.count === 1) {
+    if (this.location.count === 1) {
       this.subject = 'person';
       this.verb    = 'is'
     } else {
@@ -66,7 +69,7 @@ export default class GeolocationController {
     this.location.lng = position.coords.longitude;
 
     // set zip code
-    this.mapsService.retrieveZipcode(this.location.lat, this.location.lng).then((result) => {
+    this.locationService.retrieveZipcode(this.location.lat, this.location.lng).then((result) => {
       this.isLocating = false;
       this.location.zipcode = result;
     }, (error) => {
@@ -75,7 +78,6 @@ export default class GeolocationController {
   }
 
   setLocationError(error) {
-    console.error(error);
     this.isLocating    = false;
     this.locationError = true;
   }
@@ -85,17 +87,14 @@ export default class GeolocationController {
    ***********************/
   submit() {
     // this.locationService.saveLocation(this.location);
-    this.success = true;
-    // this.locationService.saveLocation(this.location).then((result) => {
-    //   this.success = true;
-    // });
+    this.success = true; 
+    setTimeout(() => {
+      this.dismiss = true;
+      this.locationService.success();
+    }, CONSTANTS.GEOLOCATION.MODAL_TIMEOUT);
   }
 
   dismissed() {
     this.locationService.dismissed();
-  }
-
-  error() {
-    return false;
   }
 }

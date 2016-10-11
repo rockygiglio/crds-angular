@@ -1,11 +1,10 @@
 import Geolocation from '../models/geolocation';
 
 export default class GeolocationService {
-  constructor($http, $modal, $q, $rootScope) {
-    this.http  = $http;
-    this.modal = $modal;
-    this.q     = $q;
-    this.rootScope = $rootScope;
+  constructor($q, $rootScope, GoogleMapsService) {
+    this.q          = $q;
+    this.rootScope  = $rootScope;
+    this.mapService = GoogleMapsService;
 
     this.hasAnswered    = localStorage.getItem('crds-geolocation') !== null;
     this.answered       = false;
@@ -33,6 +32,19 @@ export default class GeolocationService {
     // }
 
     // return deferred.promise;
+  }
+
+  retrieveZipcode(location) {
+    let deferred = this.q.defer();
+
+    this.mapService.retrieveZipcode(location.lat, location.lng).then((result) => {
+      location.zipcode = result;
+      deferred.resolve(location);
+    }, (error) => {
+      deferred.reject(error);
+    });
+
+    return deferred.promise;
   }
 
   hasLocation() {

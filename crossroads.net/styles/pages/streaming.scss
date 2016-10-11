@@ -1105,6 +1105,16 @@ modal.watch-now {
   }
 } // .current-series-trailer
 
+geolocation {
+  .warn {
+    p {
+      font-size: 60%;
+      color:#ea5151;
+      padding-top: 7vh;
+    }
+  }
+}
+
 .geolocation-modal {
   @media (min-width: $screen-sm) {
     geolocation > .container {
@@ -1117,6 +1127,7 @@ modal.watch-now {
       color: #96B4D4;
     }
   }
+  
   footer {
     margin-top: 3.25em;
     font-size: 51.5%;

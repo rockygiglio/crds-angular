@@ -2,7 +2,7 @@
 export default class GeolocationModalController {
   constructor($modalInstance, GeolocationService, $rootScope) {
     this.modalInstance      = $modalInstance;
-    this.geolocationService = GeolocationService;
+    this.locationService = GeolocationService;
 
     this.rootScope = $rootScope;
 
@@ -12,6 +12,7 @@ export default class GeolocationModalController {
   }
 
   close() {
+    this.locationService.modalDismissed = true;
     this.modalInstance.close();
   }
 

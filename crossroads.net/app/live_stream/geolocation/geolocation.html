@@ -14,7 +14,7 @@
         </button>
       </div>
       <strong>{{ geolocation.location.count }} {{ geolocation.subject }}</strong> <span>{{ geolocation.verb }} watching from</span> <input type="text" placeholder="zip code" ng-model="geolocation.location.zipcode">
-      <button class="btn btn-primary btn-geolocate" ng-if="!geolocation.isLocating" ng-click="geolocation.requestLocation()">
+      <button class="btn btn-primary btn-geolocate" ng-if="!geolocation.isLocating" ng-disabled="geolocation.locationError" ng-click="geolocation.requestLocation()">
         <svg viewBox="0 0 32 32" class="icon crosshairs" >
           <use xlink:href="#crosshairs"></use>
         </svg>
@@ -29,12 +29,11 @@
 
     <div class="messages">
       <div class="success" dynamic-content="$root.MESSAGES.geolocationSuccessMessage.content | html" ng-show="geolocation.success"></div>
-      <div class="error" dynamic-content="$root.MESSAGES.geolocationErrorMessage.content | html" ng-show="geolocation.error()"></div>
       <div class="warn" dynamic-content="$root.MESSAGES.geolocationLocationNotFound.content | html" ng-show="geolocation.locationError" ></div>
     </div>
 
     <footer ng-hide="geolocation.success">
-      <a ng-click="geolocation.submit()" class="btn btn-standard-dark">Submit Roll Call</a><br>
+      <a ng-disabled="!geolocation.submitEnabled()" ng-click="geolocation.submit()" class="btn btn-standard-dark">Submit Roll Call</a><br>
       <a href="#" class="btn btn-link" ng-click="geolocation.dismissed()" ng-show="geolocation.isModal">Dismiss</a>
     </footer>
 

@@ -118,6 +118,9 @@
         APPRENTICE: 66
       },
     },
+    GEOLOCATION: {
+      MODAL_TIMEOUT: 10000
+    },
     INVITATION: {
       TYPES: {
         GROUP: 1,

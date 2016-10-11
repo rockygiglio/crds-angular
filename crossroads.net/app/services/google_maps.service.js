@@ -36,7 +36,6 @@ export default class GoogleMapsService {
         lng: lng
       }
     }, (response, status) => {
-      // this.log.log(response)
       deferred.resolve(response);
     });
 
@@ -47,9 +46,7 @@ export default class GoogleMapsService {
     let deferred = this.q.defer();
 
     if (typeof google === 'undefined' || !google || !google.maps) {
-      let err = 'Google Maps API has not been loaded by init() method';
-      this.log.error(err);
-      deferred.reject(err);
+      deferred.reject('Google Maps API has not been loaded by init() method');
     }
 
     let geocoder = new google.maps.Geocoder;
@@ -60,25 +57,32 @@ export default class GoogleMapsService {
         lng: lng
       }
     }, (response, status) => {
-      // this.log.log(response)
-      if (response.length) {
-        let zipcodes = [];
-        _.each(response, (location) => {
-          _.each(location.address_components, (address) => {
-            if (_.findIndex(address.types, (t) => { return t === 'postal_code'}) >= 0) {
-              zipcodes.push(address.long_name);
-            } 
+      if (status === 'OK') {
+        if (response.length) {
+          let zipcodes = [],
+              country  = '';
+          _.each(response, (location) => {
+            _.each(location.address_components, (address) => {
+              if (_.findIndex(address.types, (t) => { return t === 'country'}) >= 0) {
+                country = address.long_name;  
+              } 
+              if (_.findIndex(address.types, (t) => { return t === 'postal_code'}) >= 0) {
+                zipcodes.push(address.long_name);
+              } 
+            })
           })
-        })
 
-        // find the duplicate values from the zipcode array as its the most accurate
-        let result = _.first(_.transform(_.countBy(zipcodes), (result, count, value) => {
-                      if (count > 1) result.push(value);
-                     }, []));
+          // find the duplicate values from the zipcode array as its the most accurate
+          let result = _.first(_.transform(_.countBy(zipcodes), (result, count, value) => {
+                        if (count > 1) result.push(value);
+                      }, []));
 
-        deferred.resolve(result);
+          deferred.resolve(result);
+        } else {
+          deferred.reject('No Results')
+        }
       } else {
-        deferred.reject('No Results')
+        deferred.reject(`API Error: ${status}`);
       }
     });
 
