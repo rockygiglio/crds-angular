@@ -126,8 +126,11 @@ export default class StreamingReminderController {
 
 
   resetForm() {
+
+    let firstEventStartDate = this.uniqueDates()[0].start;
+
     this.model = new Reminder();
-    this.model.day = this.nextDate();
+    this.model.day =  Event.formatGeneralDateTimeToLocalDate(firstEventStartDate);
 
     this.formError     = false;
     this.dateTimeError = false;
