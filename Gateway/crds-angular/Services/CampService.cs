@@ -14,14 +14,16 @@ namespace crds_angular.Services
     {
         private readonly IContactRepository _contactService;
         private readonly ICampRepository _campService;
-        
+        private readonly IParticipantRepository _participantServive;
 
         public CampService(
             IContactRepository contactService,
-            ICampRepository campService)
+            ICampRepository campService,
+            IParticipantRepository participantService)
         {
             _contactService = contactService;
             _campService = campService;
+            _participantServive = participantService;
         }
 
         public CampDTO GetCampEventDetails(int eventId)
@@ -59,8 +61,9 @@ namespace crds_angular.Services
                 HouseholdPositionId = 2
             };
 
-            var newMinorContactId = _campService.CreateMinorContact(minorContact);
-            int contactId = newMinorContactId[0]; 
+            var newMinorContact = _campService.CreateMinorContact(minorContact);
+            int contactId = newMinorContact[0].RecordId;
+            _participantServive.CreateParticipantRecord(contactId);
             _campService.AddAsCampParticipant(contactId, eventId);
         }
     }

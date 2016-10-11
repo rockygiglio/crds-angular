@@ -21,7 +21,9 @@ CREATE PROCEDURE [dbo].[api_crds_CreateContact]
 	@SchoolAttending VARCHAR(100)
 AS
 BEGIN
+    DECLARE @RecordID INT
     INSERT INTO [dbo].[Contacts] (
+	                [Company],
 	                [Display_Name],
 					[First_Name],
 					[Middle_Name],
@@ -34,6 +36,7 @@ BEGIN
 					[Domain_ID]
 
 				) VALUES (
+				    0,
 					@PreferredName,
 					@FirstName,
 					@MiddleName,
@@ -45,7 +48,8 @@ BEGIN
 					@SchoolAttending,
 					1)
 
-	SELECT SCOPE_IDENTITY()
+	SELECT @RecordID = @@IDENTITY
+	SELECT @RecordID AS RecordID
 END
 GO
 
