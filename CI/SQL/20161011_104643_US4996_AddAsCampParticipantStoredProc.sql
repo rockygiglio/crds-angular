@@ -14,6 +14,7 @@ CREATE PROCEDURE [dbo].[api_crds_Add_As_CampParticipant]
 AS
 BEGIN
     DECLARE @ParticipantID INT;
+	DECLARE @RecordID INT;
     SELECT @ParticipantID = Participant_Record FROM Contacts WHERE Contact_ID = @ContactID;
 
 	IF NOT EXISTS ( SELECT 1 FROM [dbo].[Event_Participants] 
@@ -33,7 +34,8 @@ BEGIN
 					1
 				)	 
 			END
-	SELECT SCOPE_IDENTITY() AS Record_ID
+	SELECT @RecordID = @@IDENTITY
+	SELECT @RecordID AS RecordID
 			
 END
 GO
