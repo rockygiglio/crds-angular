@@ -5,6 +5,9 @@ logs
 # tgz files
 *.tgz
 
+# swap files from vim
+*.swp
+
 # Runtime data
 pids
 *.pid
