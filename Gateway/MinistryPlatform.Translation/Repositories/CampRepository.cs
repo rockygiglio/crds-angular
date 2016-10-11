@@ -53,7 +53,7 @@ namespace MinistryPlatform.Translation.Repositories
              return newMinorContact;
         }
 
-        public Result<MpEventParticipant> AddAsCampParticipant(int contactId, int eventId)
+        public Result<int> AddAsCampParticipant(int contactId, int eventId)
         {
             var apiToken = _apiUserRepository.GetToken();
             var storedProc = _configurationWrapper.GetConfigValue("CampParticipantStoredProc");
@@ -61,16 +61,16 @@ namespace MinistryPlatform.Translation.Repositories
             {
                 var fields = new Dictionary<string, object>
                 {
-                    {"@EventId", eventId},
+                    {"@EventID", eventId},
                     {"@ContactID", contactId}
                 };
-                var result = _ministryPlatformRest.UsingAuthenticationToken(apiToken).GetFromStoredProc<MpEventParticipant>(storedProc, fields);
+                var result = _ministryPlatformRest.UsingAuthenticationToken(apiToken).GetFromStoredProc<int>(storedProc, fields);
                 if (result.Count > 0 && result[0].Count > 0)
                 {
-                    return new Result<MpEventParticipant>(true, result[0].FirstOrDefault());
+                    return new Result<int>(true, result[0].FirstOrDefault());
                 }
                 _logger.Debug($"Adding a camp particpant returned no results. The camp is already full.");
-                return new Result<MpEventParticipant>(false, "Camp is already full");
+                return new Result<int>(false, "Camp is already full");
             }
             catch (Exception e)
             {
