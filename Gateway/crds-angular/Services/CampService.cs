@@ -14,19 +14,14 @@ namespace crds_angular.Services
     {
         private readonly IContactRepository _contactService;
         private readonly ICampRepository _campService;
-        private readonly IEventRepository _eventService;
-        private readonly IEventService _crdsEventService;
+        
 
         public CampService(
             IContactRepository contactService,
-            ICampRepository campService,
-            IEventRepository eventService,
-            IEventService crdsEventService)
+            ICampRepository campService)
         {
             _contactService = contactService;
             _campService = campService;
-            _eventService = eventService;
-            _crdsEventService = crdsEventService;
         }
 
         public CampDTO GetCampEventDetails(int eventId)
