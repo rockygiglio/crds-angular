@@ -128,5 +128,10 @@
     MINISTRY: {
       SPIRITUAL_GROWTH: '8'
     },
+    STREAM_STATUS: {
+      LIVE: 'Live',
+      UPCOMING: 'Upcoming',
+      OFF: 'Off'
+    }
   };
 })();

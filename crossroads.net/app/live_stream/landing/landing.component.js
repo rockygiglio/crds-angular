@@ -10,7 +10,8 @@ export default function LandingComponent() {
     controller: controller,
     controllerAs: 'landing',
     bindToController: true
-  }
+  };
 
   return landingComponent;
+
 }
