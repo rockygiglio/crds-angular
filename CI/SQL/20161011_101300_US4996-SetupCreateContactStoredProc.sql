@@ -1,13 +1,14 @@
 USE MinistryPlatform
 GO
 
-DECLARE @APIId INT = 341
+
+DECLARE @APIId INT = 343
 DECLARE @RoleId INT = 62
 
 IF NOT EXISTS(SELECT * FROM dp_API_Procedures WHERE API_Procedure_ID = @APIId)
 BEGIN
 SET IDENTITY_INSERT dbo.dp_API_Procedures ON
-INSERT INTO dbo.dp_API_Procedures(API_Procedure_ID,Procedure_Name,Description) VALUES(@APIId,'api_crds_GetCampEvent','Get Event information for Camp')
+INSERT INTO dbo.dp_API_Procedures(API_Procedure_ID,Procedure_Name,Description) VALUES(@APIId,'api_crds_Create_Contact','Create a Contact')
 SET IDENTITY_INSERT dbo.dp_API_Procedures OFF
 
 
@@ -22,4 +23,3 @@ VALUES  ( @RoleId , -- Role_ID - int
         )
 END
 GO
-
