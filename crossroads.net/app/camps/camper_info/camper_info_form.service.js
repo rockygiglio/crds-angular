@@ -21,7 +21,6 @@ class CamperInfoForm {
 
   save(campId) {
     console.log(this.formModel);
-    // save the camper info fields and return a promise
     return this.campsService.campResource.save({campId}, this.formModel).$promise;
   }
 
@@ -103,7 +102,7 @@ class CamperInfoForm {
               labelProp: 'dp_RecordName',
               options: []
             },
-            controller: /* @ngInject */ function ($scope, LookupService) {
+            controller: /* @ngInject */ ($scope, LookupService) => {
               $scope.to.loading = LookupService.Genders.query().$promise.then((response) => {
                 $scope.to.options = response;
                 return response;
@@ -176,10 +175,9 @@ class CamperInfoForm {
               labelProp: 'dp_RecordName',
               options: []
             },
-            controller: /* @ngInject */ function ($scope, LookupService) {
-              $scope.to.loading = LookupService.Sites.query().$promise.then(function (response) {
+            controller: /* @ngInject */ ($scope, LookupService) => {
+              $scope.to.loading = LookupService.Sites.query().$promise.then((response) => {
                 $scope.to.options = response;
-                //CampService.sites = response;
                 return response;
               });
             }

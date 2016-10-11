@@ -16,13 +16,14 @@ class CamperInfoController {
   }
 
   submit() {
-    if(this.infoForm.$valid) {
+    if (this.infoForm.$valid) {
       console.log('submitting app');
-      //save the form
       this.camperInfoForm.save(this.stateParams.campId).then((data) => {
         console.log('successfully saved camperinfo', data);
         this.rootScope.$emit('notify', this.rootScope.MESSAGES.successfullRegistration);
-      }, (err) => {
+      },
+
+      (err) => {
         console.log('unable to save camperinfo', err);
         this.rootScope.$emit('notify', this.rootScope.MESSAGES.generalError);
       });

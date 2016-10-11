@@ -1,6 +1,6 @@
 /* @ngInject */
 class CampController {
-  constructor(CampsService){
+  constructor(CampsService) {
     this.viewReady = false;
     this.campsService = CampsService;
   }
