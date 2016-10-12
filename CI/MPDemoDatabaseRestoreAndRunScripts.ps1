@@ -14,7 +14,7 @@
 
 $SQLChanges = @(Get-Content $changeLogFile | Where-Object {$_.StartsWith("CI/SQL")}).Count
 
-if($SQLChanges -eq 0 && $RunIfNoScriptChanges -eq $FALSE)
+if(($SQLChanges -eq 0) -and ($RunIfNoScriptChanges -eq $FALSE))
 {
     echo "No database changes found. Skipping backup, restore, and running scripts"
     exit 0	
