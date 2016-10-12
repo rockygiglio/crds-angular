@@ -51,8 +51,6 @@ export default class LandingController {
       return event;
     });
 
-    console.log(queriedPastWeekends);
-
     return queriedPastWeekends.slice(0,maxPastWeekends);
   }
 }
