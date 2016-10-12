@@ -66,13 +66,14 @@ namespace MinistryPlatform.Translation.Repositories
             //Finish out search string and call the rest backend
             var groupServingParticipants = _ministryPlatformRest.UsingAuthenticationToken(_apiUserService.GetToken()).Search<MpGroupServingParticipant>(MpRestEncode(searchFilter));
 
-            groupServingParticipants.ForEach(p => p.RowNumber = groupServingParticipants.IndexOf(p) + 1);
-            groupServingParticipants.Where(p => p.ContactId == loggedInContactId).All(c => c.LoggedInUser = true);
-
-            foreach (var mpGroupServingParticipant in groupServingParticipants.Where(p => p.DeadlinePassedMessage == null))
-            {
-                mpGroupServingParticipant.DeadlinePassedMessage = defaultDeadlinePassedMessage;
-            }
+            groupServingParticipants.ForEach(p =>
+                                             {
+                                                 p.RowNumber = groupServingParticipants.IndexOf(p) + 1;
+                                                 if (p.ContactId == loggedInContactId)
+                                                     p.LoggedInUser = true;
+                                                 if (p.DeadlinePassedMessage == null)
+                                                     p.DeadlinePassedMessage = defaultDeadlinePassedMessage;
+                                             });
 
             return groupServingParticipants.OrderBy(g => g.EventStartDateTime)
                 .ThenBy(g => g.GroupName)

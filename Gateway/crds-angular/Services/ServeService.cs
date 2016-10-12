@@ -229,7 +229,6 @@ namespace crds_angular.Services
                     servingDay.Date = record.EventStartDateTime;
                     servingDay.ServeTimes = new List<ServingTime> {NewServingTime(record)};
 
-                   // servingDay.ServeTimes[0].ServingTeams[0].
                     var opportunities = Mapper.Map<List<ServeOpportunity>>(_groupParticipantService.GetListOfOpportunitiesByEventAndGroup(record.GroupId, record.EventId));           
                     var mpRsvpMembers = Mapper.Map<List<RsvpMembers>>(_groupParticipantService.GetRsvpMembers(record.GroupId, record.EventId));
 
