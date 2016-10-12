@@ -2,7 +2,7 @@ import constants from 'crds-constants';
 
 /* jshint unused: false */
 import campsModule from '../../app/camps/camps.module';
-import campHelpers from '../campHelpers';
+import campHelpers from './campHelpers';
 
 describe('Camp Component', () => {
 
@@ -20,9 +20,8 @@ describe('Camp Component', () => {
     $componentController = _$componentController_;
     campsService = _CampsService_;
     httpBackend = _$httpBackend_;
-    httpBackend.whenGET(`${endpoint}/lookup/sites`).respond(200, {});
     var bindings = {};
-    campsService.campInfo = campHelpers.campInfo;
+    campsService.campInfo = campHelpers().campInfo;
     campController = $componentController('crossroadsCamp', null, bindings);
     campController.$onInit();
   }));
@@ -32,6 +31,6 @@ describe('Camp Component', () => {
   });
 
   it('should set the title correctly', () => {
-    expect(campController.campTitle).toBe(campHelpers.campInfo.eventTitle);
+    expect(campController.campTitle).toBe(campHelpers().campInfo.eventTitle);
   });
 });
