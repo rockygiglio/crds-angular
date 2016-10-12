@@ -1,13 +1,15 @@
 require('../../app/app');
+var CONSTANTS = require('crds-constants');
 
 describe('Filter State Service', function() {
 
   var $rootScope, scope, filterState;
 
   beforeEach(angular.mock.module('crossroads'));
+  beforeEach(angular.mock.module(CONSTANTS.MODULES.MY_SERVE));
 
-  beforeEach(inject(function(_filterState_) {
-    filterState = _filterState_;
+  beforeEach(inject(function(_ServeTeamFilterState_) {
+    filterState = _ServeTeamFilterState_;
   }));
 
   it("should hold the selected family members", function(){

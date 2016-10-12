@@ -11,7 +11,8 @@
               <formly-form model="camperInfo.model" fields="camperInfo.fields" options="camperInfo.options" form="camperInfo.infoForm">
               </formly-form>
             </fieldset>
-            <button type="submit"class="btn btn-primary pull-right"> Submit </button>
+            <button type="submit"class="btn btn-primary pull-right" ng-if="!camperInfo.submitting"> Submit </button>
+            <button type="submit"class="btn btn-primary pull-right disabled" disabled ng-if="camperInfo.submitting"> Submitting... </button>
           </form>
         </div>
       </div>

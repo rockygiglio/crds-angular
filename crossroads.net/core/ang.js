@@ -28,9 +28,12 @@
   require('angular-formly');
   require('angular-formly-templates-bootstrap');
   require('ng-table');
+  require('ng-tags-input');
 
   require('../node_modules/angularjs-slider/dist/rzslider.min.css');
   require('../node_modules/angular-toggle-switch/angular-toggle-switch-bootstrap.css');
   require('../node_modules/angular-toggle-switch/angular-toggle-switch.css');
   require('../node_modules/video.js/dist/video-js.css');
+  require('../node_modules/ng-tags-input/build/ng-tags-input.css');
+  require('../node_modules/ng-tags-input/build/ng-tags-input.bootstrap.css');
 })();

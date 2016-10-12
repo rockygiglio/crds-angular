@@ -6,6 +6,7 @@ class CamperInfoController {
     this.options = {};
     this.rootScope = $rootScope;
     this.stateParams = $stateParams;
+    this.submitting = false;
     this.viewReady = false;
   }
 
@@ -16,18 +17,19 @@ class CamperInfoController {
   }
 
   submit() {
+    this.submitting = true;
     if (this.infoForm.$valid) {
-      console.log('submitting app');
-      this.camperInfoForm.save(this.stateParams.campId).then((data) => {
-        console.log('successfully saved camperinfo', data);
+      this.camperInfoForm.save(this.stateParams.campId).then(() => {
         this.rootScope.$emit('notify', this.rootScope.MESSAGES.successfullRegistration);
       },
 
-      (err) => {
-        console.log('unable to save camperinfo', err);
+      () => {
         this.rootScope.$emit('notify', this.rootScope.MESSAGES.generalError);
+      }).finally(() => {
+        this.submitting = false;
       });
     } else {
+      this.submitting = false;
       this.rootScope.$emit('notify', this.rootScope.MESSAGES.generalError);
     }
   }

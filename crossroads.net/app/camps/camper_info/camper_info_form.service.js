@@ -122,7 +122,6 @@ class CamperInfoForm {
               label: 'Current Grade',
               required: true,
               options: [
-                { grade: '4th'},
                 { grade: '5th'},
                 { grade: '6th'},
                 { grade: '7th'},
