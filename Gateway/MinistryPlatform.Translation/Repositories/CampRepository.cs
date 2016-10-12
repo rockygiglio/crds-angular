@@ -23,13 +23,19 @@ namespace MinistryPlatform.Translation.Repositories
             _apiUserRepository = apiUserRepository;
         }
 
-        public List<MpCampEvent> GetCampEventDetails(int eventId)
+        public MpCamp GetCampEventDetails(int eventId)
         {
             var apiToken = _apiUserRepository.GetToken();
-            var parms = new Dictionary<string, object> { { "Event_ID", eventId }, { "Domain_ID", 1 } };
-            var campEventData = _ministryPlatformRest.UsingAuthenticationToken(apiToken).GetFromStoredProc<MpCampEvent>(_configurationWrapper.GetConfigValue("CampEventStoredProc"), parms);
-            var campEvent = campEventData.FirstOrDefault() ?? new List<MpCampEvent>();
-            return campEvent;
+            //var parms = new Dictionary<string, object> { { "Event_ID", eventId }, { "Domain_ID", 1 } };
+            //var campEventData = _ministryPlatformRest.UsingAuthenticationToken(apiToken).GetFromStoredProc<MpCamp>(_configurationWrapper.GetConfigValue("CampEventStoredProc"), parms);
+            var campType = _configurationWrapper.GetConfigIntValue("CampEventType");
+            var campData = _ministryPlatformRest.UsingAuthenticationToken(apiToken).Search<MpCamp>($"Event_ID = {eventId}").ToList();
+            campData = campData.Where((camp) => camp.EventType != campType).ToList();
+            if (campData.Count > 0)
+            {
+                return campData.FirstOrDefault();
+            }            
+            throw new Exception("No Camp found");
         }
         
     }
