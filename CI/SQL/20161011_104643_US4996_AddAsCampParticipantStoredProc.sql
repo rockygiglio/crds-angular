@@ -34,7 +34,7 @@ BEGIN
 					1
 				)	 
 			END
-	SELECT @RecordID = @@IDENTITY
+	SELECT @RecordID = SCOPE_IDENTITY()
 	SELECT @RecordID AS RecordID
 			
 END

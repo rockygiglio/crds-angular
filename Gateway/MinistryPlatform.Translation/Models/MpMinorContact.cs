@@ -24,6 +24,9 @@ namespace MinistryPlatform.Translation.Models
         [JsonProperty(PropertyName = "Display_Name")]
         public string PreferredName { get; set; }
 
+        [JsonProperty(PropertyName = "Nickname")]
+        public string NickName { get; set; }
+
         [JsonProperty(PropertyName = "Date_Of_Birth")]
         public DateTime BirthDate { get; set; }
 

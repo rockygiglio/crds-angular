@@ -114,6 +114,7 @@
     <Compile Include="Extensions\RestSharpExtensionsTest.cs" />
     <Compile Include="Helpers\Conversions.cs" />
     <Compile Include="Services\CampaignRepositoryTest.cs" />
+    <Compile Include="Services\CampRepositoryTest.cs" />
     <Compile Include="Services\ChildcareRepositoryTest.cs" />
     <Compile Include="Services\ChildcareRequestServiceTest.cs" />
     <Compile Include="Services\GroupConnectorServiceTest.cs" />
