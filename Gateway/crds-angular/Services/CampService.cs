@@ -36,18 +36,17 @@ namespace crds_angular.Services
         {
             var campEvent = _campService.GetCampEventDetails(eventId);
             var campEventInfo = new CampDTO();
-            foreach (var record in campEvent)
-            {
-                campEventInfo.EventId = record.EventId;
-                campEventInfo.EventTitle = record.EventTitle;
-                campEventInfo.EventType = record.EventType;
-                campEventInfo.StartDate = record.StartDate;
-                campEventInfo.EndDate = record.EndDate;
-                campEventInfo.OnlineProductId = record.OnlineProductId;
-                campEventInfo.RegistrationEndDate = record.RegistrationEndDate;
-                campEventInfo.RegistrationStartDate = record.RegistrationStartDate;
-                campEventInfo.ProgramId = record.ProgramId;
-            }
+
+            campEventInfo.EventId = campEvent.EventId;
+            campEventInfo.EventTitle = campEvent.EventTitle;
+            campEventInfo.EventType = campEvent.EventType;
+            campEventInfo.StartDate = campEvent.StartDate;
+            campEventInfo.EndDate = campEvent.EndDate;
+            campEventInfo.OnlineProductId = campEvent.OnlineProductId;
+            campEventInfo.RegistrationEndDate = campEvent.RegistrationEndDate;
+            campEventInfo.RegistrationStartDate = campEvent.RegistrationStartDate;
+            campEventInfo.ProgramId = campEvent.ProgramId;
+
             return campEventInfo;
         }
 

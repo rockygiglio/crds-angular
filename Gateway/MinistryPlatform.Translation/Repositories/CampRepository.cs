@@ -26,8 +26,6 @@ namespace MinistryPlatform.Translation.Repositories
         public MpCamp GetCampEventDetails(int eventId)
         {
             var apiToken = _apiUserRepository.GetToken();
-            //var parms = new Dictionary<string, object> { { "Event_ID", eventId }, { "Domain_ID", 1 } };
-            //var campEventData = _ministryPlatformRest.UsingAuthenticationToken(apiToken).GetFromStoredProc<MpCamp>(_configurationWrapper.GetConfigValue("CampEventStoredProc"), parms);
             var campType = _configurationWrapper.GetConfigIntValue("CampEventType");
             var campData = _ministryPlatformRest.UsingAuthenticationToken(apiToken).Search<MpCamp>($"Event_ID = {eventId}").ToList();
             campData = campData.Where((camp) => camp.EventType != campType).ToList();
