@@ -96,7 +96,7 @@
                 <span class="label {{ role.capacity.badgeType }}" ng-show="role.capacity.display">{{ role.capacity.message }}</span>
               </label>
             </div>
-            <div class="col-sm-6 col-md-6 col-lg-4" ng-repeat="role in currentMember.roles">
+            <div class="col-sm-6 col-md-6 col-lg-4">
               <label>
                 <input type="radio" ng-disabled="team.pastDeadline" ng-model="currentMember.serveRsvp.roleId" ng-value="0" ng-change="roleChanged(role)" name="radio_{{team.index}}">
                 Not Available
