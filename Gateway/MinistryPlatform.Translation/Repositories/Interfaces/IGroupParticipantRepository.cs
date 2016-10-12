@@ -7,5 +7,6 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
     {
         int Get(int groupId, int participantId); 
         List<MpGroupServingParticipant> GetServingParticipants(List<int> participants, long from, long to, int loggedInContactId);
+        List<MpRsvpYesMember> GetRsvpYesMembers(int groupId, int eventId);
     }
 }
