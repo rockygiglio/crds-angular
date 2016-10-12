@@ -1,12 +1,12 @@
 import Geolocation from '../models/geolocation';
 
 export default class GeolocationService {
-  constructor($q, $rootScope, GoogleMapsService) {
+  constructor($q, $rootScope, GoogleMapsService, $analytics) {
     this.q          = $q;
     this.rootScope  = $rootScope;
     this.mapService = GoogleMapsService;
+    this.analytics  = $analytics;
 
-    this.hasAnswered    = localStorage.getItem('crds-geolocation') !== null;
     this.answered       = false;
     this.modalDismissed = false;
   }
@@ -18,20 +18,19 @@ export default class GeolocationService {
   showBanner() {
     // dismissed the modal w/o answering
     // OR you have previously answered
-    return (this.modalDismissed && this.answered === false) || (this.hasAnswered && this.showModal() === false);
+    return (this.modalDismissed) || (this.hasLocation() && !this.answered);
   }
 
   saveLocation(location) {
     this.answered    = true;
     localStorage.setItem('crds-geolocation', JSON.stringify(location));
 
-    dataLayer.push({
-      event:   'geolocation',
-      count:   location.count,
-      lat:     location.lat,
-      lng:     location.lng,
-      zipcode: location.zipcode
-    });
+    if (typeof this.analytics !== 'undefined') {
+      this.analytics.eventTrack('Streaming Location', { category: 'count', label: 'count', value: location.count })
+      this.analytics.eventTrack('Streaming Location', { category: 'lat', label: 'latitude', value: location.lat })
+      this.analytics.eventTrack('Streaming Location', { category: 'lng', label: 'longitude', value: location.lng })
+      this.analytics.eventTrack('Streaming Location', { category: 'zipcode', label: 'zipcode', value: location.zipcode })
+    }
   }
 
   retrieveZipcode(location) {

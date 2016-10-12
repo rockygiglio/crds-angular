@@ -5,7 +5,6 @@ export default class GeolocationController {
   constructor(GeolocationService) {
     this.locationService = GeolocationService;
     
-    this.count   = 0;
     this.subject = 'people';
     this.verb    = 'are';
 
@@ -69,15 +68,15 @@ export default class GeolocationController {
     this.location.lng = position.coords.longitude;
 
     // set zip code
-    this.locationService.retrieveZipcode(this.location.lat, this.location.lng).then((result) => {
+    this.locationService.retrieveZipcode(this.location).then((result) => {
       this.isLocating = false;
-      this.location.zipcode = result;
+      this.location = result;
     }, (error) => {
       this.setLocationError(error);
     })
   }
 
-  setLocationError(error) {
+  setLocationError() {
     this.isLocating    = false;
     this.locationError = true;
   }

@@ -64,7 +64,7 @@ export default class GoogleMapsService {
           _.each(response, (location) => {
             _.each(location.address_components, (address) => {
               if (_.findIndex(address.types, (t) => { return t === 'country'}) >= 0) {
-                country = address.long_name;  
+                country = address.long_name;
               } 
               if (_.findIndex(address.types, (t) => { return t === 'postal_code'}) >= 0) {
                 zipcodes.push(address.long_name);
@@ -76,6 +76,10 @@ export default class GoogleMapsService {
           let result = _.first(_.transform(_.countBy(zipcodes), (result, count, value) => {
                         if (count > 1) result.push(value);
                       }, []));
+
+          if (country !== 'United States') {
+            result = 'outside US';
+          }
 
           deferred.resolve(result);
         } else {
