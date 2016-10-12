@@ -201,10 +201,17 @@ namespace crds_angular.Services
                         else
                         {
                             time.ServingTeams.Add(NewServingTeam(record));
-                            var rsvpYesMembers = Mapper.Map<List<RsvpYesMembers>>(_groupParticipantService.GetRsvpYesMembers(record.GroupId, record.EventId));
+                            var opportunities = Mapper.Map<List<ServeOpportunity>>(_groupParticipantService.GetListOfOpportunitiesByEventAndGroup(record.GroupId, record.EventId));
+                            var mpRsvpMembers = Mapper.Map<List<RsvpMembers>>(_groupParticipantService.GetRsvpMembers(record.GroupId, record.EventId));
+
+                            foreach (var opp in opportunities)
+                            {
+                                opp.RsvpMembers = mpRsvpMembers.Where(m => m.Opportunity == opp.OpportunityId).ToList();
+                            }
+
                             var firstOrDefault = time.ServingTeams.FirstOrDefault(t => t.GroupId == record.GroupId);
                             if (firstOrDefault != null)
-                                firstOrDefault.RsvpYesMembers = rsvpYesMembers;
+                                firstOrDefault.Opportunities = opportunities;
                         }
                     }
                     else
@@ -222,8 +229,16 @@ namespace crds_angular.Services
                     servingDay.Date = record.EventStartDateTime;
                     servingDay.ServeTimes = new List<ServingTime> {NewServingTime(record)};
 
-                    var mpRsvpYesMembers = Mapper.Map<List<RsvpYesMembers>>(_groupParticipantService.GetRsvpYesMembers(record.GroupId, record.EventId));
-                    servingDay.ServeTimes[0].ServingTeams[0].RsvpYesMembers = mpRsvpYesMembers;
+                   // servingDay.ServeTimes[0].ServingTeams[0].
+                    var opportunities = Mapper.Map<List<ServeOpportunity>>(_groupParticipantService.GetListOfOpportunitiesByEventAndGroup(record.GroupId, record.EventId));           
+                    var mpRsvpMembers = Mapper.Map<List<RsvpMembers>>(_groupParticipantService.GetRsvpMembers(record.GroupId, record.EventId));
+
+                    foreach (var opp in opportunities)
+                    {
+                        opp.RsvpMembers = mpRsvpMembers.Where(m => m.Opportunity == opp.OpportunityId).ToList();
+                    }
+                    servingDay.ServeTimes[0].ServingTeams[0].Opportunities = opportunities;
+
                     servingDays.Add(servingDay);
                 }
             }

@@ -6,12 +6,14 @@ using Crossroads.Utilities.Extensions;
 using Crossroads.Utilities.Interfaces;
 using MinistryPlatform.Translation.Extensions;
 using MinistryPlatform.Translation.Models;
+using MinistryPlatform.Translation.Models.Opportunities;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 
 namespace MinistryPlatform.Translation.Repositories
 {
     public class GroupParticipantRepository : IGroupParticipantRepository
     {
+        public const string GetOpportunitiesForTeamStoredProc = "api_crds_Get_Opportunities_For_Team";
         private readonly IConfigurationWrapper _configurationWrapper;
         private readonly IMinistryPlatformService _ministryPlatformService;
         private readonly IApiUserRepository _apiUserService;
@@ -79,14 +81,26 @@ namespace MinistryPlatform.Translation.Repositories
                 .ToList();
         }
 
-        public List<MpRsvpYesMember> GetRsvpYesMembers(int groupId, int eventId)
+        public List<MpRsvpMember> GetRsvpMembers(int groupId, int eventId)
         {
-            const string COLUMNS = "Responses.opportunity_id,Responses.participant_id,Responses.event_id,opportunity_ID_Table.Opportunity_Title, opportunity_ID_Table.Group_Role_ID, Participant_ID_Table_Contact_ID_Table.NickName, Participant_ID_Table_Contact_ID_table.Last_Name";
-            string search = $"Responses.Response_result_id = 1 and Responses.Event_ID = {eventId} And Opportunity_ID_Table.Add_To_Group = {groupId}";
+            const string COLUMNS = "Responses.opportunity_id,Responses.participant_id,Responses.event_id,opportunity_ID_Table.Opportunity_Title, opportunity_ID_Table.Group_Role_ID, Participant_ID_Table_Contact_ID_Table.NickName, Participant_ID_Table_Contact_ID_table.Last_Name,Responses.Response_Result_Id";
+            string search = $"Responses.Event_ID = {eventId} And Opportunity_ID_Table.Add_To_Group = {groupId}";
 
-            var opportunityResponse = _ministryPlatformRest.UsingAuthenticationToken(_apiUserService.GetToken()).Search<MpRsvpYesMember>(MpRestEncode(search), MpRestEncode(COLUMNS));
+            var opportunityResponse = _ministryPlatformRest.UsingAuthenticationToken(_apiUserService.GetToken()).Search<MpRsvpMember>(MpRestEncode(search), MpRestEncode(COLUMNS));
 
             return opportunityResponse;
+        }
+
+        public List<MpSU2SOpportunity> GetListOfOpportunitiesByEventAndGroup(int groupId, int eventId)
+        {
+            var parms = new Dictionary<string, object>
+            {
+                {"@GroupID", groupId},
+                {"@EventID", eventId }
+            };
+
+            var results = _ministryPlatformRest.UsingAuthenticationToken(_apiUserService.GetToken()).GetFromStoredProc<MpSU2SOpportunity>(GetOpportunitiesForTeamStoredProc, parms);
+            return results?.FirstOrDefault();
         }
 
 

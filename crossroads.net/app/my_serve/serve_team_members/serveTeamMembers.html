@@ -5,10 +5,10 @@
   </div>
   <div class="col-sm-9 soft-half-top">
     <closable-tag ng-repeat="member in role.members"
-                  name="member.name"
+                  name="member.NickName +' '+ member.Last_Name"
                   on-click="serveTeamMembers.memberClick(member)"
                   on-close="serveTeamMembers.memberRemove(member)"
                   class="push-half-right push-half-bottom"></closable-tag>
-    <span ng-if="role.members.length == 0">None</span>
+    <span ng-if="role.members == null">None</span>
   </div>
 </div>

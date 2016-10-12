@@ -2,7 +2,7 @@
 
 namespace crds_angular.Models.Crossroads
 {
-    public class RsvpYesMembers
+    public class RsvpMembers
     {
         [JsonProperty(PropertyName = "Event_ID")]
         public long EventId { get; set; }
@@ -24,5 +24,8 @@ namespace crds_angular.Models.Crossroads
 
         [JsonProperty(PropertyName = "Opportunity_Title")]
         public string OpportunityTitle { get; set; }
+
+        [JsonProperty(PropertyName = "Response_Result_ID")]
+        public int ResponseResultId { get; set; } = 0;
     }
 }

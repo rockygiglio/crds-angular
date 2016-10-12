@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 namespace MinistryPlatform.Translation.Models
 {
     [MpRestApiTable(Name = "Responses")]
-    public class MpRsvpYesMember
+    public class MpRsvpMember
     {
 
         [JsonProperty(PropertyName = "Event_ID")]
@@ -27,5 +27,8 @@ namespace MinistryPlatform.Translation.Models
 
         [JsonProperty(PropertyName = "Opportunity_Title")]
         public string OpportunityTitle { get; set; }
+
+        [JsonProperty(PropertyName = "Response_Result_ID")]
+        public int ResponseResultId { get; set; } = 0;
     }
 }

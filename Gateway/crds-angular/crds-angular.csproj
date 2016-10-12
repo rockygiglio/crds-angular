@@ -355,6 +355,7 @@
     <Compile Include="Models\Crossroads\PrimaryContactDto.cs" />
     <Compile Include="Models\Crossroads\Profile\Participant.cs" />
     <Compile Include="Models\Crossroads\ScheduledJob.cs" />
+    <Compile Include="Models\Crossroads\ServeOpportunity.cs" />
     <Compile Include="Models\Crossroads\Serve\ServeProfile.cs" />
     <Compile Include="Models\Crossroads\Serve\ServeReminder.cs" />
     <Compile Include="Models\Crossroads\SponsoredChild.cs" />
@@ -371,7 +372,7 @@
     <Compile Include="Models\Json\PasswordReset.cs" />
     <Compile Include="Models\Json\ResetTokenStatus.cs" />
     <Compile Include="Models\MailChimp\BulkEmailSubscriberOptDTO.cs" />
-    <Compile Include="Models\Crossroads\RsvpYesMembers.cs" />
+    <Compile Include="Models\Crossroads\RsvpMembers.cs" />
     <Compile Include="Processors\SendTextMessageJob.cs" />
     <Compile Include="Services\AddressService.cs" />
     <Compile Include="Services\BulkEmailSyncService.cs" />
