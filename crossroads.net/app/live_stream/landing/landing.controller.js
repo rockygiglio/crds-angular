@@ -11,15 +11,25 @@ export default class LandingController {
       mobile: false
     }).init();
 
+    var maxPastWeekends = 4;
+
     this.cmsService
-      .getRecentMessages(4)
+      .getRecentMessages(maxPastWeekends)
       .then((response) => {
-        this.pastWeekends = this.parseWeekends(response)
+        this.pastWeekends = this.parseWeekends(response,maxPastWeekends)
       })
   }
 
-  parseWeekends(response) {
-    return response.map((event, i, pastWeekends) => {
+  parseWeekends(response,maxPastWeekends) {
+
+    var pastWeekendTotal = 0;
+    var queriedPastWeekends = response.map((event, i, pastWeekends) => {
+
+      pastWeekendTotal++;
+      if ( pastWeekendTotal > maxPastWeekends ) {
+        return false;
+      }
+
       if (typeof event.series !== "undefined") {
         let title = this.filter('replaceNonAlphaNumeric')(event.title);
 
@@ -39,6 +49,10 @@ export default class LandingController {
         } 
       }
       return event;
-    })
+    });
+
+    console.log(queriedPastWeekends);
+
+    return queriedPastWeekends.slice(0,maxPastWeekends);
   }
 }
