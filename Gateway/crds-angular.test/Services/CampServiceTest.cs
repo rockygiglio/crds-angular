@@ -60,20 +60,18 @@ namespace crds_angular.test.Services
         {
             const string token = "asdfasdf";
             int eventId = 123;
-            
+            var birthDate = DateTime.Today.AddYears(-13);
             var parentContact = new MpMyContact {Household_ID = 1234567};
             var participantIdResult = new Result<MpRecordID>(true, new MpRecordID { RecordId = 12345});
             var contactId = ContactIdList()[0].RecordId;
-
-            //var minorContactDTO = mockMinorContact();
-
+            var campReservationDto = MockCampReservationDTO(parentContact, birthDate);
+            
             _apiUserRepository.Setup(m => m.GetToken()).Returns(token);
             _contactService.Setup(m => m.GetMyProfile(token)).Returns(parentContact);
-            _campService.Setup(m => m.CreateMinorContact(mockMinorContact(parentContact))).Returns(ContactIdList());
+            _campService.Setup(m => m.CreateMinorContact(It.IsAny<MpMinorContact>())).Returns(ContactIdList());
             _campService.Setup(m => m.AddAsCampParticipant(contactId, eventId)).Returns(participantIdResult);
             
-
-            _fixture.SaveCampReservation(MockCampReservationDTO(parentContact), eventId, token);
+            _fixture.SaveCampReservation(MockCampReservationDTO(parentContact, birthDate), eventId, token);
             _campService.VerifyAll();
 
         }
@@ -97,16 +95,16 @@ namespace crds_angular.test.Services
             };
         }
 
-        private CampReservationDTO MockCampReservationDTO(MpMyContact parentContact)
+        private CampReservationDTO MockCampReservationDTO(MpMyContact parentContact, DateTime birthDate)
         {
             return new CampReservationDTO()
             {
                 FirstName = "firstName",
                 LastName = "lastName",
                 MiddleName = "middleName",
-                PreferredName = "display",
+                PreferredName = "prefer",
                 Gender = 1,
-                BirthDate = DateTime.Today.AddYears(-13),
+                BirthDate = birthDate,
                 SchoolAttending = "Primary",
                 CrossroadsSite = "Mason",
                 CurrentGrade = "5th",
@@ -114,16 +112,18 @@ namespace crds_angular.test.Services
             };
         }
 
-        private MpMinorContact mockMinorContact(MpMyContact parentContact)
+        private MpMinorContact mockMinorContact(MpMyContact parentContact, DateTime birthDate)
         {
             return new MpMinorContact()
             {
+                ContactId = 0,
                 FirstName = "firstName",
                 LastName = "lastName",
                 MiddleName = "middleName",
-                PreferredName = "prefer",
+                PreferredName = "lastName,prefer",
+                NickName = "prefer",
                 Gender = 1,
-                BirthDate = DateTime.Today.AddYears(-13),
+                BirthDate = birthDate,
                 HouseholdPositionId = 2,
                 HouseholdId = parentContact.Household_ID,
                 SchoolAttending = "Primary"

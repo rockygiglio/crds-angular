@@ -31,9 +31,8 @@ namespace MinistryPlatform.Translation.Test.Services
             _configurationWrapper = new Mock<IConfigurationWrapper>();
             _apiUserRepository = new Mock<IApiUserRepository>();
 
-            _ministryPlatformRest.Setup(m => m.UsingAuthenticationToken(token)).Returns(_ministryPlatformRest.Object);
-
             _fixture = new CampRepository(_configurationWrapper.Object, _ministryPlatformRest.Object, _apiUserRepository.Object);
+            
         }
 
         [SetUp]
@@ -51,26 +50,28 @@ namespace MinistryPlatform.Translation.Test.Services
             {
                 list
             };
+            var birthDate = DateTime.Today.AddYears(-13);
+            var minorContact = mockMinorContact(birthDate);
 
             var values = new Dictionary<string, object>
             {
-                {"@FirstName", "firstname"},
-                {"@LastName", "LastName"},
-                {"@MiddleName", "MiddleName" },
-                {"@PreferredName", "PreferredName" },
-                {"@NickName", "NickName" },
-                {"@Birthdate", "2013-10-12" },
-                {"@Gender", 1 },
-                {"@SchoolAttending", "SchoolAttending" },
-                {"@HouseholdId", 12345 },
-                {"@HouseholdPosition", 2 }
+                {"@FirstName", minorContact.FirstName},
+                {"@LastName", minorContact.LastName},
+                {"@MiddleName", minorContact.MiddleName},
+                {"@PreferredName", minorContact.PreferredName },
+                {"@NickName", minorContact.NickName },
+                {"@Birthdate", minorContact.BirthDate },
+                {"@Gender", minorContact.Gender },
+                {"@SchoolAttending", minorContact.SchoolAttending },
+                {"@HouseholdId", minorContact.HouseholdId },
+                {"@HouseholdPosition", minorContact.HouseholdPositionId }
             };
-            _ministryPlatformRest.Setup(m => m.GetFromStoredProc<MpRecordID>(createContactStoredProc, values)).Returns(lists);
-            var returnVal = _fixture.CreateMinorContact(mockMinorContact());
 
-            Assert.AreEqual(lists[0].FirstOrDefault(), returnVal);
+            _apiUserRepository.Setup(m => m.GetToken()).Returns(token);
+            _ministryPlatformRest.Setup(m => m.UsingAuthenticationToken(token).GetFromStoredProc<MpRecordID>(createContactStoredProc, values)).Returns(lists);
+            var returnVal = _fixture.CreateMinorContact(mockMinorContact(birthDate));
+
             _ministryPlatformRest.VerifyAll();
-
         }
 
         private List<MpRecordID> ContactIdList()
@@ -85,7 +86,7 @@ namespace MinistryPlatform.Translation.Test.Services
 
         }
 
-        private MpMinorContact mockMinorContact()
+        private MpMinorContact mockMinorContact(DateTime birthDate)
         {
             return new MpMinorContact()
             {
@@ -94,7 +95,7 @@ namespace MinistryPlatform.Translation.Test.Services
                 MiddleName = "MiddleName",
                 PreferredName = "PreferredName",
                 NickName = "NickName",
-                BirthDate = DateTime.Today.AddYears(-13),
+                BirthDate = birthDate,
                 Gender = 1,
                 SchoolAttending = "SchoolAttending",
                 HouseholdId = 12345,
