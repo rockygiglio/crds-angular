@@ -68,4 +68,22 @@ describe('Camper Info Component', () => {
     rootScope.$apply(); // must be called to resolve the promise
     expect(camperInfoForm.save).toHaveBeenCalledWith(eventId);
   });
+
+  it('should set the button as disabled when submitting the form', () => {
+    expect(camperInfo.submitting).toBeFalsy();
+
+    // allow for the submit fuctionality to called
+    camperInfo.infoForm = { $valid: true };
+
+    spyOn(camperInfoForm, 'save').and.callFake((data) => {
+      console.log('called faked with', data);
+      var deferred = q.defer();
+      deferred.resolve('success!');
+      return deferred.promise;
+    });
+    camperInfo.submit();
+    expect(camperInfo.submitting).toBeTruthy();
+    rootScope.$apply(); // must be called to resolve the promise
+    expect(camperInfo.submitting).toBeFalsy();
+  });
 });
