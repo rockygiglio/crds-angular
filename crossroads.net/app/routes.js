@@ -414,7 +414,7 @@
         })
         .state('livestreamvjs-ng2', {
           parent: 'noHeaderOrFooter',
-          url: '/live/videojs',
+          url: '/live/stream2',
           template: '<videojs-landing></videojs-landing>',
           data: {
             meta: {
