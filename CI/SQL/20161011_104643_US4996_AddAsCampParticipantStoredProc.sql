@@ -21,7 +21,7 @@ BEGIN
 						WHERE [Participant_ID] = @ParticipantID 
 						AND [Event_ID] = @EventID)				
 			BEGIN
-				PRINT 'Not a participant of the event yet';
+				
 				INSERT INTO [dbo].[Event_Participants] (
 					[Event_ID],
 					[Participant_ID],

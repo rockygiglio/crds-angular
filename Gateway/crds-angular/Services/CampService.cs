@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using crds_angular.Models.Crossroads.Camp;
 using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Interfaces;
@@ -14,17 +13,23 @@ namespace crds_angular.Services
         private readonly ICampRepository _campService;
         private readonly IFormSubmissionRepository _formSubmissionRepository;
         private readonly IConfigurationWrapper _configurationWrapper;
+        private readonly IParticipantRepository _participantRepository;
+        private readonly IEventRepository _eventRepository;
 
         public CampService(
             IContactRepository contactService,
             ICampRepository campService,
             IFormSubmissionRepository formSubmissionRepository,
-            IConfigurationWrapper configurationWrapper)
+            IConfigurationWrapper configurationWrapper,
+            IParticipantRepository partcipantRepository,
+            IEventRepository eventRepository)
         {
             _contactService = contactService;
             _campService = campService;
             _formSubmissionRepository = formSubmissionRepository;
             _configurationWrapper = configurationWrapper;
+            _participantRepository = partcipantRepository;
+            _eventRepository = eventRepository;
         }
 
         public CampDTO GetCampEventDetails(int eventId)
@@ -53,7 +58,7 @@ namespace crds_angular.Services
             var nickName = displayName ?? campReservation.FirstName;
             displayName = displayName != null ? campReservation.LastName + ',' + campReservation.PreferredName : campReservation.LastName + ',' + campReservation.FirstName;
             
-            var minorContact = new MpMinorContact
+            var minorContact = new MpContact
             {
                 FirstName = campReservation.FirstName,
                 LastName = campReservation.LastName,
@@ -61,22 +66,24 @@ namespace crds_angular.Services
                 BirthDate = campReservation.BirthDate,
                 Gender = campReservation.Gender,
                 PreferredName = displayName,
-                NickName = nickName,
+                Nickname = nickName,
                 SchoolAttending = campReservation.SchoolAttending,
                 HouseholdId = parentContact.Household_ID,
                 HouseholdPositionId = 2
             };
 
-            var newMinorContact = _campService.CreateMinorContact(minorContact);
+            var newMinorContact = _contactService.CreateContact(minorContact);
             var contactId = newMinorContact[0].RecordId;
-            var eventParticipantId = _campService.AddAsCampParticipant(contactId, eventId);
-
+            var participant = _participantRepository.GetParticipant(contactId);
+            var participantId = participant.ParticipantId;
+            var eventParticipantId = _eventRepository.RegisterParticipantForEvent(participantId, eventId);
+           
             //form response
             var answers = new List<MpFormAnswer>
             {
-                new MpFormAnswer {Response = campReservation.CurrentGrade,FieldId = _configurationWrapper.GetConfigIntValue("SummerCampForm.CurrentGrade"),EventParticipantId =  eventParticipantId.Value.RecordId},
-                new MpFormAnswer {Response = campReservation.SchoolAttendingNext, FieldId = _configurationWrapper.GetConfigIntValue("SummerCampForm.SchoolAttendingNextYear"),EventParticipantId =  eventParticipantId.Value.RecordId},
-                new MpFormAnswer {Response = campReservation.RoomMate, FieldId = _configurationWrapper.GetConfigIntValue("SummerCampForm.PreferredRoommate"),EventParticipantId =  eventParticipantId.Value.RecordId}
+                new MpFormAnswer {Response = campReservation.CurrentGrade,FieldId = _configurationWrapper.GetConfigIntValue("SummerCampForm.CurrentGrade"),EventParticipantId =  eventParticipantId},
+                new MpFormAnswer {Response = campReservation.SchoolAttendingNext, FieldId = _configurationWrapper.GetConfigIntValue("SummerCampForm.SchoolAttendingNextYear"),EventParticipantId =  eventParticipantId},
+                new MpFormAnswer {Response = campReservation.RoomMate, FieldId = _configurationWrapper.GetConfigIntValue("SummerCampForm.PreferredRoommate"),EventParticipantId =  eventParticipantId}
             };
 
             var formId = _configurationWrapper.GetConfigIntValue("SummerCampFormID");
