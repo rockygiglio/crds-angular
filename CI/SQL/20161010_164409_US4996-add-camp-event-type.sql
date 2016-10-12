@@ -14,7 +14,7 @@ BEGIN
 			   ,[Description]
 			   ,[Domain_ID])
 		 VALUES
-			   (389,
+			   (8,
 			    @EVENT_TYPE_NAME
 			   ,N'Type used specifically for Camps'
 			   ,1)
