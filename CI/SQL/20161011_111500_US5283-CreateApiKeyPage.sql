@@ -94,9 +94,9 @@ END
 SELECT @EXISTING_PAGE_ID = [Page_ID] FROM [dbo].[dp_Page_Section_Pages] WHERE [Page_ID] = @PAGE_ID;
 IF @EXISTING_PAGE_ID = 0
 BEGIN
-  INSERT INTO [dbo].[dp_Page_Section_Pages] (Page_ID, Page_Section_ID) VALUES (@Page_ID, 1000);
+  INSERT INTO [dbo].[dp_Page_Section_Pages] (Page_ID, Page_Section_ID) VALUES (@PAGE_ID, 1000);
 END
 ELSE
 BEGIN
-  UPDATE [dbo].[dp_Page_Section_Pages] SET Page_Section_ID = 1000 WHERE Page_ID = @Page_ID;
+  UPDATE [dbo].[dp_Page_Section_Pages] SET Page_Section_ID = 1000 WHERE Page_ID = @PAGE_ID;
 END;
