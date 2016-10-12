@@ -8,7 +8,7 @@
     '$rootScope',
     '$window',
     '$log',
-    'filterState',
+    'ServeTeamFilterState',
     'Session',
     'ServeOpportunities',
     'Groups',

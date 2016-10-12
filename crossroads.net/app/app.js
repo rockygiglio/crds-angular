@@ -23,6 +23,7 @@ require('ui-select/dist/select.css');
       constants.MODULES.LIVE_STREAM,
       constants.MODULES.MEDIA,
       constants.MODULES.MPTOOLS,
+      constants.MODULES.MY_SERVE,
       constants.MODULES.GROUP_TOOL,
       constants.MODULES.PROFILE,
       constants.MODULES.SEARCH,
