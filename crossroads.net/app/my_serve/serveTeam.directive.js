@@ -9,7 +9,7 @@
     '$log',
     'Session',
     'ServeOpportunities',
-    'Capacity',
+    'OpportunityCapacityService',
     '$modal',
     'growl'
   ];
@@ -84,6 +84,14 @@
       scope.showEdit = false;
       scope.showIcon = showIcon;
       scope.togglePanel = togglePanel;
+      scope.memberClick = memberClick;
+      scope.memberRemove = memberRemove;
+
+      //
+      // !!!!!!
+      // TODO REMOVE TEST DATA FOR TEAM IMPLEMENTATION
+      //
+      scope.team.count = Math.floor(Math.random()*10);
 
       //////////////////////////////////////
 
@@ -551,6 +559,14 @@
             max: r.maximum
           });
         });
+      }
+
+      function memberClick($member) {
+        console.debug("serve team member clicked", $member);
+      }
+
+      function memberRemove($member) {
+        console.debug("serve team member removed", $member);
       }
     }
   }

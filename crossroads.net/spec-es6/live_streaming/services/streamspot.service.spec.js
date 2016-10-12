@@ -4,9 +4,12 @@ import Event from '../../../app/live_stream/models/event';
 
 describe('Live Streaming Streamspot Service', () => {
   let resource,
+      baseTime,
       httpBackend,
       service,
       authRequestHandler;
+
+  baseTime = new Date(2016, 9, 1); // set to 10/1/2016 - month appears to be 0 based index however
 
   let events = {
     "success": true,
@@ -14,18 +17,18 @@ describe('Live Streaming Streamspot Service', () => {
       "count": 3,
       "events": [
         {
-          "start": moment().tz(moment.tz.guess()).add(1, 'hour').format('YYYY-MM-DD H:mm:ss'),
-          "end": moment().tz(moment.tz.guess()).add(2, 'hour').format('YYYY-MM-DD H:mm:ss'),
+          "start": moment(baseTime).add(1, 'hour').format('YYYY-MM-DD H:mm:ss'),
+          "end": moment(baseTime).add(2, 'hour').format('YYYY-MM-DD H:mm:ss'),
           "title": "Saturday Rehearsal Upcoming"
         },
         {
-          "start": moment().tz(moment.tz.guess()).subtract(1, 'hour').format('YYYY-MM-DD H:mm:ss'),
-          "end": moment().tz(moment.tz.guess()).add(1, 'hour').format('YYYY-MM-DD H:mm:ss'),
+          "start": moment(baseTime).subtract(1, 'hour').format('YYYY-MM-DD H:mm:ss'),
+          "end": moment(baseTime).add(1, 'hour').format('YYYY-MM-DD H:mm:ss'),
           "title": "Saturday Rehearsal Broadcasting"
         },
         {
-          "start": moment().tz(moment.tz.guess()).subtract(2, 'hour').format('YYYY-MM-DD H:mm:ss'),
-          "end": moment().tz(moment.tz.guess()).subtract(1, 'hour').format('YYYY-MM-DD H:mm:ss'),
+          "start": moment(baseTime).subtract(2, 'hour').format('YYYY-MM-DD H:mm:ss'),
+          "end": moment(baseTime).subtract(1, 'hour').format('YYYY-MM-DD H:mm:ss'),
           "title": "Saturday Rehearsal Done"
         }
       ]
@@ -41,11 +44,15 @@ describe('Live Streaming Streamspot Service', () => {
     httpBackend = $injector.get('$httpBackend');
 
     service = new StreamspotService(resource);
+    
+    jasmine.clock().mockDate(baseTime);
+
   }))
 
   afterEach(() => {
     httpBackend.verifyNoOutstandingExpectation();
     httpBackend.verifyNoOutstandingRequest();
+    jasmine.clock().mockDate();
   });
 
   describe('Events', () => {
