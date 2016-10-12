@@ -9,18 +9,11 @@
     [string]$SQLcmd = "C:\Program Files\Microsoft SQL Server\Client SDK\ODBC\110\Tools\Binn\sqlcmd.exe",
     [boolean]$ForceBackup = $FALSE, # Default to use existing backup file,
     [boolean]$RunIfNoScriptChanges = $FALSE, # Default to not running if changes to CI/SQL folder
-    [string]$ChangeLogFile = "" # Use teamcity's list of changes to determine if we need to run
+    [string]$ChangeLogFile # Use teamcity's list of changes log to determine if we need to run
 )
 
 try
-{    
-    if ($ChangeLogFile -eq "") 
-    {
-        #This line could be it's own build step. Or we can potentially just reference %system.teamcity.build.changedFiles.file% in the Get-Content call. 
-        $ChangeLogFile = "changelog.txt"
-        copy "%system.teamcity.build.changedFiles.file%" $ChangeLogFile
-    }
-
+{
     $SQLChanges = @(Get-Content $changeLogFile | Where-Object {$_.StartsWith("CI/SQL")}).Count
 } catch [System.Exception] {
     echo "ERROR - Looking for changed scripts: " + $_.Exception.Message;
