@@ -4,6 +4,9 @@ import Reminder from '../../../app/live_stream/models/reminder';
 import Event from '../../../app/live_stream/models/event';
 import ReminderService from '../../../app/live_stream/services/reminder.service';
 import StreamspotService from '../../../app/live_stream/services/streamspot.service';
+import Session from '../../../core/services/session_service';
+//import Person from '../../../app/profile/services/profile.service';
+import {Person} from '../../../app/profile/services/profile.service';
 
 describe('Streaming Reminder Controller', () => {
   let fixture,
@@ -14,11 +17,15 @@ describe('Streaming Reminder Controller', () => {
       currentEvent,
       futureEvent,
       futureDuplicateEvent,
-      httpBackend;
+      httpBackend,
+      Session,
+      Person;
 
   const reminderEndpoint = `${__API_ENDPOINT__}`;
   
   let baseTime = new Date(2016, 9, 1); // set to 10/1/2016 - month appears to be 0 based index however
+
+  //Person = require('../../../app/profile/services/profile.service').Person;
 
   modalInstance = {
     close: jasmine.createSpy('modalInstance.close'),
@@ -34,7 +41,9 @@ describe('Streaming Reminder Controller', () => {
     StreamspotService = $injector.get('StreamspotService');
     ReminderService = $injector.get('ReminderService');
     httpBackend = $injector.get('$httpBackend');
-    fixture = new StreamingReminderController(modalInstance, StreamspotService, ReminderService);
+    Session = $injector.get('Session');
+    Person = $injector.get('Person');
+    fixture = new StreamingReminderController(modalInstance, StreamspotService, ReminderService, Session, Person);
 
     jasmine.clock().mockDate(baseTime);
 
@@ -156,4 +165,20 @@ describe('Streaming Reminder Controller', () => {
     httpBackend.flush();
 
   });
+  fit('should set user defaults if user is logged in', () => {
+    fixture.setUserDefaults(1234);
+    let expectedEmail = "user@test.com";
+    let expectedPhone = "123-456-7890";
+    let result = {  
+      "emailAddress": expectedEmail,
+      "mobilePhone": expectedPhone
+    };
+
+    let url = `${reminderEndpoint}api/profile/1234`;
+    httpBackend.expectGET(url).respond(200, result);
+    httpBackend.flush();
+
+    expect(fixture.model.email).toBe(expectedEmail);
+    expect(fixture.model.phone).toBe(expectedPhone);
+  })
 })

@@ -1,12 +1,17 @@
 import Reminder from '../models/reminder';
+//require('../../../app/profile/services/profile.service').Person;
+//import {PersonService} from '../../profile/services/profile.service';
 
 
 export default class StreamingReminderController {
-  constructor($modalInstance, StreamspotService, ReminderService, Session) {
+
+  constructor($modalInstance, StreamspotService, ReminderService, Session, Profile) {
     this.modalInstance = $modalInstance;
     this.streamspotService = StreamspotService;
     this.reminderService = ReminderService;
-    this.Session = Session;
+    this.session = Session;
+    this.person = Profile.Person;
+
 
     this.streamspotService.events.then((response) => {
       this.upcoming = response;
@@ -32,11 +37,9 @@ export default class StreamingReminderController {
       time: 'h:mma z'
     };
 
-    // If the user is logged in, open the modal to the desired location
+    // If the user is logged in, set default user info
     if (this.session.isActive()) {
-      this.setUserDefaults();
-      this.model.email = getUserEmail();
-      this.model.phone = getUserPhone();
+      this.setUserDefaults(this.session.exists('userId'));      
     } 
   }
 
@@ -108,17 +111,13 @@ export default class StreamingReminderController {
     ;
   }
 
-  setUserDefaults() {
-    var userId = Session.exists('userId');
-    
-  }
-
-  setUserEmail() {
-
-  }
-
-  setUserPhone() {
-
+  setUserDefaults(userId) {
+    this.person.get({contactId: userId})
+      .$promise.then((data) => {
+        this.model.email = data.emailAddress;
+        this.model.phone = data.mobilePhone;
+        }
+      );  
   }
 
   selectedDate(date) {
