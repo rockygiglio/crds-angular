@@ -42,6 +42,7 @@ namespace MinistryPlatform.Translation.Repositories
                 {"@LastName", minorContact.LastName},
                 {"@MiddleName", minorContact.MiddleName },
                 {"@PreferredName", minorContact.PreferredName },
+                {"@NickName", minorContact.NickName },
                 {"@Birthdate", minorContact.BirthDate },
                 {"@Gender", minorContact.Gender },
                 {"@SchoolAttending", minorContact.SchoolAttending },
