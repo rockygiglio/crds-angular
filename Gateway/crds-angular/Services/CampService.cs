@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using crds_angular.Models.Crossroads.Camp;
 using crds_angular.Services.Interfaces;
+using Crossroads.Utilities.Interfaces;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 
@@ -14,16 +11,19 @@ namespace crds_angular.Services
     {
         private readonly IContactRepository _contactService;
         private readonly ICampRepository _campService;
-        private readonly IParticipantRepository _participantServive;
+        private readonly IFormSubmissionRepository _formSubmissionRepository;
+        private readonly IConfigurationWrapper _configurationWrapper;
 
         public CampService(
             IContactRepository contactService,
             ICampRepository campService,
-            IParticipantRepository participantService)
+            IFormSubmissionRepository formSubmissionRepository,
+            IConfigurationWrapper configurationWrapper)
         {
             _contactService = contactService;
             _campService = campService;
-            _participantServive = participantService;
+            _formSubmissionRepository = formSubmissionRepository;
+            _configurationWrapper = configurationWrapper;
         }
 
         public CampDTO GetCampEventDetails(int eventId)
@@ -48,9 +48,8 @@ namespace crds_angular.Services
         public void SaveCampReservation(CampReservationDTO campReservation, int eventId, string token)
         {
             var parentContact = _contactService.GetMyProfile(token);
-            var nickName = "";
             var displayName = campReservation.PreferredName;
-            nickName = displayName ?? campReservation.FirstName;
+            var nickName = displayName ?? campReservation.FirstName;
             displayName = displayName != null ? campReservation.LastName + ',' + campReservation.PreferredName : campReservation.LastName + ',' + campReservation.FirstName;
             
             var minorContact = new MpMinorContact
@@ -70,6 +69,24 @@ namespace crds_angular.Services
             var newMinorContact = _campService.CreateMinorContact(minorContact);
             var contactId = newMinorContact[0].RecordId;
             _campService.AddAsCampParticipant(contactId, eventId);
+
+            //form response
+            var answers = new List<MpFormAnswer>
+            {
+                new MpFormAnswer {Response = campReservation.CurrentGrade, FieldId = _configurationWrapper.GetConfigIntValue("SummerCampForm.CurrentGrade")},
+                new MpFormAnswer {Response = campReservation.SchoolAttendingNext, FieldId = _configurationWrapper.GetConfigIntValue("SummerCampForm.SchoolAttendingNextYear")},
+                new MpFormAnswer {Response = campReservation.RoomMate, FieldId = _configurationWrapper.GetConfigIntValue("SummerCampForm.PreferredRoommate")}
+            };
+
+            var formId = _configurationWrapper.GetConfigIntValue("SummerCampFormID");
+            var formResponse = new MpFormResponse
+            {
+                ContactId = contactId,
+                FormId = formId,
+                FormAnswers = answers
+            };
+            
+            _formSubmissionRepository.SubmitFormResponse(formResponse);
         }
     }
 }
