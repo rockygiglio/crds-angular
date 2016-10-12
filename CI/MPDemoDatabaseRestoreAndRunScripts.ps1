@@ -9,10 +9,17 @@
     [string]$SQLcmd = "C:\Program Files\Microsoft SQL Server\Client SDK\ODBC\110\Tools\Binn\sqlcmd.exe",
     [boolean]$ForceBackup = $FALSE, # Default to use existing backup file,
     [boolean]$RunIfNoScriptChanges = $FALSE, # Default to not running if changes to CI/SQL folder
-    [string]$changeLogFile = "%system.teamcity.build.changedFiles.file%" # Use teamcity's list of changes to determine if we need to run
+    [string]$changeLogFile = $(Get-ChildItem Env:system.teamcity.build.changedFiles.file).Value # Use teamcity's list of changes to determine if we need to run
 )
 
-$SQLChanges = @(Get-Content $changeLogFile | Where-Object {$_.StartsWith("CI/SQL")}).Count
+try
+{
+    $SQLChanges = @(Get-Content $changeLogFile | Where-Object {$_.StartsWith("CI/SQL")}).Count
+} catch [System.Exception] {
+    echo "ERROR - Looking for changed scripts: " + $_.Exception.Message;
+    exit 1
+}
+
 
 if(($SQLChanges -eq 0) -and ($RunIfNoScriptChanges -eq $FALSE))
 {
