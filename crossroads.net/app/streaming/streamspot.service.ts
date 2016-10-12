@@ -68,7 +68,7 @@ export class StreamspotService {
         this.eventResponse = response.json().data.events;
         let events = this.parseEvents();
         if (events.length > 0) {
-          this.broadcast()
+          this.broadcast();
           Observable.interval(1000).subscribe(() => {
             this.broadcast()
           }); 

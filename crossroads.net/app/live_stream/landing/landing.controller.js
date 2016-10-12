@@ -1,8 +1,9 @@
 let WOW = require('wow.js/dist/wow.min.js');
 
 export default class LandingController {
-  constructor(CMSService, $filter, StreamStatusService) {
+  constructor($rootScope, $filter, CMSService, StreamStatusService) {
 
+    this.rootScope = $rootScope;
     this.streamStatus = StreamStatusService.getStatus();
     console.log(this.streamStatus);
 
@@ -34,8 +35,8 @@ export default class LandingController {
         }
         event.title = `${event.series.title} #${event.number}`;
 
-        event.url = `/message/${event.id}/${title}`
-        event.image = 'https://crds-cms-uploads.imgix.net/content/images/register-bg.jpg'
+        event.url = `/message/${event.id}/${title}`;
+        event.image = 'https://crds-cms-uploads.imgix.net/content/images/register-bg.jpg';
 
         if (typeof event.messageVideo !== "undefined" && typeof event.messageVideo.still !== 'undefined') {
           event.image = event.messageVideo.still.filename

@@ -29,7 +29,8 @@ export default class StreamspotService {
       .get()
       .$promise
       .then((response) => {
-        this.eventResponse = response.data.events;
+        this.eventResponse = this.getTestEventsResponse().data.events; //response.data.events;
+        console.log(this.eventResponse);
         let events = this.parseEvents();
         if (events.length > 0) {
           this.broadcast();
@@ -84,5 +85,40 @@ export default class StreamspotService {
   handleError(error) {
     console.error('An error occurred');
     return Promise.reject(error);
+  }
+
+  //Testing method, delete after finishing current project
+  //this.eventResponse = this.getTestEventsResponse().data.events;//response.data.events;
+  getTestEventsResponse(){
+
+    let baseTime = new Date();
+    //let baseTime = baseTime = new Date(2016, 9, 1);
+
+    let events = {
+      "success": true,
+      "data": {
+        "count": 2,
+        "events": [
+          {
+            "start": moment(baseTime).add(1, 'minute').format('YYYY-MM-DD H:mm:ss'),
+            "end": moment(baseTime).add(2, 'minute').format('YYYY-MM-DD H:mm:ss'),
+            "title": "Saturday Rehearsal Upcoming"
+          },
+          {
+            "start": moment(baseTime).add(3, 'minute').format('YYYY-MM-DD H:mm:ss'),
+            "end": moment(baseTime).add(4, 'minute').format('YYYY-MM-DD H:mm:ss'),
+            "title": "Saturday Rehearsal Broadcasting"
+          }/*,
+          {
+            "start": moment(baseTime).subtract(2, 'hour').format('YYYY-MM-DD H:mm:ss'),
+            "end": moment(baseTime).subtract(1, 'hour').format('YYYY-MM-DD H:mm:ss'),
+            "title": "Saturday Rehearsal Done"
+          }*/
+        ]
+      }
+    };
+
+    return events;
+
   }
 }
