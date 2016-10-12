@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using crds_angular.Models.Crossroads.Camp;
 using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Interfaces;
@@ -68,14 +69,14 @@ namespace crds_angular.Services
 
             var newMinorContact = _campService.CreateMinorContact(minorContact);
             var contactId = newMinorContact[0].RecordId;
-            _campService.AddAsCampParticipant(contactId, eventId);
+            var eventParticipantId = _campService.AddAsCampParticipant(contactId, eventId);
 
             //form response
             var answers = new List<MpFormAnswer>
             {
-                new MpFormAnswer {Response = campReservation.CurrentGrade, FieldId = _configurationWrapper.GetConfigIntValue("SummerCampForm.CurrentGrade")},
-                new MpFormAnswer {Response = campReservation.SchoolAttendingNext, FieldId = _configurationWrapper.GetConfigIntValue("SummerCampForm.SchoolAttendingNextYear")},
-                new MpFormAnswer {Response = campReservation.RoomMate, FieldId = _configurationWrapper.GetConfigIntValue("SummerCampForm.PreferredRoommate")}
+                new MpFormAnswer {Response = campReservation.CurrentGrade,FieldId = _configurationWrapper.GetConfigIntValue("SummerCampForm.CurrentGrade"),EventParticipantId =  eventParticipantId.Value.RecordId},
+                new MpFormAnswer {Response = campReservation.SchoolAttendingNext, FieldId = _configurationWrapper.GetConfigIntValue("SummerCampForm.SchoolAttendingNextYear"),EventParticipantId =  eventParticipantId.Value.RecordId},
+                new MpFormAnswer {Response = campReservation.RoomMate, FieldId = _configurationWrapper.GetConfigIntValue("SummerCampForm.PreferredRoommate"),EventParticipantId =  eventParticipantId.Value.RecordId}
             };
 
             var formId = _configurationWrapper.GetConfigIntValue("SummerCampFormID");
