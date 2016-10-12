@@ -1,4 +1,3 @@
-
 export default class Reminder {
   constructor() {
     this.formattedDay = '';
@@ -16,5 +15,19 @@ export default class Reminder {
 
   isValid() {
     return this.day.length > 0 && this.time.length > 0 && this.type.length > 0 && (this.phone.length > 0 || this.email.length > 0);
+  }
+
+  userTZTimeWithoutTZSuffix(dateTime) {
+    let userTimeZone = moment.tz.guess(),
+        timeFormat = 'h:mma';
+
+    return moment(dateTime).tz(userTimeZone).format(timeFormat);
+  }
+
+  userTZDateShortFormat(dateTime) {
+    let userTimeZone = moment.tz.guess(),
+        dateFormat = 'MM/DD/YYYY';
+
+    return moment(dateTime).tz(userTimeZone).format(dateFormat);
   }
 }
