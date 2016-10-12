@@ -6,13 +6,15 @@
     <div class="col-md-12">
       <preloader ng-if="app.resolving" full-screen='true'> </preloader>
       <div ng-if="!app.resolving">
-        <div ui-view> </div>
+        <!--<div ui-view> </div>-->
+        <div dynamic-content="$root.MESSAGES.homePageHero.content | html"></div>
+        <div class="row"><countdown-home></countdown-home></div>
+        <div class="row" dynamic-content="$root.MESSAGES.homePageBottom.content | html"></div>
         <form-builder page="page"></form-builder>
       </div>
     </div>
   </div>
-</div>
-<!--/container-->
+</div> <!--/container-->
 
 <ng-include src="'templates/footer.html'"></ng-include>
-</div><!--/homepage-->
+</div> <!--/homepage-->
