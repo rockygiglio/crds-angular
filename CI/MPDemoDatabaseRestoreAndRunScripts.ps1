@@ -7,30 +7,31 @@
     [string]$DBUser = $(Get-ChildItem Env:MP_SOURCE_DB_USER).Value, # Default to environment variable
     [string]$DBPassword = $(Get-ChildItem Env:MP_SOURCE_DB_PASSWORD).Value, # Default to environment variable
     [string]$SQLcmd = "C:\Program Files\Microsoft SQL Server\Client SDK\ODBC\110\Tools\Binn\sqlcmd.exe",
-    [boolean]$ForceBackup = $FALSE # Default to use existing backup file,
-	[string]$changeLogFile = "changelog.txt"
+    [boolean]$ForceBackup = $FALSE, # Default to use existing backup file,
+    [boolean]$RunIfNoScriptChanges = $FALSE, # Default to not running if changes to CI/SQL folder
+    [string]$changeLogFile = "%system.teamcity.build.changedFiles.file%" # Use teamcity's list of changes to determine if we need to run
 )
-
-#This line could be it's own build step. Or we can potentially just reference %system.teamcity.build.changedFiles.file% in the Get-Content call. 
-copy "%system.teamcity.build.changedFiles.file%" changelog.txt
 
 $SQLChanges = @(Get-Content $changeLogFile | Where-Object {$_.StartsWith("CI/SQL")}).Count
 
-if($SQLChanges -gt 0)
+if($SQLChanges -eq 0 && $RunIfNoScriptChanges -eq $FALSE)
 {
-    Write-Host SQL Changes:
-    Write-Host (Get-Content $changeLogFile | Where-Object {$_.StartsWith("CI/SQL")})
-	
-	#Use mutex to ensure only 1 process executing against DBServer / DB at a time
-	$uniqueName = "MPDemoDatabaseRestoreAndRunScripts$DBServer$DBName" 
-	$singleInstanceMutex = New-Object System.Threading.Mutex($false, $uniqueName)
+    echo "No database changes found. Skipping backup, restore, and running scripts"
+    exit 0	
+}
 
-	try
-	{   
-		$singleInstanceMutex.WaitOne()
+echo "Found $SQLChanges sql files changed"
 
-		.\CI\MPDemoDatabaseBackup.ps1 -DBServer $BackupDBServer -DBName $DBName -BackupPath $BackupPath -DBUser $DBUser -DBPassword $DBPassword -ForceBackup $ForceBackup
- 
+#Use mutex to ensure only 1 process executing against DBServer / DB at a time
+$uniqueName = "MPDemoDatabaseRestoreAndRunScripts$DBServer$DBName" 
+$singleInstanceMutex = New-Object System.Threading.Mutex($false, $uniqueName)
+
+try
+{   
+	$singleInstanceMutex.WaitOne()
+
+	.\CI\MPDemoDatabaseBackup.ps1 -DBServer $BackupDBServer -DBName $DBName -BackupPath $BackupPath -DBUser $DBUser -DBPassword $DBPassword -ForceBackup $ForceBackup
+
     if($LASTEXITCODE -eq 0) 
     {
         .\CI\MPTestDatabaseRestore.ps1 -DBServer $RestoreDBServer -DBName $DBName -BackupPath $BackupPath -DBUser $DBUser -DBPassword $DBPassword
@@ -39,20 +40,12 @@ if($SQLChanges -gt 0)
     if($LASTEXITCODE -eq 0)
     {
         .\CI\ScriptProcessing.ps1 -DBServer $RestoreDBServer -path $ScriptPath -SQLcmd $SQLcmd -DBUser $DBUser -DBPassword $DBPassword
-
     }
 
     exit $LASTEXITCODE
-	}
-	finally
-	{
-		$singleInstanceMutex.ReleaseMutex()
-		$singleInstanceMutex.Dispose()
-	}
-		
-	}
-else 
-{
-    Write-Host No database changes found.
 }
-
+finally
+{
+	$singleInstanceMutex.ReleaseMutex()
+	$singleInstanceMutex.Dispose()
+}
