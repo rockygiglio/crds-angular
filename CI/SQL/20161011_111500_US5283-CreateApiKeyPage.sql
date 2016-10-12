@@ -3,6 +3,7 @@ GO
 
 DECLARE @EXISTING_PAGE_ID int = 0
 DECLARE @PAGE_ID int = 600 -- Assigned by MPIdentityMaintenance.dbo.Get_Next_Available_ID
+DECLARE @PAGE_SECTION_ID int = 10 -- "Administration" page
 DECLARE @DISPLAY_NAME nvarchar(50) = N'Client API Keys'
 DECLARE @SINGULAR_NAME nvarchar(50) = N'Client API Key'
 DECLARE @DESCRIPTION nvarchar(255) = N'API keys used by clients accessing the Gateway API REST endpoints.'
@@ -90,13 +91,14 @@ BEGIN
 	WHERE [Page_ID] = @PAGE_ID
 END
 
--- Add this to the "Administration" Page (1000)
-SELECT @EXISTING_PAGE_ID = [Page_ID] FROM [dbo].[dp_Page_Section_Pages] WHERE [Page_ID] = @PAGE_ID;
+-- Add this to the "Administration" Page
+SELECT @EXISTING_PAGE_ID = [Page_ID] FROM [dbo].[dp_Page_Section_Pages] WHERE [Page_ID] = @PAGE_ID AND [Page_Section_ID] = @PAGE_SECTION_ID;
 IF @EXISTING_PAGE_ID = 0
 BEGIN
-  INSERT INTO [dbo].[dp_Page_Section_Pages] (Page_ID, Page_Section_ID) VALUES (@PAGE_ID, 1000);
+  PRINT 'Adding page ' + Convert(varchar, @PAGE_ID) + ' to page section ' + Convert(varchar, @PAGE_SECTION_ID);
+  INSERT INTO [dbo].[dp_Page_Section_Pages] (Page_ID, Page_Section_ID) VALUES (@PAGE_ID, @PAGE_SECTION_ID);
 END
 ELSE
 BEGIN
-  UPDATE [dbo].[dp_Page_Section_Pages] SET Page_Section_ID = 1000 WHERE Page_ID = @PAGE_ID;
+  PRINT 'Page ' + Convert(varchar, @PAGE_ID) + ' is already in page section ' + Convert(varchar, @PAGE_SECTION_ID);
 END;
