@@ -7,8 +7,8 @@
     [string]$DBUser = $(Get-ChildItem Env:MP_SOURCE_DB_USER).Value, # Default to environment variable
     [string]$DBPassword = $(Get-ChildItem Env:MP_SOURCE_DB_PASSWORD).Value, # Default to environment variable
     [string]$SQLcmd = "C:\Program Files\Microsoft SQL Server\Client SDK\ODBC\110\Tools\Binn\sqlcmd.exe",
-    [boolean]$ForceBackup = $FALSE, # Default to use existing backup file,
-    [boolean]$RunIfNoScriptChanges = $FALSE, # Default to not running if changes to CI/SQL folder
+    [switch]$ForceBackup = $FALSE, # Default to use existing backup file,
+    [switch]$RunIfNoScriptChanges = $FALSE, # Default to not running if changes to CI/SQL folder
     [string]$ChangeLogFile # Use teamcity's list of changes log to determine if we need to run
 )
 
