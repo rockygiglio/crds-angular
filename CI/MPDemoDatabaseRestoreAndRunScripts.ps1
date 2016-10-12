@@ -15,11 +15,12 @@
 try
 {
     $SQLChanges = @(Get-Content $changeLogFile | Where-Object {$_.StartsWith("CI/SQL")}).Count
-} catch [System.Exception] {
+} 
+catch [System.Exception] 
+{
     echo "ERROR - Looking for changed scripts: " + $_.Exception.Message;
     exit 1
 }
-
 
 if(($SQLChanges -eq 0) -and ($RunIfNoScriptChanges -eq $FALSE))
 {
