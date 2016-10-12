@@ -5,7 +5,10 @@ export default class LandingController {
 
     this.rootScope = $rootScope;
     this.streamStatus = StreamStatusService.getStatus();
-    console.log(this.streamStatus);
+
+    this.rootScope.$on('streamStatusChanged', (e, streamStatus) => {
+      this.streamStatus = streamStatus;
+    });
 
     this.cmsService = CMSService;
     this.filter = $filter;
