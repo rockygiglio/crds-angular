@@ -193,7 +193,8 @@ namespace MinistryPlatform.Translation.Repositories
                 {"Form_Response_ID", answer.FormResponseId},
                 {"Form_Field_ID", answer.FieldId},
                 {"Response", answer.Response},
-                {"Opportunity_Response", answer.OpportunityResponseId}
+                {"Opportunity_Response", answer.OpportunityResponseId},
+                {"Event_Participant_ID", answer.EventParticipantId }
             };
 
             try
