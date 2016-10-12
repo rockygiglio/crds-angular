@@ -86,6 +86,7 @@
       scope.togglePanel = togglePanel;
       scope.memberClick = memberClick;
       scope.memberRemove = memberRemove;
+      scope.getRSVPYes = getRSVPYes();
       
       //////////////////////////////////////
 
@@ -178,6 +179,18 @@
           personToEdit.name = person.nickName === null ? person.firstName : person.nickName;
           $rootScope.$emit('personUpdated', person);
         });
+      }
+
+      function getRSVPYes() {      
+        let count = 0;
+        _.forEach(scope.team.serveOppertunities, (opportunity) =>{
+          if(opportunity.rsvpMembers.length > 0)
+          {
+            let rsvpYesMembers = _.where(opportunity.rsvpMembers, {Response_Result_ID: 1});
+            count = count + rsvpYesMembers.length;
+          }
+        });
+        return count;
       }
 
       function getFrequency() {

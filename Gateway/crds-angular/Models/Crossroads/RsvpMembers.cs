@@ -22,9 +22,6 @@ namespace crds_angular.Models.Crossroads
         [JsonProperty(PropertyName = "Last_Name")]
         public string LastName { get; set; }
 
-        [JsonProperty(PropertyName = "Opportunity_Title")]
-        public string OpportunityTitle { get; set; }
-
         [JsonProperty(PropertyName = "Response_Result_ID")]
         public int ResponseResultId { get; set; } = 0;
     }

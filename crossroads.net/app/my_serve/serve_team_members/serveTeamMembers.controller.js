@@ -11,7 +11,6 @@ export default class ServeTeamMembersController {
 
   $onInit()
   {
-    debugger;
     this.servingOpportunities = this.team.serveOppertunities; // gets passed in from component attribute.
 
     this.servingOpportunities = this.addRsvpNoMembers(this.servingOpportunities);
@@ -23,7 +22,7 @@ export default class ServeTeamMembersController {
       this.addTeam(opportunity.Opportunity_Title, opportunity.rsvpMembers);
     })
 
-    this.addTeam('Not Available', this.rsvpNoMembers);
+    this.addTeam('Not Available', _.uniq(this.rsvpNoMembers, 'Participant_ID'));
 
   }
 
@@ -32,9 +31,9 @@ export default class ServeTeamMembersController {
 
     _.forEach(opportunities, (opportunity) => {
       let partitionedArray = _.partition(opportunity.rsvpMembers, (member) => {return member.Response_Result_ID === 2});
-      this.rsvpNoMembers.concat(partitionedArray[0]);
+      this.rsvpNoMembers = this.rsvpNoMembers.concat(partitionedArray[0]);
       partitionedArray = _.partition(partitionedArray[1], (member) => {return member.Group_Role_ID === CONSTANTS.GROUP.ROLES.LEADER});
-      this.rsvpYesLeaders.concat(partitionedArray[0])
+      this.rsvpYesLeaders = this.rsvpYesLeaders.concat(partitionedArray[0]);
       opportunity.rsvpMembers = partitionedArray[1];
     })
     return opportunities;
@@ -42,7 +41,6 @@ export default class ServeTeamMembersController {
 
   addTeam(teamName, members)
   {
-    debugger;
     let team = {
       name: teamName,
       members: null

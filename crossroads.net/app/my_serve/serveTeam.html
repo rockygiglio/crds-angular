@@ -14,7 +14,7 @@
                 ng-class="{'active':isActiveTab(team.name) }"
                 ng-click="togglePanel(team)"
                 stop-event>
-          Team <span class="badge badge-success" ng-if="team.rsvpYesMembers.length > 0">{{team.rsvpYesMembers.length}}</span>
+          Team <span class="badge badge-success" ng-if="getRSVPYes > 0">{{getRSVPYes}}</span>
         </button>
 
         <!-- Member buttons -->
