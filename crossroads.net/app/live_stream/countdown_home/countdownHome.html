@@ -1,24 +1,25 @@
-<section class="navbar-section" id="countdownHome">
-<div class="upcoming animated fadeIn">
-  <div ng-if="countdown.isCountdown" class="countdown">
-    <i>Join the live stream in...</i>
+  <div class="row">
+  
+  <div ng-if="countdownHome.isCountdown" class="col-sm-50 type-color-grey h4">
+    <a href="/live-v1/stream">Watch</a> a live stream of our next service in
     <ul class="list-inline">
-      <li><strong>{{ countdown.countdown.days }}</strong> <small>days</small></li>
+      <li><strong>{{ countdownHome.countdown.days }}</strong> <small>days</small></li>
       <li class="vr"></li>
-      <li><strong>{{ countdown.countdown.hours }}</strong> <small>hours</small></li>
+      <li><strong>{{ countdownHome.countdown.hours }}</strong> <small>hours</small></li>
       <li class="vr"></li>
-      <li><strong>{{ countdown.countdown.minutes }}</strong> <small>min</small></li>
+      <li><strong>{{ countdownHome.countdown.minutes }}</strong> <small>min</small></li>
       <li class="vr"></li>
-      <li><strong>{{ countdown.countdown.seconds }}</strong> <small>sec</small></li>
+      <li><strong>{{ countdownHome.countdown.seconds }}</strong> <small>sec</small></li>
     </ul>
-    <a href="#" class="btn btn-sm btn-reminder" ng-click="countdown.openReminder()">Remind Me</a>
+    <a href="#" class="btn btn-sm btn-primary" ng-click="countdownHome.openReminder()">Remind Me</a>
   </div>
-  <div ng-if="countdown.isBroadcasting" class="in-progress">
-    <i>Live stream in progress...</i> <a class="btn btn-sm" href="/live-v1/stream">Watch Now</a>
+
+
+  <div ng-if="countdownHome.isBroadcasting" class="col-sm-12 type-color-grey h4">
+    Live stream in progress... <a class="btn btn-primary" href="/live-v1/stream">Watch Now</a>
   </div>
-  <div>
-    countdown object is missing
-  </div>
-</div>
-<streaming-reminder></streaming-reminder>
-</section>
+
+  
+  <streaming-reminder></streaming-reminder>
+
+  </div> <!-- row -->
