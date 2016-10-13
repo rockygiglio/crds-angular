@@ -5,8 +5,10 @@ import Event from '../../../app/live_stream/models/event';
 import ReminderService from '../../../app/live_stream/services/reminder.service';
 import StreamspotService from '../../../app/live_stream/services/streamspot.service';
 import Session from '../../../core/services/session_service';
+//import Profile from '../../../app/profile/services';
 //import Person from '../../../app/profile/services/profile.service';
-import {Person} from '../../../app/profile/services/profile.service';
+//import {Profile} from '../../../app/profile/services/profile.service';
+//require('../../../app/profile/services');
 
 describe('Streaming Reminder Controller', () => {
   let fixture,
@@ -19,13 +21,13 @@ describe('Streaming Reminder Controller', () => {
       futureDuplicateEvent,
       httpBackend,
       Session,
-      Person;
+      Profile;
 
   const reminderEndpoint = `${__API_ENDPOINT__}`;
   
   let baseTime = new Date(2016, 9, 1); // set to 10/1/2016 - month appears to be 0 based index however
 
-  //Person = require('../../../app/profile/services/profile.service').Person;
+  Profile = require('../../../app/profile/services/profile.service');
 
   modalInstance = {
     close: jasmine.createSpy('modalInstance.close'),
@@ -42,8 +44,9 @@ describe('Streaming Reminder Controller', () => {
     ReminderService = $injector.get('ReminderService');
     httpBackend = $injector.get('$httpBackend');
     Session = $injector.get('Session');
-    Person = $injector.get('Person');
-    fixture = new StreamingReminderController(modalInstance, StreamspotService, ReminderService, Session, Person);
+    //Profile = $injector.get('Profile');
+    //Profile = new Profile();
+    fixture = new StreamingReminderController(modalInstance, StreamspotService, ReminderService, Session, Profile);
 
     jasmine.clock().mockDate(baseTime);
 
