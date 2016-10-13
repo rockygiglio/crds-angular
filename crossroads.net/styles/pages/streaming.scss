@@ -121,10 +121,17 @@ streaming, landing {
         font-size: 123%;
         letter-spacing: -0.015em;
         padding-right: 1em;
+        @media (max-width: $screen-sm-min) {
+          padding-right: 0;
+          font-size: 100%;
+        }
       }
 
       ul {
         padding-right: 20px;
+        @media (max-width: $screen-sm-min) {
+          padding-right: 7px;
+        }
       }
 
       li {
