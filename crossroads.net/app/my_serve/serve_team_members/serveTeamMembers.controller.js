@@ -1,29 +1,33 @@
 import CONSTANTS from 'crds-constants';
 
 export default class ServeTeamMembersController {
-  constructor() {
+  constructor(ServeTeamService) {
     console.debug('Construct ServeTeamMembersController');
     this.servingOpportunities = {};
     this.rsvpNoMembers = [];
     this.rsvpYesLeaders = [];
     this.allMembers = [];
+    this.serveTeamService = ServeTeamService;
+    this.ready = false;
   }
 
   $onInit()
   {
-    this.servingOpportunities = this.team.serveOppertunities; // gets passed in from component attribute.
+    this.serveTeamService.getTeamRsvps(this.team).then((team) =>{
+      this.servingOpportunities = team.serveOppertunities; // gets passed in from component attribute.
 
-    this.servingOpportunities = this.addRsvpNoMembers(this.servingOpportunities);
-    this.allMembers = [];
+      this.servingOpportunities = this.addRsvpNoMembers(this.servingOpportunities);
+      this.allMembers = [];
 
-    this.addTeam('Leaders', this.rsvpYesLeaders);
+      this.addTeam('Leaders', this.rsvpYesLeaders);
 
-    _.forEach(this.servingOpportunities, (opportunity) => {
-      this.addTeam(opportunity.Opportunity_Title, opportunity.rsvpMembers);
-    })
+      _.forEach(this.servingOpportunities, (opportunity) => {
+        this.addTeam(opportunity.Opportunity_Title, opportunity.rsvpMembers);
+      });
 
-    this.addTeam('Not Available', _.uniq(this.rsvpNoMembers, 'Participant_ID'));
-
+      this.addTeam('Not Available', _.uniq(this.rsvpNoMembers, 'Participant_ID'));
+      this.ready = true;
+    });
   }
 
   addRsvpNoMembers(opportunities) {

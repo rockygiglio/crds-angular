@@ -160,6 +160,8 @@ namespace crds_angular.Services
                 opp.RsvpMembers = mpRsvpMembers.Where(m => m.Opportunity == opp.OpportunityId).ToList();
             }
 
+            team.Opportunities = opportunities;
+
             return team;
         }
 

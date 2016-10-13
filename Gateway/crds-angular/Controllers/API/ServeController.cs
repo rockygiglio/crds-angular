@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Messaging;
+using System.Web;
 using System.Web.Http;
 using System.Web.Http.Description;
 using crds_angular.Exceptions.Models;
@@ -59,6 +60,7 @@ namespace crds_angular.Controllers.API
 
         [ResponseType(typeof(ServingTeam))]
         [Route("api/serve/getTeamRsvps")]
+        [AcceptVerbs("POST")]
         public IHttpActionResult GetServingTeamRsvps([FromBody] ServingTeam team)
         {
             return Authorized(token =>
