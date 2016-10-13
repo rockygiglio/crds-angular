@@ -18,7 +18,7 @@ namespace MinistryPlatform.Translation.Repositories
         private readonly int _formResponseGoTripView = AppSettings("GoTripFamilySignup");
 
         private readonly IMinistryPlatformService _ministryPlatformService;
-        private IDbConnection _dbConnection;
+        private readonly IDbConnection _dbConnection;
 
         public FormSubmissionRepository(IMinistryPlatformService ministryPlatformService, IDbConnection dbConnection, IAuthenticationRepository authenticationService, IConfigurationWrapper configurationWrapper)
             : base(authenticationService,configurationWrapper)
@@ -29,7 +29,7 @@ namespace MinistryPlatform.Translation.Repositories
 
         public int GetFormFieldId(int crossroadsId)
         {
-            var searchString = string.Format(",{0}", crossroadsId);
+            var searchString = $",{crossroadsId}";
             var formFields = _ministryPlatformService.GetPageViewRecords(_formFieldCustomPage, ApiLogin(), searchString);
 
             var field = formFields.Single();
@@ -39,7 +39,7 @@ namespace MinistryPlatform.Translation.Repositories
 
         public List<MpFormField> GetFieldsForForm(int formId)
         {
-            var searchString = string.Format(",,,,{0}", formId);
+            var searchString = $",,,,{formId}";
             var formFields = _ministryPlatformService.GetPageViewRecords(_formFieldCustomPage, ApiLogin(), searchString);
 
             return formFields.Select(formField => new MpFormField
@@ -78,8 +78,7 @@ namespace MinistryPlatform.Translation.Repositories
                 var responses = new List<MpTripFormResponse>();
                 while (reader.Read())
                 {
-                    var response = new MpTripFormResponse();
-                    response.ContactId = reader.GetInt32(reader.GetOrdinal("Contact_ID"));
+                    var response = new MpTripFormResponse {ContactId = reader.GetInt32(reader.GetOrdinal("Contact_ID"))};
                     var donorId = SafeInt32(reader, "Donor_ID");
                     response.DonorId = donorId;
                     response.FundraisingGoal = SafeDecimal(reader,"Fundraising_Goal");
@@ -102,12 +101,6 @@ namespace MinistryPlatform.Translation.Repositories
         {
             var ordinal = record.GetOrdinal(fieldName);
             return !record.IsDBNull(ordinal) ? record.GetDecimal(ordinal) : 0;
-        }
-
-        private static int? SafeInt(IDataRecord record, string fieldName)
-        {
-            var ordinal = record.GetOrdinal(fieldName);
-            return !record.IsDBNull(ordinal) ? record.GetInt16(ordinal) : (int?)null;
         }
 
         private static int? SafeInt32(IDataRecord record, string fieldName)
@@ -168,7 +161,7 @@ namespace MinistryPlatform.Translation.Repositories
 
         public DateTime? GetTripFormResponseByContactId(int contactId, int pledgeId)
         {
-            var searchString = string.Format(",{0},,{1}", contactId, pledgeId);
+            var searchString = $",{contactId},,{pledgeId}";
             var signedUp = _ministryPlatformService.GetPageViewRecords(_formResponseGoTripView, ApiLogin(), searchString);
             if (signedUp.Count < 1)
             {
@@ -200,7 +193,8 @@ namespace MinistryPlatform.Translation.Repositories
                 {"Form_Response_ID", answer.FormResponseId},
                 {"Form_Field_ID", answer.FieldId},
                 {"Response", answer.Response},
-                {"Opportunity_Response", answer.OpportunityResponseId}
+                {"Opportunity_Response", answer.OpportunityResponseId},
+                {"Event_Participant_ID", answer.EventParticipantId }
             };
 
             try
@@ -209,7 +203,7 @@ namespace MinistryPlatform.Translation.Repositories
             }
             catch (Exception exception)
             {
-                throw new ApplicationException(string.Format("CreateFormAnswer failed.  Field Id: {0}", answer.FieldId), exception);
+                throw new ApplicationException($"CreateFormAnswer failed.  Field Id: {answer.FieldId}", exception);
             }
         }
     }

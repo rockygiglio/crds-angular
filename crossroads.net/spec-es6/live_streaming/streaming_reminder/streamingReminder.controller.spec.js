@@ -97,13 +97,13 @@ describe('Streaming Reminder Controller', () => {
   })
   it('should set time', () => {
     fixture.setTime(currentEvent);
-    expect(fixture.model.time).toBe(currentEvent.start.format('h:mma z'))
+    expect(fixture.model.time).toBe(currentEvent.start.format('h:mma z'));
   });
   it('should reset form', () => {
     fixture.setDay(futureEvent);
     fixture.setTime(futureEvent);
     expect(fixture.model.day).toBe(futureEvent.start.format('MM/DD/YYYY'));
-    expect(fixture.model.time).toBe(futureEvent.start.format('h:mma z'))
+    expect(fixture.model.time).toBe(futureEvent.start.format('h:mma z'));
 
     fixture.resetForm();
 
