@@ -133,7 +133,7 @@
       UPCOMING: 'Upcoming',
       OFF: 'Off'
     },
-    PRE_STREAM_HOURS: 0.0132 //15 Number of hours before stream in which to display "upcoming stream view"
+    PRE_STREAM_HOURS: 15
 
   };
 })();

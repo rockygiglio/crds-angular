@@ -33,7 +33,8 @@ export default class StreamspotService {
       .get()
       .$promise
       .then((response) => {
-        this.eventResponse = this.getTestEventsResponse().data.events; //response.data.events;
+        //this.eventResponse = this.getTestEventsResponse().data.events; //TEST
+        this.eventResponse = response.data.events;
         console.log(this.eventResponse);
         let events = this.parseEvents();
         if (events.length > 0) {

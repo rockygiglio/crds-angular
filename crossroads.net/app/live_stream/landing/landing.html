@@ -15,10 +15,25 @@
   </div>
   <!--TESTING----------------------------------->
 
-  <section id="intro" class="intro imgix-fluid-bg crds-hero" data-src="//crds-cms-uploads.imgix.net/content/images/streaming--anywhere-hero.jpg?w=1&crop=faces&fit=crop">
+  <!-- LIVE -->
+  <section ng-if = "landing.streamStatus == 'Live'" id="intro" class="intro imgix-fluid-bg crds-hero" data-src="//crds-cms-uploads.imgix.net/content/images/streaming--anywhere-hero.jpg?w=1&crop=faces&fit=crop">
     <div class="wow fadeInUp">
       <div dynamic-content="$root.MESSAGES.streamingLandingIntro.content | html"></div>
-      <p ng-if="inProgress" class="wow fadeIn"><a href="/live/stream" class="btn btn-primary">Watch Now</a></p>
+      <p class="wow fadeIn"><a href="/live/stream" class="btn btn-primary">Watch Now</a></p>
+    </div>
+  </section>
+
+  <!-- STREAM IS UPCOMING -->
+  <section ng-if = "landing.streamStatus == 'Upcoming'" id="intro" class="intro imgix-fluid-bg crds-hero" data-src="//crds-cms-uploads.imgix.net/content/images/streaming--anywhere-hero.jpg?w=1&crop=faces&fit=crop">
+    <div class="wow fadeInUp">
+      <div dynamic-content="$root.MESSAGES.streamingLandingIntro.content | html"></div>
+    </div>
+  </section>
+
+  <!-- STREAM IS OFF -->
+  <section ng-if = "landing.streamStatus == 'Off'" id="intro" class="intro imgix-fluid-bg crds-hero" data-src="//crds-cms-uploads.imgix.net/content/images/streaming--anywhere-hero.jpg?w=1&crop=faces&fit=crop">
+    <div class="wow fadeInUp">
+      <div dynamic-content="$root.MESSAGES.streamingLandingIntro.content | html"></div>
     </div>
   </section>
 

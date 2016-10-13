@@ -258,4 +258,5 @@ describe('Landing Controller', () => {
     let messages = fixture.parseWeekends(pastWeekends);
     expect(messages.length).toBe(4);
   });
+
 })
