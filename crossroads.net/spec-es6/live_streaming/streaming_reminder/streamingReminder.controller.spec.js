@@ -5,10 +5,6 @@ import Event from '../../../app/live_stream/models/event';
 import ReminderService from '../../../app/live_stream/services/reminder.service';
 import StreamspotService from '../../../app/live_stream/services/streamspot.service';
 import Session from '../../../core/services/session_service';
-//import Profile from '../../../app/profile/services';
-//import Person from '../../../app/profile/services/profile.service';
-//import {Profile} from '../../../app/profile/services/profile.service';
-//require('../../../app/profile/services');
 
 describe('Streaming Reminder Controller', () => {
   let fixture,
@@ -27,8 +23,6 @@ describe('Streaming Reminder Controller', () => {
   
   let baseTime = new Date(2016, 9, 1); // set to 10/1/2016 - month appears to be 0 based index however
 
-  Profile = require('../../../app/profile/services/profile.service');
-
   modalInstance = {
     close: jasmine.createSpy('modalInstance.close'),
     dismiss: jasmine.createSpy('modalInstance.dismiss'),
@@ -44,8 +38,7 @@ describe('Streaming Reminder Controller', () => {
     ReminderService = $injector.get('ReminderService');
     httpBackend = $injector.get('$httpBackend');
     Session = $injector.get('Session');
-    //Profile = $injector.get('Profile');
-    //Profile = new Profile();
+    Profile = $injector.get('Profile');
     fixture = new StreamingReminderController(modalInstance, StreamspotService, ReminderService, Session, Profile);
 
     jasmine.clock().mockDate(baseTime);
@@ -168,7 +161,7 @@ describe('Streaming Reminder Controller', () => {
     httpBackend.flush();
 
   });
-  fit('should set user defaults if user is logged in', () => {
+  it('should set user defaults', () => {
     fixture.setUserDefaults(1234);
     let expectedEmail = "user@test.com";
     let expectedPhone = "123-456-7890";
@@ -177,7 +170,7 @@ describe('Streaming Reminder Controller', () => {
       "mobilePhone": expectedPhone
     };
 
-    let url = `${reminderEndpoint}api/profile/1234`;
+    let url = `${reminderEndpoint}api/profile`;
     httpBackend.expectGET(url).respond(200, result);
     httpBackend.flush();
 

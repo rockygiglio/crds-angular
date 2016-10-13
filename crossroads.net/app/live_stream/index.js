@@ -5,7 +5,7 @@ import StreamspotService from './services/streamspot.service';
 import ReminderService from './services/reminder.service';
 
 export default angular
-  .module(CONSTANTS.MODULES.LIVE_STREAM, [CONSTANTS.MODULES.CORE, CONSTANTS.MODULES.COMMON])
+  .module(CONSTANTS.MODULES.LIVE_STREAM, [CONSTANTS.MODULES.CORE, CONSTANTS.MODULES.COMMON, CONSTANTS.MODULES.PROFILE])
   .config(liveStreamRouter)
   .service('StreamspotService', StreamspotService)
   .service('ReminderService', ReminderService)
