@@ -95,5 +95,10 @@ namespace crds_angular.Services
             
             _formSubmissionRepository.SubmitFormResponse(formResponse);
         }
+
+        public CampDTO GetMyCampInfo()
+        {
+            return null;
+        }
     }
 }

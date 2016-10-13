@@ -17,6 +17,26 @@ namespace crds_angular.Controllers.API
             _campService = campService;
         }
 
+        [ResponseType(typeof(CampDTO))]
+        [Route("api/my-camp")]
+        [AcceptVerbs("GET")]
+        public IHttpActionResult GetMyCampsInfo()
+        {
+            return Authorized(token =>
+            {
+                try
+                {
+                    var myCampsInfo = _campService.GetMyCampInfo();
+                    return Ok(myCampsInfo);
+                }
+                catch (Exception exception)
+                {
+                    var apiError = new ApiErrorDto("My Camp Info", exception);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+            });
+        }
+
         [ResponseType(typeof (CampDTO))]
         [Route("api/camps/{eventid}")]
         [AcceptVerbs("GET")]
