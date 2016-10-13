@@ -1,7 +1,7 @@
 import CampController from './camp.controller';
 import campTemplate from './camp.html';
 
-let CrossroadsCamp = {
+const CrossroadsCamp = {
   bindings: {},
   template: campTemplate,
   controller: CampController,
