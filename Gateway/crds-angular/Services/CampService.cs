@@ -109,7 +109,8 @@ namespace crds_angular.Services
             var dashboardData = new List<MyCampDTO>();
 
             var loggedInContact = _contactService.GetMyProfile(token);
-            var family = _contactService.GetOtherHouseholdMembers(loggedInContact.Contact_ID);
+            var family = _contactService.GetHouseholdFamilyMembers(loggedInContact.Household_ID);
+            family.AddRange(_contactService.GetOtherHouseholdMembers(loggedInContact.Contact_ID));
 
             var camps = _eventRepository.GetEvents(campType, apiToken);
             foreach (var camp in camps.Where(c => c.EventEndDate >= DateTime.Today))
