@@ -1,9 +1,9 @@
 <h4 class="">Confirmed Team Members</h4>
 <div ng-repeat="role in serveTeamMembers.allMembers" class="row serve-role-members">
-  <div class="col-sm-3 soft-half-top">
+  <div class="col-sm-3 serve-team-confirm-role">
     <strong>{{role.name}}</strong>
   </div>
-  <div class="col-sm-9 soft-half-top">
+  <div class="col-sm-9">
     <closable-tag ng-repeat="member in role.members"
                   name="member.name"
                   on-click="serveTeamMembers.memberClick(member)"

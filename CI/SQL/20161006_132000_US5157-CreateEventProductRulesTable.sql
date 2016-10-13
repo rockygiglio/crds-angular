@@ -13,8 +13,8 @@ CREATE TABLE [dbo].[cr_Event_Product_Rules](
 	[EventProductRule_ID] [INT] IDENTITY(1,1) NOT NULL,
 	[Event_ID] [INT] NOT NULL,
 	[ProductRule_ID] [INT] NOT NULL,
-	[RemainingCapacity] [INT] NOT NULL,
-	[RemainingWaitlistCapacity] [INT] NOT NULL,
+	[Remaining_Capacity] [INT] NOT NULL,
+	[Remaining_Wait_List_Capacity] [INT] NOT NULL,
 	[Domain_ID] [INT] NOT NULL,
  CONSTRAINT [PK_cr_Event_Product_Rules] PRIMARY KEY CLUSTERED 
 (

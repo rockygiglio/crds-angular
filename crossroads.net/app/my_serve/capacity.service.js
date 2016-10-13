@@ -1,13 +1,5 @@
-'use strict()';
-(function(){
+OpportunityCapacityService.$inject = ['$resource'];
 
-  angular.module('crossroads').factory('Capacity', Capacity);
-
-  Capacity.$inject = ['$resource'];
-
-  function Capacity($resource){
-    return $resource(__API_ENDPOINT__ + 'api/serve/opp-capacity'); 
-  }
-
-
-})();
+export default function OpportunityCapacityService($resource) {
+  return $resource(__API_ENDPOINT__ + 'api/serve/opp-capacity');
+}

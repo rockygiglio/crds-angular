@@ -11,11 +11,12 @@ IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[cr
 BEGIN
 CREATE TABLE [dbo].[cr_Product_Rules](
 	[ProductRule_ID] [INT] IDENTITY(1,1) NOT NULL,
+	[Product_Rule_Name] NVARCHAR(64) NOT NULL,
 	[Product_ID] [INT] NOT NULL,
 	[Gender_ID] [INT] NULL,
 	[Congregation_ID] [INT] NOT NULL,
-	[MaxQuantity] [INT] NOT NULL,
-	[WaitListQuantity] [INT] NULL,
+	[Maximum_Quantity] [INT] NOT NULL,
+	[Wait_List_Quantity] [INT] NULL,
 	[Domain_ID] [INT] NOT NULL,
  CONSTRAINT [PK_cr_Product_Rules] PRIMARY KEY CLUSTERED 
 (

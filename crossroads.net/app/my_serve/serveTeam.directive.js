@@ -9,7 +9,7 @@
     '$log',
     'Session',
     'ServeOpportunities',
-    'Capacity',
+    'OpportunityCapacityService',
     '$modal',
     'growl'
   ];
@@ -87,13 +87,51 @@
       scope.memberClick = memberClick;
       scope.memberRemove = memberRemove;
 
+      scope.isTeamTab = isTeamTab;
+      scope.isTeamLeader = isTeamLeader;
+      scope.loadTeamMembers = loadTeamMembers;
+
       //
-      // !!!!!!
+      // UI!!!
       // TODO REMOVE TEST DATA FOR TEAM IMPLEMENTATION
       //
       scope.team.count = Math.floor(Math.random()*10);
+      if (scope.team.members.length) {
+        scope.team.roles = scope.team.members[0].roles;
+      }
 
       //////////////////////////////////////
+
+      function isTeamTab() {
+        // TODO UI!!! VERIFY LOGIC
+        return scope.currentMember && !!scope.currentMember.groupId;
+      }
+
+      function isTeamLeader(team) {
+        // TODO UI!!! IMPLEMENT THIS
+        return true;
+      }
+
+      function loadTeamMembers($query) {
+        console.debug('Query team members');
+        // TODO UI!!! IMPLEMENT THIS
+        return [
+          {
+            id: 1001,
+            name: 'Genie Simmons',
+            email: 'gsimmons@gmail.com',
+            phone: '513-313-5984',
+            role: 'Leader'
+          },
+          {
+            id: 1002,
+            name: 'Holly Gennaro',
+            email: 'hgennaro@excite.com',
+            phone: '513-857-9587',
+            role: null
+          },
+        ]
+      }
 
       function allowProfileEdit() {
         var cookieId = Session.exists('userId');
