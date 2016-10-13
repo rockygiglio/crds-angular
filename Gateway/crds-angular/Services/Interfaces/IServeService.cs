@@ -19,5 +19,6 @@ namespace crds_angular.Services.Interfaces
         List<int> SaveServeRsvp(string token, SaveRsvpDto dto);
         void SendReminderEmails();
         List<GroupContactDTO> PotentialVolunteers(int groupId, crds_angular.Models.Crossroads.Events.Event evt, List<MpGroupParticipant> groupMembers );
+        ServingTeam GetServingTeamRsvps(ServingTeam team);
     }
 }
