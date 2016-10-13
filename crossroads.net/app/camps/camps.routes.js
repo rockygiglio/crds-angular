@@ -4,7 +4,7 @@ export default function CampRoutes($stateProvider) {
     .state('camps-dashboard', {
       parent: 'noSideBar',
       url: '/mycamps',
-      template: '<camps-dashboard></camps-dashboard>',
+      template: '<camps-dashboard dashboard="$resolve.dashboard"></camps-dashboard>',
       data: {
         isProtected: true,
         meta: {
@@ -14,6 +14,8 @@ export default function CampRoutes($stateProvider) {
       },
       resolve: {
         loggedin: crds_utilities.checkLoggedin,
+        campsService: 'CampsService',
+        dashboard: (campsService) => campsService.getCampDashboard()
       }
     })
     .state('crossroads-camp', {
