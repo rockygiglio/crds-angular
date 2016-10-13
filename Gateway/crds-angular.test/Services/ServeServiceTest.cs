@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using crds_angular.App_Start;
 using crds_angular.Models;
+using crds_angular.Models.Crossroads;
 using crds_angular.Models.Crossroads.Opportunity;
 using crds_angular.Models.Crossroads.Profile;
 using crds_angular.Models.Crossroads.Serve;
@@ -1124,5 +1125,52 @@ namespace crds_angular.test.Services
             }
             return responses;
         }
+
+        private static List<ServeOpportunity> getServeOpportunities()
+        {
+            var opps = new List<ServeOpportunity>();
+            opps.Add(new ServeOpportunity()
+            {
+                Group_Role_ID = 16,
+                OpportunityId = 2218712,
+                OpportunityTitle = "(t) Kindergarten K213 Sun 8:30",
+                RsvpMembers = new List<RsvpMembers>()
+                {
+                    new RsvpMembers()
+                    {
+                        EventId = 4510561,
+                        GroupRoleId = 16,
+                        LastName = "Strick",
+                        Name = "JC",
+                        Opportunity = 2218712,
+                        ParticipantId = 7572172,
+                        ResponseResultId = 1
+                    }
+                }
+            });
+
+            opps.Add(new ServeOpportunity()
+            {
+                Group_Role_ID = 22,
+                OpportunityId = 2218735,
+                OpportunityTitle = "(t) Kindergarten K213 Sun 8:30",
+                RsvpMembers = new List<RsvpMembers>()
+                {
+                    new RsvpMembers()
+                    {
+                        EventId = 4510561,
+                        GroupRoleId = 22,
+                        LastName = "Trujillo",
+                        Name = "Liz",
+                        Opportunity = 2218735,
+                        ParticipantId = 7547422,
+                        ResponseResultId = 1
+                    }
+                }
+            });
+
+            return opps;
+        }
+
     }
 }
