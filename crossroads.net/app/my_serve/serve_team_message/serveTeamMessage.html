@@ -1,0 +1,86 @@
+<form role='form' name='serveTeamMessageForm' ng-submit='serveTeamMessage.submit(serveTeamMessageForm)' novalidate>
+  <div class='row'>
+    <div class='col-md-8 col-md-offset-2'>
+
+      <h1 class="page-header">Send Message</h1>
+
+      <div class='form-group'>
+        <label class='control-label'>To</label>
+        <div class="radio" ng-repeat="team in serveTeamMessage.teams">
+          <label>
+            <input type='radio' name='teamRadio' value='{{team.id}}' ng-model='serveTeamMessage.selection'>
+            {{team.name}} <span ng-if="team.count > 0"> ({{team.count}} people)</span><span ng-if="team.isLeader"> (Team Leader)</span>
+          </label>
+        </div>
+        <div class="radio">
+          <label>
+            <input type='radio' name='teamRadio' value='-1' ng-model='serveTeamMessage.selection'>
+            Individual Team Members
+          </label>
+        </div>
+
+        <div ng-if="serveTeamMessage.selection == -1" class="push-half-left">
+          <tags-input
+            ng-model="serveTeamMessage.individuals"
+            display-property="name"
+            placeholder="Search for a team member"
+            add-from-autocomplete-only="true"
+            replace-spaces-with-dashes='false'
+          >
+
+            <auto-complete
+              source="serveTeamMessage.loadIndividuals($query)"
+              display-property="name"
+              min-length="1"
+              template='serve_team_message/serveTeamMessageAutocomplete.html'
+            ></auto-complete>
+          </tags-input>
+        </div>
+
+      </div>
+
+      <div class='form-group'>
+        <label for='subject' class='control-label'>Subject</label>
+        <input type='text' id='subject' name='subject' class='form-control'>
+      </div>
+
+      <div class='form-group' ng-class='{"has-error": serveTeamMessageForm.$submitted && serveTeamMessageForm.emailMessage.$invalid}'>
+        <label for='emailMessage' class='control-label wide-label'
+               ng-class='{"required": serveTeamMessage.emailMessageRequired}'>Message</label>
+        <textarea type='textarea' rows='8'
+                  class='form-control'
+                  id='emailMessage'
+                  name='emailMessage'
+                  ng-model='serveTeamMessage.person.message'
+                  ng-required='serveTeamMessage.emailMessageRequired'></textarea>
+
+        <ng-messages for="serveTeamMessageForm.emailMessage.$error"
+                     ng-if="serveTeamMessageForm.$submitted && serveTeamMessageForm.emailMessage.$invalid">
+          <ng-messages-include src="on-submit-messages"></ng-messages-include>
+        </ng-messages>
+      </div>
+
+      <div class='text-right'>
+        <loading-button
+          input-type='submit'
+          normal-text='Send'
+          loading-text='Sending...'
+          loading='serveTeamMessage.processing'
+          loading-class='disabled'
+          input-classes='sm-pull-right btn btn-primary btn-block-mobile mobile-push-half-bottom'></loading-button>
+
+        <a type='button' class='btn btn-standard btn-block-mobile mobile-push-half-bottom' href='#'
+           ng-click='serveTeamMessage.cancel()'>Cancel</a>
+
+      </div>
+
+      <a ui-sref="serve-signup" class="push-top">
+        <svg viewBox="0 0 32 32" class="icon icon-large arrow-circle-o-left">
+          <use xlink:href="#arrow-circle-o-left"></use>
+        </svg>
+        Back to Sign Up to Serve
+      </a>
+
+    </div>
+  </div>
+</form>
