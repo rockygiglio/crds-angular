@@ -21,8 +21,8 @@ describe('Countdown Controller', () => {
   })
 
   it('should populate the countdown object', () => {
-    let start = moment().add({ 'days': 2 }).format('YYYY-MM-DD HH:mm:ss');
-    let end = moment().add({ 'days': 2 }).format('YYYY-MM-DD HH:mm:ss');
+    let start = moment().add(2, 'days').format('YYYY-MM-DD HH:mm:ss');
+    let end = moment().add(2, 'days').format('YYYY-MM-DD HH:mm:ss');
 
     fixture.event = new Event('title', start, end);
     fixture.parseEvent();
