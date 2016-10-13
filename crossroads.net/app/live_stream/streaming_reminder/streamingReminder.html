@@ -51,11 +51,11 @@
             </label>
           </div>
           <div class="form-group validation-control" ng-show="reminder.model.type=='phone'">
-            <input class="form-control" name="phone" ng-model="reminder.model.phone" placeholder="Enter your phone number" type="tel" pattern="^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$">
+            <input class="form-control" name="phone" ng-model="reminder.model.phone" placeholder="Enter your phone number" type="tel" pattern="^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$" required>
             <div class="alert alert-danger" ng-if="reminder.model.isPhoneValid===false" dynamic-content="$root.MESSAGES.invalidPhone.content | html"></div>
           </div>
           <div class="form-group validation-control" ng-show="reminder.model.type=='email'">
-            <input class="form-control" name="email" ng-model="reminder.model.email" placeholder="Enter your email address" type="email">
+            <input class="form-control" name="email" ng-model="reminder.model.email" placeholder="Enter your email address" type="email" required>
             <div class="alert alert-danger" ng-if="reminder.model.isEmailValid===false" dynamic-content="$root.MESSAGES.invalidEmail.content | html"></div>
           </div>
         </div>
