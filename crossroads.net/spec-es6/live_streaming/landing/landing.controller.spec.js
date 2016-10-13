@@ -10,7 +10,7 @@ describe('Landing Controller', () => {
       pastWeekends,
       results;
 
-  beforeEach(angular.mock.module('crossroads'));
+  beforeEach(angular.mock.module(constants.MODULES.LIVE_STREAM));
 
   beforeEach(inject(function ($injector, $filter) {
     filter = $filter;
