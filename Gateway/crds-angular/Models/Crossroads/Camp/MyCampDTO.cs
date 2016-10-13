@@ -5,22 +5,22 @@ namespace crds_angular.Models.Crossroads.Camp
 {
     public class MyCampDTO
     {
-        [JsonProperty(PropertyName = "Contact_ID")]
+        [JsonProperty(PropertyName = "contactId")]
         public int CamperContactId { get; set; }
 
-        [JsonProperty(PropertyName = "Nickname")]
+        [JsonProperty(PropertyName = "nickName")]
         public string CamperNickName { get; set; }
 
-        [JsonProperty(PropertyName = "Last_Name")]
+        [JsonProperty(PropertyName = "lastName")]
         public string CamperLastName { get; set; }
 
-        [JsonProperty(PropertyName = "Event_Title")]
+        [JsonProperty(PropertyName = "eventTitle")]
         public string CampName { get; set; }
 
-        [JsonProperty(PropertyName = "Event_Start_Date")]
+        [JsonProperty(PropertyName = "startDate")]
         public DateTime CampStartDate { get; set; }
 
-        [JsonProperty(PropertyName = "Event_End_Date")]
+        [JsonProperty(PropertyName = "endDate")]
         public DateTime CampEndDate { get; set; }
     }
 }
