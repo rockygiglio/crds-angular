@@ -14,11 +14,11 @@ export default class StreamingController {
     this.dontMiss       = [];
     this.beTheChurch    = [];
 
-    var debug = false;
-    var location = $location;
+    let debug = false;
+    let location = $location;
 
     if ( $location != undefined ) {
-      var params = $location.search();
+      let params = $location.search();
       debug = params.debug;
     }
     
