@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using crds_angular.Security;
 using crds_angular.Services.Interfaces;
@@ -17,7 +18,7 @@ namespace crds_angular.Controllers.API
             _campService = campService;
         }
 
-        [ResponseType(typeof(CampDTO))]
+        [ResponseType(typeof(List<MyCampDTO>))]
         [Route("api/my-camp")]
         [AcceptVerbs("GET")]
         public IHttpActionResult GetMyCampsInfo()
@@ -26,7 +27,7 @@ namespace crds_angular.Controllers.API
             {
                 try
                 {
-                    var myCampsInfo = _campService.GetMyCampInfo();
+                    var myCampsInfo = _campService.GetMyCampInfo(token);
                     return Ok(myCampsInfo);
                 }
                 catch (Exception exception)

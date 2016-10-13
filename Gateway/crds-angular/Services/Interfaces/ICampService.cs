@@ -7,6 +7,6 @@ namespace crds_angular.Services.Interfaces
     {
         CampDTO GetCampEventDetails(int eventId);
         void SaveCampReservation(CampReservationDTO campReservation, int eventId, string token);
-        CampDTO GetMyCampInfo();
+        List<MyCampDTO> GetMyCampInfo(string token);
     }
 }
