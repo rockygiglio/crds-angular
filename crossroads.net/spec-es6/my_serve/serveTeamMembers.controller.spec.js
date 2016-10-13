@@ -19,7 +19,7 @@ describe('ServeTeamMembersController', () => {
 
 
 
-    fit('should build out allMembers data object', () => {
+    it('should build out allMembers data object', () => {
          fixture.team = teamData;
          fixture.loadTeamMembers(fixture.team);
 		 
