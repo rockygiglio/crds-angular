@@ -121,6 +121,10 @@
         APPRENTICE: 66
       },
     },
+    GEOLOCATION: {
+      MODAL_TIMEOUT: 10000,
+      FORMS_KEY: '1rupjr7gvqUU203fwjmeUlIiVwCA8BdkD-mP6M6s3wxQ'
+    },
     INVITATION: {
       TYPES: {
         GROUP: 1,

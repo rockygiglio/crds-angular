@@ -29,7 +29,7 @@ streaming, landing {
       display: flex;
       justify-content: center;
     }
-    
+
   }
 
   .fixed-header {
@@ -79,7 +79,7 @@ streaming, landing {
       @media (max-width: $screen-sm-min) {
         font-size: 70%;
       }
-    } 
+    }
 
     .see-schedule {
       text-transform: uppercase;
@@ -121,10 +121,17 @@ streaming, landing {
         font-size: 123%;
         letter-spacing: -0.015em;
         padding-right: 1em;
+        @media (max-width: $screen-sm-min) {
+          padding-right: 0;
+          font-size: 100%;
+        }
       }
 
       ul {
         padding-right: 20px;
+        @media (max-width: $screen-sm-min) {
+          padding-right: 7px;
+        }
       }
 
       li {
@@ -271,7 +278,7 @@ streaming, landing {
 
       li {
         display: inline;
-        
+
         &:after {
           content: ", ";
           margin-left: -4px;
@@ -410,14 +417,14 @@ streaming, landing {
       font-size: 210%;
       top: -0.85em;
       word-wrap: break-word;
-      
+
     }
 
     section {
       top: -1em;
     }
 
-    @media (max-width: $screen-xs-max) { 
+    @media (max-width: $screen-xs-max) {
       figcaption {
         top: -1.15em;
       }
@@ -488,7 +495,7 @@ streaming, landing {
         font-weight: 600;
         margin-top: 0.3em;
         word-wrap: break-word;
-        
+
 
         span {
           font-weight: normal;
@@ -640,7 +647,7 @@ streaming, landing {
       width: 100%;
     }
 
-    @media (max-width: $screen-xs-max) { 
+    @media (max-width: $screen-xs-max) {
       figcaption {
         top: -1.15em;
       }
@@ -674,6 +681,20 @@ streaming, landing {
     padding-top: 1em;
     padding-bottom: 1em;
     background: #000;
+
+    header > a:hover,
+    header > a:focus {
+      transition: color 0.5s ease;
+      text-decoration: none;
+      > svg {
+        transition: fill 0.5s ease;
+      }
+      &, .icon {
+        color: $gray-light !important;
+        fill: $gray-light;
+      }
+    }
+
     .video-player {
       margin: 0 auto;
     }
@@ -755,7 +776,7 @@ streaming, landing {
     }
 
     @media (min-width: $screen-md-min) {
-      header, 
+      header,
       .promo {
         padding-left: 30px;
         padding-right: 30px;
@@ -876,7 +897,7 @@ streaming, landing {
 
   label.text-uppercase {
     font-size: 85%;
-    margin: 1em 0 0.5em; 
+    margin: 1em 0 0.5em;
   }
 
   .btn {
@@ -890,7 +911,7 @@ streaming, landing {
         color: $cr-streaming-blue;
         background: #FFF;
         box-shadow: none;
-      } 
+      }
     }
   }
 
@@ -927,7 +948,7 @@ streaming, landing {
       margin-bottom: 0.5em;
     }
   }
-  
+
   .schedule {
     @include make-sm-column(5);
     @include make-sm-column-offset(1);
@@ -1053,7 +1074,7 @@ modal.watch-now {
   }
   &.in .modal-dialog { @include translate(0, 0) }
   .modal-header {
-    border: none; 
+    border: none;
   }
   .modal-dialog {
     width: 100%;
@@ -1091,3 +1112,72 @@ modal.watch-now {
     width: 900px;
   }
 } // .current-series-trailer
+
+geolocation {
+  .warn {
+    p {
+      font-size: 60%;
+      color:#ea5151;
+      padding-top: 7vh;
+    }
+  }
+}
+
+.geolocation-modal {
+  @media (min-width: $screen-sm) {
+    geolocation > .container {
+      padding-top: 25vh;
+    }
+  }
+  .small {
+    p {
+      font-size: 53%;
+      color: #96B4D4;
+    }
+  }
+  
+  footer {
+    margin-top: 3.25em;
+    font-size: 51.5%;
+    &, .btn-link {
+      color: #96B4D4;
+    }
+  }
+  .btn-link {
+    font-size: 87%;
+    margin-bottom: 3em;
+  }
+  .modal-backdrop {
+    background: #113556;
+    opacity: 0.95;
+    -webkit-transform-style: preserve-3d;
+    -moz-transform-style: preserve-3d;
+    transform-style: preserve-3d;
+  }
+  .modal-lg {
+    width: 100%;
+    margin: 0;
+  }
+  .modal-content {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    color: #FFF;
+    position: relative;
+    top: 50%;
+    .container {
+      width: auto;
+    }
+    .btn-standard-dark {
+      @include button-variant($cr-streaming-blue, #FFF, #FFF)
+    }
+    .close {
+      font-size: 210%;
+      font-weight: 100;
+      color: #FFF;
+      opacity: 1;
+      line-height: 30%;
+      margin: 0.5em;
+    }
+  }
+}

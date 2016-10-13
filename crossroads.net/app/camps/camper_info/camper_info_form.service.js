@@ -4,7 +4,7 @@ class CamperInfoForm {
     this.campsService = CampsService;
     this.lookupService = LookupService;
 
-    this.formModel =  {
+    this.formModel = {
       firstName: null,
       lastName: null,
       middleName: null,
@@ -20,8 +20,7 @@ class CamperInfoForm {
   }
 
   save(campId) {
-    console.log(this.formModel);
-    return this.campsService.campResource.save({campId}, this.formModel).$promise;
+    return this.campsService.campResource.save({ campId }, this.formModel).$promise;
   }
 
   getModel() {
@@ -106,7 +105,7 @@ class CamperInfoForm {
               $scope.to.loading = LookupService.Genders.query().$promise.then((response) => {
                 $scope.to.options = response;
                 return response;
-              }).catch((err) =>  console.error(err));
+              }).catch(err => console.error(err));
             }
           }
         ]
@@ -122,14 +121,14 @@ class CamperInfoForm {
               label: 'Current Grade',
               required: true,
               options: [
-                { grade: '5th'},
-                { grade: '6th'},
-                { grade: '7th'},
-                { grade: '8th'},
-                { grade: '9th'},
-                { grade: '10th'},
-                { grade: '11th'},
-                { grade: '12th'}
+                { grade: '5th' },
+                { grade: '6th' },
+                { grade: '7th' },
+                { grade: '8th' },
+                { grade: '9th' },
+                { grade: '10th' },
+                { grade: '11th' },
+                { grade: '12th' }
               ],
               valueProp: 'grade',
               labelProp: 'grade'
@@ -195,4 +194,5 @@ class CamperInfoForm {
     ];
   }
 }
+
 export default CamperInfoForm;
