@@ -267,6 +267,8 @@ namespace crds_angular.test.Services
                 .Returns(new Participant {ParticipantId = 1});
 
             _groupParticipantService.Setup(g => g.GetServingParticipants(It.IsAny<List<int>>(), It.IsAny<long>(), It.IsAny<long>(), contactId)).Returns(MockGroupServingParticipants());
+            _groupParticipantService.Setup(g => g.GetListOfOpportunitiesByEventAndGroup(It.IsAny<int>(), It.IsAny<int>())).Returns(new List<MpSU2SOpportunity>());
+            _groupParticipantService.Setup(g => g.GetRsvpMembers(It.IsAny<int>(), It.IsAny<int>())).Returns(new List<MpRsvpMember>());
 
             var servingDays = _fixture.GetServingDays(It.IsAny<string>(), contactId, It.IsAny<long>(), It.IsAny<long>());
             _contactRelationshipService.VerifyAll();
@@ -294,6 +296,7 @@ namespace crds_angular.test.Services
                 new MpGroupServingParticipant
                 {
                     ContactId = 2,
+                    DeadlinePassedMessage = 1,
                     DomainId = 1,
                     EventId = 3,
                     EventStartDateTime = startDate,
@@ -321,6 +324,7 @@ namespace crds_angular.test.Services
                 new MpGroupServingParticipant
                 {
                     ContactId = 2,
+                    DeadlinePassedMessage = 1,
                     DomainId = 1,
                     EventId = 3,
                     EventStartDateTime = startDate.AddHours(4),
@@ -348,6 +352,7 @@ namespace crds_angular.test.Services
                 new MpGroupServingParticipant
                 {
                     ContactId = 2,
+                    DeadlinePassedMessage = 1,
                     DomainId = 1,
                     EventId = 3,
                     EventStartDateTime = startDate.AddDays(1),
@@ -375,6 +380,7 @@ namespace crds_angular.test.Services
                 new MpGroupServingParticipant
                 {
                     ContactId = 2,
+                    DeadlinePassedMessage = 1,
                     DomainId = 1,
                     EventId = 3,
                     EventStartDateTime = startDate.AddDays(1).AddHours(4),
