@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace MinistryPlatform.Translation.Models.Opportunities
+namespace MinistryPlatform.Translation.Models
 {
     public class MpSU2SOpportunity
     {

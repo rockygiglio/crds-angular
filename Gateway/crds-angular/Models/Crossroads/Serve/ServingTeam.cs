@@ -38,6 +38,9 @@ namespace crds_angular.Models.Crossroads.Serve
         [JsonProperty(PropertyName = "serveOppertunities")]
         public List<ServeOpportunity> Opportunities { get; set; }
 
+        [JsonProperty(PropertyName = "rsvpYesCount")]
+        public int RsvpYesCount { get; set; }
+
 
         public ServingTeam()
         {

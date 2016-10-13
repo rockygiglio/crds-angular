@@ -217,17 +217,9 @@ namespace crds_angular.Services
                         else
                         {
                             time.ServingTeams.Add(NewServingTeam(record));
-                            //var opportunities = Mapper.Map<List<ServeOpportunity>>(_groupParticipantService.GetListOfOpportunitiesByEventAndGroup(record.GroupId, record.EventId));
-                            //var mpRsvpMembers = Mapper.Map<List<RsvpMembers>>(_groupParticipantService.GetRsvpMembers(record.GroupId, record.EventId));
-
-                            //foreach (var opp in opportunities)
-                            //{
-                            //    opp.RsvpMembers = mpRsvpMembers.Where(m => m.Opportunity == opp.OpportunityId).ToList();
-                            //}
-
-                            //var firstOrDefault = time.ServingTeams.FirstOrDefault(t => t.GroupId == record.GroupId);
-                            //if (firstOrDefault != null)
-                            //    firstOrDefault.Opportunities = opportunities;
+                            var firstOrDefault = time.ServingTeams.FirstOrDefault(t => t.GroupId == record.GroupId);
+                            if (firstOrDefault != null)
+                                firstOrDefault.RsvpYesCount = _groupParticipantService.GetRsvpYesCount(record.GroupId, record.EventId);
                         }
                     }
                     else
@@ -244,15 +236,7 @@ namespace crds_angular.Services
                     servingDay.Day = record.EventStartDateTime.Date.ToString("d");
                     servingDay.Date = record.EventStartDateTime;
                     servingDay.ServeTimes = new List<ServingTime> {NewServingTime(record)};
-
-                    //var opportunities = Mapper.Map<List<ServeOpportunity>>(_groupParticipantService.GetListOfOpportunitiesByEventAndGroup(record.GroupId, record.EventId));           
-                    //var mpRsvpMembers = Mapper.Map<List<RsvpMembers>>(_groupParticipantService.GetRsvpMembers(record.GroupId, record.EventId));
-
-                    //foreach (var opp in opportunities)
-                    //{
-                    //    opp.RsvpMembers = mpRsvpMembers.Where(m => m.Opportunity == opp.OpportunityId).ToList();
-                    //}
-                    //servingDay.ServeTimes[0].ServingTeams[0].Opportunities = opportunities;
+                    servingDay.ServeTimes[0].ServingTeams[0].RsvpYesCount = _groupParticipantService.GetRsvpYesCount(record.GroupId, record.EventId);
 
                     servingDays.Add(servingDay);
                 }

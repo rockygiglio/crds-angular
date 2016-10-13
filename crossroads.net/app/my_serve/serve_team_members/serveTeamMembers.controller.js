@@ -14,6 +14,12 @@ export default class ServeTeamMembersController {
   $onInit()
   {
     this.serveTeamService.getTeamRsvps(this.team).then((team) =>{
+      this.loadTeamMembers(team);
+      this.ready = true;
+    });
+  }
+
+  loadTeamMembers(team) {
       this.servingOpportunities = team.serveOppertunities; // gets passed in from component attribute.
 
       this.servingOpportunities = this.addRsvpNoMembers(this.servingOpportunities);
@@ -26,8 +32,6 @@ export default class ServeTeamMembersController {
       });
 
       this.addTeam('Not Available', _.uniq(this.rsvpNoMembers, 'Participant_ID'));
-      this.ready = true;
-    });
   }
 
   addRsvpNoMembers(opportunities) {

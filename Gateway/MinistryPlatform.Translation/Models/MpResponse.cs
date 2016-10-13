@@ -18,5 +18,7 @@ namespace MinistryPlatform.Translation.Models
         public int Event_ID { get; set; }
         //public DateTime Opportunity_Date { get; set; }
 
+        [JsonProperty(PropertyName = "RsvpYesCount")]
+        public int RsvpYesCount { get; set; } = 0;
     }
 }

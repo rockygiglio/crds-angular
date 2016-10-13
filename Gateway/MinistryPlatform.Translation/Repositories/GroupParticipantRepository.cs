@@ -6,7 +6,6 @@ using Crossroads.Utilities.Extensions;
 using Crossroads.Utilities.Interfaces;
 using MinistryPlatform.Translation.Extensions;
 using MinistryPlatform.Translation.Models;
-using MinistryPlatform.Translation.Models.Opportunities;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 
 namespace MinistryPlatform.Translation.Repositories
@@ -102,6 +101,16 @@ namespace MinistryPlatform.Translation.Repositories
 
             var results = _ministryPlatformRest.UsingAuthenticationToken(_apiUserService.GetToken()).GetFromStoredProc<MpSU2SOpportunity>(GetOpportunitiesForTeamStoredProc, parms);
             return results?.FirstOrDefault();
+        }
+
+        public int GetRsvpYesCount(int groupId, int eventId)
+        {
+            const string COLUMNS = "Count(*) As RsvpYesCount";
+            string search = $"Responses.Event_ID = {eventId} And Opportunity_ID_Table.Add_To_Group = {groupId} AND Response_Result_Id = 1";
+
+            var response = _ministryPlatformRest.UsingAuthenticationToken(_apiUserService.GetToken()).Search<MpResponse>(MpRestEncode(search), MpRestEncode(COLUMNS));
+
+            return response[0]?.RsvpYesCount ?? 0;
         }
 
 
