@@ -1,15 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using MinistryPlatform.Translation.Models.Attributes;
 using Newtonsoft.Json;
 
 namespace MinistryPlatform.Translation.Models
 {
-    [MpRestApiTable(Name = "Camp_Event")]
-    public class MpCampEvent
+    [MpRestApiTable(Name = "Events")]
+    public class MpCamp
     {
         [JsonProperty(PropertyName = "Event_ID")]
         public int EventId { get; set; }
@@ -24,7 +20,7 @@ namespace MinistryPlatform.Translation.Models
         public DateTime EndDate { get; set; }
 
         [JsonProperty(PropertyName = "Event_Type_ID")]
-        public String EventType { get; set; }
+        public int EventType { get; set; }
 
         [JsonProperty(PropertyName = "Program_ID")]
         public int ProgramId { get; set; }
