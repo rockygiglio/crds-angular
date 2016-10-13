@@ -13,6 +13,9 @@ namespace MinistryPlatform.Translation.Models
         [JsonProperty(PropertyName = "rsvpMembers")]
         public List<MpRsvpMember> RsvpMembers { get; set; }
 
+        [JsonProperty(PropertyName = "Group_Role_ID")]
+        public int Group_Role_Id { get; set; }
+
         public MpSU2SOpportunity()
         {
             RsvpMembers = new List<MpRsvpMember>();

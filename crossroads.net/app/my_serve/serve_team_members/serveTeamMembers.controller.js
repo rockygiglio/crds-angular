@@ -1,6 +1,7 @@
 import CONSTANTS from 'crds-constants';
 
 export default class ServeTeamMembersController {
+  /*@ngInject*/
   constructor(ServeTeamService) {
     console.debug('Construct ServeTeamMembersController');
     this.servingOpportunities = {};
@@ -22,21 +23,20 @@ export default class ServeTeamMembersController {
   loadTeamMembers(team) {
       this.servingOpportunities = team.serveOppertunities; // gets passed in from component attribute.
 
-      this.servingOpportunities = this.addRsvpNoMembers(this.servingOpportunities);
+      this.servingOpportunities = this.splitMembers(this.servingOpportunities);
       this.allMembers = [];
 
       this.addTeam('Leaders', this.rsvpYesLeaders);
 
       _.forEach(this.servingOpportunities, (opportunity) => {
+        if(opportunity.Group_Role_ID !== CONSTANTS.GROUP.ROLES.LEADER)
         this.addTeam(opportunity.Opportunity_Title, opportunity.rsvpMembers);
       });
 
       this.addTeam('Not Available', _.uniq(this.rsvpNoMembers, 'Participant_ID'));
   }
 
-  addRsvpNoMembers(opportunities) {
-    let rsvpNoMembers = [];
-
+  splitMembers(opportunities) {
     _.forEach(opportunities, (opportunity) => {
       let partitionedArray = _.partition(opportunity.rsvpMembers, (member) => {return member.Response_Result_ID === 2});
       this.rsvpNoMembers = this.rsvpNoMembers.concat(partitionedArray[0]);
