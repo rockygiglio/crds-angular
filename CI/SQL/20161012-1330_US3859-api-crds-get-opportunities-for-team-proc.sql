@@ -24,7 +24,8 @@ AS
 BEGIN
 
 	select opportunity_id, 
-		opportunity_title 
+		opportunity_title,
+		group_role_id
 	from opportunities 
 	where Add_to_Group = @GroupID 
 		and Event_Type_ID = (select event_type_id from events where event_id = @EventID);
