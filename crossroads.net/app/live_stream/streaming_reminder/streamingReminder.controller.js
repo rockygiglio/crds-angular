@@ -1,12 +1,14 @@
 import Reminder from '../models/reminder';
 import Event from '../models/event';
 
-
 export default class StreamingReminderController {
-  constructor($modalInstance, StreamspotService, ReminderService) {
+
+  constructor($modalInstance, StreamspotService, ReminderService, Session, Profile) {
     this.modalInstance = $modalInstance;
     this.streamspotService = StreamspotService;
     this.reminderService = ReminderService;
+    this.session = Session;
+    this.profile = Profile;
 
     this.streamspotService.events.then((response) => {
       this.upcoming = response;
@@ -31,6 +33,11 @@ export default class StreamingReminderController {
       display: 'dddd, MMMM Do',
       time: 'h:mma z'
     };
+
+    // If the user is logged in, set default user info
+    if (this.session.isActive()) {
+      this.setUserDefaults();      
+    } 
   }
 
   validate(form) {
@@ -99,6 +106,15 @@ export default class StreamingReminderController {
       .groupBy((event) => event.start.format(this.dateFormats.key))
       .value()
     ;
+  }
+
+  setUserDefaults() {
+    this.profile.Personal.get()
+      .$promise.then((data) => {
+        this.model.email = data.emailAddress;
+        this.model.phone = data.mobilePhone;
+        }
+      );  
   }
 
   selectedDate(date) {

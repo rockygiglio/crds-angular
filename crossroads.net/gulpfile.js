@@ -39,6 +39,7 @@ function htmlReplace(devBuild) {
       common: { js: '/assets/common.js' },
       profile: { js: '/assets/profile.js' },
       trips: { js: '/assets/trips.js' },
+      camps: { js: '/assets/camps.js'},
       childcare: { js: '/assets/childcare.js' },
       search: { js: '/assets/search.js' },
       media: { js: '/assets/media.js' },
@@ -61,6 +62,7 @@ function htmlReplace(devBuild) {
       commonjs: {src: assets.common.js, tpl: '<script src="%s" type="text/javascript"  defer></script>'},
       profilejs: {src: assets.profile.js, tpl: '<script src="%s" type="text/javascript"  defer></script>'},
       tripsjs: {src: assets.trips.js, tpl: '<script src="%s" type="text/javascript"  defer></script>'},
+      campsjs: {src: assets.camps.js, tpl: '<script src="%s" type="text/javascript" defer></script>'},
       childcarejs: {src: assets.childcare.js, tpl: '<script src="%s" type="text/javascript"  defer></script>'},
       searchjs: {src: assets.search.js, tpl: '<script src="%s" type="text/javascript"  defer></script>'},
       mediajs: {src: assets.media.js, tpl: '<script src="%s" type="text/javascript"  defer></script>'},
@@ -161,44 +163,44 @@ gulp.task('browser-sync-dev', ['icons'], function() {
 
 });
 
-// Run the dev server 
-gulp.task('webpack-dev-server', ['icons-watch'], function(callback) { 
-  webPackDevConfigs.forEach(function(element, index) { 
- 
-    // Modify some webpack config options 
-    element.devtool = 'eval'; 
-    element.debug = true; 
-    element.output.path = '/'; 
-    // Build app to assets - watch for changes 
-    gulp.src('app/**/**') 
-        .pipe(watch(element.watchPattern)) 
-        .pipe(gulpWebpack(element)) 
-        .pipe(gulp.dest('./assets')); 
-  }); 
- 
-  new WebpackDevServer(webpack(webPackDevConfigs), { 
-    historyApiFallback: fallbackOptions, 
-    publicPath: '/assets/', 
-    quiet: false, 
-    watchDelay: 300, 
-    stats: { 
-      colors: true 
-    } 
-  }).listen(8080, 'localhost', function(err) { 
-        if(err){ 
-          throw new gutil.PluginError('webpack-dev-server', err); 
-        } 
-        gutil.log('[start]', 'https://localhost:8080/webpack-dev-server/index.html'); 
-      }); 
- 
-  htmlReplace(true); 
- 
-  gulp.src('./lib/load-image.all.min.js') 
-      .pipe(gulp.dest('./assets')); 
- 
-  gutil.log('[start]', 'Access crossroads.net at https://localhost:8080/#'); 
-  gutil.log('[start]', 'Access crossroads.net Live Reload at https://localhost:8080/webpack-dev-server/#'); 
-}); 
+// Run the dev server
+gulp.task('webpack-dev-server', ['icons-watch'], function(callback) {
+  webPackDevConfigs.forEach(function(element, index) {
+
+    // Modify some webpack config options
+    element.devtool = 'eval';
+    element.debug = true;
+    element.output.path = '/';
+    // Build app to assets - watch for changes
+    gulp.src('app/**/**')
+        .pipe(watch(element.watchPattern))
+        .pipe(gulpWebpack(element))
+        .pipe(gulp.dest('./assets'));
+  });
+
+  new WebpackDevServer(webpack(webPackDevConfigs), {
+    historyApiFallback: fallbackOptions,
+    publicPath: '/assets/',
+    quiet: false,
+    watchDelay: 300,
+    stats: {
+      colors: true
+    }
+  }).listen(8080, 'localhost', function(err) {
+        if(err){
+          throw new gutil.PluginError('webpack-dev-server', err);
+        }
+        gutil.log('[start]', 'https://localhost:8080/webpack-dev-server/index.html');
+      });
+
+  htmlReplace(true);
+
+  gulp.src('./lib/load-image.all.min.js')
+      .pipe(gulp.dest('./assets'));
+
+  gutil.log('[start]', 'Access crossroads.net at https://localhost:8080/#');
+  gutil.log('[start]', 'Access crossroads.net Live Reload at https://localhost:8080/webpack-dev-server/#');
+});
 
 // webpack build for production
 gulp.task('webpack:build', ['icons', 'robots', 'apache-site-config'], function(callback) {

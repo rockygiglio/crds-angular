@@ -1,6 +1,7 @@
 import CONSTANTS from 'crds-constants';
 
 import './myserve.html';
+import './myserve_icon_key.html';
 import './one_time_serve_mockup.html';
 import './event_registration_mockup.html';
 import './event_registration_mockup_desired.html';

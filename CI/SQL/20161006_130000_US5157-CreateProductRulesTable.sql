@@ -15,8 +15,8 @@ CREATE TABLE [dbo].[cr_Product_Rules](
 	[Product_ID] [INT] NOT NULL,
 	[Gender_ID] [INT] NULL,
 	[Congregation_ID] [INT] NOT NULL,
-	[MaxQuantity] [INT] NOT NULL,
-	[WaitListQuantity] [INT] NULL,
+	[Maximum_Quantity] [INT] NOT NULL,
+	[Wait_List_Quantity] [INT] NULL,
 	[Domain_ID] [INT] NOT NULL,
  CONSTRAINT [PK_cr_Product_Rules] PRIMARY KEY CLUSTERED 
 (

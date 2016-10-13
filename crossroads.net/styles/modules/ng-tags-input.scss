@@ -18,12 +18,14 @@ tags-input {
     }
 
     .tag-item {
-      background: $brand-primary;
+      color: $black;
+      background: $gray-lighter;
+      border-color: $gray-lighter;
       margin-top: 0;
       margin-bottom: 0;
 
       .remove-button {
-        color: $white;
+        color: $black;
       }
 
       &.selected {

@@ -10,7 +10,7 @@ describe('Landing Controller', () => {
       pastWeekends,
       results;
 
-  beforeEach(angular.mock.module('crossroads'));
+  beforeEach(angular.mock.module(constants.MODULES.LIVE_STREAM));
 
   beforeEach(inject(function ($injector, $filter) {
     filter = $filter;
@@ -258,5 +258,4 @@ describe('Landing Controller', () => {
     let messages = fixture.parseWeekends(pastWeekends);
     expect(messages.length).toBe(4);
   });
-
 })

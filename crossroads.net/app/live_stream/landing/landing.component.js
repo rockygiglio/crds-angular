@@ -1,9 +1,6 @@
 import controller from './landing.controller';
 
-LandingComponent.$inject = [];
-
 export default function LandingComponent() {
-
   let landingComponent = {
     restrict: 'E',
     templateUrl: 'landing/landing.html',
@@ -13,5 +10,6 @@ export default function LandingComponent() {
   };
 
   return landingComponent;
-
 }
+
+LandingComponent.$inject = [];
