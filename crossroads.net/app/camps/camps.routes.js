@@ -1,6 +1,21 @@
 export default function CampRoutes($stateProvider) {
 
   $stateProvider
+    .state('camps-dashboard', {
+      parent: 'noSideBar',
+      url: '/mycamps',
+      template: '<camps-dashboard></camps-dashboard>',
+      data: {
+        isProtected: true,
+        meta: {
+          title: 'Camps Dashboard',
+          description: 'What camps are you signed up for?'
+        }
+      },
+      resolve: {
+        loggedin: crds_utilities.checkLoggedin,
+      }
+    })
     .state('crossroads-camp', {
       parent: 'noSideBar',
       url: '/camps/:campId',

@@ -1,7 +1,9 @@
 import constants from 'crds-constants';
 import DashboardController from '../../../app/camps/dashboard/camps_dashboard.controller';
-//import campsModule from '../../app/camps/camps.module';
-//import campHelpers from '../campHelpers';
+
+/* jshint unused: false */
+import campsModule from '../../../app/camps/camps.module';
+import campHelpers from '../campHelpers';
 
 describe('Camp Dashboard Controller', () => {
 
@@ -29,6 +31,8 @@ describe('Camp Dashboard Component', () => {
     dashboardComponent.$onInit();
   }));
 
-
+  it('should set the view state as ready', () => {
+    expect(dashboardComponent.viewReady).toBeTruthy();
+  });
 
 });
