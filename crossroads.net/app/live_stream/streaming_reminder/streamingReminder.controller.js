@@ -1,6 +1,4 @@
 import Reminder from '../models/reminder';
-//Person = require('../../../app/profile/services/profile.service');
-//import {PersonService} from '../../profile/services/profile.service';
 
 export default class StreamingReminderController {
 
@@ -10,8 +8,6 @@ export default class StreamingReminderController {
     this.reminderService = ReminderService;
     this.session = Session;
     this.profile = Profile;
-    //this.personal = require('../../../app/profile/services/profile.service').Personal;
-
 
     this.streamspotService.events.then((response) => {
       this.upcoming = response;
@@ -39,7 +35,7 @@ export default class StreamingReminderController {
 
     // If the user is logged in, set default user info
     if (this.session.isActive()) {
-      this.setUserDefaults(this.session.exists('userId'));      
+      this.setUserDefaults();      
     } 
   }
 
@@ -111,7 +107,7 @@ export default class StreamingReminderController {
     ;
   }
 
-  setUserDefaults(userId) {
+  setUserDefaults() {
     this.profile.Personal.get()
       .$promise.then((data) => {
         this.model.email = data.emailAddress;
