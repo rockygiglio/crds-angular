@@ -17,10 +17,8 @@ export default class StreamingController {
     this.beTheChurch    = [];
 
     let debug = false;
-    let location = $location;
-
-    if ( location != undefined ) {
-      let params = location.search();
+    if ( $location != undefined ) {
+      let params = $location.search();
       debug = params.debug;
     }
     
