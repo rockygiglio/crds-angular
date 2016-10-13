@@ -30,6 +30,7 @@
     <div class="messages">
       <div class="success" dynamic-content="$root.MESSAGES.geolocationSuccessMessage.content | html" ng-show="geolocation.success"></div>
       <div class="warn" dynamic-content="$root.MESSAGES.geolocationLocationNotFound.content | html" ng-show="geolocation.locationError" ></div>
+      <div class="warn" dynamic-content="$root.MESSAGES.geolocationInvalidZipcode.content | html" ng-show="geolocation.invalidZipcode" ></div>
     </div>
 
     <footer ng-hide="geolocation.success">

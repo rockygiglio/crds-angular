@@ -11,6 +11,7 @@ export default class GeolocationController {
     this.isLocating     = false;
     this.locationError  = false;
     this.dismiss        = false;
+    this.invalidZipcode = false;
 
     this.location = this.locationService.getLocation() || Geolocation.blank();
   }
@@ -85,12 +86,17 @@ export default class GeolocationController {
    * FORM FUNCTIONALITY
    ***********************/
   submit() {
-    this.locationService.saveLocation(this.location);
-    this.success = true; 
-    setTimeout(() => {
-      this.dismiss = true;
-      this.locationService.success();
-    }, CONSTANTS.GEOLOCATION.MODAL_TIMEOUT);
+    if (this.location.zipcode.length > 0 && !this.location.zipcode.match(/^\d{5}$/)) {
+      this.invalidZipcode = true;
+    } else {
+      this.locationService.saveLocation(this.location);
+      this.success = true; 
+      setTimeout(() => {
+        this.dismiss = true;
+        this.locationService.success();
+      }, CONSTANTS.GEOLOCATION.MODAL_TIMEOUT);
+
+    }
   }
 
   dismissed() {
