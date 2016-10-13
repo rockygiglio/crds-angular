@@ -1,11 +1,10 @@
 import Geolocation from '../models/geolocation';
 
 export default class GeolocationService {
-  constructor($q, $rootScope, GoogleMapsService, $analytics) {
+  constructor($q, $rootScope, GoogleMapsService) {
     this.q          = $q;
     this.rootScope  = $rootScope;
     this.mapService = GoogleMapsService;
-    this.analytics  = $analytics;
 
     this.answered       = false;
     this.modalDismissed = false;
@@ -25,12 +24,27 @@ export default class GeolocationService {
     this.answered    = true;
     localStorage.setItem('crds-geolocation', JSON.stringify(location));
 
-    if (typeof this.analytics !== 'undefined') {
-      this.analytics.eventTrack('Streaming Location', { category: 'count', label: 'count', value: location.count })
-      this.analytics.eventTrack('Streaming Location', { category: 'lat', label: 'latitude', value: location.lat })
-      this.analytics.eventTrack('Streaming Location', { category: 'lng', label: 'longitude', value: location.lng })
-      this.analytics.eventTrack('Streaming Location', { category: 'zipcode', label: 'zipcode', value: location.zipcode })
+    let formKey = '1rupjr7gvqUU203fwjmeUlIiVwCA8BdkD-mP6M6s3wxQ';
+    let url = `https://docs.google.com/forms/d/${formKey}/formResponse`;
+    let data = {
+      "entry.1874873182": location.lat,
+      "entry.1547032910": location.lng,
+      "entry.1403910056": location.count,
+      "entry.692424241": location.zipcode
+    };
+    /**
+     * Using $.ajax instead of $http as $http formats data as JSON,
+     * this causes google forms to not accept the data
+     */
+    if (typeof $ !== 'undefined') { // undefined check for tests
+      $.ajax({
+        url: url,
+        data: data,
+        type: "POST",
+        dataType: "xml"
+      })
     }
+
   }
 
   retrieveZipcode(location) {
@@ -42,6 +56,7 @@ export default class GeolocationService {
     }, (error) => {
       deferred.reject(error);
     });
+
 
     return deferred.promise;
   }
@@ -68,5 +83,4 @@ export default class GeolocationService {
     this.modalDismissed = true;
     this.rootScope.$broadcast('geolocationModalDismiss')
   }
-  
 }
