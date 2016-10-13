@@ -47,7 +47,7 @@ namespace MinistryPlatform.Translation.Test.Services
                 Console.WriteLine("Result\t{0}", p.FirstOrDefault());
             }
         }
-
+        
         [Test]
         public void TestChildRsvpdProcedure()
         {
@@ -119,6 +119,22 @@ namespace MinistryPlatform.Translation.Test.Services
             };
             var results = _fixture.UsingAuthenticationToken(_authToken).GetFromStoredProc<MpPledge>("api_crds_Add_As_TripParticipant", fields);
             Console.WriteLine("Result\t" + results.ToString());
+        }
+
+        [Test]
+        public void TestGetEvents()
+        {
+            const int eventId = 4525285;
+            Console.WriteLine("Getting Event");
+            var results = _fixture.UsingAuthenticationToken(_authToken).Search<MpCamp>($"Event_ID={eventId}");
+
+            Assert.AreEqual(results.Count, 1);
+
+            foreach (var p in results)
+            {
+                Console.WriteLine("Event\t{0}", p);
+            }
+
         }
 
         [Test]

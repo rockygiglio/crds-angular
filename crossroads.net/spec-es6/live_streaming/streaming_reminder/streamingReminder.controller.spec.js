@@ -4,6 +4,7 @@ import Reminder from '../../../app/live_stream/models/reminder';
 import Event from '../../../app/live_stream/models/event';
 import ReminderService from '../../../app/live_stream/services/reminder.service';
 import StreamspotService from '../../../app/live_stream/services/streamspot.service';
+import Session from '../../../core/services/session_service';
 
 describe('Streaming Reminder Controller', () => {
   let fixture,
@@ -14,7 +15,9 @@ describe('Streaming Reminder Controller', () => {
       currentEvent,
       futureEvent,
       futureDuplicateEvent,
-      httpBackend;
+      httpBackend,
+      Session,
+      Profile;
 
   const reminderEndpoint = `${__API_ENDPOINT__}`;
   
@@ -34,7 +37,9 @@ describe('Streaming Reminder Controller', () => {
     StreamspotService = $injector.get('StreamspotService');
     ReminderService = $injector.get('ReminderService');
     httpBackend = $injector.get('$httpBackend');
-    fixture = new StreamingReminderController(modalInstance, StreamspotService, ReminderService);
+    Session = $injector.get('Session');
+    Profile = $injector.get('Profile');
+    fixture = new StreamingReminderController(modalInstance, StreamspotService, ReminderService, Session, Profile);
 
     jasmine.clock().mockDate(baseTime);
 
@@ -97,13 +102,13 @@ describe('Streaming Reminder Controller', () => {
   })
   it('should set time', () => {
     fixture.setTime(currentEvent);
-    expect(fixture.model.time).toBe(currentEvent.start.format('h:mma z'))
+    expect(fixture.model.time).toBe(currentEvent.start.format('h:mma z'));
   });
   it('should reset form', () => {
     fixture.setDay(futureEvent);
     fixture.setTime(futureEvent);
     expect(fixture.model.day).toBe(futureEvent.start.format('MM/DD/YYYY'));
-    expect(fixture.model.time).toBe(futureEvent.start.format('h:mma z'))
+    expect(fixture.model.time).toBe(futureEvent.start.format('h:mma z'));
 
     fixture.resetForm();
 
@@ -156,4 +161,20 @@ describe('Streaming Reminder Controller', () => {
     httpBackend.flush();
 
   });
+  it('should set user defaults', () => {
+    fixture.setUserDefaults(1234);
+    let expectedEmail = "user@test.com";
+    let expectedPhone = "123-456-7890";
+    let result = {  
+      "emailAddress": expectedEmail,
+      "mobilePhone": expectedPhone
+    };
+
+    let url = `${reminderEndpoint}api/profile`;
+    httpBackend.expectGET(url).respond(200, result);
+    httpBackend.flush();
+
+    expect(fixture.model.email).toBe(expectedEmail);
+    expect(fixture.model.phone).toBe(expectedPhone);
+  })
 })

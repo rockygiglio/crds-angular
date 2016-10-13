@@ -57,10 +57,22 @@ describe('Live Stream Event', () => {
   })
 
   describe('formatting', () => {
+    it('formats date to short date style according to user timezone', () => {
+      let formattedCurrentDate = moment().tz(moment.tz.guess()).format('MM/DD/YYYY');
+
+      expect(Event.formatGeneralDateTimeToLocalDate(currentEvent.start)).toBe(formattedCurrentDate);
+
+    })
+
     it('formats the start time according to the user timezone', () => {
       let formattedCurrentTimeLess1Hour = moment().tz(moment.tz.guess()).subtract(1, 'hour').format('h:mma z');
+      expect(currentEvent.formatToLocalTZTime(currentEvent.start)).toBe(formattedCurrentTimeLess1Hour);
+    })
 
-      expect(currentEvent.formatToLocalTZ(currentEvent.start)).toBe(formattedCurrentTimeLess1Hour);
+    it('formats the start date to day of week / date format according to the user timezone', () => {
+      let formattedCurrentDate = moment().tz(moment.tz.guess()).format('dddd, MMMM Do');
+
+      expect(currentEvent.formatToLocalTZDate(currentEvent.start)).toBe(formattedCurrentDate);   
     })
   })
 })

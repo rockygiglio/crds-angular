@@ -4,6 +4,7 @@
     //TODO Should this be moved to core?
     // MODULE NAMES
     MODULES: {
+      CAMPS: 'crossroads.camps',
       CHILDCARE: 'crossroads.childcare',
       CHILDCARE_DASHBOARD: 'crossroads.childcare_dashboard',
       CORE: 'crossroads.core',
@@ -16,6 +17,7 @@
       GO_VOLUNTEER: 'crossroads.go_volunteer',
       //GROUP_FINDER: 'crossroads.group_finder',
       MEDIA: 'crossroads.media',
+      MY_SERVE: 'crossroads.my_serve',
       LIVE_STREAM: 'crossroads.live_stream',
       GROUP_TOOL: 'crossroads.grouptool',
       MPTOOLS: 'crossroads.mptools',
@@ -24,6 +26,7 @@
       SEARCH: 'crossroads.search',
       SIGNUP: 'crossroads.signup',
       TRIPS: 'crossroads.trips',
+
     },
     ATTRIBUTE_TYPE_IDS: {
       ABUSE_HISTORY: 69,

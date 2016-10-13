@@ -1,11 +1,14 @@
 import Reminder from '../models/reminder';
-
+import Event from '../models/event';
 
 export default class StreamingReminderController {
-  constructor($modalInstance, StreamspotService, ReminderService) {
+
+  constructor($modalInstance, StreamspotService, ReminderService, Session, Profile) {
     this.modalInstance = $modalInstance;
     this.streamspotService = StreamspotService;
     this.reminderService = ReminderService;
+    this.session = Session;
+    this.profile = Profile;
 
     this.streamspotService.events.then((response) => {
       this.upcoming = response;
@@ -30,6 +33,11 @@ export default class StreamingReminderController {
       display: 'dddd, MMMM Do',
       time: 'h:mma z'
     };
+
+    // If the user is logged in, set default user info
+    if (this.session.isActive()) {
+      this.setUserDefaults();      
+    } 
   }
 
   validate(form) {
@@ -100,6 +108,15 @@ export default class StreamingReminderController {
     ;
   }
 
+  setUserDefaults() {
+    this.profile.Personal.get()
+      .$promise.then((data) => {
+        this.model.email = data.emailAddress;
+        this.model.phone = data.mobilePhone;
+        }
+      );  
+  }
+
   selectedDate(date) {
     if(_.isEmpty(this.upcoming)) {
       return this.upcoming;
@@ -113,7 +130,7 @@ export default class StreamingReminderController {
     this.model.day = day;
     
     if (day) {
-      this.model.day = day.start.format(this.dateFormats.key)
+      this.model.day = Event.formatGeneralDateTimeToLocalDate(day.start);
     } else {
       this.model.time = '';
     }
@@ -123,9 +140,13 @@ export default class StreamingReminderController {
     this.model.time = event.start.format(this.dateFormats.time);
   }
 
+
   resetForm() {
+
+    let firstEventStartDate = this.uniqueDates()[0].start;
+
     this.model = new Reminder();
-    this.model.day = this.nextDate();
+    this.model.day =  Event.formatGeneralDateTimeToLocalDate(firstEventStartDate);
 
     this.formError     = false;
     this.dateTimeError = false;

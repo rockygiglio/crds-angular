@@ -289,6 +289,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\API\AccountController.cs" />
     <Compile Include="Controllers\API\AddressController.cs" />
+    <Compile Include="Controllers\API\CampController.cs" />
     <Compile Include="Controllers\API\ChildcareController.cs" />
     <Compile Include="Controllers\API\CongregationController.cs" />
     <Compile Include="Controllers\API\EventToolController.cs" />
@@ -312,6 +313,8 @@
     <Compile Include="Exceptions\NotHeadOfHouseholdException.cs" />
     <Compile Include="Exceptions\TripFullException.cs" />
     <Compile Include="Models\Crossroads\AddressDTO.cs" />
+    <Compile Include="Models\Crossroads\Camp\CampDTO.cs" />
+    <Compile Include="Models\Crossroads\Camp\CampReservationDTO.cs" />
     <Compile Include="Models\Crossroads\Childcare\ChildcareDashboardDto.cs" />
     <Compile Include="Models\Crossroads\Childcare\ChildCareDate.cs" />
     <Compile Include="Models\Crossroads\Childcare\ChildcareGroup.cs" />
@@ -374,6 +377,7 @@
     <Compile Include="Processors\SendTextMessageJob.cs" />
     <Compile Include="Services\AddressService.cs" />
     <Compile Include="Services\BulkEmailSyncService.cs" />
+    <Compile Include="Services\CampService.cs" />
     <Compile Include="Services\CongregationService.cs" />
     <Compile Include="Services\EquipmentService.cs" />
     <Compile Include="Services\GeocodeCalculationAddressProximityService.cs" />
@@ -387,6 +391,7 @@
     <Compile Include="Services\FormBuilderService.cs" />
     <Compile Include="Services\Interfaces\IAddressGeocodingService.cs" />
     <Compile Include="Services\Interfaces\IAddressProximityService.cs" />
+    <Compile Include="Services\Interfaces\ICampService.cs" />
     <Compile Include="Services\Interfaces\IInvitationService.cs" />
     <Compile Include="Services\Interfaces\ITextCommunicationService.cs" />
     <Compile Include="Services\InvitationService.cs" />

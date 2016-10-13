@@ -124,7 +124,7 @@ DECLARE @applicationTitle varchar(30) = '$ApplicationTitle';
 DECLARE @dbLoginUser varchar(50) = '$MPUser';
 
 -- The user which will be running the Windows scheduled tasks from the WEB server
-DECLARE @scheduledTasksUser varchar(50) = '$InternalServerName/MPAdmin';
+DECLARE @scheduledTasksUser varchar(50) = '$InternalServerName\MPAdmin';
 
 -- The domain GUID - set this to NEWID() when setting up a new domain, but use a previous value for an existing domain
 -- DECLARE @domainGuid = NEWID();
