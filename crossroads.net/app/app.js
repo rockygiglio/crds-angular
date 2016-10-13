@@ -4,7 +4,6 @@ require('./childcare');
 require('./mp_tools');
 require('./group_tool');
 require('./live_stream');
-
 require('ui-select/dist/select.css');
 
 (function() {
@@ -17,19 +16,18 @@ require('ui-select/dist/select.css');
       constants.MODULES.CORE,
       constants.MODULES.COMMON,
       constants.MODULES.FORM_BUILDER,
-      //constants.MODULES.FORMLY_BUILDER_PLAYGROUND,
       constants.MODULES.GIVE,
       constants.MODULES.GO_VOLUNTEER,
-      //constants.MODULES.GROUP_FINDER,
-      constants.MODULES.LIVE_STREAM,
       constants.MODULES.MEDIA,
+      constants.MODULES.LIVE_STREAM,
       constants.MODULES.MPTOOLS,
       constants.MODULES.MY_SERVE,
       constants.MODULES.GROUP_TOOL,
       constants.MODULES.PROFILE,
       constants.MODULES.SEARCH,
       constants.MODULES.SIGNUP,
-      constants.MODULES.TRIPS
+      constants.MODULES.TRIPS,
+      constants.MODULES.CAMPS
    ]);
 
   angular.module(constants.MODULES.CROSSROADS)
