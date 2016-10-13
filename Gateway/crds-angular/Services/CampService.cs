@@ -17,7 +17,6 @@ namespace crds_angular.Services
         private readonly IConfigurationWrapper _configurationWrapper;
         private readonly IParticipantRepository _participantRepository;
         private readonly IEventRepository _eventRepository;
-        private readonly IEventParticipantRepository _eventParticipantRepository;
         private readonly IApiUserRepository _apiUserRepository;
 
         public CampService(
@@ -27,7 +26,6 @@ namespace crds_angular.Services
             IConfigurationWrapper configurationWrapper,
             IParticipantRepository partcipantRepository,
             IEventRepository eventRepository,
-            IEventParticipantRepository eventParticipantRepository,
             IApiUserRepository apiUserRepository)
         {
             _contactService = contactService;
@@ -36,7 +34,6 @@ namespace crds_angular.Services
             _configurationWrapper = configurationWrapper;
             _participantRepository = partcipantRepository;
             _eventRepository = eventRepository;
-            _eventParticipantRepository = eventParticipantRepository;
             _apiUserRepository = apiUserRepository;
         }
 
@@ -107,32 +104,33 @@ namespace crds_angular.Services
         public List<MyCampDTO> GetMyCampInfo(string token)
         {
             var apiToken = _apiUserRepository.GetToken();
-            var campType = _configurationWrapper.GetConfigIntValue("CampEventType").ToString();
+            var campType = _configurationWrapper.GetConfigValue("CampEventTypeName");
 
             var dashboardData = new List<MyCampDTO>();
 
             var loggedInContact = _contactService.GetMyProfile(token);
-            //var family = _contactService.GetHouseholdFamilyMembers(loggedInContact.Household_ID);
             var family = _contactService.GetOtherHouseholdMembers(loggedInContact.Contact_ID);
 
-            var camps = _eventRepository.GetEvents("Camp", apiToken);
+            var camps = _eventRepository.GetEvents(campType, apiToken);
             foreach (var camp in camps.Where(c => c.EventEndDate >= DateTime.Today))
             {
-                
-                var campers = _eventRepository.EventParticipants(apiToken, camp.EventId);
-                foreach (var member in family)
+                var campers = _eventRepository.EventParticipants(apiToken, camp.EventId).ToList();
+                if (campers.Any())
                 {
-                    if (campers.Any(c => c.ContactId == member.ContactId))
+                    foreach (var member in family)
                     {
-                        dashboardData.Add(new MyCampDTO
+                        if (campers.Any(c => c.ContactId == member.ContactId))
                         {
-                            CamperContactId = member.ContactId,
-                            CamperNickName = member.Nickname,
-                            CamperLastName = member.LastName,
-                            CampName = camp.EventTitle,
-                            CampStartDate = camp.EventStartDate,
-                            CampEndDate = camp.EventEndDate
-                        });
+                            dashboardData.Add(new MyCampDTO
+                            {
+                                CamperContactId = member.ContactId,
+                                CamperNickName = member.Nickname,
+                                CamperLastName = member.LastName,
+                                CampName = camp.EventTitle,
+                                CampStartDate = camp.EventStartDate,
+                                CampEndDate = camp.EventEndDate
+                            });
+                        }
                     }
                 }
             }
