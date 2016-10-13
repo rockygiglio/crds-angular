@@ -252,7 +252,7 @@ namespace crds_angular.Services
                     //}
                     //servingDay.ServeTimes[0].ServingTeams[0].Opportunities = opportunities;
 
-                    //servingDays.Add(servingDay);
+                    servingDays.Add(servingDay);
                 }
             }
 
