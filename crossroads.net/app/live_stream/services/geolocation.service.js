@@ -1,4 +1,5 @@
 import Geolocation from '../models/geolocation';
+import CONSTANTS from '../../constants';
 
 export default class GeolocationService {
   constructor($q, $rootScope, GoogleMapsService) {
@@ -24,7 +25,7 @@ export default class GeolocationService {
     this.answered    = true;
     localStorage.setItem('crds-geolocation', JSON.stringify(location));
 
-    let formKey = '1rupjr7gvqUU203fwjmeUlIiVwCA8BdkD-mP6M6s3wxQ';
+    let formKey = CONSTANTS.GEOLOCATION.FORMS_KEY;
     let url = `https://docs.google.com/forms/d/${formKey}/formResponse`;
     let data = {
       "entry.1874873182": location.lat,
@@ -36,7 +37,7 @@ export default class GeolocationService {
      * Using $.ajax instead of $http as $http formats data as JSON,
      * this causes google forms to not accept the data
      */
-    if (typeof $ !== 'undefined') { // undefined check for tests
+    if (typeof $ !== 'undefined') {
       $.ajax({
         url: url,
         data: data,

@@ -73,7 +73,7 @@ export default class GeolocationController {
       this.isLocating = false;
       this.location = result;
     }, (error) => {
-      this.setLocationError(error);
+      this.setLocationError();
     })
   }
 

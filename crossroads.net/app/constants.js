@@ -120,7 +120,8 @@
       },
     },
     GEOLOCATION: {
-      MODAL_TIMEOUT: 10000
+      MODAL_TIMEOUT: 10000,
+      FORMS_KEY: '1rupjr7gvqUU203fwjmeUlIiVwCA8BdkD-mP6M6s3wxQ'
     },
     INVITATION: {
       TYPES: {
