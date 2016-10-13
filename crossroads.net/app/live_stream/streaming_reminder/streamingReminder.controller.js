@@ -44,8 +44,8 @@ export default class StreamingReminderController {
     if (form) {
       this.model.isDayValid   = form.day.$viewValue !== '';
       this.model.isTimeValid  = form.time.$viewValue !== '';
-      this.model.isEmailValid = form.email.$touched && form.email.$valid
-      this.model.isPhoneValid = form.phone.$touched && form.phone.$valid
+      this.model.isEmailValid = form.email.$valid
+      this.model.isPhoneValid = form.phone.$valid
     }
   }
 
@@ -112,9 +112,11 @@ export default class StreamingReminderController {
     this.profile.Personal.get()
       .$promise.then((data) => {
         this.model.email = data.emailAddress;
-        this.model.phone = data.mobilePhone;
+        if (data.mobilePhone) {
+          this.model.phone = data.mobilePhone;
         }
-      );  
+      }
+      );
   }
 
   selectedDate(date) {
