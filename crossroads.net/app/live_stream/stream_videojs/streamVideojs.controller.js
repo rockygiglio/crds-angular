@@ -16,7 +16,6 @@ export default class StreamVideojsController {
     this.redirectText   = 'Go Back';
 
     let debug = false;
-    let location = $location;
 
     if ( $location != undefined ) {
       let params = $location.search();
