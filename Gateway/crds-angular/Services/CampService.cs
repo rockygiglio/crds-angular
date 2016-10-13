@@ -125,7 +125,7 @@ namespace crds_angular.Services
                             dashboardData.Add(new MyCampDTO
                             {
                                 CamperContactId = member.ContactId,
-                                CamperNickName = member.Nickname,
+                                CamperNickName = member.Nickname ?? member.FirstName,
                                 CamperLastName = member.LastName,
                                 CampName = camp.EventTitle,
                                 CampStartDate = camp.EventStartDate,
