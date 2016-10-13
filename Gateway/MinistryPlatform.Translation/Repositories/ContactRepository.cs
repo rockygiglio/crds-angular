@@ -5,6 +5,7 @@ using Crossroads.Utilities.Interfaces;
 using log4net;
 using MinistryPlatform.Translation.Extensions;
 using MinistryPlatform.Translation.Models;
+using MinistryPlatform.Translation.Models.MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 
 namespace MinistryPlatform.Translation.Repositories
@@ -21,14 +22,18 @@ namespace MinistryPlatform.Translation.Repositories
         private readonly ILog _logger = LogManager.GetLogger(typeof (ContactRepository));
 
         private readonly IMinistryPlatformService _ministryPlatformService;
+        private readonly IMinistryPlatformRestRepository _ministryPlatformRest;
+        private readonly IApiUserRepository _apiUserRepository;
         private readonly int _participantsPageId;
         private readonly int _securityRolesSubPageId;
 
-        public ContactRepository(IMinistryPlatformService ministryPlatformService, IAuthenticationRepository authenticationService, IConfigurationWrapper configuration)
+        public ContactRepository(IMinistryPlatformService ministryPlatformService, IAuthenticationRepository authenticationService, IConfigurationWrapper configuration, IMinistryPlatformRestRepository ministryPlatformRest, IApiUserRepository apiUserRepository)
             : base(authenticationService, configuration)
         {
             _ministryPlatformService = ministryPlatformService;
             _configurationWrapper = configuration;
+            _ministryPlatformRest = ministryPlatformRest;
+            _apiUserRepository = apiUserRepository;
 
             _householdsPageId = configuration.GetConfigIntValue("Households");
             _securityRolesSubPageId = configuration.GetConfigIntValue("SecurityRolesSubPageId");
@@ -38,6 +43,7 @@ namespace MinistryPlatform.Translation.Repositories
             _addressesPageId = configuration.GetConfigIntValue("Addresses");
             _contactsPageId = configuration.GetConfigIntValue("Contacts");
             _participantsPageId = configuration.GetConfigIntValue("Participants");
+
         }
 
         public int CreateContactForGuestGiver(string emailAddress, string displayName, string firstName, string lastName)
@@ -273,6 +279,29 @@ namespace MinistryPlatform.Translation.Repositories
                     return 0;
                 }
             });
+        }
+
+        public List<MpRecordID> CreateContact(MpContact minorContact)
+        {
+            var storedProc = _configurationWrapper.GetConfigValue("CreateContactStoredProc");
+            var apiToken = _apiUserRepository.GetToken();
+            var fields = new Dictionary<String, Object>
+              {
+                {"@FirstName", minorContact.FirstName},
+                {"@LastName", minorContact.LastName},
+                {"@MiddleName", minorContact.MiddleName },
+                {"@PreferredName", minorContact.PreferredName },
+                {"@NickName", minorContact.Nickname },
+                {"@Birthdate", minorContact.BirthDate },
+                {"@Gender", minorContact.Gender },
+                {"@SchoolAttending", minorContact.SchoolAttending },
+                {"@HouseholdId", minorContact.HouseholdId },
+                {"@HouseholdPosition", minorContact.HouseholdPositionId }
+             };
+
+            var result = _ministryPlatformRest.UsingAuthenticationToken(apiToken).GetFromStoredProc<MpRecordID>(storedProc, fields);
+            var contactIdList = result.FirstOrDefault() ?? new List<MpRecordID>();
+            return contactIdList;
         }
 
         private static MpMyContact ParseProfileRecord(Dictionary<string, object> recordsDict)

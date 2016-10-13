@@ -27,6 +27,7 @@ Get-ChildItem $path -recurse -filter *.sql | Foreach-Object {
 		echo "Error: $output"
 		$exitCode = $LASTEXITCODE
 	} elseif($output -eq "(1 rows affected)"){#If a new script was stored then run it
+		echo "Running script $_"
 		$output = & $SQLcmd @SQLCommonParams -I -i $_.FullName
 		if($LASTEXITCODE -ne 0){
 			echo "File: $_"

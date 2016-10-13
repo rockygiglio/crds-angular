@@ -1,6 +1,5 @@
 export default class ServeTeamMembersController {
   constructor() {
-    console.debug('Construct ServeTeamMembersController');
     //
     // !!!!
     // TODO REMOVE TEMP TEAM DATA

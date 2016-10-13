@@ -48,7 +48,7 @@
             </linked-content>
           </figure>
           <section>
-            <h3 title="{{ promo.title }}"><linked-content href="{{ promo.url }}" target="_blank">{{ promo.title | truncate: 38 }}</linked-content></h3>
+            <h3 title="{{ promo.title }}"><linked-content href="{{ promo.url }}" target="_blank" ng-bind-html="promo.title | truncate: 38"></linked-content></h3>
             <div ng-bind-html="promo.description"></div>
           </section>
         </article>

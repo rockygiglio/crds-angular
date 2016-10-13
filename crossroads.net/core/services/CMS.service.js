@@ -60,7 +60,7 @@
 
     vm.getRecentMessages = function(limit) {
       return vm.http.get(`${this.url}/messages?date__LessThanOrEqual=${vm.todaysDate}&date__sort=DESC&ID__sort=DESC&SeriesID__GreaterThan=0&__limit[]=${limit}`)
-                      .then(rsp => {return rsp.data.messages});
+                      .then(rsp => {return rsp.data.messages.slice(0,limit)});
     }
 
     vm.getMessages = function(query) {
