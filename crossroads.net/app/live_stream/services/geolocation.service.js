@@ -50,13 +50,40 @@ export default class GeolocationService {
   retrieveZipcode(location) {
     let deferred = this.q.defer();
 
-    this.mapService.retrieveZipcode(location.lat, location.lng).then((result) => {
-      location.zipcode = result;
-      deferred.resolve(location);
+    this.mapService.reverseGeocode(location.lat, location.lng).then((response) => {
+      if (response.length) {
+        let zipcodes = [],
+            country  = '';
+        _.each(response, (location) => {
+          _.each(location.address_components, (address) => {
+            if (_.findIndex(address.types, (t) => { return t === 'country'}) >= 0) {
+              country = address.long_name;
+            } 
+            if (_.findIndex(address.types, (t) => { return t === 'postal_code'}) >= 0) {
+              zipcodes.push(address.long_name);
+            } 
+          })
+        })
+
+        // find the duplicate values from the zipcode array as its the most accurate
+        let zipcode = _.first(_.transform(_.countBy(zipcodes), (result, count, value) => {
+                      if (count > 1) result.push(value);
+                    }, []));
+
+        if (country !== 'United States') {
+          zipcode = 'outside US';
+        }
+
+        location.zipcode = zipcode
+
+        deferred.resolve(location);
+      } else {
+        deferred.reject('No Results')
+      }
+      
     }, (error) => {
       deferred.reject(error);
     });
-
 
     return deferred.promise;
   }
