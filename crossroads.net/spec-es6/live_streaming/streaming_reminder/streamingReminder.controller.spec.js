@@ -17,7 +17,9 @@ describe('Streaming Reminder Controller', () => {
       futureDuplicateEvent,
       httpBackend,
       Session,
-      Profile;
+      Profile,
+      RootScope,
+      Scope;
 
   const reminderEndpoint = `${__API_ENDPOINT__}`;
   
@@ -39,7 +41,9 @@ describe('Streaming Reminder Controller', () => {
     httpBackend = $injector.get('$httpBackend');
     Session = $injector.get('Session');
     Profile = $injector.get('Profile');
-    fixture = new StreamingReminderController(modalInstance, StreamspotService, ReminderService, Session, Profile);
+    RootScope = $injector.get('$rootScope');
+    Scope = RootScope.$new();
+    fixture = new StreamingReminderController(modalInstance, StreamspotService, ReminderService, Session, Profile, Scope);
 
     jasmine.clock().mockDate(baseTime);
 

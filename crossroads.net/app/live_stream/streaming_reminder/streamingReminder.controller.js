@@ -3,7 +3,7 @@ import Event from '../models/event';
 
 export default class StreamingReminderController {
 
-  constructor($modalInstance, StreamspotService, ReminderService, Session, Profile) {
+  constructor($modalInstance, StreamspotService, ReminderService, Session, Profile, $scope) {
     this.modalInstance = $modalInstance;
     this.streamspotService = StreamspotService;
     this.reminderService = ReminderService;
@@ -33,6 +33,9 @@ export default class StreamingReminderController {
       display: 'dddd, MMMM Do',
       time: 'h:mma z'
     };
+
+    this.scope = $scope;
+    $scope.selectedTime = '';
 
     // If the user is logged in, set default user info
     if (this.session.isActive()) {
@@ -82,6 +85,7 @@ export default class StreamingReminderController {
 
   close() {
     this.modalInstance.close();
+    this.scope.selectedTime = '';
   }
 
   nextDate() {
@@ -142,6 +146,7 @@ export default class StreamingReminderController {
 
   setTime(event) {
     this.model.time = event.start.format(this.dateFormats.time);
+    this.scope.selectedTime = event.title;
   }
 
 
