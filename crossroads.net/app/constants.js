@@ -142,7 +142,6 @@
       UPCOMING: 'Upcoming',
       OFF: 'Off'
     },
-    //PRE_STREAM_HOURS: 0.01338
     PRE_STREAM_HOURS: 15
 
   };
