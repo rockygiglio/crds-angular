@@ -100,6 +100,8 @@
         scope.team.roles = scope.team.members[0].roles;
       }
 
+      scope.getRSVPYes = getRSVPYes();
+      
       //////////////////////////////////////
 
       function isTeamTab() {
@@ -222,6 +224,18 @@
           personToEdit.name = person.nickName === null ? person.firstName : person.nickName;
           $rootScope.$emit('personUpdated', person);
         });
+      }
+
+      function getRSVPYes() {      
+        let count = 0;
+        _.forEach(scope.team.serveOppertunities, (opportunity) =>{
+          if(opportunity.rsvpMembers.length > 0)
+          {
+            let rsvpYesMembers = _.where(opportunity.rsvpMembers, {Response_Result_ID: 1});
+            count = count + rsvpYesMembers.length;
+          }
+        });
+        return count;
       }
 
       function getFrequency() {
