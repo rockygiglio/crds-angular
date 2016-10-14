@@ -5,8 +5,8 @@ export default class GeolocationController {
   constructor(GeolocationService) {
     this.locationService = GeolocationService;
     
-    this.subject = 'people';
-    this.verb    = 'are';
+    this.subject = 'person';
+    this.verb    = 'is';
 
     this.isLocating     = false;
     this.locationError  = false;
