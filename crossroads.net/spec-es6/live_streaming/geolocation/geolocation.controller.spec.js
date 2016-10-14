@@ -49,17 +49,17 @@ describe('Geolocation Controller', () => {
     expect(fixture.location.count).toBe(0);
   });
 
-  it('should not enable submit w/o count or zipcode', () {
-    expect(fixture.submitEnabled()).toBeFalse();
+  it('should not enable submit w/o count or zipcode', () => {
+    expect(fixture.submitEnabled()).toBeFalsy();
 
     fixture.add();
-    expect(fixture.submitEnabled()).toBeTrue();
+    expect(fixture.submitEnabled()).toBeTruthy();
 
     fixture.subtract();
-    expect(fixture.submitEnabled()).toBeFalse();
+    expect(fixture.submitEnabled()).toBeFalsy();
 
     fixture.location.zipcode = '45202';
-    expect(fixture.submitEnabled()).toBeTrue();
+    expect(fixture.submitEnabled()).toBeTruthy();
   });
 
   it('should not submit an invalid zipcode', () => {
