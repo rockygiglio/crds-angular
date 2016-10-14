@@ -23,8 +23,8 @@ describe('Streaming Reminder Model', () => {
       reminder.startDate = "2016-10-11T19:45:00-04:00";
     })
 
-    it('formats a DateTime string to a time without a timezone suffix', () => {
-      expect(reminder.userTZTimeWithoutTZSuffix(reminder.startDate)).toBe(moment(reminder.startDate).tz(moment.tz.guess()).format('h:mma'));
+    it('formats a DateTime string to a time with a timezone suffix', () => {
+      expect(reminder.userTZTimeWithTZSuffix(reminder.startDate)).toBe(moment(reminder.startDate).tz(moment.tz.guess()).format('h:mma z'));
     })
 
     it('formats a DateTime string to a date in XX/XX/XXXX format', () => {
