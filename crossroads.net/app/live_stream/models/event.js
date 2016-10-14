@@ -19,7 +19,7 @@ export default class Event {
     this.title     = title;
     this.start     = moment.tz(start, 'YYYY-MM-DD H:mm:ss', 'America/New_York');
     this.end       = moment.tz(end, 'YYYY-MM-DD H:mm:ss', 'America/New_York');
-    this.dayOfYear = this.start.dayOfYear()
+    this.dayOfYear = this.start.dayOfYear();
     this.time      = this.start.format('LT [EST]');
   }
 

@@ -137,5 +137,12 @@
     MINISTRY: {
       SPIRITUAL_GROWTH: '8'
     },
+    STREAM_STATUS: {
+      LIVE: 'Live',
+      UPCOMING: 'Upcoming',
+      OFF: 'Off'
+    },
+    PRE_STREAM_HOURS: 15
+
   };
 })();

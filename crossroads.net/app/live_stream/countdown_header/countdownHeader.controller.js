@@ -25,8 +25,8 @@ export default class CountdownHeaderController {
   }
 
   setElements() {
-    this.header  = document.getElementById('countdown'),
-    this.intro   = document.getElementById('intro'),
+    this.header  = document.getElementById('countdown');
+    this.intro   = document.getElementById('intro');
     this.wrapper = document.getElementById('wrapper');
   }
 
