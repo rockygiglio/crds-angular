@@ -887,6 +887,12 @@ namespace crds_angular.test.Services
                 Times.Exactly(3));
         }
 
+        [Test]
+        public void getRsvpMembers()
+        {
+
+        }
+
         private static readonly object[] AllMockEvents =
         {
             new[] {SetupMockEvents()},
@@ -1145,7 +1151,19 @@ namespace crds_angular.test.Services
                         Opportunity = 2218712,
                         ParticipantId = 7572172,
                         ResponseResultId = 1
+                    },
+
+                    new RsvpMembers()
+                    {
+                        EventId = 4510561,
+                        GroupRoleId = 16,
+                        LastName = "Nukem",
+                        Name = "Duke",
+                        Opportunity = 2218712,
+                        ParticipantId = 7572183,
+                        ResponseResultId = 2
                     }
+
                 }
             });
 
@@ -1153,7 +1171,7 @@ namespace crds_angular.test.Services
             {
                 Group_Role_ID = 22,
                 OpportunityId = 2218735,
-                OpportunityTitle = "(t) Kindergarten K213 Sun 8:30",
+                OpportunityTitle = "Kindergarten Leader",
                 RsvpMembers = new List<RsvpMembers>()
                 {
                     new RsvpMembers()
@@ -1165,6 +1183,16 @@ namespace crds_angular.test.Services
                         Opportunity = 2218735,
                         ParticipantId = 7547422,
                         ResponseResultId = 1
+                    },
+                    new RsvpMembers()
+                    {
+                        EventId = 4510561,
+                        GroupRoleId = 22,
+                        LastName = "Strife",
+                        Name = "Cloud",
+                        Opportunity = 2218735,
+                        ParticipantId = 7547423,
+                        ResponseResultId = 2
                     }
                 }
             });
