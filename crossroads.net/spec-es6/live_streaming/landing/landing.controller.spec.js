@@ -2,20 +2,28 @@
 import constants from 'crds-constants';
 import LandingController from '../../../app/live_stream/landing/landing.controller';
 import CMSService from '../../../core/services/CMS.service';
+import StreamStatusService from '../../../app/live_stream/services/stream-status.service';
 
 describe('Landing Controller', () => {
   let fixture,
       cmsService,
       filter,
       pastWeekends,
-      results;
+      results,
+      rootScope,
+      streamStatusService,
+      streamStatusServiceInstance;
 
   beforeEach(angular.mock.module(constants.MODULES.LIVE_STREAM));
 
   beforeEach(inject(function ($injector, $filter) {
     filter = $filter;
+    rootScope   = $injector.get('$rootScope');
     cmsService = $injector.get('CMSService');
-    fixture = new LandingController(cmsService, filter);
+    streamStatusService = $injector.get('StreamStatusService');
+    //streamStatusServiceInstance = new streamStatusService();
+
+    fixture = new LandingController(rootScope, filter, cmsService, streamStatusService);
 
     pastWeekends = [
       {
@@ -258,4 +266,5 @@ describe('Landing Controller', () => {
     let messages = fixture.parseWeekends(pastWeekends);
     expect(messages.length).toBe(4);
   });
-})
+
+});

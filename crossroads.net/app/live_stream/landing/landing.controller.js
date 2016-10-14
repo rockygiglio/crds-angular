@@ -1,9 +1,11 @@
 let WOW = require('wow.js/dist/wow.min.js');
+import StreamStatusService from '../services/stream-status.service';
 
 export default class LandingController {
   constructor($rootScope, $filter, CMSService, StreamStatusService) {
 
     this.rootScope = $rootScope;
+
     this.streamStatus = StreamStatusService.getStatus();
 
     this.rootScope.$on('streamStatusChanged', (e, streamStatus) => {
