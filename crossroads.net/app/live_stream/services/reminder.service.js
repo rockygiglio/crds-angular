@@ -32,7 +32,7 @@ export default class ReminderService {
       "templateId": 0,
       "mergeData": {
         "Event_Date":       reminder.userTZDateShortFormat(reminder.startDate),
-        "Event_Start_Time": reminder.userTZTimeWithoutTZSuffix(reminder.startDate)
+        "Event_Start_Time": reminder.userTZTimeWithTZSuffix(reminder.startDate)
       },
       "startDate":     reminder.startDate,
       "toPhoneNumber": reminder.phone
@@ -49,7 +49,7 @@ export default class ReminderService {
       "startDate":      reminder.startDate,
       "mergeData": {
         "Event_Date":       reminder.userTZDateShortFormat(reminder.startDate),
-        "Event_Start_Time": reminder.userTZTimeWithoutTZSuffix(reminder.startDate)
+        "Event_Start_Time": reminder.userTZTimeWithTZSuffix(reminder.startDate)
       },
     })
 
