@@ -74,6 +74,6 @@ export default class StreamVideojsController {
   }
 
   goBack() {
-    window.location.href = '/live-v1';
+    window.location.href = '/live';
   }
 }

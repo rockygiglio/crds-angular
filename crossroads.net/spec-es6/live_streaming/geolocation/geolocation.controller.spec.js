@@ -16,7 +16,6 @@ describe('Geolocation Controller', () => {
   }));
 
   it('should add to number of watchers', () => {
-    fixture.add();
 
     expect(fixture.location.count).toBe(1);
     expect(fixture.subject).toBe('person');
@@ -25,38 +24,45 @@ describe('Geolocation Controller', () => {
     fixture.add();
 
     expect(fixture.location.count).toBe(2);
+    expect(fixture.subject).toBe('people');
+    expect(fixture.verb).toBe('are');
+
+    fixture.add();
+
+    expect(fixture.location.count).toBe(3);
     expect(fixture.subject).toBe('people');
     expect(fixture.verb).toBe('are');
   });
 
-  it('should subtract from number of watchers', () => {
+  it('should increment / decrement appropriately (greater than 0)', () => {
     fixture.add();
     fixture.add();
 
+    expect(fixture.location.count).toBe(3);
+
+    fixture.subtract();
     expect(fixture.location.count).toBe(2);
+    expect(fixture.subject).toBe('people');
+    expect(fixture.verb).toBe('are');
 
     fixture.subtract();
     expect(fixture.location.count).toBe(1);
     expect(fixture.subject).toBe('person');
     expect(fixture.verb).toBe('is');
-
-    fixture.subtract();
-    expect(fixture.location.count).toBe(0);
-    expect(fixture.subject).toBe('people');
-    expect(fixture.verb).toBe('are');
     
     fixture.subtract();
-    expect(fixture.location.count).toBe(0);
+    expect(fixture.location.count).toBe(1);
   });
 
   it('should not enable submit w/o count or zipcode', () => {
-    expect(fixture.submitEnabled()).toBeFalsy();
 
-    fixture.add();
     expect(fixture.submitEnabled()).toBeTruthy();
 
     fixture.subtract();
-    expect(fixture.submitEnabled()).toBeFalsy();
+    expect(fixture.submitEnabled()).toBeTruthy();
+
+    fixture.add();
+    expect(fixture.submitEnabled()).toBeTruthy();
 
     fixture.location.zipcode = '45202';
     expect(fixture.submitEnabled()).toBeTruthy();

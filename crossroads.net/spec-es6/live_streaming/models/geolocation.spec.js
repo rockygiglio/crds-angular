@@ -8,7 +8,7 @@ describe('Geolocation Model', () => {
 
     expect(location.lat).not.toBeTruthy();
     expect(location.lng).not.toBeTruthy();
-    expect(location.count).toBe(0);
+    expect(location.count).toBe(1);
     expect(location.zipcode).not.toBeTruthy();
   })
 

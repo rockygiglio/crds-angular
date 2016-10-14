@@ -1,3 +1,6 @@
+import moment from 'moment';
+import 'moment-timezone';
+
 export default class Event {
 
   static asEvents(jsonArray) {
