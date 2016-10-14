@@ -67,7 +67,7 @@ IF NOT EXISTS (SELECT Role_Page_ID FROM [dbo].[dp_Role_Pages] WHERE Page_ID = @P
 BEGIN
 
 	INSERT INTO [dbo].[Dp_Role_Pages] 
-	(RoleID,Page_ID,Access_Level,Scope_All,Approver,File_Attacher,Data_Importer,Data_Exporter,Secure_Records,Allow_Comments,Quick_Add) VALUES
+	(Role_ID,Page_ID,Access_Level,Scope_All,Approver,File_Attacher,Data_Importer,Data_Exporter,Secure_Records,Allow_Comments,Quick_Add) VALUES
 	(@Role ,@PageId,3           ,0        ,0       ,0            ,0            ,0            ,0             ,0             ,0        );
 END
 GO

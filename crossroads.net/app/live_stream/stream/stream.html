@@ -1,13 +1,4 @@
 <div class="live-stream" ng-if="stream.inProgress">
-
-  <div class="pushdown-container" ng-if="stream.displayCounter">
-    <div class="container">
-      <div class="iframe-wrapper">
-        <iframe allowfullscreen="" frameborder="0" height="100" id="slider-iframe" src="//crossroads-media.s3.amazonaws.com/documents/crds-live-slider/index.html" width="800"></iframe>
-      </div>
-      <a class="pull-right btn-dismiss" href="#" ng-click="stream.displayCounter = false">Dismiss</a>
-    </div>
-  </div>
   <div class="dark-bg">
     <header class="container clearfix">
       <a class="navbar-brand logo pull-left" href="http://crossroads.net">
@@ -15,7 +6,7 @@
           <use xlink:href="#logo" xmlns:xlink="http://www.w3.org/1999/xlink"></use>
         </svg>
       </a>
-      <a href="/live-v1" class="pull-right" data-dismiss="modal" ><span class="glyphicon glyphicon-remove"></span></a>
+      <a href="/live" class="pull-right" data-dismiss="modal"><svg viewBox="0 0 32 32" class="icon arrow-left3"><use xlink:href="#arrow-left3"></use></svg> Go Back</a>
     </header>
     <section>
       <div class="container">
@@ -23,6 +14,8 @@
       </div>
     </section>
   </div>
+
+  <geolocation ng-show="stream.showGeolocationBanner()"></geolocation>
 
   <div class="container digital-program-container">
 
@@ -48,7 +41,7 @@
             </linked-content>
           </figure>
           <section>
-            <h3 title="{{ promo.title }}"><linked-content href="{{ promo.url }}" target="_blank">{{ promo.title | truncate: 38 }}</linked-content></h3>
+            <h3 title="{{ promo.title }}"><linked-content href="{{ promo.url }}" target="_blank" ng-bind-html="promo.title | truncate: 38"></linked-content></h3>
             <div ng-bind-html="promo.description"></div>
           </section>
         </article>

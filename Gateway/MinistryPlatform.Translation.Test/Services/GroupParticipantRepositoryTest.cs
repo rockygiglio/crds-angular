@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Crossroads.Utilities.Interfaces;
 using MinistryPlatform.Translation.Models;
+using MinistryPlatform.Translation.Models.DTO;
 using MinistryPlatform.Translation.Repositories;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 using Moq;
@@ -9,53 +10,30 @@ using NUnit.Framework;
 
 namespace MinistryPlatform.Translation.Test.Services
 {
-    [TestFixture]
     public class GroupParticipantRepositoryTest
     {
         private GroupParticipantRepository _fixture;
-        private Mock<IConfigurationWrapper> _configWrapper;
         private Mock<IMinistryPlatformService> _ministryPlatformService;
+        private Mock<IMinistryPlatformRestRepository> _ministryPlatformRestRepository;
         private Mock<IApiUserRepository> _apiUserRepository;
-        private Mock<IMinistryPlatformRestRepository> _ministryPlatformRestService;
-        private Mock<IGroupRepository> _groupRepository;
-        //private readonly int _groupsParticipantsPageId = 298;
-        //private readonly int _groupsParticipantsSubPage = 88;
-        //private readonly int _groupsPageId = 322;
-        //private readonly int _groupsSubGroupsPageId = 299;
-        //private readonly int _myGroupParticipationPageId = 563;
-        //private const string ApiToken = "ABC";
+
         [SetUp]
         public void SetUp()
         {
-            _ministryPlatformService = new Mock<IMinistryPlatformService>();
-            _ministryPlatformRestService = new Mock<IMinistryPlatformRestRepository>();
-            _configWrapper = new Mock<IConfigurationWrapper>();
-            _apiUserRepository = new Mock<IApiUserRepository>();
-            _groupRepository = new Mock<IGroupRepository>();
-            _fixture = new GroupParticipantRepository(_configWrapper.Object, _ministryPlatformService.Object, _apiUserRepository.Object, _ministryPlatformRestService.Object, _groupRepository.Object);
+            _ministryPlatformService = new Mock<IMinistryPlatformService>(MockBehavior.Strict);
+            _ministryPlatformRestRepository = new Mock<IMinistryPlatformRestRepository>(MockBehavior.Strict);
+            _apiUserRepository = new Mock<IApiUserRepository>(MockBehavior.Strict);
 
-            _configWrapper.Setup(m => m.GetEnvironmentVarAsString("API_USER")).Returns("uid");
-            _configWrapper.Setup(m => m.GetEnvironmentVarAsString("API_PASSWORD")).Returns("pwd");
+            var config = new Mock<IConfigurationWrapper>(MockBehavior.Strict);
+            var auth = new Mock<IAuthenticationRepository>(MockBehavior.Strict);
+
+            config.Setup(mocked => mocked.GetEnvironmentVarAsString("API_USER")).Returns("api_user");
+            config.Setup(mocked => mocked.GetEnvironmentVarAsString("API_PASSWORD")).Returns("password");
+
+            auth.Setup(m => m.Authenticate(It.IsAny<string>(), It.IsAny<string>())).Returns(new Dictionary<string, object> {{"token", "ABC"}, {"exp", "123"}});
+
+            _fixture = new GroupParticipantRepository(config.Object, _ministryPlatformService.Object, _apiUserRepository.Object, _ministryPlatformRestRepository.Object);
         }
 
-        [Test]
-        public void TestGetAllGroupsLeadByParticipantNotFound()
-        {
-        }
-
-        [Test]
-        public void TestGetAllGroupsLeadByParticipantNoGroupsFound()
-        {
-        }
-
-        [Test]
-        public void TestGetAllGroupsLeadByParticipantNoGroupsLead()
-        {
-        }
-
-        [Test]
-        public void TestGetAllGroupsLeadByParticipantNoGroups()
-        {
-        }
     }
 }

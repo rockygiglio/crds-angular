@@ -13,11 +13,11 @@
             <input type='radio' ng-required='!serveTeamMessage.selection' name='teamRadio' value='{{team.groupId}}' ng-model='serveTeamMessage.selection'>
             {{team.groupName}}
           </label>
-					
+
 				</div>
-        <ng-messages for="serveTeamMessageForm.teamRadio.$error" ng-if="serveTeamMessageForm.$submitted && serveTeamMessageForm.teamRadio.$invalid">
-          <ng-messages-include src="on-submit-messages"></ng-messages-include>
-        </ng-messages>
+				<ng-messages for="serveTeamMessageForm.teamRadio.$error" ng-if="serveTeamMessageForm.$submitted && serveTeamMessageForm.teamRadio.$invalid">
+					<ng-messages-include src="on-submit-messages"></ng-messages-include>
+				</ng-messages>
 				<!--<div class="radio">
 					<label>
             <input type='radio' name='teamRadio' value='-1' ng-model='serveTeamMessage.selection'>
@@ -59,8 +59,14 @@
 					input-classes='sm-pull-right btn btn-primary btn-block-mobile mobile-push-half-bottom'></loading-button>
 
 				<a type='button' class='btn btn-standard btn-block-mobile mobile-push-half-bottom' href='#' ng-click='serveTeamMessage.cancel()'>Cancel</a>
-
 			</div>
+
+			<a ui-sref="serve-signup" class="push-top">
+				<svg viewBox="0 0 32 32" class="icon icon-large arrow-circle-o-left">
+					<use xlink:href="#arrow-circle-o-left"></use>
+				</svg>
+				Back to Sign Up to Serve
+			</a>
 		</div>
 	</div>
 </form>

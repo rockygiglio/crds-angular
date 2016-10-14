@@ -160,6 +160,22 @@ namespace crds_angular.Services
             return groups;
         }
 
+        public ServingTeam GetServingTeamRsvps(ServingTeam team)
+        {
+            var opportunities = Mapper.Map<List<ServeOpportunity>>(_groupParticipantService.GetListOfOpportunitiesByEventAndGroup(team.GroupId, team.EventId));
+            var mpRsvpMembers = Mapper.Map<List<RsvpMembers>>(_groupParticipantService.GetRsvpMembers(team.GroupId, team.EventId));
+
+            foreach (var opp in opportunities)
+            {
+                opp.RsvpMembers = mpRsvpMembers.Where(m => m.Opportunity == opp.OpportunityId).ToList();
+            }
+
+            team.Opportunities = opportunities;
+
+            return team;
+        }
+
+
         public List<ServingDay> GetServingDays(string token, int contactId, long from, long to)
         {
             var family = GetImmediateFamilyParticipants(token);
@@ -211,10 +227,9 @@ namespace crds_angular.Services
                         else
                         {
                             time.ServingTeams.Add(NewServingTeam(record));
-                            var rsvpYesMembers = Mapper.Map<List<RsvpYesMembers>>(_groupParticipantService.GetRsvpYesMembers(record.GroupId, record.EventId));
                             var firstOrDefault = time.ServingTeams.FirstOrDefault(t => t.GroupId == record.GroupId);
                             if (firstOrDefault != null)
-                                firstOrDefault.RsvpYesMembers = rsvpYesMembers;
+                                firstOrDefault.RsvpYesCount = _groupParticipantService.GetRsvpYesCount(record.GroupId, record.EventId);
                         }
                     }
                     else
@@ -231,9 +246,8 @@ namespace crds_angular.Services
                     servingDay.Day = record.EventStartDateTime.Date.ToString("d");
                     servingDay.Date = record.EventStartDateTime;
                     servingDay.ServeTimes = new List<ServingTime> {NewServingTime(record)};
+                    servingDay.ServeTimes[0].ServingTeams[0].RsvpYesCount = _groupParticipantService.GetRsvpYesCount(record.GroupId, record.EventId);
 
-                    var mpRsvpYesMembers = Mapper.Map<List<RsvpYesMembers>>(_groupParticipantService.GetRsvpYesMembers(record.GroupId, record.EventId));
-                    servingDay.ServeTimes[0].ServingTeams[0].RsvpYesMembers = mpRsvpYesMembers;
                     servingDays.Add(servingDay);
                 }
             }

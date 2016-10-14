@@ -84,12 +84,21 @@ export class StreamingComponent {
       mobile: false
     }).init();
 
-    this.cmsDataService
-        .getXMostRecentMessages(4)
-        .subscribe((pastWeekends) => {
-          this.pastWeekends = pastWeekends;
+    var pastWeekendTotal = 0;
+    var maxPastWeekends = 4;
 
-          this.pastWeekends.forEach((event, i, pastWeekends) => {
+    this.cmsDataService
+        .getXMostRecentMessages(maxPastWeekends)
+        .subscribe((pastWeekends) => {
+          
+          var queriedPastWeekends = pastWeekends;
+          queriedPastWeekends.forEach((event, i, pastWeekends) => {
+
+            pastWeekendTotal++;
+            if ( pastWeekendTotal > maxPastWeekends ) {
+              return false;
+            }
+
             if (typeof event.series !== "undefined") {
               let slugPipe = new ReplaceNonAlphaNumericPipe();
 
@@ -108,6 +117,10 @@ export class StreamingComponent {
               } 
             }
           })
+
+          queriedPastWeekends = queriedPastWeekends.slice(0,maxPastWeekends);
+          this.pastWeekends = queriedPastWeekends;
+
         });
   }
 

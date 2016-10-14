@@ -81,6 +81,16 @@
     padding: $line-height-computed*2.5 0 $line-height-computed*3.5;
   }
 
+  .list-inline-countdown {
+    display: inline-block;
+    padding: 0 5px;
+
+    li {
+      padding-left: 0;
+      padding-right: 0;
+    }
+  }
+
   .home-series {
     background: #A7A9AC;
     overflow: visible;

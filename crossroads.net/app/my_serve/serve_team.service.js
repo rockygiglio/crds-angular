@@ -1,10 +1,12 @@
+<<<<<<< HEAD
 import CONSTANTS from '../constants';
 
 export default class ServeTeamService {
     /*@ngInject*/
-    constructor($log, $resource) {
+    constructor($log, $resource, $q) {
         this.log = $log;
         this.resource = $resource;
+        this.qApi = $q;
     }
 
     getAllTeamMembersByLeader() {
@@ -36,5 +38,10 @@ export default class ServeTeamService {
             groupId: groupId,
             groupTypeId: CONSTANTS.GROUP.GROUP_TYPE_ID.MY_SERVE
         }, message).$promise;
+    }
+
+    getTeamRsvps(team) {
+        return this.resource(__API_ENDPOINT__ +'api/serve/getTeamRsvps')
+        .save(team).$promise;
     }
 }

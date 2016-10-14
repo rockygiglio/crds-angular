@@ -1,9 +1,9 @@
 <form name="form" novalidate ng-submit="reminder.submit(form)">
   <modal-header ng-reflect-show-close="true">
   <div class="modal-header">
-    <button aria-label="Close" class="close" ng-click="reminder.close()" type="button">
+    <a aria-label="Close" class="close" ng-click="reminder.close()">
       <span aria-hidden="true">×</span>
-    </button>
+    </a>
     <div dynamic-content="$root.MESSAGES.streamingReminderTitle.content | html"></div>
   </div>
   </modal-header>
@@ -39,7 +39,6 @@
           </div>
         </div>
 
-
         <div class="contact">
           <div dynamic-content="$root.MESSAGES.streamingReminderTypeSelect.content | html"></div>
           <div class="btn-group btn-group-justified" data-toggle="buttons">
@@ -51,11 +50,11 @@
             </label>
           </div>
           <div class="form-group validation-control" ng-show="reminder.model.type=='phone'">
-            <input class="form-control" name="phone" ng-model="reminder.model.phone" placeholder="Enter your phone number" type="tel" pattern="^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$">
+            <input class="form-control" name="phone" ng-model="reminder.model.phone" placeholder="Enter your phone number" type="tel" pattern="^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$" required>
             <div class="alert alert-danger" ng-if="reminder.model.isPhoneValid===false" dynamic-content="$root.MESSAGES.invalidPhone.content | html"></div>
           </div>
           <div class="form-group validation-control" ng-show="reminder.model.type=='email'">
-            <input class="form-control" name="email" ng-model="reminder.model.email" placeholder="Enter your email address" type="email">
+            <input class="form-control" name="email" ng-model="reminder.model.email" placeholder="Enter your email address" type="email" required>
             <div class="alert alert-danger" ng-if="reminder.model.isEmailValid===false" dynamic-content="$root.MESSAGES.invalidEmail.content | html"></div>
           </div>
         </div>

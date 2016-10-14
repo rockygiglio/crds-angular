@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Messaging;
+using System.Web;
 using System.Web.Http;
 using System.Web.Http.Description;
 using crds_angular.Exceptions.Models;
@@ -39,24 +40,45 @@ namespace crds_angular.Controllers.API
         /// <param name="from">Optional- The starting date</param>
         /// <param name="to">Optional- The end date</param>
         /// <returns></returns>
-        [ResponseType(typeof (List<ServingDay>))]
+        [ResponseType(typeof(List<ServingDay>))]
         [Route("api/serve/family-serve-days/{contactId}")]
         public IHttpActionResult GetFamilyServeDays(int contactId, long from = 0, long to = 0)
         {
             return Authorized(token =>
-            {
-                try
-                {
-                    var servingDays = _serveService.GetServingDays(token, contactId, from, to);
-                    return Ok(servingDays);
-                }
-                catch (Exception exception)
-                {
-                    var apiError = new ApiErrorDto("Get Family Serve Days Failed", exception);
-                    throw new HttpResponseException(apiError.HttpResponseMessage);
-                }
-            });
+                              {
+                                  try
+                                  {
+                                      var servingDays = _serveService.GetServingDays(token, contactId, from, to);
+                                      return Ok(servingDays);
+                                  }
+                                  catch (Exception exception)
+                                  {
+                                      var apiError = new ApiErrorDto("Get Family Serve Days Failed", exception);
+                                      throw new HttpResponseException(apiError.HttpResponseMessage);
+                                  }
+                              });
         }
+
+        [ResponseType(typeof(ServingTeam))]
+        [Route("api/serve/getTeamRsvps")]
+        [AcceptVerbs("POST")]
+        public IHttpActionResult GetServingTeamRsvps([FromBody] ServingTeam team)
+        {
+            return Authorized(token =>
+                              {
+                                  try
+                                  {
+                                      var rsvpTeam = _serveService.GetServingTeamRsvps(team);
+                                      return Ok(rsvpTeam);
+                                  }
+                                  catch (Exception exception)
+                                  {
+                                      var apiError = new ApiErrorDto($"Get RSVP for {team.GroupId} group failed", exception);
+                                      throw new HttpResponseException(apiError.HttpResponseMessage);
+                                  }
+                              });
+        }
+
 
         [ResponseType(typeof (List<FamilyMember>))]
         [Route("api/serve/family/{contactId?}")]

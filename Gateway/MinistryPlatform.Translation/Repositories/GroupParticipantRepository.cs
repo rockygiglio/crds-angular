@@ -12,6 +12,7 @@ namespace MinistryPlatform.Translation.Repositories
 {
     public class GroupParticipantRepository : IGroupParticipantRepository
     {
+        public const string GetOpportunitiesForTeamStoredProc = "api_crds_Get_Opportunities_For_Team";
         private readonly IConfigurationWrapper _configurationWrapper;
         private readonly IMinistryPlatformService _ministryPlatformService;
         private readonly IApiUserRepository _apiUserService;
@@ -67,13 +68,14 @@ namespace MinistryPlatform.Translation.Repositories
             //Finish out search string and call the rest backend
             var groupServingParticipants = _ministryPlatformRest.UsingAuthenticationToken(_apiUserService.GetToken()).Search<MpGroupServingParticipant>(MpRestEncode(searchFilter));
 
-            groupServingParticipants.ForEach(p => p.RowNumber = groupServingParticipants.IndexOf(p) + 1);
-            groupServingParticipants.Where(p => p.ContactId == loggedInContactId).All(c => c.LoggedInUser = true);
-
-            foreach (var mpGroupServingParticipant in groupServingParticipants.Where(p => p.DeadlinePassedMessage == null))
-            {
-                mpGroupServingParticipant.DeadlinePassedMessage = defaultDeadlinePassedMessage;
-            }
+            groupServingParticipants.ForEach(p =>
+                                             {
+                                                 p.RowNumber = groupServingParticipants.IndexOf(p) + 1;
+                                                 if (p.ContactId == loggedInContactId)
+                                                     p.LoggedInUser = true;
+                                                 if (p.DeadlinePassedMessage == null)
+                                                     p.DeadlinePassedMessage = defaultDeadlinePassedMessage;
+                                             });
 
             return groupServingParticipants.OrderBy(g => g.EventStartDateTime)
                 .ThenBy(g => g.GroupName)
@@ -82,14 +84,36 @@ namespace MinistryPlatform.Translation.Repositories
                 .ToList();
         }
 
-        public List<MpRsvpYesMember> GetRsvpYesMembers(int groupId, int eventId)
+        public List<MpRsvpMember> GetRsvpMembers(int groupId, int eventId)
         {
-            const string COLUMNS = "Responses.opportunity_id,Responses.participant_id,Responses.event_id,opportunity_ID_Table.Opportunity_Title, opportunity_ID_Table.Group_Role_ID, Participant_ID_Table_Contact_ID_Table.NickName, Participant_ID_Table_Contact_ID_table.Last_Name";
-            string search = $"Responses.Response_result_id = 1 and Responses.Event_ID = {eventId} And Opportunity_ID_Table.Add_To_Group = {groupId}";
+            const string COLUMNS = "Responses.opportunity_id,Responses.participant_id,Responses.event_id, opportunity_ID_Table.Group_Role_ID, Participant_ID_Table_Contact_ID_Table.NickName, Participant_ID_Table_Contact_ID_table.Last_Name,Responses.Response_Result_Id";
+            string search = $"Responses.Event_ID = {eventId} And Opportunity_ID_Table.Add_To_Group = {groupId}";
 
-            var opportunityResponse = _ministryPlatformRest.UsingAuthenticationToken(_apiUserService.GetToken()).Search<MpRsvpYesMember>(MpRestEncode(search), MpRestEncode(COLUMNS));
+            var opportunityResponse = _ministryPlatformRest.UsingAuthenticationToken(_apiUserService.GetToken()).Search<MpRsvpMember>(MpRestEncode(search), MpRestEncode(COLUMNS));
 
             return opportunityResponse;
+        }
+
+        public List<MpSU2SOpportunity> GetListOfOpportunitiesByEventAndGroup(int groupId, int eventId)
+        {
+            var parms = new Dictionary<string, object>
+            {
+                {"@GroupID", groupId},
+                {"@EventID", eventId }
+            };
+
+            var results = _ministryPlatformRest.UsingAuthenticationToken(_apiUserService.GetToken()).GetFromStoredProc<MpSU2SOpportunity>(GetOpportunitiesForTeamStoredProc, parms);
+            return results?.FirstOrDefault();
+        }
+
+        public int GetRsvpYesCount(int groupId, int eventId)
+        {
+            const string COLUMNS = "Count(*) As RsvpYesCount";
+            string search = $"Responses.Event_ID = {eventId} And Opportunity_ID_Table.Add_To_Group = {groupId} AND Response_Result_Id = 1";
+
+            var response = _ministryPlatformRest.UsingAuthenticationToken(_apiUserService.GetToken()).Search<MpResponse>(MpRestEncode(search), MpRestEncode(COLUMNS));
+
+            return response[0]?.RsvpYesCount ?? 0;
         }
 
         public List<MpGroup> GetAllGroupsLeadByParticipant(int participantId)
@@ -98,7 +122,6 @@ namespace MinistryPlatform.Translation.Repositories
             string search = $"Group_Participants.participant_id = {participantId}";
 
             var groupParticipantRecords = _ministryPlatformRest.UsingAuthenticationToken(_apiUserService.GetToken()).Search<MpGroupParticipant>(MpRestEncode(search), MpRestEncode(COLUMNS));
-
 
             List<MpGroup> groups = new List<MpGroup>();
             foreach (var groupParticipant in groupParticipantRecords)

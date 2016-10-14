@@ -1,8 +1,8 @@
 <article class="crds-card fadeInUp wow" data-wow-delay="{{ contentCard.content.delay }}">
   <figure>
-    <linked-content target="{{ contentCard.content.target }}" href="{{ contentCard.content.url }}" class="imgix-fluid-bg img-background" background="{{ contentCard.content.image }}"></linked-content>
+    <linked-content target="{{ contentCard.content.target }}" href="{{ contentCard.content.url }}" class="img-background" background="{{ contentCard.content.image }}"></linked-content>
     <figcaption>
-      <linked-content  target="{{ contentCard.content.target }}" href="{{ contentCard.content.url }}" ng-if="contentCard.content.title" title="{{ contentCard.content.title }}">{{ contentCard.content.title | truncate: 38 }}</linked-content>
+      <linked-content  target="{{ contentCard.content.target }}" href="{{ contentCard.content.url }}" ng-if="contentCard.content.title" title="{{ contentCard.content.title }}" ng-bind-html="contentCard.content.title | truncate: 38"></linked-content>
     </figcaption>
   </figure>
   <section>
