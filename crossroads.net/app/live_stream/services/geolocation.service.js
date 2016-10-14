@@ -8,10 +8,8 @@ export default class GeolocationService {
     this.rootScope  = $rootScope;
     this.mapService = GoogleMapsService;
     this.cookies = $cookies;
-    debugger;
 
     this.answered       = false;
-    this.modalDismissed = false;
   }
 
   showModal() {
@@ -21,7 +19,7 @@ export default class GeolocationService {
   showBanner() {
     // dismissed the modal w/o answering
     // OR you have previously answered
-    return (this.modalDismissed && !this.answered) || (this.hasLocation() && !this.answered);
+    return (this.hasDismissed() && !this.answered) || (this.hasLocation() && !this.answered);
   }
 
   saveLocation(location) {
@@ -97,7 +95,7 @@ export default class GeolocationService {
   }
 
   hasDismissed() {
-    return cookies.get('dismissedGeo') == true;
+    return this.cookies.get('dismissedGeo') == "true";
   }
 
   getLocation() {
@@ -115,8 +113,8 @@ export default class GeolocationService {
   }
 
   dismissed() {
-    this.modalDismissed = true;
-    cookies.put('dismissedGeo', this.modalDismissed);
+    this.answered    = true;
+    this.cookies.put('dismissedGeo', true);
     this.rootScope.$broadcast('geolocationModalDismiss')
   }
 }
