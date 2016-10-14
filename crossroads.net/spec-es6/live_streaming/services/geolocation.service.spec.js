@@ -7,7 +7,8 @@ describe('Geolocation Service', () => {
       q,
       location,
       rootScope,
-      mapService;
+      mapService,
+      cookies;
 
   beforeEach(angular.mock.module(CONSTANTS.MODULES.LIVE_STREAM));
 
@@ -15,8 +16,9 @@ describe('Geolocation Service', () => {
     q          = $injector.get('$q');
     rootScope  = $injector.get('$rootScope');
     mapService = $injector.get('GoogleMapsService');
+    cookies = $injector.get('$cookies');
 
-    service = new GeolocationService(q, rootScope, mapService);
+    service = new GeolocationService(q, rootScope, mapService, cookies);
 
     location = Geolocation.build({
       lat: '39.1603615',
@@ -33,7 +35,7 @@ describe('Geolocation Service', () => {
   });
 
   describe('Modal and Banner Logic', () => {
-    it('should show modal if not answered before', () => {
+    it('should show modal if not answered before', () => {      
       expect(service.showModal()).toBe(true);
     })
 
@@ -50,13 +52,14 @@ describe('Geolocation Service', () => {
     })
 
     it('should show the banner if modal dismissed', () => {
-      service.modalDismissed = true;
+      cookies.put('dismissedGeo', true);
 
       expect(service.showBanner()).toBe(true);
 
     })
 
     it('should hide banner if answered in modal', () => {
+      cookies.put('dismissedGeo', false);
       expect(service.showModal()).toBe(true);
       service.saveLocation(location);
       expect(service.showBanner()).toBe(false);
