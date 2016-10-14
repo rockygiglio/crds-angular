@@ -229,7 +229,7 @@ streaming, landing {
     }
 
     @media (min-width: $screen-sm-min) {
-      height: 792px;
+      min-height: 550px;
     }
   }
 

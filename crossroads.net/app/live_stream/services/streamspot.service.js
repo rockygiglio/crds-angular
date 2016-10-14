@@ -2,20 +2,24 @@ import Event from '../models/event';
 
 export default class StreamspotService {
 
-  constructor($resource, $rootScope) {
-    this.resource = $resource
+  constructor($resource, $rootScope, StreamStatusService) {
+    this.resource = $resource;
+    this.rootScope = $rootScope;
+    this.streamStatusService = StreamStatusService;
     this.headers = {
       'Content-Type': 'application/json',
       'x-API-Key': __STREAMSPOT_API_KEY__
     };
     this.url  = __STREAMSPOT_ENDPOINT__;
     this.ssid = __STREAMSPOT_SSID__;
-    this.rootScope = $rootScope;
     this.events = this.getEvents();
   }
 
   broadcast() {
-    let event = _(this.parseEvents()).first();
+    let events = this.parseEvents();
+    let event = _(events).first();
+
+    let streamStatus = this.streamStatusService.setStreamStatus(events, event.isBroadcasting());
 
     // dispatch updates
     this.rootScope.$broadcast('isBroadcasting', event.isBroadcasting());
@@ -86,4 +90,5 @@ export default class StreamspotService {
     console.error('An error occurred');
     return Promise.reject(error);
   }
+
 }
