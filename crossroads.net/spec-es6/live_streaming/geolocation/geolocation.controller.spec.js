@@ -34,7 +34,7 @@ describe('Geolocation Controller', () => {
     expect(fixture.verb).toBe('are');
   });
 
-  it('should subtract from number of watchers', () => {
+  it('should increment / decrement appropriately (greater than 0)', () => {
     fixture.add();
     fixture.add();
 
@@ -51,13 +51,15 @@ describe('Geolocation Controller', () => {
     expect(fixture.verb).toBe('is');
     
     fixture.subtract();
-    expect(fixture.location.count).toBe(0);
+    expect(fixture.location.count).toBe(1);
   });
 
   it('should not enable submit w/o count or zipcode', () => {
 
+    expect(fixture.submitEnabled()).toBeTruthy();
+
     fixture.subtract();
-    expect(fixture.submitEnabled()).toBeFalsy();
+    expect(fixture.submitEnabled()).toBeTruthy();
 
     fixture.add();
     expect(fixture.submitEnabled()).toBeTruthy();

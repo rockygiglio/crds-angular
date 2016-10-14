@@ -24,7 +24,7 @@ export default class GeolocationController {
 
   subtract() {
     let count = this.location.count;
-    if (count > 0) {
+    if (count > 1 ) {
       count -= 1;
     }
 
