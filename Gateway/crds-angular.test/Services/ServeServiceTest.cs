@@ -888,9 +888,27 @@ namespace crds_angular.test.Services
         }
 
         [Test]
-        public void getRsvpMembers()
+        public void getRsvpMembersShouldReturnFilledOutTeam()
         {
+            ServingTeam team = new ServingTeam
+            {
+                EventId = 4510561,
+                GroupId = 23
+            };
 
+            _groupParticipantService.Setup(m => m.GetRsvpMembers(team.GroupId, team.EventId)).Returns(getRSVPMembersList());
+
+            _groupParticipantService.Setup(m => m.GetListOfOpportunitiesByEventAndGroup(team.GroupId, team.EventId)).Returns(getServeOpportunities());
+
+            var result = _fixture.GetServingTeamRsvps(team);
+            _groupParticipantService.VerifyAll();
+
+            Assert.AreEqual(result.Opportunities.Count, 2);
+
+            foreach(var opp in result.Opportunities)
+            {
+                Assert.AreEqual(opp.RsvpMembers.Count, 2);
+            }
         }
 
         private static readonly object[] AllMockEvents =
@@ -1132,17 +1150,34 @@ namespace crds_angular.test.Services
             return responses;
         }
 
-        private static List<ServeOpportunity> getServeOpportunities()
+        private static List<MpSU2SOpportunity> getServeOpportunities()
         {
-            var opps = new List<ServeOpportunity>();
-            opps.Add(new ServeOpportunity()
+            var opps = new List<MpSU2SOpportunity>();
+            opps.Add(new MpSU2SOpportunity()
             {
-                Group_Role_ID = 16,
+                Group_Role_Id = 16,
                 OpportunityId = 2218712,
                 OpportunityTitle = "(t) Kindergarten K213 Sun 8:30",
-                RsvpMembers = new List<RsvpMembers>()
-                {
-                    new RsvpMembers()
+                RsvpMembers = new List<MpRsvpMember>()             
+            });
+
+            opps.Add(new MpSU2SOpportunity()
+            {
+                Group_Role_Id = 22,
+                OpportunityId = 2218735,
+                OpportunityTitle = "Kindergarten Leader",
+                RsvpMembers = new List<MpRsvpMember>()
+            });
+
+            return opps;
+        }
+
+        private static List<MpRsvpMember> getRSVPMembersList()
+        {
+            var rsvpMembers = new List<MpRsvpMember>()
+            {
+                
+                    new MpRsvpMember()
                     {
                         EventId = 4510561,
                         GroupRoleId = 16,
@@ -1153,7 +1188,7 @@ namespace crds_angular.test.Services
                         ResponseResultId = 1
                     },
 
-                    new RsvpMembers()
+                    new MpRsvpMember()
                     {
                         EventId = 4510561,
                         GroupRoleId = 16,
@@ -1162,19 +1197,8 @@ namespace crds_angular.test.Services
                         Opportunity = 2218712,
                         ParticipantId = 7572183,
                         ResponseResultId = 2
-                    }
-
-                }
-            });
-
-            opps.Add(new ServeOpportunity()
-            {
-                Group_Role_ID = 22,
-                OpportunityId = 2218735,
-                OpportunityTitle = "Kindergarten Leader",
-                RsvpMembers = new List<RsvpMembers>()
-                {
-                    new RsvpMembers()
+                    },
+                    new MpRsvpMember()
                     {
                         EventId = 4510561,
                         GroupRoleId = 22,
@@ -1184,7 +1208,7 @@ namespace crds_angular.test.Services
                         ParticipantId = 7547422,
                         ResponseResultId = 1
                     },
-                    new RsvpMembers()
+                    new MpRsvpMember()
                     {
                         EventId = 4510561,
                         GroupRoleId = 22,
@@ -1194,10 +1218,9 @@ namespace crds_angular.test.Services
                         ParticipantId = 7547423,
                         ResponseResultId = 2
                     }
-                }
-            });
+            };
 
-            return opps;
+            return rsvpMembers;
         }
 
     }
