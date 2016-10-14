@@ -26,8 +26,7 @@
     'ngAnimate',
     'formly',
     'formlyBootstrap',
-    'ngTable',
-    'crossroads.live_stream' 
+    'ngTable'
     ])
     .constant('AUTH_EVENTS', {
       loginSuccess: 'auth-login-success',
