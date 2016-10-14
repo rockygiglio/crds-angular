@@ -38,7 +38,8 @@ export default class StreamspotService {
         if (events.length > 0) {
           this.broadcast();
           setInterval(() => {
-            this.broadcast()
+            this.broadcast();
+            this.rootScope.$apply();
           }, 1000)
         }
         return events;
