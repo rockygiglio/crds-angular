@@ -29,6 +29,10 @@ export default class ServeTeamMessageController {
     return this.teamPeople;
   }
 
+  cancel() {
+    this.state.go('serve-signup');
+  }
+
   submit(serveMessageForm) {
     // Validate the form - if ok, then invoke the submit callback
     debugger;

@@ -136,5 +136,15 @@ namespace MinistryPlatform.Translation.Repositories
             //TODO: store 22 somewhere
             return groups;
         }
+
+        public bool GetIsLeader(int participantId)
+        {
+            const string COLUMNS = "Group_Participants.group_role_id";
+            string search = $"Group_Participants.participant_id = {participantId}";
+
+            var mpGroupParticipants = _ministryPlatformRest.UsingAuthenticationToken(_apiUserService.GetToken()).Search<MpGroupParticipant>(MpRestEncode(search), MpRestEncode(COLUMNS));
+
+            return mpGroupParticipants.Where(x => x.GroupRoleId == 22).Any();
+        }
     }
 }

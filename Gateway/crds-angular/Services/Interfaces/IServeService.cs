@@ -22,5 +22,6 @@ namespace crds_angular.Services.Interfaces
         List<GroupContactDTO> PotentialVolunteers(int groupId, crds_angular.Models.Crossroads.Events.Event evt, List<MpGroupParticipant> groupMembers );
         List<GroupDTO> GetLeaderGroups(string token);
         ServingTeam GetServingTeamRsvps(ServingTeam team);
+        bool GetIsLeader(string token);
     }
 }

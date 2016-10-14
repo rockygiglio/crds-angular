@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import CONSTANTS from '../constants';
 
 export default class ServeTeamService {
@@ -24,6 +23,10 @@ export default class ServeTeamService {
                 role: null
             },
         ]
+    }
+
+    getIsLeader() {
+        return this.resource(`${__API_ENDPOINT__}api/serve/GetIsLeader`).get().$promise;
     }
 
     getTeamDetailsByLeader() {

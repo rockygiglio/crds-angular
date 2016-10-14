@@ -160,6 +160,16 @@ namespace crds_angular.Services
             return groups;
         }
 
+        public bool GetIsLeader(string token)
+        {
+            var contactId = _authenticationService.GetContactId(token);
+            var participant = _participantService.GetParticipant(contactId);
+
+
+            return _groupParticipantService.GetIsLeader(participant.ParticipantId);
+
+        }
+
         public ServingTeam GetServingTeamRsvps(ServingTeam team)
         {
             var opportunities = Mapper.Map<List<ServeOpportunity>>(_groupParticipantService.GetListOfOpportunitiesByEventAndGroup(team.GroupId, team.EventId));

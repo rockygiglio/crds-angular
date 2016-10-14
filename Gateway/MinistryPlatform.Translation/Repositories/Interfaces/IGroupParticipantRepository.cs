@@ -12,5 +12,6 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
         List<MpRsvpMember> GetRsvpMembers(int groupId, int eventId);
         List<MpSU2SOpportunity> GetListOfOpportunitiesByEventAndGroup(int groupId, int eventId);
         int GetRsvpYesCount(int groupId, int eventId);
+        bool GetIsLeader(int participantId);
     }
 }

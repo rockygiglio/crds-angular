@@ -139,6 +139,26 @@ namespace crds_angular.Controllers.API
             });
         }
 
+        [RequiresAuthorization]
+        [ResponseType(typeof(bool))]
+        [Route("api/serve/GetIsLeader")]
+        public IHttpActionResult GetIsLeader()
+        {
+            return Authorized(token =>
+            {
+                try
+                {
+                    bool isLeader = _serveService.GetIsLeader(token);
+                    return Ok(isLeader);
+                }
+                catch (Exception ex)
+                {
+                    var apiError = new ApiErrorDto("Get Is Leader failed", ex);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+            });
+        }
+
         [Route("api/serve/save-rsvp")]
         public IHttpActionResult SaveRsvp([FromBody] SaveRsvpDto saveRsvp)
         {
