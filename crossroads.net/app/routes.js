@@ -390,39 +390,6 @@
             }
           }
         })
-        .state('live-ng2', {
-          parent: 'screenWidth',
-          url: '/live',
-          template: '<streaming></streaming>',
-          data: {
-            meta: {
-              title: 'Live',
-              description: ''
-            }
-          }
-        })
-        .state('livestream-ng2', {
-          parent: 'noHeaderOrFooter',
-          url: '/live/stream',
-          template: '<streaming-video></streaming-video>',
-          data: {
-            meta: {
-              title: 'Live',
-              description: ''
-            }
-          }
-        })
-        .state('livestreamvjs-ng2', {
-          parent: 'noHeaderOrFooter',
-          url: '/live/stream2',
-          template: '<videojs-landing></videojs-landing>',
-          data: {
-            meta: {
-              title: 'Live VideoJS',
-              description: ''
-            }
-          }
-        })
         .state('superbowl', {
           parent: 'screenWidth',
           url: '/superbowl',
