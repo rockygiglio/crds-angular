@@ -17,7 +17,7 @@ export default class Geolocation {
   }
 
   static blank() {
-    return new Geolocation('', '', 0, '');
+    return new Geolocation('', '', 1, '');
   }
 
 }

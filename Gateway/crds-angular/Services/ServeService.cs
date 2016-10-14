@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using AutoMapper;
 using crds_angular.Enum;
+using crds_angular.Models;
 using crds_angular.Models.Crossroads;
 using crds_angular.Models.Crossroads.Opportunity;
 using crds_angular.Models.Crossroads.Serve;
@@ -100,17 +101,17 @@ namespace crds_angular.Services
             var contactRelationships =
                 _contactRelationshipService.GetMyImmediateFamilyRelationships(contactId, token).ToList();
             var family = contactRelationships.Select(contact => new FamilyMember
-            {
-                ContactId = contact.Contact_Id,
-                Email = contact.Email_Address,
-                LastName = contact.Last_Name,
-                LoggedInUser = false,
-                ParticipantId = contact.Participant_Id,
-                PreferredName = contact.Preferred_Name,
-                RelationshipId = contact.Relationship_Id,
-                Age = contact.Age,
-                HighSchoolGraduationYear = contact.HighSchoolGraduationYear
-            }).ToList();
+                                                     {
+                                                         ContactId = contact.Contact_Id,
+                                                         Email = contact.Email_Address,
+                                                         LastName = contact.Last_Name,
+                                                         LoggedInUser = false,
+                                                         ParticipantId = contact.Participant_Id,
+                                                         PreferredName = contact.Preferred_Name,
+                                                         RelationshipId = contact.Relationship_Id,
+                                                         Age = contact.Age,
+                                                         HighSchoolGraduationYear = contact.HighSchoolGraduationYear
+                                                     }).ToList();
 
             relationships.AddRange(family);
 
@@ -131,7 +132,7 @@ namespace crds_angular.Services
             foreach (var participant in immediateFamilyParticipants)
             {
                 var membership = _groupService.ParticipantQualifiedServerGroupMember(groupId, participant.ParticipantId);
-                
+
                 var opportunityResponse = _opportunityService.GetMyOpportunityResponses(participant.ContactId,
                                                                                         opportunityId);
                 var qualifiedServer = new QualifiedServerDto();
@@ -147,6 +148,23 @@ namespace crds_angular.Services
             }
             return qualifiedServers;
         }
+
+
+        public ServingTeam GetServingTeamRsvps(ServingTeam team)
+        {
+            var opportunities = Mapper.Map<List<ServeOpportunity>>(_groupParticipantService.GetListOfOpportunitiesByEventAndGroup(team.GroupId, team.EventId));
+            var mpRsvpMembers = Mapper.Map<List<RsvpMembers>>(_groupParticipantService.GetRsvpMembers(team.GroupId, team.EventId));
+
+            foreach (var opp in opportunities)
+            {
+                opp.RsvpMembers = mpRsvpMembers.Where(m => m.Opportunity == opp.OpportunityId).ToList();
+            }
+
+            team.Opportunities = opportunities;
+
+            return team;
+        }
+
 
         public List<ServingDay> GetServingDays(string token, int contactId, long from, long to)
         {
@@ -176,7 +194,10 @@ namespace crds_angular.Services
                             //team already in collection
                             if (!team.PastDeadline)
                             {
-                                team.PastDeadline = (record.EventStartDateTime.AddDays(0 - record.OpportunitySignUpDeadline) < DateTime.Today);
+                                if (record.OpportunitySignUpDeadline != null)
+                                {
+                                    team.PastDeadline = (record.EventStartDateTime.AddDays(0 - record.OpportunitySignUpDeadline.Value) < DateTime.Today);
+                                }
                             }
                             var member = team.Members.SingleOrDefault(m => m.ContactId == record.ContactId);
                             if (member == null)
@@ -196,6 +217,9 @@ namespace crds_angular.Services
                         else
                         {
                             time.ServingTeams.Add(NewServingTeam(record));
+                            var firstOrDefault = time.ServingTeams.FirstOrDefault(t => t.GroupId == record.GroupId);
+                            if (firstOrDefault != null)
+                                firstOrDefault.RsvpYesCount = _groupParticipantService.GetRsvpYesCount(record.GroupId, record.EventId);
                         }
                     }
                     else
@@ -212,6 +236,7 @@ namespace crds_angular.Services
                     servingDay.Day = record.EventStartDateTime.Date.ToString("d");
                     servingDay.Date = record.EventStartDateTime;
                     servingDay.ServeTimes = new List<ServingTime> {NewServingTime(record)};
+                    servingDay.ServeTimes[0].ServingTeams[0].RsvpYesCount = _groupParticipantService.GetRsvpYesCount(record.GroupId, record.EventId);
 
                     servingDays.Add(servingDay);
                 }
@@ -792,8 +817,8 @@ namespace crds_angular.Services
                 Members = new List<TeamMember> {NewTeamMember(record)},
                 Name = record.GroupName,
                 PrimaryContact = record.GroupPrimaryContactEmail,
-                PastDeadline = (record.EventStartDateTime.AddDays(0 - record.OpportunitySignUpDeadline) < DateTime.Today),
-                PastDeadlineMessage = record.DeadlinePassedMessage
+                PastDeadline = (record.OpportunitySignUpDeadline != null) && (record.EventStartDateTime.AddDays(0 - record.OpportunitySignUpDeadline.Value) < DateTime.Today),
+                PastDeadlineMessage = record.DeadlinePassedMessage.Value
             };
         }
 

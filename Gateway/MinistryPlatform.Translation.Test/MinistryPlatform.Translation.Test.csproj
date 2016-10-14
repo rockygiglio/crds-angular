@@ -123,6 +123,7 @@
     <Compile Include="LookupTest.cs" />
     <Compile Include="Services\BulkEmailRepositoryTest.cs" />
     <Compile Include="Services\CommunicationServiceTest.cs" />
+    <Compile Include="Services\GroupParticipantRepositoryTest.cs" />
     <Compile Include="Services\GroupToolRepositoryTest.cs" />
     <Compile Include="Services\InvitationRepositoryTest.cs" />
     <Compile Include="Services\LookupServiceTest.cs" />
