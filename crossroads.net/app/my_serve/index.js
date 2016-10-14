@@ -13,6 +13,7 @@ import './refine/serveModalContent.html';
 
 import OpportunityCapacityService from './capacity.service';
 import FilterStateService from  './filterState.service.js';
+import ServeTeamService from './serve_team.service.js';
 
 import MyServeController from './myserve.controller';
 import ServeModalController from './refine/serveModal.controller';
@@ -35,6 +36,7 @@ export default angular
 
   .factory('ServeTeamFilterState', FilterStateService)
   .factory('OpportunityCapacityService', OpportunityCapacityService)
+  .service('ServeTeamService', ServeTeamService)
 
   .controller('MyServeController', MyServeController)
   .controller('ServeModalController', ServeModalController)

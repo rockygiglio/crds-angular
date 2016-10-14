@@ -24,6 +24,21 @@ describe('Camp Service', () => {
     httpBackend.flush();
   });
 
+  it('should make the API call to get my dashboard', () => {
+    httpBackend.expectGET(`${endpoint}/my-camp`).respond(200, []);
+    campsService.getCampDashboard();
+    httpBackend.flush();
+  });
+
+  it('should make the API call to get my dashboard and handle error', () => {
+    httpBackend.expectGET(`${endpoint}/my-camp`).respond(500, []);
+    campsService.getCampDashboard();
+    httpBackend.flush();
+  });
+
+
+
+
   afterEach(() => {
     httpBackend.verifyNoOutstandingExpectation();
     httpBackend.verifyNoOutstandingRequest();

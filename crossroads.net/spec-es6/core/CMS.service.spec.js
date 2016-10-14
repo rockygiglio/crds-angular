@@ -44,11 +44,11 @@ describe('CMSService', () => {
                 "id": 3803,
                 "title": "Why we are better together",
                 "description": "<p><span>Life is better Together.<\/span><\/p>",
-                "date": moment(baseTime).add('days', 2).format('YYYY-MM-DD'),
+                "date": moment(baseTime).add(2, 'days').format('YYYY-MM-DD'),
                 "series": 236
               }
             ],
-            "created": moment().subtract('days', 7),
+            "created": moment().subtract(7, 'days'),
             "className": "Series"
           },
           {
@@ -64,11 +64,11 @@ describe('CMSService', () => {
                 "id": 3802,
                 "title": "Find you business",
                 "description": "<p><span>Find business opportunities all around you<\/span><\/p>",
-                "date": moment(baseTime).subtract('days', 14).format('YYYY-MM-DD'),
+                "date": moment(baseTime).subtract(14, 'days').format('YYYY-MM-DD'),
                 "series": 235
               }
             ],
-            "created": moment(baseTime).subtract('months', 1),
+            "created": moment(baseTime).subtract(1, 'months'),
             "className": "Series"
           },
           {
@@ -84,11 +84,11 @@ describe('CMSService', () => {
                 "id": 3801,
                 "title": "Christlike Attributes",
                 "description": "<p><span>Ways to better emulate Christ in your everyday life<\/span><\/p>",
-                "date": moment(baseTime).subtract('months', 2).format('YYYY-MM-DD'),
+                "date": moment(baseTime).subtract(2, 'months').format('YYYY-MM-DD'),
                 "series": 234
               }
             ],
-            "created": moment(baseTime).subtract('months', 3),
+            "created": moment(baseTime).subtract(3, 'months'),
             "className": "Series"
           }
         ]

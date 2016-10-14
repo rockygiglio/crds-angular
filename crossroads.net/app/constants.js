@@ -85,6 +85,9 @@
       I_DO_NOT_ATTEND_CROSSROADS: 2,
       NOT_SITE_SPECIFIC: 5
     },
+    SERVING_RESPONSES :{
+      NOT_AVAILABLE: 2
+    },
     CMS: {
       PAGENAMES: {
         COMMUNITYGROUPS: 'CommunityGroupSignupPage',
@@ -120,6 +123,10 @@
         LEADER: 22,
         APPRENTICE: 66
       },
+    },
+    GEOLOCATION: {
+      MODAL_TIMEOUT: 10000,
+      FORMS_KEY: '1rupjr7gvqUU203fwjmeUlIiVwCA8BdkD-mP6M6s3wxQ'
     },
     INVITATION: {
       TYPES: {

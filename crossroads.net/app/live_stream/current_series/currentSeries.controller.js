@@ -59,7 +59,7 @@ export default class CurrentSeriesController {
         this.trailer = response.trailerLink;
         let embed = this.trailer.split(/https*:\/\/www.youtube.com\/watch\?v=/);
         if (embed[1]) {
-          this.embed = `https://www.youtube.com/embed/${embed[1]}`;
+          this.embed = `https://www.youtube.com/embed/${embed[1]}?rel=0`;
         }
       }
 
