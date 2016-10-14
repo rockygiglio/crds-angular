@@ -6,6 +6,7 @@ using AutoMapper;
 using crds_angular.Enum;
 using crds_angular.Models;
 using crds_angular.Models.Crossroads;
+using crds_angular.Models.Crossroads.Groups;
 using crds_angular.Models.Crossroads.Opportunity;
 using crds_angular.Models.Crossroads.Serve;
 using crds_angular.Services.Interfaces;
@@ -149,6 +150,15 @@ namespace crds_angular.Services
             return qualifiedServers;
         }
 
+        public List<GroupDTO> GetLeaderGroups(string token)
+        {
+            var contactId = _authenticationService.GetContactId(token);
+            var participant = _participantService.GetParticipant(contactId);
+
+            var groups = Mapper.Map<List<GroupDTO>>(_groupParticipantService.GetAllGroupsLeadByParticipant(participant.ParticipantId));
+
+            return groups;
+        }
 
         public List<ServingDay> GetServingDays(string token, int contactId, long from, long to)
         {

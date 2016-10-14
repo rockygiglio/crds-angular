@@ -5,6 +5,7 @@ using System.Messaging;
 using System.Web.Http;
 using System.Web.Http.Description;
 using crds_angular.Exceptions.Models;
+using crds_angular.Models.Crossroads.Groups;
 using crds_angular.Models.Crossroads.Opportunity;
 using crds_angular.Models.Crossroads.Serve;
 using crds_angular.Security;
@@ -91,6 +92,26 @@ namespace crds_angular.Controllers.API
                 catch (Exception ex)
                 {
                     var apiError = new ApiErrorDto("GetQualifiedServers Failed", ex);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+            });
+        }
+
+        [RequiresAuthorization]
+        [ResponseType(typeof(List<GroupDTO>))]
+        [Route("api/serve/GetLoggedInLeadersGroups")]
+        public IHttpActionResult GetLoggedInLeadersGroups()
+        {
+            return Authorized(token =>
+            {
+                try
+                {
+                    var list = _serveService.GetLeaderGroups(token);
+                    return Ok(list);
+                }
+                catch (Exception ex)
+                {
+                    var apiError = new ApiErrorDto("Get Leaders Groups Failed", ex);
                     throw new HttpResponseException(apiError.HttpResponseMessage);
                 }
             });

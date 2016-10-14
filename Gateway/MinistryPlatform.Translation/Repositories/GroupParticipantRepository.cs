@@ -16,17 +16,20 @@ namespace MinistryPlatform.Translation.Repositories
         private readonly IMinistryPlatformService _ministryPlatformService;
         private readonly IApiUserRepository _apiUserService;
         private readonly IMinistryPlatformRestRepository _ministryPlatformRest;
+        private readonly IGroupRepository _groupRepository;
 
         public GroupParticipantRepository(IConfigurationWrapper configurationWrapper,
                                        IMinistryPlatformService ministryPlatformService,
                                        IApiUserRepository apiUserService,
-                                       IMinistryPlatformRestRepository ministryPlatformRest)
+                                       IMinistryPlatformRestRepository ministryPlatformRest,
+                                       IGroupRepository groupRepository)
 
         {
             _configurationWrapper = configurationWrapper;
             _ministryPlatformService = ministryPlatformService;
             _apiUserService = apiUserService;
             _ministryPlatformRest = ministryPlatformRest;
+            _groupRepository = groupRepository;
         }
 
         public int Get(int groupId, int participantId)
@@ -89,6 +92,26 @@ namespace MinistryPlatform.Translation.Repositories
             return opportunityResponse;
         }
 
+        public List<MpGroup> GetAllGroupsLeadByParticipant(int participantId)
+        {
+            const string COLUMNS = "Group_Participants.group_participant_id, Group_Participants.participant_id,  Group_Participants.group_id, Group_Participants.group_role_id";
+            string search = $"Group_Participants.participant_id = {participantId}";
 
+            var groupParticipantRecords = _ministryPlatformRest.UsingAuthenticationToken(_apiUserService.GetToken()).Search<MpGroupParticipant>(MpRestEncode(search), MpRestEncode(COLUMNS));
+
+
+            List<MpGroup> groups = new List<MpGroup>();
+            foreach (var groupParticipant in groupParticipantRecords)
+            {
+                if (groupParticipant.GroupRoleId == 22)
+                {
+                    var group = _groupRepository.getGroupDetails(groupParticipant.GroupId);
+                    groups.Add(group);
+                }
+            }
+
+            //TODO: store 22 somewhere
+            return groups;
+        }
     }
 }

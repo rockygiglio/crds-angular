@@ -6,10 +6,10 @@ namespace MinistryPlatform.Translation.Models
     public class MpGroup
     {
         public int GroupId { get; set; }
+        public string Name { get; set; }
         public string GroupRole { get; set; }
         public int GroupType { get; set; }
         public int TargetSize { get; set; }
-        public string Name { get; set; }
         public IList<MpGroupParticipant> Participants { get; set; }
         public Boolean Full { get; set; }
         public Boolean WaitList { get; set; }

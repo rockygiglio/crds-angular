@@ -1,42 +1,40 @@
+import CONSTANTS from '../constants';
+
 export default class ServeTeamService {
     /*@ngInject*/
-    constructor($log) {
+    constructor($log, $resource) {
         this.log = $log;
+        this.resource = $resource;
     }
 
     getAllTeamMembersByLeader() {
-    return [
-        {
-            id: 1001,
-            name: 'Genie Simmons',
-            email: 'gsimmons@gmail.com',
-            role: 'Leader'
-        },
-        {
-            id: 1002,
-            name: 'Holly Gennaro',
-            email: 'hgennaro@excite.com',
-            role: null
-        },
-    ]
+        return [
+            {
+                id: 1001,
+                name: 'Genie Simmons',
+                email: 'gsimmons@gmail.com',
+                role: 'Leader'
+            },
+            {
+                id: 1002,
+                name: 'Holly Gennaro',
+                email: 'hgennaro@excite.com',
+                role: null
+            },
+        ]
     }
 
-    getTeamDetailsByLeader(){
-        return [{
-                id: 1,
-                name: 'FI Oakley Coffee Team',
-                count: 43
-            },
-            {
-                id: 2,
-                name: 'FI Florence Info Center Team',
-                count: 37
-            },
-            {
-                id: 3,
-                name: 'Wes Donaldson',
-                isLeader: true
-            }
-        ];
+    getTeamDetailsByLeader() {
+        return this.resource(`${__API_ENDPOINT__}api/serve/GetLoggedInLeadersGroups`).query().$promise;
+    }
+
+//TODO: THIS METHOD IS BASICALLY THE SAME METHOD IN GROUP TOUL SERVICES/MESSAGE SERVICE.  THAT SERVICE SHOULD BE REFACTORED
+//AND PULLED UP TO A HIGHER LEVEL TO BE USED MORE BROADLY
+    sendGroupMessage(groupId, message) {
+        debugger;
+        return this.resource(__API_ENDPOINT__ + 'api/grouptool/:groupId/:groupTypeId/groupmessage').save({
+            groupId: groupId,
+            groupTypeId: CONSTANTS.GROUP.GROUP_TYPE_ID.MY_SERVE
+        }, message).$promise;
     }
 }
