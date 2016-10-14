@@ -26,8 +26,7 @@ module.exports = {
     core: ['./core/core.js'],
     common: ['./app/common/common.module.js'],
     formbuilder: ['./app/formBuilder/formBuilder.module.js'],
-    formlybuilder: ['./app/formlyBuilder/formlyBuilder.module.js'],
-    boot: ['./app/boot.ts']
+    formlybuilder: ['./app/formlyBuilder/formlyBuilder.module.js']
   },
   watchPattern: ['app/**/**','core/**/**'],
   externals: {
@@ -41,7 +40,7 @@ module.exports = {
     filename: '[name].[hash].js',
   },
   resolve: {
-    extensions: ['', '.ts', '.tsx', '.js', '.jsx']
+    extensions: ['', '.js', '.jsx']
   },
   module: {
     loaders: [
@@ -84,17 +83,8 @@ module.exports = {
           exclude: [/\.ng2component\.html$/]
         },
         {
-          test: /\.ts$/,
-          loaders: ['awesome-typescript-loader', 'angular2-template-loader'],
-          exclude: [/\.(spec|e2e)\.ts$/]
-        },
-        {
           test: /\.json$/,
           loaders: ["json-loader"]
-        },
-        {
-          test: /\.ng2component\.html$/,
-          loader: 'raw-loader'
         }
     ],
     noParse: [
