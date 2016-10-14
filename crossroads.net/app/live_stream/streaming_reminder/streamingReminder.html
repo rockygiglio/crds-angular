@@ -1,9 +1,9 @@
 <form name="form" novalidate ng-submit="reminder.submit(form)">
   <modal-header ng-reflect-show-close="true">
   <div class="modal-header">
-    <button aria-label="Close" class="close" ng-click="reminder.close()" type="button">
+    <a aria-label="Close" class="close" ng-click="reminder.close()">
       <span aria-hidden="true">×</span>
-    </button>
+    </a>
     <div dynamic-content="$root.MESSAGES.streamingReminderTitle.content | html"></div>
   </div>
   </modal-header>
