@@ -31,7 +31,7 @@
           <div ng-if="reminder.model.day">
             <div dynamic-content="$root.MESSAGES.streamingReminderLabelTime.content | html"></div>
             <div data-toggle="buttons">
-              <label class="btn btn-sm btn-time-select" ng-repeat="event in reminder.selectedDate(reminder.model.day)" ng-click="reminder.setTime(event)">
+              <label class="btn btn-sm btn-time-select" ng-repeat="event in reminder.selectedDate(reminder.model.day)" ng-class="{'active': event.title == selectedTime}" ng-click="reminder.setTime(event)">
                 <input name="time" autocomplete="off" type="radio" ng-model="reminder.model.time"> {{event.formatToLocalTZTime(event.start)}}
               </label>
             </div>
