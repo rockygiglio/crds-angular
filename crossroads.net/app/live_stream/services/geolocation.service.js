@@ -18,7 +18,7 @@ export default class GeolocationService {
   showBanner() {
     // dismissed the modal w/o answering
     // OR you have previously answered
-    return (this.modalDismissed) || (this.hasLocation() && !this.answered);
+    return (this.modalDismissed && !this.answered) || (this.hasLocation() && !this.answered);
   }
 
   saveLocation(location) {
