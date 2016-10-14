@@ -2,22 +2,19 @@ import CONSTANTS from 'crds-constants';
 import ReminderService from '../../../app/live_stream/services/reminder.service';
 import Reminder from '../../../app/live_stream/models/reminder';
 import StreamStatusService from '../../../app/live_stream/services/stream-status.service';
-//import * as ProfileService from "../../../app/profile/services/profile.service.js";
 
 describe('Stream Status Service', () => {
-  let service,
-      reminder,
-      http,
-      modal,
-      httpBackend,
-      expectedHrsToEvent,
+  let expectedHrsToEvent,
       hrsToNextEvent,
-      currentTime,
-      person,
       streamStatusService,
-      profileService;
+      eventStartingAfterCurrentTime,
+      doesEventStartAfterCurrentTime,
+      isBroadcasting,
+      upcomingStatus,
+      streamStatus,
+      didStreamStatusChange;
 
-  let baseTime = moment('2016-10-12');
+  let baseTime = moment();
 
   let events = [
     {
@@ -46,25 +43,35 @@ describe('Stream Status Service', () => {
 
   beforeEach(inject(function ($injector) {
     streamStatusService = new StreamStatusService();
-    //profileService = typeof ProfileService;
   }));
-
-  afterEach(() => {
-    // httpBackend.verifyNoOutstandingExpectation();
-    // httpBackend.verifyNoOutstandingRequest();
-  });
 
   describe('Stream Status Service', () => {
 
-    // it('get hours until next streaming event starts', () => {
-    //   currentTime = baseTime;
-    //   console.log('Current time created in test: ' + currentTime);
-    //   //let typeOfTime = typeof currentTime;
-    //   hrsToNextEvent = streamStatusService.getHoursToNextEvent(events, currentTime);
-    //   expectedHrsToEvent = 1;
-    //   expect(1).toEqual(expectedHrsToEvent);
-    // });
+    it('should indicate that the event starts after the current time', () => {
+      eventStartingAfterCurrentTime = events[2];
+      doesEventStartAfterCurrentTime = streamStatusService.doesEventStartAfterCurrentTime(eventStartingAfterCurrentTime);
+      expect(doesEventStartAfterCurrentTime).toBeTruthy();
+    });
 
-  })
+    it('get hours until next streaming event starts', () => {
+      hrsToNextEvent = streamStatusService.getHoursToNextEvent(events);
+      expectedHrsToEvent = 1;
+      expect(1).toEqual(expectedHrsToEvent);
+    });
+
+    it('should show stream status as upcoming', () => {
+      isBroadcasting = false;
+      streamStatus = streamStatusService.determineStreamStatus(events, isBroadcasting);
+      upcomingStatus = CONSTANTS.STREAM_STATUS.UPCOMING;
+      expect(streamStatus).toEqual(upcomingStatus);
+    });
+
+    it('should indicate that stream status changed', () => {
+      isBroadcasting = false;
+      didStreamStatusChange = streamStatusService.didStreamStatusChange(events, isBroadcasting);
+      expect(streamStatus).toBeTruthy(didStreamStatusChange);
+    });
+
+})
 
 });

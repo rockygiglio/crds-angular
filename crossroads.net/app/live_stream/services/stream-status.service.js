@@ -34,7 +34,6 @@ export default class StreamStatusService {
 
     let hrsToNextEvent = this.getHoursToNextEvent(events);
     let isStreamSoon = CONSTANTS.PRE_STREAM_HOURS > hrsToNextEvent;
-    console.log('Is stream soon: ' + isStreamSoon);
 
     if( isBroadcasting ){
       streamStatus = CONSTANTS.STREAM_STATUS.LIVE;
@@ -51,12 +50,10 @@ export default class StreamStatusService {
     let eventsStartingAfterCurrentTime = events.filter( this.doesEventStartAfterCurrentTime, event );
     let nextEvent = _.sortBy(eventsStartingAfterCurrentTime, ['event', 'start'])[0];
     let currentTime = moment();
-    let timeNextEvenStarts = nextEvent.start;
+    let timeNextEvenStarts = moment(nextEvent.start);
     let timeUntilNextEvent = moment.duration(timeNextEvenStarts.diff(currentTime));
     let hoursUntilNextEvent = timeUntilNextEvent.asHours();
     let testVar = timeUntilNextEvent.humanize();
-    console.log('Time difference: ' + testVar);
-    console.log('Hours until the next event: ' + hoursUntilNextEvent);
 
     return hoursUntilNextEvent;
 
@@ -64,7 +61,7 @@ export default class StreamStatusService {
 
   doesEventStartAfterCurrentTime(event){
     let currentTime = moment();
-    let eventStartTime = event.start;
+    let eventStartTime = moment(event.start);
     let isEventStartBeforeCurrentTime = eventStartTime.isAfter(currentTime);
 
     return isEventStartBeforeCurrentTime;
