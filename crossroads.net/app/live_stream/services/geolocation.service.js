@@ -2,17 +2,20 @@ import Geolocation from '../models/geolocation';
 import CONSTANTS from '../../constants';
 
 export default class GeolocationService {
-  constructor($q, $rootScope, GoogleMapsService) {
+  /*@ngInject*/
+  constructor($q, $rootScope, GoogleMapsService, $cookies) {
     this.q          = $q;
     this.rootScope  = $rootScope;
     this.mapService = GoogleMapsService;
+    this.cookies = $cookies;
+    debugger;
 
     this.answered       = false;
     this.modalDismissed = false;
   }
 
   showModal() {
-    return !this.hasLocation();
+    return !this.hasLocation() && !this.hasDismissed();
   }
 
   showBanner() {
@@ -93,6 +96,10 @@ export default class GeolocationService {
     return localStorage.getItem('crds-geolocation') !== null;
   }
 
+  hasDismissed() {
+    return cookies.get('dismissedGeo') == true;
+  }
+
   getLocation() {
     let locationJson = localStorage.getItem('crds-geolocation');
     let location = null;
@@ -109,6 +116,7 @@ export default class GeolocationService {
 
   dismissed() {
     this.modalDismissed = true;
+    cookies.put('dismissedGeo', this.modalDismissed);
     this.rootScope.$broadcast('geolocationModalDismiss')
   }
 }
