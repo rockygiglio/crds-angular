@@ -28,7 +28,7 @@ namespace MinistryPlatform.Translation.Repositories
             var apiToken = _apiUserRepository.GetToken();
             var campType = _configurationWrapper.GetConfigIntValue("CampEventType");
             var campData = _ministryPlatformRest.UsingAuthenticationToken(apiToken).Search<MpCamp>($"Event_ID = {eventId}").ToList();
-            campData = campData.Where((camp) => camp.EventType != campType).ToList();
+            campData = campData.Where((camp) => camp.EventType == campType).ToList();
             if (campData.Count > 0)
             {
                 return campData.FirstOrDefault();

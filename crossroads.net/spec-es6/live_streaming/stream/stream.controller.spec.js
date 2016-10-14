@@ -2,6 +2,7 @@
 import constants from 'crds-constants';
 import StreamController from '../../../app/live_stream/stream/stream.controller';
 import StreamspotService from '../../../app/live_stream/services/streamspot.service';
+import GeolocationService from '../../../app/live_stream/services/geolocation.service';
 import CMSService from '../../../core/services/CMS.service';
 
 describe('Stream Controller', () => {
@@ -10,18 +11,22 @@ describe('Stream Controller', () => {
       cmsService,
       location,
       streamspotService,
+      geolocationService,
       httpBackend,
+      modal,
       results;
 
   beforeEach(angular.mock.module(constants.MODULES.LIVE_STREAM));
 
   beforeEach(inject(function ($injector) {
-    StreamspotService = $injector.get('StreamspotService');
-    rootScope = $injector.get('$rootScope');
-    cmsService = $injector.get('CMSService');
-    location = $injector.get('$location');
-    fixture = new StreamController(cmsService, StreamspotService, rootScope, location);
+    cmsService         = $injector.get('CMSService');
+    streamspotService  = $injector.get('StreamspotService');
+    geolocationService = $injector.get('GeolocationService');
+    rootScope          = $injector.get('$rootScope');
+    modal              = $injector.get('$modal');
+    location           = $injector.get('$location');
 
+    fixture = new StreamController(cmsService, streamspotService, geolocationService, rootScope, modal, location);
     results = [
       {
         "id": 7,

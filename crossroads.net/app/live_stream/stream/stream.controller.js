@@ -2,10 +2,12 @@ let WOW = require('wow.js/dist/wow.min.js');
 
 export default class StreamingController {
   /*@ngInject*/
-  constructor(CMSService, StreamspotService, $rootScope, $location) {
-    this.cmsService        = CMSService;
-    this.streamspotService = StreamspotService;
-    this.rootScope = $rootScope;
+  constructor(CMSService, StreamspotService, GeolocationService, $rootScope, $modal, $location) {
+    this.cmsService         = CMSService;
+    this.streamspotService  = StreamspotService;
+    this.geolocationService = GeolocationService;
+    this.rootScope          = $rootScope;
+    this.modal              = $modal;
 
     this.inProgress     = false;
     this.numberOfPeople = 2;
@@ -14,18 +16,15 @@ export default class StreamingController {
     this.dontMiss       = [];
     this.beTheChurch    = [];
 
-    var debug = false;
-    var location = $location;
-
+    let debug = false;
     if ( $location != undefined ) {
-      var params = $location.search();
+      let params = $location.search();
       debug = params.debug;
     }
     
     if ( debug === "true" ) {
       this.inProgress = true;
-    }
-    else {
+    } else {
       this.rootScope.$on('isBroadcasting', (e, inProgress) => {
         this.inProgress = inProgress;
         if (this.inProgress === false) {
@@ -44,6 +43,8 @@ export default class StreamingController {
     new WOW({
       mobile: false
     }).init();
+
+    this.openGeolocationModal();
   }
 
   sortDigitalProgram(data) {
@@ -73,7 +74,20 @@ export default class StreamingController {
     })
   }
 
-  goBack() {
-    window.location.href = '/live';
+  showGeolocationBanner() {
+    return this.geolocationService.showBanner();
+  }
+
+  openGeolocationModal() {
+    if (this.geolocationService.showModal()) {
+      this.modalInstance = this.modal.open({
+        templateUrl: 'geolocation_modal/geolocationModal.html',
+        controller: 'GeolocationModalController',
+        controllerAs: 'geolocationModal',
+        openedClass: 'geolocation-modal',
+        backdrop: 'static',
+        size: 'lg'
+      });
+    }
   }
 }

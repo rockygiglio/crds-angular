@@ -1,10 +1,10 @@
 
 import constants from 'crds-constants';
-import StreamController from '../../../app/live_stream/stream/stream.controller';
+import StreamVideoJsController from '../../../app/live_stream/stream_videojs/streamVideojs.controller';
 import StreamspotService from '../../../app/live_stream/services/streamspot.service';
 import CMSService from '../../../core/services/CMS.service';
 
-describe('Stream Controller', () => {
+describe('Stream VideoJS Controller', () => {
   let fixture,
       rootScope,
       cmsService,
@@ -18,7 +18,7 @@ describe('Stream Controller', () => {
     StreamspotService = $injector.get('StreamspotService');
     rootScope = $injector.get('$rootScope');
     cmsService = $injector.get('CMSService');
-    fixture = new StreamController(cmsService, StreamspotService, rootScope);
+    fixture = new StreamVideoJsController(cmsService, StreamspotService, rootScope);
 
     results = [
       {
