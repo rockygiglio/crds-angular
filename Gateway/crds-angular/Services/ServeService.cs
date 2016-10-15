@@ -224,7 +224,9 @@ namespace crds_angular.Services
                     }
                     else
                     {
+                        int serveTimesCount = day.ServeTimes.Count;
                         day.ServeTimes.Add(NewServingTime(record));
+                        day.ServeTimes[serveTimesCount].ServingTeams[0].RsvpYesCount = _groupParticipantService.GetRsvpYesCount(record.GroupId, record.EventId);
                     }
                 }
                 else
