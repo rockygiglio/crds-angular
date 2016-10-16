@@ -58,10 +58,11 @@ namespace MinistryPlatform.Translation.Repositories
 
             //Finish out search string and call the rest backend
             var groupServingParticipants = _ministryPlatformRest.UsingAuthenticationToken(_apiUserService.GetToken()).Search<MpGroupServingParticipant>(searchFilter);
-
+            var rownum = 0;
             groupServingParticipants.ForEach(p =>
                                              {
-                                                 p.RowNumber = groupServingParticipants.IndexOf(p) + 1;
+                                                 rownum++;
+                                                 p.RowNumber = rownum;
                                                  if (p.ContactId == loggedInContactId)
                                                      p.LoggedInUser = true;
                                                  if (p.DeadlinePassedMessage == null)
