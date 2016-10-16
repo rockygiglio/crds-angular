@@ -47,7 +47,7 @@ export default class StreamStatusService {
   }
 
   getHoursToNextEvent(events){
-    let eventsStartingAfterCurrentTime = events.filter( this.doesEventStartAfterCurrentTime, event );
+    let eventsStartingAfterCurrentTime = this.filterOutEventsStartingBeforeCurrentTime(events);
     let nextEvent = _.sortBy(eventsStartingAfterCurrentTime, ['event', 'start'])[0];
     let currentTime = moment();
     let timeNextEvenStarts = moment(nextEvent.start);
@@ -57,6 +57,20 @@ export default class StreamStatusService {
 
     return hoursUntilNextEvent;
 
+  }
+
+  filterOutEventsStartingBeforeCurrentTime(events){
+    let eventsStartingAfterCurrentTime = [];
+
+    for(let idx=0; idx<events.length; idx++){
+      let iteratedEvent = events[idx];
+      let doesEventStartAfterCurrentTime = this.doesEventStartAfterCurrentTime(iteratedEvent);
+      if( doesEventStartAfterCurrentTime){
+        eventsStartingAfterCurrentTime.push(events[idx]);
+      }
+    }
+
+    return eventsStartingAfterCurrentTime;
   }
 
   doesEventStartAfterCurrentTime(event){
