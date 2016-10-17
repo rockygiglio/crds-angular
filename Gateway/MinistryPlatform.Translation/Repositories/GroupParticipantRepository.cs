@@ -116,10 +116,15 @@ namespace MinistryPlatform.Translation.Repositories
             return response[0]?.RsvpYesCount ?? 0;
         }
 
-        public List<MpGroup> GetAllGroupsLeadByParticipant(int participantId)
+        public List<MpGroup> GetAllGroupNamesLeadByParticipant(int participantId, int groupType = -1)
         {
-            const string COLUMNS = "Group_Participants.group_participant_id, Group_Participants.participant_id,  Group_Participants.group_id, Group_Participants.group_role_id";
-            string search = $"Group_Participants.participant_id = {participantId}";
+            const string COLUMNS = "Group_ID_Table.Group_Name, Group_Participants.group_participant_id, Group_Participants.participant_id,  Group_Participants.group_id, Group_Participants.group_role_id";
+            string search = $"Group_Participants.participant_id = {participantId} and Group_Role_ID = 22";
+
+            if (groupType != -1)
+            {
+                search += $"AND Group_ID_Table.Group_Type_ID = {groupType}";
+            }
 
             var groupParticipantRecords = _ministryPlatformRest.UsingAuthenticationToken(_apiUserService.GetToken()).Search<MpGroupParticipant>(MpRestEncode(search), MpRestEncode(COLUMNS));
 
@@ -128,7 +133,12 @@ namespace MinistryPlatform.Translation.Repositories
             {
                 if (groupParticipant.GroupRoleId == 22)
                 {
-                    var group = _groupRepository.getGroupDetails(groupParticipant.GroupId);
+                    var group = new MpGroup()
+                    {
+                        GroupId = groupParticipant.GroupId,
+                        Name = groupParticipant.GroupName,
+                    };
+
                     groups.Add(group);
                 }
             }
@@ -137,14 +147,18 @@ namespace MinistryPlatform.Translation.Repositories
             return groups;
         }
 
-        public bool GetIsLeader(int participantId)
+        public bool GetIsLeader(int participantId, int groupType = -1)
         {
             const string COLUMNS = "Group_Participants.group_role_id";
-            string search = $"Group_Participants.participant_id = {participantId}";
+            string search = $"Group_Participants.participant_id = {participantId} and Group_Role_ID = 22";
+
+            if (groupType != -1) {
+                search += $"AND Group_ID_Table.Group_Type_ID = {groupType}";
+            }
 
             var mpGroupParticipants = _ministryPlatformRest.UsingAuthenticationToken(_apiUserService.GetToken()).Search<MpGroupParticipant>(MpRestEncode(search), MpRestEncode(COLUMNS));
 
-            return mpGroupParticipants.Where(x => x.GroupRoleId == 22).Any();
+            return mpGroupParticipants.Any();
         }
     }
 }

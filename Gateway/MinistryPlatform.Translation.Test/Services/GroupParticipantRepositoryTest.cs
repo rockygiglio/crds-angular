@@ -16,6 +16,7 @@ namespace MinistryPlatform.Translation.Test.Services
         private Mock<IMinistryPlatformService> _ministryPlatformService;
         private Mock<IMinistryPlatformRestRepository> _ministryPlatformRestRepository;
         private Mock<IApiUserRepository> _apiUserRepository;
+        private Mock<IGroupRepository> _groupRepository;
 
         [SetUp]
         public void SetUp()
@@ -23,6 +24,7 @@ namespace MinistryPlatform.Translation.Test.Services
             _ministryPlatformService = new Mock<IMinistryPlatformService>(MockBehavior.Strict);
             _ministryPlatformRestRepository = new Mock<IMinistryPlatformRestRepository>(MockBehavior.Strict);
             _apiUserRepository = new Mock<IApiUserRepository>(MockBehavior.Strict);
+            _groupRepository = new Mock<IGroupRepository>(MockBehavior.Strict);
 
             var config = new Mock<IConfigurationWrapper>(MockBehavior.Strict);
             var auth = new Mock<IAuthenticationRepository>(MockBehavior.Strict);
@@ -32,7 +34,7 @@ namespace MinistryPlatform.Translation.Test.Services
 
             auth.Setup(m => m.Authenticate(It.IsAny<string>(), It.IsAny<string>())).Returns(new Dictionary<string, object> {{"token", "ABC"}, {"exp", "123"}});
 
-            _fixture = new GroupParticipantRepository(config.Object, _ministryPlatformService.Object, _apiUserRepository.Object, _ministryPlatformRestRepository.Object);
+            _fixture = new GroupParticipantRepository(config.Object, _ministryPlatformService.Object, _apiUserRepository.Object, _ministryPlatformRestRepository.Object, _groupRepository.Object);
         }
 
     }
