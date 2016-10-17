@@ -249,10 +249,10 @@ namespace crds_angular.Services
 
         public Capacity OpportunityCapacity(int opportunityId, int eventId, int? minNeeded, int? maxNeeded)
         {               
-            var opportunity = _opportunityService.GetOpportunityResponses(opportunityId, _apiUserService.GetToken());
+            var opportunity = _opportunityService.GetOpportunityResponses(opportunityId, eventId);
             var min = minNeeded;
             var max = maxNeeded;
-            var signedUp = opportunity.Count(r => r.Event_ID == eventId);
+            var signedUp = opportunity.Count;
 
             var capacity = new Capacity {Display = true};
 

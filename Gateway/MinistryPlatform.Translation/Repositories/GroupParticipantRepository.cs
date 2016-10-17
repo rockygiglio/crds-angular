@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using Crossroads.Utilities.Extensions;
 using Crossroads.Utilities.Interfaces;
 using MinistryPlatform.Translation.Extensions;
@@ -38,11 +37,6 @@ namespace MinistryPlatform.Translation.Repositories
             return groupParticipant != null ? groupParticipant.ToInt("Group_Participant_ID") : 0;
         }
 
-        private string MpRestEncode(string data)
-        {
-            return WebUtility.UrlEncode(data)?.Replace("+", "%20");
-        }
-
         public List<MpGroupServingParticipant> GetServingParticipants(List<int> participants, long from, long to, int loggedInContactId)
         {
 
@@ -63,11 +57,12 @@ namespace MinistryPlatform.Translation.Repositories
                 "AND Event_Start_Date >= Participant_Start_Date AND (Event_Start_Date <= Participant_End_Date OR Participant_End_Date IS NULL)";
 
             //Finish out search string and call the rest backend
-            var groupServingParticipants = _ministryPlatformRest.UsingAuthenticationToken(_apiUserService.GetToken()).Search<MpGroupServingParticipant>(MpRestEncode(searchFilter));
-
+            var groupServingParticipants = _ministryPlatformRest.UsingAuthenticationToken(_apiUserService.GetToken()).Search<MpGroupServingParticipant>(searchFilter);
+            var rownum = 0;
             groupServingParticipants.ForEach(p =>
                                              {
-                                                 p.RowNumber = groupServingParticipants.IndexOf(p) + 1;
+                                                 rownum++;
+                                                 p.RowNumber = rownum;
                                                  if (p.ContactId == loggedInContactId)
                                                      p.LoggedInUser = true;
                                                  if (p.DeadlinePassedMessage == null)
@@ -86,7 +81,7 @@ namespace MinistryPlatform.Translation.Repositories
             const string COLUMNS = "Responses.opportunity_id,Responses.participant_id,Responses.event_id, opportunity_ID_Table.Group_Role_ID, Participant_ID_Table_Contact_ID_Table.NickName, Participant_ID_Table_Contact_ID_table.Last_Name,Responses.Response_Result_Id";
             string search = $"Responses.Event_ID = {eventId} And Opportunity_ID_Table.Add_To_Group = {groupId}";
 
-            var opportunityResponse = _ministryPlatformRest.UsingAuthenticationToken(_apiUserService.GetToken()).Search<MpRsvpMember>(MpRestEncode(search), MpRestEncode(COLUMNS));
+            var opportunityResponse = _ministryPlatformRest.UsingAuthenticationToken(_apiUserService.GetToken()).Search<MpRsvpMember>(search, COLUMNS);
 
             return opportunityResponse;
         }
@@ -108,7 +103,7 @@ namespace MinistryPlatform.Translation.Repositories
             const string COLUMNS = "Count(*) As RsvpYesCount";
             string search = $"Responses.Event_ID = {eventId} And Opportunity_ID_Table.Add_To_Group = {groupId} AND Response_Result_Id = 1";
 
-            var response = _ministryPlatformRest.UsingAuthenticationToken(_apiUserService.GetToken()).Search<MpResponse>(MpRestEncode(search), MpRestEncode(COLUMNS));
+            var response = _ministryPlatformRest.UsingAuthenticationToken(_apiUserService.GetToken()).Search<MpResponse>(search, COLUMNS);
 
             return response[0]?.RsvpYesCount ?? 0;
         }

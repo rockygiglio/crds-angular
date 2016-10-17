@@ -80,7 +80,7 @@ namespace crds_angular.Services
 
             var attributesToSearch = attributes.Select(a => $"(Attribute_Name='{a.Name.Replace("'", "''")}' AND Attribute_Category_Id={a.CategoryId})");
 
-            string searchFilter = WebUtility.UrlEncode($"Attribute_Type_ID={attributeType} AND (" + String.Join(" OR ", attributesToSearch) + ")")?.Replace("+", "%20");
+            string searchFilter = $"Attribute_Type_ID={attributeType} AND (" + String.Join(" OR ", attributesToSearch) + ")";
 
             var foundNames = _ministryPlatformRestRepository.UsingAuthenticationToken(_apiUserRepository.GetToken()).Search<MpRestAttribute>(searchFilter, "Attribute_ID, Attribute_Name, ATTRIBUTE_CATEGORY_ID");
 

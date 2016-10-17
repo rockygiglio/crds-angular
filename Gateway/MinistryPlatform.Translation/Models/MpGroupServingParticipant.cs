@@ -63,7 +63,7 @@ namespace MinistryPlatform.Translation.Models
         [JsonProperty(PropertyName = "Sign_Up_Deadline")]
         public int? OpportunitySignUpDeadline {
             get { return opportunitySignUpDeadLine; }
-            set { opportunitySignUpDeadLine = (value != null) ? Convert.ToInt32(value) : 0; }
+            set { opportunitySignUpDeadLine = value ?? 0; }
         }
 
         [JsonProperty(PropertyName = "Deadline_Passed_Message_ID")]

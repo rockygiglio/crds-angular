@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using System.Net;
 using MinistryPlatform.Translation.Extensions;
 using MinistryPlatform.Translation.Models.Attributes;
 using MinistryPlatform.Translation.Repositories.Interfaces;
@@ -114,6 +115,11 @@ namespace MinistryPlatform.Translation.Repositories
             return "{" + string.Join(",", parmlist) + "}";
         }
 
+        private string MpRestEncode(string data)
+        {
+            return WebUtility.UrlEncode(data)?.Replace("+", "%20");
+        }
+
         private static string FormatStoredProcParameters(Dictionary<string, object> parameters)
         {
             var result = parameters.Aggregate("?", (current, parameter) => current + ((parameter.Key.StartsWith("@") ? parameter.Key : "@" + parameter.Key) + "=" + parameter.Value + "&"));
@@ -122,7 +128,7 @@ namespace MinistryPlatform.Translation.Repositories
 
         public List<T> Search<T>(string searchString = null, string selectColumns = null)
         {
-            var search = string.IsNullOrWhiteSpace(searchString) ? string.Empty : string.Format("?$filter={0}", searchString);
+            var search = string.IsNullOrWhiteSpace(searchString) ? string.Empty : $"?$filter={MpRestEncode(searchString)}";
 
             var url = AddColumnSelection(string.Format("/tables/{0}{1}", GetTableName<T>(), search), selectColumns);
             var request = new RestRequest(url, Method.GET);

@@ -24,6 +24,7 @@ namespace MinistryPlatform.Translation.Test.Services
         private Mock<IConfigurationWrapper> _configWrapper;
         private Mock<IParticipantRepository> _participantService;
         private Mock<IApiUserRepository> _apiUserService;
+        private Mock<IMinistryPlatformRestRepository> _ministryPlatformRest;
 
         private OpportunityRepository _fixture;
 
@@ -36,6 +37,7 @@ namespace MinistryPlatform.Translation.Test.Services
             _configWrapper = new Mock<IConfigurationWrapper>();
             _participantService = new Mock<IParticipantRepository>();
             _apiUserService = new Mock<IApiUserRepository>();
+            _ministryPlatformRest = new Mock<IMinistryPlatformRestRepository>();
 
             _configWrapper.Setup(m => m.GetEnvironmentVarAsString("API_USER")).Returns("uid");
             _configWrapper.Setup(m => m.GetEnvironmentVarAsString("API_PASSWORD")).Returns("pwd");
@@ -46,7 +48,8 @@ namespace MinistryPlatform.Translation.Test.Services
                                                   _authenticationService.Object,
                                                   _configWrapper.Object,
                                                   _participantService.Object,
-                                                  _apiUserService.Object);
+                                                  _apiUserService.Object, 
+                                                  _ministryPlatformRest.Object);
         }
 
         [Test]

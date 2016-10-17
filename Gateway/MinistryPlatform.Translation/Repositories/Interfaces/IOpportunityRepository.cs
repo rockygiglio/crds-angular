@@ -21,7 +21,7 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
         MpResponse GetOpportunityResponse(int opportunityId, int eventId, MpParticipant participant);
         List<Models.Opportunities.MpResponse> SearchResponseByGroupAndEvent(String searchString);
         List<Models.Opportunities.MpResponse> GetContactsOpportunityResponseByGroupAndEvent(int groupId, int eventId);
-        List<MpResponse> GetOpportunityResponses(int opportunityId, string token);
+        List<MpResponse> GetOpportunityResponses(int opportunityId, int eventId);
         void RespondToOpportunity(MpRespondToOpportunityDto opportunityResponse);
         int RespondToOpportunity(int participantId, int opportunityId, string comments, int eventId, bool response);
     }
