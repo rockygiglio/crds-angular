@@ -86,6 +86,7 @@ export default class GeolocationController {
    * FORM FUNCTIONALITY
    ***********************/
   submit() {
+    this.removeFormMessages();
     if (this.location.zipcode.length > 0 && !this.location.zipcode.match(/^\d{5}$/)) {
       this.invalidZipcode = true;
     } else {
@@ -101,5 +102,11 @@ export default class GeolocationController {
 
   dismissed() {
     this.locationService.dismissed();
+  }
+
+  removeFormMessages() {
+    this.success = false;
+    this.locationError = false;
+    this.invalidZipcode = false;
   }
 }
