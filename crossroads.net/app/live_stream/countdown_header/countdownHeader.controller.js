@@ -15,12 +15,16 @@ export default class CountdownHeaderController {
       this.wrapper.classList.add('fixed-header');
       this.header.classList.add('animated');
       this.header.classList.add('slideInDown');
-      this.intro.style.marginTop = this.header.offsetHeight.toString();
+      if ( this.intro !== null ) {
+        this.intro.style.marginTop = this.header.offsetHeight.toString();
+      }
     } else {
       this.wrapper.classList.remove('fixed-header');
       this.header.classList.remove('animated');
       this.header.classList.remove('slideInDown');
-      this.intro.style.marginTop = '';
+      if ( this.intro !== null ) {
+        this.intro.style.marginTop = '';
+      }
     }
   }
 
