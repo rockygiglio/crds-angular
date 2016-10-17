@@ -81,5 +81,30 @@ export default class StreamStatusService {
     return isEventStartBeforeCurrentTime;
   }
 
+  isBroadcasting(events){
+    let areAnyEventsBroadcasting = false;
+
+    for(let idx=0; idx<events.length; idx++){
+      let iteratedEvent = events[idx];
+      let isEventLive = this.isEventCurrentlyLive(iteratedEvent);
+      if (isEventLive){
+        areAnyEventsBroadcasting = true;
+      }
+    }
+
+    return areAnyEventsBroadcasting;
+  };
+
+  isEventCurrentlyLive(event){
+    let currentTime = moment();
+    let eventStartTime = moment(event.start);
+    let eventEndTime = moment(event.end);
+    let isEventStartBeforeCurrentTime = eventStartTime.isBefore(currentTime);
+    let isEventEndAfterCurrentTime = eventEndTime.isAfter(currentTime);
+    let isEventLive = isEventStartBeforeCurrentTime && isEventEndAfterCurrentTime;
+
+    return isEventLive;
+  }
+
 };
 
