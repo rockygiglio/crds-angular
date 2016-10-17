@@ -1,14 +1,64 @@
 import CONSTANTS from 'crds-constants';
+import Event from '../models/event';
 
 export default class StreamStatusService {
 
-  constructor($rootScope) {
+  constructor($rootScope, $q, $resource) {
     this.rootScope = $rootScope;
+    this.q =  $q;
+    this.resource = $resource;
     this.streamStatus = undefined;
+    this.url  = __STREAMSPOT_ENDPOINT__;
+    this.ssid = __STREAMSPOT_SSID__;
+    this.headers = {
+      'Content-Type': 'application/json',
+      'x-API-Key': __STREAMSPOT_API_KEY__
+    };
+    this.time=0;
   }
 
   getStatus(){
     return this.streamStatus;
+  }
+
+  setStreamStatus(status){
+    this.streamStatus = status;
+  }
+
+  presetStreamStatus(){
+
+    var deferred = this.q.defer();
+
+    let url = `${this.url}broadcaster/${this.ssid}/events`;
+
+    return this.resource(url, {}, { get: { method: 'GET', headers: this.headers } })
+        .get()
+        .$promise
+        .then((response) => {
+          let events = response.data.events;
+          events = this.parseEventsWithParam(events);
+          let isBroadcasting = this.isBroadcasting(events);
+          let streamStatus = this.determineStreamStatus(events, isBroadcasting);
+          this.streamStatus = streamStatus;
+          deferred.resolve(events);
+        });
+
+    return deferred;
+
+  };
+
+  parseEventsWithParam(events) {
+    return _
+        .chain(events)
+        .sortBy('start')
+        .map((object) => {
+          let event = Event.build(object);
+          if (event.isBroadcasting() || event.isUpcoming()) {
+            return event;
+          }
+        })
+        .compact()
+        .value();
   }
 
   setStreamStatus(events, isBroadcasting){
