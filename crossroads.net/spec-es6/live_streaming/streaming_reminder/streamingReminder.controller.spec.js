@@ -1,10 +1,10 @@
-
 import constants from 'crds-constants';
 import StreamingReminderController from '../../../app/live_stream/streaming_reminder/streamingReminder.controller';
 import Reminder from '../../../app/live_stream/models/reminder';
 import Event from '../../../app/live_stream/models/event';
 import ReminderService from '../../../app/live_stream/services/reminder.service';
 import StreamspotService from '../../../app/live_stream/services/streamspot.service';
+import Session from '../../../core/services/session_service';
 
 describe('Streaming Reminder Controller', () => {
   let fixture,
@@ -15,10 +15,15 @@ describe('Streaming Reminder Controller', () => {
       currentEvent,
       futureEvent,
       futureDuplicateEvent,
-      httpBackend;
+      httpBackend,
+      Session,
+      Profile,
+      RootScope,
+      Scope;
 
   const reminderEndpoint = `${__API_ENDPOINT__}`;
-
+  
+  let baseTime = new Date(2016, 9, 1); // set to 10/1/2016 - month appears to be 0 based index however
 
   modalInstance = {
     close: jasmine.createSpy('modalInstance.close'),
@@ -34,21 +39,27 @@ describe('Streaming Reminder Controller', () => {
     StreamspotService = $injector.get('StreamspotService');
     ReminderService = $injector.get('ReminderService');
     httpBackend = $injector.get('$httpBackend');
-    fixture = new StreamingReminderController(modalInstance, StreamspotService, ReminderService);
+    Session = $injector.get('Session');
+    Profile = $injector.get('Profile');
+    RootScope = $injector.get('$rootScope');
+    Scope = RootScope.$new();
+    fixture = new StreamingReminderController(modalInstance, StreamspotService, ReminderService, Session, Profile, Scope);
+
+    jasmine.clock().mockDate(baseTime);
 
     current = {
-      "start": moment().tz(moment.tz.guess()).add(1, 'hour').format('YYYY-MM-DD H:mm:ss'),
-      "end": moment().tz(moment.tz.guess()).add(2, 'hour').format('YYYY-MM-DD H:mm:ss'),
+      "start": moment(baseTime).tz(moment.tz.guess()).add(1, 'hour').format('YYYY-MM-DD H:mm:ss'),
+      "end": moment(baseTime).tz(moment.tz.guess()).add(2, 'hour').format('YYYY-MM-DD H:mm:ss'),
       "title": "Current Month"
     },
     future = {
-      "start": moment().tz(moment.tz.guess()).add(1, 'month').format('YYYY-MM-DD H:mm:ss'),
-      "end": moment().tz(moment.tz.guess()).add(1, 'month').add(1, 'hour').format('YYYY-MM-DD H:mm:ss'),
+      "start": moment(baseTime).tz(moment.tz.guess()).add(1, 'month').format('YYYY-MM-DD H:mm:ss'),
+      "end": moment(baseTime).tz(moment.tz.guess()).add(1, 'month').add(1, 'hour').format('YYYY-MM-DD H:mm:ss'),
       "title": "Future Month"
     };
     futureDuplicate = {
-      "start": moment().tz(moment.tz.guess()).add(1, 'month').add(2, 'hour').format('YYYY-MM-DD H:mm:ss'),
-      "end": moment().tz(moment.tz.guess()).add(1, 'month').add(3, 'hour').format('YYYY-MM-DD H:mm:ss'),
+      "start": moment(baseTime).tz(moment.tz.guess()).add(1, 'month').add(2, 'hour').format('YYYY-MM-DD H:mm:ss'),
+      "end": moment(baseTime).tz(moment.tz.guess()).add(1, 'month').add(3, 'hour').format('YYYY-MM-DD H:mm:ss'),
       "title": "Future Duplicate Month"
     };
 
@@ -61,25 +72,29 @@ describe('Streaming Reminder Controller', () => {
     fixture.upcoming.push(futureDuplicateEvent);
   }));
 
+  afterEach(() => {
+    jasmine.clock().mockDate();
+  });
+
   it('should return next date', () => {
     expect(fixture.nextDate()).toBe(currentEvent.start.format('MM/DD/YYYY'));
   });
-  // it('should return unique dates', () => {
-  //   let uniqueDates = fixture.uniqueDates();
-  //   expect(uniqueDates instanceof Array).toBe(true);
-  //   expect(uniqueDates.length).toBe(2);
-  //   expect(uniqueDates[0].title).toBe('Current Month');
-  //   expect(uniqueDates[1].title).toBe('Future Month');
-  // });
-  // it('should group dates', () => {
-  //   let grouped = fixture.groupedDates(),
-  //       keys    = Object.keys(grouped);
+  it('should return unique dates', () => {
+    let uniqueDates = fixture.uniqueDates();
+    expect(uniqueDates instanceof Array).toBe(true);
+    expect(uniqueDates.length).toBe(2);
+    expect(uniqueDates[0].title).toBe('Current Month');
+    expect(uniqueDates[1].title).toBe('Future Month');
+  });
+  it('should group dates', () => {
+    let grouped = fixture.groupedDates(),
+        keys    = Object.keys(grouped);
 
-  //   expect(keys.length).toBe(2);
-  //   expect(keys).toContain(currentEvent.start.format('MM/DD/YYYY'));
-  //   expect(keys).toContain(futureEvent.start.format('MM/DD/YYYY'));
-  //   expect(keys).toContain(futureDuplicateEvent.start.format('MM/DD/YYYY'));
-  // });
+    expect(keys.length).toBe(2);
+    expect(keys).toContain(currentEvent.start.format('MM/DD/YYYY'));
+    expect(keys).toContain(futureEvent.start.format('MM/DD/YYYY'));
+    expect(keys).toContain(futureDuplicateEvent.start.format('MM/DD/YYYY'));
+  });
   it('should set day', () => {
     fixture.setDay(currentEvent);
     expect(fixture.model.day).toBe(currentEvent.start.format('MM/DD/YYYY'));
@@ -91,13 +106,13 @@ describe('Streaming Reminder Controller', () => {
   })
   it('should set time', () => {
     fixture.setTime(currentEvent);
-    expect(fixture.model.time).toBe(currentEvent.start.format('h:mma z'))
+    expect(fixture.model.time).toBe(currentEvent.start.format('h:mma z'));
   });
   it('should reset form', () => {
     fixture.setDay(futureEvent);
     fixture.setTime(futureEvent);
     expect(fixture.model.day).toBe(futureEvent.start.format('MM/DD/YYYY'));
-    expect(fixture.model.time).toBe(futureEvent.start.format('h:mma z'))
+    expect(fixture.model.time).toBe(futureEvent.start.format('h:mma z'));
 
     fixture.resetForm();
 
@@ -150,4 +165,20 @@ describe('Streaming Reminder Controller', () => {
     httpBackend.flush();
 
   });
+  it('should set user defaults', () => {
+    fixture.setUserDefaults(1234);
+    let expectedEmail = "user@test.com";
+    let expectedPhone = "123-456-7890";
+    let result = {  
+      "emailAddress": expectedEmail,
+      "mobilePhone": expectedPhone
+    };
+
+    let url = `${reminderEndpoint}api/profile`;
+    httpBackend.expectGET(url).respond(200, result);
+    httpBackend.flush();
+
+    expect(fixture.model.email).toBe(expectedEmail);
+    expect(fixture.model.phone).toBe(expectedPhone);
+  })
 })

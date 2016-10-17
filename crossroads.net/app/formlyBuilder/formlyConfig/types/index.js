@@ -12,4 +12,4 @@ export default ngModule => {
   require('./crdsRadioDesc')(ngModule);
   require('./crdsSelect')(ngModule);
   require('./crdsTextArea')(ngModule);
-}
+};

@@ -23,5 +23,6 @@ namespace MinistryPlatform.Translation.Models
         public int FormResponseId { get; set; }
         public string Response { get; set; }
         public int? OpportunityResponseId { get; set; }
+        public int? EventParticipantId { get; set; }
     }
 }

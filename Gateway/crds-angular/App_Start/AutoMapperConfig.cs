@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web.ClientServices.Providers;
 using AutoMapper;
+using crds_angular.Models;
 using crds_angular.Models.Crossroads;
 using crds_angular.Models.Crossroads.Attribute;
 using crds_angular.Models.Crossroads.Events;
@@ -17,6 +18,7 @@ using crds_angular.Models.MailChimp;
 using MinistryPlatform.Translation.Extensions;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Models.DTO;
+using MinistryPlatform.Translation.Models.Opportunities;
 using MinistryPlatform.Translation.Repositories;
 using MpAddress = MinistryPlatform.Translation.Models.MpAddress;
 using DonationStatus = crds_angular.Models.Crossroads.Stewardship.DonationStatus;
@@ -298,6 +300,10 @@ namespace crds_angular.App_Start
             Mapper.CreateMap<MpInquiry, Inquiry>();
             Mapper.CreateMap<ObjectAttributeDTO, MpAttribute>();
             Mapper.CreateMap<MpAttribute, ObjectAttributeDTO>();
+            Mapper.CreateMap<RsvpMembers, MpRsvpMember>();
+            Mapper.CreateMap<MpRsvpMember, RsvpMembers>();
+            Mapper.CreateMap<MpSU2SOpportunity, ServeOpportunity>();
+            Mapper.CreateMap<ServeOpportunity, MpSU2SOpportunity>();
         }
     }
 }

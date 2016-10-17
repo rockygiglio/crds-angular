@@ -18,6 +18,8 @@ namespace MinistryPlatform.Translation.Test.Services
             _ministryPlatformService = new Mock<IMinistryPlatformService>();
             _authService = new Mock<IAuthenticationRepository>();
             _configuration = new Mock<IConfigurationWrapper>();
+            _ministryPlatformRest = new Mock<IMinistryPlatformRestRepository>();
+            _apiUserService = new Mock<IApiUserRepository>();
             _configuration.Setup(mocked => mocked.GetConfigIntValue("Contacts")).Returns(292);
             _configuration.Setup(mocked => mocked.GetConfigIntValue("Households")).Returns(327);
             _configuration.Setup(mocked => mocked.GetConfigIntValue("SecurityRolesSubPageId")).Returns(363);
@@ -31,13 +33,15 @@ namespace MinistryPlatform.Translation.Test.Services
             _authService.Setup(m => m.Authenticate(It.IsAny<string>(), It.IsAny<string>())).Returns(new Dictionary<string, object> {{"token", "ABC"}, {"exp", "123"}});
 
 
-            _fixture = new ContactRepository(_ministryPlatformService.Object, _authService.Object, _configuration.Object);
+            _fixture = new ContactRepository(_ministryPlatformService.Object, _authService.Object, _configuration.Object, _ministryPlatformRest.Object, _apiUserService.Object);
         }
 
         private Mock<IMinistryPlatformService> _ministryPlatformService;
         private Mock<IAuthenticationRepository> _authService;
         private ContactRepository _fixture;
         private Mock<IConfigurationWrapper> _configuration;
+        private Mock<IMinistryPlatformRestRepository> _ministryPlatformRest;
+        private Mock<IApiUserRepository> _apiUserService;
 
         [Test]
         public void GetContactByParticipantId()

@@ -10,7 +10,7 @@ export default function CountdownComponent() {
     controller: controller,
     controllerAs: 'countdown',
     bindToController: true
-  }
+  };
 
   return countdownComponent;
 }
