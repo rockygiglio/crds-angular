@@ -14,6 +14,13 @@ export default class GeolocationController {
     this.invalidZipcode = false;
 
     this.location = this.locationService.getLocation() || Geolocation.blank();
+    if (this.location.count === 1) {
+      this.subject = 'person';
+      this.verb    = 'is';
+    } else {
+      this.subject = 'people';
+      this.verb    = 'are';
+    }
   }
 
   add() {
@@ -40,7 +47,7 @@ export default class GeolocationController {
 
     if (this.location.count === 1) {
       this.subject = 'person';
-      this.verb    = 'is'
+      this.verb    = 'is';
     } else {
       this.subject = 'people';
       this.verb    = 'are';
