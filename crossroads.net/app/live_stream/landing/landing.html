@@ -1,10 +1,22 @@
 <div class="wrapper" id="wrapper">
   <countdown-header></countdown-header>
 
-  <section id="intro" class="intro imgix-fluid-bg crds-hero" data-src="//crds-cms-uploads.imgix.net/content/images/streaming--anywhere-hero.jpg?w=1&crop=faces&fit=crop">
+  <section ng-if = "landing.streamStatus == 'Live'" id="intro" class="intro imgix-fluid-bg crds-hero" data-src="//crds-cms-uploads.imgix.net/content/images/streaming--anywhere-hero.jpg?w=1&crop=faces&fit=crop">
     <div class="wow fadeInUp">
-      <div dynamic-content="$root.MESSAGES.streamingLandingIntro.content | html"></div>
-      <p ng-if="inProgress" class="wow fadeIn"><a href="/live/stream" class="btn btn-primary">Watch Now</a></p>
+      <div dynamic-content="$root.MESSAGES.streamingLandingIntroBroadcasting.content | html"></div>
+      <p class="wow fadeIn"><a href="/live/stream" class="btn btn-primary">Watch Now</a></p>
+    </div>
+  </section>
+
+  <section ng-if = "landing.streamStatus == 'Upcoming'" id="intro" class="intro imgix-fluid-bg crds-hero" data-src="//crds-cms-uploads.imgix.net/content/images/streaming--anywhere-hero.jpg?w=1&crop=faces&fit=crop">
+    <div class="wow fadeInUp">
+      <div dynamic-content="$root.MESSAGES.streamingLandingIntroUpcoming.content | html"></div>
+    </div>
+  </section>
+
+  <section ng-if = "landing.streamStatus == 'Off'" id="intro" class="intro imgix-fluid-bg crds-hero" data-src="//crds-cms-uploads.imgix.net/content/images/streaming--anywhere-hero.jpg?w=1&crop=faces&fit=crop">
+    <div class="wow fadeInUp">
+      <div dynamic-content="$root.MESSAGES.streamingLandingIntroOff.content | html"></div>
     </div>
   </section>
 

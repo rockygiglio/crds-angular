@@ -90,17 +90,6 @@
       scope.isTeamTab = isTeamTab;
       scope.isTeamLeader = isTeamLeader;
       scope.loadTeamMembers = loadTeamMembers;
-
-      //
-      // UI!!!
-      // TODO REMOVE TEST DATA FOR TEAM IMPLEMENTATION
-      //
-      scope.team.count = Math.floor(Math.random()*10);
-      if (scope.team.members.length) {
-        scope.team.roles = scope.team.members[0].roles;
-      }
-
-      scope.getRSVPYes = getRSVPYes();
       
       //////////////////////////////////////
 
@@ -224,18 +213,6 @@
           personToEdit.name = person.nickName === null ? person.firstName : person.nickName;
           $rootScope.$emit('personUpdated', person);
         });
-      }
-
-      function getRSVPYes() {      
-        let count = 0;
-        _.forEach(scope.team.serveOppertunities, (opportunity) =>{
-          if(opportunity.rsvpMembers.length > 0)
-          {
-            let rsvpYesMembers = _.where(opportunity.rsvpMembers, {Response_Result_ID: 1});
-            count = count + rsvpYesMembers.length;
-          }
-        });
-        return count;
       }
 
       function getFrequency() {

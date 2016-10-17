@@ -437,7 +437,7 @@ namespace crds_angular.test.Services
             opportunity.OpportunityId = opportunityId;
             opportunity.Responses = mockResponses;
 
-            _opportunityService.Setup(m => m.GetOpportunityResponses(opportunityId, It.IsAny<string>()))
+            _opportunityService.Setup(m => m.GetOpportunityResponses(opportunityId, eventId))
                 .Returns(opportunity.Responses);
 
             var capacity = _fixture.OpportunityCapacity(opportunityId, eventId, min, max);
@@ -534,7 +534,7 @@ namespace crds_angular.test.Services
             opportunity.OpportunityId = opportunityId;
             opportunity.Responses = new List<MinistryPlatform.Translation.Models.MpResponse>();
 
-            _opportunityService.Setup(m => m.GetOpportunityResponses(opportunityId, It.IsAny<string>()))
+            _opportunityService.Setup(m => m.GetOpportunityResponses(opportunityId, eventId))
                 .Returns(opportunity.Responses);
 
             var capacity = _fixture.OpportunityCapacity(opportunityId, eventId, opportunity.MinimumNeeded,
