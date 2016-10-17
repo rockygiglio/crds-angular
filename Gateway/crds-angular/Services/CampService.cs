@@ -60,7 +60,7 @@ namespace crds_angular.Services
             var parentContact = _contactService.GetMyProfile(token);
             var displayName = campReservation.PreferredName;
             var nickName = displayName ?? campReservation.FirstName;
-            displayName = displayName != null ? campReservation.LastName + ',' + campReservation.PreferredName : campReservation.LastName + ',' + campReservation.FirstName;
+            displayName = displayName != null ? campReservation.LastName + ", " + campReservation.PreferredName : campReservation.LastName + ", " + campReservation.FirstName;
             
             var minorContact = new MpContact
             {

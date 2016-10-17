@@ -38,7 +38,7 @@
     <form name="teamForm" >
     <div class="panel-collapse collapse" collapse="isCollapsed">
       <div class="panel-body soft-half-bottom">
-        <div ng-show="!isTeamTab()" class="alert alert-info" role="alert" ng-show="team.pastDeadline" dynamic-content="passedDeadlineMsg(team.pastDeadlineMessage) | html">
+        <div ng-show="(!isTeamTab() && team.pastDeadline)" class="alert alert-info" role="alert" dynamic-content="passedDeadlineMsg(team.pastDeadlineMessage) | html">
         </div>
 
         <!--

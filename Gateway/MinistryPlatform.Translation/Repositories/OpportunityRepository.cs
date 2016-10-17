@@ -7,7 +7,6 @@ using MinistryPlatform.Translation.Extensions;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Models.DTO;
 using MinistryPlatform.Translation.Repositories.Interfaces;
-using MpResponse = MinistryPlatform.Translation.Models.MpResponse;
 
 namespace MinistryPlatform.Translation.Repositories
 {
@@ -16,6 +15,7 @@ namespace MinistryPlatform.Translation.Repositories
         private readonly int _eventPage = Convert.ToInt32(AppSettings("Events"));
         private readonly IParticipantRepository _participantService;
         private readonly IApiUserRepository _apiUserService;
+        private readonly IMinistryPlatformRestRepository _ministryPlatformRest;
         private readonly int _groupParticpantsSubPageView = Convert.ToInt32(AppSettings("GroupsParticipantsSubPage"));
         private readonly IMinistryPlatformService _ministryPlatformService;
         private readonly int _opportunityPage = Convert.ToInt32(AppSettings("OpportunityPage"));
@@ -27,12 +27,15 @@ namespace MinistryPlatform.Translation.Repositories
                                       IAuthenticationRepository authenticationService,
                                       IConfigurationWrapper configurationWrapper,
                                       IParticipantRepository participantService,
-            IApiUserRepository apiUserService)
+                                      IApiUserRepository apiUserService,
+                                      IMinistryPlatformRestRepository ministryPlatformRest
+            )
             : base(authenticationService, configurationWrapper)
         {
             _ministryPlatformService = ministryPlatformService;
             _participantService = participantService;
             _apiUserService = apiUserService;
+            _ministryPlatformRest = ministryPlatformRest;
         }
 
         public MpResponse GetMyOpportunityResponses(int contactId, int opportunityId)
@@ -187,22 +190,11 @@ namespace MinistryPlatform.Translation.Repositories
             }).ToList();
         }
 
-        public List<MpResponse> GetOpportunityResponses(int opportunityId, string token)
+        public List<MpResponse> GetOpportunityResponses(int opportunityId, int eventId)
         {
-            var records = _ministryPlatformService.GetSubpageViewRecords(_signedupToServeSubPageViewId,
-                                                                         opportunityId,
-                                                                         token,
-                                                                         "");
+            string searchString = $"Opportunity_ID = {opportunityId} AND Event_ID = {eventId}";
 
-            var responses = new List<MpResponse>();
-            foreach (var r in records)
-            {
-                var response = new MpResponse();
-                response.Event_ID = r.ToInt("Event_ID");
-                responses.Add(response);
-            }
-
-            return responses;
+            return _ministryPlatformRest.UsingAuthenticationToken(_apiUserService.GetToken()).Search<MpResponse>(searchString);
         }
 
         public int GetOpportunitySignupCount(int opportunityId, int eventId, string token)
