@@ -26,10 +26,7 @@ export default class ServeTeamMembersController {
       this.servingOpportunities = this.splitMembers(this.servingOpportunities);
       this.allMembers = [];
 
-      this.addTeam('Leaders', this.rsvpYesLeaders);
-
       _.forEach(this.servingOpportunities, (opportunity) => {
-        if(opportunity.Group_Role_ID !== CONSTANTS.GROUP.ROLES.LEADER)
         this.addTeam(opportunity.Opportunity_Title, opportunity.rsvpMembers);
       });
 
@@ -40,8 +37,6 @@ export default class ServeTeamMembersController {
     _.forEach(opportunities, (opportunity) => {
       let partitionedArray = _.partition(opportunity.rsvpMembers, (member) => {return member.Response_Result_ID === CONSTANTS.SERVING_RESPONSES.NOT_AVAILABLE});
       this.rsvpNoMembers = this.rsvpNoMembers.concat(partitionedArray[0]);
-      partitionedArray = _.partition(partitionedArray[1], (member) => {return member.Group_Role_ID === CONSTANTS.GROUP.ROLES.LEADER});
-      this.rsvpYesLeaders = this.rsvpYesLeaders.concat(partitionedArray[0]);
       opportunity.rsvpMembers = partitionedArray[1];
     })
     return opportunities;
