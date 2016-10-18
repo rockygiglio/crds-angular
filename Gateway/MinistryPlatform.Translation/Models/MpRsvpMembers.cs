@@ -27,5 +27,8 @@ namespace MinistryPlatform.Translation.Models
 
         [JsonProperty(PropertyName = "Response_Result_ID")]
         public int ResponseResultId { get; set; } = 0;
+
+        [JsonProperty(PropertyName = "__Age")]
+        public int? Age { get; set; }
     }
 }
