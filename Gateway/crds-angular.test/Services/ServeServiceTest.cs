@@ -1185,7 +1185,8 @@ namespace crds_angular.test.Services
                         Name = "JC",
                         Opportunity = 2218712,
                         ParticipantId = 7572172,
-                        ResponseResultId = 1
+                        ResponseResultId = 1,
+                        Age = 18
                     },
 
                     new MpRsvpMember()
@@ -1196,7 +1197,8 @@ namespace crds_angular.test.Services
                         Name = "Duke",
                         Opportunity = 2218712,
                         ParticipantId = 7572183,
-                        ResponseResultId = 2
+                        ResponseResultId = 2,
+                        Age = null
                     },
                     new MpRsvpMember()
                     {
@@ -1206,7 +1208,8 @@ namespace crds_angular.test.Services
                         Name = "Liz",
                         Opportunity = 2218735,
                         ParticipantId = 7547422,
-                        ResponseResultId = 1
+                        ResponseResultId = 1,
+                        Age = 21
                     },
                     new MpRsvpMember()
                     {
@@ -1216,7 +1219,8 @@ namespace crds_angular.test.Services
                         Name = "Cloud",
                         Opportunity = 2218735,
                         ParticipantId = 7547423,
-                        ResponseResultId = 2
+                        ResponseResultId = 2,
+                        Age = 21
                     }
             };
 
