@@ -1,49 +1,54 @@
 export default class ServeTeamMessageController {
   /* @ngInject */
-  constructor() {
+  constructor(ServeTeamService, $log, $rootScope, $state) {
     console.debug('Serve Team Message controller');
+    this.serveTeamService = ServeTeamService;
     this.processing = false;
     this.selection = null;
     this.individuals = [];
+    this.ready = false;
+    this.log = $log;
+    this.rootScope = $rootScope;
+    this.state = $state;
+  }
 
-    // TODO !!! REPLACE MOCK DATA
-    this.teams = [
-      {
-        id: 1,
-        name: 'FI Oakley Coffee Team',
-        count: 43
-      },
-      {
-        id: 2,
-        name: 'FI Florence Info Center Team',
-        count: 37
-      },
-      {
-        id: 3,
-        name: 'Wes Donaldson',
-        isLeader: true
-      }
-    ];
+  $onInit(){
+    this.serveTeamService.getTeamDetailsByLeader().then((data) => {
+      this.log.debug(data)
+      this.teams = data;
+    }).catch((err) => {
+      this.log.debug("unable to retrieve teams")
+    }).finally(() => {
+      this.ready = true;
+    });
+    this.teamPeople = this.serveTeamService.getAllTeamMembersByLeader();
   }
 
   loadIndividuals($query) {
-    return [
-      {
-        id: 1001,
-        name: 'Genie Simmons',
-        email: 'gsimmons@gmail.com',
-        role: 'Leader'
-      },
-      {
-        id: 1002,
-        name: 'Holly Gennaro',
-        email: 'hgennaro@excite.com',
-        role: null
-      },
-    ]
+    return this.teamPeople;
   }
 
-  submit() {
+  cancel() {
+    this.state.go('serve-signup');
+  }
+
+  submit(serveMessageForm) {
+    // Validate the form - if ok, then invoke the submit callback
+    if(!serveMessageForm.$valid) {
+      this.rootScope.$emit('notify', this.rootScope.MESSAGES.generalError);
+      return;
+    }
     this.processing = true;
+    this.serveTeamService.sendGroupMessage(this.selection, { Body: this.email.message, Subject: this.email.subject })
+    .then((data)=>{      
+      this.rootScope.$emit('notify', this.rootScope.MESSAGES.emailSent);
+      this.state.go('serve-signup');
+    })
+    .catch((err)=>{
+      this.rootScope.$emit('notify', this.rootScope.MESSAGES.messageSendError);
+    })
+    .finally(()=>{
+      this.processing = false;
+    });
   }
 }
