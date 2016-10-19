@@ -2,9 +2,10 @@
 class CampService {
   constructor($resource) {
     this.resource = $resource;
-    this.campResource = $resource(__API_ENDPOINT__ + 'api/camps/:campId');
-    this.campDashboard = $resource(__API_ENDPOINT__ + 'api/my-camp');
+    this.campResource = $resource(`{${__API_ENDPOINT__}api/camps/:campId`);
+    this.campDashboard = $resource(`${__API_ENDPOINT__}api/my-camp`);
     this.campInfo = {};
+    this.campTitle = '';
   }
 
   getCampInfo(campId) {
@@ -18,13 +19,13 @@ class CampService {
   }
 
   getCampDashboard() {
-    return this.campDashboard.query( (myCamps) => {
+    return this.campDashboard.query((myCamps) => {
       this.dashboard = myCamps;
     },
 
-   (err) => {
+    (err) => {
       console.error(err);
-   }).$promise;
+    }).$promise;
   }
 
 }
