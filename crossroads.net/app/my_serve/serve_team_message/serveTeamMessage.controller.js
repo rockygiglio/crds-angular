@@ -17,7 +17,6 @@ export default class ServeTeamMessageController {
       this.log.debug(data)
       this.teams = data;
     }).catch((err) => {
-      //do something here
       this.log.debug("unable to retrieve teams")
     }).finally(() => {
       this.ready = true;
@@ -42,7 +41,6 @@ export default class ServeTeamMessageController {
     this.processing = true;
     this.serveTeamService.sendGroupMessage(this.selection, { Body: this.email.message, Subject: this.email.subject })
     .then((data)=>{      
-      debugger;
       this.rootScope.$emit('notify', this.rootScope.MESSAGES.emailSent);
       this.state.go('serve-signup');
     })
