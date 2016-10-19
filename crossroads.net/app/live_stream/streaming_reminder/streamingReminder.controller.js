@@ -109,7 +109,7 @@ export default class StreamingReminderController {
   }
 
   setUserDefaults() {
-    this.profile.Personal.get()
+    this.profile.Contact.get()
       .$promise.then((data) => {
         this.model.email = data.emailAddress;
         this.model.phone = data.mobilePhone;

@@ -170,7 +170,7 @@ describe('Streaming Reminder Controller', () => {
       "mobilePhone": expectedPhone
     };
 
-    let url = `${reminderEndpoint}api/profile`;
+    let url = `${reminderEndpoint}api/contact`;
     httpBackend.expectGET(url).respond(200, result);
     httpBackend.flush();
 
