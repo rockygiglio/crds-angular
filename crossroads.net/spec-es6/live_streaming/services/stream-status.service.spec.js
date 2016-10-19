@@ -14,65 +14,66 @@ describe('Stream Status Service', () => {
       streamStatus,
       didStreamStatusChange,
       isEventLive,
-      isAnyEventLive;
+      isAnyEventLive,
+      roundedHrsToNextEvnt;
 
   let baseTime = moment();
 
   let events = [
     {
-      "start": moment(baseTime).subtract(4, 'hour').format('YYYY-MM-DD H:mm:ss'),
-      "end": moment(baseTime).add(3, 'hour').format('YYYY-MM-DD H:mm:ss'),
+      "start": moment(baseTime).subtract(4, 'hours').format('YYYY-MM-DD H:mm:ss'),
+      "end": moment(baseTime).add(3, 'hours').format('YYYY-MM-DD H:mm:ss'),
       "title": "Saturday Rehearsal Broadcasting"
     },
     {
-      "start": moment(baseTime).subtract(5, 'hour').format('YYYY-MM-DD H:mm:ss'),
-      "end": moment(baseTime).subtract(6, 'hour').format('YYYY-MM-DD H:mm:ss'),
+      "start": moment(baseTime).subtract(5, 'hours').format('YYYY-MM-DD H:mm:ss'),
+      "end": moment(baseTime).subtract(6, 'hours').format('YYYY-MM-DD H:mm:ss'),
       "title": "Saturday Rehearsal Done"
     },
     {
       "start": moment(baseTime).add(1, 'hour').format('YYYY-MM-DD H:mm:ss'),
-      "end": moment(baseTime).add(2, 'hour').format('YYYY-MM-DD H:mm:ss'),
+      "end": moment(baseTime).add(2, 'hours').format('YYYY-MM-DD H:mm:ss'),
       "title": "Saturday Rehearsal Upcoming"
     },
     {
-      "start": moment(baseTime).subtract(10, 'hour').format('YYYY-MM-DD H:mm:ss'),
-      "end": moment(baseTime).subtract(9, 'hour').format('YYYY-MM-DD H:mm:ss'),
+      "start": moment(baseTime).subtract(10, 'hours').format('YYYY-MM-DD H:mm:ss'),
+      "end": moment(baseTime).subtract(9, 'hours').format('YYYY-MM-DD H:mm:ss'),
       "title": "Saturday Rehearsal Done"
     }
   ];
 
   let eventsWithLiveEvent = [
     {
-      "start": moment(baseTime).subtract(4, 'hour').format('YYYY-MM-DD H:mm:ss'),
-      "end": moment(baseTime).add(3, 'hour').format('YYYY-MM-DD H:mm:ss'),
+      "start": moment(baseTime).subtract(4, 'hours').format('YYYY-MM-DD H:mm:ss'),
+      "end": moment(baseTime).add(3, 'hours').format('YYYY-MM-DD H:mm:ss'),
       "title": "Saturday Rehearsal Broadcasting"
     },
     {
-      "start": moment(baseTime).subtract(5, 'hour').format('YYYY-MM-DD H:mm:ss'),
-      "end": moment(baseTime).subtract(6, 'hour').format('YYYY-MM-DD H:mm:ss'),
+      "start": moment(baseTime).subtract(5, 'hours').format('YYYY-MM-DD H:mm:ss'),
+      "end": moment(baseTime).subtract(6, 'hours').format('YYYY-MM-DD H:mm:ss'),
       "title": "Saturday Rehearsal Done"
     },
     {
       "start": moment(baseTime).add(1, 'hour').format('YYYY-MM-DD H:mm:ss'),
-      "end": moment(baseTime).add(2, 'hour').format('YYYY-MM-DD H:mm:ss'),
+      "end": moment(baseTime).add(2, 'hours').format('YYYY-MM-DD H:mm:ss'),
       "title": "Saturday Rehearsal Upcoming"
     }
   ];
 
   let eventsWithoutLiveEvent = [
     {
-      "start": moment(baseTime).add(3, 'hour').format('YYYY-MM-DD H:mm:ss'),
-      "end": moment(baseTime).add(4, 'hour').format('YYYY-MM-DD H:mm:ss'),
+      "start": moment(baseTime).add(3, 'hours').format('YYYY-MM-DD H:mm:ss'),
+      "end": moment(baseTime).add(4, 'hours').format('YYYY-MM-DD H:mm:ss'),
       "title": "Saturday Rehearsal Broadcasting"
     },
     {
-      "start": moment(baseTime).subtract(5, 'hour').format('YYYY-MM-DD H:mm:ss'),
-      "end": moment(baseTime).subtract(6, 'hour').format('YYYY-MM-DD H:mm:ss'),
+      "start": moment(baseTime).subtract(5, 'hours').format('YYYY-MM-DD H:mm:ss'),
+      "end": moment(baseTime).subtract(6, 'hours').format('YYYY-MM-DD H:mm:ss'),
       "title": "Saturday Rehearsal Done"
     },
     {
       "start": moment(baseTime).add(1, 'hour').format('YYYY-MM-DD H:mm:ss'),
-      "end": moment(baseTime).add(2, 'hour').format('YYYY-MM-DD H:mm:ss'),
+      "end": moment(baseTime).add(2, 'hours').format('YYYY-MM-DD H:mm:ss'),
       "title": "Saturday Rehearsal Upcoming"
     }
   ];
@@ -84,8 +85,8 @@ describe('Stream Status Service', () => {
   };
 
   let upcomingEvent = {
-    "start": moment(baseTime).add(3, 'hour').format('YYYY-MM-DD H:mm:ss'),
-    "end": moment(baseTime).add(4, 'hour').format('YYYY-MM-DD H:mm:ss'),
+    "start": moment(baseTime).add(3, 'hours').format('YYYY-MM-DD H:mm:ss'),
+    "end": moment(baseTime).add(4, 'hours').format('YYYY-MM-DD H:mm:ss'),
     "title": "Upcoming Event"
   };
 
@@ -105,8 +106,9 @@ describe('Stream Status Service', () => {
 
     it('get hours until next streaming event starts', () => {
       hrsToNextEvent = streamStatusService.getHoursToNextEvent(events);
+      roundedHrsToNextEvnt = Math.round(hrsToNextEvent); //avoid js floating point errors
       expectedHrsToEvent = 1;
-      expect(1).toEqual(expectedHrsToEvent);
+      expect(roundedHrsToNextEvnt).toEqual(expectedHrsToEvent);
     });
 
     it('should show stream status as upcoming', () => {
@@ -119,7 +121,7 @@ describe('Stream Status Service', () => {
     it('should indicate that stream status changed', () => {
       isBroadcasting = false;
       didStreamStatusChange = streamStatusService.didStreamStatusChange(events, isBroadcasting);
-      expect(streamStatus).toBeTruthy(didStreamStatusChange);
+      expect(didStreamStatusChange).toEqual(true);
     });
 
     it('should indicate that event IS live', () => {

@@ -38,8 +38,7 @@ export default class StreamStatusService {
           let events = response.data.events;
           events = this.parseEventsWithParam(events);
           let isBroadcasting = this.isBroadcasting(events);
-          let streamStatus = this.determineStreamStatus(events, isBroadcasting);
-          this.streamStatus = streamStatus;
+          this.streamStatus = this.determineStreamStatus(events, isBroadcasting);
           deferred.resolve(events);
         });
 
@@ -112,11 +111,11 @@ export default class StreamStatusService {
   filterOutEventsStartingBeforeCurrentTime(events){
     let eventsStartingAfterCurrentTime = [];
 
-    for(let idx=0; idx<events.length; idx++){
-      let iteratedEvent = events[idx];
+    for(let i=0; i<events.length; i++){
+      let iteratedEvent = events[i];
       let doesEventStartAfterCurrentTime = this.doesEventStartAfterCurrentTime(iteratedEvent);
       if( doesEventStartAfterCurrentTime){
-        eventsStartingAfterCurrentTime.push(events[idx]);
+        eventsStartingAfterCurrentTime.push(events[i]);
       }
     }
 
@@ -134,8 +133,8 @@ export default class StreamStatusService {
   isBroadcasting(events){
     let areAnyEventsBroadcasting = false;
 
-    for(let idx=0; idx<events.length; idx++){
-      let iteratedEvent = events[idx];
+    for(let i=0; i<events.length; i++){
+      let iteratedEvent = events[i];
       let isEventLive = this.isEventCurrentlyLive(iteratedEvent);
       if (isEventLive){
         areAnyEventsBroadcasting = true;
@@ -149,9 +148,7 @@ export default class StreamStatusService {
     let currentTime = moment();
     let eventStartTime = moment(event.start);
     let eventEndTime = moment(event.end);
-    let isEventStartBeforeCurrentTime = eventStartTime.isBefore(currentTime);
-    let isEventEndAfterCurrentTime = eventEndTime.isAfter(currentTime);
-    let isEventLive = isEventStartBeforeCurrentTime && isEventEndAfterCurrentTime;
+    let isEventLive = eventStartTime.isBefore(currentTime) && eventEndTime.isAfter(currentTime);
 
     return isEventLive;
   }
