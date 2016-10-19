@@ -2,9 +2,12 @@
 class CampService {
   constructor($resource) {
     this.resource = $resource;
+    // eslint-disable-next-line prefer-template
     this.campResource = $resource(__API_ENDPOINT__ + 'api/camps/:campId');
+    // eslint-disable-next-line prefer-template
     this.campDashboard = $resource(__API_ENDPOINT__ + 'api/my-camp');
     this.campInfo = {};
+    this.campTitle = '';
   }
 
   getCampInfo(campId) {
@@ -18,7 +21,7 @@ class CampService {
   }
 
   getCampDashboard() {
-    return this.campDashboard.query( (myCamps) => {
+    return this.campDashboard.query((myCamps) => {
       this.dashboard = myCamps;
     },
 

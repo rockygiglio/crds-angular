@@ -1,5 +1,9 @@
-export default function CampRoutes($stateProvider) {
+function getCampInfo(CampsService, $stateParams) {
+  const id = $stateParams.campId;
+  return CampsService.getCampInfo(id);
+}
 
+export default function CampRoutes($stateProvider) {
   $stateProvider
     .state('camps-dashboard', {
       parent: 'noSideBar',
@@ -15,13 +19,28 @@ export default function CampRoutes($stateProvider) {
       resolve: {
         loggedin: crds_utilities.checkLoggedin,
         campsService: 'CampsService',
-        dashboard: (campsService) => campsService.getCampDashboard()
+        dashboard: campsService => campsService.getCampDashboard()
+      }
+    })
+    .state('summercamp', {
+      parent: 'noSideBar',
+      url: '/camps/summercamp',
+      template: '<crossroads-camp is-summer-camp="true"></crossroads-camp>',
+      data: {
+        isProtected: true,
+        meta: {
+          title: 'Summer Camp',
+          description: 'Signup for Summer Camp'
+        }
+      },
+      resolve: {
+        loggedin: crds_utilities.checkLoggedin
       }
     })
     .state('crossroads-camp', {
       parent: 'noSideBar',
       url: '/camps/:campId',
-      template:'<crossroads-camp></crossroads-camp>',
+      template: '<crossroads-camp></crossroads-camp>',
       data: {
         isProtected: true,
         meta: {
@@ -32,13 +51,8 @@ export default function CampRoutes($stateProvider) {
       resolve: {
         loggedin: crds_utilities.checkLoggedin,
         campsService: 'CampsService',
-        getCampInfo: getCampInfo,
+        getCampInfo,
         $stateParams: '$stateParams'
       }
     });
-}
-
-function getCampInfo(CampsService, $stateParams) {
-  let id = $stateParams.campId;
-  return CampsService.getCampInfo(id);
 }

@@ -1,36 +1,57 @@
-import constants from 'crds-constants';
+import constants from '../../app/constants';
 
-/* jshint unused: false */
+// eslint-disable-next-line no-unused-vars
 import campsModule from '../../app/camps/camps.module';
 import campHelpers from './campHelpers';
 
 describe('Camp Component', () => {
-
-  let campService,
-      $componentController,
-      campController,
-      httpBackend,
-      campsService;
-
-  const endpoint = window.__env__['CRDS_API_ENDPOINT'] + 'api';
+  let $componentController;
+  let campController;
+  let campsService;
 
   beforeEach(angular.mock.module(constants.MODULES.CAMPS));
 
-  beforeEach(inject((_$componentController_, _$httpBackend_, _CampsService_) => {
-    $componentController = _$componentController_;
-    campsService = _CampsService_;
-    httpBackend = _$httpBackend_;
-    var bindings = {};
-    campsService.campInfo = campHelpers().campInfo;
-    campController = $componentController('crossroadsCamp', null, bindings);
-    campController.$onInit();
-  }));
+  describe('Camp Component with Summer Camp', () => {
+    beforeEach(inject((_$componentController_, _$httpBackend_, _CampsService_) => {
+      $componentController = _$componentController_;
+      campsService = _CampsService_;
+      const bindings = {
+        isSummerCamp: true
+      };
+      campsService.campInfo = campHelpers().campInfo;
+      campController = $componentController('crossroadsCamp', null, bindings);
+      campController.$onInit();
+    }));
 
-  it('should set the view as ready', () => {
-    expect(campController.viewReady).toBe(true);
+    it('should set the summer camp flag to true', () => {
+      expect(campController.isSummerCamp).toBeTruthy();
+    });
+
+    it('should set the summer camp title correctly', () => {
+      expect(campController.campsService.campTitle).toBe('Summer Camp');
+    });
   });
 
-  it('should set the title correctly', () => {
-    expect(campController.campTitle).toBe(campHelpers().campInfo.eventTitle);
+  describe('Camp Component without Summer Camp', () => {
+    beforeEach(inject((_$componentController_, _$httpBackend_, _CampsService_) => {
+      $componentController = _$componentController_;
+      campsService = _CampsService_;
+      const bindings = {};
+      campsService.campInfo = campHelpers().campInfo;
+      campController = $componentController('crossroadsCamp', null, bindings);
+      campController.$onInit();
+    }));
+
+    it('should set the view as ready', () => {
+      expect(campController.viewReady).toBe(true);
+    });
+
+    it('should not set the summer camp flag to true', () => {
+      expect(campController.isSummerCamp).toBeFalsy();
+    });
+
+    it('should set the title correctly', () => {
+      expect(campController.campsService.campTitle).toBe(campHelpers().campInfo.eventTitle);
+    });
   });
 });

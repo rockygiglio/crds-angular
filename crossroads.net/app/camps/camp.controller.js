@@ -7,7 +7,11 @@ class CampController {
 
   $onInit() {
     this.viewReady = true;
-    this.campTitle = this.campsService.campInfo.eventTitle;
+    if (this.isSummerCamp) {
+      this.campsService.campTitle = 'Summer Camp';
+    } else {
+      this.campsService.campTitle = this.campsService.campInfo.eventTitle;
+    }
   }
 }
 export default CampController;

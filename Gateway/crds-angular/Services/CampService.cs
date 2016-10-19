@@ -55,6 +55,31 @@ namespace crds_angular.Services
             return campEventInfo;
         }
 
+        public List<CampFamilyMember> GetEligibleFamilyMembers(bool isSummerCamp, string token)
+        {
+            var myContact = _contactService.GetMyProfile(token);
+            var family = _contactService.GetHouseholdFamilyMembers(myContact.Household_ID);
+            var otherFamily = _contactService.GetOtherHouseholdMembers(myContact.Contact_ID);
+            family.AddRange(otherFamily);
+            family = family.Where((member) => member.HouseholdPosition == "Minor Child").ToList();
+            
+            // if is Summer Camp, get all minor children
+            if (isSummerCamp)
+            {
+                List<CampFamilyMember> eligible = family.Select(member => new CampFamilyMember()
+                {
+                    ContactId = member.ContactId,
+                    IsEligible = true,
+                    LastName = member.LastName,
+                    PreferredName = member.Nickname ?? member.FirstName
+                }).ToList();
+            }
+            else
+            {
+                throw new Exception("We only support summer camps fool!");
+            }
+        }
+
         public void SaveCampReservation(CampReservationDTO campReservation, int eventId, string token)
         {
             var parentContact = _contactService.GetMyProfile(token);
