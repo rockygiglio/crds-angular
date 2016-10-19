@@ -28,7 +28,7 @@ describe('Camp Component', () => {
     });
 
     it('should set the summer camp title correctly', () => {
-      expect(campController.campTitle).toBe('Summer Camp');
+      expect(campController.campsService.campTitle).toBe('Summer Camp');
     });
   });
 
@@ -51,7 +51,7 @@ describe('Camp Component', () => {
     });
 
     it('should set the title correctly', () => {
-      expect(campController.campTitle).toBe(campHelpers().campInfo.eventTitle);
+      expect(campController.campsService.campTitle).toBe(campHelpers().campInfo.eventTitle);
     });
   });
 });
