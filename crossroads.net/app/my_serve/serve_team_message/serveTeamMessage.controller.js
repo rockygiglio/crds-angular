@@ -12,7 +12,7 @@ export default class ServeTeamMessageController {
     this.state = $state;
   }
 
-  $onInit(){
+  $onInit() {
     this.serveTeamService.getTeamDetailsByLeader().then((data) => {
       this.log.debug(data)
       this.teams = data;
@@ -22,6 +22,17 @@ export default class ServeTeamMessageController {
       this.ready = true;
     });
     this.teamPeople = this.serveTeamService.getAllTeamMembersByLeader();
+    this.tinymceOptions = {
+      resize: false,
+      //width: 500,
+      height: 300,
+      plugins: 'paste link legacyoutput textcolor',
+      //valid_elements: 'ol, ul, li, p, br, b, i, strong, em, a',
+      toolbar: 'undo redo | fontselect fontsizeselect forecolor backcolor | bold italic underline | alignleft aligncenter alignright | numlist bullist outdent indent | link',
+      menubar: false,
+      statusbar: false
+
+    };
   }
 
   loadIndividuals($query) {
@@ -34,21 +45,21 @@ export default class ServeTeamMessageController {
 
   submit(serveMessageForm) {
     // Validate the form - if ok, then invoke the submit callback
-    if(!serveMessageForm.$valid) {
+    if (!serveMessageForm.$valid) {
       this.rootScope.$emit('notify', this.rootScope.MESSAGES.generalError);
       return;
     }
     this.processing = true;
     this.serveTeamService.sendGroupMessage(this.selection, { Body: this.email.message, Subject: this.email.subject })
-    .then((data)=>{      
-      this.rootScope.$emit('notify', this.rootScope.MESSAGES.emailSent);
-      this.state.go('serve-signup');
-    })
-    .catch((err)=>{
-      this.rootScope.$emit('notify', this.rootScope.MESSAGES.messageSendError);
-    })
-    .finally(()=>{
-      this.processing = false;
-    });
+      .then((data) => {
+        this.rootScope.$emit('notify', this.rootScope.MESSAGES.emailSent);
+        this.state.go('serve-signup');
+      })
+      .catch((err) => {
+        this.rootScope.$emit('notify', this.rootScope.MESSAGES.messageSendError);
+      })
+      .finally(() => {
+        this.processing = false;
+      });
   }
 }

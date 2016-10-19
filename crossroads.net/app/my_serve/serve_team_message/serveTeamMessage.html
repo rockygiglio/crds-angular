@@ -1,4 +1,5 @@
 <preloader full-screen='false' ng-show='!serveTeamMessage.ready'> </preloader>
+<script type="text/javascript" src="../../node_modules/tinymce/tinymce.js"></script>
 <form role='form' name='serveTeamMessageForm' ng-if='serveTeamMessage.ready' ng-submit='serveTeamMessage.submit(serveTeamMessageForm)'
 	novalidate>
 	<div class='row'>
@@ -46,8 +47,11 @@
 
 			<div class='form-group' ng-class='{"has-error": serveTeamMessageForm.$submitted && serveTeamMessageForm.emailMessage.$invalid}'>
 				<label for='emailMessage' class='control-label wide-label' ng-class='{"required": serveTeamMessage.emailMessageRequired}'>Message</label>
-				<textarea type='textarea' rows='8' class='form-control' id='emailMessage' name='emailMessage' ng-model='serveTeamMessage.email.message'
-					ng-required='true'></textarea>
+				<textarea type='textarea' rows='8' ui-tinymce="serveTeamMessage.tinymceOptions" class='form-control' id='emailMessage' name='emailMessage'
+					ng-model='serveTeamMessage.email.message' ng-required='true'></textarea>
+				<div style="margin-top:30px;">
+					<textarea style="width:500px;height:400px;" ng-model="serveTeamMessage.email.message"></textarea>
+				</div>
 
 				<ng-messages for="serveTeamMessageForm.emailMessage.$error" ng-if="serveTeamMessageForm.$submitted && serveTeamMessageForm.emailMessage.$invalid">
 					<ng-messages-include src="on-submit-messages"></ng-messages-include>
