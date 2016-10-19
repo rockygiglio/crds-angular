@@ -5,7 +5,6 @@ export default class ClosableTagController {
   constructor() {
     this.maxSVAge = CONSTANTS.SERVING.MAXSTUDENTVOLUNTEERAGE;
     this.svText = CONSTANTS.SERVING.STUDENTVOLUNTEERTEXT;
-    console.log(this.age);
   }
 
   click() {
