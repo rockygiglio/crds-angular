@@ -35,7 +35,6 @@ export default class ServeTeamMessageController {
 
   submit(serveMessageForm) {
     // Validate the form - if ok, then invoke the submit callback
-    debugger;
     if(!serveMessageForm.$valid) {
       this.rootScope.$emit('notify', this.rootScope.MESSAGES.generalError);
       return;
@@ -43,11 +42,12 @@ export default class ServeTeamMessageController {
     this.processing = true;
     this.serveTeamService.sendGroupMessage(this.selection, { Body: this.email.message, Subject: this.email.subject })
     .then((data)=>{      
+      debugger;
       this.rootScope.$emit('notify', this.rootScope.MESSAGES.emailSent);
       this.state.go('serve-signup');
     })
     .catch((err)=>{
-      this.rootScope.$emit('notify', 'Something Went Wrong');
+      this.rootScope.$emit('notify', this.rootScope.MESSAGES.messageSendError);
     })
     .finally(()=>{
       this.processing = false;

@@ -16,6 +16,7 @@ namespace MinistryPlatform.Translation.Repositories
         private readonly IMinistryPlatformService _ministryPlatformService;
         private readonly IApiUserRepository _apiUserService;
         private readonly IMinistryPlatformRestRepository _ministryPlatformRest;
+        private readonly int _groupRoleLeader;
         private readonly IGroupRepository _groupRepository;
 
         public GroupParticipantRepository(IConfigurationWrapper configurationWrapper,
@@ -30,6 +31,7 @@ namespace MinistryPlatform.Translation.Repositories
             _apiUserService = apiUserService;
             _ministryPlatformRest = ministryPlatformRest;
             _groupRepository = groupRepository;
+            _groupRoleLeader = _configurationWrapper.GetConfigIntValue("GroupRoleLeader");
         }
 
         public int Get(int groupId, int participantId)
@@ -114,44 +116,39 @@ namespace MinistryPlatform.Translation.Repositories
         public List<MpGroup> GetAllGroupNamesLeadByParticipant(int participantId, int groupType = -1)
         {
             const string COLUMNS = "Group_ID_Table.Group_Name, Group_Participants.group_participant_id, Group_Participants.participant_id,  Group_Participants.group_id, Group_Participants.group_role_id";
-            string search = $"Group_Participants.participant_id = {participantId} and Group_Role_ID = 22";
+            string search = $"Group_Participants.participant_id = {participantId} and Group_Role_ID =  {_groupRoleLeader}";
 
             if (groupType != -1)
             {
                 search += $"AND Group_ID_Table.Group_Type_ID = {groupType}";
             }
 
-            var groupParticipantRecords = _ministryPlatformRest.UsingAuthenticationToken(_apiUserService.GetToken()).Search<MpGroupParticipant>(MpRestEncode(search), MpRestEncode(COLUMNS));
+            var groupParticipantRecords = _ministryPlatformRest.UsingAuthenticationToken(_apiUserService.GetToken()).Search<MpGroupParticipant>(search, COLUMNS);
 
             List<MpGroup> groups = new List<MpGroup>();
             foreach (var groupParticipant in groupParticipantRecords)
             {
-                if (groupParticipant.GroupRoleId == 22)
+                var group = new MpGroup()
                 {
-                    var group = new MpGroup()
-                    {
-                        GroupId = groupParticipant.GroupId,
-                        Name = groupParticipant.GroupName,
-                    };
+                    GroupId = groupParticipant.GroupId,
+                    Name = groupParticipant.GroupName,
+                };
 
-                    groups.Add(group);
-                }
+                groups.Add(group);
             }
-
-            //TODO: store 22 somewhere
             return groups;
         }
 
         public bool GetIsLeader(int participantId, int groupType = -1)
         {
             const string COLUMNS = "Group_Participants.group_role_id";
-            string search = $"Group_Participants.participant_id = {participantId} and Group_Role_ID = 22";
+            string search = $"Group_Participants.participant_id = {participantId} and Group_Role_ID = {_groupRoleLeader}";
 
             if (groupType != -1) {
                 search += $"AND Group_ID_Table.Group_Type_ID = {groupType}";
             }
 
-            var mpGroupParticipants = _ministryPlatformRest.UsingAuthenticationToken(_apiUserService.GetToken()).Search<MpGroupParticipant>(MpRestEncode(search), MpRestEncode(COLUMNS));
+            var mpGroupParticipants = _ministryPlatformRest.UsingAuthenticationToken(_apiUserService.GetToken()).Search<MpGroupParticipant>(search, COLUMNS);
 
             return mpGroupParticipants.Any();
         }

@@ -36,7 +36,6 @@ export default class ServeTeamService {
 //TODO: THIS METHOD IS BASICALLY THE SAME METHOD IN GROUP TOUL SERVICES/MESSAGE SERVICE.  THAT SERVICE SHOULD BE REFACTORED
 //AND PULLED UP TO A HIGHER LEVEL TO BE USED MORE BROADLY
     sendGroupMessage(groupId, message) {
-        debugger;
         return this.resource(__API_ENDPOINT__ + 'api/grouptool/:groupId/:groupTypeId/groupmessage').save({
             groupId: groupId,
             groupTypeId: CONSTANTS.GROUP.GROUP_TYPE_ID.MY_SERVE
