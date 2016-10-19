@@ -24,5 +24,8 @@ namespace crds_angular.Models.Crossroads
 
         [JsonProperty(PropertyName = "Response_Result_ID")]
         public int ResponseResultId { get; set; } = 0;
+
+        [JsonProperty(PropertyName = "age")]
+        public int? Age { get; set; }
     }
 }

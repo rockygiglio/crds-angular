@@ -88,6 +88,10 @@
     SERVING_RESPONSES :{
       NOT_AVAILABLE: 2
     },
+    SERVING: {
+      MAXSTUDENTVOLUNTEERAGE: 19,
+      STUDENTVOLUNTEERTEXT: " (SV)"
+    },
     CMS: {
       PAGENAMES: {
         COMMUNITYGROUPS: 'CommunityGroupSignupPage',
