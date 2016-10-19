@@ -57,27 +57,6 @@
         </div>
 
         <!--
-          TEAM MEMBER SELECTION
-        -->
-        <!--div ng-if="isTeamTab() && isTeamLeader(team)" class="push-bottom">
-          <tags-input
-            ng-model=""
-            display-property="name"
-            placeholder="Search for a team member"
-            add-from-autocomplete-only="true"
-            replace-spaces-with-dashes='false'
-          >
-
-            <auto-complete
-              source="loadTeamMembers($query)"
-              display-property="name"
-              min-length="1"
-              template='my_serve/serveTeamAutocomplete.html'
-            ></auto-complete>
-          </tags-input>
-        </div-->
-
-        <!--
           OPPORTUNITIES
         -->
         <div ng-if="!isTeamTab()" class="radio" ng-class="{'text-muted': role.capacity.badgeType === 'label-default', 'has-error': formErrors.role}"  >
@@ -215,7 +194,7 @@
         <!--
           TEAM CONFIRMED MEMBERS
         -->
-        <div ng-if='isTeamTab()' class="serve-members push-top panel-body soft-half-bottom">
+        <div ng-if='isTeamTab()' class="push-top panel-body">
           <serve-team-members on-member-click="memberClick($member)" on-member-remove="memberRemove($member)" team="team"></serve-team-members>
         </div>
       </div><!--/panel-body-->

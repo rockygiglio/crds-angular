@@ -9,6 +9,7 @@ export default class ServeTeamMembersController {
     this.rsvpYesLeaders = [];
     this.allMembers = [];
     this.serveTeamService = ServeTeamService;
+    this.selectedRole = undefined;
     this.ready = false;
   }
 
@@ -19,6 +20,28 @@ export default class ServeTeamMembersController {
       this.ready = true;
     });
   }
+
+  loadTeamMembersSearch() {
+        console.debug('Query team members');
+        // TODO UI!!! IMPLEMENT THIS
+        return [
+          {
+            id: 1001,
+            name: 'Genie Simmons',
+            email: 'gsimmons@gmail.com',
+            phone: '513-313-5984',
+            role: 'Leader'
+          },
+          {
+            id: 1002,
+            name: 'Holly Gennaro',
+            email: 'hgennaro@excite.com',
+            phone: '513-857-9587',
+            role: null
+          },
+        ]
+      }
+
 
   loadTeamMembers(team) {
       this.servingOpportunities = team.serveOppertunities; // gets passed in from component attribute.

@@ -7,7 +7,6 @@ import './event_registration_mockup.html';
 import './event_registration_mockup_desired.html';
 import './serveTabs.html';
 import './serveTeam.html';
-import './serveTeamAutocomplete.html';
 import './refine/refineList.html';
 import './refine/serveModalContent.html';
 
