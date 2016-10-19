@@ -1,5 +1,5 @@
 (function() {
-  'use strict';
+  'use strict'; 
 
   var MODULE = require('crds-constants').MODULES.COMMON;
 

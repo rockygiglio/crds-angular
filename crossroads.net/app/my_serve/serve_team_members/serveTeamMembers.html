@@ -1,0 +1,15 @@
+<h4 class="">Confirmed Team Members</h4>
+<preloader full-screen='false' ng-show='!serveTeamMembers.ready'> </preloader>
+<div ng-repeat="role in serveTeamMembers.allMembers" class="row serve-role-members" ng-show='serveTeamMembers.ready'>
+  <div class="col-sm-3 serve-team-confirm-role">
+    <strong>{{role.name}}</strong>
+  </div>
+  <div class="col-sm-9">
+    <closable-tag ng-repeat="member in role.members"
+                  name="member.NickName +' '+ member.Last_Name"
+                  on-click="serveTeamMembers.memberClick(member)"
+                  on-close="serveTeamMembers.memberRemove(member)"
+                  class="push-half-right push-half-bottom"></closable-tag>
+    <span ng-if="role.members == null">None</span>
+  </div>
+</div>

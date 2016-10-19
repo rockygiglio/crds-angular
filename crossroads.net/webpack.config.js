@@ -15,6 +15,7 @@ module.exports = {
   entry: {
     childcare: './app/childcare_dashboard/childcareDashboard.module.js',
     trips: './app/trips/trips.module.js',
+    camps: './app/camps/camps.module.js',
     search: './app/search/search.module.js',
     media: './app/media/media.module.js',
     give: './app/give/give.module.js',
@@ -25,8 +26,7 @@ module.exports = {
     core: ['./core/core.js'],
     common: ['./app/common/common.module.js'],
     formbuilder: ['./app/formBuilder/formBuilder.module.js'],
-    formlybuilder: ['./app/formlyBuilder/formlyBuilder.module.js'],
-    boot: ['./app/boot.ts']
+    formlybuilder: ['./app/formlyBuilder/formlyBuilder.module.js']
   },
   watchPattern: ['app/**/**','core/**/**'],
   externals: {
@@ -40,7 +40,7 @@ module.exports = {
     filename: '[name].[hash].js',
   },
   resolve: {
-    extensions: ['', '.ts', '.tsx', '.js', '.jsx']
+    extensions: ['', '.js', '.jsx']
   },
   module: {
     loaders: [
@@ -83,17 +83,8 @@ module.exports = {
           exclude: [/\.ng2component\.html$/]
         },
         {
-          test: /\.ts$/,
-          loaders: ['awesome-typescript-loader', 'angular2-template-loader'],
-          exclude: [/\.(spec|e2e)\.ts$/]
-        },
-        {
           test: /\.json$/,
           loaders: ["json-loader"]
-        },
-        {
-          test: /\.ng2component\.html$/,
-          loader: 'raw-loader'
         }
     ],
     noParse: [

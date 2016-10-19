@@ -4,6 +4,7 @@
     //TODO Should this be moved to core?
     // MODULE NAMES
     MODULES: {
+      CAMPS: 'crossroads.camps',
       CHILDCARE: 'crossroads.childcare',
       CHILDCARE_DASHBOARD: 'crossroads.childcare_dashboard',
       CORE: 'crossroads.core',
@@ -16,6 +17,7 @@
       GO_VOLUNTEER: 'crossroads.go_volunteer',
       //GROUP_FINDER: 'crossroads.group_finder',
       MEDIA: 'crossroads.media',
+      MY_SERVE: 'crossroads.my_serve',
       LIVE_STREAM: 'crossroads.live_stream',
       GROUP_TOOL: 'crossroads.grouptool',
       MPTOOLS: 'crossroads.mptools',
@@ -24,6 +26,7 @@
       SEARCH: 'crossroads.search',
       SIGNUP: 'crossroads.signup',
       TRIPS: 'crossroads.trips',
+
     },
     ATTRIBUTE_TYPE_IDS: {
       ABUSE_HISTORY: 69,
@@ -82,6 +85,9 @@
       I_DO_NOT_ATTEND_CROSSROADS: 2,
       NOT_SITE_SPECIFIC: 5
     },
+    SERVING_RESPONSES :{
+      NOT_AVAILABLE: 2
+    },
     CMS: {
       PAGENAMES: {
         COMMUNITYGROUPS: 'CommunityGroupSignupPage',
@@ -118,6 +124,10 @@
         APPRENTICE: 66
       },
     },
+    GEOLOCATION: {
+      MODAL_TIMEOUT: 10000,
+      FORMS_KEY: '1rupjr7gvqUU203fwjmeUlIiVwCA8BdkD-mP6M6s3wxQ'
+    },
     INVITATION: {
       TYPES: {
         GROUP: 1,
@@ -127,5 +137,12 @@
     MINISTRY: {
       SPIRITUAL_GROWTH: '8'
     },
+    STREAM_STATUS: {
+      LIVE: 'Live',
+      UPCOMING: 'Upcoming',
+      OFF: 'Off'
+    },
+    PRE_STREAM_HOURS: 15
+
   };
 })();

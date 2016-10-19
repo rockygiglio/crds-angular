@@ -1,8 +1,9 @@
 require('../../app/app');
+var CONSTANTS = require('crds-constants');
 
 describe('Refine List Directive', function() {
 
-  var $compile, $rootScope, element, scope, isolateScope, filterState, $httpBackend, $q;
+  var $compile, $rootScope, element, scope, isolateScope, ServeTeamFilterState, $httpBackend, $q;
 
   var mockMatt = setupMatt();
   var mockLeslie = setupLeslie();
@@ -83,26 +84,27 @@ describe('Refine List Directive', function() {
 
   beforeEach(function() {
     angular.mock.module('crossroads');
+    beforeEach(angular.mock.module(CONSTANTS.MODULES.MY_SERVE));
   });
 
-  beforeEach(inject(function(_$compile_, _$rootScope_, _$q_, _filterState_, _$httpBackend_) {
+  beforeEach(inject(function(_$compile_, _$rootScope_, _$q_, _ServeTeamFilterState_, _$httpBackend_) {
     $compile = _$compile_;
     $rootScope = _$rootScope_;
     $httpBackend = _$httpBackend_;
     $q = _$q_;
-    filterState = _filterState_;
-    filterState.addFamilyMember(1670885);
-    filterState.addTeam(34911);
-    filterState.addTime('08:30:00');
+    ServeTeamFilterState = _ServeTeamFilterState_;
+    ServeTeamFilterState.addFamilyMember(1670885);
+    ServeTeamFilterState.addTeam(34911);
+    ServeTeamFilterState.addTime('08:30:00');
     var yes = {
       'name': 'Yes',
       'id': 1,
       'selected': false,
       'attending': true
     };
-    filterState.addSignUp(yes);
+    ServeTeamFilterState.addSignUp(yes);
     scope = $rootScope.$new();
-    element = '<refine-list serving-days=\'servingDays\'></refine-list>';
+    element = '<serve-team-refine-list serving-days=\'servingDays\'></serve-team-refine-list>';
     scope.servingDays = mockServingDays;
     scope.servingDays.$promise = promiseServeDates(mockServingDays);
     element = $compile(element)(scope);
@@ -118,10 +120,10 @@ describe('Refine List Directive', function() {
   }));
 
   it('should have the serve data that was passed in', function() {
-    filterState.memberIds = [];
-    filterState.teams = [];
-    filterState.times = [];
-    filterState.signUps = [];
+    ServeTeamFilterState.memberIds = [];
+    ServeTeamFilterState.teams = [];
+    ServeTeamFilterState.times = [];
+    ServeTeamFilterState.signUps = [];
     isolateScope.filterAll();
     expect(JSON.stringify(isolateScope.servingDays)).toBe(JSON.stringify(mockServingDays));
   });
@@ -240,40 +242,40 @@ describe('Refine List Directive', function() {
   });
 
   it('should filter out only the teams selected', function() {
-    filterState.memberIds = [];
-    filterState.teams = [];
-    filterState.times = [];
-    filterState.addTeam(34911);
+    ServeTeamFilterState.memberIds = [];
+    ServeTeamFilterState.teams = [];
+    ServeTeamFilterState.times = [];
+    ServeTeamFilterState.addTeam(34911);
     isolateScope.filterAll();
     expect(isolateScope.servingDays[0].serveTimes[0].servingTeams.length).toBe(1);
   });
 
   it('should not filter teams when teams are not selected', function() {
-    filterState.memberIds = [];
-    filterState.teams = [];
-    filterState.times = [];
-    filterState.signUps = [];
+    ServeTeamFilterState.memberIds = [];
+    ServeTeamFilterState.teams = [];
+    ServeTeamFilterState.times = [];
+    ServeTeamFilterState.signUps = [];
     isolateScope.filterAll();
     expect(isolateScope.servingDays[0].serveTimes[0].servingTeams.length).toBe(2);
   });
 
   it('should filter out only days where I and only I have a team and serving opportunity available', function() {
-    filterState.teams = [];
-    filterState.times = [];
-    filterState.memberIds = [];
-    filterState.signUps = [];
-    filterState.addFamilyMember(1970611);
+    ServeTeamFilterState.teams = [];
+    ServeTeamFilterState.times = [];
+    ServeTeamFilterState.memberIds = [];
+    ServeTeamFilterState.signUps = [];
+    ServeTeamFilterState.addFamilyMember(1970611);
     isolateScope.filterAll();
     expect(isolateScope.servingDays[0].serveTimes[0].servingTeams[0].members.length).toBe(1);
     expect(isolateScope.servingDays[0].serveTimes[0].servingTeams[0].members[0].contactId).toBe(1970611);
   });
 
   it('should filter out only times when opportunities are available', function() {
-    filterState.teams = [];
-    filterState.times = [];
-    filterState.memberIds = [];
-    filterState.signUps = [];
-    filterState.addTime('08:30:00');
+    ServeTeamFilterState.teams = [];
+    ServeTeamFilterState.times = [];
+    ServeTeamFilterState.memberIds = [];
+    ServeTeamFilterState.signUps = [];
+    ServeTeamFilterState.addTime('08:30:00');
     isolateScope.filterAll();
     expect(isolateScope.servingDays[0].serveTimes.length).toBe(1);
     expect(isolateScope.servingDays[1].serveTimes.length).toBe(1);
@@ -281,27 +283,27 @@ describe('Refine List Directive', function() {
   });
 
   it('should not filter out times when times are not checked', function() {
-    filterState.teams = [];
-    filterState.times = [];
-    filterState.memberIds = [];
-    filterState.signUps = [];
+    ServeTeamFilterState.teams = [];
+    ServeTeamFilterState.times = [];
+    ServeTeamFilterState.memberIds = [];
+    ServeTeamFilterState.signUps = [];
     isolateScope.filterAll();
     expect(isolateScope.servingDays[0].serveTimes.length).toBe(2);
     expect(isolateScope.servingDays[1].serveTimes.length).toBe(2);
   });
 
   it('should filter out only rsvp when opportunities are available', function() {
-    filterState.teams = [];
-    filterState.times = [];
-    filterState.memberIds = [];
-    filterState.signUps = [];
+    ServeTeamFilterState.teams = [];
+    ServeTeamFilterState.times = [];
+    ServeTeamFilterState.memberIds = [];
+    ServeTeamFilterState.signUps = [];
     var yes = {
       'name': 'Yes',
       'id': 1,
       'selected': false,
       'attending': true
     };
-    filterState.addSignUp(yes);
+    ServeTeamFilterState.addSignUp(yes);
     isolateScope.filterAll();
     expect(isolateScope.servingDays[0].serveTimes.length).toBe(1);
     expect(isolateScope.servingDays[1].serveTimes.length).toBe(1);
@@ -315,10 +317,10 @@ describe('Refine List Directive', function() {
       'selected': false,
       'attending': true
     };
-    filterState.addFamilyMember(1970611);
-    filterState.addTime('08:30:00');
-    filterState.addTeam(34911);
-    filterState.addSignUp(yes);
+    ServeTeamFilterState.addFamilyMember(1970611);
+    ServeTeamFilterState.addTime('08:30:00');
+    ServeTeamFilterState.addTeam(34911);
+    ServeTeamFilterState.addSignUp(yes);
     isolateScope.filterAll();
     isolateScope.clearFilters();
     expect(isolateScope.servingDays[0].serveTimes.length).toBe(2);
