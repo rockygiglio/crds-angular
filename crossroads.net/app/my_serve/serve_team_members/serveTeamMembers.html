@@ -1,5 +1,3 @@
-<preloader full-screen='false' ng-show='!serveTeamMembers.ready'> </preloader>
-<div ng-show='serveTeamMembers.ready'>
 <!--
           TEAM MEMBER SELECTION
         -->
@@ -26,7 +24,7 @@
         -->
         <div class="radio" ng-class="{'text-muted': opp.capacity.badgeType === 'label-default', 'has-error': formErrors.role}"  >
           <div class="row">
-            <div class="col-sm-6 col-md-6 col-lg-4 mobile-push-bottom" ng-repeat="opp in serveTeamMembers.servingOpportunities">
+            <div class="col-sm-6 col-md-6 col-lg-4 mobile-push-bottom" ng-repeat="opp in serveTeamMembers.team.serveOpportunities">
               <label>
                 <input type="radio"
                        ng-model="serveTeamMembers.selectedRole"
@@ -65,5 +63,4 @@
                   class="push-half-right push-half-bottom"></closable-tag>
     <span ng-if="role.members == null">None</span>
   </div>
-</div>
 </div>

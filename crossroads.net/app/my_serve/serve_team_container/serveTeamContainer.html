@@ -1,0 +1,6 @@
+<preloader full-screen='false' ng-show='!serveTeamContainer.ready'> </preloader>
+<div ng-show='serveTeamContainer.ready'>
+	<div class="push-top panel-body" ng-if="serveTeamContainer.servingOpportunities">
+		<serve-team-members on-member-click="serveTeamContainer.memberClick($member)" on-member-remove="serveTeamContainer.memberRemove($member)" team="serveTeamContainer.servingOpportunities"></serve-team-members>
+	</div>
+</div>

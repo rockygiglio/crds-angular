@@ -2,23 +2,27 @@ import CONSTANTS from 'crds-constants';
 
 export default class ServeTeamMembersController {
   /*@ngInject*/
-  constructor(ServeTeamService) {
+  constructor() {
     console.debug('Construct ServeTeamMembersController');
-    this.servingOpportunities = {};
+    //this.servingOpportunities;
     this.rsvpNoMembers = [];
     this.rsvpYesLeaders = [];
     this.allMembers = [];
-    this.serveTeamService = ServeTeamService;
     this.selectedRole = undefined;
     this.ready = false;
   }
 
+  // $onChanges(changesObj)
+  // {
+  //   if(changesObj.servingOpportunities) {
+  //     this.servingOpportunities = changesObj.servingOpportunities;
+  //     this.loadTeamMembers();
+  //   }
+  // }
+
   $onInit()
   {
-    this.serveTeamService.getTeamRsvps(this.team).then((team) =>{
-      this.loadTeamMembers(team);
-      this.ready = true;
-    });
+    this.loadTeamMembers();
   }
 
   loadTeamMembersSearch() {
@@ -42,14 +46,12 @@ export default class ServeTeamMembersController {
         ]
       }
 
-
-  loadTeamMembers(team) {
-      this.servingOpportunities = team.serveOppertunities; // gets passed in from component attribute.
-
-      this.servingOpportunities = this.splitMembers(this.servingOpportunities);
+  loadTeamMembers() {
+      debugger;
+      this.team.serveOpportunities = this.splitMembers(this.team.serveOpportunities);
       this.allMembers = [];
 
-      _.forEach(this.servingOpportunities, (opportunity) => {
+      _.forEach(this.team.serveOpportunities, (opportunity) => {
         this.addTeam(opportunity.Opportunity_Title, opportunity.rsvpMembers);
       });
 
