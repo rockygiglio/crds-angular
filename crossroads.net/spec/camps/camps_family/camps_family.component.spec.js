@@ -41,7 +41,6 @@ describe('Camps Family Select Tool', () => {
   });
 
   it('should retrieve the correct CMS message', () => {
-    expect(rootScope.MESSAGES['summercampIntro'].content).toBe('summer camp intro text');
     expect(familySelectController.cmsMessage).toBe('summer camp intro text');
   });
 });
