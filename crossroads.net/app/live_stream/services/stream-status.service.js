@@ -36,17 +36,17 @@ export default class StreamStatusService {
         .$promise
         .then((response) => {
           let events = response.data.events;
-          events = this.parseEventsWithParam(events);
-          let isBroadcasting = this.isBroadcasting(events);
-          this.streamStatus = this.determineStreamStatus(events, isBroadcasting);
-          deferred.resolve(events);
+          let formattedEvents = this.formatEvents(events);
+          let isBroadcasting = this.isBroadcasting(formattedEvents);
+          this.streamStatus = this.determineStreamStatus(formattedEvents, isBroadcasting);
+          deferred.resolve(formattedEvents);
         });
 
     return deferred;
 
   };
 
-  parseEventsWithParam(events) {
+  formatEvents(events) {
     return _
         .chain(events)
         .sortBy('start')
