@@ -316,6 +316,7 @@
     <Compile Include="Models\Crossroads\Camp\CampDTO.cs" />
     <Compile Include="Models\Crossroads\Camp\CampFamilyMember.cs" />
     <Compile Include="Models\Crossroads\Camp\CampReservationDTO.cs" />
+    <Compile Include="Models\Crossroads\Camp\CampFamilyMember.cs" />
     <Compile Include="Models\Crossroads\Camp\MyCampDTO.cs" />
     <Compile Include="Models\Crossroads\Childcare\ChildcareDashboardDto.cs" />
     <Compile Include="Models\Crossroads\Childcare\ChildCareDate.cs" />

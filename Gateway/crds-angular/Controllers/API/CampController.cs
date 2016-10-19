@@ -31,7 +31,8 @@ namespace crds_angular.Controllers.API
                 }
                 catch (Exception e)
                 {
-                    var apiError = new ApiErrorDto("Camp Family", e);
+                    var apiError = new ApiErrorDto("Camp Family", e
+                        );
                     throw new HttpResponseException(apiError.HttpResponseMessage);
                 }
             });
