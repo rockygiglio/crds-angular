@@ -126,11 +126,14 @@ namespace MinistryPlatform.Translation.Repositories
             return result.TrimEnd('&');
         }
 
-        public List<T> Search<T>(string searchString = null, string selectColumns = null)
+        public List<T> Search<T>(string searchString = null, string selectColumns = null, string orderByString = null, bool distinct = false)
         {
             var search = string.IsNullOrWhiteSpace(searchString) ? string.Empty : $"?$filter={MpRestEncode(searchString)}";
+            ////////////////////////////////////////////////////////////////////////This is why we became programmers right?
+            var orderBy = string.IsNullOrWhiteSpace(searchString) ? string.Empty : $"&{MpRestEncode($"$orderby={orderByString}")}";
+            var distinctString = string.IsNullOrWhiteSpace(searchString) ? string.Empty : $"&{MpRestEncode($"$distinct={distinct.ToString()}")}";
 
-            var url = AddColumnSelection(string.Format("/tables/{0}{1}", GetTableName<T>(), search), selectColumns);
+            var url = AddColumnSelection(string.Format("/tables/{0}{1}{2}{3}", GetTableName<T>(), search, orderBy, distinctString),selectColumns);
             var request = new RestRequest(url, Method.GET);
             AddAuthorization(request);
 

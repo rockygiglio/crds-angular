@@ -155,9 +155,19 @@ namespace crds_angular.Services
             var contactId = _authenticationService.GetContactId(token);
             var participant = _participantService.GetParticipant(contactId);
 
-            var groups = Mapper.Map<List<GroupDTO>>(_groupParticipantService.GetAllGroupNamesLeadByParticipant(participant.ParticipantId));
+            var groups = Mapper.Map<List<GroupDTO>>(_groupParticipantService.GetAllGroupNamesLeadByParticipant(participant.ParticipantId, 9));
 
             return groups;
+        }
+
+        public List<GroupParticipantDTO> GetLeaderGroupsParticipants(string token)
+        {
+            var contactId = _authenticationService.GetContactId(token);
+            var participant = _participantService.GetParticipant(contactId);
+
+            var participants = Mapper.Map<List<GroupParticipantDTO>>(_groupParticipantService.GetAllParticipantsForAllLeadersGroups(participant.ParticipantId, 9));
+
+            return participants;
         }
 
         public bool GetIsLeader(string token)

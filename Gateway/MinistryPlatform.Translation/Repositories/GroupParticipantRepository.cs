@@ -152,5 +152,24 @@ namespace MinistryPlatform.Translation.Repositories
 
             return mpGroupParticipants.Any();
         }
+
+        public List<MpGroupParticipant> GetAllParticipantsForAllLeadersGroups(int participantId, int groupType = -1)
+        {
+            string csvGroupIdList = "166990, 167032, 176817, 176822";
+
+            const string columns = "group_participants.participant_id, group_participants.group_role_id, Participant_ID_table_contact_id_table.Nickname, Participant_ID_table_contact_id_table.Last_name, Participant_ID_table_contact_id_table.email_address ";
+            string search = $"group_participants.group_id in ({csvGroupIdList})";
+            string orderBy = "Participant_ID_table_contact_id_table.Last_name";
+            bool distinct = true;
+
+            if (groupType != -1)
+            {
+                search += $"AND Group_ID_Table.Group_Type_ID = {groupType}";
+            }
+
+            var mpGroupParticipants = _ministryPlatformRest.UsingAuthenticationToken(_apiUserService.GetToken()).Search<MpGroupParticipant>(search, columns, orderBy, distinct);
+
+            return mpGroupParticipants.Where().ToList();
+        }
     }
 }

@@ -23,5 +23,6 @@ namespace crds_angular.Services.Interfaces
         List<GroupDTO> GetLeaderGroups(string token);
         ServingTeam GetServingTeamRsvps(ServingTeam team);
         bool GetIsLeader(string token);
+        List<GroupParticipantDTO> GetLeaderGroupsParticipants(string token);
     }
 }

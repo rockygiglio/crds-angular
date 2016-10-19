@@ -18,9 +18,12 @@ namespace MinistryPlatform.Translation.Models
         [JsonProperty("Group_Name")]
         public string GroupName { get; set; }
         public int ContactId { get; set; }
+        [JsonProperty("Nickname")]
         public string NickName { get; set; }
+        [JsonProperty("Last_name")]
         public string LastName { get; set; }
         public string GroupRoleTitle { get; set; }
+        [JsonProperty("email_address")]
         public string Email { get; set; }
         public DateTime? StartDate { get; set; }
         public string Congregation { get; set; }
