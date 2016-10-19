@@ -67,7 +67,7 @@ namespace MinistryPlatform.Translation.Repositories
             _objectAttributeRepository = objectAttributeRepository;
         }
 
-        public List<MpGroup> GetEligibleSummerCampGroups(string token)        
+        public void GetEligibleSummerCampGroups(string token)        
         {
             // find all Age Groups attached to all Camp Events currently open for registration
 
