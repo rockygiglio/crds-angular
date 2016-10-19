@@ -24,7 +24,6 @@ describe('ServeTeamMembersController', () => {
          fixture.loadTeamMembers(fixture.team);
 		 
          expect(fixture.allMembers.length).toBe(4);
-         expect(fixture.rsvpYesLeaders.length).toBe(1);
          expect(fixture.rsvpNoMembers.length).toBe(3);
 		 expect(_.uniq(fixture.rsvpNoMembers, 'Participant_ID').length).toBe(2);
     });
@@ -50,7 +49,8 @@ describe('ServeTeamMembersController', () => {
 					"Group_Role_ID" : 16,
 					"NickName" : "Heather",
 					"Last_Name" : "Kerstanoff",
-					"Response_Result_ID" : 2
+					"Response_Result_ID" : 2,
+					"age": 18
 				}, {
 					"Event_ID" : 4510383,
 					"Participant_ID" : 7537153,
@@ -58,7 +58,8 @@ describe('ServeTeamMembersController', () => {
 					"Group_Role_ID" : 16,
 					"NickName" : "Joe",
 					"Last_Name" : "Kerstanoff",
-					"Response_Result_ID" : 1
+					"Response_Result_ID" : 1,
+					"age": 31
 				}
 			]
 		}, {
@@ -72,7 +73,8 @@ describe('ServeTeamMembersController', () => {
 					"Group_Role_ID" : 16,
 					"NickName" : "Heather",
 					"Last_Name" : "Kerstanoff",
-					"Response_Result_ID" : 2
+					"Response_Result_ID" : 2,
+					"age": 18
 				}
 			]
 		},{
@@ -86,7 +88,8 @@ describe('ServeTeamMembersController', () => {
 					"Group_Role_ID" : 22,
 					"NickName" : "Paige",
 					"Last_Name" : "Kerstanoff",
-					"Response_Result_ID" : 2
+					"Response_Result_ID" : 2,
+					"age": 13
 				}, {
 					"Event_ID" : 4510383,
 					"Participant_ID" : 7537155,
@@ -94,7 +97,8 @@ describe('ServeTeamMembersController', () => {
 					"Group_Role_ID" : 22,
 					"NickName" : "James",
 					"Last_Name" : "Kerstanoff",
-					"Response_Result_ID" : 1
+					"Response_Result_ID" : 1,
+					"age": 15
 				}
 			]
 		}
