@@ -59,6 +59,7 @@
   <div class="col-sm-9">
     <closable-tag ng-repeat="member in role.members"
                   name="member.NickName +' '+ member.Last_Name"
+                  age="member.age"
                   on-click="serveTeamMembers.memberClick(member)"
                   on-close="serveTeamMembers.memberRemove(member)"
                   class="push-half-right push-half-bottom"></closable-tag>
