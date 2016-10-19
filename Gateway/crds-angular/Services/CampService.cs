@@ -66,7 +66,7 @@ namespace crds_angular.Services
             // if is Summer Camp, get all minor children
             if (isSummerCamp)
             {
-                List<CampFamilyMember> eligible = family.Select(member => new CampFamilyMember()
+                return family.Select(member => new CampFamilyMember()
                 {
                     ContactId = member.ContactId,
                     IsEligible = true,
