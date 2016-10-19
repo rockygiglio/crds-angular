@@ -4,7 +4,7 @@ export default class ServeTeamMembersController {
   /*@ngInject*/
   constructor() {
     console.debug('Construct ServeTeamMembersController');
-    //this.servingOpportunities;
+    //this.opportunities; from component binding
     this.rsvpNoMembers = [];
     this.rsvpYesLeaders = [];
     this.allMembers = [];
@@ -22,6 +22,7 @@ export default class ServeTeamMembersController {
 
   $onInit()
   {
+    debugger;
     this.loadTeamMembers();
   }
 
@@ -48,10 +49,10 @@ export default class ServeTeamMembersController {
 
   loadTeamMembers() {
       debugger;
-      this.team.serveOpportunities = this.splitMembers(this.team.serveOpportunities);
+      this.opportunities = this.splitMembers(this.opportunities);
       this.allMembers = [];
 
-      _.forEach(this.team.serveOpportunities, (opportunity) => {
+      _.forEach(this.opportunities, (opportunity) => {
         this.addTeam(opportunity.Opportunity_Title, opportunity.rsvpMembers);
       });
 

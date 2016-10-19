@@ -53,3 +53,4 @@ import './closable-tag';
 import './serve_team_members';
 import './serve_team_message';
 import './serve_team_container';
+import './serve_team_leader';

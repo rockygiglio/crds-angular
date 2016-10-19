@@ -6,14 +6,16 @@ export default class ServeTeamContainerController {
     console.debug('Construct ServeTeamContainerController');
     //this.servingOpportunities = {};
     this.serveTeamService = ServeTeamService;
+    this.isLeader = true;
     this.ready = false;
   }
 
   $onInit()
   {
+    debugger;
      this.serveTeamService.getTeamRsvps(this.team).then((team) =>{
        debugger;
-       this.servingOpportunities = team;
+       this.team = team;
        this.ready = true;
     });
   }

@@ -3,7 +3,7 @@ import ServeTeamMembersController from './serveTeamMembers.controller';
 export default function serveTeamMembersComponent() {
   return {
     bindings: {
-      team: '<',
+      opportunities: '<',
       onMemberClick: '&',
       onMemberRemove: '&'
     },

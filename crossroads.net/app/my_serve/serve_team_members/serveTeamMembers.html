@@ -1,56 +1,5 @@
-<!--
-          TEAM MEMBER SELECTION
-        -->
-        <div ng-if="isTeamLeader(team)" class="push-bottom">
-          <tags-input
-            ng-model=""
-            display-property="name"
-            placeholder="Search for a team member"
-            add-from-autocomplete-only="true"
-            replace-spaces-with-dashes='false'
-          >
-
-            <auto-complete
-              source="serveTeamMembers.loadTeamMembersSearch()"
-              display-property="name"
-              min-length="1"
-              template='serve_team_members/serveTeamAutocomplete.html'
-            ></auto-complete>
-          </tags-input>
-        </div>
-
-        <!--
-          OPPORTUNITIES
-        -->
-        <div class="radio" ng-class="{'text-muted': opp.capacity.badgeType === 'label-default', 'has-error': formErrors.role}"  >
-          <div class="row">
-            <div class="col-sm-6 col-md-6 col-lg-4 mobile-push-bottom" ng-repeat="opp in serveTeamMembers.team.serveOpportunities">
-              <label>
-                <input type="radio"
-                       ng-model="serveTeamMembers.selectedRole"
-                       ng-value="opp.Opportunity_ID"
-                       ng-change="roleChanged(opp)"
-                       name="radio_{{team.index}}">
-                <div>{{::opp.Opportunity_Title}}</div>
-                <div ng-if="opp.shiftStartTime && opp.shiftEndTime">{{ opp.shiftStartTime }} - {{ opp.shiftEndTime }} </div>
-                <div ng-if="opp.room"> {{ opp.room }} </div>
-                <span class="label {{ opp.capacity.badgeType }}" ng-show="opp.capacity.display">{{ opp.capacity.message }}</span>
-              </label>
-            </div>
-            <div class="col-sm-6 col-md-6 col-lg-4">
-              <label>
-                <input type="radio" ng-disabled="team.pastDeadline" ng-model="currentMember.serveRsvp.roleId" ng-value="0" ng-change="roleChanged(role)" name="radio_{{team.index}}">
-                Not Available
-              </label>
-            </div>
-            <div ng-show="formErrors.role">
-              <span dynamic-content="$root.MESSAGES.fieldCanNotBeBlank.content | html"></span>
-            </div>
-          </div><!--/radio-->
-        </div>
-
-<h4 class="serve-members soft-half-top">Confirmed Team Members</h4>
-<div ng-repeat="role in serveTeamMembers.allMembers" class="row serve-role-members">
+<h4 class="serve-members soft-half-top soft-half-bottom">Confirmed Team Members</h4>
+<div ng-repeat="role in serveTeamMembers.allMembers" class="row serve-role-members push-half-bottom">
   <div class="col-sm-3 serve-team-confirm-role">
     <strong>{{role.name}}</strong>
   </div>

@@ -17,12 +17,20 @@ namespace MinistryPlatform.Translation.Models
         [JsonProperty(PropertyName = "Group_Role_ID")]
         public int Group_Role_Id { get; set; }
 
-        [JsonProperty(PropertyName = "Shift_Start_Time")]
+        [JsonProperty(PropertyName = "Shift_Start")]
         public string ShiftStartTime { get; set; }
 
-        [JsonProperty(PropertyName = "Shift_End_Time")]
+        [JsonProperty(PropertyName = "Shift_End")]
         public string ShiftEndTime { get; set; }
 
+        [JsonProperty(PropertyName = "Room")]
+        public string Room { get; set; }
+
+        [JsonProperty(PropertyName = "Minimum_Needed")]
+        public int? MinimumNeeded { get; set; }
+        
+        [JsonProperty(PropertyName = "Maximum_Needed")]
+        public int? MaximumNeeded { get; set; }
 
         public MpSU2SOpportunity()
         {
