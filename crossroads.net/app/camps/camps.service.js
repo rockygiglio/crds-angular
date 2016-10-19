@@ -6,6 +6,7 @@ class CampService {
     this.campResource = $resource(__API_ENDPOINT__ + 'api/camps/:campId');
     // eslint-disable-next-line prefer-template
     this.campDashboard = $resource(__API_ENDPOINT__ + 'api/my-camp');
+    this.campFamily = $resource(`${__API_ENDPOINT__}api/camps/family`);
     this.campInfo = {};
     this.campTitle = '';
   }
@@ -26,8 +27,16 @@ class CampService {
     },
 
    (err) => {
-      console.error(err);
+     console.error(err);
    }).$promise;
+  }
+
+  getSummerCampFamily() {
+    return this.campFamily.query({ summerCamp: true }, (family) => {
+      this.family = family;
+    }, (err) => {
+      console.error(err);
+    }).$promise;
   }
 
 }

@@ -34,7 +34,9 @@ export default function CampRoutes($stateProvider) {
         }
       },
       resolve: {
-        loggedin: crds_utilities.checkLoggedin
+        loggedin: crds_utilities.checkLoggedin,
+        campsService: 'CampsService',
+        family: campsService => campsService.getSummerCampFamily()
       }
     })
     .state('crossroads-camp', {
