@@ -12,7 +12,8 @@
     'Session',
     'ServeOpportunities',
     'Groups',
-    'AUTH_EVENTS'
+    'AUTH_EVENTS',
+    'ServeTeamService'
   ];
 
   function MyServeController(
@@ -24,7 +25,8 @@
     Session,
     ServeOpportunities,
     Groups,
-    AUTH_EVENTS
+    AUTH_EVENTS,
+    ServeTeamService
     ) {
 
     var vm = this;
@@ -39,6 +41,7 @@
     vm.original = [];
     vm.showButton = showButton;
     vm.showNoOpportunitiesMsg = showNoOpportunitiesMsg;
+    vm.isLeader = false;
 
     activate();
 
@@ -69,6 +72,7 @@
 
     function activate() {
       vm.lastDate = formatDate(new Date(), 28);
+      vm.isLeader = ServeTeamService.getIsLeader();
     }
 
     function addOneMonth(date) {
