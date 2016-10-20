@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using MinistryPlatform.Translation.Models;
+using MinistryPlatform.Translation.Models.DTO;
 
 namespace MinistryPlatform.Translation.Repositories.Interfaces
 {
@@ -27,5 +28,6 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
         void SendMessageFromDonor(int pledgeId, int donationId, string message);
         void FinishSendMessageFromDonor(int donationId, bool success);
         void AddDonationCommunication(int donationId, int communicationId);
+        List<int> GetQuickDonationAmounts();
     }
 }

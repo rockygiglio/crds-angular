@@ -11,6 +11,7 @@ using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.PlatformService;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 using MpCommunication = MinistryPlatform.Translation.Models.MpCommunication;
+using MinistryPlatform.Translation.Models.DTO; 
 
 namespace MinistryPlatform.Translation.Repositories
 {
@@ -37,10 +38,12 @@ namespace MinistryPlatform.Translation.Repositories
         private readonly IDonorRepository _donorService;
         private readonly ICommunicationRepository _communicationService;
         private readonly IPledgeRepository _pledgeService;
-        
+        private readonly IApiUserRepository _apiUserRepository;
+        private readonly IMinistryPlatformRestRepository _ministryPlatformRest;
+
         private readonly int _donationStatusSucceeded;
        
-        public DonationRepository(IMinistryPlatformService ministryPlatformService, IDonorRepository donorService, ICommunicationRepository communicationService, IPledgeRepository pledgeService, IConfigurationWrapper configuration, IAuthenticationRepository authenticationService, IConfigurationWrapper configurationWrapper)
+        public DonationRepository(IMinistryPlatformService ministryPlatformService, IDonorRepository donorService, ICommunicationRepository communicationService, IPledgeRepository pledgeService, IConfigurationWrapper configuration, IAuthenticationRepository authenticationService, IConfigurationWrapper configurationWrapper, IApiUserRepository apiUserRepository, IMinistryPlatformRestRepository ministryPlatformRest)
             : base(authenticationService, configurationWrapper)
         {
             _ministryPlatformService = ministryPlatformService;
@@ -64,6 +67,8 @@ namespace MinistryPlatform.Translation.Repositories
             _messagesPageId = configuration.GetConfigIntValue("Messages");
             _glAccountMappingByProgramPageView = configuration.GetConfigIntValue("GLAccountMappingByProgramPageView");
             _donationDistributionsSubPage = configuration.GetConfigIntValue("DonationDistributionsApiSubPageView");
+            _apiUserRepository = apiUserRepository;
+            _ministryPlatformRest = ministryPlatformRest;
         }
 
         public int UpdateDonationStatus(int donationId, int statusId, DateTime statusDate,
@@ -709,6 +714,29 @@ namespace MinistryPlatform.Translation.Repositories
             };
             var pageId = AppSetting("DonationCommunication");
             _ministryPlatformService.CreateRecord(pageId, communication, ApiLogin(), true);
+        }
+
+        public List<int> GetQuickDonationAmounts()
+        {
+            var apiToken = _apiUserRepository.GetToken();
+            var parms = new Dictionary<string, object>();
+            string spName = "api_Get_Quick_Donation_Amounts";
+
+            List<List<QuickDonationAmountDTO>> quickAmounts = _ministryPlatformRest.UsingAuthenticationToken(apiToken).GetFromStoredProc<QuickDonationAmountDTO>(spName, parms);
+
+            List<int> quickAmountValues;
+
+            if (quickAmounts.Any())
+            {
+                List<QuickDonationAmountDTO> quickAmountsList = quickAmounts.First();
+                quickAmountValues = quickAmountsList.Select(qA => qA.Amount).ToList();
+            }
+            else
+            {
+                quickAmountValues = new List<int>(); 
+            }
+
+            return quickAmountValues;
         }
 
     }

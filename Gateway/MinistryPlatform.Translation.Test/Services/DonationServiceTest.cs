@@ -22,6 +22,8 @@ namespace MinistryPlatform.Translation.Test.Services
         private Mock<IAuthenticationRepository> _authService;
         private Mock<IPledgeRepository> _pledgeService;
         private Mock<ICommunicationRepository> _communicationService;
+        private Mock<IApiUserRepository> _apiUserRepository;
+        private Mock<IMinistryPlatformRestRepository> _ministryPlatformRest;
 
         [SetUp]
         public void SetUp()
@@ -33,6 +35,8 @@ namespace MinistryPlatform.Translation.Test.Services
             _authService = new Mock<IAuthenticationRepository>();
             _pledgeService = new Mock<IPledgeRepository>();
             _communicationService = new Mock<ICommunicationRepository>();
+            _apiUserRepository = new Mock<IApiUserRepository>();
+            _ministryPlatformRest = new Mock<IMinistryPlatformRestRepository>();
 
             var configuration = new Mock<IConfigurationWrapper>();
             configuration.Setup(mocked => mocked.GetConfigIntValue("Donations")).Returns(9090);
@@ -51,7 +55,7 @@ namespace MinistryPlatform.Translation.Test.Services
             configuration.Setup(m => m.GetEnvironmentVarAsString("API_USER")).Returns("uid");
             configuration.Setup(m => m.GetEnvironmentVarAsString("API_PASSWORD")).Returns("pwd");
             _authService.Setup(m => m.Authenticate(It.IsAny<string>(), It.IsAny<string>())).Returns(new Dictionary<string, object> { { "token", "ABC" }, { "exp", "123" } });
-            _fixture = new DonationRepository(_ministryPlatformService.Object, _donorService.Object, _communicationService.Object, _pledgeService.Object, configuration.Object, _authService.Object, configuration.Object);
+            _fixture = new DonationRepository(_ministryPlatformService.Object, _donorService.Object, _communicationService.Object, _pledgeService.Object, configuration.Object, _authService.Object, configuration.Object, _apiUserRepository.Object, _ministryPlatformRest.Object);
         }
 
         [Test]

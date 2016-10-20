@@ -50,6 +50,18 @@ namespace crds_angular.Controllers.API
         }
 
         /// <summary>
+        /// Retrieves a list of "quick" recommended donation amounts for in-line giving 
+        /// </summary>
+        /// <returns>A list of donation amounts (int)</returns>
+        [Route("api/donations/quickamounts")]
+        [HttpGet]
+        public IHttpActionResult GetQuickDonationAmounts()
+        {
+            List<int> quickAmounts =_mpDonationService.GetQuickDonationAmounts();
+            return Ok(quickAmounts);
+        }
+
+        /// <summary>
         /// Retrieve list of donations for the logged-in donor, optionally for the specified year, and optionally returns only soft credit donations (by default returns only direct gifts).
         /// </summary>
         /// <param name="softCredit">A bool indicating if the result should contain only soft-credit (true), only direct (false), or all (null) donations.  Defaults to null.</param>
