@@ -16,17 +16,22 @@ namespace MinistryPlatform.Translation.Repositories
         private readonly IMinistryPlatformService _ministryPlatformService;
         private readonly IApiUserRepository _apiUserService;
         private readonly IMinistryPlatformRestRepository _ministryPlatformRest;
+        private readonly int _groupRoleLeader;
+        private readonly IGroupRepository _groupRepository;
 
         public GroupParticipantRepository(IConfigurationWrapper configurationWrapper,
                                        IMinistryPlatformService ministryPlatformService,
                                        IApiUserRepository apiUserService,
-                                       IMinistryPlatformRestRepository ministryPlatformRest)
+                                       IMinistryPlatformRestRepository ministryPlatformRest,
+                                       IGroupRepository groupRepository)
 
         {
             _configurationWrapper = configurationWrapper;
             _ministryPlatformService = ministryPlatformService;
             _apiUserService = apiUserService;
             _ministryPlatformRest = ministryPlatformRest;
+            _groupRepository = groupRepository;
+            _groupRoleLeader = _configurationWrapper.GetConfigIntValue("GroupRoleLeader");
         }
 
         public int Get(int groupId, int participantId)
@@ -78,7 +83,7 @@ namespace MinistryPlatform.Translation.Repositories
 
         public List<MpRsvpMember> GetRsvpMembers(int groupId, int eventId)
         {
-            const string COLUMNS = "Responses.opportunity_id,Responses.participant_id,Responses.event_id, opportunity_ID_Table.Group_Role_ID, Participant_ID_Table_Contact_ID_Table.NickName, Participant_ID_Table_Contact_ID_table.Last_Name,Responses.Response_Result_Id";
+            const string COLUMNS = "Responses.opportunity_id,Responses.participant_id,Responses.event_id, opportunity_ID_Table.Group_Role_ID, Participant_ID_Table_Contact_ID_Table.NickName, Participant_ID_Table_Contact_ID_table.Last_Name,Responses.Response_Result_Id,Participant_ID_Table_Contact_ID_Table.__Age AS Age";
             string search = $"Responses.Event_ID = {eventId} And Opportunity_ID_Table.Add_To_Group = {groupId}";
 
             var opportunityResponse = _ministryPlatformRest.UsingAuthenticationToken(_apiUserService.GetToken()).Search<MpRsvpMember>(search, COLUMNS);
@@ -108,6 +113,44 @@ namespace MinistryPlatform.Translation.Repositories
             return response[0]?.RsvpYesCount ?? 0;
         }
 
+        public List<MpGroup> GetAllGroupNamesLeadByParticipant(int participantId, int groupType = -1)
+        {
+            const string COLUMNS = "Group_ID_Table.Group_Name, Group_Participants.group_participant_id, Group_Participants.participant_id,  Group_Participants.group_id, Group_Participants.group_role_id";
+            string search = $"Group_Participants.participant_id = {participantId} and Group_Role_ID =  {_groupRoleLeader}";
 
+            if (groupType != -1)
+            {
+                search += $"AND Group_ID_Table.Group_Type_ID = {groupType}";
+            }
+
+            var groupParticipantRecords = _ministryPlatformRest.UsingAuthenticationToken(_apiUserService.GetToken()).Search<MpGroupParticipant>(search, COLUMNS);
+
+            List<MpGroup> groups = new List<MpGroup>();
+            foreach (var groupParticipant in groupParticipantRecords)
+            {
+                var group = new MpGroup()
+                {
+                    GroupId = groupParticipant.GroupId,
+                    Name = groupParticipant.GroupName,
+                };
+
+                groups.Add(group);
+            }
+            return groups;
+        }
+
+        public bool GetIsLeader(int participantId, int groupType = -1)
+        {
+            const string COLUMNS = "Group_Participants.group_role_id";
+            string search = $"Group_Participants.participant_id = {participantId} and Group_Role_ID = {_groupRoleLeader}";
+
+            if (groupType != -1) {
+                search += $"AND Group_ID_Table.Group_Type_ID = {groupType}";
+            }
+
+            var mpGroupParticipants = _ministryPlatformRest.UsingAuthenticationToken(_apiUserService.GetToken()).Search<MpGroupParticipant>(search, COLUMNS);
+
+            return mpGroupParticipants.Any();
+        }
     }
 }

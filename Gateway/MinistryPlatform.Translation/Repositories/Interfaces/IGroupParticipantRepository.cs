@@ -8,8 +8,10 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
     {
         int Get(int groupId, int participantId); 
         List<MpGroupServingParticipant> GetServingParticipants(List<int> participants, long from, long to, int loggedInContactId);
+        List<MpGroup> GetAllGroupNamesLeadByParticipant(int participantId, int groupType = -1);
         List<MpRsvpMember> GetRsvpMembers(int groupId, int eventId);
         List<MpSU2SOpportunity> GetListOfOpportunitiesByEventAndGroup(int groupId, int eventId);
         int GetRsvpYesCount(int groupId, int eventId);
+        bool GetIsLeader(int participantId, int groupType = -1);
     }
 }
