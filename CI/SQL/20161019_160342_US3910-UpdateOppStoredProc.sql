@@ -23,19 +23,19 @@ ALTER PROCEDURE [dbo].[api_crds_Get_Opportunities_For_Team]
 AS
 BEGIN
 
-	select opportunity_id, 
-		opportunity_title,
-		group_role_id,
-		shift_start,
-		shift_end,
-		room,
-		minimum_needed,
-		maximum_needed
-	from opportunities 
-	where Add_to_Group = @GroupID 
-		and Event_Type_ID = (select event_type_id from events where event_id = @EventID);
-
-
+	select o.opportunity_id, 
+		o.opportunity_title,
+		o.group_role_id,
+		o.shift_start,
+		o.shift_end,
+		o.room,
+		o.minimum_needed,
+		o.maximum_needed, 
+		gr.Role_Title
+	from opportunities o, group_roles gr
+	where o.Add_to_Group = @GroupID 
+		and o.Event_Type_ID = (select event_type_id from events where event_id = @EventID)
+		and o.group_role_id = gr.group_role_id;
 END
 
 
