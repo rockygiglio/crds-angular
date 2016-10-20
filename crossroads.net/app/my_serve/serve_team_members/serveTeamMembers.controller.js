@@ -12,47 +12,16 @@ export default class ServeTeamMembersController {
     this.ready = false;
   }
 
-  // $onChanges(changesObj)
-  // {
-  //   if(changesObj.servingOpportunities) {
-  //     this.servingOpportunities = changesObj.servingOpportunities;
-  //     this.loadTeamMembers();
-  //   }
-  // }
-
   $onInit()
   {
-    debugger;
     this.loadTeamMembers();
   }
 
-  loadTeamMembersSearch() {
-        console.debug('Query team members');
-        // TODO UI!!! IMPLEMENT THIS
-        return [
-          {
-            id: 1001,
-            name: 'Genie Simmons',
-            email: 'gsimmons@gmail.com',
-            phone: '513-313-5984',
-            role: 'Leader'
-          },
-          {
-            id: 1002,
-            name: 'Holly Gennaro',
-            email: 'hgennaro@excite.com',
-            phone: '513-857-9587',
-            role: null
-          },
-        ]
-      }
-
   loadTeamMembers() {
-      debugger;
       this.opportunities = this.splitMembers(this.opportunities);
       this.allMembers = [];
 
-      _.forEach(this.servingOpportunities, (opportunity) => {
+      _.forEach(this.opportunities, (opportunity) => {
         this.addTeam((opportunity.Opportunity_Title + " " + opportunity.roleTitle), opportunity.rsvpMembers);
       });
 

@@ -12,9 +12,7 @@ export default class ServeTeamContainerController {
 
   $onInit()
   {
-    debugger;
      this.serveTeamService.getTeamRsvps(this.team).then((team) =>{
-       debugger;
        this.team = team;
        this.ready = true;
     });
