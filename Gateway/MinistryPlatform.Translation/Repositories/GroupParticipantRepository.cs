@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Data.SqlClient;
 using System.Linq;
 using Crossroads.Utilities.Extensions;
 using Crossroads.Utilities.Interfaces;
@@ -13,21 +11,27 @@ namespace MinistryPlatform.Translation.Repositories
 {
     public class GroupParticipantRepository : IGroupParticipantRepository
     {
-        private readonly IDbConnection _dbConnection;
+        public const string GetOpportunitiesForTeamStoredProc = "api_crds_Get_Opportunities_For_Team";
         private readonly IConfigurationWrapper _configurationWrapper;
         private readonly IMinistryPlatformService _ministryPlatformService;
         private readonly IApiUserRepository _apiUserService;
+        private readonly IMinistryPlatformRestRepository _ministryPlatformRest;
+        private readonly int _groupRoleLeader;
+        private readonly IGroupRepository _groupRepository;
 
-        public GroupParticipantRepository(IDbConnection dbConnection,
-                                       IConfigurationWrapper configurationWrapper,
+        public GroupParticipantRepository(IConfigurationWrapper configurationWrapper,
                                        IMinistryPlatformService ministryPlatformService,
-                                       IApiUserRepository apiUserService)
+                                       IApiUserRepository apiUserService,
+                                       IMinistryPlatformRestRepository ministryPlatformRest,
+                                       IGroupRepository groupRepository)
 
         {
-            _dbConnection = dbConnection;
             _configurationWrapper = configurationWrapper;
             _ministryPlatformService = ministryPlatformService;
             _apiUserService = apiUserService;
+            _ministryPlatformRest = ministryPlatformRest;
+            _groupRepository = groupRepository;
+            _groupRoleLeader = _configurationWrapper.GetConfigIntValue("GroupRoleLeader");
         }
 
         public int Get(int groupId, int participantId)
@@ -40,150 +44,113 @@ namespace MinistryPlatform.Translation.Repositories
 
         public List<MpGroupServingParticipant> GetServingParticipants(List<int> participants, long from, long to, int loggedInContactId)
         {
-            var connection = _dbConnection;
-            try
-            {
-                connection.Open();
 
-                var command = CreateSqlCommand(participants, from, to);
-                command.Connection = connection;
-                var reader = command.ExecuteReader();
-                var groupServingParticipants = new List<MpGroupServingParticipant>();
-                var rowNumber = 0;
-                var defaultDeadlinePassedMessage = _configurationWrapper.GetConfigIntValue("DefaultDeadlinePassedMessage");
-                while (reader.Read())
-                {
-                    var rowContactId = reader.GetInt32(reader.GetOrdinal("Contact_ID"));
-                    var loggedInUser = (loggedInContactId == rowContactId);
-                    rowNumber = rowNumber + 1;
-                    var participant = new MpGroupServingParticipant();
-                    participant.ContactId = rowContactId;
-                    participant.EventType = reader.GetString(reader.GetOrdinal("Event_Type"));
-                    participant.EventTypeId = reader.GetInt32(reader.GetOrdinal("Event_Type_ID"));
-                    participant.GroupRoleId = reader.GetInt32(reader.GetOrdinal("Group_Role_ID"));
-                    participant.DomainId = reader.GetInt32(reader.GetOrdinal("Domain_ID"));
-                    participant.EventId = reader.GetInt32(reader.GetOrdinal("Event_ID"));
-                    participant.EventStartDateTime = (DateTime) reader["Event_Start_Date"];
-                    participant.EventTitle = reader.GetString(reader.GetOrdinal("Event_Title"));                   
-                    participant.Room = SafeString(reader, "Room");
-                    participant.GroupId = reader.GetInt32(reader.GetOrdinal("Group_ID"));
-                    participant.GroupName = reader.GetString(reader.GetOrdinal("Group_Name"));
-                    participant.GroupPrimaryContactEmail = reader.GetString(reader.GetOrdinal("Primary_Contact_Email"));
-                    participant.OpportunityId = reader.GetInt32(reader.GetOrdinal("Opportunity_ID"));
-                    participant.OpportunityMaximumNeeded = SafeInt(reader, "Maximum_Needed");
-                    participant.OpportunityMinimumNeeded = SafeInt(reader, "Minimum_Needed");
-                    participant.OpportunityRoleTitle = reader.GetString(reader.GetOrdinal("Role_Title"));
-                    participant.OpportunityShiftEnd = GetTimeSpan(reader, "Shift_End");
-                    participant.OpportunityShiftStart = GetTimeSpan(reader, "Shift_Start");
-                    participant.OpportunitySignUpDeadline = (SafeInt32(reader, "Sign_Up_Deadline") ?? 0);
-                    participant.DeadlinePassedMessage = (SafeInt32(reader, "Deadline_Passed_Message_ID") ?? defaultDeadlinePassedMessage);
-                    participant.OpportunityTitle = reader.GetString(reader.GetOrdinal("Opportunity_Title"));
-                    participant.ParticipantNickname = reader.GetString(reader.GetOrdinal("Nickname"));
-                    participant.ParticipantEmail = SafeString(reader, "Email_Address");
-                    participant.ParticipantId = reader.GetInt32(reader.GetOrdinal("Participant_ID"));
-                    participant.ParticipantLastName = reader.GetString(reader.GetOrdinal("Last_Name"));
-                    participant.RowNumber = rowNumber;
-                    participant.Rsvp = GetRsvp(reader, "Rsvp");
-                    participant.LoggedInUser = loggedInUser;
-                    groupServingParticipants.Add(participant);
-                }
-                return
-                    groupServingParticipants.OrderBy(g => g.EventStartDateTime)
-                        .ThenBy(g => g.GroupName)
-                        .ThenByDescending(g => g.LoggedInUser)
-                        .ThenBy(g => g.ParticipantNickname)
-                        .ToList();
-            }
-            finally
-            {
-                connection.Close();
-            }
-        }
+            var defaultDeadlinePassedMessage = _configurationWrapper.GetConfigIntValue("DefaultDeadlinePassedMessage");
+            var searchFilter = "(";
 
-        private static IDbCommand CreateSqlCommand(IReadOnlyList<int> participants, long from, long to)
-        {
+            for (int i = 0; i <= participants.Count - 1; i++)
+            {
+                searchFilter += (i == participants.Count - 1)
+                    ? "(Participant_ID=" + participants[i] + ")"
+                    : "(Participant_ID=" + participants[i] + ") OR ";
+            }
+
             var fromDate = from == 0 ? DateTime.Today : from.FromUnixTime();
             var toDate = to == 0 ? DateTime.Today.AddDays(29) : to.FromUnixTime();
 
-            const string query = @"SELECT *
-                    FROM MinistryPlatform.dbo.vw_crds_Serving_Participants v 
-                    WHERE ( {0} ) 
-                    AND Event_Start_Date >= @from 
-                    AND Event_Start_Date <= @to
-                    AND Event_Start_Date >= Participant_Start_Date
-                    AND (Event_Start_Date <= Participant_End_Date OR Participant_End_Date IS NULL)";
+            searchFilter += $") AND Event_Start_Date >= '{fromDate:yyyy-MM-dd}' AND Event_Start_Date <= '{toDate:yyyy-MM-dd}' " +
+                "AND Event_Start_Date >= Participant_Start_Date AND (Event_Start_Date <= Participant_End_Date OR Participant_End_Date IS NULL)";
 
-            var participantSqlParameters = participants.Select((s, i) => "@participant" + i.ToString()).ToArray();
-            var participantParameters =
-                participants.Select((s, i) => string.Format("(v.Participant_ID = @participant{0})", i)).ToList();
-            var participantWhere = string.Join(" OR ", participantParameters);
+            //Finish out search string and call the rest backend
+            var groupServingParticipants = _ministryPlatformRest.UsingAuthenticationToken(_apiUserService.GetToken()).Search<MpGroupServingParticipant>(searchFilter);
+            var rownum = 0;
+            groupServingParticipants.ForEach(p =>
+                                             {
+                                                 rownum++;
+                                                 p.RowNumber = rownum;
+                                                 if (p.ContactId == loggedInContactId)
+                                                     p.LoggedInUser = true;
+                                                 if (p.DeadlinePassedMessage == null)
+                                                     p.DeadlinePassedMessage = defaultDeadlinePassedMessage;
+                                             });
 
-            using (IDbCommand command = new SqlCommand(string.Format(query, participantWhere)))
+            return groupServingParticipants.OrderBy(g => g.EventStartDateTime)
+                .ThenBy(g => g.GroupName)
+                .ThenBy(g => g.LoggedInUser == false)
+                .ThenBy(g => g.ParticipantNickname)
+                .ToList();
+        }
+
+        public List<MpRsvpMember> GetRsvpMembers(int groupId, int eventId)
+        {
+            const string COLUMNS = "Responses.opportunity_id,Responses.participant_id,Responses.event_id, opportunity_ID_Table.Group_Role_ID, Participant_ID_Table_Contact_ID_Table.NickName, Participant_ID_Table_Contact_ID_table.Last_Name,Responses.Response_Result_Id,Participant_ID_Table_Contact_ID_Table.__Age AS Age";
+            string search = $"Responses.Event_ID = {eventId} And Opportunity_ID_Table.Add_To_Group = {groupId}";
+
+            var opportunityResponse = _ministryPlatformRest.UsingAuthenticationToken(_apiUserService.GetToken()).Search<MpRsvpMember>(search, COLUMNS);
+
+            return opportunityResponse;
+        }
+
+        public List<MpSU2SOpportunity> GetListOfOpportunitiesByEventAndGroup(int groupId, int eventId)
+        {
+            var parms = new Dictionary<string, object>
             {
-                command.Parameters.Add(new SqlParameter("@from", fromDate) {DbType = DbType.DateTime});
-                command.Parameters.Add(new SqlParameter("@to", toDate) {DbType = DbType.DateTime});
+                {"@GroupID", groupId},
+                {"@EventID", eventId }
+            };
 
-                //Add values to each participant parameter
-                command.CommandType = CommandType.Text;
-                for (var i = 0; i < participantParameters.Count; i++)
+            var results = _ministryPlatformRest.UsingAuthenticationToken(_apiUserService.GetToken()).GetFromStoredProc<MpSU2SOpportunity>(GetOpportunitiesForTeamStoredProc, parms);
+            return results?.FirstOrDefault();
+        }
+
+        public int GetRsvpYesCount(int groupId, int eventId)
+        {
+            const string COLUMNS = "Count(*) As RsvpYesCount";
+            string search = $"Responses.Event_ID = {eventId} And Opportunity_ID_Table.Add_To_Group = {groupId} AND Response_Result_Id = 1";
+
+            var response = _ministryPlatformRest.UsingAuthenticationToken(_apiUserService.GetToken()).Search<MpResponse>(search, COLUMNS);
+
+            return response[0]?.RsvpYesCount ?? 0;
+        }
+
+        public List<MpGroup> GetAllGroupNamesLeadByParticipant(int participantId, int groupType = -1)
+        {
+            const string COLUMNS = "Group_ID_Table.Group_Name, Group_Participants.group_participant_id, Group_Participants.participant_id,  Group_Participants.group_id, Group_Participants.group_role_id";
+            string search = $"Group_Participants.participant_id = {participantId} and Group_Role_ID =  {_groupRoleLeader}";
+
+            if (groupType != -1)
+            {
+                search += $"AND Group_ID_Table.Group_Type_ID = {groupType}";
+            }
+
+            var groupParticipantRecords = _ministryPlatformRest.UsingAuthenticationToken(_apiUserService.GetToken()).Search<MpGroupParticipant>(search, COLUMNS);
+
+            List<MpGroup> groups = new List<MpGroup>();
+            foreach (var groupParticipant in groupParticipantRecords)
+            {
+                var group = new MpGroup()
                 {
-                    var sqlParameter = new SqlParameter(participantSqlParameters[i], participants[i]);
-                    command.Parameters.Add(sqlParameter);
-                }
-                return command;
+                    GroupId = groupParticipant.GroupId,
+                    Name = groupParticipant.GroupName,
+                };
+
+                groups.Add(group);
             }
+            return groups;
         }
 
-        private static bool? GetRsvp(IDataRecord record, string columnName)
+        public bool GetIsLeader(int participantId, int groupType = -1)
         {
-            var ordinal = record.GetOrdinal(columnName);
-            bool? rsvp = false;
-            if (record.IsDBNull(ordinal))
-            {
-                rsvp = null;
-            }
-            else if (record.GetInt32(ordinal) == 1)
-            {
-                rsvp = true;
-            }
-            return rsvp;
-        }
+            const string COLUMNS = "Group_Participants.group_role_id";
+            string search = $"Group_Participants.participant_id = {participantId} and Group_Role_ID = {_groupRoleLeader}";
 
-        private static TimeSpan? GetTimeSpan(IDataRecord record, string columnName)
-        {
-            var columnIndex = record.GetOrdinal(columnName);
-            var reader = record as SqlDataReader;
-            if (reader == null)
-            {
-                throw new Exception("The DataReader is not a SqlDataReader");
+            if (groupType != -1) {
+                search += $"AND Group_ID_Table.Group_Type_ID = {groupType}";
             }
 
-            return !record.IsDBNull(columnIndex) ? reader.GetTimeSpan(columnIndex) : (TimeSpan?) null;
-        }
+            var mpGroupParticipants = _ministryPlatformRest.UsingAuthenticationToken(_apiUserService.GetToken()).Search<MpGroupParticipant>(search, COLUMNS);
 
-        private static string SafeString(IDataRecord record, string fieldName)
-        {
-            try
-            {
-                var ordinal = record.GetOrdinal(fieldName);
-                return !record.IsDBNull(ordinal) ? record.GetString(ordinal) : null;
-            }
-            catch (Exception e)
-            {
-                return null;
-            }
-        }
-
-        private static int? SafeInt(IDataRecord record, string fieldName)
-        {
-            var ordinal = record.GetOrdinal(fieldName);
-            return !record.IsDBNull(ordinal) ? record.GetInt16(ordinal) : (int?) null;
-        }
-
-        private static int? SafeInt32(IDataRecord record, string fieldName)
-        {
-            var ordinal = record.GetOrdinal(fieldName);
-            return !record.IsDBNull(ordinal) ? record.GetInt32(ordinal) : (int?) null;
+            return mpGroupParticipants.Any();
         }
     }
 }

@@ -18,7 +18,7 @@ export default function MyServeRouter($httpProvider, $stateProvider) {
         loggedin: crds_utilities.checkLoggedin,
         ServeOpportunities: 'ServeOpportunities',
         $cookies: '$cookies',
-        Groups: function(ServeOpportunities, $cookies) {
+        Groups: function (ServeOpportunities, $cookies) {
           return ServeOpportunities.ServeDays.query({
             id: $cookies.get('userId')
           }).$promise;
@@ -36,7 +36,5 @@ export default function MyServeRouter($httpProvider, $stateProvider) {
           description: ''
         }
       }
-    })
-
-  ;
+    });
 }

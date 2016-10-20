@@ -90,16 +90,7 @@
       scope.isTeamTab = isTeamTab;
       scope.isTeamLeader = isTeamLeader;
       scope.loadTeamMembers = loadTeamMembers;
-
-      //
-      // UI!!!
-      // TODO REMOVE TEST DATA FOR TEAM IMPLEMENTATION
-      //
-      scope.team.count = Math.floor(Math.random()*10);
-      if (scope.team.members.length) {
-        scope.team.roles = scope.team.members[0].roles;
-      }
-
+      
       //////////////////////////////////////
 
       function isTeamTab() {

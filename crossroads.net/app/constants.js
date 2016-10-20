@@ -85,6 +85,13 @@
       I_DO_NOT_ATTEND_CROSSROADS: 2,
       NOT_SITE_SPECIFIC: 5
     },
+    SERVING_RESPONSES :{
+      NOT_AVAILABLE: 2
+    },
+    SERVING: {
+      MAXSTUDENTVOLUNTEERAGE: 19,
+      STUDENTVOLUNTEERTEXT: " (SV)"
+    },
     CMS: {
       PAGENAMES: {
         COMMUNITYGROUPS: 'CommunityGroupSignupPage',
@@ -114,12 +121,17 @@
       GROUP_TYPE_ID: {
         UNDIVIDED: 26,
         SMALL_GROUPS: 1,
+        MY_SERVE: 9
       },
       ROLES: {
         MEMBER: 16,
         LEADER: 22,
         APPRENTICE: 66
       },
+    },
+    GEOLOCATION: {
+      MODAL_TIMEOUT: 10000,
+      FORMS_KEY: '1rupjr7gvqUU203fwjmeUlIiVwCA8BdkD-mP6M6s3wxQ'
     },
     INVITATION: {
       TYPES: {
@@ -130,5 +142,12 @@
     MINISTRY: {
       SPIRITUAL_GROWTH: '8'
     },
+    STREAM_STATUS: {
+      LIVE: 'Live',
+      UPCOMING: 'Upcoming',
+      OFF: 'Off'
+    },
+    PRE_STREAM_HOURS: 15
+
   };
 })();

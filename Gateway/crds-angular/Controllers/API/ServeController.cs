@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Messaging;
+using System.Web;
 using System.Web.Http;
 using System.Web.Http.Description;
 using crds_angular.Exceptions.Models;
+using crds_angular.Models.Crossroads.Groups;
 using crds_angular.Models.Crossroads.Opportunity;
 using crds_angular.Models.Crossroads.Serve;
 using crds_angular.Security;
@@ -38,24 +40,45 @@ namespace crds_angular.Controllers.API
         /// <param name="from">Optional- The starting date</param>
         /// <param name="to">Optional- The end date</param>
         /// <returns></returns>
-        [ResponseType(typeof (List<ServingDay>))]
+        [ResponseType(typeof(List<ServingDay>))]
         [Route("api/serve/family-serve-days/{contactId}")]
         public IHttpActionResult GetFamilyServeDays(int contactId, long from = 0, long to = 0)
         {
             return Authorized(token =>
-            {
-                try
-                {
-                    var servingDays = _serveService.GetServingDays(token, contactId, from, to);
-                    return Ok(servingDays);
-                }
-                catch (Exception exception)
-                {
-                    var apiError = new ApiErrorDto("Get Family Serve Days Failed", exception);
-                    throw new HttpResponseException(apiError.HttpResponseMessage);
-                }
-            });
+                              {
+                                  try
+                                  {
+                                      var servingDays = _serveService.GetServingDays(token, contactId, from, to);
+                                      return Ok(servingDays);
+                                  }
+                                  catch (Exception exception)
+                                  {
+                                      var apiError = new ApiErrorDto("Get Family Serve Days Failed", exception);
+                                      throw new HttpResponseException(apiError.HttpResponseMessage);
+                                  }
+                              });
         }
+
+        [ResponseType(typeof(ServingTeam))]
+        [Route("api/serve/getTeamRsvps")]
+        [AcceptVerbs("POST")]
+        public IHttpActionResult GetServingTeamRsvps([FromBody] ServingTeam team)
+        {
+            return Authorized(token =>
+                              {
+                                  try
+                                  {
+                                      var rsvpTeam = _serveService.GetServingTeamRsvps(team);
+                                      return Ok(rsvpTeam);
+                                  }
+                                  catch (Exception exception)
+                                  {
+                                      var apiError = new ApiErrorDto($"Get RSVP for {team.GroupId} group failed", exception);
+                                      throw new HttpResponseException(apiError.HttpResponseMessage);
+                                  }
+                              });
+        }
+
 
         [ResponseType(typeof (List<FamilyMember>))]
         [Route("api/serve/family/{contactId?}")]
@@ -91,6 +114,46 @@ namespace crds_angular.Controllers.API
                 catch (Exception ex)
                 {
                     var apiError = new ApiErrorDto("GetQualifiedServers Failed", ex);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+            });
+        }
+
+        [RequiresAuthorization]
+        [ResponseType(typeof(List<GroupDTO>))]
+        [Route("api/serve/GetLoggedInLeadersGroups")]
+        public IHttpActionResult GetLoggedInLeadersGroups()
+        {
+            return Authorized(token =>
+            {
+                try
+                {
+                    var list = _serveService.GetLeaderGroups(token);
+                    return Ok(list);
+                }
+                catch (Exception ex)
+                {
+                    var apiError = new ApiErrorDto("Get Leaders Groups Failed", ex);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+            });
+        }
+
+        [RequiresAuthorization]
+        [ResponseType(typeof(bool))]
+        [Route("api/serve/GetIsLeader")]
+        public IHttpActionResult GetIsLeader()
+        {
+            return Authorized(token =>
+            {
+                try
+                {
+                    bool isLeader = _serveService.GetIsLeader(token);
+                    return Ok(isLeader);
+                }
+                catch (Exception ex)
+                {
+                    var apiError = new ApiErrorDto("Get Is Leader failed", ex);
                     throw new HttpResponseException(apiError.HttpResponseMessage);
                 }
             });

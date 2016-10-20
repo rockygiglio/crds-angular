@@ -14,7 +14,7 @@
                 ng-class="{'active':isActiveTab(team.name) }"
                 ng-click="togglePanel(team)"
                 stop-event>
-          Team <span class="badge badge-success" ng-if="team.count > 0">{{team.count}}</span>
+          Team <span class="badge badge-success" ng-if="team.rsvpYesCount > 0">{{team.rsvpYesCount}}</span>
         </button>
 
         <!-- Member buttons -->
@@ -38,7 +38,7 @@
     <form name="teamForm" >
     <div class="panel-collapse collapse" collapse="isCollapsed">
       <div class="panel-body soft-half-bottom">
-        <div class="alert alert-info" role="alert" ng-show="team.pastDeadline" dynamic-content="passedDeadlineMsg(team.pastDeadlineMessage) | html">
+        <div ng-show="(!isTeamTab() && team.pastDeadline)" class="alert alert-info" role="alert" dynamic-content="passedDeadlineMsg(team.pastDeadlineMessage) | html">
         </div>
 
         <!--
@@ -59,7 +59,7 @@
         <!--
           TEAM MEMBER SELECTION
         -->
-        <div ng-if="isTeamTab() && isTeamLeader(team)" class="push-bottom">
+        <!--div ng-if="isTeamTab() && isTeamLeader(team)" class="push-bottom">
           <tags-input
             ng-model=""
             display-property="name"
@@ -75,12 +75,12 @@
               template='my_serve/serveTeamAutocomplete.html'
             ></auto-complete>
           </tags-input>
-        </div>
+        </div-->
 
         <!--
           OPPORTUNITIES
         -->
-        <div class="radio" ng-class="{'text-muted': role.capacity.badgeType === 'label-default', 'has-error': formErrors.role}"  >
+        <div ng-if="!isTeamTab()" class="radio" ng-class="{'text-muted': role.capacity.badgeType === 'label-default', 'has-error': formErrors.role}"  >
           <div class="row">
             <div class="col-sm-6 col-md-6 col-lg-4 mobile-push-bottom" ng-repeat="role in currentMember.roles">
               <label>
@@ -197,7 +197,7 @@
         <!--
           CONTACT AND BUTTONS
         -->
-        <div class="row">
+        <div ng-if="!isTeamTab()" class="row">
           <div class="col-sm-12 serve-save soft-half-top">
             <a href="mailto:{{ ::team.primaryContact }}" class="pull-left" ng-if="!isTeamTab()">
               <svg viewBox="0 0 32 32" class="icon icon-mail5 icon-xlarge icon-subtle" tooltip-placement="right" tooltip="Email Team Leader">
@@ -216,7 +216,7 @@
           TEAM CONFIRMED MEMBERS
         -->
         <div ng-if='isTeamTab()' class="serve-members push-top panel-body soft-half-bottom">
-          <serve-team-members on-member-click="memberClick($member)" on-member-remove="memberRemove($member)"></serve-team-members>
+          <serve-team-members on-member-click="memberClick($member)" on-member-remove="memberRemove($member)" team="team"></serve-team-members>
         </div>
       </div><!--/panel-body-->
 

@@ -1,9 +1,15 @@
 <div>
-  <!--<a ng-click="closableTag.click()">{{closableTag.name}}</a>-->
+  <!--a ng-click="closableTag.click()>{{closableTag.name}}</a-->
+  <text ng-if="closableTag.age !== null && closableTag.age < closableTag.maxSVAge">
+    {{closableTag.name + closableTag.svText}}
+  </text>
+
+  <text ng-if="closableTag.age == null || closableTag.age > closableTag.maxSVAge">
   {{closableTag.name}}
-  <svg ng-click='closableTag.close()'
+  </text>
+  <!--svg ng-click='closableTag.close()'
        viewBox="0 0 32 32"
        class="icon icon-close pointer">
     <use xlink:href="#close"></use>
-  </svg>
+  </svg-->
 </div>

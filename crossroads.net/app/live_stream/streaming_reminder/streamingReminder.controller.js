@@ -3,7 +3,7 @@ import Event from '../models/event';
 
 export default class StreamingReminderController {
 
-  constructor($modalInstance, StreamspotService, ReminderService, Session, Profile) {
+  constructor($modalInstance, StreamspotService, ReminderService, Session, Profile, $scope) {
     this.modalInstance = $modalInstance;
     this.streamspotService = StreamspotService;
     this.reminderService = ReminderService;
@@ -34,6 +34,9 @@ export default class StreamingReminderController {
       time: 'h:mma z'
     };
 
+    this.scope = $scope;
+    $scope.selectedTime = '';
+
     // If the user is logged in, set default user info
     if (this.session.isActive()) {
       this.setUserDefaults();      
@@ -44,8 +47,8 @@ export default class StreamingReminderController {
     if (form) {
       this.model.isDayValid   = form.day.$viewValue !== '';
       this.model.isTimeValid  = form.time.$viewValue !== '';
-      this.model.isEmailValid = form.email.$touched && form.email.$valid
-      this.model.isPhoneValid = form.phone.$touched && form.phone.$valid
+      this.model.isEmailValid = form.email.$valid
+      this.model.isPhoneValid = form.phone.$valid
     }
   }
 
@@ -82,6 +85,7 @@ export default class StreamingReminderController {
 
   close() {
     this.modalInstance.close();
+    this.scope.selectedTime = '';
   }
 
   nextDate() {
@@ -103,7 +107,7 @@ export default class StreamingReminderController {
   groupedDates() {
     return _
       .chain(this.upcoming)
-      .groupBy((event) => event.start.format(this.dateFormats.key))
+      .groupBy((event) => Event.formatGeneralDateTimeToLocalDate(event.start))
       .value()
     ;
   }
@@ -111,10 +115,14 @@ export default class StreamingReminderController {
   setUserDefaults() {
     this.profile.Contact.get()
       .$promise.then((data) => {
-        this.model.email = data.emailAddress;
-        this.model.phone = data.mobilePhone;
+        if (data.emailAddress) {
+          this.model.email = data.emailAddress;
         }
-      );  
+        if (data.mobilePhone) {
+          this.model.phone = data.mobilePhone;
+        }
+      }
+      );
   }
 
   selectedDate(date) {
@@ -138,6 +146,7 @@ export default class StreamingReminderController {
 
   setTime(event) {
     this.model.time = event.start.format(this.dateFormats.time);
+    this.scope.selectedTime = event.title;
   }
 
 

@@ -48,7 +48,7 @@ describe('Current Series Controller', () => {
     expect(fixture.title).toBe('Hello World');
     expect(fixture.runningDates).toBe('RUNS: August 1st - August 30th');
     expect(fixture.tags).toEqual(['some tag title 1','some tag title 2']);
-    expect(fixture.embed).toEqual('https://www.youtube.com/embed/h1Lfd1aB9YI');
+    expect(fixture.embed).toEqual('https://www.youtube.com/embed/h1Lfd1aB9YI?rel=0');
   })
 
 })

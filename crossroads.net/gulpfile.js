@@ -47,8 +47,7 @@ function htmlReplace(devBuild) {
       govolunteer: { js: '/assets/govolunteer.js' },
       main: { js: '/assets/main.js', css: '/assets/main.css' },
       formbuilder: { js: '/assets/formbuilder.js' },
-      formlybuilder: { js: '/assets/formlybuilder.js' },
-      boot: { js: '/assets/boot.js' }
+      formlybuilder: { js: '/assets/formlybuilder.js' }
     };
   } else {
     assets = require('./webpack-assets.json');
@@ -70,7 +69,6 @@ function htmlReplace(devBuild) {
       govolunteerjs: {src: assets.govolunteer.js, tpl: '<script src="%s" type="text/javascript"  defer></script>'},
       formbuilderjs: {src: assets.formbuilder.js, tpl: '<script src="%s" type="text/javascript"  defer></script>'},
       formlybuilderjs: {src: assets.formlybuilder.js, tpl: '<script src="%s" type="text/javascript"  defer></script>'},
-      boot: {src: assets.boot.js, tpl: '<script src="%s" type="text/javascript"  defer></script>'},
       js: {src: assets.main.js, tpl: '<script src="%s" type="text/javascript"  defer></script>'}
     })).pipe(gulp.dest('./'));
 
@@ -163,44 +161,44 @@ gulp.task('browser-sync-dev', ['icons'], function() {
 
 });
 
-// Run the dev server 
-gulp.task('webpack-dev-server', ['icons-watch'], function(callback) { 
-  webPackDevConfigs.forEach(function(element, index) { 
- 
-    // Modify some webpack config options 
-    element.devtool = 'eval'; 
-    element.debug = true; 
-    element.output.path = '/'; 
-    // Build app to assets - watch for changes 
-    gulp.src('app/**/**') 
-        .pipe(watch(element.watchPattern)) 
-        .pipe(gulpWebpack(element)) 
-        .pipe(gulp.dest('./assets')); 
-  }); 
- 
-  new WebpackDevServer(webpack(webPackDevConfigs), { 
-    historyApiFallback: fallbackOptions, 
-    publicPath: '/assets/', 
-    quiet: false, 
-    watchDelay: 300, 
-    stats: { 
-      colors: true 
-    } 
-  }).listen(8080, 'localhost', function(err) { 
-        if(err){ 
-          throw new gutil.PluginError('webpack-dev-server', err); 
-        } 
-        gutil.log('[start]', 'https://localhost:8080/webpack-dev-server/index.html'); 
-      }); 
- 
-  htmlReplace(true); 
- 
-  gulp.src('./lib/load-image.all.min.js') 
-      .pipe(gulp.dest('./assets')); 
- 
-  gutil.log('[start]', 'Access crossroads.net at https://localhost:8080/#'); 
-  gutil.log('[start]', 'Access crossroads.net Live Reload at https://localhost:8080/webpack-dev-server/#'); 
-}); 
+// Run the dev server
+gulp.task('webpack-dev-server', ['icons-watch'], function(callback) {
+  webPackDevConfigs.forEach(function(element, index) {
+
+    // Modify some webpack config options
+    element.devtool = 'eval';
+    element.debug = true;
+    element.output.path = '/';
+    // Build app to assets - watch for changes
+    gulp.src('app/**/**')
+        .pipe(watch(element.watchPattern))
+        .pipe(gulpWebpack(element))
+        .pipe(gulp.dest('./assets'));
+  });
+
+  new WebpackDevServer(webpack(webPackDevConfigs), {
+    historyApiFallback: fallbackOptions,
+    publicPath: '/assets/',
+    quiet: false,
+    watchDelay: 300,
+    stats: {
+      colors: true
+    }
+  }).listen(8080, 'localhost', function(err) {
+        if(err){
+          throw new gutil.PluginError('webpack-dev-server', err);
+        }
+        gutil.log('[start]', 'https://localhost:8080/webpack-dev-server/index.html');
+      });
+
+  htmlReplace(true);
+
+  gulp.src('./lib/load-image.all.min.js')
+      .pipe(gulp.dest('./assets'));
+
+  gutil.log('[start]', 'Access crossroads.net at https://localhost:8080/#');
+  gutil.log('[start]', 'Access crossroads.net Live Reload at https://localhost:8080/webpack-dev-server/#');
+});
 
 // webpack build for production
 gulp.task('webpack:build', ['icons', 'robots', 'apache-site-config'], function(callback) {
