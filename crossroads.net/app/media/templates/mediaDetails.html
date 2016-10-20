@@ -29,15 +29,16 @@
                 <use xlink:href="#caret-down"></use>
               </svg> <span dynamic-content="$root.MESSAGES.singleMessageShowWeekendSummary.content | html"></span> </a>
 
-            <div ng-if="singleMedia.weekendSummaryOpen">
+            <a ng-if="singleMedia.weekendSummaryOpen" ng-click="singleMedia.weekendSummaryOpen = false">
+              <svg viewBox="0 0 18 32" class="icon icon-caret-up">
+                <use xlink:href="#caret-up"></use>
+              </svg>  <span dynamic-content="$root.MESSAGES.singleMessageHideWeekendSummary.content | html"></span> </a>
+
+            <div collapse="!singleMedia.weekendSummaryOpen">
+
               <div class="message-body" ng-if="singleMedia.media.keyPoints" dynamic-content="singleMedia.media.keyPoints | html" ></div>
               <div class="message-body" ng-if="singleMedia.media.discussion" dynamic-content="singleMedia.media.discussion | html" ></div>
               <div class="message-body" ng-if="singleMedia.media.resources" dynamic-content="singleMedia.media.resources | html" ></div>
-
-              <a ng-click="singleMedia.weekendSummaryOpen = false">
-                <svg viewBox="0 0 18 32" class="icon icon-caret-up">
-                  <use xlink:href="#caret-up"></use>
-                </svg>  <span dynamic-content="$root.MESSAGES.singleMessageHideWeekendSummary.content | html"></span> </a>
             </div>
           </div>
         </div><!--/message-info-->
