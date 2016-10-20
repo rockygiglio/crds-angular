@@ -4,6 +4,8 @@
   </div>
 
   <ul class="list-group">
-    <li class="list-group-item" data-ng-repeat="member in $ctrl.campsService.family">{{member.preferredName}} {{member.lastName}}</li>
+    <li class="list-group-item" data-ng-repeat="member in $ctrl.campsService.family">
+      {{member.preferredName}} {{member.lastName}} <span class="label label-default pull-right">Not Signed Up</span>
+    </li>
   </ul>
 </div>
