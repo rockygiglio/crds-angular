@@ -4,7 +4,8 @@ import constants from 'crds-constants';
 import campsModule from '../../app/camps/camps.module';
 
 describe('Camp Service', () => {
-  const endpoint = window.__env__['CRDS_API_ENDPOINT'] + 'api';
+  /* eslint-disable-next-line */
+  const endpoint = `${window.__env__.CRDS_API_ENDPOINT}api`;
   let campsService;
   let httpBackend;
 
@@ -16,7 +17,7 @@ describe('Camp Service', () => {
   }));
 
   it('Should make the API call to Camp Service', () => {
-    let eventId = 4525285;
+    const eventId = 4525285;
     httpBackend.expectGET(`${endpoint}/camps/${eventId}`)
       .respond(200, {});
     campsService.getCampInfo(eventId);
@@ -36,8 +37,13 @@ describe('Camp Service', () => {
     httpBackend.flush();
   });
 
+  it('should make the API call to get my summer camp family', () => {
 
+  });
 
+  it('should make the API call to get my summer camp family and handle error', () => {
+
+  });
 
   afterEach(() => {
     httpBackend.verifyNoOutstandingExpectation();
