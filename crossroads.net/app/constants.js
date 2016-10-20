@@ -89,7 +89,7 @@
       NOT_AVAILABLE: 2
     },
     SERVING: {
-      MAXSTUDENTVOLUNTEERAGE: 19,
+      MAXSTUDENTVOLUNTEERAGE: 18,
       STUDENTVOLUNTEERTEXT: " (SV)"
     },
     CMS: {
@@ -121,6 +121,7 @@
       GROUP_TYPE_ID: {
         UNDIVIDED: 26,
         SMALL_GROUPS: 1,
+        MY_SERVE: 9
       },
       ROLES: {
         MEMBER: 16,

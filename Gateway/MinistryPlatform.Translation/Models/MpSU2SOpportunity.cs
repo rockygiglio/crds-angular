@@ -17,6 +17,9 @@ namespace MinistryPlatform.Translation.Models
         [JsonProperty(PropertyName = "Group_Role_ID")]
         public int Group_Role_Id { get; set; }
 
+        [JsonProperty(PropertyName = "Role_Title")]
+        public string RoleTitle { get; set; }
+
         [JsonProperty(PropertyName = "Shift_Start")]
         public string ShiftStartTime { get; set; }
 

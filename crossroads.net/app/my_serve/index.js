@@ -37,6 +37,8 @@ export default angular
   .factory('OpportunityCapacityService', OpportunityCapacityService)
   .service('ServeTeamService', ServeTeamService)
 
+  .service('ServeTeamService', ServeTeamService)
+
   .controller('MyServeController', MyServeController)
   .controller('ServeModalController', ServeModalController)
 
