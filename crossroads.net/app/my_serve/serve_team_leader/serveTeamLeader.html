@@ -29,7 +29,7 @@
 			</div>
 			<div class="col-sm-6 col-md-6 col-lg-4">
 				<label>
-                <input type="radio" ng-model="currentMember.serveRsvp.roleId" ng-value="0" ng-change="roleChanged(role)" name="radio_{{team.index}}">
+                <input type="radio" ng-model="serveTeamLeader.model.selectedOpp" ng-value="0" ng-change="roleChanged(role)" name="radio_{{team.index}}">
                 Not Available
               </label>
 			</div>
@@ -43,7 +43,7 @@
 	<!--
           FREQUENCY
         -->
-	<div class="row" ng-show="serveTeamLeader.model.selectedOpp">
+	<div class="row" ng-show="serveTeamLeader.model.selectedOpp && serveTeamLeader.model.selectedOpp !== 0">
 		<!-- HOW OFTEN -->
 		<div class="col-md-4">
 			<div class="form-group" ng-class="{'has-error': formErrors.frequency}">
@@ -113,7 +113,7 @@
 				</div>
 			</div>
 		</div>
-
+		{{serveTeamLeader.model | json}}
 		 <!-- BUTTONS    -->
         <div ng-if="!isTeamTab()" class="row">
           <div class="col-sm-12 serve-save soft-half-top">
@@ -121,7 +121,7 @@
               <span ng-if="processing">Saving...</span>
               <span ng-if="!processing">Save</span>
             </button>
-            <button class="btn btn-standard btn-block-mobile" ng-disabled="team.pastDeadline" ng-click="cancel()">Cancel</button>
+            <button class="btn btn-standard btn-block-mobile" ng-disabled="team.pastDeadline" ng-click="serveTeamLeader.leaderCancel()">Cancel</button>
           </div><!--/col-sm-12-->
         </div>
 

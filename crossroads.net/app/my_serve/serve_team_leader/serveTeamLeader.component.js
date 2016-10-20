@@ -5,7 +5,8 @@ export default function serveTeamLeaderComponent() {
     bindings: {
       team: '<',
       oppServeDate: '<',
-      oppServeTime: '<'
+      oppServeTime: '<',
+      cancel: '&'
     },
     templateUrl: 'serve_team_leader/serveTeamLeader.html',
     controller: ServeTeamLeaderController,

@@ -5,7 +5,8 @@ export default function serveTeamContainerComponent() {
     bindings: {
       team: '<',
       oppServeDate: '<',
-      oppServeTime: '<'
+      oppServeTime: '<',
+      cancel: '&'
     },
     templateUrl: 'serve_team_container/serveTeamContainer.html',
     controller: ServeTeamContainerController,

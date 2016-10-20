@@ -14,6 +14,7 @@ export default class ServeTeamMembersController {
 
   $onInit()
   {
+    debugger;
     this.loadTeamMembers();
   }
 

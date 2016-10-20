@@ -121,6 +121,13 @@ export default class ServeTeamLeaderController {
     });
   }
 
+  leaderCancel(){
+    this.model.fromDt = null;
+    this.model.toDt = null;
+    this.model.selectedOpp = null;
+    this.cancel();
+  }
+
   loadTeamMembersSearch() {
     console.debug('Query team members');
     // TODO UI!!! IMPLEMENT THIS
