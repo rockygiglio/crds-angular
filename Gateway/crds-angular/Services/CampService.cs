@@ -64,14 +64,16 @@ namespace crds_angular.Services
             var family = _contactService.GetHouseholdFamilyMembers(myContact.Household_ID);
             var otherFamily = _contactService.GetOtherHouseholdMembers(myContact.Contact_ID);
             family.AddRange(otherFamily);
-                 
+
+            var apiToken = _apiUserRepository.GetToken();     
+
             if (isSummerCamp)
             {
                 family = family.Where((member) => member.HouseholdPosition == "Minor Child").ToList();                
                 return family.Select(member => new CampFamilyMember()
                 {
                     ContactId = member.ContactId,
-                    IsEligible = _groupRepository.isMemberOfSummerCampGroups(member.ContactId, token),
+                    IsEligible = _groupRepository.isMemberOfSummerCampGroups(member.ContactId, apiToken),
                     LastName = member.LastName,
                     PreferredName = member.Nickname ?? member.FirstName
                 }).ToList();

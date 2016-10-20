@@ -819,7 +819,86 @@ namespace MinistryPlatform.Translation.Test.Services
             Assert.AreEqual(string.Empty, group.MeetingFrequency);
         }
 
+        [Test]
+        public void IsMemberOfGradeGroup()
+        {
+            const string api_token = "asdfasdfasdf";
+            const string storedProcName = "storedProcName";
+            const int contactId = 12345;
 
+            var storedProcParams = new Dictionary<string, object>
+            {
+                {"@ContactID", contactId}
+            };
+
+            var result = new List<List<MpStoredProcBool>>
+            {
+                new List<MpStoredProcBool>
+                {
+                    new MpStoredProcBool()
+                    {
+                        isTrue = true
+                    }
+                }
+            };
+            _configWrapper.Setup(m => m.GetConfigValue("IsCampEligibleStoredProc")).Returns(storedProcName);
+            _ministryPlatformRestService.Setup(m => m.UsingAuthenticationToken(api_token)).Returns(_ministryPlatformRestService.Object);
+            _ministryPlatformRestService.Setup(m => m.GetFromStoredProc<MpStoredProcBool>(storedProcName, storedProcParams)).Returns(result);
+            var actual = _fixture.isMemberOfSummerCampGroups(contactId, api_token);
+            Assert.IsTrue(actual);
+            _ministryPlatformRestService.VerifyAll();           
+        }
+
+        [Test]
+        public void IsNotMemberOfGradeGroup()
+        {
+            const string api_token = "asdfasdfasdf";
+            const string storedProcName = "storedProcName";
+            const int contactId = 12345;
+
+            var storedProcParams = new Dictionary<string, object>
+            {
+                {"@ContactID", contactId}
+            };
+
+            var result = new List<List<MpStoredProcBool>>
+            {
+                new List<MpStoredProcBool>
+                {
+                    new MpStoredProcBool()
+                    {
+                        isTrue = false
+                    }
+                }
+            };
+            _configWrapper.Setup(m => m.GetConfigValue("IsCampEligibleStoredProc")).Returns(storedProcName);
+            _ministryPlatformRestService.Setup(m => m.UsingAuthenticationToken(api_token)).Returns(_ministryPlatformRestService.Object);
+            _ministryPlatformRestService.Setup(m => m.GetFromStoredProc<MpStoredProcBool>(storedProcName, storedProcParams)).Returns(result);
+            var actual = _fixture.isMemberOfSummerCampGroups(contactId, api_token);
+            Assert.IsFalse(actual);
+            _ministryPlatformRestService.VerifyAll();            
+        }
+
+        [Test]
+        public void IsNullMemberOfGradeGroup()
+        {
+            const string api_token = "asdfasdfasdf";
+            const string storedProcName = "storedProcName";
+            const int contactId = 12345;
+
+            var storedProcParams = new Dictionary<string, object>
+            {
+                {"@ContactID", contactId}
+            };
+
+            var result = new List<List<MpStoredProcBool>>();
+            _configWrapper.Setup(m => m.GetConfigValue("IsCampEligibleStoredProc")).Returns(storedProcName);
+            _ministryPlatformRestService.Setup(m => m.UsingAuthenticationToken(api_token)).Returns(_ministryPlatformRestService.Object);
+            _ministryPlatformRestService.Setup(m => m.GetFromStoredProc<MpStoredProcBool>(storedProcName, storedProcParams)).Returns(result);
+            var actual = _fixture.isMemberOfSummerCampGroups(contactId, api_token);
+            Assert.IsFalse(actual);
+            _ministryPlatformRestService.VerifyAll();
+        }
 
         private Dictionary<string, object> getTestGroupRecord()
         {
