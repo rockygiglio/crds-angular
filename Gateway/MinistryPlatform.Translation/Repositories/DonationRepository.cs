@@ -722,7 +722,8 @@ namespace MinistryPlatform.Translation.Repositories
             var parms = new Dictionary<string, object>();
             string spName = "api_Get_Quick_Donation_Amounts";
 
-            List<List<QuickDonationAmountDTO>> quickAmounts = _ministryPlatformRest.UsingAuthenticationToken(apiToken).GetFromStoredProc<QuickDonationAmountDTO>(spName, parms);
+            List<List<QuickDonationAmountDTO>> quickAmounts = _ministryPlatformRest.UsingAuthenticationToken(apiToken)
+                                                                                   .GetFromStoredProc<QuickDonationAmountDTO>(spName, parms);
 
             List<int> quickAmountValues;
 

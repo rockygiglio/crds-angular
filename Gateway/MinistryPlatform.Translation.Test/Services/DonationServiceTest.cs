@@ -11,6 +11,7 @@ using NUnit.Framework;
 using MinistryPlatform.Translation.Enum;
 using MinistryPlatform.Translation.Extensions;
 using MinistryPlatform.Translation.Models;
+using MinistryPlatform.Translation.Models.DTO;
 
 namespace MinistryPlatform.Translation.Test.Services
 {
@@ -86,6 +87,38 @@ namespace MinistryPlatform.Translation.Test.Services
             Assert.AreEqual(batchId, result.Id);
             Assert.AreEqual(depositId, result.DepositId);
             Assert.AreEqual(batchName, result.BatchName);
+        }
+
+        [Test]
+        public void GetQuickDonationAmounts()
+        {
+            var parms = new Dictionary<string, object>();
+            string spName = "api_Get_Quick_Donation_Amounts";
+            string token = "abc123";
+
+            var quickDonationAmts = new List<QuickDonationAmountDTO>
+            {
+                new QuickDonationAmountDTO() {Amount = 5 },
+                new QuickDonationAmountDTO() {Amount = 10 },
+                new QuickDonationAmountDTO() {Amount = 25 },
+                new QuickDonationAmountDTO() {Amount = 50 },
+                new QuickDonationAmountDTO() {Amount = 100 },
+                new QuickDonationAmountDTO() {Amount = 500 },
+            };
+
+            var mockedGetCallResults = new List<List<QuickDonationAmountDTO>> { quickDonationAmts };
+
+            List<int> expectedResults = new List<int> { 5, 10, 25, 50, 100, 500 };
+
+            _apiUserRepository.Setup(mocked => mocked.GetToken()).Returns(token);
+
+            _ministryPlatformRest.Setup(m => m.UsingAuthenticationToken(token)).Returns(_ministryPlatformRest.Object); 
+
+            _ministryPlatformRest.Setup(m =>m.GetFromStoredProc<QuickDonationAmountDTO>(spName, parms)).Returns(mockedGetCallResults);
+
+            var result = _fixture.GetQuickDonationAmounts();
+
+            Assert.AreEqual(expectedResults, result);
         }
 
         [Test]
