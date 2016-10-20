@@ -18,6 +18,7 @@ namespace crds_angular.Services
         private readonly IParticipantRepository _participantRepository;
         private readonly IEventRepository _eventRepository;
         private readonly IApiUserRepository _apiUserRepository;
+        private readonly IGroupRepository _groupRepository;
 
         public CampService(
             IContactRepository contactService,
@@ -26,7 +27,8 @@ namespace crds_angular.Services
             IConfigurationWrapper configurationWrapper,
             IParticipantRepository partcipantRepository,
             IEventRepository eventRepository,
-            IApiUserRepository apiUserRepository)
+            IApiUserRepository apiUserRepository,
+            IGroupRepository groupRepository)
         {
             _contactService = contactService;
             _campService = campService;
@@ -35,6 +37,7 @@ namespace crds_angular.Services
             _participantRepository = partcipantRepository;
             _eventRepository = eventRepository;
             _apiUserRepository = apiUserRepository;
+            _groupRepository = groupRepository;
         }
 
         public CampDTO GetCampEventDetails(int eventId)
@@ -61,15 +64,14 @@ namespace crds_angular.Services
             var family = _contactService.GetHouseholdFamilyMembers(myContact.Household_ID);
             var otherFamily = _contactService.GetOtherHouseholdMembers(myContact.Contact_ID);
             family.AddRange(otherFamily);
-            family = family.Where((member) => member.HouseholdPosition == "Minor Child").ToList();
-            
-            // if is Summer Camp, get all minor children
+                 
             if (isSummerCamp)
             {
+                family = family.Where((member) => member.HouseholdPosition == "Minor Child").ToList();                
                 return family.Select(member => new CampFamilyMember()
                 {
                     ContactId = member.ContactId,
-                    IsEligible = true,
+                    IsEligible = _groupRepository.isMemberOfSummerCampGroups(member.ContactId, token),
                     LastName = member.LastName,
                     PreferredName = member.Nickname ?? member.FirstName
                 }).ToList();

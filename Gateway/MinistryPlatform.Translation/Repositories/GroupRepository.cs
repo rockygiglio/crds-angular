@@ -67,10 +67,19 @@ namespace MinistryPlatform.Translation.Repositories
             _objectAttributeRepository = objectAttributeRepository;
         }
 
-        public void GetEligibleSummerCampGroups(string token)        
+        public bool isMemberOfSummerCampGroups(int contactId, string token)
         {
-            // find all Age Groups attached to all Camp Events currently open for registration
-
+            var storedProc = _configurationWrapper.GetConfigValue("IsCampEligibleStoredProc");
+            var storedProcOpts = new Dictionary<string,object>
+            {
+                {"@ContactID", contactId }   
+            };
+            var result = _ministryPlatformRestRepository.UsingAuthenticationToken(token).GetFromStoredProc<MpStoredProcBool>(storedProc, storedProcOpts);
+            if (result.Count <= 0) return false;
+            var mpStoredProcBool = result.FirstOrDefault();
+            return mpStoredProcBool != null 
+                   && mpStoredProcBool.FirstOrDefault() != null 
+                   && mpStoredProcBool.FirstOrDefault().isTrue;
         }
 
         public int CreateGroup(MpGroup group)

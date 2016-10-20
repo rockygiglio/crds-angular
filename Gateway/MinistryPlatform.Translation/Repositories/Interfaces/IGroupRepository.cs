@@ -69,5 +69,7 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
         MpGroupParticipant GetAuthenticatedUserParticipationByGroupID(string token, int groupId);
 
         bool ParticipantGroupHasStudents(string token, int participantId, int groupParticipantId);
+
+        bool isMemberOfSummerCampGroups(int contactId, string token);
     }
 }

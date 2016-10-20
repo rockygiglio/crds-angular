@@ -1,7 +1,7 @@
 USE [MinistryPlatform]
 GO
 
-DECLARE @PROCNAME NVARCHAR(128) = N'api_crds_Grade_Group_For_Camps'; 
+DECLARE @PROCNAME NVARCHAR(128) = N'api_crds_Grade_Group_Participant_For_Camps'; 
 
 IF NOT EXISTS (SELECT 1 FROM [dbo].[dp_API_Procedures] WHERE [Procedure_Name] = @PROCNAME)
 BEGIN
@@ -10,7 +10,7 @@ BEGIN
 			   ,[Description])
 		 VALUES
 			   (@PROCNAME
-			   ,N'Gets grade groups for camps open for registration')
+			   ,N'Is a contact part of a Grade Group?')
 END
 
 DECLARE @APIROLE int = 62;

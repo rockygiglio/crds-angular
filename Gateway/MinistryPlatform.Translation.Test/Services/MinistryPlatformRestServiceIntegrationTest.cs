@@ -234,6 +234,58 @@ namespace MinistryPlatform.Translation.Test.Services
             Assert.AreEqual("Andy", contact.Nickname);
             Assert.AreEqual("Canterbury", contact.LastName);
         }
+
+        [Test]
+        public void GradeGroupsInCurrentCampEvents()
+        {
+            var columnList = new List<string>
+            {
+                "Event_ID_Table_Event_Type_ID_Table.[Event_Type_ID]",
+                "Group_ID_Table.[Group_ID]",
+                "Group_ID_Table_Group_Type_ID_Table.[Group_Type_ID]"
+            };
+
+            var date = DateTime.Today;
+
+            var filter = "Event_ID_Table_Event_Type_ID_Table.[Event_Type_ID] = 8 AND Group_ID_Table_Group_Type_ID_Table.[Group_Type_ID] = 4 " +
+                         $"AND '{date}' between Event_ID_Table.[Registration_Start] and Event_ID_Table.[Registration_End]";
+                         
+            var groups = _fixture.UsingAuthenticationToken(_authToken).Search<MpEventGroup>(filter, columnList);
+            foreach (MpEventGroup eg in groups)
+            {
+                Console.WriteLine(eg);
+            };
+        }
+
+        [Test]
+        public void ContactNotInGradeGroup()
+        {
+            var storedProcOpts = new Dictionary<string, object>
+            {
+                {"@ContactID", 1234 }
+            };
+            var result = _fixture.UsingAuthenticationToken(_authToken).GetFromStoredProc<MpStoredProcBool>("api_crds_Grade_Group_Participant_For_Camps", storedProcOpts);
+            var l = result.FirstOrDefault();
+            foreach (var r in l)
+            {
+                Assert.IsFalse(r.isTrue);                
+            }
+        }
+
+        [Test]
+        public void ContactInAGradeGroup()
+        {
+            var storedProcOpts = new Dictionary<string, object>
+            {
+                {"@ContactID", 7672203 }
+            };
+            var result = _fixture.UsingAuthenticationToken(_authToken).GetFromStoredProc<MpStoredProcBool>("api_crds_Grade_Group_Participant_For_Camps", storedProcOpts);
+            var l = result.FirstOrDefault();
+            foreach (var r in l)
+            {
+                Assert.IsTrue(r.isTrue);
+            }
+        }
     }
 
     [MpRestApiTable(Name = "Payment_Types")]
