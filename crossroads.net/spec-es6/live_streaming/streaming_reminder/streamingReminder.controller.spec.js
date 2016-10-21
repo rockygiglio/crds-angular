@@ -42,7 +42,6 @@ describe('Streaming Reminder Controller', () => {
     StreamspotService = $injector.get('StreamspotService');
     ReminderService = $injector.get('ReminderService');
     httpBackend = $injector.get('$httpBackend');
-    //Session = $injector.get('Session');
     RootScope = $injector.get('$rootScope');
     Scope = RootScope.$new();
     fixture = new StreamingReminderController(modalInstance, StreamspotService, ReminderService, mockSession, Scope, RootScope);

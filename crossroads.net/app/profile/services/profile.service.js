@@ -3,7 +3,6 @@
   
   module.exports = function($resource) {
     return {
-      Contact: $resource(__API_ENDPOINT__ + 'api/contact'),
       Personal: $resource(__API_ENDPOINT__ + 'api/profile'),
       Person: $resource(__API_ENDPOINT__ +  'api/profile/:contactId'),
       AdminPerson: $resource(__API_ENDPOINT__ +  'api/profile/:contactId/admin'),
