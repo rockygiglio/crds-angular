@@ -34,13 +34,4 @@ describe('Camps Family Select Tool', () => {
   it('should initialize the component', () => {
     expect(log.debug).toHaveBeenCalled();
   });
-
-  it('should create the correct identifier for the camp intro text', () => {
-    expect(familySelectController.buildCMSIdentifier()).toBe('summercampIntro');
-    expect(familySelectController.campsService.campTitle).toBe('Summer Camp');
-  });
-
-  it('should retrieve the correct CMS message', () => {
-    expect(familySelectController.cmsMessage).toBe('summer camp intro text');
-  });
 });

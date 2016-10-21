@@ -7,19 +7,11 @@ class CampsFamilyController {
 
   $onInit() {
     this.log.debug('Camps Family Controller Initialized!');
-    const ident = this.buildCMSIdentifier();
-    this.cmsMessage = this.rootScope.MESSAGES[ident].content;
-  }
-
-  buildCMSIdentifier() {
-    const title = _.filter(this.campsService.campTitle, letter => !/\s/.test(letter))
-      .join('')
-      .toLowerCase();
-    return `${title}Intro`;
   }
 
   isSignedUp(member) {
-    
+    this.log.debug('is member already signed up?');
+    return member.signedUpDate !== null;
   }
 }
 

@@ -22,24 +22,7 @@ export default function CampRoutes($stateProvider) {
         dashboard: campsService => campsService.getCampDashboard()
       }
     })
-    .state('summercamp', {
-      parent: 'noSideBar',
-      url: '/camps/summercamp',
-      template: '<crossroads-camp is-summer-camp="true"></crossroads-camp>',
-      data: {
-        isProtected: true,
-        meta: {
-          title: 'Summer Camp',
-          description: 'Signup for Summer Camp'
-        }
-      },
-      resolve: {
-        loggedin: crds_utilities.checkLoggedin,
-        campsService: 'CampsService',
-        family: campsService => campsService.getSummerCampFamily()
-      }
-    })
-    .state('crossroads-camp', {
+    .state('campsignup', {
       parent: 'noSideBar',
       url: '/camps/:campId',
       template: '<crossroads-camp></crossroads-camp>',
@@ -54,7 +37,16 @@ export default function CampRoutes($stateProvider) {
         loggedin: crds_utilities.checkLoggedin,
         campsService: 'CampsService',
         getCampInfo,
-        $stateParams: '$stateParams'
+        $stateParams: '$stateParams',
+        family: (campsService, $stateParams) => {
+          const id = $stateParams.campId;
+          return campsService.getCampFamily(id);
+        }
       }
-    });
+    })
+    .state('campsignup.family', {
+      url: '/family',
+      template: '<camps-family></camps-family>'
+    })
+    ;
 }

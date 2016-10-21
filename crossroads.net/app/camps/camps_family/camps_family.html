@@ -1,13 +1,9 @@
 <div>
-  <div class="well">
-    <div dynamic-content="$ctrl.cmsMessage | html"></div>
-  </div>
-
-  <ul class="list-group">
+    <ul class="list-group">
     <li class="list-group-item" data-ng-repeat="member in $ctrl.campsService.family">
       {{member.preferredName}} {{member.lastName}}
-      <span class="label label-danger pull-right" data-ng-if="!member.isEligible">Not Eligible</span>
-      <span class="label label-warning pull-right" data-ng-if="$ctrl.isSignedUp(member)"> Signed Up </span>
+      <span class="label label-danger pull-right" data-ng-if="!member.isEligible && !$ctrl.isSignedUp(member)">Not Eligible</span>
+      <span class="label label-warning pull-right" data-ng-if="$ctrl.isSignedUp(member)"> Signed Up on {{member.signedUpDate | date:'medium' }} </span>
     </li>
   </ul>
 </div>

@@ -1,17 +1,18 @@
 /* @ngInject */
 class CampController {
-  constructor(CampsService) {
+  constructor(CampsService, $rootScope, $stateParams) {
     this.viewReady = false;
     this.campsService = CampsService;
+    this.rootScope = $rootScope;
+    this.stateParams = $stateParams;
+    this.campId = $stateParams.campId;
   }
 
   $onInit() {
+    this.cmsMessage = this.rootScope.MESSAGES.summercampIntro.content;
     this.viewReady = true;
-    if (this.isSummerCamp) {
-      this.campsService.campTitle = 'Summer Camp';
-    } else {
-      this.campsService.campTitle = this.campsService.campInfo.eventTitle;
-    }
+    this.campsService.campTitle = this.campsService.campInfo.eventTitle;
   }
+
 }
 export default CampController;
