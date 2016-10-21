@@ -29,15 +29,18 @@ namespace MinistryPlatform.Translation.Repositories
             Convert.ToInt32(AppSettings("EventsReadyForReminder"));
 
         private readonly IMinistryPlatformService _ministryPlatformService;
+        private readonly IMinistryPlatformRestRepository _ministryPlatformRestRepository;
         private readonly IGroupRepository _groupService;
 
         public EventRepository(IMinistryPlatformService ministryPlatformService,
                             IAuthenticationRepository authenticationService,
                             IConfigurationWrapper configurationWrapper,
-                            IGroupRepository groupService)
+                            IGroupRepository groupService,
+                            IMinistryPlatformRestRepository ministryPlatformRestRepository)
             : base(authenticationService, configurationWrapper)
         {
             _ministryPlatformService = ministryPlatformService;
+            _ministryPlatformRestRepository = ministryPlatformRestRepository;
             _groupService = groupService;
         }
 
@@ -519,6 +522,21 @@ namespace MinistryPlatform.Translation.Repositories
                 Congregation = record.ToString("Congregation_Name"),
                 EventTitle = record.ToString("Event_Title"),
             }).ToList();
-        } 
+        }
+
+        public List<MpWaivers> GetWaivers(int eventId)
+        {
+            var apiToken = ApiLogin();
+            const string columnList = "Waiver_ID_Table.[Waiver_ID], Waiver_ID_Table.[Waiver_Name], Waiver_ID_Table.[Waiver_Text], cr_Event_Waivers.[Required]";
+            var campWaivers = _ministryPlatformRestRepository.UsingAuthenticationToken(apiToken).Search<MpWaivers>($"Event_ID = {eventId}", columnList).ToList();
+            return campWaivers;
+        }
+
+        public void SetWaivers(List<MpWaiverResponse> waiverResponses)
+        {
+            var apiToken = ApiLogin();
+            _ministryPlatformRestRepository.UsingAuthenticationToken(apiToken);
+            throw new NotImplementedException();
+        }
     }
 }

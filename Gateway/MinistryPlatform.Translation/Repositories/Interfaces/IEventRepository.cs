@@ -32,5 +32,8 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
         List<MpEvent> GetEventsBySite(string site, string token, DateTime startDate, DateTime endDate);
         List<MpEvent> GetEventTemplatesBySite(string site, string token);
         void DeleteEventGroupsForEvent(int eventId, string token);
+
+        List<MpWaivers> GetWaivers(int eventId);
+        void SetWaivers(List<MpWaiverResponse> waiverResponses);
     }
 }

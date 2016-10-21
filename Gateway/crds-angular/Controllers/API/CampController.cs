@@ -84,5 +84,43 @@ namespace crds_angular.Controllers.API
                 }
             });
         }
+
+        [Route("api/camps/waivers/{eventid}")]
+        [AcceptVerbs("GET")]
+        public IHttpActionResult GetCampWaivers(int eventId)
+        {
+            return Authorized(token =>
+            {
+                try
+                {
+                    var waivers = _campService.GetCampWaivers(eventId);
+                    return Ok(waivers);
+                }
+                catch (Exception e)
+                {
+                    var apiError = new ApiErrorDto("Failed to get waiver data", e);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+            });
+        }
+
+        [Route("api/camps/waivers/{eventParticipantId}")]
+        [AcceptVerbs("POST")]
+        public IHttpActionResult SaveWaivers([FromBody] List<CampWaiverResponseDTO> waivers, int eventParticipantId)
+        {
+            return Authorized(token =>
+            {
+                try
+                {
+                    _campService.SaveWaivers(token, eventParticipantId, waivers);
+                    return Ok();
+                }
+                catch (Exception e)
+                {
+                    var apiError = new ApiErrorDto("Failed to save waiver data", e);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+            });
+        }
     }
 }
