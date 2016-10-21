@@ -24,10 +24,9 @@ export default class ServeTeamMessageController {
     this.teamPeople = this.serveTeamService.getAllTeamMembersByLeader();
     this.tinymceOptions = {
       resize: false,
-      //width: 500,
       height: 300,
       plugins: 'paste link legacyoutput textcolor',
-      //valid_elements: 'ol, ul, li, p, br, b, i, strong, em, a',
+      valid_elements: 'ol,ul,li,p,br,strong/b,i,em,a[href|target=_blank],p,br',
       toolbar: 'undo redo | fontselect fontsizeselect forecolor backcolor | bold italic underline | alignleft aligncenter alignright | numlist bullist outdent indent | link',
       menubar: false,
       statusbar: false
