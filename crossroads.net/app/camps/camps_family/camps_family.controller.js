@@ -17,6 +17,10 @@ class CampsFamilyController {
       .toLowerCase();
     return `${title}Intro`;
   }
+
+  isSignedUp(member) {
+    
+  }
 }
 
 export default CampsFamilyController;
