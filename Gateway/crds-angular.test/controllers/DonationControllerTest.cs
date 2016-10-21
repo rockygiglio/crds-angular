@@ -27,7 +27,7 @@ namespace crds_angular.test.controllers
     {
         private DonationController fixture;
         private Mock<MinistryPlatform.Translation.Repositories.Interfaces.IDonorRepository> donorServiceMock;
-        private Mock<IPaymentService> stripeServiceMock;
+        private Mock<IPaymentProcessorService> stripeServiceMock;
         private Mock<IAuthenticationRepository> authenticationServiceMock;
         private Mock<IDonorService> gatewayDonorServiceMock;
         private Mock<IDonationService> gatewayDonationServiceMock;
@@ -42,7 +42,7 @@ namespace crds_angular.test.controllers
         {
             donorServiceMock = new Mock<MinistryPlatform.Translation.Repositories.Interfaces.IDonorRepository>();
             gatewayDonorServiceMock = new Mock<IDonorService>();
-            stripeServiceMock = new Mock<IPaymentService>();
+            stripeServiceMock = new Mock<IPaymentProcessorService>();
             authenticationServiceMock = new Mock<IAuthenticationRepository>();
             gatewayDonationServiceMock = new Mock<IDonationService>();
             mpPledgeService = new Mock<IPledgeRepository>();

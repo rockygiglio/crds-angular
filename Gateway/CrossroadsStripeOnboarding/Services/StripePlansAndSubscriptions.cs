@@ -13,10 +13,10 @@ namespace CrossroadsStripeOnboarding.Services
     public class StripePlansAndSubscriptions
     {
 
-        private readonly IPaymentService _paymentService;
+        private readonly IPaymentProcessorService _paymentService;
         private readonly int _additionalTrialPeriod;
 
-        public StripePlansAndSubscriptions(IPaymentService paymentService)
+        public StripePlansAndSubscriptions(IPaymentProcessorService paymentService)
         {
             _paymentService = paymentService;
             _additionalTrialPeriod = Int32.Parse(ConfigurationManager.AppSettings.Get("additonalTrialPeriodMonths"));

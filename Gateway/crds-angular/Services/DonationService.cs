@@ -25,12 +25,12 @@ namespace crds_angular.Services
 
         private readonly MPServices.IDonationRepository _mpDonationService;
         private readonly MPServices.IDonorRepository _mpDonorService;
-        private readonly IPaymentService _paymentService;
+        private readonly IPaymentProcessorService _paymentService;
         private readonly MPServices.IContactRepository _contactService;
         private readonly int _statementTypeFamily;
         private readonly int _bankErrorRefundDonorId;
 
-        public DonationService(MPServices.IDonationRepository mpDonationService, MPServices.IDonorRepository mpDonorService, IPaymentService paymentService, MPServices.IContactRepository contactService, IConfigurationWrapper config)
+        public DonationService(MPServices.IDonationRepository mpDonationService, MPServices.IDonorRepository mpDonorService, IPaymentProcessorService paymentService, MPServices.IContactRepository contactService, IConfigurationWrapper config)
         {
             _mpDonationService = mpDonationService;
             _mpDonorService = mpDonorService;

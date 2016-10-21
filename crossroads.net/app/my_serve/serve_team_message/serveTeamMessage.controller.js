@@ -24,6 +24,15 @@ export default class ServeTeamMessageController {
       debugger;
       this.teamPeople = data;
     }).catch((err) => { debugger; });
+    this.tinymceOptions = {
+      resize: false,
+      height: 300,
+      plugins: 'paste link legacyoutput textcolor',
+      valid_elements: 'ol,ul,li,p,br,strong/b,i,em,a[href|target=_blank],p,br',
+      toolbar: 'undo redo | fontselect fontsizeselect forecolor backcolor | bold italic underline | alignleft aligncenter alignright | numlist bullist outdent indent | link',
+      menubar: false,
+      statusbar: false
+    };
   }
 
   loadIndividuals($query) {
@@ -44,21 +53,17 @@ export default class ServeTeamMessageController {
       this.rootScope.$emit('notify', this.rootScope.MESSAGES.generalError);
       return;
     }
-    if (this.selection == -1) {
-
-    } else {
-      this.processing = true;
-      this.serveTeamService.sendGroupMessage(this.selection, { Body: this.email.message, Subject: this.email.subject })
-        .then((data) => {
-          this.rootScope.$emit('notify', this.rootScope.MESSAGES.emailSent);
-          this.state.go('serve-signup');
-        })
-        .catch((err) => {
-          this.rootScope.$emit('notify', this.rootScope.MESSAGES.messageSendError);
-        })
-        .finally(() => {
-          this.processing = false;
-        });
-    }
+    this.processing = true;
+    this.serveTeamService.sendGroupMessage(this.selection, { Body: this.email.message, Subject: this.email.subject })
+      .then((data) => {
+        this.rootScope.$emit('notify', this.rootScope.MESSAGES.emailSent);
+        this.state.go('serve-signup');
+      })
+      .catch((err) => {
+        this.rootScope.$emit('notify', this.rootScope.MESSAGES.messageSendError);
+      })
+      .finally(() => {
+        this.processing = false;
+      });
   }
 }

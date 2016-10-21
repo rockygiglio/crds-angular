@@ -29,6 +29,8 @@
   require('angular-formly-templates-bootstrap');
   require('ng-table');
   require('ng-tags-input');
+  require('angular-ui-tinymce'); 
+    
 
   require('../node_modules/angularjs-slider/dist/rzslider.min.css');
   require('../node_modules/angular-toggle-switch/angular-toggle-switch-bootstrap.css');
