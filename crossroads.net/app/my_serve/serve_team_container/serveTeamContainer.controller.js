@@ -13,7 +13,8 @@ export default class ServeTeamContainerController {
 
   $onInit()
   {
-    this.qApi.all([this.serveTeamService.getIsLeader(this.team.groupId), this.serveTeamService.getTeamRsvps(this.team)]).then((results) => {
+    let promises = [this.serveTeamService.getIsLeader(this.team.groupId), this.serveTeamService.getTeamRsvps(this.team)];
+    this.qApi.all(promises).then((results) => {
       this.isLeader = results[0].isLeader;
       this.team = results[1];
       this.ready = true;

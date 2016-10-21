@@ -132,24 +132,11 @@ export default class ServeTeamLeaderController {
     this.cancel();
   }
 
-  loadTeamMembersSearch() {
+  loadTeamMembersSearch($query) {
     console.debug('Query team members');
-    // TODO UI!!! IMPLEMENT THIS
-    return [
-      {
-        id: 1001,
-        name: 'Genie Simmons',
-        email: 'gsimmons@gmail.com',
-        phone: '513-313-5984',
-        role: 'Leader'
-      },
-      {
-        id: 1002,
-        name: 'Holly Gennaro',
-        email: 'hgennaro@excite.com',
-        phone: '513-857-9587',
-        role: null
-      },
-    ]
+    return _.filter(this.teamMembers, (person) => {
+     return person.displayName.toLowerCase()
+       .includes($query.toLowerCase())
+   })
   }
 }

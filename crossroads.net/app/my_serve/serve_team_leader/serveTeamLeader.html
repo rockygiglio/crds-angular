@@ -2,10 +2,11 @@
 
 	<!--TEAM MEMBER SELECTION  -->
 	<div class="push-bottom">
-		<tags-input ng-model="" display-property="name" placeholder="Search for a team member" add-from-autocomplete-only="true"
+		<tags-input ng-model="serveTeamLeader.individuals" ng-required='true' display-property="displayName" key-property="email" placeholder="Search for a team member" add-from-autocomplete-only="true"
 			replace-spaces-with-dashes='false'>
 
-			<auto-complete source="serveTeamLeader.loadTeamMembersSearch()" display-property="name" min-length="1" template='serve_team_leader/serveTeamAutocomplete.html'></auto-complete>
+			<auto-complete source="serveTeamLeader.loadTeamMembersSearch($query)" display-property="displayName" key-property="email" min-length="1"
+				template='serve_team_leader/serveTeamAutocomplete.html'></auto-complete>
 		</tags-input>
 	</div>
 
@@ -61,7 +62,8 @@
 					<div class="well well-sm">You can use the frequency dropdown to sign up for one opportunity or to sign up on an ongoing basis, either weekly or
 						every other week.</div>
 				</div>
-				<select ng-disabled="true" class="form-control" ng-model="serveTeamLeader.model.selectedFrequency" ng-change="serveTeamLeader.populateDates()" ng-value="f.value" ng-options="f.text for f in serveTeamLeader.frequencies">
+				<select ng-disabled="true" class="form-control" ng-model="serveTeamLeader.model.selectedFrequency" ng-change="serveTeamLeader.populateDates()"
+					ng-value="f.value" ng-options="f.text for f in serveTeamLeader.frequencies">
                 <option value="">Select a Frequency</option>
               </select>
 				<div ng-show="formErrors.frequency">
@@ -77,9 +79,9 @@
 			<div class="form-group" ng-class="{'has-error': formErrors.from || formErrors.dateRange}">
 				<label>From: </label>
 				<div class="input-group">
-					<input type="text" class="form-control" datepicker-popup="{{::format}}" ng-model="serveTeamLeader.model.fromDt"
-						is-open="datePickers.fromOpened" datepicker-options="{showWeeks:false}" ng-required="true" close-text="Close" ng-change="changeFromDate()"
-						ng-disabled="serveTeamLeader.datesDisabled" />
+					<input type="text" class="form-control" datepicker-popup="{{::format}}" ng-model="serveTeamLeader.model.fromDt" is-open="datePickers.fromOpened"
+						datepicker-options="{showWeeks:false}" ng-required="true" close-text="Close" ng-change="changeFromDate()" ng-disabled="serveTeamLeader.datesDisabled"
+					/>
 					<span class="input-group-btn">
                     <button type="button" class="btn btn-standard" ng-click="openFromDate($event)" ng-disabled="serveTeamLeader.datesDisabled"><i class="glyphicon glyphicon-calendar"></i></button>
                   </span>
@@ -97,8 +99,8 @@
 			<div class="form-group" ng-class="{'has-error': formErrors.to || formErrors.dateRange}">
 				<label>To:</label>
 				<div class="input-group">
-					<input type="text" class="form-control" datepicker-popup="{{::format}}" ng-model="serveTeamLeader.model.toDt"
-						is-open="datePickers.toOpened" min-date="minDate" max-date="'2050-06-22'" datepicker-options="{showWeeks:false}" date-disabled="disabled(date, mode)"
+					<input type="text" class="form-control" datepicker-popup="{{::format}}" ng-model="serveTeamLeader.model.toDt" is-open="datePickers.toOpened"
+						min-date="minDate" max-date="'2050-06-22'" datepicker-options="{showWeeks:false}" date-disabled="disabled(date, mode)"
 						ng-required="true" close-text="Close" ng-change="changeToDate()" ng-disabled="serveTeamLeader.datesDisabled" />
 					<span class="input-group-btn">
                     <button type="button" class="btn btn-standard" ng-click="openToDate($event)" ng-disabled="serveTeamLeader.datesDisabled"><i class="glyphicon glyphicon-calendar"></i></button>
@@ -114,15 +116,17 @@
 			</div>
 		</div>
 		{{serveTeamLeader.model | json}}
-		 <!-- BUTTONS    -->
-        <div ng-if="!isTeamTab()" class="row">
-          <div class="col-sm-12 serve-save soft-half-top">
-            <button class="btn btn-primary btn-block-mobile sm-pull-right mobile-push-half-bottom" ng-disabled="team.pastDeadline" ng-class="{disabled: buttonState()}" ng-click="serveTeamLeader.saveRsvp()">
+		<!-- BUTTONS    -->
+		<div ng-if="!isTeamTab()" class="row">
+			<div class="col-sm-12 serve-save soft-half-top">
+				<button class="btn btn-primary btn-block-mobile sm-pull-right mobile-push-half-bottom" ng-disabled="team.pastDeadline" ng-class="{disabled: buttonState()}"
+					ng-click="serveTeamLeader.saveRsvp()">
               <span ng-if="processing">Saving...</span>
               <span ng-if="!processing">Save</span>
             </button>
-            <button class="btn btn-standard btn-block-mobile" ng-disabled="team.pastDeadline" ng-click="serveTeamLeader.leaderCancel()">Cancel</button>
-          </div><!--/col-sm-12-->
-        </div>
+				<button class="btn btn-standard btn-block-mobile" ng-disabled="team.pastDeadline" ng-click="serveTeamLeader.leaderCancel()">Cancel</button>
+			</div>
+			<!--/col-sm-12-->
+		</div>
 
 </form>
