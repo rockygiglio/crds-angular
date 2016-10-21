@@ -298,6 +298,7 @@
     <Compile Include="Controllers\API\InvitationController.cs" />
     <Compile Include="Controllers\API\GroupToolController.cs" />
     <Compile Include="Controllers\API\ParticipantController.cs" />
+    <Compile Include="Controllers\API\PaymentController.cs" />
     <Compile Include="Controllers\API\RoomController.cs" />
     <Compile Include="Controllers\API\StaffContactController.cs" />
     <Compile Include="Controllers\API\DonorStatementController.cs" />
@@ -309,6 +310,7 @@
     <Compile Include="Exceptions\EventMissingException.cs" />
     <Compile Include="Exceptions\GroupParticipantRemovalException.cs" />
     <Compile Include="Exceptions\InvalidAddressException.cs" />
+    <Compile Include="Exceptions\InvoiceNotFoundException.cs" />
     <Compile Include="Exceptions\MoreThanOneRecordException.cs" />
     <Compile Include="Exceptions\NotHeadOfHouseholdException.cs" />
     <Compile Include="Exceptions\TripFullException.cs" />
@@ -358,6 +360,7 @@
     <Compile Include="Models\Crossroads\Lookups\OtherOrganization.cs" />
     <Compile Include="Models\Crossroads\GoVolunteer\OrgLocation.cs" />
     <Compile Include="Models\Crossroads\Participants\ParticipantProfile.cs" />
+    <Compile Include="Models\Crossroads\Payment\PaymentDTO.cs" />
     <Compile Include="Models\Crossroads\PrimaryContactDto.cs" />
     <Compile Include="Models\Crossroads\Profile\Participant.cs" />
     <Compile Include="Models\Crossroads\ScheduledJob.cs" />
@@ -398,6 +401,7 @@
     <Compile Include="Services\Interfaces\IAddressProximityService.cs" />
     <Compile Include="Services\Interfaces\ICampService.cs" />
     <Compile Include="Services\Interfaces\IInvitationService.cs" />
+    <Compile Include="Services\Interfaces\IPaymentService.cs" />
     <Compile Include="Services\Interfaces\ITextCommunicationService.cs" />
     <Compile Include="Services\InvitationService.cs" />
     <Compile Include="Services\Interfaces\IAddressService.cs" />
@@ -414,6 +418,7 @@
     <Compile Include="Services\Interfaces\IRoomService.cs" />
     <Compile Include="Services\Interfaces\ITaskService.cs" />
     <Compile Include="Services\OrganizationService.cs" />
+    <Compile Include="Services\PaymentService.cs" />
     <Compile Include="Services\RoomService.cs" />
     <Compile Include="Services\StaffContactService.cs" />
     <Compile Include="Services\EventService.cs" />
@@ -596,7 +601,7 @@
     <Compile Include="Services\Interfaces\IProgramService.cs" />
     <Compile Include="Services\Interfaces\IServeService.cs" />
     <Compile Include="Services\Interfaces\IPersonService.cs" />
-    <Compile Include="Services\Interfaces\IPaymentService.cs" />
+    <Compile Include="Services\Interfaces\IPaymentProcessorService.cs" />
     <Compile Include="Services\Interfaces\IStripeEventService.cs" />
     <Compile Include="Services\Interfaces\ITripService.cs" />
     <Compile Include="Services\Interfaces\IUserImpersonationService.cs" />
@@ -606,7 +611,7 @@
     <Compile Include="Services\ProgramService.cs" />
     <Compile Include="Services\ServeService.cs" />
     <Compile Include="Services\StripeEventService.cs" />
-    <Compile Include="Services\StripeService.cs" />
+    <Compile Include="Services\StripePaymentProcessorService .cs" />
     <Compile Include="Services\TranslationService.cs" />
     <Compile Include="Services\TripService.cs" />
     <Compile Include="Services\UserImpersonationService.cs" />

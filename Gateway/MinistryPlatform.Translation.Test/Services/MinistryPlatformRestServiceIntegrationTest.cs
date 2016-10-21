@@ -4,6 +4,7 @@ using System.Linq;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Models.Attributes;
 using MinistryPlatform.Translation.Models.Childcare;
+using MinistryPlatform.Translation.Models.Payments;
 using MinistryPlatform.Translation.Repositories;
 using Newtonsoft.Json;
 using NUnit.Framework;
@@ -234,6 +235,96 @@ namespace MinistryPlatform.Translation.Test.Services
             Assert.AreEqual("Andy", contact.Nickname);
             Assert.AreEqual("Canterbury", contact.LastName);
         }
+
+        [Test]
+        public void ShouldCreateARecord()
+        {
+            var payment = new MpPayment
+            {
+                PaymentTotal = 123.45,
+                ContactId = 3717387,
+                PaymentDate = DateTime.Now,
+                PaymentTypeId = 11
+            };
+
+            var paymentDetail = new MpPaymentDetail
+            {
+                Payment = payment,
+                PaymentAmount = 123.45,
+                InvoiceDetailId = 19
+            };
+            var resp = _fixture.UsingAuthenticationToken(_authToken).Post(new List<MpPaymentDetail> {paymentDetail});
+
+        }
+
+
+
+        [Test]
+        public void ShouldUpdateARecord()
+        {
+            var invoice = new MyMpInvoiceUpdate()
+            {
+                InvoiceId = 9,
+                InvoiceStatusId = 3
+            };
+
+            var resp = _fixture.UsingAuthenticationToken(_authToken).Put<MyMpInvoiceUpdate>(new List<MyMpInvoiceUpdate> { invoice });
+        }
+
+        [Test]
+        public void ShouldUpdate2GenericRecord()
+        {
+            var tableName = "Invoices";
+
+            var dict = new Dictionary<string, object>();
+            dict.Add("Invoice_ID",8);
+            dict.Add("Invoice_Status_ID", 2);
+
+            var dict2 = new Dictionary<string, object>();
+            dict2.Add("Invoice_ID", 9);
+            dict2.Add("Invoice_Status_ID", 2);
+
+            var thelist = new List<Dictionary<string, object>>();
+            thelist.Add(dict);
+            thelist.Add(dict2);
+
+            var resp = _fixture.UsingAuthenticationToken(_authToken).Put(tableName,thelist);
+        }
+
+        [Test]
+        public void TestPaymentsForInvoiceProcedure()
+        {
+            Console.WriteLine(" TestPaymentsForInvoiceProcedure");
+            var invoiceId = 1;
+            var fields = new Dictionary<string, object>
+            {
+                {"@InvoiceId", invoiceId }
+            };
+            var results = _fixture.UsingAuthenticationToken(_authToken).GetFromStoredProc<MpPayment>("api_crds_PaymentsForInvoice", fields);
+            Console.WriteLine("Result\t" + results.ToString());
+        }
+
+        [Test]
+        public void TestGetWithFilter()
+        {
+            Console.WriteLine(" TestGetWithFilter");
+            var invoiceId = 8;
+            var fields = new Dictionary<string, object>
+            {
+                {"Invoice_Number", invoiceId }
+            };
+            var results = _fixture.UsingAuthenticationToken(_authToken).Get<MpPayment>("Payments", fields);
+            Console.WriteLine("Result\t" + results.ToString());
+        }
+    }
+
+    [MpRestApiTable(Name = "Invoices")]
+    public class MyMpInvoiceUpdate
+    {
+        [JsonProperty(PropertyName = "Invoice_ID")]
+        public int InvoiceId { get; set; }
+        [JsonProperty(PropertyName = "Invoice_Status_ID")]
+        public int InvoiceStatusId { get; set; }
     }
 
     [MpRestApiTable(Name = "Payment_Types")]

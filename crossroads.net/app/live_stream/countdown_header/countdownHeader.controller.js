@@ -9,21 +9,18 @@ export default class CountdownHeaderController {
   }
 
   onScroll() {
-    let offset = this.wrapper.getBoundingClientRect().top;
+    let offset = this.wrapper.getBoundingClientRect().top,
+        intro  = document.getElementById('intro');
 
-    if (offset <= 0) {
+    if (offset < 0) {
       this.wrapper.classList.add('fixed-header');
-      this.header.classList.add('animated');
-      this.header.classList.add('slideInDown');
-      if ( this.intro !== null ) {
-        this.intro.style.marginTop = this.header.offsetHeight.toString();
+      if ( intro !== null ) {
+        intro.style.marginTop = `${this.header.offsetHeight.toString()}px`;
       }
     } else {
       this.wrapper.classList.remove('fixed-header');
-      this.header.classList.remove('animated');
-      this.header.classList.remove('slideInDown');
-      if ( this.intro !== null ) {
-        this.intro.style.marginTop = '';
+      if ( intro !== null ) {
+        intro.style.marginTop = '';
       }
     }
   }
