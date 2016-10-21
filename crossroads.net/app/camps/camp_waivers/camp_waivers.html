@@ -1,0 +1,27 @@
+<legend>Waivers</legend>
+<article ng-repeat="waiver in campWaivers.waivers">
+  <div dynamic-content="waiver | html"></div>
+  <hr ng-if="!$last">
+</article>
+
+<h4 class="required">Electronic Signature</h4>
+<form role="form">
+  <div class="radio">
+    <label>
+      <input type="radio" name="signature" ng-model="campWaivers.signature">
+      I am the legal guardian of {{campWaivers.getFullName()}} and I approve of the above waivers.
+    </label>
+  </div>
+  <div class="radio">
+    <label>
+      <input type="radio" name="signature" ng-model="campWaivers.signature">
+      I am <strong>NOT</strong> the legal guardian of {{campWaivers.getFullName()}} and they will approve at a later date.
+    </label>
+  </div>
+  <div class="radio">
+    <label>
+      <input type="radio" name="signature" ng-model="campWaivers.signature">
+      I am <strong>{{campWaivers.getFullName()}}</strong> and at least 18 years of age, and I approve of the above waivers.
+    </label>
+  </div>
+</form>

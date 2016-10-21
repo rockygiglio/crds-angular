@@ -35,7 +35,20 @@ export default function CampRoutes($stateProvider) {
         getCampInfo: getCampInfo,
         $stateParams: '$stateParams'
       }
-    });
+    })
+    .state('crossroads-camp.waivers', {
+      parent: 'noSideBar',
+      url: '/camps/:campId/waivers',
+      template:'<camp-waivers></camp-waivers>',
+      data: {
+        isProtected: true,
+        meta: {
+          title: 'Camp Waivers',
+          description: 'Join us for camp!'
+        }
+      }
+    })
+  ;
 }
 
 function getCampInfo(CampsService, $stateParams) {
