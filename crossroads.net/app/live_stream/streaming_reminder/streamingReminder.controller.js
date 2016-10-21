@@ -75,7 +75,6 @@ export default class StreamingReminderController {
   }
 
   $onInit() {
-    debugger;
     this.streamspotService.events.then((response) => {
       this.upcoming = response;
     })
