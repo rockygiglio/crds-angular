@@ -9,8 +9,8 @@ class CampsFamilyController {
     this.log.debug('Camps Family Controller Initialized!');
   }
 
+  // eslint-disable-next-line class-methods-use-this
   isSignedUp(member) {
-    this.log.debug('is member already signed up?');
     return member.signedUpDate !== null;
   }
 }
