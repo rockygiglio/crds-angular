@@ -516,13 +516,23 @@ streaming, landing {
 
   .community {
     @include clearfix();
-    background: #1D3C50;
-    background-repeat: no-repeat;
-    background-position: center center;
-    background-size: cover;
+    background-color: rgba(29,60,80,0.6);
     position: relative;
     @media (min-width: $screen-sm-min) {
       height: 622px;
+    }
+
+    .background {
+      height: 100%;
+      width: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: -100;
+      background-repeat: no-repeat;
+      background-position: center center;
+      background-size: cover;
+      background-image: url(https://crds-cms-uploads.s3.amazonaws.com/content/images/live-map.gif);
     }
 
     .overlay {
@@ -540,27 +550,6 @@ streaming, landing {
 
     }
 
-    iframe {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-    }
-    @media (min-aspect-ratio: 16/9) {
-    iframe {
-        height: 300%; top: -100%;
-        /* or height: 200%; top: -50%;
-          or height: 400%; top: -150%; */
-      }
-    }
-    @media (max-aspect-ratio: 16/9) {
-    iframe {
-        width: 300%; left: -100%;
-        /* or width: 200%; left: -50%;
-          or width: 400%; left: -150%; */
-      }
-    }
     img {
       position: fixed; 
       left: 50%; top: 50%;
