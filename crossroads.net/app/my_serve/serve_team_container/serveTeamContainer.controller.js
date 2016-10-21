@@ -4,7 +4,7 @@ export default class ServeTeamContainerController {
   /*@ngInject*/
   constructor(ServeTeamService, $q) {
     console.debug('Construct ServeTeamContainerController');
-    //this.servingOpportunities = {};
+    //this.team = {};
     this.isLeader = false;
     this.serveTeamService = ServeTeamService;
     this.ready = false;

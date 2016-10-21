@@ -2,13 +2,15 @@ import CONSTANTS from 'crds-constants';
 
 export default class ServeTeamLeaderController {
   /*@ngInject*/
-  constructor(ServeTeamService) {
+  constructor(ServeTeamService, ServeOpportunities, $rootScope) {
     console.debug('Construct ServeTeamLeaderController');
     //this.opportunities; from component binding
     //this.oppServeDate;
     //this.oppServeTime;
     this.selectedOpp = undefined;
     this.serveTeamService = ServeTeamService;
+    this.serveOpportunities = ServeOpportunities;
+    this.rootScope = $rootScope;
     this.model = {};
     this.formErrors = {from: false}
     this.datesDisabled = false;
@@ -65,71 +67,55 @@ export default class ServeTeamLeaderController {
   }
 
   saveRsvp() {
-    var validForm = isFormValid();
+    //var validForm = isFormValid();
 
-    if (!validForm.valid) {
-      $rootScope.$emit('notify', $rootScope.MESSAGES.generalError);
-      return false;
-    }
-
-    scope.processing = true;
-    var rsvp = {};
-    rsvp.contactId = scope.currentMember.contactId;
-    rsvp.opportunityId = scope.currentMember.serveRsvp.roleId;
-    rsvp.opportunityIds = _.map(scope.currentMember.roles, function (role) {
-      return role.roleId;
+    //if (!validForm.valid) {
+    //  $rootScope.$emit('notify', $rootScope.MESSAGES.generalError);
+    //  return false;
+    //}
+    this.processing = true;
+    let signUp = (this.model.selectedOpp !== 0) ? true : 0;
+    _.forEach(this.individuals, (person) => {
+      var rsvp = {};
+      rsvp.contactId = person.contactId;
+      rsvp.opportunityId = this.model.selectedOpp;
+      rsvp.opportunityIds = [this.model.selectedOpp];
+      rsvp.eventTypeId = this.team.eventTypeId;
+      rsvp.endDate = moment(this.model.toDt, 'MM/DD/YYYY').format('X');
+      rsvp.startDate = moment(this.model.fromDt, 'MM/DD/YYYY').format('X');
+      rsvp.signUp = signUp;
+      rsvp.alternateWeeks = (this.model.selectedFrequency.value === 2);
+      //this.serveOpportunities.SaveRsvp.save(rsvp);
+      this.updateTeam(person, this.model.selectedOpp);
     });
 
-    rsvp.eventTypeId = scope.team.eventTypeId;
-    rsvp.endDate = parseDate(scope.currentMember.currentOpportunity.toDt);
-    rsvp.startDate = parseDate(scope.currentMember.currentOpportunity.fromDt);
-    if (scope.currentMember.serveRsvp.roleId !== 0) {
-      rsvp.signUp = true;
-    } else {
-      rsvp.signUp = false;
+    if (signUp)
+      this.rootScope.$emit('notify', $rootScope.MESSAGES.SU2S_Saving_Message);
+    else {
+      var saveMessage = `You have indicated that the participants are not available for ${this.team.name} on ${this.oppServeDate}`;
+      growl.success(saveMessage);
     }
 
-    rsvp.alternateWeeks = (scope.currentMember.currentOpportunity.frequency.value === 2);
-    ServeOpportunities.SaveRsvp.save(rsvp, function (updatedEvents) {
-      if (rsvp.signUp) {
-        $rootScope.$emit('notify', $rootScope.MESSAGES.SU2S_Saving_Message);
-      } else {
-        var saveMessage = 'You have indicated that [participant] is not available for [team] on [date]';
-        saveMessage = saveMessage.replace('[participant]', scope.currentActiveTab);
-        saveMessage = saveMessage.replace('[team]', scope.team.name);
-        saveMessage = saveMessage.replace('[date]', scope.oppServeDate);
-        growl.success(saveMessage);
+
+      this.processing = false;
+  }
+
+  updateTeam(person, opp){
+    debugger;
+    let signedUpOpp = _.find(this.team.serveOpportunities, {Opportunity_ID: opp});
+    signedUpOpp.rsvpMembers.push(
+      {
+        NickName: person.nickName,
+        Last_Name: person.lastName
       }
-
-      scope.currentMember.serveRsvp.isSaved = true;
-      scope.processing = false;
-      updateCapacity();
-      savePanel(scope.currentMember, true);
-      $rootScope.$emit('updateAfterSave',
-        { member: scope.currentMember, groupId: scope.team.groupId, eventIds: updatedEvents.EventIds });
-
-      determineSaveButtonState();
-
-      // should we reset the form to pristine
-      if (!isFormDirty()) {
-        scope.teamForm.$setPristine();
-      }
-
-      return true;
-    }, function (err) {
-
-      $rootScope.$emit('notify', $rootScope.MESSAGES.generalError);
-      scope.processing = false;
-      determineSaveButtonState();
-      return false;
-    });
+    );
   }
 
   leaderCancel(){
+    this.cancel();
     this.model.fromDt = null;
     this.model.toDt = null;
     this.model.selectedOpp = null;
-    this.cancel();
   }
 
   loadTeamMembersSearch($query) {

@@ -3,7 +3,7 @@ import ServeTeamContainerController from './serveTeamContainer.controller';
 export default function serveTeamContainerComponent() {
   return {
     bindings: {
-      team: '<',
+      team: '=',
       oppServeDate: '<',
       oppServeTime: '<',
       cancel: '&'
