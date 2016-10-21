@@ -24,22 +24,22 @@ streaming, landing {
     @include make-row();
     @include clearfix();
     overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
 
     .navbar-section .container {
       display: flex;
       justify-content: center;
     }
-
   }
 
   .fixed-header {
+
     .navbar-section {
       position: fixed;
       z-index: 1000;
       left: 0;
       right: 0;
       top: 0;
-      -webkit-overflow-scrolling: touch;
     }
   }
 
@@ -50,6 +50,8 @@ streaming, landing {
     padding: 1em 0;
     font-size: 90%;
     min-height: 52px;
+    transform: translateZ(0);
+    
 
     @media (min-width: $screen-sm-min) {
       min-height: 66px;
@@ -232,6 +234,8 @@ streaming, landing {
       min-height: 550px;
     }
   }
+
+  
 
   .current-series {
 
@@ -514,21 +518,46 @@ streaming, landing {
 
   .community {
     @include clearfix();
-    background: #1D3C50;
-    background-repeat: no-repeat;
-    background-position: center center;
-    background-size: cover;
+    background-color: rgba(29,60,80,0.6);
+    position: relative;
     @media (min-width: $screen-sm-min) {
       height: 622px;
     }
-    &, h2 {
-      color: #FFF;
+
+    .background {
+      height: 100%;
+      width: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: -100;
+      background-repeat: no-repeat;
+      background-position: center center;
+      background-size: cover;
+      background-image: url(https://crds-cms-uploads.s3.amazonaws.com/content/images/live-map.gif);
     }
 
-    .addthis_crossroads_sharing {
-      a {
-        float: none;
+    .overlay {
+      z-index: 100;
+
+      &, h2 {
+        color: #FFF;
       }
+
+      .addthis_crossroads_sharing {
+        a {
+          float: none;
+        }
+      }
+
+    }
+
+    img {
+      position: fixed; 
+      left: 50%; top: 50%;
+      margin-left: -350px;
+      margin-top: -300px;
+      width: 700px; height: auto;
     }
   }
 

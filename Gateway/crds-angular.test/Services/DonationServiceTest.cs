@@ -22,7 +22,7 @@ namespace crds_angular.test.Services
         private DonationService _fixture;
         private Mock<MPServices.IDonationRepository> _mpDonationService;
         private Mock<MPServices.IDonorRepository> _mpDonorService;
-        private Mock<IPaymentService> _paymentService;
+        private Mock<IPaymentProcessorService> _paymentService;
         private Mock<MPServices.IContactRepository> _contactService;
         private Mock<IConfigurationWrapper> _configurationWrapper;
 
@@ -33,7 +33,7 @@ namespace crds_angular.test.Services
 
             _mpDonationService = new Mock<MPServices.IDonationRepository>(MockBehavior.Strict);
             _mpDonorService = new Mock<MPServices.IDonorRepository>(MockBehavior.Strict);
-            _paymentService = new Mock<IPaymentService>();
+            _paymentService = new Mock<IPaymentProcessorService>();
             _contactService = new Mock<MPServices.IContactRepository>();
             _configurationWrapper = new Mock<IConfigurationWrapper>();
 

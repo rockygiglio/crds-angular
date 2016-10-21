@@ -31,7 +31,7 @@ module.exports = {
   watchPattern: ['app/**/**','core/**/**'],
   externals: {
     stripe: 'Stripe',
-    moment: 'moment'
+    moment: 'moment',
   },
   context: __dirname,
   output: {
@@ -40,7 +40,7 @@ module.exports = {
     filename: '[name].[hash].js',
   },
   resolve: {
-    extensions: ['', '.js', '.jsx']
+    extensions: ['', '.js', '.jsx'],
   },
   module: {
     loaders: [
@@ -85,7 +85,7 @@ module.exports = {
         {
           test: /\.json$/,
           loaders: ["json-loader"]
-        }
+        },
     ],
     noParse: [
         path.join(__dirname, "node_modules", "video.js","dist","video.js"),

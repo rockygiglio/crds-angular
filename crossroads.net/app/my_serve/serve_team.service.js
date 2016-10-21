@@ -33,7 +33,7 @@ export default class ServeTeamService {
         return this.resource(`${__API_ENDPOINT__}api/serve/GetLoggedInLeadersGroups`).query().$promise;
     }
 
-//TODO: THIS METHOD IS BASICALLY THE SAME METHOD IN GROUP TOUL SERVICES/MESSAGE SERVICE.  THAT SERVICE SHOULD BE REFACTORED
+//TODO: THIS METHOD IS BASICALLY THE SAME METHOD IN GROUP TOOL SERVICES/MESSAGE SERVICE.  THAT SERVICE SHOULD BE REFACTORED
 //AND PULLED UP TO A HIGHER LEVEL TO BE USED MORE BROADLY
     sendGroupMessage(groupId, message) {
         return this.resource(__API_ENDPOINT__ + 'api/grouptool/:groupId/:groupTypeId/groupmessage').save({
