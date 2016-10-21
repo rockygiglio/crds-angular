@@ -8,12 +8,14 @@ export default class ServeTeamService {
         this.qApi = $q;
     }
 
-    getAllTeamMembersForLoggedInLeader() {
-        return this.resource(`${__API_ENDPOINT__}api/serve/GetLoggedInLeadersGroupsParticipants`).query().$promise;
+    getAllTeamMembersForLoggedInLeader(groupId) {
+        return this.resource(`${__API_ENDPOINT__}api/serve/GetLoggedInLeadersGroupsParticipants`).query({groupId: groupId}).$promise;
     }
 
-    getIsLeader() {
-        return this.resource(`${__API_ENDPOINT__}api/serve/GetIsLeader`).get().$promise;
+
+
+    getIsLeader(groupId) {
+        return this.resource(`${__API_ENDPOINT__}api/serve/GetIsLeader`).get({groupId: groupId}).$promise;
     }
 
     getTeamDetailsByLeader() {

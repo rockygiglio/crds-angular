@@ -16,6 +16,9 @@ export default class ServeTeamLeaderController {
   }
 
   $onInit() {
+    this.serveTeamService.getAllTeamMembersForLoggedInLeader(this.team.groupId).then((data) => {
+      this.teamMembers = data;
+    });
     _.each(this.team.serveOpportunities, (opp) => {
       opp.capacity = this.serveTeamService.getCapacity(opp, this.team.eventId);
     });
