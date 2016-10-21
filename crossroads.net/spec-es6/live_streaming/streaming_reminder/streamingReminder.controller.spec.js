@@ -16,8 +16,7 @@ describe('Streaming Reminder Controller', () => {
       futureEvent,
       futureDuplicateEvent,
       httpBackend,
-      Session,
-      Profile,
+      mockSession,
       RootScope,
       Scope;
 
@@ -32,6 +31,10 @@ describe('Streaming Reminder Controller', () => {
       then: jasmine.createSpy('modalInstance.result.then')
     }
   };
+
+  mockSession = {
+    isActive: function() {}
+  }
     
   beforeEach(angular.mock.module(constants.MODULES.LIVE_STREAM));
 
@@ -39,11 +42,10 @@ describe('Streaming Reminder Controller', () => {
     StreamspotService = $injector.get('StreamspotService');
     ReminderService = $injector.get('ReminderService');
     httpBackend = $injector.get('$httpBackend');
-    Session = $injector.get('Session');
-    Profile = $injector.get('Profile');
+    //Session = $injector.get('Session');
     RootScope = $injector.get('$rootScope');
     Scope = RootScope.$new();
-    fixture = new StreamingReminderController(modalInstance, StreamspotService, ReminderService, Session, Profile, Scope);
+    fixture = new StreamingReminderController(modalInstance, StreamspotService, ReminderService, mockSession, Scope, RootScope);
 
     jasmine.clock().mockDate(baseTime);
 
@@ -165,20 +167,17 @@ describe('Streaming Reminder Controller', () => {
     httpBackend.flush();
 
   });
-  it('should set user defaults', () => {
-    fixture.setUserDefaults(1234);
+  it('should set user defaults if user is logged in', () => {
+
     let expectedEmail = "user@test.com";
     let expectedPhone = "123-456-7890";
-    let result = {  
-      "emailAddress": expectedEmail,
-      "mobilePhone": expectedPhone
-    };
 
-    let url = `${reminderEndpoint}api/contact`;
-    httpBackend.expectGET(url).respond(200, result);
-    httpBackend.flush();
+    spyOn(mockSession, 'isActive').and.returnValue(true);
+    RootScope.email = expectedEmail;
+    RootScope.phone = expectedPhone;
+    fixture.setUserDefaults(1234);
 
     expect(fixture.model.email).toBe(expectedEmail);
     expect(fixture.model.phone).toBe(expectedPhone);
-  })
+  });
 })
