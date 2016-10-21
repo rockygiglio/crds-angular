@@ -10,17 +10,13 @@ describe('ServeTeamMembersController', () => {
     beforeEach(angular.mock.module(CONSTANTS.MODULES.MY_SERVE));
 
     beforeEach(inject(function ($injector) {
-       // log = $injector.get('$log');
-        serveTeamService = $injector.get('ServeTeamService');
-        //qApi = $injector.get('$q');
-
-        fixture = new ServeTeamMembersController(serveTeamService);
+        fixture = new ServeTeamMembersController();
     }));
 
 
 
     it('should build out allMembers data object', () => {
-         fixture.team = teamData;
+         fixture.opportunities = opportunitiesData;
          fixture.loadTeamMembers(fixture.team);
 		 
          expect(fixture.allMembers.length).toBe(4);
@@ -28,17 +24,7 @@ describe('ServeTeamMembersController', () => {
 		 expect(_.uniq(fixture.rsvpNoMembers, 'Participant_ID').length).toBe(2);
     });
 
-    var teamData = {
-	"groupId" : 176822,
-    "eventId" : 4510383,
-	"eventType" : "Service - Oakley Saturday at 4:30pm",
-	"eventTypeId" : 94,
-	"index" : 1,
-	"name" : "(t) FI Oakley Coffee Team",
-	"primaryContact" : "lizett.trujillo@ingagepartners.com",
-	"pastDeadline" : true,
-	"pastDeadlineMessage" : 53,
-	"serveOppertunities" : [{
+    var opportunitiesData = [{
 			"Opportunity_ID" : 2218723,
 			"Opportunity_Title" : "(t) Coffee Setup Sat 2:00",
 			"Group_Role_ID" : 16,
@@ -101,8 +87,5 @@ describe('ServeTeamMembersController', () => {
 					"age": 15
 				}
 			]
-		}
-	],
-	"rsvpYesCount" : 2
-};
+		}];
 });

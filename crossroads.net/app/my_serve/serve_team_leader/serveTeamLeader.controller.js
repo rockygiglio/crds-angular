@@ -10,6 +10,7 @@ export default class ServeTeamLeaderController {
     this.selectedOpp = undefined;
     this.serveTeamService = ServeTeamService;
     this.model = {};
+    this.formErrors = {from: false}
     this.datesDisabled = false;
     this.processing = false;
   }
