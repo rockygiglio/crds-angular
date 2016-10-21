@@ -17,7 +17,7 @@ using RestSharp.Extensions;
 
 namespace crds_angular.Services
 {
-    public class StripeService : IPaymentService
+    public class StripePaymentProcessorService : IPaymentProcessorService
     {
         private readonly IRestClient _stripeRestClient;
 
@@ -29,7 +29,7 @@ namespace crds_angular.Services
 
         private readonly IContentBlockService _contentBlockService;
 
-        public StripeService(IRestClient stripeRestClient, IConfigurationWrapper configuration, IContentBlockService contentBlockService)
+        public StripePaymentProcessorService(IRestClient stripeRestClient, IConfigurationWrapper configuration, IContentBlockService contentBlockService)
         {
             _stripeRestClient = stripeRestClient;
             _maxQueryResultsPerPage = configuration.GetConfigIntValue("MaxStripeQueryResultsPerPage");

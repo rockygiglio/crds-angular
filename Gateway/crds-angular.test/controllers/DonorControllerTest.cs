@@ -30,7 +30,7 @@ namespace crds_angular.test.controllers
         private DonorController _fixture;
         private Mock<IDonorService> _donorService;
         private Mock<IDonationService> _donationService;
-        private Mock<IPaymentService> _paymentService;
+        private Mock<IPaymentProcessorService> _paymentService;
         private Mock<IAuthenticationRepository> _authenticationService;
         private Mock<MPInterfaces.IDonorRepository> _mpDonorService;
         private Mock<IUserImpersonationService> _impersonationService;
@@ -56,7 +56,7 @@ namespace crds_angular.test.controllers
         {
             _donorService = new Mock<IDonorService>();
             _donationService = new Mock<IDonationService>();
-            _paymentService = new Mock<IPaymentService>();
+            _paymentService = new Mock<IPaymentProcessorService>();
             _authenticationService = new Mock<IAuthenticationRepository>();
             _mpDonorService = new Mock<MPInterfaces.IDonorRepository>();
             _impersonationService = new Mock<IUserImpersonationService>();

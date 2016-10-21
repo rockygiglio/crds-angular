@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using Crossroads.Utilities.FunctionalHelpers;
 using Crossroads.Utilities.Interfaces;
 using log4net;
 using MinistryPlatform.Translation.Models;
@@ -35,6 +33,5 @@ namespace MinistryPlatform.Translation.Repositories
             }            
             throw new Exception("No Camp found");
         }
-        
     }
 }

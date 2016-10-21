@@ -138,5 +138,27 @@ namespace crds_angular.Services
 
             return dashboardData;
         }
+
+        public List<CampWaiverDTO> GetCampWaivers(int eventId)
+        {
+            var waivers = _eventRepository.GetWaivers(eventId);
+            return waivers.Select(waiver => new CampWaiverDTO
+            {
+                WaiverId = waiver.WaiverId, WaiverName = waiver.WaiverName, WaiverText = waiver.WaiverText, Required = waiver.Required
+            }).ToList();
+        }
+
+        public void SaveWaivers(string token, int eventParticipantId, List<CampWaiverResponseDTO> waivers)
+        {
+            var loggedInContact = _contactService.GetMyProfile(token);
+            var waiverResponses = waivers.Select(waiver => new MpWaiverResponse()
+            {
+                EventParticipantId = eventParticipantId,
+                WaiverId = waiver.WaiverId,
+                Accepted = waiver.WaiverAccepted,
+                SigneeContactId = loggedInContact.Contact_ID
+            }).ToList();
+            _eventRepository.SetWaivers(waiverResponses);
+        }
     }
 }
