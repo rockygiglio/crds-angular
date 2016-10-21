@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using crds_angular.Services;
 using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Interfaces;
@@ -24,6 +22,7 @@ namespace crds_angular.test.Services
         private readonly Mock<IEventRepository> _eventRepository;
         private readonly Mock<IApiUserRepository> _apiUserRepository;
         private readonly Mock<IGroupRepository> _groupRepository;
+        private readonly Mock<IEventParticipantRepository> _eventParticipantRepository;
 
         public CampServiceTest()
         {
@@ -35,7 +34,8 @@ namespace crds_angular.test.Services
             _eventRepository = new Mock<IEventRepository>();
             _apiUserRepository = new Mock<IApiUserRepository>();
             _groupRepository = new Mock<IGroupRepository>();
-            _fixture = new CampService(_contactService.Object, _campService.Object, _formSubmissionRepository.Object, _configurationWrapper.Object, _participantRepository.Object, _eventRepository.Object, _apiUserRepository.Object, _groupRepository.Object);
+            _eventParticipantRepository = new Mock<IEventParticipantRepository>();
+            _fixture = new CampService(_contactService.Object, _campService.Object, _formSubmissionRepository.Object, _configurationWrapper.Object, _participantRepository.Object, _eventRepository.Object, _apiUserRepository.Object, _groupRepository.Object, _eventParticipantRepository.Object);
         }
 
         [Test]
@@ -43,20 +43,48 @@ namespace crds_angular.test.Services
         {
             var token = "asdfasdfasdfasdf";
             var apiToken = "apiToken";
-            var isSummerCamp = true;
             var myContactId = 2187211;
+            var signedUpDate = DateTime.Now;
+            var eventId = 5433;
             var myContact = getFakeContact(myContactId);
 
             _contactService.Setup(m => m.GetMyProfile(token)).Returns(myContact);
             _contactService.Setup(m => m.GetHouseholdFamilyMembers(myContact.Household_ID)).Returns(getFakeHouseholdMembers(myContact));
             _contactService.Setup(m => m.GetOtherHouseholdMembers(myContactId)).Returns(new List<MpHouseholdMember>());
             _apiUserRepository.Setup(m => m.GetToken()).Returns(apiToken);
-            _groupRepository.Setup(m => m.isMemberOfSummerCampGroups(123, apiToken)).Returns(true);
+            _groupRepository.Setup(m => m.IsMemberOfEventGroup(123, eventId, apiToken)).Returns(true);
+            _eventParticipantRepository.Setup(m => m.EventParticipantSignupDate(123, eventId, apiToken)).Returns(signedUpDate);
 
-            var result = _fixture.GetEligibleFamilyMembers(true, token);
+            var result = _fixture.GetEligibleFamilyMembers(eventId, token);
             Assert.AreEqual(result.Count, 1);
             _contactService.VerifyAll();
             _groupRepository.VerifyAll();
+            _eventParticipantRepository.VerifyAll();
+        }
+
+        [Test]
+        public void shouldGetCampFamilyMembersNotSignedUp()
+        {
+            var token = "asdfasdfasdfasdf";
+            var apiToken = "apiToken";
+            var myContactId = 2187211;
+            var signedUpDate = DateTime.Now;
+            var eventId = 5433;
+            var myContact = getFakeContact(myContactId);
+
+            _contactService.Setup(m => m.GetMyProfile(token)).Returns(myContact);
+            _contactService.Setup(m => m.GetHouseholdFamilyMembers(myContact.Household_ID)).Returns(getFakeHouseholdMembers(myContact));
+            _contactService.Setup(m => m.GetOtherHouseholdMembers(myContactId)).Returns(new List<MpHouseholdMember>());
+            _apiUserRepository.Setup(m => m.GetToken()).Returns(apiToken);
+            _groupRepository.Setup(m => m.IsMemberOfEventGroup(123, eventId, apiToken)).Returns(true);
+            _eventParticipantRepository.Setup(m => m.EventParticipantSignupDate(123, eventId, apiToken)).Returns((DateTime?)null);
+
+            var result = _fixture.GetEligibleFamilyMembers(eventId, token);
+            Assert.AreEqual(result.Count, 1);
+            Assert.IsNull(result.FirstOrDefault().SignedUpDate);
+            _contactService.VerifyAll();
+            _groupRepository.VerifyAll();
+            _eventParticipantRepository.VerifyAll();
         }
 
         [Test]
@@ -64,8 +92,8 @@ namespace crds_angular.test.Services
         {
             var token = "asdfasdfasdfasdf";
             var apiToken = "apiToken";
-            var isSummerCamp = true;
             var myContactId = 2187211;
+            var eventId = 1234;
             var myContact = getFakeContact(myContactId);
 
             _contactService.Setup(m => m.GetMyProfile(token)).Returns(myContact);
@@ -73,7 +101,7 @@ namespace crds_angular.test.Services
             _contactService.Setup(m => m.GetOtherHouseholdMembers(myContactId)).Returns(new List<MpHouseholdMember>());
             _apiUserRepository.Setup(m => m.GetToken()).Returns(apiToken);            
 
-            var result = _fixture.GetEligibleFamilyMembers(true, token);
+            var result = _fixture.GetEligibleFamilyMembers(eventId, token);
             Assert.AreEqual(result.Count, 0);
             _contactService.VerifyAll();
         }

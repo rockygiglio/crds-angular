@@ -19,6 +19,7 @@ namespace crds_angular.Services
         private readonly IEventRepository _eventRepository;
         private readonly IApiUserRepository _apiUserRepository;
         private readonly IGroupRepository _groupRepository;
+        private readonly IEventParticipantRepository _eventParticipantRepository;
 
         public CampService(
             IContactRepository contactService,
@@ -28,7 +29,8 @@ namespace crds_angular.Services
             IParticipantRepository partcipantRepository,
             IEventRepository eventRepository,
             IApiUserRepository apiUserRepository,
-            IGroupRepository groupRepository)
+            IGroupRepository groupRepository,
+            IEventParticipantRepository eventParticipantRepository)
         {
             _contactService = contactService;
             _campService = campService;
@@ -38,6 +40,7 @@ namespace crds_angular.Services
             _eventRepository = eventRepository;
             _apiUserRepository = apiUserRepository;
             _groupRepository = groupRepository;
+            _eventParticipantRepository = eventParticipantRepository;
         }
 
         public CampDTO GetCampEventDetails(int eventId)
@@ -72,6 +75,7 @@ namespace crds_angular.Services
             {
                 ContactId = member.ContactId,
                 IsEligible = _groupRepository.IsMemberOfEventGroup(member.ContactId, eventId, apiToken),
+                SignedUpDate = _eventParticipantRepository.EventParticipantSignupDate(member.ContactId, eventId, apiToken),
                 LastName = member.LastName,
                 PreferredName = member.Nickname ?? member.FirstName
             }).ToList();                       

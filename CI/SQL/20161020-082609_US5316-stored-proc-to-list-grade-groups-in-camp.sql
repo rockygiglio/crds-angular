@@ -34,12 +34,11 @@ BEGIN
 	DECLARE @GroupTypeID int = 4;
 	
 	SELECT DISTINCT(1) as 'Status' from [dbo].[Events] e
-	JOIN Event_Groups eg on eg.Event_ID = e.Event_ID
+	JOIN Event_Groups eg on eg.Event_ID = e.Event_ID AND e.[Event_ID] = @EventID
 	JOIN Groups g on eg.Group_ID = g.Group_ID AND g.Group_Type_ID = @GroupTypeID
 	JOIN Group_Participants gp on gp.[Group_ID] = g.[Group_ID]
 	JOIN Participants p on p.[Participant_ID] = gp.[Participant_ID]
-	WHERE e.[Event_Type_ID] = 8 
-	AND e.[Event_ID] = @EventID
+	WHERE e.[Event_Type_ID] = 8 	
 	AND getDate() between e.[Registration_Start] and e.[Registration_End]
 	AND e.[Cancelled] = 0
 	AND p.Contact_ID = @ContactID

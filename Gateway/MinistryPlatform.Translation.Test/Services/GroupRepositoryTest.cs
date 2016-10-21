@@ -825,10 +825,12 @@ namespace MinistryPlatform.Translation.Test.Services
             const string api_token = "asdfasdfasdf";
             const string storedProcName = "storedProcName";
             const int contactId = 12345;
+            const int eventId = 54321;
 
             var storedProcParams = new Dictionary<string, object>
             {
-                {"@ContactID", contactId}
+                {"@ContactID", contactId},
+                {"@EventID", eventId }
             };
 
             var result = new List<List<MpStoredProcBool>>
@@ -844,7 +846,7 @@ namespace MinistryPlatform.Translation.Test.Services
             _configWrapper.Setup(m => m.GetConfigValue("IsCampEligibleStoredProc")).Returns(storedProcName);
             _ministryPlatformRestService.Setup(m => m.UsingAuthenticationToken(api_token)).Returns(_ministryPlatformRestService.Object);
             _ministryPlatformRestService.Setup(m => m.GetFromStoredProc<MpStoredProcBool>(storedProcName, storedProcParams)).Returns(result);
-            var actual = _fixture.isMemberOfSummerCampGroups(contactId, api_token);
+            var actual = _fixture.IsMemberOfEventGroup(contactId, eventId, api_token);
             Assert.IsTrue(actual);
             _ministryPlatformRestService.VerifyAll();           
         }
@@ -855,10 +857,12 @@ namespace MinistryPlatform.Translation.Test.Services
             const string api_token = "asdfasdfasdf";
             const string storedProcName = "storedProcName";
             const int contactId = 12345;
+            const int eventId = 543321;
 
             var storedProcParams = new Dictionary<string, object>
             {
-                {"@ContactID", contactId}
+                {"@ContactID", contactId},
+                {"@EventID", eventId }
             };
 
             var result = new List<List<MpStoredProcBool>>
@@ -874,7 +878,7 @@ namespace MinistryPlatform.Translation.Test.Services
             _configWrapper.Setup(m => m.GetConfigValue("IsCampEligibleStoredProc")).Returns(storedProcName);
             _ministryPlatformRestService.Setup(m => m.UsingAuthenticationToken(api_token)).Returns(_ministryPlatformRestService.Object);
             _ministryPlatformRestService.Setup(m => m.GetFromStoredProc<MpStoredProcBool>(storedProcName, storedProcParams)).Returns(result);
-            var actual = _fixture.isMemberOfSummerCampGroups(contactId, api_token);
+            var actual = _fixture.IsMemberOfEventGroup(contactId, eventId, api_token);
             Assert.IsFalse(actual);
             _ministryPlatformRestService.VerifyAll();            
         }
@@ -885,17 +889,19 @@ namespace MinistryPlatform.Translation.Test.Services
             const string api_token = "asdfasdfasdf";
             const string storedProcName = "storedProcName";
             const int contactId = 12345;
+            const int eventId = 5431;
 
             var storedProcParams = new Dictionary<string, object>
             {
-                {"@ContactID", contactId}
+                {"@ContactID", contactId},
+                {"@EventID", eventId }
             };
 
             var result = new List<List<MpStoredProcBool>>();
             _configWrapper.Setup(m => m.GetConfigValue("IsCampEligibleStoredProc")).Returns(storedProcName);
             _ministryPlatformRestService.Setup(m => m.UsingAuthenticationToken(api_token)).Returns(_ministryPlatformRestService.Object);
             _ministryPlatformRestService.Setup(m => m.GetFromStoredProc<MpStoredProcBool>(storedProcName, storedProcParams)).Returns(result);
-            var actual = _fixture.isMemberOfSummerCampGroups(contactId, api_token);
+            var actual = _fixture.IsMemberOfEventGroup(contactId, eventId, api_token);
             Assert.IsFalse(actual);
             _ministryPlatformRestService.VerifyAll();
         }

@@ -262,7 +262,8 @@ namespace MinistryPlatform.Translation.Test.Services
         {
             var storedProcOpts = new Dictionary<string, object>
             {
-                {"@ContactID", 1234 }
+                {"@ContactID", 1234 },
+                {"@EventID", 4525285}
             };
             var result = _fixture.UsingAuthenticationToken(_authToken).GetFromStoredProc<MpStoredProcBool>("api_crds_Grade_Group_Participant_For_Camps", storedProcOpts);
             var l = result.FirstOrDefault();
@@ -277,7 +278,8 @@ namespace MinistryPlatform.Translation.Test.Services
         {
             var storedProcOpts = new Dictionary<string, object>
             {
-                {"@ContactID", 7672203 }
+                {"@ContactID", 7672203},
+                {"@EventID", 4525325}
             };
             var result = _fixture.UsingAuthenticationToken(_authToken).GetFromStoredProc<MpStoredProcBool>("api_crds_Grade_Group_Participant_For_Camps", storedProcOpts);
             var l = result.FirstOrDefault();
@@ -285,6 +287,17 @@ namespace MinistryPlatform.Translation.Test.Services
             {
                 Assert.IsTrue(r.isTrue);
             }
+        }
+
+        [Test]
+        public void SearchForEventParticipant()
+        {
+            var contactId = 7681367;
+            var eventId = 4525285;
+            var filter = $"Event_ID_Table.[Event_ID] = {eventId} AND Participant_ID_Table_Contact_ID_Table.[Contact_ID] = {contactId}";
+
+            var found = _fixture.UsingAuthenticationToken(_authToken).Search<MpEventParticipant>(filter, "Event_Participants.[Event_Participant_ID],Event_Participants.[_Setup_Date] as [Setup_Date]");
+            Assert.Greater(found.Count, 0);
         }
     }
 
