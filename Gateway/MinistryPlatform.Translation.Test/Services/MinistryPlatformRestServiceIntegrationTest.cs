@@ -250,7 +250,6 @@ namespace MinistryPlatform.Translation.Test.Services
 
             var filter = "Event_ID_Table_Event_Type_ID_Table.[Event_Type_ID] = 8 AND Group_ID_Table_Group_Type_ID_Table.[Group_Type_ID] = 4 " +
                          $"AND '{date}' between Event_ID_Table.[Registration_Start] and Event_ID_Table.[Registration_End]";
-                         
             var groups = _fixture.UsingAuthenticationToken(_authToken).Search<MpEventGroup>(filter, columnList);
             foreach (MpEventGroup eg in groups)
             {
@@ -263,7 +262,8 @@ namespace MinistryPlatform.Translation.Test.Services
         {
             var storedProcOpts = new Dictionary<string, object>
             {
-                {"@ContactID", 1234 }
+                {"@ContactID", 1234 },
+                {"@EventID", 4525285}
             };
             var result = _fixture.UsingAuthenticationToken(_authToken).GetFromStoredProc<MpStoredProcBool>("api_crds_Grade_Group_Participant_For_Camps", storedProcOpts);
             var l = result.FirstOrDefault();
@@ -278,7 +278,8 @@ namespace MinistryPlatform.Translation.Test.Services
         {
             var storedProcOpts = new Dictionary<string, object>
             {
-                {"@ContactID", 7672203 }
+                {"@ContactID", 7672203},
+                {"@EventID", 4525325}
             };
             var result = _fixture.UsingAuthenticationToken(_authToken).GetFromStoredProc<MpStoredProcBool>("api_crds_Grade_Group_Participant_For_Camps", storedProcOpts);
             var l = result.FirstOrDefault();
@@ -367,15 +368,6 @@ namespace MinistryPlatform.Translation.Test.Services
             var results = _fixture.UsingAuthenticationToken(_authToken).Get<MpPayment>("Payments", fields);
             Console.WriteLine("Result\t" + results.ToString());
         }
-    }
-
-    [MpRestApiTable(Name = "Invoices")]
-    public class MyMpInvoiceUpdate
-    {
-        [JsonProperty(PropertyName = "Invoice_ID")]
-        public int InvoiceId { get; set; }
-        [JsonProperty(PropertyName = "Invoice_Status_ID")]
-        public int InvoiceStatusId { get; set; }
     }
 
     [MpRestApiTable(Name = "Payment_Types")]

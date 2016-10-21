@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using System;
+using Newtonsoft.Json;
 
 namespace crds_angular.Models.Crossroads.Camp
 {
@@ -15,5 +16,8 @@ namespace crds_angular.Models.Crossroads.Camp
 
         [JsonProperty(PropertyName = "isEligible")]
         public bool IsEligible { get; set; }
+
+        [JsonProperty(PropertyName = "signedUpDate")]
+        public DateTime? SignedUpDate { get; set; }
     }
 }

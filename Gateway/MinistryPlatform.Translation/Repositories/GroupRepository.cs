@@ -67,12 +67,13 @@ namespace MinistryPlatform.Translation.Repositories
             _objectAttributeRepository = objectAttributeRepository;
         }
 
-        public bool isMemberOfSummerCampGroups(int contactId, string token)
+        public bool IsMemberOfEventGroup(int contactId, int eventId, string token)
         {
             var storedProc = _configurationWrapper.GetConfigValue("IsCampEligibleStoredProc");
             var storedProcOpts = new Dictionary<string,object>
             {
-                {"@ContactID", contactId }   
+                {"@ContactID", contactId },
+                {"@EventID", eventId }   
             };
             var result = _ministryPlatformRestRepository.UsingAuthenticationToken(token).GetFromStoredProc<MpStoredProcBool>(storedProc, storedProcOpts);
             if (result.Count <= 0) return false;

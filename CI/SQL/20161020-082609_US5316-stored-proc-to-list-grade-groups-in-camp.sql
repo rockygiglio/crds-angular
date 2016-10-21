@@ -26,18 +26,19 @@ GO
 -- Description: Determine if the passed in contact is in an eligible grade group 
 -- =============================================
 ALTER PROCEDURE [dbo].[api_crds_Grade_Group_Participant_For_Camps]
-	@ContactID int
+	@ContactID int,
+	@EventID int
 AS	
 BEGIN
 		
 	DECLARE @GroupTypeID int = 4;
 	
 	SELECT DISTINCT(1) as 'Status' from [dbo].[Events] e
-	JOIN Event_Groups eg on eg.Event_ID = e.Event_ID
+	JOIN Event_Groups eg on eg.Event_ID = e.Event_ID AND e.[Event_ID] = @EventID
 	JOIN Groups g on eg.Group_ID = g.Group_ID AND g.Group_Type_ID = @GroupTypeID
 	JOIN Group_Participants gp on gp.[Group_ID] = g.[Group_ID]
 	JOIN Participants p on p.[Participant_ID] = gp.[Participant_ID]
-	WHERE e.[Event_Type_ID] = 8 
+	WHERE e.[Event_Type_ID] = 8 	
 	AND getDate() between e.[Registration_Start] and e.[Registration_End]
 	AND e.[Cancelled] = 0
 	AND p.Contact_ID = @ContactID
