@@ -112,6 +112,21 @@
   }
 }
 
+.message-weekend-summary {
+  * {
+	color: $gray-lighter;
+  }
+
+  a {
+	color: $gray-lighter;
+	font-weight: 400;
+
+	svg {
+	  margin-bottom: 2px;
+	}
+  }
+}
+
 @media (max-width: $screen-sm-min) {
   .message-body {
     .btn {

@@ -489,7 +489,15 @@ namespace crds_angular.Services
             var leaderRecord = _participantRepository.GetParticipantRecord(token);
             var groups = _groupService.GetGroupsByTypeForAuthenticatedUser(token, groupTypeId, groupId);
 
-            ValidateUserAsLeader(token, groupId, groupTypeId, leaderRecord.ParticipantId, groups);
+            if (groups == null || !groups.Any())
+            {
+                throw new GroupNotFoundForParticipantException($"Could not find group {groupId} for groupParticipant {leaderRecord.ParticipantId}");
+            }
+
+            if (!ValidateUserAsLeader(token, groupTypeId, groupId, leaderRecord.ParticipantId, groups.First()))
+            {
+                throw new NotGroupLeaderException($"Group participant ID {leaderRecord.ParticipantId} is not a leader of group {groupId}");
+            }
 
             var fromContact = new MpContact
             {
@@ -523,21 +531,28 @@ namespace crds_angular.Services
             _communicationRepository.SendMessage(email);
         }
 
-        public void ValidateUserAsLeader(string token, int groupTypeId, int groupId, int groupParticipantId, List<GroupDTO> groups)
+        public bool ValidateUserAsLeader(string token, int groupTypeId, int groupId, int groupParticipantId, GroupDTO group)
         {
-            if (groups == null || !groups.Any())
-            {
-                throw new GroupNotFoundForParticipantException($"Could not find group {groupId} for groupParticipant {groupParticipantId}");
-            }
-
-            var groupParticipants = groups.First().Participants;
+            var groupParticipants = group.Participants;
             var me = _participantRepository.GetParticipantRecord(token);
 
-            if (groupParticipants == null || groupParticipants.Find(p => p.ParticipantId == me.ParticipantId) == null ||
-                groupParticipants.Find(p => p.ParticipantId == me.ParticipantId).GroupRoleId != _groupRoleLeaderId)
+            if (groupParticipants == null || groupParticipants.Find(p => p.ParticipantId == me.ParticipantId) == null)
             {
                 throw new NotGroupLeaderException($"Group participant {groupParticipantId} is not a leader of group {groupId}");
+
             }
+            var isLeader = false;
+            foreach (var part in groupParticipants)
+            {
+                if ( (me.ParticipantId == part.ParticipantId) &&
+                        (_groupRoleLeaderId == part.GroupRoleId) )
+                {
+                    isLeader = true;
+                    break;
+
+                }
+            }
+            return isLeader;
         }
 
         public void EndGroup(int groupId, int reasonEndedId)

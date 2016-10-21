@@ -20,7 +20,7 @@ namespace crds_angular.test.Services
     public class StripeEventServiceTest
     {
         private StripeEventService _fixture;
-        private Mock<IPaymentService> _paymentService;
+        private Mock<IPaymentProcessorService> _paymentService;
         private Mock<IDonationService> _donationService;
         private Mock<MinistryPlatform.Translation.Repositories.Interfaces.IDonorRepository> _mpDonorService;
 
@@ -33,7 +33,7 @@ namespace crds_angular.test.Services
             configuration.Setup(mocked => mocked.GetConfigIntValue("DonationStatusDeclined")).Returns(777);
             configuration.Setup(mocked => mocked.GetConfigIntValue("BatchEntryTypePaymentProcessor")).Returns(555);
 
-            _paymentService = new Mock<IPaymentService>(MockBehavior.Strict);
+            _paymentService = new Mock<IPaymentProcessorService>(MockBehavior.Strict);
             _donationService = new Mock<IDonationService>(MockBehavior.Strict);
             _mpDonorService = new Mock<MinistryPlatform.Translation.Repositories.Interfaces.IDonorRepository>(MockBehavior.Strict);
 

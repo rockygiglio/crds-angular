@@ -26,7 +26,8 @@
     'ngAnimate',
     'formly',
     'formlyBootstrap',
-    'ngTable'
+    'ngTable',
+    'ui.tinymce'    
     ])
     .constant('AUTH_EVENTS', {
       loginSuccess: 'auth-login-success',
