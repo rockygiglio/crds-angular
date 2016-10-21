@@ -20,14 +20,14 @@ namespace crds_angular.Controllers.API
     public class DonorController : MPAuth
     {
         private readonly IDonorService _donorService;
-        private readonly IPaymentService _stripePaymentService;
+        private readonly IPaymentProcessorService _stripePaymentService;
         private readonly IDonationService _donationService;
         private readonly MPInterfaces.IDonorRepository _mpDonorService;
         private readonly MPInterfaces.IAuthenticationRepository _authenticationService;
         private readonly IUserImpersonationService _impersonationService;
 
-        public DonorController(IDonorService donorService, 
-                                IPaymentService stripePaymentService, 
+        public DonorController(IDonorService donorService,
+                                IPaymentProcessorService stripePaymentService, 
                                 IDonationService donationService, 
                                 MPInterfaces.IDonorRepository mpDonorService, 
                                 MPInterfaces.IAuthenticationRepository authenticationService,
