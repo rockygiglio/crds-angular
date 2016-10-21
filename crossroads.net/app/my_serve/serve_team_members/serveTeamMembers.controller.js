@@ -27,7 +27,7 @@ export default class ServeTeamMembersController {
       this.allMembers = [];
 
       _.forEach(this.servingOpportunities, (opportunity) => {
-        this.addTeam(opportunity.Opportunity_Title, opportunity.rsvpMembers);
+        this.addTeam((opportunity.Opportunity_Title + " " + opportunity.roleTitle), opportunity.rsvpMembers);
       });
 
       this.addTeam('Not Available', _.uniq(this.rsvpNoMembers, 'Participant_ID'));

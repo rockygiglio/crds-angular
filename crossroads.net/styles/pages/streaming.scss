@@ -24,22 +24,22 @@ streaming, landing {
     @include make-row();
     @include clearfix();
     overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
 
     .navbar-section .container {
       display: flex;
       justify-content: center;
     }
-
   }
 
   .fixed-header {
+
     .navbar-section {
       position: fixed;
       z-index: 1000;
       left: 0;
       right: 0;
       top: 0;
-      -webkit-overflow-scrolling: touch;
     }
   }
 
@@ -50,6 +50,8 @@ streaming, landing {
     padding: 1em 0;
     font-size: 90%;
     min-height: 52px;
+    transform: translateZ(0);
+    
 
     @media (min-width: $screen-sm-min) {
       min-height: 66px;
