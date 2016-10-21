@@ -57,7 +57,7 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
         /// <param name="searchString">An "MP SQL" WHERE clause, for instance "Payment_Type_Id > 5 AND Payment_Type_Id &lt; 9".</param>
         /// <param name="columns">Optionally specify which columns to retrieve from MP.  This is a comma-separated list of column names.</param>
         /// <returns>An List of objects representing the matching MP rows for the search, if found.</returns>
-        List<T> Search<T>(string searchString, List<string> columns);
+        List<T> Search<T>(string searchString, List<string> columns, string orderByString = null, bool distinct = false);
 
         int PostStoredProc(string procedureName, Dictionary<string, object> parameters);
 

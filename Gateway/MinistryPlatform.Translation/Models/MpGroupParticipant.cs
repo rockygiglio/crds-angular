@@ -17,11 +17,15 @@ namespace MinistryPlatform.Translation.Models
         public int GroupRoleId { get; set; }
         [JsonProperty("Group_Name")]
         public string GroupName { get; set; }
+        [JsonProperty("Contact_ID")]
         public int ContactId { get; set; }
         [JsonProperty("Nickname")]
         public string NickName { get; set; }
+        [JsonProperty("Display_Name")]
+        public string DisplayName { get; set; }
         [JsonProperty("Last_name")]
         public string LastName { get; set; }
+        [JsonProperty("Role_Title")]
         public string GroupRoleTitle { get; set; }
         [JsonProperty("email_address")]
         public string Email { get; set; }

@@ -8,21 +8,8 @@ export default class ServeTeamService {
         this.qApi = $q;
     }
 
-    getAllTeamMembersByLeader() {
-        return [
-            {
-                id: 1001,
-                name: 'Genie Simmons',
-                email: 'gsimmons@gmail.com',
-                role: 'Leader'
-            },
-            {
-                id: 1002,
-                name: 'Holly Gennaro',
-                email: 'hgennaro@excite.com',
-                role: null
-            },
-        ]
+    getAllTeamMembersForLoggedInLeader() {
+        return this.resource(`${__API_ENDPOINT__}api/serve/GetLoggedInLeadersGroupsParticipants`).query().$promise;
     }
 
     getIsLeader() {
