@@ -70,6 +70,6 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
 
         bool ParticipantGroupHasStudents(string token, int participantId, int groupParticipantId);
 
-        bool isMemberOfSummerCampGroups(int contactId, string token);
+        bool IsMemberOfEventGroup(int contactId, int eventId, string token);
     }
 }

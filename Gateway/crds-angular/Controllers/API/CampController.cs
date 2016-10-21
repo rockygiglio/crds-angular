@@ -18,15 +18,15 @@ namespace crds_angular.Controllers.API
             _campService = campService;
         }
 
-        [Route("api/camps/family")]
+        [Route("api/camps/{eventId}/family")]
         [AcceptVerbs("GET")]
-        public IHttpActionResult GetCampFamily(bool summerCamp = false)
+        public IHttpActionResult GetCampFamily(int eventId)
         {
             return Authorized(token =>
             {
                 try
                 {
-                    var members = _campService.GetEligibleFamilyMembers(summerCamp, token);
+                    var members = _campService.GetEligibleFamilyMembers(eventId, token);
                     return Ok(members);
                 }
                 catch (Exception e)
