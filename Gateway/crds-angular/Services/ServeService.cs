@@ -6,6 +6,7 @@ using AutoMapper;
 using crds_angular.Enum;
 using crds_angular.Models;
 using crds_angular.Models.Crossroads;
+using crds_angular.Models.Crossroads.Groups;
 using crds_angular.Models.Crossroads.Opportunity;
 using crds_angular.Models.Crossroads.Serve;
 using crds_angular.Services.Interfaces;
@@ -149,10 +150,29 @@ namespace crds_angular.Services
             return qualifiedServers;
         }
 
+        public List<GroupDTO> GetLeaderGroups(string token)
+        {
+            var contactId = _authenticationService.GetContactId(token);
+            var participant = _participantService.GetParticipant(contactId);
+
+            var groups = Mapper.Map<List<GroupDTO>>(_groupParticipantService.GetAllGroupNamesLeadByParticipant(participant.ParticipantId));
+
+            return groups;
+        }
+
+        public bool GetIsLeader(string token)
+        {
+            var contactId = _authenticationService.GetContactId(token);
+            var participant = _participantService.GetParticipant(contactId);
+
+
+            return _groupParticipantService.GetIsLeader(participant.ParticipantId, 9);
+
+        }
 
         public ServingTeam GetServingTeamRsvps(ServingTeam team)
         {
-            var opportunities = Mapper.Map<List<ServeOpportunity>>(_groupParticipantService.GetListOfOpportunitiesByEventAndGroup(team.GroupId, team.EventId));
+            var opportunities = Mapper.Map<List<ServeOpportunity>>(_groupParticipantService.GetListOfOpportunitiesByEventAndGroup(team.GroupId, team.EventId)).OrderByDescending(o => o.Group_Role_ID).ToList();
             var mpRsvpMembers = Mapper.Map<List<RsvpMembers>>(_groupParticipantService.GetRsvpMembers(team.GroupId, team.EventId));
 
             foreach (var opp in opportunities)

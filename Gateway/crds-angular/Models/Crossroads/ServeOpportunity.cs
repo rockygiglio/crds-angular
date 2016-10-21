@@ -18,6 +18,9 @@ namespace crds_angular.Models.Crossroads
         [JsonProperty(PropertyName = "Group_Role_ID")]
         public int Group_Role_ID { get; set; }
 
+        [JsonProperty(PropertyName = "roleTitle")]
+        public string RoleTitle { get; set; }
+
         public ServeOpportunity()
         {
             RsvpMembers = new List<RsvpMembers>(); 

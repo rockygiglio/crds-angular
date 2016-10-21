@@ -4,6 +4,7 @@ export default function closableTagComponent() {
   return {
     bindings: {
       name: '<',
+      age: '<',
       onClick: '&',
       onClose: '&'
     },

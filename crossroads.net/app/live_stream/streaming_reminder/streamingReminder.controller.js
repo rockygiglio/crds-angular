@@ -107,7 +107,7 @@ export default class StreamingReminderController {
   groupedDates() {
     return _
       .chain(this.upcoming)
-      .groupBy((event) => event.start.format(this.dateFormats.key))
+      .groupBy((event) => Event.formatGeneralDateTimeToLocalDate(event.start))
       .value()
     ;
   }

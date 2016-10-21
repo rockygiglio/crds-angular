@@ -389,7 +389,7 @@ streaming, landing {
     &, h3 {
       color: $gray;
     }
-
+    
     content-card {
       @media(max-width: $screen-md-min){
         @include make-sm-column(6);
