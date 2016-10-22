@@ -90,7 +90,7 @@ export default class ServeTeamLeaderController {
     });
 
     if (signUp)
-      this.rootScope.$emit('notify', $rootScope.MESSAGES.SU2S_Saving_Message);
+      this.rootScope.$emit('notify', this.rootScope.MESSAGES.SU2S_Saving_Message);
     else {
       var saveMessage = `You have indicated that the participants are not available for ${this.team.name} on ${this.oppServeDate}`;
       growl.success(saveMessage);
@@ -102,11 +102,17 @@ export default class ServeTeamLeaderController {
 
   updateTeam(person, opp){
     debugger;
+    _.forEach(this.team.serveOpportunities, (opp) => {
+        _.remove(opp.rsvpMembers, (member) => {
+          return member.Participant_ID == person.participantId;
+        });
+    });
     let signedUpOpp = _.find(this.team.serveOpportunities, {Opportunity_ID: opp});
     signedUpOpp.rsvpMembers.push(
       {
         NickName: person.nickName,
-        Last_Name: person.lastName
+        Last_Name: person.lastName,
+        Participant_ID: person.participantId
       }
     );
   }
