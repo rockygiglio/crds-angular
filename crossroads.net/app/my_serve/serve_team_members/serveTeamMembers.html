@@ -10,6 +10,6 @@
                   on-click="serveTeamMembers.memberClick(member)"
                   on-close="serveTeamMembers.memberRemove(member)"
                   class="push-half-right push-half-bottom"></closable-tag>
-    <span ng-if="role.members == null">None</span>
+    <span ng-if="role.members == null || role.members.length < 1">None</span>
   </div>
 </div>

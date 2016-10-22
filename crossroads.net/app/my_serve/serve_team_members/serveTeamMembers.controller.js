@@ -5,8 +5,6 @@ export default class ServeTeamMembersController {
   constructor() {
     console.debug('Construct ServeTeamMembersController');
     //this.opportunities; from component binding
-    this.rsvpNoMembers = [];
-    this.rsvpYesLeaders = [];
     this.allMembers = [];
     this.selectedRole = undefined;
     this.ready = false;
@@ -14,8 +12,11 @@ export default class ServeTeamMembersController {
 
   $onInit()
   {
-    debugger;
     this.loadTeamMembers();
+  }
+
+  $onChanges(teamChanges){
+    console.log("changes Happened");
   }
 
   loadTeamMembers() {
@@ -25,16 +26,21 @@ export default class ServeTeamMembersController {
       _.forEach(this.opportunities, (opportunity) => {
         this.addTeam((opportunity.Opportunity_Title + " " + opportunity.roleTitle), opportunity.rsvpMembers);
       });
-
-      this.addTeam('Not Available', _.uniq(this.rsvpNoMembers, 'Participant_ID'));
   }
 
   splitMembers(opportunities) {
+    let notAvailable ={
+        Opportunity_ID: 0,
+        Opportunity_Title: "Not Available",
+        rsvpMembers: [],
+        roleTitle: ""
+    };
     _.forEach(opportunities, (opportunity) => {
       let partitionedArray = _.partition(opportunity.rsvpMembers, (member) => {return member.Response_Result_ID === CONSTANTS.SERVING_RESPONSES.NOT_AVAILABLE});
-      this.rsvpNoMembers = this.rsvpNoMembers.concat(partitionedArray[0]);
+      notAvailable.rsvpMembers = notAvailable.rsvpMembers.concat(partitionedArray[0]);
       opportunity.rsvpMembers = partitionedArray[1];
-    })
+    });
+    opportunities.push(notAvailable);
     return opportunities;
   }
 
@@ -44,7 +50,7 @@ export default class ServeTeamMembersController {
       name: teamName,
       members: null
     };
-    team.members = (members !== null && members.length > 0) ? members : undefined;
+    team.members = (members !== null) ? members : undefined;
     this.allMembers.push(team);
   }
 

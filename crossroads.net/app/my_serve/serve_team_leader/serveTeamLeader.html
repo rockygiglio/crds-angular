@@ -2,11 +2,11 @@
 
 	<!--TEAM MEMBER SELECTION  -->
 	<div class="push-bottom">
-		<tags-input ng-model="serveTeamLeader.individuals" ng-required='true' display-property="displayName" key-property="email" placeholder="Search for a team member" add-from-autocomplete-only="true"
-			replace-spaces-with-dashes='false'>
+		<tags-input ng-model="serveTeamLeader.individuals" ng-required='true' display-property="displayName" key-property="email"
+			placeholder="Search for a team member" add-from-autocomplete-only="true" replace-spaces-with-dashes='false' autofocus>
 
-			<auto-complete source="serveTeamLeader.loadTeamMembersSearch($query)" display-property="displayName" key-property="email" min-length="1"
-				template='serve_team_leader/serveTeamAutocomplete.html'></auto-complete>
+			<auto-complete source="serveTeamLeader.loadTeamMembersSearch($query)" display-property="displayName" key-property="email"
+				min-length="1" template='serve_team_leader/serveTeamAutocomplete.html'></auto-complete>
 		</tags-input>
 	</div>
 
@@ -26,12 +26,6 @@
                 <div ng-if="opp.shiftStartTime && opp.shiftEndTime">{{ opp.shiftStartTime | time}} - {{ opp.shiftEndTime | time}} </div>
                 <div ng-if="opp.room"> {{ opp.room }} </div>
                 <span class="label {{ opp.capacity.badgeType }}" ng-show="opp.capacity.display">{{ opp.capacity.message }}</span>
-              </label>
-			</div>
-			<div class="col-sm-6 col-md-6 col-lg-4">
-				<label>
-                <input type="radio" ng-model="serveTeamLeader.model.selectedOpp" ng-value="0" ng-change="roleChanged(role)" name="radio_{{team.index}}">
-                Not Available
               </label>
 			</div>
 			<div ng-show="formErrors.role">
@@ -115,18 +109,18 @@
 				</div>
 			</div>
 		</div>
-		{{serveTeamLeader.model | json}}
-		<!-- BUTTONS    -->
-		<div ng-if="!isTeamTab()" class="row">
-			<div class="col-sm-12 serve-save soft-half-top">
-				<button class="btn btn-primary btn-block-mobile sm-pull-right mobile-push-half-bottom" ng-disabled="team.pastDeadline" ng-class="{disabled: buttonState()}"
-					ng-click="serveTeamLeader.saveRsvp()">
+	</div>
+
+	<!-- BUTTONS    -->
+	<div ng-if="serveTeamLeader.model.selectedOpp >= 0" class="row">
+		<div class="col-sm-12 serve-save soft-half-top">
+			<button class="btn btn-primary btn-block-mobile sm-pull-right mobile-push-half-bottom" ng-class="{disabled: buttonState()}"
+				ng-click="serveTeamLeader.saveRsvp()">
               <span ng-if="processing">Saving...</span>
               <span ng-if="!processing">Save</span>
             </button>
-				<button class="btn btn-standard btn-block-mobile" ng-disabled="team.pastDeadline" ng-click="serveTeamLeader.leaderCancel()">Cancel</button>
-			</div>
-			<!--/col-sm-12-->
+			<button class="btn btn-standard btn-block-mobile" ng-click="serveTeamLeader.leaderCancel()">Cancel</button>
 		</div>
-
+		<!--/col-sm-12-->
+	</div>
 </form>
