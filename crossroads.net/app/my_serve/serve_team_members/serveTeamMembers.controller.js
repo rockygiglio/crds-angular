@@ -15,10 +15,6 @@ export default class ServeTeamMembersController {
     this.loadTeamMembers();
   }
 
-  $onChanges(teamChanges){
-    console.log("changes Happened");
-  }
-
   loadTeamMembers() {
       this.opportunities = this.splitMembers(this.opportunities);
       this.allMembers = [];

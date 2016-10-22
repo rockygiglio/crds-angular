@@ -96,8 +96,8 @@ export default class ServeTeamLeaderController {
             var saveMessage = `You have indicated that the participants are not available for ${this.team.name} on ${this.oppServeDate}`;
             this.growl.success(saveMessage);
         }
-
-
+        this.model.selectedOpp = null;
+        this.individuals = null;
         this.processing = false;
     }
 
