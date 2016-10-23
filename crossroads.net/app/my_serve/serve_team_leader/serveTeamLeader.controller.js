@@ -2,7 +2,7 @@ import CONSTANTS from 'crds-constants';
 
 export default class ServeTeamLeaderController {
     /*@ngInject*/
-    constructor(ServeTeamService, ServeOpportunities, $rootScope, growl) {
+    constructor(ServeTeamService, ServeOpportunities, $rootScope, growl, $q) {
         console.debug('Construct ServeTeamLeaderController');
         //this.opportunities; from component binding
         //this.oppServeDate;
@@ -11,6 +11,7 @@ export default class ServeTeamLeaderController {
         this.serveTeamService = ServeTeamService;
         this.serveOpportunities = ServeOpportunities;
         this.rootScope = $rootScope;
+        this.qApi = $q;
         this.growl = growl;
         this.model = {};
         this.formErrors = { from: false }
@@ -76,6 +77,7 @@ export default class ServeTeamLeaderController {
         //}
         this.processing = true;
         let signUp = (this.model.selectedOpp !== 0) ? true : false;
+        let promises = [];
         _.forEach(this.individuals, (person) => {
             var rsvp = {};
             rsvp.contactId = person.contactId;
@@ -86,19 +88,29 @@ export default class ServeTeamLeaderController {
             rsvp.startDate = moment(this.model.fromDt, 'MM/DD/YYYY').format('X');
             rsvp.signUp = signUp;
             rsvp.alternateWeeks = (this.model.selectedFrequency.value === 2);
-            this.serveOpportunities.SaveRsvp.save(rsvp);
+            promises.push(this.serveOpportunities.SaveRsvp.save(rsvp).$promise);
             this.updateTeam(person, this.model.selectedOpp);
         });
 
-        if (signUp)
-            this.rootScope.$emit('notify', this.rootScope.MESSAGES.SU2S_Saving_Message);
-        else {
-            var saveMessage = `You have indicated that the participants are not available for ${this.team.name} on ${this.oppServeDate}`;
-            this.growl.success(saveMessage);
-        }
-        this.model.selectedOpp = null;
-        this.individuals = null;
-        this.processing = false;
+        this.qApi.all(promises).then((results) => {
+            debugger;
+            this.updatedEvent = results[0];
+            if (signUp)
+                this.rootScope.$emit('notify', this.rootScope.MESSAGES.SU2S_Saving_Message);
+            else {
+                var saveMessage = `You have indicated that the participants are not available for ${this.team.name} on ${this.oppServeDate}`;
+                this.growl.success(saveMessage);
+            }
+            this.model.selectedOpp = null;
+            this.individuals = null;
+            this.processing = false;
+        }, (error) => {
+            debugger;
+            this.rootScope.$emit('notify', this.rootScope.MESSAGES.generalError);
+            this.processing = false;
+
+            return false;
+        });
     }
 
     updateTeam(person, opp) {
