@@ -37,6 +37,12 @@ export default class StreamingReminderController {
     this.scope = $scope;
     $scope.selectedTime = '';
 
+    $(document).on('click', '.btn-group > .btn', (e) => {
+      let el = $(e.target);
+      el.addClass('active');
+      el.siblings().removeClass('active');
+    });
+
     // If the user is logged in, set default user info
     if (this.session.isActive()) {
       this.setUserDefaults();      
