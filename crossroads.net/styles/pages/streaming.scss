@@ -221,6 +221,14 @@ streaming, landing {
       font-size: 125%;
     }
 
+    p {
+      font-size: initial;
+
+      &.lead {
+        font-size: 125%;
+      }
+    }
+
     h1 {
       font-size: 238%;
       @media (min-width: $screen-md-min) {

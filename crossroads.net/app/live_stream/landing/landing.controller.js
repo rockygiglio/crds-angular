@@ -2,7 +2,7 @@ let WOW = require('wow.js/dist/wow.min.js');
 import StreamStatusService from '../services/stream-status.service';
 
 export default class LandingController {
-  constructor($rootScope, $filter, CMSService, StreamStatusService) {
+  constructor($rootScope, $filter, CMSService, StreamStatusService, $sce) {
 
     this.rootScope = $rootScope;
 
@@ -14,6 +14,7 @@ export default class LandingController {
 
     this.cmsService = CMSService;
     this.filter = $filter;
+    this.sce = $sce;
 
     new WOW({
       offset: 100,
@@ -27,6 +28,23 @@ export default class LandingController {
       .then((response) => {
         this.pastWeekends = this.parseWeekends(response,maxPastWeekends)
       })
+  }
+
+  introImage() {
+    let src = '';
+    switch (this.streamStatus) {
+      case 'Live':
+        src = 'crds-cms-uploads.imgix.net/media/streaming/streaming-anywhere-hero-broadcasting.jpg?w=1&crop=faces&fit=crop';
+        break;
+      case 'Upcoming':
+        src = 'crds-cms-uploads.imgix.net/media/streaming/streaming-anywhere-hero-upcoming.jpg?w=1&crop=faces&fit=crop';
+        break;
+      case 'Off':
+        src = 'crds-cms-uploads.imgix.net/media/streaming/streaming-anywhere-hero-off.jpg?w=1&crop=faces&fit=crop';
+        break
+    }
+
+    return this.sce.trustAsResourceUrl(`//${src}`);
   }
 
   parseWeekends(response,maxPastWeekends) {
