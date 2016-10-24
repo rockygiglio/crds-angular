@@ -17,7 +17,6 @@ BEGIN
 			  Display_Search ,
 			  Default_Field_List ,
 			  Selected_Record_Expression ,
-			  Contact_ID_Field ,
 			  Display_Copy
 			)
 	VALUES  ( @PageID,
@@ -30,7 +29,6 @@ BEGIN
 			  1 , -- Display_Search - bit
 			  N'Event_Participant_ID_Table_Participant_ID_Table_Contact_ID_Table.Display_Name  ,Waiver_ID_Table.Waiver_Name' , -- Default_Field_List - nvarchar(2000)
 			  N'Waiver_ID_Table.Waiver_Name' , -- Selected_Record_Expression - nvarchar(255)
-			  N'Event_ID_Table.Primary_Contact' , -- Contact_ID_Field - nvarchar(100)
 			  1  -- Display_Copy - bit
 			)
 	SET IDENTITY_INSERT dbo.dp_Pages ON
