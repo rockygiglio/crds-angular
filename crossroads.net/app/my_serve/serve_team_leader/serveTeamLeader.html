@@ -1,26 +1,26 @@
-<form name="teamLeaderForm">
+<form name="serveTeamLeader.teamLeaderForm">
 
 	<!--TEAM MEMBER SELECTION  -->
-	<div class="push-bottom">
-		<tags-input ng-model="serveTeamLeader.individuals" ng-required='true' display-property="displayName" key-property="email"
+	<div class="push-bottom" ng-class="{'has-error': (serveTeamLeader.teamLeaderForm.$submitted && serveTeamLeader.individuals.length < 1)}">
+		<tags-input ng-model="serveTeamLeader.individuals" ng-class="{'custom-tags': (!serveTeamLeader.teamLeaderForm.$submitted && serveTeamLeader.individuals.length < 1)}" ng-required='true' display-property="displayName" key-property="email"
 			placeholder="Search for a team member" add-from-autocomplete-only="true" replace-spaces-with-dashes='false' autofocus>
 
 			<auto-complete source="serveTeamLeader.loadTeamMembersSearch($query)" display-property="displayName" key-property="email"
 				min-length="1" template='serve_team_leader/serveTeamAutocomplete.html'></auto-complete>
 		</tags-input>
+		<div ng-show="(serveTeamLeader.teamLeaderForm.$submitted && serveTeamLeader.individuals.length < 1)">
+			<span dynamic-content="$root.MESSAGES.fieldCanNotBeBlank.content | html"></span>
+		</div>
 	</div>
 
-	<!--
-          OPPORTUNITIES
-        -->
-	<div class="radio" ng-class="{'text-muted': opp.capacity.badgeType === 'label-default', 'has-error': formErrors.role}">
+	<!-- OPPORTUNITIES -->
+	<div class="radio" ng-class="{'text-muted': opp.capacity.badgeType === 'label-default'}">
 		<div class="row">
 			<div class="col-sm-6 col-md-6 col-lg-4 mobile-push-bottom" ng-repeat="opp in serveTeamLeader.team.serveOpportunities">
 				<label>
                 <input type="radio"
                        ng-model="serveTeamLeader.model.selectedOpp"
                        ng-value="opp.Opportunity_ID"
-                       ng-change="roleChanged(opp)"
                        name="radio_{{team.index}}">
                 <div>{{::opp.Opportunity_Title}} {{::opp.roleTitle}}</div>
                 <div ng-if="opp.shiftStartTime && opp.shiftEndTime">{{ opp.shiftStartTime | time}} - {{ opp.shiftEndTime | time}} </div>
@@ -28,16 +28,10 @@
                 <span class="label {{ opp.capacity.badgeType }}" ng-show="opp.capacity.display">{{ opp.capacity.message }}</span>
               </label>
 			</div>
-			<div ng-show="formErrors.role">
-				<span dynamic-content="$root.MESSAGES.fieldCanNotBeBlank.content | html"></span>
-			</div>
 		</div>
-		<!--/radio-->
 	</div>
 
-	<!--
-          FREQUENCY
-        -->
+	<!-- FREQUENCY  -->
 	<div class="row" ng-show="serveTeamLeader.model.selectedOpp && serveTeamLeader.model.selectedOpp !== 0">
 		<!-- HOW OFTEN -->
 		<div class="col-md-4">
@@ -60,7 +54,7 @@
 					ng-value="f.value" ng-options="f.text for f in serveTeamLeader.frequencies">
                 <option value="">Select a Frequency</option>
               </select>
-				<div ng-show="formErrors.frequency">
+				<div ng-show="serveTeamLeader.formErrors.frequency">
 					<span dynamic-content="$root.MESSAGES.selectFrequency.content | html"></span>
 				</div>
 			</div>
@@ -112,7 +106,7 @@
 	</div>
 
 	<!-- BUTTONS    -->
-	<div ng-if="serveTeamLeader.model.selectedOpp >= 0" class="row">
+	<div ng-if="serveTeamLeader.model.selectedOpp != null" class="row">
 		<div class="col-sm-12 serve-save soft-half-top">
 			<button class="btn btn-primary btn-block-mobile sm-pull-right mobile-push-half-bottom" ng-class="{disabled: buttonState()}"
 				ng-click="serveTeamLeader.saveRsvp()">

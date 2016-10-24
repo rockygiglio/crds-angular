@@ -13,24 +13,25 @@ export default class ServeTeamLeaderController {
         this.rootScope = $rootScope;
         this.qApi = $q;
         this.growl = growl;
-        this.model = {};
+        this.model = { selectedFrequency: null };
         this.formErrors = { from: false }
         this.datesDisabled = false;
+        this.individuals = [];
         this.processing = false;
     }
 
     $onInit() {
+        debugger;
         this.serveTeamService.getAllTeamMembersForLoggedInLeader(this.team.groupId).then((data) => {
             this.teamMembers = data;
         });
         _.each(this.team.serveOpportunities, (opp) => {
             opp.capacity = this.serveTeamService.getCapacity(opp, this.team.eventId);
         });
-        debugger;
+
         this.frequencies = this.getFrequency();
         this.model.selectedFrequency = this.frequencies[0];
         this.populateDates();
-
     }
 
     populateDates() {
@@ -39,12 +40,14 @@ export default class ServeTeamLeaderController {
                 this.model.fromDt = null;
                 this.model.toDt = null;
                 this.datesDisabled = true;
+                this.formErrors.from = true;
                 break;
             case 0:
                 this.model.fromDt = this.oppServeDate;
                 this.model.toDt = this.oppServeDate;
                 this.datesDisabled = true;
                 this.formErrors.from = false;
+                break;
         }
     }
 
@@ -68,49 +71,66 @@ export default class ServeTeamLeaderController {
         return [once, everyWeek, everyOtherWeek];
     }
 
+    isFormValid() {
+        let validForm =  {
+            valid: true
+        };
+
+        if(this.individuals.length < 1)
+        {
+            validForm.valid = false;
+            this.formErrors.noParticipants = true;
+        }
+        
+            return validForm.valid;
+    };
+
     saveRsvp() {
-        //var validForm = isFormValid();
+        var validForm = this.isFormValid();
 
-        //if (!validForm.valid) {
-        //  $rootScope.$emit('notify', $rootScope.MESSAGES.generalError);
-        //  return false;
-        //}
-        this.processing = true;
-        let signUp = (this.model.selectedOpp !== 0) ? true : false;
-        let promises = [];
-        _.forEach(this.individuals, (person) => {
-            var rsvp = {};
-            rsvp.contactId = person.contactId;
-            rsvp.opportunityId = this.model.selectedOpp;
-            rsvp.opportunityIds = (signUp) ? [this.model.selectedOpp] : _.pluck(this.team.serveOpportunities, 'Opportunity_ID');
-            rsvp.eventTypeId = this.team.eventTypeId;
-            rsvp.endDate = moment(this.model.toDt, 'MM/DD/YYYY').format('X');
-            rsvp.startDate = moment(this.model.fromDt, 'MM/DD/YYYY').format('X');
-            rsvp.signUp = signUp;
-            rsvp.alternateWeeks = (this.model.selectedFrequency.value === 2);
-            promises.push(this.serveOpportunities.SaveRsvp.save(rsvp).$promise);
-            this.updateTeam(person, this.model.selectedOpp);
-        });
-
-        this.qApi.all(promises).then((results) => {
-            debugger;
-            this.updatedEvent = results[0];
-            if (signUp)
-                this.rootScope.$emit('notify', this.rootScope.MESSAGES.SU2S_Saving_Message);
-            else {
-                var saveMessage = `You have indicated that the participants are not available for ${this.team.name} on ${this.oppServeDate}`;
-                this.growl.success(saveMessage);
-            }
-            this.model.selectedOpp = null;
-            this.individuals = null;
-            this.processing = false;
-        }, (error) => {
-            debugger;
+        if (!validForm) {
             this.rootScope.$emit('notify', this.rootScope.MESSAGES.generalError);
-            this.processing = false;
-
             return false;
-        });
+        }
+        else {
+            this.processing = true;
+            
+            let signUp = (this.model.selectedOpp !== 0) ? true : false;
+            let promises = [];
+            _.forEach(this.individuals, (person) => {
+                var rsvp = {};
+                rsvp.contactId = person.contactId;
+                rsvp.opportunityId = this.model.selectedOpp;
+                rsvp.opportunityIds = (signUp) ? [this.model.selectedOpp] : _.pluck(this.team.serveOpportunities, 'Opportunity_ID');
+                rsvp.eventTypeId = this.team.eventTypeId;
+                rsvp.endDate = moment(this.model.toDt, 'MM/DD/YYYY').format('X');
+                rsvp.startDate = moment(this.model.fromDt, 'MM/DD/YYYY').format('X');
+                rsvp.signUp = signUp;
+                rsvp.alternateWeeks = (this.model.selectedFrequency.value === 2);
+                promises.push(this.serveOpportunities.SaveRsvp.save(rsvp).$promise);
+                
+                this.updateTeam(person, this.model.selectedOpp);
+            });
+
+            this.qApi.all(promises).then((results) => {
+                this.updatedEvent = results[0];
+                if (signUp)
+                    this.rootScope.$emit('notify', this.rootScope.MESSAGES.SU2S_Saving_Message);
+                else {
+                    var saveMessage = `You have indicated that the participants are not available for ${this.team.name} on ${this.oppServeDate}`;
+                    this.growl.success(saveMessage);
+                }
+                this.model.selectedOpp = null;
+                this.individuals = null;
+                this.teamLeaderForm.$submitted = false;
+                this.processing = false;
+                return true;
+            }, (error) => {
+                this.rootScope.$emit('notify', this.rootScope.MESSAGES.generalError);
+                this.processing = false;
+                return false;
+            });
+        }
     }
 
     updateTeam(person, opp) {

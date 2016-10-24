@@ -102,7 +102,7 @@ BEGIN
 
 		DECLARE @Group_Name_Subquery NVARCHAR(MAX)
 		SELECT @Group_Name_Subquery = STUFF((
-			select ' UPPER(Name) LIKE ''%' + Keyword + '%'' OR '
+			select ' UPPER(Group_Name) LIKE ''%' + Keyword + '%'' OR '
 			from #Keywords
 			FOR XML PATH('')
 			)
@@ -200,7 +200,7 @@ BEGIN
 			@Site_Subquery, @Address_Subquery, @City_Subquery, @State_Subquery, @Zip_Subquery, @Meeting_Day_Subquery, @Meeting_Time_Subquery, @Meeting_Frequency_Subquery)
 
 		-- need to figure out a better way to handle the dangling OR
-		SET @DynamicQuery += ' Name = ''ThisIsAHack'''
+		SET @DynamicQuery += 'Group_Name = ''ThisIsAHack'''
 
 		EXEC(@DynamicQuery)
 
