@@ -62,7 +62,7 @@ export default class ReminderService {
       templateUrl: 'streaming_reminder/streamingReminder.html',
       controller: 'StreamingReminderController',
       controllerAs: 'reminder',
-      openedClass: 'crds-modal',
+      openedClass: 'crds-modal reminder-modal',
       size: 'lg'
     });
   }

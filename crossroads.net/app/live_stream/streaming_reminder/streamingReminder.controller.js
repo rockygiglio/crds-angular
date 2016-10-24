@@ -37,6 +37,14 @@ export default class StreamingReminderController {
     this.scope = $scope;
     $scope.selectedTime = '';
 
+    if (typeof $ !== 'undefined') {
+      $(document).on('click', '.btn-group > .btn', (e) => {
+        let el = $(e.target);
+        el.addClass('active');
+        el.siblings().removeClass('active');
+      });
+    }
+
     this.setUserDefaults();     
   }
 
@@ -77,7 +85,7 @@ export default class StreamingReminderController {
   $onInit() {
     this.streamspotService.events.then((response) => {
       this.upcoming = response;
-    })
+    });
   }
 
   close() {
