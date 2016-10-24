@@ -1,14 +1,63 @@
 import CONSTANTS from 'crds-constants';
+import Event from '../models/event';
 
 export default class StreamStatusService {
 
-  constructor($rootScope) {
+  constructor($rootScope, $q, $resource) {
     this.rootScope = $rootScope;
+    this.q =  $q;
+    this.resource = $resource;
     this.streamStatus = undefined;
+    this.url  = __STREAMSPOT_ENDPOINT__;
+    this.ssid = __STREAMSPOT_SSID__;
+    this.headers = {
+      'Content-Type': 'application/json',
+      'x-API-Key': __STREAMSPOT_API_KEY__
+    };
+    this.time=0;
   }
 
   getStatus(){
     return this.streamStatus;
+  }
+
+  setStreamStatus(status){
+    this.streamStatus = status;
+  }
+
+  presetStreamStatus(){
+
+    var deferred = this.q.defer();
+
+    let url = `${this.url}broadcaster/${this.ssid}/events`;
+
+    return this.resource(url, {}, { get: { method: 'GET', headers: this.headers } })
+        .get()
+        .$promise
+        .then((response) => {
+          let events = response.data.events;
+          let formattedEvents = this.formatEvents(events);
+          let isBroadcasting = this.isBroadcasting(formattedEvents);
+          this.streamStatus = this.determineStreamStatus(formattedEvents, isBroadcasting);
+          deferred.resolve(formattedEvents);
+        });
+
+    return deferred;
+
+  };
+
+  formatEvents(events) {
+    return _
+        .chain(events)
+        .sortBy('start')
+        .map((object) => {
+          let event = Event.build(object);
+          if (event.isBroadcasting() || event.isUpcoming()) {
+            return event;
+          }
+        })
+        .compact()
+        .value();
   }
 
   setStreamStatus(events, isBroadcasting){
@@ -62,11 +111,11 @@ export default class StreamStatusService {
   filterOutEventsStartingBeforeCurrentTime(events){
     let eventsStartingAfterCurrentTime = [];
 
-    for(let idx=0; idx<events.length; idx++){
-      let iteratedEvent = events[idx];
+    for(let i=0; i<events.length; i++){
+      let iteratedEvent = events[i];
       let doesEventStartAfterCurrentTime = this.doesEventStartAfterCurrentTime(iteratedEvent);
       if( doesEventStartAfterCurrentTime){
-        eventsStartingAfterCurrentTime.push(events[idx]);
+        eventsStartingAfterCurrentTime.push(events[i]);
       }
     }
 
@@ -79,6 +128,29 @@ export default class StreamStatusService {
     let isEventStartBeforeCurrentTime = eventStartTime.isAfter(currentTime);
 
     return isEventStartBeforeCurrentTime;
+  }
+
+  isBroadcasting(events){
+    let areAnyEventsBroadcasting = false;
+
+    for(let i=0; i<events.length; i++){
+      let iteratedEvent = events[i];
+      let isEventLive = this.isEventCurrentlyLive(iteratedEvent);
+      if (isEventLive){
+        areAnyEventsBroadcasting = true;
+      }
+    }
+
+    return areAnyEventsBroadcasting;
+  };
+
+  isEventCurrentlyLive(event){
+    let currentTime = moment();
+    let eventStartTime = moment(event.start);
+    let eventEndTime = moment(event.end);
+    let isEventLive = eventStartTime.isBefore(currentTime) && eventEndTime.isAfter(currentTime);
+
+    return isEventLive;
   }
 
 };

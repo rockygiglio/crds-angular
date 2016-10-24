@@ -3,12 +3,11 @@ import Event from '../models/event';
 
 export default class StreamingReminderController {
 
-  constructor($modalInstance, StreamspotService, ReminderService, Session, Profile, $scope) {
+  constructor($modalInstance, StreamspotService, ReminderService, Session, $scope, $rootScope) {
     this.modalInstance = $modalInstance;
     this.streamspotService = StreamspotService;
     this.reminderService = ReminderService;
     this.session = Session;
-    this.profile = Profile;
 
     this.streamspotService.events.then((response) => {
       this.upcoming = response;
@@ -34,13 +33,19 @@ export default class StreamingReminderController {
       time: 'h:mma z'
     };
 
+    this.rootScope = $rootScope;
     this.scope = $scope;
     $scope.selectedTime = '';
 
-    // If the user is logged in, set default user info
-    if (this.session.isActive()) {
-      this.setUserDefaults();      
-    } 
+    if (typeof $ !== 'undefined') {
+      $(document).on('click', '.btn-group > .btn', (e) => {
+        let el = $(e.target);
+        el.addClass('active');
+        el.siblings().removeClass('active');
+      });
+    }
+
+    this.setUserDefaults();     
   }
 
   validate(form) {
@@ -80,7 +85,7 @@ export default class StreamingReminderController {
   $onInit() {
     this.streamspotService.events.then((response) => {
       this.upcoming = response;
-    })
+    });
   }
 
   close() {
@@ -107,22 +112,19 @@ export default class StreamingReminderController {
   groupedDates() {
     return _
       .chain(this.upcoming)
-      .groupBy((event) => event.start.format(this.dateFormats.key))
+      .groupBy((event) => Event.formatGeneralDateTimeToLocalDate(event.start))
       .value()
     ;
   }
 
   setUserDefaults() {
-    this.profile.Personal.get()
-      .$promise.then((data) => {
-        if (data.emailAddress) {
-          this.model.email = data.emailAddress;
-        }
-        if (data.mobilePhone) {
-          this.model.phone = data.mobilePhone;
-        }
-      }
-      );
+    // If the user is logged in, set default user info
+    if (this.session.isActive()) {
+      if(this.rootScope.phone)
+        this.model.phone = this.rootScope.phone;
+      if(this.rootScope.email)
+        this.model.email = this.rootScope.email;      
+    }
   }
 
   selectedDate(date) {
@@ -156,6 +158,7 @@ export default class StreamingReminderController {
 
     this.model = new Reminder();
     this.model.day =  Event.formatGeneralDateTimeToLocalDate(firstEventStartDate);
+    this.setUserDefaults();
 
     this.formError     = false;
     this.dateTimeError = false;

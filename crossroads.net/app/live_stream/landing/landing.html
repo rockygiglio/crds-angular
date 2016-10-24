@@ -28,7 +28,7 @@
         <a class="pull-right view-all-desktop" href="/media">View All Past Weekends</a>
         <h2>Past Weekends</h2>
       </header>
-      <div class="row">
+      <div class="content-card-row">
         <content-card ng-repeat="event in landing.pastWeekends" content="event"></content-card>
       </div>
       <a class="btn btn-primary btn-block-mobile view-all-mobile" href="/media">View All Past Weekends</a>
@@ -45,11 +45,13 @@
       </div>
     </div>
   </section>
-
-  <section class="community imgix-fluid-bg crds-hero" data-src="//crds-cms-uploads.imgix.net/content/images/streaming--anywhere-map.jpg?w=1&amp;fit=crop" style="background-image: url(&quot;https://crds-cms-uploads.imgix.net/content/images/streaming--anywhere-map.jpg?dpr=2&amp;fit=crop&amp;h=630&amp;ixjsv=2.2.3&amp;q=50&amp;w=1440&quot;);">
-    <div class="wow fadeInUp">
-      <div dynamic-content="$root.MESSAGES.streamingLandingCommunity.content | html" ></div>
-      <social-sharing class="clearfix addthis_crossroads_sharing addthis_32x32_style"></social-sharing>
+  <section class="community crds-hero">
+    <div class="background"></div>  
+    <div class="overlay">
+      <div class="wow fadeInUp">
+        <div dynamic-content="$root.MESSAGES.streamingLandingCommunity.content | html" ></div>
+        <social-sharing class="clearfix addthis_crossroads_sharing addthis_32x32_style"></social-sharing>
+      </div>
     </div>
   </section>
 

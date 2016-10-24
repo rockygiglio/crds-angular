@@ -4,6 +4,7 @@ using System.Linq;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Models.Attributes;
 using MinistryPlatform.Translation.Models.Childcare;
+using MinistryPlatform.Translation.Models.Payments;
 using MinistryPlatform.Translation.Repositories;
 using Newtonsoft.Json;
 using NUnit.Framework;
@@ -233,6 +234,125 @@ namespace MinistryPlatform.Translation.Test.Services
             var contact = _fixture.UsingAuthenticationToken(_authToken).Get<MpContact>("Pledges", 656098, "Donor_ID_Table_Contact_ID_Table.Nickname, Donor_ID_Table_Contact_ID_Table.Last_Name");
             Assert.AreEqual("Andy", contact.Nickname);
             Assert.AreEqual("Canterbury", contact.LastName);
+        }
+
+        [Test]
+        public void GradeGroupsInCurrentCampEvents()
+        {
+            var columnList = new List<string>
+            {
+                "Event_ID_Table_Event_Type_ID_Table.[Event_Type_ID]",
+                "Group_ID_Table.[Group_ID]",
+                "Group_ID_Table_Group_Type_ID_Table.[Group_Type_ID]"
+            };
+
+            var date = DateTime.Today;
+
+            var filter = "Event_ID_Table_Event_Type_ID_Table.[Event_Type_ID] = 8 AND Group_ID_Table_Group_Type_ID_Table.[Group_Type_ID] = 4 " +
+                         $"AND '{date}' between Event_ID_Table.[Registration_Start] and Event_ID_Table.[Registration_End]";
+            var groups = _fixture.UsingAuthenticationToken(_authToken).Search<MpEventGroup>(filter, columnList);
+            foreach (MpEventGroup eg in groups)
+            {
+                Console.WriteLine(eg);
+            };
+        }
+
+        [Test]
+        public void ContactNotInGradeGroup()
+        {
+            var storedProcOpts = new Dictionary<string, object>
+            {
+                {"@ContactID", 1234 },
+                {"@EventID", 4525285}
+            };
+            var result = _fixture.UsingAuthenticationToken(_authToken).GetFromStoredProc<MpStoredProcBool>("api_crds_Grade_Group_Participant_For_Camps", storedProcOpts);
+            var l = result.FirstOrDefault();
+            foreach (var r in l)
+            {
+                Assert.IsFalse(r.isTrue);                
+            }
+        }
+
+        [Test]
+        public void ContactInAGradeGroup()
+        {
+            var storedProcOpts = new Dictionary<string, object>
+            {
+                {"@ContactID", 7672203},
+                {"@EventID", 4525325}
+            };
+            var result = _fixture.UsingAuthenticationToken(_authToken).GetFromStoredProc<MpStoredProcBool>("api_crds_Grade_Group_Participant_For_Camps", storedProcOpts);
+            var l = result.FirstOrDefault();
+            foreach (var r in l)
+            {
+                Assert.IsTrue(r.isTrue);
+            }
+        }
+        
+        public void ShouldCreateARecord()
+        {
+            var payment = new MpPayment
+            {
+                PaymentTotal = 123.45,
+                ContactId = 3717387,
+                PaymentDate = DateTime.Now,
+                PaymentTypeId = 11
+            };
+
+            var paymentDetail = new MpPaymentDetail
+            {
+                Payment = payment,
+                PaymentAmount = 123.45,
+                InvoiceDetailId = 19
+            };
+            var resp = _fixture.UsingAuthenticationToken(_authToken).Post(new List<MpPaymentDetail> {paymentDetail});
+
+        }
+
+        [Test]
+        public void ShouldUpdate2GenericRecord()
+        {
+            var tableName = "Invoices";
+
+            var dict = new Dictionary<string, object>();
+            dict.Add("Invoice_ID",8);
+            dict.Add("Invoice_Status_ID", 2);
+
+            var dict2 = new Dictionary<string, object>();
+            dict2.Add("Invoice_ID", 9);
+            dict2.Add("Invoice_Status_ID", 2);
+
+            var thelist = new List<Dictionary<string, object>>();
+            thelist.Add(dict);
+            thelist.Add(dict2);
+
+            var resp = _fixture.UsingAuthenticationToken(_authToken).Put(tableName,thelist);
+        }
+
+        [Test]
+        public void TestPaymentsForInvoiceProcedure()
+        {
+            Console.WriteLine(" TestPaymentsForInvoiceProcedure");
+            var invoiceId = 1;
+            var fields = new Dictionary<string, object>
+            {
+                {"@InvoiceId", invoiceId }
+            };
+            var results = _fixture.UsingAuthenticationToken(_authToken).GetFromStoredProc<MpPayment>("api_crds_PaymentsForInvoice", fields);
+            Console.WriteLine("Result\t" + results.ToString());
+        }
+
+        [Test]
+        public void TestGetWithFilter()
+        {
+            Console.WriteLine(" TestGetWithFilter");
+            var invoiceId = 8;
+            var fields = new Dictionary<string, object>
+            {
+                {"Invoice_Number", invoiceId }
+            };
+            var results = _fixture.UsingAuthenticationToken(_authToken).Get<MpPayment>("Payments", fields);
+            Console.WriteLine("Result\t" + results.ToString());
         }
     }
 

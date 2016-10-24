@@ -142,6 +142,7 @@
     <Compile Include="Services\OpportunityServiceTest.cs" />
     <Compile Include="Services\OrganizationServiceTest.cs" />
     <Compile Include="Services\ParticipantServiceTest.cs" />
+    <Compile Include="Services\PaymentRepositoryTest.cs" />
     <Compile Include="Services\PledgeRepositoryTest.cs" />
     <Compile Include="Services\ProgramServiceTest.cs" />
     <Compile Include="Services\ResponseServiceTest.cs" />

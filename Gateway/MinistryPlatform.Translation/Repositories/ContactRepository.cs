@@ -92,6 +92,11 @@ namespace MinistryPlatform.Translation.Repositories
                 throw new ApplicationException("GetContactById returned multiple records");
             }
 
+            if (pageViewRecords.Count == 0)
+            {
+                return null;
+            }
+
             return ParseProfileRecord(pageViewRecords[0]);
         }
 

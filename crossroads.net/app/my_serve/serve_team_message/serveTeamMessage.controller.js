@@ -25,6 +25,16 @@ export default class ServeTeamMessageController {
     }).catch((err) => {
       this.log.debug("unable to retrieve team members.")
     });
+    this.tinymceOptions = {
+      resize: false,
+      height: 300,
+      plugins: 'paste link legacyoutput textcolor',
+      valid_elements: 'ol,ul,li,p,br,strong/b,i,em,a[href|target=_blank],p,br',
+      toolbar: 'undo redo | fontselect fontsizeselect forecolor backcolor | bold italic underline | alignleft aligncenter alignright | numlist bullist outdent indent | link',
+      menubar: false,
+      statusbar: false
+
+    };
   }
 
   loadIndividuals($query) {
@@ -44,6 +54,7 @@ export default class ServeTeamMessageController {
       this.rootScope.$emit('notify', this.rootScope.MESSAGES.generalError);
       return;
     }
+<<<<<<< HEAD
     if (this.selection == -1) {
       this.processing = true;
       this.serveTeamService.sendParticipantsMessage({ Participants: this.individuals, Body: this.email.message, Subject: this.email.subject })

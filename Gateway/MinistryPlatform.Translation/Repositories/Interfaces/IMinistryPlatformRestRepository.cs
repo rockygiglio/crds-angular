@@ -22,6 +22,8 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
 
         T Get<T>(string tableName, int recordId, string columnName);
 
+        List<T> Get<T>(string tableName, Dictionary<string, object> filter);
+
         /// <summary>
         /// Get results from a stored procedure in Ministry Platform
         /// </summary>
@@ -59,6 +61,16 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
         /// <returns>An List of objects representing the matching MP rows for the search, if found.</returns>
         List<T> Search<T>(string searchString, List<string> columns, string orderByString = null, bool distinct = false);
 
+        /// <summary>
+        /// Update a set of records of the given type in MP. 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="records"></param>
+        /// <returns></returns>
+        int Post<T>(List<T> records);
+
+        int Put<T>(List<T> records);
+        int Put(string tableName, List<Dictionary<string, object>> records);
         int PostStoredProc(string procedureName, Dictionary<string, object> parameters);
 
         void UpdateRecord(string tableName, int recordId, Dictionary<string, object> fields);

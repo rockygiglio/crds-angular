@@ -67,6 +67,22 @@ namespace MinistryPlatform.Translation.Repositories
             _objectAttributeRepository = objectAttributeRepository;
         }
 
+        public bool IsMemberOfEventGroup(int contactId, int eventId, string token)
+        {
+            var storedProc = _configurationWrapper.GetConfigValue("IsCampEligibleStoredProc");
+            var storedProcOpts = new Dictionary<string,object>
+            {
+                {"@ContactID", contactId },
+                {"@EventID", eventId }   
+            };
+            var result = _ministryPlatformRestRepository.UsingAuthenticationToken(token).GetFromStoredProc<MpStoredProcBool>(storedProc, storedProcOpts);
+            if (result.Count <= 0) return false;
+            var mpStoredProcBool = result.FirstOrDefault();
+            return mpStoredProcBool != null 
+                   && mpStoredProcBool.FirstOrDefault() != null 
+                   && mpStoredProcBool.FirstOrDefault().isTrue;
+        }
+
         public int CreateGroup(MpGroup group)
         {
             logger.Debug("Adding group");

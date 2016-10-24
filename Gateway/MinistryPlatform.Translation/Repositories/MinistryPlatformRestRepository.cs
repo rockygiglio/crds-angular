@@ -30,13 +30,13 @@ namespace MinistryPlatform.Translation.Repositories
 
         public T Get<T>(int recordId, string selectColumns = null)
         {
-            var url = AddGetColumnSelection(string.Format("/tables/{0}/{1}", GetTableName<T>(), recordId), selectColumns);
+            var url = AddGetColumnSelection($"/tables/{GetTableName<T>()}/{recordId}", selectColumns);
             var request = new RestRequest(url, Method.GET);
             AddAuthorization(request);
 
             var response = _ministryPlatformRestClient.Execute(request);
             _authToken.Value = null;
-            response.CheckForErrors(string.Format("Error getting {0} by ID {1}", GetTableName<T>(), recordId), true);
+            response.CheckForErrors($"Error getting {GetTableName<T>()} by ID {recordId}", true);
 
             var content = JsonConvert.DeserializeObject<List<T>>(response.Content);
             if (content == null || !content.Any())
@@ -49,13 +49,13 @@ namespace MinistryPlatform.Translation.Repositories
 
         public T Get<T>(string tableName, int recordId, string columnName)
         {
-            var url = AddGetColumnSelection(string.Format("/tables/{0}/{1}", tableName, recordId), columnName);
+            var url = AddGetColumnSelection($"/tables/{tableName}/{recordId}", columnName);
             var request = new RestRequest(url, Method.GET);
             AddAuthorization(request);
 
             var response = _ministryPlatformRestClient.Execute(request);
             _authToken.Value = null;
-            response.CheckForErrors(string.Format("Error getting {0} by ID {1}", tableName, recordId), true);
+            response.CheckForErrors($"Error getting {tableName} by ID {recordId}", true);
 
             var content = JsonConvert.DeserializeObject<List<T>>(response.Content);
             if (content == null || !content.Any())
@@ -66,6 +66,22 @@ namespace MinistryPlatform.Translation.Repositories
             return content.FirstOrDefault();
         }
 
+        public List<T> Get<T>(string tableName, Dictionary<string,object> filter)
+        {
+            var url = AddFilter($"/tables/{tableName}", filter);
+
+            var request = new RestRequest(url, Method.GET);
+            AddAuthorization(request);
+
+            var response = _ministryPlatformRestClient.Execute(request);
+            _authToken.Value = null;
+            response.CheckForErrors($"Error getting {tableName} using filter", true);
+
+            var content = JsonConvert.DeserializeObject<List<T>>(response.Content);
+           
+            return content;
+        }
+
         public List<List<T>> GetFromStoredProc<T>(string procedureName)
         {
             return GetFromStoredProc<T>(procedureName, new Dictionary<string, object>());
@@ -73,13 +89,13 @@ namespace MinistryPlatform.Translation.Repositories
 
         public List<List<T>> GetFromStoredProc<T>(string procedureName, Dictionary<string, object> parameters)
         {
-            var url = string.Format("/procs/{0}/{1}", procedureName, FormatStoredProcParameters(parameters));
+            var url = $"/procs/{procedureName}/{FormatStoredProcParameters(parameters)}";
             var request = new RestRequest(url, Method.GET);
             AddAuthorization(request);
 
             var response = _ministryPlatformRestClient.ExecuteAsGet(request, "GET");
             _authToken.Value = null;
-            response.CheckForErrors(string.Format("Error executing procedure {0}", procedureName), true);
+            response.CheckForErrors($"Error executing procedure {procedureName}", true);
 
             var content = JsonConvert.DeserializeObject<List<List<T>>>(response.Content);
             if (content == null || !content.Any())
@@ -91,16 +107,68 @@ namespace MinistryPlatform.Translation.Repositories
 
         public int PostStoredProc(string procedureName, Dictionary<string, object> parameters)
         {
-            var url = string.Format("/procs/{0}", procedureName );
+            var url = $"/procs/{procedureName}";
             var request = new RestRequest(url, Method.POST);
             AddAuthorization(request);
           
             request.AddParameter("application/json", FormatStoredProcBody(parameters), ParameterType.RequestBody);
             var response = _ministryPlatformRestClient.Execute(request);
             _authToken.Value = null;
-            response.CheckForErrors(string.Format("Error executing procedure {0}", procedureName), true);
+            response.CheckForErrors($"Error executing procedure {procedureName}", true);
 
             return (int) response.StatusCode;
+        }
+
+        public int Post<T>(List<T> records)
+        {
+            var json = JsonConvert.SerializeObject(records);
+            var url = $"/tables/{GetTableName<T>()}";
+
+            var request = new RestRequest(url, Method.POST);
+            AddAuthorization(request);
+
+            request.AddParameter("application/json", json, ParameterType.RequestBody);
+
+            var response = _ministryPlatformRestClient.Execute(request);
+            _authToken.Value = null;
+            response.CheckForErrors($"Error updating {GetTableName<T>()}", true);
+
+            return (int) response.StatusCode;
+        }
+
+        public int Put<T>(List<T> records)
+        {
+            var json = JsonConvert.SerializeObject(records);
+            var url = $"/tables/{GetTableName<T>()}";
+
+            var request = new RestRequest(url, Method.PUT);
+            AddAuthorization(request);
+
+            request.AddParameter("application/json", json, ParameterType.RequestBody);
+
+            var response = _ministryPlatformRestClient.Execute(request);
+            _authToken.Value = null;
+            response.CheckForErrors($"Error updating {GetTableName<T>()}", true);
+
+            return (int)response.StatusCode;
+        }
+
+        public int Put(string tableName, List<Dictionary<string, object>> records)
+        {
+            //build the json
+            var json = JsonConvert.SerializeObject(records);
+            var url = $"/tables/{tableName}";
+
+            var request = new RestRequest(url, Method.PUT);
+            AddAuthorization(request);
+
+            request.AddParameter("application/json", json, ParameterType.RequestBody);
+
+            var response = _ministryPlatformRestClient.Execute(request);
+            _authToken.Value = null;
+            response.CheckForErrors($"Error updating {tableName}", true);
+
+            return (int)response.StatusCode;
         }
 
         private static string FormatStoredProcBody(Dictionary<string, object> parameters)
@@ -134,12 +202,13 @@ namespace MinistryPlatform.Translation.Repositories
             var distinctString = $"&{MpRestEncode($"$distinct={distinct.ToString()}")}";
 
             var url = AddColumnSelection(string.Format("/tables/{0}{1}{2}{3}", GetTableName<T>(), search, orderBy, distinctString),selectColumns);
+
             var request = new RestRequest(url, Method.GET);
             AddAuthorization(request);
 
             var response = _ministryPlatformRestClient.Execute(request);
             _authToken.Value = null;
-            response.CheckForErrors(string.Format("Error searching {0}", GetTableName<T>()));
+            response.CheckForErrors($"Error searching {GetTableName<T>()}");
 
             var content = JsonConvert.DeserializeObject<List<T>>(response.Content);
 
@@ -158,20 +227,20 @@ namespace MinistryPlatform.Translation.Repositories
 
         public void UpdateRecord(string tableName, int recordId, Dictionary<string, object> fields)
         {
-            var url = string.Format("/tables/{0}", tableName);
+            var url = $"/tables/{tableName}";
             var request = new RestRequest(url, Method.PUT);
             AddAuthorization(request);
             request.AddParameter("application/json", "[" + FormatStoredProcBody(fields) + "]", ParameterType.RequestBody);
 
             var response = _ministryPlatformRestClient.Execute(request);
-            response.CheckForErrors(string.Format("Error updating {0}", tableName), true);
+            response.CheckForErrors($"Error updating {tableName}", true);
         }
 
         private void AddAuthorization(IRestRequest request)
         {
             if (_authToken.IsValueCreated)
             {
-                request.AddHeader("Authorization", string.Format("Bearer {0}", _authToken.Value));
+                request.AddHeader("Authorization", $"Bearer {_authToken.Value}");
             }
         }
 
@@ -188,17 +257,34 @@ namespace MinistryPlatform.Translation.Repositories
 
         private static string AddColumnSelection(string url, string selectColumns)
         {
-            return string.IsNullOrWhiteSpace(selectColumns) ? url : string.Format("{0}&$select={1}", url, selectColumns);
+            return string.IsNullOrWhiteSpace(selectColumns) ? url : $"{url}&$select={selectColumns}";
         }
 
         private static string AddGetColumnSelection(string url, string selectColumns)
         {
-            return string.IsNullOrWhiteSpace(selectColumns) ? url : string.Format("{0}?$select={1}", url, selectColumns);
+            return string.IsNullOrWhiteSpace(selectColumns) ? url : $"{url}?$select={selectColumns}";
+        }
+
+        private static string AddFilter(string url, Dictionary<string,object> filter)
+        {
+            var filterString = "";
+
+            foreach (var entry in filter)
+            {
+                if (filterString.Length > 0)
+                {
+                    filterString += ",";
+                }
+
+                filterString += entry.Key + "=" + entry.Value;
+            }
+
+            return string.IsNullOrWhiteSpace(filterString) ? url : $"{url}?$filter={filterString}";
         }
     }
 
     public class NoTableDefinitionException : Exception
     {
-        public NoTableDefinitionException(Type t) : base(string.Format("No RestApiTable attribute specified on type {0}", t)) { }
+        public NoTableDefinitionException(Type t) : base($"No RestApiTable attribute specified on type {t}") { }
     }
 }

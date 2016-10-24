@@ -22,7 +22,7 @@ namespace crds_angular.Controllers.API
         private readonly ILog _logger = LogManager.GetLogger(typeof(DonationController));
 
         private readonly MPInterfaces.IDonorRepository _mpDonorService;
-        private readonly IPaymentService _stripeService;
+        private readonly IPaymentProcessorService _stripeService;
         private readonly MPInterfaces.IAuthenticationRepository _authenticationService;
         private readonly IDonorService _gatewayDonorService;
         private readonly IDonationService _gatewayDonationService;
@@ -31,7 +31,7 @@ namespace crds_angular.Controllers.API
         private readonly MPInterfaces.IPledgeRepository _mpPledgeService;
 
         public DonationController(MPInterfaces.IDonorRepository mpDonorService,
-                                  IPaymentService stripeService,
+                                  IPaymentProcessorService stripeService,
                                   MPInterfaces.IAuthenticationRepository authenticationService,
                                   IDonorService gatewayDonorService,
                                   IDonationService gatewayDonationService,
@@ -47,6 +47,18 @@ namespace crds_angular.Controllers.API
             _impersonationService = impersonationService;
             _mpDonationService = mpDonationService;
             _mpPledgeService = mpPledgeService;
+        }
+
+        /// <summary>
+        /// Retrieves a list of "quick" recommended donation amounts for in-line giving 
+        /// </summary>
+        /// <returns>A list of donation amounts (int)</returns>
+        [Route("api/donations/predefinedamounts")]
+        [HttpGet]
+        public IHttpActionResult GetPredefinedDonationAmounts()
+        {
+            List<int> predefinedDonationAmounts =_mpDonationService.GetPredefinedDonationAmounts();
+            return Ok(predefinedDonationAmounts);
         }
 
         /// <summary>

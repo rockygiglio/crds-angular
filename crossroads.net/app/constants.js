@@ -89,7 +89,7 @@
       NOT_AVAILABLE: 2
     },
     SERVING: {
-      MAXSTUDENTVOLUNTEERAGE: 19,
+      MAXSTUDENTVOLUNTEERAGE: 17,
       STUDENTVOLUNTEERTEXT: " (SV)"
     },
     CMS: {
@@ -130,7 +130,7 @@
       },
     },
     GEOLOCATION: {
-      MODAL_TIMEOUT: 10000,
+      MODAL_TIMEOUT: 3000,
       FORMS_KEY: '1rupjr7gvqUU203fwjmeUlIiVwCA8BdkD-mP6M6s3wxQ'
     },
     INVITATION: {
