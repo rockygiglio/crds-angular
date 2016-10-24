@@ -148,7 +148,7 @@ namespace MinistryPlatform.Translation.Repositories
 
             if (groupType != -1)
             {
-                search += $"AND Group_ID_Table.Group_Type_ID = {groupType}";
+                search += $" AND Group_ID_Table.Group_Type_ID = {groupType}";
             }
 
             var mpGroupParticipants = _ministryPlatformRest.UsingAuthenticationToken(_apiUserService.GetToken()).Search<MpGroupParticipant>(search, COLUMNS);
@@ -156,30 +156,18 @@ namespace MinistryPlatform.Translation.Repositories
             return mpGroupParticipants.Any();
         }
 
-        public List<MpGroupParticipant> GetAllParticipantsForLeaderGroups(int participantId, int groupType = -1, int groupId = -1)
+        public List<MpGroupParticipant> GetAllParticipantsForLeaderGroups(int participantId, int? groupType = -1, int? groupId = -1)
         {
-            List<MpGroupParticipant> mpLeadersGroups = new List<MpGroupParticipant>();
             string csvGroupIds = "";
             if (groupId < 0)
             {
-                const string groupIdColumns = "group_participants.group_id";
-                string groupIdSearch = $"group_participants.participant_id = {participantId} AND group_participants.group_role_id = {_groupRoleLeader}";
-
-                if (groupType != -1)
-                    groupIdSearch += $" AND Group_ID_Table.Group_Type_ID = {groupType}";
-
-                mpLeadersGroups = _ministryPlatformRest.UsingAuthenticationToken(_apiUserService.GetToken()).Search<MpGroupParticipant>(groupIdSearch, groupIdColumns);
-
-                if (mpLeadersGroups.Count > 0)
-                {
-                    csvGroupIds = String.Join(",", mpLeadersGroups.Select(g => g.GroupId.ToString()).ToArray());
-                }
+                var groupIds = GetLeadersGroupIds(participantId, groupType);
+                if (groupIds.Count > 0)
+                    csvGroupIds = String.Join(",", groupIds.Select(g => g.GroupId.ToString()).ToArray());
 
             }
             else
-            {
                 csvGroupIds = groupId.ToString();
-            }
 
             if (csvGroupIds != "")
             {
@@ -198,6 +186,17 @@ namespace MinistryPlatform.Translation.Repositories
             }
 
             return new List<MpGroupParticipant>();
+        }
+
+        public List<MpGroupParticipant> GetLeadersGroupIds(int participantId, int? groupType = -1)
+        {
+            const string groupIdColumns = "group_participants.group_id";
+            string groupIdSearch = $"group_participants.participant_id = {participantId} AND group_participants.group_role_id = {_groupRoleLeader}";
+
+            if (groupType != -1)
+                groupIdSearch += $" AND Group_ID_Table.Group_Type_ID = {groupType}";
+
+            return _ministryPlatformRest.UsingAuthenticationToken(_apiUserService.GetToken()).Search<MpGroupParticipant>(groupIdSearch, groupIdColumns);
         }
     }
 }
