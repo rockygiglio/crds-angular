@@ -24,7 +24,7 @@ BEGIN
 	Child_Care_Available AS [ChildCareAvailable],
 	Kids_Welcome AS [KidsWelcome],
 	Primary_Contact AS [ContactId],
-	'[ ' + STUFF((SELECT ' { NickName: "' + Nickname + '", LastName: "' + Last_Name + '", Congregation: "'+ ISNULL(cong.Congregation_Name, '') +'", Group_Role_ID: ' + CONVERT(VARCHAR(10), gp.Group_Role_ID) + ' },'
+	'[ ' + STUFF((SELECT ' { Nickname: "' + Nickname + '", Last_name: "' + Last_Name + '", Congregation: "'+ ISNULL(cong.Congregation_Name, '') +'", Group_Role_ID: ' + CONVERT(VARCHAR(10), gp.Group_Role_ID) + ' },'
 			FROM Groups g INNER JOIN Group_Participants gp ON g.Group_ID = gp.Group_ID 
 			INNER JOIN Participants p ON gp.Participant_ID = p.Participant_ID
 			INNER JOIN Contacts c ON p.Contact_ID = c.Contact_ID
