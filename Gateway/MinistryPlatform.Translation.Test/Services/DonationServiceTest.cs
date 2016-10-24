@@ -92,29 +92,27 @@ namespace MinistryPlatform.Translation.Test.Services
         [Test]
         public void GetQuickDonationAmounts()
         {
-            var parms = new Dictionary<string, object>();
-            string spName = "api_Get_Quick_Donation_Amounts";
-            string token = "abc123";
+            string apiToken = "abc123";
+            string tableName = "cr_Predefined_Donation_Amounts";
 
-            var quickDonationAmts = new List<QuickDonationAmountDTO>
+            var mockedQuickDonationAmts = new List<QuickDonationAmountDTO>
             {
-                new QuickDonationAmountDTO() {Amount = 5 },
-                new QuickDonationAmountDTO() {Amount = 10 },
-                new QuickDonationAmountDTO() {Amount = 25 },
-                new QuickDonationAmountDTO() {Amount = 50 },
-                new QuickDonationAmountDTO() {Amount = 100 },
-                new QuickDonationAmountDTO() {Amount = 500 },
+                new QuickDonationAmountDTO() {Id = 1, Amount = 5, DomainId = 1},
+                new QuickDonationAmountDTO() {Id = 2, Amount = 10, DomainId = 1},
+                new QuickDonationAmountDTO() {Id = 3, Amount = 25, DomainId = 1},
+                new QuickDonationAmountDTO() {Id = 4, Amount = 50, DomainId = 1},
+                new QuickDonationAmountDTO() {Id = 5, Amount = 100, DomainId = 1},
+                new QuickDonationAmountDTO() {Id = 6, Amount = 500, DomainId = 1},
             };
-
-            var mockedGetCallResults = new List<List<QuickDonationAmountDTO>> { quickDonationAmts };
 
             List<int> expectedResults = new List<int> { 5, 10, 25, 50, 100, 500 };
 
-            _apiUserRepository.Setup(mocked => mocked.GetToken()).Returns(token);
+            _apiUserRepository.Setup(mocked => mocked.GetToken()).Returns(apiToken);
 
-            _ministryPlatformRest.Setup(m => m.UsingAuthenticationToken(token)).Returns(_ministryPlatformRest.Object); 
+            _ministryPlatformRest.Setup(m => m.UsingAuthenticationToken(apiToken)).Returns(_ministryPlatformRest.Object); 
 
-            _ministryPlatformRest.Setup(m =>m.GetFromStoredProc<QuickDonationAmountDTO>(spName, parms)).Returns(mockedGetCallResults);
+            _ministryPlatformRest.Setup(m =>m.Get<QuickDonationAmountDTO>(tableName, new Dictionary<string, object>() ))
+                                             .Returns(mockedQuickDonationAmts);
 
             var result = _fixture.GetQuickDonationAmounts();
 

@@ -719,22 +719,21 @@ namespace MinistryPlatform.Translation.Repositories
         public List<int> GetQuickDonationAmounts()
         {
             var apiToken = _apiUserRepository.GetToken();
-            var parms = new Dictionary<string, object>();
-            string spName = "api_Get_Quick_Donation_Amounts";
+            string tableName = "cr_Predefined_Donation_Amounts";
 
-            List<List<QuickDonationAmountDTO>> quickAmounts = _ministryPlatformRest.UsingAuthenticationToken(apiToken)
-                                                                                   .GetFromStoredProc<QuickDonationAmountDTO>(spName, parms);
+            List<QuickDonationAmountDTO> quickAmounts = _ministryPlatformRest
+                .UsingAuthenticationToken(apiToken)
+                .Get<QuickDonationAmountDTO>(tableName, new Dictionary<string, object>());
 
             List<int> quickAmountValues;
 
             if (quickAmounts.Any())
             {
-                List<QuickDonationAmountDTO> quickAmountsList = quickAmounts.First();
-                quickAmountValues = quickAmountsList.Select(qA => qA.Amount).ToList();
+                quickAmountValues = quickAmounts.Select(qA => qA.Amount).ToList();
             }
             else
             {
-                quickAmountValues = new List<int>(); 
+                quickAmountValues = new List<int>();
             }
 
             return quickAmountValues;
