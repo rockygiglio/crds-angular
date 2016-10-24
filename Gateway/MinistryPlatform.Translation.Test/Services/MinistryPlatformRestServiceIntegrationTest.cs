@@ -309,20 +309,6 @@ namespace MinistryPlatform.Translation.Test.Services
 
         }
 
-
-
-        [Test]
-        public void ShouldUpdateARecord()
-        {
-            var invoice = new MyMpInvoiceUpdate()
-            {
-                InvoiceId = 9,
-                InvoiceStatusId = 3
-            };
-
-            var resp = _fixture.UsingAuthenticationToken(_authToken).Put<MyMpInvoiceUpdate>(new List<MyMpInvoiceUpdate> { invoice });
-        }
-
         [Test]
         public void ShouldUpdate2GenericRecord()
         {
