@@ -108,6 +108,13 @@ namespace crds_angular.Controllers.API
         [AcceptVerbs("POST")]
         public IHttpActionResult SaveWaivers([FromBody] List<CampWaiverResponseDTO> waivers, int eventParticipantId)
         {
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState.Values.SelectMany(val => val.Errors).Aggregate("", (current, err) => current + err.Exception.Message);
+                var dataError = new ApiErrorDto("Waiver data Invalid", new InvalidOperationException("Invalid Waiver Data" + errors));
+                throw new HttpResponseException(dataError.HttpResponseMessage);
+            }
+
             return Authorized(token =>
             {
                 try

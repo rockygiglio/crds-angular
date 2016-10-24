@@ -535,8 +535,7 @@ namespace MinistryPlatform.Translation.Repositories
         public void SetWaivers(List<MpWaiverResponse> waiverResponses)
         {
             var apiToken = ApiLogin();
-            _ministryPlatformRestRepository.UsingAuthenticationToken(apiToken);
-            throw new NotImplementedException();
+            _ministryPlatformRestRepository.UsingAuthenticationToken(apiToken).Post(waiverResponses);
         }
     }
 }
