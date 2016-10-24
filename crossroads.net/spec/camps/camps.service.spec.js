@@ -1,14 +1,14 @@
-import constants from 'crds-constants';
+import constants from '../../app/constants';
 
-/* jshint unused: false */
 import campsModule from '../../app/camps/camps.module';
 
 describe('Camp Service', () => {
-  const endpoint = window.__env__['CRDS_API_ENDPOINT'] + 'api';
+  /* eslint-disable-next-line no-underscore-dangle*/
+  const endpoint = `${window.__env__.CRDS_API_ENDPOINT}api`;
   let campsService;
   let httpBackend;
 
-  beforeEach(angular.mock.module(constants.MODULES.CAMPS));
+  beforeEach(angular.mock.module(campsModule));
 
   beforeEach(inject((_CampsService_, _$httpBackend_) => {
     campsService = _CampsService_;
@@ -16,7 +16,7 @@ describe('Camp Service', () => {
   }));
 
   it('Should make the API call to Camp Service', () => {
-    let eventId = 4525285;
+    const eventId = 4525285;
     httpBackend.expectGET(`${endpoint}/camps/${eventId}`)
       .respond(200, {});
     campsService.getCampInfo(eventId);
@@ -36,8 +36,23 @@ describe('Camp Service', () => {
     httpBackend.flush();
   });
 
+  it('should make the API call to get my camp family', () => {
+    const campId = 21312;
+    expect(campsService.family).toBeUndefined();
+    httpBackend.expectGET(`${endpoint}/camps/${campId}/family`).respond(200, []);
+    campsService.getCampFamily(campId);
+    httpBackend.flush();
+    expect(campsService.family).toBeDefined();
+  });
 
-
+  it('should make the API call to get my camp family and handle error', () => {
+    const campId = 21312;
+    expect(campsService.family).toBeUndefined();
+    httpBackend.expectGET(`${endpoint}/camps/${campId}/family`).respond(500, []);
+    campsService.getCampFamily(campId);
+    httpBackend.flush();
+    expect(campsService.family).toBeUndefined();
+  });
 
   afterEach(() => {
     httpBackend.verifyNoOutstandingExpectation();

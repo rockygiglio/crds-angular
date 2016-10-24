@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 
 namespace MinistryPlatform.Translation.Models
 {
-    [MpRestApiTable(Name = "Event_Participant")]
+    [MpRestApiTable(Name = "Event_Participants")]
     public class MpEventParticipant
     {
         [JsonProperty(PropertyName = "Childcare_Required")]
@@ -45,5 +45,8 @@ namespace MinistryPlatform.Translation.Models
 
         [JsonProperty(PropertyName = "Room_ID")]
         public int RoomId { get; set; }
+
+        [JsonProperty(PropertyName = "Setup_Date")]
+        public DateTime? SetupDate { get; set; }
     }
 }
