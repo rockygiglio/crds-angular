@@ -1,4 +1,5 @@
 import ServeTeamMembersController from './serveTeamMembers.controller';
+import template from './serveTeamMembers.html';
 
 export default function serveTeamMembersComponent() {
   return {
@@ -7,7 +8,7 @@ export default function serveTeamMembersComponent() {
       onMemberClick: '&',
       onMemberRemove: '&'
     },
-    templateUrl: 'serve_team_members/serveTeamMembers.html',
+    template,
     controller: ServeTeamMembersController,
     controllerAs: 'serveTeamMembers'
   }

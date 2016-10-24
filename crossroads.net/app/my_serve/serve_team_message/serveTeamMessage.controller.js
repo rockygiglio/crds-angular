@@ -21,9 +21,8 @@ export default class ServeTeamMessageController {
       this.ready = true;
     });
     this.teamPeople = this.serveTeamService.getAllTeamMembersForLoggedInLeader().then((data) => {
-      debugger;
       this.teamPeople = data;
-    }).catch((err) => { debugger; });
+    }).catch((err) => { });
     this.tinymceOptions = {
       resize: false,
       height: 300,
@@ -36,7 +35,6 @@ export default class ServeTeamMessageController {
   }
 
   loadIndividuals($query) {
-    debugger;
     return _.filter(this.teamPeople, (person) => {
       return person.displayName.toLowerCase()
         .includes($query.toLowerCase())

@@ -3,15 +3,12 @@ import CONSTANTS from 'crds-constants';
 export default class ServeTeamMembersController {
   /*@ngInject*/
   constructor() {
-    console.debug('Construct ServeTeamMembersController');
     //this.opportunities; from component binding
     this.allMembers = [];
-    this.selectedRole = undefined;
     this.ready = false;
   }
 
-  $onInit()
-  {
+  $onInit() {
     this.loadTeamMembers();
   }
 
@@ -50,13 +47,11 @@ export default class ServeTeamMembersController {
     this.allMembers.push(team);
   }
 
-  memberClick(member) {
-    console.debug('member click', member);
+  memberClick(member) {);
     this.onMemberClick({ $member: member });
   }
 
   memberRemove(member) {
-    console.debug('member remove', member);
     this.onMemberRemove({ $member: member });
   }
 }

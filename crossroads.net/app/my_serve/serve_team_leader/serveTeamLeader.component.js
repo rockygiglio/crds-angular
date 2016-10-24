@@ -1,4 +1,5 @@
 import ServeTeamLeaderController from './serveTeamLeader.controller';
+import template from './serveTeamLeader.html';
 
 export default function serveTeamLeaderComponent() {
   return {
@@ -6,9 +7,9 @@ export default function serveTeamLeaderComponent() {
       team: '<',
       oppServeDate: '<',
       oppServeTime: '<',
-      cancel: '&'
+      onCancel: '&'
     },
-    templateUrl: 'serve_team_leader/serveTeamLeader.html',
+    template,
     controller: ServeTeamLeaderController,
     controllerAs: 'serveTeamLeader'
   }

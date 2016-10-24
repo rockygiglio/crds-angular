@@ -3,7 +3,6 @@ import CONSTANTS from 'crds-constants';
 export default class ServeTeamLeaderController {
     /*@ngInject*/
     constructor(ServeTeamService, ServeOpportunities, $rootScope, growl, $q) {
-        console.debug('Construct ServeTeamLeaderController');
         //this.opportunities; from component binding
         //this.oppServeDate;
         //this.oppServeTime;
@@ -21,7 +20,6 @@ export default class ServeTeamLeaderController {
     }
 
     $onInit() {
-        debugger;
         this.serveTeamService.getAllTeamMembersForLoggedInLeader(this.team.groupId).then((data) => {
             this.teamMembers = data;
         });
@@ -42,7 +40,7 @@ export default class ServeTeamLeaderController {
                 this.datesDisabled = true;
                 this.formErrors.from = true;
                 break;
-            case 0:
+            default:
                 this.model.fromDt = this.oppServeDate;
                 this.model.toDt = this.oppServeDate;
                 this.datesDisabled = true;
@@ -134,7 +132,7 @@ export default class ServeTeamLeaderController {
     }
 
     updateTeam(person, opp) {
-        let signedUp = (opp === 0) ? 2 : 1;
+        let signedUp = (opp === 0) ? CONSTANTS.SERVING_RESPONSES.NOT_AVAILABLE : CONSTANTS.SERVING_RESPONSES.AVAILABLE;
 
         _.forEach(this.team.serveOpportunities, (opportunity) => {
             _.remove(opportunity.rsvpMembers, (member) => {
@@ -155,14 +153,13 @@ export default class ServeTeamLeaderController {
     }
 
     leaderCancel() {
-        this.cancel();
+        this.onCancel();
         this.model.fromDt = null;
         this.model.toDt = null;
         this.model.selectedOpp = null;
     }
 
     loadTeamMembersSearch($query) {
-        console.debug('Query team members');
         return _.filter(this.teamMembers, (person) => {
             return person.displayName.toLowerCase()
                 .includes($query.toLowerCase())

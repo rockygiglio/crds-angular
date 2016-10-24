@@ -1,4 +1,5 @@
 import ServeTeamContainerController from './serveTeamContainer.controller';
+import template from './serveTeamContainer.html';
 
 export default function serveTeamContainerComponent() {
   return {
@@ -6,9 +7,9 @@ export default function serveTeamContainerComponent() {
       team: '=',
       oppServeDate: '<',
       oppServeTime: '<',
-      cancel: '&'
+      onCancel: '&'
     },
-    templateUrl: 'serve_team_container/serveTeamContainer.html',
+    template,
     controller: ServeTeamContainerController,
     controllerAs: 'serveTeamContainer'
   }
