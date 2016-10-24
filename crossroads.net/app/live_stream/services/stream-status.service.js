@@ -14,7 +14,7 @@ export default class StreamStatusService {
       'Content-Type': 'application/json',
       'x-API-Key': __STREAMSPOT_API_KEY__
     };
-    this.time=0;
+    this.time = 0;
   }
 
   getStatus(){
@@ -64,7 +64,7 @@ export default class StreamStatusService {
     let streamStatus = this.determineStreamStatus(events, isBroadcasting);
     let isChanged = this.didStreamStatusChange(events, isBroadcasting);
 
-    if(isChanged){
+    if (isChanged){
       this.streamStatus = status;
       this.rootScope.$broadcast('streamStatusChanged', streamStatus);
     }
@@ -84,9 +84,9 @@ export default class StreamStatusService {
     let hrsToNextEvent = this.getHoursToNextEvent(events);
     let isStreamSoon = CONSTANTS.PRE_STREAM_HOURS > hrsToNextEvent;
 
-    if( isBroadcasting ){
+    if (isBroadcasting){
       streamStatus = CONSTANTS.STREAM_STATUS.LIVE;
-    } else if ( isStreamSoon ){
+    } else if (isStreamSoon) {
       streamStatus = CONSTANTS.STREAM_STATUS.UPCOMING;
     } else {
       streamStatus = CONSTANTS.STREAM_STATUS.OFF;
@@ -111,7 +111,7 @@ export default class StreamStatusService {
   filterOutEventsStartingBeforeCurrentTime(events){
     let eventsStartingAfterCurrentTime = [];
 
-    for(let i=0; i<events.length; i++){
+    for (let i = 0; i < events.length; i++) {
       let iteratedEvent = events[i];
       let doesEventStartAfterCurrentTime = this.doesEventStartAfterCurrentTime(iteratedEvent);
       if( doesEventStartAfterCurrentTime){
@@ -133,7 +133,7 @@ export default class StreamStatusService {
   isBroadcasting(events){
     let areAnyEventsBroadcasting = false;
 
-    for(let i=0; i<events.length; i++){
+    for (let i = 0; i < events.length; i++) {
       let iteratedEvent = events[i];
       let isEventLive = this.isEventCurrentlyLive(iteratedEvent);
       if (isEventLive){

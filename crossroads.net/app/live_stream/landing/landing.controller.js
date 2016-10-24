@@ -20,7 +20,7 @@ export default class LandingController {
       mobile: false
     }).init();
 
-    var maxPastWeekends = 4;
+    let maxPastWeekends = 4;
 
     this.cmsService
       .getRecentMessages(maxPastWeekends)
@@ -31,8 +31,8 @@ export default class LandingController {
 
   parseWeekends(response,maxPastWeekends) {
 
-    var pastWeekendTotal = 0;
-    var queriedPastWeekends = response.map((event, i, pastWeekends) => {
+    let pastWeekendTotal = 0;
+    let queriedPastWeekends = response.map((event, i, pastWeekends) => {
 
       pastWeekendTotal++;
       if ( pastWeekendTotal > maxPastWeekends ) {

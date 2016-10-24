@@ -116,7 +116,7 @@ export default class StreamingReminderController {
         this.model.phone = this.rootScope.phone;
       }
       if (this.rootScope.email) {
-        this.model.email = this.rootScope.email;      
+        this.model.email = this.rootScope.email;
       }
     }
   }
