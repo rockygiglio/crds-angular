@@ -47,7 +47,7 @@ export default class ServeTeamMembersController {
     this.allMembers.push(team);
   }
 
-  memberClick(member) {)
+  memberClick(member) {
     this.onMemberClick({ $member: member });
   }
 
