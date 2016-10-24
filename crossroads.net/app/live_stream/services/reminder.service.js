@@ -13,7 +13,7 @@ export default class ReminderService {
     let result = null;
     let time = reminder.time.slice(0, reminder.time.length - 4);
 
-    reminder.startDate = moment.tz(`${reminder.day} ${time}`, 'MM/DD/YYYY h:mma', "America/New_York").format();
+    reminder.startDate = moment.tz(`${reminder.day} ${time}`, 'MM/DD/YYYY h:mma', "America/New_York").toISOString();
     if (reminder.isValid()) {
       switch(reminder.type) {
         case 'phone':
