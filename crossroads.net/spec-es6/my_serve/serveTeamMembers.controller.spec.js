@@ -22,7 +22,7 @@ describe('ServeTeamMembersController', () => {
 		fixture.loadTeamMembers();
 
 		expect(fixture.allMembers.length).toBe(4);
-		expect(fixture.allMembers[3].members.length).toBe(3);
+		expect(fixture.allMembers[3].members.length).toBe(2, 'because of _uniq');
 		expect(_.uniq(fixture.allMembers[3].members, 'Participant_ID').length).toBe(2);
 		expect(fixture.opportunities.length).toBe(4, 'because a Not available opportunity is added');
 	});
