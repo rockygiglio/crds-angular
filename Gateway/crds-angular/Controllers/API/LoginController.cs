@@ -88,7 +88,7 @@ namespace crds_angular.Controllers.API
                     else
                     {
                         var roles = _personService.GetLoggedInUserRoles(token);
-                        var l = new LoginReturn(token, person.ContactId, person.FirstName, person.EmailAddress, roles);
+                        var l = new LoginReturn(token, person.ContactId, person.FirstName, person.EmailAddress, person.MobilePhone, roles);
                         return this.Ok(l);
                     }
                 }
@@ -127,7 +127,8 @@ namespace crds_angular.Controllers.API
                     username = p.FirstName,
                     userEmail = p.EmailAddress,
                     roles = userRoles,
-                    age = p.Age
+                    age = p.Age,
+                    userPhone = p.MobilePhone
                 };
 
                 _loginService.ClearResetToken(cred.username);
@@ -176,11 +177,12 @@ namespace crds_angular.Controllers.API
     public class LoginReturn
     {
         public LoginReturn(){}
-        public LoginReturn(string userToken, int userId, string username, string userEmail, List<MpRoleDto> roles){
+        public LoginReturn(string userToken, int userId, string username, string userEmail, string userPhone, List<MpRoleDto> roles){
             this.userId = userId;
             this.userToken = userToken;
             this.username = username;
             this.userEmail = userEmail;
+            this.userPhone = userPhone;
             this.roles = roles;
         }
         public string userToken { get; set; }
@@ -191,6 +193,7 @@ namespace crds_angular.Controllers.API
         public string userEmail { get; set;  }
         public List<MpRoleDto> roles { get; set; }
         public int age { get; set; }
+        public string userPhone { get; set; }
     }
 
     public class Credentials
