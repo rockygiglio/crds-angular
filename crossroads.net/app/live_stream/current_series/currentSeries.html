@@ -1,6 +1,6 @@
 <section class="current-series">
   <figure class="container text-center wow fadeIn">
-    <img class="img-responsive" src="{{ currentSeries.picture }}">
+    <img ng-if="currentSeries.picture" class="img-responsive imgix-fluid" data-src="{{ currentSeries.picture }}">
     <figcaption>Current Series</figcaption>
   </figure>
 
