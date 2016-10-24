@@ -1,5 +1,5 @@
 {
-  "extends": "airbnb-base",
+  "extends": "airbnb",
 
   "rules": {
     "comma-dangle": 0
@@ -26,6 +26,7 @@
     "crds_utilities" : false,
     "spyOn": false,
     "_$location_" : false,
-    "expect" : false
+    "expect" : false,
+    __API_ENDPOINT__: false
   }
 }

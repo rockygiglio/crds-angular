@@ -42,6 +42,16 @@ namespace crds_angular.Controllers.API
                     var apiError = new ApiErrorDto("Invoice Not Found", e);
                     throw new HttpResponseException(apiError.HttpResponseMessage);
                 }
+                catch (ContactNotFoundException e)
+                {
+                    var apiError = new ApiErrorDto("Contact Not Found", e);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+                catch (PaymentTypeNotFoundException e)
+                {
+                    var apiError = new ApiErrorDto("PaymentType Not Found", e);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
                 catch (Exception e)
                 {
                     var apiError = new ApiErrorDto("SavePayment Failed", e);
