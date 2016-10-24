@@ -21,8 +21,13 @@ function CampHelpers() {
       productId: 8,
       programId: 168,
       registrationEndDate: '2016-11-05T00:00:00',
-      registrationStartDate : '2016-10-16T00:00:00',
+      registrationStartDate: '2016-10-16T00:00:00',
       startDate: '2017-01-08T00:00:00'
+    },
+    messages: {
+      summercampIntro: {
+        content: 'summer camp intro text'
+      }
     }
   };
 }
