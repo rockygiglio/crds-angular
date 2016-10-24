@@ -13,14 +13,18 @@ namespace crds_angular.Services
     {
         private readonly IInvoiceRepository _invoiceRepository;
         private readonly IPaymentRepository _paymentRepository;
+        private readonly IContactRepository _contactRepository;
+        private readonly IPaymentTypeRepository _paymentTypeRepository;
 
         private readonly int _paidinfullStatus;
         private readonly int _somepaidStatus;
 
-        public PaymentService(IInvoiceRepository invoiceRepository, IPaymentRepository paymentRepository, IConfigurationWrapper configurationWrapper)
+        public PaymentService(IInvoiceRepository invoiceRepository, IPaymentRepository paymentRepository, IConfigurationWrapper configurationWrapper, IContactRepository contactRepository, IPaymentTypeRepository paymentTypeRepository)
         {
             _invoiceRepository = invoiceRepository;
             _paymentRepository = paymentRepository;
+            _contactRepository = contactRepository;
+            _paymentTypeRepository = paymentTypeRepository;
             
             _paidinfullStatus = configurationWrapper.GetConfigIntValue("PaidInFull");
             _somepaidStatus = configurationWrapper.GetConfigIntValue("SomePaid");
@@ -33,6 +37,23 @@ namespace crds_angular.Services
                 throw new InvoiceNotFoundException(paymentDto.InvoiceId);
             }
 
+            //check if contact exists
+            if (_contactRepository.GetContactById(paymentDto.ContactId)==null)
+            {
+                throw new ContactNotFoundException(paymentDto.ContactId);
+            }
+
+            if (paymentDto.StripeTransactionId.Length > 50)
+            {
+                throw new Exception("Max length of 50 exceeded for transaction code");
+            }
+
+            //check if payment type exists
+            if (!_paymentTypeRepository.PaymentTypeExists(paymentDto.PaymentTypeId))
+            {
+                throw new PaymentTypeNotFoundException(paymentDto.PaymentTypeId);
+            }
+            
             //create payment -- send model
             var payment = new MpPayment
             {
