@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using MinistryPlatform.Translation.Models;
 
 namespace MinistryPlatform.Translation.Repositories.Interfaces
@@ -9,5 +10,6 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
         List<MpTripParticipant> TripParticipants(string search);
         List<MpEventParticipant> GetChildCareParticipants(int daysBeforeEvent);
         List<MpEventParticipant> GetEventParticipants(int eventId, int? roomId = null);
+        DateTime? EventParticipantSignupDate(int contactId , int eventId , string apiToken);
     }
 }

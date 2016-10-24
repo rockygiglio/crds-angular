@@ -18,6 +18,8 @@ namespace crds_angular.Services
         private readonly IParticipantRepository _participantRepository;
         private readonly IEventRepository _eventRepository;
         private readonly IApiUserRepository _apiUserRepository;
+        private readonly IGroupRepository _groupRepository;
+        private readonly IEventParticipantRepository _eventParticipantRepository;
 
         public CampService(
             IContactRepository contactService,
@@ -26,7 +28,9 @@ namespace crds_angular.Services
             IConfigurationWrapper configurationWrapper,
             IParticipantRepository partcipantRepository,
             IEventRepository eventRepository,
-            IApiUserRepository apiUserRepository)
+            IApiUserRepository apiUserRepository,
+            IGroupRepository groupRepository,
+            IEventParticipantRepository eventParticipantRepository)
         {
             _contactService = contactService;
             _campService = campService;
@@ -35,6 +39,8 @@ namespace crds_angular.Services
             _participantRepository = partcipantRepository;
             _eventRepository = eventRepository;
             _apiUserRepository = apiUserRepository;
+            _groupRepository = groupRepository;
+            _eventParticipantRepository = eventParticipantRepository;
         }
 
         public CampDTO GetCampEventDetails(int eventId)
@@ -53,6 +59,26 @@ namespace crds_angular.Services
             campEventInfo.ProgramId = campEvent.ProgramId;
 
             return campEventInfo;
+        }
+
+        public List<CampFamilyMember> GetEligibleFamilyMembers(int eventId, string token)
+        {
+            var myContact = _contactService.GetMyProfile(token);
+            var family = _contactService.GetHouseholdFamilyMembers(myContact.Household_ID);
+            var otherFamily = _contactService.GetOtherHouseholdMembers(myContact.Contact_ID);
+            family.AddRange(otherFamily);
+
+            var apiToken = _apiUserRepository.GetToken(); 
+                
+            family = family.Where((member) => member.HouseholdPosition == "Minor Child").ToList();                
+            return family.Select(member => new CampFamilyMember()
+            {
+                ContactId = member.ContactId,
+                IsEligible = _groupRepository.IsMemberOfEventGroup(member.ContactId, eventId, apiToken),
+                SignedUpDate = _eventParticipantRepository.EventParticipantSignupDate(member.ContactId, eventId, apiToken),
+                LastName = member.LastName,
+                PreferredName = member.Nickname ?? member.FirstName
+            }).ToList();                       
         }
 
         public void SaveCampReservation(CampReservationDTO campReservation, int eventId, string token)
