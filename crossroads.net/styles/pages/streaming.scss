@@ -923,7 +923,14 @@ streaming, landing {
     }
   }
 } // .live-stream
-
+.reminder-modal {
+  .modal {
+    @media(max-width: $screen-md) {
+      position: absolute;
+      overflow: scroll;
+    }
+  }
+}
 .reminder-content {
 
   margin-bottom: 2em;
