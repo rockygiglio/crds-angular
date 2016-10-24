@@ -115,7 +115,7 @@
   <ItemGroup>
     <Compile Include="Exceptions\DonationNotFoundException.cs" />
     <Compile Include="Extensions\RestSharpExtensions.cs" />
-    <Compile Include="Models\DTO\QuickDonationAmountDTO.cs" />
+    <Compile Include="Models\DTO\PredefinedDonationAmountDTO.cs" />
     <Compile Include="Models\MpCamp.cs" />
     <Compile Include="Models\MpRecordID.cs" />
     <Compile Include="Models\MpStoredProcBool.cs" />

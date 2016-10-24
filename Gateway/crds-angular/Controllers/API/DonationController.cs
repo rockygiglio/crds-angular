@@ -53,12 +53,12 @@ namespace crds_angular.Controllers.API
         /// Retrieves a list of "quick" recommended donation amounts for in-line giving 
         /// </summary>
         /// <returns>A list of donation amounts (int)</returns>
-        [Route("api/donations/quickamounts")]
+        [Route("api/donations/predefinedamounts")]
         [HttpGet]
-        public IHttpActionResult GetQuickDonationAmounts()
+        public IHttpActionResult GetPredefinedDonationAmounts()
         {
-            List<int> quickAmounts =_mpDonationService.GetQuickDonationAmounts();
-            return Ok(quickAmounts);
+            List<int> predefinedDonationAmounts =_mpDonationService.GetPredefinedDonationAmounts();
+            return Ok(predefinedDonationAmounts);
         }
 
         /// <summary>

@@ -6,7 +6,7 @@ using Newtonsoft.Json.Converters;
 namespace MinistryPlatform.Translation.Models.DTO
 {
     [MpRestApiTable(Name = "cr_Preferred_Donation_Amounts")]
-    public class QuickDonationAmountDTO
+    public class PredefinedDonationAmountDTO
     {
         [JsonProperty(PropertyName = "id")]
         public int Id { get; set; }

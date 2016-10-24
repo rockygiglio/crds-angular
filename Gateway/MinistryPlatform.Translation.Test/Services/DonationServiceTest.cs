@@ -90,19 +90,19 @@ namespace MinistryPlatform.Translation.Test.Services
         }
 
         [Test]
-        public void GetQuickDonationAmounts()
+        public void GetPredefinedDonationAmounts()
         {
             string apiToken = "abc123";
             string tableName = "cr_Predefined_Donation_Amounts";
 
-            var mockedQuickDonationAmts = new List<QuickDonationAmountDTO>
+            var mockedPredefinedDonationAmts = new List<PredefinedDonationAmountDTO>
             {
-                new QuickDonationAmountDTO() {Id = 1, Amount = 5, DomainId = 1},
-                new QuickDonationAmountDTO() {Id = 2, Amount = 10, DomainId = 1},
-                new QuickDonationAmountDTO() {Id = 3, Amount = 25, DomainId = 1},
-                new QuickDonationAmountDTO() {Id = 4, Amount = 50, DomainId = 1},
-                new QuickDonationAmountDTO() {Id = 5, Amount = 100, DomainId = 1},
-                new QuickDonationAmountDTO() {Id = 6, Amount = 500, DomainId = 1},
+                new PredefinedDonationAmountDTO() {Id = 1, Amount = 5, DomainId = 1},
+                new PredefinedDonationAmountDTO() {Id = 2, Amount = 10, DomainId = 1},
+                new PredefinedDonationAmountDTO() {Id = 3, Amount = 25, DomainId = 1},
+                new PredefinedDonationAmountDTO() {Id = 4, Amount = 50, DomainId = 1},
+                new PredefinedDonationAmountDTO() {Id = 5, Amount = 100, DomainId = 1},
+                new PredefinedDonationAmountDTO() {Id = 6, Amount = 500, DomainId = 1},
             };
 
             List<int> expectedResults = new List<int> { 5, 10, 25, 50, 100, 500 };
@@ -111,10 +111,10 @@ namespace MinistryPlatform.Translation.Test.Services
 
             _ministryPlatformRest.Setup(m => m.UsingAuthenticationToken(apiToken)).Returns(_ministryPlatformRest.Object); 
 
-            _ministryPlatformRest.Setup(m =>m.Get<QuickDonationAmountDTO>(tableName, new Dictionary<string, object>() ))
-                                             .Returns(mockedQuickDonationAmts);
+            _ministryPlatformRest.Setup(m =>m.Get<PredefinedDonationAmountDTO>(tableName, new Dictionary<string, object>() ))
+                                             .Returns(mockedPredefinedDonationAmts);
 
-            var result = _fixture.GetQuickDonationAmounts();
+            var result = _fixture.GetPredefinedDonationAmounts();
 
             Assert.AreEqual(expectedResults, result);
         }

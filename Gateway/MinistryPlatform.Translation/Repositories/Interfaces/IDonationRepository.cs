@@ -28,6 +28,6 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
         void SendMessageFromDonor(int pledgeId, int donationId, string message);
         void FinishSendMessageFromDonor(int donationId, bool success);
         void AddDonationCommunication(int donationId, int communicationId);
-        List<int> GetQuickDonationAmounts();
+        List<int> GetPredefinedDonationAmounts();
     }
 }
