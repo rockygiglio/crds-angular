@@ -37,7 +37,7 @@ export default class StreamingReminderController {
     this.scope = $scope;
     $scope.selectedTime = '';
 
-    this.setUserDefaults();     
+    this.setUserDefaults();
   }
 
   validate(form) {
@@ -112,10 +112,12 @@ export default class StreamingReminderController {
   setUserDefaults() {
     // If the user is logged in, set default user info
     if (this.session.isActive()) {
-      if(this.rootScope.phone)
+      if (this.rootScope.phone) {
         this.model.phone = this.rootScope.phone;
-      if(this.rootScope.email)
+      }
+      if (this.rootScope.email) {
         this.model.email = this.rootScope.email;      
+      }
     }
   }
 
