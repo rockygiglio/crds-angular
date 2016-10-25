@@ -5,6 +5,7 @@
     // MODULE NAMES
     MODULES: {
       CAMPS: 'crossroads.camps',
+      CAMPS_APPLICATION_PAGE: 'crossroads.camps.applicationPages',
       CHILDCARE: 'crossroads.childcare',
       CHILDCARE_DASHBOARD: 'crossroads.childcare_dashboard',
       CORE: 'crossroads.core',

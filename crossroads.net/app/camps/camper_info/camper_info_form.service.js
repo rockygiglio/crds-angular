@@ -27,6 +27,7 @@ class CamperInfoForm {
     return this.formModel;
   }
 
+  // eslint-disable-next-line class-methods-use-this
   getFields() {
     return [
       {
