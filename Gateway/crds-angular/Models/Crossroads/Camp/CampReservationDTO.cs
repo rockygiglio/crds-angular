@@ -17,6 +17,15 @@ namespace crds_angular.Models.Crossroads.Camp
         [JsonProperty(PropertyName = "preferredName")]
         public string PreferredName { get; set; }
 
+        [JsonProperty(PropertyName = "mobileNumber")]
+        public string MobileNumber { get; set; }
+
+        [JsonProperty(PropertyName = "email")]
+        public string Email { get; set; }
+
+        [JsonProperty(PropertyName = "relationship")]
+        public string Relationship { get; set; }
+
         [JsonProperty(PropertyName = "birthDate")]
         public DateTime BirthDate { get; set; }
 
@@ -37,20 +46,5 @@ namespace crds_angular.Models.Crossroads.Camp
 
         [JsonProperty(PropertyName = "roommate")]
         public string RoomMate { get; set; }
-
-        [JsonProperty(PropertyName = "EmergencyContactFirstName")]
-        public string EmergencyContactFirstName { get; set; }
-
-        [JsonProperty(PropertyName = "EmergencyContactLastName")]
-        public string EmergencyContactLastName { get; set; }
-
-        [JsonProperty(PropertyName = "EmergecyContactMobilePhone")]
-        public string EmergecyContactMobilePhone { get; set; }
-
-        [JsonProperty(PropertyName = "EmergencyContactEmail")]
-        public string EmergencyContactEmail { get; set; }
-
-        [JsonProperty(PropertyName = "EmergencyContactRelationship")]
-        public string EmergencyContactRelationship { get; set; }
     }
 }
