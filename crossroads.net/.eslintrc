@@ -1,8 +1,9 @@
 {
-  "extends": "airbnb",
+  "extends": "airbnb-base",
 
   "rules": {
-    "comma-dangle": 0
+    "comma-dangle": 0,
+    "space-before-function-paren": 2
   },
   "env" : {
     "browser": true,
