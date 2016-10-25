@@ -35,7 +35,8 @@ BEGIN
 	from opportunities o, group_roles gr
 	where o.Add_to_Group = @GroupID 
 		and o.Event_Type_ID = (select event_type_id from events where event_id = @EventID)
-		and o.group_role_id = gr.group_role_id;
+		and o.group_role_id = gr.group_role_id 
+		Order By o.group_role_id desc;
 END
 
 

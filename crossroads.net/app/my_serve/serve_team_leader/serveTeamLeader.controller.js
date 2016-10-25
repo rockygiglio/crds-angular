@@ -6,13 +6,12 @@ export default class ServeTeamLeaderController {
         //this.opportunities; from component binding
         //this.oppServeDate;
         //this.oppServeTime;
-        this.selectedOpp = undefined;
         this.serveTeamService = ServeTeamService;
         this.serveOpportunities = ServeOpportunities;
         this.rootScope = $rootScope;
         this.qApi = $q;
         this.growl = growl;
-        this.model = { selectedFrequency: null };
+        this.model = { selectedFrequency: null, selectedOpp: null };
         this.formErrors = { from: false }
         this.datesDisabled = false;
         this.individuals = [];
@@ -123,9 +122,8 @@ export default class ServeTeamLeaderController {
                     this.growl.success(saveMessage);
                 }
                 this.model.selectedOpp = null;
-                this.individuals = null;
+                this.individuals = [];
                 this.teamLeaderForm.$setPristine();
-                this.teamLeaderForm.$submitted = false;
                 this.processing = false;
                 return true;
             }, (error) => {

@@ -184,7 +184,7 @@ namespace crds_angular.Services
 
         public ServingTeam GetServingTeamRsvps(ServingTeam team)
         {
-            var opportunities = Mapper.Map<List<ServeOpportunity>>(_groupParticipantService.GetListOfOpportunitiesByEventAndGroup(team.GroupId, team.EventId)).OrderByDescending(o => o.Group_Role_ID).ToList();
+            var opportunities = Mapper.Map<List<ServeOpportunity>>(_groupParticipantService.GetListOfOpportunitiesByEventAndGroup(team.GroupId, team.EventId));
             var mpRsvpMembers = Mapper.Map<List<RsvpMembers>>(_groupParticipantService.GetRsvpMembers(team.GroupId, team.EventId));
 
             foreach (var opp in opportunities)
