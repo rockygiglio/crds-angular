@@ -5,7 +5,9 @@ import constants from '../../constants';
 import EmergencyContactComponent from './emergency_contact_info/emergency_contact.component';
 import EmergencyContactForm from './emergency_contact_info/emergency_contact_form.service';
 
-export default angular.module(constants.MODULES.CAMPS_APPLICATION_PAGE, [])
+export default angular.module(constants.MODULES.CAMPS_APPLICATION_PAGE, [
+  constants.MODULES.CORE,
+  constants.MODULES.COMMON])
   .component('campsApplicationPage', ApplicationPage)
   .component('emergencyContact', EmergencyContactComponent)
 

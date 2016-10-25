@@ -44,5 +44,4 @@ describe('Camper Info Form Service', () => {
      campHelpers().camperInfoModel
     );
   });
-
 });

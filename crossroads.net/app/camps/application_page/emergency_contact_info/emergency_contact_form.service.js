@@ -1,3 +1,4 @@
+/* ngInject */
 class EmergencyContactForm {
 
   constructor($resource) {
@@ -8,7 +9,12 @@ class EmergencyContactForm {
       email: null,
       relationship: null
     };
+
     this.emergencyContactResource = $resource(`${__API_ENDPOINT__}api/camps/:campId/emergencycontact/:contactId`);
+  }
+
+  save(campId, contactId) {
+    return this.emergencyContactResource.save({ campId, contactId }, this.formModel).$promise;
   }
 
   // eslint-disable-next-line class-methods-use-this

@@ -2,9 +2,10 @@
   "extends": "airbnb-base",
 
   "rules": {
-    "comma-dangle": 0
+    "comma-dangle": 0,
+    "max-len": 0
   },
-  "env" : {
+  "env": {
     "browser": true,
     "node": true,
     "es6": true
@@ -15,18 +16,9 @@
   "globals": {
     "angular": false,
     "$": false,
-    "describe"   : false,
-    "it"         : false,
-    "before"     : false,
-    "beforeEach" : false,
-    "inject"     : false,
-    "after"      : false,
-    "afterEach"  : false,
-    "_"          : false,
-    "crds_utilities" : false,
-    "spyOn": false,
-    "_$location_" : false,
-    "expect" : false,
-    __API_ENDPOINT__: false
+    "_": false,
+    "crds_utilities": false,
+    "_$location_": false,
+    "__API_ENDPOINT__": false
   }
 }
