@@ -54,7 +54,6 @@ export default class ServeTeamMessageController {
       this.rootScope.$emit('notify', this.rootScope.MESSAGES.generalError);
       return;
     }
-<<<<<<< HEAD
     if (this.selection == -1) {
       this.processing = true;
       this.serveTeamService.sendParticipantsMessage({ Participants: this.individuals, Body: this.email.message, Subject: this.email.subject })

@@ -197,7 +197,6 @@ namespace MinistryPlatform.Translation.Repositories
         public List<T> Search<T>(string searchString = null, string selectColumns = null, string orderByString = null, bool distinct = false)
         {
             var search = string.IsNullOrWhiteSpace(searchString) ? string.Empty : $"?$filter={MpRestEncode(searchString)}";
-            ////////////////////////////////////////////////////////////////////////This is why we became programmers right?
             var orderBy = string.IsNullOrWhiteSpace(orderByString) ? string.Empty : $"&{MpRestEncode($"$orderby={orderByString}")}";
             var distinctString = $"&{MpRestEncode($"$distinct={distinct.ToString()}")}";
 

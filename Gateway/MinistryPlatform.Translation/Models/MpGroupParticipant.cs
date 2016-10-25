@@ -27,7 +27,7 @@ namespace MinistryPlatform.Translation.Models
         public string LastName { get; set; }
         [JsonProperty("Role_Title")]
         public string GroupRoleTitle { get; set; }
-        [JsonProperty("email_address")]
+        [JsonProperty("Email_Address")]
         public string Email { get; set; }
         public DateTime? StartDate { get; set; }
         public string Congregation { get; set; }
