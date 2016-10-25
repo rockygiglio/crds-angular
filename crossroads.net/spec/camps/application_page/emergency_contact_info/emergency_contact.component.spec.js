@@ -1,39 +1,33 @@
 import campsModule from '../../../../app/camps/application_page/application_page.module';
-import campHelpers from '../../campHelpers';
+// import campHelpers from '../../campHelpers';
 
 describe('Camps Emergency Contact Component', () => {
   let $componentController;
   let emergencyContactController;
   // let log;
   let rootScope;
-  let resource;
   let stateParams;
   let q;
   let emergencyContactForm;
 
   const campId = 123;
   const contactId = 456;
-  const success = 'success';
-  const error = 'error';
 
   beforeEach(angular.mock.module(campsModule));
 
-  beforeEach(inject((_$componentController_, _EmergencyContactForm_, _$log_, _$rootScope_, _$resource_, _$stateParams_, _$q_) => {
+  beforeEach(inject((_$componentController_, _EmergencyContactForm_, _$log_, _$rootScope_, _$stateParams_, _$q_) => {
     $componentController = _$componentController_;
     // log = _$log_;
     emergencyContactForm = _EmergencyContactForm_;
-    rootScope = _$rootScope_;
-    resource = _$resource_;
     stateParams = _$stateParams_;
+    rootScope = _$rootScope_;
     q = _$q_;
-    rootScope.MESSAGES = campHelpers.messages;
 
     stateParams.campId = campId;
     stateParams.contactId = contactId;
 
     spyOn(emergencyContactForm, 'getModel').and.callThrough();
     spyOn(emergencyContactForm, 'getFields').and.callThrough();
-    spyOn(rootScope, '$emit').and.callThrough();
 
     const bindings = {};
     emergencyContactController = $componentController('emergencyContact', null, bindings);
@@ -67,8 +61,6 @@ describe('Camps Emergency Contact Component', () => {
     emergencyContactController.submit();
     rootScope.$apply();
     expect(emergencyContactForm.save).toHaveBeenCalledWith(campId, contactId);
-    expect(rootScope.$emit).toHaveBeenCalled();
-    expect(rootScope.$emit).toHaveBeenCalledWith('notify', success);
   });
 
   it('should disable the submit button while saving', () => {
