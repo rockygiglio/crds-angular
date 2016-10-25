@@ -78,6 +78,26 @@ namespace crds_angular.Controllers.API
             });
         }
 
+        [ResponseType(typeof(CampReservationDTO))]
+        [Route("api/camps/{eventid}/{contactid}")]
+        [AcceptVerbs("GET")]
+        public IHttpActionResult GetCamperInfo(int eventId, int contactId)
+        {
+            return Authorized(token =>
+            {
+                try
+                {
+                    var camperInfo = _campService.GetCamperInfo(token, eventId, contactId);
+                    return Ok(camperInfo);
+                }
+                catch (Exception exception)
+                {
+                    var apiError = new ApiErrorDto("CamperInfo", exception);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+            });
+        }
+
         [Route("api/camps/{eventid}")]
         [AcceptVerbs("POST")]
         public IHttpActionResult SaveCampReservation([FromBody] CampReservationDTO campReservation, int eventId)

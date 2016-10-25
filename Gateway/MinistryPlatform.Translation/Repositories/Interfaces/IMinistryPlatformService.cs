@@ -20,8 +20,9 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
         JArray GetRecordsArr(int pageId, String token, String search = "", String sort = "");
         
         List<Dictionary<string, object>> GetRecordsDict(int pageId, String token, String search = "", String sort = "");
+
         List<Dictionary<string, object>> GetRecordsDict(string pageKey, String token, String search = "", String sort = "");
-        
+
         SelectQueryResult GetRecord(int pageId, int recordId, String token, bool quickadd = false);
         
         JArray GetRecordArr(int pageId, int recordId, String token, bool quickadd = false);

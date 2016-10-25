@@ -194,11 +194,14 @@ namespace MinistryPlatform.Translation.Repositories
             return result.TrimEnd('&');
         }
 
-        public List<T> Search<T>(string searchString = null, string selectColumns = null)
+        public List<T> Search<T>(string searchString = null, string selectColumns = null, string orderByString = null, bool distinct = false)
         {
             var search = string.IsNullOrWhiteSpace(searchString) ? string.Empty : $"?$filter={MpRestEncode(searchString)}";
+            var orderBy = string.IsNullOrWhiteSpace(orderByString) ? string.Empty : $"&{MpRestEncode($"$orderby={orderByString}")}";
+            var distinctString = $"&{MpRestEncode($"$distinct={distinct.ToString()}")}";
 
-            var url = AddColumnSelection($"/tables/{GetTableName<T>()}{search}", selectColumns);
+            var url = AddColumnSelection(string.Format("/tables/{0}{1}{2}{3}", GetTableName<T>(), search, orderBy, distinctString),selectColumns);
+
             var request = new RestRequest(url, Method.GET);
             AddAuthorization(request);
 
@@ -211,14 +214,14 @@ namespace MinistryPlatform.Translation.Repositories
             return content;
         }
 
-        public List<T> Search<T>(string searchString, List<string> columns)
+        public List<T> Search<T>(string searchString, List<string> columns, string orderByString = null, bool distinct = false)
         {
             string selectColumns = null;
             if (columns != null)
             {
                 selectColumns = string.Join(",", columns);
             }
-            return Search<T>(searchString, selectColumns);
+            return Search<T>(searchString, selectColumns, orderByString, distinct);
         }
 
         public void UpdateRecord(string tableName, int recordId, Dictionary<string, object> fields)

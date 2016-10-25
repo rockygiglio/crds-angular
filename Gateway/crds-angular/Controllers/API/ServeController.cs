@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Messaging;
 using System.Web;
+using System.Web.Helpers;
 using System.Web.Http;
 using System.Web.Http.Description;
 using crds_angular.Exceptions.Models;
@@ -140,16 +141,36 @@ namespace crds_angular.Controllers.API
         }
 
         [RequiresAuthorization]
-        [ResponseType(typeof(bool))]
-        [Route("api/serve/GetIsLeader")]
-        public IHttpActionResult GetIsLeader()
+        [ResponseType(typeof(List<GroupParticipantDTO>))]
+        [Route("api/serve/GetLoggedInLeadersGroupsParticipants")]
+        public IHttpActionResult GetLoggedInLeadersGroupsParticipants(int? groupId = null)
         {
             return Authorized(token =>
             {
                 try
                 {
-                    bool isLeader = _serveService.GetIsLeader(token);
-                    return Ok(isLeader);
+                    var list = _serveService.GetLeaderGroupsParticipants(token, groupId);
+                    return Ok(list);
+                }
+                catch (Exception ex)
+                {
+                    var apiError = new ApiErrorDto("Get Leaders Groups Participants Failed", ex);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+            });
+        }
+
+        [RequiresAuthorization]
+        [ResponseType(typeof(object))]
+        [Route("api/serve/GetIsLeader")]
+        public IHttpActionResult GetIsLeader(int? groupId = null)
+        {
+            return Authorized(token =>
+            {
+                try
+                {
+                    bool isLeader = _serveService.GetIsLeader(token, groupId);
+                    return Ok(new {isLeader = isLeader});
                 }
                 catch (Exception ex)
                 {

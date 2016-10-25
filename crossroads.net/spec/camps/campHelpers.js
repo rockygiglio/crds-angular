@@ -1,16 +1,17 @@
 function CampHelpers() {
   return {
     camperInfoModel: {
-      firstName: null,
-      lastName: null,
-      middleName: null,
-      preferredName: null,
-      birthDate: null,
-      gender: null,
-      currentGrade: null,
-      schoolAttending: null,
+      contactId: undefined,
+      firstName: undefined,
+      lastName: undefined,
+      middleName: undefined,
+      preferredName: undefined,
+      birthDate: undefined,
+      gender: undefined,
+      currentGrade: undefined,
+      schoolAttending: undefined,
       schoolAttendingNext: null,
-      crossroadsSite: null,
+      crossroadsSite: undefined,
       roomate: null
     },
     campInfo: {
