@@ -27,6 +27,12 @@ function CampHelpers() {
     messages: {
       summercampIntro: {
         content: 'summer camp intro text'
+      },
+      successfulSubmission: {
+        content: 'success'
+      },
+      generalError: {
+        content: 'error'
       }
     }
   };
