@@ -7,9 +7,9 @@ import './event_registration_mockup.html';
 import './event_registration_mockup_desired.html';
 import './serveTabs.html';
 import './serveTeam.html';
-import './serveTeamAutocomplete.html';
 import './refine/refineList.html';
 import './refine/serveModalContent.html';
+
 
 import OpportunityCapacityService from './capacity.service';
 import FilterStateService from  './filterState.service.js';
@@ -46,6 +46,7 @@ export default angular
   .directive('serveTabs', ServeTabsDirective)
   .directive('serveTeam', ServeTeamDirective)
   .directive('serveTeamRefineList', RefineListDirective)
+ // .filter('unique', UniqueFilter)
 ;
 
 //
@@ -55,3 +56,5 @@ export default angular
 import './closable-tag';
 import './serve_team_members';
 import './serve_team_message';
+import './serve_team_container';
+import './serve_team_leader';

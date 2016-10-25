@@ -105,6 +105,33 @@ namespace crds_angular.Controllers.API
         }
 
         /// <summary>
+        /// Send an email message to certain group participants
+        /// </summary>
+        [RequiresAuthorization]
+        [HttpPost]
+        [Route("api/group/messageselectparticipants")]
+        public IHttpActionResult SendParticipantsMessage(GroupMessageDTO message)
+        {
+            return Authorized(token =>
+            {
+                try
+                {
+                    _groupService.SendParticipantsEmail(token, message.Participants, message.Subject, message.Body);
+                    return Ok();
+                }
+                catch (InvalidOperationException)
+                {
+                    return (IHttpActionResult)NotFound();
+                }
+                catch (Exception ex)
+                {
+                    var apiError = new ApiErrorDto("Error sending emails", ex);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+            });
+        }
+
+        /// <summary>
         /// Enroll the currently logged-in user into a Community Group, and register this user for all events for the CG.
         /// Also send email confirmation to user if joining a CG
         /// Or Add Journey/Small Group Participant to a Group 

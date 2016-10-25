@@ -24,4 +24,6 @@
 
   require('./services');
 
+  require('./filters');
+
 })();

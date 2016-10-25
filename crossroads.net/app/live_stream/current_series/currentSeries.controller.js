@@ -1,8 +1,8 @@
 
 export default class CurrentSeriesController {
-  constructor(CMSService, $modal) {
+  constructor(CMSService, $modal, ResponsiveImageService) {
     this.title        = '';
-    this.picture      = '';
+    this.picture      = undefined;
     this.description  = '';
     this.startDate    = '';
     this.endDate      = '';
@@ -14,6 +14,7 @@ export default class CurrentSeriesController {
     this.response;
     this.cmsService = CMSService;
     this.modal = $modal;
+    this.ResponsiveImageService = ResponsiveImageService;
   }
 
   $onInit() {
@@ -71,7 +72,7 @@ export default class CurrentSeriesController {
       this.setTagsArray(response);
       
       this.visible = true;
-
+      this.ResponsiveImageService.updateResponsiveImages();
     }
   }
 

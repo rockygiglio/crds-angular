@@ -8,7 +8,8 @@ describe('Current Series Controller', () => {
       series,
       modal,
       cmsService,
-      httpBackend;
+      httpBackend,
+      responsiveImageService;
 
   const reminderEndpoint = `${__API_ENDPOINT__}`;
 
@@ -38,8 +39,8 @@ describe('Current Series Controller', () => {
     modal       = $injector.get('$modal');
     httpBackend = $injector.get('$httpBackend');
     cmsService  = $injector.get('CMSService');
-    fixture = new CurrentSeriesController(cmsService, modal);
-
+    responsiveImageService = $injector.get('ResponsiveImageService');
+    fixture = new CurrentSeriesController(cmsService, modal, );
   }));
 
   it('should correctly parse results', () => {

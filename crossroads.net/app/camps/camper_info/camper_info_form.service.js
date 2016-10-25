@@ -5,16 +5,17 @@ class CamperInfoForm {
     this.lookupService = LookupService;
 
     this.formModel = {
-      firstName: null,
-      lastName: null,
-      middleName: null,
-      preferredName: null,
-      birthDate: null,
-      gender: null,
-      currentGrade: null,
-      schoolAttending: null,
+      contactId: this.campsService.camperInfo.contactId,
+      firstName: this.campsService.camperInfo.firstName,
+      lastName: this.campsService.camperInfo.lastName,
+      middleName: this.campsService.camperInfo.middleName,
+      preferredName: this.campsService.camperInfo.preferredName,
+      birthDate: this.campsService.camperInfo.birthDate,
+      gender: this.campsService.camperInfo.gender,
+      currentGrade: this.campsService.camperInfo.currentGrade,
+      schoolAttending: this.campsService.camperInfo.schoolAttending,
       schoolAttendingNext: null,
-      crossroadsSite: null,
+      crossroadsSite: this.campsService.camperInfo.crossroadsSite,
       roomate: null
     };
   }
@@ -35,7 +36,7 @@ class CamperInfoForm {
           {
             className: 'form-group col-xs-6',
             key: 'firstName',
-            type: 'crdsInput',
+            type: 'crdsInput',  
             templateOptions: {
               label: 'First Name',
               required: true
@@ -116,22 +117,22 @@ class CamperInfoForm {
           {
             className: 'form-group col-xs-6',
             key: 'currentGrade',
-            type: 'crdsSelect',
+            type: 'crdsInput',
             templateOptions: {
               label: 'Current Grade',
-              required: true,
-              options: [
-                { grade: '5th' },
-                { grade: '6th' },
-                { grade: '7th' },
-                { grade: '8th' },
-                { grade: '9th' },
-                { grade: '10th' },
-                { grade: '11th' },
-                { grade: '12th' }
-              ],
-              valueProp: 'grade',
-              labelProp: 'grade'
+              disabled: true
+              // options: [
+              //   { grade: '5th' },
+              //   { grade: '6th' },
+              //   { grade: '7th' },
+              //   { grade: '8th' },
+              //   { grade: '9th' },
+              //   { grade: '10th' },
+              //   { grade: '11th' },
+              //   { grade: '12th' }
+              // ],
+              // valueProp: 'grade',
+              // labelProp: 'grade'
             }
           },
           {
@@ -185,7 +186,7 @@ class CamperInfoForm {
             key: 'roomate',
             type: 'crdsInput',
             templateOptions: {
-              label: 'Prefered Roommate First and Last Name',
+              label: 'Preferred Roommate First and Last Name',
               required: false
             }
           }
