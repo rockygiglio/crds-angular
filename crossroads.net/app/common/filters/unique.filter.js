@@ -1,3 +1,7 @@
+(function() {  
+ 
+  'use strict';
+  module.exports = unique;
 /**
  * Filters out all duplicate items from an array by checking the specified key
  * @param [key] {string} the name of the attribute of each object to compare for uniqueness
@@ -5,7 +9,7 @@
  if the key === false then no filtering will be performed
  * @return {array}
  */
-export default function() {
+function unique() {
 
   return function (items, filterOn) {
 
@@ -43,3 +47,4 @@ export default function() {
     return items;
   };
 };
+})();

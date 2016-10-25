@@ -9,7 +9,7 @@ import './serveTabs.html';
 import './serveTeam.html';
 import './refine/refineList.html';
 import './refine/serveModalContent.html';
-import UniqueFilter from './unique.filter';
+
 
 import OpportunityCapacityService from './capacity.service';
 import FilterStateService from  './filterState.service.js';
@@ -46,7 +46,7 @@ export default angular
   .directive('serveTabs', ServeTabsDirective)
   .directive('serveTeam', ServeTeamDirective)
   .directive('serveTeamRefineList', RefineListDirective)
-  .filter('unique', UniqueFilter)
+ // .filter('unique', UniqueFilter)
 ;
 
 //
