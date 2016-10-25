@@ -51,6 +51,7 @@ namespace crds_angular.Services
         private readonly int _groupTypeAttributeTypeId;
         private readonly int _groupAgeRangeAttributeTypeId;
         private readonly int _groupRoleLeader;
+        private readonly int _domainId;
 
 
         public GroupService(IGroupRepository mpGroupService,
@@ -85,6 +86,7 @@ namespace crds_angular.Services
             _userRepository = userRepository;
             _invitationRepository = invitationRepository;
             _attributeService = attributeService;
+            _domainId = configurationWrapper.GetConfigIntValue("DomainId");
 
             _groupRoleDefaultId = _configurationWrapper.GetConfigIntValue("Group_Role_Default_ID");
             _defaultContactEmailId = _configurationWrapper.GetConfigIntValue("DefaultContactEmailId");
@@ -703,6 +705,42 @@ namespace crds_angular.Services
             }
 
             _mpGroupService.UpdateGroupParticipant(participants);
+        }
+
+        public void SendParticipantsEmail(string token, List<GroupParticipantDTO> participants, string subject, string body)
+        {
+            var senderRecord = _participantService.GetParticipantRecord(token);
+
+            var fromContact = new MpContact
+            {
+                ContactId = 1519180,
+                EmailAddress = "updates@crossroads.net"
+            };
+
+            var replyToContact = new MpContact
+            {
+                ContactId = senderRecord.ContactId,
+                EmailAddress = senderRecord.EmailAddress
+            };
+
+            var toContacts = participants.Select(p => new MpContact
+            {
+                ContactId = p.ContactId,
+                EmailAddress = p.Email
+            }).ToList();
+
+            var email = new MpCommunication
+            {
+                EmailBody = body,
+                EmailSubject = subject,
+                AuthorUserId = 5,
+                DomainId = _domainId,
+                FromContact = fromContact,
+                ReplyToContact = replyToContact,
+                ToContacts = toContacts
+            };
+
+            _communicationService.SendMessage(email);
         }
     }
 }

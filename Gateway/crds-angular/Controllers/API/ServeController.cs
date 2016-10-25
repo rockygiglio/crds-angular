@@ -140,6 +140,26 @@ namespace crds_angular.Controllers.API
         }
 
         [RequiresAuthorization]
+        [ResponseType(typeof(List<GroupParticipantDTO>))]
+        [Route("api/serve/GetLoggedInLeadersGroupsParticipants")]
+        public IHttpActionResult GetLoggedInLeadersGroupsParticipants()
+        {
+            return Authorized(token =>
+            {
+                try
+                {
+                    var list = _serveService.GetLeaderGroupsParticipants(token);
+                    return Ok(list);
+                }
+                catch (Exception ex)
+                {
+                    var apiError = new ApiErrorDto("Get Leaders Groups Participants Failed", ex);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+            });
+        }
+
+        [RequiresAuthorization]
         [ResponseType(typeof(bool))]
         [Route("api/serve/GetIsLeader")]
         public IHttpActionResult GetIsLeader()

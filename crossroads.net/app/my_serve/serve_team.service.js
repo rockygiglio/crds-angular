@@ -8,21 +8,8 @@ export default class ServeTeamService {
         this.qApi = $q;
     }
 
-    getAllTeamMembersByLeader() {
-        return [
-            {
-                id: 1001,
-                name: 'Genie Simmons',
-                email: 'gsimmons@gmail.com',
-                role: 'Leader'
-            },
-            {
-                id: 1002,
-                name: 'Holly Gennaro',
-                email: 'hgennaro@excite.com',
-                role: null
-            },
-        ]
+    getAllTeamMembersForLoggedInLeader() {
+        return this.resource(`${__API_ENDPOINT__}api/serve/GetLoggedInLeadersGroupsParticipants`).query().$promise;
     }
 
     getIsLeader() {
@@ -40,6 +27,10 @@ export default class ServeTeamService {
             groupId: groupId,
             groupTypeId: CONSTANTS.GROUP.GROUP_TYPE_ID.MY_SERVE
         }, message).$promise;
+    }
+
+    sendParticipantsMessage(message) {
+        return this.resource(__API_ENDPOINT__ + 'api/group/messageselectparticipants').save(message).$promise;
     }
 
     getTeamRsvps(team) {

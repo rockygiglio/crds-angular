@@ -44,6 +44,7 @@ namespace crds_angular.Services
         private readonly IConfigurationWrapper _configurationWrapper;
         private readonly IApiUserRepository _apiUserService;
         private readonly IResponseRepository _responseService;
+        private readonly int _serveGroupType;
 
         private readonly List<string> TABLE_HEADERS = new List<string>()
         {
@@ -80,6 +81,7 @@ namespace crds_angular.Services
             _configurationWrapper = configurationWrapper;
             _apiUserService = apiUserService;
             _responseService = responseService;
+            _serveGroupType = _configurationWrapper.GetConfigIntValue("ServeGroupType");
         }
 
         public List<FamilyMember> GetImmediateFamilyParticipants(string token)
@@ -155,9 +157,19 @@ namespace crds_angular.Services
             var contactId = _authenticationService.GetContactId(token);
             var participant = _participantService.GetParticipant(contactId);
 
-            var groups = Mapper.Map<List<GroupDTO>>(_groupParticipantService.GetAllGroupNamesLeadByParticipant(participant.ParticipantId));
+            var groups = Mapper.Map<List<GroupDTO>>(_groupParticipantService.GetAllGroupNamesLeadByParticipant(participant.ParticipantId, _serveGroupType));
 
             return groups;
+        }
+
+        public List<GroupParticipantDTO> GetLeaderGroupsParticipants(string token)
+        {
+            var contactId = _authenticationService.GetContactId(token);
+            var participant = _participantService.GetParticipant(contactId);
+
+            var participants = Mapper.Map<List<GroupParticipantDTO>>(_groupParticipantService.GetAllParticipantsForLeaderGroups(participant.ParticipantId, _serveGroupType));
+
+            return participants;
         }
 
         public bool GetIsLeader(string token)
@@ -166,7 +178,7 @@ namespace crds_angular.Services
             var participant = _participantService.GetParticipant(contactId);
 
 
-            return _groupParticipantService.GetIsLeader(participant.ParticipantId, 9);
+            return _groupParticipantService.GetIsLeader(participant.ParticipantId, _serveGroupType);
 
         }
 
