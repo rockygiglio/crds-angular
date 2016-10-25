@@ -6,6 +6,7 @@ describe('Camps Emergency Contact Component', () => {
   let emergencyContactController;
 //  let log;
   let rootScope;
+  let emergencyContactForm;
 
   beforeEach(angular.mock.module(campsModule));
 
@@ -18,9 +19,15 @@ describe('Camps Emergency Contact Component', () => {
     const bindings = {};
     emergencyContactController = $componentController('emergencyContact', null, bindings);
     emergencyContactController.$onInit();
+
+    emergencyContactForm = _EmergencyContactForm_;
+    spyOn(emergencyContactForm, 'getModel').and.callThrough();
+    spyOn(emergencyContactForm, 'getFields').and.callThrough();
   }));
 
   it('should set the view as ready', () => {
     expect(emergencyContactController.viewReady).toBeTruthy();
+
+    expect(emergencyContactForm.getModel).toHaveBeenCalled();
   });
 });

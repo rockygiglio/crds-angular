@@ -1,6 +1,7 @@
+/* ngInject */
 class EmergencyContactForm {
 
-  constructor($resource) {
+  constructor() {
     this.formModel = {
       firstName: null,
       lastName: null,
@@ -8,7 +9,9 @@ class EmergencyContactForm {
       email: null,
       relationship: null
     };
-    this.emergencyContactResource = $resource(`${__API_ENDPOINT__}api/camps/:campId/emergencycontact/:contactId`);
+
+    // FIXME: inject $resource
+    // this.emergencyContactResource = $resource(`${__API_ENDPOINT__}api/camps/:campId/emergencycontact/:contactId`);
   }
 
   // eslint-disable-next-line class-methods-use-this
