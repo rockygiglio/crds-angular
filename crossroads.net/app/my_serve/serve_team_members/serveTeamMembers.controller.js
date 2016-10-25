@@ -43,7 +43,7 @@ export default class ServeTeamMembersController {
       name: teamName,
       members: null
     };
-    team.members = (members !== null) ? _.uniq(members, 'Participant_ID') : undefined;
+    team.members = (members !== null) ? members : undefined;
     this.allMembers.push(team);
   }
 

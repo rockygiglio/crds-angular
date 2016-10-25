@@ -4,7 +4,7 @@
     <strong>{{role.name}}</strong>
   </div>
   <div class="col-sm-9">
-    <closable-tag ng-repeat="member in role.members"
+    <closable-tag ng-repeat="member in role.members | unique:'Participant_ID'"
                   name="member.NickName +' '+ member.Last_Name"
                   age="member.age"
                   on-click="serveTeamMembers.memberClick(member)"

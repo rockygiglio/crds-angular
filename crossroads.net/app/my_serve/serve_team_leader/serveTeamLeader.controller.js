@@ -99,15 +99,19 @@ export default class ServeTeamLeaderController {
                 var rsvp = {};
                 rsvp.contactId = person.contactId;
                 rsvp.opportunityId = this.model.selectedOpp;
-                rsvp.opportunityIds = (signUp) ? [this.model.selectedOpp] : _.pluck(this.team.serveOpportunities, 'Opportunity_ID');
+                rsvp.opportunityIds = (signUp) ? [this.model.selectedOpp] : _.pluck(this.team.serveOpportunities, 'Opportunity_ID');                              
                 rsvp.eventTypeId = this.team.eventTypeId;
                 rsvp.endDate = moment(this.model.toDt, 'MM/DD/YYYY').format('X');
                 rsvp.startDate = moment(this.model.fromDt, 'MM/DD/YYYY').format('X');
                 rsvp.signUp = signUp;
                 rsvp.alternateWeeks = (this.model.selectedFrequency.value === 2);
+                this.updateTeam(person, this.model.selectedOpp);
+                if(!signUp){
+                    _.pull(rsvp.opportunityIds, 0);
+                }
                 promises.push(this.serveOpportunities.SaveRsvp.save(rsvp).$promise);
                 
-                this.updateTeam(person, this.model.selectedOpp);
+                
             });
 
             this.qApi.all(promises).then((results) => {
@@ -115,11 +119,12 @@ export default class ServeTeamLeaderController {
                 if (signUp)
                     this.rootScope.$emit('notify', this.rootScope.MESSAGES.SU2S_Saving_Message);
                 else {
-                    var saveMessage = `You have indicated that the participants are not available for ${this.team.name} on ${this.oppServeDate}`;
+                    var saveMessage = `You have indicated that the selected participants are not available for ${this.team.name} on ${this.oppServeDate}`;
                     this.growl.success(saveMessage);
                 }
                 this.model.selectedOpp = null;
                 this.individuals = null;
+                this.teamLeaderForm.$setPristine();
                 this.teamLeaderForm.$submitted = false;
                 this.processing = false;
                 return true;

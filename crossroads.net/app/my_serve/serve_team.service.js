@@ -32,7 +32,7 @@ export default class ServeTeamService {
     }
 
     sendParticipantsMessage(message) {
-        return this.resource(__API_ENDPOINT__ + 'api/group/messageselectparticipants').save(message).$promise;
+        return this.resource(`${__API_ENDPOINT__}api/group/messageselectparticipants`).save(message).$promise;
     }
 
     getTeamRsvps(team) {

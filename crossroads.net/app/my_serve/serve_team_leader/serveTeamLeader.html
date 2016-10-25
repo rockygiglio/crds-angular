@@ -108,10 +108,10 @@
 	<!-- BUTTONS    -->
 	<div ng-if="serveTeamLeader.model.selectedOpp != null" class="row">
 		<div class="col-sm-12 serve-save soft-half-top">
-			<button class="btn btn-primary btn-block-mobile sm-pull-right mobile-push-half-bottom" ng-class="{disabled: buttonState()}"
+			<button class="btn btn-primary btn-block-mobile sm-pull-right mobile-push-half-bottom" ng-class="{disabled: serveTeamLeader.processing}"
 				ng-click="serveTeamLeader.saveRsvp()">
-              <span ng-if="processing">Saving...</span>
-              <span ng-if="!processing">Save</span>
+              <span ng-if="serveTeamLeader.processing">Saving...</span>
+              <span ng-if="!serveTeamLeader.processing">Save</span>
             </button>
 			<button class="btn btn-standard btn-block-mobile" ng-click="serveTeamLeader.leaderCancel()">Cancel</button>
 		</div>
