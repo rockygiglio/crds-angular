@@ -162,29 +162,29 @@ namespace crds_angular.Services
             return groups;
         }
 
-        public List<GroupParticipantDTO> GetLeaderGroupsParticipants(string token)
+        public List<GroupParticipantDTO> GetLeaderGroupsParticipants(string token, int? groupId)
         {
             var contactId = _authenticationService.GetContactId(token);
             var participant = _participantService.GetParticipant(contactId);
 
-            var participants = Mapper.Map<List<GroupParticipantDTO>>(_groupParticipantService.GetAllParticipantsForLeaderGroups(participant.ParticipantId, _serveGroupType));
+            var participants = Mapper.Map<List<GroupParticipantDTO>>(_groupParticipantService.GetAllParticipantsForLeaderGroups(participant.ParticipantId, _serveGroupType, groupId));
 
             return participants;
         }
 
-        public bool GetIsLeader(string token)
+        public bool GetIsLeader(string token, int? groupId)
         {
             var contactId = _authenticationService.GetContactId(token);
             var participant = _participantService.GetParticipant(contactId);
 
 
-            return _groupParticipantService.GetIsLeader(participant.ParticipantId, _serveGroupType);
+            return _groupParticipantService.GetIsLeader(participant.ParticipantId, _serveGroupType, groupId);
 
         }
 
         public ServingTeam GetServingTeamRsvps(ServingTeam team)
         {
-            var opportunities = Mapper.Map<List<ServeOpportunity>>(_groupParticipantService.GetListOfOpportunitiesByEventAndGroup(team.GroupId, team.EventId)).OrderByDescending(o => o.Group_Role_ID).ToList();
+            var opportunities = Mapper.Map<List<ServeOpportunity>>(_groupParticipantService.GetListOfOpportunitiesByEventAndGroup(team.GroupId, team.EventId));
             var mpRsvpMembers = Mapper.Map<List<RsvpMembers>>(_groupParticipantService.GetRsvpMembers(team.GroupId, team.EventId));
 
             foreach (var opp in opportunities)
