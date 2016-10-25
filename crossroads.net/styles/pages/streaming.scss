@@ -260,9 +260,13 @@ streaming, landing {
         strong {
           font-size: 150%;
           display: block;
+
+          &.muted {
+            color: $cr-grey;
+          }
         }
         small {
-          fontcolor: #8d8d8d;
+          color: $cr-grey;
         }
       }
     }
