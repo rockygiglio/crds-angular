@@ -141,17 +141,17 @@ namespace MinistryPlatform.Translation.Repositories
             return groups;
         }
 
-        public bool GetIsLeader(int participantId, int? groupType = -1, int? groupId = -1)
+        public bool GetIsLeader(int participantId, int? groupType = null, int? groupId = null)
         {
             const string COLUMNS = "Group_Participants.group_role_id";
             string search = $"Group_Participants.participant_id = {participantId} and Group_Role_ID = {_groupRoleLeader}";
 
-            if (groupType != -1)
+            if (groupType != null)
             {
                 search += $" AND Group_ID_Table.Group_Type_ID = {groupType}";
             }
 
-            if (groupId != -1)
+            if (groupId != null)
             {
                 search += $" AND Group_Participants.GROUP_ID = {groupId}";
             }
@@ -161,7 +161,7 @@ namespace MinistryPlatform.Translation.Repositories
             return mpGroupParticipants.Any();
         }
 
-        public List<MpGroupParticipant> GetAllParticipantsForLeaderGroups(int participantId, int? groupType = -1, int? groupId = -1)
+        public List<MpGroupParticipant> GetAllParticipantsForLeaderGroups(int participantId, int? groupType, int? groupId)
         {
             string csvGroupIds = "";
             if (groupId == null)

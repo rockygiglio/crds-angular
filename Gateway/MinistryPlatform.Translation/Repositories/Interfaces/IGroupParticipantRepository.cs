@@ -12,8 +12,8 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
         List<MpRsvpMember> GetRsvpMembers(int groupId, int eventId);
         List<MpSU2SOpportunity> GetListOfOpportunitiesByEventAndGroup(int groupId, int eventId);
         int GetRsvpYesCount(int groupId, int eventId);
-        bool GetIsLeader(int participantId, int? groupType = -1, int? groupId = -1);
-        List<MpGroupParticipant> GetAllParticipantsForLeaderGroups(int participantId, int? groupType = -1, int? groupId = -1);
+        bool GetIsLeader(int participantId, int? groupType = null, int? groupId = null);
+        List<MpGroupParticipant> GetAllParticipantsForLeaderGroups(int participantId, int? groupType, int? groupId);
         List<MpGroupParticipant> GetLeadersGroupIds(int participantId, int? groupType = -1);
     }
 }
