@@ -99,17 +99,8 @@ namespace crds_angular.Services
         }
 
         public DonationsDTO GetLastDonationForAuthenticatedUser(string userToken)
-        {         
-            var donations = _mpDonorService.GetDonationsForAuthenticatedUser(userToken, false, null);
-
-            for (var i = 0; i < donations.Count; i++)
-            {
-                if (donations[i].recurringGift)
-                {                    
-                    donations.Remove(donations[i]);
-                }
-            }
-
+        {
+            var donations = _mpDonorService.GetLastDonationForAuthenticatedUser(userToken, false, null);
             return (PostProcessDonations(donations, 1));
         }
 

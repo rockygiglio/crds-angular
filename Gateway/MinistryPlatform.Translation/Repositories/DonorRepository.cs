@@ -738,6 +738,21 @@ namespace MinistryPlatform.Translation.Repositories
             return MapDonationRecords(records);
         }
 
+        public List<MpDonation> GetLastDonationForAuthenticatedUser(string userToken, bool? softCredit = false, string donationYear = null)
+        {
+            var search = string.Format("{0},{1}", YearSearch(donationYear), softCredit.HasValue ? softCredit.Value.ToString() : string.Empty);
+            var records = _ministryPlatformService.GetRecordsDict(_myHouseholdDonationDistributions, userToken, search);
+            var donations = MapDonationRecords(records);
+            for (var i = 0; i < donations.Count; i++)
+            {
+                if (donations[i].recurringGift)
+                {
+                    donations.Remove(donations[i]);
+                }
+            }            
+            return donations;
+        }
+
         private List<MpDonation> MapDonationRecords(List<Dictionary<string, Object>> records)
         {
             if (records == null || records.Count == 0)

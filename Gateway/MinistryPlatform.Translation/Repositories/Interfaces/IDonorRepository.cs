@@ -30,6 +30,7 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
         List<MpDonation> GetDonations(IEnumerable<int> donorIds, string donationYear = null);
         List<MpDonation> GetSoftCreditDonations(IEnumerable<int> donorIds, string donationYear = null);
         List<MpDonation> GetDonationsForAuthenticatedUser(string userToken, bool? softCredit = null, string donationYear = null);
+        List<MpDonation> GetLastDonationForAuthenticatedUser(string userToken, bool? softCredit = false, string donationYear = null);
         MpCreateDonationDistDto GetRecurringGiftForSubscription(string subscription, string optionalSourceId = "");
         MpCreateDonationDistDto GetRecurringGiftById(string authorizedUserToken, int recurringGiftId);
         int CreateRecurringGiftRecord(string authorizedUserToken, int donorId, int donorAccountId, string planInterval, decimal planAmount, DateTime startDate, string program, string subscriptionId, int congregationId);
