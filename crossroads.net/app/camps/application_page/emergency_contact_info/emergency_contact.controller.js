@@ -1,6 +1,7 @@
 class EmergencyContactController {
   constructor(EmergencyContactForm) {
     this.emergencyContactForm = EmergencyContactForm;
+    this.viewReady = false;
   }
 
   $onInit() {

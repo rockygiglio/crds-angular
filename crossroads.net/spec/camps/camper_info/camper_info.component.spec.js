@@ -25,8 +25,8 @@ describe('Camper Info Component', () => {
     stateParams = _$stateParams_;
     rootScope = _$rootScope_.$new();
     rootScope.MESSAGES = {
-      successfullRegistration: {content: 'success'},
-      generalError: {content: 'error'}
+      successfullRegistration: { content: 'success' },
+      generalError: { content: 'error' }
     };
 
     spyOn(camperInfoForm, 'getFields').and.callThrough();
@@ -35,7 +35,7 @@ describe('Camper Info Component', () => {
 
     stateParams.campId = eventId;
 
-    var bindings = {};
+    const bindings = {};
     camperInfo = $componentController('camperInfo', null, bindings);
     camperInfo.$onInit();
   }));
@@ -60,7 +60,7 @@ describe('Camper Info Component', () => {
 
     spyOn(camperInfoForm, 'save').and.callFake((data) => {
       console.log('called faked with', data);
-      var deferred = q.defer();
+      const deferred = q.defer();
       deferred.resolve('success!');
       return deferred.promise;
     });
@@ -77,7 +77,7 @@ describe('Camper Info Component', () => {
 
     spyOn(camperInfoForm, 'save').and.callFake((data) => {
       console.log('called faked with', data);
-      var deferred = q.defer();
+      const deferred = q.defer();
       deferred.resolve('success!');
       return deferred.promise;
     });
