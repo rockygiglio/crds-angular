@@ -5,6 +5,9 @@ namespace crds_angular.Models.Crossroads.Camp
 {
     public class CampReservationDTO
     {
+        [JsonProperty(PropertyName = "contactId")]
+        public int? ContactId { get; set; }
+
         [JsonProperty(PropertyName = "firstName")]
         public string FirstName { get; set; }
 
@@ -18,7 +21,7 @@ namespace crds_angular.Models.Crossroads.Camp
         public string PreferredName { get; set; }
 
         [JsonProperty(PropertyName = "birthDate")]
-        public DateTime BirthDate { get; set; }
+        public string BirthDate { get; set; }
 
         [JsonProperty(PropertyName = "gender")]
         public int Gender { get; set; }
@@ -33,7 +36,7 @@ namespace crds_angular.Models.Crossroads.Camp
         public string SchoolAttendingNext { get; set; }
 
         [JsonProperty(PropertyName = "crossroadsSite")]
-        public string CrossroadsSite { get; set; }
+        public int CrossroadsSite { get; set; }
 
         [JsonProperty(PropertyName = "roommate")]
         public string RoomMate { get; set; }
