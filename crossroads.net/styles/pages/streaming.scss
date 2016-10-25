@@ -241,6 +241,31 @@ streaming, landing {
     @media (min-width: $screen-sm-min) {
       min-height: 550px;
     }
+
+    countdown-intro {
+      ul {
+        background: rgba(0,0,0,0.1);
+        border: 1px solid rgba(255,255,255,0.3);
+        padding: 22px 0 15px;
+
+        @media (min-width: $screen-lg-min) {
+          display: inline-block;
+          padding: 22px 25px 15px;
+
+        }
+      }
+      li {
+        line-height: 120%;
+        min-width: 45px;
+        strong {
+          font-size: 150%;
+          display: block;
+        }
+        small {
+          fontcolor: #8d8d8d;
+        }
+      }
+    }
   }
 
   

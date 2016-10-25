@@ -22,6 +22,7 @@ export default angular
 import contentCard from './content_card';
 import countdownHeader from './countdown_header';
 import countdownHome from './countdown_home';
+import countdownIntro from './countdown_intro';
 import currentSeries from './current_series';
 import currentSeriesModal from './current_series_modal';
 import geolocation from './geolocation';

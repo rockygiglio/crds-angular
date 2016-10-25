@@ -1,23 +1,24 @@
 <div class="wrapper" id="wrapper">
   <countdown-header></countdown-header>
 
-  <section ng-if="landing.streamStatus == 'Live'" id="intro" class="intro imgix-fluid-bg crds-hero" data-src="{{ landing.introImage() }}">
+  <!--<section ng-if="landing.streamStatus == 'Live'" id="intro" class="intro imgix-fluid-bg crds-hero" data-src="{{ landing.introImage() }}">
     <div class="wow fadeInUp">
       <div dynamic-content="$root.MESSAGES.streamingLandingIntroBroadcasting.content | html"></div>
     </div>
-  </section>
+  </section>-->
 
-  <section ng-if="landing.streamStatus == 'Upcoming'" id="intro" class="intro imgix-fluid-bg crds-hero" data-src="{{ landing.introImage() }}">
+  <section id="intro" class="intro imgix-fluid-bg crds-hero" data-src="{{ landing.introImage() }}">
     <div class="wow fadeInUp">
-      <div dynamic-content="$root.MESSAGES.streamingLandingIntroUpcoming.content | html"></div>
+      <div data-ng-init="landing.moveCountdown()" dynamic-content="$root.MESSAGES.streamingLandingIntroUpcoming.content | html"></div>
+      <countdown-intro></countdown-intro>
     </div>
   </section>
 
-  <section ng-if="landing.streamStatus == 'Off'" id="intro" class="intro imgix-fluid-bg crds-hero" data-src="{{ landing.introImage() }}">
+  <!--<section ng-if="landing.streamStatus == 'Off'" id="intro" class="intro imgix-fluid-bg crds-hero" data-src="{{ landing.introImage() }}">
     <div class="wow fadeInUp">
       <div dynamic-content="$root.MESSAGES.streamingLandingIntroOff.content | html"></div>
     </div>
-  </section>
+  </section>-->
 
   <current-series></current-series>
   

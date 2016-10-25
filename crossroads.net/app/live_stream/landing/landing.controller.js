@@ -5,7 +5,6 @@ export default class LandingController {
   constructor($rootScope, $filter, CMSService, StreamStatusService, $sce) {
 
     this.rootScope = $rootScope;
-
     this.streamStatus = StreamStatusService.getStatus();
 
     this.rootScope.$on('streamStatusChanged', (e, streamStatus) => {
@@ -28,6 +27,13 @@ export default class LandingController {
       .then((response) => {
         this.pastWeekends = this.parseWeekends(response,maxPastWeekends)
       })
+
+    $rootScope.$on('dynamicContentCompiled', () => { 
+      let el = angular.element('#intro p.lead');
+      if (el.length) {
+        angular.element('countdown-intro').insertAfter(el)
+      }
+    });
   }
 
   introImage() {
