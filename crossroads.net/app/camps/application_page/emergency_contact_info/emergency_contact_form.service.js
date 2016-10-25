@@ -21,7 +21,7 @@ class EmergencyContactForm {
           type: 'crdsInput',
           templateOptions: {
             label: 'First Name',
-            requrired: true
+            required: true
           }
         }, {
           className: 'form-group col-xs-6',
@@ -29,7 +29,7 @@ class EmergencyContactForm {
           type: 'crdsInput',
           templateOptions: {
             label: 'Last Name',
-            requrired: true
+            required: true
           }
         }]
       },
@@ -51,10 +51,21 @@ class EmergencyContactForm {
           templateOptions: {
             label: 'Email',
             type: 'email',
-            required: true
           }
         }]
       },
+      {
+        className: 'row',
+        fieldGroup: [{
+          className: 'form-group col-xs-6',
+          key: 'relationship',
+          type: 'crdsInput',
+          templateOptions: {
+            label: 'Relationship to Student',
+            required: true
+          }
+        }]
+      }
     ];
   }
 
