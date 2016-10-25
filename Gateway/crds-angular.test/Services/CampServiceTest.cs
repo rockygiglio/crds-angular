@@ -222,6 +222,9 @@ namespace crds_angular.test.Services
             _configurationWrapper.Setup(m => m.GetConfigIntValue("SummerCampForm.EmergencyContactRelationship")).Returns(14);
 
             _fixture.SaveCamperEmergencyContactInfo(MockCampReservationDTO(), eventId, contactId);
+            _configurationWrapper.VerifyAll();
+            _participantRepository.VerifyAll();
+            _eventRepository.VerifyAll();
         }
 
         [Test]
