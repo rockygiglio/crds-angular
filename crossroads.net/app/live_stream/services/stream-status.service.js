@@ -124,7 +124,7 @@ export default class StreamStatusService {
 
   doesEventStartAfterCurrentTime(event){
     let currentTime = moment();
-    let eventStartTime = moment(event.start);
+    let eventStartTime = (typeof event.startTime === moment) ? event.start : moment(event.start);        
     let isEventStartBeforeCurrentTime = eventStartTime.isAfter(currentTime);
 
     return isEventStartBeforeCurrentTime;
