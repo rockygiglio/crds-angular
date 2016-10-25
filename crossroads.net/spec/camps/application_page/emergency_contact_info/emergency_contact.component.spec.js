@@ -6,15 +6,17 @@ describe('Camps Emergency Contact Component', () => {
   let emergencyContactController;
   // let log;
   let rootScope;
+  let resource;
   let emergencyContactForm;
 
   beforeEach(angular.mock.module(campsModule));
 
-  beforeEach(inject((_$componentController_, _$log_, _$rootScope_, _EmergencyContactForm_) => {
+  beforeEach(inject((_$componentController_, _EmergencyContactForm_, _$log_, _$rootScope_, _$resource_) => {
     $componentController = _$componentController_;
     // log = _$log_;
     emergencyContactForm = _EmergencyContactForm_;
     rootScope = _$rootScope_;
+    resource = _$resource_;
     rootScope.MESSAGES = campHelpers.messages;
 
     spyOn(emergencyContactForm, 'getModel').and.callThrough();
