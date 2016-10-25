@@ -63,6 +63,20 @@ describe('Camps Emergency Contact Component', () => {
     expect(emergencyContactForm.save).toHaveBeenCalledWith(campId, contactId);
   });
 
+  it('should reject saving the form', () => {
+    emergencyContactController.emergencyContact = { $valid: true };
+
+    spyOn(emergencyContactForm, 'save').and.callFake(() => {
+      const deferred = q.defer();
+      deferred.reject('error!');
+      return deferred.promise;
+    });
+
+    emergencyContactController.submit();
+    rootScope.$apply();
+    expect(emergencyContactForm.save).toHaveBeenCalledWith(campId, contactId);
+  });
+
   it('should disable the submit button while saving', () => {
     expect(emergencyContactController.submitting).toBe(false);
 

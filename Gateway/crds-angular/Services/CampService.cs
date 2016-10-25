@@ -11,34 +11,40 @@ namespace crds_angular.Services
 {
     public class CampService : ICampService
     {
-        private readonly IContactRepository _contactService;
         private readonly ICampRepository _campService;
         private readonly IFormSubmissionRepository _formSubmissionRepository;
         private readonly IConfigurationWrapper _configurationWrapper;
         private readonly IParticipantRepository _participantRepository;
         private readonly IEventRepository _eventRepository;
         private readonly IApiUserRepository _apiUserRepository;
+        private readonly IGroupService _groupService;
+        private readonly IContactRepository _contactRepository;
+        private readonly ICongregationRepository _congregationRepository;
         private readonly IGroupRepository _groupRepository;
         private readonly IEventParticipantRepository _eventParticipantRepository;
 
         public CampService(
-            IContactRepository contactService,
             ICampRepository campService,
             IFormSubmissionRepository formSubmissionRepository,
             IConfigurationWrapper configurationWrapper,
             IParticipantRepository partcipantRepository,
             IEventRepository eventRepository,
             IApiUserRepository apiUserRepository,
+            IGroupService groupService,
+            IContactRepository contactRepository,
+            ICongregationRepository congregationRepository,
             IGroupRepository groupRepository,
             IEventParticipantRepository eventParticipantRepository)
         {
-            _contactService = contactService;
             _campService = campService;
             _formSubmissionRepository = formSubmissionRepository;
             _configurationWrapper = configurationWrapper;
             _participantRepository = partcipantRepository;
             _eventRepository = eventRepository;
             _apiUserRepository = apiUserRepository;
+            _groupService = groupService;
+            _contactRepository = contactRepository;
+            _congregationRepository = congregationRepository;
             _groupRepository = groupRepository;
             _eventParticipantRepository = eventParticipantRepository;
         }
@@ -63,9 +69,9 @@ namespace crds_angular.Services
 
         public List<CampFamilyMember> GetEligibleFamilyMembers(int eventId, string token)
         {
-            var myContact = _contactService.GetMyProfile(token);
-            var family = _contactService.GetHouseholdFamilyMembers(myContact.Household_ID);
-            var otherFamily = _contactService.GetOtherHouseholdMembers(myContact.Contact_ID);
+            var myContact = _contactRepository.GetMyProfile(token);
+            var family = _contactRepository.GetHouseholdFamilyMembers(myContact.Household_ID);
+            var otherFamily = _contactRepository.GetOtherHouseholdMembers(myContact.Contact_ID);
             family.AddRange(otherFamily);
 
             var apiToken = _apiUserRepository.GetToken(); 
@@ -108,30 +114,51 @@ namespace crds_angular.Services
 
         public void SaveCampReservation(CampReservationDTO campReservation, int eventId, string token)
         {
-            var parentContact = _contactService.GetMyProfile(token);
-            var displayName = campReservation.PreferredName;
-            var nickName = displayName ?? campReservation.FirstName;
-            displayName = displayName != null ? campReservation.LastName + ", " + campReservation.PreferredName : campReservation.LastName + ", " + campReservation.FirstName;
-            
+            var gender = campReservation.Gender == 1 ? "Male" : "Female ";            
+            var nickName = campReservation.PreferredName ?? campReservation.FirstName;
+            var displayName = campReservation.PreferredName ?? campReservation.LastName + ", " + campReservation.FirstName;
+            MpParticipant participant;
+            var contactId = Convert.ToInt32(campReservation.ContactId);
+
             var minorContact = new MpContact
             {
                 FirstName = campReservation.FirstName,
                 LastName = campReservation.LastName,
                 MiddleName = campReservation.MiddleName,
-                BirthDate = campReservation.BirthDate,
+                BirthDate = Convert.ToDateTime(campReservation.BirthDate),
                 Gender = campReservation.Gender,
                 PreferredName = displayName,
                 Nickname = nickName,
                 SchoolAttending = campReservation.SchoolAttending,
-                HouseholdId = parentContact.Household_ID,
+                HouseholdId = (_contactRepository.GetMyProfile(token)).Household_ID,
                 HouseholdPositionId = 2
             };
 
-            var newMinorContact = _contactService.CreateContact(minorContact);
-            var contactId = newMinorContact[0].RecordId;
-            var participant = _participantRepository.GetParticipant(contactId);
+            if (campReservation.ContactId == null || campReservation.ContactId == 0)
+            {
+                var newMinorContact = _contactRepository.CreateContact(minorContact);
+                contactId = newMinorContact[0].RecordId;
+                participant = _participantRepository.GetParticipant(contactId);
+            }
+            else
+            {
+                var updateToDictionary = new Dictionary<string, object>
+                {
+                    {"Contact_ID", Convert.ToInt32(campReservation.ContactId) },
+                    { "First_Name", minorContact.FirstName },
+                    {"Last_Name", minorContact.LastName },
+                    {"Middle_Name", minorContact.MiddleName },
+                    {"Display_Name", displayName },
+                    {"Date_Of_Birth", minorContact.BirthDate },
+                    {"Gender", gender},
+                    {"Current_School", minorContact.SchoolAttending },
+                    {"Congregation_Name", (_congregationRepository.GetCongregationById(campReservation.CrossroadsSite)).Name }
+                };
+                _contactRepository.UpdateContact(Convert.ToInt32(campReservation.ContactId), updateToDictionary);
+                participant = _participantRepository.GetParticipant(Convert.ToInt32(campReservation.ContactId));
+            }
             var eventParticipantId = _eventRepository.RegisterParticipantForEvent(participant.ParticipantId, eventId);
-           
+
             //form response
             var answers = new List<MpFormAnswer>
             {
@@ -158,9 +185,9 @@ namespace crds_angular.Services
 
             var dashboardData = new List<MyCampDTO>();
 
-            var loggedInContact = _contactService.GetMyProfile(token);
-            var family = _contactService.GetHouseholdFamilyMembers(loggedInContact.Household_ID);
-            family.AddRange(_contactService.GetOtherHouseholdMembers(loggedInContact.Contact_ID));
+            var loggedInContact = _contactRepository.GetMyProfile(token);
+            var family = _contactRepository.GetHouseholdFamilyMembers(loggedInContact.Household_ID);
+            family.AddRange(_contactRepository.GetOtherHouseholdMembers(loggedInContact.Contact_ID));
 
             var camps = _eventRepository.GetEvents(campType, apiToken);
             foreach (var camp in camps.Where(c => c.EventEndDate >= DateTime.Today))
@@ -187,6 +214,37 @@ namespace crds_angular.Services
             }
 
             return dashboardData;
+        }
+
+        public CampReservationDTO GetCamperInfo(string token, int eventId, int contactId)
+        {
+            var loggedInContact = _contactRepository.GetMyProfile(token);
+            var family = _contactRepository.GetHouseholdFamilyMembers(loggedInContact.Household_ID);
+            family.AddRange(_contactRepository.GetOtherHouseholdMembers(loggedInContact.Contact_ID));
+            CampReservationDTO camperInfo = null;
+            if (family.Where(f => f.ContactId == contactId).ToList().Count > 0)
+            {
+                var camperContact = _contactRepository.GetContactById(contactId);
+                var participant = _participantRepository.GetParticipant(contactId);
+                var gradeGroupTypeId = _configurationWrapper.GetConfigIntValue("AgeorGradeGroupType");
+                var gradeGroup = (_groupService.GetGroupsByTypeForParticipant(token, participant.ParticipantId, gradeGroupTypeId)).FirstOrDefault();
+                var currentGrade = gradeGroup.GroupName;
+
+                camperInfo = new CampReservationDTO
+                {
+                    ContactId = camperContact.Contact_ID,
+                    FirstName = camperContact.First_Name,
+                    LastName = camperContact.Last_Name,
+                    MiddleName = camperContact.Middle_Name,
+                    PreferredName = camperContact.Display_Name,
+                    CrossroadsSite = Convert.ToInt32(camperContact.Congregation_ID),
+                    BirthDate = Convert.ToString(camperContact.Date_Of_Birth),
+                    SchoolAttending = camperContact.Current_School,
+                    Gender = Convert.ToInt32(camperContact.Gender_ID),
+                    CurrentGrade = currentGrade
+                };
+            }
+            return camperInfo;
         }
     }
 }

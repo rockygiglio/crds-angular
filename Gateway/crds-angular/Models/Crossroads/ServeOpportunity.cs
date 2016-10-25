@@ -21,6 +21,21 @@ namespace crds_angular.Models.Crossroads
         [JsonProperty(PropertyName = "roleTitle")]
         public string RoleTitle { get; set; }
 
+        [JsonProperty(PropertyName = "shiftStartTime")]
+        public string ShiftStartTime { get; set; }
+
+        [JsonProperty(PropertyName = "shiftEndTime")]
+        public string ShiftEndTime { get; set; }
+
+        [JsonProperty(PropertyName = "room")]
+        public string Room { get; set; }
+
+        [JsonProperty(PropertyName = "minimum")]
+        public int? MinimumNeeded { get; set; }
+
+        [JsonProperty(PropertyName = "maximum")]
+        public int? MaximumNeeded { get; set; }
+ 
         public ServeOpportunity()
         {
             RsvpMembers = new List<RsvpMembers>(); 
