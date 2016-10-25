@@ -101,6 +101,39 @@ namespace crds_angular.Controllers.API
             }));
         }
 
+
+        /// <summary>
+        /// Retrieve the last donation for the logged-in donor.
+        /// </summary>
+        /// <param name="includeRecurring">A bool indicating if the result should contain only soft-credit (true), only direct (false), or all (null) donations.  Defaults to null.</param>
+        /// <returns>A DonationDTO for the last donation</returns>
+        [RequiresAuthorization]
+        [Route("api/donations/lastdonation")]
+        [HttpGet]
+        public IHttpActionResult GetLastDonations(bool? includeRecurring = false)
+        {
+            return (Authorized(token =>
+            {
+                try
+                {
+                    //TODO variables for null year, 1 for limit, false for soft credit (only direct donations)
+                    var donations = _gatewayDonationService.GetDonationsForAuthenticatedUser(token, null, 1, false);
+                    if (donations == null || !donations.HasDonations)
+                    {
+                        return (RestHttpActionResult<ApiErrorDto>.WithStatus(HttpStatusCode.NotFound, new ApiErrorDto("No matching donations found")));
+                    }
+
+                    return (Ok(donations));
+                }
+                //TODO clean up exception handling
+                catch (Exception e)
+                {
+                    var apiError = new ApiErrorDto("Last Donation Get Failed", e);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+            }));
+        }
+
         /// <summary>
         /// Retrieve a list of donation years for the logged-in donor.  This includes any year the donor has given either directly, or via soft-credit.
         /// </summary>
