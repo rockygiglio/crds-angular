@@ -107,12 +107,12 @@ namespace crds_angular.Controllers.API
 
         [Route("api/camps/:campId/emergencycontact/:contactId}")]
         [AcceptVerbs("POST")]
-        public IHttpActionResult SaveCamperEmergencyContact([FromBody] CampReservationDTO campReservation, int eventId)
+        public IHttpActionResult SaveCamperEmergencyContact([FromBody] CampReservationDTO campReservation, int eventId, int contactId)
         {
             if (!ModelState.IsValid)
             {
                 var errors = ModelState.Values.SelectMany(val => val.Errors).Aggregate("", (current, err) => current + err.Exception.Message);
-                var dataError = new ApiErrorDto("Camper Application data Invalid", new InvalidOperationException("Invalid Camper Application Data" + errors));
+                var dataError = new ApiErrorDto("Camper Emergency Contact data Invalid", new InvalidOperationException("Invalid Camper emergency contact Data" + errors));
                 throw new HttpResponseException(dataError.HttpResponseMessage);
             }
 
@@ -120,7 +120,7 @@ namespace crds_angular.Controllers.API
             {
                 try
                 {
-                    _campService.SaveCampReservation(campReservation, eventId, token);
+                    _campService.SaveCamperEmergencyContactInfo(campReservation, eventId, contactId);
                     return Ok();
                 }
 

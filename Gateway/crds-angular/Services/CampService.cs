@@ -81,6 +81,31 @@ namespace crds_angular.Services
             }).ToList();                       
         }
 
+        public void SaveCamperEmergencyContactInfo(CampReservationDTO campReservation, int eventId, int contactId)
+        {
+            var participant = _participantRepository.GetParticipant(contactId);
+            var eventParticipantId = _eventRepository.RegisterParticipantForEvent(participant.ParticipantId, eventId);
+
+            var answers = new List<MpFormAnswer>
+            {
+                new MpFormAnswer {Response = campReservation.FirstName,FieldId = _configurationWrapper.GetConfigIntValue("SummerCampForm.EmergenyContactFirstName"),EventParticipantId =  eventParticipantId},
+                new MpFormAnswer {Response = campReservation.LastName, FieldId = _configurationWrapper.GetConfigIntValue("SummerCampForm.EmergencyContactLastName"),EventParticipantId =  eventParticipantId},
+                new MpFormAnswer {Response = campReservation.MobileNumber, FieldId = _configurationWrapper.GetConfigIntValue("SummerCampForm.EmergencyContactMobilePhone"),EventParticipantId =  eventParticipantId},
+                new MpFormAnswer {Response = campReservation.Email, FieldId = _configurationWrapper.GetConfigIntValue("SummerCampForm.EmergencyContactEmail"),EventParticipantId =  eventParticipantId},
+                new MpFormAnswer {Response = campReservation.Relationship, FieldId = _configurationWrapper.GetConfigIntValue("SummerCampForm.EmergencyContactRelationship"),EventParticipantId =  eventParticipantId}
+            };
+
+            var formId = _configurationWrapper.GetConfigIntValue("SummerCampFormID");
+            var formResponse = new MpFormResponse
+            {
+                ContactId = contactId,
+                FormId = formId,
+                FormAnswers = answers
+            };
+
+            _formSubmissionRepository.SubmitFormResponse(formResponse);
+        }
+
         public void SaveCampReservation(CampReservationDTO campReservation, int eventId, string token)
         {
             var parentContact = _contactService.GetMyProfile(token);
@@ -105,8 +130,7 @@ namespace crds_angular.Services
             var newMinorContact = _contactService.CreateContact(minorContact);
             var contactId = newMinorContact[0].RecordId;
             var participant = _participantRepository.GetParticipant(contactId);
-            var participantId = participant.ParticipantId;
-            var eventParticipantId = _eventRepository.RegisterParticipantForEvent(participantId, eventId);
+            var eventParticipantId = _eventRepository.RegisterParticipantForEvent(participant.ParticipantId, eventId);
            
             //form response
             var answers = new List<MpFormAnswer>
