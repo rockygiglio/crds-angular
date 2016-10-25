@@ -84,12 +84,9 @@
       scope.showEdit = false;
       scope.showIcon = showIcon;
       scope.togglePanel = togglePanel;
-      scope.memberClick = memberClick;
-      scope.memberRemove = memberRemove;
 
       scope.isTeamTab = isTeamTab;
       scope.isTeamLeader = isTeamLeader;
-      scope.loadTeamMembers = loadTeamMembers;
       
       //////////////////////////////////////
 
@@ -101,27 +98,6 @@
       function isTeamLeader(team) {
         // TODO UI!!! IMPLEMENT THIS
         return true;
-      }
-
-      function loadTeamMembers($query) {
-        console.debug('Query team members');
-        // TODO UI!!! IMPLEMENT THIS
-        return [
-          {
-            id: 1001,
-            name: 'Genie Simmons',
-            email: 'gsimmons@gmail.com',
-            phone: '513-313-5984',
-            role: 'Leader'
-          },
-          {
-            id: 1002,
-            name: 'Holly Gennaro',
-            email: 'hgennaro@excite.com',
-            phone: '513-857-9587',
-            role: null
-          },
-        ]
       }
 
       function allowProfileEdit() {
@@ -588,14 +564,6 @@
             max: r.maximum
           });
         });
-      }
-
-      function memberClick($member) {
-        console.debug("serve team member clicked", $member);
-      }
-
-      function memberRemove($member) {
-        console.debug("serve team member removed", $member);
       }
     }
   }

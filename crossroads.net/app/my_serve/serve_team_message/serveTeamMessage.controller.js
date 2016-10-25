@@ -33,7 +33,6 @@ export default class ServeTeamMessageController {
       toolbar: 'undo redo | fontselect fontsizeselect forecolor backcolor | bold italic underline | alignleft aligncenter alignright | numlist bullist outdent indent | link',
       menubar: false,
       statusbar: false
-
     };
   }
 

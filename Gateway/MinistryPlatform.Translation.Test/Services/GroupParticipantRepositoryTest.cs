@@ -303,7 +303,7 @@ namespace MinistryPlatform.Translation.Test.Services
                 .Returns(groupParticipantReturn);
 
 
-            var result = _fixture.GetAllParticipantsForLeaderGroups(participantId, groupType);
+            var result = _fixture.GetAllParticipantsForLeaderGroups(participantId, groupType, null);
             _ministryPlatformRestRepository.VerifyAll();
 
             Assert.IsNotNull(result);
@@ -392,7 +392,7 @@ namespace MinistryPlatform.Translation.Test.Services
                 .Returns(groupParticipantReturn);
 
 
-            var result = _fixture.GetAllParticipantsForLeaderGroups(participantId);
+            var result = _fixture.GetAllParticipantsForLeaderGroups(participantId, null, null);
             _ministryPlatformRestRepository.VerifyAll();
 
             Assert.IsNotNull(result);

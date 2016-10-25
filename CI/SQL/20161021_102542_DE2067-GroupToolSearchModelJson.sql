@@ -24,7 +24,7 @@ BEGIN
 	Child_Care_Available AS [ChildCareAvailable],
 	Kids_Welcome AS [KidsWelcome],
 	Primary_Contact AS [ContactId],
-	'[ ' + STUFF((SELECT ' { NickName: "' + Nickname + '", LastName: "' + Last_Name + '", Congregation: "'+ ISNULL(cong.Congregation_Name, '') +'", Group_Role_ID: ' + CONVERT(VARCHAR(10), gp.Group_Role_ID) + ' },'
+	'[ ' + STUFF((SELECT ' { Nickname: "' + Nickname + '", Last_Name: "' + Last_Name + '", Congregation: "'+ ISNULL(cong.Congregation_Name, '') +'", Group_Role_ID: ' + CONVERT(VARCHAR(10), gp.Group_Role_ID) + ' },'
 			FROM Groups g INNER JOIN Group_Participants gp ON g.Group_ID = gp.Group_ID 
 			INNER JOIN Participants p ON gp.Participant_ID = p.Participant_ID
 			INNER JOIN Contacts c ON p.Contact_ID = c.Contact_ID
@@ -102,7 +102,7 @@ BEGIN
 
 		DECLARE @Group_Name_Subquery NVARCHAR(MAX)
 		SELECT @Group_Name_Subquery = STUFF((
-			select ' UPPER(Name) LIKE ''%' + Keyword + '%'' OR '
+			select ' UPPER(Group_Name) LIKE ''%' + Keyword + '%'' OR '
 			from #Keywords
 			FOR XML PATH('')
 			)
@@ -200,7 +200,7 @@ BEGIN
 			@Site_Subquery, @Address_Subquery, @City_Subquery, @State_Subquery, @Zip_Subquery, @Meeting_Day_Subquery, @Meeting_Time_Subquery, @Meeting_Frequency_Subquery)
 
 		-- need to figure out a better way to handle the dangling OR
-		SET @DynamicQuery += ' Name = ''ThisIsAHack'''
+		SET @DynamicQuery += 'Group_Name = ''ThisIsAHack'''
 
 		EXEC(@DynamicQuery)
 
