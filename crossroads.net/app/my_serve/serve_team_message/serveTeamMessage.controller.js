@@ -22,7 +22,9 @@ export default class ServeTeamMessageController {
     });
     this.teamPeople = this.serveTeamService.getAllTeamMembersForLoggedInLeader().then((data) => {
       this.teamPeople = data;
-    }).catch((err) => { });
+    }).catch((err) => {
+      this.log.debug("unable to retrieve team members.")
+    });
     this.tinymceOptions = {
       resize: false,
       height: 300,
@@ -51,17 +53,32 @@ export default class ServeTeamMessageController {
       this.rootScope.$emit('notify', this.rootScope.MESSAGES.generalError);
       return;
     }
-    this.processing = true;
-    this.serveTeamService.sendGroupMessage(this.selection, { Body: this.email.message, Subject: this.email.subject })
-      .then((data) => {
-        this.rootScope.$emit('notify', this.rootScope.MESSAGES.emailSent);
-        this.state.go('serve-signup');
-      })
-      .catch((err) => {
-        this.rootScope.$emit('notify', this.rootScope.MESSAGES.messageSendError);
-      })
-      .finally(() => {
-        this.processing = false;
-      });
+    if (this.selection == -1) {
+      this.processing = true;
+      this.serveTeamService.sendParticipantsMessage({ Participants: this.individuals, Body: this.email.message, Subject: this.email.subject })
+        .then((data) => {
+          this.rootScope.$emit('notify', this.rootScope.MESSAGES.emailSent);
+          this.state.go('serve-signup');
+        })
+        .catch((err) => {
+          this.rootScope.$emit('notify', this.rootScope.MESSAGES.messageSendError);
+        })
+        .finally(() => {
+          this.processing = false;
+        });
+    } else {
+      this.processing = true;
+      this.serveTeamService.sendGroupMessage(this.selection, { Body: this.email.message, Subject: this.email.subject })
+        .then((data) => {
+          this.rootScope.$emit('notify', this.rootScope.MESSAGES.emailSent);
+          this.state.go('serve-signup');
+        })
+        .catch((err) => {
+          this.rootScope.$emit('notify', this.rootScope.MESSAGES.messageSendError);
+        })
+        .finally(() => {
+          this.processing = false;
+        });
+    }
   }
 }
