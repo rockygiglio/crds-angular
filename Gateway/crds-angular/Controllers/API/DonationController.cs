@@ -116,8 +116,7 @@ namespace crds_angular.Controllers.API
             {
                 try
                 {
-                    //TODO variables for null year, 1 for limit, false for soft credit (only direct donations)
-                    var donations = _gatewayDonationService.GetDonationsForAuthenticatedUser(token, null, 1, false);
+                    var donations = _gatewayDonationService.GetLastDonationForAuthenticatedUser(token);
                     if (donations == null || !donations.HasDonations)
                     {
                         return (RestHttpActionResult<ApiErrorDto>.WithStatus(HttpStatusCode.NotFound, new ApiErrorDto("No matching donations found")));
@@ -125,10 +124,9 @@ namespace crds_angular.Controllers.API
 
                     return (Ok(donations));
                 }
-                //TODO clean up exception handling
                 catch (Exception e)
                 {
-                    var apiError = new ApiErrorDto("Last Donation Get Failed", e);
+                    var apiError = new ApiErrorDto("Get Last Donation Get Failed", e);
                     throw new HttpResponseException(apiError.HttpResponseMessage);
                 }
             }));

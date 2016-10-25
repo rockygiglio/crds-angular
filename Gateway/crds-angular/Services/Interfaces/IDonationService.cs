@@ -19,6 +19,7 @@ namespace crds_angular.Services.Interfaces
         DonationBatchDTO GetDonationBatchByProcessorTransferId(string processorTransferId);
         DonationBatchDTO GetDonationBatch(int batchId);
         DonationsDTO GetDonationsForAuthenticatedUser(string userToken, string donationYear = null, int? limit = null, bool? softCredit = null);
+        DonationsDTO GetLastDonationForAuthenticatedUser(string userToken);
         DonationYearsDTO GetDonationYearsForAuthenticatedUser(string userToken);
         DonationsDTO GetDonationsForDonor(int donorId, string donationYear = null, bool softCredit = false);
         DonationYearsDTO GetDonationYearsForDonor(int donorId);

@@ -98,6 +98,21 @@ namespace crds_angular.Services
             return (PostProcessDonations(donations, limit));
         }
 
+        public DonationsDTO GetLastDonationForAuthenticatedUser(string userToken)
+        {         
+            var donations = _mpDonorService.GetDonationsForAuthenticatedUser(userToken, false, null);
+
+            for (var i = 0; i < donations.Count; i++)
+            {
+                if (donations[i].recurringGift)
+                {                    
+                    donations.Remove(donations[i]);
+                }
+            }
+
+            return (PostProcessDonations(donations, 1));
+        }
+
         public DonationYearsDTO GetDonationYearsForAuthenticatedUser(string userToken)
         {
             var donations = _mpDonorService.GetDonationsForAuthenticatedUser(userToken, null, null);

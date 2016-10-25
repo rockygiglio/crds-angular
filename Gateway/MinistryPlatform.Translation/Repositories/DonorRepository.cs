@@ -783,7 +783,8 @@ namespace MinistryPlatform.Translation.Repositories
                 transactionCode = record["Transaction_Code"] as string,
                 softCreditDonorId = record["Soft_Credit_Donor_ID"] as int? ?? 0,
                 donorDisplayName = record["Donor_Display_Name"] as string,
-                itemNumber = record["Item_Number"] as string
+                itemNumber = record["Item_Number"] as string,
+                recurringGift = record["Is_Recurring_Gift"] as bool? ?? false
             };
 
             var status = statuses.Find(x => x.Id == donation.donationStatus) ?? new MpDonationStatus();
