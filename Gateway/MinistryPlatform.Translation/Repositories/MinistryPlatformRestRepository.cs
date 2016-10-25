@@ -221,6 +221,26 @@ namespace MinistryPlatform.Translation.Repositories
             return Search<T>(searchString, selectColumns);
         }
 
+        public T Search<T>(string tableName, string searchString, string column)
+        {
+            var search = string.IsNullOrWhiteSpace(searchString) ? string.Empty : $"?$filter={MpRestEncode(searchString)}";
+            var url = AddGetColumnSelection($"/tables/{tableName}{search}", column);
+            var request = new RestRequest(url, Method.GET);
+            AddAuthorization(request);
+
+            var response = _ministryPlatformRestClient.Execute(request);
+            _authToken.Value = null;
+            response.CheckForErrors($"Error getting {tableName}", true);
+
+            var content = JsonConvert.DeserializeObject<List<T>>(response.Content);
+            if (content == null || !content.Any())
+            {
+                return default(T);
+            }
+
+            return content.FirstOrDefault();
+        }
+
         public void UpdateRecord(string tableName, int recordId, Dictionary<string, object> fields)
         {
             var url = $"/tables/{tableName}";

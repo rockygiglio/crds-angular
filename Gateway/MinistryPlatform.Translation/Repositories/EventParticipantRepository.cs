@@ -11,11 +11,13 @@ namespace MinistryPlatform.Translation.Repositories
     public class EventParticipantRepository : BaseRepository, IEventParticipantRepository
     {
         private readonly IMinistryPlatformService _ministryPlatformService;
+        private readonly IMinistryPlatformRestRepository _ministryPlatformRestRepository;
 
-        public EventParticipantRepository(IMinistryPlatformService ministryPlatformService, IAuthenticationRepository authenticationService, IConfigurationWrapper configurationWrapper)
+        public EventParticipantRepository(IMinistryPlatformService ministryPlatformService, IMinistryPlatformRestRepository ministryPlatformRestRepository, IAuthenticationRepository authenticationService, IConfigurationWrapper configurationWrapper)
             : base(authenticationService, configurationWrapper)
         {
             _ministryPlatformService = ministryPlatformService;
+            _ministryPlatformRestRepository = ministryPlatformRestRepository;
         }
 
         public bool AddDocumentsToTripParticipant(List<MpTripDocuments> documents, int eventParticipantId)
@@ -135,6 +137,12 @@ namespace MinistryPlatform.Translation.Repositories
             {
                 throw new ApplicationException("GetEventParticipants failed", e);
             }
+        }
+
+        public int GetEventParticipantByContactId(int eventId, int contactId)
+        {
+            //var eventParticipant = _ministryPlatformRestRepository.Search();
+            return 1; //eventParticipant;
         }
     }
 }

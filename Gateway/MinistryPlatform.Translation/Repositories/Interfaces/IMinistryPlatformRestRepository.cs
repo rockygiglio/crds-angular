@@ -59,6 +59,8 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
         /// <returns>An List of objects representing the matching MP rows for the search, if found.</returns>
         List<T> Search<T>(string searchString, List<string> columns);
 
+        T Search<T>(string tableName, string searchString, string column);
+
         /// <summary>
         /// Update a set of records of the given type in MP. 
         /// </summary>

@@ -316,6 +316,17 @@ namespace MinistryPlatform.Translation.Test.Services
             var results = _fixture.UsingAuthenticationToken(_authToken).Get<MpPayment>("Payments", fields);
             Console.WriteLine("Result\t" + results.ToString());
         }
+
+        [Test]
+        public void TestGetASingleValue()
+        {
+            var contactId = 7681520;
+            var eventId = 4525325;
+            var tableName = "Event_Participants";
+            var searchString = $"Event_ID_Table.Event_ID={eventId} AND Participant_ID_Table_Contact_ID_Table.Contact_ID={contactId}";
+            var column = "Event_Participant_ID";
+            var results = _fixture.UsingAuthenticationToken(_authToken).Search<int>(tableName, searchString, column);
+        }
     }
 
     [MpRestApiTable(Name = "Invoices")]
