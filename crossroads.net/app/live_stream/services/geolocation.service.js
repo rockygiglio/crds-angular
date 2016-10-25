@@ -23,7 +23,6 @@ export default class GeolocationService {
   }
 
   saveLocation(location) {
-    this.answered    = true;
     localStorage.setItem('crds-geolocation', JSON.stringify(location));
 
     let formKey = CONSTANTS.GEOLOCATION.FORMS_KEY;
@@ -109,6 +108,7 @@ export default class GeolocationService {
   }
 
   success() {
+    this.answered    = true;
     this.rootScope.$broadcast('geolocationModalDismiss');
   }
 

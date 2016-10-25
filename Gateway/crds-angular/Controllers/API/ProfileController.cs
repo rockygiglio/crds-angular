@@ -13,6 +13,7 @@ using crds_angular.Security;
 using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Interfaces;
 using log4net;
+using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 using IPersonService = crds_angular.Services.Interfaces.IPersonService;
 using IDonorService = crds_angular.Services.Interfaces.IDonorService;
@@ -70,7 +71,7 @@ namespace crds_angular.Controllers.API
             });
         }
 
-        [ResponseType(typeof(Person))]
+       [ResponseType(typeof(Person))]
         [Route("api/profile/{contactId}")]
         [HttpGet]
         public IHttpActionResult GetProfile(int contactId)
@@ -101,7 +102,7 @@ namespace crds_angular.Controllers.API
                 }
             });
         }
-
+        
         [ResponseType(typeof(Person))]
         [Route("api/profile/{contactId}/admin")]
         [HttpGet]

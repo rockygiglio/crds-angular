@@ -18,6 +18,26 @@ namespace crds_angular.Controllers.API
             _campService = campService;
         }
 
+        [Route("api/camps/{eventId}/family")]
+        [AcceptVerbs("GET")]
+        public IHttpActionResult GetCampFamily(int eventId)
+        {
+            return Authorized(token =>
+            {
+                try
+                {
+                    var members = _campService.GetEligibleFamilyMembers(eventId, token);
+                    return Ok(members);
+                }
+                catch (Exception e)
+                {
+                    var apiError = new ApiErrorDto("Camp Family", e
+                        );
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+            });
+        }
+
         [ResponseType(typeof(List<MyCampDTO>))]
         [Route("api/my-camp")]
         [AcceptVerbs("GET")]
@@ -53,6 +73,26 @@ namespace crds_angular.Controllers.API
                 catch (Exception exception)
                 {
                     var apiError = new ApiErrorDto("EventInfo", exception);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+            });
+        }
+
+        [ResponseType(typeof(CampReservationDTO))]
+        [Route("api/camps/{eventid}/{contactid}")]
+        [AcceptVerbs("GET")]
+        public IHttpActionResult GetCamperInfo(int eventId, int contactId)
+        {
+            return Authorized(token =>
+            {
+                try
+                {
+                    var camperInfo = _campService.GetCamperInfo(token, eventId, contactId);
+                    return Ok(camperInfo);
+                }
+                catch (Exception exception)
+                {
+                    var apiError = new ApiErrorDto("CamperInfo", exception);
                     throw new HttpResponseException(apiError.HttpResponseMessage);
                 }
             });

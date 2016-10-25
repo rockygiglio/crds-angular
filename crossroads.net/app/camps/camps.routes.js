@@ -1,5 +1,15 @@
-export default function CampRoutes($stateProvider) {
+function getCampInfo(CampsService, $stateParams) {
+  const id = $stateParams.campId;
+  return CampsService.getCampInfo(id);
+}
 
+function getCamperInfo(CampsService, $stateParams) {
+  let camperId = $stateParams.camperId;
+  let campId = $stateParams.campId;
+  return CampsService.getCamperInfo(campId, camperId);
+}
+
+export default function CampRoutes($stateProvider) {
   $stateProvider
     .state('camps-dashboard', {
       parent: 'noSideBar',
@@ -15,13 +25,13 @@ export default function CampRoutes($stateProvider) {
       resolve: {
         loggedin: crds_utilities.checkLoggedin,
         campsService: 'CampsService',
-        dashboard: (campsService) => campsService.getCampDashboard()
+        dashboard: campsService => campsService.getCampDashboard()
       }
     })
-    .state('crossroads-camp', {
+    .state('campsignup', {
       parent: 'noSideBar',
       url: '/camps/:campId',
-      template:'<crossroads-camp></crossroads-camp>',
+      template: '<crossroads-camp></crossroads-camp>',
       data: {
         isProtected: true,
         meta: {
@@ -32,14 +42,27 @@ export default function CampRoutes($stateProvider) {
       resolve: {
         loggedin: crds_utilities.checkLoggedin,
         campsService: 'CampsService',
-        getCampInfo: getCampInfo,
+        getCampInfo,
+        $stateParams: '$stateParams',
+        family: (campsService, $stateParams) => {
+          const id = $stateParams.campId;
+          return campsService.getCampFamily(id);
+        }
+      }
+    })
+    .state('campsignup.camper', {
+      url: '/:camperId',
+      template: '<camper-info></camper-info>',
+      resolve: {
+        campsService: 'CampsService',
+        getCamperInfo: getCamperInfo,
         $stateParams: '$stateParams'
       }
     })
     .state('crossroads-camp.waivers', {
       parent: 'noSideBar',
       url: '/camps/:campId/waivers',
-      template:'<camp-waivers></camp-waivers>',
+      template: '<camp-waivers></camp-waivers>',
       data: {
         isProtected: true,
         meta: {
@@ -48,10 +71,9 @@ export default function CampRoutes($stateProvider) {
         }
       }
     })
-  ;
+    .state('campsignup.family', {
+      url: '/family',
+      template: '<camps-family></camps-family>'
+    });
 }
 
-function getCampInfo(CampsService, $stateParams) {
-  let id = $stateParams.campId;
-  return CampsService.getCampInfo(id);
-}

@@ -1,7 +1,5 @@
-import constants from 'crds-constants';
 import DashboardController from '../../../app/camps/dashboard/camps_dashboard.controller';
 
-/* jshint unused: false */
 import campsModule from '../../../app/camps/camps.module';
 import campHelpers from '../campHelpers';
 
@@ -10,7 +8,7 @@ describe('Camp Dashboard Component', () => {
   let dashboardComponent,
       campsService;
 
-  beforeEach(angular.mock.module(constants.MODULES.CAMPS));
+  beforeEach(angular.mock.module(campsModule));
 
   beforeEach(inject((_$componentController_, _CampsService_) => {
     campsService = _CampsService_;

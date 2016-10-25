@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Crossroads.Utilities.Interfaces;
 using FsCheck;
 using MinistryPlatform.Translation.Models;
@@ -99,5 +100,48 @@ namespace MinistryPlatform.Translation.Test.Services
                 Assert.AreEqual(p[i]["Room_ID"], result[i].RoomId);
             }
         }
+
+        [Test]
+        public void ShouldBeAnEventParticipant()
+        {
+            const int eventId = 12345;
+            const int contactId = 587878745;
+            const string apiToken = "letmein";
+            var signupDate = new DateTime(2016, 10, 06);
+            var expected = new List<MpEventParticipant>
+            {
+                new MpEventParticipant()
+                {
+                    EventParticipantId = 1232456,
+                    SetupDate = signupDate
+                }   
+            };
+
+            var filter = $"Event_ID_Table.[Event_ID] = {eventId} AND Participant_ID_Table_Contact_ID_Table.[Contact_ID] = {contactId}";
+
+            _ministryPlatformRest.Setup(m => m.UsingAuthenticationToken(apiToken)).Returns(_ministryPlatformRest.Object);
+            _ministryPlatformRest.Setup(m => m.Search<MpEventParticipant>(filter, "Event_Participants.[Event_Participant_ID],Event_Participants.[_Setup_Date] as [Setup_Date]", (string) null, false)).Returns(expected);
+
+            var result = _fixture.EventParticipantSignupDate(contactId, eventId, apiToken);
+            Assert.IsNotNull(result);
+            Assert.AreEqual(signupDate, result);
+        }
+
+        [Test]
+        public void ShouldNotBeAnEventParticpant()
+        {
+            const int eventId = 12345;
+            const int contactId = 587878745;
+            const string apiToken = "letmein";
+            var expected = new List<MpEventParticipant>();
+
+            var filter = $"Event_ID_Table.[Event_ID] = {eventId} AND Participant_ID_Table_Contact_ID_Table.[Contact_ID] = {contactId}";
+
+            _ministryPlatformRest.Setup(m => m.UsingAuthenticationToken(apiToken)).Returns(_ministryPlatformRest.Object);
+            _ministryPlatformRest.Setup(m => m.Search<MpEventParticipant>(filter, "Event_Participants.[Event_Participant_ID],Event_Participants.[_Setup_Date] as [Setup_Date]", (string)null, false)).Returns(expected);
+
+            var result = _fixture.EventParticipantSignupDate(contactId, eventId, apiToken);
+            Assert.IsNull(result);
+        }       
     }
 }

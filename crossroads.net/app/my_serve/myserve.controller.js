@@ -72,7 +72,9 @@
 
     function activate() {
       vm.lastDate = formatDate(new Date(), 28);
-      vm.isLeader = ServeTeamService.getIsLeader();
+      ServeTeamService.getIsLeader().then((data) => {
+        vm.isLeader = data.isLeader;
+        });
     }
 
     function addOneMonth(date) {

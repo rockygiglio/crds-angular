@@ -144,5 +144,18 @@ namespace MinistryPlatform.Translation.Repositories
             //var eventParticipant = _ministryPlatformRestRepository.Search();
             return 1; //eventParticipant;
         }
+
+        public DateTime? EventParticipantSignupDate(int contactId, int eventId, string apiToken)
+        {
+            var filter = $"Event_ID_Table.[Event_ID] = {eventId} AND Participant_ID_Table_Contact_ID_Table.[Contact_ID] = {contactId}";
+            var participants = _ministryPlatformRestRepository.UsingAuthenticationToken(apiToken)
+                .Search<MpEventParticipant>(filter, "Event_Participants.[Event_Participant_ID],Event_Participants.[_Setup_Date] as [Setup_Date]");
+            if (participants.Count > 0)
+            {
+                var ret = participants.FirstOrDefault();
+                if (ret != null) return ret.SetupDate;
+            }
+            return null;
+        }
     }
 }

@@ -14,14 +14,17 @@ export default class ServeTeamMessageController {
 
   $onInit() {
     this.serveTeamService.getTeamDetailsByLeader().then((data) => {
-      this.log.debug(data)
       this.teams = data;
     }).catch((err) => {
       this.log.debug("unable to retrieve teams")
     }).finally(() => {
       this.ready = true;
     });
-    this.teamPeople = this.serveTeamService.getAllTeamMembersByLeader();
+    this.teamPeople = this.serveTeamService.getAllTeamMembersForLoggedInLeader().then((data) => {
+      this.teamPeople = data;
+    }).catch((err) => {
+      this.log.debug("unable to retrieve team members.")
+    });
     this.tinymceOptions = {
       resize: false,
       height: 300,
@@ -30,12 +33,14 @@ export default class ServeTeamMessageController {
       toolbar: 'undo redo | fontselect fontsizeselect forecolor backcolor | bold italic underline | alignleft aligncenter alignright | numlist bullist outdent indent | link',
       menubar: false,
       statusbar: false
-
     };
   }
 
   loadIndividuals($query) {
-    return this.teamPeople;
+    return _.filter(this.teamPeople, (person) => {
+      return person.displayName.toLowerCase()
+        .includes($query.toLowerCase())
+    })
   }
 
   cancel() {
@@ -48,17 +53,32 @@ export default class ServeTeamMessageController {
       this.rootScope.$emit('notify', this.rootScope.MESSAGES.generalError);
       return;
     }
-    this.processing = true;
-    this.serveTeamService.sendGroupMessage(this.selection, { Body: this.email.message, Subject: this.email.subject })
-      .then((data) => {
-        this.rootScope.$emit('notify', this.rootScope.MESSAGES.emailSent);
-        this.state.go('serve-signup');
-      })
-      .catch((err) => {
-        this.rootScope.$emit('notify', this.rootScope.MESSAGES.messageSendError);
-      })
-      .finally(() => {
-        this.processing = false;
-      });
+    if (this.selection == -1) {
+      this.processing = true;
+      this.serveTeamService.sendParticipantsMessage({ Participants: this.individuals, Body: this.email.message, Subject: this.email.subject })
+        .then((data) => {
+          this.rootScope.$emit('notify', this.rootScope.MESSAGES.emailSent);
+          this.state.go('serve-signup');
+        })
+        .catch((err) => {
+          this.rootScope.$emit('notify', this.rootScope.MESSAGES.messageSendError);
+        })
+        .finally(() => {
+          this.processing = false;
+        });
+    } else {
+      this.processing = true;
+      this.serveTeamService.sendGroupMessage(this.selection, { Body: this.email.message, Subject: this.email.subject })
+        .then((data) => {
+          this.rootScope.$emit('notify', this.rootScope.MESSAGES.emailSent);
+          this.state.go('serve-signup');
+        })
+        .catch((err) => {
+          this.rootScope.$emit('notify', this.rootScope.MESSAGES.messageSendError);
+        })
+        .finally(() => {
+          this.processing = false;
+        });
+    }
   }
 }

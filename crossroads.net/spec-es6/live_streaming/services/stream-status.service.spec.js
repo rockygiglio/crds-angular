@@ -101,7 +101,7 @@ describe('Stream Status Service', () => {
     it('should indicate that the event starts after the current time', () => {
       eventStartingAfterCurrentTime = events[2];
       doesEventStartAfterCurrentTime = streamStatusService.doesEventStartAfterCurrentTime(eventStartingAfterCurrentTime);
-      expect(doesEventStartAfterCurrentTime).toBeTruthy();
+      expect(doesEventStartAfterCurrentTime).toBe(true);
     });
 
     it('get hours until next streaming event starts', () => {

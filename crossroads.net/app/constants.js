@@ -86,7 +86,8 @@
       NOT_SITE_SPECIFIC: 5
     },
     SERVING_RESPONSES :{
-      NOT_AVAILABLE: 2
+      NOT_AVAILABLE: 2,
+      AVAILABLE: 1
     },
     SERVING: {
       MAXSTUDENTVOLUNTEERAGE: 17,
@@ -130,7 +131,7 @@
       },
     },
     GEOLOCATION: {
-      MODAL_TIMEOUT: 10000,
+      MODAL_TIMEOUT: 3000,
       FORMS_KEY: '1rupjr7gvqUU203fwjmeUlIiVwCA8BdkD-mP6M6s3wxQ'
     },
     INVITATION: {
