@@ -7,6 +7,7 @@ namespace MinistryPlatform.Translation.Models
     {
         [JsonProperty(PropertyName = "Opportunity_ID")]
         public int OpportunityId;
+
         [JsonProperty(PropertyName = "Opportunity_Title")]
         public string OpportunityTitle;
 
@@ -18,6 +19,21 @@ namespace MinistryPlatform.Translation.Models
 
         [JsonProperty(PropertyName = "Role_Title")]
         public string RoleTitle { get; set; }
+
+        [JsonProperty(PropertyName = "Shift_Start")]
+        public string ShiftStartTime { get; set; }
+
+        [JsonProperty(PropertyName = "Shift_End")]
+        public string ShiftEndTime { get; set; }
+
+        [JsonProperty(PropertyName = "Room")]
+        public string Room { get; set; }
+
+        [JsonProperty(PropertyName = "Minimum_Needed")]
+        public int? MinimumNeeded { get; set; }
+        
+        [JsonProperty(PropertyName = "Maximum_Needed")]
+        public int? MaximumNeeded { get; set; }
 
         public MpSU2SOpportunity()
         {

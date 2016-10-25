@@ -2,43 +2,38 @@ import CONSTANTS from 'crds-constants';
 
 export default class ServeTeamMembersController {
   /*@ngInject*/
-  constructor(ServeTeamService) {
-    console.debug('Construct ServeTeamMembersController');
-    this.servingOpportunities = {};
-    this.rsvpNoMembers = [];
-    this.rsvpYesLeaders = [];
+  constructor() {
+    //this.opportunities; from component binding
     this.allMembers = [];
-    this.serveTeamService = ServeTeamService;
     this.ready = false;
   }
 
-  $onInit()
-  {
-    this.serveTeamService.getTeamRsvps(this.team).then((team) =>{
-      this.loadTeamMembers(team);
-      this.ready = true;
-    });
+  $onInit() {
+    this.loadTeamMembers();
   }
 
-  loadTeamMembers(team) {
-      this.servingOpportunities = team.serveOppertunities; // gets passed in from component attribute.
-
-      this.servingOpportunities = this.splitMembers(this.servingOpportunities);
+  loadTeamMembers() {
+      this.opportunities = this.splitMembers(this.opportunities);
       this.allMembers = [];
 
-      _.forEach(this.servingOpportunities, (opportunity) => {
+      _.forEach(this.opportunities, (opportunity) => {
         this.addTeam((opportunity.Opportunity_Title + " " + opportunity.roleTitle), opportunity.rsvpMembers);
       });
-
-      this.addTeam('Not Available', _.uniq(this.rsvpNoMembers, 'Participant_ID'));
   }
 
   splitMembers(opportunities) {
+    let notAvailable ={
+        Opportunity_ID: 0,
+        Opportunity_Title: "Not Available",
+        rsvpMembers: [],
+        roleTitle: ""
+    };
     _.forEach(opportunities, (opportunity) => {
       let partitionedArray = _.partition(opportunity.rsvpMembers, (member) => {return member.Response_Result_ID === CONSTANTS.SERVING_RESPONSES.NOT_AVAILABLE});
-      this.rsvpNoMembers = this.rsvpNoMembers.concat(partitionedArray[0]);
+      notAvailable.rsvpMembers = notAvailable.rsvpMembers.concat(partitionedArray[0]);
       opportunity.rsvpMembers = partitionedArray[1];
-    })
+    });
+    opportunities.push(notAvailable);
     return opportunities;
   }
 
@@ -48,17 +43,15 @@ export default class ServeTeamMembersController {
       name: teamName,
       members: null
     };
-    team.members = (members !== null && members.length > 0) ? members : undefined;
+    team.members = (members !== null) ? members : undefined;
     this.allMembers.push(team);
   }
 
   memberClick(member) {
-    console.debug('member click', member);
     this.onMemberClick({ $member: member });
   }
 
   memberRemove(member) {
-    console.debug('member remove', member);
     this.onMemberRemove({ $member: member });
   }
 }

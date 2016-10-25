@@ -1,8 +1,8 @@
 import controller from './currentSeries.controller';
 
-CountdownComponent.$inject = [];
+CurrentSeriesComponent.$inject = [];
 
-export default function CountdownComponent() {
+export default function CurrentSeriesComponent() {
 
   let currentSeriesComponent = {
     restrict: 'E',

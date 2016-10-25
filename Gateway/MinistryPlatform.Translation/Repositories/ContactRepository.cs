@@ -331,6 +331,8 @@ namespace MinistryPlatform.Translation.Repositories
                 Foreign_Country = recordsDict.ToString("Foreign_Country"),
                 Gender_ID = recordsDict.ToNullableInt("Gender_ID"),
                 Home_Phone = recordsDict.ToString("Home_Phone"),
+                Display_Name = recordsDict.ToString("Display_Name"),
+                Current_School = recordsDict.ToString("Current_School"),
                 Last_Name = recordsDict.ToString("Last_Name"),
                 Maiden_Name = recordsDict.ToString("Maiden_Name"),
                 Marital_Status_ID = recordsDict.ToNullableInt("Marital_Status_ID"),
@@ -345,6 +347,7 @@ namespace MinistryPlatform.Translation.Repositories
                 Passport_Firstname = recordsDict.ToString("Passport_Firstname"),
                 Passport_Lastname = recordsDict.ToString("Passport_Lastname"),
                 Passport_Middlename = recordsDict.ToString("Passport_Middlename")
+                
             };
             if (recordsDict.ContainsKey("Participant_Start_Date"))
             {
