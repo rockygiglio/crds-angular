@@ -4,6 +4,7 @@ using System.Linq;
 using crds_angular.Models.Crossroads.Camp;
 using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Interfaces;
+using log4net;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 
@@ -22,6 +23,8 @@ namespace crds_angular.Services
         private readonly ICongregationRepository _congregationRepository;
         private readonly IGroupRepository _groupRepository;
         private readonly IEventParticipantRepository _eventParticipantRepository;
+
+        private readonly ILog _logger = LogManager.GetLogger(typeof(CampService));
 
         public CampService(
             ICampRepository campService,
@@ -132,8 +135,19 @@ namespace crds_angular.Services
                 _contactRepository.UpdateContact(Convert.ToInt32(campReservation.ContactId), updateToDictionary);
                 participant = _participantRepository.GetParticipant(Convert.ToInt32(campReservation.ContactId));
             }
-            var eventParticipantId = _eventRepository.RegisterParticipantForEvent(participant.ParticipantId, eventId);
-            
+
+            int eventParticipantId = 0;
+            var isEventParticipant = _eventRepository.EventHasParticipant(eventId, participant.ParticipantId);
+
+            if (!isEventParticipant)
+            {
+                eventParticipantId = _eventRepository.RegisterParticipantForEvent(participant.ParticipantId, eventId);
+            }
+            else
+            {
+                _logger.Error("The person is already an event participant");
+            }
+
             //form response
             var answers = new List<MpFormAnswer>
             {
