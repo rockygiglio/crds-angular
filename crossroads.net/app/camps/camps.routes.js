@@ -1,3 +1,5 @@
+import campWaiversResolve from './camp_waivers/camp_waivers.resolve';
+
 export default function CampRoutes($stateProvider) {
 
   $stateProvider
@@ -39,7 +41,7 @@ export default function CampRoutes($stateProvider) {
     .state('crossroads-camp.waivers', {
       parent: 'noSideBar',
       url: '/camps/:campId/waivers',
-      template:'<camp-waivers></camp-waivers>',
+      template: '<camp-waivers></camp-waivers>',
       data: {
         isProtected: true,
         meta: {
@@ -47,12 +49,7 @@ export default function CampRoutes($stateProvider) {
           description: 'Join us for camp!'
         }
       },
-      resolve: {
-        loggedin: crds_utilities.checkLoggedin,
-        campsService: 'CampsService',
-        getCampWaivers: getCampWaivers,
-        $stateParams: '$stateParams'
-      }
+      resolve: campWaiversResolve
     })
   ;
 }
@@ -62,8 +59,3 @@ function getCampInfo(CampsService, $stateParams) {
   return CampsService.getCampInfo(id);
 }
 
-function getCampWaivers(CampsService, $stateParams) {
-  console.debug('Get Camp Waivers');
-  let campId = $stateParams.campId;
-  return CampsService.getCampWaivers(campId);
-}
