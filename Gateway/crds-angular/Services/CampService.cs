@@ -93,11 +93,11 @@ namespace crds_angular.Services
         public void SaveCamperEmergencyContactInfo(CampReservationDTO campReservation, int eventId, int contactId)
         {
             var participant = _participantRepository.GetParticipant(contactId);
-            var eventParticipantId = _eventRepository.RegisterParticipantForEvent(participant.ParticipantId, eventId);
+            var eventParticipantId = _eventRepository.SafeRegisterParticipant(eventId, participant.ParticipantId);
 
             var answers = new List<MpFormAnswer>
             {
-                new MpFormAnswer {Response = campReservation.FirstName,FieldId = _configurationWrapper.GetConfigIntValue("SummerCampForm.EmergenyContactFirstName"),EventParticipantId =  eventParticipantId},
+                new MpFormAnswer {Response = campReservation.FirstName,FieldId = _configurationWrapper.GetConfigIntValue("SummerCampForm.EmergencyContactFirstName"),EventParticipantId =  eventParticipantId},
                 new MpFormAnswer {Response = campReservation.LastName, FieldId = _configurationWrapper.GetConfigIntValue("SummerCampForm.EmergencyContactLastName"),EventParticipantId =  eventParticipantId},
                 new MpFormAnswer {Response = campReservation.MobileNumber, FieldId = _configurationWrapper.GetConfigIntValue("SummerCampForm.EmergencyContactMobilePhone"),EventParticipantId =  eventParticipantId},
                 new MpFormAnswer {Response = campReservation.Email, FieldId = _configurationWrapper.GetConfigIntValue("SummerCampForm.EmergencyContactEmail"),EventParticipantId =  eventParticipantId},
@@ -160,6 +160,7 @@ namespace crds_angular.Services
                 _contactRepository.UpdateContact(Convert.ToInt32(campReservation.ContactId), updateToDictionary);
                 participant = _participantRepository.GetParticipant(Convert.ToInt32(campReservation.ContactId));
             }
+<<<<<<< HEAD
 
             int eventParticipantId = 0;
             var isEventParticipant = _eventRepository.EventHasParticipant(eventId, participant.ParticipantId);
@@ -172,6 +173,9 @@ namespace crds_angular.Services
             {
                 _logger.Error("The person is already an event participant");
             }
+=======
+            var eventParticipantId = _eventRepository.SafeRegisterParticipant(eventId, participant.ParticipantId);
+>>>>>>> e1d5f30f0dfe7d40f6ad2c21bfdd5e833dd30060
 
             //form response
             var answers = new List<MpFormAnswer>
