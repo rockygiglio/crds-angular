@@ -15,6 +15,7 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
         List<MpEvent> GetEvents(string eventType, string token);
         List<MpEvent> GetEventsByTypeForRange(int eventTypeId, DateTime startDate, DateTime endDate, string token);
         List<MpGroup> GetGroupsForEvent(int eventId);
+        int GetEventParticipantRecordId(int eventId, int participantId);
         bool EventHasParticipant(int eventId, int participantId);
         MpEvent GetEvent(int eventId);
         List<MpEvent> GetEventsByParentEventId(int parentEventId);
