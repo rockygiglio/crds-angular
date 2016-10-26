@@ -97,7 +97,7 @@ describe('ServeTeamLeaderController', () => {
 		expect(data.length).toBe(2);
 	});
 
-	fit('should save rsvp', () => {
+	it('should save rsvp', () => {
 		spyOn(serveTeamService, 'getAllTeamMembersForLoggedInLeader').and.callFake(function () {
 			var deferred = qApi.defer();
 			deferred.resolve(true);
