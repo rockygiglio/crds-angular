@@ -125,7 +125,7 @@ namespace crds_angular.Controllers.API
             });
         }
 
-        [Route("api/camps/:campId/emergencycontact/:contactId}")]
+        [Route("api/camps/{eventId}/emergencycontact/{contactId}")]
         [AcceptVerbs("POST")]
         public IHttpActionResult SaveCamperEmergencyContact([FromBody] CampReservationDTO campReservation, int eventId, int contactId)
         {
