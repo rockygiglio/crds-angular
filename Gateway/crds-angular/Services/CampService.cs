@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using crds_angular.Models.Crossroads.Camp;
 using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Interfaces;
@@ -92,9 +93,7 @@ namespace crds_angular.Services
 
         public void SaveCampReservation(CampReservationDTO campReservation, int eventId, string token)
         {
-            var gender = campReservation.Gender == 1 ? "Male" : "Female ";            
             var nickName = campReservation.PreferredName ?? campReservation.FirstName;
-            var displayName = campReservation.PreferredName ?? campReservation.LastName + ", " + campReservation.FirstName;
             MpParticipant participant;
             var contactId = Convert.ToInt32(campReservation.ContactId);
 
@@ -105,7 +104,6 @@ namespace crds_angular.Services
                 MiddleName = campReservation.MiddleName,
                 BirthDate = Convert.ToDateTime(campReservation.BirthDate),
                 Gender = campReservation.Gender,
-                PreferredName = displayName,
                 Nickname = nickName,
                 SchoolAttending = campReservation.SchoolAttending,
                 HouseholdId = (_contactRepository.GetMyProfile(token)).Household_ID,
@@ -120,26 +118,26 @@ namespace crds_angular.Services
             }
             else
             {
-                var updateToDictionary = new Dictionary<string, object>
+                var updateToDictionary = new Dictionary<String, Object>
                 {
                     {"Contact_ID", Convert.ToInt32(campReservation.ContactId) },
-                    { "First_Name", minorContact.FirstName },
+                    {"First_Name", minorContact.FirstName },
                     {"Last_Name", minorContact.LastName },
                     {"Middle_Name", minorContact.MiddleName },
-                    {"Display_Name", displayName },
+                    {"Nickname", nickName },
+                    { "Gender_ID", campReservation.Gender },
                     {"Date_Of_Birth", minorContact.BirthDate },
-                    {"Gender", gender},
                     {"Current_School", minorContact.SchoolAttending },
                     {"Congregation_Name", (_congregationRepository.GetCongregationById(campReservation.CrossroadsSite)).Name }
                 };
+
                 _contactRepository.UpdateContact(Convert.ToInt32(campReservation.ContactId), updateToDictionary);
                 participant = _participantRepository.GetParticipant(Convert.ToInt32(campReservation.ContactId));
             }
 
-            int eventParticipantId = 0;
-            var isEventParticipant = _eventRepository.EventHasParticipant(eventId, participant.ParticipantId);
-
-            if (!isEventParticipant)
+            int eventParticipantId = _eventRepository.GetEventParticipantRecordId(eventId, participant.ParticipantId);
+            
+            if (eventParticipantId == 0)
             {
                 eventParticipantId = _eventRepository.RegisterParticipantForEvent(participant.ParticipantId, eventId);
             }
