@@ -28,7 +28,7 @@ namespace crds_angular.Controllers.API
         }
 
         [RequiresAuthorization]
-        [Route("api/participant/event/{eventId")]
+        [Route("api/participant/event/{eventId}")]
         [HttpGet]
         public IHttpActionResult GetEventParticipant(int eventId)
         {
