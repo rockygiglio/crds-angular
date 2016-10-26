@@ -742,15 +742,16 @@ namespace MinistryPlatform.Translation.Repositories
         {
             var search = string.Format("{0},{1}", YearSearch(donationYear), softCredit.HasValue ? softCredit.Value.ToString() : string.Empty);
             var records = _ministryPlatformService.GetRecordsDict(_myHouseholdDonationDistributions, userToken, search);
-            var donations = MapDonationRecords(records);
+            var donations = MapDonationRecords(records);            
+            var nonRecurringDonations = new List<MpDonation>();
             for (var i = 0; i < donations.Count; i++)
             {
-                if (donations[i].recurringGift)
+                if (!donations[i].recurringGift)
                 {
-                    donations.Remove(donations[i]);
+                    nonRecurringDonations.Add(donations[i]);
                 }
             }            
-            return donations;
+            return nonRecurringDonations;
         }
 
         private List<MpDonation> MapDonationRecords(List<Dictionary<string, Object>> records)
