@@ -44,7 +44,6 @@ namespace MinistryPlatform.Translation.Repositories
 
         public List<MpGroupServingParticipant> GetServingParticipants(List<int> participants, long from, long to, int loggedInContactId)
         {
-
             var defaultDeadlinePassedMessage = _configurationWrapper.GetConfigIntValue("DefaultDeadlinePassedMessage");
             var searchFilter = "(";
 
@@ -114,13 +113,16 @@ namespace MinistryPlatform.Translation.Repositories
             return response[0]?.RsvpYesCount ?? 0;
         }
 
-        public List<MpGroup> GetAllGroupNamesLeadByParticipant(int participantId, int? groupType = -1)
+        public List<MpGroup> GetAllGroupNamesLeadByParticipant(int participantId, int? groupType)
         {
             const string COLUMNS =
                 "Group_ID_Table.Group_Name, Group_Participants.group_participant_id, Group_Participants.participant_id,  Group_Participants.group_id, Group_Participants.group_role_id";
-            string search = $"Group_Participants.participant_id = {participantId} and Group_Role_ID =  {_groupRoleLeader}";
+            string search = $"Group_Participants.participant_id = {participantId}" +
+                            $" AND Group_Role_ID = {_groupRoleLeader}" +
+                            $" AND (Group_ID_Table.End_Date >= '{DateTime.Today:yyyy-MM-dd}' OR Group_ID_Table.End_Date Is Null)" +
+                            $" AND (Group_Participants.End_Date >= '{DateTime.Today:yyyy-MM-dd}' OR Group_Participants.End_Date Is Null)";
 
-            if (groupType != -1)
+            if (groupType != null)
             {
                 search += $" AND Group_ID_Table.Group_Type_ID = {groupType}";
             }
@@ -143,8 +145,11 @@ namespace MinistryPlatform.Translation.Repositories
 
         public bool GetIsLeader(int participantId, int? groupType = null, int? groupId = null)
         {
-            const string COLUMNS = "Group_Participants.group_role_id";
-            string search = $"Group_Participants.participant_id = {participantId} and Group_Role_ID = {_groupRoleLeader}";
+            string COLUMNS = "Group_Participants.group_role_id";
+            string search = $"Group_Participants.participant_id = {participantId}" +
+                            $" AND Group_Role_ID = {_groupRoleLeader}" +
+                            $" AND (Group_ID_Table.End_Date >= '{DateTime.Today:yyyy-MM-dd}' OR Group_ID_Table.End_Date Is Null)" +
+                            $" AND (Group_Participants.End_Date >= '{DateTime.Today:yyyy-MM-dd}' OR Group_Participants.End_Date Is Null)";
 
             if (groupType != null)
             {
@@ -170,7 +175,7 @@ namespace MinistryPlatform.Translation.Repositories
                 if (groupIds.Count > 0)
                     csvGroupIds = String.Join(",", groupIds.Select(g => g.GroupId.ToString()).ToArray());
 
-            }
+             }
             else
                 csvGroupIds = groupId.ToString();
 
@@ -180,7 +185,8 @@ namespace MinistryPlatform.Translation.Repositories
                     "group_participants.participant_id, group_participants.group_role_id, Participant_ID_table_contact_id_table.Nickname," +
                     " Participant_ID_table_contact_id_table.Display_Name, Group_Role_ID_table.Role_Title, Participant_ID_table_contact_id_table.Last_name," +
                     " Participant_ID_table_contact_id_table.email_address, Participant_ID_table.contact_id";
-                string search = $"group_participants.group_id in ({csvGroupIds})";
+                string search = $"group_participants.group_id in ({csvGroupIds})" +
+                                $" AND (Group_Participants.End_Date >= '{DateTime.Today:yyyy-MM-dd}' OR Group_Participants.End_Date Is Null)";
                 string orderBy = "Participant_ID_table_contact_id_table.Last_name";
                 bool distinct = true;
 
@@ -193,12 +199,15 @@ namespace MinistryPlatform.Translation.Repositories
             return new List<MpGroupParticipant>();
         }
 
-        public List<MpGroupParticipant> GetLeadersGroupIds(int participantId, int? groupType = -1)
+        public List<MpGroupParticipant> GetLeadersGroupIds(int participantId, int? groupType)
         {
             const string groupIdColumns = "group_participants.group_id";
-            string groupIdSearch = $"group_participants.participant_id = {participantId} AND group_participants.group_role_id = {_groupRoleLeader}";
+            string groupIdSearch = $"group_participants.participant_id = {participantId}" +
+                                   $" AND group_participants.group_role_id = {_groupRoleLeader}" +
+                                   $" AND (Group_ID_Table.End_Date >= '{DateTime.Today:yyyy-MM-dd}' OR Group_ID_Table.End_Date Is Null)" +
+                                   $" AND (Group_Participants.End_Date >= '{DateTime.Today:yyyy-MM-dd}' OR Group_Participants.End_Date Is Null)";
 
-            if (groupType != -1)
+            if (groupType != null)
                 groupIdSearch += $" AND Group_ID_Table.Group_Type_ID = {groupType}";
 
             return _ministryPlatformRest.UsingAuthenticationToken(_apiUserService.GetToken()).Search<MpGroupParticipant>(groupIdSearch, groupIdColumns);

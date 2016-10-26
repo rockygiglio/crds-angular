@@ -17,6 +17,10 @@ export default function MyServeRouter($httpProvider, $stateProvider) {
       resolve: {
         loggedin: crds_utilities.checkLoggedin,
         ServeOpportunities: 'ServeOpportunities',
+        /*@ngInject*/
+        leader: function (ServeTeamService) {
+          return ServeTeamService.getIsLeader();
+        },
         $cookies: '$cookies',
         Groups: function (ServeOpportunities, $cookies) {
           return ServeOpportunities.ServeDays.query({
@@ -29,6 +33,12 @@ export default function MyServeRouter($httpProvider, $stateProvider) {
       parent: 'noSideBar',
       url: '/serve-signup/message',
       template: '<serve-team-message></serve-team-message>',
+      resolve: {
+        /*@ngInject*/
+        leader: function (ServeTeamService) {
+          return ServeTeamService.getIsLeader().then((data) => { ServeTeamService.isLeader = data.isLeader; });
+        },
+      },
       data: {
         isProtected: true,
         meta: {

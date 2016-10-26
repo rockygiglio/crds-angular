@@ -6,6 +6,8 @@ export default class ServeTeamService {
         this.log = $log;
         this.resource = $resource;
         this.qApi = $q;
+
+        //isleader gets set by my_serve.routes
     }
 
     getAllTeamMembersForLoggedInLeader(groupId) {
