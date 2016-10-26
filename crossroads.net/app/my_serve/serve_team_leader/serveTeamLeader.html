@@ -106,9 +106,9 @@
 	</div>
 
 	<!-- BUTTONS    -->
-	<div ng-if="serveTeamLeader.model.selectedOpp != null" class="row">
+	<div class="row">
 		<div class="col-sm-12 serve-save soft-half-top">
-			<button class="btn btn-primary btn-block-mobile sm-pull-right mobile-push-half-bottom" ng-class="{disabled: serveTeamLeader.processing}"
+			<button class="btn btn-primary btn-block-mobile sm-pull-right mobile-push-half-bottom" ng-disabled="(serveTeamLeader.processing || !serveTeamLeader.isFormValid())" ng-class="{disabled: (serveTeamLeader.processing || !serveTeamLeader.isFormValid())}"
 				ng-click="serveTeamLeader.saveRsvp()">
               <span ng-if="serveTeamLeader.processing">Saving...</span>
               <span ng-if="!serveTeamLeader.processing">Save</span>
