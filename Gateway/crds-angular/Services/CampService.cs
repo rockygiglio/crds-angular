@@ -94,7 +94,6 @@ namespace crds_angular.Services
         public void SaveCampReservation(CampReservationDTO campReservation, int eventId, string token)
         {
             var nickName = campReservation.PreferredName ?? campReservation.FirstName;
-            var displayName = campReservation.LastName + ", " + campReservation.FirstName;
             MpParticipant participant;
             var contactId = Convert.ToInt32(campReservation.ContactId);
 
@@ -105,7 +104,6 @@ namespace crds_angular.Services
                 MiddleName = campReservation.MiddleName,
                 BirthDate = Convert.ToDateTime(campReservation.BirthDate),
                 Gender = campReservation.Gender,
-                PreferredName = nickName,
                 Nickname = nickName,
                 SchoolAttending = campReservation.SchoolAttending,
                 HouseholdId = (_contactRepository.GetMyProfile(token)).Household_ID,
@@ -127,8 +125,7 @@ namespace crds_angular.Services
                     {"Last_Name", minorContact.LastName },
                     {"Middle_Name", minorContact.MiddleName },
                     {"Nickname", nickName },
-                    {"Display_Name" , displayName },
-                    {"Gender_ID", campReservation.Gender },
+                    { "Gender_ID", campReservation.Gender },
                     {"Date_Of_Birth", minorContact.BirthDate },
                     {"Current_School", minorContact.SchoolAttending },
                     {"Congregation_Name", (_congregationRepository.GetCongregationById(campReservation.CrossroadsSite)).Name }
