@@ -21,6 +21,7 @@ class EmergencyContactController {
     if (this.emergencyContact.$valid) {
       this.emergencyContactForm.save(this.stateParams.campId, this.stateParams.contactId).then(() => {
         this.rootScope.$emit('notify', this.rootScope.MESSAGES.successfulSubmission);
+        this.options.resetModel();
       }).catch(() => {
         this.rootScope.$emit('notify', this.rootScope.MESSAGES.generalError);
       }).finally(() => {
