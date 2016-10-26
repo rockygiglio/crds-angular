@@ -160,8 +160,6 @@ namespace crds_angular.Services
                 _contactRepository.UpdateContact(Convert.ToInt32(campReservation.ContactId), updateToDictionary);
                 participant = _participantRepository.GetParticipant(Convert.ToInt32(campReservation.ContactId));
             }
-<<<<<<< HEAD
-
             int eventParticipantId = 0;
             var isEventParticipant = _eventRepository.EventHasParticipant(eventId, participant.ParticipantId);
 
@@ -173,9 +171,7 @@ namespace crds_angular.Services
             {
                 _logger.Error("The person is already an event participant");
             }
-=======
-            var eventParticipantId = _eventRepository.SafeRegisterParticipant(eventId, participant.ParticipantId);
->>>>>>> e1d5f30f0dfe7d40f6ad2c21bfdd5e833dd30060
+
 
             //form response
             var answers = new List<MpFormAnswer>
