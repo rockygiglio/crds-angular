@@ -1,18 +1,20 @@
 
 import constants from 'crds-constants';
-import CountdownController from '../../../app/live_stream/countdown/countdown.controller';
+import CountdownService from '../../../app/live_stream/services/countdown.service';
+import StreamspotService from '../../../app/live_stream/services/streamspot.service';
 import Event from '../../../app/live_stream/models/event';
 
-describe('Countdown Controller', () => {
+describe('Countdown Service', () => {
   let fixture,
-    rootScope;
+      streamspotService,
+      rootScope;
 
   beforeEach(angular.mock.module(constants.MODULES.GROUP_TOOL));
 
   beforeEach(inject(function ($injector) {
     rootScope = $injector.get('$rootScope');
 
-    fixture = new CountdownController(rootScope);
+    fixture = new CountdownService(rootScope, StreamspotService);
   }));
 
   it('should return padded string for numbers less than 10', () => {

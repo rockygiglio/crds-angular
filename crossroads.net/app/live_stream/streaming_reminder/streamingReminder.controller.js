@@ -120,10 +120,12 @@ export default class StreamingReminderController {
   setUserDefaults() {
     // If the user is logged in, set default user info
     if (this.session.isActive()) {
-      if(this.rootScope.phone)
+      if (this.rootScope.phone) {
         this.model.phone = this.rootScope.phone;
-      if(this.rootScope.email)
-        this.model.email = this.rootScope.email;      
+      }
+      if (this.rootScope.email) {
+        this.model.email = this.rootScope.email;
+      }
     }
   }
 
