@@ -4,8 +4,8 @@ function getCampInfo(CampsService, $stateParams) {
 }
 
 function getCamperInfo(CampsService, $stateParams) {
-  let camperId = $stateParams.camperId;
-  let campId = $stateParams.campId;
+  const camperId = $stateParams.camperId;
+  const campId = $stateParams.campId;
   return CampsService.getCamperInfo(campId, camperId);
 }
 
@@ -32,32 +32,23 @@ export default function CampRoutes($stateProvider) {
       parent: 'noSideBar',
       url: '/camps/:campId',
       template: '<crossroads-camp></crossroads-camp>',
-       data: {
-         isProtected: true,
-         meta: {
-           title: 'Camp Signup',
-           description: 'Join us for camp!'
-         }
-       },
-       resolve: {
-         loggedin: crds_utilities.checkLoggedin,
-         campsService: 'CampsService',
-         getCampInfo,
-         $stateParams: '$stateParams',
-         family: (campsService, $stateParams) => {
-           const id = $stateParams.campId;
-           return campsService.getCampFamily(id);
-         }
-       }
-     })
-    .state('campsignup.camper', {    
-      url: '/:camperId',
-      template:'<camper-info></camper-info>',
-      resolve: {        
+      data: {
+        isProtected: true,
+        meta: {
+          title: 'Camp Signup',
+          description: 'Join us for camp!'
+        }
+      },
+      resolve: {
+        loggedin: crds_utilities.checkLoggedin,
         campsService: 'CampsService',
-        getCamperInfo: getCamperInfo,
-        $stateParams: '$stateParams'
-      }       
+        getCampInfo,
+        $stateParams: '$stateParams',
+        family: (campsService, $stateParams) => {
+          const id = $stateParams.campId;
+          return campsService.getCampFamily(id);
+        }
+      }
     })
     .state('campsignup.family', {
       url: '/family',
@@ -67,6 +58,14 @@ export default function CampRoutes($stateProvider) {
       url: '/:page/:contactId',
       template: '<camps-application-page></camps-application-page>'
     })
-    ;
+    .state('campsignup.camper', {
+      url: '/:camperId',
+      template: '<camper-info></camper-info>',
+      resolve: {
+        campsService: 'CampsService',
+        getCamperInfo,
+        $stateParams: '$stateParams'
+      }
+    });
 }
 
