@@ -11,17 +11,19 @@ describe('Landing Controller', () => {
       pastWeekends,
       results,
       rootScope,
+      sce,
       streamStatusService;
 
   beforeEach(angular.mock.module(constants.MODULES.LIVE_STREAM));
 
   beforeEach(inject(function ($injector, $filter) {
-    filter = $filter;
-    rootScope   = $injector.get('$rootScope');
+    filter     = $filter;
+    rootScope  = $injector.get('$rootScope');
     cmsService = $injector.get('CMSService');
+    sce        = $injector.get('$sce');
     streamStatusService = $injector.get('StreamStatusService');
 
-    fixture = new LandingController(rootScope, filter, cmsService, streamStatusService);
+    fixture = new LandingController(rootScope, filter, cmsService, streamStatusService, sce);
 
     pastWeekends = [
       {

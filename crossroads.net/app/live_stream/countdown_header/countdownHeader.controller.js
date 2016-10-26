@@ -1,11 +1,17 @@
 export default class CountdownHeaderController {
-  constructor($document, $window) {
+  constructor($document, $window, CountdownService, ReminderService) {
     this.document = $document;
     this.window   = $window;
-
+    this.countdownService = CountdownService;
+    this.reminderService = ReminderService;
+    
     this.setElements();
 
     angular.element(this.window).bind("scroll", this.onScroll.bind(this));
+  }
+
+  openReminder() {
+    this.reminderService.open();
   }
 
   onScroll() {
