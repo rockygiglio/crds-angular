@@ -21,72 +21,72 @@ describe('Stream Status Service', () => {
 
   let events = [
     {
-      "start": moment(baseTime).subtract(4, 'hours').format('YYYY-MM-DD H:mm:ss'),
-      "end": moment(baseTime).add(3, 'hours').format('YYYY-MM-DD H:mm:ss'),
+      "start": moment(baseTime).subtract(4, 'hours'),
+      "end": moment(baseTime).add(3, 'hours'),
       "title": "Saturday Rehearsal Broadcasting"
     },
     {
-      "start": moment(baseTime).subtract(5, 'hours').format('YYYY-MM-DD H:mm:ss'),
-      "end": moment(baseTime).subtract(6, 'hours').format('YYYY-MM-DD H:mm:ss'),
+      "start": moment(baseTime).subtract(5, 'hours'),
+      "end": moment(baseTime).subtract(6, 'hours'),
       "title": "Saturday Rehearsal Done"
     },
     {
-      "start": moment(baseTime).add(1, 'hour').format('YYYY-MM-DD H:mm:ss'),
-      "end": moment(baseTime).add(2, 'hours').format('YYYY-MM-DD H:mm:ss'),
+      "start": moment(baseTime).add(1, 'hour'),
+      "end": moment(baseTime).add(2, 'hours'),
       "title": "Saturday Rehearsal Upcoming"
     },
     {
-      "start": moment(baseTime).subtract(10, 'hours').format('YYYY-MM-DD H:mm:ss'),
-      "end": moment(baseTime).subtract(9, 'hours').format('YYYY-MM-DD H:mm:ss'),
+      "start": moment(baseTime).subtract(10, 'hours'),
+      "end": moment(baseTime).subtract(9, 'hours'),
       "title": "Saturday Rehearsal Done"
     }
   ];
 
   let eventsWithLiveEvent = [
     {
-      "start": moment(baseTime).subtract(4, 'hours').format('YYYY-MM-DD H:mm:ss'),
-      "end": moment(baseTime).add(3, 'hours').format('YYYY-MM-DD H:mm:ss'),
+      "start": moment(baseTime).subtract(4, 'hours'),
+      "end": moment(baseTime).add(3, 'hours'),
       "title": "Saturday Rehearsal Broadcasting"
     },
     {
-      "start": moment(baseTime).subtract(5, 'hours').format('YYYY-MM-DD H:mm:ss'),
-      "end": moment(baseTime).subtract(6, 'hours').format('YYYY-MM-DD H:mm:ss'),
+      "start": moment(baseTime).subtract(5, 'hours'),
+      "end": moment(baseTime).subtract(6, 'hours'),
       "title": "Saturday Rehearsal Done"
     },
     {
-      "start": moment(baseTime).add(1, 'hour').format('YYYY-MM-DD H:mm:ss'),
-      "end": moment(baseTime).add(2, 'hours').format('YYYY-MM-DD H:mm:ss'),
+      "start": moment(baseTime).add(1, 'hour'),
+      "end": moment(baseTime).add(2, 'hours'),
       "title": "Saturday Rehearsal Upcoming"
     }
   ];
 
   let eventsWithoutLiveEvent = [
     {
-      "start": moment(baseTime).add(3, 'hours').format('YYYY-MM-DD H:mm:ss'),
-      "end": moment(baseTime).add(4, 'hours').format('YYYY-MM-DD H:mm:ss'),
+      "start": moment(baseTime).add(3, 'hours'),
+      "end": moment(baseTime).add(4, 'hours'),
       "title": "Saturday Rehearsal Broadcasting"
     },
     {
-      "start": moment(baseTime).subtract(5, 'hours').format('YYYY-MM-DD H:mm:ss'),
-      "end": moment(baseTime).subtract(6, 'hours').format('YYYY-MM-DD H:mm:ss'),
+      "start": moment(baseTime).subtract(5, 'hours'),
+      "end": moment(baseTime).subtract(6, 'hours'),
       "title": "Saturday Rehearsal Done"
     },
     {
-      "start": moment(baseTime).add(1, 'hour').format('YYYY-MM-DD H:mm:ss'),
-      "end": moment(baseTime).add(2, 'hours').format('YYYY-MM-DD H:mm:ss'),
+      "start": moment(baseTime).add(1, 'hour'),
+      "end": moment(baseTime).add(2, 'hours'),
       "title": "Saturday Rehearsal Upcoming"
     }
   ];
 
   let liveEvent = {
-    "start": moment(baseTime).subtract(1, 'hour').format('YYYY-MM-DD H:mm:ss'),
-    "end": moment(baseTime).add(1, 'hour').format('YYYY-MM-DD H:mm:ss'),
+    "start": moment(baseTime).subtract(1, 'hour'),
+    "end": moment(baseTime).add(1, 'hour'),
     "title": "Live Event"
   };
 
   let upcomingEvent = {
-    "start": moment(baseTime).add(3, 'hours').format('YYYY-MM-DD H:mm:ss'),
-    "end": moment(baseTime).add(4, 'hours').format('YYYY-MM-DD H:mm:ss'),
+    "start": moment(baseTime).add(3, 'hours'),
+    "end": moment(baseTime).add(4, 'hours'),
     "title": "Upcoming Event"
   };
 
