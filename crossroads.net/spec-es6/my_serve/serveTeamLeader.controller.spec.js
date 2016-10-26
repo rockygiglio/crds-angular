@@ -133,11 +133,20 @@ describe('ServeTeamLeaderController', () => {
 			lastName: 'Nukem'
 		});
 
-		spyOn(serveOpportunities.SaveRsvp, 'save').and.returnValue(345);
-		expect(fixture.team.serveOpportunities[0].rsvpMembers.length).toBe(2);
-		let returnVal = fixture.saveRsvp();
+		spyOn(serveOpportunities.SaveRsvp, 'save').and.callFake(function (promises) {
+			var deferred = qApi.defer();
+			deferred.resolve();
+			return deferred.promise;
+		});
 
+		serveOpportunities.SaveRsvp.save.calls.reset();
+		expect(fixture.team.serveOpportunities[0].rsvpMembers.length).toBe(2);
+		expect(fixture.individuals.length).toBe(2);
+		let returnVal = fixture.saveRsvp();
+		rootScope.$digest(); //makes qApi.all resolve
 		expect(serveOpportunities.SaveRsvp.save.calls.count()).toBe(2);
+
+		
 		expect(fixture.team.serveOpportunities[0].rsvpMembers.length).toBe(4);
 
 	});
