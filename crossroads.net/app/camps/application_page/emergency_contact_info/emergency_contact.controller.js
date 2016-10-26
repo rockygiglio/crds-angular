@@ -14,9 +14,6 @@ class EmergencyContactController {
   }
 
   submit() {
-    // TODO: throw error if not all required fields
-    // TODO: disable button until request completes
-
     this.submitting = true;
     if (this.emergencyContact.$valid) {
       this.emergencyContactForm.save(this.stateParams.campId, this.stateParams.contactId).then(() => {
