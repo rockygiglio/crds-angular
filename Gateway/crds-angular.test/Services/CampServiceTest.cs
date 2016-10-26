@@ -118,7 +118,7 @@ namespace crds_angular.test.Services
 
             _contactService.Setup(m => m.CreateContact(It.IsAny<MpContact>())).Returns(contact);
             _participantRepository.Setup(m => m.GetParticipant(contact[0].RecordId)).Returns(participant);
-            _eventRepository.Setup(m => m.RegisterParticipantForEvent(participant.ParticipantId, eventId, 0, 0)).Returns(eventParticipantId);
+            _eventRepository.Setup(m => m.SafeRegisterParticipant(eventId, participant.ParticipantId, 0, 0)).Returns(eventParticipantId);
             _configurationWrapper.Setup(m => m.GetConfigIntValue("SummerCampFormID")).Returns(formId);
             _configurationWrapper.Setup(m => m.GetConfigIntValue("SummerCampForm.CurrentGrade")).Returns(10);
             _configurationWrapper.Setup(m => m.GetConfigIntValue("SummerCampForm.SchoolAttendingNextYear")).Returns(12);
@@ -161,7 +161,7 @@ namespace crds_angular.test.Services
             _contactService.Setup(m => m.GetMyProfile(token)).Returns(household);
 
             _participantRepository.Setup(m => m.GetParticipant(Convert.ToInt32(MockCampReservationDTOwithContactId().ContactId))).Returns(participant);
-            _eventRepository.Setup(m => m.RegisterParticipantForEvent(participant.ParticipantId, eventId, 0, 0)).Returns(eventParticipantId);
+            _eventRepository.Setup(m => m.SafeRegisterParticipant(eventId, participant.ParticipantId, 0, 0)).Returns(eventParticipantId);
             _configurationWrapper.Setup(m => m.GetConfigIntValue("SummerCampFormID")).Returns(formId);
             _configurationWrapper.Setup(m => m.GetConfigIntValue("SummerCampForm.CurrentGrade")).Returns(10);
             _configurationWrapper.Setup(m => m.GetConfigIntValue("SummerCampForm.SchoolAttendingNextYear")).Returns(12);
@@ -213,7 +213,7 @@ namespace crds_angular.test.Services
                 ParticipantId = 2
             };
             _participantRepository.Setup(m => m.GetParticipant(contactId)).Returns(participant);
-            _eventRepository.Setup(m => m.RegisterParticipantForEvent(participant.ParticipantId, eventId, 0, 0));
+            _eventRepository.Setup(m => m.SafeRegisterParticipant(eventId, participant.ParticipantId, 0, 0));
             _configurationWrapper.Setup(m => m.GetConfigIntValue("SummerCampFormID")).Returns(formId);
             _configurationWrapper.Setup(m => m.GetConfigIntValue("SummerCampForm.EmergencyContactFirstName")).Returns(10);
             _configurationWrapper.Setup(m => m.GetConfigIntValue("SummerCampForm.EmergencyContactLastName")).Returns(12);
