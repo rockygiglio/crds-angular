@@ -6,7 +6,6 @@ class CampController {
     this.rootScope = $rootScope;
     this.stateParams = $stateParams;
     this.campId = $stateParams.campId;
-
   }
 
   $onInit() {

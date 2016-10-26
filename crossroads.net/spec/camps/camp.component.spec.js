@@ -10,6 +10,8 @@ describe('Camp Component', () => {
   let campsService;
   let rootScope;
 
+  const bindings = {};
+
   beforeEach(angular.mock.module(constants.MODULES.CAMPS));
 
   beforeEach(inject((_$componentController_, _$httpBackend_, _CampsService_, _$rootScope_) => {
@@ -23,18 +25,34 @@ describe('Camp Component', () => {
     };
 
     campsService = _CampsService_;
-    const bindings = {
-    };
-    campsService.campInfo = campHelpers().campInfo;
-    campController = $componentController('crossroadsCamp', null, bindings);
-    campController.$onInit();
   }));
 
-  it('should set the view as ready', () => {
-    expect(campController.viewReady).toBe(true);
+
+  describe('Registration open', () => {
+    beforeEach(() => {
+      campsService.campInfo = campHelpers().campInfoOpen;
+      campController = $componentController('crossroadsCamp', null, bindings);
+      campController.$onInit();
+    });
+
+    it('should set the view as ready', () => {
+      expect(campController.viewReady).toBe(true);
+    });
+
+    it('should set the title correctly', () => {
+      expect(campController.campsService.campTitle).toBe(campHelpers().campInfo.eventTitle);
+    });
   });
 
-  it('should set the title correctly', () => {
-    expect(campController.campsService.campTitle).toBe(campHelpers().campInfo.eventTitle);
+  describe('Registration Closed', () => {
+    beforeEach(() => {
+      campsService.campInfo = campHelpers().campInfoClosed;
+      campController = $componentController('crossroadsCamp', null, bindings);
+      campController.$onInit();
+    });
+
+    it('should not be open for registration', () => {
+      expect(campController.isClosed).toBe(true);
+    });
   });
 });
