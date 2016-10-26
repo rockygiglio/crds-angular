@@ -10,7 +10,6 @@
   <section ng-if="landing.streamStatus == 'Upcoming'" id="intro" class="intro imgix-fluid-bg crds-hero" data-src="{{ landing.introImage() }}">
     <div class="wow fadeInUp">
       <div data-ng-init="landing.moveCountdown()" dynamic-content="$root.MESSAGES.streamingLandingIntroUpcoming.content | html"></div>
-      <countdown-intro></countdown-intro>
     </div>
   </section>
 
@@ -20,6 +19,7 @@
     </div>
   </section>
 
+  <countdown-intro ng-class="{'hidden': landing.streamStatus !== 'Upcoming'}"></countdown-intro>
   <current-series></current-series>
   
   <section class="past-weekends">
