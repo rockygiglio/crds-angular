@@ -46,6 +46,12 @@ export default function CampRoutes($stateProvider) {
           title: 'Camp Waivers',
           description: 'Join us for camp!'
         }
+      },
+      resolve: {
+        loggedin: crds_utilities.checkLoggedin,
+        campsService: 'CampsService',
+        getCampWaivers: getCampWaivers,
+        $stateParams: '$stateParams'
       }
     })
   ;
@@ -54,4 +60,10 @@ export default function CampRoutes($stateProvider) {
 function getCampInfo(CampsService, $stateParams) {
   let id = $stateParams.campId;
   return CampsService.getCampInfo(id);
+}
+
+function getCampWaivers(CampsService, $stateParams) {
+  console.debug('Get Camp Waivers');
+  let campId = $stateParams.campId;
+  return CampsService.getCampWaivers(campId);
 }

@@ -1,6 +1,7 @@
 <legend>Waivers</legend>
 <article ng-repeat="waiver in campWaivers.waivers">
-  <div dynamic-content="waiver | html"></div>
+  <h4>{{waiver.waiverName}}</h4>
+  <div dynamic-content="waiver.waiverText | html"></div>
   <hr ng-if="!$last">
 </article>
 
