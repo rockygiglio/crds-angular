@@ -99,8 +99,8 @@ class CamperInfoForm {
               label: 'Gender',
               required: true,
               inline: true,
-              valueProp: 'dp_RecordID',
               labelProp: 'dp_RecordName',
+              valueProp: 'dp_RecordID',
               options: []
             },
             controller: /* @ngInject */ ($scope, LookupService) => {
