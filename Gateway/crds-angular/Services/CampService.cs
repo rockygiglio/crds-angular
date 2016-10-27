@@ -206,9 +206,10 @@ namespace crds_angular.Services
             }).ToList();
         }
 
-        public void SaveWaivers(string token, int eventParticipantId, List<CampWaiverResponseDTO> waivers)
+        public void SaveWaivers(string token, int eventId, int contactId, List<CampWaiverResponseDTO> waivers)
         {
             var loggedInContact = _contactRepository.GetMyProfile(token);
+            var eventParticipantId = _eventParticipantRepository.GetEventParticipantByContactId(eventId, contactId);
             var waiverResponses = waivers.Select(waiver => new MpWaiverResponse()
             {
                 EventParticipantId = eventParticipantId,

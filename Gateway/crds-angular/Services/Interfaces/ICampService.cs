@@ -9,7 +9,7 @@ namespace crds_angular.Services.Interfaces
         void SaveCampReservation(CampReservationDTO campReservation, int eventId, string token);
         List<MyCampDTO> GetMyCampInfo(string token);
         List<CampWaiverDTO> GetCampWaivers(int eventId, int contactId);
-        void SaveWaivers(string token, int eventParticipantId, List<CampWaiverResponseDTO> waivers);
+        void SaveWaivers(string token, int eventId, int contactId, List<CampWaiverResponseDTO> waivers);
         CampReservationDTO GetCamperInfo(string token, int eventId, int contactId);   
         List<CampFamilyMember> GetEligibleFamilyMembers(int eventId, string token);
     }

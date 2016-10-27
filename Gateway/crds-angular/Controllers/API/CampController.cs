@@ -146,7 +146,7 @@ namespace crds_angular.Controllers.API
 
         [Route("api/camps/{eventId}/waivers/{contactId}")]
         [AcceptVerbs("POST")]
-        public IHttpActionResult SaveWaivers([FromBody] List<CampWaiverResponseDTO> waivers, int eventParticipantId)
+        public IHttpActionResult SaveWaivers([FromBody] List<CampWaiverResponseDTO> waivers, int eventId, int contactId)
         {
             if (!ModelState.IsValid)
             {
@@ -159,7 +159,7 @@ namespace crds_angular.Controllers.API
             {
                 try
                 {
-                    _campService.SaveWaivers(token, eventParticipantId, waivers);
+                    _campService.SaveWaivers(token, eventId, contactId, waivers);
                     return Ok();
                 }
                 catch (Exception e)
