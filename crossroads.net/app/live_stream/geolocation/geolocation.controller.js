@@ -4,7 +4,7 @@ import CONSTANTS from '../../constants';
 export default class GeolocationController {
   constructor(GeolocationService) {
     this.locationService = GeolocationService;
-    
+
     this.subject = 'person';
     this.verb    = 'is';
 
@@ -31,7 +31,7 @@ export default class GeolocationController {
 
   subtract() {
     let count = this.location.count;
-    if (count > 1 ) {
+    if (count > 0) {
       count -= 1;
     }
 
@@ -98,7 +98,7 @@ export default class GeolocationController {
       this.invalidZipcode = true;
     } else {
       this.locationService.saveLocation(this.location);
-      this.success = true; 
+      this.success = true;
       setTimeout(() => {
         this.dismiss = true;
         this.locationService.success();
