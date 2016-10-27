@@ -20,8 +20,6 @@ class CamperInfoController {
     if (this.infoForm.$valid) {
       this.camperInfoForm.save(this.stateParams.campId).then(() => {
         this.rootScope.$emit('notify', this.rootScope.MESSAGES.successfullRegistration);
-
-        this.options.resetModel();
       },
 
       () => {
