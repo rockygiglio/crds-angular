@@ -51,7 +51,7 @@ streaming, landing {
     font-size: 90%;
     min-height: 52px;
     transform: translateZ(0);
-    
+
 
     @media (min-width: $screen-sm-min) {
       min-height: 66px;
@@ -275,7 +275,7 @@ streaming, landing {
     }
   }
 
-  
+
 
   .current-series {
 
@@ -431,7 +431,7 @@ streaming, landing {
     &, h3 {
       color: $gray;
     }
-    
+
     content-card {
       @media(max-width: $screen-md-min){
         @include make-sm-column(6);
@@ -593,7 +593,7 @@ streaming, landing {
     }
 
     img {
-      position: fixed; 
+      position: fixed;
       left: 50%; top: 50%;
       margin-left: -350px;
       margin-top: -300px;
@@ -1219,7 +1219,7 @@ geolocation {
       color: #96B4D4;
     }
   }
-  
+
   footer {
     margin-top: 3.25em;
     font-size: 51.5%;
@@ -1229,7 +1229,12 @@ geolocation {
   }
   .btn-link {
     font-size: 87%;
+    margin-top: 1em;
     margin-bottom: 3em;
+
+    @media(max-width: $screen-md) {
+      @include button-variant(#96B4D4, $cr-blue, $cr-blue)
+    }
   }
   .modal-backdrop {
     background: #113556;
@@ -1252,7 +1257,7 @@ geolocation {
     .container {
       width: auto;
     }
-    .btn-standard-dark {
+    .btn-standard {
       @include button-variant($cr-streaming-blue, #FFF, #FFF)
     }
     .close {
