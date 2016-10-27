@@ -8,16 +8,20 @@
     </div>
     <div class="upcoming animated fadeIn">
       <div ng-if="countdown.countdownService.isCountdown" class="countdown">
-        <i>Join the live stream in...</i>
-        <ul class="list-inline">
-          <li><strong>{{ countdown.countdownService.countdown.days }}</strong> <small>days</small></li>
-          <li class="vr"></li>
-          <li><strong>{{ countdown.countdownService.countdown.hours }}</strong> <small>hours</small></li>
-          <li class="vr"></li>
-          <li><strong>{{ countdown.countdownService.countdown.minutes }}</strong> <small>min</small></li>
-          <li class="vr"></li>
-          <li><strong>{{ countdown.countdownService.countdown.seconds }}</strong> <small>sec</small></li>
-        </ul>
+        <div class="countdown__timer">
+          <i class="countdown__text">Join the live stream in...</i>
+
+          <ul class="list-inline">
+            <li><strong>{{ countdown.countdownService.countdown.days }}</strong> <small>days</small></li>
+            <li class="vr"></li>
+            <li><strong>{{ countdown.countdownService.countdown.hours }}</strong> <small>hours</small></li>
+            <li class="vr"></li>
+            <li><strong>{{ countdown.countdownService.countdown.minutes }}</strong> <small>min</small></li>
+            <li class="vr"></li>
+            <li><strong>{{ countdown.countdownService.countdown.seconds }}</strong> <small>sec</small></li>
+          </ul>
+        </div>
+
         <a href="#" class="btn btn-sm btn-reminder" ng-click="countdown.openReminder()">Remind Me</a>
       </div>
       <div ng-if="countdown.countdownService.isBroadcasting" class="in-progress">
