@@ -249,7 +249,7 @@ namespace crds_angular.Services
                     FirstName = camperContact.First_Name,
                     LastName = camperContact.Last_Name,
                     MiddleName = camperContact.Middle_Name,
-                    PreferredName = camperContact.Display_Name,
+                    PreferredName = camperContact.Nickname,
                     CrossroadsSite = Convert.ToInt32(camperContact.Congregation_ID),
                     BirthDate = Convert.ToString(camperContact.Date_Of_Birth),
                     SchoolAttending = camperContact.Current_School,
