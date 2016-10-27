@@ -143,8 +143,8 @@ namespace MinistryPlatform.Translation.Repositories
         {
             const string tableName = "Event_Participants";
             var searchString = $"Event_ID_Table.Event_ID={eventId} AND Participant_ID_Table_Contact_ID_Table.Contact_ID={contactId}";
-            const string column = "Event_ID_Table.Event_Title";
-            var eventParticipant = _ministryPlatformRestRepository.Search<int>(tableName, searchString, column);
+            const string column = "Event_Participant_ID";
+            var eventParticipant = _ministryPlatformRestRepository.UsingAuthenticationToken(ApiLogin()).Search<int>(tableName, searchString, column);
             return eventParticipant;
         }
 
