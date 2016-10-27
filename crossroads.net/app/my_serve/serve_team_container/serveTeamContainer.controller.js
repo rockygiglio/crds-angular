@@ -63,7 +63,8 @@ export default class ServeTeamContainerController {
         lastName: person.lastName,
         participantId: person.participantId,
         responseResultId: signedUp,
-        opportunityId: signedUpOpp.opportunityId
+        opportunityId: signedUpOpp.opportunityId,
+        contactId: person.contactId
       }
     );
   }

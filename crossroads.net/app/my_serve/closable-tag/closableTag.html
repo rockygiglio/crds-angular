@@ -7,7 +7,7 @@
   <text ng-if="closableTag.age == null || closableTag.age > closableTag.maxSVAge">
   {{closableTag.name}}
   </text>
-  <svg ng-if='closableTag.isLeader' ng-click='closableTag.close()'
+  <svg ng-if='(closableTag.isLeader && closableTag.opportunityId > 0)' ng-click='closableTag.close()'
        viewBox="0 0 32 32"
        class="icon icon-close pointer">
     <use xlink:href="#close"></use>

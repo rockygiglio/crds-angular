@@ -10,7 +10,8 @@
                   on-click="serveTeamMembers.memberClick(member)"
                   on-close="serveTeamMembers.memberRemove(member)"
                   class="push-half-right push-half-bottom"
-                  is-leader="serveTeamMembers.isLeader"></closable-tag>
+                  is-leader="serveTeamMembers.isLeader"
+                  opportunity-id="member.opportunityId"></closable-tag>
     <span ng-if="role.members == null || role.members.length < 1">None</span>
   </div>
 </div>

@@ -153,7 +153,8 @@ export default class ServeTeamLeaderController {
                 lastName: person.lastName,
                 participantId: person.participantId,
                 responseResultId: signedUp,
-                opportunityId: signedUpOpp.opportunityId
+                opportunityId: signedUpOpp.Opportunity_ID,
+                contactId: person.contactId
             }
         );
     }

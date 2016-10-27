@@ -33,6 +33,9 @@ export default class ServeTeamMembersController {
       notAvailable.rsvpMembers = notAvailable.rsvpMembers.concat(partitionedArray[0]);
       opportunity.rsvpMembers = partitionedArray[1];
     });
+    _.map(notAvailable.rsvpMembers, (member) => {
+      member.opportunityId = 0;
+    })
     opportunities.push(notAvailable);
     return opportunities;
   }
