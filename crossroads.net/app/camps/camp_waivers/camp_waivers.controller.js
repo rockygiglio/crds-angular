@@ -1,12 +1,16 @@
+import forEach from 'lodash/collection/forEach';
+
 export default class CampWaiversController {
   /* @ngInject */
-  constructor(CampsService) {
+  constructor($stateParams, CampsService) {
+    this.$stateParams = $stateParams;
     this.campsService = CampsService;
+
     this.signature = null;
     this.camper = {
       firstName: 'John',
       lastName: 'Doe'
-    }
+    };
   }
 
   $onInit() {
@@ -14,6 +18,20 @@ export default class CampWaiversController {
   }
 
   getFullName() {
-    return this.camper.firstName + ' ' + this.camper.lastName;
+    return `${this.camper.firstName} ${this.camper.lastName}`;
+  }
+
+  submitWaivers() {
+    const approved = this.signature === 'guardian' || this.signature === 'self';
+    const params = [];
+
+    forEach(this.waivers, (waiver) => {
+      params.push({
+        waiverId: waiver.waiverId,
+        approved
+      });
+    });
+
+    this.campsService.submitWaivers(this.$stateParams.campId, this.$stateParams.contactId, params);
   }
 }

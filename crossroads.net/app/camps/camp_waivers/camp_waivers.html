@@ -5,23 +5,26 @@
 </article>
 
 <h4 class="required push-top">Electronic Signature</h4>
-<form role="form">
+<form role="form" ng-submit="campWaivers.submitWaivers()">
   <div class="radio">
     <label>
-      <input type="radio" name="signature" ng-model="campWaivers.signature">
+      <input type="radio" name="signature" ng-model="campWaivers.signature" value="guardian">
       I am the legal guardian of {{campWaivers.getFullName()}} and I approve of the above waivers.
     </label>
   </div>
   <div class="radio">
     <label>
-      <input type="radio" name="signature" ng-model="campWaivers.signature">
+      <input type="radio" name="signature" ng-model="campWaivers.signature" value="approveLater">
       I am <strong>NOT</strong> the legal guardian of {{campWaivers.getFullName()}} and they will approve at a later date.
     </label>
   </div>
   <div class="radio">
     <label>
-      <input type="radio" name="signature" ng-model="campWaivers.signature">
+      <input type="radio" name="signature" ng-model="campWaivers.signature" value="self">
       I am <strong>{{campWaivers.getFullName()}}</strong> and at least 18 years of age, and I approve of the above waivers.
     </label>
+  </div>
+  <div class="push-top">
+    <button type="submit" class="btn btn-primary pull-right">Next</button>
   </div>
 </form>

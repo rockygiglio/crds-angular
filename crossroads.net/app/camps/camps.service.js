@@ -32,12 +32,16 @@ class CampService {
 
   getCampWaivers(campId) {
     return this.campWaiversResource.query({ campId }, (waivers) => {
-        this.waivers = waivers;
-      },
+      this.waivers = waivers;
+    },
 
-      (err) => {
-        console.log(err);
-      }).$promise;
+    (err) => {
+      console.log(err);
+    }).$promise;
+  }
+
+  submitWaivers(campId, contactId, waivers) {
+    console.debug(`Camp: ${campId}, Contact: ${contactId}, Waivers:`, waivers);
   }
 
 }
