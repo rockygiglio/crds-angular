@@ -7,6 +7,7 @@ using MinistryPlatform.Translation.Extensions;
 using MinistryPlatform.Translation.Models.Attributes;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using RestSharp;
 using RestSharp.Extensions;
 
@@ -194,11 +195,14 @@ namespace MinistryPlatform.Translation.Repositories
             return result.TrimEnd('&');
         }
 
-        public List<T> Search<T>(string searchString = null, string selectColumns = null)
+        public List<T> Search<T>(string searchString = null, string selectColumns = null, string orderByString = null, bool distinct = false)
         {
             var search = string.IsNullOrWhiteSpace(searchString) ? string.Empty : $"?$filter={MpRestEncode(searchString)}";
+            var orderBy = string.IsNullOrWhiteSpace(orderByString) ? string.Empty : $"&{MpRestEncode($"$orderby={orderByString}")}";
+            var distinctString = $"&{MpRestEncode($"$distinct={distinct.ToString()}")}";
 
-            var url = AddColumnSelection($"/tables/{GetTableName<T>()}{search}", selectColumns);
+            var url = AddColumnSelection(string.Format("/tables/{0}{1}{2}{3}", GetTableName<T>(), search, orderBy, distinctString),selectColumns);
+
             var request = new RestRequest(url, Method.GET);
             AddAuthorization(request);
 
@@ -211,20 +215,20 @@ namespace MinistryPlatform.Translation.Repositories
             return content;
         }
 
-        public List<T> Search<T>(string searchString, List<string> columns)
+        public List<T> Search<T>(string searchString, List<string> columns, string orderByString = null, bool distinct = false)
         {
             string selectColumns = null;
             if (columns != null)
             {
                 selectColumns = string.Join(",", columns);
             }
-            return Search<T>(searchString, selectColumns);
+            return Search<T>(searchString, selectColumns, orderByString, distinct);
         }
 
         public T Search<T>(string tableName, string searchString, string column)
         {
             var search = string.IsNullOrWhiteSpace(searchString) ? string.Empty : $"?$filter={MpRestEncode(searchString)}";
-            var url = AddGetColumnSelection($"/tables/{tableName}{search}", column);
+            var url = AddColumnSelection($"/tables/{tableName}{search}", column);
             var request = new RestRequest(url, Method.GET);
             AddAuthorization(request);
 
@@ -232,13 +236,9 @@ namespace MinistryPlatform.Translation.Repositories
             _authToken.Value = null;
             response.CheckForErrors($"Error getting {tableName}", true);
 
-            var content = JsonConvert.DeserializeObject<List<T>>(response.Content);
-            if (content == null || !content.Any())
-            {
-                return default(T);
-            }
-
-            return content.FirstOrDefault();
+            var jsonResponse = JObject.Parse(response.Content.TrimStart('[').TrimEnd(']'));
+            var returnVal = jsonResponse.Values().FirstOrDefault().Value<T>();
+            return returnVal == null ? default(T) : returnVal;
         }
 
         public void UpdateRecord(string tableName, int recordId, Dictionary<string, object> fields)

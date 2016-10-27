@@ -18,6 +18,26 @@ namespace crds_angular.Controllers.API
             _campService = campService;
         }
 
+        [Route("api/camps/{eventId}/family")]
+        [AcceptVerbs("GET")]
+        public IHttpActionResult GetCampFamily(int eventId)
+        {
+            return Authorized(token =>
+            {
+                try
+                {
+                    var members = _campService.GetEligibleFamilyMembers(eventId, token);
+                    return Ok(members);
+                }
+                catch (Exception e)
+                {
+                    var apiError = new ApiErrorDto("Camp Family", e
+                        );
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+            });
+        }
+
         [ResponseType(typeof(List<MyCampDTO>))]
         [Route("api/my-camp")]
         [AcceptVerbs("GET")]
@@ -58,6 +78,26 @@ namespace crds_angular.Controllers.API
             });
         }
 
+        [ResponseType(typeof(CampReservationDTO))]
+        [Route("api/camps/{eventid}/{contactid}")]
+        [AcceptVerbs("GET")]
+        public IHttpActionResult GetCamperInfo(int eventId, int contactId)
+        {
+            return Authorized(token =>
+            {
+                try
+                {
+                    var camperInfo = _campService.GetCamperInfo(token, eventId, contactId);
+                    return Ok(camperInfo);
+                }
+                catch (Exception exception)
+                {
+                    var apiError = new ApiErrorDto("CamperInfo", exception);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+            });
+        }
+
         [Route("api/camps/{eventid}")]
         [AcceptVerbs("POST")]
         public IHttpActionResult SaveCampReservation([FromBody] CampReservationDTO campReservation, int eventId)
@@ -85,15 +125,15 @@ namespace crds_angular.Controllers.API
             });
         }
 
-        [Route("api/camps/waivers/{eventid}")]
+        [Route("api/camps/{eventId}/waivers/{contactId}")]
         [AcceptVerbs("GET")]
-        public IHttpActionResult GetCampWaivers(int eventId)
+        public IHttpActionResult GetCampWaivers(int eventId, int contactId)
         {
             return Authorized(token =>
             {
                 try
                 {
-                    var waivers = _campService.GetCampWaivers(eventId);
+                    var waivers = _campService.GetCampWaivers(eventId, contactId);
                     return Ok(waivers);
                 }
                 catch (Exception e)
@@ -104,9 +144,9 @@ namespace crds_angular.Controllers.API
             });
         }
 
-        [Route("api/camps/waivers/{eventParticipantId}")]
+        [Route("api/camps/{eventId}/waivers/{contactId}")]
         [AcceptVerbs("POST")]
-        public IHttpActionResult SaveWaivers([FromBody] List<CampWaiverResponseDTO> waivers, int eventParticipantId)
+        public IHttpActionResult SaveWaivers([FromBody] List<CampWaiverResponseDTO> waivers, int eventId, int contactId)
         {
             if (!ModelState.IsValid)
             {
@@ -119,7 +159,7 @@ namespace crds_angular.Controllers.API
             {
                 try
                 {
-                    _campService.SaveWaivers(token, eventParticipantId, waivers);
+                    _campService.SaveWaivers(token, eventId, contactId, waivers);
                     return Ok();
                 }
                 catch (Exception e)

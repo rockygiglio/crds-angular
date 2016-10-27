@@ -8,25 +8,14 @@ export default class ServeTeamService {
         this.qApi = $q;
     }
 
-    getAllTeamMembersByLeader() {
-        return [
-            {
-                id: 1001,
-                name: 'Genie Simmons',
-                email: 'gsimmons@gmail.com',
-                role: 'Leader'
-            },
-            {
-                id: 1002,
-                name: 'Holly Gennaro',
-                email: 'hgennaro@excite.com',
-                role: null
-            },
-        ]
+    getAllTeamMembersForLoggedInLeader(groupId) {
+        return this.resource(`${__API_ENDPOINT__}api/serve/GetLoggedInLeadersGroupsParticipants`).query({groupId: groupId}).$promise;
     }
 
-    getIsLeader() {
-        return this.resource(`${__API_ENDPOINT__}api/serve/GetIsLeader`).get().$promise;
+
+
+    getIsLeader(groupId) {
+        return this.resource(`${__API_ENDPOINT__}api/serve/GetIsLeader`).get({groupId: groupId}).$promise;
     }
 
     getTeamDetailsByLeader() {
@@ -36,14 +25,27 @@ export default class ServeTeamService {
 //TODO: THIS METHOD IS BASICALLY THE SAME METHOD IN GROUP TOOL SERVICES/MESSAGE SERVICE.  THAT SERVICE SHOULD BE REFACTORED
 //AND PULLED UP TO A HIGHER LEVEL TO BE USED MORE BROADLY
     sendGroupMessage(groupId, message) {
-        return this.resource(__API_ENDPOINT__ + 'api/grouptool/:groupId/:groupTypeId/groupmessage').save({
+        return this.resource(`${__API_ENDPOINT__}api/grouptool/:groupId/:groupTypeId/groupmessage`).save({
             groupId: groupId,
             groupTypeId: CONSTANTS.GROUP.GROUP_TYPE_ID.MY_SERVE
         }, message).$promise;
     }
 
+    sendParticipantsMessage(message) {
+        return this.resource(`${__API_ENDPOINT__}api/group/messageselectparticipants`).save(message).$promise;
+    }
+
     getTeamRsvps(team) {
-        return this.resource(__API_ENDPOINT__ +'api/serve/getTeamRsvps')
+        return this.resource(`${__API_ENDPOINT__}api/serve/getTeamRsvps`)
         .save(team).$promise;
     }
+
+    getCapacity(opp, eventId) {
+          return this.resource(`${__API_ENDPOINT__}api/serve/opp-capacity`).get({
+            id: opp.Opportunity_ID,
+            eventId: eventId,
+            min: opp.minimum,
+            max: opp.maximum
+          });
+      }
 }

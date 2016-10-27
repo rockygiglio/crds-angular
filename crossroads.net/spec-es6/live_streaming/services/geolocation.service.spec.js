@@ -62,6 +62,7 @@ describe('Geolocation Service', () => {
       cookies.put('dismissedGeo', false);
       expect(service.showModal()).toBe(true);
       service.saveLocation(location);
+      service.success();
       expect(service.showBanner()).toBe(false);
     })
 

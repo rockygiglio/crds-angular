@@ -1,12 +1,19 @@
 /* ngInject */
 class CampService {
-  constructor($resource) {
+  constructor($resource, $stateParams, $log) {
+    this.log = $log;
+    this.stateParams = $stateParams;
     this.resource = $resource;
+    // eslint-disable-next-line prefer-template
     this.campResource = $resource(__API_ENDPOINT__ + 'api/camps/:campId');
+    this.camperResource = $resource(__API_ENDPOINT__ + 'api/camps/:campId/:camperId');
+    // eslint-disable-next-line prefer-template
     this.campDashboard = $resource(__API_ENDPOINT__ + 'api/my-camp');
+    this.campFamily = $resource(`${__API_ENDPOINT__}api/camps/:campId/family`);
     this.campWaiversResource = $resource(__API_ENDPOINT__ + 'api/camps/waivers/:campId');
-
     this.campInfo = {};
+    this.camperInfo = {};
+    this.campTitle = '';
     this.waivers = [];
   }
 
@@ -16,18 +23,36 @@ class CampService {
     },
 
     (err) => {
+      this.log.error(err);
+    }).$promise;
+  }
+
+  getCamperInfo(campId, camperId) {
+    return this.camperResource.get({ campId, camperId }, (camperInfo) => {
+      this.camperInfo = camperInfo;
+    },
+
+    (err) => {
       console.log(err);
     }).$promise;
   }
 
   getCampDashboard() {
-    return this.campDashboard.query( (myCamps) => {
+    return this.campDashboard.query((myCamps) => {
       this.dashboard = myCamps;
     },
 
    (err) => {
-      console.error(err);
-   }).$promise;
+      this.log.error(err);
+    }).$promise;
+  }
+
+  getCampFamily(campId) {
+    return this.campFamily.query({ campId }, (family) => {
+      this.family = family;
+    }, (err) => {
+      this.log.error(err);
+    }).$promise;
   }
 
   getCampWaivers(campId) {

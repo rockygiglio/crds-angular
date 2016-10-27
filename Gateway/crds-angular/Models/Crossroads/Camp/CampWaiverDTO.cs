@@ -15,5 +15,11 @@ namespace crds_angular.Models.Crossroads.Camp
 
         [JsonProperty(PropertyName = "waiverRequired")]
         public bool Required { get; set; }
+        
+        [JsonProperty(PropertyName = "accepted")]
+        public bool Accepted { get; set; }
+
+        [JsonProperty(PropertyName = "signee")]
+        public int SigneeContactId { get; set; }
     }
 }

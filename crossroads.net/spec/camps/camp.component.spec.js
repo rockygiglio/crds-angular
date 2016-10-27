@@ -1,26 +1,30 @@
-import constants from 'crds-constants';
+import constants from '../../app/constants';
 
-/* jshint unused: false */
+// eslint-disable-next-line no-unused-vars
 import campsModule from '../../app/camps/camps.module';
 import campHelpers from './campHelpers';
 
 describe('Camp Component', () => {
-
-  let campService,
-      $componentController,
-      campController,
-      httpBackend,
-      campsService;
-
-  const endpoint = window.__env__['CRDS_API_ENDPOINT'] + 'api';
+  let $componentController;
+  let campController;
+  let campsService;
+  let rootScope;
 
   beforeEach(angular.mock.module(constants.MODULES.CAMPS));
 
-  beforeEach(inject((_$componentController_, _$httpBackend_, _CampsService_) => {
+  beforeEach(inject((_$componentController_, _$httpBackend_, _CampsService_, _$rootScope_) => {
     $componentController = _$componentController_;
+    rootScope = _$rootScope_;
+
+    rootScope.MESSAGES = {
+      summercampIntro: {
+        content: 'summer camp intro text'
+      }
+    };
+
     campsService = _CampsService_;
-    httpBackend = _$httpBackend_;
-    var bindings = {};
+    const bindings = {
+    };
     campsService.campInfo = campHelpers().campInfo;
     campController = $componentController('crossroadsCamp', null, bindings);
     campController.$onInit();
@@ -31,6 +35,6 @@ describe('Camp Component', () => {
   });
 
   it('should set the title correctly', () => {
-    expect(campController.campTitle).toBe(campHelpers().campInfo.eventTitle);
+    expect(campController.campsService.campTitle).toBe(campHelpers().campInfo.eventTitle);
   });
 });
