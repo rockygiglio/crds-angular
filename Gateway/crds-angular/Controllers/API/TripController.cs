@@ -22,10 +22,10 @@ namespace crds_angular.Controllers.API
             _tripService = tripService;
         }
 
-        [AcceptVerbs("GET")]
         [ResponseType(typeof (List<FamilyMemberTripDto>))]
         [VersionedRoute(template: "trip/{campaignId}/familyMembers", minimumVersion: "1.0.0")]
         [Route("trip/{pledgeCampaignId}/family-members")]
+        [HttpGet]
         public IHttpActionResult GetFamilyWithTripInfo(int campaignId)
         {
             return Authorized(token =>
@@ -44,9 +44,9 @@ namespace crds_angular.Controllers.API
             });         
         }
 
-        [AcceptVerbs("GET")]
         [VersionedRoute(template: "trip/scholarship/{campaignId}/{contactId}", minimumVersion: "1.0.0")]
         [Route("trip/scholarship/{campaignId}/{contactId}")]
+        [HttpGet]
         public IHttpActionResult ContactHasScholarship(int contactId, int campaignId)
         {
             return Authorized(token =>
@@ -68,10 +68,10 @@ namespace crds_angular.Controllers.API
             });
         }
 
-        [AcceptVerbs("GET")]
         [ResponseType(typeof (TripFormResponseDto))]
         [VersionedRoute(template: "trip/formResponses/{selectionId}/{selectionCount}/{recordId}", minimumVersion: "1.0.0")]
         [Route("trip/form-responses/{selectionId}/{selectionCount}/{recordId}")]
+        [HttpGet]
         public IHttpActionResult TripFormResponses(int selectionId, int selectionCount, int recordId)
         {
             return Authorized(token =>
@@ -89,10 +89,10 @@ namespace crds_angular.Controllers.API
             });
         }
 
-        [AcceptVerbs("GET")]
         [ResponseType(typeof (TripCampaignDto))]
         [VersionedRoute(template: "trip/campaign/{campaignId}", minimumVersion: "1.0.0")]
         [Route("trip/campaign/{campaignId}")]
+        [HttpGet]
         public IHttpActionResult GetCampaigns(int campaignId)
         {
             return Authorized(token =>
@@ -110,9 +110,9 @@ namespace crds_angular.Controllers.API
             });
         }
 
-        [AcceptVerbs("POST")]
         [VersionedRoute(template: "trip/generatePrivateInvite", minimumVersion: "1.0.0")]
         [Route("trip/generate-private-invite")]
+        [HttpPost]
         public IHttpActionResult GeneratePrivateInvite([FromBody] PrivateInviteDto dto)
         {
             if (!ModelState.IsValid)
@@ -137,10 +137,10 @@ namespace crds_angular.Controllers.API
             });
         }
 
-        [AcceptVerbs("GET")]
         [ResponseType(typeof (TripParticipantDto))]
         [VersionedRoute(template: "trip/search/{query?}", minimumVersion: "1.0.0")]
         [Route("trip/search/{query?}")]
+        [HttpGet]
         public IHttpActionResult Search(string query)
         {
             try
@@ -155,10 +155,10 @@ namespace crds_angular.Controllers.API
             }
         }
 
-        [AcceptVerbs("GET")]
         [ResponseType(typeof (TripParticipantDto))]
         [VersionedRoute(template: "trip/participant/{tripParticipantId}", minimumVersion: "1.0.0")]
         [Route("trip/participant/{tripParticipantId}")]
+        [HttpGet]
         public IHttpActionResult TripParticipant(string tripParticipantId)
         {
             try
@@ -175,10 +175,10 @@ namespace crds_angular.Controllers.API
             }
         }
 
-        [AcceptVerbs("GET")]
         [ResponseType(typeof (MyTripsDto))]
         [VersionedRoute(template: "trip/myTrips", minimumVersion: "1.0.0")]
         [Route("trip/mytrips")]
+        [HttpGet]
         public IHttpActionResult MyTrips()
         {
             return Authorized(token =>
@@ -196,10 +196,10 @@ namespace crds_angular.Controllers.API
             });
         }
 
-        [AcceptVerbs("GET")]
         [ResponseType(typeof (ValidatePrivateInviteDto))]
         [VersionedRoute(template: "trip/validatePrivateInvite/{campaignId}/{invitationKey}", minimumVersion: "1.0.0")]
         [Route("trip/validate-private-invite/{pledgeCampaignId}/{guid}")]
+        [HttpGet]
         public IHttpActionResult ValidatePrivateInvite(int campaignId, string invitationKey)
         {
             return Authorized(token =>

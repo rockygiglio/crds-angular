@@ -35,10 +35,10 @@ namespace crds_angular.Controllers.API
             _messageFactory = messageFactory;
         }
 
-        [AcceptVerbs("GET")]
         [ResponseType(typeof(TripParticipantPledgeDto))]
         [VersionedRoute(template: "tripApplication/{contactId}/{campaignId}", minimumVersion: "1.0.0")]
         [Route("trip-application/{contactId}/{campaignId}")]
+        [HttpGet]
         public IHttpActionResult GetCampaignInfo(int contactId, int campaignId)
         {
             return Authorized(token =>

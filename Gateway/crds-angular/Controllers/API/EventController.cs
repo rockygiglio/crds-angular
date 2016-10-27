@@ -26,9 +26,9 @@ namespace crds_angular.Controllers.API
             _apiUserService = apiUserService;
         }
 
-        [AcceptVerbs("POST")]
         [VersionedRoute(template: "event", minimumVersion: "1.0.0")]
         [Route("event")]
+        [HttpPost]
         public IHttpActionResult RsvpToEvent([FromBody] EventRsvpDto eventRsvp)
         {
             if (ModelState.IsValid)
@@ -67,9 +67,9 @@ namespace crds_angular.Controllers.API
         }
 
         [ResponseType(typeof (Event))]
-        [AcceptVerbs("GET")]
         [VersionedRoute(template: "event/{eventId}", minimumVersion: "1.0.0")]
         [Route("event/{eventid}")]
+        [HttpGet]
         public IHttpActionResult EventById(int eventId)
         {
             return Authorized(token => {

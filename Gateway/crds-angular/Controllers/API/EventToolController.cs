@@ -22,10 +22,10 @@ namespace crds_angular.Controllers.API
             _apiUserService = apiUserService;
         }
 
-        [AcceptVerbs("GET")]
         [ResponseType(typeof (EventToolDto))]
         [VersionedRoute(template: "eventTool/{eventId}", minimumVersion: "1.0.0")]
         [Route("eventTool/{eventId}")]
+        [HttpGet]
         public IHttpActionResult GetEventReservation(int eventId)
         {
             return Authorized(token =>
@@ -45,10 +45,10 @@ namespace crds_angular.Controllers.API
             });
         }
 
-        [AcceptVerbs("GET")]
         [ResponseType(typeof(EventToolDto))]
         [VersionedRoute(template: "eventTool/{eventId}/rooms", minimumVersion: "1.0.0")]
         [Route("eventTool/{eventId:int}/rooms")]
+        [HttpGet]
         public IHttpActionResult GetEventRoomDetails(int eventId)
         {
             return Authorized(token =>
@@ -68,9 +68,9 @@ namespace crds_angular.Controllers.API
             });
         }
 
-        [AcceptVerbs("POST")]
         [VersionedRoute(template: "eventTool", minimumVersion: "1.0.0")]
         [Route("eventTool")]
+        [HttpPost]
         public IHttpActionResult Post([FromBody] EventToolDto eventReservation)
         {
             if (ModelState.IsValid)
@@ -96,9 +96,9 @@ namespace crds_angular.Controllers.API
             throw new HttpResponseException(dataError.HttpResponseMessage);
         }
 
-        [AcceptVerbs("PUT")]
         [VersionedRoute(template: "eventTool/{eventId}", minimumVersion: "1.0.0")]
         [Route("eventTool/{eventId}")]
+        [HttpPut]
         public IHttpActionResult Put([FromBody] EventToolDto eventReservation, int eventId)
         {
             if (ModelState.IsValid)
@@ -129,9 +129,9 @@ namespace crds_angular.Controllers.API
         }
 
 
-        [AcceptVerbs("PUT")]
         [VersionedRoute(template: "eventTool/{eventId}/rooms", minimumVersion: "1.0.0")]
         [Route("eventTool/{eventId:int}/rooms")]
+        [HttpPut]
         public IHttpActionResult UpdateEventRoom([FromBody] EventRoomDto room, int eventId)
         {
             if (ModelState.IsValid)

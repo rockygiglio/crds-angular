@@ -62,10 +62,10 @@ namespace crds_angular.Controllers.API
                               });
         }
 
-        [AcceptVerbs("POST")]
         [ResponseType(typeof(ServingTeam))]
         [VersionedRoute(template: "serve/getTeamRsvps", minimumVersion: "1.0.0")]
         [Route("serve/getTeamRsvps")]
+        [HttpPost]
         public IHttpActionResult GetServingTeamRsvps([FromBody] ServingTeam team)
         {
             return Authorized(token =>

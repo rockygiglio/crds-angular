@@ -21,7 +21,7 @@ namespace crds_angular.Controllers.API
 
         [VersionedRoute(template: "camps/{eventId}/family", minimumVersion: "1.0.0")]
         [Route("camps/{eventId}/family")]
-        [AcceptVerbs("GET")]
+        [HttpGet]
         public IHttpActionResult GetCampFamily(int eventId)
         {
             return Authorized(token =>
@@ -43,7 +43,7 @@ namespace crds_angular.Controllers.API
         [ResponseType(typeof(List<MyCampDTO>))]
         [VersionedRoute(template: "myCamp", minimumVersion: "1.0.0")]
         [Route("my-camp")]
-        [AcceptVerbs("GET")]
+        [HttpGet]
         public IHttpActionResult GetMyCampsInfo()
         {
             return Authorized(token =>
@@ -64,7 +64,7 @@ namespace crds_angular.Controllers.API
         [ResponseType(typeof (CampDTO))]
         [VersionedRoute(template: "camps/{eventId}", minimumVersion: "1.0.0")]
         [Route("camps/{eventid}")]
-        [AcceptVerbs("GET")]
+        [HttpGet]
         public IHttpActionResult GetCampEventDetails(int eventId)
         {
             return Authorized(token =>
@@ -85,7 +85,7 @@ namespace crds_angular.Controllers.API
         [ResponseType(typeof(CampReservationDTO))]
         [VersionedRoute(template: "camps/{eventId}/{contactId}", minimumVersion: "1.0.0")]
         [Route("camps/{eventid}/{contactid}")]
-        [AcceptVerbs("GET")]
+        [HttpGet]
         public IHttpActionResult GetCamperInfo(int eventId, int contactId)
         {
             return Authorized(token =>
@@ -103,9 +103,9 @@ namespace crds_angular.Controllers.API
             });
         }
 
-        [AcceptVerbs("POST")]
         [VersionedRoute(template: "camps/{eventId}", minimumVersion: "1.0.0")]
         [Route("camps/{eventid}")]
+        [HttpPost]
         public IHttpActionResult SaveCampReservation([FromBody] CampReservationDTO campReservation, int eventId)
         {
             if (!ModelState.IsValid)

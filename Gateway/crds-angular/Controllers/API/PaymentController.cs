@@ -21,7 +21,7 @@ namespace crds_angular.Controllers.API
 
         [VersionedRoute(template: "payment", minimumVersion: "1.0.0")]
         [Route("payment")]
-        [AcceptVerbs("POST")]
+        [HttpPost]
         public IHttpActionResult SavePayment([FromBody] PaymentDTO payment)
         {
             if (!ModelState.IsValid)

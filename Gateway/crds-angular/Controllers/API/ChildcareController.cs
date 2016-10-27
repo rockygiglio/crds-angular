@@ -33,7 +33,7 @@ namespace crds_angular.Controllers.API
 
         [VersionedRoute(template: "childcare/rsvp", minimumVersion: "1.0.0")]
         [Route("childcare/rsvp")]
-        [AcceptVerbs("POST")]
+        [HttpPost]
         public IHttpActionResult SaveRsvp([FromBody] ChildcareRsvpDto saveRsvp)
         {
             if (!ModelState.IsValid)
@@ -75,7 +75,7 @@ namespace crds_angular.Controllers.API
         [ResponseType(typeof(Event))]
         [VersionedRoute(template: "childcare/event/{eventId}", minimumVersion: "1.0.0")]
         [Route("childcare/event/{eventid}")]
-        [AcceptVerbs("GET")]
+        [HttpGet]
         public IHttpActionResult ChildcareEventById(int eventId)
         {
             return Authorized(token =>
@@ -97,7 +97,7 @@ namespace crds_angular.Controllers.API
         [ResponseType(typeof(List<FamilyMember>))]
         [VersionedRoute(template: "childcare/eligableChildren", minimumVersion: "1.0.0")]
         [Route("childcare/eligible-children")]
-        [AcceptVerbs("GET")]
+        [HttpGet]
         public IHttpActionResult ChildrenEligibleForChildcare()
         {
             return Authorized(token =>
@@ -116,7 +116,7 @@ namespace crds_angular.Controllers.API
 
         [VersionedRoute(template: "childcare/request", minimumVersion: "1.0.0")]
         [Route("childcare/request")]
-        [AcceptVerbs("POST")]
+        [HttpPost]
         public IHttpActionResult CreateChildcareRequest([FromBody] ChildcareRequestDto request)
         {
             if (!ModelState.IsValid)
@@ -144,7 +144,7 @@ namespace crds_angular.Controllers.API
 
         [VersionedRoute(template: "childcare/updateRequest", minimumVersion: "1.0.0")]
         [Route("childcare/updaterequest")]
-        [AcceptVerbs("POST")]
+        [HttpPost]
         public IHttpActionResult UpdateChildcareRequest([FromBody] ChildcareRequestDto request)
         {
             if (!ModelState.IsValid)
@@ -172,7 +172,7 @@ namespace crds_angular.Controllers.API
 
         [VersionedRoute(template: "childcare/request/approve/{requestId}", minimumVersion: "1.0.0")]
         [Route("childcare/request/approve/{requestId}")]
-        [AcceptVerbs("POST")]
+        [HttpPost]
         public IHttpActionResult ApproveChildcareRequest(int requestId, ChildcareRequestDto childcareRequest)
         {
             if (!ModelState.IsValid)
@@ -223,7 +223,7 @@ namespace crds_angular.Controllers.API
 
         [VersionedRoute(template: "childcare/request/reject/{requestId}", minimumVersion: "1.0.0")]
         [Route("childcare/request/reject/{requestId}")]
-        [AcceptVerbs("POST")]
+        [HttpPost]
         public IHttpActionResult RejectChildcareRequest(int requestId, ChildcareRequestDto childcareRequest)
         {
             if (!ModelState.IsValid)
@@ -251,7 +251,7 @@ namespace crds_angular.Controllers.API
 
         [VersionedRoute(template: "childcare/getRequest/{requestId}", minimumVersion: "1.0.0")]
         [Route("childcare/getrequest/{requestid}")]
-        [AcceptVerbs("GET")]
+        [HttpGet]
         public IHttpActionResult GetChildcareRequest(int requestId)
         {
 
@@ -272,7 +272,7 @@ namespace crds_angular.Controllers.API
 
         [VersionedRoute(template: "childcare/dashboard/{contactId}", minimumVersion: "1.0.0")]
         [Route("childcare/dashboard/{contactId}")]
-        [AcceptVerbs("GET")]
+        [HttpGet]
         public IHttpActionResult ChildcareDashboard(int contactId)
         {
             return Authorized(token =>

@@ -206,9 +206,9 @@ namespace crds_angular.Controllers.API
         /// <returns>A list of Group DTO</returns>
         [RequiresAuthorization]
         [ResponseType(typeof(GroupDTO))]
-        [AcceptVerbs("GET")]
         [VersionedRoute(template: "group/invitation/{invitationKey}", minimumVersion: "1.0.0")]
         [Route("group/invitation/{invitationGUID}")]
+        [HttpGet]
         public IHttpActionResult GetGroupByInvitationGuid(string invitationKey)
         {
             return Authorized(token =>

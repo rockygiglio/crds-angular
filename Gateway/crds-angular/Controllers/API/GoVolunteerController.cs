@@ -250,10 +250,10 @@ namespace crds_angular.Controllers.API
             }
         }
 
-        [AcceptVerbs("POST")]
         [VersionedRoute(template: "goVolunteer/registration", minimumVersion: "1.0.0")]
         [Route("govolunteer/registration")]
         [ResponseType(typeof (Registration))]
+        [HttpPost]
         public IHttpActionResult Post([FromBody] Registration goVolunteerRegistration)
         {
             if (ModelState.IsValid)
