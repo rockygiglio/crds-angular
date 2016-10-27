@@ -64,6 +64,7 @@ describe('Camper Info Component', () => {
       deferred.resolve('success!');
       return deferred.promise;
     });
+
     camperInfo.submit();
     rootScope.$apply(); // must be called to resolve the promise
     expect(camperInfoForm.save).toHaveBeenCalledWith(eventId);

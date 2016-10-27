@@ -5,17 +5,17 @@ class CamperInfoForm {
     this.lookupService = LookupService;
 
     this.formModel = {
-      contactId: this.campsService.camperInfo.contactId,
-      firstName: this.campsService.camperInfo.firstName,
-      lastName: this.campsService.camperInfo.lastName,
-      middleName: this.campsService.camperInfo.middleName,
-      preferredName: this.campsService.camperInfo.preferredName,
-      birthDate: this.campsService.camperInfo.birthDate,
-      gender: this.campsService.camperInfo.gender,
-      currentGrade: this.campsService.camperInfo.currentGrade,
-      schoolAttending: this.campsService.camperInfo.schoolAttending,
+      contactId: this.campsService.camperInfo.contactId || undefined,
+      firstName: this.campsService.camperInfo.firstName || undefined,
+      lastName: this.campsService.camperInfo.lastName || undefined,
+      middleName: this.campsService.camperInfo.middleName || undefined,
+      preferredName: this.campsService.camperInfo.preferredName || undefined,
+      birthDate: this.campsService.camperInfo.birthDate || undefined,
+      gender: this.campsService.camperInfo.gender || undefined,
+      currentGrade: this.campsService.camperInfo.currentGrade || undefined,
+      schoolAttending: this.campsService.camperInfo.schoolAttending || undefined,
       schoolAttendingNext: null,
-      crossroadsSite: this.campsService.camperInfo.crossroadsSite,
+      crossroadsSite: this.campsService.camperInfo.crossroadsSite || undefined,
       roomate: null
     };
   }
@@ -37,7 +37,7 @@ class CamperInfoForm {
           {
             className: 'form-group col-xs-6',
             key: 'firstName',
-            type: 'crdsInput',  
+            type: 'crdsInput',
             templateOptions: {
               label: 'First Name',
               required: true

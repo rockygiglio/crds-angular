@@ -97,6 +97,7 @@ namespace crds_angular.test.Services
             };
 
             var eventParticipantId = 6;
+
             var newEventparticipantId = 0;
 
             var formId = 8;
@@ -153,7 +154,7 @@ namespace crds_angular.test.Services
             _configurationWrapper.Setup(m => m.GetConfigIntValue("SummerCampForm.SchoolAttendingNextYear")).Returns(12);
             _configurationWrapper.Setup(m => m.GetConfigIntValue("SummerCampForm.PreferredRoommate")).Returns(14);
             _congregationRepository.Setup(m => m.GetCongregationById(MockCampReservationDTOwithContactId().CrossroadsSite)).Returns(congregation);
-            _eventRepository.Setup(m => m.GetEventParticipantRecordId(eventId, participant.ParticipantId)).Returns(eventParticipantId);
+           _eventRepository.Setup(m => m.GetEventParticipantRecordId(eventId, participant.ParticipantId)).Returns(eventParticipantId);
             _fixture.SaveCampReservation(MockCampReservationDTOwithContactId(), eventId, token);
             _eventRepository.VerifyAll();
             _participantRepository.VerifyAll();
