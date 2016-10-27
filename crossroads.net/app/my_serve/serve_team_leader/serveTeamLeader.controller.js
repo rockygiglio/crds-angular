@@ -69,17 +69,20 @@ export default class ServeTeamLeaderController {
     }
 
     isFormValid() {
-        let validForm =  {
+        let validForm = {
             valid: true
         };
 
-        if(this.individuals.length < 1)
-        {
+        if (this.individuals.length < 1) {
             validForm.valid = false;
             this.formErrors.noParticipants = true;
         }
-        
-            return validForm.valid;
+
+        if (this.model.selectedOpp == null) {
+            validForm.valid = false;
+        }
+
+        return validForm.valid;
     };
 
     saveRsvp() {

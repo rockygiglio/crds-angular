@@ -8,6 +8,9 @@ export default class LandingController {
     this.streamStatus = StreamStatusService.getStatus();
 
     this.rootScope.$on('streamStatusChanged', (e, streamStatus) => {
+      if (streamStatus === 'Upcoming' &&  this.streamStatus !== 'Upcoming') {
+        this.moveCountdown();
+      }
       this.streamStatus = streamStatus;
     });
 
@@ -26,14 +29,16 @@ export default class LandingController {
       .getRecentMessages(maxPastWeekends)
       .then((response) => {
         this.pastWeekends = this.parseWeekends(response,maxPastWeekends)
-      })
+      });
 
-    $rootScope.$on('dynamicContentCompiled', () => { 
-      let el = angular.element('#intro p.lead');
-      if (el.length) {
-        angular.element('countdown-intro').insertAfter(el)
-      }
-    });
+    this.rootScope.$on('dynamicContentCompiled', this.moveCountdown);
+  }
+
+  moveCountdown() {
+    let el = angular.element('#intro .upcoming p.lead');
+    if (el.length) {
+      angular.element('countdown-intro').insertAfter(el)
+    }
   }
 
   introImage() {
@@ -68,7 +73,7 @@ export default class LandingController {
 
         event.delay = i * 100;
         event.subtitle = event.title;
-        
+
         if (event.number === 0) {
           event.number++;
         }
@@ -79,7 +84,7 @@ export default class LandingController {
 
         if (typeof event.messageVideo !== "undefined" && typeof event.messageVideo.still !== 'undefined') {
           event.image = event.messageVideo.still.filename
-        } 
+        }
       }
       return event;
     });

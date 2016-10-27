@@ -20,6 +20,7 @@ namespace MinistryPlatform.Translation.Models
         public string transactionCode { get; set; }
         public bool IncludeOnGivingHistory { get; set; }
         public bool IncludeOnPrintedStatement { get; set; }
+        public bool recurringGift { get; set; }
 
         #region Distributions property
         private readonly List<MpDonationDistribution> _distributions = new List<MpDonationDistribution>();

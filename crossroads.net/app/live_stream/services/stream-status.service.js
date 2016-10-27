@@ -42,8 +42,6 @@ export default class StreamStatusService {
           deferred.resolve(formattedEvents);
         });
 
-    return deferred;
-
   };
 
   formatEvents(events) {

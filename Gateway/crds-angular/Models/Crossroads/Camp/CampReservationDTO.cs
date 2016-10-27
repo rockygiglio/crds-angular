@@ -1,5 +1,4 @@
-﻿using System;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
 namespace crds_angular.Models.Crossroads.Camp
 {
@@ -19,7 +18,7 @@ namespace crds_angular.Models.Crossroads.Camp
 
         [JsonProperty(PropertyName = "preferredName")]
         public string PreferredName { get; set; }
-
+        
         [JsonProperty(PropertyName = "birthDate")]
         public string BirthDate { get; set; }
 
@@ -42,4 +41,3 @@ namespace crds_angular.Models.Crossroads.Camp
         public string RoomMate { get; set; }
     }
 }
-
