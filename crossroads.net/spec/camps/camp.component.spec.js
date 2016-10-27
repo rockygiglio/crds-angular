@@ -1,6 +1,3 @@
-import constants from '../../app/constants';
-
-// eslint-disable-next-line no-unused-vars
 import campsModule from '../../app/camps/camps.module';
 import campHelpers from './campHelpers';
 
@@ -12,7 +9,7 @@ describe('Camp Component', () => {
 
   const bindings = {};
 
-  beforeEach(angular.mock.module(constants.MODULES.CAMPS));
+  beforeEach(angular.mock.module(campsModule));
 
   beforeEach(inject((_$componentController_, _$httpBackend_, _CampsService_, _$rootScope_) => {
     $componentController = _$componentController_;
@@ -36,11 +33,13 @@ describe('Camp Component', () => {
     });
 
     it('should set the view as ready', () => {
+      expect(campController.isClosed).toBe(false);
       expect(campController.viewReady).toBe(true);
     });
 
     it('should set the title correctly', () => {
-      expect(campController.campsService.campTitle).toBe(campHelpers().campInfo.eventTitle);
+      expect(campController.isClosed).toBe(false);
+      expect(campController.campsService.campTitle).toBe(campHelpers().campInfoOpen.eventTitle);
     });
   });
 
@@ -52,6 +51,7 @@ describe('Camp Component', () => {
     });
 
     it('should not be open for registration', () => {
+      expect(campController.campsService.campTitle).toBe(campHelpers().campInfoClosed.eventTitle);
       expect(campController.isClosed).toBe(true);
     });
   });
