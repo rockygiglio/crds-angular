@@ -189,6 +189,31 @@ namespace crds_angular.test.Services
         }
 
         [Test]
+        public void shouldSaveEmergencyContact()
+        {
+            var contactId = 12345;
+            var formId = 10;
+            var eventId = 6789;
+            var participant = new MpParticipant
+            {
+                ParticipantId = 2
+            };
+            _participantRepository.Setup(m => m.GetParticipant(contactId)).Returns(participant);
+            _eventRepository.Setup(m => m.SafeRegisterParticipant(eventId, participant.ParticipantId, 0, 0));
+            _configurationWrapper.Setup(m => m.GetConfigIntValue("SummerCampFormID")).Returns(formId);
+            _configurationWrapper.Setup(m => m.GetConfigIntValue("SummerCampForm.EmergencyContactFirstName")).Returns(10);
+            _configurationWrapper.Setup(m => m.GetConfigIntValue("SummerCampForm.EmergencyContactLastName")).Returns(12);
+            _configurationWrapper.Setup(m => m.GetConfigIntValue("SummerCampForm.EmergencyContactMobilePhone")).Returns(14);
+            _configurationWrapper.Setup(m => m.GetConfigIntValue("SummerCampForm.EmergencyContactEmail")).Returns(12);
+            _configurationWrapper.Setup(m => m.GetConfigIntValue("SummerCampForm.EmergencyContactRelationship")).Returns(14);
+
+            _fixture.SaveCamperEmergencyContactInfo(MockCampEmergencyContactDTO(), eventId, contactId);
+            _configurationWrapper.VerifyAll();
+            _participantRepository.VerifyAll();
+            _eventRepository.VerifyAll();
+        }
+
+        [Test]
         public void shouldGetEmptyListOfFamilyMembers()
         {
             var token = "asdfasdfasdfasdf";
@@ -325,6 +350,17 @@ namespace crds_angular.test.Services
                 SchoolAttendingNext = "Mason",
                 CrossroadsSite = 3,
                 RoomMate = ""
+            };
+        }
+        private CampEmergencyContactDTO MockCampEmergencyContactDTO()
+        {
+            return new CampEmergencyContactDTO
+            {
+                FirstName = "Jon",
+                LastName = "Horner",
+                Email = "lknair@gmail.com",
+                MobileNumber = "123456789",
+                Relationship = "friend"
             };
         }
         private CampReservationDTO MockCampReservationDTOwithContactId()
