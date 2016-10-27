@@ -62,31 +62,36 @@ namespace crds_angular.Controllers.API
         }
 
         /// <summary>
-        /// Retrieve list of donations for the logged-in donor, optionally for the specified year, and optionally returns only soft credit donations (by default returns only direct gifts).
+        /// Function serves TWO Routes - api/donations AND api/donations/{donationYear} 
+        /// Retrieve list of donations for the logged-in donor, optionally for the specified year, and optionally returns only soft credit donations (by default returns only direct gifts), and optionally include recurring gifts.
         /// </summary>
         /// <param name="softCredit">A bool indicating if the result should contain only soft-credit (true), only direct (false), or all (null) donations.  Defaults to null.</param>
         /// <param name="donationYear">A year filter (YYYY format) for donations returned - defaults to null, meaning return all available donations regardless of year.</param>
         /// <param name="impersonateDonorId">An optional donorId of a donor to impersonate</param>
         /// <param name="limit">A limit of donations to return starting at the most resent - defaults to null, meaning return all available donations with no limit.</param>
+        /// <param name="includeRecurring">Include recurring donations</param>
         /// <returns>A list of DonationDTOs</returns>
+        [Route("api/donations")]
         [Route("api/donations/{donationYear:regex(\\d{4})?}")]
         [HttpGet]
+        [RequiresAuthorization]
         public IHttpActionResult GetDonations(string donationYear = null,
                                               int? limit = null,
                                               [FromUri(Name = "softCredit")] bool? softCredit = null,
-                                              [FromUri(Name = "impersonateDonorId")] int? impersonateDonorId = null)
+                                              [FromUri(Name = "impersonateDonorId")] int? impersonateDonorId = null,
+                                              bool? includeRecurring = true)
         {
             return (Authorized(token =>
             {
-                var impersonateUserId = impersonateDonorId == null ? string.Empty : _mpDonorService.GetEmailViaDonorId(impersonateDonorId.Value).Email;
+                var impersonateUserId = impersonateDonorId == null ? string.Empty : _mpDonorService.GetEmailViaDonorId(impersonateDonorId.Value).Email;                
                 try
                 {
                     var donations = (impersonateDonorId != null)
                         ? _impersonationService.WithImpersonation(token,
                                                                   impersonateUserId,
                                                                   () =>
-                                                                      _gatewayDonationService.GetDonationsForAuthenticatedUser(token, donationYear, limit, softCredit))
-                        : _gatewayDonationService.GetDonationsForAuthenticatedUser(token, donationYear, limit, softCredit);
+                                                                      _gatewayDonationService.GetDonationsForAuthenticatedUser(token, donationYear, limit, softCredit, includeRecurring))
+                        : _gatewayDonationService.GetDonationsForAuthenticatedUser(token, donationYear, limit, softCredit, includeRecurring);
                     if (donations == null || !donations.HasDonations)
                     {
                         return (RestHttpActionResult<ApiErrorDto>.WithStatus(HttpStatusCode.NotFound, new ApiErrorDto("No matching donations found")));
@@ -97,37 +102,6 @@ namespace crds_angular.Controllers.API
                 catch (UserImpersonationException e)
                 {
                     return (e.GetRestHttpActionResult());
-                }
-            }));
-        }
-
-
-        /// <summary>
-        /// Retrieve the last donation for the logged-in donor.
-        /// </summary>
-        /// <param name="includeRecurring">A bool indicating if the result should contain only soft-credit (true), only direct (false), or all (null) donations.  Defaults to null.</param>
-        /// <returns>A DonationDTO for the last donation</returns>
-        [RequiresAuthorization]
-        [Route("api/donations/lastdonation")]
-        [HttpGet]
-        public IHttpActionResult GetLastDonations(bool? includeRecurring = false)
-        {
-            return (Authorized(token =>
-            {
-                try
-                {
-                    var donations = _gatewayDonationService.GetLastDonationForAuthenticatedUser(token);
-                    if (donations == null || !donations.HasDonations)
-                    {
-                        return (RestHttpActionResult<ApiErrorDto>.WithStatus(HttpStatusCode.NotFound, new ApiErrorDto("No matching donations found")));
-                    }
-
-                    return (Ok(donations));
-                }
-                catch (Exception e)
-                {
-                    var apiError = new ApiErrorDto("Get Last Donation Get Failed", e);
-                    throw new HttpResponseException(apiError.HttpResponseMessage);
                 }
             }));
         }

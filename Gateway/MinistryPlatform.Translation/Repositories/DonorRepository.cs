@@ -730,27 +730,27 @@ namespace MinistryPlatform.Translation.Repositories
             return MapDonationRecords(records);
         }
 
-        public List<MpDonation> GetDonationsForAuthenticatedUser(string userToken, bool? softCredit = null, string donationYear = null)
+        public List<MpDonation> GetDonationsForAuthenticatedUser(string userToken, bool? softCredit = null, string donationYear = null, bool? includeRecurring = true)
         {
             var search = string.Format("{0},{1}", YearSearch(donationYear), softCredit.HasValue ? softCredit.Value.ToString() : string.Empty);
+            //TODO update search string for includeRecurring, instead of looping through list below
+            // like this,  var search = string.Format("{0},{1},,,,,,,,,,,,,,,,,,,,{2}", YearSearch(donationYear), softCredit.HasValue ? softCredit.Value.ToString() : string.Empty, includeRecurring.HasValue ? includeRecurring.Value.ToString() : "true");            
             var records = _ministryPlatformService.GetRecordsDict(_myHouseholdDonationDistributions, userToken, search);
-
-            return MapDonationRecords(records);
-        }
-
-        public List<MpDonation> GetLastDonationForAuthenticatedUser(string userToken, bool? softCredit = false, string donationYear = null)
-        {
-            var search = string.Format("{0},{1}", YearSearch(donationYear), softCredit.HasValue ? softCredit.Value.ToString() : string.Empty);
-            var records = _ministryPlatformService.GetRecordsDict(_myHouseholdDonationDistributions, userToken, search);
-            var donations = MapDonationRecords(records);            
-            var nonRecurringDonations = new List<MpDonation>();
-            for (var i = 0; i < donations.Count; i++)
+            
+            if (includeRecurring.HasValue ? includeRecurring.Value : true)
             {
-                if (!donations[i].recurringGift)
+                return MapDonationRecords(records);
+            }
+
+            var donations = MapDonationRecords(records);
+            var nonRecurringDonations = new List<MpDonation>();
+            foreach (MpDonation donation in donations)
+            {
+                if (!donation.recurringGift)
                 {
-                    nonRecurringDonations.Add(donations[i]);
+                    nonRecurringDonations.Add(donation);
                 }
-            }            
+            }
             return nonRecurringDonations;
         }
 

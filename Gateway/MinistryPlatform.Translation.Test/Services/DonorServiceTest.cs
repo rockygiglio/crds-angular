@@ -1338,42 +1338,6 @@ namespace MinistryPlatform.Translation.Test.Services
         [Test]
         public void TestGetLastDonationForAuthenticatedUser()
         {
-            var statuses = new List<Dictionary<string, object>>
-            {
-                new Dictionary<string, object>
-                {
-                    {"dp_RecordID", 1},
-                    {"Display_On_Giving_History", true},
-                    {"Display_On_Statements", true},
-                    {"Display_On_MyTrips", true},
-                    {"Donation_Status", "Succeeded"}
-                },
-                new Dictionary<string, object>
-                {
-                    {"dp_RecordID", 2},
-                    {"Display_On_Giving_History", false},
-                    {"Display_On_Statements", false},
-                    {"Display_On_MyTrips", false},
-                    {"Donation_Status", "Succeeded"}
-                },
-                new Dictionary<string, object>
-                {
-                    {"dp_RecordID", 3},
-                    {"Display_On_Giving_History", false},
-                    {"Display_On_Statements", false},
-                    {"Display_On_MyTrips", false},
-                    {"Donation_Status", "Succeeded"}
-                },
-                new Dictionary<string, object>
-                {
-                    {"dp_RecordID", 4},
-                    {"Display_On_Giving_History", false},
-                    {"Display_On_Statements", false},
-                    {"Display_On_MyTrips", false},
-                    {"Donation_Status", "Succeeded"}
-                }
-            };
-
             var records = new List<Dictionary<string, object>>
             {
                 new Dictionary<string, object>
@@ -1441,12 +1405,10 @@ namespace MinistryPlatform.Translation.Test.Services
                 },
             };
 
-            //var searchString = "\"*/2015*\",True";
             var searchString = string.Format("{0},{1}", null, false);
-            _ministryPlatformService.Setup(mocked => mocked.GetRecordsDict(516, "auth token", searchString, It.IsAny<string>())).Returns(records);
-            //_ministryPlatformService.Setup(mocked => mocked.GetRecordsDict(90210, It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns(statuses);
+            _ministryPlatformService.Setup(mocked => mocked.GetRecordsDict(516, "auth token", searchString, It.IsAny<string>())).Returns(records);            
 
-            var result = _fixture.GetLastDonationForAuthenticatedUser("auth token", false, null);
+            var result = _fixture.GetDonationsForAuthenticatedUser("auth token", false, null, false);
 
             _ministryPlatformService.VerifyAll();
 
