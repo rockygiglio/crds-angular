@@ -1,6 +1,3 @@
-import constants from '../../app/constants';
-
-// eslint-disable-next-line no-unused-vars
 import campsModule from '../../app/camps/camps.module';
 import campHelpers from './campHelpers';
 
@@ -10,7 +7,9 @@ describe('Camp Component', () => {
   let campsService;
   let rootScope;
 
-  beforeEach(angular.mock.module(constants.MODULES.CAMPS));
+  const bindings = {};
+
+  beforeEach(angular.mock.module(campsModule));
 
   beforeEach(inject((_$componentController_, _$httpBackend_, _CampsService_, _$rootScope_) => {
     $componentController = _$componentController_;
@@ -23,18 +22,37 @@ describe('Camp Component', () => {
     };
 
     campsService = _CampsService_;
-    const bindings = {
-    };
-    campsService.campInfo = campHelpers().campInfo;
-    campController = $componentController('crossroadsCamp', null, bindings);
-    campController.$onInit();
   }));
 
-  it('should set the view as ready', () => {
-    expect(campController.viewReady).toBe(true);
+
+  describe('Registration open', () => {
+    beforeEach(() => {
+      campsService.campInfo = campHelpers().campInfoOpen;
+      campController = $componentController('crossroadsCamp', null, bindings);
+      campController.$onInit();
+    });
+
+    it('should set the view as ready', () => {
+      expect(campController.isClosed).toBe(false);
+      expect(campController.viewReady).toBe(true);
+    });
+
+    it('should set the title correctly', () => {
+      expect(campController.isClosed).toBe(false);
+      expect(campController.campsService.campTitle).toBe(campHelpers().campInfoOpen.eventTitle);
+    });
   });
 
-  it('should set the title correctly', () => {
-    expect(campController.campsService.campTitle).toBe(campHelpers().campInfo.eventTitle);
+  describe('Registration Closed', () => {
+    beforeEach(() => {
+      campsService.campInfo = campHelpers().campInfoClosed;
+      campController = $componentController('crossroadsCamp', null, bindings);
+      campController.$onInit();
+    });
+
+    it('should not be open for registration', () => {
+      expect(campController.campsService.campTitle).toBe(campHelpers().campInfoClosed.eventTitle);
+      expect(campController.isClosed).toBe(true);
+    });
   });
 });

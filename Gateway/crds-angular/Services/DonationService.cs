@@ -92,9 +92,9 @@ namespace crds_angular.Services
             return (Mapper.Map<MpDonationBatch, DonationBatchDTO>(_mpDonationService.GetDonationBatch(batchId)));
         }
 
-        public DonationsDTO GetDonationsForAuthenticatedUser(string userToken, string donationYear = null, int? limit = null, bool? softCredit = null)
+        public DonationsDTO GetDonationsForAuthenticatedUser(string userToken, string donationYear = null, int? limit = null, bool? softCredit = null, bool? includeRecurring = true)
         {
-            var donations = _mpDonorService.GetDonationsForAuthenticatedUser(userToken, softCredit, donationYear);
+            var donations = _mpDonorService.GetDonationsForAuthenticatedUser(userToken, softCredit, donationYear, includeRecurring);            
             return (PostProcessDonations(donations, limit));
         }
 
