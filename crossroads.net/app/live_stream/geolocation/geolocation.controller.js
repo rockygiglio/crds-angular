@@ -38,6 +38,14 @@ export default class GeolocationController {
     this.setCount(count);
   }
 
+  displayCount() {
+    let result = '\u00A0\u00A0';
+    if (this.location.count > 0) {
+      result = `${this.location.count}`;
+    }
+    return result;
+  }
+
   submitEnabled() {
     return this.location.count > 0 || this.location.zipcode !== '';
   }
