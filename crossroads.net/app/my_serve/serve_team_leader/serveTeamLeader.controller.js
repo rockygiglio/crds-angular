@@ -156,10 +156,10 @@ export default class ServeTeamLeaderController {
     }
 
     leaderCancel() {
-        this.onCancel();
-        this.model.fromDt = null;
-        this.model.toDt = null;
         this.model.selectedOpp = null;
+        this.individuals = []; 
+        this.teamLeaderForm.$setPristine();   
+        this.onCancel();
     }
 
     loadTeamMembersSearch($query) {
