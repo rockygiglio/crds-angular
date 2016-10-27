@@ -7,7 +7,7 @@ export default class GeolocationService {
     this.q          = $q;
     this.rootScope  = $rootScope;
     this.mapService = GoogleMapsService;
-    this.cookies = $cookies;
+    this.cookies    = $cookies;
 
     this.answered       = false;
   }
@@ -59,10 +59,10 @@ export default class GeolocationService {
           _.each(location.address_components, (address) => {
             if (_.findIndex(address.types, (t) => { return t === 'country'}) >= 0) {
               country = address.long_name;
-            } 
+            }
             if (_.findIndex(address.types, (t) => { return t === 'postal_code'}) >= 0) {
               zipcodes.push(address.long_name);
-            } 
+            }
           })
         })
 
@@ -81,7 +81,7 @@ export default class GeolocationService {
       } else {
         deferred.reject('No Results')
       }
-      
+
     }, (error) => {
       deferred.reject(error);
     });
@@ -94,7 +94,7 @@ export default class GeolocationService {
   }
 
   hasDismissed() {
-    return this.cookies.get('dismissedGeo') == "true";
+    return this.cookies.get('dismissedGeo') === "true";
   }
 
   getLocation() {
@@ -108,12 +108,12 @@ export default class GeolocationService {
   }
 
   success() {
-    this.answered    = true;
+    this.answered = true;
     this.rootScope.$broadcast('geolocationModalDismiss');
   }
 
   dismissed() {
-    this.answered    = true;
+    this.answered = true;
     this.cookies.put('dismissedGeo', true);
     this.rootScope.$broadcast('geolocationModalDismiss')
   }

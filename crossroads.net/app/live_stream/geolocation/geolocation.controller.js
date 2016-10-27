@@ -94,16 +94,22 @@ export default class GeolocationController {
    ***********************/
   submit() {
     this.removeFormMessages();
-    if (this.location.zipcode.length > 0 && !this.location.zipcode.match(/^\d{5}$/)) {
-      this.invalidZipcode = true;
-    } else {
-      this.locationService.saveLocation(this.location);
-      this.success = true;
-      setTimeout(() => {
-        this.dismiss = true;
-        this.locationService.success();
-      }, CONSTANTS.GEOLOCATION.MODAL_TIMEOUT);
 
+    if (this.location.zipcode.length <= 0 && this.location.count === 0) {
+      this.dismissed();
+      return false;
+    } else {
+      if (this.location.zipcode.length > 0 && !this.location.zipcode.match(/^\d{5}$/)) {
+        this.invalidZipcode = true;
+      } else {
+        this.locationService.saveLocation(this.location);
+        this.success = true;
+        setTimeout(() => {
+          this.dismiss = true;
+          this.locationService.success();
+        }, CONSTANTS.GEOLOCATION.MODAL_TIMEOUT);
+
+      }
     }
   }
 
