@@ -9,7 +9,8 @@ export default class GeolocationService {
     this.mapService = GoogleMapsService;
     this.cookies    = $cookies;
 
-    this.answered       = false;
+    this.answered = false;
+    this.inModal = this.showModal();
   }
 
   showModal() {
@@ -31,7 +32,8 @@ export default class GeolocationService {
       "entry.1874873182": location.lat,
       "entry.1547032910": location.lng,
       "entry.1403910056": location.count,
-      "entry.692424241": location.zipcode
+      "entry.692424241": location.zipcode,
+      "entry.644514730": this.inModal ? "Modal": "Banner"
     };
     /**
      * Using $.ajax instead of $http as $http formats data as JSON,
