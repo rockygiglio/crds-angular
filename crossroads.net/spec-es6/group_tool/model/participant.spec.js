@@ -22,7 +22,7 @@ describe('Participant', () => {
       expect(participant.nickName).toEqual(mockJson.nickName);
       expect(participant.lastName).toEqual(mockJson.lastName);
       expect(participant.groupRoleId).toEqual(mockJson.groupRoleId);
-      expect(participant.displayName()).toEqual(`${mockJson.nickName} ${mockJson.lastName}`);
+      expect(participant.getDisplayName()).toEqual(`${mockJson.nickName} ${mockJson.lastName}`);
     });
 
     it('should have the following values when created without json', () => {
@@ -68,13 +68,13 @@ describe('Participant', () => {
       participant.nickName = 'first';
       participant.lastName = 'last';
       participant.groupRoleId = constants.GROUP.ROLES.APPRENTICE;
-      expect(participant.displayName()).toEqual('first last');
+      expect(participant.getDisplayName()).toEqual('first last');
     });
 
     it('should be blank', () => {
       participant = new Participant();
       participant.groupRoleId = constants.GROUP.ROLES.LEADER;
-      expect(participant.displayName()).toEqual('');
+      expect(participant.getDisplayName()).toEqual('');
     });
   });
 
