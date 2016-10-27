@@ -105,7 +105,7 @@ export default class GeolocationController {
         this.locationService.saveLocation(this.location);
         this.success = true;
         setTimeout(() => {
-          this.dismiss = true;
+          this.dismissed();
           this.locationService.success();
         }, CONSTANTS.GEOLOCATION.MODAL_TIMEOUT);
 
