@@ -92,6 +92,31 @@ namespace crds_angular.Services
             }).ToList();                       
         }
 
+        public void SaveCamperEmergencyContactInfo(CampEmergencyContactDTO emergencyContact, int eventId, int contactId)
+        {
+            var participant = _participantRepository.GetParticipant(contactId);
+            var eventParticipantId = _eventRepository.SafeRegisterParticipant(eventId, participant.ParticipantId);
+
+            var answers = new List<MpFormAnswer>
+            {
+                new MpFormAnswer {Response = emergencyContact.FirstName,FieldId = _configurationWrapper.GetConfigIntValue("SummerCampForm.EmergencyContactFirstName"),EventParticipantId =  eventParticipantId},
+                new MpFormAnswer {Response = emergencyContact.LastName, FieldId = _configurationWrapper.GetConfigIntValue("SummerCampForm.EmergencyContactLastName"),EventParticipantId =  eventParticipantId},
+                new MpFormAnswer {Response = emergencyContact.MobileNumber, FieldId = _configurationWrapper.GetConfigIntValue("SummerCampForm.EmergencyContactMobilePhone"),EventParticipantId =  eventParticipantId},
+                new MpFormAnswer {Response = emergencyContact.Email, FieldId = _configurationWrapper.GetConfigIntValue("SummerCampForm.EmergencyContactEmail"),EventParticipantId =  eventParticipantId},
+                new MpFormAnswer {Response = emergencyContact.Relationship, FieldId = _configurationWrapper.GetConfigIntValue("SummerCampForm.EmergencyContactRelationship"),EventParticipantId =  eventParticipantId}
+            };
+
+            var formId = _configurationWrapper.GetConfigIntValue("SummerCampFormID");
+            var formResponse = new MpFormResponse
+            {
+                ContactId = contactId,
+                FormId = formId,
+                FormAnswers = answers
+            };
+
+            _formSubmissionRepository.SubmitFormResponse(formResponse);
+        }
+
         public void SaveCampReservation(CampReservationDTO campReservation, int eventId, string token)
         {
             var nickName = campReservation.PreferredName ?? campReservation.FirstName;
@@ -136,8 +161,7 @@ namespace crds_angular.Services
                 participant = _participantRepository.GetParticipant(Convert.ToInt32(campReservation.ContactId));
             }
 
-            int eventParticipantId = _eventRepository.GetEventParticipantRecordId(eventId, participant.ParticipantId);
-            
+            int eventParticipantId = _eventRepository.GetEventParticipantRecordId(eventId, participant.ParticipantId);            
             if (eventParticipantId == 0)
             {
                 eventParticipantId = _eventRepository.RegisterParticipantForEvent(participant.ParticipantId, eventId);
@@ -146,6 +170,7 @@ namespace crds_angular.Services
             {
                 _logger.Error("The person is already an event participant");
             }
+
 
             //form response
             var answers = new List<MpFormAnswer>
