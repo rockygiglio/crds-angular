@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using crds_angular.Models.Crossroads.Camp;
 using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Interfaces;
@@ -56,17 +55,19 @@ namespace crds_angular.Services
         public CampDTO GetCampEventDetails(int eventId)
         {
             var campEvent = _campService.GetCampEventDetails(eventId);
-            var campEventInfo = new CampDTO();
+            var campEventInfo = new CampDTO
+            {
+                EventId = campEvent.EventId,
+                EventTitle = campEvent.EventTitle,
+                EventType = campEvent.EventType,
+                StartDate = campEvent.StartDate,
+                EndDate = campEvent.EndDate,
+                OnlineProductId = campEvent.OnlineProductId,
+                RegistrationEndDate = campEvent.RegistrationEndDate,
+                RegistrationStartDate = campEvent.RegistrationStartDate,
+                ProgramId = campEvent.ProgramId
+            };
 
-            campEventInfo.EventId = campEvent.EventId;
-            campEventInfo.EventTitle = campEvent.EventTitle;
-            campEventInfo.EventType = campEvent.EventType;
-            campEventInfo.StartDate = campEvent.StartDate;
-            campEventInfo.EndDate = campEvent.EndDate;
-            campEventInfo.OnlineProductId = campEvent.OnlineProductId;
-            campEventInfo.RegistrationEndDate = campEvent.RegistrationEndDate;
-            campEventInfo.RegistrationStartDate = campEvent.RegistrationStartDate;
-            campEventInfo.ProgramId = campEvent.ProgramId;
 
             return campEventInfo;
         }
@@ -240,7 +241,7 @@ namespace crds_angular.Services
                 var participant = _participantRepository.GetParticipant(contactId);
                 var gradeGroupTypeId = _configurationWrapper.GetConfigIntValue("AgeorGradeGroupType");
                 var gradeGroup = (_groupService.GetGroupsByTypeForParticipant(token, participant.ParticipantId, gradeGroupTypeId)).FirstOrDefault();
-                var currentGrade = gradeGroup?.GroupName;
+                var currentGrade = gradeGroup != null ? gradeGroup.GroupName : "";
 
                 camperInfo = new CampReservationDTO
                 {

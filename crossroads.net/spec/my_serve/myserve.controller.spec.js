@@ -15,6 +15,7 @@ describe('MyServeController', function() {
   beforeEach(angular.mock.module(function($provide){
     $provide.value('$state', { get: function() {} });
     $provide.value('Groups', retArray);
+    $provide.value('leader', {isLeader: 'true'});
     mockSession= jasmine.createSpyObj('Session', ['exists', 'isActive']);
     mockSession.exists.and.callFake(function(something){
       return '12345678';

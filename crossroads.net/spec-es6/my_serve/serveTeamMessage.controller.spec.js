@@ -27,6 +27,8 @@ describe('GroupMessageController', () => {
 			return deferred.promise;
 		});
 
+		serveTeamService.isLeader = true;
+
 		fixture.$onInit();
 
 		expect(fixture.tinymceOptions.resize).toEqual(false);
