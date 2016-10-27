@@ -17,5 +17,11 @@ namespace MinistryPlatform.Translation.Models
 
         [JsonProperty(PropertyName = "Required")]
         public bool Required { get; set; }
+
+        [JsonProperty(PropertyName = "Accepted")]
+        public bool Accepted { get; set; }
+
+        [JsonProperty(PropertyName = "Signee_Contact_ID")]
+        public int SigneeContactId { get; set; }
     }
 }

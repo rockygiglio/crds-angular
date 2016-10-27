@@ -356,7 +356,7 @@ namespace MinistryPlatform.Translation.Test.Services
         }
 
         [Test]
-        public void TestGetASingleValue()
+        public void TestGetASingleIntValue()
         {
             var contactId = 7681520;
             var eventId = 4525325;
@@ -364,6 +364,17 @@ namespace MinistryPlatform.Translation.Test.Services
             var searchString = $"Event_ID_Table.Event_ID={eventId} AND Participant_ID_Table_Contact_ID_Table.Contact_ID={contactId}";
             var column = "Event_Participant_ID";
             var results = _fixture.UsingAuthenticationToken(_authToken).Search<int>(tableName, searchString, column);
+        }
+
+        [Test]
+        public void TestGetASingleStringValue()
+        {
+            var contactId = 7681520;
+            var eventId = 4525325;
+            var tableName = "Event_Participants";
+            var searchString = $"Event_ID_Table.Event_ID={eventId} AND Participant_ID_Table_Contact_ID_Table.Contact_ID={contactId}";
+            var column = "Event_ID_Table.Event_Title";
+            var results = _fixture.UsingAuthenticationToken(_authToken).Search<string>(tableName, searchString, column);
         }
     }
 
