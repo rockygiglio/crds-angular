@@ -114,8 +114,8 @@ namespace MinistryPlatform.Translation.Test.Services
 
             string search = $"Group_Participants.participant_id = {participantId}" +
                             $" AND Group_Role_ID = {GroupLeaderRole}" +
-                            $" AND (Group_ID_Table.End_Date > '{DateTime.Today:yyyy-MM-dd}' OR Group_ID_Table.End_Date Is Null)" +
-                            $" AND (Group_Participants.End_Date > '{DateTime.Today:yyyy-MM-dd}' OR Group_Participants.End_Date Is Null)" +
+                            $" AND (Group_ID_Table.End_Date > '{DateTime.Now:yyyy-MM-dd H:mm:ss}' OR Group_ID_Table.End_Date Is Null)" +
+                            $" AND (Group_Participants.End_Date > '{DateTime.Now:yyyy-MM-dd H:mm:ss}' OR Group_Participants.End_Date Is Null)" +
                             $" AND Group_ID_Table.Group_Type_ID = {groupType}";
 
             _apiUserRepository.Setup(mocked => mocked.GetToken()).Returns("yeah!");
@@ -204,8 +204,8 @@ namespace MinistryPlatform.Translation.Test.Services
             };
             string search = $"Group_Participants.participant_id = {participantId}" +
                             $" AND Group_Role_ID = {GroupLeaderRole}" +
-                            $" AND (Group_ID_Table.End_Date > '{DateTime.Today:yyyy-MM-dd}' OR Group_ID_Table.End_Date Is Null)" +
-                            $" AND (Group_Participants.End_Date > '{DateTime.Today:yyyy-MM-dd}' OR Group_Participants.End_Date Is Null)";
+                            $" AND (Group_ID_Table.End_Date > '{DateTime.Now:yyyy-MM-dd H:mm:ss}' OR Group_ID_Table.End_Date Is Null)" +
+                            $" AND (Group_Participants.End_Date > '{DateTime.Now:yyyy-MM-dd H:mm:ss}' OR Group_Participants.End_Date Is Null)";
 
             _apiUserRepository.Setup(mocked => mocked.GetToken()).Returns("yeah!");
             _ministryPlatformRestRepository.Setup(mocked => mocked.UsingAuthenticationToken("yeah!")).Returns(_ministryPlatformRestRepository.Object);
@@ -291,7 +291,7 @@ namespace MinistryPlatform.Translation.Test.Services
             };
             string csvGroupIds = "1,2,3";
             string search = $"group_participants.group_id in ({csvGroupIds})" +
-                            $" AND (Group_Participants.End_Date > '{DateTime.Today:yyyy-MM-dd}' OR Group_Participants.End_Date Is Null)";
+                            $" AND (Group_Participants.End_Date > '{DateTime.Now:yyyy-MM-dd H:mm:ss}' OR Group_Participants.End_Date Is Null)";
 
             _apiUserRepository.Setup(mocked => mocked.GetToken()).Returns("yeah!");
             _ministryPlatformRestRepository.Setup(mocked => mocked.UsingAuthenticationToken("yeah!")).Returns(_ministryPlatformRestRepository.Object);
@@ -382,7 +382,7 @@ namespace MinistryPlatform.Translation.Test.Services
             };
             string csvGroupIds = "1,2,3";
             string search = $"group_participants.group_id in ({csvGroupIds})" +
-                            $" AND (Group_Participants.End_Date > '{DateTime.Today:yyyy-MM-dd}' OR Group_Participants.End_Date Is Null)";
+                            $" AND (Group_Participants.End_Date > '{DateTime.Now:yyyy-MM-dd H:mm:ss}' OR Group_Participants.End_Date Is Null)";
 
             _apiUserRepository.Setup(mocked => mocked.GetToken()).Returns("yeah!");
             _ministryPlatformRestRepository.Setup(mocked => mocked.UsingAuthenticationToken("yeah!")).Returns(_ministryPlatformRestRepository.Object);
@@ -472,7 +472,7 @@ namespace MinistryPlatform.Translation.Test.Services
                 }
             };
             string search = $"group_participants.group_id in ({groupId})" +
-                            $" AND (Group_Participants.End_Date > '{DateTime.Today:yyyy-MM-dd}' OR Group_Participants.End_Date Is Null)";
+                            $" AND (Group_Participants.End_Date > '{DateTime.Now:yyyy-MM-dd H:mm:ss}' OR Group_Participants.End_Date Is Null)";
 
             _apiUserRepository.Setup(mocked => mocked.GetToken()).Returns("yeah!");
             _ministryPlatformRestRepository.Setup(mocked => mocked.UsingAuthenticationToken("yeah!")).Returns(_ministryPlatformRestRepository.Object);
@@ -541,8 +541,8 @@ namespace MinistryPlatform.Translation.Test.Services
 
             var search = $"Group_Participants.participant_id = {participantId}" +
                             $" AND Group_Role_ID = {GroupLeaderRole}" +
-                            $" AND (Group_ID_Table.End_Date > '{DateTime.Today:yyyy-MM-dd}' OR Group_ID_Table.End_Date Is Null)" +
-                            $" AND (Group_Participants.End_Date > '{DateTime.Today:yyyy-MM-dd}' OR Group_Participants.End_Date Is Null)";
+                            $" AND (Group_ID_Table.End_Date > '{DateTime.Now:yyyy-MM-dd H:mm:ss}' OR Group_ID_Table.End_Date Is Null)" +
+                            $" AND (Group_Participants.End_Date > '{DateTime.Now:yyyy-MM-dd H:mm:ss}' OR Group_Participants.End_Date Is Null)";
 
             _apiUserRepository.Setup(mocked => mocked.GetToken()).Returns("yeah!");
             _ministryPlatformRestRepository.Setup(mocked => mocked.UsingAuthenticationToken("yeah!")).Returns(_ministryPlatformRestRepository.Object);
@@ -606,8 +606,8 @@ namespace MinistryPlatform.Translation.Test.Services
 
             var search = $"Group_Participants.participant_id = {participantId}" +
                             $" AND Group_Role_ID = {GroupLeaderRole}" +
-                            $" AND (Group_ID_Table.End_Date > '{DateTime.Today:yyyy-MM-dd}' OR Group_ID_Table.End_Date Is Null)" +
-                            $" AND (Group_Participants.End_Date > '{DateTime.Today:yyyy-MM-dd}' OR Group_Participants.End_Date Is Null)" +
+                            $" AND (Group_ID_Table.End_Date > '{DateTime.Now:yyyy-MM-dd H:mm:ss}' OR Group_ID_Table.End_Date Is Null)" +
+                            $" AND (Group_Participants.End_Date > '{DateTime.Now:yyyy-MM-dd H:mm:ss}' OR Group_Participants.End_Date Is Null)" +
                             $" AND Group_ID_Table.Group_Type_ID = {groupType}";
 
             _apiUserRepository.Setup(mocked => mocked.GetToken()).Returns("yeah!");
@@ -693,8 +693,8 @@ namespace MinistryPlatform.Translation.Test.Services
 
             string search = $"group_participants.participant_id = {participantId}" +
                                    $" AND group_participants.group_role_id = {GroupLeaderRole}" +
-                                   $" AND (Group_ID_Table.End_Date > '{DateTime.Today:yyyy-MM-dd}' OR Group_ID_Table.End_Date Is Null)" +
-                                   $" AND (Group_Participants.End_Date > '{DateTime.Today:yyyy-MM-dd}' OR Group_Participants.End_Date Is Null)";
+                                   $" AND (Group_ID_Table.End_Date > '{DateTime.Now:yyyy-MM-dd H:mm:ss}' OR Group_ID_Table.End_Date Is Null)" +
+                                   $" AND (Group_Participants.End_Date > '{DateTime.Now:yyyy-MM-dd H:mm:ss}' OR Group_Participants.End_Date Is Null)";
 
             _apiUserRepository.Setup(mocked => mocked.GetToken()).Returns("yeah!");
             _ministryPlatformRestRepository.Setup(mocked => mocked.UsingAuthenticationToken("yeah!")).Returns(_ministryPlatformRestRepository.Object);
@@ -764,8 +764,8 @@ namespace MinistryPlatform.Translation.Test.Services
 
             string search = $"group_participants.participant_id = {participantId}" +
                             $" AND group_participants.group_role_id = {GroupLeaderRole}" +
-                            $" AND (Group_ID_Table.End_Date > '{DateTime.Today:yyyy-MM-dd}' OR Group_ID_Table.End_Date Is Null)" +
-                            $" AND (Group_Participants.End_Date > '{DateTime.Today:yyyy-MM-dd}' OR Group_Participants.End_Date Is Null)" +
+                            $" AND (Group_ID_Table.End_Date > '{DateTime.Now:yyyy-MM-dd H:mm:ss}' OR Group_ID_Table.End_Date Is Null)" +
+                            $" AND (Group_Participants.End_Date > '{DateTime.Now:yyyy-MM-dd H:mm:ss}' OR Group_Participants.End_Date Is Null)" +
                             $" AND Group_ID_Table.Group_Type_ID = {groupType}";
 
             _apiUserRepository.Setup(mocked => mocked.GetToken()).Returns("yeah!");
