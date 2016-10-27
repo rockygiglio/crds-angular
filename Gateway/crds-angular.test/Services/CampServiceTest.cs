@@ -207,7 +207,7 @@ namespace crds_angular.test.Services
             _configurationWrapper.Setup(m => m.GetConfigIntValue("SummerCampForm.EmergencyContactEmail")).Returns(12);
             _configurationWrapper.Setup(m => m.GetConfigIntValue("SummerCampForm.EmergencyContactRelationship")).Returns(14);
 
-            _fixture.SaveCamperEmergencyContactInfo(MockCampReservationDTO(), eventId, contactId);
+            _fixture.SaveCamperEmergencyContactInfo(MockCampEmergencyContactDTO(), eventId, contactId);
             _configurationWrapper.VerifyAll();
             _participantRepository.VerifyAll();
             _eventRepository.VerifyAll();
@@ -343,9 +343,6 @@ namespace crds_angular.test.Services
                 LastName = "Horner",
                 MiddleName = "",
                 BirthDate = new DateTime(2006, 04, 03) + "",
-                Email = "lknair@gmail.com",
-                MobileNumber = "123456789",
-                Relationship = "friend",
                 Gender = 1,
                 PreferredName = "Jon",
                 SchoolAttending = "Mason",
@@ -353,6 +350,17 @@ namespace crds_angular.test.Services
                 SchoolAttendingNext = "Mason",
                 CrossroadsSite = 3,
                 RoomMate = ""
+            };
+        }
+        private CampEmergencyContactDTO MockCampEmergencyContactDTO()
+        {
+            return new CampEmergencyContactDTO
+            {
+                FirstName = "Jon",
+                LastName = "Horner",
+                Email = "lknair@gmail.com",
+                MobileNumber = "123456789",
+                Relationship = "friend"
             };
         }
         private CampReservationDTO MockCampReservationDTOwithContactId()

@@ -91,18 +91,18 @@ namespace crds_angular.Services
             }).ToList();                       
         }
 
-        public void SaveCamperEmergencyContactInfo(CampReservationDTO campReservation, int eventId, int contactId)
+        public void SaveCamperEmergencyContactInfo(CampEmergencyContactDTO emergencyContact, int eventId, int contactId)
         {
             var participant = _participantRepository.GetParticipant(contactId);
             var eventParticipantId = _eventRepository.SafeRegisterParticipant(eventId, participant.ParticipantId);
 
             var answers = new List<MpFormAnswer>
             {
-                new MpFormAnswer {Response = campReservation.FirstName,FieldId = _configurationWrapper.GetConfigIntValue("SummerCampForm.EmergencyContactFirstName"),EventParticipantId =  eventParticipantId},
-                new MpFormAnswer {Response = campReservation.LastName, FieldId = _configurationWrapper.GetConfigIntValue("SummerCampForm.EmergencyContactLastName"),EventParticipantId =  eventParticipantId},
-                new MpFormAnswer {Response = campReservation.MobileNumber, FieldId = _configurationWrapper.GetConfigIntValue("SummerCampForm.EmergencyContactMobilePhone"),EventParticipantId =  eventParticipantId},
-                new MpFormAnswer {Response = campReservation.Email, FieldId = _configurationWrapper.GetConfigIntValue("SummerCampForm.EmergencyContactEmail"),EventParticipantId =  eventParticipantId},
-                new MpFormAnswer {Response = campReservation.Relationship, FieldId = _configurationWrapper.GetConfigIntValue("SummerCampForm.EmergencyContactRelationship"),EventParticipantId =  eventParticipantId}
+                new MpFormAnswer {Response = emergencyContact.FirstName,FieldId = _configurationWrapper.GetConfigIntValue("SummerCampForm.EmergencyContactFirstName"),EventParticipantId =  eventParticipantId},
+                new MpFormAnswer {Response = emergencyContact.LastName, FieldId = _configurationWrapper.GetConfigIntValue("SummerCampForm.EmergencyContactLastName"),EventParticipantId =  eventParticipantId},
+                new MpFormAnswer {Response = emergencyContact.MobileNumber, FieldId = _configurationWrapper.GetConfigIntValue("SummerCampForm.EmergencyContactMobilePhone"),EventParticipantId =  eventParticipantId},
+                new MpFormAnswer {Response = emergencyContact.Email, FieldId = _configurationWrapper.GetConfigIntValue("SummerCampForm.EmergencyContactEmail"),EventParticipantId =  eventParticipantId},
+                new MpFormAnswer {Response = emergencyContact.Relationship, FieldId = _configurationWrapper.GetConfigIntValue("SummerCampForm.EmergencyContactRelationship"),EventParticipantId =  eventParticipantId}
             };
 
             var formId = _configurationWrapper.GetConfigIntValue("SummerCampFormID");

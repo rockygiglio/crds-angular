@@ -127,7 +127,7 @@ namespace crds_angular.Controllers.API
 
         [Route("api/camps/{eventId}/emergencycontact/{contactId}")]
         [AcceptVerbs("POST")]
-        public IHttpActionResult SaveCamperEmergencyContact([FromBody] CampReservationDTO campReservation, int eventId, int contactId)
+        public IHttpActionResult SaveCamperEmergencyContact([FromBody] CampEmergencyContactDTO emergencyContact, int eventId, int contactId)
         {
             if (!ModelState.IsValid)
             {
@@ -140,7 +140,7 @@ namespace crds_angular.Controllers.API
             {
                 try
                 {
-                    _campService.SaveCamperEmergencyContactInfo(campReservation, eventId, contactId);
+                    _campService.SaveCamperEmergencyContactInfo(emergencyContact, eventId, contactId);
                     return Ok();
                 }
 
