@@ -9,6 +9,7 @@ using crds_angular.Exceptions.Models;
 using crds_angular.Models.Crossroads.Trip;
 using crds_angular.Security;
 using crds_angular.Services.Interfaces;
+using Crossroads.ApiVersioning;
 
 namespace crds_angular.Controllers.API
 {
@@ -23,14 +24,15 @@ namespace crds_angular.Controllers.API
 
         [AcceptVerbs("GET")]
         [ResponseType(typeof (List<FamilyMemberTripDto>))]
-        [Route("api/trip/{pledgeCampaignId}/family-members")]
-        public IHttpActionResult GetFamilyWithTripInfo(int pledgeCampaignId)
+        [VersionedRoute(template: "trip/{campaignId}/familyMembers", minimumVersion: "1.0.0")]
+        [Route("trip/{pledgeCampaignId}/family-members")]
+        public IHttpActionResult GetFamilyWithTripInfo(int campaignId)
         {
             return Authorized(token =>
             {
                 try
                 {
-                    var familyMembers = _tripService.GetFamilyMembers(pledgeCampaignId, token);
+                    var familyMembers = _tripService.GetFamilyMembers(campaignId, token);
                     return Ok(familyMembers);
                 }
                 catch (Exception ex)
@@ -43,7 +45,8 @@ namespace crds_angular.Controllers.API
         }
 
         [AcceptVerbs("GET")]
-        [Route("api/trip/scholarship/{campaignId}/{contactId}")]
+        [VersionedRoute(template: "trip/scholarship/{campaignId}/{contactId}", minimumVersion: "1.0.0")]
+        [Route("trip/scholarship/{campaignId}/{contactId}")]
         public IHttpActionResult ContactHasScholarship(int contactId, int campaignId)
         {
             return Authorized(token =>
@@ -67,7 +70,8 @@ namespace crds_angular.Controllers.API
 
         [AcceptVerbs("GET")]
         [ResponseType(typeof (TripFormResponseDto))]
-        [Route("api/trip/form-responses/{selectionId}/{selectionCount}/{recordId}")]
+        [VersionedRoute(template: "trip/formResponses/{selectionId}/{selectionCount}/{recordId}", minimumVersion: "1.0.0")]
+        [Route("trip/form-responses/{selectionId}/{selectionCount}/{recordId}")]
         public IHttpActionResult TripFormResponses(int selectionId, int selectionCount, int recordId)
         {
             return Authorized(token =>
@@ -87,7 +91,8 @@ namespace crds_angular.Controllers.API
 
         [AcceptVerbs("GET")]
         [ResponseType(typeof (TripCampaignDto))]
-        [Route("api/trip/campaign/{campaignId}")]
+        [VersionedRoute(template: "trip/campaign/{campaignId}", minimumVersion: "1.0.0")]
+        [Route("trip/campaign/{campaignId}")]
         public IHttpActionResult GetCampaigns(int campaignId)
         {
             return Authorized(token =>
@@ -106,7 +111,8 @@ namespace crds_angular.Controllers.API
         }
 
         [AcceptVerbs("POST")]
-        [Route("api/trip/generate-private-invite")]
+        [VersionedRoute(template: "trip/generatePrivateInvite", minimumVersion: "1.0.0")]
+        [Route("trip/generate-private-invite")]
         public IHttpActionResult GeneratePrivateInvite([FromBody] PrivateInviteDto dto)
         {
             if (!ModelState.IsValid)
@@ -133,7 +139,8 @@ namespace crds_angular.Controllers.API
 
         [AcceptVerbs("GET")]
         [ResponseType(typeof (TripParticipantDto))]
-        [Route("api/trip/search/{query?}")]
+        [VersionedRoute(template: "trip/search/{query?}", minimumVersion: "1.0.0")]
+        [Route("trip/search/{query?}")]
         public IHttpActionResult Search(string query)
         {
             try
@@ -150,7 +157,8 @@ namespace crds_angular.Controllers.API
 
         [AcceptVerbs("GET")]
         [ResponseType(typeof (TripParticipantDto))]
-        [Route("api/trip/participant/{tripParticipantId}")]
+        [VersionedRoute(template: "trip/participant/{tripParticipantId}", minimumVersion: "1.0.0")]
+        [Route("trip/participant/{tripParticipantId}")]
         public IHttpActionResult TripParticipant(string tripParticipantId)
         {
             try
@@ -169,7 +177,8 @@ namespace crds_angular.Controllers.API
 
         [AcceptVerbs("GET")]
         [ResponseType(typeof (MyTripsDto))]
-        [Route("api/trip/mytrips")]
+        [VersionedRoute(template: "trip/myTrips", minimumVersion: "1.0.0")]
+        [Route("trip/mytrips")]
         public IHttpActionResult MyTrips()
         {
             return Authorized(token =>
@@ -189,14 +198,15 @@ namespace crds_angular.Controllers.API
 
         [AcceptVerbs("GET")]
         [ResponseType(typeof (ValidatePrivateInviteDto))]
-        [Route("api/trip/validate-private-invite/{pledgeCampaignId}/{guid}")]
-        public IHttpActionResult ValidatePrivateInvite(int pledgeCampaignId, string guid)
+        [VersionedRoute(template: "trip/validatePrivateInvite/{campaignId}/{invitationKey}", minimumVersion: "1.0.0")]
+        [Route("trip/validate-private-invite/{pledgeCampaignId}/{guid}")]
+        public IHttpActionResult ValidatePrivateInvite(int campaignId, string invitationKey)
         {
             return Authorized(token =>
             {
                 try
                 {
-                    var retVal = new ValidatePrivateInviteDto {Valid = _tripService.ValidatePrivateInvite(pledgeCampaignId, guid, token)};
+                    var retVal = new ValidatePrivateInviteDto {Valid = _tripService.ValidatePrivateInvite(campaignId, invitationKey, token)};
                     return Ok(retVal);
                 }
                 catch (Exception exception)

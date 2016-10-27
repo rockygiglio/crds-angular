@@ -6,6 +6,7 @@ using crds_angular.Models.Crossroads;
 using crds_angular.Models.Json;
 using crds_angular.Security;
 using crds_angular.Services.Interfaces;
+using Crossroads.ApiVersioning;
 
 namespace crds_angular.Controllers.API
 {
@@ -42,7 +43,8 @@ namespace crds_angular.Controllers.API
             
         }
 
-        [Route("api/account/password")]
+        [VersionedRoute(template: "account/password", minimumVersion: "1.0.0")]
+        [Route("account/password")]
         [HttpPost]
         public IHttpActionResult UpdatePassword([FromBody] NewPassword password)
         {

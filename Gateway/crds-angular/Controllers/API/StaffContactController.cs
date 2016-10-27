@@ -5,6 +5,7 @@ using System.Web.Http.Description;
 using crds_angular.Exceptions.Models;
 using crds_angular.Security;
 using MinistryPlatform.Translation.Repositories.Interfaces;
+using Crossroads.ApiVersioning;
 
 namespace crds_angular.Controllers.API
 {
@@ -18,7 +19,8 @@ namespace crds_angular.Controllers.API
         }
 
         [ResponseType(typeof (List<Dictionary<string, object>>))]
-        [Route("api/staffcontacts")]
+        [VersionedRoute(template: "staffContacts", minimumVersion: "1.0.0")]
+        [Route("staffcontacts")]
         public IHttpActionResult Get()
         {
             return Authorized(t =>

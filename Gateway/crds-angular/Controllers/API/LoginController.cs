@@ -8,6 +8,7 @@ using crds_angular.Security;
 using crds_angular.Services;
 using crds_angular.Services.Interfaces;
 using MinistryPlatform.Translation.Models.DTO;
+using Crossroads.ApiVersioning;
 
 namespace crds_angular.Controllers.API
 {
@@ -23,8 +24,9 @@ namespace crds_angular.Controllers.API
             _personService = personService;
         }
 
+        [VersionedRoute(template: "requestPasswordReset", minimumVersion: "1.0.0")]
+        [Route("requestpasswordreset")]
         [HttpPost]
-        [Route("api/requestpasswordreset/")]
         public IHttpActionResult RequestPasswordReset(PasswordResetRequest request)
         {
             try
@@ -38,8 +40,9 @@ namespace crds_angular.Controllers.API
             }
         }
 
+        [VersionedRoute(template: "verifyResetToken/{token}", minimumVersion: "1.0.0")]
+        [Route("verifyresettoken/{token}")]
         [HttpGet]
-        [Route("api/verifyresettoken/{token}")]
         public IHttpActionResult VerifyResetTokenRequest(string token)
         {
             try
@@ -54,8 +57,9 @@ namespace crds_angular.Controllers.API
             }
         }
 
+        [VersionedRoute(template: "resetPassword", minimumVersion: "1.0.0")]
+        [Route("resetpassword")]
         [HttpPost]
-        [Route("api/resetpassword/")]
         public IHttpActionResult ResetPassword(PasswordReset request)
         {
             try
@@ -70,8 +74,9 @@ namespace crds_angular.Controllers.API
         }
 
         [ResponseType(typeof (LoginReturn))]
+        [VersionedRoute(template: "authenticated", minimumVersion: "1.0.0")]
+        [Route("authenticated")]
         [HttpGet]
-        [Route("api/authenticated")]
         public IHttpActionResult isAuthenticated()
         {
             return Authorized(token =>
@@ -144,8 +149,9 @@ namespace crds_angular.Controllers.API
             }
         }
 
+        [VersionedRoute(template: "verifyCredentials", minimumVersion: "1.0.0")]
+        [Route("verifycredentials")]
         [HttpPost]
-        [Route("api/verifycredentials")]
         public IHttpActionResult VerifyCredentials([FromBody] Credentials cred)
         {
             return Authorized(token =>

@@ -3,6 +3,7 @@ using crds_angular.Models.Crossroads.Attribute;
 using crds_angular.Security;
 using crds_angular.Services.Interfaces;
 using MinistryPlatform.Translation.Models;
+using Crossroads.ApiVersioning;
 
 namespace crds_angular.Controllers.API
 {
@@ -14,8 +15,9 @@ namespace crds_angular.Controllers.API
         {
             _objectAttributeService = objectAttributeService;
         }
-        
-        [Route("api/contact/attribute/{contactId}")]
+
+        [VersionedRoute(template: "contact/attribute/{contactId}", minimumVersion: "1.0.0")]
+        [Route("contact/attribute/{contactId}")]
         public IHttpActionResult Post(int contactId, [FromBody] ObjectAttributeDTO objectAttribute)
         {
             return Authorized(token =>

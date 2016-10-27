@@ -7,6 +7,7 @@ using crds_angular.Models.Crossroads.Events;
 using crds_angular.Security;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 using IEventService = crds_angular.Services.Interfaces.IEventService;
+using Crossroads.ApiVersioning;
 
 namespace crds_angular.Controllers.API
 {
@@ -22,8 +23,9 @@ namespace crds_angular.Controllers.API
         }
 
         [AcceptVerbs("GET")]
-        [Route("api/eventTool/{eventId}")]
         [ResponseType(typeof (EventToolDto))]
+        [VersionedRoute(template: "eventTool/{eventId}", minimumVersion: "1.0.0")]
+        [Route("eventTool/{eventId}")]
         public IHttpActionResult GetEventReservation(int eventId)
         {
             return Authorized(token =>
@@ -44,8 +46,9 @@ namespace crds_angular.Controllers.API
         }
 
         [AcceptVerbs("GET")]
-        [Route("api/eventTool/{eventId:int}/rooms")]
         [ResponseType(typeof(EventToolDto))]
+        [VersionedRoute(template: "eventTool/{eventId}/rooms", minimumVersion: "1.0.0")]
+        [Route("eventTool/{eventId:int}/rooms")]
         public IHttpActionResult GetEventRoomDetails(int eventId)
         {
             return Authorized(token =>
@@ -66,7 +69,8 @@ namespace crds_angular.Controllers.API
         }
 
         [AcceptVerbs("POST")]
-        [Route("api/eventTool")]
+        [VersionedRoute(template: "eventTool", minimumVersion: "1.0.0")]
+        [Route("eventTool")]
         public IHttpActionResult Post([FromBody] EventToolDto eventReservation)
         {
             if (ModelState.IsValid)
@@ -93,7 +97,8 @@ namespace crds_angular.Controllers.API
         }
 
         [AcceptVerbs("PUT")]
-        [Route("api/eventTool/{eventId}")]
+        [VersionedRoute(template: "eventTool/{eventId}", minimumVersion: "1.0.0")]
+        [Route("eventTool/{eventId}")]
         public IHttpActionResult Put([FromBody] EventToolDto eventReservation, int eventId)
         {
             if (ModelState.IsValid)
@@ -125,7 +130,8 @@ namespace crds_angular.Controllers.API
 
 
         [AcceptVerbs("PUT")]
-        [Route("api/eventTool/{eventId:int}/rooms")]
+        [VersionedRoute(template: "eventTool/{eventId}/rooms", minimumVersion: "1.0.0")]
+        [Route("eventTool/{eventId:int}/rooms")]
         public IHttpActionResult UpdateEventRoom([FromBody] EventRoomDto room, int eventId)
         {
             if (ModelState.IsValid)

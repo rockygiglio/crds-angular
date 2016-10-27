@@ -6,6 +6,7 @@ using crds_angular.Exceptions.Models;
 using crds_angular.Models.Crossroads;
 using crds_angular.Security;
 using crds_angular.Services.Interfaces;
+using Crossroads.ApiVersioning;
 
 namespace crds_angular.Controllers.API
 {
@@ -18,8 +19,9 @@ namespace crds_angular.Controllers.API
             _programService = programService;
         }
 
-        [Route("api/all-programs")]
-        [ResponseType(typeof (IList<ProgramDTO>))]
+        [ResponseType(typeof(IList<ProgramDTO>))]
+        [VersionedRoute(template: "all-programs", minimumVersion: "1.0.0")]
+        [Route("all-programs")]
         public IHttpActionResult Get()
         {
             return Authorized(token =>
@@ -37,7 +39,8 @@ namespace crds_angular.Controllers.API
             });
         }
 
-        [Route("api/programs")]
+        [VersionedRoute(template: "programs", minimumVersion: "1.0.0")]
+        [Route("programs")]
         [HttpGet]
         public IHttpActionResult GetAllPrograms([FromUri(Name = "excludeTypes")] int[] excludeTypes = null)
         {
@@ -55,7 +58,8 @@ namespace crds_angular.Controllers.API
             return Ok(result);
         }
 
-        [Route("api/programs/{programType}")]
+        [VersionedRoute(template: "programs/{programType}", minimumVersion: "1.0.0")]
+        [Route("programs/{programType}")]
         [HttpGet]
         public IHttpActionResult GetProgramsByType(int programType)
         {

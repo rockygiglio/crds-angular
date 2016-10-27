@@ -10,6 +10,7 @@ using crds_angular.Models.Crossroads.Lookups;
 using crds_angular.Security;
 using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Interfaces;
+using Crossroads.ApiVersioning;
 
 namespace crds_angular.Controllers.API
 {
@@ -41,9 +42,10 @@ namespace crds_angular.Controllers.API
             _configurationWrapper = configurationWrapper;
         }
 
-        [HttpGet]
         [ResponseType(typeof (List<ChildrenOptions>))]
-        [Route("api/govolunteer/children")]
+        [VersionedRoute(template: "goVolunteer/children", minimumVersion: "1.0.0")]
+        [Route("govolunteer/children")]
+        [HttpGet]
         public IHttpActionResult GetGoChildrenOptions()
         {
             try
@@ -58,9 +60,10 @@ namespace crds_angular.Controllers.API
             }
         }
 
-        [HttpGet]
+        [VersionedRoute(template: "goVolunteer/prepTimes", minimumVersion: "1.0.0")]
         [ResponseType(typeof (List<AttributeDTO>))]
-        [Route("api/govolunteer/prep-times")]
+        [Route("govolunteer/prep-times")]
+        [HttpGet]
         public IHttpActionResult GetPrepTimes()
         {
             try
@@ -74,9 +77,10 @@ namespace crds_angular.Controllers.API
             }
         }
 
-        [HttpGet]
         [ResponseType(typeof (List<AttributeDTO>))]
-        [Route("api/govolunteer/equipment")]
+        [VersionedRoute(template: "goVolunteer/equipment", minimumVersion: "1.0.0")]
+        [Route("govolunteer/equipment")]
+        [HttpGet]
         public IHttpActionResult GetGoEquipment()
         {
             try
@@ -97,9 +101,10 @@ namespace crds_angular.Controllers.API
             return attributeTypes.Single().Attributes;
         }
 
-        [HttpGet]
         [ResponseType(typeof (List<GoSkills>))]
-        [Route("api/govolunteer/skills")]
+        [VersionedRoute(template: "goVolunteer/skills", minimumVersion: "1.0.0")]
+        [Route("govolunteer/skills")]
+        [HttpGet]
         public IHttpActionResult GetGoSkills()
         {
             return (Authorized(Skills, () => Skills(string.Empty)));
@@ -119,9 +124,10 @@ namespace crds_angular.Controllers.API
             }
         }
 
-        [HttpGet]
         [ResponseType(typeof (List<GroupConnector>))]
-        [Route("api/group-connectors/open-orgs/{initiativeId}")]
+        [VersionedRoute(template: "groupConnectors/openOrgs/{initiativeId}", minimumVersion: "1.0.0")]
+        [Route("group-connectors/open-orgs/{initiativeId}")]
+        [HttpGet]
         public IHttpActionResult GetGetGroupConnectorsOpenOrgs(int initiativeId)
         {
             try
@@ -143,14 +149,15 @@ namespace crds_angular.Controllers.API
             }
         }
 
-        [HttpGet]
         [ResponseType(typeof (List<GroupConnector>))]
-        [Route("api/group-connectors/{orgId}/{initiativeId}")]
-        public IHttpActionResult GetGroupConnectorsForOrg(int orgId, int initiativeId)
+        [VersionedRoute(template: "groupConnectors/{organizationId}/{initiativeId}", minimumVersion: "1.0.0")]
+        [Route("group-connectors/{orgId}/{initiativeId}")]
+        [HttpGet]
+        public IHttpActionResult GetGroupConnectorsForOrg(int organizationId, int initiativeId)
         {
             try
             {
-                var groupConnectors = _groupConnectorService.GetGroupConnectorsByOrganization(orgId, initiativeId);
+                var groupConnectors = _groupConnectorService.GetGroupConnectorsByOrganization(organizationId, initiativeId);
 
                 if (groupConnectors == null)
                 {
@@ -167,14 +174,15 @@ namespace crds_angular.Controllers.API
             }
         }
 
-        [HttpGet]
         [ResponseType(typeof (Organization))]
-        [Route("api/organization/{name}")]
-        public IHttpActionResult GetOrganization(string name)
+        [VersionedRoute(template: "organization/{organizationName}", minimumVersion: "1.0.0")]
+        [Route("organization/{name}")]
+        [HttpGet]
+        public IHttpActionResult GetOrganization(string organizationName)
         {
             try
             {
-                var org = _organizationService.GetOrganizationByName(name);
+                var org = _organizationService.GetOrganizationByName(organizationName);
                 if (org == null)
                 {
                     return NotFound();
@@ -188,9 +196,10 @@ namespace crds_angular.Controllers.API
             }
         }
 
-        [HttpGet]
         [ResponseType(typeof (List<OtherOrganization>))]
-        [Route("api/organizations/other")]
+        [VersionedRoute(template: "organizations/other", minimumVersion: "1.0.0")]
+        [Route("organizations/other")]
+        [HttpGet]
         public IHttpActionResult GetOtherOrganizations()
         {
             try
@@ -205,14 +214,15 @@ namespace crds_angular.Controllers.API
             }
         }
 
-        [HttpGet]
         [ResponseType(typeof (List<OrgLocation>))]
-        [Route("api/organizations/{orgId}/locations")]
-        public IHttpActionResult GetLocationsForOrganization(int orgId)
+        [VersionedRoute(template: "organizations/{organizationId}/locations", minimumVersion: "1.0.0")]
+        [Route("organizations/{orgId}/locations")]
+        [HttpGet]
+        public IHttpActionResult GetLocationsForOrganization(int organizationId)
         {
             try
             {
-                var Locs = _organizationService.GetLocationsForOrganization(orgId);
+                var Locs = _organizationService.GetLocationsForOrganization(organizationId);
                 return Ok(Locs);
             }
             catch (Exception e)
@@ -222,9 +232,10 @@ namespace crds_angular.Controllers.API
             }
         }
 
-        [HttpGet]
         [ResponseType(typeof (List<ProjectType>))]
-        [Route("api/goVolunteer/projectTypes")]
+        [VersionedRoute(template: "goVolunteer/projectTypes", minimumVersion: "1.0.0")]
+        [Route("goVolunteer/projectTypes")]
+        [HttpGet]
         public IHttpActionResult GetProjectTypes()
         {
             try
@@ -240,7 +251,8 @@ namespace crds_angular.Controllers.API
         }
 
         [AcceptVerbs("POST")]
-        [Route("api/govolunteer/registration")]
+        [VersionedRoute(template: "goVolunteer/registration", minimumVersion: "1.0.0")]
+        [Route("govolunteer/registration")]
         [ResponseType(typeof (Registration))]
         public IHttpActionResult Post([FromBody] Registration goVolunteerRegistration)
         {

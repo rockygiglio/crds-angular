@@ -6,6 +6,7 @@ using crds_angular.Models.Json;
 using crds_angular.Security;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 using Newtonsoft.Json;
+using Crossroads.ApiVersioning;
 
 namespace crds_angular.Controllers.API
 {
@@ -19,7 +20,8 @@ namespace crds_angular.Controllers.API
         }
 
         [HttpGet]
-        [Route("api/mptools/selection/{selectionId:regex(\\d+)}")]
+        [VersionedRoute(template: "mpTools/selection/{selectionId:regex(\\d+)}", minimumVersion: "1.0.0")]
+        [Route("mptools/selection/{selectionId:regex(\\d+)}")]
         public IHttpActionResult GetPageSelectionRecordIds(int selectionId)
         {
             var response = Authorized(token =>

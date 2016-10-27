@@ -6,6 +6,7 @@ using crds_angular.Exceptions.Models;
 using crds_angular.Models.Crossroads.Payment;
 using crds_angular.Security;
 using crds_angular.Services.Interfaces;
+using Crossroads.ApiVersioning;
 
 namespace crds_angular.Controllers.API
 {
@@ -18,7 +19,8 @@ namespace crds_angular.Controllers.API
         }
 
 
-        [Route("api/payment")]
+        [VersionedRoute(template: "payment", minimumVersion: "1.0.0")]
+        [Route("payment")]
         [AcceptVerbs("POST")]
         public IHttpActionResult SavePayment([FromBody] PaymentDTO payment)
         {

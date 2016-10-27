@@ -10,6 +10,7 @@ using crds_angular.Models.Json;
 using crds_angular.Security;
 using Crossroads.Utilities.Interfaces;
 using MinistryPlatform.Translation.Repositories;
+using Crossroads.ApiVersioning;
 
 namespace crds_angular.Controllers.API
 {
@@ -30,7 +31,8 @@ namespace crds_angular.Controllers.API
         /// </summary>
         [RequiresAuthorization]
         [ResponseType(typeof(List<Dictionary<string, object>>))]
-        [Route("api/lookup/{table?}")]
+        [VersionedRoute(template: "lookup/{table?}", minimumVersion: "1.0.0")]
+        [Route("lookup/{table?}")]
         [HttpGet]
         public IHttpActionResult Lookup(string table)
         {
@@ -104,7 +106,8 @@ namespace crds_angular.Controllers.API
         /// Get lookup values for genders
         /// </summary>
         [ResponseType(typeof(List<Dictionary<string, object>>))]
-        [Route("api/lookup/genders")]
+        [VersionedRoute(template: "lookup/genders", minimumVersion: "1.0.0")]
+        [Route("lookup/genders")]
         [HttpGet]
         public IHttpActionResult LookupGenders()
         {
@@ -115,7 +118,8 @@ namespace crds_angular.Controllers.API
         /// Get lookup values for group ended reasons
         /// </summary>
         [ResponseType(typeof(List<Dictionary<string, object>>))]
-        [Route("api/lookup/groupreasonended")]
+        [VersionedRoute(template: "lookup/groupReasonEnded", minimumVersion: "1.0.0")]
+        [Route("lookup/groupreasonended")]
         [HttpGet]
         public IHttpActionResult LookupGroupReasonEnded()
         {        
@@ -126,7 +130,8 @@ namespace crds_angular.Controllers.API
         /// Get lookup values for crossroads sites
         /// </summary>
         [ResponseType(typeof(List<Dictionary<string, object>>))]
-        [Route("api/lookup/sites")]
+        [VersionedRoute(template: "lookup/sites", minimumVersion: "1.0.0")]
+        [Route("lookup/sites")]
         [HttpGet]
         public IHttpActionResult LookupSites()
         {
@@ -138,18 +143,19 @@ namespace crds_angular.Controllers.API
         /// </summary>
         [RequiresAuthorization]
         [ResponseType(typeof(List<Dictionary<string, object>>))]
-        [Route("api/lookup/group/{congregationid}/{ministryid}")]
+        [VersionedRoute(template: "lookup/group/{congregationId}/{ministryId}", minimumVersion: "1.0.0")]
+        [Route("lookup/group/{congregationid}/{ministryid}")]
         [HttpGet]
-        public IHttpActionResult FindGroups(string congregationid, string ministryid)
+        public IHttpActionResult FindGroups(string congregationId, string ministryId)
         {
             return Authorized(t =>
             {
                 var ret = new List<Dictionary<string, object>>();
-                ret = _lookupRepository.GroupsByCongregationAndMinistry(t, congregationid, ministryid);
+                ret = _lookupRepository.GroupsByCongregationAndMinistry(t, congregationId, ministryId);
 
                 if (ret.Count == 0)
                 {
-                    return this.BadRequest(string.Format("congregationid: {0} ministryid: {1}", congregationid, ministryid));
+                    return this.BadRequest(string.Format("congregationid: {0} ministryid: {1}", congregationId, ministryId));
                 }
                 return Ok(ret);
             });
@@ -160,20 +166,22 @@ namespace crds_angular.Controllers.API
         /// </summary>
         [RequiresAuthorization]
         [ResponseType(typeof(List<Dictionary<string, object>>))]
-        [Route("api/lookup/childcaretimes/{congregationid}")]
+        [VersionedRoute(template: "lookup/childcareTimes/{congregationId}", minimumVersion: "1.0.0")]
+        [Route("lookup/childcaretimes/{congregationid}")]
         [HttpGet]
-        public IHttpActionResult FindChildcareTimes(string congregationid)
+        public IHttpActionResult FindChildcareTimes(string congregationId)
         {
             return Authorized(t =>
             {
-                var ret = _lookupRepository.ChildcareTimesByCongregation(t, congregationid);
+                var ret = _lookupRepository.ChildcareTimesByCongregation(t, congregationId);
                 return Ok(ret);
             });
         }
 
         [ResponseType(typeof(Dictionary<string, object>))]
+        [VersionedRoute(template: "lookup/{userId}/find/{email?}", minimumVersion: "1.0.0")]
+        [Route("lookup/{userId}/find/{email?}")]
         [HttpGet]
-        [Route("api/lookup/{userId}/find/{email?}")]
         public IHttpActionResult EmailExists(int userId, string email)
         {
             //TODO let's clean this up

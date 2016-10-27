@@ -6,6 +6,7 @@ using crds_angular.Models.Crossroads;
 using crds_angular.Security;
 using crds_angular.Services.Interfaces;
 using MPInterfaces = MinistryPlatform.Translation.Repositories.Interfaces;
+using Crossroads.ApiVersioning;
 
 namespace crds_angular.Controllers.API
 {
@@ -20,7 +21,8 @@ namespace crds_angular.Controllers.API
 
 
         [ResponseType(typeof(DonorStatementDTO))]
-        [Route("api/donor-statement")]
+        [VersionedRoute(template: "donorStatement", minimumVersion: "1.0.0")]
+        [Route("donor-statement")]
         [HttpGet]
         public IHttpActionResult Get()
         {
@@ -39,7 +41,8 @@ namespace crds_angular.Controllers.API
             }));
         }
 
-        [Route("api/donor-statement")]
+        [VersionedRoute(template: "donor-statement", minimumVersion: "1.0.0")]
+        [Route("donor-statement")]
         [HttpPost]
         public IHttpActionResult Post(DonorStatementDTO donorStatement)
         {

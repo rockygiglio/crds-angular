@@ -15,6 +15,7 @@ using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Interfaces;
 using Crossroads.Utilities.Messaging.Interfaces;
 using Newtonsoft.Json;
+using Crossroads.ApiVersioning;
 
 namespace crds_angular.Controllers.API
 {
@@ -36,7 +37,8 @@ namespace crds_angular.Controllers.API
 
         [AcceptVerbs("GET")]
         [ResponseType(typeof(TripParticipantPledgeDto))]
-        [Route("api/trip-application/{contactId}/{campaignId}")]
+        [VersionedRoute(template: "tripApplication/{contactId}/{campaignId}", minimumVersion: "1.0.0")]
+        [Route("trip-application/{contactId}/{campaignId}")]
         public IHttpActionResult GetCampaignInfo(int contactId, int campaignId)
         {
             return Authorized(token =>
@@ -54,7 +56,9 @@ namespace crds_angular.Controllers.API
             });
         }
 
-        [Route("api/trip-application"), HttpPost]
+        [VersionedRoute(template: "tripApplication", minimumVersion: "1.0.0")]
+        [Route("trip-application")]
+        [HttpPost]
         public IHttpActionResult Save([FromBody] TripApplicationDto dto)
         {
             if (!ModelState.IsValid)

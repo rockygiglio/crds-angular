@@ -9,6 +9,7 @@ using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
 using Crossroads.Utilities.Services;
+using Crossroads.ApiVersioning;
 
 namespace crds_angular
 {
@@ -18,7 +19,8 @@ namespace crds_angular
         {
             AreaRegistration.RegisterAllAreas();
             UnityConfig.RegisterComponents();
-            GlobalConfiguration.Configure(WebApiConfig.Register);
+            //GlobalConfiguration.Configure(WebApiConfig.Register);
+            GlobalConfiguration.Configure(VersionConfig.Register);
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);

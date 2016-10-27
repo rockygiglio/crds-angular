@@ -4,6 +4,7 @@ using System.Web.Http.Description;
 using crds_angular.Models.Crossroads.Attribute;
 using crds_angular.Security;
 using crds_angular.Services.Interfaces;
+using Crossroads.ApiVersioning;
 
 namespace crds_angular.Controllers.API
 {
@@ -17,7 +18,8 @@ namespace crds_angular.Controllers.API
         }
 
         [ResponseType(typeof (List<AttributeTypeDTO>))]
-        [Route("api/attributetype")]
+        [VersionedRoute(template: "attributeType", minimumVersion: "1.0.0")]
+        [Route("attributetype")]
         public IHttpActionResult Get()
         {
             var attributeTypes = _attributeService.GetAttributeTypes(null);
@@ -25,7 +27,8 @@ namespace crds_angular.Controllers.API
         }
 
         [ResponseType(typeof(AttributeTypeDTO))]
-        [Route("api/attributetype/{attributeTypeId}")]
+        [VersionedRoute(template: "attributeType/{attributeTypeId}", minimumVersion: "1.0.0")]
+        [Route("attributetype/{attributeTypeId}")]
         public IHttpActionResult Get(int attributeTypeId)
         {   
             var attributeTypes = _attributeService.GetAttributeTypes(attributeTypeId);

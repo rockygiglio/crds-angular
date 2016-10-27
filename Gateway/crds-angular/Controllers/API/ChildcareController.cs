@@ -14,6 +14,7 @@ using crds_angular.Security;
 using crds_angular.Services.Interfaces;
 using MinistryPlatform.Translation.Exceptions;
 using Newtonsoft.Json;
+using Crossroads.ApiVersioning;
 
 namespace crds_angular.Controllers.API
 {
@@ -30,7 +31,8 @@ namespace crds_angular.Controllers.API
             _personService = personService;
         }
 
-        [Route("api/childcare/rsvp")]
+        [VersionedRoute(template: "childcare/rsvp", minimumVersion: "1.0.0")]
+        [Route("childcare/rsvp")]
         [AcceptVerbs("POST")]
         public IHttpActionResult SaveRsvp([FromBody] ChildcareRsvpDto saveRsvp)
         {
@@ -71,15 +73,16 @@ namespace crds_angular.Controllers.API
         }
 
         [ResponseType(typeof(Event))]
-        [Route("api/childcare/event/{eventid}")]
+        [VersionedRoute(template: "childcare/event/{eventId}", minimumVersion: "1.0.0")]
+        [Route("childcare/event/{eventid}")]
         [AcceptVerbs("GET")]
-        public IHttpActionResult ChildcareEventById(int eventid)
+        public IHttpActionResult ChildcareEventById(int eventId)
         {
             return Authorized(token =>
             {
                 try
                 {
-                    return Ok(_eventService.GetMyChildcareEvent(eventid, token));
+                    return Ok(_eventService.GetMyChildcareEvent(eventId, token));
                 }
                 catch (Exception e)
                 {
@@ -92,7 +95,8 @@ namespace crds_angular.Controllers.API
 
 
         [ResponseType(typeof(List<FamilyMember>))]
-        [Route("api/childcare/eligible-children")]
+        [VersionedRoute(template: "childcare/eligableChildren", minimumVersion: "1.0.0")]
+        [Route("childcare/eligible-children")]
         [AcceptVerbs("GET")]
         public IHttpActionResult ChildrenEligibleForChildcare()
         {
@@ -110,7 +114,8 @@ namespace crds_angular.Controllers.API
             });
         }
 
-        [Route("api/childcare/request")]
+        [VersionedRoute(template: "childcare/request", minimumVersion: "1.0.0")]
+        [Route("childcare/request")]
         [AcceptVerbs("POST")]
         public IHttpActionResult CreateChildcareRequest([FromBody] ChildcareRequestDto request)
         {
@@ -137,7 +142,8 @@ namespace crds_angular.Controllers.API
             });
         }
 
-        [Route("api/childcare/updaterequest")]
+        [VersionedRoute(template: "childcare/updateRequest", minimumVersion: "1.0.0")]
+        [Route("childcare/updaterequest")]
         [AcceptVerbs("POST")]
         public IHttpActionResult UpdateChildcareRequest([FromBody] ChildcareRequestDto request)
         {
@@ -164,7 +170,8 @@ namespace crds_angular.Controllers.API
             });
         }
 
-        [Route("api/childcare/request/approve/{requestId}")]
+        [VersionedRoute(template: "childcare/request/approve/{requestId}", minimumVersion: "1.0.0")]
+        [Route("childcare/request/approve/{requestId}")]
         [AcceptVerbs("POST")]
         public IHttpActionResult ApproveChildcareRequest(int requestId, ChildcareRequestDto childcareRequest)
         {
@@ -214,7 +221,8 @@ namespace crds_angular.Controllers.API
             });
         }
 
-        [Route("api/childcare/request/reject/{requestId}")]
+        [VersionedRoute(template: "childcare/request/reject/{requestId}", minimumVersion: "1.0.0")]
+        [Route("childcare/request/reject/{requestId}")]
         [AcceptVerbs("POST")]
         public IHttpActionResult RejectChildcareRequest(int requestId, ChildcareRequestDto childcareRequest)
         {
@@ -241,16 +249,17 @@ namespace crds_angular.Controllers.API
             });
         }
 
-        [Route("api/childcare/getrequest/{requestid}")]
+        [VersionedRoute(template: "childcare/getRequest/{requestId}", minimumVersion: "1.0.0")]
+        [Route("childcare/getrequest/{requestid}")]
         [AcceptVerbs("GET")]
-        public IHttpActionResult GetChildcareRequest(int requestid)
+        public IHttpActionResult GetChildcareRequest(int requestId)
         {
 
             return Authorized(token =>
             {
                 try
                 {
-                    return Ok(_childcareService.GetChildcareRequestForReview(requestid, token));
+                    return Ok(_childcareService.GetChildcareRequestForReview(requestId, token));
                 }
                 catch (Exception e)
                 {
@@ -261,7 +270,8 @@ namespace crds_angular.Controllers.API
             });
         }
 
-        [Route("api/childcare/dashboard/{contactId}")]
+        [VersionedRoute(template: "childcare/dashboard/{contactId}", minimumVersion: "1.0.0")]
+        [Route("childcare/dashboard/{contactId}")]
         [AcceptVerbs("GET")]
         public IHttpActionResult ChildcareDashboard(int contactId)
         {

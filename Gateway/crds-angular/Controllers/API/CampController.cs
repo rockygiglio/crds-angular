@@ -7,6 +7,7 @@ using System.Web.Http;
 using System.Web.Http.Description;
 using crds_angular.Exceptions.Models;
 using crds_angular.Models.Crossroads.Camp;
+using Crossroads.ApiVersioning;
 
 namespace crds_angular.Controllers.API
 {
@@ -18,7 +19,8 @@ namespace crds_angular.Controllers.API
             _campService = campService;
         }
 
-        [Route("api/camps/{eventId}/family")]
+        [VersionedRoute(template: "camps/{eventId}/family", minimumVersion: "1.0.0")]
+        [Route("camps/{eventId}/family")]
         [AcceptVerbs("GET")]
         public IHttpActionResult GetCampFamily(int eventId)
         {
@@ -39,7 +41,8 @@ namespace crds_angular.Controllers.API
         }
 
         [ResponseType(typeof(List<MyCampDTO>))]
-        [Route("api/my-camp")]
+        [VersionedRoute(template: "myCamp", minimumVersion: "1.0.0")]
+        [Route("my-camp")]
         [AcceptVerbs("GET")]
         public IHttpActionResult GetMyCampsInfo()
         {
@@ -59,7 +62,8 @@ namespace crds_angular.Controllers.API
         }
 
         [ResponseType(typeof (CampDTO))]
-        [Route("api/camps/{eventid}")]
+        [VersionedRoute(template: "camps/{eventId}", minimumVersion: "1.0.0")]
+        [Route("camps/{eventid}")]
         [AcceptVerbs("GET")]
         public IHttpActionResult GetCampEventDetails(int eventId)
         {
@@ -79,7 +83,8 @@ namespace crds_angular.Controllers.API
         }
 
         [ResponseType(typeof(CampReservationDTO))]
-        [Route("api/camps/{eventid}/{contactid}")]
+        [VersionedRoute(template: "camps/{eventId}/{contactId}", minimumVersion: "1.0.0")]
+        [Route("camps/{eventid}/{contactid}")]
         [AcceptVerbs("GET")]
         public IHttpActionResult GetCamperInfo(int eventId, int contactId)
         {
@@ -98,8 +103,9 @@ namespace crds_angular.Controllers.API
             });
         }
 
-        [Route("api/camps/{eventid}")]
         [AcceptVerbs("POST")]
+        [VersionedRoute(template: "camps/{eventId}", minimumVersion: "1.0.0")]
+        [Route("camps/{eventid}")]
         public IHttpActionResult SaveCampReservation([FromBody] CampReservationDTO campReservation, int eventId)
         {
             if (!ModelState.IsValid)

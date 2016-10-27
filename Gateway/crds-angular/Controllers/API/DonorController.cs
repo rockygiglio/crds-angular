@@ -14,6 +14,7 @@ using crds_angular.Security;
 using crds_angular.Services.Interfaces;
 using MinistryPlatform.Translation.Models;
 using MPInterfaces = MinistryPlatform.Translation.Repositories.Interfaces;
+using Crossroads.ApiVersioning;
 
 namespace crds_angular.Controllers.API
 {
@@ -42,14 +43,16 @@ namespace crds_angular.Controllers.API
         }
     
         [ResponseType(typeof(DonorDTO))]
-        [Route("api/donor/{email?}")]
+        [VersionedRoute(template: "donor/{email?}", minimumVersion: "1.0.0")]
+        [Route("donor/{email?}")]
         public IHttpActionResult Get(string email="")
         {
             return (Authorized(GetDonorForAuthenticatedUser, () => GetDonorForUnauthenticatedUser(email)));
         }
 
         [ResponseType(typeof (DonorDTO))]
-        [Route("api/donor")]
+        [VersionedRoute(template: "donor", minimumVersion: "1.0.0")]
+        [Route("donor")]
         public IHttpActionResult Post([FromBody] CreateDonorDTO dto)
         {
             return (Authorized(token => CreateDonorForAuthenticatedUser(token, dto), () => CreateDonorForUnauthenticatedUser(dto)));
@@ -221,7 +224,8 @@ namespace crds_angular.Controllers.API
         }
 
         [ResponseType(typeof (DonorDTO))]
-        [Route("api/donor")]
+        [VersionedRoute(template: "donor", minimumVersion: "1.0.0")]
+        [Route("donor")]
         [HttpPut]
         public IHttpActionResult UpdateDonor([FromBody] UpdateDonorDTO dto)
         {
@@ -290,8 +294,9 @@ namespace crds_angular.Controllers.API
         /// <returns>The input RecurringGiftDto, with donor email address and recurring gift ID from MinistryPlatform populated</returns>
         [RequiresAuthorization]
         [ResponseType(typeof(RecurringGiftDto))]
+        [VersionedRoute(template: "donor/recurrence", minimumVersion: "1.0.0")]
+        [Route("donor/recurrence")]
         [HttpPost]
-        [Route("api/donor/recurrence")]
         public IHttpActionResult CreateRecurringGift([FromBody] RecurringGiftDto recurringGiftDto, [FromUri(Name = "impersonateDonorId")] int? impersonateDonorId = null)
         {
             return (Authorized(token =>
@@ -340,8 +345,9 @@ namespace crds_angular.Controllers.API
         /// <returns>The input RecurringGiftDto, with donor email address and recurring gift ID from MinistryPlatform populated</returns>
         [RequiresAuthorization]
         [ResponseType(typeof(RecurringGiftDto))]
+        [VersionedRoute(template: "donor/recurrence/{recurringGiftId:int}", minimumVersion: "1.0.0")]
+        [Route("donor/recurrence/{recurringGiftId:int}")]
         [HttpPut]
-        [Route("api/donor/recurrence/{recurringGiftId:int}")]
         public IHttpActionResult EditRecurringGift([FromUri]int recurringGiftId, [FromBody] RecurringGiftDto editGift, [FromUri(Name = "impersonateDonorId")] int? impersonateDonorId = null)
         {
             editGift.RecurringGiftId = recurringGiftId;
@@ -388,8 +394,9 @@ namespace crds_angular.Controllers.API
         /// <param name="impersonateDonorId">An optional donorId of a donor to impersonate</param>
         /// <returns>The RecurringGiftDto representing the gift that was deleted</returns>
         [RequiresAuthorization]
+        [VersionedRoute(template: "donor/recurrence/{recurringGiftId:int}", minimumVersion: "1.0.0")]
+        [Route("donor/recurrence/{recurringGiftId:int}")]
         [HttpDelete]
-        [Route("api/donor/recurrence/{recurringGiftId:int}")]
         public IHttpActionResult CancelRecurringGift([FromUri]int recurringGiftId, [FromUri(Name = "impersonateDonorId")] int? impersonateDonorId = null)
         {
             return(Authorized(token =>
@@ -426,9 +433,10 @@ namespace crds_angular.Controllers.API
         /// </summary>
         /// <param name="impersonateDonorId">An optional donorId of a donor to impersonate</param>
         /// <returns>A list of RecurringGiftDto</returns>
-       // [RequiresAuthorization]
-        [Route("api/donor/recurrence")]
+        // [RequiresAuthorization]
         [ResponseType(typeof(List<RecurringGiftDto>))]
+        [VersionedRoute(template: "donor/recurrence", minimumVersion: "1.0.0")]
+        [Route("donor/recurrence")]
         [HttpGet]
         public IHttpActionResult GetRecurringGifts([FromUri(Name = "impersonateDonorId")] int? impersonateDonorId = null)
         {
@@ -463,8 +471,9 @@ namespace crds_angular.Controllers.API
         /// Retrieve list of capital campaign pledges for the logged-in donor.
         /// </summary>
         /// <returns>A list of PledgeDto</returns>
-        [Route("api/donor/pledge")]
         [ResponseType(typeof(List<PledgeDto>))]
+        [VersionedRoute(template: "donor/pledge", minimumVersion: "1.0.0")]
+        [Route("donor/pledge")]
         [HttpGet]
         public IHttpActionResult GetPledges()
         {

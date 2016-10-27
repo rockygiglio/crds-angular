@@ -14,6 +14,7 @@ using crds_angular.Security;
 using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Interfaces;
 using Crossroads.Utilities.Messaging.Interfaces;
+using Crossroads.ApiVersioning;
 
 namespace crds_angular.Controllers.API
 {
@@ -42,7 +43,8 @@ namespace crds_angular.Controllers.API
         /// <param name="to">Optional- The end date</param>
         /// <returns></returns>
         [ResponseType(typeof(List<ServingDay>))]
-        [Route("api/serve/family-serve-days/{contactId}")]
+        [VersionedRoute(template: "serve/familyServeDays/{contactId}", minimumVersion: "1.0.0")]
+        [Route("serve/family-serve-days/{contactId}")]
         public IHttpActionResult GetFamilyServeDays(int contactId, long from = 0, long to = 0)
         {
             return Authorized(token =>
@@ -60,9 +62,10 @@ namespace crds_angular.Controllers.API
                               });
         }
 
-        [ResponseType(typeof(ServingTeam))]
-        [Route("api/serve/getTeamRsvps")]
         [AcceptVerbs("POST")]
+        [ResponseType(typeof(ServingTeam))]
+        [VersionedRoute(template: "serve/getTeamRsvps", minimumVersion: "1.0.0")]
+        [Route("serve/getTeamRsvps")]
         public IHttpActionResult GetServingTeamRsvps([FromBody] ServingTeam team)
         {
             return Authorized(token =>
@@ -82,7 +85,8 @@ namespace crds_angular.Controllers.API
 
 
         [ResponseType(typeof (List<FamilyMember>))]
-        [Route("api/serve/family/{contactId?}")]
+        [VersionedRoute(template: "serve/family/{contactId?}", minimumVersion: "1.0.0")]
+        [Route("serve/family/{contactId?}")]
         public IHttpActionResult GetFamily(int contactId = 0)
         {
             //TODO: I don't think you need to pass in contactId here, use the token
@@ -102,7 +106,8 @@ namespace crds_angular.Controllers.API
         }
 
         [ResponseType(typeof (List<QualifiedServerDto>))]
-        [Route("api/serve/qualifiedservers/{groupId}/{opportunityId}")]
+        [VersionedRoute(template: "serve/qualifiedServers/{groupId}/{opportunityId}", minimumVersion: "1.0.0")]
+        [Route("serve/qualifiedservers/{groupId}/{opportunityId}")]
         public IHttpActionResult GetQualifiedServers(int groupId, int opportunityId)
         {
             return Authorized(token =>
@@ -122,7 +127,8 @@ namespace crds_angular.Controllers.API
 
         [RequiresAuthorization]
         [ResponseType(typeof(List<GroupDTO>))]
-        [Route("api/serve/GetLoggedInLeadersGroups")]
+        [VersionedRoute(template: "serve/GetLoggedInLeadersGroups", minimumVersion: "1.0.0")]
+        [Route("serve/GetLoggedInLeadersGroups")]
         public IHttpActionResult GetLoggedInLeadersGroups()
         {
             return Authorized(token =>
@@ -142,7 +148,8 @@ namespace crds_angular.Controllers.API
 
         [RequiresAuthorization]
         [ResponseType(typeof(List<GroupParticipantDTO>))]
-        [Route("api/serve/GetLoggedInLeadersGroupsParticipants")]
+        [VersionedRoute(template: "serve/GetLoggedInLeadersGroupsParticipants", minimumVersion: "1.0.0")]
+        [Route("serve/GetLoggedInLeadersGroupsParticipants")]
         public IHttpActionResult GetLoggedInLeadersGroupsParticipants(int? groupId = null)
         {
             return Authorized(token =>
@@ -162,7 +169,8 @@ namespace crds_angular.Controllers.API
 
         [RequiresAuthorization]
         [ResponseType(typeof(object))]
-        [Route("api/serve/GetIsLeader")]
+        [VersionedRoute(template: "serve/GetIsLeader", minimumVersion: "1.0.0")]
+        [Route("serve/GetIsLeader")]
         public IHttpActionResult GetIsLeader(int? groupId = null)
         {
             return Authorized(token =>
@@ -180,7 +188,8 @@ namespace crds_angular.Controllers.API
             });
         }
 
-        [Route("api/serve/save-rsvp")]
+        [VersionedRoute(template: "serve/saveRsvp", minimumVersion: "1.0.0")]
+        [Route("serve/save-rsvp")]
         public IHttpActionResult SaveRsvp([FromBody] SaveRsvpDto saveRsvp)
         {
             if (!ModelState.IsValid)
@@ -217,7 +226,8 @@ namespace crds_angular.Controllers.API
         }
 
         [ResponseType(typeof (Capacity))]
-        [Route("api/serve/opp-capacity")]
+        [VersionedRoute(template: "serve/opportunityCapacity", minimumVersion: "1.0.0")]
+        [Route("serve/opp-capacity")]
         public IHttpActionResult GetOpportunityCapacity([FromUri] OpportunityCapacityDto oppCap)
         {
             return Authorized(token =>

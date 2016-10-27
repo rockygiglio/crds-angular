@@ -12,6 +12,7 @@ using Crossroads.Utilities.Extensions;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Models.DTO;
 using MinistryPlatform.Translation.Repositories.Interfaces;
+using Crossroads.ApiVersioning;
 
 namespace crds_angular.Controllers.API
 {
@@ -25,8 +26,9 @@ namespace crds_angular.Controllers.API
         }
 
         [ResponseType(typeof (int))]
-        [Route("api/opportunity/{id}")]
-        public IHttpActionResult Post(int id, [FromBody] string stuff)
+        [VersionedRoute(template: "opportunity/{opportunityId}", minimumVersion: "1.0.0")]
+        [Route("opportunity/{id}")]
+        public IHttpActionResult Post(int opportunityId, [FromBody] string stuff)
         {
             var comments = string.Format("Request on {0}", DateTime.Now.ToString(CultureInfo.CurrentCulture));
 
@@ -34,8 +36,8 @@ namespace crds_angular.Controllers.API
             {
                 try
                 {
-                    var opportunityId = _opportunityService.RespondToOpportunity(token, id, comments);
-                    return Ok(opportunityId);
+                    var id = _opportunityService.RespondToOpportunity(token, opportunityId, comments);
+                    return Ok(id);
                 }
                 catch (Exception ex)
                 {
@@ -45,7 +47,8 @@ namespace crds_angular.Controllers.API
         }
 
         [ResponseType(typeof (int))]
-        [Route("api/opportunity/save-qualified-server")]
+        [VersionedRoute(template: "opportunity/saveQualifiedServer", minimumVersion: "1.0.0")]
+        [Route("opportunity/save-qualified-server")]
         public IHttpActionResult Post([FromBody] MpRespondToOpportunityDto opportunityResponse)
         {
             if (!ModelState.IsValid)
@@ -73,50 +76,54 @@ namespace crds_angular.Controllers.API
         }
 
         [ResponseType(typeof (List<long>))]
-        [Route("api/opportunity/getAllOpportunityDates/{id}")]
-        public IHttpActionResult GetAllOpportunityDates(int id)
+        [VersionedRoute(template: "opportunity/getAllOpportunityDates/{opportunityId}", minimumVersion: "1.0.0")]
+        [Route("opportunity/getAllOpportunityDates/{id}")]
+        public IHttpActionResult GetAllOpportunityDates(int opportunityId)
         {
             var oppDates = new List<long>();
             return Authorized(token =>
             {
-                var opportunities = _opportunityService.GetAllOpportunityDates(id, token);
+                var opportunities = _opportunityService.GetAllOpportunityDates(opportunityId, token);
                 oppDates.AddRange(opportunities.Select(opp => opp.ToUnixTime()));
                 return Ok(oppDates);
             });
         }
 
         [ResponseType(typeof (Dictionary<string, long>))]
-        [Route("api/opportunity/getLastOpportunityDate/{id}")]
-        public IHttpActionResult GetLastOpportunityDate(int id)
+        [VersionedRoute(template: "opportunity/getLastOpportunityDate/{opportunityId}", minimumVersion: "1.0.0")]
+        [Route("opportunity/getLastOpportunityDate/{id}")]
+        public IHttpActionResult GetLastOpportunityDate(int opportunityId)
         {
             return
                 Authorized(
                     token =>
                         Ok(new Dictionary<string, long>
                         {
-                            {"date", _opportunityService.GetLastOpportunityDate(id, token).ToUnixTime()}
+                            {"date", _opportunityService.GetLastOpportunityDate(opportunityId, token).ToUnixTime()}
                         }));
         }
 
         [ResponseType(typeof (OpportunityGroup))]
-        [Route("api/opportunity/getGroupParticipantsForOpportunity/{id}")]
-        public IHttpActionResult GetGroupParticipantsForOpportunity(int id)
+        [VersionedRoute(template: "opportunity/{opportunityId}", minimumVersion: "1.0.0")]
+        [Route("opportunity/{id}")]
+        public IHttpActionResult GetGroupParticipantsForOpportunity(int opportunityId)
         {
             return Authorized(token =>
             {
-                var group = _opportunityService.GetGroupParticipantsForOpportunity(id, token);
+                var group = _opportunityService.GetGroupParticipantsForOpportunity(opportunityId, token);
                 var oppGrp = Mapper.Map<MpGroup, OpportunityGroup>(group);
                 return Ok(oppGrp);
             });
         }
 
         [ResponseType(typeof (OpportunityResponseDto))]
-        [Route("api/opportunity/getResponseForOpportunity/{id}/{contactId}")]
-        public IHttpActionResult GetResponseForOpportunity(int id, int contactId)
+        [VersionedRoute(template: "opportunity/getResponseForOpportunity/{opportunityId}/{contactId}", minimumVersion: "1.0.0")]
+        [Route("opportunity/getResponseForOpportunity/{id}/{contactId}")]
+        public IHttpActionResult GetResponseForOpportunity(int opportunityId, int contactId)
         {
             try
             {
-                var response = _opportunityService.GetOpportunityResponse(contactId, id);
+                var response = _opportunityService.GetOpportunityResponse(contactId, opportunityId);
                 var mapped = Mapper.Map<MpResponse, OpportunityResponseDto>((MpResponse)response);
                 return Ok(mapped);
             }

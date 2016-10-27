@@ -15,6 +15,7 @@ using Crossroads.Utilities.Interfaces;
 using Crossroads.Utilities.Messaging.Interfaces;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Repositories.Interfaces;
+using Crossroads.ApiVersioning;
 
 namespace crds_angular.Controllers.API
 {
@@ -53,7 +54,8 @@ namespace crds_angular.Controllers.API
         }
 
         [RequiresAuthorization]
-        [Route("api/checkscanner/batches")]
+        [VersionedRoute(template: "checkScanner/batches", minimumVersion: "1.0.0")]
+        [Route("checkscanner/batches")]
         public IHttpActionResult GetBatches([FromUri(Name = "onlyOpen")] bool onlyOpen = true)
         {
             return (Authorized(token =>
@@ -64,7 +66,8 @@ namespace crds_angular.Controllers.API
         }
 
         [RequiresAuthorization]
-        [Route("api/checkscanner/batches/{batchName}/checks")]
+        [VersionedRoute(template: "checkScanner/batches/{batchName}/checks", minimumVersion: "1.0.0")]
+        [Route("checkscanner/batches/{batchName}/checks")]
         public IHttpActionResult GetChecksForBatch(string batchName)
         {
             return (Authorized(token =>
@@ -75,7 +78,9 @@ namespace crds_angular.Controllers.API
         }
 
         [RequiresAuthorization]
-        [Route("api/checkscanner/batches"), HttpPost]
+        [VersionedRoute(template: "checkScanner/batches", minimumVersion: "1.0.0")]
+        [Route("checkscanner/batches")]
+        [HttpPost]
         public IHttpActionResult CreateDonationsForBatch([FromBody] CheckScannerBatch batch)
         {
             return (Authorized(token =>
@@ -102,7 +107,9 @@ namespace crds_angular.Controllers.API
         /// <returns>The created or updated donor record.</returns>
         [RequiresAuthorization]
         [ResponseType(typeof(EZScanDonorDetails))]
-        [Route("api/checkscanner/getdonor"), HttpPost]
+        [VersionedRoute(template: "checkScanner/getDonor", minimumVersion: "1.0.0")]
+        [Route("checkscanner/getdonor")]
+        [HttpPost]
         public IHttpActionResult GetDonorForCheck([FromBody] CheckAccount checkAccount)
         {
             return (Authorized(token =>
@@ -142,7 +149,9 @@ namespace crds_angular.Controllers.API
         /// <returns>The created donor record.</returns>
         [RequiresAuthorization]
         [ResponseType(typeof(MpContactDonor))]
-        [Route("api/checkscanner/donor"), HttpPost]
+        [VersionedRoute(template: "checkScanner/donor", minimumVersion: "1.0.0")]
+        [Route("checkscanner/donor")]
+        [HttpPost]
         public IHttpActionResult CreateDonor([FromBody] CheckScannerCheck checkDetails)
         {
             return (Authorized(token =>
@@ -167,9 +176,10 @@ namespace crds_angular.Controllers.API
 
         //the following was created for testing purposes only
         //QA needed the ability encrypt account and routing numbers for testing
-       [RequiresAuthorization]
+        [RequiresAuthorization]
         [ResponseType(typeof(EncryptValue))]
-        [Route("api/checkscanner/encrypt/{*value}")]
+        [VersionedRoute(template: "checkScanner/encrypt/{*value}", minimumVersion: "1.0.0")]
+        [Route("checkscanner/encrypt/{*value}")]
         public IHttpActionResult GetEncrypted(string value = "")
         {
             return (Authorized(token =>
