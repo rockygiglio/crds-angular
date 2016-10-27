@@ -29,7 +29,7 @@ export default class ServeTeamMembersController {
         roleTitle: ""
     };
     _.forEach(opportunities, (opportunity) => {
-      let partitionedArray = _.partition(opportunity.rsvpMembers, (member) => {return member.Response_Result_ID === CONSTANTS.SERVING_RESPONSES.NOT_AVAILABLE});
+      let partitionedArray = _.partition(opportunity.rsvpMembers, (member) => {return member.responseResultId === CONSTANTS.SERVING_RESPONSES.NOT_AVAILABLE});
       notAvailable.rsvpMembers = notAvailable.rsvpMembers.concat(partitionedArray[0]);
       opportunity.rsvpMembers = partitionedArray[1];
     });

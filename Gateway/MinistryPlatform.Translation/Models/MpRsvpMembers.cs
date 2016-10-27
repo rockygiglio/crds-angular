@@ -6,6 +6,8 @@ namespace MinistryPlatform.Translation.Models
     [MpRestApiTable(Name = "Responses")]
     public class MpRsvpMember
     {
+        [JsonProperty(PropertyName = "Contact_ID")]
+        public long ContactId { get; set; }
 
         [JsonProperty(PropertyName = "Event_ID")]
         public long EventId { get; set; }

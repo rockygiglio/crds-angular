@@ -86,7 +86,7 @@ export default class ServeTeamLeaderController {
     };
 
     saveRsvp() {
-        var validForm = this.isFormValid();
+        let validForm = this.isFormValid();
 
         if (!validForm) {
             this.rootScope.$emit('notify', this.rootScope.MESSAGES.generalError);
@@ -94,23 +94,23 @@ export default class ServeTeamLeaderController {
         }
         else {
             this.processing = true;
-            
+
             let signUp = (this.model.selectedOpp !== 0) ? true : false;
             let promises = [];
             _.forEach(this.individuals, (person) => {
                 var rsvp = {};
                 rsvp.contactId = person.contactId;
                 rsvp.opportunityId = this.model.selectedOpp;
-                rsvp.opportunityIds = _.pluck(this.team.serveOpportunities, 'Opportunity_ID');                              
+                rsvp.opportunityIds = _.pluck(this.team.serveOpportunities, 'Opportunity_ID');
                 rsvp.eventTypeId = this.team.eventTypeId;
                 rsvp.endDate = moment(this.model.toDt, 'MM/DD/YYYY').format('X');
                 rsvp.startDate = moment(this.model.fromDt, 'MM/DD/YYYY').format('X');
                 rsvp.signUp = signUp;
                 rsvp.alternateWeeks = (this.model.selectedFrequency.value === 2);
-                if(!signUp){
+                if (!signUp) {
                     _.pull(rsvp.opportunityIds, 0);
                 }
-                promises.push(this.serveOpportunities.SaveRsvp.save(rsvp).$promise);            
+                promises.push(this.serveOpportunities.SaveRsvp.save(rsvp).$promise);
             });
 
             this.qApi.all(promises).then((results) => {
@@ -142,18 +142,18 @@ export default class ServeTeamLeaderController {
 
         _.forEach(this.team.serveOpportunities, (opportunity) => {
             _.remove(opportunity.rsvpMembers, (member) => {
-                return member.Participant_ID == person.participantId;
+                return member.participantId == person.participantId;
             });
         });
 
         let signedUpOpp = _.find(this.team.serveOpportunities, { Opportunity_ID: opp });
         signedUpOpp.rsvpMembers.push(
             {
-                NickName: person.nickName,
-                Last_Name: person.lastName,
-                Participant_ID: person.participantId,
-                Response_Result_ID: signedUp,
-                Opportunity_ID: signedUpOpp.Opportunity_ID
+                nickName: person.nickName,
+                lastName: person.lastName,
+                participantId: person.participantId,
+                responseResultId: signedUp,
+                opportunityId: signedUpOpp.opportunityId
             }
         );
     }

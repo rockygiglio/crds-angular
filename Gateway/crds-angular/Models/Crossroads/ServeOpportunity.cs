@@ -13,7 +13,7 @@ namespace crds_angular.Models.Crossroads
         public string OpportunityTitle { get; set; }
 
         [JsonProperty(PropertyName = "rsvpMembers")]
-        public List<RsvpMembers> RsvpMembers { get; set; }
+        public List<RsvpMember> RsvpMembers { get; set; }
 
         [JsonProperty(PropertyName = "Group_Role_ID")]
         public int Group_Role_ID { get; set; }
@@ -38,7 +38,7 @@ namespace crds_angular.Models.Crossroads
  
         public ServeOpportunity()
         {
-            RsvpMembers = new List<RsvpMembers>(); 
+            RsvpMembers = new List<RsvpMember>(); 
         }
     }
 }

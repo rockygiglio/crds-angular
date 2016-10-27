@@ -6,7 +6,8 @@ export default function closableTagComponent() {
       name: '<',
       age: '<',
       onClick: '&',
-      onClose: '&'
+      onClose: '&',
+      isLeader: '='
     },
     templateUrl: 'closable-tag/closableTag.html',
     controller: controller,
