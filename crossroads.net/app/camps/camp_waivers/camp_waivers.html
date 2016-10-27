@@ -1,10 +1,10 @@
 <legend>Waivers</legend>
 <article ng-repeat="waiver in campWaivers.waivers">
-  <div dynamic-content="waiver | html"></div>
+  <div dynamic-content="waiver.waiverText | html"></div>
   <hr ng-if="!$last">
 </article>
 
-<h4 class="required">Electronic Signature</h4>
+<h4 class="required push-top">Electronic Signature</h4>
 <form role="form">
   <div class="radio">
     <label>

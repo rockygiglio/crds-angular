@@ -1,3 +1,5 @@
+import campWaiversResolve from './camp_waivers/camp_waivers.resolve';
+
 function getCampInfo(CampsService, $stateParams) {
   const id = $stateParams.campId;
   return CampsService.getCampInfo(id);
@@ -69,11 +71,11 @@ export default function CampRoutes($stateProvider) {
           title: 'Camp Waivers',
           description: 'Join us for camp!'
         }
-      }
+      },
+      resolve: campWaiversResolve
     })
     .state('campsignup.family', {
       url: '/family',
       template: '<camps-family></camps-family>'
     });
 }
-
