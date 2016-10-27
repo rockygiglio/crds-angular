@@ -31,11 +31,11 @@ export default class LandingController {
         this.pastWeekends = this.parseWeekends(response,maxPastWeekends)
       });
 
-    $rootScope.$on('dynamicContentCompiled', this.moveCountdown);
+    this.rootScope.$on('dynamicContentCompiled', this.moveCountdown);
   }
 
   moveCountdown() {
-    let el = angular.element('#intro p.lead');
+    let el = angular.element('#intro .upcoming p.lead');
     if (el.length) {
       angular.element('countdown-intro').insertAfter(el)
     }
@@ -73,7 +73,7 @@ export default class LandingController {
 
         event.delay = i * 100;
         event.subtitle = event.title;
-        
+
         if (event.number === 0) {
           event.number++;
         }
@@ -84,7 +84,7 @@ export default class LandingController {
 
         if (typeof event.messageVideo !== "undefined" && typeof event.messageVideo.still !== 'undefined') {
           event.image = event.messageVideo.still.filename
-        } 
+        }
       }
       return event;
     });

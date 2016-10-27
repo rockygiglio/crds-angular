@@ -85,7 +85,7 @@ namespace crds_angular.test.controllers
             var dto = new DonationsDTO();
             dto.Donations.AddRange(donations);
 
-            gatewayDonationServiceMock.Setup(mocked => mocked.GetDonationsForAuthenticatedUser(authType + " " + authToken, "1999", null, true)).Returns(dto);
+            gatewayDonationServiceMock.Setup(mocked => mocked.GetDonationsForAuthenticatedUser(authType + " " + authToken, "1999", null, true, true)).Returns(dto);
             var response = fixture.GetDonations("1999", null, true);
             gatewayDonationServiceMock.VerifyAll();
 
@@ -99,7 +99,7 @@ namespace crds_angular.test.controllers
         [Test]
         public void TestGetDonationsNoDonationsFound()
         {
-            gatewayDonationServiceMock.Setup(mocked => mocked.GetDonationsForAuthenticatedUser(authType + " " + authToken, "1999", null, true)).Returns((DonationsDTO)null);
+            gatewayDonationServiceMock.Setup(mocked => mocked.GetDonationsForAuthenticatedUser(authType + " " + authToken, "1999", null, true, true)).Returns((DonationsDTO)null);
             var response = fixture.GetDonations("1999", null, true);
             gatewayDonationServiceMock.VerifyAll();
 

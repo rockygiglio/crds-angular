@@ -124,5 +124,32 @@ namespace crds_angular.Controllers.API
                 }
             });
         }
+
+        [Route("api/camps/{eventId}/emergencycontact/{contactId}")]
+        [AcceptVerbs("POST")]
+        public IHttpActionResult SaveCamperEmergencyContact([FromBody] CampEmergencyContactDTO emergencyContact, int eventId, int contactId)
+        {
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState.Values.SelectMany(val => val.Errors).Aggregate("", (current, err) => current + err.Exception.Message);
+                var dataError = new ApiErrorDto("Camper Emergency Contact data Invalid", new InvalidOperationException("Invalid Camper emergency contact Data" + errors));
+                throw new HttpResponseException(dataError.HttpResponseMessage);
+            }
+
+            return Authorized(token =>
+            {
+                try
+                {
+                    _campService.SaveCamperEmergencyContactInfo(emergencyContact, eventId, contactId);
+                    return Ok();
+                }
+
+                catch (Exception e)
+                {
+                    var apiError = new ApiErrorDto("Camp Reservation failed", e);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+            });
+        }
     }
 }
