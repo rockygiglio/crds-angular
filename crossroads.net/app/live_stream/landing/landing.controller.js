@@ -8,6 +8,9 @@ export default class LandingController {
     this.streamStatus = StreamStatusService.getStatus();
 
     this.rootScope.$on('streamStatusChanged', (e, streamStatus) => {
+      if (streamStatus === 'Upcoming' &&  this.streamStatus !== 'Upcoming') {
+        this.moveCountdown();
+      }
       this.streamStatus = streamStatus;
     });
 
@@ -26,14 +29,16 @@ export default class LandingController {
       .getRecentMessages(maxPastWeekends)
       .then((response) => {
         this.pastWeekends = this.parseWeekends(response,maxPastWeekends)
-      })
+      });
 
-    $rootScope.$on('dynamicContentCompiled', () => { 
-      let el = angular.element('#intro p.lead');
-      if (el.length) {
-        angular.element('countdown-intro').insertAfter(el)
-      }
-    });
+    $rootScope.$on('dynamicContentCompiled', this.moveCountdown);
+  }
+
+  moveCountdown() {
+    let el = angular.element('#intro p.lead');
+    if (el.length) {
+      angular.element('countdown-intro').insertAfter(el)
+    }
   }
 
   introImage() {
