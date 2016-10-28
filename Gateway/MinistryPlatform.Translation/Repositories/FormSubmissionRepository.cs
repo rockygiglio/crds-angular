@@ -18,12 +18,14 @@ namespace MinistryPlatform.Translation.Repositories
         private readonly int _formResponseGoTripView = AppSettings("GoTripFamilySignup");
 
         private readonly IMinistryPlatformService _ministryPlatformService;
+        private readonly IMinistryPlatformRestRepository _ministryPlatformRestRepository;
         private readonly IDbConnection _dbConnection;
 
-        public FormSubmissionRepository(IMinistryPlatformService ministryPlatformService, IDbConnection dbConnection, IAuthenticationRepository authenticationService, IConfigurationWrapper configurationWrapper)
+        public FormSubmissionRepository(IMinistryPlatformService ministryPlatformService, IDbConnection dbConnection, IAuthenticationRepository authenticationService, IConfigurationWrapper configurationWrapper, IMinistryPlatformRestRepository ministryPlatformRest)
             : base(authenticationService,configurationWrapper)
         {
             _ministryPlatformService = ministryPlatformService;
+            _ministryPlatformRestRepository = ministryPlatformRest;
             _dbConnection = dbConnection;
         }
 
@@ -147,14 +149,12 @@ namespace MinistryPlatform.Translation.Repositories
         public int SubmitFormResponse(MpFormResponse form)
         {
             var token = ApiLogin();
-            var responseId = CreateFormResponse(form, token);
+            var responseId = CreateOrUpdateFormResponse(form, token);
             foreach (var answer in form.FormAnswers)
             {
-                if (answer.Response != null)
-                {
-                    answer.FormResponseId = responseId;
-                    CreateFormAnswer(answer, token);
-                }
+                if (answer.Response == null) continue;
+                answer.FormResponseId = responseId;
+                CreateOrUpdateFormAnswer(answer, token);
             }
             return responseId;
         }
@@ -170,7 +170,7 @@ namespace MinistryPlatform.Translation.Repositories
             return DateTime.Parse(signedUp.First()["Response_Date"].ToString());
         }
 
-        private int CreateFormResponse(MpFormResponse formResponse, string token)
+        private int CreateOrUpdateFormResponse(MpFormResponse formResponse, string token)
         {
             var record = new Dictionary<string, object>
             {
@@ -182,11 +182,43 @@ namespace MinistryPlatform.Translation.Repositories
                 {"Pledge_Campaign_ID", formResponse.PledgeCampaignId}
             };
 
-            var responseId = _ministryPlatformService.CreateRecord(_formResponsePageId, record, token, true);
+            var responseId = GetFormResponseIdForFormContact(formResponse.FormId, formResponse.ContactId);
+            if (responseId == 0)
+            {
+                responseId = _ministryPlatformService.CreateRecord(_formResponsePageId, record, token, true);
+            }
+            else
+            {
+                record.Add("Form_Response_ID", responseId);
+                _ministryPlatformService.UpdateRecord(_formResponsePageId, record, token);
+            }
+            
             return responseId;
         }
 
-        private void CreateFormAnswer(MpFormAnswer answer, string token)
+        private int GetFormResponseIdForFormContact(int formId, int contactId)
+        {
+            var apiToken = ApiLogin();
+            var searchString = $"Contact_ID='{contactId}' AND Form_ID='{formId}'";
+            const string selectColumns = "Form_Response_ID";
+
+            var formResponse = _ministryPlatformRestRepository.UsingAuthenticationToken(apiToken).Search<MpFormResponse>(searchString, selectColumns, null, true).FirstOrDefault();
+
+            return formResponse?.FormResponseId ?? 0;
+        }
+
+        private int GetFormResponseAnswerIdForFormFeildFormResponse(int formResponseId, int formFieldId)
+        {
+            var apiToken = ApiLogin();
+            var searchString = $"Form_Response_ID='{formResponseId}' AND Form_Field_ID='{formFieldId}'";
+            const string selectColumns = "Form_Response_Answer_ID";
+
+            var formResponseAnswer = _ministryPlatformRestRepository.UsingAuthenticationToken(apiToken).Search<MpFormAnswer>(searchString, selectColumns, null, true).FirstOrDefault();
+
+            return formResponseAnswer?.FormResponseAnswerId ?? 0;
+        }
+
+        private void CreateOrUpdateFormAnswer(MpFormAnswer answer, string token)
         {
             var formAnswer = new Dictionary<string, object>
             {
@@ -199,7 +231,17 @@ namespace MinistryPlatform.Translation.Repositories
 
             try
             {
-                _ministryPlatformService.CreateRecord(_formAnswerPageId, formAnswer, token, true);
+                var responseAnswerId = GetFormResponseAnswerIdForFormFeildFormResponse(answer.FormResponseId, answer.FieldId);
+                if (responseAnswerId == 0)
+                {
+                    _ministryPlatformService.CreateRecord(_formAnswerPageId, formAnswer, token, true);
+                }
+                else
+                {
+                    formAnswer.Add("Form_Response_Answer_ID",responseAnswerId);
+                    _ministryPlatformService.UpdateRecord(_formAnswerPageId, formAnswer, token);
+                }
+                
             }
             catch (Exception exception)
             {

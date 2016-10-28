@@ -271,7 +271,7 @@
     <Compile Include="Repositories\EventParticipantRepository.cs" />
     <Compile Include="Repositories\EventRepository.cs" />
     <Compile Include="Repositories\CommunicationRepository.cs" />
-    <Compile Include="Repositories\FormSubmissionRepository..cs" />
+    <Compile Include="Repositories\FormSubmissionRepository.cs" />
     <Compile Include="Repositories\AttributeRepository.cs" />
     <Compile Include="Repositories\GetMyRecordsRepository..cs" />
     <Compile Include="Repositories\GroupParticipantRepository.cs" />
