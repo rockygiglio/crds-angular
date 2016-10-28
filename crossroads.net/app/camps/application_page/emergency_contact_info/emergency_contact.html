@@ -3,7 +3,7 @@
 <div>
   <div class="row">
     <div class="col-sm-12">
-      <legend>Parent Information</legend>
+      <legend>Parent/Guardian</legend>
       <preloader full-screen='false' ng-show='!$ctrl.viewReady'> </preloader>
       <div ng-show='$ctrl.viewReady' class="row">
         <div class="col-sm-12">
@@ -12,7 +12,7 @@
               <formly-form model="$ctrl.model" fields="$ctrl.fields" options="$ctrl.options" form="$ctrl.emergencyContact">
               </formly-form>
             </fieldset>
-            <button type="submit"class="btn btn-primary pull-right" ng-if="!$ctrl.submitting"> Submit </button>
+            <button type="submit"class="btn btn-primary pull-right" ng-if="!$ctrl.submitting"> Next </button>
             <button type="submit"class="btn btn-primary pull-right disabled" disabled ng-if="$ctrl.submitting"> Submitting... </button>
           </form>
         </div>
