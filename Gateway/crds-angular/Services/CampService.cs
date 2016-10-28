@@ -234,30 +234,28 @@ namespace crds_angular.Services
             var loggedInContact = _contactRepository.GetMyProfile(token);
             var family = _contactRepository.GetHouseholdFamilyMembers(loggedInContact.Household_ID);
             family.AddRange(_contactRepository.GetOtherHouseholdMembers(loggedInContact.Contact_ID));
-            CampReservationDTO camperInfo = null;
-            if (family.Where(f => f.ContactId == contactId).ToList().Count > 0)
-            {
-                var camperContact = _contactRepository.GetContactById(contactId);
-                var participant = _participantRepository.GetParticipant(contactId);
-                var gradeGroupTypeId = _configurationWrapper.GetConfigIntValue("AgeorGradeGroupType");
-                var gradeGroup = (_groupService.GetGroupsByTypeForParticipant(token, participant.ParticipantId, gradeGroupTypeId)).FirstOrDefault();
-                var currentGrade = gradeGroup != null ? gradeGroup.GroupName : "";
+            
+            if (family.Where(f => f.ContactId == contactId).ToList().Count <= 0) return null;
+            var camperContact = _contactRepository.GetContactById(contactId);
 
-                camperInfo = new CampReservationDTO
-                {
-                    ContactId = camperContact.Contact_ID,
-                    FirstName = camperContact.First_Name,
-                    LastName = camperContact.Last_Name,
-                    MiddleName = camperContact.Middle_Name,
-                    PreferredName = camperContact.Nickname,
-                    CrossroadsSite = Convert.ToInt32(camperContact.Congregation_ID),
-                    BirthDate = Convert.ToString(camperContact.Date_Of_Birth),
-                    SchoolAttending = camperContact.Current_School,
-                    Gender = Convert.ToInt32(camperContact.Gender_ID),
-                    CurrentGrade = currentGrade
-                };
-            }
-            return camperInfo;
+            var apiToken = _apiUserRepository.GetToken();
+
+            // get camper grade if they have one
+            var groupResult = _groupRepository.GetGradeGroupForContact(contactId, apiToken);           
+
+            return new CampReservationDTO
+            {
+                ContactId = camperContact.Contact_ID,
+                FirstName = camperContact.First_Name,
+                LastName = camperContact.Last_Name,
+                MiddleName = camperContact.Middle_Name,
+                PreferredName = camperContact.Nickname,
+                CrossroadsSite = Convert.ToInt32(camperContact.Congregation_ID),
+                BirthDate = Convert.ToString(camperContact.Date_Of_Birth),
+                SchoolAttending = camperContact.Current_School,
+                Gender = Convert.ToInt32(camperContact.Gender_ID),
+                CurrentGrade = groupResult.Status ? groupResult.Value.GroupName : null
+            };
         }
     }
 }

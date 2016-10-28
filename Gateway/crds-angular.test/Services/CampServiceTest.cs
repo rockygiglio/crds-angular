@@ -5,6 +5,7 @@ using crds_angular.Models.Crossroads.Camp;
 using crds_angular.Models.Crossroads.Groups;
 using crds_angular.Services;
 using crds_angular.Services.Interfaces;
+using Crossroads.Utilities.FunctionalHelpers;
 using Crossroads.Utilities.Interfaces;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Repositories.Interfaces;
@@ -236,27 +237,21 @@ namespace crds_angular.test.Services
         [Test]
         public void shouldGetCamperInfo()
         {
-            var eventId = 123;
-            var token = "asdf";
-            var contactId = 2187211;
+            const int eventId = 123;
+            const string token = "asdf";
+            const string apiToken = "apiToken";
+            const int contactId = 2187211;
             var myContact = getFakeContact(contactId);
-            var gradeGroupId = 5;
-            var participant = new MpParticipant
-            {
-                ParticipantId = 9876
-            };
-            var gradeGroupList = new List<GroupDTO>
-            {
-                new GroupDTO
-                {
-                    GroupName = "6th Grade"
-                }
-            };
+            const int childContactId = 123456789;
+
+            var participant = new Result<MpGroupParticipant>(true, new MpGroupParticipant() {GroupName = "6th Grade"});
+            
             var loggedInContact = new MpMyContact
             {
                 Contact_ID = 56789,
                 Household_ID = 10000
             };
+
             var householdfamily = new List<MpHouseholdMember>
             {
                 new MpHouseholdMember
@@ -269,7 +264,7 @@ namespace crds_angular.test.Services
             {
                 new MpHouseholdMember
                 {
-                    ContactId = 123456789
+                    ContactId = childContactId
                 }
 
             };
@@ -277,16 +272,62 @@ namespace crds_angular.test.Services
             _contactService.Setup(m => m.GetHouseholdFamilyMembers(loggedInContact.Household_ID)).Returns(householdfamily);
             _contactService.Setup(m => m.GetOtherHouseholdMembers(loggedInContact.Contact_ID)).Returns(otherHouseholdfamily);
             _contactService.Setup(m => m.GetContactById(contactId)).Returns(myContact);
-            _participantRepository.Setup(m => m.GetParticipant(contactId)).Returns(participant);
-            _configurationWrapper.Setup(m => m.GetConfigIntValue("AgeorGradeGroupType")).Returns(gradeGroupId);
-            _groupService.Setup(m => m.GetGroupsByTypeForParticipant(token, participant.ParticipantId, gradeGroupId))
-                .Returns(gradeGroupList);
+            _apiUserRepository.Setup(m => m.GetToken()).Returns(apiToken);
+            _groupRepository.Setup(m => m.GetGradeGroupForContact(contactId, apiToken)).Returns(participant);
 
             var result = _fixture.GetCamperInfo(token, eventId, contactId);
             Assert.AreEqual(result.ContactId, 2187211);
+            Assert.AreEqual(result.CurrentGrade, "6th Grade");
             _contactService.VerifyAll();
-            _congregationRepository.VerifyAll();
-            _participantRepository.VerifyAll();
+            _groupRepository.VerifyAll();
+        }
+
+        [Test]
+        public void shouldGetCamperInfoNoGrade()
+        {
+            const int eventId = 123;
+            const string token = "asdf";
+            const string apiToken = "apiToken";
+            const int contactId = 2187211;
+            var myContact = getFakeContact(contactId);
+            const int childContactId = 123456789;
+
+            var participant = new Result<MpGroupParticipant>(false, "some error message");
+
+            var loggedInContact = new MpMyContact
+            {
+                Contact_ID = 56789,
+                Household_ID = 10000
+            };
+
+            var householdfamily = new List<MpHouseholdMember>
+            {
+                new MpHouseholdMember
+                {
+                    ContactId = contactId
+                }
+
+            };
+            var otherHouseholdfamily = new List<MpHouseholdMember>
+            {
+                new MpHouseholdMember
+                {
+                    ContactId = childContactId
+                }
+
+            };
+            _contactService.Setup(m => m.GetMyProfile(token)).Returns(loggedInContact);
+            _contactService.Setup(m => m.GetHouseholdFamilyMembers(loggedInContact.Household_ID)).Returns(householdfamily);
+            _contactService.Setup(m => m.GetOtherHouseholdMembers(loggedInContact.Contact_ID)).Returns(otherHouseholdfamily);
+            _contactService.Setup(m => m.GetContactById(contactId)).Returns(myContact);
+            _apiUserRepository.Setup(m => m.GetToken()).Returns(apiToken);
+            _groupRepository.Setup(m => m.GetGradeGroupForContact(contactId, apiToken)).Returns(participant);
+
+            var result = _fixture.GetCamperInfo(token, eventId, contactId);
+            Assert.AreEqual(result.ContactId, 2187211);
+            Assert.IsNull(result.CurrentGrade);
+            _contactService.VerifyAll();
+            _groupRepository.VerifyAll();
         }
 
         private List<MpHouseholdMember> getFakeHouseholdMembers(MpMyContact me)

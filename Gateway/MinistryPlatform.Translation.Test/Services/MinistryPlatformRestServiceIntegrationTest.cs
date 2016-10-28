@@ -353,7 +353,7 @@ namespace MinistryPlatform.Translation.Test.Services
             };
             var results = _fixture.UsingAuthenticationToken(_authToken).Get<MpPayment>("Payments", fields);
             Console.WriteLine("Result\t" + results.ToString());
-        }
+        }       
     }
 
     [MpRestApiTable(Name = "Payment_Types")]
