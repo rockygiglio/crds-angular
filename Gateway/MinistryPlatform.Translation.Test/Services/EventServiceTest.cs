@@ -401,7 +401,7 @@ namespace MinistryPlatform.Translation.Test.Services
                 }
             };
 
-            _ministryPlatformRestService.Setup(m => m.Search<MpWaivers>($"Event_ID = {eventId}", columnList, null, false)).Returns(mockWaiver);
+            _ministryPlatformRestService.Setup(m => m.Search<MpWaivers>($"Event_ID={eventId} AND Active=1", columnList, null, false)).Returns(mockWaiver);
             _ministryPlatformRestService.Setup(m => m.Search<MpWaiverResponse>($"Waiver_ID_Table.Waiver_ID = 123 AND Event_Participant_ID_Table_Event_ID_Table.Event_ID = {eventId}", columns, null, false)).Returns(mockWaiverResponse);
             _ministryPlatformRestService.Setup(m => m.Search<MpWaiverResponse>($"Waiver_ID_Table.Waiver_ID = 456 AND Event_Participant_ID_Table_Event_ID_Table.Event_ID = {eventId}", columns, null, false)).Returns(mockWaiverResponse2);
             _ministryPlatformRestService.Setup(m => m.UsingAuthenticationToken("ABC")).Returns(_ministryPlatformRestService.Object);
