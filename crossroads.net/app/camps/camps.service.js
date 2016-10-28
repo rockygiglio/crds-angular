@@ -72,13 +72,7 @@ class CampService {
   }
 
   submitWaivers(campId, contactId, waivers) {
-    console.debug(`Camp: ${campId}, Contact: ${contactId}, Waivers:`, waivers);
-    return this.campWaiversResource.save({ campId, contactId }, waivers).$promise
-      .then(
-        response => response,
-        (err) => {
-          this.log.error(err);
-        });
+    return this.campWaiversResource.save({ campId, contactId }, waivers).$promise;
   }
 
 }

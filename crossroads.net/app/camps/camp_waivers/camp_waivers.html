@@ -5,26 +5,38 @@
 </article>
 
 <h4 class="required push-top">Electronic Signature</h4>
-<form role="form" ng-submit="campWaivers.submitWaivers()">
-  <div class="radio">
-    <label>
-      <input type="radio" name="signature" ng-model="campWaivers.signature" value="guardian">
-      I am the legal guardian of {{campWaivers.getFullName()}} and I approve of the above waivers.
-    </label>
+<form role="form" name="campWaivers.form" ng-submit="campWaivers.submitWaivers()" novalidate>
+  <div ng-class="{ 'has-error': campWaivers.form.$submitted && campWaivers.form.signature.$invalid }">
+    <div class="radio">
+      <label>
+        <input type="radio" name="signature" ng-model="campWaivers.signature" value="{{campWaivers.GUARDIAN}}" ng-required="!campWaivers.signature">
+        I am the legal guardian of {{campWaivers.getFullName()}} and I approve of the above waivers.
+      </label>
+    </div>
   </div>
-  <div class="radio">
-    <label>
-      <input type="radio" name="signature" ng-model="campWaivers.signature" value="approveLater">
-      I am <strong>NOT</strong> the legal guardian of {{campWaivers.getFullName()}} and they will approve at a later date.
-    </label>
+  <div ng-class="{ 'has-error': campWaivers.form.$submitted && campWaivers.form.signature.$invalid }">
+    <div class="radio">
+      <label>
+        <input type="radio" name="signature" ng-model="campWaivers.signature" value="{{campWaivers.APPROVE_LATER}}" ng-required="!campWaivers.signature">
+        I am <strong>NOT</strong> the legal guardian of {{campWaivers.getFullName()}} and they will approve at a later date.
+      </label>
+    </div>
   </div>
-  <div class="radio">
-    <label>
-      <input type="radio" name="signature" ng-model="campWaivers.signature" value="self">
-      I am <strong>{{campWaivers.getFullName()}}</strong> and at least 18 years of age, and I approve of the above waivers.
-    </label>
+  <div ng-class="{ 'has-error': campWaivers.form.$submitted && campWaivers.form.signature.$invalid }">
+    <div class="radio">
+      <label>
+        <input type="radio" name="signature" ng-model="campWaivers.signature" value="{{campWaivers.SELF}}" ng-required="!campWaivers.signature">
+        I am <strong>{{campWaivers.getFullName()}}</strong> and at least 18 years of age, and I approve of the above waivers.
+      </label>
+    </div>
   </div>
   <div class="push-top">
-    <button type="submit" class="btn btn-primary pull-right">Next</button>
+    <loading-button
+      input-type='submit'
+      normal-text='Next'
+      loading-text='Submitting...'
+      loading='campWaivers.processing'
+      loading-class='disabled'
+      input-classes='btn btn-primary btn-block-mobile sm-pull-right'></loading-button>
   </div>
 </form>
