@@ -19,7 +19,7 @@ BEGIN
 	[Kiosk_Type_ID] [int] IDENTITY(1,1) NOT NULL,
 	[Kiosk_Type] [nvarchar](50) NOT NULL,
 	[Description] [nvarchar](255) NULL,
-	[Domain_ID] [int] NOT NULL,
+	[Domain_ID] [int] NOT NULL CONSTRAINT [DF_cr_Kiosk_Types_Domain_ID]  DEFAULT ((1)),
 	 CONSTRAINT [PK_Kiosk_Types] PRIMARY KEY CLUSTERED 
 	(
 		[Kiosk_Type_ID] ASC

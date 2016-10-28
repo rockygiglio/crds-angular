@@ -29,7 +29,7 @@ BEGIN
 		[Room_ID] [int] NOT NULL,
 		[Start_Date] [date] NOT NULL CONSTRAINT [DF_cr_Kiosk_Configs_Start_Date]  DEFAULT (getdate()),
 		[End_Date] [date] NULL,
-		[Domain_ID] [int] NOT NULL CONSTRAINT [DF_cr_Kiosk Configs_Domain_ID]  DEFAULT ((1)),
+		[Domain_ID] [int] NOT NULL CONSTRAINT [DF_cr_Kiosk_Configs_Domain_ID]  DEFAULT ((1)),
 	 CONSTRAINT [PK_cr_Kiosk_Configs] PRIMARY KEY CLUSTERED 
 	(
 		[Kiosk_Config_ID] ASC
