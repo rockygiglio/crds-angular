@@ -141,6 +141,7 @@
     <Compile Include="Models\DTO\MpGroupSearchResultDto.cs" />
     <Compile Include="Models\MpAddress.cs" />
     <Compile Include="Models\MpAttribute.cs" />
+    <Compile Include="Models\Attributes\MpRestApiPrimaryKey.cs" />
     <Compile Include="Models\Attributes\MpRestApiTable.cs" />
     <Compile Include="Models\MpBulkEmailPublication.cs" />
     <Compile Include="Models\MpBulkEmailSubscriber.cs" />
