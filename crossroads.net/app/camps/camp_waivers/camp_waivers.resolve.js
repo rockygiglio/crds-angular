@@ -1,13 +1,7 @@
 function getCampWaivers(CampsService, $stateParams) {
   const campId = $stateParams.campId;
-  return CampsService.getCampWaivers(campId);
+  const contactId = $stateParams.contactId;
+  return CampsService.getCampWaivers(campId, contactId);
 }
 
-const resolve = {
-  loggedin: crds_utilities.checkLoggedin,
-  campsService: 'CampsService',
-  getCampWaivers,
-  $stateParams: '$stateParams'
-};
-
-export default resolve;
+export default getCampWaivers;

@@ -1,4 +1,4 @@
-import campWaiversResolve from './camp_waivers/camp_waivers.resolve';
+import getCampWaivers from './camp_waivers/camp_waivers.resolve';
 
 function getCampInfo(CampsService, $stateParams) {
   const id = $stateParams.campId;
@@ -52,26 +52,16 @@ export default function CampRoutes($stateProvider) {
         }
       }
     })
-    .state('crossroads-camp.waivers', {
-      parent: 'noSideBar',
-      url: '/camps/:campId/waivers',
-      template: '<camp-waivers></camp-waivers>',
-      data: {
-        isProtected: true,
-        meta: {
-          title: 'Camp Waivers',
-          description: 'Join us for camp!'
-        }
-      },
-      resolve: campWaiversResolve
-    })
     .state('campsignup.family', {
       url: '/family',
       template: '<camps-family></camps-family>',
     })
     .state('campsignup.application', {
       url: '/:page/:contactId',
-      template: '<camps-application-page></camps-application-page>'
+      template: '<camps-application-page></camps-application-page>',
+      resolve: {
+        getCampWaivers
+      }
     })
     .state('campsignup.camper', {
       url: '/:camperId',
