@@ -6,7 +6,8 @@
 
 <h4 class="required push-top">Electronic Signature</h4>
 <form role="form" name="campWaivers.form" ng-submit="campWaivers.submitWaivers()" novalidate>
-  <div ng-class="{ 'has-error': campWaivers.form.$submitted && campWaivers.form.signature.$invalid }">
+  <div ng-if="!campWaivers.isSelf"
+    ng-class="{ 'has-error': campWaivers.form.$submitted && campWaivers.form.signature.$invalid }">
     <div class="radio">
       <label>
         <input type="radio" name="signature" ng-model="campWaivers.signature" value="{{campWaivers.GUARDIAN}}" ng-required="!campWaivers.signature">
@@ -22,7 +23,7 @@
       </label>
     </div>
   </div>
-  <div ng-class="{ 'has-error': campWaivers.form.$submitted && campWaivers.form.signature.$invalid }">
+  <div ng-if="campWaivers.isSelf" ng-class="{ 'has-error': campWaivers.form.$submitted && campWaivers.form.signature.$invalid }">
     <div class="radio">
       <label>
         <input type="radio" name="signature" ng-model="campWaivers.signature" value="{{campWaivers.SELF}}" ng-required="!campWaivers.signature">

@@ -2,11 +2,13 @@ import forEach from 'lodash/collection/forEach';
 
 export default class CampWaiversController {
   /* @ngInject */
-  constructor($stateParams, $rootScope, CampsService) {
+  constructor($stateParams, $rootScope, CampsService, Session, $state) {
     // Injectables
     this.$stateParams = $stateParams;
     this.rootScope = $rootScope;
     this.campsService = CampsService;
+    this.session = Session;
+    this.state = $state;
 
     // Constants
     this.GUARDIAN = 'guardian';
@@ -15,11 +17,14 @@ export default class CampWaiversController {
 
     // Variables
     this.signature = null;
-    this.camper = {
-      firstName: 'John',
-      lastName: 'Doe'
-    };
 
+    this.camper = _.find(this.campsService.family,
+                         f => f.contactId === Number($stateParams.contactId));
+    if (this.camper === undefined) {
+      this.state.go('campsignup.family', { campId: $stateParams.campId });
+    }
+
+    this.isSelf = Number(this.$stateParams.contactId) === Number(this.session.exists('userId'));
     this.processing = false;
   }
 
@@ -39,7 +44,7 @@ export default class CampWaiversController {
 
     if (signee > 0) {
       if (accepted) {
-        if (this.$stateParams.contactId === signee) {
+        if (Number(this.$stateParams.contactId) === signee) {
           this.signature = this.SELF;
         } else {
           this.signature = this.GUARDIAN;
@@ -51,7 +56,7 @@ export default class CampWaiversController {
   }
 
   getFullName() {
-    return `${this.camper.firstName} ${this.camper.lastName}`;
+    return `${this.camper.preferredName} ${this.camper.lastName}`;
   }
 
   submitWaivers() {
@@ -59,13 +64,13 @@ export default class CampWaiversController {
       return;
     }
 
-    const approved = this.signature === this.GUARDIAN || this.signature === this.SELF;
+    const accepted = this.signature === this.GUARDIAN || this.signature === this.SELF;
     const params = [];
 
     forEach(this.waivers, (waiver) => {
       params.push({
         waiverId: waiver.waiverId,
-        approved
+        accepted
       });
     });
 
