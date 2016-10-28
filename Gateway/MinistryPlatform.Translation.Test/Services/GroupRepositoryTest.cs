@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using Crossroads.Utilities.FunctionalHelpers;
 using Crossroads.Utilities.Interfaces;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Repositories;
@@ -488,6 +490,63 @@ namespace MinistryPlatform.Translation.Test.Services
             Assert.AreEqual(2, myGroups.Count);
             Assert.AreEqual("Full Throttle", myGroups[0].Name);
             Assert.AreEqual("Angels Unite", myGroups[1].Name);
+        }
+
+        [Test]
+        public void GetGradeGroupForContact()
+        {
+            const int contactId = 987654;
+            const string apiToken = "letmein";
+            const int gradeGroupType = 4;
+            var participantList = new List<MpGroupParticipant>
+            {
+                new MpGroupParticipant()
+                {
+                    GroupName = "5th Graders",
+                    GroupId = 1234
+                }
+            };
+
+            var searchString = $"Participant_ID_Table_Contact_ID_Table.[Contact_ID]='{contactId}' AND Group_ID_Table_Group_Type_ID_Table.[Group_Type_ID]='{gradeGroupType}'";
+            const string selectColumns = "Group_ID_Table.[Group_Name],Group_ID_Table.[Group_ID]";
+
+            _configWrapper.Setup(m => m.GetConfigIntValue("AgeorGradeGroupType")).Returns(gradeGroupType);
+
+            _ministryPlatformRestService.Setup(m => m.UsingAuthenticationToken(apiToken)).Returns(_ministryPlatformRestService.Object);
+            _ministryPlatformRestService.Setup(m => m.Search<MpGroupParticipant>(searchString, selectColumns, null, true)).Returns(participantList);
+
+            Result<MpGroupParticipant> result = _fixture.GetGradeGroupForContact(contactId, apiToken);
+
+            _ministryPlatformRestService.VerifyAll();
+            Assert.IsTrue(result.Status);
+            Assert.AreSame(participantList.FirstOrDefault(), result.Value);            
+        }
+
+        [Test]
+        public void GetGradeGroupForContactEmpty()
+        {
+            const int contactId = 987654;
+            const string apiToken = "letmein";
+            const int gradeGroupType = 4;
+            var participantList = new List<MpGroupParticipant>
+            {
+                new MpGroupParticipant()
+            };
+
+            var searchString = $"Participant_ID_Table_Contact_ID_Table.[Contact_ID]='{contactId}' AND Group_ID_Table_Group_Type_ID_Table.[Group_Type_ID]='{gradeGroupType}'";
+            const string selectColumns = "Group_ID_Table.[Group_Name],Group_ID_Table.[Group_ID]";
+
+            _configWrapper.Setup(m => m.GetConfigIntValue("AgeorGradeGroupType")).Returns(gradeGroupType);
+
+            _ministryPlatformRestService.Setup(m => m.UsingAuthenticationToken(apiToken)).Returns(_ministryPlatformRestService.Object);
+            _ministryPlatformRestService.Setup(m => m.Search<MpGroupParticipant>(searchString, selectColumns, null, true)).Returns(participantList);
+
+            Result<MpGroupParticipant> result = _fixture.GetGradeGroupForContact(contactId, apiToken);
+
+            _ministryPlatformRestService.VerifyAll();
+            Assert.IsFalse(result.Status);
+            Assert.IsNull(result.Value);
+            Assert.NotNull(result.ErrorMessage);
         }
 
         [Test]
