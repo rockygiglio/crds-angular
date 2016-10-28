@@ -23,6 +23,7 @@ namespace crds_angular.Services
         private readonly ICongregationRepository _congregationRepository;
         private readonly IGroupRepository _groupRepository;
         private readonly IEventParticipantRepository _eventParticipantRepository;
+        private readonly IMedicalInformationRepository _medicalInformationRepository;
 
         private readonly ILog _logger = LogManager.GetLogger(typeof(CampService));
 
@@ -37,7 +38,8 @@ namespace crds_angular.Services
             IContactRepository contactRepository,
             ICongregationRepository congregationRepository,
             IGroupRepository groupRepository,
-            IEventParticipantRepository eventParticipantRepository)
+            IEventParticipantRepository eventParticipantRepository,
+            IMedicalInformationRepository medicalInformationRepository)
         {
             _campService = campService;
             _formSubmissionRepository = formSubmissionRepository;
@@ -50,6 +52,7 @@ namespace crds_angular.Services
             _congregationRepository = congregationRepository;
             _groupRepository = groupRepository;
             _eventParticipantRepository = eventParticipantRepository;
+            _medicalInformationRepository = medicalInformationRepository;
         }
 
         public CampDTO GetCampEventDetails(int eventId)
@@ -227,6 +230,18 @@ namespace crds_angular.Services
             }
 
             return dashboardData;
+        }
+
+        public void SaveCamperMedicalInfo(MedicalInfoDTO medicalInfo, int contactId, string token)
+        {
+            var mpMedicalInfo = new MpMedicalInformation
+            {
+                InsuranceCompany = medicalInfo.InsuranceCompany,
+                PhysicianName = medicalInfo.PhysicianName,
+                PhysicianPhone = medicalInfo.PhysicianPhone,
+                PolicyHolder = medicalInfo.PolicyHolder
+            };
+            _medicalInformationRepository.SaveMedicalInformation(mpMedicalInfo, contactId);
         }
 
         public CampReservationDTO GetCamperInfo(string token, int eventId, int contactId)

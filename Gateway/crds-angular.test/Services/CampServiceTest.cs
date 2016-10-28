@@ -28,6 +28,7 @@ namespace crds_angular.test.Services
         private readonly Mock<ICongregationRepository> _congregationRepository;
         private readonly Mock<IGroupRepository> _groupRepository;
         private readonly Mock<IEventParticipantRepository> _eventParticipantRepository;
+        private readonly Mock<IMedicalInformationRepository> _medicalInformationRepository;
 
         public CampServiceTest()
         {
@@ -43,7 +44,19 @@ namespace crds_angular.test.Services
             _congregationRepository = new Mock<ICongregationRepository>();
             _groupRepository = new Mock<IGroupRepository>();
             _eventParticipantRepository = new Mock<IEventParticipantRepository>();
-            _fixture = new CampService(_campService.Object, _formSubmissionRepository.Object, _configurationWrapper.Object, _participantRepository.Object, _eventRepository.Object, _apiUserRepository.Object, _groupService.Object, _contactService.Object, _congregationRepository.Object, _groupRepository.Object, _eventParticipantRepository.Object);
+            _medicalInformationRepository = new Mock<IMedicalInformationRepository>();
+            _fixture = new CampService(_campService.Object, 
+                                       _formSubmissionRepository.Object, 
+                                       _configurationWrapper.Object, 
+                                       _participantRepository.Object, 
+                                       _eventRepository.Object, 
+                                       _apiUserRepository.Object, 
+                                       _groupService.Object,
+                                       _contactService.Object,
+                                       _congregationRepository.Object,
+                                       _groupRepository.Object,
+                                       _eventParticipantRepository.Object,
+                                       _medicalInformationRepository.Object);
         }
 
         [Test]
@@ -170,7 +183,6 @@ namespace crds_angular.test.Services
             var token = "asdfasdfasdfasdf";
             var apiToken = "apiToken";
             var myContactId = 2187211;
-            var signedUpDate = DateTime.Now;
             var eventId = 5433;
             var myContact = getFakeContact(myContactId);
 
@@ -231,6 +243,32 @@ namespace crds_angular.test.Services
             var result = _fixture.GetEligibleFamilyMembers(eventId, token);
             Assert.AreEqual(result.Count, 0);
             _contactService.VerifyAll();
+        }
+
+        [Test]
+        public void ShouldSaveMedicalInfo()
+        {
+            const string token = "theToken";
+            var contactId = 123;
+            var medicalInfo = new MedicalInfoDTO
+            {
+                InsuranceCompany = "Ins. Co. Name",
+                PhysicianName = "bobby",
+                PhysicianPhone = "123-4567",
+                PolicyHolder = "your mom"
+            };
+
+            var mpMedInfo = new MpMedicalInformation
+            {
+                InsuranceCompany = "Ins. Co. Name",
+                PhysicianName = "bobby",
+                PhysicianPhone = "123-4567",
+                PolicyHolder = "your mom"
+            };
+
+            _medicalInformationRepository.Setup(m => m.SaveMedicalInformation(mpMedInfo, 123));
+           
+            Assert.DoesNotThrow(() =>_fixture.SaveCamperMedicalInfo(medicalInfo, contactId, token));
         }
 
         [Test]
