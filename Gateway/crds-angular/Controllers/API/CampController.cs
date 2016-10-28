@@ -167,7 +167,7 @@ namespace crds_angular.Controllers.API
             {
                 try
                 {
-                    _campService.SaveCamperEmergencyContactInfo(emergencyContact, eventId, contactId);
+                    _campService.SaveCamperEmergencyContactInfo(emergencyContact, eventId, contactId, token);
                     return Ok();
                 }
 
