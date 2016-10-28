@@ -117,6 +117,7 @@ namespace crds_angular.test.Services
             _communicationService.Setup(m => m.GetTemplate(rsvpYesId)).Returns(mockRsvpYesTemplate);
             _communicationService.Setup(m => m.GetTemplate(rsvpNoId)).Returns(mockRsvpNoTemplate);
             _communicationService.Setup(m => m.GetTemplate(rsvpChangeId)).Returns(mockRsvpChangedTemplate);
+            _configurationWrapper.Setup(m => m.GetConfigIntValue("RSVPYesId")).Returns(1);
 
 
             _authenticationService.Setup(mocked => mocked.GetContactId(It.IsAny<string>())).Returns(123456);
@@ -1135,7 +1136,7 @@ namespace crds_angular.test.Services
             var responses = new List<MinistryPlatform.Translation.Models.MpResponse>();
             for (var i = 0; i < 20; i++)
             {
-                responses.Add(new MinistryPlatform.Translation.Models.MpResponse { Event_ID = 1000});
+                responses.Add(new MinistryPlatform.Translation.Models.MpResponse { Event_ID = 1000, Response_Result_ID = 1 });
             }
             return responses;
         }
@@ -1145,7 +1146,7 @@ namespace crds_angular.test.Services
             var responses = new List<MinistryPlatform.Translation.Models.MpResponse>();
             for (var i = 0; i < 15; i++)
             {
-                responses.Add(new MinistryPlatform.Translation.Models.MpResponse { Event_ID = 1000});
+                responses.Add(new MinistryPlatform.Translation.Models.MpResponse { Event_ID = 1000, Response_Result_ID = 1 });
             }
             return responses;
         }
