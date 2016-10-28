@@ -20,7 +20,6 @@ class CampController {
     this.campsService.campTitle = this.campsService.campInfo.eventTitle;
     this.isClosed = !isBetween(this.campsService.campInfo.registrationStartDate,
                                this.campsService.campInfo.registrationEndDate);
-    this.cmsMessage = this.rootScope.MESSAGES.summercampIntro.content;
     this.viewReady = true;
   }
 

@@ -7,6 +7,7 @@ class CampsFamilyController {
 
   $onInit() {
     this.log.debug('Camps Family Controller Initialized!');
+    this.cmsMessage = this.rootScope.MESSAGES.summercampIntro.content;
   }
 
   // eslint-disable-next-line class-methods-use-this
