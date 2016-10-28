@@ -25,13 +25,15 @@ export default class CampWaiversController {
     const approved = this.signature === 'guardian' || this.signature === 'self';
     const params = [];
 
-    forEach(this.waivers, (waiver) => {
-      params.push({
-        waiverId: waiver.waiverId,
-        approved
+    if (this.waivers.length > 0) {
+      forEach(this.waivers, (waiver) => {
+        params.push({
+          waiverId: waiver.waiverId,
+          approved
+        });
       });
-    });
 
-    this.campsService.submitWaivers(this.$stateParams.campId, this.$stateParams.contactId, params);
+      this.campsService.submitWaivers(this.$stateParams.campId, this.$stateParams.contactId, params);
+    }
   }
 }
