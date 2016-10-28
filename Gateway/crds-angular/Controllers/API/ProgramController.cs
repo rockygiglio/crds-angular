@@ -20,7 +20,7 @@ namespace crds_angular.Controllers.API
         }
 
         [ResponseType(typeof(IList<ProgramDTO>))]
-        [VersionedRoute(template: "all-programs", minimumVersion: "1.0.0")]
+        [VersionedRoute(template: "allPrograms", minimumVersion: "1.0.0")]
         [Route("all-programs")]
         public IHttpActionResult Get()
         {
