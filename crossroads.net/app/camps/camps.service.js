@@ -6,10 +6,15 @@ class CampService {
     this.resource = $resource;
     // eslint-disable-next-line prefer-template
     this.campResource = $resource(__API_ENDPOINT__ + 'api/camps/:campId');
+    // eslint-disable-next-line prefer-template
+    this.camperResource = $resource(__API_ENDPOINT__ + 'api/camps/:campId/:camperId');
+    // eslint-disable-next-line prefer-template
     this.camperResource = $resource(__API_ENDPOINT__ + 'api/camps/:campId/:camperId');
     // eslint-disable-next-line prefer-template
     this.campDashboard = $resource(__API_ENDPOINT__ + 'api/my-camp');
-    this.campFamily = $resource(`${__API_ENDPOINT__}api/camps/:campId/family`);
+    // eslint-disable-next-line prefer-template
+    this.campFamily = $resource(__API_ENDPOINT__ + 'api/camps/:campId/family');
+    // eslint-disable-next-line prefer-template
     this.campWaiversResource = $resource(__API_ENDPOINT__ + 'api/camps/waivers/:campId');
     this.campInfo = {};
     this.camperInfo = {};

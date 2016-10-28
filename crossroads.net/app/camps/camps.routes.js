@@ -6,8 +6,8 @@ function getCampInfo(CampsService, $stateParams) {
 }
 
 function getCamperInfo(CampsService, $stateParams) {
-  let camperId = $stateParams.camperId;
-  let campId = $stateParams.campId;
+  const camperId = $stateParams.camperId;
+  const campId = $stateParams.campId;
   return CampsService.getCamperInfo(campId, camperId);
 }
 
@@ -52,15 +52,6 @@ export default function CampRoutes($stateProvider) {
         }
       }
     })
-    .state('campsignup.camper', {
-      url: '/:camperId',
-      template: '<camper-info></camper-info>',
-      resolve: {
-        campsService: 'CampsService',
-        getCamperInfo: getCamperInfo,
-        $stateParams: '$stateParams'
-      }
-    })
     .state('crossroads-camp.waivers', {
       parent: 'noSideBar',
       url: '/camps/:campId/waivers',
@@ -76,6 +67,19 @@ export default function CampRoutes($stateProvider) {
     })
     .state('campsignup.family', {
       url: '/family',
-      template: '<camps-family></camps-family>'
+      template: '<camps-family></camps-family>',
+    })
+    .state('campsignup.application', {
+      url: '/:page/:contactId',
+      template: '<camps-application-page></camps-application-page>'
+    })
+    .state('campsignup.camper', {
+      url: '/:camperId',
+      template: '<camper-info></camper-info>',
+      resolve: {
+        campsService: 'CampsService',
+        getCamperInfo,
+        $stateParams: '$stateParams'
+      }
     });
 }

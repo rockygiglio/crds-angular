@@ -12,6 +12,7 @@
     'Session',
     'ServeOpportunities',
     'Groups',
+    'leader',
     'AUTH_EVENTS',
     'ServeTeamService'
   ];
@@ -25,6 +26,7 @@
     Session,
     ServeOpportunities,
     Groups,
+    leader,
     AUTH_EVENTS,
     ServeTeamService
     ) {
@@ -41,7 +43,7 @@
     vm.original = [];
     vm.showButton = showButton;
     vm.showNoOpportunitiesMsg = showNoOpportunitiesMsg;
-    vm.isLeader = false;
+    vm.isLeader = leader.isLeader;
 
     activate();
 
@@ -72,9 +74,6 @@
 
     function activate() {
       vm.lastDate = formatDate(new Date(), 28);
-      ServeTeamService.getIsLeader().then((data) => {
-        vm.isLeader = data.isLeader;
-        });
     }
 
     function addOneMonth(date) {

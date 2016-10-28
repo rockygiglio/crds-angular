@@ -112,7 +112,10 @@ namespace MinistryPlatform.Translation.Test.Services
                 }
             };
 
-            string search = $"Group_Participants.participant_id = {participantId} and Group_Role_ID =  {GroupLeaderRole}" +
+            string search = $"Group_Participants.participant_id = {participantId}" +
+                            $" AND Group_Role_ID = {GroupLeaderRole}" +
+                            $" AND (Group_ID_Table.End_Date > '{DateTime.Now:yyyy-MM-dd H:mm:ss}' OR Group_ID_Table.End_Date Is Null)" +
+                            $" AND (Group_Participants.End_Date > '{DateTime.Now:yyyy-MM-dd H:mm:ss}' OR Group_Participants.End_Date Is Null)" +
                             $" AND Group_ID_Table.Group_Type_ID = {groupType}";
 
             _apiUserRepository.Setup(mocked => mocked.GetToken()).Returns("yeah!");
@@ -199,7 +202,11 @@ namespace MinistryPlatform.Translation.Test.Services
                     Name = "group three"
                 }
             };
-            string search = $"Group_Participants.participant_id = {participantId} and Group_Role_ID =  {GroupLeaderRole}";
+            string search = $"Group_Participants.participant_id = {participantId}" +
+                            $" AND Group_Role_ID = {GroupLeaderRole}" +
+                            $" AND (Group_ID_Table.End_Date > '{DateTime.Now:yyyy-MM-dd H:mm:ss}' OR Group_ID_Table.End_Date Is Null)" +
+                            $" AND (Group_Participants.End_Date > '{DateTime.Now:yyyy-MM-dd H:mm:ss}' OR Group_Participants.End_Date Is Null)";
+
             _apiUserRepository.Setup(mocked => mocked.GetToken()).Returns("yeah!");
             _ministryPlatformRestRepository.Setup(mocked => mocked.UsingAuthenticationToken("yeah!")).Returns(_ministryPlatformRestRepository.Object);
             _ministryPlatformRestRepository.Setup(mocked => mocked.Search<MpGroupParticipant>(
@@ -209,7 +216,7 @@ namespace MinistryPlatform.Translation.Test.Services
                 false))
                 .Returns(groupParticipantReturn);
 
-            var result = _fixture.GetAllGroupNamesLeadByParticipant(participantId);
+            var result = _fixture.GetAllGroupNamesLeadByParticipant(participantId, null);
 
             Assert.IsNotNull(result);
             Assert.AreEqual(result.Count, 3, "Result count should be three groups");
@@ -283,7 +290,8 @@ namespace MinistryPlatform.Translation.Test.Services
                 }
             };
             string csvGroupIds = "1,2,3";
-            string search = $"group_participants.group_id in ({csvGroupIds})";
+            string search = $"group_participants.group_id in ({csvGroupIds})" +
+                            $" AND (Group_Participants.End_Date > '{DateTime.Now:yyyy-MM-dd H:mm:ss}' OR Group_Participants.End_Date Is Null)";
 
             _apiUserRepository.Setup(mocked => mocked.GetToken()).Returns("yeah!");
             _ministryPlatformRestRepository.Setup(mocked => mocked.UsingAuthenticationToken("yeah!")).Returns(_ministryPlatformRestRepository.Object);
@@ -373,7 +381,8 @@ namespace MinistryPlatform.Translation.Test.Services
                 }
             };
             string csvGroupIds = "1,2,3";
-            string search = $"group_participants.group_id in ({csvGroupIds})";
+            string search = $"group_participants.group_id in ({csvGroupIds})" +
+                            $" AND (Group_Participants.End_Date > '{DateTime.Now:yyyy-MM-dd H:mm:ss}' OR Group_Participants.End_Date Is Null)";
 
             _apiUserRepository.Setup(mocked => mocked.GetToken()).Returns("yeah!");
             _ministryPlatformRestRepository.Setup(mocked => mocked.UsingAuthenticationToken("yeah!")).Returns(_ministryPlatformRestRepository.Object);
@@ -462,7 +471,8 @@ namespace MinistryPlatform.Translation.Test.Services
                     GroupId = 3
                 }
             };
-            string search = $"group_participants.group_id in ({groupId})";
+            string search = $"group_participants.group_id in ({groupId})" +
+                            $" AND (Group_Participants.End_Date > '{DateTime.Now:yyyy-MM-dd H:mm:ss}' OR Group_Participants.End_Date Is Null)";
 
             _apiUserRepository.Setup(mocked => mocked.GetToken()).Returns("yeah!");
             _ministryPlatformRestRepository.Setup(mocked => mocked.UsingAuthenticationToken("yeah!")).Returns(_ministryPlatformRestRepository.Object);
@@ -529,7 +539,10 @@ namespace MinistryPlatform.Translation.Test.Services
                 },
             };
 
-            var search = $"Group_Participants.participant_id = {participantId} and Group_Role_ID = {GroupLeaderRole}";
+            var search = $"Group_Participants.participant_id = {participantId}" +
+                            $" AND Group_Role_ID = {GroupLeaderRole}" +
+                            $" AND (Group_ID_Table.End_Date > '{DateTime.Now:yyyy-MM-dd H:mm:ss}' OR Group_ID_Table.End_Date Is Null)" +
+                            $" AND (Group_Participants.End_Date > '{DateTime.Now:yyyy-MM-dd H:mm:ss}' OR Group_Participants.End_Date Is Null)";
 
             _apiUserRepository.Setup(mocked => mocked.GetToken()).Returns("yeah!");
             _ministryPlatformRestRepository.Setup(mocked => mocked.UsingAuthenticationToken("yeah!")).Returns(_ministryPlatformRestRepository.Object);
@@ -591,8 +604,11 @@ namespace MinistryPlatform.Translation.Test.Services
                 },
             };
 
-            var search = $"Group_Participants.participant_id = {participantId} and Group_Role_ID = {GroupLeaderRole}" +
-                         $" AND Group_ID_Table.Group_Type_ID = {groupType}";
+            var search = $"Group_Participants.participant_id = {participantId}" +
+                            $" AND Group_Role_ID = {GroupLeaderRole}" +
+                            $" AND (Group_ID_Table.End_Date > '{DateTime.Now:yyyy-MM-dd H:mm:ss}' OR Group_ID_Table.End_Date Is Null)" +
+                            $" AND (Group_Participants.End_Date > '{DateTime.Now:yyyy-MM-dd H:mm:ss}' OR Group_Participants.End_Date Is Null)" +
+                            $" AND Group_ID_Table.Group_Type_ID = {groupType}";
 
             _apiUserRepository.Setup(mocked => mocked.GetToken()).Returns("yeah!");
             _ministryPlatformRestRepository.Setup(mocked => mocked.UsingAuthenticationToken("yeah!")).Returns(_ministryPlatformRestRepository.Object);
@@ -675,7 +691,10 @@ namespace MinistryPlatform.Translation.Test.Services
                 },
             };
 
-            string search = $"group_participants.participant_id = {participantId} AND group_participants.group_role_id = {GroupLeaderRole}";
+            string search = $"group_participants.participant_id = {participantId}" +
+                                   $" AND group_participants.group_role_id = {GroupLeaderRole}" +
+                                   $" AND (Group_ID_Table.End_Date > '{DateTime.Now:yyyy-MM-dd H:mm:ss}' OR Group_ID_Table.End_Date Is Null)" +
+                                   $" AND (Group_Participants.End_Date > '{DateTime.Now:yyyy-MM-dd H:mm:ss}' OR Group_Participants.End_Date Is Null)";
 
             _apiUserRepository.Setup(mocked => mocked.GetToken()).Returns("yeah!");
             _ministryPlatformRestRepository.Setup(mocked => mocked.UsingAuthenticationToken("yeah!")).Returns(_ministryPlatformRestRepository.Object);
@@ -686,7 +705,7 @@ namespace MinistryPlatform.Translation.Test.Services
                 false))
                 .Returns(leadersGroupParticipantRecords);
 
-            var result = _fixture.GetLeadersGroupIds(participantId);
+            var result = _fixture.GetLeadersGroupIds(participantId, null);
 
             _ministryPlatformRestRepository.VerifyAll();
 
@@ -743,8 +762,11 @@ namespace MinistryPlatform.Translation.Test.Services
                 },
             };
 
-            string search = $"group_participants.participant_id = {participantId} AND group_participants.group_role_id = {GroupLeaderRole}" +
-                        $" AND Group_ID_Table.Group_Type_ID = {groupType}";
+            string search = $"group_participants.participant_id = {participantId}" +
+                            $" AND group_participants.group_role_id = {GroupLeaderRole}" +
+                            $" AND (Group_ID_Table.End_Date > '{DateTime.Now:yyyy-MM-dd H:mm:ss}' OR Group_ID_Table.End_Date Is Null)" +
+                            $" AND (Group_Participants.End_Date > '{DateTime.Now:yyyy-MM-dd H:mm:ss}' OR Group_Participants.End_Date Is Null)" +
+                            $" AND Group_ID_Table.Group_Type_ID = {groupType}";
 
             _apiUserRepository.Setup(mocked => mocked.GetToken()).Returns("yeah!");
             _ministryPlatformRestRepository.Setup(mocked => mocked.UsingAuthenticationToken("yeah!")).Returns(_ministryPlatformRestRepository.Object);

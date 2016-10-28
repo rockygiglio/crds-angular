@@ -1,27 +1,27 @@
 <div class="wrapper" id="wrapper">
   <countdown-header></countdown-header>
 
-  <section ng-if = "landing.streamStatus == 'Live'" id="intro" class="intro imgix-fluid-bg crds-hero" data-src="//crds-cms-uploads.imgix.net/content/images/streaming--anywhere-hero.jpg?w=1&crop=faces&fit=crop">
+  <section ng-if="landing.streamStatus == 'Live'" id="intro" class="intro imgix-fluid-bg crds-hero" data-src="{{ landing.introImage() }}">
     <div class="wow fadeInUp">
-      <div dynamic-content="$root.MESSAGES.streamingLandingIntroBroadcasting.content | html"></div>
-      <p class="wow fadeIn"><a href="/live/stream" class="btn btn-primary">Watch Now</a></p>
+      <div class="live" dynamic-content="$root.MESSAGES.streamingLandingIntroBroadcasting.content | html"></div>
     </div>
   </section>
 
-  <section ng-if = "landing.streamStatus == 'Upcoming'" id="intro" class="intro imgix-fluid-bg crds-hero" data-src="//crds-cms-uploads.imgix.net/content/images/streaming--anywhere-hero.jpg?w=1&crop=faces&fit=crop">
+  <section ng-if="landing.streamStatus == 'Upcoming'" id="intro" class="intro imgix-fluid-bg crds-hero" data-src="{{ landing.introImage() }}">
     <div class="wow fadeInUp">
-      <div dynamic-content="$root.MESSAGES.streamingLandingIntroUpcoming.content | html"></div>
+      <div class="upcoming" dynamic-content="$root.MESSAGES.streamingLandingIntroUpcoming.content | html"></div>
     </div>
   </section>
 
-  <section ng-if = "landing.streamStatus == 'Off'" id="intro" class="intro imgix-fluid-bg crds-hero" data-src="//crds-cms-uploads.imgix.net/content/images/streaming--anywhere-hero.jpg?w=1&crop=faces&fit=crop">
+  <section ng-if="landing.streamStatus == 'Off'" id="intro" class="intro imgix-fluid-bg crds-hero" data-src="{{ landing.introImage() }}">
     <div class="wow fadeInUp">
-      <div dynamic-content="$root.MESSAGES.streamingLandingIntroOff.content | html"></div>
+      <div class="off" dynamic-content="$root.MESSAGES.streamingLandingIntroOff.content | html"></div>
     </div>
   </section>
 
+  <countdown-intro ng-show="landing.streamStatus === 'Upcoming'"></countdown-intro>
   <current-series></current-series>
-  
+
   <section class="past-weekends">
     <div class="container">
       <header>
@@ -46,7 +46,7 @@
     </div>
   </section>
   <section class="community crds-hero">
-    <div class="background"></div>  
+    <div class="background"></div>
     <div class="overlay">
       <div class="wow fadeInUp">
         <div dynamic-content="$root.MESSAGES.streamingLandingCommunity.content | html" ></div>

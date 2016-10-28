@@ -221,6 +221,14 @@ streaming, landing {
       font-size: 125%;
     }
 
+    p {
+      font-size: initial;
+
+      &.lead {
+        font-size: 125%;
+      }
+    }
+
     h1 {
       font-size: 238%;
       @media (min-width: $screen-md-min) {
@@ -232,6 +240,38 @@ streaming, landing {
 
     @media (min-width: $screen-sm-min) {
       min-height: 550px;
+    }
+
+    countdown-intro {
+      &.hidden {
+        display: none;
+      }
+      ul {
+        background: rgba(0,0,0,0.1);
+        border: 1px solid rgba(255,255,255,0.3);
+        padding: 22px 0 15px;
+
+        @media (min-width: $screen-lg-min) {
+          display: inline-block;
+          padding: 22px 25px 15px;
+
+        }
+      }
+      li {
+        line-height: 120%;
+        min-width: 45px;
+        strong {
+          font-size: 150%;
+          display: block;
+
+          &.muted {
+            color: $cr-grey;
+          }
+        }
+        small {
+          color: $cr-grey;
+        }
+      }
     }
   }
 

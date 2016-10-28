@@ -8,7 +8,7 @@ export default function CountdownHomeComponent() {
     restrict: 'E',
     templateUrl: 'countdown_home/countdownHome.html',
     controller: controller,
-    controllerAs: 'countdownHome',
+    controllerAs: 'countdown',
     bindToController: true
   }
 

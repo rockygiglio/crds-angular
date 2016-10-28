@@ -27,6 +27,8 @@ describe('GroupMessageController', () => {
 			return deferred.promise;
 		});
 
+		serveTeamService.isLeader = true;
+
 		fixture.$onInit();
 
 		expect(fixture.tinymceOptions.resize).toEqual(false);
@@ -35,7 +37,7 @@ describe('GroupMessageController', () => {
 		expect(fixture.tinymceOptions.statusbar).toEqual(false);
 		expect(fixture.tinymceOptions.plugins).toEqual('paste link legacyoutput textcolor');
 		expect(fixture.tinymceOptions.valid_elements).toEqual('ol,ul,li,p,br,strong/b,i,em,a[href|target=_blank],p,br');
-		expect(fixture.tinymceOptions.toolbar).toEqual('undo redo | fontselect fontsizeselect forecolor backcolor | bold italic underline | alignleft aligncenter alignright | numlist bullist outdent indent | link');
+		expect(fixture.tinymceOptions.toolbar).toEqual('undo redo | fontselect fontsizeselect forecolor backcolor | bold italic underline | alignleft aligncenter alignright | numlist bullist | link');
 
 	});
 });

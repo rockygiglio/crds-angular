@@ -8,7 +8,7 @@ export default function CountdownHeaderComponent() {
     restrict: 'E',
     templateUrl: 'countdown_header/countdownHeader.html',
     controller: controller,
-    controllerAs: 'countdownHeader',
+    controllerAs: 'countdown',
     bindToController: true
   }
 
