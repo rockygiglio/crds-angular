@@ -20,6 +20,44 @@ streaming, landing {
     font-weight: 300;
   }
 
+  .countdown {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+
+    &__timer {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
+      .list-inline {
+        margin-bottom: 0;
+        min-width: 141px;
+      }
+    }
+
+    &__text {
+      padding-bottom: 3px;
+    }
+
+    .btn-reminder {
+      display: flex;
+      align-items: center;
+    }
+  }
+
+  @media (min-width: 500px) {
+    .countdown__timer {
+      flex-flow: row nowrap;
+      align-items: center;
+    }
+
+    .countdown__text {
+      padding-bottom: 0;
+      padding-right: 3px;
+    }
+  }
+
   > .wrapper {
     @include make-row();
     @include clearfix();
@@ -29,6 +67,7 @@ streaming, landing {
     .navbar-section .container {
       display: flex;
       justify-content: center;
+      align-items: center;
     }
   }
 
@@ -121,8 +160,8 @@ streaming, landing {
       }
 
       i, ul, .btn-reminder {
-        display: table-cell;
-        vertical-align: middle;
+        // display: table-cell;
+        // vertical-align: middle;
       }
 
       i {
@@ -132,7 +171,7 @@ streaming, landing {
         letter-spacing: -0.015em;
         padding-right: 1em;
         @media (max-width: $screen-sm-min) {
-          padding-right: 0;
+          // padding-right: 0;
           font-size: 100%;
         }
       }
@@ -629,17 +668,20 @@ streaming, landing {
     @media (min-width: $screen-sm-min) {
       .container {
         display: flex;
-        flex-direction:column;
+        flex-direction: column;
         height: 100%;
+
         > div {
           flex: 1 0 auto;
           display:flex;
         }
+
         article {
           margin-bottom: 0;
           width: 33%;
           padding: 0 2em;
           border-left: 1px solid $gray-lighter;
+
           &:first-child {
             border-left: none;
           }
