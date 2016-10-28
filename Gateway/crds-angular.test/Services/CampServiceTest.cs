@@ -205,12 +205,39 @@ namespace crds_angular.test.Services
         public void shouldSaveEmergencyContact()
         {
             var contactId = 12345;
+            var token = "444";
             var formId = 10;
             var eventId = 6789;
             var participant = new MpParticipant
             {
                 ParticipantId = 2
             };
+            var myContact = new MpMyContact
+            {
+                Contact_ID = 999999,
+                Household_ID = 77777
+            };
+
+            var myHousehold = new List<MpHouseholdMember>
+            {
+                new MpHouseholdMember
+                {
+                    ContactId = contactId
+                }
+            };
+
+            var otherHousehold = new List<MpHouseholdMember>
+            {
+                new MpHouseholdMember
+                {
+                    ContactId = 5555555
+                }
+            };
+
+            _apiUserRepository.Setup(m => m.GetToken()).Returns(token);
+            _contactService.Setup(m => m.GetMyProfile(token)).Returns(myContact);
+            _contactService.Setup(m => m.GetHouseholdFamilyMembers(myContact.Household_ID)).Returns(myHousehold);
+            _contactService.Setup(m => m.GetOtherHouseholdMembers(myContact.Contact_ID)).Returns(otherHousehold);
             _participantRepository.Setup(m => m.GetParticipant(contactId)).Returns(participant);
             _eventRepository.Setup(m => m.SafeRegisterParticipant(eventId, participant.ParticipantId, 0, 0));
             _configurationWrapper.Setup(m => m.GetConfigIntValue("SummerCampFormID")).Returns(formId);
