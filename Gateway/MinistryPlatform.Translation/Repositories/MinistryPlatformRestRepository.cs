@@ -235,10 +235,13 @@ namespace MinistryPlatform.Translation.Repositories
             var response = _ministryPlatformRestClient.Execute(request);
             _authToken.Value = null;
             response.CheckForErrors($"Error getting {tableName}", true);
-
-            var jsonResponse = JObject.Parse(response.Content.TrimStart('[').TrimEnd(']'));
-            var returnVal = jsonResponse.Values().FirstOrDefault().Value<T>();
-            return returnVal == null ? default(T) : returnVal;
+            var returnVal = default(T);
+            if (response.Content.Length > 2)
+            {
+                var jsonResponse = JObject.Parse(response.Content.TrimStart('[').TrimEnd(']'));
+                returnVal = jsonResponse.Values().FirstOrDefault().Value<T>();
+            }
+            return returnVal;
         }
 
         public void UpdateRecord(string tableName, int recordId, Dictionary<string, object> fields)
