@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using crds_angular.Exceptions;
 using crds_angular.Models.Crossroads.Camp;
 using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Interfaces;
@@ -148,6 +149,10 @@ namespace crds_angular.Services
                 };
 
                 _formSubmissionRepository.SubmitFormResponse(formResponse);
+            }
+            else
+            {
+               throw new ContactNotFoundException(contactId);
             }
         }
 
