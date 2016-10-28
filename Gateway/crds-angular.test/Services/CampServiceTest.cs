@@ -293,6 +293,32 @@ namespace crds_angular.test.Services
                 PolicyHolder = "your mom"
             };
 
+            var myContact = new MpMyContact
+            {
+                Contact_ID = 999999,
+                Household_ID = 77777
+            };
+
+            var myHousehold = new List<MpHouseholdMember>
+            {
+                new MpHouseholdMember
+                {
+                    ContactId = contactId
+                }
+            };
+
+            var otherHousehold = new List<MpHouseholdMember>
+            {
+                new MpHouseholdMember
+                {
+                    ContactId = 5555555
+                }
+            };
+
+            _contactService.Setup(m => m.GetMyProfile(token)).Returns(myContact);
+            _contactService.Setup(m => m.GetHouseholdFamilyMembers(myContact.Household_ID)).Returns(myHousehold);
+            _contactService.Setup(m => m.GetOtherHouseholdMembers(myContact.Contact_ID)).Returns(otherHousehold);
+
             _medicalInformationRepository.Setup(m => m.SaveMedicalInformation(mpMedInfo, 123));
            
             Assert.DoesNotThrow(() =>_fixture.SaveCamperMedicalInfo(medicalInfo, contactId, token));
