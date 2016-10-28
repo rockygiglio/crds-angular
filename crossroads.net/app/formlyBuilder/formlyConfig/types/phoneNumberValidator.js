@@ -5,6 +5,9 @@ function addPhoneNumberValidator(formlyConfig) {
       validators: {
         phoneNumber: {
           expression: (value) => {
+            if (value == null) {
+              return true;
+            }
             const regex = /^\(?(\d{3})\)?[\s.-]?(\d{3})[\s.-]?(\d{4})$/;
             return regex.test(value);
           },

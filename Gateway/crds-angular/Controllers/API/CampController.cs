@@ -142,6 +142,32 @@ namespace crds_angular.Controllers.API
                     throw new HttpResponseException(apiError.HttpResponseMessage);
                 }
             });
+        }     
+
+        [Route("api/camps/medical/{contactid}")]
+        [AcceptVerbs("POST")]
+        public IHttpActionResult SaveMedicalInformation([FromBody] MedicalInfoDTO medicalInfo, int contactId)
+        {
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState.Values.SelectMany(val => val.Errors).Aggregate("", (current, err) => current + err.Exception.Message);
+                var dataError = new ApiErrorDto("Camper Medical Info Invalid", new InvalidOperationException("Invalid Camper Medical Data" + errors));
+                throw new HttpResponseException(dataError.HttpResponseMessage);
+            }
+
+            return Authorized(token =>
+            {
+                try
+                {
+                    _campService.SaveCamperMedicalInfo(medicalInfo, contactId, token);
+                    return Ok();
+                }
+                catch (Exception e)
+                {
+                    var apiError = new ApiErrorDto("Camp Medical Info failed", e);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+            });
         }
 
         [Route("api/camps/{eventId}/waivers/{contactId}")]
@@ -167,6 +193,8 @@ namespace crds_angular.Controllers.API
                     var apiError = new ApiErrorDto("Failed to save waiver data", e);
                     throw new HttpResponseException(apiError.HttpResponseMessage);
                 }
+
+                
             });
         }
 
@@ -185,7 +213,7 @@ namespace crds_angular.Controllers.API
             {
                 try
                 {
-                    _campService.SaveCamperEmergencyContactInfo(emergencyContact, eventId, contactId);
+                    _campService.SaveCamperEmergencyContactInfo(emergencyContact, eventId, contactId, token);
                     return Ok();
                 }
 

@@ -17,6 +17,12 @@ describe('Geolocation Controller', () => {
 
   it('should add to number of watchers', () => {
 
+    expect(fixture.location.count).toBe(0);
+    expect(fixture.subject).toBe('people');
+    expect(fixture.verb).toBe('are');
+
+    fixture.add();
+
     expect(fixture.location.count).toBe(1);
     expect(fixture.subject).toBe('person');
     expect(fixture.verb).toBe('is');
@@ -26,46 +32,32 @@ describe('Geolocation Controller', () => {
     expect(fixture.location.count).toBe(2);
     expect(fixture.subject).toBe('people');
     expect(fixture.verb).toBe('are');
-
-    fixture.add();
-
-    expect(fixture.location.count).toBe(3);
-    expect(fixture.subject).toBe('people');
-    expect(fixture.verb).toBe('are');
   });
 
-  it('should increment / decrement appropriately (greater than 0)', () => {
+  it('should increment / decrement appropriately', () => {
     fixture.add();
     fixture.add();
 
-    expect(fixture.location.count).toBe(3);
-
-    fixture.subtract();
     expect(fixture.location.count).toBe(2);
-    expect(fixture.subject).toBe('people');
-    expect(fixture.verb).toBe('are');
 
     fixture.subtract();
     expect(fixture.location.count).toBe(1);
     expect(fixture.subject).toBe('person');
     expect(fixture.verb).toBe('is');
-    
+
     fixture.subtract();
-    expect(fixture.location.count).toBe(1);
+    expect(fixture.location.count).toBe(0);
+    expect(fixture.subject).toBe('people');
+    expect(fixture.verb).toBe('are');
+
+    fixture.subtract();
+    expect(fixture.location.count).toBe(0);
   });
 
-  it('should not enable submit w/o count or zipcode', () => {
-
-    expect(fixture.submitEnabled()).toBeTruthy();
-
-    fixture.subtract();
-    expect(fixture.submitEnabled()).toBeTruthy();
-
-    fixture.add();
-    expect(fixture.submitEnabled()).toBeTruthy();
-
-    fixture.location.zipcode = '45202';
-    expect(fixture.submitEnabled()).toBeTruthy();
+  it('should dismiss w/o count or zipcode', () => {
+    fixture.submit();
+    expect(fixture.locationService.answered).toBe(true);
+    expect(fixture.success).toBe(false);
   });
 
   it('should not submit an invalid zipcode', () => {

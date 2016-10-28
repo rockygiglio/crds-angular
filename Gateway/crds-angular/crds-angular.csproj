@@ -323,6 +323,7 @@
     <Compile Include="Models\Crossroads\Camp\CampReservationDTO.cs" />
     <Compile Include="Models\Crossroads\Camp\CampWaiverDTO.cs" />
     <Compile Include="Models\Crossroads\Camp\CampWaiverResponseDTO.cs" />
+    <Compile Include="Models\Crossroads\Camp\MedicalInfoDTO.cs" />
     <Compile Include="Models\Crossroads\Camp\MyCampDTO.cs" />
     <Compile Include="Models\Crossroads\Childcare\ChildcareDashboardDto.cs" />
     <Compile Include="Models\Crossroads\Childcare\ChildCareDate.cs" />

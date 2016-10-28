@@ -18,6 +18,7 @@ namespace MinistryPlatform.Translation.Test.Services
         private Mock<IAuthenticationRepository> _authService;
         private Mock<IConfigurationWrapper> _configWrapper;
         private Mock<IDbConnection> _dbConnection;
+        private Mock<IMinistryPlatformRestRepository> _ministryPlatformRest;
         private MpFormResponse _mockForm;
         private MpFormAnswer _mockAnswer1, _mockAnswer2, _mockAnswer3;
         private const int formResponsePageId = 424;
@@ -31,12 +32,13 @@ namespace MinistryPlatform.Translation.Test.Services
             _authService = new Mock<IAuthenticationRepository>();
             _configWrapper = new Mock<IConfigurationWrapper>();
             _dbConnection = new Mock<IDbConnection>();
+            _ministryPlatformRest = new Mock<IMinistryPlatformRestRepository>();
 
             _configWrapper.Setup(m => m.GetEnvironmentVarAsString("API_USER")).Returns("uid");
             _configWrapper.Setup(m => m.GetEnvironmentVarAsString("API_PASSWORD")).Returns("pwd");
             _authService.Setup(m => m.Authenticate(It.IsAny<string>(), It.IsAny<string>())).Returns(new Dictionary<string, object> { { "token", "ABC" }, { "exp", "123" } });
 
-            _fixture = new FormSubmissionRepository(_ministryPlatformService.Object, _dbConnection.Object, _authService.Object, _configWrapper.Object);
+            _fixture = new FormSubmissionRepository(_ministryPlatformService.Object, _dbConnection.Object, _authService.Object, _configWrapper.Object, _ministryPlatformRest.Object);
 
             _mockAnswer1 = new MpFormAnswer
             {
@@ -120,11 +122,24 @@ namespace MinistryPlatform.Translation.Test.Services
                 {"Event_Participant_ID", null}
             };
 
+            
             _ministryPlatformService.Setup(m => m.CreateRecord(formResponsePageId, expectedResponseDict, It.IsAny<string>(), true)).Returns(responseId);
             _ministryPlatformService.Setup(m => m.CreateRecord(formAnswerPageId, expectedAnswerDict1, It.IsAny<string>(), true));
             _ministryPlatformService.Setup(m => m.CreateRecord(formAnswerPageId, expectedAnswerDict2, It.IsAny<string>(), true));
             _ministryPlatformService.Setup(m => m.CreateRecord(formAnswerPageId, expectedAnswerDict3, It.IsAny<string>(), true));
 
+            _ministryPlatformRest.Setup(m => m.UsingAuthenticationToken(It.IsAny<string>())).Returns(_ministryPlatformRest.Object);
+
+            var formResult = new List<MpFormResponse>();
+            var f = new MpFormResponse {FormResponseId = 0};
+            formResult.Add(f);
+            _ministryPlatformRest.Setup(m => m.Search<MpFormResponse>(It.IsAny<string>(), It.IsAny<string>(),null,true)).Returns(formResult);
+
+            var ansResult = new List<MpFormAnswer>();
+            var a = new MpFormAnswer {FormResponseAnswerId = 0};
+            _ministryPlatformRest.Setup(m => m.Search<MpFormAnswer>(It.IsAny<string>(), It.IsAny<string>(), null, true)).Returns(ansResult);
+
+            
             var result = _fixture.SubmitFormResponse(_mockForm);
 
             Assert.AreEqual(responseId, result);

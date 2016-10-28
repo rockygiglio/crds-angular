@@ -118,6 +118,7 @@
     <Compile Include="Models\DTO\PredefinedDonationAmountDTO.cs" />
     <Compile Include="Models\MpCamp.cs" />
     <Compile Include="Models\MpWaivers.cs" />
+    <Compile Include="Models\MpMedicalInformation.cs" />
     <Compile Include="Models\MpRecordID.cs" />
     <Compile Include="Models\MpWaiverResponse.cs" />
     <Compile Include="Models\MpStoredProcBool.cs" />
@@ -132,6 +133,7 @@
     <Compile Include="Models\MpRsvpMembers.cs" />
     <Compile Include="Models\MpSU2SOpportunity.cs" />
     <Compile Include="Repositories\Interfaces\IInvoiceRepository.cs" />
+    <Compile Include="Repositories\Interfaces\IMedicalInformationRepository.cs" />
     <Compile Include="Repositories\Interfaces\IPaymentRepository.cs" />
     <Compile Include="Repositories\Interfaces\IPaymentTypeRepository.cs" />
     <Compile Include="Repositories\Interfaces\ITripRepository.cs" />
@@ -141,6 +143,7 @@
     <Compile Include="Models\DTO\MpGroupSearchResultDto.cs" />
     <Compile Include="Models\MpAddress.cs" />
     <Compile Include="Models\MpAttribute.cs" />
+    <Compile Include="Models\Attributes\MpRestApiPrimaryKey.cs" />
     <Compile Include="Models\Attributes\MpRestApiTable.cs" />
     <Compile Include="Models\MpBulkEmailPublication.cs" />
     <Compile Include="Models\MpBulkEmailSubscriber.cs" />
@@ -250,6 +253,7 @@
     <Compile Include="Repositories\Interfaces\IGroupToolRepository.cs" />
     <Compile Include="Repositories\Interfaces\IMinistryPlatformRestRepository.cs" />
     <Compile Include="Repositories\InvoiceRepository.cs" />
+    <Compile Include="Repositories\MedicalInformationRepository.cs" />
     <Compile Include="Repositories\MinistryPlatformRestRepository.cs" />
     <Compile Include="Repositories\PaymentRepository.cs" />
     <Compile Include="Repositories\PaymentTypeRepository.cs" />
@@ -269,7 +273,7 @@
     <Compile Include="Repositories\EventParticipantRepository.cs" />
     <Compile Include="Repositories\EventRepository.cs" />
     <Compile Include="Repositories\CommunicationRepository.cs" />
-    <Compile Include="Repositories\FormSubmissionRepository..cs" />
+    <Compile Include="Repositories\FormSubmissionRepository.cs" />
     <Compile Include="Repositories\AttributeRepository.cs" />
     <Compile Include="Repositories\GetMyRecordsRepository..cs" />
     <Compile Include="Repositories\GroupParticipantRepository.cs" />

@@ -20,6 +20,44 @@ streaming, landing {
     font-weight: 300;
   }
 
+  .countdown {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+
+    &__timer {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
+      .list-inline {
+        margin-bottom: 0;
+        min-width: 141px;
+      }
+    }
+
+    &__text {
+      padding-bottom: 3px;
+    }
+
+    .btn-reminder {
+      display: flex;
+      align-items: center;
+    }
+  }
+
+  @media (min-width: 500px) {
+    .countdown__timer {
+      flex-flow: row nowrap;
+      align-items: center;
+    }
+
+    .countdown__text {
+      padding-bottom: 0;
+      padding-right: 3px;
+    }
+  }
+
   > .wrapper {
     @include make-row();
     @include clearfix();
@@ -29,6 +67,7 @@ streaming, landing {
     .navbar-section .container {
       display: flex;
       justify-content: center;
+      align-items: center;
     }
   }
 
@@ -51,7 +90,7 @@ streaming, landing {
     font-size: 90%;
     min-height: 52px;
     transform: translateZ(0);
-    
+
 
     @media (min-width: $screen-sm-min) {
       min-height: 66px;
@@ -121,8 +160,8 @@ streaming, landing {
       }
 
       i, ul, .btn-reminder {
-        display: table-cell;
-        vertical-align: middle;
+        // display: table-cell;
+        // vertical-align: middle;
       }
 
       i {
@@ -132,7 +171,7 @@ streaming, landing {
         letter-spacing: -0.015em;
         padding-right: 1em;
         @media (max-width: $screen-sm-min) {
-          padding-right: 0;
+          // padding-right: 0;
           font-size: 100%;
         }
       }
@@ -275,7 +314,7 @@ streaming, landing {
     }
   }
 
-  
+
 
   .current-series {
 
@@ -431,7 +470,7 @@ streaming, landing {
     &, h3 {
       color: $gray;
     }
-    
+
     content-card {
       @media(max-width: $screen-md-min){
         @include make-sm-column(6);
@@ -593,7 +632,7 @@ streaming, landing {
     }
 
     img {
-      position: fixed; 
+      position: fixed;
       left: 50%; top: 50%;
       margin-left: -350px;
       margin-top: -300px;
@@ -629,17 +668,20 @@ streaming, landing {
     @media (min-width: $screen-sm-min) {
       .container {
         display: flex;
-        flex-direction:column;
+        flex-direction: column;
         height: 100%;
+
         > div {
           flex: 1 0 auto;
           display:flex;
         }
+
         article {
           margin-bottom: 0;
           width: 33%;
           padding: 0 2em;
           border-left: 1px solid $gray-lighter;
+
           &:first-child {
             border-left: none;
           }
@@ -1219,7 +1261,7 @@ geolocation {
       color: #96B4D4;
     }
   }
-  
+
   footer {
     margin-top: 3.25em;
     font-size: 51.5%;
@@ -1229,7 +1271,10 @@ geolocation {
   }
   .btn-link {
     font-size: 87%;
+    margin-top: 1em;
     margin-bottom: 3em;
+
+    @include button-variant(#96B4D4, $cr-blue, $cr-blue)
   }
   .modal-backdrop {
     background: #113556;
@@ -1252,7 +1297,7 @@ geolocation {
     .container {
       width: auto;
     }
-    .btn-standard-dark {
+    .btn-standard {
       @include button-variant($cr-streaming-blue, #FFF, #FFF)
     }
     .close {

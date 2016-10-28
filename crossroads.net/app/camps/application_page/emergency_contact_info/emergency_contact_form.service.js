@@ -49,7 +49,7 @@ class EmergencyContactForm {
           optionsTypes: ['phoneNumber'],
           templateOptions: {
             label: 'Mobile Number',
-            required: true,
+            required: true
           }
         }, {
           className: 'form-group col-xs-6',
@@ -58,6 +58,7 @@ class EmergencyContactForm {
           templateOptions: {
             label: 'Email',
             type: 'email',
+            required: true
           }
         }]
       },

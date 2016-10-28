@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Crossroads.Utilities.FunctionalHelpers;
 using Crossroads.Utilities.Interfaces;
 using log4net;
 using MinistryPlatform.Translation.Extensions;
@@ -81,6 +82,23 @@ namespace MinistryPlatform.Translation.Repositories
             return mpStoredProcBool != null 
                    && mpStoredProcBool.FirstOrDefault() != null 
                    && mpStoredProcBool.FirstOrDefault().isTrue;
+        }
+
+        public Result<MpGroupParticipant> GetGradeGroupForContact(int contactId, string apiToken)
+        {
+            var groupType = _configurationWrapper.GetConfigIntValue("AgeorGradeGroupType");
+            var searchString = $"Participant_ID_Table_Contact_ID_Table.[Contact_ID]='{contactId}' AND Group_ID_Table_Group_Type_ID_Table.[Group_Type_ID]='{groupType}'";
+            const string selectColumns = "Group_ID_Table.[Group_Name],Group_ID_Table.[Group_ID]";
+            var participant = _ministryPlatformRestRepository.UsingAuthenticationToken(apiToken).Search<MpGroupParticipant>(searchString, selectColumns, null, true);
+            if (participant.Count > 0)
+            {
+                if (participant.FirstOrDefault() != null && participant.FirstOrDefault().GroupName != null)
+                {
+                    return new Result<MpGroupParticipant>(true, participant.FirstOrDefault());
+                }
+                return new Result<MpGroupParticipant>(false, $"Grade group not found for contact {contactId}");
+            }
+            return new Result<MpGroupParticipant>(false, $"Grade group not found for contact {contactId}");
         }
 
         public int CreateGroup(MpGroup group)

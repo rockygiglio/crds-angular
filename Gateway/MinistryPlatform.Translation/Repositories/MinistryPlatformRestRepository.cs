@@ -17,6 +17,7 @@ namespace MinistryPlatform.Translation.Repositories
     {
         private readonly IRestClient _ministryPlatformRestClient;
         private readonly ThreadLocal<string> _authToken = new ThreadLocal<string>();
+        private const string DeleteRecordsStoredProcName = "api_crds_Delete_Table_Rows";
 
         public MinistryPlatformRestRepository(IRestClient ministryPlatformRestClient)
         {
@@ -255,6 +256,24 @@ namespace MinistryPlatform.Translation.Repositories
             response.CheckForErrors($"Error updating {tableName}", true);
         }
 
+        public void Delete<T>(int recordId)
+        {
+            Delete<T>(new[] { recordId });
+        }
+
+        public void Delete<T>(IEnumerable<int> recordIds)
+        {
+            var parms = new Dictionary<string, object>
+            {
+                {"@TableName", GetTableName<T>()},
+                {"@PrimaryKeyColumnName", GetPrimaryKeyColumnName<T>()},
+                {"@IdentifiersToDelete", string.Join(",", recordIds)}
+            };
+
+            PostStoredProc(DeleteRecordsStoredProcName, parms);
+        }
+
+
         private void AddAuthorization(IRestRequest request)
         {
             if (_authToken.IsValueCreated)
@@ -268,10 +287,20 @@ namespace MinistryPlatform.Translation.Repositories
             var table = typeof(T).GetAttribute<MpRestApiTable>();
             if (table == null)
             {
-                throw new NoTableDefinitionException(typeof(T));
+                throw new NoTableDefinitionException<T>();
             }
 
             return table.Name;
+        }
+
+        private static string GetPrimaryKeyColumnName<T>()
+        {
+            var primaryKey = typeof(T).GetProperties().ToList().Select(p => p.GetAttribute<MpRestApiPrimaryKey>()).FirstOrDefault();
+            if (primaryKey == null)
+            {
+                throw new NoPrimaryKeyDefinitionException<T>();
+            }
+            return primaryKey.Name;
         }
 
         private static string AddColumnSelection(string url, string selectColumns)
@@ -302,8 +331,14 @@ namespace MinistryPlatform.Translation.Repositories
         }
     }
 
-    public class NoTableDefinitionException : Exception
+    public class NoTableDefinitionException<T> : Exception
     {
-        public NoTableDefinitionException(Type t) : base($"No RestApiTable attribute specified on type {t}") { }
+        public NoTableDefinitionException() : base($"No RestApiTable attribute specified on type {typeof(T)}") { }
     }
+
+    public class NoPrimaryKeyDefinitionException<T> : Exception
+    {
+        public NoPrimaryKeyDefinitionException() : base($"No RestApiPrimaryKey attribute specified on type {typeof(T)}") { }
+    }
+
 }

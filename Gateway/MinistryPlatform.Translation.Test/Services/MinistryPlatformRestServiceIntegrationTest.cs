@@ -376,6 +376,7 @@ namespace MinistryPlatform.Translation.Test.Services
             var column = "Event_ID_Table.Event_Title";
             var results = _fixture.UsingAuthenticationToken(_authToken).Search<string>(tableName, searchString, column);
         }
+
     }
 
     [MpRestApiTable(Name = "Payment_Types")]
