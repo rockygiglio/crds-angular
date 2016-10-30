@@ -119,8 +119,8 @@ namespace MinistryPlatform.Translation.Repositories
                 "Group_ID_Table.Group_Name, Group_Participants.group_participant_id, Group_Participants.participant_id,  Group_Participants.group_id, Group_Participants.group_role_id";
             string search = $"Group_Participants.participant_id = {participantId}" +
                             $" AND Group_Role_ID = {_groupRoleLeader}" +
-                            $" AND (Group_ID_Table.End_Date > '{DateTime.Today:yyyy-MM-dd}' OR Group_ID_Table.End_Date Is Null)" +
-                            $" AND (Group_Participants.End_Date > '{DateTime.Today:yyyy-MM-dd}' OR Group_Participants.End_Date Is Null)";
+                            $" AND (Group_ID_Table.End_Date > '{DateTime.Now:yyyy-MM-dd H:mm:ss}' OR Group_ID_Table.End_Date Is Null)" +
+                            $" AND (Group_Participants.End_Date > '{DateTime.Now:yyyy-MM-dd H:mm:ss}' OR Group_Participants.End_Date Is Null)";
 
             if (groupType != null)
             {
@@ -148,8 +148,8 @@ namespace MinistryPlatform.Translation.Repositories
             string COLUMNS = "Group_Participants.group_role_id";
             string search = $"Group_Participants.participant_id = {participantId}" +
                             $" AND Group_Role_ID = {_groupRoleLeader}" +
-                            $" AND (Group_ID_Table.End_Date > '{DateTime.Today:yyyy-MM-dd}' OR Group_ID_Table.End_Date Is Null)" +
-                            $" AND (Group_Participants.End_Date > '{DateTime.Today:yyyy-MM-dd}' OR Group_Participants.End_Date Is Null)";
+                            $" AND (Group_ID_Table.End_Date > '{DateTime.Now:yyyy-MM-dd H:mm:ss}' OR Group_ID_Table.End_Date Is Null)" +
+                            $" AND (Group_Participants.End_Date > '{DateTime.Now:yyyy-MM-dd H:mm:ss}' OR Group_Participants.End_Date Is Null)";
 
             if (groupType != null)
             {
@@ -186,7 +186,7 @@ namespace MinistryPlatform.Translation.Repositories
                     " Participant_ID_table_contact_id_table.Display_Name, Group_Role_ID_table.Role_Title, Participant_ID_table_contact_id_table.Last_name," +
                     " Participant_ID_table_contact_id_table.email_address, Participant_ID_table.contact_id";
                 string search = $"group_participants.group_id in ({csvGroupIds})" +
-                                $" AND (Group_Participants.End_Date > '{DateTime.Today:yyyy-MM-dd}' OR Group_Participants.End_Date Is Null)";
+                                $" AND (Group_Participants.End_Date > '{DateTime.Now:yyyy-MM-dd H:mm:ss}' OR Group_Participants.End_Date Is Null)";
                 string orderBy = "Participant_ID_table_contact_id_table.Last_name";
                 bool distinct = true;
 
@@ -204,8 +204,8 @@ namespace MinistryPlatform.Translation.Repositories
             const string groupIdColumns = "group_participants.group_id";
             string groupIdSearch = $"group_participants.participant_id = {participantId}" +
                                    $" AND group_participants.group_role_id = {_groupRoleLeader}" +
-                                   $" AND (Group_ID_Table.End_Date > '{DateTime.Today:yyyy-MM-dd}' OR Group_ID_Table.End_Date Is Null)" +
-                                   $" AND (Group_Participants.End_Date > '{DateTime.Today:yyyy-MM-dd}' OR Group_Participants.End_Date Is Null)";
+                                   $" AND (Group_ID_Table.End_Date > '{DateTime.Now:yyyy-MM-dd H:mm:ss}' OR Group_ID_Table.End_Date Is Null)" +
+                                   $" AND (Group_Participants.End_Date > '{DateTime.Now:yyyy-MM-dd H:mm:ss}' OR Group_Participants.End_Date Is Null)";
 
             if (groupType != null)
                 groupIdSearch += $" AND Group_ID_Table.Group_Type_ID = {groupType}";

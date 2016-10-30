@@ -16,7 +16,7 @@ describe('Geolocation Service', () => {
     q          = $injector.get('$q');
     rootScope  = $injector.get('$rootScope');
     mapService = $injector.get('GoogleMapsService');
-    cookies = $injector.get('$cookies');
+    cookies    = $injector.get('$cookies');
 
     service = new GeolocationService(q, rootScope, mapService, cookies);
 
@@ -35,7 +35,8 @@ describe('Geolocation Service', () => {
   });
 
   describe('Modal and Banner Logic', () => {
-    it('should show modal if not answered before', () => {      
+    it('should show modal if not answered before', () => {
+      cookies.put('dismissedGeo', false);
       expect(service.showModal()).toBe(true);
     })
 
@@ -47,7 +48,7 @@ describe('Geolocation Service', () => {
 
     it('should show the banner if answered before', () => {
       localStorage.setItem('crds-geolocation', JSON.stringify(location));
-      
+
       expect(service.showBanner()).toBe(true);
     })
 

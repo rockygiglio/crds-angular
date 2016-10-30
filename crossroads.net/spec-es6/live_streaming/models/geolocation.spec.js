@@ -8,12 +8,12 @@ describe('Geolocation Model', () => {
 
     expect(location.lat).not.toBeTruthy();
     expect(location.lng).not.toBeTruthy();
-    expect(location.count).toBe(1);
+    expect(location.count).toBe(0);
     expect(location.zipcode).not.toBeTruthy();
   })
 
   it('should build a location', () => {
-    
+
     let location = Geolocation.build({
       lat: '0.0',
       lng: '0.0',

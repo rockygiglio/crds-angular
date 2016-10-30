@@ -744,11 +744,16 @@ namespace MinistryPlatform.Translation.Repositories
 
             var donations = MapDonationRecords(records);
             var nonRecurringDonations = new List<MpDonation>();
-            foreach (MpDonation donation in donations)
+
+            if (donations != null)
             {
-                if (!donation.recurringGift)
+                
+                foreach (MpDonation donation in donations)
                 {
-                    nonRecurringDonations.Add(donation);
+                    if (!donation.recurringGift)
+                    {
+                        nonRecurringDonations.Add(donation);
+                    }
                 }
             }
             return nonRecurringDonations;
