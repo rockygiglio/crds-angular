@@ -16,17 +16,22 @@ namespace MinistryPlatform.Translation.Repositories
         private readonly IMinistryPlatformService _ministryPlatformService;
         private readonly IApiUserRepository _apiUserService;
         private readonly IMinistryPlatformRestRepository _ministryPlatformRest;
+        private readonly int _groupRoleLeader;
+        private readonly IGroupRepository _groupRepository;
 
         public GroupParticipantRepository(IConfigurationWrapper configurationWrapper,
-                                       IMinistryPlatformService ministryPlatformService,
-                                       IApiUserRepository apiUserService,
-                                       IMinistryPlatformRestRepository ministryPlatformRest)
+                                          IMinistryPlatformService ministryPlatformService,
+                                          IApiUserRepository apiUserService,
+                                          IMinistryPlatformRestRepository ministryPlatformRest,
+                                          IGroupRepository groupRepository)
 
         {
             _configurationWrapper = configurationWrapper;
             _ministryPlatformService = ministryPlatformService;
             _apiUserService = apiUserService;
             _ministryPlatformRest = ministryPlatformRest;
+            _groupRepository = groupRepository;
+            _groupRoleLeader = _configurationWrapper.GetConfigIntValue("GroupRoleLeader");
         }
 
         public int Get(int groupId, int participantId)
@@ -39,7 +44,6 @@ namespace MinistryPlatform.Translation.Repositories
 
         public List<MpGroupServingParticipant> GetServingParticipants(List<int> participants, long from, long to, int loggedInContactId)
         {
-
             var defaultDeadlinePassedMessage = _configurationWrapper.GetConfigIntValue("DefaultDeadlinePassedMessage");
             var searchFilter = "(";
 
@@ -54,20 +58,20 @@ namespace MinistryPlatform.Translation.Repositories
             var toDate = to == 0 ? DateTime.Today.AddDays(29) : to.FromUnixTime();
 
             searchFilter += $") AND Event_Start_Date >= '{fromDate:yyyy-MM-dd}' AND Event_Start_Date <= '{toDate:yyyy-MM-dd}' " +
-                "AND Event_Start_Date >= Participant_Start_Date AND (Event_Start_Date <= Participant_End_Date OR Participant_End_Date IS NULL)";
+                            "AND Event_Start_Date >= Participant_Start_Date AND (Event_Start_Date <= Participant_End_Date OR Participant_End_Date IS NULL)";
 
             //Finish out search string and call the rest backend
             var groupServingParticipants = _ministryPlatformRest.UsingAuthenticationToken(_apiUserService.GetToken()).Search<MpGroupServingParticipant>(searchFilter);
             var rownum = 0;
             groupServingParticipants.ForEach(p =>
-                                             {
-                                                 rownum++;
-                                                 p.RowNumber = rownum;
-                                                 if (p.ContactId == loggedInContactId)
-                                                     p.LoggedInUser = true;
-                                                 if (p.DeadlinePassedMessage == null)
-                                                     p.DeadlinePassedMessage = defaultDeadlinePassedMessage;
-                                             });
+            {
+                rownum++;
+                p.RowNumber = rownum;
+                if (p.ContactId == loggedInContactId)
+                    p.LoggedInUser = true;
+                if (p.DeadlinePassedMessage == null)
+                    p.DeadlinePassedMessage = defaultDeadlinePassedMessage;
+            });
 
             return groupServingParticipants.OrderBy(g => g.EventStartDateTime)
                 .ThenBy(g => g.GroupName)
@@ -78,7 +82,8 @@ namespace MinistryPlatform.Translation.Repositories
 
         public List<MpRsvpMember> GetRsvpMembers(int groupId, int eventId)
         {
-            const string COLUMNS = "Responses.opportunity_id,Responses.participant_id,Responses.event_id, opportunity_ID_Table.Group_Role_ID, Participant_ID_Table_Contact_ID_Table.NickName, Participant_ID_Table_Contact_ID_table.Last_Name,Responses.Response_Result_Id";
+            const string COLUMNS =
+                "Responses.opportunity_id,Responses.participant_id,Responses.event_id, opportunity_ID_Table.Group_Role_ID, Participant_ID_Table_Contact_ID_Table.NickName, Participant_ID_Table_Contact_ID_table.Last_Name,Responses.Response_Result_Id,Participant_ID_Table_Contact_ID_Table.__Age AS Age";
             string search = $"Responses.Event_ID = {eventId} And Opportunity_ID_Table.Add_To_Group = {groupId}";
 
             var opportunityResponse = _ministryPlatformRest.UsingAuthenticationToken(_apiUserService.GetToken()).Search<MpRsvpMember>(search, COLUMNS);
@@ -91,7 +96,7 @@ namespace MinistryPlatform.Translation.Repositories
             var parms = new Dictionary<string, object>
             {
                 {"@GroupID", groupId},
-                {"@EventID", eventId }
+                {"@EventID", eventId}
             };
 
             var results = _ministryPlatformRest.UsingAuthenticationToken(_apiUserService.GetToken()).GetFromStoredProc<MpSU2SOpportunity>(GetOpportunitiesForTeamStoredProc, parms);
@@ -108,6 +113,104 @@ namespace MinistryPlatform.Translation.Repositories
             return response[0]?.RsvpYesCount ?? 0;
         }
 
+        public List<MpGroup> GetAllGroupNamesLeadByParticipant(int participantId, int? groupType)
+        {
+            const string COLUMNS =
+                "Group_ID_Table.Group_Name, Group_Participants.group_participant_id, Group_Participants.participant_id,  Group_Participants.group_id, Group_Participants.group_role_id";
+            string search = $"Group_Participants.participant_id = {participantId}" +
+                            $" AND Group_Role_ID = {_groupRoleLeader}" +
+                            $" AND (Group_ID_Table.End_Date > '{DateTime.Now:yyyy-MM-dd H:mm:ss}' OR Group_ID_Table.End_Date Is Null)" +
+                            $" AND (Group_Participants.End_Date > '{DateTime.Now:yyyy-MM-dd H:mm:ss}' OR Group_Participants.End_Date Is Null)";
 
+            if (groupType != null)
+            {
+                search += $" AND Group_ID_Table.Group_Type_ID = {groupType}";
+            }
+
+            var groupParticipantRecords = _ministryPlatformRest.UsingAuthenticationToken(_apiUserService.GetToken()).Search<MpGroupParticipant>(search, COLUMNS);
+
+            List<MpGroup> groups = new List<MpGroup>();
+            foreach (var groupParticipant in groupParticipantRecords)
+            {
+                var group = new MpGroup()
+                {
+                    GroupId = groupParticipant.GroupId,
+                    Name = groupParticipant.GroupName,
+                };
+
+                groups.Add(group);
+            }
+            return groups;
+        }
+
+        public bool GetIsLeader(int participantId, int? groupType = null, int? groupId = null)
+        {
+            string COLUMNS = "Group_Participants.group_role_id";
+            string search = $"Group_Participants.participant_id = {participantId}" +
+                            $" AND Group_Role_ID = {_groupRoleLeader}" +
+                            $" AND (Group_ID_Table.End_Date > '{DateTime.Now:yyyy-MM-dd H:mm:ss}' OR Group_ID_Table.End_Date Is Null)" +
+                            $" AND (Group_Participants.End_Date > '{DateTime.Now:yyyy-MM-dd H:mm:ss}' OR Group_Participants.End_Date Is Null)";
+
+            if (groupType != null)
+            {
+                search += $" AND Group_ID_Table.Group_Type_ID = {groupType}";
+            }
+
+            if (groupId != null)
+            {
+                search += $" AND Group_Participants.GROUP_ID = {groupId}";
+            }
+
+            var mpGroupParticipants = _ministryPlatformRest.UsingAuthenticationToken(_apiUserService.GetToken()).Search<MpGroupParticipant>(search, COLUMNS);
+
+            return mpGroupParticipants.Any();
+        }
+
+        public List<MpGroupParticipant> GetAllParticipantsForLeaderGroups(int participantId, int? groupType, int? groupId)
+        {
+            string csvGroupIds = "";
+            if (groupId == null)
+            {
+                var groupIds = GetLeadersGroupIds(participantId, groupType);
+                if (groupIds.Count > 0)
+                    csvGroupIds = String.Join(",", groupIds.Select(g => g.GroupId.ToString()).ToArray());
+
+             }
+            else
+                csvGroupIds = groupId.ToString();
+
+            if (csvGroupIds != "")
+            {
+                const string columns =
+                    "group_participants.participant_id, group_participants.group_role_id, Participant_ID_table_contact_id_table.Nickname," +
+                    " Participant_ID_table_contact_id_table.Display_Name, Group_Role_ID_table.Role_Title, Participant_ID_table_contact_id_table.Last_name," +
+                    " Participant_ID_table_contact_id_table.email_address, Participant_ID_table.contact_id";
+                string search = $"group_participants.group_id in ({csvGroupIds})" +
+                                $" AND (Group_Participants.End_Date > '{DateTime.Now:yyyy-MM-dd H:mm:ss}' OR Group_Participants.End_Date Is Null)";
+                string orderBy = "Participant_ID_table_contact_id_table.Last_name";
+                bool distinct = true;
+
+                var mpGroupParticipants = _ministryPlatformRest.UsingAuthenticationToken(_apiUserService.GetToken())
+                    .Search<MpGroupParticipant>(search, columns, orderBy, distinct);
+
+                return mpGroupParticipants.DistinctBy(x => x.Email).ToList();
+            }
+
+            return new List<MpGroupParticipant>();
+        }
+
+        public List<MpGroupParticipant> GetLeadersGroupIds(int participantId, int? groupType)
+        {
+            const string groupIdColumns = "group_participants.group_id";
+            string groupIdSearch = $"group_participants.participant_id = {participantId}" +
+                                   $" AND group_participants.group_role_id = {_groupRoleLeader}" +
+                                   $" AND (Group_ID_Table.End_Date > '{DateTime.Now:yyyy-MM-dd H:mm:ss}' OR Group_ID_Table.End_Date Is Null)" +
+                                   $" AND (Group_Participants.End_Date > '{DateTime.Now:yyyy-MM-dd H:mm:ss}' OR Group_Participants.End_Date Is Null)";
+
+            if (groupType != null)
+                groupIdSearch += $" AND Group_ID_Table.Group_Type_ID = {groupType}";
+
+            return _ministryPlatformRest.UsingAuthenticationToken(_apiUserService.GetToken()).Search<MpGroupParticipant>(groupIdSearch, groupIdColumns);
+        }
     }
 }

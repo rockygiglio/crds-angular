@@ -59,7 +59,7 @@ namespace MinistryPlatform.Translation.Test.Services
             };
 
             _ministryPlatformRest.Setup(m => m.UsingAuthenticationToken(token)).Returns(_ministryPlatformRest.Object);
-            _ministryPlatformRest.Setup(m => m.Search<MpPledgeCampaign>($"Pledge_Campaigns.[Pledge_Campaign_ID] = {pledgeCampaignId}", columnList)).Returns(PledgeCampaignList());
+            _ministryPlatformRest.Setup(m => m.Search<MpPledgeCampaign>($"Pledge_Campaigns.[Pledge_Campaign_ID] = {pledgeCampaignId}", columnList, It.IsAny<string>(), It.IsAny<bool>())).Returns(PledgeCampaignList());
             _configWrapper.Setup(m => m.GetConfigIntValue("GoTripAgeExceptions")).Returns(ageExceptionsPage);
             _ministryPlatformService.Setup(m => m.GetSubPageRecords(ageExceptionsPage, pledgeCampaignId, token)).Returns(AgeExceptions());
 
@@ -99,7 +99,7 @@ namespace MinistryPlatform.Translation.Test.Services
             };
 
             _ministryPlatformRest.Setup(m => m.UsingAuthenticationToken(token)).Returns(_ministryPlatformRest.Object);
-            _ministryPlatformRest.Setup(m => m.Search<MpPledgeCampaign>($"Pledge_Campaigns.[Pledge_Campaign_ID] = {pledgeCampaignId}", columnList)).Returns(new List<MpPledgeCampaign>());
+            _ministryPlatformRest.Setup(m => m.Search<MpPledgeCampaign>($"Pledge_Campaigns.[Pledge_Campaign_ID] = {pledgeCampaignId}", columnList, It.IsAny<string>(), It.IsAny<bool>())).Returns(new List<MpPledgeCampaign>());
             _configWrapper.Setup(m => m.GetConfigIntValue("GoTripAgeExceptions")).Returns(ageExceptionsPage);
             _ministryPlatformService.Setup(m => m.GetSubPageRecords(ageExceptionsPage, pledgeCampaignId, token)).Returns(AgeExceptions());
 
@@ -142,7 +142,7 @@ namespace MinistryPlatform.Translation.Test.Services
             campaigns.Add(new MpPledgeCampaign());
 
             _ministryPlatformRest.Setup(m => m.UsingAuthenticationToken(token)).Returns(_ministryPlatformRest.Object);
-            _ministryPlatformRest.Setup(m => m.Search<MpPledgeCampaign>($"Pledge_Campaigns.[Pledge_Campaign_ID] = {pledgeCampaignId}", columnList)).Returns(campaigns);
+            _ministryPlatformRest.Setup(m => m.Search<MpPledgeCampaign>($"Pledge_Campaigns.[Pledge_Campaign_ID] = {pledgeCampaignId}", columnList, It.IsAny<string>(), It.IsAny<bool>())).Returns(campaigns);
             _configWrapper.Setup(m => m.GetConfigIntValue("GoTripAgeExceptions")).Returns(ageExceptionsPage);
             _ministryPlatformService.Setup(m => m.GetSubPageRecords(ageExceptionsPage, pledgeCampaignId, token)).Returns(AgeExceptions());
 

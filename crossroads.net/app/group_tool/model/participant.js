@@ -21,7 +21,7 @@ export default class Participant {
     return this.groupRoleId === constants.GROUP.ROLES.APPRENTICE; 
   }
 
-  displayName() {
+  getDisplayName() {
     return `${this.nickName} ${this.lastName}`.replace(/^\s+|\s+$/g,'');
   }
 

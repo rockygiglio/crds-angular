@@ -18,7 +18,6 @@
     authService.login = function(credentials) {
       return $http
         .post(__API_ENDPOINT__ + 'api/login', credentials).then(function(res) {
-          console.log(res.data);
           Session.create(
             res.data.refreshToken,
             res.data.userToken,
@@ -29,6 +28,7 @@
           // The username from the credentials is really the email address
           // In a future story, the contact email address will always be in sync with the user email address.
           $rootScope.email = credentials.username;
+          $rootScope.phone = res.data.userPhone;
 
           //TODO: we really need to refactor "username" to be nickname
           $rootScope.username = res.data.username;
@@ -40,6 +40,7 @@
 
     authService.logout = function() {
       $rootScope.email = null;
+      $rootScope.userPhone = null;
       $rootScope.username = null;
       $rootScope.userid = null;
       $rootScope.roles = null;

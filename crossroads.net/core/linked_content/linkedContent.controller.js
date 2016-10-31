@@ -1,7 +1,8 @@
 export default class LinkedContentController {
-  constructor($element, $sce) {
+  constructor($element, $sce, ResponsiveImageService) {
     this.element = $element;
     this.sce = $sce;
+    this.ResponsiveImageService = ResponsiveImageService;
 
     this.element.bind('click', (e) => {
       if (!this.isLinked()) {
@@ -13,6 +14,7 @@ export default class LinkedContentController {
   $onInit() {
     this.href = this.isLinked() ? this.href : '#';
     this.parseBackground();
+    this.ResponsiveImageService.updateResponsiveImages();
   }
 
   isLinked() {

@@ -22,7 +22,7 @@ namespace crds_angular.test.Services
         private Mock<IRestClient> _restClient;
         private Mock<IConfigurationWrapper> _configuration;
         private Mock<IContentBlockService> _contentBlockService;
-        private StripeService _fixture;
+        private StripePaymentProcessorService _fixture;
         private Dictionary<string, ContentBlock> _errors;
 
         [SetUp]
@@ -46,7 +46,7 @@ namespace crds_angular.test.Services
                 _contentBlockService.SetupGet(mocked => mocked[e1.Key]).Returns(e1.Value);
             }
 
-            _fixture = new StripeService(_restClient.Object, _configuration.Object, _contentBlockService.Object);
+            _fixture = new StripePaymentProcessorService(_restClient.Object, _configuration.Object, _contentBlockService.Object);
         }
 
         [Test]

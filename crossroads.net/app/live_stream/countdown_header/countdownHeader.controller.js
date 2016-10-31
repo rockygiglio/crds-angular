@@ -1,29 +1,32 @@
 export default class CountdownHeaderController {
-  constructor($document, $window) {
+  constructor($document, $window, CountdownService, ReminderService) {
     this.document = $document;
     this.window   = $window;
-
+    this.countdownService = CountdownService;
+    this.reminderService = ReminderService;
+    
     this.setElements();
 
     angular.element(this.window).bind("scroll", this.onScroll.bind(this));
   }
 
-  onScroll() {
-    let offset = this.wrapper.getBoundingClientRect().top;
+  openReminder() {
+    this.reminderService.open();
+  }
 
-    if (offset <= 0) {
+  onScroll() {
+    let offset = this.wrapper.getBoundingClientRect().top,
+        intro  = document.getElementById('intro');
+
+    if (offset < 0) {
       this.wrapper.classList.add('fixed-header');
-      this.header.classList.add('animated');
-      this.header.classList.add('slideInDown');
-      if ( this.intro !== null ) {
-        this.intro.style.marginTop = this.header.offsetHeight.toString();
+      if ( intro !== null ) {
+        intro.style.marginTop = `${this.header.offsetHeight.toString()}px`;
       }
     } else {
       this.wrapper.classList.remove('fixed-header');
-      this.header.classList.remove('animated');
-      this.header.classList.remove('slideInDown');
-      if ( this.intro !== null ) {
-        this.intro.style.marginTop = '';
+      if ( intro !== null ) {
+        intro.style.marginTop = '';
       }
     }
   }
