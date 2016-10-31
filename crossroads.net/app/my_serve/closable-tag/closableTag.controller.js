@@ -12,6 +12,7 @@ export default class ClosableTagController {
   }
 
   close() {
+    this.opportunityId = 0;
     this.onClose({});
   }
 }

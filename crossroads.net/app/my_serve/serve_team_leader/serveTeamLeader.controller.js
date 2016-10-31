@@ -101,7 +101,7 @@ export default class ServeTeamLeaderController {
         const rsvp = {};
         rsvp.contactId = person.contactId;
         rsvp.opportunityId = this.model.selectedOpp;
-        rsvp.opportunityIds = _.pluck(this.team.serveOpportunities, 'Opportunity_ID');
+        rsvp.opportunityIds = _.pluck(this.team.serveOpportunities, 'opportunityId');
         rsvp.eventTypeId = this.team.eventTypeId;
         rsvp.endDate = moment(this.model.toDt, 'MM/DD/YYYY').format('X');
         rsvp.startDate = moment(this.model.fromDt, 'MM/DD/YYYY').format('X');

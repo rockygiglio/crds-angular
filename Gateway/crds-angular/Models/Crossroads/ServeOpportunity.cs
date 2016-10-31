@@ -6,16 +6,16 @@ namespace crds_angular.Models.Crossroads
 {
     public class ServeOpportunity
     {
-        [JsonProperty(PropertyName = "Opportunity_ID")]
+        [JsonProperty(PropertyName = "opportunityId")]
         public int OpportunityId { get; set; }
 
-        [JsonProperty(PropertyName = "Opportunity_Title")]
+        [JsonProperty(PropertyName = "opportunityTitle")]
         public string OpportunityTitle { get; set; }
 
         [JsonProperty(PropertyName = "rsvpMembers")]
         public List<RsvpMember> RsvpMembers { get; set; }
 
-        [JsonProperty(PropertyName = "Group_Role_ID")]
+        [JsonProperty(PropertyName = "groupRoleId")]
         public int Group_Role_ID { get; set; }
 
         [JsonProperty(PropertyName = "roleTitle")]
