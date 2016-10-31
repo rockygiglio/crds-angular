@@ -1,7 +1,7 @@
 import CONSTANTS from 'crds-constants';
 
 export default class ServeTeamContainerController {
-  /* @ngInject*/
+  /* @ngInject */
   constructor(ServeTeamService, $q, ServeOpportunities) {
     // this.team; from binding
     this.isLeader = false;
@@ -21,7 +21,6 @@ export default class ServeTeamContainerController {
   }
 
   memberClick(member) {
-
     this.onMemberClick({ $member: member });
   }
 
@@ -47,8 +46,7 @@ export default class ServeTeamContainerController {
   }
 
   updateTeam(person, opp) {
-    debugger;
-    let signedUp = (opp === 0) ? CONSTANTS.SERVING_RESPONSES.NOT_AVAILABLE : CONSTANTS.SERVING_RESPONSES.AVAILABLE;
+    const signedUp = (opp === 0) ? CONSTANTS.SERVING_RESPONSES.NOT_AVAILABLE : CONSTANTS.SERVING_RESPONSES.AVAILABLE;
 
     _.forEach(this.team.serveOpportunities, (opportunity) => {
       _.remove(opportunity.rsvpMembers, (member) => {
@@ -56,14 +54,15 @@ export default class ServeTeamContainerController {
       });
     });
 
-    let signedUpOpp = _.find(this.team.serveOpportunities, { Opportunity_ID: opp });
+    const signedUpOpp = _.find(this.team.serveOpportunities, { Opportunity_ID: opp });
+    debugger;
     signedUpOpp.rsvpMembers.push(
       {
         nickName: person.nickName,
         lastName: person.lastName,
         participantId: person.participantId,
         responseResultId: signedUp,
-        opportunityId: signedUpOpp.opportunityId,
+        opportunityId: signedUpOpp.Opportunity_ID,
         contactId: person.contactId
       }
     );
