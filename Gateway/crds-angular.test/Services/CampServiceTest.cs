@@ -5,6 +5,7 @@ using crds_angular.Models.Crossroads.Camp;
 using crds_angular.Models.Crossroads.Groups;
 using crds_angular.Services;
 using crds_angular.Services.Interfaces;
+using Crossroads.Utilities.FunctionalHelpers;
 using Crossroads.Utilities.Interfaces;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Repositories.Interfaces;
@@ -28,6 +29,7 @@ namespace crds_angular.test.Services
         private readonly Mock<ICongregationRepository> _congregationRepository;
         private readonly Mock<IGroupRepository> _groupRepository;
         private readonly Mock<IEventParticipantRepository> _eventParticipantRepository;
+        private readonly Mock<IMedicalInformationRepository> _medicalInformationRepository;
 
         public CampServiceTest()
         {
@@ -43,7 +45,19 @@ namespace crds_angular.test.Services
             _congregationRepository = new Mock<ICongregationRepository>();
             _groupRepository = new Mock<IGroupRepository>();
             _eventParticipantRepository = new Mock<IEventParticipantRepository>();
-            _fixture = new CampService(_campService.Object, _formSubmissionRepository.Object, _configurationWrapper.Object, _participantRepository.Object, _eventRepository.Object, _apiUserRepository.Object, _groupService.Object, _contactService.Object, _congregationRepository.Object, _groupRepository.Object, _eventParticipantRepository.Object);
+            _medicalInformationRepository = new Mock<IMedicalInformationRepository>();
+            _fixture = new CampService(_campService.Object, 
+                                       _formSubmissionRepository.Object, 
+                                       _configurationWrapper.Object, 
+                                       _participantRepository.Object, 
+                                       _eventRepository.Object, 
+                                       _apiUserRepository.Object, 
+                                       _groupService.Object,
+                                       _contactService.Object,
+                                       _congregationRepository.Object,
+                                       _groupRepository.Object,
+                                       _eventParticipantRepository.Object,
+                                       _medicalInformationRepository.Object);
         }
 
         [Test]
@@ -97,25 +111,12 @@ namespace crds_angular.test.Services
             };
 
             var eventParticipantId = 6;
+
+            var newEventparticipantId = 0;
+
             var formId = 8;
 
             _contactService.Setup(m => m.GetMyProfile(token)).Returns(household);
-
-            var minorContact = new MpContact
-            {
-                ContactId = 0,
-                FirstName = campReservation.FirstName,
-                LastName = campReservation.LastName,
-                MiddleName = campReservation.MiddleName,
-                BirthDate = Convert.ToDateTime(campReservation.BirthDate),
-                Gender = campReservation.Gender,
-                PreferredName = campReservation.PreferredName,
-                Nickname = campReservation.PreferredName ?? campReservation.FirstName,
-                SchoolAttending = campReservation.SchoolAttending,
-                HouseholdId = household.Household_ID,
-                HouseholdPositionId = 2
-            };
-
             _contactService.Setup(m => m.CreateContact(It.IsAny<MpContact>())).Returns(contact);
             _participantRepository.Setup(m => m.GetParticipant(contact[0].RecordId)).Returns(participant);
             _eventRepository.Setup(m => m.RegisterParticipantForEvent(participant.ParticipantId, eventId, 0, 0)).Returns(eventParticipantId);
@@ -123,6 +124,7 @@ namespace crds_angular.test.Services
             _configurationWrapper.Setup(m => m.GetConfigIntValue("SummerCampForm.CurrentGrade")).Returns(10);
             _configurationWrapper.Setup(m => m.GetConfigIntValue("SummerCampForm.SchoolAttendingNextYear")).Returns(12);
             _configurationWrapper.Setup(m => m.GetConfigIntValue("SummerCampForm.PreferredRoommate")).Returns(14);
+            _eventRepository.Setup(m => m.GetEventParticipantRecordId(eventId, participant.ParticipantId)).Returns(newEventparticipantId);
 
             _fixture.SaveCampReservation(MockCampReservationDTO(), eventId, token);
             _eventRepository.VerifyAll();
@@ -161,13 +163,12 @@ namespace crds_angular.test.Services
             _contactService.Setup(m => m.GetMyProfile(token)).Returns(household);
 
             _participantRepository.Setup(m => m.GetParticipant(Convert.ToInt32(MockCampReservationDTOwithContactId().ContactId))).Returns(participant);
-            _eventRepository.Setup(m => m.RegisterParticipantForEvent(participant.ParticipantId, eventId, 0, 0)).Returns(eventParticipantId);
             _configurationWrapper.Setup(m => m.GetConfigIntValue("SummerCampFormID")).Returns(formId);
             _configurationWrapper.Setup(m => m.GetConfigIntValue("SummerCampForm.CurrentGrade")).Returns(10);
             _configurationWrapper.Setup(m => m.GetConfigIntValue("SummerCampForm.SchoolAttendingNextYear")).Returns(12);
             _configurationWrapper.Setup(m => m.GetConfigIntValue("SummerCampForm.PreferredRoommate")).Returns(14);
             _congregationRepository.Setup(m => m.GetCongregationById(MockCampReservationDTOwithContactId().CrossroadsSite)).Returns(congregation);
-
+           _eventRepository.Setup(m => m.GetEventParticipantRecordId(eventId, participant.ParticipantId)).Returns(eventParticipantId);
             _fixture.SaveCampReservation(MockCampReservationDTOwithContactId(), eventId, token);
             _eventRepository.VerifyAll();
             _participantRepository.VerifyAll();
@@ -183,7 +184,6 @@ namespace crds_angular.test.Services
             var token = "asdfasdfasdfasdf";
             var apiToken = "apiToken";
             var myContactId = 2187211;
-            var signedUpDate = DateTime.Now;
             var eventId = 5433;
             var myContact = getFakeContact(myContactId);
 
@@ -200,6 +200,57 @@ namespace crds_angular.test.Services
             _contactService.VerifyAll();
             _groupRepository.VerifyAll();
             _eventParticipantRepository.VerifyAll();
+        }
+
+        [Test]
+        public void shouldSaveEmergencyContact()
+        {
+            var contactId = 12345;
+            var token = "444";
+            var formId = 10;
+            var eventId = 6789;
+            var participant = new MpParticipant
+            {
+                ParticipantId = 2
+            };
+            var myContact = new MpMyContact
+            {
+                Contact_ID = 999999,
+                Household_ID = 77777
+            };
+
+            var myHousehold = new List<MpHouseholdMember>
+            {
+                new MpHouseholdMember
+                {
+                    ContactId = contactId
+                }
+            };
+
+            var otherHousehold = new List<MpHouseholdMember>
+            {
+                new MpHouseholdMember
+                {
+                    ContactId = 5555555
+                }
+            };
+
+            _contactService.Setup(m => m.GetMyProfile(token)).Returns(myContact);
+            _contactService.Setup(m => m.GetHouseholdFamilyMembers(myContact.Household_ID)).Returns(myHousehold);
+            _contactService.Setup(m => m.GetOtherHouseholdMembers(myContact.Contact_ID)).Returns(otherHousehold);
+            _participantRepository.Setup(m => m.GetParticipant(contactId)).Returns(participant);
+            _eventRepository.Setup(m => m.SafeRegisterParticipant(eventId, participant.ParticipantId, 0, 0));
+            _configurationWrapper.Setup(m => m.GetConfigIntValue("SummerCampFormID")).Returns(formId);
+            _configurationWrapper.Setup(m => m.GetConfigIntValue("SummerCampForm.EmergencyContactFirstName")).Returns(10);
+            _configurationWrapper.Setup(m => m.GetConfigIntValue("SummerCampForm.EmergencyContactLastName")).Returns(12);
+            _configurationWrapper.Setup(m => m.GetConfigIntValue("SummerCampForm.EmergencyContactMobilePhone")).Returns(14);
+            _configurationWrapper.Setup(m => m.GetConfigIntValue("SummerCampForm.EmergencyContactEmail")).Returns(12);
+            _configurationWrapper.Setup(m => m.GetConfigIntValue("SummerCampForm.EmergencyContactRelationship")).Returns(14);
+
+            _fixture.SaveCamperEmergencyContactInfo(MockCampEmergencyContactDTO(), eventId, contactId, token);
+            _configurationWrapper.VerifyAll();
+            _participantRepository.VerifyAll();
+            _eventRepository.VerifyAll();
         }
 
         [Test]
@@ -222,29 +273,75 @@ namespace crds_angular.test.Services
         }
 
         [Test]
-        public void shouldGetCamperInfo()
+        public void ShouldSaveMedicalInfo()
         {
-            var eventId = 123;
-            var token = "asdf";
-            var contactId = 2187211;
-            var myContact = getFakeContact(contactId);
-            var gradeGroupId = 5;
-            var participant = new MpParticipant
+            const string token = "theToken";
+            var contactId = 123;
+            var medicalInfo = new MedicalInfoDTO
             {
-                ParticipantId = 9876
+                InsuranceCompany = "Ins. Co. Name",
+                PhysicianName = "bobby",
+                PhysicianPhone = "123-4567",
+                PolicyHolder = "your mom"
             };
-            var gradeGroupList = new List<GroupDTO>
+
+            var mpMedInfo = new MpMedicalInformation
             {
-                new GroupDTO
+                InsuranceCompany = "Ins. Co. Name",
+                PhysicianName = "bobby",
+                PhysicianPhone = "123-4567",
+                PolicyHolder = "your mom"
+            };
+
+            var myContact = new MpMyContact
+            {
+                Contact_ID = 999999,
+                Household_ID = 77777
+            };
+
+            var myHousehold = new List<MpHouseholdMember>
+            {
+                new MpHouseholdMember
                 {
-                    GroupName = "6th Grade"
+                    ContactId = contactId
                 }
             };
+
+            var otherHousehold = new List<MpHouseholdMember>
+            {
+                new MpHouseholdMember
+                {
+                    ContactId = 5555555
+                }
+            };
+
+            _contactService.Setup(m => m.GetMyProfile(token)).Returns(myContact);
+            _contactService.Setup(m => m.GetHouseholdFamilyMembers(myContact.Household_ID)).Returns(myHousehold);
+            _contactService.Setup(m => m.GetOtherHouseholdMembers(myContact.Contact_ID)).Returns(otherHousehold);
+
+            _medicalInformationRepository.Setup(m => m.SaveMedicalInformation(mpMedInfo, 123));
+           
+            Assert.DoesNotThrow(() =>_fixture.SaveCamperMedicalInfo(medicalInfo, contactId, token));
+        }
+
+        [Test]
+        public void shouldGetCamperInfo()
+        {
+            const int eventId = 123;
+            const string token = "asdf";
+            const string apiToken = "apiToken";
+            const int contactId = 2187211;
+            var myContact = getFakeContact(contactId);
+            const int childContactId = 123456789;
+
+            var participant = new Result<MpGroupParticipant>(true, new MpGroupParticipant() {GroupName = "6th Grade"});
+            
             var loggedInContact = new MpMyContact
             {
                 Contact_ID = 56789,
                 Household_ID = 10000
             };
+
             var householdfamily = new List<MpHouseholdMember>
             {
                 new MpHouseholdMember
@@ -257,7 +354,7 @@ namespace crds_angular.test.Services
             {
                 new MpHouseholdMember
                 {
-                    ContactId = 123456789
+                    ContactId = childContactId
                 }
 
             };
@@ -265,16 +362,62 @@ namespace crds_angular.test.Services
             _contactService.Setup(m => m.GetHouseholdFamilyMembers(loggedInContact.Household_ID)).Returns(householdfamily);
             _contactService.Setup(m => m.GetOtherHouseholdMembers(loggedInContact.Contact_ID)).Returns(otherHouseholdfamily);
             _contactService.Setup(m => m.GetContactById(contactId)).Returns(myContact);
-            _participantRepository.Setup(m => m.GetParticipant(contactId)).Returns(participant);
-            _configurationWrapper.Setup(m => m.GetConfigIntValue("AgeorGradeGroupType")).Returns(gradeGroupId);
-            _groupService.Setup(m => m.GetGroupsByTypeForParticipant(token, participant.ParticipantId, gradeGroupId))
-                .Returns(gradeGroupList);
+            _apiUserRepository.Setup(m => m.GetToken()).Returns(apiToken);
+            _groupRepository.Setup(m => m.GetGradeGroupForContact(contactId, apiToken)).Returns(participant);
 
             var result = _fixture.GetCamperInfo(token, eventId, contactId);
             Assert.AreEqual(result.ContactId, 2187211);
+            Assert.AreEqual(result.CurrentGrade, "6th Grade");
             _contactService.VerifyAll();
-            _congregationRepository.VerifyAll();
-            _participantRepository.VerifyAll();
+            _groupRepository.VerifyAll();
+        }
+
+        [Test]
+        public void shouldGetCamperInfoNoGrade()
+        {
+            const int eventId = 123;
+            const string token = "asdf";
+            const string apiToken = "apiToken";
+            const int contactId = 2187211;
+            var myContact = getFakeContact(contactId);
+            const int childContactId = 123456789;
+
+            var participant = new Result<MpGroupParticipant>(false, "some error message");
+
+            var loggedInContact = new MpMyContact
+            {
+                Contact_ID = 56789,
+                Household_ID = 10000
+            };
+
+            var householdfamily = new List<MpHouseholdMember>
+            {
+                new MpHouseholdMember
+                {
+                    ContactId = contactId
+                }
+
+            };
+            var otherHouseholdfamily = new List<MpHouseholdMember>
+            {
+                new MpHouseholdMember
+                {
+                    ContactId = childContactId
+                }
+
+            };
+            _contactService.Setup(m => m.GetMyProfile(token)).Returns(loggedInContact);
+            _contactService.Setup(m => m.GetHouseholdFamilyMembers(loggedInContact.Household_ID)).Returns(householdfamily);
+            _contactService.Setup(m => m.GetOtherHouseholdMembers(loggedInContact.Contact_ID)).Returns(otherHouseholdfamily);
+            _contactService.Setup(m => m.GetContactById(contactId)).Returns(myContact);
+            _apiUserRepository.Setup(m => m.GetToken()).Returns(apiToken);
+            _groupRepository.Setup(m => m.GetGradeGroupForContact(contactId, apiToken)).Returns(participant);
+
+            var result = _fixture.GetCamperInfo(token, eventId, contactId);
+            Assert.AreEqual(result.ContactId, 2187211);
+            Assert.IsNull(result.CurrentGrade);
+            _contactService.VerifyAll();
+            _groupRepository.VerifyAll();
         }
 
         private List<MpHouseholdMember> getFakeHouseholdMembers(MpMyContact me)
@@ -339,6 +482,17 @@ namespace crds_angular.test.Services
                 SchoolAttendingNext = "Mason",
                 CrossroadsSite = 3,
                 RoomMate = ""
+            };
+        }
+        private CampEmergencyContactDTO MockCampEmergencyContactDTO()
+        {
+            return new CampEmergencyContactDTO
+            {
+                FirstName = "Jon",
+                LastName = "Horner",
+                Email = "lknair@gmail.com",
+                MobileNumber = "123456789",
+                Relationship = "friend"
             };
         }
         private CampReservationDTO MockCampReservationDTOwithContactId()

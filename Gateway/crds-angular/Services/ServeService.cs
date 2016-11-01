@@ -46,6 +46,8 @@ namespace crds_angular.Services
         private readonly IResponseRepository _responseService;
         private readonly int _serveGroupType;
 
+        private readonly int _rsvpYes;
+
         private readonly List<string> TABLE_HEADERS = new List<string>()
         {
             "Event Date",
@@ -82,6 +84,8 @@ namespace crds_angular.Services
             _apiUserService = apiUserService;
             _responseService = responseService;
             _serveGroupType = _configurationWrapper.GetConfigIntValue("ServeGroupType");
+
+            _rsvpYes = _configurationWrapper.GetConfigIntValue("RSVPYesId");
         }
 
         public List<FamilyMember> GetImmediateFamilyParticipants(string token)
@@ -284,7 +288,7 @@ namespace crds_angular.Services
             var opportunity = _opportunityService.GetOpportunityResponses(opportunityId, eventId);
             var min = minNeeded;
             var max = maxNeeded;
-            var signedUp = opportunity.Count;
+            var signedUp = opportunity.Count(o => o.Response_Result_ID == _rsvpYes);
 
             var capacity = new Capacity {Display = true};
 

@@ -18,7 +18,6 @@
     authService.login = function(credentials) {
       return $http
         .post(__API_ENDPOINT__ + 'api/login', credentials).then(function(res) {
-          console.log(res.data);
           Session.create(
             res.data.refreshToken,
             res.data.userToken,

@@ -13,27 +13,31 @@ export default class ServeTeamMessageController {
   }
 
   $onInit() {
-    this.serveTeamService.getTeamDetailsByLeader().then((data) => {
-      this.teams = data;
-    }).catch((err) => {
-      this.log.debug("unable to retrieve teams")
-    }).finally(() => {
-      this.ready = true;
-    });
-    this.teamPeople = this.serveTeamService.getAllTeamMembersForLoggedInLeader().then((data) => {
-      this.teamPeople = data;
-    }).catch((err) => {
-      this.log.debug("unable to retrieve team members.")
-    });
-    this.tinymceOptions = {
-      resize: false,
-      height: 300,
-      plugins: 'paste link legacyoutput textcolor',
-      valid_elements: 'ol,ul,li,p,br,strong/b,i,em,a[href|target=_blank],p,br',
-      toolbar: 'undo redo | fontselect fontsizeselect forecolor backcolor | bold italic underline | alignleft aligncenter alignright | numlist bullist outdent indent | link',
-      menubar: false,
-      statusbar: false
-    };
+    if (this.serveTeamService.isLeader) {
+      this.serveTeamService.getTeamDetailsByLeader().then((data) => {
+        this.teams = data;
+      }).catch((err) => {
+        this.log.debug("unable to retrieve teams")
+      }).finally(() => {
+        this.ready = true;
+      });
+      this.teamPeople = this.serveTeamService.getAllTeamMembersForLoggedInLeader().then((data) => {
+        this.teamPeople = data;
+      }).catch((err) => {
+        this.log.debug("unable to retrieve team members.")
+      });
+      this.tinymceOptions = {
+        resize: false,
+        height: 300,
+        plugins: 'paste link legacyoutput textcolor',
+        valid_elements: 'ol,ul,li,p,br,strong/b,i,em,a[href|target=_blank],p,br',
+        toolbar: 'undo redo | fontselect fontsizeselect forecolor backcolor | bold italic underline | alignleft aligncenter alignright | numlist bullist | link',
+        menubar: false,
+        statusbar: false
+      };
+    } else {
+      this.state.go('serve-signup');
+    }
   }
 
   loadIndividuals($query) {

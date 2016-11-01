@@ -42,8 +42,6 @@ export default class StreamStatusService {
           deferred.resolve(formattedEvents);
         });
 
-    return deferred;
-
   };
 
   formatEvents(events) {
@@ -99,13 +97,11 @@ export default class StreamStatusService {
     let eventsStartingAfterCurrentTime = this.filterOutEventsStartingBeforeCurrentTime(events);
     let nextEvent = _.sortBy(eventsStartingAfterCurrentTime, ['event', 'start'])[0];
     let currentTime = moment();
-    let timeNextEvenStarts = moment(nextEvent.start);
+    let timeNextEvenStarts =  (typeof nextEvent.start === moment) ? nextEvent.start : moment(nextEvent.start);
     let timeUntilNextEvent = moment.duration(timeNextEvenStarts.diff(currentTime));
     let hoursUntilNextEvent = timeUntilNextEvent.asHours();
-    let testVar = timeUntilNextEvent.humanize();
 
     return hoursUntilNextEvent;
-
   }
 
   filterOutEventsStartingBeforeCurrentTime(events){
@@ -146,8 +142,8 @@ export default class StreamStatusService {
 
   isEventCurrentlyLive(event){
     let currentTime = moment();
-    let eventStartTime = moment(event.start);
-    let eventEndTime = moment(event.end);
+    let eventStartTime = (typeof event.start === moment) ? event.start : moment(event.start);
+    let eventEndTime = (typeof event.end === moment) ? event.end : moment(event.end);
     let isEventLive = eventStartTime.isBefore(currentTime) && eventEndTime.isAfter(currentTime);
 
     return isEventLive;
