@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Crossroads.Utilities.Interfaces;
 using FsCheck;
+using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.PlatformService;
 using MinistryPlatform.Translation.Repositories;
 using MinistryPlatform.Translation.Repositories.Interfaces;
@@ -18,6 +19,7 @@ namespace MinistryPlatform.Translation.Test.Services
         public void SetUp()
         {
             _ministryPlatformService = new Mock<IMinistryPlatformService>(MockBehavior.Strict);
+            _ministryPlatformRestService = new Mock<IMinistryPlatformRestRepository>(MockBehavior.Strict);
             _authService = new Mock<IAuthenticationRepository>(MockBehavior.Strict);
             _configWrapper = new Mock<IConfigurationWrapper>(MockBehavior.Strict);
             _groupService = new Mock<IGroupRepository>(MockBehavior.Strict);
@@ -28,11 +30,12 @@ namespace MinistryPlatform.Translation.Test.Services
             _configWrapper.Setup(m => m.GetConfigIntValue("EventsBySite")).Returns(2222);
             _authService.Setup(m => m.Authenticate(It.IsAny<string>(), It.IsAny<string>())).Returns(new Dictionary<string, object> {{"token", "ABC"}, {"exp", "123"}});
 
-            _fixture = new EventRepository(_ministryPlatformService.Object, _authService.Object, _configWrapper.Object, _groupService.Object);
+            _fixture = new EventRepository(_ministryPlatformService.Object, _authService.Object, _configWrapper.Object, _groupService.Object, _ministryPlatformRestService.Object);
         }
 
         private EventRepository _fixture;
         private Mock<IMinistryPlatformService> _ministryPlatformService;
+        private Mock<IMinistryPlatformRestRepository> _ministryPlatformRestService;
         private Mock<IAuthenticationRepository> _authService;
         private Mock<IConfigurationWrapper> _configWrapper;
         private Mock<IGroupRepository> _groupService;
@@ -368,6 +371,114 @@ namespace MinistryPlatform.Translation.Test.Services
                 _fixture.DeleteEventGroupsForEvent(eventId, token);
                 _ministryPlatformService.VerifyAll();
             }).QuickCheckThrowOnFailure();
+        }
+
+        [Test]
+        public void ShouldGetWaiversForEvent()
+        {
+            var eventId = 12345;
+            var contactId = 67890;
+            const string columnList = "Waiver_ID_Table.[Waiver_ID], Waiver_ID_Table.[Waiver_Name], Waiver_ID_Table.[Waiver_Text], cr_Event_Waivers.[Required]";
+            const string columns = "cr_Event_Participant_Waivers.Waiver_ID, cr_Event_Participant_Waivers.Event_Participant_ID, Accepted, Signee_Contact_ID";
+
+            var mockWaiver = mockWaivers();
+
+            var mockWaiverResponse = new List<MpWaiverResponse>
+            {
+                new MpWaiverResponse
+                {
+                    Accepted = true,
+                    SigneeContactId = 09876
+                }
+            };
+
+            var mockWaiverResponse2 = new List<MpWaiverResponse>
+            {
+                new MpWaiverResponse
+                {
+                    Accepted = false,
+                    SigneeContactId = contactId
+                }
+            };
+
+            _ministryPlatformRestService.Setup(m => m.Search<MpWaivers>($"Event_ID = {eventId} AND Active=1", columnList, null, false)).Returns(mockWaiver);           
+            _ministryPlatformRestService.Setup(m => m.Search<MpWaiverResponse>($"Waiver_ID_Table.Waiver_ID = 123 AND Event_Participant_ID_Table_Event_ID_Table.Event_ID = {eventId}", columns, null, false)).Returns(mockWaiverResponse);
+            _ministryPlatformRestService.Setup(m => m.Search<MpWaiverResponse>($"Waiver_ID_Table.Waiver_ID = 456 AND Event_Participant_ID_Table_Event_ID_Table.Event_ID = {eventId}", columns, null, false)).Returns(mockWaiverResponse2);
+            _ministryPlatformRestService.Setup(m => m.UsingAuthenticationToken("ABC")).Returns(_ministryPlatformRestService.Object);
+
+            var result = _fixture.GetWaivers(eventId, contactId);
+
+            _ministryPlatformRestService.VerifyAll();
+            Assert.AreEqual(2,result.Count);
+            Assert.IsTrue(result[0].Accepted);
+            Assert.IsFalse(result[1].Accepted);
+            Assert.AreEqual(09876, result[0].SigneeContactId);
+            Assert.AreEqual(contactId, result[1].SigneeContactId);
+        }
+
+        [Ignore]
+        [Test]
+        public void ShouldSaveWaiversForEventParticipant()
+        {
+            var mockWaiverResponse = new List<MpWaiverResponse>
+            {
+                new MpWaiverResponse
+                {
+                    Accepted = true,
+                    SigneeContactId = 9876,
+                    EventParticipantWaiverId = 0,
+                    EventParticipantId = 525123,
+                    WaiverId = 2
+                }
+            };
+
+            var mockWaiverResponse2 = new List<MpWaiverResponse>
+            {
+                new MpWaiverResponse
+                {
+                    Accepted = true,
+                    SigneeContactId = 9876,
+                    EventParticipantWaiverId = 123456,
+                    EventParticipantId = 525123,
+                    WaiverId = 2
+                }
+            };
+
+            var emptyList = new List<MpWaiverResponse>();
+
+            _ministryPlatformRestService.Setup(m => m.Search<int>("cr_Event_Participant_Waivers", $"Event_Participant_ID={mockWaiverResponse[0].EventParticipantId} AND Waiver_ID={mockWaiverResponse[0].WaiverId}", "Event_Participant_Waiver_ID")).Returns(123456);
+            _ministryPlatformRestService.Setup(m => m.Post(emptyList)).Returns(0);
+            _ministryPlatformRestService.Setup(m => m.Put(mockWaiverResponse2)).Returns(1);
+            _ministryPlatformRestService.Setup(m => m.UsingAuthenticationToken("ABC")).Returns(_ministryPlatformRestService.Object);
+
+            _fixture.SetWaivers(mockWaiverResponse);
+
+            _ministryPlatformRestService.VerifyAll();
+        }
+
+        private static List<MpWaivers> mockWaivers()
+        {
+            return new List<MpWaivers>
+            {
+                new MpWaivers
+                {
+                    Accepted = false,
+                    Required = true,
+                    SigneeContactId = 0,
+                    WaiverName = "NoRights",
+                    WaiverId = 123,
+                    WaiverText = "I waive ALL my rights."
+                },
+                new MpWaivers
+                {
+                    Accepted = false,
+                    Required = true,
+                    SigneeContactId = 0,
+                    WaiverName = "SomeRights",
+                    WaiverId = 456,
+                    WaiverText = "I waive Some of my rights."
+                }
+            };
         }
 
         private static List<Dictionary<string, object>> GetMockedEventGroups(int recordsToGenerate)

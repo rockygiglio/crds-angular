@@ -1,3 +1,5 @@
+import getCampWaivers from './camp_waivers/camp_waivers.resolve';
+
 function getCampInfo(CampsService, $stateParams) {
   const id = $stateParams.campId;
   return CampsService.getCampInfo(id);
@@ -56,7 +58,10 @@ export default function CampRoutes($stateProvider) {
     })
     .state('campsignup.application', {
       url: '/:page/:contactId',
-      template: '<camps-application-page></camps-application-page>'
+      template: '<camps-application-page></camps-application-page>',
+      resolve: {
+        getCampWaivers
+      }
     })
     .state('campsignup.camper', {
       url: '/:camperId',
@@ -68,4 +73,3 @@ export default function CampRoutes($stateProvider) {
       }
     });
 }
-

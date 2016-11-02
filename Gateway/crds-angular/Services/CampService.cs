@@ -282,6 +282,35 @@ namespace crds_angular.Services
             return dashboardData;
         }
 
+        public List<CampWaiverDTO> GetCampWaivers(int eventId, int contactId)
+        {
+
+            var waivers = _eventRepository.GetWaivers(eventId, contactId);
+            return waivers.Select(waiver => new CampWaiverDTO
+            {
+                WaiverId = waiver.WaiverId,
+                WaiverName = waiver.WaiverName,
+                WaiverText = waiver.WaiverText,
+                Required = waiver.Required,
+                Accepted = waiver.Accepted,
+                SigneeContactId = waiver.SigneeContactId
+            }).ToList();
+        }
+
+        public void SaveWaivers(string token, int eventId, int contactId, List<CampWaiverResponseDTO> waivers)
+        {
+            var loggedInContact = _contactRepository.GetMyProfile(token);
+            var eventParticipantId = _eventParticipantRepository.GetEventParticipantByContactId(eventId, contactId);
+            var waiverResponses = waivers.Select(waiver => new MpWaiverResponse()
+            {
+                EventParticipantId = eventParticipantId,
+                WaiverId = waiver.WaiverId,
+                Accepted = waiver.WaiverAccepted,
+                SigneeContactId = loggedInContact.Contact_ID
+            }).ToList();
+            _eventRepository.SetWaivers(waiverResponses);
+        }
+
         public void SaveCamperMedicalInfo(MedicalInfoDTO medicalInfo, int contactId, string token)
         {
             var loggedInContact = _contactRepository.GetMyProfile(token);
