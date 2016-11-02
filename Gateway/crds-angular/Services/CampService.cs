@@ -80,14 +80,11 @@ namespace crds_angular.Services
         {
             var apiToken = _apiUserRepository.GetToken();
             var myContact = _contactRepository.GetMyProfile(token);            
-            var family = _contactRepository.GetHouseholdFamilyMembers(myContact.Household_ID);
-
-            // Get my family record ID
+            var family = _contactRepository.GetHouseholdFamilyMembers(myContact.Household_ID);            
             var me = family.Where(member => member.ContactId == myContact.Contact_ID).ToList();
 
             if ((me.First().HouseholdPosition == null || !me.First().HouseholdPosition.ToLower().StartsWith("head")) )
             {
-                // return just my record...
                 return me.Select(member => new CampFamilyMember
                 {
                     ContactId = member.ContactId,
