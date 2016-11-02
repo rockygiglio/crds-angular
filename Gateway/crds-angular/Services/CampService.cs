@@ -78,13 +78,28 @@ namespace crds_angular.Services
 
         public List<CampFamilyMember> GetEligibleFamilyMembers(int eventId, string token)
         {
-            var myContact = _contactRepository.GetMyProfile(token);
+            var apiToken = _apiUserRepository.GetToken();
+            var myContact = _contactRepository.GetMyProfile(token);            
             var family = _contactRepository.GetHouseholdFamilyMembers(myContact.Household_ID);
+
+            // Get my family record ID
+            var me = family.Where(member => member.ContactId == myContact.Contact_ID).ToList();
+
+            if ((me.First().HouseholdPosition == null || !me.First().HouseholdPosition.ToLower().StartsWith("head")) )
+            {
+                // return just my record...
+                return me.Select(member => new CampFamilyMember
+                {
+                    ContactId = member.ContactId,
+                    IsEligible = _groupRepository.IsMemberOfEventGroup(member.ContactId, eventId, apiToken),
+                    SignedUpDate = _eventParticipantRepository.EventParticipantSignupDate(member.ContactId, eventId, apiToken),
+                    LastName = member.LastName,
+                    PreferredName = member.Nickname ?? member.FirstName
+                }).ToList();
+            } 
+
             var otherFamily = _contactRepository.GetOtherHouseholdMembers(myContact.Contact_ID);
             family.AddRange(otherFamily);
-
-            var apiToken = _apiUserRepository.GetToken();
-
             family = family.Where((member) => member.HouseholdPosition == "Minor Child").ToList();
             return family.Select(member => new CampFamilyMember()
             {

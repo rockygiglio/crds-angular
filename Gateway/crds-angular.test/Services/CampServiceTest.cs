@@ -203,6 +203,81 @@ namespace crds_angular.test.Services
         }
 
         [Test]
+        public void shouldGetCampFamilyNotHeadNotSignedUp()
+        {
+            const string token = "asdfasdfasdfasdf";
+            const string apiToken = "apiToken";
+            const int myContactId = 2187211;
+            const int eventId = 5433;
+            var myContact = getFakeContact(myContactId);
+
+            _contactService.Setup(m => m.GetMyProfile(token)).Returns(myContact);
+            _contactService.Setup(m => m.GetHouseholdFamilyMembers(myContact.Household_ID)).Returns(getFakeHouseholdMembers(myContact, false, "Adult Child"));            
+            _apiUserRepository.Setup(m => m.GetToken()).Returns(apiToken);
+            _groupRepository.Setup(m => m.IsMemberOfEventGroup(myContact.Contact_ID, eventId, apiToken)).Returns(true);
+            _eventParticipantRepository.Setup(m => m.EventParticipantSignupDate(myContact.Contact_ID, eventId, apiToken)).Returns((DateTime?)null);
+
+            var result = _fixture.GetEligibleFamilyMembers(eventId, token);
+            Assert.AreEqual(result.Count, 1);
+            Assert.IsNull(result.FirstOrDefault().SignedUpDate);
+            Assert.IsTrue(result.FirstOrDefault().IsEligible);
+            _contactService.VerifyAll();
+            _groupRepository.VerifyAll();
+            _eventParticipantRepository.VerifyAll();
+        }
+
+        [Test]
+        public void shouldGetCampFamilyHouseholdPositionNotSet()
+        {
+            const string token = "asdfasdfasdfasdf";
+            const string apiToken = "apiToken";
+            const int myContactId = 2187211;
+            const int eventId = 5433;
+            var myContact = getFakeContact(myContactId);
+
+            _contactService.Setup(m => m.GetMyProfile(token)).Returns(myContact);
+            _contactService.Setup(m => m.GetHouseholdFamilyMembers(myContact.Household_ID)).Returns(getFakeHouseholdMembers(myContact, false));
+            _apiUserRepository.Setup(m => m.GetToken()).Returns(apiToken);
+            _groupRepository.Setup(m => m.IsMemberOfEventGroup(myContact.Contact_ID, eventId, apiToken)).Returns(true);
+            _eventParticipantRepository.Setup(m => m.EventParticipantSignupDate(myContact.Contact_ID, eventId, apiToken)).Returns((DateTime?)null);
+
+            var result = _fixture.GetEligibleFamilyMembers(eventId, token);
+            Assert.AreEqual(result.Count, 1);
+            Assert.IsNull(result.FirstOrDefault().SignedUpDate);
+            Assert.IsTrue(result.FirstOrDefault().IsEligible);
+            _contactService.VerifyAll();
+            _groupRepository.VerifyAll();
+            _eventParticipantRepository.VerifyAll();
+        }
+
+        [Test]
+        public void shouldGetCampFamilyNotHeadSignedUp()
+        {
+            const string token = "asdfasdfasdfasdf";
+            const string apiToken = "apiToken";
+            const int myContactId = 2187211;
+            const int eventId = 5433;
+            var myContact = getFakeContact(myContactId);
+
+            var signedUpOn = DateTime.Now;
+
+            _contactService.Setup(m => m.GetMyProfile(token)).Returns(myContact);
+            _contactService.Setup(m => m.GetHouseholdFamilyMembers(myContact.Household_ID)).Returns(getFakeHouseholdMembers(myContact, false, "Adult Child"));
+            _apiUserRepository.Setup(m => m.GetToken()).Returns(apiToken);
+            _groupRepository.Setup(m => m.IsMemberOfEventGroup(myContact.Contact_ID, eventId, apiToken)).Returns(true);
+            _eventParticipantRepository.Setup(m => m.EventParticipantSignupDate(myContact.Contact_ID, eventId, apiToken)).Returns(signedUpOn);
+
+            var result = _fixture.GetEligibleFamilyMembers(eventId, token);
+            Assert.AreEqual(result.Count, 1);
+            Assert.IsNotNull(result.First().SignedUpDate);
+            Assert.AreEqual(signedUpOn, result.First().SignedUpDate);
+            Assert.IsTrue(result.First().IsEligible);
+            _contactService.VerifyAll();
+            _groupRepository.VerifyAll();
+            _eventParticipantRepository.VerifyAll();
+        }
+
+        [Test]
         public void shouldSaveEmergencyContact()
         {
             var contactId = 12345;
@@ -262,8 +337,11 @@ namespace crds_angular.test.Services
             var eventId = 1234;
             var myContact = getFakeContact(myContactId);
 
+            // Get a family list with only me in it i.e. no family
+            var family = getFakeHouseholdMembers(myContact).Where(member => member.ContactId == myContactId).ToList();
+
             _contactService.Setup(m => m.GetMyProfile(token)).Returns(myContact);
-            _contactService.Setup(m => m.GetHouseholdFamilyMembers(myContact.Household_ID)).Returns(new List<MpHouseholdMember>());
+            _contactService.Setup(m => m.GetHouseholdFamilyMembers(myContact.Household_ID)).Returns(family);
             _contactService.Setup(m => m.GetOtherHouseholdMembers(myContactId)).Returns(new List<MpHouseholdMember>());
             _apiUserRepository.Setup(m => m.GetToken()).Returns(apiToken);            
 
@@ -420,7 +498,7 @@ namespace crds_angular.test.Services
             _groupRepository.VerifyAll();
         }
 
-        private List<MpHouseholdMember> getFakeHouseholdMembers(MpMyContact me)
+        private List<MpHouseholdMember> getFakeHouseholdMembers(MpMyContact me, bool isHead = true, string positionIfNotHead = null)
         {
             return new List<MpHouseholdMember>
             {
@@ -440,11 +518,11 @@ namespace crds_angular.test.Services
                     ContactId = me.Contact_ID,
                     FirstName = me.First_Name,
                     LastName = me.Last_Name,
-                    HouseholdPosition = "Head of Household",
+                    HouseholdPosition = isHead ? "Head of Household" : positionIfNotHead,
                     Nickname = "matt"
                 }
             };
-        }
+        }        
 
         private MpMyContact getFakeContact(int contactId)
         {
