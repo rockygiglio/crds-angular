@@ -42,7 +42,9 @@ namespace Crossroads.Utilities.Models
         [EnumMember(Value = "trip application")]
         TripApplication,
         [EnumMember(Value = "group tool")]
-        GroupTool
+        GroupTool,
+        [EnumMember(Value = "echeck")]
+        Echeck
     }
 
     public class ContentBlocks
