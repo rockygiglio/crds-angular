@@ -48,7 +48,7 @@ function CampHelpers() {
       policyHolderName: undefined,
       physicianName: undefined,
       physicianNumber: undefined,
-      showAllergies: true,
+      showAllergies: false,
       medicineAllergies: undefined,
       foodAllergies: undefined,
       environmentAllergies: undefined,

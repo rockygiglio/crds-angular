@@ -32,7 +32,7 @@ describe('Camps Medical Info Form', () => {
 
   it('should set up the form model', () => {
     expect(fixture.getModel()).toEqual(campHelpers().medicalInfoModel);
-  })
+  });
 
   afterEach(() => {
     httpBackend.verifyNoOutstandingExpectation();

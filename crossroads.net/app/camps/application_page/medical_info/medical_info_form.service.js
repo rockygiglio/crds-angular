@@ -7,7 +7,7 @@ class MedicalInfoForm {
       policyHolderName: undefined,
       physicianName: undefined,
       physicianNumber: undefined,
-      showAllergies: undefined || true,
+      showAllergies: undefined || false,
       medicineAllergies: undefined,
       foodAllergies: undefined,
       environmentAllergies: undefined,
