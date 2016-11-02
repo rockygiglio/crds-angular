@@ -5,6 +5,7 @@
     // MODULE NAMES
     MODULES: {
       CAMPS: 'crossroads.camps',
+      CAMPS_APPLICATION_PAGE: 'crossroads.camps.applicationPages',
       CHILDCARE: 'crossroads.childcare',
       CHILDCARE_DASHBOARD: 'crossroads.childcare_dashboard',
       CORE: 'crossroads.core',
@@ -86,7 +87,12 @@
       NOT_SITE_SPECIFIC: 5
     },
     SERVING_RESPONSES :{
-      NOT_AVAILABLE: 2
+      NOT_AVAILABLE: 2,
+      AVAILABLE: 1
+    },
+    SERVING: {
+      MAXSTUDENTVOLUNTEERAGE: 17,
+      STUDENTVOLUNTEERTEXT: " (SV)"
     },
     CMS: {
       PAGENAMES: {
@@ -117,6 +123,7 @@
       GROUP_TYPE_ID: {
         UNDIVIDED: 26,
         SMALL_GROUPS: 1,
+        MY_SERVE: 9
       },
       ROLES: {
         MEMBER: 16,
@@ -125,7 +132,7 @@
       },
     },
     GEOLOCATION: {
-      MODAL_TIMEOUT: 10000,
+      MODAL_TIMEOUT: 3000,
       FORMS_KEY: '1rupjr7gvqUU203fwjmeUlIiVwCA8BdkD-mP6M6s3wxQ'
     },
     INVITATION: {

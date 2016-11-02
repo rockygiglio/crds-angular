@@ -55,7 +55,7 @@
           <div class="row push-quarter-bottom">
             <div class='group-detail-label col-sm-4'><strong>Leaders</strong></div>
             <div class='col-sm-8'>
-              <span ng-repeat='leader in groupDetailAbout.data.leaders()'>{{leader.displayName()}}<span ng-if='leader.congregation'> ({{leader.congregation}})</span><span ng-if='!$last'>,&nbsp;</span></span>
+              <span ng-repeat='leader in groupDetailAbout.data.leaders()'>{{leader.getDisplayName()}}<span ng-if='leader.congregation'> ({{leader.congregation}})</span><span ng-if='!$last'>,&nbsp;</span></span>
             </div>
           </div>
           <div class="row push-quarter-bottom">

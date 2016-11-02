@@ -13,6 +13,11 @@ export default function LiveStreamRouter($httpProvider, $stateProvider) {
           title: 'Live',
           description: ''
         }
+      },
+      resolve: {
+        preloadStreamStatus: function (StreamStatusService) {
+          return StreamStatusService.presetStreamStatus();
+        }
       }
     })
     .state('livestream', {

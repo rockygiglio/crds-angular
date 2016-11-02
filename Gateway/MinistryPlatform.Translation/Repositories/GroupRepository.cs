@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Crossroads.Utilities.FunctionalHelpers;
 using Crossroads.Utilities.Interfaces;
 using log4net;
 using MinistryPlatform.Translation.Extensions;
@@ -65,6 +66,39 @@ namespace MinistryPlatform.Translation.Repositories
             _contentBlockService = contentBlockService;
             _addressRepository = addressRepository;
             _objectAttributeRepository = objectAttributeRepository;
+        }
+
+        public bool IsMemberOfEventGroup(int contactId, int eventId, string token)
+        {
+            var storedProc = _configurationWrapper.GetConfigValue("IsCampEligibleStoredProc");
+            var storedProcOpts = new Dictionary<string,object>
+            {
+                {"@ContactID", contactId },
+                {"@EventID", eventId }   
+            };
+            var result = _ministryPlatformRestRepository.UsingAuthenticationToken(token).GetFromStoredProc<MpStoredProcBool>(storedProc, storedProcOpts);
+            if (result.Count <= 0) return false;
+            var mpStoredProcBool = result.FirstOrDefault();
+            return mpStoredProcBool != null 
+                   && mpStoredProcBool.FirstOrDefault() != null 
+                   && mpStoredProcBool.FirstOrDefault().isTrue;
+        }
+
+        public Result<MpGroupParticipant> GetGradeGroupForContact(int contactId, string apiToken)
+        {
+            var groupType = _configurationWrapper.GetConfigIntValue("AgeorGradeGroupType");
+            var searchString = $"Participant_ID_Table_Contact_ID_Table.[Contact_ID]='{contactId}' AND Group_ID_Table_Group_Type_ID_Table.[Group_Type_ID]='{groupType}'";
+            const string selectColumns = "Group_ID_Table.[Group_Name],Group_ID_Table.[Group_ID]";
+            var participant = _ministryPlatformRestRepository.UsingAuthenticationToken(apiToken).Search<MpGroupParticipant>(searchString, selectColumns, null, true);
+            if (participant.Count > 0)
+            {
+                if (participant.FirstOrDefault() != null && participant.FirstOrDefault().GroupName != null)
+                {
+                    return new Result<MpGroupParticipant>(true, participant.FirstOrDefault());
+                }
+                return new Result<MpGroupParticipant>(false, $"Grade group not found for contact {contactId}");
+            }
+            return new Result<MpGroupParticipant>(false, $"Grade group not found for contact {contactId}");
         }
 
         public int CreateGroup(MpGroup group)

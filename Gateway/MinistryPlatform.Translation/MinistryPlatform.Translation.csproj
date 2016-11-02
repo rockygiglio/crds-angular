@@ -115,12 +115,25 @@
   <ItemGroup>
     <Compile Include="Exceptions\DonationNotFoundException.cs" />
     <Compile Include="Extensions\RestSharpExtensions.cs" />
+    <Compile Include="Models\DTO\PredefinedDonationAmountDTO.cs" />
     <Compile Include="Models\MpCamp.cs" />
+    <Compile Include="Models\MpMedicalInformation.cs" />
     <Compile Include="Models\MpRecordID.cs" />
+    <Compile Include="Models\MpStoredProcBool.cs" />
+    <Compile Include="Models\Payments\MpInvoice.cs" />
+    <Compile Include="Models\Payments\MpNestedInvoiceDetail.cs" />
+    <Compile Include="Models\Payments\MpInvoiceDetail.cs" />
+    <Compile Include="Models\Payments\MpPayment.cs" />
+    <Compile Include="Models\Payments\MpPaymentDetail.cs" />
+    <Compile Include="Models\Payments\MpPaymentType.cs" />
     <Compile Include="Repositories\CampRepository.cs" />
     <Compile Include="Repositories\Interfaces\ICampRepository.cs" />
     <Compile Include="Models\MpRsvpMembers.cs" />
     <Compile Include="Models\MpSU2SOpportunity.cs" />
+    <Compile Include="Repositories\Interfaces\IInvoiceRepository.cs" />
+    <Compile Include="Repositories\Interfaces\IMedicalInformationRepository.cs" />
+    <Compile Include="Repositories\Interfaces\IPaymentRepository.cs" />
+    <Compile Include="Repositories\Interfaces\IPaymentTypeRepository.cs" />
     <Compile Include="Repositories\Interfaces\ITripRepository.cs" />
     <Compile Include="Models\Childcare\MpChildcareCancelledNotification.cs" />
     <Compile Include="Models\Childcare\MpChildcareDashboard.cs" />
@@ -128,6 +141,7 @@
     <Compile Include="Models\DTO\MpGroupSearchResultDto.cs" />
     <Compile Include="Models\MpAddress.cs" />
     <Compile Include="Models\MpAttribute.cs" />
+    <Compile Include="Models\Attributes\MpRestApiPrimaryKey.cs" />
     <Compile Include="Models\Attributes\MpRestApiTable.cs" />
     <Compile Include="Models\MpBulkEmailPublication.cs" />
     <Compile Include="Models\MpBulkEmailSubscriber.cs" />
@@ -236,7 +250,11 @@
     <Compile Include="Repositories\Interfaces\IFormBuilderRepository.cs" />
     <Compile Include="Repositories\Interfaces\IGroupToolRepository.cs" />
     <Compile Include="Repositories\Interfaces\IMinistryPlatformRestRepository.cs" />
+    <Compile Include="Repositories\InvoiceRepository.cs" />
+    <Compile Include="Repositories\MedicalInformationRepository.cs" />
     <Compile Include="Repositories\MinistryPlatformRestRepository.cs" />
+    <Compile Include="Repositories\PaymentRepository.cs" />
+    <Compile Include="Repositories\PaymentTypeRepository.cs" />
     <Compile Include="Repositories\ProjectTypeRepository.cs" />
     <Compile Include="Repositories\Interfaces\IProjectTypeRepository.cs" />
     <Compile Include="Repositories\Interfaces\IOrganizationRepository.cs" />
@@ -253,7 +271,7 @@
     <Compile Include="Repositories\EventParticipantRepository.cs" />
     <Compile Include="Repositories\EventRepository.cs" />
     <Compile Include="Repositories\CommunicationRepository.cs" />
-    <Compile Include="Repositories\FormSubmissionRepository..cs" />
+    <Compile Include="Repositories\FormSubmissionRepository.cs" />
     <Compile Include="Repositories\AttributeRepository.cs" />
     <Compile Include="Repositories\GetMyRecordsRepository..cs" />
     <Compile Include="Repositories\GroupParticipantRepository.cs" />

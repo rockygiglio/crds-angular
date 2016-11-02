@@ -27,7 +27,7 @@ namespace crds_angular.test.controllers
     {
         private DonationController fixture;
         private Mock<MinistryPlatform.Translation.Repositories.Interfaces.IDonorRepository> donorServiceMock;
-        private Mock<IPaymentService> stripeServiceMock;
+        private Mock<IPaymentProcessorService> stripeServiceMock;
         private Mock<IAuthenticationRepository> authenticationServiceMock;
         private Mock<IDonorService> gatewayDonorServiceMock;
         private Mock<IDonationService> gatewayDonationServiceMock;
@@ -42,7 +42,7 @@ namespace crds_angular.test.controllers
         {
             donorServiceMock = new Mock<MinistryPlatform.Translation.Repositories.Interfaces.IDonorRepository>();
             gatewayDonorServiceMock = new Mock<IDonorService>();
-            stripeServiceMock = new Mock<IPaymentService>();
+            stripeServiceMock = new Mock<IPaymentProcessorService>();
             authenticationServiceMock = new Mock<IAuthenticationRepository>();
             gatewayDonationServiceMock = new Mock<IDonationService>();
             mpPledgeService = new Mock<IPledgeRepository>();
@@ -85,7 +85,7 @@ namespace crds_angular.test.controllers
             var dto = new DonationsDTO();
             dto.Donations.AddRange(donations);
 
-            gatewayDonationServiceMock.Setup(mocked => mocked.GetDonationsForAuthenticatedUser(authType + " " + authToken, "1999", null, true)).Returns(dto);
+            gatewayDonationServiceMock.Setup(mocked => mocked.GetDonationsForAuthenticatedUser(authType + " " + authToken, "1999", null, true, true)).Returns(dto);
             var response = fixture.GetDonations("1999", null, true);
             gatewayDonationServiceMock.VerifyAll();
 
@@ -99,7 +99,7 @@ namespace crds_angular.test.controllers
         [Test]
         public void TestGetDonationsNoDonationsFound()
         {
-            gatewayDonationServiceMock.Setup(mocked => mocked.GetDonationsForAuthenticatedUser(authType + " " + authToken, "1999", null, true)).Returns((DonationsDTO)null);
+            gatewayDonationServiceMock.Setup(mocked => mocked.GetDonationsForAuthenticatedUser(authType + " " + authToken, "1999", null, true, true)).Returns((DonationsDTO)null);
             var response = fixture.GetDonations("1999", null, true);
             gatewayDonationServiceMock.VerifyAll();
 

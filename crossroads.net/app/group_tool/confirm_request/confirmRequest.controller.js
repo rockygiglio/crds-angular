@@ -56,7 +56,7 @@ export default class ConfirmRequestController {
   }
 
   leaderDisplayName(participant) {
-    return this.multipleLeaders ? participant.nickName : participant.displayName();
+    return this.multipleLeaders ? participant.nickName : participant.getDisplayName();
   }
 
   emailGroupLeader() {

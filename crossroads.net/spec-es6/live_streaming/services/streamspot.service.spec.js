@@ -18,7 +18,7 @@ describe('Live Streaming Streamspot Service', () => {
       "events": [
         {
           "start": moment(baseTime).add(1, 'hour').format('YYYY-MM-DD H:mm:ss'),
-          "end": moment(baseTime).add(2, 'hour').format('YYYY-MM-DD H:mm:ss'),
+          "end": moment(baseTime).add(2, 'hours').format('YYYY-MM-DD H:mm:ss'),
           "title": "Saturday Rehearsal Upcoming"
         },
         {
@@ -27,7 +27,7 @@ describe('Live Streaming Streamspot Service', () => {
           "title": "Saturday Rehearsal Broadcasting"
         },
         {
-          "start": moment(baseTime).subtract(2, 'hour').format('YYYY-MM-DD H:mm:ss'),
+          "start": moment(baseTime).subtract(2, 'hours').format('YYYY-MM-DD H:mm:ss'),
           "end": moment(baseTime).subtract(1, 'hour').format('YYYY-MM-DD H:mm:ss'),
           "title": "Saturday Rehearsal Done"
         }
@@ -47,7 +47,7 @@ describe('Live Streaming Streamspot Service', () => {
     
     jasmine.clock().mockDate(baseTime);
 
-  }))
+  }));
 
   afterEach(() => {
     httpBackend.verifyNoOutstandingExpectation();
@@ -59,7 +59,7 @@ describe('Live Streaming Streamspot Service', () => {
     it('should get events', () => {
       httpBackend.expectGET(eventsEndpoint).respond(200, events);
       httpBackend.flush();
-    })
+    });
 
     it('should return upcoming events', () => {
       httpBackend.expectGET(eventsEndpoint).respond(200, events);
@@ -69,7 +69,7 @@ describe('Live Streaming Streamspot Service', () => {
       expect(service.parseEvents() instanceof Array).toBeTruthy();
 
       let titles = service.parseEvents().map((event) => { return event.title });
-      expect(titles).not.toContain('Saturday Rehearsal Done')
+      expect(titles).not.toContain('Saturday Rehearsal Done');
 
       expect(_.first(service.parseEvents()).title).toBe('Saturday Rehearsal Broadcasting');
       
@@ -88,4 +88,4 @@ describe('Live Streaming Streamspot Service', () => {
       expect(event.title).toBe('Saturday Rehearsal Broadcasting');
     });
   })
-})
+});

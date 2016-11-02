@@ -25,12 +25,12 @@ namespace crds_angular.Services
 
         private readonly MPServices.IDonationRepository _mpDonationService;
         private readonly MPServices.IDonorRepository _mpDonorService;
-        private readonly IPaymentService _paymentService;
+        private readonly IPaymentProcessorService _paymentService;
         private readonly MPServices.IContactRepository _contactService;
         private readonly int _statementTypeFamily;
         private readonly int _bankErrorRefundDonorId;
 
-        public DonationService(MPServices.IDonationRepository mpDonationService, MPServices.IDonorRepository mpDonorService, IPaymentService paymentService, MPServices.IContactRepository contactService, IConfigurationWrapper config)
+        public DonationService(MPServices.IDonationRepository mpDonationService, MPServices.IDonorRepository mpDonorService, IPaymentProcessorService paymentService, MPServices.IContactRepository contactService, IConfigurationWrapper config)
         {
             _mpDonationService = mpDonationService;
             _mpDonorService = mpDonorService;
@@ -92,9 +92,9 @@ namespace crds_angular.Services
             return (Mapper.Map<MpDonationBatch, DonationBatchDTO>(_mpDonationService.GetDonationBatch(batchId)));
         }
 
-        public DonationsDTO GetDonationsForAuthenticatedUser(string userToken, string donationYear = null, int? limit = null, bool? softCredit = null)
+        public DonationsDTO GetDonationsForAuthenticatedUser(string userToken, string donationYear = null, int? limit = null, bool? softCredit = null, bool? includeRecurring = true)
         {
-            var donations = _mpDonorService.GetDonationsForAuthenticatedUser(userToken, softCredit, donationYear);
+            var donations = _mpDonorService.GetDonationsForAuthenticatedUser(userToken, softCredit, donationYear, includeRecurring);            
             return (PostProcessDonations(donations, limit));
         }
 

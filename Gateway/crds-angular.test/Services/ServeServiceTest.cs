@@ -1136,7 +1136,7 @@ namespace crds_angular.test.Services
             var responses = new List<MinistryPlatform.Translation.Models.MpResponse>();
             for (var i = 0; i < 20; i++)
             {
-                responses.Add(new MinistryPlatform.Translation.Models.MpResponse { Event_ID = 1000, Response_Result_ID = 1 });
+                responses.Add(new MinistryPlatform.Translation.Models.MpResponse { Event_ID = 1000, Response_Result_ID = 1});
             }
             return responses;
         }
@@ -1146,7 +1146,7 @@ namespace crds_angular.test.Services
             var responses = new List<MinistryPlatform.Translation.Models.MpResponse>();
             for (var i = 0; i < 15; i++)
             {
-                responses.Add(new MinistryPlatform.Translation.Models.MpResponse { Event_ID = 1000, Response_Result_ID = 1 });
+                responses.Add(new MinistryPlatform.Translation.Models.MpResponse { Event_ID = 1000, Response_Result_ID = 1});
             }
             return responses;
         }
@@ -1186,7 +1186,8 @@ namespace crds_angular.test.Services
                         Name = "JC",
                         Opportunity = 2218712,
                         ParticipantId = 7572172,
-                        ResponseResultId = 1
+                        ResponseResultId = 1,
+                        Age = 18
                     },
 
                     new MpRsvpMember()
@@ -1197,7 +1198,8 @@ namespace crds_angular.test.Services
                         Name = "Duke",
                         Opportunity = 2218712,
                         ParticipantId = 7572183,
-                        ResponseResultId = 2
+                        ResponseResultId = 2,
+                        Age = null
                     },
                     new MpRsvpMember()
                     {
@@ -1207,7 +1209,8 @@ namespace crds_angular.test.Services
                         Name = "Liz",
                         Opportunity = 2218735,
                         ParticipantId = 7547422,
-                        ResponseResultId = 1
+                        ResponseResultId = 1,
+                        Age = 21
                     },
                     new MpRsvpMember()
                     {
@@ -1217,7 +1220,8 @@ namespace crds_angular.test.Services
                         Name = "Cloud",
                         Opportunity = 2218735,
                         ParticipantId = 7547423,
-                        ResponseResultId = 2
+                        ResponseResultId = 2,
+                        Age = 21
                     }
             };
 

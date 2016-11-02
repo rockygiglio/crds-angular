@@ -7,9 +7,10 @@ export default class GeolocationService {
     this.q          = $q;
     this.rootScope  = $rootScope;
     this.mapService = GoogleMapsService;
-    this.cookies = $cookies;
+    this.cookies    = $cookies;
 
-    this.answered       = false;
+    this.answered = false;
+    this.inModal = this.showModal();
   }
 
   showModal() {
@@ -23,7 +24,6 @@ export default class GeolocationService {
   }
 
   saveLocation(location) {
-    this.answered    = true;
     localStorage.setItem('crds-geolocation', JSON.stringify(location));
 
     let formKey = CONSTANTS.GEOLOCATION.FORMS_KEY;
@@ -32,7 +32,8 @@ export default class GeolocationService {
       "entry.1874873182": location.lat,
       "entry.1547032910": location.lng,
       "entry.1403910056": location.count,
-      "entry.692424241": location.zipcode
+      "entry.692424241": location.zipcode,
+      "entry.644514730": this.inModal ? "Modal": "Banner"
     };
     /**
      * Using $.ajax instead of $http as $http formats data as JSON,
@@ -60,10 +61,10 @@ export default class GeolocationService {
           _.each(location.address_components, (address) => {
             if (_.findIndex(address.types, (t) => { return t === 'country'}) >= 0) {
               country = address.long_name;
-            } 
+            }
             if (_.findIndex(address.types, (t) => { return t === 'postal_code'}) >= 0) {
               zipcodes.push(address.long_name);
-            } 
+            }
           })
         })
 
@@ -82,7 +83,7 @@ export default class GeolocationService {
       } else {
         deferred.reject('No Results')
       }
-      
+
     }, (error) => {
       deferred.reject(error);
     });
@@ -95,7 +96,7 @@ export default class GeolocationService {
   }
 
   hasDismissed() {
-    return this.cookies.get('dismissedGeo') == "true";
+    return this.cookies.get('dismissedGeo') === "true";
   }
 
   getLocation() {
@@ -109,11 +110,12 @@ export default class GeolocationService {
   }
 
   success() {
+    this.answered = true;
     this.rootScope.$broadcast('geolocationModalDismiss');
   }
 
   dismissed() {
-    this.answered    = true;
+    this.answered = true;
     this.cookies.put('dismissedGeo', true);
     this.rootScope.$broadcast('geolocationModalDismiss')
   }

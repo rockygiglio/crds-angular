@@ -17,7 +17,7 @@ namespace crds_angular.test.Services
         private EzScanCheckScannerService _fixture;
         private Mock<ICheckScannerDao> _checkScannerDao;
         private Mock<IDonorService> _donorService;
-        private Mock<IPaymentService> _paymentService;
+        private Mock<IPaymentProcessorService> _paymentService;
         private Mock<MPServices.IDonorRepository> _mpDonorService;
 
         [SetUp]
@@ -25,7 +25,7 @@ namespace crds_angular.test.Services
         {
             _checkScannerDao = new Mock<ICheckScannerDao>(MockBehavior.Strict);
             _donorService = new Mock<IDonorService>(MockBehavior.Strict);
-            _paymentService = new Mock<IPaymentService>(MockBehavior.Strict);
+            _paymentService = new Mock<IPaymentProcessorService>(MockBehavior.Strict);
             _mpDonorService = new Mock<MPServices.IDonorRepository>(MockBehavior.Strict);
             _fixture = new EzScanCheckScannerService(_checkScannerDao.Object, _donorService.Object, _paymentService.Object, _mpDonorService.Object);
             AutoMapperConfig.RegisterMappings();

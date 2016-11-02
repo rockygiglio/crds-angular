@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using Crossroads.Utilities.FunctionalHelpers;
 using Crossroads.Utilities.Interfaces;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Repositories;
@@ -491,6 +493,63 @@ namespace MinistryPlatform.Translation.Test.Services
         }
 
         [Test]
+        public void GetGradeGroupForContact()
+        {
+            const int contactId = 987654;
+            const string apiToken = "letmein";
+            const int gradeGroupType = 4;
+            var participantList = new List<MpGroupParticipant>
+            {
+                new MpGroupParticipant()
+                {
+                    GroupName = "5th Graders",
+                    GroupId = 1234
+                }
+            };
+
+            var searchString = $"Participant_ID_Table_Contact_ID_Table.[Contact_ID]='{contactId}' AND Group_ID_Table_Group_Type_ID_Table.[Group_Type_ID]='{gradeGroupType}'";
+            const string selectColumns = "Group_ID_Table.[Group_Name],Group_ID_Table.[Group_ID]";
+
+            _configWrapper.Setup(m => m.GetConfigIntValue("AgeorGradeGroupType")).Returns(gradeGroupType);
+
+            _ministryPlatformRestService.Setup(m => m.UsingAuthenticationToken(apiToken)).Returns(_ministryPlatformRestService.Object);
+            _ministryPlatformRestService.Setup(m => m.Search<MpGroupParticipant>(searchString, selectColumns, null, true)).Returns(participantList);
+
+            Result<MpGroupParticipant> result = _fixture.GetGradeGroupForContact(contactId, apiToken);
+
+            _ministryPlatformRestService.VerifyAll();
+            Assert.IsTrue(result.Status);
+            Assert.AreSame(participantList.FirstOrDefault(), result.Value);            
+        }
+
+        [Test]
+        public void GetGradeGroupForContactEmpty()
+        {
+            const int contactId = 987654;
+            const string apiToken = "letmein";
+            const int gradeGroupType = 4;
+            var participantList = new List<MpGroupParticipant>
+            {
+                new MpGroupParticipant()
+            };
+
+            var searchString = $"Participant_ID_Table_Contact_ID_Table.[Contact_ID]='{contactId}' AND Group_ID_Table_Group_Type_ID_Table.[Group_Type_ID]='{gradeGroupType}'";
+            const string selectColumns = "Group_ID_Table.[Group_Name],Group_ID_Table.[Group_ID]";
+
+            _configWrapper.Setup(m => m.GetConfigIntValue("AgeorGradeGroupType")).Returns(gradeGroupType);
+
+            _ministryPlatformRestService.Setup(m => m.UsingAuthenticationToken(apiToken)).Returns(_ministryPlatformRestService.Object);
+            _ministryPlatformRestService.Setup(m => m.Search<MpGroupParticipant>(searchString, selectColumns, null, true)).Returns(participantList);
+
+            Result<MpGroupParticipant> result = _fixture.GetGradeGroupForContact(contactId, apiToken);
+
+            _ministryPlatformRestService.VerifyAll();
+            Assert.IsFalse(result.Status);
+            Assert.IsNull(result.Value);
+            Assert.NotNull(result.ErrorMessage);
+        }
+
+        [Test]
         public void GetMyGroupsByTypeAndGroupId()
         {
             const int groupId = 987;
@@ -819,7 +878,92 @@ namespace MinistryPlatform.Translation.Test.Services
             Assert.AreEqual(string.Empty, group.MeetingFrequency);
         }
 
+        [Test]
+        public void IsMemberOfGradeGroup()
+        {
+            const string api_token = "asdfasdfasdf";
+            const string storedProcName = "storedProcName";
+            const int contactId = 12345;
+            const int eventId = 54321;
 
+            var storedProcParams = new Dictionary<string, object>
+            {
+                {"@ContactID", contactId},
+                {"@EventID", eventId }
+            };
+
+            var result = new List<List<MpStoredProcBool>>
+            {
+                new List<MpStoredProcBool>
+                {
+                    new MpStoredProcBool()
+                    {
+                        isTrue = true
+                    }
+                }
+            };
+            _configWrapper.Setup(m => m.GetConfigValue("IsCampEligibleStoredProc")).Returns(storedProcName);
+            _ministryPlatformRestService.Setup(m => m.UsingAuthenticationToken(api_token)).Returns(_ministryPlatformRestService.Object);
+            _ministryPlatformRestService.Setup(m => m.GetFromStoredProc<MpStoredProcBool>(storedProcName, storedProcParams)).Returns(result);
+            var actual = _fixture.IsMemberOfEventGroup(contactId, eventId, api_token);
+            Assert.IsTrue(actual);
+            _ministryPlatformRestService.VerifyAll();           
+        }
+
+        [Test]
+        public void IsNotMemberOfGradeGroup()
+        {
+            const string api_token = "asdfasdfasdf";
+            const string storedProcName = "storedProcName";
+            const int contactId = 12345;
+            const int eventId = 543321;
+
+            var storedProcParams = new Dictionary<string, object>
+            {
+                {"@ContactID", contactId},
+                {"@EventID", eventId }
+            };
+
+            var result = new List<List<MpStoredProcBool>>
+            {
+                new List<MpStoredProcBool>
+                {
+                    new MpStoredProcBool()
+                    {
+                        isTrue = false
+                    }
+                }
+            };
+            _configWrapper.Setup(m => m.GetConfigValue("IsCampEligibleStoredProc")).Returns(storedProcName);
+            _ministryPlatformRestService.Setup(m => m.UsingAuthenticationToken(api_token)).Returns(_ministryPlatformRestService.Object);
+            _ministryPlatformRestService.Setup(m => m.GetFromStoredProc<MpStoredProcBool>(storedProcName, storedProcParams)).Returns(result);
+            var actual = _fixture.IsMemberOfEventGroup(contactId, eventId, api_token);
+            Assert.IsFalse(actual);
+            _ministryPlatformRestService.VerifyAll();            
+        }
+
+        [Test]
+        public void IsNullMemberOfGradeGroup()
+        {
+            const string api_token = "asdfasdfasdf";
+            const string storedProcName = "storedProcName";
+            const int contactId = 12345;
+            const int eventId = 5431;
+
+            var storedProcParams = new Dictionary<string, object>
+            {
+                {"@ContactID", contactId},
+                {"@EventID", eventId }
+            };
+
+            var result = new List<List<MpStoredProcBool>>();
+            _configWrapper.Setup(m => m.GetConfigValue("IsCampEligibleStoredProc")).Returns(storedProcName);
+            _ministryPlatformRestService.Setup(m => m.UsingAuthenticationToken(api_token)).Returns(_ministryPlatformRestService.Object);
+            _ministryPlatformRestService.Setup(m => m.GetFromStoredProc<MpStoredProcBool>(storedProcName, storedProcParams)).Returns(result);
+            var actual = _fixture.IsMemberOfEventGroup(contactId, eventId, api_token);
+            Assert.IsFalse(actual);
+            _ministryPlatformRestService.VerifyAll();
+        }
 
         private Dictionary<string, object> getTestGroupRecord()
         {

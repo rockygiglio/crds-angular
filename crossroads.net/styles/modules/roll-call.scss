@@ -16,6 +16,12 @@
     color: $gray-light;
   }
 
+  .count {
+    min-width: 45px;
+    border-bottom: 1px solid $gray-light;
+    display: inline-block;
+  }
+
   input {
     background: transparent;
     border: none;

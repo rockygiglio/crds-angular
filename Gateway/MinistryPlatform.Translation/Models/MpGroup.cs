@@ -1,15 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
+using MinistryPlatform.Translation.Models.Attributes;
+using Newtonsoft.Json;
+
 
 namespace MinistryPlatform.Translation.Models
 {
+[MpRestApiTable(Name = "Groups")]
     public class MpGroup
     {
+        [JsonProperty("Group_ID")]
         public int GroupId { get; set; }
+        [JsonProperty("Group_Name")]
+        public string Name { get; set; }
         public string GroupRole { get; set; }
+        [JsonProperty("Group_Type_ID")]
         public int GroupType { get; set; }
         public int TargetSize { get; set; }
-        public string Name { get; set; }
         public IList<MpGroupParticipant> Participants { get; set; }
         public Boolean Full { get; set; }
         public Boolean WaitList { get; set; }

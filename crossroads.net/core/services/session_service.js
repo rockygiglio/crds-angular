@@ -174,6 +174,7 @@
           $rootScope.userid = user.userId;
           $rootScope.username = user.username;
           $rootScope.email = user.userEmail;
+          $rootScope.phone = user.userPhone;
           $rootScope.roles = user.roles;
         }).error(function (e) {
           clearAndRedirect(event, stateName, stateToParams);
@@ -196,6 +197,10 @@
       vm.clear();
       $rootScope.userid = null;
       $rootScope.username = null;
+      $rootScope.email = null;
+      $rootScope.phone = null;
+      $rootScope.roles = null;
+
       vm.addRedirectRoute(toState, toParams);
 
       if (event) {

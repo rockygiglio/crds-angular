@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using crds_angular.Models.Crossroads;
+using crds_angular.Models.Crossroads.Groups;
 using crds_angular.Models.Crossroads.Opportunity;
 using crds_angular.Models.Crossroads.Serve;
 using MinistryPlatform.Translation.Models;
@@ -19,6 +20,9 @@ namespace crds_angular.Services.Interfaces
         List<int> SaveServeRsvp(string token, SaveRsvpDto dto);
         void SendReminderEmails();
         List<GroupContactDTO> PotentialVolunteers(int groupId, crds_angular.Models.Crossroads.Events.Event evt, List<MpGroupParticipant> groupMembers );
+        List<GroupDTO> GetLeaderGroups(string token);
         ServingTeam GetServingTeamRsvps(ServingTeam team);
+        bool GetIsLeader(string token, int? groupId);
+        List<GroupParticipantDTO> GetLeaderGroupsParticipants(string token, int? groupId);
     }
 }
