@@ -4,7 +4,7 @@ import CONSTANTS from '../../constants';
 export default class GeolocationController {
   constructor(GeolocationService) {
     this.locationService = GeolocationService;
-    
+
     this.subject = 'person';
     this.verb    = 'is';
 
@@ -31,11 +31,19 @@ export default class GeolocationController {
 
   subtract() {
     let count = this.location.count;
-    if (count > 1 ) {
+    if (count > 0) {
       count -= 1;
     }
 
     this.setCount(count);
+  }
+
+  displayCount() {
+    let result = '\u00A0\u00A0';
+    if (this.location.count > 0) {
+      result = `${this.location.count}`;
+    }
+    return result;
   }
 
   submitEnabled() {
@@ -94,16 +102,22 @@ export default class GeolocationController {
    ***********************/
   submit() {
     this.removeFormMessages();
-    if (this.location.zipcode.length > 0 && !this.location.zipcode.match(/^\d{5}$/)) {
-      this.invalidZipcode = true;
-    } else {
-      this.locationService.saveLocation(this.location);
-      this.success = true; 
-      setTimeout(() => {
-        this.dismiss = true;
-        this.locationService.success();
-      }, CONSTANTS.GEOLOCATION.MODAL_TIMEOUT);
 
+    if (this.location.zipcode.length <= 0 && this.location.count === 0) {
+      this.dismissed();
+      return false;
+    } else {
+      if (this.location.zipcode.length > 0 && !this.location.zipcode.match(/^\d{5}$/)) {
+        this.invalidZipcode = true;
+      } else {
+        this.locationService.saveLocation(this.location);
+        this.success = true;
+        setTimeout(() => {
+          this.dismissed();
+          this.locationService.success();
+        }, CONSTANTS.GEOLOCATION.MODAL_TIMEOUT);
+
+      }
     }
   }
 

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using crds_angular.Security;
@@ -125,6 +125,25 @@ namespace crds_angular.Controllers.API
             });
         }
 
+        [Route("api/camps/{eventId}/waivers/{contactId}")]
+        [AcceptVerbs("GET")]
+        public IHttpActionResult GetCampWaivers(int eventId, int contactId)
+        {
+            return Authorized(token =>
+            {
+                try
+                {
+                    var waivers = _campService.GetCampWaivers(eventId, contactId);
+                    return Ok(waivers);
+                }
+                catch (Exception e)
+                {
+                    var apiError = new ApiErrorDto("Failed to get waiver data", e);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+            });
+        }     
+
         [Route("api/camps/medical/{contactid}")]
         [AcceptVerbs("POST")]
         public IHttpActionResult SaveMedicalInformation([FromBody] MedicalInfoDTO medicalInfo, int contactId)
@@ -143,12 +162,39 @@ namespace crds_angular.Controllers.API
                     _campService.SaveCamperMedicalInfo(medicalInfo, contactId, token);
                     return Ok();
                 }
-
                 catch (Exception e)
                 {
                     var apiError = new ApiErrorDto("Camp Medical Info failed", e);
                     throw new HttpResponseException(apiError.HttpResponseMessage);
                 }
+            });
+        }
+
+        [Route("api/camps/{eventId}/waivers/{contactId}")]
+        [AcceptVerbs("POST")]
+        public IHttpActionResult SaveWaivers([FromBody] List<CampWaiverResponseDTO> waivers, int eventId, int contactId)
+        {
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState.Values.SelectMany(val => val.Errors).Aggregate("", (current, err) => current + err.Exception.Message);
+                var dataError = new ApiErrorDto("Waiver data Invalid", new InvalidOperationException("Invalid Waiver Data" + errors));
+                throw new HttpResponseException(dataError.HttpResponseMessage);
+            }
+
+            return Authorized(token =>
+            {
+                try
+                {
+                    _campService.SaveWaivers(token, eventId, contactId, waivers);
+                    return Ok();
+                }
+                catch (Exception e)
+                {
+                    var apiError = new ApiErrorDto("Failed to save waiver data", e);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+
+                
             });
         }
 
@@ -167,7 +213,7 @@ namespace crds_angular.Controllers.API
             {
                 try
                 {
-                    _campService.SaveCamperEmergencyContactInfo(emergencyContact, eventId, contactId);
+                    _campService.SaveCamperEmergencyContactInfo(emergencyContact, eventId, contactId, token);
                     return Ok();
                 }
 

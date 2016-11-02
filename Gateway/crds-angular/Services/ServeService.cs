@@ -45,6 +45,7 @@ namespace crds_angular.Services
         private readonly IApiUserRepository _apiUserService;
         private readonly IResponseRepository _responseService;
         private readonly int _serveGroupType;
+
         private readonly int _rsvpYes;
 
         private readonly List<string> TABLE_HEADERS = new List<string>()
@@ -83,6 +84,7 @@ namespace crds_angular.Services
             _apiUserService = apiUserService;
             _responseService = responseService;
             _serveGroupType = _configurationWrapper.GetConfigIntValue("ServeGroupType");
+
             _rsvpYes = _configurationWrapper.GetConfigIntValue("RSVPYesId");
         }
 

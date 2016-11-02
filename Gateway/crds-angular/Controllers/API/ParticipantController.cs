@@ -26,5 +26,17 @@ namespace crds_angular.Controllers.API
         {
             return Authorized(token => Ok(_groupService.GetParticipantRecord(token)));
         }
+
+        [RequiresAuthorization]
+        [Route("api/participant/event/{eventId}")]
+        [HttpGet]
+        public IHttpActionResult GetEventParticipant(int eventId)
+        {
+            return Authorized(token =>
+            {
+                var eventParticipantId = 1;
+                return Ok(eventParticipantId);
+            });
+        }
     }
 }

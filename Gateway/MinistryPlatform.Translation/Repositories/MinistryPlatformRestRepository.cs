@@ -7,6 +7,7 @@ using MinistryPlatform.Translation.Extensions;
 using MinistryPlatform.Translation.Models.Attributes;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using RestSharp;
 using RestSharp.Extensions;
 
@@ -16,6 +17,7 @@ namespace MinistryPlatform.Translation.Repositories
     {
         private readonly IRestClient _ministryPlatformRestClient;
         private readonly ThreadLocal<string> _authToken = new ThreadLocal<string>();
+        private const string DeleteRecordsStoredProcName = "api_crds_Delete_Table_Rows";
 
         public MinistryPlatformRestRepository(IRestClient ministryPlatformRestClient)
         {
@@ -224,6 +226,25 @@ namespace MinistryPlatform.Translation.Repositories
             return Search<T>(searchString, selectColumns, orderByString, distinct);
         }
 
+        public T Search<T>(string tableName, string searchString, string column)
+        {
+            var search = string.IsNullOrWhiteSpace(searchString) ? string.Empty : $"?$filter={MpRestEncode(searchString)}";
+            var url = AddColumnSelection($"/tables/{tableName}{search}", column);
+            var request = new RestRequest(url, Method.GET);
+            AddAuthorization(request);
+
+            var response = _ministryPlatformRestClient.Execute(request);
+            _authToken.Value = null;
+            response.CheckForErrors($"Error getting {tableName}", true);
+            var returnVal = default(T);
+            if (response.Content.Length > 2)
+            {
+                var jsonResponse = JObject.Parse(response.Content.TrimStart('[').TrimEnd(']'));
+                returnVal = jsonResponse.Values().FirstOrDefault().Value<T>();
+            }
+            return returnVal;
+        }
+
         public void UpdateRecord(string tableName, int recordId, Dictionary<string, object> fields)
         {
             var url = $"/tables/{tableName}";
@@ -234,6 +255,24 @@ namespace MinistryPlatform.Translation.Repositories
             var response = _ministryPlatformRestClient.Execute(request);
             response.CheckForErrors($"Error updating {tableName}", true);
         }
+
+        public void Delete<T>(int recordId)
+        {
+            Delete<T>(new[] { recordId });
+        }
+
+        public void Delete<T>(IEnumerable<int> recordIds)
+        {
+            var parms = new Dictionary<string, object>
+            {
+                {"@TableName", GetTableName<T>()},
+                {"@PrimaryKeyColumnName", GetPrimaryKeyColumnName<T>()},
+                {"@IdentifiersToDelete", string.Join(",", recordIds)}
+            };
+
+            PostStoredProc(DeleteRecordsStoredProcName, parms);
+        }
+
 
         private void AddAuthorization(IRestRequest request)
         {
@@ -248,10 +287,20 @@ namespace MinistryPlatform.Translation.Repositories
             var table = typeof(T).GetAttribute<MpRestApiTable>();
             if (table == null)
             {
-                throw new NoTableDefinitionException(typeof(T));
+                throw new NoTableDefinitionException<T>();
             }
 
             return table.Name;
+        }
+
+        private static string GetPrimaryKeyColumnName<T>()
+        {
+            var primaryKey = typeof(T).GetProperties().ToList().Select(p => p.GetAttribute<MpRestApiPrimaryKey>()).FirstOrDefault();
+            if (primaryKey == null)
+            {
+                throw new NoPrimaryKeyDefinitionException<T>();
+            }
+            return primaryKey.Name;
         }
 
         private static string AddColumnSelection(string url, string selectColumns)
@@ -282,8 +331,14 @@ namespace MinistryPlatform.Translation.Repositories
         }
     }
 
-    public class NoTableDefinitionException : Exception
+    public class NoTableDefinitionException<T> : Exception
     {
-        public NoTableDefinitionException(Type t) : base($"No RestApiTable attribute specified on type {t}") { }
+        public NoTableDefinitionException() : base($"No RestApiTable attribute specified on type {typeof(T)}") { }
     }
+
+    public class NoPrimaryKeyDefinitionException<T> : Exception
+    {
+        public NoPrimaryKeyDefinitionException() : base($"No RestApiPrimaryKey attribute specified on type {typeof(T)}") { }
+    }
+
 }

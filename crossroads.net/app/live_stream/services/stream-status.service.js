@@ -78,9 +78,13 @@ export default class StreamStatusService {
 
   determineStreamStatus(events, isBroadcasting){
     let streamStatus;
+    let hrsToNextEvent = false;
 
-    let hrsToNextEvent = this.getHoursToNextEvent(events);
-    let isStreamSoon = CONSTANTS.PRE_STREAM_HOURS > hrsToNextEvent;
+    if ( events.length > 0 ) {
+      hrsToNextEvent = this.getHoursToNextEvent(events);
+    }
+    
+    let isStreamSoon = ( CONSTANTS.PRE_STREAM_HOURS > hrsToNextEvent && hrsToNextEvent !== false );
 
     if (isBroadcasting){
       streamStatus = CONSTANTS.STREAM_STATUS.LIVE;
@@ -97,10 +101,11 @@ export default class StreamStatusService {
     let eventsStartingAfterCurrentTime = this.filterOutEventsStartingBeforeCurrentTime(events);
     let nextEvent = _.sortBy(eventsStartingAfterCurrentTime, ['event', 'start'])[0];
     let currentTime = moment();
+
     let timeNextEvenStarts =  (typeof nextEvent.start === moment) ? nextEvent.start : moment(nextEvent.start);
     let timeUntilNextEvent = moment.duration(timeNextEvenStarts.diff(currentTime));
     let hoursUntilNextEvent = timeUntilNextEvent.asHours();
-
+    
     return hoursUntilNextEvent;
   }
 

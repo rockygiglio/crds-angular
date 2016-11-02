@@ -29,15 +29,18 @@ namespace MinistryPlatform.Translation.Repositories
             Convert.ToInt32(AppSettings("EventsReadyForReminder"));
 
         private readonly IMinistryPlatformService _ministryPlatformService;
+        private readonly IMinistryPlatformRestRepository _ministryPlatformRestRepository;
         private readonly IGroupRepository _groupService;
 
         public EventRepository(IMinistryPlatformService ministryPlatformService,
                             IAuthenticationRepository authenticationService,
                             IConfigurationWrapper configurationWrapper,
-                            IGroupRepository groupService)
+                            IGroupRepository groupService,
+                            IMinistryPlatformRestRepository ministryPlatformRestRepository)
             : base(authenticationService, configurationWrapper)
         {
             _ministryPlatformService = ministryPlatformService;
+            _ministryPlatformRestRepository = ministryPlatformRestRepository;
             _groupService = groupService;
         }
 
@@ -519,6 +522,43 @@ namespace MinistryPlatform.Translation.Repositories
                 Congregation = record.ToString("Congregation_Name"),
                 EventTitle = record.ToString("Event_Title"),
             }).ToList();
-        } 
+        }
+
+        public List<MpWaivers> GetWaivers(int eventId, int contactId)
+        {
+            var apiToken = ApiLogin();
+            const string columnList = "Waiver_ID_Table.[Waiver_ID], Waiver_ID_Table.[Waiver_Name], Waiver_ID_Table.[Waiver_Text], cr_Event_Waivers.[Required]";
+            var campWaivers = _ministryPlatformRestRepository.UsingAuthenticationToken(apiToken).Search<MpWaivers>($"Event_ID = {eventId} AND Active=1", columnList).ToList();
+            
+            //for each event/waiver, see if someone has signed. 
+            const string columns = "cr_Event_Participant_Waivers.Waiver_ID, cr_Event_Participant_Waivers.Event_Participant_ID, Accepted, Signee_Contact_ID";
+            foreach (var waiver in campWaivers)
+            {
+                var searchString = $"Waiver_ID_Table.Waiver_ID = {waiver.WaiverId} AND Event_Participant_ID_Table_Event_ID_Table.Event_ID = {eventId}";
+                var response = _ministryPlatformRestRepository.UsingAuthenticationToken(apiToken).Search<MpWaiverResponse>(searchString, columns).FirstOrDefault();
+                if (response != null)
+                {
+                    waiver.Accepted = response.Accepted;
+                    waiver.SigneeContactId = response.SigneeContactId;
+                }
+            }
+
+            return campWaivers;
+        }
+
+        public void SetWaivers(List<MpWaiverResponse> waiverResponses)
+        {
+            var apiToken = ApiLogin();
+
+            foreach (var waiver in waiverResponses)
+            {
+                var searchString = $"Event_Participant_ID={waiver.EventParticipantId} AND Waiver_ID={waiver.WaiverId}";
+                waiver.EventParticipantWaiverId = _ministryPlatformRestRepository.UsingAuthenticationToken(apiToken).Search<int>("cr_Event_Participant_Waivers", searchString, "Event_Participant_Waiver_ID");
+            }
+            
+            _ministryPlatformRestRepository.UsingAuthenticationToken(apiToken).Post(waiverResponses.Where(w => w.EventParticipantWaiverId == 0).ToList());
+
+            _ministryPlatformRestRepository.UsingAuthenticationToken(apiToken).Put(waiverResponses.Where(w => w.EventParticipantWaiverId != 0).ToList());
+        }
     }
 }

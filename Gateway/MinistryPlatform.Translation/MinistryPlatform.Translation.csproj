@@ -117,8 +117,10 @@
     <Compile Include="Extensions\RestSharpExtensions.cs" />
     <Compile Include="Models\DTO\PredefinedDonationAmountDTO.cs" />
     <Compile Include="Models\MpCamp.cs" />
+    <Compile Include="Models\MpWaivers.cs" />
     <Compile Include="Models\MpMedicalInformation.cs" />
     <Compile Include="Models\MpRecordID.cs" />
+    <Compile Include="Models\MpWaiverResponse.cs" />
     <Compile Include="Models\MpStoredProcBool.cs" />
     <Compile Include="Models\Payments\MpInvoice.cs" />
     <Compile Include="Models\Payments\MpNestedInvoiceDetail.cs" />
@@ -141,6 +143,7 @@
     <Compile Include="Models\DTO\MpGroupSearchResultDto.cs" />
     <Compile Include="Models\MpAddress.cs" />
     <Compile Include="Models\MpAttribute.cs" />
+    <Compile Include="Models\Attributes\MpRestApiPrimaryKey.cs" />
     <Compile Include="Models\Attributes\MpRestApiTable.cs" />
     <Compile Include="Models\MpBulkEmailPublication.cs" />
     <Compile Include="Models\MpBulkEmailSubscriber.cs" />
@@ -270,7 +273,7 @@
     <Compile Include="Repositories\EventParticipantRepository.cs" />
     <Compile Include="Repositories\EventRepository.cs" />
     <Compile Include="Repositories\CommunicationRepository.cs" />
-    <Compile Include="Repositories\FormSubmissionRepository..cs" />
+    <Compile Include="Repositories\FormSubmissionRepository.cs" />
     <Compile Include="Repositories\AttributeRepository.cs" />
     <Compile Include="Repositories\GetMyRecordsRepository..cs" />
     <Compile Include="Repositories\GroupParticipantRepository.cs" />
