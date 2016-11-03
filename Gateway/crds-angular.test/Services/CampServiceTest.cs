@@ -572,7 +572,8 @@ namespace crds_angular.test.Services
                     LastName = "Horner",
                     Email = "lknair@gmail.com",
                     MobileNumber = "123456789",
-                    Relationship = "friend"
+                    Relationship = "friend",
+                    PrimaryEmergencyContact = true
                 }
             };
         }
