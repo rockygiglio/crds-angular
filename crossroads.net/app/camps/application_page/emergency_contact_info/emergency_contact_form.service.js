@@ -21,7 +21,8 @@ class EmergencyContactForm {
   getFields() {
     return [
       {
-        className: 'row',
+        className: '',
+        wrapper: 'campBootstrapRow',
         fieldGroup: [{
           className: 'form-group col-xs-6',
           key: 'firstName',
@@ -41,7 +42,8 @@ class EmergencyContactForm {
         }]
       },
       {
-        className: 'row',
+        className: '',
+        wrapper: 'campBootstrapRow',
         fieldGroup: [{
           className: 'form-group col-xs-6',
           key: 'mobileNumber',
@@ -63,7 +65,8 @@ class EmergencyContactForm {
         }]
       },
       {
-        className: 'row',
+        className: '',
+        wrapper: 'campBootstrapRow',
         fieldGroup: [{
           className: 'form-group col-xs-6',
           key: 'relationship',
