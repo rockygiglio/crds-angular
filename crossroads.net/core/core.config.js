@@ -2,6 +2,7 @@
 (function() {
 
   var app = angular.module('crossroads.core');
+  var cookieNames = require('crds-constants').COOKIES;
   app.config(AppConfig);
 
   AppConfig.$inject = [
@@ -33,8 +34,8 @@
     });
 
     $httpProvider.defaults.useXDomain = true;
-    $httpProvider.defaults.headers.common.Authorization = crds_utilities.getCookie('sessionId');
-    $httpProvider.defaults.headers.common.RefreshToken = crds_utilities.getCookie('refreshToken');
+    $httpProvider.defaults.headers.common.Authorization = crds_utilities.getCookie(cookieNames.SESSION_ID);
+    $httpProvider.defaults.headers.common.RefreshToken = crds_utilities.getCookie(cookieNames.REFRESH_TOKEN);
 
     // This is a dummy header that will always be returned
     // in any 'Allow-Header' from any CORS request

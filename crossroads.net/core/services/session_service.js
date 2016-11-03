@@ -4,6 +4,7 @@
   angular.module('crossroads.core').service('Session', SessionService);
 
   var timeoutPromise;
+  var cookieNames = require('crds-constants').COOKIES;
 
   SessionService.$inject = [
     '$log',
@@ -33,12 +34,12 @@
       $log.debug('creating cookies!');
       var expDate = new Date();
       expDate.setTime(expDate.getTime() + (userTokenExp * 1000));
-      $cookies.put('sessionId', sessionId, {
+      $cookies.put(cookieNames.SESSION_ID, sessionId, {
         expires: expDate
       });
       $cookies.put('userId', userId);
       $cookies.put('username', username);
-      $cookies.put('refreshToken', refreshToken, {
+      $cookies.put(cookieNames.REFRESH_TOKEN, refreshToken, {
         expires: expDate
       });
       $http.defaults.headers.common.Authorization = sessionId;
@@ -64,10 +65,11 @@
 
         sessionLength);
 
-      $cookies.put('sessionId', response.headers('sessionId'), {
+        
+      $cookies.put(cookieNames.SESSION_ID, response.headers('sessionId'), {
         expires: expDate
       });
-      $cookies.put('refreshToken', response.headers('refreshToken'), {
+      $cookies.put(cookieNames.REFRESH_TOKEN, response.headers('refreshToken'), {
         expires: expDate
       });
       $http.defaults.headers.common.RefreshToken = response.headers('refreshToken');
@@ -99,7 +101,7 @@
     };
 
     vm.isActive = function() {
-      var ex = this.exists('sessionId');
+      var ex = this.exists(cookieNames.SESSION_ID);
       if (ex === undefined || ex === null) {
         return false;
       }
@@ -112,8 +114,8 @@
     };
 
     vm.clear = function() {
-      $cookies.remove('sessionId');
-      $cookies.remove('refreshToken');
+      $cookies.remove(cookieNames.SESSION_ID);
+      $cookies.remove(cookieNames.REFRESH_TOKEN);
       $cookies.remove('userId');
       $cookies.remove('username');
       $cookies.remove('family');
@@ -167,8 +169,8 @@
           url: __API_ENDPOINT__ + 'api/authenticated',
           withCredentials: true,
           headers: {
-            Authorization: $cookies.get('sessionId'),
-            RefreshToken: $cookies.get('refreshToken')
+            Authorization: $cookies.get(cookieNames.SESSION_ID),
+            RefreshToken: $cookies.get(cookieNames.REFRESH_TOKEN)
           }
         }).success(function (user) {
           $rootScope.userid = user.userId;

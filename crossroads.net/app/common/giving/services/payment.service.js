@@ -3,6 +3,7 @@
   module.exports = PaymentService;
 
   var moment = require('moment');
+  var cookieNames = require('crds-constants').COOKIES;
 
   PaymentService.$inject = ['$http','$q', 'stripe', '$cookies', '$rootScope', 'GiveTransferService', 'MESSAGES'];
 
@@ -96,7 +97,7 @@
         url: __API_ENDPOINT__ + 'api/donation',
         data: donationRequest,
         headers: {
-              Authorization: $cookies.get('sessionId')
+              Authorization: $cookies.get(cookieNames.SESSION_ID)
             }
       }).success(function(data) {
         paymentService.donation = data;
@@ -118,7 +119,7 @@
         method: 'GET',
         url: __API_ENDPOINT__ + 'api/donor/?email=' + encodedEmail,
         headers: {
-          Authorization: $cookies.get('sessionId')
+          Authorization: $cookies.get(cookieNames.SESSION_ID)
         }
       }).success(function(data) {
         def.resolve(data);
@@ -199,7 +200,7 @@
             method: apiMethod,
             url: __API_ENDPOINT__ + 'api/donor',
             headers: {
-              Authorization:  $cookies.get('sessionId')
+              Authorization:  $cookies.get(cookieNames.SESSION_ID)
             },
             data: donorRequest
           }).success(function(data) {
@@ -254,7 +255,7 @@
         isArray: (apiMethod === 'QUERY'),
         url: apiRecurringGiftUrl(apiMethod, recurringGiftId, impersonateDonorId),
         headers: {
-          Authorization: $cookies.get('sessionId')
+          Authorization: $cookies.get(cookieNames.SESSION_ID)
         },
         data: recurringGiftRequest
       }).success(function(data) {
