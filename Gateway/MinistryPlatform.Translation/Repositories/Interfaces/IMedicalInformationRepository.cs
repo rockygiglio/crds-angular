@@ -5,6 +5,6 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
 {
     public interface IMedicalInformationRepository
     {
-        void SaveMedicalInformation(MpMedicalInformation medicalInfo, int contactId);
+        void SaveMedicalInformation(MpMedicalAllergy medAllergyInfo, int contactId);
     }
 }

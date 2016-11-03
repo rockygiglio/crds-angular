@@ -323,11 +323,18 @@ namespace crds_angular.Services
             }
             var mpMedicalInfo = new MpMedicalInformation
             {
-                InsuranceCompany = medicalInfo.InsuranceCompany,
-                PhysicianName = medicalInfo.PhysicianName,
-                PhysicianPhone = medicalInfo.PhysicianPhone,
-                PolicyHolder = medicalInfo.PolicyHolder
+                InsuranceCompany = medicalInfo.InsuranceCompany ?? "N/A",
+                PhysicianName = medicalInfo.PhysicianName ?? "N/A",
+                PhysicianPhone = medicalInfo.PhysicianPhone ?? "N/A",
+                PolicyHolder = medicalInfo.PolicyHolder ?? "N/A",
+                ContactID = medicalInfo.ContactId
             };
+            var mpAllergyList = medicalInfo.AllergyList.Select(allergy => new MpAllergy
+            {
+                AllergyDescription = allergy.AllergyDescription,
+                AllergyTypeID = allergy.AllergyType
+            }).ToList();
+
             _medicalInformationRepository.SaveMedicalInformation(mpMedicalInfo, contactId);
         }
 

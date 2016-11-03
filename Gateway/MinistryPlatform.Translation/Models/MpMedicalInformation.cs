@@ -6,6 +6,12 @@ namespace MinistryPlatform.Translation.Models
     [MpRestApiTable(Name = "cr_Medical_Information")]
     public class MpMedicalInformation
     {
+        [JsonProperty(PropertyName = "Contact_ID")]
+        public string ContactID { get; set; }
+
+        [JsonProperty(PropertyName = "MedicalInformation_ID")]
+        public string MedicalInformationID { get; set; }
+
         [JsonProperty(PropertyName = "InsuranceCompany")]
         public string InsuranceCompany { get; set; }
 
@@ -18,5 +24,6 @@ namespace MinistryPlatform.Translation.Models
         [JsonProperty(PropertyName = "PhysicianPhone")]
         public string PhysicianPhone { get; set; }
     }
+    
 }
 
