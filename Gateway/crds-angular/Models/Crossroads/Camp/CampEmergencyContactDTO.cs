@@ -19,5 +19,7 @@ namespace crds_angular.Models.Crossroads.Camp
         [JsonProperty(PropertyName = "relationship")]
         public string Relationship { get; set; }
 
+        [JsonProperty(PropertyName = "primaryContact")]
+        public bool PrimaryEmergencyContact { get; set; }
     }
 }
