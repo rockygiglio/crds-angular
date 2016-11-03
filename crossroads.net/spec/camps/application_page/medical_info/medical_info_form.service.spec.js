@@ -24,6 +24,16 @@ describe('Camps Medical Info Form', () => {
     httpBackend.flush();
   });
 
+  it('should get fields', () => {
+    const fields = fixture.getFields();
+    expect(fields).toBeDefined();
+    expect(fields.length).toBeGreaterThan(0);
+  });
+
+  it('should set up the form model', () => {
+    expect(fixture.getModel()).toEqual(campHelpers().medicalInfoModel);
+  });
+
   afterEach(() => {
     httpBackend.verifyNoOutstandingExpectation();
     httpBackend.verifyNoOutstandingRequest();

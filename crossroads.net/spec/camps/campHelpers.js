@@ -43,6 +43,17 @@ function CampHelpers() {
       email: null,
       relationship: 'co-worker'
     },
+    medicalInfoModel: {
+      insuranceCompanyName: undefined,
+      policyHolderName: undefined,
+      physicianName: undefined,
+      physicianNumber: undefined,
+      showAllergies: false,
+      medicineAllergies: undefined,
+      foodAllergies: undefined,
+      environmentAllergies: undefined,
+      otherAllergies: undefined
+    },
     messages: {
       summercampIntro: {
         content: 'summer camp intro text'

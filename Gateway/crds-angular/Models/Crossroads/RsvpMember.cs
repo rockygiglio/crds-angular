@@ -2,27 +2,30 @@
 
 namespace crds_angular.Models.Crossroads
 {
-    public class RsvpMembers
+    public class RsvpMember
     {
-        [JsonProperty(PropertyName = "Event_ID")]
+        [JsonProperty(PropertyName = "contactId")]
+        public long ContactId { get; set; }
+
+        [JsonProperty(PropertyName = "eventId")]
         public long EventId { get; set; }
 
-        [JsonProperty(PropertyName = "Participant_ID")]
+        [JsonProperty(PropertyName = "participantId")]
         public long ParticipantId { get; set; }
 
-        [JsonProperty(PropertyName = "Opportunity_ID")]
+        [JsonProperty(PropertyName = "opportunityId")]
         public long Opportunity { get; set; }
 
-        [JsonProperty(PropertyName = "Group_Role_ID")]
+        [JsonProperty(PropertyName = "groupRoleId")]
         public int GroupRoleId { get; set; }
 
-        [JsonProperty(PropertyName = "NickName")]
+        [JsonProperty(PropertyName = "nickName")]
         public string Name { get; set; }
 
-        [JsonProperty(PropertyName = "Last_Name")]
+        [JsonProperty(PropertyName = "lastName")]
         public string LastName { get; set; }
 
-        [JsonProperty(PropertyName = "Response_Result_ID")]
+        [JsonProperty(PropertyName = "responseResultId")]
         public int ResponseResultId { get; set; } = 0;
 
         [JsonProperty(PropertyName = "age")]
