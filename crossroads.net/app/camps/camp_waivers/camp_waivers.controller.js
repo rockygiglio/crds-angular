@@ -61,6 +61,7 @@ export default class CampWaiversController {
 
   submitWaivers() {
     if (this.form.$invalid) {
+      this.rootScope.$emit('notify', this.rootScope.MESSAGES.generalError);
       return;
     }
 
