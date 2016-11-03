@@ -23,6 +23,7 @@ namespace MinistryPlatform.Translation.Test.Services
             _authService = new Mock<IAuthenticationRepository>(MockBehavior.Strict);
             _configWrapper = new Mock<IConfigurationWrapper>(MockBehavior.Strict);
             _groupService = new Mock<IGroupRepository>(MockBehavior.Strict);
+            _eventParticipantRepository = new Mock<IEventParticipantRepository>(MockBehavior.Strict);
 
             _configWrapper.Setup(m => m.GetEnvironmentVarAsString("API_USER")).Returns("uid");
             _configWrapper.Setup(m => m.GetEnvironmentVarAsString("API_PASSWORD")).Returns("pwd");
@@ -30,7 +31,7 @@ namespace MinistryPlatform.Translation.Test.Services
             _configWrapper.Setup(m => m.GetConfigIntValue("EventsBySite")).Returns(2222);
             _authService.Setup(m => m.Authenticate(It.IsAny<string>(), It.IsAny<string>())).Returns(new Dictionary<string, object> {{"token", "ABC"}, {"exp", "123"}});
 
-            _fixture = new EventRepository(_ministryPlatformService.Object, _authService.Object, _configWrapper.Object, _groupService.Object, _ministryPlatformRestService.Object);
+            _fixture = new EventRepository(_ministryPlatformService.Object, _authService.Object, _configWrapper.Object, _groupService.Object, _ministryPlatformRestService.Object, _eventParticipantRepository.Object);
         }
 
         private EventRepository _fixture;
@@ -39,6 +40,7 @@ namespace MinistryPlatform.Translation.Test.Services
         private Mock<IAuthenticationRepository> _authService;
         private Mock<IConfigurationWrapper> _configWrapper;
         private Mock<IGroupRepository> _groupService;
+        private Mock<IEventParticipantRepository> _eventParticipantRepository;
         private const int EventParticipantPageId = 281;
         private const int EventParticipantStatusDefaultId = 2;
         private const int EventsPageId = 308;
@@ -378,6 +380,7 @@ namespace MinistryPlatform.Translation.Test.Services
         {
             var eventId = 12345;
             var contactId = 67890;
+            var eventParticipantId = 9876543;
             const string columnList = "Waiver_ID_Table.[Waiver_ID], Waiver_ID_Table.[Waiver_Name], Waiver_ID_Table.[Waiver_Text], cr_Event_Waivers.[Required]";
             const string columns = "cr_Event_Participant_Waivers.Waiver_ID, cr_Event_Participant_Waivers.Event_Participant_ID, Accepted, Signee_Contact_ID";
 
@@ -402,9 +405,10 @@ namespace MinistryPlatform.Translation.Test.Services
             };
 
             _ministryPlatformRestService.Setup(m => m.Search<MpWaivers>($"Event_ID = {eventId} AND Active=1", columnList, null, false)).Returns(mockWaiver);           
-            _ministryPlatformRestService.Setup(m => m.Search<MpWaiverResponse>($"Waiver_ID_Table.Waiver_ID = 123 AND Event_Participant_ID_Table_Event_ID_Table.Event_ID = {eventId}", columns, null, false)).Returns(mockWaiverResponse);
-            _ministryPlatformRestService.Setup(m => m.Search<MpWaiverResponse>($"Waiver_ID_Table.Waiver_ID = 456 AND Event_Participant_ID_Table_Event_ID_Table.Event_ID = {eventId}", columns, null, false)).Returns(mockWaiverResponse2);
+            _ministryPlatformRestService.Setup(m => m.Search<MpWaiverResponse>($"Waiver_ID_Table.Waiver_ID = 123 AND Event_Participant_ID_Table_Event_ID_Table.Event_ID = {eventId} AND cr_Event_Participant_Waivers.Event_Participant_ID = {eventParticipantId}", columns, null, false)).Returns(mockWaiverResponse);
+            _ministryPlatformRestService.Setup(m => m.Search<MpWaiverResponse>($"Waiver_ID_Table.Waiver_ID = 456 AND Event_Participant_ID_Table_Event_ID_Table.Event_ID = {eventId} AND cr_Event_Participant_Waivers.Event_Participant_ID = {eventParticipantId}", columns, null, false)).Returns(mockWaiverResponse2);
             _ministryPlatformRestService.Setup(m => m.UsingAuthenticationToken("ABC")).Returns(_ministryPlatformRestService.Object);
+            _eventParticipantRepository.Setup(m => m.GetEventParticipantByContactId(eventId, contactId)).Returns(eventParticipantId);
 
             var result = _fixture.GetWaivers(eventId, contactId);
 
