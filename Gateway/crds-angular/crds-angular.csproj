@@ -69,10 +69,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\AWSSDK.Core.3.1.1.0\lib\net45\AWSSDK.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Crossroads.ApiVersioning, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Crossroads.ApiVersioning.1.0.0\lib\Crossroads.ApiVersioning.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\EntityFramework.6.1.2\lib\net45\EntityFramework.dll</HintPath>
@@ -307,6 +303,14 @@
     <Compile Include="Controllers\API\StaffContactController.cs" />
     <Compile Include="Controllers\API\DonorStatementController.cs" />
     <Compile Include="Controllers\API\TextCommunicationController.cs" />
+    <Compile Include="Crossroads.ApiVersioning\ApiRouteProvider.cs" />
+    <Compile Include="Crossroads.ApiVersioning\DeprecatedVersionFilter.cs" />
+    <Compile Include="Crossroads.ApiVersioning\RemovedVersionFilter.cs" />
+    <Compile Include="Crossroads.ApiVersioning\SemanticVersion.cs" />
+    <Compile Include="Crossroads.ApiVersioning\VersionConfig.cs" />
+    <Compile Include="Crossroads.ApiVersioning\VersionConstraint.cs" />
+    <Compile Include="Crossroads.ApiVersioning\VersionedRoute.cs" />
+    <Compile Include="Crossroads.ApiVersioning\VersionSpace.cs" />
     <Compile Include="Exceptions\ChildcareDatesMissingException.cs" />
     <Compile Include="Exceptions\ContactEmailExistsException.cs" />
     <Compile Include="Exceptions\ContactNotFoundException.cs" />
@@ -631,6 +635,7 @@
     <Compile Include="Util\HtmlHelper.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Crossroads.ApiVersioning\readme.txt" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <None Include="MinistryPlatform.Debug.config">
