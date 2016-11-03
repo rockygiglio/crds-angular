@@ -74,7 +74,7 @@ namespace crds_angular.Controllers.API
 
         [ResponseType(typeof(Event))]
         [VersionedRoute(template: "childcare/event/{eventId}", minimumVersion: "1.0.0")]
-        [Route("childcare/event/{eventid}")]
+        [Route("childcare/event/{eventId}")]
         [HttpGet]
         public IHttpActionResult ChildcareEventById(int eventId)
         {
@@ -95,7 +95,7 @@ namespace crds_angular.Controllers.API
 
 
         [ResponseType(typeof(List<FamilyMember>))]
-        [VersionedRoute(template: "childcare/eligableChildren", minimumVersion: "1.0.0")]
+        [VersionedRoute(template: "childcare/eligibleChildren", minimumVersion: "1.0.0")]
         [Route("childcare/eligible-children")]
         [HttpGet]
         public IHttpActionResult ChildrenEligibleForChildcare()
@@ -250,7 +250,7 @@ namespace crds_angular.Controllers.API
         }
 
         [VersionedRoute(template: "childcare/getRequest/{requestId}", minimumVersion: "1.0.0")]
-        [Route("childcare/getrequest/{requestid}")]
+        [Route("childcare/getrequest/{requestId}")]
         [HttpGet]
         public IHttpActionResult GetChildcareRequest(int requestId)
         {

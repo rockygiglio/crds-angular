@@ -155,7 +155,7 @@ namespace crds_angular.Controllers.API
 
                 if (ret.Count == 0)
                 {
-                    return this.BadRequest(string.Format("congregationid: {0} ministryid: {1}", congregationId, ministryId));
+                    return this.BadRequest(string.Format("congregationId: {0} ministryId: {1}", congregationId, ministryId));
                 }
                 return Ok(ret);
             });
@@ -167,7 +167,7 @@ namespace crds_angular.Controllers.API
         [RequiresAuthorization]
         [ResponseType(typeof(List<Dictionary<string, object>>))]
         [VersionedRoute(template: "lookup/childcareTimes/{congregationId}", minimumVersion: "1.0.0")]
-        [Route("lookup/childcaretimes/{congregationid}")]
+        [Route("lookup/childcaretimes/{congregationId}")]
         [HttpGet]
         public IHttpActionResult FindChildcareTimes(string congregationId)
         {

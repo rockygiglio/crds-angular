@@ -68,7 +68,7 @@ namespace crds_angular.Controllers.API
 
         [ResponseType(typeof (Event))]
         [VersionedRoute(template: "event/{eventId}", minimumVersion: "1.0.0")]
-        [Route("event/{eventid}")]
+        [Route("event/{eventId}")]
         [HttpGet]
         public IHttpActionResult EventById(int eventId)
         {

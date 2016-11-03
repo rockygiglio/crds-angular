@@ -41,7 +41,7 @@ namespace crds_angular.Controllers.API
             }));
         }
 
-        [VersionedRoute(template: "donor-statement", minimumVersion: "1.0.0")]
+        [VersionedRoute(template: "donorStatement", minimumVersion: "1.0.0")]
         [Route("donor-statement")]
         [HttpPost]
         public IHttpActionResult Post(DonorStatementDTO donorStatement)

@@ -20,7 +20,7 @@ namespace crds_angular.Controllers.API
         }
 
         [HttpGet]
-        [VersionedRoute(template: "mpTools/selection/{selectionId:regex(\\d+)}", minimumVersion: "1.0.0")]
+        [VersionedRoute(template: "mpTools/selection/{selectionId}", minimumVersion: "1.0.0")]
         [Route("mptools/selection/{selectionId:regex(\\d+)}")]
         public IHttpActionResult GetPageSelectionRecordIds(int selectionId)
         {

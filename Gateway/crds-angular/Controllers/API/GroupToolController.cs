@@ -95,7 +95,7 @@ namespace crds_angular.Controllers.API
         /// <param name="groupReasonEndedId">The id of the reason the group was ended</param>
         /// <returns>Http Result</returns>
         [RequiresAuthorization]
-        [VersionedRoute(template: "groupTool/{groupId:int}/endSmallGroup", minimumVersion: "1.0.0")]
+        [VersionedRoute(template: "groupTool/{groupId}/endSmallGroup", minimumVersion: "1.0.0")]
         [Route("grouptool/{groupId:int}/endsmallgroup")]
         [HttpPost]
         public IHttpActionResult EndSmallGroup([FromUri]int groupId, [FromUri]int groupReasonEndedId)
@@ -227,7 +227,7 @@ namespace crds_angular.Controllers.API
         //        stupid fix for a bug that is out of our control.
         [RequiresAuthorization]
         [VersionedRoute(template: "groupTool/group/{groupId}/invitation/{invitationKey}", minimumVersion: "1.0.0")]
-        [Route("grouptool/group/{groupId:int}/invitation/{invitationGuid}")]
+        [Route("grouptool/group/{groupId:int}/invitation/{invitationKey}")]
         [HttpPost]
         public IHttpActionResult ApproveDenyGroupInvitation([FromUri]int groupId, [FromUri]string invitationKey, [FromBody]bool accept)
         {
@@ -291,7 +291,7 @@ namespace crds_angular.Controllers.API
         /// Will return a 404 if the user is not a Leader of the group
         /// </summary>
         [RequiresAuthorization]
-        [VersionedRoute(template: "groupTool/group/{groupId}/invitation/{invitationGuid}", minimumVersion: "1.0.0")]
+        [VersionedRoute(template: "groupTool/{groupId}/{groupTypeId}/groupMessage", minimumVersion: "1.0.0")]
         [Route("grouptool/{groupId}/{groupTypeId}/groupmessage")]
         public IHttpActionResult PostGroupMessage([FromUri()] int groupId, [FromUri()] int groupTypeId, GroupMessageDTO message)
         {

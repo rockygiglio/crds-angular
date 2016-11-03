@@ -151,7 +151,7 @@ namespace crds_angular.Controllers.API
 
         [ResponseType(typeof (List<GroupConnector>))]
         [VersionedRoute(template: "groupConnectors/{organizationId}/{initiativeId}", minimumVersion: "1.0.0")]
-        [Route("group-connectors/{orgId}/{initiativeId}")]
+        [Route("group-connectors/{organizationId}/{initiativeId}")]
         [HttpGet]
         public IHttpActionResult GetGroupConnectorsForOrg(int organizationId, int initiativeId)
         {
@@ -176,7 +176,7 @@ namespace crds_angular.Controllers.API
 
         [ResponseType(typeof (Organization))]
         [VersionedRoute(template: "organization/{organizationName}", minimumVersion: "1.0.0")]
-        [Route("organization/{name}")]
+        [Route("organization/{organizationName}")]
         [HttpGet]
         public IHttpActionResult GetOrganization(string organizationName)
         {
@@ -216,7 +216,7 @@ namespace crds_angular.Controllers.API
 
         [ResponseType(typeof (List<OrgLocation>))]
         [VersionedRoute(template: "organizations/{organizationId}/locations", minimumVersion: "1.0.0")]
-        [Route("organizations/{orgId}/locations")]
+        [Route("organizations/{organizationId}/locations")]
         [HttpGet]
         public IHttpActionResult GetLocationsForOrganization(int organizationId)
         {

@@ -207,7 +207,7 @@ namespace crds_angular.Controllers.API
         [RequiresAuthorization]
         [ResponseType(typeof(GroupDTO))]
         [VersionedRoute(template: "group/invitation/{invitationKey}", minimumVersion: "1.0.0")]
-        [Route("group/invitation/{invitationGUID}")]
+        [Route("group/invitation/{invitationKey}")]
         [HttpGet]
         public IHttpActionResult GetGroupByInvitationGuid(string invitationKey)
         {

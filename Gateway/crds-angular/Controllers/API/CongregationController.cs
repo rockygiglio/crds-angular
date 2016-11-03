@@ -22,7 +22,7 @@ namespace crds_angular.Controllers.API
 
         [ResponseType(typeof (Congregation))]
         [VersionedRoute(template: "congregation/{congregationId}", minimumVersion: "1.0.0")]
-        [Route("congregation/{id}")]
+        [Route("congregation/{congregationId}")]
         public IHttpActionResult Get(int congregationId)
         {
             return Authorized(t =>
@@ -35,7 +35,7 @@ namespace crds_angular.Controllers.API
                 }
                 catch (Exception e)
                 {
-                    var msg = "Error getting Congregation by id " + congregationId;
+                    var msg = "Error getting Congregation by congregationId " + congregationId;
                     logger.Error(msg, e);
                     var apiError = new ApiErrorDto(msg, e);
                     throw new HttpResponseException(apiError.HttpResponseMessage);
@@ -45,7 +45,7 @@ namespace crds_angular.Controllers.API
 
         [ResponseType(typeof (List<Room>))]
         [VersionedRoute(template: "congregation/{congregationId}/rooms", minimumVersion: "1.0.0")]
-        [Route("congregation/{id}/rooms")]
+        [Route("congregation/{congregationId}/rooms")]
         public IHttpActionResult GetRooms(int congregationId)
         {
             return Authorized(t =>
@@ -57,7 +57,7 @@ namespace crds_angular.Controllers.API
                 }
                 catch (Exception e)
                 {
-                    var msg = "Error getting Rooms by id " + congregationId;
+                    var msg = "Error getting Rooms by congregationId " + congregationId;
                     logger.Error(msg, e);
                     var apiError = new ApiErrorDto(msg, e);
                     throw new HttpResponseException(apiError.HttpResponseMessage);
@@ -67,7 +67,7 @@ namespace crds_angular.Controllers.API
 
         [ResponseType(typeof (List<RoomEquipment>))]
         [VersionedRoute(template: "congregation/{congregationId}/equipment", minimumVersion: "1.0.0")]
-        [Route("congregation/{id}/equipment")]
+        [Route("congregation/{congregationId}/equipment")]
         public IHttpActionResult GetEquipment(int congregationId)
         {
             return Authorized(t =>
@@ -79,7 +79,7 @@ namespace crds_angular.Controllers.API
                 }
                 catch (Exception e)
                 {
-                    var msg = "Error getting Equipment by id " + congregationId;
+                    var msg = "Error getting Equipment by congregatioinId " + congregationId;
                     logger.Error(msg, e);
                     var apiError = new ApiErrorDto(msg, e);
                     throw new HttpResponseException(apiError.HttpResponseMessage);

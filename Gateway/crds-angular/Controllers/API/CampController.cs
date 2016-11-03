@@ -63,7 +63,7 @@ namespace crds_angular.Controllers.API
 
         [ResponseType(typeof (CampDTO))]
         [VersionedRoute(template: "camps/{eventId}", minimumVersion: "1.0.0")]
-        [Route("camps/{eventid}")]
+        [Route("camps/{eventId}")]
         [HttpGet]
         public IHttpActionResult GetCampEventDetails(int eventId)
         {
@@ -84,7 +84,7 @@ namespace crds_angular.Controllers.API
 
         [ResponseType(typeof(CampReservationDTO))]
         [VersionedRoute(template: "camps/{eventId}/{contactId}", minimumVersion: "1.0.0")]
-        [Route("camps/{eventid}/{contactid}")]
+        [Route("camps/{eventId}/{contactId}")]
         [HttpGet]
         public IHttpActionResult GetCamperInfo(int eventId, int contactId)
         {
@@ -104,7 +104,7 @@ namespace crds_angular.Controllers.API
         }
 
         [VersionedRoute(template: "camps/{eventId}", minimumVersion: "1.0.0")]
-        [Route("camps/{eventid}")]
+        [Route("camps/{eventId}")]
         [HttpPost]
         public IHttpActionResult SaveCampReservation([FromBody] CampReservationDTO campReservation, int eventId)
         {
@@ -131,7 +131,8 @@ namespace crds_angular.Controllers.API
             });
         }
 
-        [Route("api/camps/medical/{contactid}")]
+        [VersionedRoute(template: "camps/medical/{contactId}", minimumVersion: "1.0.0")]
+        [Route("camps/medical/{contactId}")]
         [AcceptVerbs("POST")]
         public IHttpActionResult SaveMedicalInformation([FromBody] MedicalInfoDTO medicalInfo, int contactId)
         {
@@ -158,7 +159,8 @@ namespace crds_angular.Controllers.API
             });
         }
 
-        [Route("api/camps/{eventId}/emergencycontact/{contactId}")]
+        [VersionedRoute(template: "camps/{eventId}/emergencyContact/{contactId}", minimumVersion: "1.0.0")]
+        [Route("camps/{eventId}/emergencycontact/{contactId}")]
         [AcceptVerbs("POST")]
         public IHttpActionResult SaveCamperEmergencyContact([FromBody] CampEmergencyContactDTO emergencyContact, int eventId, int contactId)
         {

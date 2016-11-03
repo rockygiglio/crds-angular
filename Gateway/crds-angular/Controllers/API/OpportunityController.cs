@@ -27,7 +27,7 @@ namespace crds_angular.Controllers.API
 
         [ResponseType(typeof (int))]
         [VersionedRoute(template: "opportunity/{opportunityId}", minimumVersion: "1.0.0")]
-        [Route("opportunity/{id}")]
+        [Route("opportunity/{opportunityId}")]
         public IHttpActionResult Post(int opportunityId, [FromBody] string stuff)
         {
             var comments = string.Format("Request on {0}", DateTime.Now.ToString(CultureInfo.CurrentCulture));
@@ -77,7 +77,7 @@ namespace crds_angular.Controllers.API
 
         [ResponseType(typeof (List<long>))]
         [VersionedRoute(template: "opportunity/getAllOpportunityDates/{opportunityId}", minimumVersion: "1.0.0")]
-        [Route("opportunity/getAllOpportunityDates/{id}")]
+        [Route("opportunity/getAllOpportunityDates/{opportunityId}")]
         public IHttpActionResult GetAllOpportunityDates(int opportunityId)
         {
             var oppDates = new List<long>();
@@ -91,7 +91,7 @@ namespace crds_angular.Controllers.API
 
         [ResponseType(typeof (Dictionary<string, long>))]
         [VersionedRoute(template: "opportunity/getLastOpportunityDate/{opportunityId}", minimumVersion: "1.0.0")]
-        [Route("opportunity/getLastOpportunityDate/{id}")]
+        [Route("opportunity/getLastOpportunityDate/{opportunityId}")]
         public IHttpActionResult GetLastOpportunityDate(int opportunityId)
         {
             return
@@ -105,7 +105,7 @@ namespace crds_angular.Controllers.API
 
         [ResponseType(typeof (OpportunityGroup))]
         [VersionedRoute(template: "opportunity/{opportunityId}", minimumVersion: "1.0.0")]
-        [Route("opportunity/{id}")]
+        [Route("opportunity/{opportunityId}")]
         public IHttpActionResult GetGroupParticipantsForOpportunity(int opportunityId)
         {
             return Authorized(token =>
@@ -118,7 +118,7 @@ namespace crds_angular.Controllers.API
 
         [ResponseType(typeof (OpportunityResponseDto))]
         [VersionedRoute(template: "opportunity/getResponseForOpportunity/{opportunityId}/{contactId}", minimumVersion: "1.0.0")]
-        [Route("opportunity/getResponseForOpportunity/{id}/{contactId}")]
+        [Route("opportunity/getResponseForOpportunity/{opportunityId}/{contactId}")]
         public IHttpActionResult GetResponseForOpportunity(int opportunityId, int contactId)
         {
             try
