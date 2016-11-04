@@ -48,7 +48,9 @@
 
   var configureDefaultCookieScope =  function($cookiesProvider) {
     $cookiesProvider.defaults.path = '/';
-    $cookiesProvider.defaults.domain = '.crossroads.net';
+    if(__COOKIE_DOMAIN__) {
+      $cookiesProvider.defaults.domain = __COOKIE_DOMAIN__;
+    }
   };
 
   var configureDatePickersDefaults = function(datepickerConfig, datepickerPopupConfig) {

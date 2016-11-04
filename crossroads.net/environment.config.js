@@ -1,7 +1,8 @@
 module.exports = {
   get: function() {
     return {
-      __CRDS_ENV__: JSON.stringify(process.env.CRDS_ENV || ''),
+      __CRDS_ENV__: JSON.stringify(process.env.CRDS_ENV),
+      __COOKIE_DOMAIN__: JSON.stringify(process.env.CRDS_COOKIE_DOMAIN),
       __API_ENDPOINT__: JSON.stringify(process.env.CRDS_API_ENDPOINT || 'https://gatewayint.crossroads.net/gateway/'),
       __CMS_ENDPOINT__: JSON.stringify(process.env.CRDS_CMS_ENDPOINT || 'https://contentint.crossroads.net/'),
       __GOOGLE_API_KEY__: JSON.stringify(process.env.CRDS_GOOGLE_API_KEY || 'AIzaSyArKsBK97N0Wi-69x10OL7Sx57Fwlmu6Cs'),
