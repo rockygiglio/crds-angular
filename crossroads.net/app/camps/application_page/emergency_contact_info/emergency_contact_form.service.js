@@ -11,7 +11,7 @@ class EmergencyContactForm {
     // Create param array from model
     const contacts = [];
     contacts[0] = this.formModel.contacts['0'];
-    contacts[0].primary = true;
+    contacts[0].primaryContact = true;
 
     if (this.formModel.additionalContact) {
       contacts[1] = this.formModel.contacts['1'];
