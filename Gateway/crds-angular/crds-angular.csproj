@@ -329,6 +329,8 @@
     <Compile Include="Models\Crossroads\Camp\CampEmergencyContactDTO.cs" />
     <Compile Include="Models\Crossroads\Camp\CampFamilyMember.cs" />
     <Compile Include="Models\Crossroads\Camp\CampReservationDTO.cs" />
+    <Compile Include="Models\Crossroads\Camp\CampWaiverDTO.cs" />
+    <Compile Include="Models\Crossroads\Camp\CampWaiverResponseDTO.cs" />
     <Compile Include="Models\Crossroads\Camp\MedicalInfoDTO.cs" />
     <Compile Include="Models\Crossroads\Camp\MyCampDTO.cs" />
     <Compile Include="Models\Crossroads\Childcare\ChildcareDashboardDto.cs" />
@@ -392,7 +394,7 @@
     <Compile Include="Models\Json\PasswordReset.cs" />
     <Compile Include="Models\Json\ResetTokenStatus.cs" />
     <Compile Include="Models\MailChimp\BulkEmailSubscriberOptDTO.cs" />
-    <Compile Include="Models\Crossroads\RsvpMembers.cs" />
+    <Compile Include="Models\Crossroads\RsvpMember.cs" />
     <Compile Include="Processors\SendTextMessageJob.cs" />
     <Compile Include="Services\AddressService.cs" />
     <Compile Include="Services\BulkEmailSyncService.cs" />

@@ -131,9 +131,28 @@ namespace crds_angular.Controllers.API
             });
         }
 
+        [VersionedRoute(template: "camps/{eventId}/waivers{contactId}", minimumVersion: "1.0.0")]
+        [Route("camps/{eventId}/waivers{contactId}")]
+        [AcceptVerbs("GET")]
+        public IHttpActionResult GetCampWaivers(int eventId, int contactId)
+        {
+            return Authorized(token =>
+            {
+                try
+                {
+                    var waivers = _campService.GetCampWaivers(eventId, contactId);
+                    return Ok(waivers);
+                }
+                catch (Exception e)
+                {
+                    var apiError = new ApiErrorDto("Failed to get waiver data", e);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+            });
+        }
+
         [VersionedRoute(template: "camps/medical/{contactId}", minimumVersion: "1.0.0")]
         [Route("camps/medical/{contactId}")]
-        [AcceptVerbs("POST")]
         public IHttpActionResult SaveMedicalInformation([FromBody] MedicalInfoDTO medicalInfo, int contactId)
         {
             if (!ModelState.IsValid)
@@ -150,7 +169,6 @@ namespace crds_angular.Controllers.API
                     _campService.SaveCamperMedicalInfo(medicalInfo, contactId, token);
                     return Ok();
                 }
-
                 catch (Exception e)
                 {
                     var apiError = new ApiErrorDto("Camp Medical Info failed", e);
@@ -159,7 +177,36 @@ namespace crds_angular.Controllers.API
             });
         }
 
-        [VersionedRoute(template: "camps/{eventId}/emergencyContact/{contactId}", minimumVersion: "1.0.0")]
+        [VersionedRoute(template: "camps/{eventId}/waivers/{contactId}", minimumVersion: "1.0.0")]
+        [Route("camps/{eventId}/waivers/{contactId}")]
+        [AcceptVerbs("POST")]
+        public IHttpActionResult SaveWaivers([FromBody] List<CampWaiverResponseDTO> waivers, int eventId, int contactId)
+        {
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState.Values.SelectMany(val => val.Errors).Aggregate("", (current, err) => current + err.Exception.Message);
+                var dataError = new ApiErrorDto("Waiver data Invalid", new InvalidOperationException("Invalid Waiver Data" + errors));
+                throw new HttpResponseException(dataError.HttpResponseMessage);
+            }
+
+            return Authorized(token =>
+            {
+                try
+                {
+                    _campService.SaveWaivers(token, eventId, contactId, waivers);
+                    return Ok();
+                }
+                catch (Exception e)
+                {
+                    var apiError = new ApiErrorDto("Failed to save waiver data", e);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+
+                
+            });
+        }
+
+        [VersionedRoute(template:"camps/{eventId}/emergencycontact/{contactId}", minimumVersion: "1.0.0")]
         [Route("camps/{eventId}/emergencycontact/{contactId}")]
         [AcceptVerbs("POST")]
         public IHttpActionResult SaveCamperEmergencyContact([FromBody] CampEmergencyContactDTO emergencyContact, int eventId, int contactId)

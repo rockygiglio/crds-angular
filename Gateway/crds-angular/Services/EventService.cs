@@ -756,5 +756,10 @@ namespace crds_angular.Services
 
             return eventTemplates;
         }
+
+        public int GetEventParticipantByEventAndContact(int eventId, int contactId)
+        {
+            return _eventParticipantService.GetEventParticipantByContactId(eventId, contactId);
+        }
     }
 }
