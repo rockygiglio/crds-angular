@@ -16,10 +16,25 @@ export default class CountdownService {
     this.isCountdown    = this.event.isUpcoming();
     this.isBroadcasting = this.event.isBroadcasting();
 
-    let duration = moment.duration(
-      +this.event.start - +moment(),
-      'milliseconds'
-    );
+    let now = moment();
+    let difference = this.event.start.diff(now);
+    let tz = 'America/New_York';
+    let format = 'YYYY-MM-DD H:mm:ss';
+
+    let isNowDst = moment.tz(now, format, tz).isDST();
+    let isStartDst = moment.tz(this.event.start, format, tz).isDST();
+    let oneHour = 3600000;
+
+    // account for DST during date overlaps
+    if ( isNowDst && !isStartDst ) {
+      difference -= oneHour;
+    }
+    else if ( !isNowDst && isStartDst ) {
+      difference += oneHour;
+    }
+
+    let duration = moment.duration(difference);
+    
     this.countdown.days    = this.pad(duration.days());
     this.countdown.hours   = this.pad(duration.hours());
     this.countdown.minutes = this.pad(duration.minutes());
