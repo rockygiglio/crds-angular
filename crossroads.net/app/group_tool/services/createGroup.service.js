@@ -511,30 +511,35 @@ export default class CreateGroupService {
                             label: 'Interest',
                             labelDesc: '$root.MESSAGES.groupToolInterestDetail.content | html',
                             placeholder: 'Ex. Boxing, XBox',
-                            disabled: false
+                            static: 'defaultedText',
+                            disabled: true
                         }, {
                             categoryId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.NEIGHBORHOODS,
                             label: 'Neighborhoods',
                             labelDesc: '$root.MESSAGES.groupToolNeighborhoodDescription.content | html',
                             placeholder: 'Ex. Norwood, Gaslight',
+                            static: '',
                             disabled: false
                         }, {
                             categoryId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.SPIRITUAL_GROWTH,
                             label: 'Spiritual Growth',
                             labelDesc: '$root.MESSAGES.groupToolSpiritualGrowthDescription.content | html',
                             placeholder: 'Ex. Huddle, James',
+                            static: '',
                             disabled: false
                         }, {
                             categoryId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.LIFE_STAGES,
                             label: 'Life Stage',
                             labelDesc: '$root.MESSAGES.groupToolLifeStageDescription.content | html',
                             placeholder: 'Ex. new family, young married, college, empty nesters',
+                            static: '',
                             disabled: false
                         }, {
                             categoryId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.HEALING,
                             label: 'Healing',
                             labelDesc: '$root.MESSAGES.groupToolHealingDescription.content | html',
                             placeholder: 'Ex. grief, infertility, addiction, divorce, crisis',
+                            static: '',
                             disabled: false
                         }],
                 }

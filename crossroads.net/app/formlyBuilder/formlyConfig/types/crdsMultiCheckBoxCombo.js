@@ -102,7 +102,11 @@ export default ngModule => {
                     $scope.model[opts.key] = [];
                     angular.forEach($scope.multiCheckboxCombo.checked, (checkbox, index) => {
                         if (checkbox) {
-                            $scope.model[opts.key].push({ detail: $scope.multiCheckboxCombo.detail[index], value: to.options[index][to.valueProp || 'value'] });
+                            $scope.model[opts.key].push({ 
+                                detail: to.options[index]['disabled'] ? to.options[index]['static'] : $scope.multiCheckboxCombo.detail[index], 
+                                value: to.options[index][to.valueProp || 'value'] 
+                            });
+                            
                         } else {
                             $scope.multiCheckboxCombo.detail[index] = '';
                         }
