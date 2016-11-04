@@ -45,13 +45,13 @@ export default class LandingController {
     let src = '';
     switch (this.streamStatus) {
       case 'Live':
-        src = 'crds-cms-uploads.imgix.net/media/streaming/streaming-anywhere-hero-broadcasting.jpg?w=1&crop=faces&fit=crop';
+        src = 'crds-cms-uploads.imgix.net/content/images/streaming-anywhere-hero-broadcasting.jpg?w=1&crop=faces&fit=crop';
         break;
       case 'Upcoming':
-        src = 'crds-cms-uploads.imgix.net/media/streaming/streaming-anywhere-hero-upcoming.jpg?w=1&crop=faces&fit=crop';
+        src = 'crds-cms-uploads.imgix.net/content/images/streaming-anywhere-hero-upcoming.jpg?w=1&crop=faces&fit=crop';
         break;
       case 'Off':
-        src = 'crds-cms-uploads.imgix.net/media/streaming/streaming-anywhere-hero-off.jpg?w=1&crop=faces&fit=crop';
+        src = 'crds-cms-uploads.imgix.net/content/images/streaming-anywhere-hero-off.jpg?w=1&crop=faces&fit=crop';
         break
     }
 
