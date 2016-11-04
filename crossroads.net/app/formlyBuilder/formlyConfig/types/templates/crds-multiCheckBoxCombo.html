@@ -19,6 +19,7 @@
                 ng-if="multiCheckboxCombo.checked[$index]"
                 maxlength="{{to.maxFieldLength}}"
                 placeholder="{{option[to.placeholder]}}"
+                ng-disabled="{{option['disabled']}}"
                 class="form-control ng-pristine ng-valid ng-empty push-half-bottom">
     </div>
   </div>
