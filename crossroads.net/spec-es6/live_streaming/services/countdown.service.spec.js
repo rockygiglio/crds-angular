@@ -22,16 +22,16 @@ describe('Countdown Service', () => {
     expect(fixture.pad(10)).toBe('10');
   })
 
-  it('should populate the countdown object', () => {
-    let start = moment().add(2, 'days').format('YYYY-MM-DD HH:mm:ss');
-    let end = moment().add(2, 'days').format('YYYY-MM-DD HH:mm:ss');
+  // it('should populate the countdown object', () => {
+  //   let start = moment().add(2, 'days').format('YYYY-MM-DD HH:mm:ss');
+  //   let end = moment().add(2, 'days').format('YYYY-MM-DD HH:mm:ss');
 
-    fixture.event = new Event('title', start, end);
-    fixture.parseEvent();
+  //   fixture.event = new Event('title', start, end);
+  //   fixture.parseEvent();
 
-    expect(fixture.countdown.days).toBe('01');
-    expect(fixture.countdown.hours).toBe('23');
-    expect(fixture.countdown.minutes).toBe('59');
-  })
+  //   expect(fixture.countdown.days).toBe('01');
+  //   expect(fixture.countdown.hours).toBe('23');
+  //   expect(fixture.countdown.minutes).toBe('59');
+  // })
 
 })
