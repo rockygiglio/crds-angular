@@ -18,19 +18,18 @@ export default class CountdownService {
 
     let now = moment();
     let difference = this.event.start.diff(now);
+    
     let tz = 'America/New_York';
     let format = 'YYYY-MM-DD H:mm:ss';
 
     let isNowDst = moment.tz(now, format, tz).isDST();
     let isStartDst = moment.tz(this.event.start, format, tz).isDST();
-    let oneHour = 3600000;
 
-    // account for DST during date overlaps
     if ( isNowDst && !isStartDst ) {
-      difference -= oneHour;
+      this.countdown.overlapDst = -1;
     }
     else if ( !isNowDst && isStartDst ) {
-      difference += oneHour;
+      this.countdown.overlapDst = 1;
     }
 
     let duration = moment.duration(difference);
