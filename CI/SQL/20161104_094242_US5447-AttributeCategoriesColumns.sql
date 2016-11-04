@@ -13,9 +13,7 @@ COMMIT
 
 IF NOT EXISTS (SELECT * FROM sys.columns WHERE Name = N'Requires_Active_Attribute' AND Object_ID = Object_ID(N'Attribute_Categories'))
 BEGIN
-
-
 ALTER TABLE [dbo].[Attribute_Categories]
 ADD Requires_Active_Attribute BIT NOT NULL DEFAULT(0),
 ADD Placeholder_Text NVARCHAR(155) NULL
-GO
+END
