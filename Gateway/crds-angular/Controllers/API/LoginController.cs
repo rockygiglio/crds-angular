@@ -104,7 +104,8 @@ namespace crds_angular.Controllers.API
             });
         }
 
-
+        [VersionedRoute(template: "login", minimumVersion: "1.0.0")]
+        [Route("login")]
         [ResponseType(typeof (LoginReturn))]
         public IHttpActionResult Post([FromBody] Credentials cred)
         {
