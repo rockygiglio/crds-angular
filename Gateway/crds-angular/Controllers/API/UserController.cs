@@ -6,6 +6,7 @@ using crds_angular.Exceptions;
 using crds_angular.Models.Crossroads;
 using crds_angular.Services.Interfaces;
 using crds_angular.Exceptions.Models;
+using Crossroads.ApiVersioning;
 
 namespace crds_angular.Controllers.API
 {
@@ -22,6 +23,9 @@ namespace crds_angular.Controllers.API
         }
 
         [ResponseType(typeof(User))]
+        [VersionedRoute(template: "user", minimumVersion: "1.0.0")]
+        [Route("user")]
+        [HttpPost]
         public IHttpActionResult Post([FromBody] User user)
         {
             try

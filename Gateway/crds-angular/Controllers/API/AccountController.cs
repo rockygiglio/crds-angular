@@ -18,9 +18,11 @@ namespace crds_angular.Controllers.API
         {
             _accountService = accountService;
         }
-        
 
-        [ResponseType(typeof (AccountInfo))]
+        [ResponseType(typeof(AccountInfo))]
+        [VersionedRoute(template: "account", minimumVersion: "1.0.0")]
+        [Route("account")]
+        [HttpGet]
         public IHttpActionResult Get()
         {
             
@@ -61,6 +63,9 @@ namespace crds_angular.Controllers.API
 
         }
 
+        [VersionedRoute(template: "account", minimumVersion: "1.0.0")]
+        [Route("account")]
+        [HttpPost]
         public IHttpActionResult Post([FromBody]AccountInfo accountInfo)
         {
 

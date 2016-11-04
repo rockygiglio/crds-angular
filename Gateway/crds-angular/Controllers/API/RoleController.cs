@@ -6,6 +6,7 @@ using crds_angular.Security;
 using Crossroads.Utilities.Services;
 using MinistryPlatform.Translation.Repositories;
 using MinistryPlatform.Translation.Repositories.Interfaces;
+using Crossroads.ApiVersioning;
 
 namespace crds_angular.Controllers.API
 {
@@ -20,6 +21,9 @@ namespace crds_angular.Controllers.API
         }
 
         [ResponseType(typeof(IList<int>))]
+        [VersionedRoute(template: "role", minimumVersion: "1.0.0")]
+        [Route("role")]
+        [HttpGet]
         public IHttpActionResult Get(int id)
         {
             return Authorized(token =>
