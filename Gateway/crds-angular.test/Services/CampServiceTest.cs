@@ -562,15 +562,19 @@ namespace crds_angular.test.Services
                 RoomMate = ""
             };
         }
-        private CampEmergencyContactDTO MockCampEmergencyContactDTO()
+        private List<CampEmergencyContactDTO> MockCampEmergencyContactDTO()
         {
-            return new CampEmergencyContactDTO
+            return new List<CampEmergencyContactDTO>
             {
-                FirstName = "Jon",
-                LastName = "Horner",
-                Email = "lknair@gmail.com",
-                MobileNumber = "123456789",
-                Relationship = "friend"
+                new CampEmergencyContactDTO
+                {
+                    FirstName = "Jon",
+                    LastName = "Horner",
+                    Email = "lknair@gmail.com",
+                    MobileNumber = "123456789",
+                    Relationship = "friend",
+                    PrimaryEmergencyContact = true
+                }
             };
         }
         private CampReservationDTO MockCampReservationDTOwithContactId()
