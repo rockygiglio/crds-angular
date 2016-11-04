@@ -16,7 +16,6 @@ namespace MinistryPlatform.Translation.Models
         public string Email_Address { get; set; }
         public string Employer_Name { get; set; }
         public string First_Name { get; set; }
-        public string Display_Name { get; set; }
         public string Current_School { get; set; }
         public string Foreign_Country { get; set; }
         public int? Gender_ID { get; set; }

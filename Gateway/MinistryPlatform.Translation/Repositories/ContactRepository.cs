@@ -331,7 +331,6 @@ namespace MinistryPlatform.Translation.Repositories
                 Foreign_Country = recordsDict.ToString("Foreign_Country"),
                 Gender_ID = recordsDict.ToNullableInt("Gender_ID"),
                 Home_Phone = recordsDict.ToString("Home_Phone"),
-                Display_Name = recordsDict.ToString("Display_Name"),
                 Current_School = recordsDict.ToString("Current_School"),
                 Last_Name = recordsDict.ToString("Last_Name"),
                 Maiden_Name = recordsDict.ToString("Maiden_Name"),

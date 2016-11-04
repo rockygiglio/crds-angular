@@ -453,7 +453,6 @@ namespace crds_angular.test.Services
                 First_Name = "Jon",
                 Last_Name = "Baker",
                 Middle_Name = "",
-                Display_Name = "Jon",
                 Current_School = "mASON",
                 Gender_ID = 1,
                 Address_ID = 12,
