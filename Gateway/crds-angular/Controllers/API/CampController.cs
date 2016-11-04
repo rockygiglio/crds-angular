@@ -142,7 +142,26 @@ namespace crds_angular.Controllers.API
                     throw new HttpResponseException(apiError.HttpResponseMessage);
                 }
             });
-        }     
+        }
+
+        [Route("api/camps/{eventId}/medical/{contactId}")]
+        [AcceptVerbs("GET")]
+        public IHttpActionResult GetCampMedicalInfo(int eventId, int contactId)
+        {
+            return Authorized(token =>
+            {
+                try
+                {
+                    var medicalInfo = _campService.GetCampMedicalInfo(eventId, contactId, token);
+                    return Ok(medicalInfo);
+                }
+                catch (Exception e)
+                {
+                    var apiError = new ApiErrorDto("Failed to get medical info data", e);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+            });
+        }
 
         [Route("api/camps/medical/{contactid}")]
         [AcceptVerbs("POST")]

@@ -333,21 +333,63 @@ namespace crds_angular.Services
             {
                 throw new ContactNotFoundException(contactId);
             }
-            var mpMedicalInfo = new MpMedicalInformation
+            if (medicalInfo != null)
             {
-                InsuranceCompany = medicalInfo.InsuranceCompany ?? "N/A",
-                PhysicianName = medicalInfo.PhysicianName ?? "N/A",
-                PhysicianPhone = medicalInfo.PhysicianPhone ?? "N/A",
-                PolicyHolder = medicalInfo.PolicyHolder ?? "N/A",
-                ContactID = medicalInfo.ContactId
-            };
-            var mpAllergyList = medicalInfo.AllergyList.Select(allergy => new MpAllergy
-            {
-                AllergyDescription = allergy.AllergyDescription,
-                AllergyTypeID = allergy.AllergyType
-            }).ToList();
 
-            _medicalInformationRepository.SaveMedicalInformation(mpMedicalInfo, contactId);
+                var mpMedicalInfo = new MpMedicalInformation
+                {
+                    ContactId = contactId,
+                    MedicalInformationId = medicalInfo.MedicalInformationId,
+                    InsuranceCompany = medicalInfo.InsuranceCompany??"N/A",
+                    PhysicianName = medicalInfo.PhysicianName??"N/A",
+                    PhysicianPhone = medicalInfo.PhysicianPhone??"N/A",
+                    PolicyHolder = medicalInfo.PolicyHolder??"N/A"
+                };
+                var allergyList = new List<MpAllergy>
+                {
+                    new MpAllergy
+                    {
+                        AllergyDescription = medicalInfo.EnvironmentAllergies,
+                        AllergyTypeID = 3
+                    },
+                    new MpAllergy
+                    {
+                        AllergyDescription = medicalInfo.FoodAllergies,
+                        AllergyTypeID = 2
+                    },
+                    new MpAllergy
+                    {
+                        AllergyDescription = medicalInfo.MedicineAllergies,
+                        AllergyTypeID = 1
+                    },
+                    new MpAllergy
+                    {
+                        AllergyDescription = medicalInfo.OtherAllergies,
+                        AllergyTypeID = 4
+                    }
+                };
+   
+                if (medicalInfo.MedicalInformationId != 0)
+                {
+                    _medicalInformationRepository.UpdateMedicalRecords(mpMedicalInfo, allergyList, contactId);
+                }
+
+                _medicalInformationRepository.CreateMedicalRecords(mpMedicalInfo, allergyList, contactId);
+            }
+        }
+
+        public MedicalInfoDTO GetCampMedicalInfo(int eventId, int contactId, string token)
+        {
+            var loggedInContact = _contactRepository.GetMyProfile(token);
+            var family = _contactRepository.GetHouseholdFamilyMembers(loggedInContact.Household_ID);
+            family.AddRange(_contactRepository.GetOtherHouseholdMembers(loggedInContact.Contact_ID));
+
+            if (family.Where(f => f.ContactId == contactId).ToList().Count <= 0)
+            {
+                throw new ContactNotFoundException(contactId);
+            }
+            _medicalInformationRepository.GetMedicalInfo(contactId);
+            return null;
         }
 
         public CampReservationDTO GetCamperInfo(string token, int eventId, int contactId)

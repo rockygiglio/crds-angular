@@ -73,7 +73,7 @@ namespace MinistryPlatform.Translation.Repositories
             var storedProc = _configurationWrapper.GetConfigValue("IsCampEligibleStoredProc");
             var storedProcOpts = new Dictionary<string,object>
             {
-                {"@ContactID", contactId },
+                {"@ContactId", contactId },
                 {"@EventID", eventId }   
             };
             var result = _ministryPlatformRestRepository.UsingAuthenticationToken(token).GetFromStoredProc<MpStoredProcBool>(storedProc, storedProcOpts);

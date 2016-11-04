@@ -11,6 +11,12 @@ function getCamperInfo(CampsService, $stateParams) {
   return CampsService.getCamperInfo(campId, camperId);
 }
 
+function getCampMedical(CampsService, $stateParams) {
+  const campId = $stateParams.campId;
+  const contactId = $stateParams.contactId;
+  return CampsService.getCampMedical(campId, contactId);
+}
+
 export default function CampRoutes($stateProvider) {
   $stateProvider
     .state('camps-dashboard', {
@@ -60,7 +66,8 @@ export default function CampRoutes($stateProvider) {
       url: '/:page/:contactId',
       template: '<camps-application-page></camps-application-page>',
       resolve: {
-        getCampWaivers
+        // getCampWaivers,
+        getCampMedical
       }
     })
     .state('campsignup.camper', {

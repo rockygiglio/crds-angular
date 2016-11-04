@@ -42,7 +42,7 @@ namespace MinistryPlatform.Translation.Test.Services
             var values = new Dictionary<string, object>
             {
                 {"@PledgeCampaignID", 12345},
-                {"@ContactID", 433334}
+                {"@ContactId", 433334}
             };
             _ministryPlatformRest.Setup(m => m.GetFromStoredProc<MpPledge>(storedProc, values)).Returns(lists);
             var returnVal = _fixture.AddAsTripParticipant(433334, 12345, token);
@@ -58,7 +58,7 @@ namespace MinistryPlatform.Translation.Test.Services
             var values = new Dictionary<string, object>
             {
                 {"@PledgeCampaignID", 12345},
-                {"@ContactID", 433334}
+                {"@ContactId", 433334}
             };
 
             var lists = new List<List<MpPledge>>();

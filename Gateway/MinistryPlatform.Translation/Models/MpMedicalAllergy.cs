@@ -1,4 +1,5 @@
-﻿using MinistryPlatform.Translation.Models.Attributes;
+﻿using System.Collections.Generic;
+using MinistryPlatform.Translation.Models.Attributes;
 using Newtonsoft.Json;
 
 namespace MinistryPlatform.Translation.Models
@@ -7,7 +8,7 @@ namespace MinistryPlatform.Translation.Models
     public class MpMedicalAllergy
     {
         [JsonProperty(PropertyName = "Allergy_ID")]
-        public MpAllergy Allergy { get; set; }
+        public List<MpAllergy> Allergy { get; set; }
 
         [JsonProperty(PropertyName = "Medical_Information_ID")]
         public MpMedicalInformation MedicalInfo { get; set; }

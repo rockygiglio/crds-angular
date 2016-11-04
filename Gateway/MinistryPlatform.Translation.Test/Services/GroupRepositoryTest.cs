@@ -888,7 +888,7 @@ namespace MinistryPlatform.Translation.Test.Services
 
             var storedProcParams = new Dictionary<string, object>
             {
-                {"@ContactID", contactId},
+                {"@ContactId", contactId},
                 {"@EventID", eventId }
             };
 
@@ -920,7 +920,7 @@ namespace MinistryPlatform.Translation.Test.Services
 
             var storedProcParams = new Dictionary<string, object>
             {
-                {"@ContactID", contactId},
+                {"@ContactId", contactId},
                 {"@EventID", eventId }
             };
 
@@ -952,7 +952,7 @@ namespace MinistryPlatform.Translation.Test.Services
 
             var storedProcParams = new Dictionary<string, object>
             {
-                {"@ContactID", contactId},
+                {"@ContactId", contactId},
                 {"@EventID", eventId }
             };
 

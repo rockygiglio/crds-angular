@@ -33,7 +33,7 @@ namespace MinistryPlatform.Translation.Repositories
         {
             var parms = new Dictionary<string,object>()
             {
-                {"@ContactID", contactId },
+                {"@ContactId", contactId },
                 {"@EventGroupID", groupId }
             };
             var storedProcReturn = _ministryPlatformRest.UsingAuthenticationToken(token).GetFromStoredProc<MPRspvd>("api_crds_childrsvpd", parms);

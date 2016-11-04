@@ -6,7 +6,10 @@ namespace crds_angular.Models.Crossroads.Camp
     public class MedicalInfoDTO
     {
         [JsonProperty(PropertyName = "contactId")]
-        public string ContactId { get; set; }
+        public int ContactId { get; set; }
+
+        [JsonProperty(PropertyName = "medicalInformationId")]
+        public int MedicalInformationId { get; set; }
 
         [JsonProperty(PropertyName = "insuranceCompany")]
         public string InsuranceCompany { get; set; }
@@ -20,15 +23,20 @@ namespace crds_angular.Models.Crossroads.Camp
         [JsonProperty(PropertyName = "physicianPhone")]
         public string PhysicianPhone { get; set; }
 
-        [JsonProperty(PropertyName = "allergies")]
-        public List<Allergy> AllergyList  { get; set; }
-    }
-    public class Allergy
-    {
-        [JsonProperty(PropertyName = "allergyType")]
-        public int AllergyType { get; set; }
+        [JsonProperty(PropertyName = "showAllergies")]
+        public bool ShowAllergies { get; set; }
 
-        [JsonProperty(PropertyName = "allergyDescription")]
-        public string AllergyDescription { get; set; }
+        [JsonProperty(PropertyName = "medicineAllergies")]
+        public string MedicineAllergies  { get; set; }
+
+        [JsonProperty(PropertyName = "foodAllergies")]
+        public string FoodAllergies { get; set; }
+
+        [JsonProperty(PropertyName = "environmentAllergies")]
+        public string EnvironmentAllergies { get; set; }
+
+        [JsonProperty(PropertyName = "otherAllergies")]
+        public string OtherAllergies { get; set; }
     }
+   
 }

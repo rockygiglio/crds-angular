@@ -16,11 +16,14 @@ class CampService {
     this.campFamily = $resource(__API_ENDPOINT__ + 'api/camps/:campId/family');
     // eslint-disable-next-line prefer-template
     this.campWaiversResource = $resource(__API_ENDPOINT__ + 'api/camps/:campId/waivers/:contactId', { campId: '@campId', contactId: '@contactId' });
+    // eslint-disable-next-line prefer-template
+    this.campMedicalResource = $resource(__API_ENDPOINT__ + 'api/camps/:campId/medical/:contactId', { campId: '@campId', contactId: '@contactId' });
 
     this.campInfo = {};
     this.camperInfo = {};
     this.campTitle = '';
     this.waivers = [];
+    this.campMedical = {};
   }
 
   getCampInfo(campId) {
@@ -47,8 +50,7 @@ class CampService {
     return this.campDashboard.query((myCamps) => {
       this.dashboard = myCamps;
     },
-
-   (err) => {
+    (err) => {
       this.log.error(err);
     }).$promise;
   }
@@ -64,6 +66,16 @@ class CampService {
   getCampWaivers(campId, contactId) {
     return this.campWaiversResource.query({ campId, contactId }, (waivers) => {
       this.waivers = waivers;
+    },
+
+    (err) => {
+      this.log.error(err);
+    }).$promise;
+  }
+
+  getCampMedical(campId, contactId) {
+    return this.campMedicalResource.get({ campId, contactId }, (medical) => {
+      this.medical = medical;
     },
 
     (err) => {

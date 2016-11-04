@@ -55,7 +55,7 @@ namespace MinistryPlatform.Translation.Test.Services
             Console.WriteLine("TestCallingAStoredProcedure");
             var parms = new Dictionary<string, object>()
             {
-                {"@ContactID", 100030266},
+                {"@ContactId", 100030266},
                 {"@EventGroupID", 172309}
             };
             var results = _fixture.UsingAuthenticationToken(_authToken).GetFromStoredProc<MPRspvd>("api_crds_childrsvpd", parms);
@@ -116,7 +116,7 @@ namespace MinistryPlatform.Translation.Test.Services
             var fields = new Dictionary<string, object>
             {
                 {"@PledgeCampaignID", 10000000},
-                {"@ContactID", 2186211 }
+                {"@ContactId", 2186211 }
             };
             var results = _fixture.UsingAuthenticationToken(_authToken).GetFromStoredProc<MpPledge>("api_crds_Add_As_TripParticipant", fields);
             Console.WriteLine("Result\t" + results.ToString());
@@ -262,7 +262,7 @@ namespace MinistryPlatform.Translation.Test.Services
         {
             var storedProcOpts = new Dictionary<string, object>
             {
-                {"@ContactID", 1234 },
+                {"@ContactId", 1234 },
                 {"@EventID", 4525285}
             };
             var result = _fixture.UsingAuthenticationToken(_authToken).GetFromStoredProc<MpStoredProcBool>("api_crds_Grade_Group_Participant_For_Camps", storedProcOpts);
@@ -278,7 +278,7 @@ namespace MinistryPlatform.Translation.Test.Services
         {
             var storedProcOpts = new Dictionary<string, object>
             {
-                {"@ContactID", 7672203},
+                {"@ContactId", 7672203},
                 {"@EventID", 4525325}
             };
             var result = _fixture.UsingAuthenticationToken(_authToken).GetFromStoredProc<MpStoredProcBool>("api_crds_Grade_Group_Participant_For_Camps", storedProcOpts);

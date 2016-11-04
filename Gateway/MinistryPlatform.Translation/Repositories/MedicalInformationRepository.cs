@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 
@@ -15,42 +17,50 @@ namespace MinistryPlatform.Translation.Repositories
             _apiUserRepository = apiUserRepository;
         }
 
-        public void SaveMedicalInformation(MpMedicalAllergy medAllergyInfo, int contactId)
+        public MpMedicalInformation GetMedicalInfo(int contactId)
         {
-            //var parms = new Dictionary<string, object>
-            //{
-            //    {"@ContactId", contactId},
-            //    {"@InsuranceCompany", medicalInfo.InsuranceCompany},
-            //    {"@PolicyHolder", medicalInfo.PolicyHolder},
-            //    {"@PhysicianName", medicalInfo.PhysicianName},
-            //    {"@PhysicianPhone", medicalInfo.PhysicianPhone},
-            //    {"@AllergyType", medicalInfo.AllergyType },
-            //    {"@AllergyDescription", medicalInfo.AllergyDescription }
-            //};
-
-            //var apiToken = _apiUserRepository.GetToken();
-            //_ministryPlatformRest.UsingAuthenticationToken(apiToken).PostStoredProc("api_crds_Create_Medical_Info_For_Contacts", parms);
-
             var apiToken = _apiUserRepository.GetToken();
-            var searchString = $"Contact_ID={contactId}";
-            var medicalInformationId = _ministryPlatformRest.UsingAuthenticationToken(apiToken).Search<int>("cr_Medical_Information", searchString, "MedicalInformation_ID");
-            if (medicalInformationId == 0 && medAllergyInfo.Allergy != null)
+
+            //TODO: get rid of try-catch
+            try
             {
-                _ministryPlatformRest.UsingAuthenticationToken(apiToken).Post(new List<MpMedicalAllergy> {medAllergyInfo});
+                var medInfo = _ministryPlatformRest.UsingAuthenticationToken(apiToken).Search<MpMedicalInformation>($"Contact_ID = {contactId}");
             }
-            if (medicalInformationId != 0)
+            catch (Exception e)
             {
-                searchString = $"Medical_Information_ID ={medicalInformationId}";
-                var allergyIds = _ministryPlatformRest.UsingAuthenticationToken(apiToken).Search<List<int>>("cr_Medical_Information_Allergy", searchString, "Allergy_ID");
-                foreach (var allergyId in allergyIds)
-                {
-                    
-                }
-
-
+                System.Diagnostics.Debug.WriteLine($"\n\n\n***** Medical Info *****\n{e}\n\n\n{e.Message}");
             }
-            
 
+
+            //var mpMedicalInformation = medInfo.FirstOrDefault();
+
+            //if(mpMedicalInformation == null) { return null; }
+
+            //var allergyIdList = _ministryPlatformRest.UsingAuthenticationToken(apiToken)
+            //    .Search<MpMedicalAllergy>($"Medical_Information_ID = {mpMedicalInformation.MedicalInformationId}");
+
+            //System.Diagnostics.Debug.WriteLine(allergyIdList);
+
+
+            return null;
+
+        }
+
+        public void UpdateMedicalRecords(MpMedicalInformation mpMedicalInfo, List<MpAllergy> allergyList, int contactId)
+        {
+            var apiToken = _apiUserRepository.GetToken();
+            if (allergyList.Count <= 0 )
+            {
+                
+            }
+
+
+
+
+        }
+
+        public void CreateMedicalRecords(MpMedicalInformation mpMedicalInfo, List<MpAllergy> allergyList, int contactId)
+        {
 
         }
     }

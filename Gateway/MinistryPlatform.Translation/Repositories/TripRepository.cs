@@ -30,7 +30,7 @@ namespace MinistryPlatform.Translation.Repositories
                 var fields = new Dictionary<string, object>
                 {
                     {"@PledgeCampaignID", PledgeCampaignID},
-                    {"@ContactID", ContactId}
+                    {"@ContactId", ContactId}
                 };
                 var result = _ministryPlatformRestRepository.UsingAuthenticationToken(token).GetFromStoredProc<MpPledge>(storedProc, fields);
                 if (result.Count > 0 && result[0].Count > 0)

@@ -7,10 +7,10 @@ namespace MinistryPlatform.Translation.Models
     public class MpMedicalInformation
     {
         [JsonProperty(PropertyName = "Contact_ID")]
-        public string ContactID { get; set; }
+        public int ContactId { get; set; }
 
         [JsonProperty(PropertyName = "MedicalInformation_ID")]
-        public string MedicalInformationID { get; set; }
+        public int MedicalInformationId { get; set; }
 
         [JsonProperty(PropertyName = "InsuranceCompany")]
         public string InsuranceCompany { get; set; }
