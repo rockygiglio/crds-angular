@@ -511,8 +511,8 @@ export default class CreateGroupService {
                             label: 'Interest',
                             labelDesc: '$root.MESSAGES.groupToolInterestDetail.content | html',
                             placeholder: 'Ex. Boxing, XBox',
-                            static: 'defaultedText',
-                            disabled: true
+                            static: '',
+                            disabled: false
                         }, {
                             categoryId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.NEIGHBORHOODS,
                             label: 'Neighborhoods',
