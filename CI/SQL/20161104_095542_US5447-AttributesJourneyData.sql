@@ -56,5 +56,5 @@ BEGIN
 		null,
 		null
 	)
-GO
+END
 

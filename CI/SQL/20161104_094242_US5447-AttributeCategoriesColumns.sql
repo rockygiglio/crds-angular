@@ -15,5 +15,5 @@ IF NOT EXISTS (SELECT * FROM sys.columns WHERE Name = N'Requires_Active_Attribut
 BEGIN
 ALTER TABLE [dbo].[Attribute_Categories]
 ADD Requires_Active_Attribute BIT NOT NULL DEFAULT(0),
-ADD Placeholder_Text NVARCHAR(155) NULL
+ADD Example_Text NVARCHAR(155) NULL
 END
