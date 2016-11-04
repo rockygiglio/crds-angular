@@ -1,14 +1,16 @@
 ﻿using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.Routing;
+using log4net;
+using System.Reflection;
 
 namespace Crossroads.ApiVersioning
 {
     public class ApiRouteProvider : DefaultDirectRouteProvider
     {
+        private readonly ILog _logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         private const string ApiRoutePrefix = "api";
 
         public IReadOnlyList<RouteEntry> DirectRoutes { get; private set; }
@@ -29,7 +31,7 @@ namespace Crossroads.ApiVersioning
                 string routePath = routeEntry.Route.RouteTemplate;
                 System.Web.Http.Controllers.HttpActionDescriptor[] actions = (System.Web.Http.Controllers.HttpActionDescriptor[])routeEntry.Route.DataTokens["actions"];
                 string action = actions[0].SupportedHttpMethods[0].Method;
-                string route = action + ":" + routeBasename(routePath);
+                string route = "(" + action + ") " + routeBasename(routePath);
                 VersionConstraint constraint = null;
                 if (routeEntry.Route.Constraints.ContainsKey("allowedVersions"))
                     constraint = routeEntry.Route.Constraints["allowedVersions"] as VersionConstraint;
@@ -38,10 +40,7 @@ namespace Crossroads.ApiVersioning
             int routeCount = VersionSpace.Count();
             JArray problems = VersionSpace.Problems();
             if (problems.Count > 0)
-            {
-                System.Diagnostics.Debug.WriteLine("----------------------- Controller: " + controllerDescriptor.ControllerName);
-                System.Diagnostics.Debug.WriteLine("API Versioning (" + routeCount + " routes) Problems: " + problems);
-            }
+                _logger.Warn("\n----------------------- Controller: " + controllerDescriptor.ControllerName + "  (" + routeCount + " routes)\nAPI Versioning Problems: \n" + problems);
         }
 
         private const string _versionedRoutePattern = @"^api/v\{apiVersion\}/(.*)$";
