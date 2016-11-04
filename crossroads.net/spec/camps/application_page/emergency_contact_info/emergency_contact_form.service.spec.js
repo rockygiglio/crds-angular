@@ -18,7 +18,8 @@ describe('Camps Emergency Contact Form', () => {
   }));
 
   it('should save the emergency contact', () => {
-    fixture.formModel = campHelpers.emergencyContactModel;
+    fixture.formModel = campHelpers().emergencyContactModel;
+
     httpBackend.expectPOST(`${endpoint}/camps/${campId}/emergencycontact/${contactId}`, campHelpers.emergencyContactModel).respond(200);
     fixture.save(campId, contactId);
     httpBackend.flush();

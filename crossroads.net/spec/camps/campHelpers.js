@@ -37,11 +37,23 @@ function CampHelpers() {
       startDate: '2017-01-08T00:00:00'
     },
     emergencyContactModel: {
-      firstName: 'Jon',
-      lastName: 'Horner',
-      mobileNumber: '513-123-2345',
-      email: null,
-      relationship: 'co-worker'
+      contacts: {
+        0: {
+          firstName: 'Jon',
+          lastName: 'Horner',
+          mobileNumber: '513-123-2345',
+          email: null,
+          relationship: 'co-worker',
+          primaryContact: true
+        },
+        1: {
+          firstName: 'Jane',
+          lastName: 'Horner',
+          mobileNumber: '513-987-6543',
+          email: null,
+          relationship: 'co-worker'
+        }
+      }
     },
     messages: {
       summercampIntro: {
