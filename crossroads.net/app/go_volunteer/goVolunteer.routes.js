@@ -2,6 +2,7 @@
   'use strict';
 
   module.exports = GoVolunteerRoutes;
+  var cookieNames = require('crds-constants').COOKIES;
 
   GoVolunteerRoutes.$inject = ['$stateProvider', '$urlMatcherFactoryProvider', '$locationProvider'];
 
@@ -52,7 +53,7 @@
           Meta: Meta,
           $state: '$state',
           LoggedIn: function($state) {
-            if (crds_utilities.getCookie('sessionId') !== undefined) {
+            if (crds_utilities.getCookie(cookieNames.SESSION_ID) !== undefined) {
               $state.go('go-volunteer.crossroadspage', {page: 'profile'});
             }
           }

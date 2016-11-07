@@ -11,6 +11,8 @@ delete from form_response_answers where form_response_id in (select form_respons
 
 delete from form_responses where event_id in (select event_id from events where event_title = @tripName);
 
+delete from form_responses where pledge_campaign_id  = @pledgeCampaignId;
+
 delete from cr_EventParticipant_documents where event_participant_ID in (select Event_Participant_ID from Event_Participants where event_id in (select event_id from events where event_title = @tripName));
 
 delete from event_participants where event_id in (select event_id from events where event_title = @tripName);
