@@ -38,9 +38,8 @@ BEGIN
 		[Domain_ID],
 		[__ExternalAttributeID],
 		[Sort_Order],
-		[__SpiritualJourneyID],
-		[__AirlineID],
-		[__ProfessionID]
+		[Start_Date],
+		[End_Date]
 		)
 	VALUES
 	(
@@ -48,13 +47,12 @@ BEGIN
 		'I am ______',
 		'2017 Crossroads Journey Groups',
 		90,
-		1003,
+		@categoryId,
 		1,
 		null,
 		0,
-		null,
-		null,
-		null
+		{ts '2017-01-07 00:00:00'},
+		{ts '2017-03-24 00:00:00'}
 	)
-END
+GO
 
