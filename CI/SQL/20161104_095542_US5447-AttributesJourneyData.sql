@@ -54,5 +54,6 @@ BEGIN
 		{ts '2017-01-07 00:00:00'},
 		{ts '2017-03-24 00:00:00'}
 	)
-GO
+	SET IDENTITY_INSERT [dbo].[Attributes] OFF;	
+END
 

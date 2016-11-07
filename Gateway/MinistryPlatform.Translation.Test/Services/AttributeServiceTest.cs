@@ -13,6 +13,7 @@ namespace MinistryPlatform.Translation.Test.Services
     {
         private AttributeRepository _fixture;
         private Mock<IMinistryPlatformService> _ministryPlatformService;
+        private Mock<IMinistryPlatformRestRepository> _ministryPlaformRestService;
         private Mock<IAuthenticationRepository> _authService;
         private Mock<IConfigurationWrapper> _configWrapper;
 
@@ -22,6 +23,7 @@ namespace MinistryPlatform.Translation.Test.Services
         public void SetUp()
         {
             _ministryPlatformService = new Mock<IMinistryPlatformService>();
+            _ministryPlaformRestService = new Mock<IMinistryPlatformRestRepository>();
             _authService = new Mock<IAuthenticationRepository>();
             _configWrapper = new Mock<IConfigurationWrapper>();
 
@@ -32,7 +34,7 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"exp", "123"}
                 };
             _authService.Setup(m => m.Authenticate(It.IsAny<string>(), It.IsAny<string>())).Returns(authenticateResults);
-            _fixture = new AttributeRepository(_ministryPlatformService.Object, _authService.Object, _configWrapper.Object);
+            _fixture = new AttributeRepository(_ministryPlatformService.Object, _authService.Object, _configWrapper.Object, _ministryPlaformRestService.Object);
         }
 
         [Test]
