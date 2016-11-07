@@ -28,14 +28,13 @@ namespace MinistryPlatform.Translation.Repositories
         {
             var token = base.ApiLogin();
             const string COLUMNS =
-                "Attributes.Attribute_ID, Attributes.Attribute_Name, Attributes.Description, Attribute_Categories.Attribute_Category, Attribute_Categories.Attribute_Category_ID, Attribute_Categories.Description as Attribute_Category_Description, Attributes.Sort_Order, Attributes.Attribute_Type_ID, Attributes_Types.Prevent_Multiple_Seclection";
-            //string search = $"Responses.Event_ID = {eventId} And Opportunity_ID_Table.Add_To_Group = {groupId}";
+                "Attribute_ID, Attribute_Name, Attribute_Category_ID_Table.Attribute_Category, Attributes.Attribute_Category_ID, Attribute_Category_ID_Table.Description as Attribute_Category_Description, Attributes.Sort_Order, Attribute_Type_ID_Table.Prevent_Multiple_Selection";
 
-
-            var filter = attributeTypeId.HasValue ? string.Format(",,,\"{0}\"", attributeTypeId) : string.Empty;
-            var records = _ministryPlatformService.GetPageViewRecords("AttributesPageView", token, filter);
-
-            return records.Select(MapMpAttribute).ToList();
+            var search = attributeTypeId.HasValue ? $"Attributes.Attribute_Type_ID = { attributeTypeId}  AND " : string.Empty;
+            search += $"(Attributes.Start_Date Is Null OR Attributes.Start_Date <= GetDate()) ";
+            search += $"AND (Attributes.End_Date Is Null OR Attributes.End_Date >= GetDate())";
+            var records = _ministryPlatformRestService.UsingAuthenticationToken(token).Search<MpAttribute>(search, COLUMNS);
+            return records;
         }
 
         public List<MpAttribute> GetAttributesByFilter(string filter)
