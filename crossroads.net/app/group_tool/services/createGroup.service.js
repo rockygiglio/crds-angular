@@ -24,10 +24,10 @@ export default class CreateGroupService {
         this.meetingFrequencyLookup = [{
             meetingFrequencyId: 1,
             meetingFrequencyDesc: 'Every week'
-        },{
+        }, {
             meetingFrequencyId: 2,
             meetingFrequencyDesc: 'Every other week'
-        },{
+        }, {
             meetingFrequencyId: 8,
             meetingFrequencyDesc: 'Every month'
         }];
@@ -119,41 +119,41 @@ export default class CreateGroupService {
                     });
                 }
             }, {
-                    key: 'profile.dateOfBirth',
-                    type: 'crdsDatepicker',
-                    templateOptions: {
-                        label: 'Birth Date',
-                        required: true,
-                        type: 'text',
-                        datepickerPopup: 'MM/dd/yyyy'
-                    }
-                }, {
-                    key: 'profile.genderId',
-                    type: 'crdsRadio',
-                    templateOptions: {
-                        label: 'Gender',
-                        required: true,
-                        inline: false,
-                        valueProp: 'dp_RecordID',
-                        labelProp: 'dp_RecordName',
-                        options: []
-                    },
-                    controller: /* @ngInject */ function ($scope, GroupService) {
-                        $scope.to.loading = GroupService.getGenders().then(function (response) {
-                            $scope.to.options = response;
-                            CreateGroupService.genderLookup = response;
-                            return response;
-                        });
-                    }
-                }, {
-                    type: 'crdsProfilePicture',
-                    wrapper: 'createGroupProfilePicture',
-                    templateOptions: {
-                        contactId: this.model.profile.contactId,
-                        title: 'Update/Add Profile Picture',
-                        desc: 'This will display on your group page. (Optional)'
-                    }
-                }]
+                key: 'profile.dateOfBirth',
+                type: 'crdsDatepicker',
+                templateOptions: {
+                    label: 'Birth Date',
+                    required: true,
+                    type: 'text',
+                    datepickerPopup: 'MM/dd/yyyy'
+                }
+            }, {
+                key: 'profile.genderId',
+                type: 'crdsRadio',
+                templateOptions: {
+                    label: 'Gender',
+                    required: true,
+                    inline: false,
+                    valueProp: 'dp_RecordID',
+                    labelProp: 'dp_RecordName',
+                    options: []
+                },
+                controller: /* @ngInject */ function ($scope, GroupService) {
+                    $scope.to.loading = GroupService.getGenders().then(function (response) {
+                        $scope.to.options = response;
+                        CreateGroupService.genderLookup = response;
+                        return response;
+                    });
+                }
+            }, {
+                type: 'crdsProfilePicture',
+                wrapper: 'createGroupProfilePicture',
+                templateOptions: {
+                    contactId: this.model.profile.contactId,
+                    title: 'Update/Add Profile Picture',
+                    desc: 'This will display on your group page. (Optional)'
+                }
+            }]
         };
         var profileAddressFields = {
             wrapper: 'createGroup',
@@ -169,40 +169,40 @@ export default class CreateGroupService {
                     required: true,
                 }
             }, {
-                    key: 'profile.city',
-                    type: 'crdsInput',
-                    templateOptions: {
-                        label: 'City',
-                        required: true,
-                    }
-                }, {
-                    key: 'profile.state',
-                    type: 'crdsSelect',
-                    templateOptions: {
-                        label: 'State',
-                        required: true,
-                        valueProp: 'dp_RecordName',
-                        labelProp: 'dp_RecordName',
-                        options: this.statesLookup
-                    }
-                }, {
-                    key: 'profile.postalCode',
-                    type: 'crdsInput',
-                    templateOptions: {
-                        label: 'Zip',
-                        required: true,
-                    }
-                }, {
-                    key: 'profile.foreignCountry',
-                    type: 'crdsSelect',
-                    templateOptions: {
-                        label: 'Country',
-                        required: true,
-                        valueProp: 'dp_RecordName',
-                        labelProp: 'dp_RecordName',
-                        options: this.countryLookup
-                    }
-                }]
+                key: 'profile.city',
+                type: 'crdsInput',
+                templateOptions: {
+                    label: 'City',
+                    required: true,
+                }
+            }, {
+                key: 'profile.state',
+                type: 'crdsSelect',
+                templateOptions: {
+                    label: 'State',
+                    required: true,
+                    valueProp: 'dp_RecordName',
+                    labelProp: 'dp_RecordName',
+                    options: this.statesLookup
+                }
+            }, {
+                key: 'profile.postalCode',
+                type: 'crdsInput',
+                templateOptions: {
+                    label: 'Zip',
+                    required: true,
+                }
+            }, {
+                key: 'profile.foreignCountry',
+                type: 'crdsSelect',
+                templateOptions: {
+                    label: 'Country',
+                    required: true,
+                    valueProp: 'dp_RecordName',
+                    labelProp: 'dp_RecordName',
+                    options: this.countryLookup
+                }
+            }]
         };
         var groupMeetingDateTimeFields = {
             wrapper: 'createGroup',
@@ -221,59 +221,59 @@ export default class CreateGroupService {
                         label: 'Specific Day and Time',
                         value: true
                     }, {
-                            label: 'Flexible Meeting Time/Not Sure Yet',
-                            value: false
-                        }]
+                        label: 'Flexible Meeting Time/Not Sure Yet',
+                        value: false
+                    }]
                 }
             }, {
-                    key: 'group.meeting.day',
-                    type: 'crdsSelect',
-                    hideExpression: '!model.specificDay',
-                    templateOptions: {
-                        label: 'Day',
-                        required: true,
-                        valueProp: 'dp_RecordID',
-                        labelProp: 'dp_RecordName',
-                        options: []
-                    },
-                    expressionProperties: {
-                        'templateOptions.required': 'model.specificDay'
-                    },
-                    controller: /* @ngInject */ function ($scope, GroupService, CreateGroupService) {
-                        $scope.to.loading = GroupService.getDaysOfTheWeek().then(function (response) {
-                            let sortedResponse = _.sortBy(response, function (day) { return day.dp_RecordID; });
-                            $scope.to.options = sortedResponse;
-                            CreateGroupService.meetingDaysLookup = response;
-                            return response;
-                        });
-                    }
-                }, {
-                    key: 'group.meeting.time',
-                    type: 'crdsTimepicker',
-                    hideExpression: '!model.specificDay',
-                    expressionProperties: {
-                        'templateOptions.required': 'model.specificDay'
-                    },
-                    templateOptions: {
-                        label: 'Time',
-                        required: true,
-                        minuteStep: 15
-                    }
-                }, {
-                    key: 'group.meeting.frequency',
-                    type: 'crdsSelect',
-                    hideExpression: '!model.specificDay',
-                    expressionProperties: {
-                        'templateOptions.required': 'model.specificDay'
-                    },
-                    templateOptions: {
-                        label: 'Frequency',
-                        required: true,
-                        valueProp: 'meetingFrequencyId',
-                        labelProp: 'meetingFrequencyDesc',
-                        options: this.meetingFrequencyLookup
-                    }
-                }]
+                key: 'group.meeting.day',
+                type: 'crdsSelect',
+                hideExpression: '!model.specificDay',
+                templateOptions: {
+                    label: 'Day',
+                    required: true,
+                    valueProp: 'dp_RecordID',
+                    labelProp: 'dp_RecordName',
+                    options: []
+                },
+                expressionProperties: {
+                    'templateOptions.required': 'model.specificDay'
+                },
+                controller: /* @ngInject */ function ($scope, GroupService, CreateGroupService) {
+                    $scope.to.loading = GroupService.getDaysOfTheWeek().then(function (response) {
+                        let sortedResponse = _.sortBy(response, function (day) { return day.dp_RecordID; });
+                        $scope.to.options = sortedResponse;
+                        CreateGroupService.meetingDaysLookup = response;
+                        return response;
+                    });
+                }
+            }, {
+                key: 'group.meeting.time',
+                type: 'crdsTimepicker',
+                hideExpression: '!model.specificDay',
+                expressionProperties: {
+                    'templateOptions.required': 'model.specificDay'
+                },
+                templateOptions: {
+                    label: 'Time',
+                    required: true,
+                    minuteStep: 15
+                }
+            }, {
+                key: 'group.meeting.frequency',
+                type: 'crdsSelect',
+                hideExpression: '!model.specificDay',
+                expressionProperties: {
+                    'templateOptions.required': 'model.specificDay'
+                },
+                templateOptions: {
+                    label: 'Frequency',
+                    required: true,
+                    valueProp: 'meetingFrequencyId',
+                    labelProp: 'meetingFrequencyDesc',
+                    options: this.meetingFrequencyLookup
+                }
+            }]
         };
         var groupMeetingLocationFields = {
             wrapper: 'createGroup',
@@ -294,80 +294,80 @@ export default class CreateGroupService {
                         label: 'In person',
                         online: false
                     }, {
-                            label: 'Online',
-                            online: true
-                        }]
+                        label: 'Online',
+                        online: true
+                    }]
                 }
             }, {
-                    key: 'group.meeting.address.street',
-                    type: 'crdsInput',
-                    hideExpression: 'model.group.meeting.online',
-                    templateOptions: {
-                        label: 'Street',
-                        required: true,
-                    },
-                    expressionProperties: {
-                        'templateOptions.required': '!model.group.meeting.online'
-                    }
-                }, {
-                    key: 'group.meeting.address.city',
-                    type: 'crdsInput',
-                    hideExpression: 'model.group.meeting.online',
-                    templateOptions: {
-                        label: 'City',
-                        required: true,
-                    },
-                    expressionProperties: {
-                        'templateOptions.required': '!model.group.meeting.online'
-                    }
-                }, {
-                    key: 'group.meeting.address.state',
-                    type: 'crdsSelect',
-                    hideExpression: 'model.group.meeting.online',
-                    templateOptions: {
-                        label: 'State',
-                        required: true,
-                        valueProp: 'dp_RecordName',
-                        labelProp: 'dp_RecordName',
-                        options: this.statesLookup
-                    },
-                    expressionProperties: {
-                        'templateOptions.required': '!model.group.meeting.online'
-                    }
-                }, {
-                    key: 'group.meeting.address.zip',
-                    type: 'crdsInput',
-                    optionsTypes: ['zipcode'],
-                    hideExpression: 'model.group.meeting.online',
-                    templateOptions: {
-                        label: 'Zip',
-                        required: true
-                    },
-                    expressionProperties: {
-                        'templateOptions.required': '!model.group.meeting.online'
-                    }
-                }, {
-                    key: 'group.kidFriendly',
-                    type: 'crdsRadio',
-                    hideExpression: 'model.group.meeting.online',
-                    templateOptions: {
-                        required: true,
-                        label: 'Are kids welcome at the group?',
-                        labelProp: 'label',
-                        valueProp: 'kidFriendly',
-                        inline: false,
-                        options: [{
-                            label: 'Yep. Kids are welcome.  As a group, we’ll decide what to do with them.',
-                            kidFriendly: true
-                        }, {
-                                label: 'No. Adults only please.',
-                                kidFriendly: false
-                            }]
-                    },
-                    expressionProperties: {
-                        'templateOptions.required': '!model.group.meeting.online'
-                    }
-                }]
+                key: 'group.meeting.address.street',
+                type: 'crdsInput',
+                hideExpression: 'model.group.meeting.online',
+                templateOptions: {
+                    label: 'Street',
+                    required: true,
+                },
+                expressionProperties: {
+                    'templateOptions.required': '!model.group.meeting.online'
+                }
+            }, {
+                key: 'group.meeting.address.city',
+                type: 'crdsInput',
+                hideExpression: 'model.group.meeting.online',
+                templateOptions: {
+                    label: 'City',
+                    required: true,
+                },
+                expressionProperties: {
+                    'templateOptions.required': '!model.group.meeting.online'
+                }
+            }, {
+                key: 'group.meeting.address.state',
+                type: 'crdsSelect',
+                hideExpression: 'model.group.meeting.online',
+                templateOptions: {
+                    label: 'State',
+                    required: true,
+                    valueProp: 'dp_RecordName',
+                    labelProp: 'dp_RecordName',
+                    options: this.statesLookup
+                },
+                expressionProperties: {
+                    'templateOptions.required': '!model.group.meeting.online'
+                }
+            }, {
+                key: 'group.meeting.address.zip',
+                type: 'crdsInput',
+                optionsTypes: ['zipcode'],
+                hideExpression: 'model.group.meeting.online',
+                templateOptions: {
+                    label: 'Zip',
+                    required: true
+                },
+                expressionProperties: {
+                    'templateOptions.required': '!model.group.meeting.online'
+                }
+            }, {
+                key: 'group.kidFriendly',
+                type: 'crdsRadio',
+                hideExpression: 'model.group.meeting.online',
+                templateOptions: {
+                    required: true,
+                    label: 'Are kids welcome at the group?',
+                    labelProp: 'label',
+                    valueProp: 'kidFriendly',
+                    inline: false,
+                    options: [{
+                        label: 'Yep. Kids are welcome.  As a group, we’ll decide what to do with them.',
+                        kidFriendly: true
+                    }, {
+                        label: 'No. Adults only please.',
+                        kidFriendly: false
+                    }]
+                },
+                expressionProperties: {
+                    'templateOptions.required': '!model.group.meeting.online'
+                }
+            }]
         };
         var groupTypeFields = {
             wrapper: 'createGroup',
@@ -447,16 +447,16 @@ export default class CreateGroupService {
                     maxlength: 75
                 }
             }, {
-                    key: 'group.groupDescription',
-                    type: 'crdsTextArea',
-                    templateOptions: {
-                        label: 'Group Description',
-                        required: true,
-                        placeholder: 'Ex:This group is for men in their 30s who like to brew their own beer. We’ll meet regularly to come up with a new beer and brew it together, and share some beers while we build friendships. We’ll meet in Pleasant Ridge weekly in my home.',
-                        rows: 6,
-                        maxlength: 2000
-                    }
-                }]
+                key: 'group.groupDescription',
+                type: 'crdsTextArea',
+                templateOptions: {
+                    label: 'Group Description',
+                    required: true,
+                    placeholder: 'Ex:This group is for men in their 30s who like to brew their own beer. We’ll meet regularly to come up with a new beer and brew it together, and share some beers while we build friendships. We’ll meet in Pleasant Ridge weekly in my home.',
+                    rows: 6,
+                    maxlength: 2000
+                }
+            }]
         };
         var groupVisibilityFields = {
             wrapper: 'createGroup',
@@ -477,7 +477,7 @@ export default class CreateGroupService {
                     options: [{
                         accessId: true,
                         accessLabel: 'Public (Your group will be viewable in search results for everyone to see.)'
-                    },{
+                    }, {
                         accessId: false,
                         accessLabel: 'Private (Your group will NOT be publically viewable in search results.)'
                     }]
@@ -505,43 +505,13 @@ export default class CreateGroupService {
                     maxFieldLength: '25',
                     placeholder: 'placeholder',
                     // TODO - These are needed in the filters as well; created getGroupCategories() on group.service.js - can we use the same in both places?
-                    options: [
-                        {
-                            categoryId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.INTEREST,
-                            label: 'Interest',
-                            labelDesc: '$root.MESSAGES.groupToolInterestDetail.content | html',
-                            placeholder: 'Ex. Boxing, XBox',
-                            static: '',
-                            disabled: false
-                        }, {
-                            categoryId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.NEIGHBORHOODS,
-                            label: 'Neighborhoods',
-                            labelDesc: '$root.MESSAGES.groupToolNeighborhoodDescription.content | html',
-                            placeholder: 'Ex. Norwood, Gaslight',
-                            static: '',
-                            disabled: false
-                        }, {
-                            categoryId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.SPIRITUAL_GROWTH,
-                            label: 'Spiritual Growth',
-                            labelDesc: '$root.MESSAGES.groupToolSpiritualGrowthDescription.content | html',
-                            placeholder: 'Ex. Huddle, James',
-                            static: '',
-                            disabled: false
-                        }, {
-                            categoryId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.LIFE_STAGES,
-                            label: 'Life Stage',
-                            labelDesc: '$root.MESSAGES.groupToolLifeStageDescription.content | html',
-                            placeholder: 'Ex. new family, young married, college, empty nesters',
-                            static: '',
-                            disabled: false
-                        }, {
-                            categoryId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.HEALING,
-                            label: 'Healing',
-                            labelDesc: '$root.MESSAGES.groupToolHealingDescription.content | html',
-                            placeholder: 'Ex. grief, infertility, addiction, divorce, crisis',
-                            static: '',
-                            disabled: false
-                        }],
+                    options: [],
+                },
+                controller: /* @ngInject */ function ($scope, GroupService, CreateGroupService) {
+                    $scope.to.loading = GroupService.getGroupTypeCategories().then(function (response) {
+                        $scope.to.options = CreateGroupService.createGroupCategoryOptionList(response);
+                        return response;
+                    });
                 }
             }]
         }
@@ -549,6 +519,29 @@ export default class CreateGroupService {
         return [profileAboutFields, profileAddressFields, groupMeetingDateTimeFields,
             groupMeetingLocationFields, groupTypeFields, groupAgeFields,
             groupCategoryFields, groupAboutFields, groupVisibilityFields];
+    }
+
+    createGroupCategoryOptionList(categories) {
+        var parsedCategories = [];
+
+        _.forEach(categories, (category) => {
+            var parsed = {
+                categoryId: category.categoryId,
+                label: category.name,
+                labelDesc: category.desc,
+                placeholder: category.exampleText
+            };
+
+            if (category.requiresActiveAtribute == true) {
+                parsed.static = category.attribute.name;
+                parsed.disabled = true;
+            } else {
+                parsed.disabled = false;
+                parsed.static = '';
+            }
+            parsedCategories.push(parsed);
+        });
+        return parsedCategories;
     }
 
     mapFromSmallGroupAbout(smallGroup) {
@@ -645,7 +638,7 @@ export default class CreateGroupService {
 
     mapToSmallGroupAbout(smallGroup) {
         smallGroup.availableOnline = this.model.group.availableOnline;
-        
+
         smallGroup.congregationId = this.getCongregationId();
 
         smallGroup.groupDescription = this.model.group.groupDescription;
@@ -670,15 +663,13 @@ export default class CreateGroupService {
     }
 
     getCongregationId() {
-        
-        if(this.editGroupCongregationId == null )
-        {
+
+        if (this.editGroupCongregationId == null) {
             return this.model.profile.congregationId;
         }
-        else
-        {
-            return (this.primaryContactId === parseInt(this.session.exists('userId'))) 
-            ? this.model.profile.congregationId : this.editGroupCongregationId;
+        else {
+            return (this.primaryContactId === parseInt(this.session.exists('userId')))
+                ? this.model.profile.congregationId : this.editGroupCongregationId;
         }
     }
 
@@ -779,7 +770,7 @@ export default class CreateGroupService {
         if (this.model.specificDay) {
             smallGroup.meetingDayId = this.model.group.meeting.day;
             smallGroup.meetingTime = moment(this.model.group.meeting.time).format('LT');
-            var freqObj = _.find(this.meetingFrequencyLookup, (data) => {return data.meetingFrequencyId == smallGroup.meetingFrequencyId;});
+            var freqObj = _.find(this.meetingFrequencyLookup, (data) => { return data.meetingFrequencyId == smallGroup.meetingFrequencyId; });
             if (freqObj !== undefined && freqObj !== null) {
                 smallGroup.meetingFrequencyText = freqObj.meetingFrequencyDesc;
             }
@@ -910,6 +901,10 @@ export default class CreateGroupService {
                 break;
         }
         return returnString;
+    }
+
+    getCategories() {
+
     }
 
     getIdFromCategory(category) {

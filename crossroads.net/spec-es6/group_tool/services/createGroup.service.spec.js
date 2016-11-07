@@ -81,7 +81,57 @@ describe('Group Tool Group Service', () => {
     });
   });
 
-   describe('getCongregationId() function', () => {
+  describe('createGroupCategoryOptionList() function', () => {
+    it('categories are mapped correctly', () => {
+
+      let backendCategories = [
+        {
+          categoryId: 1,
+          name: 'Journey',
+          desc: 'The current Journey',
+          exampleText: 'Journey Group',
+          requiresActiveAtribute: true,
+          attribute: {
+            id: '1',
+            name: 'I Am ______',
+            startDate: '',
+            endDate: ''
+          }
+        }, {
+          categoryId: 2,
+          name: 'Interest',
+          desc: 'desc',
+          exampleText: 'Ex. Boxing, XBox',
+          requiresActiveAtribute: false,
+          attribute: {
+            id: '',
+            name: '',
+            startDate: '',
+            endDate: ''
+          }
+        }];
+
+      var mappedCategoriesMock = [{
+        categoryId: 1,
+        label: 'Journey',
+        labelDesc: 'The current Journey',
+        placeholder: 'Journey Group',
+        static: 'I Am ______',
+        disabled: true
+      },{
+        categoryId: 2,
+        label: 'Interest',
+        labelDesc: 'desc',
+        placeholder: 'Ex. Boxing, XBox',
+        static: '',
+        disabled: false
+      }]
+
+      var mappedCategories = fixture.createGroupCategoryOptionList(backendCategories);
+      expect(mappedCategories).toEqual(mappedCategoriesMock);
+    });
+  });
+  describe('getCongregationId() function', () => {
     it('editGroupCongregationId is null and congregationId is mapped correctly', () => {
 
       let model = { profile: { 'congregationId': 0 } };
@@ -98,7 +148,7 @@ describe('Group Tool Group Service', () => {
       fixture.editGroupCongregationId = 2;
       fixture.model = model;
       fixture.primaryContactId = 1234;
-      spyOn(fixture.session, 'exists').and.callFake(function(userId) {
+      spyOn(fixture.session, 'exists').and.callFake(function (userId) {
         return '1234';
       });
 
@@ -113,7 +163,7 @@ describe('Group Tool Group Service', () => {
       fixture.editGroupCongregationId = editGroupCongregationId;
       fixture.model = model;
       fixture.primaryContactId = 1234;
-      spyOn(fixture.session, 'exists').and.callFake(function(userId) {
+      spyOn(fixture.session, 'exists').and.callFake(function (userId) {
         return '2222';
       });
 

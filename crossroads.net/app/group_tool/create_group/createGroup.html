@@ -1,5 +1,6 @@
 <preloader full-screen='false' ng-show='!createGroup.ready'> </preloader>
 <div ng-show='createGroup.ready'>
+  <pre>{{createGroup.createGroupService.model | json}}</pre>
   <div dynamic-content="$root.MESSAGES.groupToolCreateGroupHeading.content | html"></div>
   <form ng-submit="createGroup.previewGroup()" novalidate name="createGroup.createGroupForm">
     <formly-form model="createGroup.createGroupService.model" fields="createGroup.fields" form="createGroup.createGroupForm" options="createGroup.options" ng-cloak>

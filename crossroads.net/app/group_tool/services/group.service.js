@@ -60,6 +60,9 @@ export default class GroupService {
     return this.lookupService.Genders.query().$promise;
   }
 
+//getGroupCategories is being used in search,
+//getGroupTypeCategories is being used in group tool
+//these things need to be merged
   getGroupCategories() {
     let categories = [
       {
@@ -87,6 +90,90 @@ export default class GroupService {
         label: 'Healing',
         labelDesc: 'groupToolHealingDescription',
         placeholder: 'Ex. grief, infertility, addiction, divorce, crisis'
+      }];
+
+    let deferred = this.qApi.defer();
+    deferred.resolve(categories);
+    return deferred.promise;
+  }
+
+
+
+  getGroupTypeCategories() {
+    //mocked Data
+    var categories = [
+      {
+        categoryId: 9987878,
+        name: 'Journey',
+        desc: 'The current Journey',
+        exampleText: 'Journey Group',
+        requiresActiveAtribute: true,
+        attribute: {
+          id: '1',
+          name: 'I Am ______',
+          startDate: '',
+          endDate: ''
+        }
+      }, {
+        categoryId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.INTEREST,
+        name: 'Interest',
+        desc: 'desc',
+        exampleText: 'Ex. Boxing, XBox',
+        requiresActiveAtribute: false,
+        attribute: {
+          id: '',
+          name: '',
+          startDate: '',
+          endDate: ''
+        }
+      }, {
+        categoryId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.NEIGHBORHOODS,
+        name: 'Neighborhoods',
+        desc: 'desc',
+        exampleText: 'Ex. Boxing, XBox',
+        requiresActiveAtribute: false,
+        attribute: {
+          id: '',
+          name: '',
+          startDate: '',
+          endDate: ''
+        }
+      }, {
+        categoryId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.SPIRITUAL_GROWTH,
+        name: 'Spiritual growth',
+        desc: 'desc',
+        exampleText: 'Ex. Boxing, XBox',
+        requiresActiveAtribute: false,
+        attribute: {
+          id: '',
+          name: '',
+          startDate: '',
+          endDate: ''
+        }
+      }, {
+        categoryId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.LIFE_STAGES,
+        name: 'Life Stages',
+        desc: 'desc',
+        exampleText: 'Ex. Boxing, XBox',
+        requiresActiveAtribute: false,
+        attribute: {
+          id: '',
+          name: '',
+          startDate: '',
+          endDate: ''
+        }
+      }, {
+        categoryId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.HEALING,
+        name: 'Healing',
+        desc: 'desc',
+        exampleText: 'Ex. Boxing, XBox',
+        requiresActiveAtribute: false,
+        attribute: {
+          id: '',
+          name: '',
+          startDate: '',
+          endDate: ''
+        }
       }];
 
     let deferred = this.qApi.defer();
@@ -178,12 +265,12 @@ export default class GroupService {
 
   endGroup(groupId, groupReasonEndedId) {
     let promise = this.resource(`${__API_ENDPOINT__}api/grouptool/:groupId/endsmallgroup`)
-                          .save({groupId: groupId, groupReasonEndedId: groupReasonEndedId}, {}).$promise;
+      .save({ groupId: groupId, groupReasonEndedId: groupReasonEndedId }, {}).$promise;
     return promise.then((data) => {
-        return data;
-      }, (err) => {
-        throw err;
-      });
+      return data;
+    }, (err) => {
+      throw err;
+    });
   }
 
   approveDenyInquiry(groupId, approve, inquiry) {
@@ -336,7 +423,7 @@ export default class GroupService {
   }
 
   submitJoinRequest(groupId) {
-      return this.resource(`${__API_ENDPOINT__}api/grouptool/group/:groupId/submitinquiry`)
-          .save({groupId: groupId},{}).$promise;
+    return this.resource(`${__API_ENDPOINT__}api/grouptool/group/:groupId/submitinquiry`)
+      .save({ groupId: groupId }, {}).$promise;
   }
 }
