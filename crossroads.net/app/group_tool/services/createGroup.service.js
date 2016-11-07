@@ -504,11 +504,11 @@ export default class CreateGroupService {
                     descProp: 'labelDesc',
                     maxFieldLength: '25',
                     placeholder: 'placeholder',
-                    // TODO - These are needed in the filters as well; created getGroupCategories() on group.service.js - can we use the same in both places?
                     options: [],
                 },
                 controller: /* @ngInject */ function ($scope, GroupService, CreateGroupService) {
                     $scope.to.loading = GroupService.getGroupTypeCategories().then(function (response) {
+                        debugger;
                         $scope.to.options = CreateGroupService.createGroupCategoryOptionList(response);
                         return response;
                     });
@@ -532,7 +532,7 @@ export default class CreateGroupService {
                 placeholder: category.exampleText
             };
 
-            if (category.requiresActiveAtribute == true) {
+            if (category.requiresActiveAttribute == true) {
                 parsed.static = category.attribute.name;
                 parsed.disabled = true;
             } else {

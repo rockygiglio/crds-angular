@@ -21,7 +21,7 @@ describe('GroupSearchFilter', () => {
     groupService = jasmine.createSpyObj('groupServiceMock', [ 'getAgeRanges', 
                                                               'getGroupGenderMixType', 
                                                               'getDaysOfTheWeek', 
-                                                              'getGroupCategories', 
+                                                              'getGroupTypeCategories', 
                                                               'getSites']);
 
     createGroupService = jasmine.createSpyObj('createGroupServiceMock', ['getMeetingFrequencies']);
@@ -69,7 +69,7 @@ describe('GroupSearchFilter', () => {
       groupService.getAgeRanges.and.callFake(() => { let d = qApi.defer(); d.reject({}); return d.promise; });
       groupService.getGroupGenderMixType.and.callFake(() => { let d = qApi.defer(); d.reject({}); return d.promise; });
       groupService.getDaysOfTheWeek.and.callFake(() => { let d = qApi.defer(); d.reject({}); return d.promise; });
-      groupService.getGroupCategories.and.callFake(() => { let d = qApi.defer(); d.reject({}); return d.promise; });
+      groupService.getGroupTypeCategories.and.callFake(() => { let d = qApi.defer(); d.reject({}); return d.promise; });
       createGroupService.getMeetingFrequencies.and.callFake(() => { let d = qApi.defer(); d.reject({}); return d.promise; });
       groupService.getSites.and.callFake(() => { let d = qApi.defer(); d.reject({}); return d.promise; });
 
@@ -89,7 +89,7 @@ describe('GroupSearchFilter', () => {
       let categoryFilter = fixture.allFilters.getValues()[i++];
       expect(categoryFilter instanceof CategoryFilter).toBeTruthy();
       expect(categoryFilter.getName()).toEqual('Category');
-      expect(groupService.getGroupCategories).toHaveBeenCalled();
+      expect(groupService.getGroupTypeCategories).toHaveBeenCalled();
 
       let groupTypeFilter = fixture.allFilters.getValues()[i++];
       expect(groupTypeFilter instanceof GroupTypeFilter).toBeTruthy();

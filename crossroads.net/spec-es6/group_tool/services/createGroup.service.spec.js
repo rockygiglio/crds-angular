@@ -90,7 +90,7 @@ describe('Group Tool Group Service', () => {
           name: 'Journey',
           desc: 'The current Journey',
           exampleText: 'Journey Group',
-          requiresActiveAtribute: true,
+          requiresActiveAttribute: true,
           attribute: {
             id: '1',
             name: 'I Am ______',
@@ -102,9 +102,9 @@ describe('Group Tool Group Service', () => {
           name: 'Interest',
           desc: 'desc',
           exampleText: 'Ex. Boxing, XBox',
-          requiresActiveAtribute: false,
+          requiresActiveAttribute: false,
           attribute: {
-            id: '',
+            attributeId: '',
             name: '',
             startDate: '',
             endDate: ''

@@ -8,6 +8,7 @@ using System.Web.Http.Description;
 using crds_angular.Exceptions;
 using crds_angular.Exceptions.Models;
 using crds_angular.Models.Crossroads;
+using crds_angular.Models.Crossroads.Attribute;
 using crds_angular.Models.Crossroads.Groups;
 using crds_angular.Models.Json;
 using crds_angular.Security;
@@ -56,6 +57,78 @@ namespace crds_angular.Controllers.API
                     throw new HttpResponseException(apiError.HttpResponseMessage);
                 }
             });
+        }
+
+        [AcceptVerbs("GET")]
+        [ResponseType(typeof(List<AttributeCategoryDTO>))]
+        [Route("api/grouptool/categories")]
+        public IHttpActionResult GetCategories()
+        {
+            try
+            {
+                var groupCategories = new List<AttributeCategoryDTO>()
+                {
+                    new AttributeCategoryDTO()
+                    {
+                        CategoryId= 1,
+                        AttributeCategory= "Journey",
+                        Description= "The current Journey",
+                        ExampleText= "Journey Group",
+                        RequiresActiveAttribute= true,
+                        Attribute = new ObjectAttributeDTO()
+                        {
+                            AttributeId = 1,
+                            Name="I am _______",
+                        }
+                    },
+                    new AttributeCategoryDTO()
+                    {
+                        CategoryId= 2,
+                        AttributeCategory= "Interest",
+                        Description= "desc",
+                        ExampleText= "Ex. Boxing, XBox",
+                        RequiresActiveAttribute= false
+                    },
+                    new AttributeCategoryDTO()
+                    {
+                        CategoryId= 3,
+                        AttributeCategory= "Neighborhoods",
+                        Description= "desc",
+                        ExampleText= "Ex. Boxing, XBox",
+                        RequiresActiveAttribute= false
+                    },
+                    new AttributeCategoryDTO()
+                    {
+                        CategoryId= 4,
+                        AttributeCategory= "Spiritual growth",
+                        Description= "desc",
+                        ExampleText= "Ex. Boxing, XBox",
+                        RequiresActiveAttribute= false
+                    },
+                    new AttributeCategoryDTO()
+                    {
+                        CategoryId= 5,
+                        AttributeCategory= "Life Stages",
+                        Description= "desc",
+                        ExampleText= "Ex. Boxing, XBox",
+                        RequiresActiveAttribute= false
+                    },
+                    new AttributeCategoryDTO()
+                    {
+                        CategoryId= 6,
+                        AttributeCategory= "Healing",
+                        Description= "desc",
+                        ExampleText= "Ex. Boxing, XBox",
+                        RequiresActiveAttribute= false
+                    }
+                };
+                return Ok(groupCategories);
+            }
+            catch (Exception exception)
+            {
+                var apiError = new ApiErrorDto("Get Group Categories Failed", exception);
+                throw new HttpResponseException(apiError.HttpResponseMessage);
+            }
         }
 
         /// <summary>

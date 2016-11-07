@@ -101,84 +101,85 @@ export default class GroupService {
 
   getGroupTypeCategories() {
     //mocked Data
-    var categories = [
-      {
-        categoryId: 9987878,
-        name: 'Journey',
-        desc: 'The current Journey',
-        exampleText: 'Journey Group',
-        requiresActiveAtribute: true,
-        attribute: {
-          id: '1',
-          name: 'I Am ______',
-          startDate: '',
-          endDate: ''
-        }
-      }, {
-        categoryId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.INTEREST,
-        name: 'Interest',
-        desc: 'desc',
-        exampleText: 'Ex. Boxing, XBox',
-        requiresActiveAtribute: false,
-        attribute: {
-          id: '',
-          name: '',
-          startDate: '',
-          endDate: ''
-        }
-      }, {
-        categoryId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.NEIGHBORHOODS,
-        name: 'Neighborhoods',
-        desc: 'desc',
-        exampleText: 'Ex. Boxing, XBox',
-        requiresActiveAtribute: false,
-        attribute: {
-          id: '',
-          name: '',
-          startDate: '',
-          endDate: ''
-        }
-      }, {
-        categoryId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.SPIRITUAL_GROWTH,
-        name: 'Spiritual growth',
-        desc: 'desc',
-        exampleText: 'Ex. Boxing, XBox',
-        requiresActiveAtribute: false,
-        attribute: {
-          id: '',
-          name: '',
-          startDate: '',
-          endDate: ''
-        }
-      }, {
-        categoryId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.LIFE_STAGES,
-        name: 'Life Stages',
-        desc: 'desc',
-        exampleText: 'Ex. Boxing, XBox',
-        requiresActiveAtribute: false,
-        attribute: {
-          id: '',
-          name: '',
-          startDate: '',
-          endDate: ''
-        }
-      }, {
-        categoryId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.HEALING,
-        name: 'Healing',
-        desc: 'desc',
-        exampleText: 'Ex. Boxing, XBox',
-        requiresActiveAtribute: false,
-        attribute: {
-          id: '',
-          name: '',
-          startDate: '',
-          endDate: ''
-        }
-      }];
+    // var categories = [
+    //   {
+    //     categoryId: 9987878,
+    //     name: 'Journey',
+    //     desc: 'The current Journey',
+    //     exampleText: 'Journey Group',
+    //     requiresActiveAttribute: true,
+    //     attribute: {
+    //       attributeId: '1',
+    //       name: 'I Am ______',
+    //       startDate: '',
+    //       endDate: ''
+    //     }
+    //   }, {
+    //     categoryId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.INTEREST,
+    //     name: 'Interest',
+    //     desc: 'desc',
+    //     exampleText: 'Ex. Boxing, XBox',
+    //     requiresActiveAttribute: false,
+    //     attribute: {
+    //       attributeId: '',
+    //       name: '',
+    //       startDate: '',
+    //       endDate: ''
+    //     }
+    //   }, {
+    //     categoryId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.NEIGHBORHOODS,
+    //     name: 'Neighborhoods',
+    //     desc: 'desc',
+    //     exampleText: 'Ex. Boxing, XBox',
+    //     requiresActiveAttribute: false,
+    //     attribute: {
+    //       attributeId: '',
+    //       name: '',
+    //       startDate: '',
+    //       endDate: ''
+    //     }
+    //   }, {
+    //     categoryId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.SPIRITUAL_GROWTH,
+    //     name: 'Spiritual growth',
+    //     desc: 'desc',
+    //     exampleText: 'Ex. Boxing, XBox',
+    //     requiresActiveAttribute: false,
+    //     attribute: {
+    //       attributeId: '',
+    //       name: '',
+    //       startDate: '',
+    //       endDate: ''
+    //     }
+    //   }, {
+    //     categoryId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.LIFE_STAGES,
+    //     name: 'Life Stages',
+    //     desc: 'desc',
+    //     exampleText: 'Ex. Boxing, XBox',
+    //     requiresActiveAtribute: false,
+    //     attribute: {
+    //       attributeId: '',
+    //       name: '',
+    //       startDate: '',
+    //       endDate: ''
+    //     }
+    //   }, {
+    //     categoryId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.HEALING,
+    //     name: 'Healing',
+    //     desc: 'desc',
+    //     exampleText: 'Ex. Boxing, XBox',
+    //     requiresActiveAttribute: false,
+    //     attribute: {
+    //       attributeId: '',
+    //       name: '',
+    //       startDate: '',
+    //       endDate: ''
+    //     }
+    //   }];
 
-    let deferred = this.qApi.defer();
-    deferred.resolve(categories);
-    return deferred.promise;
+    // let deferred = this.qApi.defer();
+    // deferred.resolve(categories);
+    // return deferred.promise;
+    return this.resource(__API_ENDPOINT__ + 'api/grouptool/categories').query().$promise;
   }
 
   sendGroupInvitation(invitation) {
