@@ -32,14 +32,14 @@ BEGIN
 	          384 , -- Page_ID - int
 	          100 , -- View_Order - smallint
 	          @PageID , -- Link_To_Page_ID - int
-	          N'Event_Waiver_ID' , -- Link_From_Field_Name - nvarchar(50)
-	          605 , -- Select_To_Page_ID - int
-	          N'Event_Waivers.Waiver_Id' , -- Select_From_Field_Name - nvarchar(50)
-	          N'cr_Event_Waivers' , -- Primary_Table - nvarchar(50)
-	          N'Event_Waiver_ID' , -- Primary_Key - nvarchar(50)
-	          N'Waiver_ID_Table.Waiver_Name' , -- Default_Field_List - nvarchar(2000)
-	          N'Waiver_ID_Table.Waiver_Name' , -- Selected_Record_Expression - nvarchar(500)
-	          N'Event_ID' , -- Filter_Key - nvarchar(50)
+	          N'Bumping_Rule_ID' , -- Link_From_Field_Name - nvarchar(50)
+	          384 , -- Select_To_Page_ID - int
+	          N'Bumping_Rules.Bumping_Rule_ID' , -- Select_From_Field_Name - nvarchar(50)
+	          N'cr_Bumping_Rules' , -- Primary_Table - nvarchar(50)
+	          N'Bumping_Rule_ID' , -- Primary_Key - nvarchar(50)
+	          N'From_Room_ID_Table.Room_Name' , -- Default_Field_List - nvarchar(2000)
+	          N'Bumping_Rule_ID_Table.Bumping_Rule_ID, Bumping_Rule_ID_Table.From_Event_Room_ID, Bumping_Rule_ID_Table.To_Event_Room_ID' , -- Selected_Record_Expression - nvarchar(500)
+	          N'From_Event_Room_ID' , -- Filter_Key - nvarchar(50)
 	          2 , -- Relation_Type_ID - int
 	          0 , -- On_Quick_Add - bit
 	          1  -- Display_Copy - bit

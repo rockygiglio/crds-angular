@@ -27,7 +27,7 @@ BEGIN
 	',
 	'1=1',
 	NULL,
-	4412415)
+	NULL)
 
 	SET IDENTITY_INSERT dbo.dp_Sub_Page_Views OFF
 END
