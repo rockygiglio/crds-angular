@@ -12,13 +12,15 @@ BEGIN
 		[Attribute_Category_ID],
 		[Attribute_Category],
 		[Description],
-		[Requires_Active_Attribute]
+		[Requires_Active_Attribute],
+		[Domain_ID]
 	) 
 	VALUES 
 	(
 		@categoryId,
 		'Journey',
 		null,
+		1,
 		1
 	)
 	SET IDENTITY_INSERT [dbo].[Attribute_Categories] OFF
