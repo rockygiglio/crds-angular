@@ -3,7 +3,7 @@ GO
 
 DECLARE @EXISTING_PAGE_ID int = 0
 DECLARE @PAGE_ID int = 616 -- Assigned by MPIdentityMaintenance.dbo.Get_Next_Available_ID
-DECLARE @PAGE_SECTION_ID int = 11 -- "System Lookups" page
+DECLARE @PAGE_SECTION_ID int = 4 -- "Lookups" page
 DECLARE @DISPLAY_NAME nvarchar(50) = N'Bumping Rule Types'
 DECLARE @SINGULAR_NAME nvarchar(50) = N'Bumping Rule Type'
 DECLARE @DESCRIPTION nvarchar(255) = N'Types used for determining Bumping Rule type.'
