@@ -1,4 +1,5 @@
 'use strict()';
+var cookieNames = require('crds-constants').COOKIES;
 
 var getCookie =  function(cname) {
   var name = cname + '=';
@@ -48,12 +49,12 @@ var preventRouteTypeUrlEncoding = function(urlMatcherFactory, routeType, urlPatt
 //================================================
 var checkLoggedin = function ($q, $timeout, $http, $location, $rootScope, $cookies, Session) {
   var deferred = $q.defer();
-  $http.defaults.headers.common.Authorization = $cookies.get('sessionId');
+  $http.defaults.headers.common.Authorization = $cookies.get(cookieNames.SESSION_ID);
   $http({
     method: 'GET',
     url: __API_ENDPOINT__ + 'api/authenticated',
     headers: {
-      'Authorization': $cookies.get('sessionId')
+      'Authorization': $cookies.get(cookieNames.SESSION_ID)
     }
   }).success(function (user) {
     // Authenticated
@@ -85,7 +86,7 @@ var optimisticallyCheckLoggedin = function ($q, $timeout, $http, $location, $roo
   if (Session.beOptimistic) {
     var deferred = $q.defer();
     
-    var sessionId = $cookies.get('sessionId');
+    var sessionId = $cookies.get(cookieNames.SESSION_ID);
     if (_.isEmpty(sessionId) ) {
       Session.clear();
       deferred.reject();
