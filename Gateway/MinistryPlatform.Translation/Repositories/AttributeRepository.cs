@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Management.Instrumentation;
 using Crossroads.Utilities.Interfaces;
-using MinistryPlatform.Translation.Extensions;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 
@@ -13,7 +10,6 @@ namespace MinistryPlatform.Translation.Repositories
     {
         private readonly IMinistryPlatformService _ministryPlatformService;
         private readonly IMinistryPlatformRestRepository _ministryPlatformRestService;
-        private readonly int _attributesByTypePageViewId = Convert.ToInt32(AppSettings("AttributesPageView"));
         private readonly int _attributesPageId = Convert.ToInt32(AppSettings("Attributes"));
 
         public AttributeRepository(IMinistryPlatformService ministryPlatformService, IAuthenticationRepository authenticationService, IConfigurationWrapper configurationWrapper,
