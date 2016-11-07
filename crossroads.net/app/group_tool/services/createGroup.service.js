@@ -510,27 +510,37 @@ export default class CreateGroupService {
                             categoryId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.INTEREST,
                             label: 'Interest',
                             labelDesc: '$root.MESSAGES.groupToolInterestDetail.content | html',
-                            placeholder: 'Ex. Boxing, XBox'
+                            placeholder: 'Ex. Boxing, XBox',
+                            static: '',
+                            disabled: false
                         }, {
                             categoryId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.NEIGHBORHOODS,
                             label: 'Neighborhoods',
                             labelDesc: '$root.MESSAGES.groupToolNeighborhoodDescription.content | html',
-                            placeholder: 'Ex. Norwood, Gaslight'
+                            placeholder: 'Ex. Norwood, Gaslight',
+                            static: '',
+                            disabled: false
                         }, {
                             categoryId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.SPIRITUAL_GROWTH,
                             label: 'Spiritual Growth',
                             labelDesc: '$root.MESSAGES.groupToolSpiritualGrowthDescription.content | html',
-                            placeholder: 'Ex. Huddle, James'
+                            placeholder: 'Ex. Huddle, James',
+                            static: '',
+                            disabled: false
                         }, {
                             categoryId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.LIFE_STAGES,
                             label: 'Life Stage',
                             labelDesc: '$root.MESSAGES.groupToolLifeStageDescription.content | html',
-                            placeholder: 'Ex. new family, young married, college, empty nesters'
+                            placeholder: 'Ex. new family, young married, college, empty nesters',
+                            static: '',
+                            disabled: false
                         }, {
                             categoryId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.HEALING,
                             label: 'Healing',
                             labelDesc: '$root.MESSAGES.groupToolHealingDescription.content | html',
-                            placeholder: 'Ex. grief, infertility, addiction, divorce, crisis'
+                            placeholder: 'Ex. grief, infertility, addiction, divorce, crisis',
+                            static: '',
+                            disabled: false
                         }],
                 }
             }]
