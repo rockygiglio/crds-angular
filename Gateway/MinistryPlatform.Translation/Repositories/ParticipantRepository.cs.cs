@@ -100,6 +100,18 @@ namespace MinistryPlatform.Translation.Repositories
             return participant;
         }
 
+        public void UpdateParticipant(MpParticipant participant)
+        {
+            var participantDict = new Dictionary<string, object>()
+            {
+                {"Participant_ID", participant.ParticipantId },
+                {"Attendance_Start_Date", participant.AttendanceStart },
+                {"Approved_Small_Group", participant.ApprovedSmallGroupLeader }
+            };
+            UpdateParticipant(participantDict);
+        }
+            
+
         public void UpdateParticipant(Dictionary<string, object> participant)
         {
             var apiToken = ApiLogin();
