@@ -149,7 +149,10 @@
       UPCOMING: 'Upcoming',
       OFF: 'Off'
     },
-    PRE_STREAM_HOURS: 15
-
+    PRE_STREAM_HOURS: 15,
+    COOKIES: {
+      SESSION_ID: __CRDS_ENV__+'sessionId',
+      REFRESH_TOKEN: __CRDS_ENV__+'refreshToken'
+    }
   };
 })();

@@ -300,8 +300,8 @@ namespace crds_angular.App_Start
             Mapper.CreateMap<MpInquiry, Inquiry>();
             Mapper.CreateMap<ObjectAttributeDTO, MpAttribute>();
             Mapper.CreateMap<MpAttribute, ObjectAttributeDTO>();
-            Mapper.CreateMap<RsvpMembers, MpRsvpMember>();
-            Mapper.CreateMap<MpRsvpMember, RsvpMembers>();
+            Mapper.CreateMap<RsvpMember, MpRsvpMember>();
+            Mapper.CreateMap<MpRsvpMember, RsvpMember>();
             Mapper.CreateMap<MpSU2SOpportunity, ServeOpportunity>();
             Mapper.CreateMap<ServeOpportunity, MpSU2SOpportunity>();
         }

@@ -13,11 +13,11 @@ namespace MinistryPlatform.Translation.Repositories
         private readonly IMinistryPlatformService _ministryPlatformService;
         private readonly IMinistryPlatformRestRepository _ministryPlatformRestRepository;
 
-        public EventParticipantRepository(IMinistryPlatformService ministryPlatformService, IMinistryPlatformRestRepository restRepository, IAuthenticationRepository authenticationService, IConfigurationWrapper configurationWrapper)
+        public EventParticipantRepository(IMinistryPlatformService ministryPlatformService, IMinistryPlatformRestRepository ministryPlatformRestRepository, IAuthenticationRepository authenticationService, IConfigurationWrapper configurationWrapper)
             : base(authenticationService, configurationWrapper)
         {
             _ministryPlatformService = ministryPlatformService;
-            _ministryPlatformRestRepository = restRepository;
+            _ministryPlatformRestRepository = ministryPlatformRestRepository;
         }
 
         public bool AddDocumentsToTripParticipant(List<MpTripDocuments> documents, int eventParticipantId)
@@ -137,6 +137,15 @@ namespace MinistryPlatform.Translation.Repositories
             {
                 throw new ApplicationException("GetEventParticipants failed", e);
             }
+        }
+
+        public int GetEventParticipantByContactId(int eventId, int contactId)
+        {
+            const string tableName = "Event_Participants";
+            var searchString = $"Event_ID_Table.Event_ID={eventId} AND Participant_ID_Table_Contact_ID_Table.Contact_ID={contactId}";
+            const string column = "Event_Participant_ID";
+            var eventParticipant = _ministryPlatformRestRepository.UsingAuthenticationToken(ApiLogin()).Search<int>(tableName, searchString, column);
+            return eventParticipant;
         }
 
         public DateTime? EventParticipantSignupDate(int contactId, int eventId, string apiToken)

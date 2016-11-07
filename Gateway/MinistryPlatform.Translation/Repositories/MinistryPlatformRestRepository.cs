@@ -7,6 +7,7 @@ using MinistryPlatform.Translation.Extensions;
 using MinistryPlatform.Translation.Models.Attributes;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using RestSharp;
 using RestSharp.Extensions;
 
@@ -223,6 +224,25 @@ namespace MinistryPlatform.Translation.Repositories
                 selectColumns = string.Join(",", columns);
             }
             return Search<T>(searchString, selectColumns, orderByString, distinct);
+        }
+
+        public T Search<T>(string tableName, string searchString, string column)
+        {
+            var search = string.IsNullOrWhiteSpace(searchString) ? string.Empty : $"?$filter={MpRestEncode(searchString)}";
+            var url = AddColumnSelection($"/tables/{tableName}{search}", column);
+            var request = new RestRequest(url, Method.GET);
+            AddAuthorization(request);
+
+            var response = _ministryPlatformRestClient.Execute(request);
+            _authToken.Value = null;
+            response.CheckForErrors($"Error getting {tableName}", true);
+            var returnVal = default(T);
+            if (response.Content.Length > 2)
+            {
+                var jsonResponse = JObject.Parse(response.Content.TrimStart('[').TrimEnd(']'));
+                returnVal = jsonResponse.Values().FirstOrDefault().Value<T>();
+            }
+            return returnVal;
         }
 
         public void UpdateRecord(string tableName, int recordId, Dictionary<string, object> fields)

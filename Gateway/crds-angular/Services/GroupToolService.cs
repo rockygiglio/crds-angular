@@ -11,6 +11,7 @@ using log4net;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 using System.Text.RegularExpressions;
+using Crossroads.Utilities.Extensions;
 
 namespace crds_angular.Services
 {
@@ -515,7 +516,7 @@ namespace crds_angular.Services
                                                                             {
                                                                                 ContactId = groupParticipant.ContactId,
                                                                                 EmailAddress = groupParticipant.Email
-                                                                            }).ToList();
+                                                                            }).DistinctBy(c => c.EmailAddress).ToList();
 
             var email = new MpCommunication
             {

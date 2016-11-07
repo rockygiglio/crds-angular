@@ -27,7 +27,8 @@
     'formly',
     'formlyBootstrap',
     'ngTable',
-    'ui.tinymce'    
+    'ui.tinymce',
+    'mwl.confirm'
     ])
     .constant('AUTH_EVENTS', {
       loginSuccess: 'auth-login-success',

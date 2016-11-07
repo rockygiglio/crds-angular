@@ -78,13 +78,25 @@ namespace crds_angular.Services
 
         public List<CampFamilyMember> GetEligibleFamilyMembers(int eventId, string token)
         {
-            var myContact = _contactRepository.GetMyProfile(token);
-            var family = _contactRepository.GetHouseholdFamilyMembers(myContact.Household_ID);
+            var apiToken = _apiUserRepository.GetToken();
+            var myContact = _contactRepository.GetMyProfile(token);            
+            var family = _contactRepository.GetHouseholdFamilyMembers(myContact.Household_ID);            
+            var me = family.Where(member => member.ContactId == myContact.Contact_ID).ToList();
+
+            if ((me.First().HouseholdPosition == null || !me.First().HouseholdPosition.ToLower().StartsWith("head")) )
+            {
+                return me.Select(member => new CampFamilyMember
+                {
+                    ContactId = member.ContactId,
+                    IsEligible = _groupRepository.IsMemberOfEventGroup(member.ContactId, eventId, apiToken),
+                    SignedUpDate = _eventParticipantRepository.EventParticipantSignupDate(member.ContactId, eventId, apiToken),
+                    LastName = member.LastName,
+                    PreferredName = member.Nickname ?? member.FirstName
+                }).ToList();
+            } 
+
             var otherFamily = _contactRepository.GetOtherHouseholdMembers(myContact.Contact_ID);
             family.AddRange(otherFamily);
-
-            var apiToken = _apiUserRepository.GetToken();
-
             family = family.Where((member) => member.HouseholdPosition == "Minor Child").ToList();
             return family.Select(member => new CampFamilyMember()
             {
@@ -280,6 +292,35 @@ namespace crds_angular.Services
             }
 
             return dashboardData;
+        }
+
+        public List<CampWaiverDTO> GetCampWaivers(int eventId, int contactId)
+        {
+
+            var waivers = _eventRepository.GetWaivers(eventId, contactId);
+            return waivers.Select(waiver => new CampWaiverDTO
+            {
+                WaiverId = waiver.WaiverId,
+                WaiverName = waiver.WaiverName,
+                WaiverText = waiver.WaiverText,
+                Required = waiver.Required,
+                Accepted = waiver.Accepted,
+                SigneeContactId = waiver.SigneeContactId
+            }).ToList();
+        }
+
+        public void SaveWaivers(string token, int eventId, int contactId, List<CampWaiverResponseDTO> waivers)
+        {
+            var loggedInContact = _contactRepository.GetMyProfile(token);
+            var eventParticipantId = _eventParticipantRepository.GetEventParticipantByContactId(eventId, contactId);
+            var waiverResponses = waivers.Select(waiver => new MpWaiverResponse()
+            {
+                EventParticipantId = eventParticipantId,
+                WaiverId = waiver.WaiverId,
+                Accepted = waiver.WaiverAccepted,
+                SigneeContactId = loggedInContact.Contact_ID
+            }).ToList();
+            _eventRepository.SetWaivers(waiverResponses);
         }
 
         public void SaveCamperMedicalInfo(MedicalInfoDTO medicalInfo, int contactId, string token)

@@ -117,8 +117,10 @@
     <Compile Include="Extensions\RestSharpExtensions.cs" />
     <Compile Include="Models\DTO\PredefinedDonationAmountDTO.cs" />
     <Compile Include="Models\MpCamp.cs" />
+    <Compile Include="Models\MpWaivers.cs" />
     <Compile Include="Models\MpMedicalInformation.cs" />
     <Compile Include="Models\MpRecordID.cs" />
+    <Compile Include="Models\MpWaiverResponse.cs" />
     <Compile Include="Models\MpStoredProcBool.cs" />
     <Compile Include="Models\Payments\MpInvoice.cs" />
     <Compile Include="Models\Payments\MpNestedInvoiceDetail.cs" />

@@ -972,6 +972,71 @@ namespace crds_angular.test.Services
         }
 
         [Test]
+        public void TestSendAllGroupParticipantsEmailOnlyDistinct()
+        {
+            string token = "123ABC";
+
+            var groupParticipantDTO = new MpParticipant
+            {
+                ContactId = 123,
+                EmailAddress = "leader@test.com",
+                ParticipantId = 456
+            };
+
+            var groups = new List<GroupDTO>();
+
+            var group1 = new GroupDTO();
+            group1.Participants = new List<GroupParticipantDTO>();
+
+            List<GroupParticipantDTO> groupParticipants = new List<GroupParticipantDTO>()
+            {
+
+
+                new GroupParticipantDTO()
+                {
+                    ContactId = 123,
+                    Email = "leader@test.com",
+                    ParticipantId = 456,
+                    GroupRoleId = 987,
+                },
+                new GroupParticipantDTO()
+                {
+                    ContactId = 123,
+                    Email = "leader@test.com",
+                    ParticipantId = 456,
+                    GroupRoleId = 765,
+                },
+                new GroupParticipantDTO()
+                {
+                    ContactId = 012,
+                    Email = "different@email.com",
+                    ParticipantId = 345,
+                    GroupRoleId = 765,
+                },
+                new GroupParticipantDTO()
+                {
+                    ContactId = 555,
+                    Email = "member@test.com",
+                    ParticipantId = 777,
+                    GroupRoleId = 765,
+                }
+            };
+
+            // There are 3 Distinct email addresses 
+            int expectedToContactsCount = 3;
+
+            group1.Participants = groupParticipants;
+            groups.Add(group1);
+
+            _communicationRepository.Setup(m => m.SendMessage(It.Is<MpCommunication>(email => email.ToContacts.Count() == expectedToContactsCount), false)).Returns(1);
+            _participantRepository.Setup(m => m.GetParticipantRecord(token)).Returns(groupParticipantDTO);
+            _groupService.Setup(m => m.GetGroupsByTypeForAuthenticatedUser(token, 123, 1)).Returns(groups);
+
+            _fixture.SendAllGroupParticipantsEmail(token, 1, 123, "aaa", "bbb");
+            _communicationRepository.VerifyAll();
+        }
+
+        [Test]
         public void TestSendAllGroupLeadersEmail()
         {
             string token = "123ABC";

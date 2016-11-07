@@ -7,10 +7,11 @@ export default function serveTeamLeaderComponent() {
       team: '<',
       oppServeDate: '<',
       oppServeTime: '<',
-      onCancel: '&'
+      onCancel: '&',
+      onUpdateTeam: '&'
     },
     template,
     controller: ServeTeamLeaderController,
     controllerAs: 'serveTeamLeader'
-  }
+  };
 }
