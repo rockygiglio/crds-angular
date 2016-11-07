@@ -13,5 +13,6 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
         int SubmitFormResponse(MpFormResponse form);
 
         DateTime? GetTripFormResponseByContactId(int p, int pledgeId);
+        MpFormResponse GetFormResponse(int formId, int contactId);
     }
 }

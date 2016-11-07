@@ -347,6 +347,34 @@ namespace crds_angular.Services
             _medicalInformationRepository.SaveMedicalInformation(mpMedicalInfo, contactId);
         }
 
+        public List<CampEmergencyContactDTO> GetCamperEmergencyContactInfo(int eventId, int contactId, string token)
+        {
+            var formId = _configurationWrapper.GetConfigIntValue("SummerCampFormID");
+            var response = _formSubmissionRepository.GetFormResponse(formId, contactId);
+            var emergencyContacts = new List<CampEmergencyContactDTO>();
+            emergencyContacts.Add(new CampEmergencyContactDTO
+            {
+                Email = response.FormAnswers.FirstOrDefault(a => a.FieldId == _configurationWrapper.GetConfigIntValue("SummerCampForm.EmergencyContactEmail"))?.Response,
+                FirstName = response.FormAnswers.FirstOrDefault(a => a.FieldId == _configurationWrapper.GetConfigIntValue("SummerCampForm.EmergencyContactFirstName"))?.Response,
+                LastName = response.FormAnswers.FirstOrDefault(a => a.FieldId == _configurationWrapper.GetConfigIntValue("SummerCampForm.EmergencyContactLastName"))?.Response,
+                MobileNumber = response.FormAnswers.FirstOrDefault(a => a.FieldId == _configurationWrapper.GetConfigIntValue("SummerCampForm.EmergencyContactMobilePhone"))?.Response,
+                PrimaryEmergencyContact = true,
+                Relationship = response.FormAnswers.FirstOrDefault(a => a.FieldId == _configurationWrapper.GetConfigIntValue("SummerCampForm.EmergencyContactRelationship"))?.Response
+            });
+
+            emergencyContacts.Add(new CampEmergencyContactDTO
+            {
+                Email = response.FormAnswers.FirstOrDefault(a => a.FieldId == _configurationWrapper.GetConfigIntValue("SummerCampForm.AdditionalEmergencyContactEmail"))?.Response,
+                FirstName = response.FormAnswers.FirstOrDefault(a => a.FieldId == _configurationWrapper.GetConfigIntValue("SummerCampForm.AdditionalEmergencyContactFirstName"))?.Response,
+                LastName = response.FormAnswers.FirstOrDefault(a => a.FieldId == _configurationWrapper.GetConfigIntValue("SummerCampForm.AdditionalEmergencyContactLastName"))?.Response,
+                MobileNumber = response.FormAnswers.FirstOrDefault(a => a.FieldId == _configurationWrapper.GetConfigIntValue("SummerCampForm.AdditionalEmergencyContactMobilePhone"))?.Response,
+                PrimaryEmergencyContact = false,
+                Relationship = response.FormAnswers.FirstOrDefault(a => a.FieldId == _configurationWrapper.GetConfigIntValue("SummerCampForm.AdditionalEmergencyContactRelationship"))?.Response
+            });
+
+            return emergencyContacts;
+        }
+
         public CampReservationDTO GetCamperInfo(string token, int eventId, int contactId)
         {
             var loggedInContact = _contactRepository.GetMyProfile(token);

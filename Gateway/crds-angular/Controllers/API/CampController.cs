@@ -10,9 +10,10 @@ using crds_angular.Models.Crossroads.Camp;
 
 namespace crds_angular.Controllers.API
 {
-    public class CampController: MPAuth
+    public class CampController : MPAuth
     {
         private readonly ICampService _campService;
+
         public CampController(ICampService campService)
         {
             _campService = campService;
@@ -58,7 +59,7 @@ namespace crds_angular.Controllers.API
             });
         }
 
-        [ResponseType(typeof (CampDTO))]
+        [ResponseType(typeof(CampDTO))]
         [Route("api/camps/{eventid}")]
         [AcceptVerbs("GET")]
         public IHttpActionResult GetCampEventDetails(int eventId)
@@ -116,7 +117,7 @@ namespace crds_angular.Controllers.API
                     _campService.SaveCampReservation(campReservation, eventId, token);
                     return Ok();
                 }
-               
+
                 catch (Exception e)
                 {
                     var apiError = new ApiErrorDto("Camp Reservation failed", e);
@@ -142,7 +143,7 @@ namespace crds_angular.Controllers.API
                     throw new HttpResponseException(apiError.HttpResponseMessage);
                 }
             });
-        }     
+        }
 
         [Route("api/camps/medical/{contactid}")]
         [AcceptVerbs("POST")]
@@ -194,7 +195,7 @@ namespace crds_angular.Controllers.API
                     throw new HttpResponseException(apiError.HttpResponseMessage);
                 }
 
-                
+
             });
         }
 
@@ -220,7 +221,28 @@ namespace crds_angular.Controllers.API
 
                 catch (Exception e)
                 {
-                    var apiError = new ApiErrorDto("Camp Reservation failed", e);
+                    var apiError = new ApiErrorDto("Save Camp Emergency Contact Info failed", e);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+            });
+        }
+
+        [Route("api/camps/{eventId}/emergencycontact/{contactId}")]
+        [ResponseType(typeof(List<CampEmergencyContactDTO>))]
+        [AcceptVerbs("GET")]
+        public IHttpActionResult GetCamperEmergencyContact(int eventId, int contactId)
+        {
+            return Authorized(token =>
+            {
+                try
+                {
+                    var emergencyContacts = _campService.GetCamperEmergencyContactInfo(eventId, contactId, token);
+                    return Ok(emergencyContacts);
+                }
+
+                catch (Exception e)
+                {
+                    var apiError = new ApiErrorDto("Camp Emergency Contact Info failed", e);
                     throw new HttpResponseException(apiError.HttpResponseMessage);
                 }
             });
