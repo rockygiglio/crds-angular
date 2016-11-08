@@ -303,6 +303,14 @@
     <Compile Include="Controllers\API\StaffContactController.cs" />
     <Compile Include="Controllers\API\DonorStatementController.cs" />
     <Compile Include="Controllers\API\TextCommunicationController.cs" />
+    <Compile Include="Crossroads.ApiVersioning\ApiRouteProvider.cs" />
+    <Compile Include="Crossroads.ApiVersioning\DeprecatedVersionFilter.cs" />
+    <Compile Include="Crossroads.ApiVersioning\RemovedVersionFilter.cs" />
+    <Compile Include="Crossroads.ApiVersioning\SemanticVersion.cs" />
+    <Compile Include="Crossroads.ApiVersioning\VersionConfig.cs" />
+    <Compile Include="Crossroads.ApiVersioning\VersionConstraint.cs" />
+    <Compile Include="Crossroads.ApiVersioning\VersionedRoute.cs" />
+    <Compile Include="Crossroads.ApiVersioning\VersionSpace.cs" />
     <Compile Include="Exceptions\ChildcareDatesMissingException.cs" />
     <Compile Include="Exceptions\ContactEmailExistsException.cs" />
     <Compile Include="Exceptions\ContactNotFoundException.cs" />
@@ -629,6 +637,7 @@
     <Compile Include="Util\HtmlHelper.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Crossroads.ApiVersioning\readme.txt" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <None Include="MinistryPlatform.Debug.config">
