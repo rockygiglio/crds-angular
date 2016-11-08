@@ -9,6 +9,8 @@ set @pledgeCampaignId = (select top 1 pledge_campaign_id from Pledge_Campaigns w
 
 delete from form_response_answers where form_response_id in (select form_response_id from form_responses where event_id in (select event_id from events where event_title = @tripName));
 
+delete from form_response_answers where form_response_id in (select form_response_id from form_responses where pledge_campaign_id  = @pledgeCampaignId);
+
 delete from form_responses where event_id in (select event_id from events where event_title = @tripName);
 
 delete from form_responses where pledge_campaign_id  = @pledgeCampaignId;
