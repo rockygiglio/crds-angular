@@ -5,5 +5,6 @@ export default class Countdown {
     this.hours   = '00';
     this.minutes = '00';
     this.seconds = '00';
+    this.overlapDst = 0;
   }
 }

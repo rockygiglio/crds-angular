@@ -8,6 +8,7 @@ using crds_angular.Models.Crossroads.Serve;
 using crds_angular.Models.Crossroads.VolunteerApplication;
 using crds_angular.Security;
 using crds_angular.Services.Interfaces;
+using Crossroads.ApiVersioning;
 
 namespace crds_angular.Controllers.API
 {
@@ -21,7 +22,8 @@ namespace crds_angular.Controllers.API
             _volunteerApplicationService = volunteerApplicationService;
         }
 
-        [Route("api/volunteer-application/adult")]
+        [VersionedRoute(template: "volunteerApplication/adult", minimumVersion: "1.0.0")]
+        [Route("volunteer-application/adult")]
         public IHttpActionResult SaveAdult([FromBody] AdultApplicationDto application)
         {
             if (ModelState.IsValid)
@@ -46,7 +48,8 @@ namespace crds_angular.Controllers.API
             throw new HttpResponseException(dataError.HttpResponseMessage);
         }
 
-        [Route("api/volunteer-application/student")]
+        [VersionedRoute(template: "volunteerApplication/student", minimumVersion: "1.0.0")]
+        [Route("volunteer-application/student")]
         public IHttpActionResult SaveStudent([FromBody] StudentApplicationDto application)
         {
             if (ModelState.IsValid)
@@ -74,7 +77,8 @@ namespace crds_angular.Controllers.API
         }
 
         [ResponseType(typeof(List<FamilyMember>))]
-        [Route("api/volunteer-application/family/{contactId}")]
+        [VersionedRoute(template: "volunteerApplication/family/{contactId}", minimumVersion: "1.0.0")]
+        [Route("volunteer-application/family/{contactId}")]
         public IHttpActionResult GetFamily(int contactId)
         {//TODO: I don't think you need to pass in contactId, use the token instead
             return Authorized(token =>

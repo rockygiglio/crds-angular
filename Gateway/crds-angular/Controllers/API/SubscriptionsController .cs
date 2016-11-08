@@ -5,6 +5,7 @@ using crds_angular.Security;
 using crds_angular.Services.Interfaces;
 using MPInterfaces = MinistryPlatform.Translation.Repositories.Interfaces;
 using crds_angular.Models.Crossroads.Subscription;
+using Crossroads.ApiVersioning;
 
 namespace crds_angular.Controllers.API
 {
@@ -20,7 +21,8 @@ namespace crds_angular.Controllers.API
         }
 
         [ResponseType(typeof (List<Dictionary<string, object>>))]
-        [Route("api/subscriptions")]
+        [VersionedRoute(template: "subscriptions", minimumVersion: "1.0.0")]
+        [Route("subscriptions")]
         [HttpGet]
         public IHttpActionResult Get()
         {
@@ -31,7 +33,8 @@ namespace crds_angular.Controllers.API
             }));
         }
 
-        [Route("api/subscriptions")]
+        [VersionedRoute(template: "subscriptions", minimumVersion: "1.0.0")]
+        [Route("subscriptions")]
         [HttpPost]
         public IHttpActionResult Post(Dictionary<string, object> subscription)
         {
@@ -43,7 +46,8 @@ namespace crds_angular.Controllers.API
             }));
         }
 
-        [Route("api/subscriptions/optin")]
+        [VersionedRoute(template: "subscriptions/optIn", minimumVersion: "1.0.0")]
+        [Route("subscriptions/optin")]
         [HttpPost]
         public IHttpActionResult PostOptIn(OptInRequest request)
         {

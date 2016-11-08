@@ -7,6 +7,7 @@ using System.Web.Http;
 using System.Web.Http.Description;
 using crds_angular.Exceptions.Models;
 using crds_angular.Models.Crossroads.Camp;
+using Crossroads.ApiVersioning;
 
 namespace crds_angular.Controllers.API
 {
@@ -19,8 +20,9 @@ namespace crds_angular.Controllers.API
             _campService = campService;
         }
 
-        [Route("api/camps/{eventId}/family")]
-        [AcceptVerbs("GET")]
+        [VersionedRoute(template: "camps/{eventId}/family", minimumVersion: "1.0.0")]
+        [Route("camps/{eventId}/family")]
+        [HttpGet]
         public IHttpActionResult GetCampFamily(int eventId)
         {
             return Authorized(token =>
@@ -40,8 +42,9 @@ namespace crds_angular.Controllers.API
         }
 
         [ResponseType(typeof(List<MyCampDTO>))]
-        [Route("api/my-camp")]
-        [AcceptVerbs("GET")]
+        [VersionedRoute(template: "myCamp", minimumVersion: "1.0.0")]
+        [Route("my-camp")]
+        [HttpGet]
         public IHttpActionResult GetMyCampsInfo()
         {
             return Authorized(token =>
@@ -59,9 +62,10 @@ namespace crds_angular.Controllers.API
             });
         }
 
-        [ResponseType(typeof(CampDTO))]
-        [Route("api/camps/{eventid}")]
-        [AcceptVerbs("GET")]
+        [ResponseType(typeof (CampDTO))]
+        [VersionedRoute(template: "camps/{eventId}", minimumVersion: "1.0.0")]
+        [Route("camps/{eventId}")]
+        [HttpGet]
         public IHttpActionResult GetCampEventDetails(int eventId)
         {
             return Authorized(token =>
@@ -80,8 +84,9 @@ namespace crds_angular.Controllers.API
         }
 
         [ResponseType(typeof(CampReservationDTO))]
-        [Route("api/camps/{eventid}/{contactid}")]
-        [AcceptVerbs("GET")]
+        [VersionedRoute(template: "camps/{eventId}/{contactId}", minimumVersion: "1.0.0")]
+        [Route("camps/{eventId}/{contactId}")]
+        [HttpGet]
         public IHttpActionResult GetCamperInfo(int eventId, int contactId)
         {
             return Authorized(token =>
@@ -99,8 +104,9 @@ namespace crds_angular.Controllers.API
             });
         }
 
-        [Route("api/camps/{eventid}")]
-        [AcceptVerbs("POST")]
+        [VersionedRoute(template: "camps/{eventId}", minimumVersion: "1.0.0")]
+        [Route("camps/{eventId}")]
+        [HttpPost]
         public IHttpActionResult SaveCampReservation([FromBody] CampReservationDTO campReservation, int eventId)
         {
             if (!ModelState.IsValid)
@@ -126,7 +132,8 @@ namespace crds_angular.Controllers.API
             });
         }
 
-        [Route("api/camps/{eventId}/waivers/{contactId}")]
+        [VersionedRoute(template: "camps/{eventId}/waivers{contactId}", minimumVersion: "1.0.0")]
+        [Route("camps/{eventId}/waivers{contactId}")]
         [AcceptVerbs("GET")]
         public IHttpActionResult GetCampWaivers(int eventId, int contactId)
         {
@@ -145,8 +152,8 @@ namespace crds_angular.Controllers.API
             });
         }
 
-        [Route("api/camps/medical/{contactid}")]
-        [AcceptVerbs("POST")]
+        [VersionedRoute(template: "camps/medical/{contactId}", minimumVersion: "1.0.0")]
+        [Route("camps/medical/{contactId}")]
         public IHttpActionResult SaveMedicalInformation([FromBody] MedicalInfoDTO medicalInfo, int contactId)
         {
             if (!ModelState.IsValid)
@@ -171,7 +178,8 @@ namespace crds_angular.Controllers.API
             });
         }
 
-        [Route("api/camps/{eventId}/waivers/{contactId}")]
+        [VersionedRoute(template: "camps/{eventId}/waivers/{contactId}", minimumVersion: "1.0.0")]
+        [Route("camps/{eventId}/waivers/{contactId}")]
         [AcceptVerbs("POST")]
         public IHttpActionResult SaveWaivers([FromBody] List<CampWaiverResponseDTO> waivers, int eventId, int contactId)
         {
@@ -199,7 +207,8 @@ namespace crds_angular.Controllers.API
             });
         }
 
-        [Route("api/camps/{eventId}/emergencycontact/{contactId}")]
+        [VersionedRoute(template:"camps/{eventId}/emergencycontact/{contactId}", minimumVersion: "1.0.0")]
+        [Route("camps/{eventId}/emergencycontact/{contactId}")]
         [AcceptVerbs("POST")]
         public IHttpActionResult SaveCamperEmergencyContact([FromBody] List<CampEmergencyContactDTO> emergencyContacts, int eventId, int contactId)
         {

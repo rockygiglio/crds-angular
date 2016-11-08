@@ -29,9 +29,31 @@ describe('Countdown Service', () => {
     fixture.event = new Event('title', start, end);
     fixture.parseEvent();
 
-    expect(fixture.countdown.days).toBe('01');
-    expect(fixture.countdown.hours).toBe('23');
+    let tz = 'America/New_York';
+    let format = 'YYYY-MM-DD H:mm:ss';
+
+    let isNowDst = moment.tz(moment(), format, tz).isDST();
+    let isStartDst = moment.tz(start, format, tz).isDST();
+
+    let daysUntil = '01';
+    let hoursUntil = '23';
+    let minutesUntil = '59';
+
+    // we are coming out of DST and gaining an hour
+    if ( fixture.countdown.overlapDst === -1 ) {
+      daysUntil = '02';
+      hoursUntil = '00';
+    }
+    // we are going into DST and losing an hour
+    else if ( fixture.countdown.overlapDst === 1 ) {
+      daysUntil = '01';
+      hoursUntil = '22';
+    }
+
+    expect(fixture.countdown.days).toBe(daysUntil);
+    expect(fixture.countdown.hours).toBe(hoursUntil);
     expect(fixture.countdown.minutes).toBe('59');
+
   })
 
 })

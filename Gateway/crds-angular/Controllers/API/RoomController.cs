@@ -3,6 +3,7 @@ using System.Web.Http;
 using crds_angular.Exceptions.Models;
 using crds_angular.Security;
 using crds_angular.Services.Interfaces;
+using Crossroads.ApiVersioning;
 
 namespace crds_angular.Controllers.API
 {
@@ -15,7 +16,8 @@ namespace crds_angular.Controllers.API
             _roomService = roomService;
         }
 
-        [Route("api/room/layouts")]
+        [VersionedRoute(template: "room/layouts", minimumVersion: "1.0.0")]
+        [Route("room/layouts")]
         public IHttpActionResult GetLayouts()
         {
             return Authorized(t =>
