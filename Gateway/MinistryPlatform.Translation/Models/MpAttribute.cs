@@ -18,7 +18,9 @@ namespace MinistryPlatform.Translation.Models
         [JsonProperty(PropertyName = "Attribute_Category_Description")]
         public string CategoryDescription { get; set; }
         public bool? Selected { get; set; }
+        [JsonProperty(PropertyName = "Attribute_Type_ID")]
         public int AttributeTypeId { get; set; }
+        [JsonProperty(PropertyName = "Attribute_Type")]
         public string AttributeTypeName { get; set; }
         [JsonProperty(PropertyName = "Prevent_Multiple_Selection")]
         public bool PreventMultipleSelection { get; set; }

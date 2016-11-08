@@ -24,12 +24,13 @@ namespace MinistryPlatform.Translation.Repositories
         {
             var token = base.ApiLogin();
             const string COLUMNS =
-                "Attribute_ID, Attribute_Name, Attribute_Category_ID_Table.Attribute_Category, Attributes.Attribute_Category_ID, Attribute_Category_ID_Table.Description as Attribute_Category_Description, Attributes.Sort_Order, Attribute_Type_ID_Table.Prevent_Multiple_Selection";
+                "Attribute_ID, Attribute_Name, Attributes.Description, Attribute_Category_ID_Table.Attribute_Category, Attributes.Attribute_Category_ID, Attribute_Category_ID_Table.Description as Attribute_Category_Description, Attributes.Sort_Order, Attribute_Type_ID_Table.Attribute_Type_ID, Attribute_Type_ID_Table.Attribute_Type, Attribute_Type_ID_Table.Prevent_Multiple_Selection";
 
             var search = attributeTypeId.HasValue ? $"Attributes.Attribute_Type_ID = { attributeTypeId}  AND " : string.Empty;
             search += $"(Attributes.Start_Date Is Null OR Attributes.Start_Date <= GetDate()) ";
             search += $"AND (Attributes.End_Date Is Null OR Attributes.End_Date >= GetDate())";
-            var records = _ministryPlatformRestService.UsingAuthenticationToken(token).Search<MpAttribute>(search, COLUMNS);
+            var orderBy = $"Attribute_Type_ID_Table.[Attribute_Type_ID], Attributes.[Sort_Order], Attributes.[Attribute_Name]";
+            var records = _ministryPlatformRestService.UsingAuthenticationToken(token).Search<MpAttribute>(search, COLUMNS, orderBy, false);
             return records;
         }
 
