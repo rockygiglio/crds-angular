@@ -304,6 +304,20 @@ namespace crds_angular.App_Start
             Mapper.CreateMap<MpRsvpMember, RsvpMember>();
             Mapper.CreateMap<MpSU2SOpportunity, ServeOpportunity>();
             Mapper.CreateMap<ServeOpportunity, MpSU2SOpportunity>();
+            Mapper.CreateMap<MpAttributeCategory, AttributeCategoryDTO>()
+                .ForMember(dest => dest.CategoryId, opts => opts.MapFrom(src => src.CategoryID))
+                .ForMember(dest => dest.AttributeCategory, opts => opts.MapFrom(src => src.Attribute_Category))
+                .ForMember(dest => dest.Attribute, opts => opts.MapFrom(src => src.Attribute))
+                .ForMember(dest => dest.RequiresActiveAttribute, opts => opts.MapFrom(src => src.Requires_Active_Attribute))
+                .ForMember(dest => dest.Description, opts => opts.MapFrom(src => src.Description))
+                .ForMember(dest => dest.ExampleText, opts => opts.MapFrom(src => src.Example_Text));
+            Mapper.CreateMap<AttributeCategoryDTO, MpAttributeCategory>()
+                .ForMember(dest => dest.CategoryID, opts => opts.MapFrom(src => src.CategoryId))
+                .ForMember(dest => dest.Attribute_Category, opts => opts.MapFrom(src => src.AttributeCategory))
+                .ForMember(dest => dest.Attribute, opts => opts.MapFrom(src => src.Attribute))
+                .ForMember(dest => dest.Requires_Active_Attribute, opts => opts.MapFrom(src => src.RequiresActiveAttribute))
+                .ForMember(dest => dest.Description, opts => opts.MapFrom(src => src.Description))
+                .ForMember(dest => dest.Example_Text, opts => opts.MapFrom(src => src.ExampleText));
         }
     }
 }

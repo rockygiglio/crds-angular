@@ -2,6 +2,8 @@
 using System.Net;
 using System.Collections.Generic;
 using System.Linq;
+using AutoMapper;
+using crds_angular.Models.Crossroads;
 using crds_angular.Models.Crossroads.Attribute;
 using crds_angular.Services.Interfaces;
 using MinistryPlatform.Translation.Models;
@@ -99,6 +101,21 @@ namespace crds_angular.Services
             }
 
             return attributes;
+        }
+
+        public List<AttributeCategoryDTO> GetAttributeCategory(int attributeCategory)
+        {
+            List<MpAttributeCategory> mpCats = _attributeRepository.GetAttributeCategory(attributeCategory);
+
+            return Mapper.Map<List<AttributeCategoryDTO>>(mpCats);
+            
+        }
+
+        public ObjectAttributeDTO GetOneAttributeByCategoryId(int categoryId)
+        {
+            MpObjectAttribute mpCat = _attributeRepository.GetOneAttributeByCategoryId(categoryId);
+
+            return Mapper.Map<ObjectAttributeDTO>(mpCat);
         }
     }
 }

@@ -66,63 +66,9 @@ namespace crds_angular.Controllers.API
         {
             try
             {
-                var groupCategories = new List<AttributeCategoryDTO>()
-                {
-                    new AttributeCategoryDTO()
-                    {
-                        CategoryId= 1,
-                        AttributeCategory= "Journey",
-                        Description= "The current Journey",
-                        ExampleText= "Journey Group",
-                        RequiresActiveAttribute= true,
-                        Attribute = new ObjectAttributeDTO()
-                        {
-                            AttributeId = 1,
-                            Name="I am _______",
-                        }
-                    },
-                    new AttributeCategoryDTO()
-                    {
-                        CategoryId= 2,
-                        AttributeCategory= "Interest",
-                        Description= "desc",
-                        ExampleText= "Ex. Boxing, XBox",
-                        RequiresActiveAttribute= false
-                    },
-                    new AttributeCategoryDTO()
-                    {
-                        CategoryId= 3,
-                        AttributeCategory= "Neighborhoods",
-                        Description= "desc",
-                        ExampleText= "Ex. Boxing, XBox",
-                        RequiresActiveAttribute= false
-                    },
-                    new AttributeCategoryDTO()
-                    {
-                        CategoryId= 4,
-                        AttributeCategory= "Spiritual growth",
-                        Description= "desc",
-                        ExampleText= "Ex. Boxing, XBox",
-                        RequiresActiveAttribute= false
-                    },
-                    new AttributeCategoryDTO()
-                    {
-                        CategoryId= 5,
-                        AttributeCategory= "Life Stages",
-                        Description= "desc",
-                        ExampleText= "Ex. Boxing, XBox",
-                        RequiresActiveAttribute= false
-                    },
-                    new AttributeCategoryDTO()
-                    {
-                        CategoryId= 6,
-                        AttributeCategory= "Healing",
-                        Description= "desc",
-                        ExampleText= "Ex. Boxing, XBox",
-                        RequiresActiveAttribute= false
-                    }
-                };
-                return Ok(groupCategories);
+                var cats = _groupToolService.GetGroupCategories();
+
+                return Ok(cats);
             }
             catch (Exception exception)
             {

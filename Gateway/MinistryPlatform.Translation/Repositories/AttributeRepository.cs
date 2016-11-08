@@ -52,6 +52,70 @@ namespace MinistryPlatform.Translation.Repositories
             return _ministryPlatformService.CreateRecord(_attributesPageId, values, token, true);
         }
 
+        public List<MpAttributeCategory> GetAttributeCategory(int attributeCategoryId)
+        {
+            return new List<MpAttributeCategory>()
+                {
+                    new MpAttributeCategory()
+                    {
+                        CategoryID= 1,
+                        Attribute_Category= "Journey",
+                        Description= "The current Journey",
+                        Example_Text= "Journey Group",
+                        Requires_Active_Attribute= true
+                    },
+                    new MpAttributeCategory()
+                    {
+                        CategoryID= 2,
+                        Attribute_Category= "Interest",
+                        Description= "desc",
+                        Example_Text= "Ex. Boxing, XBox",
+                        Requires_Active_Attribute= false
+                    },
+                    new MpAttributeCategory()
+                    {
+                        CategoryID= 3,
+                        Attribute_Category= "Neighborhoods",
+                        Description= "desc",
+                        Example_Text= "Ex. Boxing, XBox",
+                        Requires_Active_Attribute= false
+                    },
+                    new MpAttributeCategory()
+                    {
+                        CategoryID= 4,
+                        Attribute_Category= "Spiritual growth",
+                        Description= "desc",
+                        Example_Text= "Ex. Boxing, XBox",
+                        Requires_Active_Attribute= false
+                    },
+                    new MpAttributeCategory()
+                    {
+                        CategoryID= 5,
+                        Attribute_Category= "Life Stages",
+                        Description= "desc",
+                        Example_Text= "Ex. Boxing, XBox",
+                        Requires_Active_Attribute= false
+                    },
+                    new MpAttributeCategory()
+                    {
+                        CategoryID= 6,
+                        Attribute_Category= "Healing",
+                        Description= "desc",
+                        Example_Text= "Ex. Boxing, XBox",
+                        Requires_Active_Attribute= false
+                    }
+                };
+        }
+
+        public MpObjectAttribute GetOneAttributeByCategoryId(int categoryId)
+        {
+            return new MpObjectAttribute()
+            {
+                AttributeId = 1,
+                Name = "I am _______",
+            };
+        }
+
 
         private MpAttribute MapMpAttribute(Dictionary<string, object> record)
         {

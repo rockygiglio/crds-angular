@@ -403,6 +403,7 @@
     <Compile Include="Services\GoSkillsService.cs" />
     <Compile Include="Services\GroupSearchService.cs" />
     <Compile Include="Services\FormBuilderService.cs" />
+    <Compile Include="Services\Interfaces\GroupAttributeDTO.cs" />
     <Compile Include="Services\Interfaces\IAddressGeocodingService.cs" />
     <Compile Include="Services\Interfaces\IAddressProximityService.cs" />
     <Compile Include="Services\Interfaces\ICampService.cs" />
