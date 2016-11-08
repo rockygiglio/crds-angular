@@ -5,6 +5,7 @@ class MedicalInfoController {
     this.stateParams = $stateParams;
     this.viewReady = false;
     this.submitting = false;
+    this.update = true;
   }
 
   $onInit() {
