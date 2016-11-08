@@ -54,9 +54,7 @@ class MedicalInfoForm {
   }
 
   medicineAllergies() {
-    this.medicineAllergies = _.find(this.campsService.campMedical.allergies, (allergy) => {
-      return (allergy.allergyType === 'Medicine');
-    });
+    this.medicineAllergies = _.find(this.campsService.campMedical.allergies, allergy => (allergy.allergyType === 'Medicine'));
     if (this.medicineAllergies !== undefined) {
       this.medicineAllergyId = this.medicineAllergies.allergyId;
       return this.medicineAllergies.allergyDescription;
@@ -65,9 +63,7 @@ class MedicalInfoForm {
   }
 
   foodAllergies() {
-    this.foodAllergies = _.find(this.campsService.campMedical.allergies, (allergy) => {
-      return (allergy.allergyType === 'Food');
-    });
+    this.foodAllergies = _.find(this.campsService.campMedical.allergies, allergy => (allergy.allergyType === 'Food'));
     if (this.foodAllergies !== undefined) {
       this.foodAllergyId = this.foodAllergies.allergyId;
       return this.foodAllergies.allergyDescription;
@@ -76,9 +72,7 @@ class MedicalInfoForm {
   }
 
   environmentalAllergies() {
-    this.environmentalAllergies = _.find(this.campsService.campMedical.allergies, (allergy) => {
-      return (allergy.allergyType === 'Environmental');
-    });
+    this.environmentalAllergies = _.find(this.campsService.campMedical.allergies, allergy => (allergy.allergyType === 'Environmental'));
     if (this.environmentalAllergies !== undefined) {
       this.environmentalAllergyId = this.environmentalAllergies.allergyId;
       return this.environmentalAllergies.allergyDescription;
@@ -87,9 +81,7 @@ class MedicalInfoForm {
   }
 
   otherAllergies() {
-    this.otherAllergies = _.find(this.campsService.campMedical.allergies, (allergy) => {
-      return (allergy.allergyType === 'Other');
-    });
+    this.otherAllergies = _.find(this.campsService.campMedical.allergies, allergy => (allergy.allergyType === 'Other'));
     if (this.otherAllergies !== undefined) {
       this.otherAllergyId = this.otherAllergies.allergyId;
       return this.otherAllergies.allergyDescription;
