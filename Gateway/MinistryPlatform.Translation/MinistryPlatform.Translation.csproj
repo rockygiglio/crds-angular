@@ -255,6 +255,7 @@
     <Compile Include="Repositories\InvoiceRepository.cs" />
     <Compile Include="Repositories\MedicalInformationRepository.cs" />
     <Compile Include="Repositories\MinistryPlatformRestRepository.cs" />
+    <Compile Include="Repositories\ParticipantRepository.cs" />
     <Compile Include="Repositories\PaymentRepository.cs" />
     <Compile Include="Repositories\PaymentTypeRepository.cs" />
     <Compile Include="Repositories\ProjectTypeRepository.cs" />
@@ -313,7 +314,6 @@
     <Compile Include="Repositories\MinistryPlatformServiceImpl.cs" />
     <Compile Include="Repositories\OpportunityRepository.cs" />
     <Compile Include="Repositories\OrganizationRepository.cs.cs" />
-    <Compile Include="Repositories\ParticipantRepository.cs.cs" />
     <Compile Include="Repositories\PledgeRepository.cs.cs" />
     <Compile Include="Repositories\PrivateInviteRepository.cs" />
     <Compile Include="Repositories\ProgramRepository.cs" />
