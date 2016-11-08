@@ -1,8 +1,15 @@
-﻿using System.Collections.Generic;
+﻿#define USE_API_VERSIONING
+
+// To include Api Versioning,     #define USE_API_VERSIONING
+// ...to leave it out,            #undef  USE_API_VERSIONING
+
+using System;
+using System.Collections.Generic;
 using System.Web.Http.Routing;
 
 namespace Crossroads.ApiVersioning
 {
+#if USE_API_VERSIONING
     public class VersionedRoute : RouteFactoryAttribute
     {
         public SemanticVersion MinimumVersion { get; }
@@ -35,4 +42,15 @@ namespace Crossroads.ApiVersioning
             }
         }
     }
+#else
+    [AttributeUsage(AttributeTargets.Method, Inherited = false, AllowMultiple = true)]
+    public class VersionedRoute : Attribute
+    {
+        public const string ApiVersionParameter = "apiVersion";
+
+        public VersionedRoute(string template, string minimumVersion, string maximumVersion = null, bool deprecated = false, bool removed = false)
+        {
+        }
+    }
+#endif
 }
