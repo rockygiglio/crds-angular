@@ -1,8 +1,9 @@
 class MedicalInfoController {
-  constructor(MedicalInfoForm, $rootScope, $stateParams) {
+  constructor(MedicalInfoForm, $rootScope, $stateParams, $state) {
     this.medicalInfoForm = MedicalInfoForm;
     this.rootScope = $rootScope;
     this.stateParams = $stateParams;
+    this.state = $state;
     this.viewReady = false;
     this.submitting = false;
     this.update = true;
@@ -23,6 +24,10 @@ class MedicalInfoController {
         this.rootScope.$emit('notify', this.rootScope.MESSAGES.generalError);
       }).finally(() => {
         this.submitting = false;
+        if (this.update) {
+          // navigae back to mycamps page
+          this.state.go('camps-dashboard');
+        }
       });
     } else {
       this.submitting = false;
