@@ -52,7 +52,7 @@ namespace MinistryPlatform.Translation.Test.Services
                             m =>
                                 m.Equals(
                                     $"Attributes.Attribute_Type_ID = {attributeTypeId}  AND (Attributes.Start_Date Is Null OR Attributes.Start_Date <= GetDate()) AND (Attributes.End_Date Is Null OR Attributes.End_Date >= GetDate())")),
-                        It.Is<string>(m => m.Equals("Attribute_ID, Attribute_Name, Attributes.Description, Attribute_Category_ID_Table.Attribute_Category, Attributes.Attribute_Category_ID, Attribute_Category_ID_Table.Description as Attribute_Category_Description, Attributes.Sort_Order, Attribute_Type_ID_Table.Attribute_Type_ID, Attribute_Type_ID_Table.Attribute_Type, Attribute_Type_ID_Table.Prevent_Multiple_Selection")),
+                        It.Is<string>(m => m.Equals("Attribute_ID, Attribute_Name, Attributes.Description, Attribute_Category_ID_Table.Attribute_Category, Attributes.Attribute_Category_ID, Attribute_Category_ID_Table.Description as Attribute_Category_Description, Attributes.Sort_Order, Attribute_Type_ID_Table.Attribute_Type_ID, Attribute_Type_ID_Table.Attribute_Type, Attribute_Type_ID_Table.Prevent_Multiple_Selection, Start_Date, End_Date")),
                              It.IsAny<string>(),
                              It.IsAny<bool>())).Returns(response);
 
@@ -99,7 +99,7 @@ namespace MinistryPlatform.Translation.Test.Services
                             m =>
                                 m.Equals(
                                     "(Attributes.Start_Date Is Null OR Attributes.Start_Date <= GetDate()) AND (Attributes.End_Date Is Null OR Attributes.End_Date >= GetDate())")),
-                        It.Is<string>(m => m.Equals("Attribute_ID, Attribute_Name, Attributes.Description, Attribute_Category_ID_Table.Attribute_Category, Attributes.Attribute_Category_ID, Attribute_Category_ID_Table.Description as Attribute_Category_Description, Attributes.Sort_Order, Attribute_Type_ID_Table.Attribute_Type_ID, Attribute_Type_ID_Table.Attribute_Type, Attribute_Type_ID_Table.Prevent_Multiple_Selection")),
+                        It.Is<string>(m => m.Equals("Attribute_ID, Attribute_Name, Attributes.Description, Attribute_Category_ID_Table.Attribute_Category, Attributes.Attribute_Category_ID, Attribute_Category_ID_Table.Description as Attribute_Category_Description, Attributes.Sort_Order, Attribute_Type_ID_Table.Attribute_Type_ID, Attribute_Type_ID_Table.Attribute_Type, Attribute_Type_ID_Table.Prevent_Multiple_Selection, Start_Date, End_Date")),
                              It.IsAny<string>(),
                              It.IsAny<bool>())).Returns(response);
 
