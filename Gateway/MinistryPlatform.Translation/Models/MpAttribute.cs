@@ -1,3 +1,4 @@
+using System;
 using MinistryPlatform.Translation.Models.Attributes;
 using Newtonsoft.Json;
 
@@ -26,5 +27,9 @@ namespace MinistryPlatform.Translation.Models
         public bool PreventMultipleSelection { get; set; }
         [JsonProperty(PropertyName = "Sort_Order")]
         public int SortOrder { get; set; }
+        [JsonProperty(PropertyName = "End_Date")]
+        public DateTime? EndDate { get; set; }
+        [JsonProperty(PropertyName = "Start_Date")]
+        public DateTime? StartDate { get; set; }
     }
 }
