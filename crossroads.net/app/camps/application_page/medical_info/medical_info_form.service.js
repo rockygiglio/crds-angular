@@ -38,15 +38,19 @@ class MedicalInfoForm {
       physicianPhone: this.formModel.physicianPhone,
       allergies: [
         { allergyType: 'Medicine',
+          allergyId: this.medicineAllergyId,
           allergyDescription: this.formModel.medicineAllergies
         },
         { allergyType: 'Food',
+          allergyId: this.foodAllergyId,
           allergyDescription: this.formModel.foodAllergies
         },
         { allergyType: 'Environmental',
+          allergyId: this.environmentalAllergyId,
           allergyDescription: this.formModel.environmentalAllergies
         },
         { allergyType: 'Other',
+          allergyId: this.otherAllergyId,
           allergyDescription: this.formModel.otherAllergies
         }]
     };
