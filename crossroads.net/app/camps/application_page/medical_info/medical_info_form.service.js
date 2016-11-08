@@ -1,24 +1,92 @@
 /* ngInject */
 class MedicalInfoForm {
 
-  constructor($resource) {
+  constructor(CampsService, $resource) {
+    this.campsService = CampsService;
+    this.allergies = [];
     this.formModel = {
-      insuranceCompanyName: undefined,
-      policyHolderName: undefined,
-      physicianName: undefined,
-      physicianNumber: undefined,
-      showAllergies: undefined || false,
-      medicineAllergies: undefined,
-      foodAllergies: undefined,
-      environmentAllergies: undefined,
-      otherAllergies: undefined
+      contactId: this.campsService.campMedical.contactId || undefined,
+      insuranceCompany: this.campsService.campMedical.insuranceCompany || undefined,
+      policyHolder: this.campsService.campMedical.policyHolder || undefined,
+      physicianName: this.campsService.campMedical.physicianName || undefined,
+      physicianPhone: this.campsService.campMedical.physicianPhone || undefined,
+      showAllergies: this.campsService.campMedical.showAllergies || false,
+      medicineAllergies: this.medicineAllergies() || undefined,
+      foodAllergies: this.foodAllergies() || undefined,
+      environmentalAllergies: this.environmentalAllergies() || undefined,
+      otherAllergies: this.otherAllergies() || undefined,
     };
 
     this.medicalInfoResource = $resource(`${__API_ENDPOINT__}api/camps/medical/:contactId`);
   }
 
   save(contactId) {
-    return this.medicalInfoResource.save({ contactId }, this.formModel).$promise;
+    return this.medicalInfoResource.save({ contactId }, this.saveDto()).$promise;
+  }
+
+  saveDto() {
+    const dto = {
+      contactId: this.formModel.contactId,
+      medicalInformationId: this.campsService.campMedical.medicalInformationId,
+      insuranceCompany: this.formModel.insuranceCompany,
+      policyHolder: this.formModel.policyHolder,
+      physicianName: this.formModel.physicianName,
+      physicianPhone: this.formModel.physicianPhone,
+      allergies: [
+        { allergyType: 'Medicine',
+          allergyDescription: this.formModel.medicineAllergies
+        },
+        { allergyType: 'Food',
+          allergyDescription: this.formModel.foodAllergies
+        },
+        { allergyType: 'Environmental',
+          allergyDescription: this.formModel.environmentalAllergies
+        },
+        { allergyType: 'Other',
+          allergyDescription: this.formModel.otherAllergies
+        }]
+    };
+    return dto;
+  }
+
+  medicineAllergies() {
+    this.medicineAllergies = _.find(this.campsService.campMedical.allergies, (allergy) => {
+      return (allergy.allergyType === 'Medicine');
+    });
+    if (this.medicineAllergies !== undefined) {
+      return this.medicineAllergies.allergyDescription;
+    }
+    return null;
+  }
+
+  foodAllergies() {
+    this.foodAllergies = _.find(this.campsService.campMedical.allergies, (allergy) => {
+      return (allergy.allergyType === 'Food');
+    });
+    if (this.foodAllergies !== undefined) {
+      return this.foodAllergies.allergyDescription;
+    }
+    return null;
+  }
+
+  environmentalAllergies() {
+    this.environmentalAllergies = _.find(this.campsService.campMedical.allergies, (allergy) => {
+      return (allergy.allergyType === 'Environmental');
+    });
+    if (this.environmentalAllergies !== undefined) {
+      return this.environmentalAllergies.allergyDescription;
+    }
+    return null;
+  }
+
+  otherAllergies() {
+    this.otherAllergies = _.find(this.campsService.campMedical.allergies, (allergy) => {
+      return (allergy.allergyType === 'Other');
+    });
+    if (this.otherAllergies !== undefined) {
+      return this.otherAllergies.allergyDescription;
+    }
+    return null;
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -28,7 +96,7 @@ class MedicalInfoForm {
         className: 'row',
         fieldGroup: [{
           className: 'form-group col-xs-6',
-          key: 'insuranceCompanyName',
+          key: 'insuranceCompany',
           type: 'crdsInput',
           templateOptions: {
             label: 'Insurance Company Name',
@@ -36,7 +104,7 @@ class MedicalInfoForm {
           }
         }, {
           className: 'form-group col-xs-6',
-          key: 'policyHolderName',
+          key: 'policyHolder',
           type: 'crdsInput',
           templateOptions: {
             label: 'Policy Holder Name',
@@ -111,7 +179,7 @@ class MedicalInfoForm {
           }
         }, {
           className: 'form-group col-xs-12',
-          key: 'environmentAllergies',
+          key: 'environmentalAllergies',
           type: 'crdsTextArea',
           templateOptions: {
             label: 'Environmental Allergies',

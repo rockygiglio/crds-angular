@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using log4net.Repository.Hierarchy;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 
@@ -17,43 +18,50 @@ namespace MinistryPlatform.Translation.Repositories
             _apiUserRepository = apiUserRepository;
         }
 
-        public MpMedicalInformation GetMedicalInfo(int contactId)
+        public List<MpMedicalAllergy> GetMedicalAllergyInfo(int contactId)
         {
             var apiToken = _apiUserRepository.GetToken();
-            var medInfo = _ministryPlatformRest.UsingAuthenticationToken(apiToken).Search<MpMedicalInformation>($"Contact_ID = {contactId},MedicalInformation_ID = 33");
-            //var medInfo = _ministryPlatformRest.UsingAuthenticationToken(apiToken).Search<MpMedicalAllergy>($"Medical_Information_ID_Table_Contact_ID_Table.[Contact_ID] = {contactId}");
-            var mpMedicalInformation = medInfo.FirstOrDefault();
-
-            if(mpMedicalInformation == null) { return null; }
-
-            var filter = new Dictionary<string, object> { { "Medical_Information_ID_Table.MedicalInformation_ID", mpMedicalInformation.MedicalInformationId } };
-
-            var allergyIdList = _ministryPlatformRest.UsingAuthenticationToken(apiToken)
-               .Get<MpMedicalAllergy>("cr_Medical_Information_Allergies", filter);
-
-            System.Diagnostics.Debug.WriteLine(allergyIdList);
-
-
-            return null;
-
+            string columns = "Medical_Information_ID_Table.MedicalInformation_ID,Medical_Information_ID_Table.InsuranceCompany, " +
+                             "Medical_Information_ID_Table.PolicyHolderName,Medical_Information_ID_Table.PhysicianName, " +
+                             "Medical_Information_ID_Table.PhysicianPhone, Allergy_ID_Table.[Description], " +
+                             "Allergy_ID_Table_Allergy_Type_ID_Table.[Allergy_Type],cr_Medical_Information_Allergies.[Medical_Information_Allergy_ID]";
+            return _ministryPlatformRest.UsingAuthenticationToken(apiToken)
+                .Search<MpMedicalAllergy>($"Medical_Information_ID_Table_Contact_ID_Table.Contact_ID={contactId}",columns ).ToList();           
         }
 
-        public void UpdateMedicalRecords(MpMedicalInformation mpMedicalInfo, List<MpAllergy> allergyList, int contactId)
+        public int SaveMedicalInfo(MpMedicalInformation mpMedicalInfo, int contactId)
         {
             var apiToken = _apiUserRepository.GetToken();
-            if (allergyList.Count <= 0 )
+            var records = new List<MpMedicalInformation> {mpMedicalInfo};
+            if (mpMedicalInfo.MedicalInformationId != 0)
             {
-                
+                _ministryPlatformRest.UsingAuthenticationToken(apiToken).Put(records);
+                return mpMedicalInfo.MedicalInformationId;
             }
-
-
-
-
+            _ministryPlatformRest.UsingAuthenticationToken(apiToken).Post(records);
+            var medInfo = _ministryPlatformRest.UsingAuthenticationToken(apiToken).Search<MpMedicalInformation>($"Contact_ID_Table.Contact_ID={contactId}", "MedicalInformation_ID");
+            return medInfo[0].MedicalInformationId;
         }
 
-        public void CreateMedicalRecords(MpMedicalInformation mpMedicalInfo, List<MpAllergy> allergyList, int contactId)
+        public void UpdateOrCreateMedAllergy(int medicalInformationId, MpAllergy allergy)
         {
-
+            var apiToken = _apiUserRepository.GetToken();
+            string columns = "Allergy_ID_Table.[Allergy_ID],Allergy_ID_Table.[Description]";
+            var allergies =  _ministryPlatformRest.UsingAuthenticationToken(apiToken)
+                .Search<MpMedicalAllergy>($"Medical_Information_ID_Table_MedicalInformation_ID={medicalInformationId} && Allergy_ID_Table_Allergy_Type_ID_Table.[Allergy_Type]={allergy.AllergyType}", columns).ToList();
+            if (allergies.Count <= 0)
+            {
+                var records = new List<MpMedicalAllergy>
+                {
+                    new MpMedicalAllergy
+                    {
+                        AllergyDescription = allergy.AllergyDescription,
+                        MedicalInformationId = medicalInformationId,
+                        AllergyType = allergy.AllergyType
+                    }
+                };
+                _ministryPlatformRest.UsingAuthenticationToken(apiToken).Post()
+            }
         }
     }
 }

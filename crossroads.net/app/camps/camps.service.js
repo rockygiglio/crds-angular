@@ -75,7 +75,7 @@ class CampService {
 
   getCampMedical(campId, contactId) {
     return this.campMedicalResource.get({ campId, contactId }, (medical) => {
-      this.medical = medical;
+      this.campMedical = medical;
     },
 
     (err) => {
