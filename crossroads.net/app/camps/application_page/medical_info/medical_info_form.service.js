@@ -4,6 +4,10 @@ class MedicalInfoForm {
   constructor(CampsService, $resource) {
     this.campsService = CampsService;
     this.allergies = [];
+    this.medicineAllergyId = undefined;
+    this.foodAllergyId = undefined;
+    this.environmentalAllergyId = undefined;
+    this.otherAllergyId = undefined;
     this.formModel = {
       contactId: this.campsService.campMedical.contactId || undefined,
       insuranceCompany: this.campsService.campMedical.insuranceCompany || undefined,
@@ -54,6 +58,7 @@ class MedicalInfoForm {
       return (allergy.allergyType === 'Medicine');
     });
     if (this.medicineAllergies !== undefined) {
+      this.medicineAllergyId = this.medicineAllergies.allergyId;
       return this.medicineAllergies.allergyDescription;
     }
     return null;
@@ -64,6 +69,7 @@ class MedicalInfoForm {
       return (allergy.allergyType === 'Food');
     });
     if (this.foodAllergies !== undefined) {
+      this.foodAllergyId = this.foodAllergies.allergyId;
       return this.foodAllergies.allergyDescription;
     }
     return null;
@@ -74,6 +80,7 @@ class MedicalInfoForm {
       return (allergy.allergyType === 'Environmental');
     });
     if (this.environmentalAllergies !== undefined) {
+      this.environmentalAllergyId = this.environmentalAllergies.allergyId;
       return this.environmentalAllergies.allergyDescription;
     }
     return null;
@@ -84,6 +91,7 @@ class MedicalInfoForm {
       return (allergy.allergyType === 'Other');
     });
     if (this.otherAllergies !== undefined) {
+      this.otherAllergyId = this.otherAllergies.allergyId;
       return this.otherAllergies.allergyDescription;
     }
     return null;

@@ -23,7 +23,7 @@ namespace MinistryPlatform.Translation.Repositories
             var apiToken = _apiUserRepository.GetToken();
             string columns = "Medical_Information_ID_Table.MedicalInformation_ID,Medical_Information_ID_Table.InsuranceCompany, " +
                              "Medical_Information_ID_Table.PolicyHolderName,Medical_Information_ID_Table.PhysicianName, " +
-                             "Medical_Information_ID_Table.PhysicianPhone, Allergy_ID_Table.[Description], " +
+                             "Medical_Information_ID_Table.PhysicianPhone, Allergy_ID_Table.[Description],Allergy_ID_Table.[Allergy_ID], " +
                              "Allergy_ID_Table_Allergy_Type_ID_Table.[Allergy_Type],cr_Medical_Information_Allergies.[Medical_Information_Allergy_ID]";
             return _ministryPlatformRest.UsingAuthenticationToken(apiToken)
                 .Search<MpMedicalAllergy>($"Medical_Information_ID_Table_Contact_ID_Table.Contact_ID={contactId}",columns ).ToList();           

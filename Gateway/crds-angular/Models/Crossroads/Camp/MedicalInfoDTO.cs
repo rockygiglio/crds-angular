@@ -37,6 +37,9 @@ namespace crds_angular.Models.Crossroads.Camp
 
         [JsonProperty(PropertyName = "allergyDescription")]
         public string AllergyDescription { get; set; }
+
+        [JsonProperty(PropertyName = "allergyId")]
+        public int AllergyId { get; set; }
     }
    
 }

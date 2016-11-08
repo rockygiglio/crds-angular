@@ -388,7 +388,8 @@ namespace crds_angular.Services
                     var allergy = new Allergy
                     {
                         AllergyDescription = medInfo.AllergyDescription,
-                        AllergyType = medInfo.AllergyType
+                        AllergyType = medInfo.AllergyType,
+                        AllergyId = medInfo.AllergyId
                     };                   
                     camperMedInfo.Allergies.Add(allergy);
                 }
