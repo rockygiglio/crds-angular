@@ -7,7 +7,14 @@
  *    paymentRemaining
  */
 class CampCardController {
-  constructor() {}
+  constructor($stateParams, $state) {
+    this.stateParams = $stateParams;
+    this.state = $state;
+  }
+
+  cancel() {
+    this.state.go('camps-dashboard');
+  }
 
   formatDate() {
     let startDateMoment = moment(this.startDate);

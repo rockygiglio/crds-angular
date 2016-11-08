@@ -16,7 +16,7 @@
 
             <button type="submit"class="btn btn-primary pull-right" ng-if="!$ctrl.submitting && $ctrl.update"> Update </button>
             <button type="submit"class="btn btn-primary pull-right" ng-if="$ctrl.submitting && $ctrl.update"> Updating... </button>
-            <button type="submit"class="btn  pull-right " ng-if="!$ctrl.submitting && $ctrl.update"> Cancel </button>
+            <button type="button"class="btn  pull-right " ng-if="!$ctrl.submitting && $ctrl.update" ng-click='cancel()'> Cancel </button>
           </form>
         </div>
       </div>

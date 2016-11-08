@@ -7,12 +7,17 @@ class MedicalInfoController {
     this.viewReady = false;
     this.submitting = false;
     this.update = true;
+    this.cancel = cancel();
   }
 
   $onInit() {
     this.viewReady = true;
     this.model = this.medicalInfoForm.getModel();
     this.fields = this.medicalInfoForm.getFields();
+  }
+
+  cancel() {
+    this.state.go('camps-dashboard');
   }
 
   submit() {
