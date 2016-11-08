@@ -81,13 +81,14 @@ namespace MinistryPlatform.Translation.Repositories
                 var record = records.Single();
                 participant = new MpParticipant
                 {
-                    ContactId = record.ToInt("Contact ID"),
-                    ParticipantId = record.ToInt("dp_RecordID"),
-                    EmailAddress = record.ToString("Email Address"),
+                    ContactId = record.ToInt("Contact_ID"),
+                    ParticipantId = record.ToInt("Participant_ID"),
+                    EmailAddress = record.ToString("Email_Address"),
                     PreferredName = record.ToString("Nickname"), 
-                    DisplayName =  record.ToString("Display Name"), 
-                    Age = record.ToInt("Age"),
-                    ApprovedSmallGroupLeader = record.ToBool("Approved_Small_Group_Leader")
+                    DisplayName =  record.ToString("Display_Name"), 
+                    Age = record.ToInt("__Age"),
+                    ApprovedSmallGroupLeader = record.ToBool("Approved_Small_Group_Leader"),
+                    AttendanceStart = record.ToDate("Attendance_Start_Date")
                 };
             }
             catch (Exception ex)
