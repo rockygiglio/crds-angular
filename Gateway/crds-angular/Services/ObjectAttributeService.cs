@@ -61,7 +61,7 @@ namespace crds_angular.Services
                               mpAttributeType => new ObjectAttributeTypeDTO()
                               {
                                   AttributeTypeId = mpAttributeType.AttributeTypeId,
-                                  Name = mpAttributeType.AttributeTypeName,
+                                  Name = mpAttributeType.AttributeTypeName
                               });
 
 
@@ -75,7 +75,8 @@ namespace crds_angular.Services
                     SortOrder = mpAttribute.SortOrder,
                     Selected = false,
                     Category = mpAttribute.Category,
-                    CategoryDescription = mpAttribute.CategoryDescription
+                    CategoryDescription = mpAttribute.CategoryDescription,
+                    EndDate = mpAttribute.EndDate ?? null
                 };
 
                 attributeTypesDictionary[mpAttribute.AttributeTypeId].Attributes.Add(objectAttribute);
