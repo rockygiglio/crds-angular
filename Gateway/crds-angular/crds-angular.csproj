@@ -364,7 +364,6 @@
     <Compile Include="Models\Crossroads\Inquiry.cs" />
     <Compile Include="Models\Crossroads\Lookups\OtherOrganization.cs" />
     <Compile Include="Models\Crossroads\GoVolunteer\OrgLocation.cs" />
-    <Compile Include="Models\Crossroads\Participants\ParticipantProfile.cs" />
     <Compile Include="Models\Crossroads\Payment\PaymentDTO.cs" />
     <Compile Include="Models\Crossroads\PrimaryContactDto.cs" />
     <Compile Include="Models\Crossroads\Profile\Participant.cs" />
