@@ -15,10 +15,10 @@ class MedicalInfoForm {
       physicianName: this.campsService.campMedical.physicianName || undefined,
       physicianPhone: this.campsService.campMedical.physicianPhone || undefined,
       showAllergies: this.campsService.campMedical.showAllergies || false,
-      medicineAllergies: this.medicineAllergies() || undefined,
-      foodAllergies: this.foodAllergies() || undefined,
-      environmentalAllergies: this.environmentalAllergies() || undefined,
-      otherAllergies: this.otherAllergies() || undefined,
+      medicineAllergies: this.medicineAllergies(),
+      foodAllergies: this.foodAllergies(),
+      environmentalAllergies: this.environmentalAllergies(),
+      otherAllergies: this.otherAllergies(),
     };
 
     this.medicalInfoResource = $resource(`${__API_ENDPOINT__}api/camps/medical/:contactId`);
@@ -55,38 +55,46 @@ class MedicalInfoForm {
 
   medicineAllergies() {
     this.medicineAllergies = _.find(this.campsService.campMedical.allergies, allergy => (allergy.allergyType === 'Medicine'));
+
     if (this.medicineAllergies !== undefined) {
       this.medicineAllergyId = this.medicineAllergies.allergyId;
       return this.medicineAllergies.allergyDescription;
     }
-    return null;
+
+    return undefined;
   }
 
   foodAllergies() {
     this.foodAllergies = _.find(this.campsService.campMedical.allergies, allergy => (allergy.allergyType === 'Food'));
+
     if (this.foodAllergies !== undefined) {
       this.foodAllergyId = this.foodAllergies.allergyId;
       return this.foodAllergies.allergyDescription;
     }
-    return null;
+
+    return undefined;
   }
 
   environmentalAllergies() {
     this.environmentalAllergies = _.find(this.campsService.campMedical.allergies, allergy => (allergy.allergyType === 'Environmental'));
+
     if (this.environmentalAllergies !== undefined) {
       this.environmentalAllergyId = this.environmentalAllergies.allergyId;
       return this.environmentalAllergies.allergyDescription;
     }
-    return null;
+
+    return undefined;
   }
 
   otherAllergies() {
     this.otherAllergies = _.find(this.campsService.campMedical.allergies, allergy => (allergy.allergyType === 'Other'));
+
     if (this.otherAllergies !== undefined) {
       this.otherAllergyId = this.otherAllergies.allergyId;
       return this.otherAllergies.allergyDescription;
     }
-    return null;
+
+    return undefined;
   }
 
   // eslint-disable-next-line class-methods-use-this
