@@ -38,17 +38,19 @@ namespace MinistryPlatform.Translation.Test.Services
 
             const string viewKey = "ParticipantByContactId";
             var searchString = contactId.ToString() + ",";
+            DateTime backToTheFuture = new DateTime(2015, 10, 21);
             var mockDictionaryList = new List<Dictionary<string, object>>
             {
                 new Dictionary<string, object>
                 {
-                    {"Contact ID", 99999},
-                    {"dp_RecordID", 100},
-                    {"Email Address", "email-address"},
+                    {"Contact_ID", 99999},
+                    {"Participant_ID", 100},
+                    {"Email_Address", "email-address"},
                     {"Nickname", "nick-name"},
-                    {"Display Name", "display-name"},
-                    {"Age", 99},
-                    {"Approved_Small_Group_Leader", true }
+                    {"Display_Name", "display-name"},
+                    {"__Age", 99},
+                    {"Approved_Small_Group_Leader", true },
+                    {"Attendance_Start_Date", backToTheFuture}
                 }
             };
 
@@ -63,6 +65,7 @@ namespace MinistryPlatform.Translation.Test.Services
             Assert.AreEqual("email-address", participant.EmailAddress);
             Assert.AreEqual(100, participant.ParticipantId);
             Assert.IsTrue(participant.ApprovedSmallGroupLeader);
+            Assert.AreEqual(backToTheFuture, participant.AttendanceStart);
         }
 
         [Test]
