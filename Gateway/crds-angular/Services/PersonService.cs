@@ -7,7 +7,6 @@ using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Models.DTO;
 using MinistryPlatform.Translation.Repositories;
 using MPServices = MinistryPlatform.Translation.Repositories.Interfaces;
-using Participant = MinistryPlatform.Translation.Models.MpParticipant;
 
 
 namespace crds_angular.Services
@@ -47,13 +46,11 @@ namespace crds_angular.Services
             var configuration = MpObjectAttributeConfigurationFactory.Contact();
             _objectAttributeService.SaveObjectAttributes(person.ContactId, person.AttributeTypes, person.SingleAttributes, configuration);
 
-            Participant participant = _participantService.GetParticipant(person.ContactId);
+            var participant = _participantService.GetParticipant(person.ContactId);
             if (participant.AttendanceStart != person.AttendanceStartDate)
             {                
                 participant.AttendanceStart = person.AttendanceStartDate;
-                // convert to the object with underscores
-                var p = Mapper.Map <Participant>(participant);
-                _participantService.UpdateParticipant(getDictionary(p));
+                _participantService.UpdateParticipant(participant);
             }
 
             // TODO: It appears we are updating the contact records email address above if the email address is changed

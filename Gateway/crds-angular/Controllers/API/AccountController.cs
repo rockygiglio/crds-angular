@@ -6,6 +6,7 @@ using crds_angular.Models.Crossroads;
 using crds_angular.Models.Json;
 using crds_angular.Security;
 using crds_angular.Services.Interfaces;
+using Crossroads.ApiVersioning;
 
 namespace crds_angular.Controllers.API
 {
@@ -17,9 +18,11 @@ namespace crds_angular.Controllers.API
         {
             _accountService = accountService;
         }
-        
 
-        [ResponseType(typeof (AccountInfo))]
+        [ResponseType(typeof(AccountInfo))]
+        [VersionedRoute(template: "account", minimumVersion: "1.0.0")]
+        [Route("account")]
+        [HttpGet]
         public IHttpActionResult Get()
         {
             
@@ -42,7 +45,8 @@ namespace crds_angular.Controllers.API
             
         }
 
-        [Route("api/account/password")]
+        [VersionedRoute(template: "account/password", minimumVersion: "1.0.0")]
+        [Route("account/password")]
         [HttpPost]
         public IHttpActionResult UpdatePassword([FromBody] NewPassword password)
         {
@@ -59,6 +63,9 @@ namespace crds_angular.Controllers.API
 
         }
 
+        [VersionedRoute(template: "account", minimumVersion: "1.0.0")]
+        [Route("account")]
+        [HttpPost]
         public IHttpActionResult Post([FromBody]AccountInfo accountInfo)
         {
 

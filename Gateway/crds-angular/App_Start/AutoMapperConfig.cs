@@ -10,7 +10,6 @@ using crds_angular.Models.Crossroads.Attribute;
 using crds_angular.Models.Crossroads.Events;
 using crds_angular.Models.Crossroads.Groups;
 using crds_angular.Models.Crossroads.Opportunity;
-using crds_angular.Models.Crossroads.Participants;
 using crds_angular.Models.Crossroads.Profile;
 using crds_angular.Models.Crossroads.Serve;
 using crds_angular.Models.Crossroads.Stewardship;
@@ -36,7 +35,6 @@ namespace crds_angular.App_Start
             Mapper.Initialize(cfg =>
             {
                 cfg.AddProfile<EventProfile>();
-                cfg.AddProfile<ParticipantProfile>();
                 cfg.AddProfile<ServeProfile>();
             });
 

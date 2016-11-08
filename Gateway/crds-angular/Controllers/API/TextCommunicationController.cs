@@ -13,6 +13,7 @@ using Crossroads.Utilities.Messaging.Interfaces;
 using Crossroads.Utilities.Messaging;
 using log4net;
 using Crossroads.Utilities.Interfaces;
+using Crossroads.ApiVersioning;
 
 namespace crds_angular.Controllers.API
 {
@@ -40,7 +41,8 @@ namespace crds_angular.Controllers.API
         /// <summary>
         /// Schedule a text message to a specific contactId/number at a specific time
         /// </summary>
-        [Route("api/sendTextMessageReminder")]
+        [VersionedRoute(template: "sendTextMessageReminder", minimumVersion: "1.0.0")]
+        [Route("sendTextMessageReminder")]
         public IHttpActionResult PostReminder(TextCommunicationDto textCommunicationData)
         {
             if (textCommunicationData == null || !ModelState.IsValid)

@@ -3,7 +3,7 @@ const path = require('path');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 const environmentVars = require(path.resolve(__dirname, 'environment.config.js'));
-const definePlugin = new webpack.DefinePlugin(environmentVars.get());
+const definePlugin = new webpack.DefinePlugin(environmentVars.getTest());
 
 module.exports = function(config) {
   config.set({

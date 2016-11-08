@@ -14,6 +14,7 @@ using log4net;
 using Microsoft.Ajax.Utilities;
 using MinistryPlatform.Translation.Models;
 using MPInterfaces = MinistryPlatform.Translation.Repositories.Interfaces;
+using Crossroads.ApiVersioning;
 
 namespace crds_angular.Controllers.API
 {
@@ -53,7 +54,8 @@ namespace crds_angular.Controllers.API
         /// Retrieves a list of "quick" recommended donation amounts for in-line giving 
         /// </summary>
         /// <returns>A list of donation amounts (int)</returns>
-        [Route("api/donations/predefinedamounts")]
+        [VersionedRoute(template: "donations/predefinedAmounts", minimumVersion: "1.0.0")]
+        [Route("donations/predefinedamounts")]
         [HttpGet]
         public IHttpActionResult GetPredefinedDonationAmounts()
         {
@@ -71,8 +73,10 @@ namespace crds_angular.Controllers.API
         /// <param name="limit">A limit of donations to return starting at the most resent - defaults to null, meaning return all available donations with no limit.</param>
         /// <param name="includeRecurring">Include recurring donations</param>
         /// <returns>A list of DonationDTOs</returns>
-        [Route("api/donations")]
-        [Route("api/donations/{donationYear:regex(\\d{4})?}")]
+        [VersionedRoute(template: "donations", minimumVersion: "1.0.0")]
+        [Route("donations")]
+        [VersionedRoute(template: "donations/{donationYear:regex(\\d{4})?}", minimumVersion: "1.0.0")]
+        [Route("donations/{donationYear:regex(\\d{4})?}")]
         [HttpGet]
         [RequiresAuthorization]
         public IHttpActionResult GetDonations(string donationYear = null,
@@ -111,7 +115,8 @@ namespace crds_angular.Controllers.API
         /// </summary>
         /// <param name="impersonateDonorId">An optional donorId of a donor to impersonate</param>
         /// <returns>A list of years (string)</returns>
-        [Route("api/donations/years")]
+        [VersionedRoute(template: "donations/years", minimumVersion: "1.0.0")]
+        [Route("donations/years")]
         [HttpGet]
         public IHttpActionResult GetDonationYears([FromUri(Name = "impersonateDonorId")] int? impersonateDonorId = null)
         {
@@ -139,7 +144,8 @@ namespace crds_angular.Controllers.API
         }
 
         [ResponseType(typeof (DonationDTO))]
-        [Route("api/donation")]
+        [VersionedRoute(template: "donation", minimumVersion: "1.0.0")]
+        [Route("donation")]
         public IHttpActionResult Post([FromBody] CreateDonationDTO dto)
         {
             return (Authorized(token =>
@@ -147,7 +153,8 @@ namespace crds_angular.Controllers.API
                                () => CreateDonationAndDistributionUnauthenticated(dto)));
         }
 
-        [Route("api/donation/message")]
+        [VersionedRoute(template: "donation/message", minimumVersion: "1.0.0")]
+        [Route("donation/message")]
         public IHttpActionResult SendMessageToDonor([FromBody] MessageToDonorDTO dto)
         {
             return (Authorized(token =>
@@ -159,7 +166,8 @@ namespace crds_angular.Controllers.API
         }
 
         [RequiresAuthorization]
-        [Route("api/gpexport/file/{selectionId}/{depositId}")]
+        [VersionedRoute(template: "gpExport/file/{selectionId}/{depositId}", minimumVersion: "1.0.0")]
+        [Route("gpexport/file/{selectionId}/{depositId}")]
         [HttpGet]
         public IHttpActionResult GetGPExportFile(int selectionId, int depositId)
         {
@@ -182,7 +190,8 @@ namespace crds_angular.Controllers.API
         }
 
         [ResponseType(typeof (List<DepositDTO>))]
-        [Route("api/gpexport/filenames/{selectionId}")]
+        [VersionedRoute(template: "gpExport/filenames/{selectionId}", minimumVersion: "1.0.0")]
+        [Route("gpexport/filenames/{selectionId}")]
         [HttpGet]
         public IHttpActionResult GetGPExportFileNames(int selectionId)
         {
