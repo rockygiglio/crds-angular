@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using crds_angular.Models.Crossroads.Attribute;
 using crds_angular.Models.Crossroads.Profile;
 using crds_angular.Services.Interfaces;
@@ -88,6 +89,11 @@ namespace crds_angular.Services
                 }
 
                 var objectAttributeType = attributeTypesDictionary[mpObjectAttribute.AttributeTypeId];
+
+                if (!objectAttributeType.Attributes.Exists(x => x.AttributeId == mpObjectAttribute.AttributeId))
+                {
+                    continue;
+                }
                 var objectAttribute = objectAttributeType.Attributes.First(x => x.AttributeId == mpObjectAttribute.AttributeId);
                 objectAttribute.StartDate = mpObjectAttribute.StartDate;
                 objectAttribute.EndDate = mpObjectAttribute.EndDate;
