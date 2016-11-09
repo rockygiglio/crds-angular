@@ -19,7 +19,8 @@ function getCampMedical(CampsService, $stateParams) {
 
 function getCampProductInfo(CampsService, $stateParams) {
   const campId = $stateParams.campId;
-  return CampsService.getCampProductInfo(campId);
+  const camperId = $stateParams.contactId;
+  return CampsService.getCampProductInfo(campId, camperId);
 }
 
 export default function CampRoutes($stateProvider) {

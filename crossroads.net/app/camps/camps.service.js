@@ -19,7 +19,7 @@ class CampsService {
     // eslint-disable-next-line prefer-template
     this.campWaiversResource = $resource(__API_ENDPOINT__ + 'api/camps/:campId/waivers/:contactId', { campId: '@campId', contactId: '@contactId' });
     // eslint-disable-next-line prefer-template
-    this.productSummaryResource = $resource(__API_ENDPOINT__ + 'api/camps/:campId/product', { campId: '@campId' });
+    this.productSummaryResource = $resource(__API_ENDPOINT__ + 'api/camps/:campId/product/:camperId', { campId: '@campId', camperId: '@camperId' });
 
     this.campInfo = {};
     this.camperInfo = {};
@@ -87,8 +87,8 @@ class CampsService {
     }).$promise;
   }
 
-  getCampProductInfo(campId) {
-    return this.productSummaryResource.get({ campId }, (productInfo) => {
+  getCampProductInfo(campId, camperId) {
+    return this.productSummaryResource.get({ campId, camperId }, (productInfo) => {
       this.productInfo = productInfo;
     },
 

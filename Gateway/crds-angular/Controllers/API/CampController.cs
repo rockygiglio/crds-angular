@@ -83,15 +83,15 @@ namespace crds_angular.Controllers.API
         }
 
         [ResponseType(typeof(ProductDTO))]
-        [Route("camps/{eventid}/product")]
+        [Route("camps/{eventid}/product/{contactid}")]
         [AcceptVerbs("GET")]
-        public IHttpActionResult GetCampProductDetails(int eventId)
+        public IHttpActionResult GetCampProductDetails(int eventId, int contactId)
         {
             return Authorized(token =>
             {
                 try
                 {
-                    var campProductInfo = _campService.GetCampProductDetails(eventId, token);
+                    var campProductInfo = _campService.GetCampProductDetails(eventId, contactId, token);
                     return Ok(campProductInfo);
                 }
                 catch (Exception exception)
