@@ -12,11 +12,8 @@ class CampCardController {
     this.state = $state;
   }
 
-  cancel() {
-    this.state.go('camps-dashboard');
-  }
-
-  submit() {
+    pressMe() {
+    //build
     this.state.go('camps-dashboard');
   }
 

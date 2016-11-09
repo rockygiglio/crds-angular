@@ -16,7 +16,7 @@ class MedicalInfoController {
     this.fields = this.medicalInfoForm.getFields();
   }
 
-  bob() {
+  cancel() {
     this.state.go('camps-dashboard');
   }
 
