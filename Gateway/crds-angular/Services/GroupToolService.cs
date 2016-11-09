@@ -42,7 +42,7 @@ namespace crds_angular.Services
         private readonly int _addressMatrixSearchDepth;
         private readonly int _groupRequestToJoinEmailTemplate;
         private readonly int _groupRequestPendingReminderEmailTemplateId;
-        private readonly int _attributeCategoryGroupCategory;
+        private readonly int _attributeTypeGroupCategory;
 
         private const string GroupToolRemoveParticipantEmailTemplateTextTitle = "groupToolRemoveParticipantEmailTemplateText";
         private const string GroupToolRemoveParticipantSubjectTemplateText = "groupToolRemoveParticipantSubjectTemplateText";
@@ -86,7 +86,7 @@ namespace crds_angular.Services
             _groupRoleLeaderId = configurationWrapper.GetConfigIntValue("GroupRoleLeader");
             _defaultGroupRoleId = configurationWrapper.GetConfigIntValue("Group_Role_Default_ID");
             _groupRequestPendingReminderEmailTemplateId = configurationWrapper.GetConfigIntValue("GroupRequestPendingReminderEmailTemplateId");
-            _attributeCategoryGroupCategory = configurationWrapper.GetConfigIntValue("GroupCategoryAttributeTypeId");
+            _attributeTypeGroupCategory = configurationWrapper.GetConfigIntValue("GroupCategoryAttributeTypeId");
 
             _removeParticipantFromGroupEmailTemplateId = configurationWrapper.GetConfigIntValue("RemoveParticipantFromGroupEmailTemplateId");
 
@@ -740,7 +740,7 @@ namespace crds_angular.Services
 
         public List<AttributeCategoryDTO> GetGroupCategories()
         {
-            List<AttributeCategoryDTO> cats = _attributeService.GetAttributeCategory(_attributeCategoryGroupCategory);
+            List<AttributeCategoryDTO> cats = _attributeService.GetAttributeCategory(_attributeTypeGroupCategory);
             
             foreach (AttributeCategoryDTO cat in cats)
             {
@@ -749,6 +749,9 @@ namespace crds_angular.Services
                     cat.Attribute = _attributeService.GetOneAttributeByCategoryId(cat.CategoryId);
                 }
             }
+
+            //do not return any categories where it requires an active attribute but there are no active attributes
+            cats.RemoveAll(cat => cat.RequiresActiveAttribute && cat.Attribute == null );
 
             return cats;
         }

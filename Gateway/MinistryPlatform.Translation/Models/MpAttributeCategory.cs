@@ -1,8 +1,13 @@
+using MinistryPlatform.Translation.Models.Attributes;
+using Newtonsoft.Json;
+
 namespace MinistryPlatform.Translation.Models
 {
+
+    [MpRestApiTable(Name = "Attribute_Categories")]
     public class MpAttributeCategory
     {
-        public int CategoryID { get; set; }
+        public int Attribute_Category_ID { get; set; }
         public MpAttribute Attribute { get; set; }
         public string Description { get; set; }
         public string Example_Text { get; set; }

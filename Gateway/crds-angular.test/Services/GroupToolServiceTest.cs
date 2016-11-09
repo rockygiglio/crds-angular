@@ -456,7 +456,7 @@ namespace crds_angular.test.Services
         [Test]
         public void TestGetGroupCategories()
         {
-            var cats =  new List<AttributeCategoryDTO>()
+            var cats = new List<AttributeCategoryDTO>()
             {
                 new AttributeCategoryDTO()
                 {
@@ -508,7 +508,7 @@ namespace crds_angular.test.Services
                 }
             };
 
-            var attribute = new ObjectAttributeDTO()
+            var attribute = new AttributeDTO()
             {
                 AttributeId = 1,
                 Name = "I am _______",
@@ -522,6 +522,75 @@ namespace crds_angular.test.Services
 
             Assert.AreEqual(returnedCats.First(c => c.CategoryId == 1).Attribute.AttributeId, attribute.AttributeId);
             Assert.IsTrue(returnedCats.Count(c => c.Attribute == null) == 5);
+            _attributeService.VerifyAll();
+        }
+
+        [Test]
+        public void TestGetGroupCategoriesNoActiveAttribute()
+        {
+            var cats = new List<AttributeCategoryDTO>()
+            {
+                new AttributeCategoryDTO()
+                {
+                    CategoryId= 1,
+                    AttributeCategory= "Journey",
+                    Description= "The current Journey",
+                    ExampleText= "Journey Group",
+                    RequiresActiveAttribute= true
+                },
+                new AttributeCategoryDTO()
+                {
+                    CategoryId= 2,
+                    AttributeCategory= "Interest",
+                    Description= "desc",
+                    ExampleText= "Ex. Boxing, XBox",
+                    RequiresActiveAttribute= false
+                },
+                new AttributeCategoryDTO()
+                {
+                    CategoryId= 3,
+                    AttributeCategory= "Neighborhoods",
+                    Description= "desc",
+                    ExampleText= "Ex. Boxing, XBox",
+                    RequiresActiveAttribute= false
+                },
+                new AttributeCategoryDTO()
+                {
+                    CategoryId= 4,
+                    AttributeCategory= "Spiritual growth",
+                    Description= "desc",
+                    ExampleText= "Ex. Boxing, XBox",
+                    RequiresActiveAttribute= false
+                },
+                new AttributeCategoryDTO()
+                {
+                    CategoryId= 5,
+                    AttributeCategory= "Life Stages",
+                    Description= "desc",
+                    ExampleText= "Ex. Boxing, XBox",
+                    RequiresActiveAttribute= false
+                },
+                new AttributeCategoryDTO()
+                {
+                    CategoryId= 6,
+                    AttributeCategory= "Healing",
+                    Description= "desc",
+                    ExampleText= "Ex. Boxing, XBox",
+                    RequiresActiveAttribute= false
+                }
+            };
+
+            AttributeDTO attribute = null;
+
+            _attributeService.Setup(mocked => mocked.GetAttributeCategory(It.Is<int>(id => id.Equals(AttributeCategoryGroupCategory)))).Returns(cats);
+            _attributeService.Setup(mocked => mocked.GetOneAttributeByCategoryId(It.Is<int>(id => id.Equals(1)))).Returns(attribute);
+
+
+            List<AttributeCategoryDTO> returnedCats = _fixture.GetGroupCategories();
+            
+            Assert.IsNull(returnedCats.First(c => c.CategoryId == 2).Attribute);
+            Assert.IsTrue(returnedCats.Count(c => c.Attribute == null) == 5);
+            Assert.IsTrue(returnedCats.Count() == 5);
             _attributeService.VerifyAll();
         }
 

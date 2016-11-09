@@ -14,7 +14,7 @@ namespace crds_angular.Models.Crossroads
         public int CategoryId { get; set; }
 
         [JsonProperty(PropertyName = "attribute")]
-        public ObjectAttributeDTO Attribute { get; set; }
+        public AttributeDTO Attribute { get; set; }
 
         [JsonProperty(PropertyName = "desc")]
         public string Description { get; set; }

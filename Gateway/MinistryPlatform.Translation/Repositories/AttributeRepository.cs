@@ -14,11 +14,19 @@ namespace MinistryPlatform.Translation.Repositories
         private readonly IMinistryPlatformService _ministryPlatformService;
         private readonly int _attributesByTypePageViewId = Convert.ToInt32(AppSettings("AttributesPageView"));
         private readonly int _attributesPageId = Convert.ToInt32(AppSettings("Attributes"));
+        private readonly IApiUserRepository _apiUserService;
+        private readonly IMinistryPlatformRestRepository _ministryPlatformRest;
 
-        public AttributeRepository(IMinistryPlatformService ministryPlatformService, IAuthenticationRepository authenticationService, IConfigurationWrapper configurationWrapper)
+        public AttributeRepository(IMinistryPlatformService ministryPlatformService,
+                                   IAuthenticationRepository authenticationService,
+                                   IConfigurationWrapper configurationWrapper,
+                                   IApiUserRepository apiUserService,
+                                   IMinistryPlatformRestRepository ministryPlatformRest)
             : base(authenticationService, configurationWrapper)
         {
             _ministryPlatformService = ministryPlatformService;
+            _ministryPlatformRest = ministryPlatformRest;
+            _apiUserService = apiUserService;
         }
         
         public List<MpAttribute> GetAttributes(int? attributeTypeId)
@@ -52,70 +60,28 @@ namespace MinistryPlatform.Translation.Repositories
             return _ministryPlatformService.CreateRecord(_attributesPageId, values, token, true);
         }
 
-        public List<MpAttributeCategory> GetAttributeCategory(int attributeCategoryId)
+        public List<MpAttributeCategory> GetAttributeCategory(int attributeTypeId)
         {
-            return new List<MpAttributeCategory>()
-                {
-                    new MpAttributeCategory()
-                    {
-                        CategoryID= 1,
-                        Attribute_Category= "Journey",
-                        Description= "The current Journey",
-                        Example_Text= "Journey Group",
-                        Requires_Active_Attribute= true
-                    },
-                    new MpAttributeCategory()
-                    {
-                        CategoryID= 2,
-                        Attribute_Category= "Interest",
-                        Description= "desc",
-                        Example_Text= "Ex. Boxing, XBox",
-                        Requires_Active_Attribute= false
-                    },
-                    new MpAttributeCategory()
-                    {
-                        CategoryID= 3,
-                        Attribute_Category= "Neighborhoods",
-                        Description= "desc",
-                        Example_Text= "Ex. Boxing, XBox",
-                        Requires_Active_Attribute= false
-                    },
-                    new MpAttributeCategory()
-                    {
-                        CategoryID= 4,
-                        Attribute_Category= "Spiritual growth",
-                        Description= "desc",
-                        Example_Text= "Ex. Boxing, XBox",
-                        Requires_Active_Attribute= false
-                    },
-                    new MpAttributeCategory()
-                    {
-                        CategoryID= 5,
-                        Attribute_Category= "Life Stages",
-                        Description= "desc",
-                        Example_Text= "Ex. Boxing, XBox",
-                        Requires_Active_Attribute= false
-                    },
-                    new MpAttributeCategory()
-                    {
-                        CategoryID= 6,
-                        Attribute_Category= "Healing",
-                        Description= "desc",
-                        Example_Text= "Ex. Boxing, XBox",
-                        Requires_Active_Attribute= false
-                    }
-                };
+            //Get all categories
+
+            //cat cols haha
+            string catCols = "Attribute_Category_ID_table.*";
+            string catSearch = $"attribute_type_id = {attributeTypeId}";
+
+            return _ministryPlatformRest.UsingAuthenticationToken(_apiUserService.GetToken()).Search<MpAttribute, MpAttributeCategory>(catSearch, catCols, null, true);
         }
 
-        public MpObjectAttribute GetOneAttributeByCategoryId(int categoryId)
+        public MpAttribute GetOneAttributeByCategoryId(int categoryId)
         {
-            return new MpObjectAttribute()
-            {
-                AttributeId = 1,
-                Name = "I am _______",
-            };
-        }
+            //return distinct attributes of type categoryId
+            //that is active based on today and start and end date
+            // this must be able to return null if there are none
+            string atSearch = $"attribute_category_id = {categoryId}";
 
+            var ret = _ministryPlatformRest.UsingAuthenticationToken(_apiUserService.GetToken()).Search<MpAttribute>(atSearch, (string)null, (string)null, true);
+            return ret.FirstOrDefault();
+
+        }
 
         private MpAttribute MapMpAttribute(Dictionary<string, object> record)
         {

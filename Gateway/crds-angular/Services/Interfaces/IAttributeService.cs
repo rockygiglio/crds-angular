@@ -10,7 +10,7 @@ namespace crds_angular.Services.Interfaces
         List<AttributeTypeDTO> GetAttributeTypes(int? attributeTypeId);
         AttributeDTO ConvertAttributeToAttributeDto(MpAttribute attribute);
         List<MpAttribute> CreateMissingAttributes(List<MpAttribute> attributes, int attributeType);
-        List<AttributeCategoryDTO> GetAttributeCategory(int attributeCategory);
-        ObjectAttributeDTO GetOneAttributeByCategoryId(int categoryId);
+        List<AttributeCategoryDTO> GetAttributeCategory(int attributeTypeId);
+        AttributeDTO GetOneAttributeByCategoryId(int categoryId);
     }
 }

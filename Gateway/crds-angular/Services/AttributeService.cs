@@ -103,19 +103,18 @@ namespace crds_angular.Services
             return attributes;
         }
 
-        public List<AttributeCategoryDTO> GetAttributeCategory(int attributeCategory)
+        public List<AttributeCategoryDTO> GetAttributeCategory(int attributeTypeId)
         {
-            List<MpAttributeCategory> mpCats = _attributeRepository.GetAttributeCategory(attributeCategory);
+            List<MpAttributeCategory> mpCats = _attributeRepository.GetAttributeCategory(attributeTypeId);
 
             return Mapper.Map<List<AttributeCategoryDTO>>(mpCats);
-            
         }
 
-        public ObjectAttributeDTO GetOneAttributeByCategoryId(int categoryId)
+        public AttributeDTO GetOneAttributeByCategoryId(int categoryId)
         {
-            MpObjectAttribute mpCat = _attributeRepository.GetOneAttributeByCategoryId(categoryId);
+            MpAttribute mpCat = _attributeRepository.GetOneAttributeByCategoryId(categoryId);
 
-            return Mapper.Map<ObjectAttributeDTO>(mpCat);
+            return Mapper.Map<AttributeDTO>(mpCat);
         }
     }
 }
