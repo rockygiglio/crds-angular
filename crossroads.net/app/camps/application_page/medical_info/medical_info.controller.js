@@ -7,7 +7,7 @@ class MedicalInfoController {
     this.viewReady = false;
     this.submitting = false;
     this.update = true;
-    this.cancel = cancel();
+    //this.cancel = cancel();
   }
 
   $onInit() {
@@ -16,7 +16,7 @@ class MedicalInfoController {
     this.fields = this.medicalInfoForm.getFields();
   }
 
-  cancel() {
+  bob() {
     this.state.go('camps-dashboard');
   }
 
@@ -25,14 +25,14 @@ class MedicalInfoController {
     if (this.medicalInfo.$valid) {
       this.medicalInfoForm.save(this.stateParams.contactId).then(() => {
         this.rootScope.$emit('notify', this.rootScope.MESSAGES.successfulSubmission);
-      }).catch(() => {
-        this.rootScope.$emit('notify', this.rootScope.MESSAGES.generalError);
-      }).finally(() => {
-        this.submitting = false;
         if (this.update) {
           // navigae back to mycamps page
           this.state.go('camps-dashboard');
         }
+      }).catch(() => {
+        this.rootScope.$emit('notify', this.rootScope.MESSAGES.generalError);
+      }).finally(() => {
+        this.submitting = false;
       });
     } else {
       this.submitting = false;

@@ -16,6 +16,10 @@ class CampCardController {
     this.state.go('camps-dashboard');
   }
 
+  submit() {
+    this.state.go('camps-dashboard');
+  }
+
   formatDate() {
     let startDateMoment = moment(this.startDate);
     let endDateMoment = moment(this.endDate);
