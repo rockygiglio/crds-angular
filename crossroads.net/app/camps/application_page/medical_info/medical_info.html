@@ -11,8 +11,10 @@
               <formly-form model="$ctrl.model" fields="$ctrl.fields" options="$ctrl.options" form="$ctrl.medicalInfo">
               </formly-form>
             </fieldset>
-            <button type="submit"class="btn btn-primary pull-right" ng-if="!$ctrl.submitting"> Submit </button>
-            <button type="submit"class="btn btn-primary pull-right disabled" disabled ng-if="$ctrl.submitting"> Submitting... </button>
+            <button>
+              <a ui-sref="campsignup.application({page: 'product', camperId: $ctrl.model.contactId})" ng-if="!$ctrl.submitting" class="table-btn btn-standard">Next</a>
+              <a ui-sref="campsignup.camper({page: 'product', camperId: $ctrl.model.contactId})" ng-if="!$ctrl.submitting" class="table-btn btn-standard disabled">Next</a>
+            </button>
           </form>
         </div>
       </div>
