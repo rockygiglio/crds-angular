@@ -6,8 +6,8 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
 {
     public interface IMedicalInformationRepository
     {
-        List<MpMedicalAllergy> GetMedicalAllergyInfo(int contactId);
-        int SaveMedicalInfo(MpMedicalInformation mpMedicalInfo, int contactId);
-        void UpdateOrCreateMedAllergy(int medicalInformationId, List<MpMedicalAllergy> updateToAllergyList, List<MpMedicalAllergy> createToAllergyList );
+        List<MpMedical> GetMedicalAllergyInfo(int contactId);
+        MpMedicalInformation SaveMedicalInfo(MpMedicalInformation mpMedicalInfo, int contactId);
+        void UpdateOrCreateMedAllergy(List<MpMedicalAllergy> updateToAllergyList, List<MpMedicalAllergy> createToAllergyList );
     }
 }

@@ -6,12 +6,16 @@ class MedicalInfoForm {
     this.allergies = [];
     this.medicineAllergyId = undefined;
     this.medicineMedAllergyId = undefined;
+    this.medicineAllergyTypeId = undefined;
     this.foodAllergyId = undefined;
     this.foodMedAllergyId = undefined;
+    this.foodAllergyTypeId = undefined;
     this.environmentalAllergyId = undefined;
     this.environmentalMedAllergyId = undefined;
+    this.environmentAllergyTypeId = undefined;
     this.otherAllergyId = undefined;
     this.otherMedAllergyId = undefined;
+    this.otherAllergyTypeId = undefined;
     this.formModel = {
       contactId: this.campsService.campMedical.contactId || undefined,
       insuranceCompany: this.campsService.campMedical.insuranceCompany || undefined,
@@ -44,22 +48,26 @@ class MedicalInfoForm {
         { allergyType: 'Medicine',
           allergyId: this.medicineAllergyId,
           allergyDescription: this.formModel.medicineAllergies,
-          medicalInformationAllergyId: this.medicineMedAllergyId
+          medicalInformationAllergyId: this.medicineMedAllergyId,
+          allergyTypeId: this.medicineAllergyTypeId
         },
         { allergyType: 'Food',
           allergyId: this.foodAllergyId,
           allergyDescription: this.formModel.foodAllergies,
-          medicalInformationAllergyId: this.foodMedAllergyId
+          medicalInformationAllergyId: this.foodMedAllergyId,
+          allergyTypeId: this.foodAllergyTypeId
         },
         { allergyType: 'Environmental',
           allergyId: this.environmentalAllergyId,
           allergyDescription: this.formModel.environmentalAllergies,
-          medicalInformationAllergyId: this.environmentalMedAllergyId
+          medicalInformationAllergyId: this.environmentalMedAllergyId,
+          allergyTypeId: this.environmentAllergyTypeId
         },
         { allergyType: 'Other',
           allergyId: this.otherAllergyId,
           allergyDescription: this.formModel.otherAllergies,
-          medicalInformationAllergyId: this.otherMedAllergyId
+          medicalInformationAllergyId: this.otherMedAllergyId,
+          allergyTypeId: this.otherAllergyTypeId
         }]
     };
     return dto;
@@ -71,6 +79,7 @@ class MedicalInfoForm {
     if (this.medicineAllergies !== undefined) {
       this.medicineAllergyId = this.medicineAllergies.allergyId;
       this.medicineMedAllergyId = this.medicineAllergies.medicalInformationAllergyId;
+      this.medicineAllergyTypeId = this.medicineAllergies.allergyTypeId;
       return this.medicineAllergies.allergyDescription;
     }
 
@@ -83,6 +92,7 @@ class MedicalInfoForm {
     if (this.foodAllergies !== undefined) {
       this.foodAllergyId = this.foodAllergies.allergyId;
       this.foodMedAllergyId = this.foodAllergies.medicalInformationAllergyId;
+      this.foodAllergyTypeId = this.foodAllergies.allergyTypeId;
       return this.foodAllergies.allergyDescription;
     }
 
@@ -95,6 +105,7 @@ class MedicalInfoForm {
     if (this.environmentalAllergies !== undefined) {
       this.environmentalAllergyId = this.environmentalAllergies.allergyId;
       this.environmentalMedAllergyId = this.environmentalAllergies.medicalInformationAllergyId;
+      this.environmentAllergyTypeId = this.environmentalAllergies.allergyTypeId;
       return this.environmentalAllergies.allergyDescription;
     }
 
@@ -107,6 +118,7 @@ class MedicalInfoForm {
     if (this.otherAllergies !== undefined) {
       this.otherAllergyId = this.otherAllergies.allergyId;
       this.otherMedAllergyId = this.otherAllergies.medicalInformationAllergyId;
+      this.otherAllergyTypeId = this.otherAllergies.allergyTypeId;
       return this.otherAllergies.allergyDescription;
     }
 

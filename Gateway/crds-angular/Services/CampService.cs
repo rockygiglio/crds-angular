@@ -344,7 +344,7 @@ namespace crds_angular.Services
                     PhysicianPhone = medicalInfo.PhysicianPhone ?? "N/A",
                     PolicyHolder = medicalInfo.PolicyHolder ?? "N/A"
                 };
-                var medicalInformationId =  _medicalInformationRepository.SaveMedicalInfo(mpMedicalInfo, contactId);
+                var medicalInformation =  _medicalInformationRepository.SaveMedicalInfo(mpMedicalInfo, contactId);
                 var updateToAllergyList = new List<MpMedicalAllergy>();
                 var createToAllergyList = new List<MpMedicalAllergy>();
                 foreach (var allergy in medicalInfo.Allergies)
@@ -353,28 +353,36 @@ namespace crds_angular.Services
                     {
                         updateToAllergyList.Add(new MpMedicalAllergy
                         {
-                            AllergyId = allergy.AllergyId,
-                            AllergyType = allergy.AllergyType,
-                            AllergyDescription = allergy.AllergyDescription,
-                            MedicalInformationId = medicalInformationId,
-                            MedicalInfoAllergyId = allergy.MedicalInformationAllergyId,
-                            InsuranceCompany = medicalInfo.InsuranceCompany ?? "N/A",
-                            PhysicianName = medicalInfo.PhysicianName ?? "N/A",
-                            PhysicianPhone = medicalInfo.PhysicianPhone ?? "N/A",
-                            PolicyHolderName = medicalInfo.PolicyHolder ?? "N/A"
+                            Allergy = new MpAllergy { 
+                                AllergyID = allergy.AllergyId,
+                                AllergyType = new MpAllergyType {
+                                    AllergyType = allergy.AllergyType,
+                                    AllergyTypeID = allergy.AllergyTypeId
+                                },
+                                AllergyDescription = allergy.AllergyDescription
+                            },
+                            MedicalInformationId = medicalInformation.MedicalInformationId,
+                            MedicalInfoAllergyId = allergy.MedicalInformationAllergyId
                         });
                     }
                     else if (!string.IsNullOrEmpty(allergy.AllergyDescription))
                     {
                         createToAllergyList.Add(new MpMedicalAllergy
                         {
-                            AllergyType = allergy.AllergyType,
-                            AllergyDescription = allergy.AllergyDescription,
-                            MedicalInformationId = medicalInformationId,
+                            Allergy = new MpAllergy
+                            {
+                                AllergyType = new MpAllergyType {
+                                    AllergyType = allergy.AllergyType,
+                                    AllergyTypeID = allergy.AllergyTypeId
+                                },
+                                AllergyDescription = allergy.AllergyDescription
+                            },
+                            MedicalInformationId = medicalInformation.MedicalInformationId,
+                            MedicalInfoAllergyId = allergy.MedicalInformationAllergyId
                         });
                     }
                 }
-                _medicalInformationRepository.UpdateOrCreateMedAllergy(medicalInformationId, updateToAllergyList, createToAllergyList);
+                _medicalInformationRepository.UpdateOrCreateMedAllergy(updateToAllergyList, createToAllergyList);
             }           
         }
 
@@ -409,12 +417,12 @@ namespace crds_angular.Services
                         MedicalInformationAllergyId = medInfo.MedicalInfoAllergyId,
                         AllergyDescription = medInfo.AllergyDescription,
                         AllergyType = medInfo.AllergyType,
+                        AllergyTypeId = medInfo.AllergyTypeId,
                         AllergyId = medInfo.AllergyId
-                    };                   
+                    };
                     camperMedInfo.Allergies.Add(allergy);
-                }
-            }
-             
+                }                    
+            }             
             if (camperMedInfo.Allergies.Count > 0) { camperMedInfo.ShowAllergies = true; }
             return camperMedInfo;
         }

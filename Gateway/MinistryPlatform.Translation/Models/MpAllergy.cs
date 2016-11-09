@@ -10,12 +10,19 @@ namespace MinistryPlatform.Translation.Models
         public int AllergyID { get; set; }
 
         [JsonProperty(PropertyName = "Allergy_Type_ID")]
+        public MpAllergyType AllergyType { get; set; }
+
+        [JsonProperty(PropertyName = "Description")]
+        public string AllergyDescription { get; set; }
+    }
+
+    [MpRestApiTable(Name = "cr_Allergy_Types")]
+    public class MpAllergyType
+    {
+        [JsonProperty(PropertyName = "Allergy_Type_ID")]
         public int AllergyTypeID { get; set; }
 
         [JsonProperty(PropertyName = "Allergy_Type")]
         public string AllergyType { get; set; }
-
-        [JsonProperty(PropertyName = "Description")]
-        public string AllergyDescription { get; set; }
     }
 }
