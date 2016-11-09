@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using crds_angular.Models.Crossroads.Attribute;
 using crds_angular.Models.Crossroads.Profile;
 using crds_angular.Services.Interfaces;
@@ -76,7 +75,7 @@ namespace crds_angular.Services
                     Selected = false,
                     Category = mpAttribute.Category,
                     CategoryDescription = mpAttribute.CategoryDescription,
-                    EndDate = mpAttribute.EndDate ?? null
+                    EndDate = mpAttribute.EndDate
                 };
 
                 attributeTypesDictionary[mpAttribute.AttributeTypeId].Attributes.Add(objectAttribute);
@@ -91,6 +90,7 @@ namespace crds_angular.Services
 
                 var objectAttributeType = attributeTypesDictionary[mpObjectAttribute.AttributeTypeId];
 
+                // Is the attribute ID in the collection
                 if (!objectAttributeType.Attributes.Exists(x => x.AttributeId == mpObjectAttribute.AttributeId))
                 {
                     continue;
