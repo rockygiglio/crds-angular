@@ -79,16 +79,16 @@ namespace crds_angular.Services
             return campEventInfo;
         }
 
-        public ProductDTO GetCampProductDetails(int eventId, string token)
+        public ProductDTO GetCampProductDetails(int eventId, int camperContactId, string token)
         {
             var formId = _configurationWrapper.GetConfigIntValue("SummerCampFormID");
             var formFieldId = _configurationWrapper.GetConfigIntValue("SummerCampForm.FinancialAssistance");
-            var myContact = _contactRepository.GetMyProfile(token);
-
+            
             var campEvent = _eventRepository.GetEvent(eventId);
             var eventProduct = _productRepository.GetProductForEvent(eventId);
             var eventProductOptionPrices = _productRepository.GetProductOptionPricesForProduct(eventProduct.ProductId);
-            var financialAssistance = Convert.ToBoolean(_formSubmissionRepository.GetFormResponseAnswer(formId, myContact.Contact_ID, formFieldId));
+            var answer = _formSubmissionRepository.GetFormResponseAnswer(formId, camperContactId, formFieldId);
+            var financialAssistance = (string.IsNullOrEmpty(answer) ? false : Convert.ToBoolean(answer));
 
             var campProductInfo = new ProductDTO
             {
