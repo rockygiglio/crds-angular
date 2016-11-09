@@ -149,26 +149,21 @@ namespace MinistryPlatform.Translation.Test.Services
         {
             //Arrange
             const int eventId = 999;
-            const string pageKey = "EventsWithDetail";
-            var mockEventDictionary = new List<Dictionary<string, object>>
-            {
-                new Dictionary<string, object>
-                {
-                    {"Event_ID", 999},
-                    {"Event_Title", "event-title-100"},
-                    {"Event_Type", "event-type-100"},
-                    {"Event_Start_Date", new DateTime(2015, 3, 28, 8, 30, 0)},
-                    {"Event_End_Date", new DateTime(2015, 3, 28, 8, 30, 0)},
-                    {"Contact_ID", 12345},
-                    {"Email_Address", "thecinnamonbagel@react.js"},
-                    {"Parent_Event_ID", 6543219},
-                    {"Congregation_ID", It.IsAny<int>()},
-                    {"Reminder_Days_Prior_ID", 2},
-                    {"Cancelled", false}
-                }
+            var mpevent = new MpEvent {EventId = 999,
+                                       EventTitle = "event-title-100",
+                                       EventType = "event-type-100",
+                                       EventStartDate = new DateTime(2015, 3, 28, 8, 30, 0),
+                                       EventEndDate = new DateTime(2015, 3, 28, 8, 30, 0),
+                                       PrimaryContact = new MpContact{ContactId = 12345, EmailAddress = "thecinnamonbagel@react.js" },
+                                       ParentEventId = 6543219,
+                                       CongregationId = 2,
+                                       ReminderDaysPriorId = 2,
+                                       Cancelled = false
             };
-            var searchString = eventId + ",";
-            _ministryPlatformService.Setup(m => m.GetPageViewRecords(pageKey, It.IsAny<string>(), searchString, string.Empty, 0)).Returns(mockEventDictionary);
+
+            _ministryPlatformRestService.Setup(m => m.UsingAuthenticationToken(It.IsAny<string>())).Returns(_ministryPlatformRestService.Object);
+            _ministryPlatformRestService.Setup(m => m.Get<MpEvent>(eventId, null)).Returns(mpevent);
+            _ministryPlatformRestService.Setup(m => m.Get<MpContact>(It.IsAny<int>(), null)).Returns(new MpContact {ContactId = 12345, EmailAddress = "thecinnamonbagel@react.js"});
 
             //Act
             var theEvent = _fixture.GetEvent(eventId);

@@ -45,14 +45,19 @@ namespace MinistryPlatform.Translation.Models
 
         public MpContact PrimaryContact { get; set; }
 
+        [JsonProperty(PropertyName = "Primary_Contact")]
+        public int PrimaryContactId { get; set; }
         public IList<int> Participants
         {
             get { return (participants); }
         }
-
+        [JsonProperty(PropertyName = "Congregation_ID")]
         public int CongregationId { get; set; }
+        [JsonProperty(PropertyName = "Reminder_Days_Prior_ID")]
         public int ReminderDaysPriorId { get; set; }
-        public bool Template { get; set; }
+        [JsonProperty(PropertyName = "Template")]
+        public bool? Template { get; set; }
+        [JsonProperty(PropertyName = "Cancelled")]
         public bool Cancelled { get; set; }
     }
 }

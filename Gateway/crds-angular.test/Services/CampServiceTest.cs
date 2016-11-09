@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using crds_angular.Models.Crossroads.Camp;
-using crds_angular.Models.Crossroads.Groups;
+
 using crds_angular.Services;
 using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.FunctionalHelpers;
@@ -12,6 +12,7 @@ using MinistryPlatform.Translation.Repositories.Interfaces;
 using Moq;
 using NUnit.Framework;
 using MinistryPlatform.Translation.Models.MinistryPlatform.Translation.Models;
+using MinistryPlatform.Translation.Models.Product;
 
 namespace crds_angular.test.Services
 {
@@ -30,6 +31,8 @@ namespace crds_angular.test.Services
         private readonly Mock<IGroupRepository> _groupRepository;
         private readonly Mock<IEventParticipantRepository> _eventParticipantRepository;
         private readonly Mock<IMedicalInformationRepository> _medicalInformationRepository;
+        private readonly Mock<IProductRepository> _productRepository;
+        private readonly Mock<IInvoiceRepository> _invoiceRepository;
 
         public CampServiceTest()
         {
@@ -46,18 +49,21 @@ namespace crds_angular.test.Services
             _groupRepository = new Mock<IGroupRepository>();
             _eventParticipantRepository = new Mock<IEventParticipantRepository>();
             _medicalInformationRepository = new Mock<IMedicalInformationRepository>();
+            _productRepository = new Mock<IProductRepository>();
+            _invoiceRepository = new Mock<IInvoiceRepository>();
             _fixture = new CampService(_campService.Object, 
                                        _formSubmissionRepository.Object, 
                                        _configurationWrapper.Object, 
                                        _participantRepository.Object, 
                                        _eventRepository.Object, 
                                        _apiUserRepository.Object, 
-                                       _groupService.Object,
                                        _contactService.Object,
                                        _congregationRepository.Object,
                                        _groupRepository.Object,
                                        _eventParticipantRepository.Object,
-                                       _medicalInformationRepository.Object);
+                                       _medicalInformationRepository.Object,
+                                       _productRepository.Object,
+                                       _invoiceRepository.Object);
         }
 
         [Test]
@@ -498,6 +504,68 @@ namespace crds_angular.test.Services
             _groupRepository.VerifyAll();
         }
 
+        [Test]
+        public void ShouldGetProductInfo()
+        {
+            const int eventId = 1234;
+            const string token = "1aaaa";
+            var product = new MpProduct
+            {
+                ProductId = 111,
+                BasePrice = 1000,
+                DepositPrice = 200,
+                ProductName = "Hipster Beard Wax"
+            };
+
+            var mpevent = new MpEvent
+            {
+                EventId = 999,
+                EventTitle = "Hipster Beard Training",
+                EventType = "event-type-100",
+                EventStartDate = new DateTime(2017, 3, 28, 8, 30, 0),
+                EventEndDate = new DateTime(2017, 4, 28, 8, 30, 0),
+                PrimaryContact = new MpContact { ContactId = 12345, EmailAddress = "thedude@beautifulbeards.com" },
+                ParentEventId = 6543219,
+                CongregationId = 2,
+                ReminderDaysPriorId = 2,
+                RegistrationStartDate = new DateTime(2017, 1, 1, 8, 30, 0),
+                RegistrationEndDate = new DateTime(2017, 3, 15, 8, 30, 0),
+                Cancelled = false
+            };
+
+            var mpprodoption1 = new MpProductOptionPrice
+            {
+                ProductOptionPriceId = 1,
+                OptionTitle = "Option 1",
+                OptionPrice = 20,
+                DaysOutToHide = 90
+            };
+
+            var mpprodoption2 = new MpProductOptionPrice
+            {
+                ProductOptionPriceId = 1,
+                OptionTitle = "Option 1",
+                OptionPrice = 20,
+                DaysOutToHide = 90
+            };
+
+            var mpoptionlist = new List<MpProductOptionPrice>() {mpprodoption1, mpprodoption2};
+
+
+            _eventRepository.Setup(m => m.GetEvent(eventId)).Returns(mpevent);
+            _productRepository.Setup(m => m.GetProductForEvent(eventId)).Returns(product);
+            _productRepository.Setup(m => m.GetProductOptionPricesForProduct(product.ProductId)).Returns(mpoptionlist);
+            _formSubmissionRepository.Setup(m => m.GetFormResponseAnswer(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>())).Returns("true");
+
+
+
+            _contactService.Setup(m => m.GetMyProfile(token)).Returns(this.getFakeContact(1));
+
+
+            var result = _fixture.GetCampProductDetails(eventId, token);
+            Assert.IsTrue(result.Options.Count == 2);
+            Assert.IsTrue(result.ProductId == 111);
+        }
         private List<MpHouseholdMember> getFakeHouseholdMembers(MpMyContact me, bool isHead = true, string positionIfNotHead = null)
         {
             return new List<MpHouseholdMember>
