@@ -123,7 +123,10 @@ namespace crds_angular.Services
                 {
                     continue;
                 }
-
+                if (!mpAttributes.Exists(x => x.AttributeId == mpObjectAttribute.AttributeId))
+                {
+                    continue;
+                }
                 var mpAttribute = mpAttributes.First(x => x.AttributeId == mpObjectAttribute.AttributeId);
 
                 var attribute = _attributeService.ConvertAttributeToAttributeDto(mpAttribute);
