@@ -1,5 +1,6 @@
+/* eslint no-var: 0 */
 module.exports = {
-  get: () => {
+  get() {
     return {
       __CRDS_ENV__: JSON.stringify(process.env.CRDS_ENV || ''),
       __COOKIE_DOMAIN__: JSON.stringify(process.env.CRDS_COOKIE_DOMAIN || ''),
@@ -16,10 +17,14 @@ module.exports = {
       __STREAMSPOT_PLAYER_ID__: JSON.stringify(process.env.CRDS_STREAMSPOT_PLAYER_ID || '1adb55de')
     };
   },
-  getTest: () => {
-    const params = this.get();
+  getTest() {
+    var params = this.get();
+
+    /* eslint-disable no-underscore-dangle */
     params.__CRDS_ENV__ = JSON.stringify('');
     params.__COOKIE_DOMAIN__ = JSON.stringify('');
+    /* eslint-enable */
+
     return params;
   }
 };
