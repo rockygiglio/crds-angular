@@ -40,21 +40,13 @@ BEGIN
               , Event_Rooms srcToRes
               , Event_Rooms destFromRes
               , Event_Rooms destToRes
-              , Rooms srcFromRoom
-              , Rooms srcToRoom
-              , Rooms destFromRoom
-              , Rooms destToRoom
       WHERE  
               srcFromRes.Event_ID = @SourceEventId
-              AND srcFromRes.Room_ID = srcFromRoom.Room_ID
               AND srcToRes.Event_ID = @SourceEventId
-              AND srcToRes.Room_ID = srcToRoom.Room_ID
               AND destFromRes.Event_ID = @DestinationEventId
-              AND destFromRes.Room_ID = destFromRoom.Room_ID
               AND destToRes.Event_ID = @DestinationEventId
-              AND destToRes.Room_ID = destToRoom.Room_ID
-              AND srcFromRoom.Room_ID = destFromRoom.Room_ID
-              AND srcToRoom.Room_ID = destToRoom.Room_ID
+              AND srcFromRes.Room_ID = destFromRes.Room_ID
+              AND srcToRes.Room_ID = destToRes.Room_ID
               AND b.From_Event_Room_ID = srcFromRes.Event_Room_ID
               AND b.To_Event_Room_ID = srcToRes.Event_Room_ID;
 
