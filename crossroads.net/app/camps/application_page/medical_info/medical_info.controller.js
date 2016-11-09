@@ -21,8 +21,7 @@ class MedicalInfoController {
     if (this.medicalInfo.$valid) {
       this.medicalInfoForm.save(this.stateParams.contactId).then(() => {
         this.rootScope.$emit('notify', this.rootScope.MESSAGES.successfulSubmission);
-
-        this.nextPage(this.medicalInfoForm.formModel.contactId);
+        this.nextPage(this.model.contactId);
       }).catch(() => {
         this.rootScope.$emit('notify', this.rootScope.MESSAGES.generalError);
       }).finally(() => {
@@ -35,7 +34,7 @@ class MedicalInfoController {
   }
 
   nextPage(camperId) {
-    this.go('campsignup.camper', { camperId });
+    this.go('campsignup.application', { page: 'product-summary', camperId });
   }
 }
 

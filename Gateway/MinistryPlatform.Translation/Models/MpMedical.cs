@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using MinistryPlatform.Translation.Models.Attributes;
+﻿using MinistryPlatform.Translation.Models.Attributes;
 using Newtonsoft.Json;
 
 namespace MinistryPlatform.Translation.Models
