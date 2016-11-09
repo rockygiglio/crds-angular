@@ -178,7 +178,6 @@ namespace crds_angular.test.Services
             _fixture.SaveCampReservation(MockCampReservationDTOwithContactId(), eventId, token);
             _eventRepository.VerifyAll();
             _participantRepository.VerifyAll();
-            _contactService.VerifyAll();
             _configurationWrapper.VerifyAll();
             _formSubmissionRepository.VerifyAll();
 
