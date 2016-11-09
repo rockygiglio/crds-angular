@@ -90,7 +90,7 @@ namespace crds_angular.Services
 
                 var objectAttributeType = attributeTypesDictionary[mpObjectAttribute.AttributeTypeId];
 
-                // Is the attribute ID in the collection
+                // Is the attribute ID in the collection (if not, was most likely end dated)
                 if (!objectAttributeType.Attributes.Exists(x => x.AttributeId == mpObjectAttribute.AttributeId))
                 {
                     continue;
