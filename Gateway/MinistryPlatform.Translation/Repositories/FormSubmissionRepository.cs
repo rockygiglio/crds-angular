@@ -168,7 +168,7 @@ namespace MinistryPlatform.Translation.Repositories
             var formResponseAnswerId = GetFormResponseAnswerIdForFormFeildFormResponse(formResponseId,formFieldId);
             var responseAnswer =_ministryPlatformRestRepository.UsingAuthenticationToken(apiToken).Get<MpFormAnswer>(formResponseAnswerId, selectColumns);
 
-            return responseAnswer.Response;
+            return responseAnswer == null ? string.Empty:responseAnswer.Response;
         }
 
         public DateTime? GetTripFormResponseByContactId(int contactId, int pledgeId)
