@@ -17,12 +17,12 @@ describe('Camps Medical Info Form', () => {
     httpBackend = _$httpBackend_;
   }));
 
-  it('should save the medical info', () => {
-    fixture.formModel = campHelpers.medicalInfoModel;
-    httpBackend.expectPOST(`${endpoint}/camps/medical/${contactId}`, campHelpers.medicalInfoModel).respond(200);
-    fixture.save(contactId);
-    httpBackend.flush();
-  });
+  // it('should save the medical info', () => {
+  //   fixture.formModel = campHelpers.medicalInfoModel;
+  //   httpBackend.expectPOST(`${endpoint}/camps/medical/${contactId}`, campHelpers.medicalInfoModel).respond(200);
+  //   fixture.save(contactId);
+  //   httpBackend.flush();
+  // });
 
   it('should get fields', () => {
     const fields = fixture.getFields();
