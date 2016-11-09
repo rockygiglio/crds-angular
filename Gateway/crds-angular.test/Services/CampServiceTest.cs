@@ -178,7 +178,6 @@ namespace crds_angular.test.Services
             _fixture.SaveCampReservation(MockCampReservationDTOwithContactId(), eventId, token);
             _eventRepository.VerifyAll();
             _participantRepository.VerifyAll();
-            _contactService.VerifyAll();
             _configurationWrapper.VerifyAll();
             _formSubmissionRepository.VerifyAll();
 
@@ -550,7 +549,7 @@ namespace crds_angular.test.Services
             };
 
             var mpoptionlist = new List<MpProductOptionPrice>() {mpprodoption1, mpprodoption2};
-
+            int contactid = 12345;
 
             _eventRepository.Setup(m => m.GetEvent(eventId)).Returns(mpevent);
             _productRepository.Setup(m => m.GetProductForEvent(eventId)).Returns(product);
@@ -562,7 +561,7 @@ namespace crds_angular.test.Services
             _contactService.Setup(m => m.GetMyProfile(token)).Returns(this.getFakeContact(1));
 
 
-            var result = _fixture.GetCampProductDetails(eventId, token);
+            var result = _fixture.GetCampProductDetails(eventId,contactid, token);
             Assert.IsTrue(result.Options.Count == 2);
             Assert.IsTrue(result.ProductId == 111);
         }

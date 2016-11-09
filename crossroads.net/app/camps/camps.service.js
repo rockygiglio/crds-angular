@@ -15,15 +15,18 @@ class CampsService {
     // eslint-disable-next-line prefer-template
     this.campFamily = $resource(__API_ENDPOINT__ + 'api/camps/:campId/family');
     // eslint-disable-next-line prefer-template
+    this.campMedicalResource = $resource(__API_ENDPOINT__ + 'api/camps/:campId/medical/:contactId', { campId: '@campId', contactId: '@contactId' });
+    // eslint-disable-next-line prefer-template
     this.campWaiversResource = $resource(__API_ENDPOINT__ + 'api/camps/:campId/waivers/:contactId', { campId: '@campId', contactId: '@contactId' });
     // eslint-disable-next-line prefer-template
-    this.productSummaryResource = $resource(__API_ENDPOINT__ + 'api/camps/:campId/product', { campId: '@campId' });
+    this.productSummaryResource = $resource(__API_ENDPOINT__ + 'api/camps/:campId/product/:camperId', { campId: '@campId', camperId: '@camperId' });
 
     this.campInfo = {};
     this.camperInfo = {};
     this.campTitle = '';
     this.waivers = [];
     this.productInfo = {};
+    this.campMedical = {};
   }
 
   getCampInfo(campId) {
@@ -74,8 +77,18 @@ class CampsService {
     }).$promise;
   }
 
-  getCampProductInfo(campId) {
-    return this.productSummaryResource.get({ campId }, (productInfo) => {
+  getCampMedical(campId, contactId) {
+    return this.campMedicalResource.get({ campId, contactId }, (medical) => {
+      this.campMedical = medical;
+    },
+
+    (err) => {
+      this.log.error(err);
+    }).$promise;
+  }
+
+  getCampProductInfo(campId, camperId) {
+    return this.productSummaryResource.get({ campId, camperId }, (productInfo) => {
       this.productInfo = productInfo;
     },
 
