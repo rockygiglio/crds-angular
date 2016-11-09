@@ -42,7 +42,7 @@ class CampService {
     },
 
     (err) => {
-      console.log(err);
+      this.log(err);
     }).$promise;
   }
 

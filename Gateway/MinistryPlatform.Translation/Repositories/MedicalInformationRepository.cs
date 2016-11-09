@@ -43,24 +43,15 @@ namespace MinistryPlatform.Translation.Repositories
             return medInfo[0].MedicalInformationId;
         }
 
-        public void UpdateOrCreateMedAllergy(int medicalInformationId, MpAllergy allergy)
+        public void UpdateOrCreateMedAllergy(int medicalInformationId, List<MpMedicalAllergy> updateToAllergyList, List<MpMedicalAllergy> createToAllergyList  )
         {
             var apiToken = _apiUserRepository.GetToken();
-            string columns = "Allergy_ID_Table.[Allergy_ID],Allergy_ID_Table.[Description]";
-            var allergies =  _ministryPlatformRest.UsingAuthenticationToken(apiToken)
-                .Search<MpMedicalAllergy>($"Medical_Information_ID_Table_MedicalInformation_ID={medicalInformationId} && Allergy_ID_Table_Allergy_Type_ID_Table.[Allergy_Type]={allergy.AllergyType}", columns).ToList();
-            if (allergies.Count <= 0)
-            {
-                var records = new List<MpMedicalAllergy>
-                {
-                    new MpMedicalAllergy
-                    {
-                        AllergyDescription = allergy.AllergyDescription,
-                        MedicalInformationId = medicalInformationId,
-                        AllergyType = allergy.AllergyType
-                    }
-                };
-                _ministryPlatformRest.UsingAuthenticationToken(apiToken).Post()
+            //var records = new List<Dictionary<string, object>>();
+            if (updateToAllergyList.Count > 0) {
+                _ministryPlatformRest.UsingAuthenticationToken(apiToken).Put(updateToAllergyList);
+            }
+            if (updateToAllergyList.Count > 0) {
+                _ministryPlatformRest.UsingAuthenticationToken(_apiUserRepository.GetToken()).Post(createToAllergyList);
             }
         }
     }

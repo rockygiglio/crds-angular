@@ -8,6 +8,6 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
     {
         List<MpMedicalAllergy> GetMedicalAllergyInfo(int contactId);
         int SaveMedicalInfo(MpMedicalInformation mpMedicalInfo, int contactId);
-        void UpdateOrCreateMedAllergy(int medicalInformationId, MpAllergy allergy);
+        void UpdateOrCreateMedAllergy(int medicalInformationId, List<MpMedicalAllergy> updateToAllergyList, List<MpMedicalAllergy> createToAllergyList );
     }
 }

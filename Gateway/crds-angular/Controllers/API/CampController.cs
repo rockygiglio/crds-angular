@@ -171,9 +171,9 @@ namespace crds_angular.Controllers.API
             });
         }
 
-        [VersionedRoute(template: "camps/{eventId}/medical/{contactId}", minimumVersion: "1.0.0")]
+        [VersionedRoute(template: "camps/medical/{contactId}", minimumVersion: "1.0.0")]
         [Route("camps/medical/{contactId}")]
-        public IHttpActionResult SaveMedicalInformation([FromBody] MedicalInfoDTO medicalInfo, int eventId, int contactId)
+        public IHttpActionResult SaveMedicalInformation([FromBody] MedicalInfoDTO medicalInfo, int contactId)
         {
             if (!ModelState.IsValid)
             {

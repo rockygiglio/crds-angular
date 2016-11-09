@@ -345,18 +345,37 @@ namespace crds_angular.Services
                     PolicyHolder = medicalInfo.PolicyHolder ?? "N/A"
                 };
                 var medicalInformationId =  _medicalInformationRepository.SaveMedicalInfo(mpMedicalInfo, contactId);
+                var updateToAllergyList = new List<MpMedicalAllergy>();
+                var createToAllergyList = new List<MpMedicalAllergy>();
                 foreach (var allergy in medicalInfo.Allergies)
                 {
-                    var mpAllergy = new MpAllergy
+                    if (allergy.AllergyId != 0)
                     {
-                        AllergyType = allergy.AllergyType,
-                        AllergyDescription = allergy.AllergyDescription
-                    };
-                    _medicalInformationRepository.UpdateOrCreateMedAllergy(medicalInformationId, mpAllergy);
+                        updateToAllergyList.Add(new MpMedicalAllergy
+                        {
+                            AllergyId = allergy.AllergyId,
+                            AllergyType = allergy.AllergyType,
+                            AllergyDescription = allergy.AllergyDescription,
+                            MedicalInformationId = medicalInformationId,
+                            MedicalInfoAllergyId = allergy.MedicalInformationAllergyId,
+                            InsuranceCompany = medicalInfo.InsuranceCompany ?? "N/A",
+                            PhysicianName = medicalInfo.PhysicianName ?? "N/A",
+                            PhysicianPhone = medicalInfo.PhysicianPhone ?? "N/A",
+                            PolicyHolderName = medicalInfo.PolicyHolder ?? "N/A"
+                        });
+                    }
+                    else if (!string.IsNullOrEmpty(allergy.AllergyDescription))
+                    {
+                        createToAllergyList.Add(new MpMedicalAllergy
+                        {
+                            AllergyType = allergy.AllergyType,
+                            AllergyDescription = allergy.AllergyDescription,
+                            MedicalInformationId = medicalInformationId,
+                        });
+                    }
                 }
-
-            }
-            
+                _medicalInformationRepository.UpdateOrCreateMedAllergy(medicalInformationId, updateToAllergyList, createToAllergyList);
+            }           
         }
 
         public MedicalInfoDTO GetCampMedicalInfo(int eventId, int contactId, string token)
@@ -374,7 +393,7 @@ namespace crds_angular.Services
             var camperMedInfo = new MedicalInfoDTO
             {
                 ContactId = contactId,
-                MedicalInformationId = medInfoList[0].MedicalInformationId,
+                MedicalInformationId = medInfoList[0].MedicalInformationId,              
                 InsuranceCompany = medInfoList[0].InsuranceCompany,
                 PolicyHolder = medInfoList[0].PolicyHolderName,
                 PhysicianName = medInfoList[0].PhysicianName,
@@ -387,6 +406,7 @@ namespace crds_angular.Services
                 {
                     var allergy = new Allergy
                     {
+                        MedicalInformationAllergyId = medInfo.MedicalInfoAllergyId,
                         AllergyDescription = medInfo.AllergyDescription,
                         AllergyType = medInfo.AllergyType,
                         AllergyId = medInfo.AllergyId
