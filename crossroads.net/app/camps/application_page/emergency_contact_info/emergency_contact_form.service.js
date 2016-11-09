@@ -1,10 +1,36 @@
-/* ngInject */
 class EmergencyContactForm {
-
-  constructor($resource) {
+  /* ngInject */
+  constructor($resource, CampsService) {
+    this.campsService = CampsService;
     this.formModel = {};
+  }
 
-    this.emergencyContactResource = $resource(`${__API_ENDPOINT__}api/camps/:campId/emergencycontact/:contactId`);
+  load(campId, contactId) {
+    return this.campsService.getEmergencyContacts(campId, contactId)
+      .then(emergencyContacts => this.initFormModel(emergencyContacts));
+  }
+
+  initFormModel(emergencyContacts) {
+    const contacts = {
+      0: emergencyContacts[0],
+      1: emergencyContacts[1]
+    };
+
+    // Additional Contact should be null if neither contact has been set
+    // Additional Contact should be false if only contact 0 has values
+    // Additional Contact should be true if both contact 0 and 1 have values
+    // Both contact records are alwawys returned, but have null fields
+    let additionalContact = null;
+    if (emergencyContacts[0].mobileNumber) {
+      additionalContact = !!emergencyContacts[1].mobileNumber;
+    }
+
+    this.formModel = {
+      contacts,
+      additionalContact
+    };
+
+    return this.formModel;
   }
 
   save(campId, contactId) {
@@ -17,7 +43,11 @@ class EmergencyContactForm {
       contacts[1] = this.formModel.contacts['1'];
     }
 
-    return this.emergencyContactResource.save({ campId, contactId }, contacts).$promise;
+    return this.campsService.saveEmergencyContacts(campId, contactId, contacts);
+  }
+
+  getModel() {
+    return this.formModel;
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -63,7 +93,7 @@ class EmergencyContactForm {
           templateOptions: {
             label: 'Email',
             type: 'email',
-            required: true
+            required: false
           }
         }]
       },
@@ -144,7 +174,6 @@ class EmergencyContactForm {
           key: 'contacts[1].email',
           type: 'crdsInput',
           expressionProperties: {
-            'templateOptions.required': 'model.additionalContact'
           },
           templateOptions: {
             label: 'Email',
@@ -171,9 +200,6 @@ class EmergencyContactForm {
     ];
   }
 
-  getModel() {
-    return this.formModel;
-  }
 }
 
 export default EmergencyContactForm;

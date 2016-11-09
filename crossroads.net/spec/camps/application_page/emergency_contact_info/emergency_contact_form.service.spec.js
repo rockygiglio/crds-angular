@@ -1,9 +1,15 @@
-import campsModule from '../../../../app/camps/application_page/application_page.module';
+import cloneDeep from 'lodash/lang/cloneDeep';
+
+import applicationmodule from '../../../../app/camps/application_page/application_page.module';
+import campsModule from '../../../../app/camps/camps.module';
+
 import campHelpers from '../../campHelpers';
+
 
 describe('Camps Emergency Contact Form', () => {
   let fixture;
   let httpBackend;
+  let campsService;
 
   // eslint-disable-next-line no-underscore-dangle
   const endpoint = `${window.__env__.CRDS_API_ENDPOINT}api`;
@@ -11,18 +17,31 @@ describe('Camps Emergency Contact Form', () => {
   const campId = 4321;
 
   beforeEach(angular.mock.module(campsModule));
+  beforeEach(angular.mock.module(applicationmodule));
 
-  beforeEach(inject((_EmergencyContactForm_, _$httpBackend_) => {
+  beforeEach(inject((_EmergencyContactForm_, _CampsService_, _$httpBackend_) => {
     fixture = _EmergencyContactForm_;
+    campsService = _CampsService_;
     httpBackend = _$httpBackend_;
+
+    campsService.emergencyContacts = campHelpers().emergencyContacts;
+    fixture.initFormModel();
   }));
 
   it('should save the emergency contact', () => {
-    fixture.formModel = campHelpers().emergencyContactModel;
+    fixture.formModel = campHelpers().emergencyContactFormModel;
 
     httpBackend.expectPOST(`${endpoint}/camps/${campId}/emergencycontact/${contactId}`, campHelpers.emergencyContactModel).respond(200);
     fixture.save(campId, contactId);
     httpBackend.flush();
+  });
+
+  describe('Prepopulate Model', () => {
+    it('should prepopulate the model', () => {
+      const expected = campHelpers().emergencyContactFormModel;
+
+      expect(fixture.formModel).toEqual(expected);
+    });
   });
 
   afterEach(() => {

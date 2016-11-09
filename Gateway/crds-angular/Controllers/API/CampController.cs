@@ -132,7 +132,7 @@ namespace crds_angular.Controllers.API
             });
         }
 
-        [VersionedRoute(template: "camps/{eventId}/waivers{contactId}", minimumVersion: "1.0.0")]
+        [VersionedRoute(template: "camps/{eventId}/waivers/{contactId}", minimumVersion: "1.0.0")]
         [Route("camps/{eventId}/waivers{contactId}")]
         [AcceptVerbs("GET")]
         public IHttpActionResult GetCampWaivers(int eventId, int contactId)
@@ -236,7 +236,7 @@ namespace crds_angular.Controllers.API
             });
         }
 
-        [Route("api/camps/{eventId}/emergencycontact/{contactId}")]
+        [VersionedRoute(template: "camps/{eventId}/emergencyContact/{contactId}", minimumVersion: "1.0.0")]
         [ResponseType(typeof(List<CampEmergencyContactDTO>))]
         [AcceptVerbs("GET")]
         public IHttpActionResult GetCamperEmergencyContact(int eventId, int contactId)

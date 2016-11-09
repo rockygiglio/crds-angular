@@ -1,9 +1,11 @@
-import campsModule from '../../../../app/camps/application_page/application_page.module';
-// import campHelpers from '../../campHelpers';
+import applicationModule from '../../../../app/camps/application_page/application_page.module';
+import campsModule from '../../../../app/camps/camps.module';
+import campHelpers from '../../campHelpers';
 
 describe('Camps Emergency Contact Component', () => {
   let $componentController;
   let emergencyContactController;
+  let campsService;
   // let log;
   let rootScope;
   let stateParams;
@@ -14,11 +16,13 @@ describe('Camps Emergency Contact Component', () => {
   const contactId = 456;
 
   beforeEach(angular.mock.module(campsModule));
+  beforeEach(angular.mock.module(applicationModule));
 
-  beforeEach(inject((_$componentController_, _EmergencyContactForm_, _$log_, _$rootScope_, _$stateParams_, _$q_) => {
+  beforeEach(inject((_$componentController_, _EmergencyContactForm_, _CampsService_, _$log_, _$rootScope_, _$stateParams_, _$q_) => {
     $componentController = _$componentController_;
     // log = _$log_;
     emergencyContactForm = _EmergencyContactForm_;
+    campsService = _CampsService_;
     stateParams = _$stateParams_;
     rootScope = _$rootScope_;
     q = _$q_;
@@ -28,6 +32,8 @@ describe('Camps Emergency Contact Component', () => {
 
     spyOn(emergencyContactForm, 'getModel').and.callThrough();
     spyOn(emergencyContactForm, 'getFields').and.callThrough();
+
+    campsService.emergencyContacts = campHelpers().emergencyContactModel;
 
     const bindings = {};
     emergencyContactController = $componentController('emergencyContact', null, bindings);
