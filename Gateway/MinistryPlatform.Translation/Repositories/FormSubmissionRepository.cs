@@ -159,6 +159,18 @@ namespace MinistryPlatform.Translation.Repositories
             return responseId;
         }
 
+        public string GetFormResponseAnswer(int formId, int contactId, int formFieldId)
+        {
+            var apiToken = ApiLogin();
+            const string selectColumns = "Response";
+
+            var formResponseId = GetFormResponseIdForFormContact(formId, contactId);
+            var formResponseAnswerId = GetFormResponseAnswerIdForFormFeildFormResponse(formResponseId,formFieldId);
+            var responseAnswer =_ministryPlatformRestRepository.UsingAuthenticationToken(apiToken).Get<MpFormAnswer>(formResponseAnswerId, selectColumns);
+
+            return responseAnswer.Response;
+        }
+
         public DateTime? GetTripFormResponseByContactId(int contactId, int pledgeId)
         {
             var searchString = $",{contactId},,{pledgeId}";

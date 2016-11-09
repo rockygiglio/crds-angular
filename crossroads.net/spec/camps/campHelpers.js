@@ -43,6 +43,7 @@ function CampHelpers() {
       email: null,
       relationship: 'co-worker'
     },
+<<<<<<< HEAD
     medicalInfoModel: {
       insuranceCompanyName: undefined,
       policyHolderName: undefined,
@@ -53,6 +54,29 @@ function CampHelpers() {
       foodAllergies: undefined,
       environmentAllergies: undefined,
       otherAllergies: undefined
+=======
+    productInfo: {
+      productId: 8,
+      productName: 'Phil\'s Really Cool Camp',
+      basePrice: 900.0,
+      basePriceEndDate: '2017-02-19T00:00:00',
+      depositPrice: 200.0,
+      options: [{
+        productOptionPriceId: 13,
+        optionTitle: 'Phil\'s Early Bird',
+        optionPrice: -100.0,
+        daysOutToHide: 90,
+        totalWithOptionPrice: 800.0,
+        endDate: '2016-11-21T00:00:00'
+      }, {
+        productOptionPriceId: 19,
+        optionTitle: 'Kinda Early',
+        optionPrice: -50.0,
+        daysOutToHide: 80,
+        totalWithOptionPrice: 850.0,
+        endDate: '2016-12-01T00:00:00'
+      }]
+>>>>>>> development
     },
     messages: {
       summercampIntro: {
