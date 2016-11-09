@@ -43,7 +43,6 @@ function CampHelpers() {
       email: null,
       relationship: 'co-worker'
     },
-<<<<<<< HEAD
     medicalInfoModel: {
       insuranceCompanyName: undefined,
       policyHolderName: undefined,
@@ -54,7 +53,7 @@ function CampHelpers() {
       foodAllergies: undefined,
       environmentAllergies: undefined,
       otherAllergies: undefined
-=======
+    },
     productInfo: {
       productId: 8,
       productName: 'Phil\'s Really Cool Camp',
@@ -76,7 +75,6 @@ function CampHelpers() {
         totalWithOptionPrice: 850.0,
         endDate: '2016-12-01T00:00:00'
       }]
->>>>>>> development
     },
     messages: {
       summercampIntro: {
