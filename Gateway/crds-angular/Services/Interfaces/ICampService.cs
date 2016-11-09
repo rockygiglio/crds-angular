@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using crds_angular.Models.Crossroads.Camp;
 
 namespace crds_angular.Services.Interfaces
@@ -15,5 +15,7 @@ namespace crds_angular.Services.Interfaces
         List<CampFamilyMember> GetEligibleFamilyMembers(int eventId, string token);
         void SaveCamperMedicalInfo(MedicalInfoDTO medicalInfo, int contactId, string token);
         List<CampEmergencyContactDTO> GetCamperEmergencyContactInfo(int eventId, int contactId, string token);
+        ProductDTO GetCampProductDetails(int eventId, int contactId, string token);
+        void SaveInvoice(CampProductDTO campProductDto, string token);
     }
 }

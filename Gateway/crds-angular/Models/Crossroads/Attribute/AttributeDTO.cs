@@ -1,3 +1,4 @@
+using System;
 using Newtonsoft.Json;
 
 namespace crds_angular.Models.Crossroads.Attribute
@@ -20,5 +21,9 @@ namespace crds_angular.Models.Crossroads.Attribute
         public int SortOrder { get; set; }
         [JsonProperty(PropertyName = "attributeTypeId")]
         public int? AttributeTypeId { get; set; }
+        [JsonProperty(PropertyName = "endDate")]
+        public DateTime? EndDate { get; set; }
+        [JsonProperty(PropertyName = "startDate")]
+        public DateTime? StartDate { get; set; }
     }
 }

@@ -1,5 +1,5 @@
 /* ngInject */
-class CampService {
+class CampsService {
   constructor($resource, $stateParams, $log) {
     this.log = $log;
     this.stateParams = $stateParams;
@@ -18,11 +18,14 @@ class CampService {
     this.campWaiversResource = $resource(__API_ENDPOINT__ + 'api/v1.0.0/camps/:campId/waivers/:contactId', { campId: '@campId', contactId: '@contactId' });
     // eslint-disable-next-line prefer-template
     this.emergencyContactResource = $resource(__API_ENDPOINT__ + 'api/v1.0.0/camps/:campId/emergencycontact/:contactId', { campId: '@campId', contactId: '@contactId' });
+    // eslint-disable-next-line prefer-template
+    this.productSummaryResource = $resource(__API_ENDPOINT__ + 'api/camps/:campId/product/:camperId', { campId: '@campId', camperId: '@camperId' });
 
     this.campInfo = {};
     this.camperInfo = {};
     this.campTitle = '';
     this.waivers = [];
+    this.productInfo = {};
   }
 
   getCampInfo(campId) {
@@ -41,7 +44,7 @@ class CampService {
     },
 
     (err) => {
-      console.log(err);
+      this.log.error(err);
     }).$promise;
   }
 
@@ -50,7 +53,7 @@ class CampService {
       this.dashboard = myCamps;
     },
 
-   (err) => {
+    (err) => {
       this.log.error(err);
     }).$promise;
   }
@@ -73,6 +76,16 @@ class CampService {
     }).$promise;
   }
 
+  getCampProductInfo(campId, camperId) {
+    return this.productSummaryResource.get({ campId, camperId }, (productInfo) => {
+      this.productInfo = productInfo;
+    },
+
+    (err) => {
+      this.log.error(err);
+    }).$promise;
+  }
+
   submitWaivers(campId, contactId, waivers) {
     return this.campWaiversResource.save({ campId, contactId }, waivers).$promise;
   }
@@ -86,4 +99,4 @@ class CampService {
   }
 }
 
-export default CampService;
+export default CampsService;
