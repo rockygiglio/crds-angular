@@ -78,11 +78,7 @@ export default class StreamStatusService {
 
   determineStreamStatus(events, isBroadcasting){
     let streamStatus;
-    let hrsToNextEvent = false;
-
-    if ( events.length > 0 ) {
-      hrsToNextEvent = this.getHoursToNextEvent(events);
-    }
+    let hrsToNextEvent = this.getHoursToNextEvent(events);
     
     let isStreamSoon = ( CONSTANTS.PRE_STREAM_HOURS > hrsToNextEvent && hrsToNextEvent !== false );
 
@@ -98,13 +94,22 @@ export default class StreamStatusService {
   }
 
   getHoursToNextEvent(events){
-    let eventsStartingAfterCurrentTime = this.filterOutEventsStartingBeforeCurrentTime(events);
-    let nextEvent = _.sortBy(eventsStartingAfterCurrentTime, ['event', 'start'])[0];
-    let currentTime = moment();
 
-    let timeNextEvenStarts =  (typeof nextEvent.start === moment) ? nextEvent.start : moment(nextEvent.start);
-    let timeUntilNextEvent = moment.duration(timeNextEvenStarts.diff(currentTime));
-    let hoursUntilNextEvent = timeUntilNextEvent.asHours();
+    let hoursUntilNextEvent = false;
+    if ( events.length > 0 ) {
+
+      let eventsStartingAfterCurrentTime = this.filterOutEventsStartingBeforeCurrentTime(events);
+      let nextEvent = _.sortBy(eventsStartingAfterCurrentTime, ['event', 'start'])[0];
+      
+      if ( nextEvent !== undefined ) {
+
+        let currentTime = moment();
+        let timeNextEvenStarts =  (typeof nextEvent.start === moment) ? nextEvent.start : moment(nextEvent.start);
+        let timeUntilNextEvent = moment.duration(timeNextEvenStarts.diff(currentTime));
+        hoursUntilNextEvent = timeUntilNextEvent.asHours();
+
+      }
+    }
     
     return hoursUntilNextEvent;
   }

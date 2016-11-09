@@ -128,6 +128,9 @@
     <Compile Include="Models\Payments\MpPayment.cs" />
     <Compile Include="Models\Payments\MpPaymentDetail.cs" />
     <Compile Include="Models\Payments\MpPaymentType.cs" />
+    <Compile Include="Models\Product\MpProduct.cs" />
+    <Compile Include="Models\Product\MpProductOptionGroup.cs" />
+    <Compile Include="Models\Product\MpProductOptionPrice.cs" />
     <Compile Include="Repositories\CampRepository.cs" />
     <Compile Include="Repositories\Interfaces\ICampRepository.cs" />
     <Compile Include="Models\MpRsvpMembers.cs" />
@@ -136,6 +139,7 @@
     <Compile Include="Repositories\Interfaces\IMedicalInformationRepository.cs" />
     <Compile Include="Repositories\Interfaces\IPaymentRepository.cs" />
     <Compile Include="Repositories\Interfaces\IPaymentTypeRepository.cs" />
+    <Compile Include="Repositories\Interfaces\IProductRepository.cs" />
     <Compile Include="Repositories\Interfaces\ITripRepository.cs" />
     <Compile Include="Models\Childcare\MpChildcareCancelledNotification.cs" />
     <Compile Include="Models\Childcare\MpChildcareDashboard.cs" />
@@ -255,8 +259,10 @@
     <Compile Include="Repositories\InvoiceRepository.cs" />
     <Compile Include="Repositories\MedicalInformationRepository.cs" />
     <Compile Include="Repositories\MinistryPlatformRestRepository.cs" />
+    <Compile Include="Repositories\ParticipantRepository.cs" />
     <Compile Include="Repositories\PaymentRepository.cs" />
     <Compile Include="Repositories\PaymentTypeRepository.cs" />
+    <Compile Include="Repositories\ProductRepository.cs" />
     <Compile Include="Repositories\ProjectTypeRepository.cs" />
     <Compile Include="Repositories\Interfaces\IProjectTypeRepository.cs" />
     <Compile Include="Repositories\Interfaces\IOrganizationRepository.cs" />
@@ -313,7 +319,6 @@
     <Compile Include="Repositories\MinistryPlatformServiceImpl.cs" />
     <Compile Include="Repositories\OpportunityRepository.cs" />
     <Compile Include="Repositories\OrganizationRepository.cs.cs" />
-    <Compile Include="Repositories\ParticipantRepository.cs.cs" />
     <Compile Include="Repositories\PledgeRepository.cs.cs" />
     <Compile Include="Repositories\PrivateInviteRepository.cs" />
     <Compile Include="Repositories\ProgramRepository.cs" />
