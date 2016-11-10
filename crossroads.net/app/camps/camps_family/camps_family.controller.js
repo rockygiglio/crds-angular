@@ -1,5 +1,5 @@
 class CampsFamilyController {
-  constructor(CampsService, CamperInfoForm, EmergencyContactForm, MedicalInfoForm, ProductSummaryForm, $log, $rootScope) {
+  constructor(CampsService, $log, $rootScope) {
     this.campsService = CampsService;
     this.log = $log;
     this.rootScope = $rootScope;
@@ -9,12 +9,6 @@ class CampsFamilyController {
   $onInit() {
     this.log.debug('Camps Family Controller Initialized!');
     this.cmsMessage = this.rootScope.MESSAGES.summercampIntro.content;
-    this.resetCampForm();
-  }
-
-  resetCampForm() {
-    alert(JSON.stringify(this.formData), null, 2);
-    this.CamperInfoForm.formData = this.formData;
   }
 
   // eslint-disable-next-line class-methods-use-this
