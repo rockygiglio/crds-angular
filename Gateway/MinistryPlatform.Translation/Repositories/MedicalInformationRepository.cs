@@ -39,7 +39,7 @@ namespace MinistryPlatform.Translation.Repositories
                 return mpMedicalInfo;
             }
             _ministryPlatformRest.UsingAuthenticationToken(apiToken).Post(records);
-            var medInfo = _ministryPlatformRest.UsingAuthenticationToken(apiToken).Search<MpMedicalInformation>($"Contact_ID_Table.Contact_ID={contactId}", "MedicalInformation_ID");
+            var medInfo = _ministryPlatformRest.UsingAuthenticationToken(apiToken).Search<MpMedicalInformation>($"Contact_ID_Table.Contact_ID={contactId}");
             return medInfo.SingleOrDefault();
         }
 

@@ -15,7 +15,7 @@ class CampsService {
     // eslint-disable-next-line prefer-template
     this.campFamily = $resource(__API_ENDPOINT__ + 'api/v1.0.0/camps/:campId/family');
     // eslint-disable-next-line prefer-template
-    this.campMedicalResource = $resource(__API_ENDPOINT__ + 'api/camps/:campId/medical/:contactId', { campId: '@campId', contactId: '@contactId' });
+    this.campMedicalResource = $resource(__API_ENDPOINT__ + 'api/v1.0.0/camps/:campId/medical/:contactId', { campId: '@campId', contactId: '@contactId' });
     // eslint-disable-next-line prefer-template
     this.campWaiversResource = $resource(__API_ENDPOINT__ + 'api/v1.0.0/camps/:campId/waivers/:contactId', { campId: '@campId', contactId: '@contactId' });
     // eslint-disable-next-line prefer-template
