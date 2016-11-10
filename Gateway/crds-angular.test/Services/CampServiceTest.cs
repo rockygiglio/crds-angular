@@ -12,6 +12,7 @@ using MinistryPlatform.Translation.Repositories.Interfaces;
 using Moq;
 using NUnit.Framework;
 using MinistryPlatform.Translation.Models.MinistryPlatform.Translation.Models;
+using MinistryPlatform.Translation.Models.Payments;
 using MinistryPlatform.Translation.Models.Product;
 
 namespace crds_angular.test.Services
@@ -506,6 +507,7 @@ namespace crds_angular.test.Services
         [Test]
         public void ShouldGetProductInfo()
         {
+            var me = this.getFakeContact(1);
             const int eventId = 1234;
             const string token = "1aaaa";
             var product = new MpProduct
@@ -551,15 +553,13 @@ namespace crds_angular.test.Services
             var mpoptionlist = new List<MpProductOptionPrice>() {mpprodoption1, mpprodoption2};
             int contactid = 12345;
 
+            _contactService.Setup(m => m.GetMyProfile(token)).Returns(me);
             _eventRepository.Setup(m => m.GetEvent(eventId)).Returns(mpevent);
             _productRepository.Setup(m => m.GetProductForEvent(eventId)).Returns(product);
             _productRepository.Setup(m => m.GetProductOptionPricesForProduct(product.ProductId)).Returns(mpoptionlist);
             _formSubmissionRepository.Setup(m => m.GetFormResponseAnswer(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>())).Returns("true");
-
-
-
-            _contactService.Setup(m => m.GetMyProfile(token)).Returns(this.getFakeContact(1));
-
+            _invoiceRepository.Setup(m => m.GetInvoiceDetailsForProductAndCamperAndContact(product.ProductId, contactid, me.Contact_ID))
+                .Returns(new Result<MpInvoiceDetail>(true, new MpInvoiceDetail() {InvoiceId = 1234}));
 
             var result = _fixture.GetCampProductDetails(eventId,contactid, token);
             Assert.IsTrue(result.Options.Count == 2);
