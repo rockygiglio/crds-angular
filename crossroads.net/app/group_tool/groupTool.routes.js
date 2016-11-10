@@ -30,14 +30,14 @@ export default function GroupToolRouter($httpProvider, $stateProvider) {
         cancelSref: null
       },
       template: '<create-group></create-group>',
-      resolve:{
-        stateList: (CreateGroupService, GroupService) =>{
+      resolve: {
+        stateList: (CreateGroupService, GroupService) => {
           return GroupService.getStates().then((data) => {
             CreateGroupService.statesLookup = data;
           })
         },
         profile: (CreateGroupService, GroupService) => {
-          if(!CreateGroupService.resolved) {
+          if (!CreateGroupService.resolved) {
             return GroupService.getProfileData().then((data) => {
               CreateGroupService.setCreateModel(data);
             })
@@ -46,6 +46,12 @@ export default function GroupToolRouter($httpProvider, $stateProvider) {
         countryList: (CreateGroupService, GroupService) => {
           return GroupService.getCountries().then((data) => {
             CreateGroupService.countryLookup = data;
+          })
+        },
+        categories: (CreateGroupService, GroupService) => {
+          return GroupService.getGroupTypeCategories().then((response) => {
+            CreateGroupService.createGroupCategoryOptionList(response);
+            CreateGroupService.categories = response;
           })
         }
       },
@@ -91,17 +97,17 @@ export default function GroupToolRouter($httpProvider, $stateProvider) {
       parent: 'noSideBar',
       url: '/groups/edit/{groupId:int}',
       template: '<edit-group> </edit-group>',
-      resolve:{
+      resolve: {
         // we are not using any of these resolves in the controller.
         // we are using these resolves to prepare the CreateGroupService
         // before the controller is initialized
-        stateList: (CreateGroupService, GroupService) =>{
+        stateList: (CreateGroupService, GroupService) => {
           return GroupService.getStates().then((data) => {
             CreateGroupService.statesLookup = data;
           })
         },
         profile: ($stateParams, CreateGroupService, GroupService) => {
-          if(!CreateGroupService.resolved) {
+          if (!CreateGroupService.resolved) {
             return GroupService.getProfileData().then((profile) => {
               return GroupService.getGroupData($stateParams.groupId).then((group) => {
                 CreateGroupService.setEditModel(group, profile);
@@ -114,6 +120,12 @@ export default function GroupToolRouter($httpProvider, $stateProvider) {
             CreateGroupService.countryLookup = data;
           })
         },
+        categories: (CreateGroupService, GroupService) => {
+          return GroupService.getGroupTypeCategories().then((response) => {
+            CreateGroupService.createGroupCategoryOptionList(response);
+            CreateGroupService.categories = response;
+          })
+        }
       },
       data: {
         isProtected: true,
@@ -240,5 +252,5 @@ export default function GroupToolRouter($httpProvider, $stateProvider) {
         }
       },
     })
-  ;
+    ;
 }

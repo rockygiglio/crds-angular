@@ -31,6 +31,8 @@ export default class CreateGroupService {
             meetingFrequencyId: 8,
             meetingFrequencyDesc: 'Every month'
         }];
+        debugger;
+
         //this.statesLookup is added by the route resolve of the createGroupController.
         //this.profileData is added by the route resolve of the createGroupController.
         //this.countryLookup is added by the route resolve of the createGroupController.
@@ -504,14 +506,7 @@ export default class CreateGroupService {
                     descProp: 'labelDesc',
                     maxFieldLength: '25',
                     placeholder: 'placeholder',
-                    options: [],
-                },
-                controller: /* @ngInject */ function ($scope, GroupService, CreateGroupService) {
-                    $scope.to.loading = GroupService.getGroupTypeCategories().then(function (response) {
-                        debugger;
-                        $scope.to.options = CreateGroupService.createGroupCategoryOptionList(response);
-                        return response;
-                    });
+                    options: this.parsedCategories,
                 }
             }]
         }
@@ -541,7 +536,19 @@ export default class CreateGroupService {
             }
             parsedCategories.push(parsed);
         });
+
+        this.parsedCategories = parsedCategories;
         return parsedCategories;
+    }
+
+    getCategoryFromID(id){
+        debugger;
+        return _.find(this.parsedCategories, (cat) => {return cat.categoryId == id;});
+    }
+
+    getCategoryFromName(name){
+        debugger;
+        return _.find(this.parsedCategories, (cat) => {return cat.label == name});
     }
 
     mapFromSmallGroupAbout(smallGroup) {
@@ -619,7 +626,7 @@ export default class CreateGroupService {
         _.forEach(smallGroup.attributeTypes[CONSTANTS.GROUP.ATTRIBUTE_TYPE_ID].attributes, (value, key) => {
             if (value.selected)
                 categories.push({
-                    value: this.getIdFromCategory(value.category),
+                    value: this.getCategoryFromName(value.category).categoryId,
                     detail: value.name
                 })
         });
@@ -806,7 +813,7 @@ export default class CreateGroupService {
                 attribute.selected = false;
             });
         }
-
+        debugger;
         var ids = [];
         _.forEach(this.model.categories, (category) => {
             ids.push(
@@ -820,7 +827,7 @@ export default class CreateGroupService {
                     endDate: null,
                     notes: null,
                     sortOrder: 0,
-                    category: this.getCategoryFromId(category.value),
+                    category: this.getCategoryFromID(category.value).label,
                     categoryId: category.value,
                     categoryDescription: null
 
@@ -879,54 +886,6 @@ export default class CreateGroupService {
         });
 
         return results;
-    }
-
-    getCategoryFromId(id) {
-        var returnString = '';
-        switch (id) {
-            case CONSTANTS.ATTRIBUTE_CATEGORY_IDS.LIFE_STAGES:
-                returnString = "Life Stages";
-                break;
-            case CONSTANTS.ATTRIBUTE_CATEGORY_IDS.NEIGHBORHOODS:
-                returnString = "Neighborhoods";
-                break;
-            case CONSTANTS.ATTRIBUTE_CATEGORY_IDS.SPIRITUAL_GROWTH:
-                returnString = "Spiritual Growth";
-                break;
-            case CONSTANTS.ATTRIBUTE_CATEGORY_IDS.INTEREST:
-                returnString = "Interest";
-                break;
-            case CONSTANTS.ATTRIBUTE_CATEGORY_IDS.HEALING:
-                returnString = "Healing";
-                break;
-        }
-        return returnString;
-    }
-
-    getCategories() {
-
-    }
-
-    getIdFromCategory(category) {
-        var categoryId = null;
-        switch (category) {
-            case "Life Stages":
-                categoryId = CONSTANTS.ATTRIBUTE_CATEGORY_IDS.LIFE_STAGES;
-                break;
-            case "Neighborhoods":
-                categoryId = CONSTANTS.ATTRIBUTE_CATEGORY_IDS.NEIGHBORHOODS;
-                break;
-            case "Spiritual Growth":
-                categoryId = CONSTANTS.ATTRIBUTE_CATEGORY_IDS.SPIRITUAL_GROWTH;
-                break;
-            case "Interest":
-                categoryId = CONSTANTS.ATTRIBUTE_CATEGORY_IDS.INTEREST;
-                break;
-            case "Healing":
-                categoryId = CONSTANTS.ATTRIBUTE_CATEGORY_IDS.HEALING;
-                break;
-        }
-        return categoryId;
     }
 
     getMeetingFrequencies() {
