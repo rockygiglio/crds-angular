@@ -124,6 +124,7 @@ namespace crds_angular.Controllers.API
             });
         }
 
+        [VersionedRoute(template: "camps/product", minimumVersion: "1.0.0")]
         [Route("camps/product")]
         [AcceptVerbs("POST")]
         public IHttpActionResult SaveProductDetails([FromBody] CampProductDTO campProductDto)

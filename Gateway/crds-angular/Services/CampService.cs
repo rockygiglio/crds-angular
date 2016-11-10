@@ -391,7 +391,7 @@ namespace crds_angular.Services
             };
 
             _formSubmissionRepository.SubmitFormResponse(formResponse);
-
+            
             // create the invoice with product from event and best pricing for the current date
             //get the product id for this event
             var campEvent = _eventRepository.GetEvent(campProductDto.EventId);
@@ -400,7 +400,7 @@ namespace crds_angular.Services
             //find current option price (if any)
             var productOptionPriceId = optionPrices.Count>0 ? ConvertProductOptionPricetoDto(optionPrices, product.BasePrice, campEvent.EventStartDate).Where(i => i.EndDate > DateTime.Now).OrderByDescending(i => i.EndDate).FirstOrDefault()?.ProductOptionPriceId : (int?)null;
 
-            _invoiceRepository.CreateInvoiceAndDetail(product.ProductId, productOptionPriceId, loggedInContact.Contact_ID, campProductDto.ContactId);
+            _invoiceRepository.CreateInvoiceAndDetail(product.ProductId, productOptionPriceId, loggedInContact.Contact_ID, campProductDto.ContactId, eventParticipantId);
         }
 
         public void SaveCamperMedicalInfo(MedicalInfoDTO medicalInfo, int contactId, string token)
