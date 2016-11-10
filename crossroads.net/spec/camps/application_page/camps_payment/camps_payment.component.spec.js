@@ -6,19 +6,18 @@ describe('Camps Payment Component', () => {
   let campsService;
   let state;
 
-  const campsId = 123;
+  const campId = 123;
   const contactId = 456;
+  const invoiceId = 476543;
 
   beforeEach(angular.mock.module(campsModule));
 
   beforeEach(inject((_$componentController_, _CampsService_, _$state_) => {
     campsService = _CampsService_;
     state = _$state_;
-    state.toParams = {
-      contactId,
-
-    }
-    fixture = _$componentController('campsPayment', null, {});
+    campsService.productInfo = campHelpers.productInfo;
+    fixture = _$componentController_('campsPayment', null, {});
   }));
+
 });
 

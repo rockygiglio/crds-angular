@@ -6,7 +6,7 @@ const CampsPayment = {
   template,
   controller,
   resolve: [
-
+    // when thankyou page changes are merged, add resolve for productInfo
   ]
 };
 
