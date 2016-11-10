@@ -21,7 +21,7 @@ describe('Camps Medical Info Component', () => {
     $componentController = _$componentController_;
     // log = _$log_;
     medicalInfoForm = _MedicalInfoForm_;
-    stateParams = _$state_.Params;
+    stateParams = _$state_.params;
     rootScope = _$rootScope_;
     q = _$q_;
 
