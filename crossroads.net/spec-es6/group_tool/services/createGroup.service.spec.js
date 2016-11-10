@@ -197,6 +197,10 @@ describe('Group Tool Group Service', () => {
       };
       smallGroup.attributeTypes = {};
       fixture.model = model;
+      fixture.parsedCategories = [{
+        label: 'My interest',
+        categoryId: 123
+      }];
       fixture.mapToSmallGroupCategory(smallGroup);
       expect(123, smallGroup.categories[0].categoryId, 'categories not mapped correctely');
     });
@@ -227,9 +231,13 @@ describe('Group Tool Group Service', () => {
         = {
           90: {
             attributeTypeId: 90,
-            attributes: [{ attributeId: 123, name: 'My interest', selected: true },]
+            attributes: [{ attributeId: 123, name: 'My interest', selected: true, category:'My interest' },]
           }
         };
+      fixture.parsedCategories = [{
+        label: 'My interest',
+        categoryId: 123
+      }];
       fixture.mapFromSmallGroupCategory(smallGroup);
       expect(123, fixture.model.categories[0].value, 'categories not mapped correctely');
     });

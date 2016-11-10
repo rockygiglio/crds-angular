@@ -8,6 +8,7 @@ using crds_angular.Models.Json;
 using crds_angular.Services;
 using Crossroads.Utilities.Interfaces;
 using Crossroads.Utilities.Messaging.Interfaces;
+using Crossroads.ApiVersioning;
 
 namespace crds_angular.Controllers.API
 {
@@ -43,7 +44,8 @@ namespace crds_angular.Controllers.API
             }
         }
 
-        [Route("api/stripe-event")]
+        [VersionedRoute(template: "stripeEvent", minimumVersion: "1.0.0")]
+        [Route("stripe-event")]
         [HttpPost]
         public IHttpActionResult ProcessStripeEvent([FromBody]StripeEvent stripeEvent)
         {

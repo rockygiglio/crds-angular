@@ -37,7 +37,7 @@ describe('Camp Service', () => {
   it('should make the API call to get my camp family', () => {
     const campId = 21312;
     expect(campsService.family).toBeUndefined();
-    httpBackend.expectGET(`${endpoint}/camps/${campId}/family`).respond(200, []);
+    httpBackend.expectGET(`${endpoint}/v1.0.0/camps/${campId}/family`).respond(200, []);
     campsService.getCampFamily(campId);
     httpBackend.flush();
     expect(campsService.family).toBeDefined();
@@ -46,7 +46,7 @@ describe('Camp Service', () => {
   it('should make the API call to get my camp family and handle error', () => {
     const campId = 21312;
     expect(campsService.family).toBeUndefined();
-    httpBackend.expectGET(`${endpoint}/camps/${campId}/family`).respond(500, []);
+    httpBackend.expectGET(`${endpoint}/v1.0.0/camps/${campId}/family`).respond(500, []);
     campsService.getCampFamily(campId);
     httpBackend.flush();
     expect(campsService.family).toBeUndefined();

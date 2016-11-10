@@ -3,7 +3,7 @@ var path = require('path');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 var environmentVars = require(path.resolve(__dirname, 'environment.config.js'));
-var definePlugin = new webpack.DefinePlugin(environmentVars.get());
+var definePlugin = new webpack.DefinePlugin(environmentVars.getTest());
 
 module.exports = function(config) {
   config.set({
@@ -32,7 +32,7 @@ module.exports = function(config) {
 
     envPreprocessor: [
       'CRDS_API_ENDPOINT',
-      'CRDS_CMS_ENDPOINT',
+      'CRDS_CMS_ENDPOINT'
     ],
 
     // test results reporter to use

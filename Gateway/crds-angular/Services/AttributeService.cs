@@ -54,7 +54,8 @@ namespace crds_angular.Services
                 SortOrder = attribute.SortOrder,
                 CategoryId = attribute.CategoryId,
                 Category = attribute.Category,
-                CategoryDescription = attribute.CategoryDescription
+                CategoryDescription = attribute.CategoryDescription,
+                EndDate = attribute.EndDate               
             };
             return attributeDto;
         }

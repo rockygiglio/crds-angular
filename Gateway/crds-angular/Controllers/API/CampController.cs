@@ -7,19 +7,22 @@ using System.Web.Http;
 using System.Web.Http.Description;
 using crds_angular.Exceptions.Models;
 using crds_angular.Models.Crossroads.Camp;
+using Crossroads.ApiVersioning;
 
 namespace crds_angular.Controllers.API
 {
-    public class CampController: MPAuth
+    public class CampController : MPAuth
     {
         private readonly ICampService _campService;
+
         public CampController(ICampService campService)
         {
             _campService = campService;
         }
 
-        [Route("api/camps/{eventId}/family")]
-        [AcceptVerbs("GET")]
+        [VersionedRoute(template: "camps/{eventId}/family", minimumVersion: "1.0.0")]
+        [Route("camps/{eventId}/family")]
+        [HttpGet]
         public IHttpActionResult GetCampFamily(int eventId)
         {
             return Authorized(token =>
@@ -39,8 +42,9 @@ namespace crds_angular.Controllers.API
         }
 
         [ResponseType(typeof(List<MyCampDTO>))]
-        [Route("api/my-camp")]
-        [AcceptVerbs("GET")]
+        [VersionedRoute(template: "myCamp", minimumVersion: "1.0.0")]
+        [Route("my-camp")]
+        [HttpGet]
         public IHttpActionResult GetMyCampsInfo()
         {
             return Authorized(token =>
@@ -59,8 +63,9 @@ namespace crds_angular.Controllers.API
         }
 
         [ResponseType(typeof (CampDTO))]
-        [Route("api/camps/{eventid}")]
-        [AcceptVerbs("GET")]
+        [VersionedRoute(template: "camps/{eventId}", minimumVersion: "1.0.0")]
+        [Route("camps/{eventId}")]
+        [HttpGet]
         public IHttpActionResult GetCampEventDetails(int eventId)
         {
             return Authorized(token =>
@@ -78,9 +83,30 @@ namespace crds_angular.Controllers.API
             });
         }
 
-        [ResponseType(typeof(CampReservationDTO))]
-        [Route("api/camps/{eventid}/{contactid}")]
+        [ResponseType(typeof(ProductDTO))]
+        [Route("camps/{eventid}/product/{contactid}")]
         [AcceptVerbs("GET")]
+        public IHttpActionResult GetCampProductDetails(int eventId, int contactId)
+        {
+            return Authorized(token =>
+            {
+                try
+                {
+                    var campProductInfo = _campService.GetCampProductDetails(eventId, contactId, token);
+                    return Ok(campProductInfo);
+                }
+                catch (Exception exception)
+                {
+                    var apiError = new ApiErrorDto("EventInfo", exception);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+            });
+        }
+
+        [ResponseType(typeof(CampReservationDTO))]
+        [VersionedRoute(template: "camps/{eventId}/{contactId}", minimumVersion: "1.0.0")]
+        [Route("camps/{eventId}/{contactId}")]
+        [HttpGet]
         public IHttpActionResult GetCamperInfo(int eventId, int contactId)
         {
             return Authorized(token =>
@@ -98,8 +124,36 @@ namespace crds_angular.Controllers.API
             });
         }
 
-        [Route("api/camps/{eventid}")]
+        [Route("camps/product")]
         [AcceptVerbs("POST")]
+        public IHttpActionResult SaveProductDetails([FromBody] CampProductDTO campProductDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState.Values.SelectMany(val => val.Errors).Aggregate("", (current, err) => current + err.Exception.Message);
+                var dataError = new ApiErrorDto("Product data Invalid", new InvalidOperationException("Product Data" + errors));
+                throw new HttpResponseException(dataError.HttpResponseMessage);
+            }
+
+            return Authorized(token =>
+            {
+                try
+                {
+                    _campService.SaveInvoice(campProductDto, token);
+                    return Ok();
+                }
+
+                catch (Exception e)
+                {
+                    var apiError = new ApiErrorDto("Product Invoicing failed", e);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+            });
+        }
+
+        [VersionedRoute(template: "camps/{eventId}", minimumVersion: "1.0.0")]
+        [Route("camps/{eventid}")]
+        [HttpPost]
         public IHttpActionResult SaveCampReservation([FromBody] CampReservationDTO campReservation, int eventId)
         {
             if (!ModelState.IsValid)
@@ -116,7 +170,7 @@ namespace crds_angular.Controllers.API
                     _campService.SaveCampReservation(campReservation, eventId, token);
                     return Ok();
                 }
-               
+
                 catch (Exception e)
                 {
                     var apiError = new ApiErrorDto("Camp Reservation failed", e);
@@ -125,7 +179,8 @@ namespace crds_angular.Controllers.API
             });
         }
 
-        [Route("api/camps/{eventId}/waivers/{contactId}")]
+        [VersionedRoute(template: "camps/{eventId}/waivers/{contactId}", minimumVersion: "1.0.0")]
+        [Route("camps/{eventId}/waivers/{contactId}")]
         [AcceptVerbs("GET")]
         public IHttpActionResult GetCampWaivers(int eventId, int contactId)
         {
@@ -142,10 +197,30 @@ namespace crds_angular.Controllers.API
                     throw new HttpResponseException(apiError.HttpResponseMessage);
                 }
             });
-        }     
+        }
 
-        [Route("api/camps/medical/{contactid}")]
-        [AcceptVerbs("POST")]
+        [VersionedRoute(template: "camps/{eventId}/medical/{contactId}", minimumVersion: "1.0.0")]
+        [Route("camps/{eventId}/medical/{contactId}")]
+        [AcceptVerbs("GET")]
+        public IHttpActionResult GetCampMedicalInfo(int eventId, int contactId)
+        {
+            return Authorized(token =>
+            {
+                try
+                {
+                    var medicalInfo = _campService.GetCampMedicalInfo(eventId, contactId, token);
+                    return Ok(medicalInfo);
+                }
+                catch (Exception e)
+                {
+                    var apiError = new ApiErrorDto("Failed to get medical info data", e);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+            });
+        }
+
+        [VersionedRoute(template: "camps/medical/{contactId}", minimumVersion: "1.0.0")]
+        [Route("camps/medical/{contactId}")]
         public IHttpActionResult SaveMedicalInformation([FromBody] MedicalInfoDTO medicalInfo, int contactId)
         {
             if (!ModelState.IsValid)
@@ -170,7 +245,8 @@ namespace crds_angular.Controllers.API
             });
         }
 
-        [Route("api/camps/{eventId}/waivers/{contactId}")]
+        [VersionedRoute(template: "camps/{eventId}/waivers/{contactId}", minimumVersion: "1.0.0")]
+        [Route("camps/{eventId}/waivers/{contactId}")]
         [AcceptVerbs("POST")]
         public IHttpActionResult SaveWaivers([FromBody] List<CampWaiverResponseDTO> waivers, int eventId, int contactId)
         {
@@ -194,13 +270,14 @@ namespace crds_angular.Controllers.API
                     throw new HttpResponseException(apiError.HttpResponseMessage);
                 }
 
-                
+
             });
         }
 
-        [Route("api/camps/{eventId}/emergencycontact/{contactId}")]
+        [VersionedRoute(template:"camps/{eventId}/emergencycontact/{contactId}", minimumVersion: "1.0.0")]
+        [Route("camps/{eventId}/emergencycontact/{contactId}")]
         [AcceptVerbs("POST")]
-        public IHttpActionResult SaveCamperEmergencyContact([FromBody] CampEmergencyContactDTO emergencyContact, int eventId, int contactId)
+        public IHttpActionResult SaveCamperEmergencyContact([FromBody] List<CampEmergencyContactDTO> emergencyContacts, int eventId, int contactId)
         {
             if (!ModelState.IsValid)
             {
@@ -213,13 +290,35 @@ namespace crds_angular.Controllers.API
             {
                 try
                 {
-                    _campService.SaveCamperEmergencyContactInfo(emergencyContact, eventId, contactId, token);
+                    _campService.SaveCamperEmergencyContactInfo(emergencyContacts, eventId, contactId, token);
+
                     return Ok();
                 }
 
                 catch (Exception e)
                 {
-                    var apiError = new ApiErrorDto("Camp Reservation failed", e);
+                    var apiError = new ApiErrorDto("Save Camp Emergency Contact Info failed", e);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+            });
+        }
+
+        [VersionedRoute(template: "camps/{eventId}/emergencyContact/{contactId}", minimumVersion: "1.0.0")]
+        [ResponseType(typeof(List<CampEmergencyContactDTO>))]
+        [AcceptVerbs("GET")]
+        public IHttpActionResult GetCamperEmergencyContact(int eventId, int contactId)
+        {
+            return Authorized(token =>
+            {
+                try
+                {
+                    var emergencyContacts = _campService.GetCamperEmergencyContactInfo(eventId, contactId, token);
+                    return Ok(emergencyContacts);
+                }
+
+                catch (Exception e)
+                {
+                    var apiError = new ApiErrorDto("Camp Emergency Contact Info failed", e);
                     throw new HttpResponseException(apiError.HttpResponseMessage);
                 }
             });

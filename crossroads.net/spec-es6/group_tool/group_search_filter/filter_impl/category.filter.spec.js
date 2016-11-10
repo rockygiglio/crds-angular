@@ -26,7 +26,7 @@ describe('CategoryFilter', () => {
           endDate: ''
         }
       }, {
-        categoryId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.INTEREST,
+        categoryId: 2,
         name: 'Interest',
         desc: 'desc',
         exampleText: 'Ex. Boxing, XBox',

@@ -158,59 +158,29 @@ namespace MinistryPlatform.Translation.Repositories
             catch (Exception ex)
             {
                 throw new ApplicationException(
-                    string.Format("unRegisterParticipantForEvent failed.  Participant Id: {0}, Event Id: {1}",
-                                  participantId,
-                                  eventId),
+                    $"unRegisterParticipantForEvent failed.  Participant Id: {participantId}, Event Id: {eventId}",
                     ex.InnerException);
             }
 
-            _logger.Debug(string.Format("Removed participant {0} from event {1}; record id: {2}",
-                                        participantId,
-                                        eventId,
-                                        eventParticipantId));
+            _logger.Debug($"Removed participant {participantId} from event {eventId}; record id: {eventParticipantId}");
             return (eventParticipantId);
         }
 
         public MpEvent GetEvent(int eventId)
         {
-            var token = ApiLogin();
-            var searchString = string.Format("{0},", eventId);
-            var r = _ministryPlatformService.GetPageViewRecords("EventsWithDetail", token, searchString);
-            if (r.Count == 1)
-            {
-                var record = r[0];
-                var e = new MpEvent
-                {
-                    CongregationId = record.ToInt("Congregation_ID"),
-                    EventEndDate = record.ToDate("Event_End_Date"),
-                    EventId = record.ToInt("Event_ID"),
-                    EventStartDate = record.ToDate("Event_Start_Date"),
-                    EventTitle = record.ToString("Event_Title"),
-                    ParentEventId = record.ToNullableInt("Parent_Event_ID"),
-                    PrimaryContact = new MpContact
-                    {
-                        ContactId = record.ToInt("Contact_ID"),
-                        EmailAddress = record.ToString("Email_Address")
-                    },
-                    ReminderDaysPriorId = record.ToInt("Reminder_Days_Prior_ID"),
-                    Cancelled = record.ToBool("Cancelled")
-                };
+            var apiToken = ApiLogin();
+            
+            var mpevent = _ministryPlatformRestRepository.UsingAuthenticationToken(apiToken).Get<MpEvent>(eventId);
+            mpevent.PrimaryContact = _ministryPlatformRestRepository.UsingAuthenticationToken(apiToken).Get<MpContact>(mpevent.PrimaryContactId);
 
-
-                return e;
-            }
-            if (r.Count == 0)
-            {
-                return null;
-            }
-            throw new ApplicationException(string.Format("Duplicate Event ID detected: {0}", eventId));
+            return mpevent;
         }
 
         public int GetEventParticipantRecordId(int eventId, int participantId)
         {
             var search = "," + eventId + "," + participantId;
             var participant = _ministryPlatformService.GetPageViewRecords("EventParticipantByEventIdAndParticipantId", ApiLogin(), search).FirstOrDefault();
-            return participant == null ? 0 : participant.ToInt("Event_Participant_ID");
+            return participant?.ToInt("Event_Participant_ID") ?? 0;
         }
 
         public bool EventHasParticipant(int eventId, int participantId)

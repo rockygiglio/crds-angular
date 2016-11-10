@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Management.Instrumentation;
 using Crossroads.Utilities.Interfaces;
 using MinistryPlatform.Translation.Extensions;
 using MinistryPlatform.Translation.Models;
@@ -12,7 +11,6 @@ namespace MinistryPlatform.Translation.Repositories
     public class AttributeRepository : BaseRepository, IAttributeRepository
     {
         private readonly IMinistryPlatformService _ministryPlatformService;
-        private readonly int _attributesByTypePageViewId = Convert.ToInt32(AppSettings("AttributesPageView"));
         private readonly int _attributesPageId = Convert.ToInt32(AppSettings("Attributes"));
         private readonly IApiUserRepository _apiUserService;
         private readonly IMinistryPlatformRestRepository _ministryPlatformRest;
@@ -32,17 +30,15 @@ namespace MinistryPlatform.Translation.Repositories
         public List<MpAttribute> GetAttributes(int? attributeTypeId)
         {
             var token = base.ApiLogin();
+            const string COLUMNS =
+                "Attribute_ID, Attribute_Name, Attributes.Description, Attribute_Category_ID_Table.Attribute_Category, Attributes.Attribute_Category_ID, Attribute_Category_ID_Table.Description as Attribute_Category_Description, Attributes.Sort_Order, Attribute_Type_ID_Table.Attribute_Type_ID, Attribute_Type_ID_Table.Attribute_Type, Attribute_Type_ID_Table.Prevent_Multiple_Selection, Start_Date, End_Date";
 
-            var filter = attributeTypeId.HasValue ? string.Format(",,,\"{0}\"", attributeTypeId) : string.Empty;
-            var records = _ministryPlatformService.GetPageViewRecords("AttributesPageView", token, filter);
-
-            return records.Select(MapMpAttribute).ToList();
-        }
-
-        public List<MpAttribute> GetAttributesByFilter(string filter)
-        {
-            var token = base.ApiLogin();
-            return _ministryPlatformService.GetPageViewRecords(_attributesByTypePageViewId, token, filter).Select(MapMpAttribute).ToList();
+            var search = attributeTypeId.HasValue ? $"Attributes.Attribute_Type_ID = { attributeTypeId}  AND " : string.Empty;
+            search += "(Attributes.Start_Date Is Null OR Attributes.Start_Date <= GetDate()) ";
+            search += "AND (Attributes.End_Date Is Null OR Attributes.End_Date >= GetDate())";
+            var orderBy = "Attribute_Type_ID_Table.[Attribute_Type_ID], Attributes.[Sort_Order], Attributes.[Attribute_Name]";
+            var records = _ministryPlatformRest.UsingAuthenticationToken(token).Search<MpAttribute>(search, COLUMNS, orderBy, false);
+            return records;
         }
 
         public int CreateAttribute(MpAttribute attribute)
@@ -59,7 +55,7 @@ namespace MinistryPlatform.Translation.Repositories
 
             return _ministryPlatformService.CreateRecord(_attributesPageId, values, token, true);
         }
-
+        
         public List<MpAttributeCategory> GetAttributeCategory(int attributeTypeId)
         {
             //Get all categories

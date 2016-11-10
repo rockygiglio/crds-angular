@@ -303,6 +303,14 @@
     <Compile Include="Controllers\API\StaffContactController.cs" />
     <Compile Include="Controllers\API\DonorStatementController.cs" />
     <Compile Include="Controllers\API\TextCommunicationController.cs" />
+    <Compile Include="Crossroads.ApiVersioning\ApiRouteProvider.cs" />
+    <Compile Include="Crossroads.ApiVersioning\DeprecatedVersionFilter.cs" />
+    <Compile Include="Crossroads.ApiVersioning\RemovedVersionFilter.cs" />
+    <Compile Include="Crossroads.ApiVersioning\SemanticVersion.cs" />
+    <Compile Include="Crossroads.ApiVersioning\VersionConfig.cs" />
+    <Compile Include="Crossroads.ApiVersioning\VersionConstraint.cs" />
+    <Compile Include="Crossroads.ApiVersioning\VersionedRoute.cs" />
+    <Compile Include="Crossroads.ApiVersioning\VersionSpace.cs" />
     <Compile Include="Exceptions\ChildcareDatesMissingException.cs" />
     <Compile Include="Exceptions\ContactEmailExistsException.cs" />
     <Compile Include="Exceptions\ContactNotFoundException.cs" />
@@ -321,11 +329,14 @@
     <Compile Include="Models\Crossroads\Camp\CampDTO.cs" />
     <Compile Include="Models\Crossroads\Camp\CampEmergencyContactDTO.cs" />
     <Compile Include="Models\Crossroads\Camp\CampFamilyMember.cs" />
+    <Compile Include="Models\Crossroads\Camp\CampProductDTO.cs" />
     <Compile Include="Models\Crossroads\Camp\CampReservationDTO.cs" />
     <Compile Include="Models\Crossroads\Camp\CampWaiverDTO.cs" />
     <Compile Include="Models\Crossroads\Camp\CampWaiverResponseDTO.cs" />
     <Compile Include="Models\Crossroads\Camp\MedicalInfoDTO.cs" />
     <Compile Include="Models\Crossroads\Camp\MyCampDTO.cs" />
+    <Compile Include="Models\Crossroads\Camp\ProductDTO.cs" />
+    <Compile Include="Models\Crossroads\Camp\ProductOptionDTO.cs" />
     <Compile Include="Models\Crossroads\Childcare\ChildcareDashboardDto.cs" />
     <Compile Include="Models\Crossroads\Childcare\ChildCareDate.cs" />
     <Compile Include="Models\Crossroads\Childcare\ChildcareGroup.cs" />
@@ -365,7 +376,6 @@
     <Compile Include="Models\Crossroads\Inquiry.cs" />
     <Compile Include="Models\Crossroads\Lookups\OtherOrganization.cs" />
     <Compile Include="Models\Crossroads\GoVolunteer\OrgLocation.cs" />
-    <Compile Include="Models\Crossroads\Participants\ParticipantProfile.cs" />
     <Compile Include="Models\Crossroads\Payment\PaymentDTO.cs" />
     <Compile Include="Models\Crossroads\PrimaryContactDto.cs" />
     <Compile Include="Models\Crossroads\Profile\Participant.cs" />
@@ -631,6 +641,7 @@
     <Compile Include="Util\HtmlHelper.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Crossroads.ApiVersioning\readme.txt" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <None Include="MinistryPlatform.Debug.config">
