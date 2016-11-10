@@ -72,6 +72,9 @@ export default function CampRoutes($stateProvider) {
     .state('campsignup.application', {
       url: '/:page/:contactId',
       template: '<camps-application-page></camps-application-page>',
+      params: {
+        update: false
+      },
       resolve: {
         getCampMedical,
         getCampWaivers,

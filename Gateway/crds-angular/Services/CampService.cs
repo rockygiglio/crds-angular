@@ -318,7 +318,8 @@ namespace crds_angular.Services
                                 CamperLastName = member.LastName,
                                 CampName = camp.EventTitle,
                                 CampStartDate = camp.EventStartDate,
-                                CampEndDate = camp.EventEndDate
+                                CampEndDate = camp.EventEndDate,
+                                EventId = camp.EventId
                             });
                         }
                     }

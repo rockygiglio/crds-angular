@@ -12,7 +12,7 @@ class CampCardController {
   }
 
   updateMedical() {
-    this.state.go('campsignup.application', { page: 'medical-info', contactId: this.camperId, campId: this.campId });
+    this.state.go('campsignup.application', { page: 'medical-info', contactId: this.camperId, campId: this.campId, update: true });
   }
 
   formatDate() {
