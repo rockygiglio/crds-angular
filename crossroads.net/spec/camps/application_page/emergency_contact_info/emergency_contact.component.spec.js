@@ -33,6 +33,13 @@ describe('Camps Emergency Contact Component', () => {
     spyOn(emergencyContactForm, 'getModel').and.callThrough();
     spyOn(emergencyContactForm, 'getFields').and.callThrough();
 
+    // Set up fake deferred formModel for the Form.load() call
+    spyOn(emergencyContactForm, 'load').and.callFake(() => {
+      const deferred = q.defer();
+      deferred.resolve(campHelpers().emergencyContactFormModel);
+      return deferred.promise;
+    });
+
     campsService.emergencyContacts = campHelpers().emergencyContactModel;
 
     const bindings = {};
@@ -41,15 +48,20 @@ describe('Camps Emergency Contact Component', () => {
   }));
 
   it('should set the view as ready', () => {
+    rootScope.$apply();
+
     expect(emergencyContactController.viewReady).toBeTruthy();
   });
 
   it('should get the model', () => {
-    expect(emergencyContactForm.getModel).toHaveBeenCalled();
-    expect(emergencyContactController.model).toBeDefined();
+    rootScope.$apply();
+
+    expect(emergencyContactController.model).toEqual(campHelpers().emergencyContactFormModel);
   });
 
   it('should get the fields', () => {
+    rootScope.$apply();
+
     expect(emergencyContactForm.getFields).toHaveBeenCalled();
     expect(emergencyContactController.fields).toBeDefined();
     expect(emergencyContactController.fields.length).toBeGreaterThan(0);

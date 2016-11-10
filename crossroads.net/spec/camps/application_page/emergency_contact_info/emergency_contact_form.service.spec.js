@@ -25,13 +25,12 @@ describe('Camps Emergency Contact Form', () => {
     httpBackend = _$httpBackend_;
 
     campsService.emergencyContacts = campHelpers().emergencyContacts;
-    fixture.initFormModel();
   }));
 
   it('should save the emergency contact', () => {
     fixture.formModel = campHelpers().emergencyContactFormModel;
 
-    httpBackend.expectPOST(`${endpoint}/camps/${campId}/emergencycontact/${contactId}`, campHelpers.emergencyContactModel).respond(200);
+    httpBackend.expectPOST(`${endpoint}/v1.0.0/camps/${campId}/emergencycontact/${contactId}`, campHelpers.emergencyContactModel).respond(200);
     fixture.save(campId, contactId);
     httpBackend.flush();
   });
@@ -39,7 +38,9 @@ describe('Camps Emergency Contact Form', () => {
   describe('Prepopulate Model', () => {
     it('should prepopulate the model', () => {
       const expected = campHelpers().emergencyContactFormModel;
+      expected.additionalContact = true;
 
+      fixture.initFormModel(campHelpers().emergencyContacts);
       expect(fixture.formModel).toEqual(expected);
     });
   });
