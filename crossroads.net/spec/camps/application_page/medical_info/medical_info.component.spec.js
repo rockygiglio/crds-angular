@@ -1,4 +1,6 @@
-import campsModule from '../../../../app/camps/application_page/application_page.module';
+import applicationModule from '../../../../app/camps/application_page/application_page.module';
+import campsModule from '../../../../app/camps/camps.module';
+
 
 describe('Camps Medical Info Component', () => {
   let $componentController;
@@ -13,6 +15,7 @@ describe('Camps Medical Info Component', () => {
   const contactId = 456;
 
   beforeEach(angular.mock.module(campsModule));
+  beforeEach(angular.mock.module(applicationModule));
 
   beforeEach(inject((_$componentController_, _MedicalInfoForm_, _$log_, _$rootScope_, _$stateParams_, _$q_) => {
     $componentController = _$componentController_;
