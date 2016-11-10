@@ -31,7 +31,6 @@ export default class CreateGroupService {
             meetingFrequencyId: 8,
             meetingFrequencyDesc: 'Every month'
         }];
-        debugger;
 
         //this.statesLookup is added by the route resolve of the createGroupController.
         //this.profileData is added by the route resolve of the createGroupController.
@@ -542,12 +541,10 @@ export default class CreateGroupService {
     }
 
     getCategoryFromID(id){
-        debugger;
         return _.find(this.parsedCategories, (cat) => {return cat.categoryId == id;});
     }
 
     getCategoryFromName(name){
-        debugger;
         return _.find(this.parsedCategories, (cat) => {return cat.label == name});
     }
 
@@ -813,7 +810,6 @@ export default class CreateGroupService {
                 attribute.selected = false;
             });
         }
-        debugger;
         var ids = [];
         _.forEach(this.model.categories, (category) => {
             ids.push(
