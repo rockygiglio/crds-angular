@@ -8,13 +8,11 @@
  */
 class CampCardController {
   constructor($state) {
-    // this.stateParams = $stateParams;
     this.state = $state;
   }
 
   updateMedical() {
-    let contactId = 6989102;
-    this.state.go('campsignup.application', { page: 'medical-info', contactId, campId: 4525285 });
+    this.state.go('campsignup.application', { page: 'medical-info', contactId: this.camperId, campId: this.campId });
   }
 
   formatDate() {
