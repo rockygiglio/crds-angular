@@ -61,7 +61,7 @@ export default class GroupService {
   }
 
   getGroupTypeCategories() {
-  return this.resource(__API_ENDPOINT__ + 'api/grouptool/categories').query().$promise;
+    return this.resource(__API_ENDPOINT__ + 'api/grouptool/categories').query().$promise;
   }
 
   sendGroupInvitation(invitation) {
