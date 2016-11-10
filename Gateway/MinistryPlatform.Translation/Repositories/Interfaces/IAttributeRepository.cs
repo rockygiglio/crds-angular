@@ -7,5 +7,7 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
     {
         List<MpAttribute> GetAttributes(int? attributeTypeId);
         int CreateAttribute(MpAttribute attribute);
+        List<MpAttributeCategory> GetAttributeCategory(int attributeTypeId);
+        MpAttribute GetOneAttributeByCategoryId(int categoryId);
     }
 }

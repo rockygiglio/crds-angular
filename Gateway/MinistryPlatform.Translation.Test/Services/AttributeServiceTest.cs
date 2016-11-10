@@ -17,6 +17,8 @@ namespace MinistryPlatform.Translation.Test.Services
         private Mock<IMinistryPlatformRestRepository> _ministryPlatformRestService;
         private Mock<IAuthenticationRepository> _authService;
         private Mock<IConfigurationWrapper> _configWrapper;
+        private Mock<IApiUserRepository> _apiUserService;
+        private Mock<IMinistryPlatformRestRepository> _ministryPlatformRest;
 
         private readonly string _tokenValue = "ABC";
 
@@ -27,6 +29,8 @@ namespace MinistryPlatform.Translation.Test.Services
             _ministryPlatformRestService = new Mock<IMinistryPlatformRestRepository>();
             _authService = new Mock<IAuthenticationRepository>();
             _configWrapper = new Mock<IConfigurationWrapper>();
+            _apiUserService = new Mock<IApiUserRepository>();
+            _ministryPlatformRest = new Mock<IMinistryPlatformRestRepository>();
 
             var authenticateResults =
                 new Dictionary<string, object>()
@@ -35,9 +39,10 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"exp", "123"}
                 };
             _authService.Setup(m => m.Authenticate(It.IsAny<string>(), It.IsAny<string>())).Returns(authenticateResults);
+
             _ministryPlatformRestService.Setup(mocked => mocked.UsingAuthenticationToken(It.IsAny<string>())).Returns(_ministryPlatformRestService.Object);
 
-            _fixture = new AttributeRepository(_ministryPlatformService.Object, _authService.Object, _configWrapper.Object, _ministryPlatformRestService.Object);
+            _fixture = new AttributeRepository(_ministryPlatformService.Object, _authService.Object, _configWrapper.Object, _apiUserService.Object, _ministryPlatformRestService.Object);
         }
 
         [Test]
