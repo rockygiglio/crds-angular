@@ -45,14 +45,14 @@ function CampHelpers() {
     },
     medicalInfoModel: {
       contactId: undefined,
-      insuranceCompanyName: undefined,
-      policyHolderName: undefined,
+      insuranceCompany: undefined,
+      policyHolder: undefined,
       physicianName: undefined,
-      physicianNumber: undefined,
+      physicianPhone: undefined,
       showAllergies: false,
       medicineAllergies: undefined,
       foodAllergies: undefined,
-      environmentAllergies: undefined,
+      environmentalAllergies: undefined,
       otherAllergies: undefined
     },
     productInfo: {
@@ -76,6 +76,39 @@ function CampHelpers() {
         totalWithOptionPrice: 850.0,
         endDate: '2016-12-01T00:00:00'
       }]
+    },
+    medicalInfoDto:{
+      contactId: 1234,
+      medicalInformationId: 5,
+      insuranceCompany: 'cigna',
+      policyHolder: 'holder',
+      physicianName: 'dr.humble',
+      physicianPhone: '1234567890',
+      allergies: [
+        { allergyType: 'Medicine',
+          allergyId: 1,
+          allergyDescription: 'advil',
+          medicalInformationAllergyId: 2,
+          allergyTypeId: 1
+        },
+        { allergyType: 'Food',
+          allergyId: 2,
+          allergyDescription: "",
+          medicalInformationAllergyId: 5,
+          allergyTypeId: 2
+        },
+        { allergyType: 'Environmental',
+          allergyId: undefined,
+          allergyDescription: undefined,
+          medicalInformationAllergyId: undefined,
+          allergyTypeId: 3
+        },
+        { allergyType: 'Other',
+          allergyId: undefined,
+          allergyDescription: 'I dont know',
+          medicalInformationAllergyId: undefined,
+          allergyTypeId: 4
+        }]
     },
     messages: {
       summercampIntro: {
