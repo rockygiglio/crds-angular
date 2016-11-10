@@ -22,24 +22,27 @@ class MedicalInfoController {
   }
 
   submit() {
-    this.submitting = true;
+    console.log('submit');
+    if (!this.submitting) {
+      this.submitting = true;
 
-    if (this.medicalInfo.$valid) {
-      this.medicalInfoForm.save(this.stateParams.contactId).then(() => {
-        this.rootScope.$emit('notify', this.rootScope.MESSAGES.successfulSubmission);
-        this.nextPage(this.model.contactId);
-        if (this.update) {
-          // navigate back to mycamps page
-          this.go('camps-dashboard');
-        }
-      }).catch(() => {
-        this.rootScope.$emit('notify', this.rootScope.MESSAGES.generalError);
-      }).finally(() => {
+      if (this.medicalInfo.$valid) {
+        this.medicalInfoForm.save(this.stateParams.contactId).then(() => {
+          this.rootScope.$emit('notify', this.rootScope.MESSAGES.successfulSubmission);
+          this.nextPage(this.model.contactId);
+          if (this.update) {
+            // navigate back to mycamps page
+            this.go('camps-dashboard');
+          }
+        }).catch(() => {
+          this.rootScope.$emit('notify', this.rootScope.MESSAGES.generalError);
+        }).finally(() => {
+          this.submitting = false;
+        });
+      } else {
         this.submitting = false;
-      });
-    } else {
-      this.submitting = false;
-      this.rootScope.$emit('notify', this.rootScope.MESSAGES.generalError);
+        this.rootScope.$emit('notify', this.rootScope.MESSAGES.generalError);
+      }
     }
   }
 
