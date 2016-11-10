@@ -1,4 +1,4 @@
-import campsModule from '../../../../app/camps/application_page/application_page.module';
+import campsModule from '../../../../app/camps/camps.module';
 import campHelpers from '../../campHelpers';
 
 describe('Camps Medical Info Form', () => {
@@ -7,7 +7,7 @@ describe('Camps Medical Info Form', () => {
 
   // eslint-disable-next-line no-underscore-dangle
   const endpoint = `${window.__env__.CRDS_API_ENDPOINT}api`;
-  const contactId = 1234;
+  const contactId = 456;
   const campId = 4321;
 
   beforeEach(angular.mock.module(campsModule));
@@ -17,12 +17,11 @@ describe('Camps Medical Info Form', () => {
     httpBackend = _$httpBackend_;
   }));
 
-  // it('should save the medical info', () => {
-  //   fixture.formModel = campHelpers.medicalInfoModel;
-  //   httpBackend.expectPOST(`${endpoint}/camps/medical/${contactId}`, campHelpers.medicalInfoModel).respond(200);
-  //   fixture.save(contactId);
-  //   httpBackend.flush();
-  // });
+  it('should save the medical info', () => {
+    httpBackend.expectPOST(`${endpoint}/camps/medical/${contactId}`, campHelpers.medicalInfoModel).respond(200);
+    fixture.save(contactId);
+    httpBackend.flush();
+  });
 
   it('should get fields', () => {
     const fields = fixture.getFields();

@@ -44,7 +44,7 @@ function CampHelpers() {
       relationship: 'co-worker'
     },
     medicalInfoModel: {
-      contactId: 456,
+      contactId: undefined,
       insuranceCompany: undefined,
       policyHolder: undefined,
       physicianName: undefined,
