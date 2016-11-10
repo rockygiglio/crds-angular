@@ -13,11 +13,13 @@ class CampsService {
     // eslint-disable-next-line prefer-template
     this.campDashboard = $resource(__API_ENDPOINT__ + 'api/my-camp');
     // eslint-disable-next-line prefer-template
-    this.campFamily = $resource(__API_ENDPOINT__ + 'api/camps/:campId/family');
+    this.campFamily = $resource(__API_ENDPOINT__ + 'api/v1.0.0/camps/:campId/family');
     // eslint-disable-next-line prefer-template
     this.campMedicalResource = $resource(__API_ENDPOINT__ + 'api/camps/:campId/medical/:contactId', { campId: '@campId', contactId: '@contactId' });
     // eslint-disable-next-line prefer-template
-    this.campWaiversResource = $resource(__API_ENDPOINT__ + 'api/camps/:campId/waivers/:contactId', { campId: '@campId', contactId: '@contactId' });
+    this.campWaiversResource = $resource(__API_ENDPOINT__ + 'api/v1.0.0/camps/:campId/waivers/:contactId', { campId: '@campId', contactId: '@contactId' });
+    // eslint-disable-next-line prefer-template
+    this.emergencyContactResource = $resource(__API_ENDPOINT__ + 'api/v1.0.0/camps/:campId/emergencycontact/:contactId', { campId: '@campId', contactId: '@contactId' });
     // eslint-disable-next-line prefer-template
     this.productSummaryResource = $resource(__API_ENDPOINT__ + 'api/camps/:campId/product/:camperId', { campId: '@campId', camperId: '@camperId' });
 
@@ -101,6 +103,13 @@ class CampsService {
     return this.campWaiversResource.save({ campId, contactId }, waivers).$promise;
   }
 
+  getEmergencyContacts(campId, contactId) {
+    return this.emergencyContactResource.query({ campId, contactId }).$promise;
+  }
+
+  saveEmergencyContacts(campId, contactId, contacts) {
+    return this.emergencyContactResource.save({ campId, contactId }, contacts).$promise;
+  }
 }
 
 export default CampsService;

@@ -36,12 +36,24 @@ function CampHelpers() {
       registrationStartDate: '2016-10-16T00:00:00',
       startDate: '2017-01-08T00:00:00'
     },
-    emergencyContactModel: {
-      firstName: 'Jon',
-      lastName: 'Horner',
-      mobileNumber: '513-123-2345',
-      email: null,
-      relationship: 'co-worker'
+    emergencyContactFormModel: {
+      contacts: {
+        0: {
+          firstName: 'Jon',
+          lastName: 'Horner',
+          mobileNumber: '513-123-2345',
+          email: null,
+          relationship: 'co-worker',
+          primaryContact: true
+        },
+        1: {
+          firstName: 'Jane',
+          lastName: 'Horner',
+          mobileNumber: '513-987-6543',
+          email: null,
+          relationship: 'co-worker'
+        }
+      }
     },
     medicalInfoModel: {
       contactId: undefined,
@@ -55,6 +67,53 @@ function CampHelpers() {
       environmentalAllergies: undefined,
       otherAllergies: undefined
     },
+    emergencyContacts: [
+      {
+        firstName: 'Jon',
+        lastName: 'Horner',
+        mobileNumber: '513-123-2345',
+        email: null,
+        relationship: 'co-worker',
+        primaryContact: true
+      }, {
+        firstName: 'Jane',
+        lastName: 'Horner',
+        mobileNumber: '513-987-6543',
+        email: null,
+        relationship: 'co-worker'
+      }
+    ],
+    emergencyContactsSingle: [
+      {
+        firstName: 'Jon',
+        lastName: 'Horner',
+        mobileNumber: '513-123-2345',
+        email: null,
+        relationship: 'co-worker',
+        primaryContact: true
+      }, {
+        firstName: null,
+        lastName: null,
+        mobileNumber: null,
+        email: null,
+        relationship: null
+      }
+    ],
+    emergencyContactsEmpty: [
+      {
+        firstName: null,
+        lastName: null,
+        mobileNumber: null,
+        email: null,
+        relationship: null
+      }, {
+        firstName: null,
+        lastName: null,
+        mobileNumber: null,
+        email: null,
+        relationship: null
+      }
+    ],
     productInfo: {
       productId: 8,
       productName: 'Phil\'s Really Cool Camp',
@@ -77,7 +136,7 @@ function CampHelpers() {
         endDate: '2016-12-01T00:00:00'
       }]
     },
-    medicalInfoDto:{
+    medicalInfoDto: {
       contactId: 1234,
       medicalInformationId: 5,
       insuranceCompany: 'cigna',
@@ -93,7 +152,7 @@ function CampHelpers() {
         },
         { allergyType: 'Food',
           allergyId: 2,
-          allergyDescription: "",
+          allergyDescription: '',
           medicalInformationAllergyId: 5,
           allergyTypeId: 2
         },
