@@ -4,7 +4,7 @@ GO
 
 DECLARE @processorID as varchar(255);
 
-IF (SELECT URL from DP_Bookmarks where name like '%demo%')
+IF (SELECT URL from DP_Bookmarks where name like '%demo%') is not null
 	SET @processorID = 'cus_6YjXxCzFsV300g';
 ELSE
 	SET @processorID = 'cus_8Lez4HV887Qnwo';
