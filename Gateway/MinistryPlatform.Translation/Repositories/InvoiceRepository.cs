@@ -23,6 +23,14 @@ namespace MinistryPlatform.Translation.Repositories
            return GetInvoice(invoiceId) != null;
         }
 
+        public bool InvoiceExistsForEventParticipant(int eventParticipantId)
+        {
+            var filter = new Dictionary<string, object> { { "Event_Participant_ID", eventParticipantId } };
+
+            var apiToken = _apiUserRepository.GetToken();
+            return  _ministryPlatformRest.UsingAuthenticationToken(apiToken).Get<MpInvoiceDetail>("Invoice_Detail", filter).FirstOrDefault() != null;
+        }
+
         public void SetInvoiceStatus(int invoiceId, int statusId)
         {
             var dict = new Dictionary<string, object> {{"Invoice_ID", invoiceId}, {"Invoice_Status_ID", statusId}};
