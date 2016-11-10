@@ -480,19 +480,22 @@ namespace crds_angular.Services
             {
                 throw new ContactNotFoundException(contactId);
             }
-            var medInfoList = _medicalInformationRepository.GetMedicalAllergyInfo(contactId);
-            if (medInfoList.Count <= 0) {return null;}
+            var camperMed = _medicalInformationRepository.GetMedicalInformation(contactId);
+            if (camperMed == null) { return null; }
+
+            var allergies = _medicalInformationRepository.GetMedicalAllergyInfo(contactId);
+            
             var camperMedInfo = new MedicalInfoDTO
             {
                 ContactId = contactId,
-                MedicalInformationId = medInfoList[0].MedicalInformationId,              
-                InsuranceCompany = medInfoList[0].InsuranceCompany,
-                PolicyHolder = medInfoList[0].PolicyHolderName,
-                PhysicianName = medInfoList[0].PhysicianName,
-                PhysicianPhone = medInfoList[0].PhysicianPhone
+                MedicalInformationId = camperMed.MedicalInformationId,              
+                InsuranceCompany = camperMed.InsuranceCompany,
+                PolicyHolder = camperMed.PolicyHolder,
+                PhysicianName = camperMed.PhysicianName,
+                PhysicianPhone = camperMed.PhysicianPhone
             };
             camperMedInfo.Allergies = new List<Allergy>();
-            foreach (var medInfo in medInfoList )
+            foreach (var medInfo in allergies )
             {
                 if (medInfo.AllergyType != string.Empty)
                 {
