@@ -17,11 +17,11 @@ describe('Camps Medical Info Component', () => {
   beforeEach(angular.mock.module(campsModule));
   beforeEach(angular.mock.module(applicationModule));
 
-  beforeEach(inject((_$componentController_, _MedicalInfoForm_, _$log_, _$rootScope_, _$stateParams_, _$q_) => {
+  beforeEach(inject((_$componentController_, _MedicalInfoForm_, _$log_, _$rootScope_, _$state_, _$q_) => {
     $componentController = _$componentController_;
     // log = _$log_;
     medicalInfoForm = _MedicalInfoForm_;
-    stateParams = _$stateParams_;
+    stateParams = _$state.Params_;
     rootScope = _$rootScope_;
     q = _$q_;
 
