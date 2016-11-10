@@ -8,6 +8,7 @@ using System.Web.Http.Description;
 using crds_angular.Exceptions;
 using crds_angular.Exceptions.Models;
 using crds_angular.Models.Crossroads;
+using crds_angular.Models.Crossroads.Attribute;
 using crds_angular.Models.Crossroads.Groups;
 using crds_angular.Models.Json;
 using crds_angular.Security;
@@ -58,6 +59,25 @@ namespace crds_angular.Controllers.API
                     throw new HttpResponseException(apiError.HttpResponseMessage);
                 }
             });
+        }
+
+        [AcceptVerbs("GET")]
+        [ResponseType(typeof(List<AttributeCategoryDTO>))]
+        [VersionedRoute(template: "grouptool/categories", minimumVersion: "1.0.0")]
+        [Route("grouptool/categories")]
+        public IHttpActionResult GetCategories()
+        {
+            try
+            {
+                var cats = _groupToolService.GetGroupCategories();
+
+                return Ok(cats);
+            }
+            catch (Exception exception)
+            {
+                var apiError = new ApiErrorDto("Get Group Categories Failed", exception);
+                throw new HttpResponseException(apiError.HttpResponseMessage);
+            }
         }
 
         /// <summary>

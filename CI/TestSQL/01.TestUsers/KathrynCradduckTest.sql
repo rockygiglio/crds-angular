@@ -1,7 +1,7 @@
 USE [MinistryPlatform]
 GO
 
---kcradduck+testing@crossroads.net Contact
+--kcradduck+testing@crossroads.net Contact (providing last name filters out the Guest Giver record)
 DECLARE @contactID as int
 set @contactID = (select contact_id from contacts where Email_Address = 'kcradduck+testing@crossroads.net' and Last_Name = 'Cradduck-Test');
 
@@ -99,7 +99,7 @@ set @contactID = (select contact_id from contacts where Email_Address = 'kcraddu
 
 --Household for Kid14 Cradduck-Test
 DECLARE @houseHoldID as int
-set @houseHoldID = (select HouseHold_ID from Contacts where email_address = 'kcradduck+testing@crossroads.net');
+set @houseHoldID = (select HouseHold_ID from Contacts where email_address = 'kcradduck+testing@crossroads.net' and Last_Name = 'Cradduck-Test');
 
 --Kid14 Cradduck-Test Contact Updates
 UPDATE[dbo].Contacts 
@@ -113,7 +113,7 @@ set @contactID = (select contact_id from contacts where Email_Address = 'kcraddu
 
 --Household for Kid17 Cradduck-Test
 DECLARE @houseHoldID as int
-set @houseHoldID = (select HouseHold_ID from Contacts where email_address = 'kcradduck+testing@crossroads.net');
+set @houseHoldID = (select HouseHold_ID from Contacts where email_address = 'kcradduck+testing@crossroads.net' and Last_Name = 'Cradduck-Test');
 
 --Kid17 Cradduck-Test Contact Updates
 UPDATE [dbo].Contacts 

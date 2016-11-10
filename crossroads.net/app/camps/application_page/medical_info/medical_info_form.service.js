@@ -29,7 +29,7 @@ class MedicalInfoForm {
       otherAllergies: this.otherAllergies(),
     };
 
-    this.medicalInfoResource = $resource(`${__API_ENDPOINT__}api/camps/medical/:contactId`);
+    this.medicalInfoResource = $resource(`${__API_ENDPOINT__}api/v1.0.0/camps/medical/:contactId`);
   }
 
   save(contactId) {

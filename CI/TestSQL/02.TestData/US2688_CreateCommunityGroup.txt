@@ -1,3 +1,5 @@
+--This is in-progress. Needs to be refactored when we need it for further Community Groups work.
+
 --Community Group Setup
 USE [MinistryPlatform]
 GO

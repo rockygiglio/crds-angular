@@ -18,7 +18,7 @@ describe('Camps Medical Info Form', () => {
   }));
 
   it('should save the medical info', () => {
-    httpBackend.expectPOST(`${endpoint}/camps/medical/${contactId}`, campHelpers.medicalInfoModel).respond(200);
+    httpBackend.expectPOST(`${endpoint}/v1.0.0/camps/medical/${contactId}`, campHelpers.medicalInfoModel).respond(200);
     fixture.save(contactId);
     httpBackend.flush();
   });
