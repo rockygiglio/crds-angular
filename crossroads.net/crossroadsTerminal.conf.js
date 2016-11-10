@@ -1,11 +1,27 @@
+/* eslint-disable import/no-extraneous-dependencies */
 const webpack = require('webpack');
 const path = require('path');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const KarmaWebpackPlugin = require('karma-webpack');
+const KarmaJasminePlugin = require('karma-jasmine');
+const KarmaMochaReporterPlugin = require('karma-mocha-reporter');
+const KarmaPhantomjsLauncherPlugin = require('karma-phantomjs-launcher');
+const KarmaEnvPreprocessorPlugin = require('karma-env-preprocessor');
+const KarmaSourcemapLoaderPlugin = require('karma-sourcemap-loader');
+/* eslint-enable */
 
+
+/**
+ * FIXME: why are we using `path.resolve` and `__dirname` here? why not just `./`?
+ * --Jonathan Horner
+ */
+/* eslint-disable import/no-dynamic-require */
 const environmentVars = require(path.resolve(__dirname, 'environment.config.js'));
+/* eslint-enable */
+
 const definePlugin = new webpack.DefinePlugin(environmentVars.getTest());
 
-module.exports = function(config) {
+module.exports = function crdsTermConf(config) {
   config.set({
 
     // base path that will be used to resolve all patterns (eg. files, exclude)
@@ -25,7 +41,7 @@ module.exports = function(config) {
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
-      'spec/spec_index.js': ['webpack','env', 'sourcemap']
+      'spec/spec_index.js': ['webpack', 'env', 'sourcemap']
     },
 
     envPreprocessor: [
@@ -85,13 +101,13 @@ module.exports = function(config) {
           },
           {
             test: /\.json$/,
-            loaders: ["json-loader"]
+            loaders: ['json-loader']
           }
         ],
         noParse: [
-            path.join(__dirname, 'node_modules', 'video.js','dist'),
-            /videojs5-hlsjs-source-handler/,
-            path.join(__dirname, 'node_modules', 'videojs-chromecast','dist','videojs-chromecast.js')
+          path.join(__dirname, 'node_modules', 'video.js', 'dist'),
+          /videojs5-hlsjs-source-handler/,
+          path.join(__dirname, 'node_modules', 'videojs-chromecast', 'dist', 'videojs-chromecast.js')
         ]
       },
       plugins: [new ExtractTextPlugin('[name].css'), definePlugin]
@@ -127,12 +143,12 @@ module.exports = function(config) {
 
     // Plugins
     plugins: [
-      require('karma-webpack'),
-      require('karma-jasmine'),
-      require('karma-mocha-reporter'),
-      require('karma-phantomjs-launcher'),
-      require('karma-env-preprocessor'),
-      require('karma-sourcemap-loader')
+      KarmaWebpackPlugin,
+      KarmaJasminePlugin,
+      KarmaMochaReporterPlugin,
+      KarmaPhantomjsLauncherPlugin,
+      KarmaEnvPreprocessorPlugin,
+      KarmaSourcemapLoaderPlugin
     ]
   });
 };
