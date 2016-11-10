@@ -7,7 +7,7 @@ DECLARE @groupName as varchar(75)
 set @groupName = '(t) Life Group Oakley';
 
 DECLARE @groupStartDate as varchar(19)
-set @groupStartDate = {CONVERT(VARCHAR(19), getdate());
+set @groupStartDate = CONVERT(VARCHAR(19), getdate());
 
 DECLARE @eventTitle as varchar(75)
 set @eventTitle = '(t) Life Group Oakley';

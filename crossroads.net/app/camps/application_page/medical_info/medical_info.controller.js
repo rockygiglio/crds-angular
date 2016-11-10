@@ -1,9 +1,10 @@
+/* @ngInject */
 class MedicalInfoController {
-  constructor(MedicalInfoForm, $rootScope, $stateParams, $state) {
+  constructor(MedicalInfoForm, $rootScope, $state) {
     this.medicalInfoForm = MedicalInfoForm;
     this.rootScope = $rootScope;
-    this.stateParams = $stateParams;
-    this.state = $state;
+    this.go = $state.go;
+    this.stateParams = $state.params;
     this.viewReady = false;
     this.submitting = false;
     this.update = true;
@@ -22,6 +23,7 @@ class MedicalInfoController {
 
   submit() {
     this.submitting = true;
+
     if (this.medicalInfo.$valid) {
       this.medicalInfoForm.save(this.stateParams.contactId).then(() => {
         this.rootScope.$emit('notify', this.rootScope.MESSAGES.successfulSubmission);
@@ -29,6 +31,7 @@ class MedicalInfoController {
           // navigae back to mycamps page
           this.state.go('camps-dashboard');
         }
+        this.nextPage(this.model.contactId);
       }).catch(() => {
         this.rootScope.$emit('notify', this.rootScope.MESSAGES.generalError);
       }).finally(() => {
@@ -38,6 +41,10 @@ class MedicalInfoController {
       this.submitting = false;
       this.rootScope.$emit('notify', this.rootScope.MESSAGES.generalError);
     }
+  }
+
+  nextPage(camperId) {
+    this.go('campsignup.application', { page: 'product-summary', camperId });
   }
 }
 
