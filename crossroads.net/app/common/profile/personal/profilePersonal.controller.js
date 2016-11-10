@@ -20,7 +20,8 @@
     '$modal',
     'PasswordService',
     'Session',
-    'emailChange'
+    'emailChange',
+    '$cookies'
   ];
 
   function ProfilePersonalController(
@@ -38,7 +39,8 @@
       $modal,
       PasswordService,
       Session,
-      emailChange) {
+      emailChange,
+      $cookies) {
 
     var vm = this;
     var attributeTypeIds = require('crds-constants').ATTRIBUTE_TYPE_IDS;
@@ -123,7 +125,8 @@
         vm.countries = response.countries;
         vm.crossroadsLocations = response.crossroadsLocations;
         if (!vm.profileData) {
-          Profile.Personal.get(function(data) {
+          var cid = $cookies.get('userId');
+          Profile.Person.get({contactId: cid}).$promise.then (function(data) {
             vm.profileData = { person: data };
 
             // TODO: This is a continuation of the hack above. Remove this as part of fixing that hack.
