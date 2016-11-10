@@ -163,7 +163,7 @@ namespace MinistryPlatform.Translation.Test.Services
 
             _ministryPlatformRestService.Setup(m => m.UsingAuthenticationToken(It.IsAny<string>())).Returns(_ministryPlatformRestService.Object);
             _ministryPlatformRestService.Setup(m => m.Get<MpEvent>(eventId, null)).Returns(mpevent);
-            _ministryPlatformRestService.Setup(m => m.Get<MpContact>(It.IsAny<int>(), null)).Returns(new MpContact {ContactId = 12345, EmailAddress = "thecinnamonbagel@react.js"});
+            _ministryPlatformRestService.Setup(m => m.Get<MpContact>(It.IsAny<int>(), It.IsAny<string>())).Returns(new MpContact {ContactId = 12345, EmailAddress = "thecinnamonbagel@react.js"});
 
             //Act
             var theEvent = _fixture.GetEvent(eventId);

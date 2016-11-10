@@ -171,7 +171,7 @@ namespace MinistryPlatform.Translation.Repositories
             var apiToken = ApiLogin();
             
             var mpevent = _ministryPlatformRestRepository.UsingAuthenticationToken(apiToken).Get<MpEvent>(eventId);
-            mpevent.PrimaryContact = _ministryPlatformRestRepository.UsingAuthenticationToken(apiToken).Get<MpContact>(mpevent.PrimaryContactId);
+            mpevent.PrimaryContact = _ministryPlatformRestRepository.UsingAuthenticationToken(apiToken).Get<MpContact>(mpevent.PrimaryContactId, "Email_Address");
 
             return mpevent;
         }
