@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using MinistryPlatform.Translation.Models;
 
@@ -15,5 +15,6 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
         DateTime? GetTripFormResponseByContactId(int p, int pledgeId);
 
         string GetFormResponseAnswer(int formId, int contactId, int formFieldId);
+        MpFormResponse GetFormResponse(int formId, int contactId);
     }
 }
