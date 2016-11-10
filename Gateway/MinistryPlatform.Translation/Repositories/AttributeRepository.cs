@@ -78,23 +78,5 @@ namespace MinistryPlatform.Translation.Repositories
             return ret.FirstOrDefault();
 
         }
-
-        private MpAttribute MapMpAttribute(Dictionary<string, object> record)
-        {
-            return new MpAttribute
-            {
-
-                AttributeId = record.ToInt("Attribute_ID"),
-                Name = record.ToString("Attribute_Name"),
-                Description = record.ToString("Attribute_Description"),
-                CategoryId = record.ToNullableInt("Attribute_Category_ID"),
-                Category = record.ToString("Attribute_Category"),
-                CategoryDescription = record.ToString("Attribute_Category_Description"),
-                AttributeTypeId = record.ToInt("Attribute_Type_ID"),
-                AttributeTypeName = record.ToString("Attribute_Type"),
-                PreventMultipleSelection = record.ToBool("Prevent_Multiple_Selection"),
-                SortOrder = record.ToInt("Sort_Order")
-            };
-        }
     }
 }
