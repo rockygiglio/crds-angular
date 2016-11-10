@@ -12,9 +12,9 @@ class CampCardController {
     this.state = $state;
   }
 
-    pressMe() {
-    //build
-    this.state.go('camps-dashboard');
+  updateMedical() {
+    // build the link and navigate
+    this.state.go('campsignup.medical', { eventId: this.stateParams.eventId, contactId: this.stateParams.contactId });
   }
 
   formatDate() {
