@@ -3,7 +3,6 @@ class CampsFamilyController {
     this.campsService = CampsService;
     this.log = $log;
     this.rootScope = $rootScope;
-    this.formData = {};
   }
 
   $onInit() {
