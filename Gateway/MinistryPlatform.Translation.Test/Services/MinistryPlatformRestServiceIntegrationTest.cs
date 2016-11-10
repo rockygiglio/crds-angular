@@ -139,6 +139,16 @@ namespace MinistryPlatform.Translation.Test.Services
         }
 
         [Test]
+        public void TestGetEvents2()
+        {
+            var eventId = 4525285;
+
+            var mpevent = _fixture.UsingAuthenticationToken(_authToken).Get<MpEvent>(eventId);
+            mpevent.PrimaryContact = _fixture.UsingAuthenticationToken(_authToken).Get<MpContact>(mpevent.PrimaryContactId);
+
+            Assert.AreNotEqual(mpevent.PrimaryContact.ContactId, null);
+        }
+        [Test]
         public void TestSearchAllPaymentTypes()
         {
             Console.WriteLine("TestSearchAllPaymentTypes");

@@ -6,6 +6,7 @@ using crds_angular.Services.Interfaces;
 using MPInterfaces = MinistryPlatform.Translation.Repositories.Interfaces;
 using crds_angular.Exceptions.Models;
 using Crossroads.Utilities.Interfaces;
+using Crossroads.ApiVersioning;
 
 namespace crds_angular.Controllers.API
 {
@@ -24,7 +25,8 @@ namespace crds_angular.Controllers.API
         /// Send an email to a specific contactId
         /// </summary>
         [RequiresAuthorization]
-        [Route("api/sendemail")]
+        [VersionedRoute(template: "sendEmail", minimumVersion: "1.0.0")]
+        [Route("sendemail")]
         public IHttpActionResult Post(EmailCommunicationDTO email)
         {
             return Authorized(token =>
@@ -46,7 +48,8 @@ namespace crds_angular.Controllers.API
         /// Send an email to a group, takes in a list of contactId's
         /// </summary>
         [RequiresAuthorization]
-        [Route("api/sendgroupemail")]
+        [VersionedRoute(template: "sendGroupEmail", minimumVersion: "1.0.0")]
+        [Route("sendgroupemail")]
         public IHttpActionResult Post([FromBody] CommunicationDTO communication)
         {
             return Authorized(token =>
@@ -66,7 +69,8 @@ namespace crds_angular.Controllers.API
         /// <summary>
         /// Schedule an email to a specific contactId/emailAddress at a specific time
         /// </summary>
-        [Route("api/sendEmailReminder")]
+        [VersionedRoute(template: "sendEmailReminder", minimumVersion: "1.0.0")]
+        [Route("sendEmailReminder")]
         public IHttpActionResult PostReminder(EmailCommunicationDTO email)
         {
             try
