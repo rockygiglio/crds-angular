@@ -39,8 +39,9 @@ namespace MinistryPlatform.Translation.Repositories
                 return mpMedicalInfo;
             }
             _ministryPlatformRest.UsingAuthenticationToken(apiToken).Post(records);
-            var medInfo = _ministryPlatformRest.UsingAuthenticationToken(apiToken).Search<MpMedicalInformation>($"Contact_ID_Table.Contact_ID={contactId}", "MedicalInformation_ID");
-            return medInfo.SingleOrDefault();
+            string columns = "cr_Medical_Information.MedicalInformation_ID,InsuranceCompany,PolicyHolderName,PhysicianName,PhysicianPhone";
+            var medInfo = _ministryPlatformRest.UsingAuthenticationToken(apiToken).Search<MpMedicalInformation>($"Contact_ID_Table.Contact_ID={contactId}", columns);
+            return medInfo.FirstOrDefault();
         }
 
         public void UpdateOrCreateMedAllergy(List<MpMedicalAllergy> updateToAllergyList, List<MpMedicalAllergy> createToAllergyList  )

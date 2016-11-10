@@ -7,7 +7,9 @@ const CampCard = {
     startDate: '<',
     endDate: '<',
     paymentRemaining: '<',
-    campTitle: '<'
+    campTitle: '<',
+    camperId: '<',
+    campId: '<'
   },
   template: cardTemplate,
   controller: campCardController,

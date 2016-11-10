@@ -5,9 +5,10 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
     public interface IInvoiceRepository
     {
         bool InvoiceExists(int invoiceId);
+        bool InvoiceExistsForEventParticipant(int participantId);
         MpInvoice GetInvoice(int invoiceId);
         void SetInvoiceStatus(int invoiceId, int statusId);
         MpInvoiceDetail GetInvoiceDetailForInvoice(int invoiceId);
-        bool CreateInvoiceAndDetail(int productId, int? productOptionPriceId, int purchaserContactId, int recipientContactId);
+        bool CreateInvoiceAndDetail(int productId, int? productOptionPriceId, int purchaserContactId, int recipientContactId, int eventParticiapntId);
     }
 }
