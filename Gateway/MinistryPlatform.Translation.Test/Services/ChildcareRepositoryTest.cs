@@ -41,7 +41,7 @@ namespace MinistryPlatform.Translation.Test.Services
 
             var parms = new Dictionary<string,object>()
             {
-                {"@ContactID", contactId},
+                {"@ContactId", contactId},
                 {"@EventGroupID", groupId }
             };
 
@@ -70,7 +70,7 @@ namespace MinistryPlatform.Translation.Test.Services
 
             var parms = new Dictionary<string, object>()
             {
-                {"@ContactID", contactId},
+                {"@ContactId", contactId},
                 {"@EventGroupID", groupId }
             };
 

@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using log4net.Repository.Hierarchy;
 using MinistryPlatform.Translation.Models;
-using MinistryPlatform.Translation.Models.Payments;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 
 namespace MinistryPlatform.Translation.Repositories
@@ -16,19 +18,41 @@ namespace MinistryPlatform.Translation.Repositories
             _apiUserRepository = apiUserRepository;
         }
 
-        public void SaveMedicalInformation(MpMedicalInformation medicalInfo, int contactId)
+        public List<MpMedical> GetMedicalAllergyInfo(int contactId)
         {
-            var parms = new Dictionary<string, object>
-            {
-                {"@ContactId", contactId},
-                {"@InsuranceCompany", medicalInfo.InsuranceCompany},
-                {"@PolicyHolder", medicalInfo.PolicyHolder},
-                {"@PhysicianName", medicalInfo.PhysicianName},
-                {"@PhysicianPhone", medicalInfo.PhysicianPhone}
-            };
-
             var apiToken = _apiUserRepository.GetToken();
-            _ministryPlatformRest.UsingAuthenticationToken(apiToken).PostStoredProc("api_crds_Create_Medical_Info_For_Contacts", parms);
+            string columns = "Medical_Information_ID_Table.MedicalInformation_ID,Medical_Information_ID_Table.InsuranceCompany, " +
+                             "Medical_Information_ID_Table.PolicyHolderName,Medical_Information_ID_Table.PhysicianName, " +
+                             "Medical_Information_ID_Table.PhysicianPhone, Allergy_ID_Table.[Description],Allergy_ID_Table.[Allergy_ID], " +
+                             "Allergy_ID_Table_Allergy_Type_ID_Table.[Allergy_Type],Allergy_ID_Table_Allergy_Type_ID_Table.[Allergy_Type_ID], cr_Medical_Information_Allergies.[Medical_Information_Allergy_ID]";
+            return _ministryPlatformRest.UsingAuthenticationToken(apiToken)
+                .Search<MpMedical>($"Medical_Information_ID_Table_Contact_ID_Table.Contact_ID={contactId}",columns ).ToList();           
+        }
+
+        public MpMedicalInformation SaveMedicalInfo(MpMedicalInformation mpMedicalInfo, int contactId)
+        {
+            var apiToken = _apiUserRepository.GetToken();
+            var records = new List<MpMedicalInformation> {mpMedicalInfo};
+            if (mpMedicalInfo.MedicalInformationId != 0)
+            {
+                _ministryPlatformRest.UsingAuthenticationToken(apiToken).Put(records);
+                return mpMedicalInfo;
+            }
+            _ministryPlatformRest.UsingAuthenticationToken(apiToken).Post(records);
+            var medInfo = _ministryPlatformRest.UsingAuthenticationToken(apiToken).Search<MpMedicalInformation>($"Contact_ID_Table.Contact_ID={contactId}");
+            return medInfo.SingleOrDefault();
+        }
+
+        public void UpdateOrCreateMedAllergy(List<MpMedicalAllergy> updateToAllergyList, List<MpMedicalAllergy> createToAllergyList  )
+        {
+            var apiToken = _apiUserRepository.GetToken();
+            //var records = new List<Dictionary<string, object>>();
+            if (updateToAllergyList.Count > 0) {
+                _ministryPlatformRest.UsingAuthenticationToken(apiToken).Put(updateToAllergyList);
+            }
+            if (updateToAllergyList.Count > 0) {
+                _ministryPlatformRest.UsingAuthenticationToken(apiToken).Post(createToAllergyList);
+            }
         }
     }
 }

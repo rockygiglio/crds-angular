@@ -4,7 +4,7 @@ GO
 
 DECLARE @processorID as varchar(255);
 
-IF ((SELECT URL from DP_Bookmarks where name = 'crossroads.net') like '%demo%')
+IF (SELECT URL from DP_Bookmarks where name like '%demo%') is not null
 	SET @processorID = 'cus_6YjXxCzFsV300g';
 ELSE
 	SET @processorID = 'cus_8Lez4HV887Qnwo';
@@ -30,7 +30,7 @@ GO
 --Registered Account - Mpcrds+20@gmail.com contact record
 DECLARE @processorID as varchar(255);
 
-IF ((SELECT URL from DP_Bookmarks where name = 'crossroads.net') like '%demo%')
+IF (SELECT URL from DP_Bookmarks where name like '%demo%') is not null
  SET @processorID = 'cus_6Woe7iX2PlkGeb';
 ELSE
  SET @processorID = 'cus_8Lf397wd4AxozZ';

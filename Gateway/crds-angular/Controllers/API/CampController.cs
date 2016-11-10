@@ -199,8 +199,29 @@ namespace crds_angular.Controllers.API
             });
         }
 
+        [VersionedRoute(template: "camps/{eventId}/medical/{contactId}", minimumVersion: "1.0.0")]
+        [Route("camps/{eventId}/medical/{contactId}")]
+        [AcceptVerbs("GET")]
+        public IHttpActionResult GetCampMedicalInfo(int eventId, int contactId)
+        {
+            return Authorized(token =>
+            {
+                try
+                {
+                    var medicalInfo = _campService.GetCampMedicalInfo(eventId, contactId, token);
+                    return Ok(medicalInfo);
+                }
+                catch (Exception e)
+                {
+                    var apiError = new ApiErrorDto("Failed to get medical info data", e);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+            });
+        }
+
         [VersionedRoute(template: "camps/medical/{contactId}", minimumVersion: "1.0.0")]
         [Route("camps/medical/{contactId}")]
+        [AcceptVerbs("POST")]
         public IHttpActionResult SaveMedicalInformation([FromBody] MedicalInfoDTO medicalInfo, int contactId)
         {
             if (!ModelState.IsValid)

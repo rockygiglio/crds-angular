@@ -320,7 +320,8 @@ namespace crds_angular.Services
                                 CamperLastName = member.LastName,
                                 CampName = camp.EventTitle,
                                 CampStartDate = camp.EventStartDate,
-                                CampEndDate = camp.EventEndDate
+                                CampEndDate = camp.EventEndDate,
+                                EventId = camp.EventId
                             });
                         }
                     }
@@ -415,14 +416,98 @@ namespace crds_angular.Services
             {
                 throw new ContactNotFoundException(contactId);
             }
-            var mpMedicalInfo = new MpMedicalInformation
+            if (medicalInfo != null)
             {
-                InsuranceCompany = medicalInfo.InsuranceCompany,
-                PhysicianName = medicalInfo.PhysicianName,
-                PhysicianPhone = medicalInfo.PhysicianPhone,
-                PolicyHolder = medicalInfo.PolicyHolder
+                var mpMedicalInfo = new MpMedicalInformation
+                {
+                    MedicalInformationId = medicalInfo.MedicalInformationId,
+                    ContactId = contactId,
+                    InsuranceCompany = medicalInfo.InsuranceCompany ?? "N/A",
+                    PhysicianName = medicalInfo.PhysicianName ?? "N/A",
+                    PhysicianPhone = medicalInfo.PhysicianPhone ?? "N/A",
+                    PolicyHolder = medicalInfo.PolicyHolder ?? "N/A"
+                };
+                var medicalInformation =  _medicalInformationRepository.SaveMedicalInfo(mpMedicalInfo, contactId);
+                var updateToAllergyList = new List<MpMedicalAllergy>();
+                var createToAllergyList = new List<MpMedicalAllergy>();
+                foreach (var allergy in medicalInfo.Allergies)
+                {
+                    if (allergy.AllergyId != 0)
+                    {
+                        updateToAllergyList.Add(new MpMedicalAllergy
+                        {
+                            Allergy = new MpAllergy { 
+                                AllergyID = allergy.AllergyId,
+                                AllergyType = new MpAllergyType {
+                                    AllergyType = allergy.AllergyType,
+                                    AllergyTypeID = allergy.AllergyTypeId
+                                },
+                                AllergyDescription = allergy.AllergyDescription
+                            },
+                            MedicalInformationId = medicalInformation.MedicalInformationId,
+                            MedicalInfoAllergyId = allergy.MedicalInformationAllergyId
+                        });
+                    }
+                    else if (!string.IsNullOrEmpty(allergy.AllergyDescription))
+                    {
+                        createToAllergyList.Add(new MpMedicalAllergy
+                        {
+                            Allergy = new MpAllergy
+                            {
+                                AllergyType = new MpAllergyType {
+                                    AllergyType = allergy.AllergyType,
+                                    AllergyTypeID = allergy.AllergyTypeId
+                                },
+                                AllergyDescription = allergy.AllergyDescription
+                            },
+                            MedicalInformationId = medicalInformation.MedicalInformationId,
+                            MedicalInfoAllergyId = allergy.MedicalInformationAllergyId
+                        });
+                    }
+                }
+                _medicalInformationRepository.UpdateOrCreateMedAllergy(updateToAllergyList, createToAllergyList);
+            }           
+        }
+
+        public MedicalInfoDTO GetCampMedicalInfo(int eventId, int contactId, string token)
+        {
+            var loggedInContact = _contactRepository.GetMyProfile(token);
+            var family = _contactRepository.GetHouseholdFamilyMembers(loggedInContact.Household_ID);
+            family.AddRange(_contactRepository.GetOtherHouseholdMembers(loggedInContact.Contact_ID));
+
+            if (family.Where(f => f.ContactId == contactId).ToList().Count <= 0)
+            {
+                throw new ContactNotFoundException(contactId);
+            }
+            var medInfoList = _medicalInformationRepository.GetMedicalAllergyInfo(contactId);
+            if (medInfoList.Count <= 0) {return null;}
+            var camperMedInfo = new MedicalInfoDTO
+            {
+                ContactId = contactId,
+                MedicalInformationId = medInfoList[0].MedicalInformationId,              
+                InsuranceCompany = medInfoList[0].InsuranceCompany,
+                PolicyHolder = medInfoList[0].PolicyHolderName,
+                PhysicianName = medInfoList[0].PhysicianName,
+                PhysicianPhone = medInfoList[0].PhysicianPhone
             };
-            _medicalInformationRepository.SaveMedicalInformation(mpMedicalInfo, contactId);
+            camperMedInfo.Allergies = new List<Allergy>();
+            foreach (var medInfo in medInfoList )
+            {
+                if (medInfo.AllergyType != string.Empty)
+                {
+                    var allergy = new Allergy
+                    {
+                        MedicalInformationAllergyId = medInfo.MedicalInfoAllergyId,
+                        AllergyDescription = medInfo.AllergyDescription,
+                        AllergyType = medInfo.AllergyType,
+                        AllergyTypeId = medInfo.AllergyTypeId,
+                        AllergyId = medInfo.AllergyId
+                    };
+                    camperMedInfo.Allergies.Add(allergy);
+                }                    
+            }             
+            if (camperMedInfo.Allergies.Count > 0) { camperMedInfo.ShowAllergies = true; }
+            return camperMedInfo;
         }
 
         public List<CampEmergencyContactDTO> GetCamperEmergencyContactInfo(int eventId, int contactId, string token)
