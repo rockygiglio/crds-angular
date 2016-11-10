@@ -17,7 +17,7 @@ module.exports = {
     }
   },
   getTest: function() {
-    let params = this.get();
+    var params = this.get();
     params.__CRDS_ENV__ = JSON.stringify('');
     params.__COOKIE_DOMAIN__ = JSON.stringify('');
     return params;

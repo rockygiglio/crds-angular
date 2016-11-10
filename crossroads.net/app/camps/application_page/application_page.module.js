@@ -13,6 +13,9 @@ import MedicalInfoForm from './medical_info/medical_info_form.service';
 import ProductSummaryComponent from './product_summary/product_summary.component';
 import ProductSummaryForm from './product_summary/product_summary_form.service';
 
+// Payment
+import CampsPayment from './camps_payment/camps_payment.component';
+
 export default angular.module(constants.MODULES.CAMPS_APPLICATION_PAGE, [
   constants.MODULES.CORE,
   constants.MODULES.COMMON])
@@ -20,6 +23,7 @@ export default angular.module(constants.MODULES.CAMPS_APPLICATION_PAGE, [
   .component('emergencyContact', EmergencyContactComponent)
   .component('medicalInfo', MedicalInfoComponent)
   .component('productSummary', ProductSummaryComponent)
+  .component('campsPayment', CampsPayment)
   .service('ProductSummaryForm', ProductSummaryForm)
   .service('MedicalInfoForm', MedicalInfoForm)
   .service('EmergencyContactForm', EmergencyContactForm)
