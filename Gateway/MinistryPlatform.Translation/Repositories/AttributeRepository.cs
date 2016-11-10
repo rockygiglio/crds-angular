@@ -58,8 +58,6 @@ namespace MinistryPlatform.Translation.Repositories
         
         public List<MpAttributeCategory> GetAttributeCategory(int attributeTypeId)
         {
-            //Get all categories
-
             //cat cols haha
             string catCols = "Attribute_Category_ID_table.*";
             string catSearch = $"attribute_type_id = {attributeTypeId}";
@@ -69,10 +67,9 @@ namespace MinistryPlatform.Translation.Repositories
 
         public MpAttribute GetOneAttributeByCategoryId(int categoryId)
         {
-            //return distinct attributes of type categoryId
-            //that is active based on today and start and end date
-            // this must be able to return null if there are none
             string atSearch = $"attribute_category_id = {categoryId}";
+            atSearch += " AND (Attributes.Start_Date Is Null OR Attributes.Start_Date <= GetDate())";
+            atSearch += " AND (Attributes.End_Date Is Null OR Attributes.End_Date >= GetDate())";
 
             var ret = _ministryPlatformRest.UsingAuthenticationToken(_apiUserService.GetToken()).Search<MpAttribute>(atSearch, (string)null, (string)null, true);
             return ret.FirstOrDefault();
