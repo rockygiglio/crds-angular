@@ -32,7 +32,7 @@ describe('Camps Medical Info Component', () => {
     spyOn(medicalInfoForm, 'getFields').and.callThrough();
 
     const bindings = {};
-    medicalInfoController = $componentController('medicalInfo', null, bindings);
+    medicalInfoController = $componentController('campMedicalInfo', null, bindings);
     medicalInfoController.$onInit();
   }));
 

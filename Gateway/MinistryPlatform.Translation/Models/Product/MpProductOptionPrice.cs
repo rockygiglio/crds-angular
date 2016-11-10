@@ -13,7 +13,7 @@ namespace MinistryPlatform.Translation.Models.Product
         public string OptionTitle { get; set; }
 
         [JsonProperty(PropertyName = "Option_Price")]
-        public double OptionPrice { get; set; }
+        public decimal OptionPrice { get; set; }
 
         [JsonProperty(PropertyName = "Days_Out_To_Hide")]
         public int? DaysOutToHide { get; set; }

@@ -11,9 +11,9 @@ class MedicalInfoController {
   }
 
   $onInit() {
-    this.viewReady = true;
     this.model = this.medicalInfoForm.getModel();
     this.fields = this.medicalInfoForm.getFields();
+    this.viewReady = true;
     this.update = this.stateParams.update;
   }
 

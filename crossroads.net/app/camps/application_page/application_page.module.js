@@ -1,5 +1,10 @@
 import ApplicationPage from './application_page.component';
 import constants from '../../constants';
+import { registerResolve } from './resolve_registry';
+
+// Camper Info
+import CamperInfoComponent from './camper_info/camper_info.component';
+import CamperInfoForm from './camper_info/camper_info_form.service';
 
 // Emergency Contact Info
 import EmergencyContactComponent from './emergency_contact_info/emergency_contact.component';
@@ -9,6 +14,9 @@ import EmergencyContactForm from './emergency_contact_info/emergency_contact_for
 import MedicalInfoComponent from './medical_info/medical_info.component';
 import MedicalInfoForm from './medical_info/medical_info_form.service';
 
+// Camp Waivers
+import CampWaiversComponent from './camp_waivers/camp_waivers.component';
+
 // Product Summary
 import ProductSummaryComponent from './product_summary/product_summary.component';
 import ProductSummaryForm from './product_summary/product_summary_form.service';
@@ -16,11 +24,19 @@ import ProductSummaryForm from './product_summary/product_summary_form.service';
 export default angular.module(constants.MODULES.CAMPS_APPLICATION_PAGE, [
   constants.MODULES.CORE,
   constants.MODULES.COMMON])
+  .component('camperInfo', CamperInfoComponent)
   .component('campsApplicationPage', ApplicationPage)
   .component('emergencyContact', EmergencyContactComponent)
+  .component('campMedicalInfo', MedicalInfoComponent)
+  .component('campWaivers', CampWaiversComponent)
   .component('medicalInfo', MedicalInfoComponent)
   .component('productSummary', ProductSummaryComponent)
   .service('ProductSummaryForm', ProductSummaryForm)
   .service('MedicalInfoForm', MedicalInfoForm)
   .service('EmergencyContactForm', EmergencyContactForm)
+  .service('CamperInfoForm', CamperInfoForm)
+  .run(() => {
+    registerResolve('camp-waivers', CampWaiversComponent.resolve);
+    registerResolve('camper-info', CamperInfoComponent.resolve);
+  })
   .name;

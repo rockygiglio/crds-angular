@@ -131,6 +131,7 @@
     <Compile Include="Models\Payments\MpInvoiceDetail.cs" />
     <Compile Include="Models\Payments\MpPayment.cs" />
     <Compile Include="Models\Payments\MpPaymentDetail.cs" />
+    <Compile Include="Models\Payments\MpPaymentDetailReturn.cs" />
     <Compile Include="Models\Payments\MpPaymentType.cs" />
     <Compile Include="Models\Product\MpProduct.cs" />
     <Compile Include="Models\Product\MpProductOptionGroup.cs" />

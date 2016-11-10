@@ -574,7 +574,7 @@ namespace crds_angular.Services
             };
         }
 
-        private static List<ProductOptionDTO> ConvertProductOptionPricetoDto(List<MpProductOptionPrice> options, double basePrice, DateTime registrationEnd)
+        private static List<ProductOptionDTO> ConvertProductOptionPricetoDto(List<MpProductOptionPrice> options, decimal basePrice, DateTime registrationEnd)
         {
             
             return options.Select(option => new ProductOptionDTO

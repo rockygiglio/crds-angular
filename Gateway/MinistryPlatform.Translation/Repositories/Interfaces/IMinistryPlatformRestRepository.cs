@@ -97,6 +97,15 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
         /// <returns></returns>
         int Post<T>(List<T> records);
 
+        /// <summary>
+        /// Create a record and return a new record with it's ID 
+        /// </summary>
+        /// <typeparam name="T">The expected Return type</typeparam>
+        /// <typeparam name="M"> The shape of the data in Ministry Platform</typeparam>
+        /// <param name="records"></param>
+        /// <returns> The list of records with their new ID </returns>
+        List<T> PostWithReturn<M, T>(List<M> records);
+
         int Put<T>(List<T> records);
         int Put(string tableName, List<Dictionary<string, object>> records);
         int PostStoredProc(string procedureName, Dictionary<string, object> parameters);

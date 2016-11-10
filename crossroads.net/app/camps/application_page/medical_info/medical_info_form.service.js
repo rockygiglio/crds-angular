@@ -33,7 +33,7 @@ class MedicalInfoForm {
   }
 
   save(contactId) {
-    return this.medicalInfoResource.save({ contactId }, this.saveDto()).$promise;
+    return this.campsService.medicalInfoResource.save({ contactId }, this.saveDto()).$promise;
   }
 
   saveDto() {

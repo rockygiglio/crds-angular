@@ -22,7 +22,7 @@ namespace MinistryPlatform.Translation.Models.Payments
         public int Quantity { get; set; }
 
         [JsonProperty(PropertyName = "Line_Total")]
-        public double LineTotal { get; set; }
+        public decimal LineTotal { get; set; }
 
         [JsonProperty(PropertyName = "Product_ID")]
         public int ProductId { get; set; }

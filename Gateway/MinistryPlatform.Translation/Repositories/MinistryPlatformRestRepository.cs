@@ -138,6 +138,24 @@ namespace MinistryPlatform.Translation.Repositories
             return (int) response.StatusCode;
         }
 
+        public List<T> PostWithReturn<M, T>(List<M> records)
+        {
+            var json = JsonConvert.SerializeObject(records);
+            var url = $"/tables/{GetTableName<M>()}";
+            var request = new RestRequest(url, Method.POST);
+            AddAuthorization(request);
+            request.AddParameter("application/json", json, ParameterType.RequestBody);
+            var response = _ministryPlatformRestClient.Execute(request);
+            _authToken.Value = null;
+            response.CheckForErrors($"Error updating {GetTableName<M>()}", true);            
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                var content = JsonConvert.DeserializeObject<List<T>>(response.Content);
+                return content;
+            }
+            return default(List<T>);
+        }
+
         public int Put<T>(List<T> records)
         {
             var json = JsonConvert.SerializeObject(records);
