@@ -62,10 +62,6 @@ export default function CampRoutes($stateProvider) {
       url: '/family',
       template: '<camps-family></camps-family>',
     })
-    .state('campsignup.medical', {
-      url: '/camps/:eventId/medical-info/:contactId',
-      template: '<camps-application-page></camps-application-page>',
-    })
     .state('campsignup.application', {
       url: '/:page/:contactId',
       template: '<camps-application-page></camps-application-page>',

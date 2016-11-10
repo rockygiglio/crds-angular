@@ -7,17 +7,14 @@
  *    paymentRemaining
  */
 class CampCardController {
-  constructor($stateParams, $state) {
-    this.stateParams = $stateParams;
+  constructor($state) {
+    // this.stateParams = $stateParams;
     this.state = $state;
   }
 
   updateMedical() {
-    // build the link and navigate
-    // this.state.go('campsignup.medical', { eventId: this.stateParams.eventId, contactId: this.stateParams.contactId });
-
-    let camperId = 1;
-    this.state.go('campsignup.application', { page: 'product-summary', camperId });
+    let contactId = 6989102;
+    this.state.go('campsignup.application', { page: 'medical-info', contactId, campId: 4525285 });
   }
 
   formatDate() {
