@@ -83,15 +83,17 @@ namespace crds_angular.Services
         {
             var formId = _configurationWrapper.GetConfigIntValue("SummerCampFormID");
             var formFieldId = _configurationWrapper.GetConfigIntValue("SummerCampForm.FinancialAssistance");
-            
+            var me = _contactRepository.GetMyProfile(token);
             var campEvent = _eventRepository.GetEvent(eventId);
             var eventProduct = _productRepository.GetProductForEvent(eventId);
             var eventProductOptionPrices = _productRepository.GetProductOptionPricesForProduct(eventProduct.ProductId);
+            var invoiceDetails = _invoiceRepository.GetInvoiceDetailsForProductAndCamperAndContact(eventProduct.ProductId, camperContactId, me.Contact_ID);
             var answer = _formSubmissionRepository.GetFormResponseAnswer(formId, camperContactId, formFieldId);
             var financialAssistance = (string.IsNullOrEmpty(answer) ? false : Convert.ToBoolean(answer));
 
             var campProductInfo = new ProductDTO
             {
+                InvoiceId = invoiceDetails.Status ? invoiceDetails.Value.InvoiceId : 0,
                 ProductId = eventProduct.ProductId,
                 ProductName = eventProduct.ProductName,
                 BasePrice = eventProduct.BasePrice,

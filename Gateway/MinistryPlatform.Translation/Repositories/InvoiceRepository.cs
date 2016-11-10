@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Crossroads.Utilities.FunctionalHelpers;
 using MinistryPlatform.Translation.Models.Payments;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 
@@ -69,6 +70,20 @@ namespace MinistryPlatform.Translation.Repositories
             };
             var apiToken = _apiUserRepository.GetToken();
             return _ministryPlatformRest.UsingAuthenticationToken(apiToken).Post(new List<MpNestedInvoiceDetail>(new List<MpNestedInvoiceDetail> { invoice })) == 200;
+        }
+
+        public Result<MpInvoiceDetail> GetInvoiceDetailsForProductAndCamperAndContact(int productId, int camperId, int contactId)
+        {
+            var apiToken = _apiUserRepository.GetToken();
+            var invoiceDetails = _ministryPlatformRest.UsingAuthenticationToken(apiToken).Search<MpInvoiceDetail>($"Invoice_ID_Table_Purchaser_Contact_ID_Table.[Contact_ID]={contactId} AND Recipient_Contact_ID_Table.[Contact_ID]={camperId} AND Product_ID_Table.[Product_ID]={productId}", "Invoice_ID_Table.[Invoice_ID]");
+            if (invoiceDetails.Any())
+            {
+                if (invoiceDetails.First() != null)
+                {
+                    return new Result<MpInvoiceDetail>(true, invoiceDetails.First());
+                }
+            }
+            return new Result<MpInvoiceDetail>(false, "no invoice details for that user and product");
         }
     }
 }

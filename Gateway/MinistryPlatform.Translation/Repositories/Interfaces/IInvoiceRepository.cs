@@ -1,4 +1,5 @@
-﻿using MinistryPlatform.Translation.Models.Payments;
+﻿using Crossroads.Utilities.FunctionalHelpers;
+using MinistryPlatform.Translation.Models.Payments;
 
 namespace MinistryPlatform.Translation.Repositories.Interfaces
 {
@@ -9,5 +10,6 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
         void SetInvoiceStatus(int invoiceId, int statusId);
         MpInvoiceDetail GetInvoiceDetailForInvoice(int invoiceId);
         bool CreateInvoiceAndDetail(int productId, int? productOptionPriceId, int purchaserContactId, int recipientContactId);
+        Result<MpInvoiceDetail> GetInvoiceDetailsForProductAndCamperAndContact(int productId, int camperId, int contactId);
     }
 }

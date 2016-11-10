@@ -6,6 +6,9 @@ namespace crds_angular.Models.Crossroads.Camp
 {
     public class ProductDTO
     {
+        [JsonProperty(PropertyName = "invoiceId")]
+        public int? InvoiceId { get; set; }
+
         [JsonProperty(PropertyName = "productId")]
         public int ProductId { get; set; }
 
