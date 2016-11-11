@@ -4,7 +4,7 @@ import moment from 'moment';
 class ProductSummaryController {
   /* @ngInject */
   constructor(ProductSummaryForm, CampsService, $rootScope, $stateParams) {
-    this.productSummaryForm = ProductSummaryForm;
+    this.productSummaryForm = ProductSummaryForm.createForm();
     this.campsService = CampsService;
     this.rootScope = $rootScope;
     this.stateParams = $stateParams;

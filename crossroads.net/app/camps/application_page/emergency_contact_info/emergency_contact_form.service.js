@@ -1,6 +1,18 @@
-class EmergencyContactForm {
+class EmergencyContactFormFactory {
   /* ngInject */
-  constructor($resource, CampsService) {
+  constructor(CampsService) {
+    this.campsService = CampsService;
+  }
+
+  createForm() {
+    return new EmergencyContactForm(this.campsService);
+  }
+}
+
+export default EmergencyContactFormFactory;
+
+class EmergencyContactForm {
+  constructor(CampsService) {
     this.campsService = CampsService;
     this.formModel = {};
   }
@@ -201,5 +213,3 @@ class EmergencyContactForm {
   }
 
 }
-
-export default EmergencyContactForm;

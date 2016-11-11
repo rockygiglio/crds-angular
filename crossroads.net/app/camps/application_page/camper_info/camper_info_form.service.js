@@ -1,7 +1,6 @@
 class CamperInfoFormFactory {
   /* ngInject */
   constructor(CampsService, LookupService) {
-    console.debug('CamperInfoFormFactory - constructor');
     this.campsService = CampsService;
     this.lookupService = LookupService;
   }
@@ -15,7 +14,6 @@ export default CamperInfoFormFactory;
 
 class CamperInfoForm {
   constructor(CampsService, LookupService) {
-    console.debug('CamperInfoForm - constructor');
     this.campsService = CampsService;
     this.lookupService = LookupService;
 

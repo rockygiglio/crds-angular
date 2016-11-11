@@ -21,7 +21,6 @@ describe('Camp Product Summary Component', () => {
 
   beforeEach(inject((_$componentController_, _ProductSummaryForm_, _CampsService_, _$rootScope_, _$stateParams_, _$q_) => {
     $componentController = _$componentController_;
-    productSummaryForm = _ProductSummaryForm_;
     campsService = _CampsService_;
     stateParams = _$stateParams_;
     rootScope = _$rootScope_;
@@ -32,8 +31,12 @@ describe('Camp Product Summary Component', () => {
     stateParams.campId = campId;
     stateParams.contactId = contactId;
 
+    // Set up the form instance
+    productSummaryForm = _ProductSummaryForm_.createForm();
+    spyOn(_ProductSummaryForm_, 'createForm').and.callFake(() => productSummaryForm);
     spyOn(productSummaryForm, 'getModel').and.callThrough();
 
+    // Create the component to test
     const bindings = {};
     productSummaryController = $componentController('productSummary', null, bindings);
     productSummaryController.$onInit();

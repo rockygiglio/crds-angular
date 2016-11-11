@@ -1,6 +1,18 @@
-/* ngInject */
-class MedicalInfoForm {
+class MedicalInfoFormFactory {
+  /* ngInject */
+  constructor(CampsService, $resource) {
+    this.campsService = CampsService;
+    this.$resource = $resource;
+  }
 
+  createForm() {
+    return new MedicalInfoForm(this.campsService, this.$resource);
+  }
+}
+
+export default MedicalInfoFormFactory;
+
+class MedicalInfoForm {
   constructor(CampsService, $resource) {
     this.campsService = CampsService;
     this.allergies = [];
@@ -238,5 +250,3 @@ class MedicalInfoForm {
     return this.formModel;
   }
 }
-
-export default MedicalInfoForm;

@@ -20,7 +20,7 @@ describe('Camps Emergency Contact Form', () => {
   beforeEach(angular.mock.module(applicationmodule));
 
   beforeEach(inject((_EmergencyContactForm_, _CampsService_, _$httpBackend_) => {
-    fixture = _EmergencyContactForm_;
+    fixture = _EmergencyContactForm_.createForm();
     campsService = _CampsService_;
     httpBackend = _$httpBackend_;
 
