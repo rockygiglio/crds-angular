@@ -22,6 +22,16 @@ describe('Camp Service', () => {
     httpBackend.flush();
   });
 
+  it('Should make the API call to get a Camper', () => {
+    const eventId = 4525285;
+    const camperId = 1234;
+    httpBackend.expectGET(`${endpoint}/camps/${eventId}/campers/${camperId}`)
+      .respond(200, {});
+    campsService.getCamperInfo(eventId, camperId);
+
+    httpBackend.flush();
+  });
+
   it('should make the API call to get my dashboard', () => {
     httpBackend.expectGET(`${endpoint}/my-camp`).respond(200, []);
     campsService.getCampDashboard();

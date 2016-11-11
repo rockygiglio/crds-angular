@@ -1,6 +1,21 @@
-/* ngInject */
+class CamperInfoFormFactory {
+  /* ngInject */
+  constructor(CampsService, LookupService) {
+    console.debug('CamperInfoFormFactory - constructor');
+    this.campsService = CampsService;
+    this.lookupService = LookupService;
+  }
+
+  createForm() {
+    return new CamperInfoForm(this.campsService, this.lookupService);
+  }
+}
+
+export default CamperInfoFormFactory;
+
 class CamperInfoForm {
   constructor(CampsService, LookupService) {
+    console.debug('CamperInfoForm - constructor');
     this.campsService = CampsService;
     this.lookupService = LookupService;
 
@@ -21,7 +36,7 @@ class CamperInfoForm {
   }
 
   save(campId) {
-    return this.campsService.campResource.save({ campId }, this.formModel).$promise;
+    return this.campsService.camperResource.save({ campId }, this.formModel).$promise;
   }
 
   getModel() {
@@ -196,5 +211,3 @@ class CamperInfoForm {
     ];
   }
 }
-
-export default CamperInfoForm;

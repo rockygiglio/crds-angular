@@ -7,9 +7,7 @@ class CampsService {
     // eslint-disable-next-line prefer-template
     this.campResource = $resource(__API_ENDPOINT__ + 'api/camps/:campId');
     // eslint-disable-next-line prefer-template
-    this.camperResource = $resource(__API_ENDPOINT__ + 'api/camps/:campId/:camperId');
-    // eslint-disable-next-line prefer-template
-    this.camperResource = $resource(__API_ENDPOINT__ + 'api/camps/:campId/:camperId');
+    this.camperResource = $resource(__API_ENDPOINT__ + 'api/camps/:campId/campers/:camperId');
     // eslint-disable-next-line prefer-template
     this.campDashboard = $resource(__API_ENDPOINT__ + 'api/my-camp');
     // eslint-disable-next-line prefer-template
@@ -26,9 +24,25 @@ class CampsService {
     // eslint-disable-next-line prefer-template
     this.paymentResource = $resource(__API_ENDPOINT__ + 'api/v1.0.0/invoice/:invoiceId/payment/:paymentId');
 
+    this.campInfo = null;
+    this.campTitle = null;
+    this.camperInfo = null;
+    this.waivers = null;
+    this.productInfo = null;
+    this.payment = null;
+    this.campMedical = null;
+
+    this.initializeCampData();
+    this.initializeCamperData();
+  }
+
+  initializeCampData() {
     this.campInfo = {};
-    this.camperInfo = {};
     this.campTitle = '';
+  }
+
+  initializeCamperData() {
+    this.camperInfo = {};
     this.waivers = [];
     this.productInfo = {};
     this.payment = {};

@@ -11,7 +11,7 @@ describe('Camper Info Form Service', () => {
   beforeEach(angular.mock.module(campsModule));
 
   beforeEach(inject((_LookupService_, _CamperInfoForm_, _$httpBackend_) => {
-    camperInfoForm = _CamperInfoForm_;
+    camperInfoForm = _CamperInfoForm_.createForm();
     httpBackend = _$httpBackend_;
   }));
 
@@ -34,7 +34,7 @@ describe('Camper Info Form Service', () => {
     camperInfoForm.formModel.middleName = 'M';
     camperInfoForm.formModel.preferredName = 'Matt';
 
-    httpBackend.expectPOST(`${endpoint}/camps/${campId}`, camperInfoForm.formModel).respond(200);
+    httpBackend.expectPOST(`${endpoint}/camps/${campId}/campers`, camperInfoForm.formModel).respond(200);
     camperInfoForm.save(campId);
     httpBackend.flush();
   });

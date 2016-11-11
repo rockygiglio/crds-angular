@@ -1,7 +1,7 @@
-/* @ngInject */
 class CamperInfoController {
+  /* @ngInject */
   constructor(LookupService, CamperInfoForm, $rootScope, $stateParams) {
-    this.camperInfoForm = CamperInfoForm;
+    this.camperInfoForm = CamperInfoForm.createForm();
     this.lookupService = LookupService;
     this.rootScope = $rootScope;
     this.stateParams = $stateParams;
