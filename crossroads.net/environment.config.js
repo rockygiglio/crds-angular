@@ -19,12 +19,11 @@ module.exports = {
   },
   getTest() {
     var params = this.get();
-
     /* eslint-disable no-underscore-dangle */
     params.__CRDS_ENV__ = JSON.stringify('');
     params.__COOKIE_DOMAIN__ = JSON.stringify('');
     /* eslint-enable */
-
     return params;
   }
 };
+

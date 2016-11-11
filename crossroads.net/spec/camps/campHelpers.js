@@ -119,6 +119,7 @@ function CampHelpers() {
       productName: 'Phil\'s Really Cool Camp',
       basePrice: 900.0,
       basePriceEndDate: '2017-02-19T00:00:00',
+      financialAssistance: true,
       depositPrice: 200.0,
       options: [{
         productOptionPriceId: 13,
