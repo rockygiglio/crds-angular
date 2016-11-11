@@ -286,11 +286,12 @@ namespace crds_angular.Controllers.API
                             ContactId = contactId,
                             InvoiceId = dto.InvoiceId
                         };
-                        _paymentService.PostPayment(payment);
+                        var paymentReturn = _paymentService.PostPayment(payment);
                         var response = new DonationDTO
                         {
                             Amount = (int)dto.Amount,
-                            Email = donor.Email
+                            Email = donor.Email,
+                            PaymentId = paymentReturn.PaymentId
                         };
                         return Ok(response);
                     }
