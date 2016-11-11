@@ -38,5 +38,7 @@ export default angular.module(constants.MODULES.CAMPS_APPLICATION_PAGE, [
   .run(() => {
     registerResolve('camp-waivers', CampWaiversComponent.resolve);
     registerResolve('camper-info', CamperInfoComponent.resolve);
+    registerResolve('medical-info', MedicalInfoComponent.resolve);
+    //registerResolve('emergency-contact', EmergencyContactComponent.resolve);
   })
   .name;

@@ -22,7 +22,6 @@ class MedicalInfoController {
   }
 
   submit() {
-    console.log('submit');
     if (!this.submitting) {
       this.submitting = true;
 
