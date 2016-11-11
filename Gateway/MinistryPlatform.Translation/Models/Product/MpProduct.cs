@@ -13,9 +13,9 @@ namespace MinistryPlatform.Translation.Models.Product
         public string ProductName { get; set; }
 
         [JsonProperty(PropertyName = "Base_Price")]
-        public double BasePrice { get; set; }
+        public decimal BasePrice { get; set; }
 
         [JsonProperty(PropertyName = "Deposit_Price")]
-        public double DepositPrice { get; set; }
+        public decimal DepositPrice { get; set; }
     }
 }

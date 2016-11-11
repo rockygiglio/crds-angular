@@ -52,6 +52,28 @@ describe('Camp Service', () => {
     expect(campsService.family).toBeUndefined();
   });
 
+  it('should make the API call to get my camp payment', () => {
+    const invoiceId = 111;
+    const paymentId = 222;
+    expect(campsService.payment).toEqual({});
+
+    httpBackend.expectGET(`${endpoint}/v1.0.0/invoice/${invoiceId}/payment/${paymentId}`).respond(200, []);
+    campsService.getCampPayment(invoiceId, paymentId);
+    httpBackend.flush();
+    expect(campsService.payment).toBeDefined();
+  });
+
+  it('should make the API call to get my camp payment and handle error', () => {
+    const invoiceId = 111;
+    const paymentId = 222;
+
+    expect(campsService.payment).toEqual({});
+    httpBackend.expectGET(`${endpoint}/v1.0.0/invoice/${invoiceId}/payment/${paymentId}`).respond(500, []);
+    campsService.getCampPayment(invoiceId, paymentId);
+    httpBackend.flush();
+    expect(campsService.payment).toEqual({});
+  });
+
   afterEach(() => {
     httpBackend.verifyNoOutstandingExpectation();
     httpBackend.verifyNoOutstandingRequest();

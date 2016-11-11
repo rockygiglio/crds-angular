@@ -124,6 +124,7 @@ namespace crds_angular.Controllers.API
             });
         }
 
+        [VersionedRoute(template: "camps/product", minimumVersion: "1.0.0")]
         [Route("camps/product")]
         [AcceptVerbs("POST")]
         public IHttpActionResult SaveProductDetails([FromBody] CampProductDTO campProductDto)
@@ -221,6 +222,7 @@ namespace crds_angular.Controllers.API
 
         [VersionedRoute(template: "camps/medical/{contactId}", minimumVersion: "1.0.0")]
         [Route("camps/medical/{contactId}")]
+        [AcceptVerbs("POST")]
         public IHttpActionResult SaveMedicalInformation([FromBody] MedicalInfoDTO medicalInfo, int contactId)
         {
             if (!ModelState.IsValid)

@@ -13,13 +13,13 @@ namespace crds_angular.Models.Crossroads.Camp
         public string ProductName { get; set; }
 
         [JsonProperty(PropertyName = "basePrice")]
-        public double BasePrice { get; set; }
+        public decimal BasePrice { get; set; }
 
         [JsonProperty(PropertyName = "basePriceEndDate")]
         public DateTime BasePriceEndDate { get; set; }
 
         [JsonProperty(PropertyName = "depositPrice")]
-        public double DepositPrice { get; set; }
+        public decimal DepositPrice { get; set; }
 
         [JsonProperty(PropertyName = "financialAssistance")]
         public bool FinancialAssistance { get; set; }

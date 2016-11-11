@@ -1,26 +1,11 @@
-import getCampWaivers from './camp_waivers/camp_waivers.resolve';
+import { invokeResolve } from './application_page/resolve_registry';
 
-function getCampInfo(CampsService, $stateParams) {
-  const id = $stateParams.campId;
-  return CampsService.getCampInfo(id);
-}
-
-function getCamperInfo(CampsService, $stateParams) {
-  const camperId = $stateParams.camperId;
-  const campId = $stateParams.campId;
-  return CampsService.getCamperInfo(campId, camperId);
-}
+import { getCampInfo, getCamperInfo, getCampProductInfo, getCamperPayment } from './camps.resolves';
 
 function getCampMedical(CampsService, $stateParams) {
   const campId = $stateParams.campId;
   const contactId = $stateParams.contactId;
   return CampsService.getCampMedical(campId, contactId);
-}
-
-function getCampProductInfo(CampsService, $stateParams) {
-  const campId = $stateParams.campId;
-  const camperId = $stateParams.contactId;
-  return CampsService.getCampProductInfo(campId, camperId);
 }
 
 export default function CampRoutes($stateProvider) {
@@ -69,15 +54,6 @@ export default function CampRoutes($stateProvider) {
       url: '/family',
       template: '<camps-family></camps-family>',
     })
-    .state('campsignup.application', {
-      url: '/:page/:contactId',
-      template: '<camps-application-page></camps-application-page>',
-      resolve: {
-        getCampMedical,
-        getCampWaivers,
-        getCampProductInfo
-      }
-    })
     .state('campsignup.camper', {
       url: '/:camperId',
       template: '<camper-info></camper-info>',
@@ -86,5 +62,34 @@ export default function CampRoutes($stateProvider) {
         getCamperInfo,
         $stateParams: '$stateParams'
       }
-    });
+    })
+    .state('campsignup.thankyou', {
+      url: '/thankyou/:contactId?paymentId&invoiceId',
+      template: '<camp-thank-you></camp-thank-you>',
+      resolve: {
+        CampsService: 'CampsService',
+        $state: '$state',
+        getCamperPayment
+      }
+    })
+    //
+    // THIS MUST BE THE LAST DEFINED STATE
+    //
+    .state('campsignup.application', {
+      url: '/:page/:contactId',
+      template: '<camps-application-page></camps-application-page>',
+      params: {
+        update: false
+      },
+      resolve: {
+        $injector: '$injector',
+        $state: '$state',
+        $stateParams: '$stateParams',
+        CampsService: 'CampsService',
+        register: invokeResolve,
+        getCampMedical,
+        getCampProductInfo
+      }
+    })
+    ;
 }

@@ -4,6 +4,8 @@ using crds_angular.Exceptions;
 using crds_angular.Models.Crossroads.Payment;
 using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Interfaces;
+using MinistryPlatform.Translation.Enum;
+using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Models.Payments;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 
@@ -29,58 +31,90 @@ namespace crds_angular.Services
             _paidinfullStatus = configurationWrapper.GetConfigIntValue("PaidInFull");
             _somepaidStatus = configurationWrapper.GetConfigIntValue("SomePaid");
         }
-        public void PostPayment(PaymentDTO paymentDto)
+
+        public MpPaymentDetailReturn PostPayment(MpDonationAndDistributionRecord paymentRecord)
         {
             //check if invoice exists
-            if (!_invoiceRepository.InvoiceExists(paymentDto.InvoiceId))
+            if (!_invoiceRepository.InvoiceExists(paymentRecord.InvoiceId))
             {
-                throw new InvoiceNotFoundException(paymentDto.InvoiceId);
+                throw new InvoiceNotFoundException(paymentRecord.InvoiceId);
             }
 
             //check if contact exists
-            if (_contactRepository.GetContactById(paymentDto.ContactId)==null)
+            if (_contactRepository.GetContactById(paymentRecord.ContactId) == null)
             {
-                throw new ContactNotFoundException(paymentDto.ContactId);
+                throw new ContactNotFoundException(paymentRecord.ContactId);
             }
 
-            if (paymentDto.StripeTransactionId.Length > 50)
+            if (paymentRecord.ProcessorId.Length > 50)
             {
                 throw new Exception("Max length of 50 exceeded for transaction code");
             }
 
+            var pymtId = PaymentType.GetPaymentType(paymentRecord.PymtType).id;
+
             //check if payment type exists
-            if (!_paymentTypeRepository.PaymentTypeExists(paymentDto.PaymentTypeId))
+            if (!_paymentTypeRepository.PaymentTypeExists(pymtId))
             {
-                throw new PaymentTypeNotFoundException(paymentDto.PaymentTypeId);
-            }
-            
+                throw new PaymentTypeNotFoundException(pymtId);
+            }            
+
             //create payment -- send model
             var payment = new MpPayment
             {
-                InvoiceNumber = paymentDto.InvoiceId.ToString(),
-                ContactId = paymentDto.ContactId,
-                TransactionCode = paymentDto.StripeTransactionId,
+                InvoiceNumber = paymentRecord.InvoiceId.ToString(),
+                ContactId = paymentRecord.ContactId,
+                TransactionCode = paymentRecord.ProcessorId,
                 PaymentDate = DateTime.Now,
-                PaymentTotal = paymentDto.Amount,
-                PaymentTypeId = paymentDto.PaymentTypeId
+                PaymentTotal = paymentRecord.DonationAmt,
+                PaymentTypeId = pymtId                
             };
             var paymentDetail = new MpPaymentDetail
             {
                 Payment = payment,
-                PaymentAmount = paymentDto.Amount,
-                InvoiceDetailId = _invoiceRepository.GetInvoiceDetailForInvoice(paymentDto.InvoiceId).InvoiceDetailId
+                PaymentAmount = paymentRecord.DonationAmt,
+                InvoiceDetailId = _invoiceRepository.GetInvoiceDetailForInvoice(paymentRecord.InvoiceId).InvoiceDetailId
                 
             };
 
-            //returns boolean
-            _paymentRepository.CreatePaymentAndDetail(paymentDetail);
+            var result = _paymentRepository.CreatePaymentAndDetail(paymentDetail);
+            if (result.Status)
+            {
+                //update invoice payment status
+                var invoice = _invoiceRepository.GetInvoice(paymentRecord.InvoiceId);
+                var payments = _paymentRepository.GetPaymentsForInvoice(paymentRecord.InvoiceId);
+                var paymentTotal = payments.Sum(p => p.PaymentTotal);
+            
+                _invoiceRepository.SetInvoiceStatus(paymentRecord.InvoiceId, paymentTotal >= invoice.InvoiceTotal ? _paidinfullStatus : _somepaidStatus);
+                return result.Value;
+            }
+            else
+            {
+                throw new Exception("Unable to save payment data");
+            }
+        }
 
-            //update invoice payment status
-            var invoice = _invoiceRepository.GetInvoice(paymentDto.InvoiceId);
-            var payments = _paymentRepository.GetPaymentsForInvoice(paymentDto.InvoiceId);
-            var paymentTotal = payments.Sum(p => p.PaymentTotal);
+        public PaymentDetailDTO GetPaymentDetails(int paymentId, int invoiceId, string token)
+        {
+            var me = _contactRepository.GetMyProfile(token);
+            var invoice = _invoiceRepository.GetInvoice(invoiceId);
+            var payments = _paymentRepository.GetPaymentsForInvoice(invoiceId);
+            
+            var currentPayment = payments.Where(p => p.PaymentId == paymentId && p.ContactId == me.Contact_ID).ToList();
 
-            _invoiceRepository.SetInvoiceStatus(paymentDto.InvoiceId, paymentTotal >= invoice.InvoiceTotal ? _paidinfullStatus : _somepaidStatus);
+            if (currentPayment.Any())
+            {
+                var totalPaymentsMade = payments.Sum(p => p.PaymentTotal);
+                var leftToPay = invoice.InvoiceTotal - totalPaymentsMade;
+                return new PaymentDetailDTO()
+                {
+                    PaymentAmount = currentPayment.Any() ? currentPayment.First().PaymentTotal : 0M,
+                    RecipientEmail = me.Email_Address,
+                    TotalToPay = leftToPay
+                };
+            }
+            throw new Exception("No Payment found for " + me.Email_Address + " with id " + paymentId);
+           
         }
     }
 }

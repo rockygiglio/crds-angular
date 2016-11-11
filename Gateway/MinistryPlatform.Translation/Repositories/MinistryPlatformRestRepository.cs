@@ -138,6 +138,24 @@ namespace MinistryPlatform.Translation.Repositories
             return (int) response.StatusCode;
         }
 
+        public List<T> PostWithReturn<M, T>(List<M> records)
+        {
+            var json = JsonConvert.SerializeObject(records);
+            var url = $"/tables/{GetTableName<M>()}";
+            var request = new RestRequest(url, Method.POST);
+            AddAuthorization(request);
+            request.AddParameter("application/json", json, ParameterType.RequestBody);
+            var response = _ministryPlatformRestClient.Execute(request);
+            _authToken.Value = null;
+            response.CheckForErrors($"Error updating {GetTableName<M>()}", true);            
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                var content = JsonConvert.DeserializeObject<List<T>>(response.Content);
+                return content;
+            }
+            return default(List<T>);
+        }
+
         public int Put<T>(List<T> records)
         {
             var json = JsonConvert.SerializeObject(records);
@@ -194,6 +212,57 @@ namespace MinistryPlatform.Translation.Repositories
         {
             var result = parameters.Aggregate("?", (current, parameter) => current + ((parameter.Key.StartsWith("@") ? parameter.Key : "@" + parameter.Key) + "=" + parameter.Value + "&"));
             return result.TrimEnd('&');
+        }
+
+
+        /// <summary>
+        /// this allows us to search one table, and return a type of another
+        /// </summary>
+        /// <typeparam name="T1">Table/Type to search</typeparam>
+        /// <typeparam name="T2">Type to return</typeparam>
+        /// <param name="searchString">where clause</param>
+        /// <param name="columns">select statement</param>
+        /// <param name="orderByString">order by clause</param>
+        /// <param name="distinct">should we only return distinct</param>
+        /// <returns>List of T2</returns>
+        public List<T2> Search<T1, T2>(string searchString = null, string selectColumns = null, string orderByString = null, bool distinct = false)
+        {
+            var search = string.IsNullOrWhiteSpace(searchString) ? string.Empty : $"?$filter={MpRestEncode(searchString)}";
+            var orderBy = string.IsNullOrWhiteSpace(orderByString) ? string.Empty : $"&{MpRestEncode($"$orderby={orderByString}")}";
+            var distinctString = $"&{MpRestEncode("$distinct") + $"={distinct.ToString()}"}";
+
+            var url = AddColumnSelection(string.Format("/tables/{0}{1}{2}{3}", GetTableName<T1>(), search, orderBy, distinctString), selectColumns);
+
+            var request = new RestRequest(url, Method.GET);
+            AddAuthorization(request);
+
+            var response = _ministryPlatformRestClient.Execute(request);
+            _authToken.Value = null;
+            response.CheckForErrors($"Error searching {GetTableName<T1>()}");
+
+            var content = JsonConvert.DeserializeObject<List<T2>>(response.Content);
+
+            return content;
+        }
+
+        /// <summary>
+        /// this allows us to search one table, and return a type of another
+        /// </summary>
+        /// <typeparam name="T1">Table/Type to search</typeparam>
+        /// <typeparam name="T2">Type to return</typeparam>
+        /// <param name="searchString">where clause</param>
+        /// <param name="columns">select statement</param>
+        /// <param name="orderByString">order by clause</param>
+        /// <param name="distinct">should we only return distinct</param>
+        /// <returns>List of T2</returns>
+        public List<T2> Search<T1, T2>(string searchString, List<string> columns, string orderByString = null, bool distinct = false)
+        {
+            string selectColumns = null;
+            if (columns != null)
+            {
+                selectColumns = string.Join(",", columns);
+            }
+            return Search<T1, T2>(searchString, selectColumns, orderByString, distinct);
         }
 
         public List<T> Search<T>(string searchString = null, string selectColumns = null, string orderByString = null, bool distinct = false)

@@ -15,19 +15,23 @@ class CampsService {
     // eslint-disable-next-line prefer-template
     this.campFamily = $resource(__API_ENDPOINT__ + 'api/v1.0.0/camps/:campId/family');
     // eslint-disable-next-line prefer-template
-    this.campMedicalResource = $resource(__API_ENDPOINT__ + 'api/camps/:campId/medical/:contactId', { campId: '@campId', contactId: '@contactId' });
+    this.campMedicalResource = $resource(__API_ENDPOINT__ + 'api/v1.0.0/camps/:campId/medical/:contactId', { campId: '@campId', contactId: '@contactId' });
     // eslint-disable-next-line prefer-template
     this.campWaiversResource = $resource(__API_ENDPOINT__ + 'api/v1.0.0/camps/:campId/waivers/:contactId', { campId: '@campId', contactId: '@contactId' });
+    this.medicalInfoResource = $resource(`${__API_ENDPOINT__}api/camps/medical/:contactId`);
     // eslint-disable-next-line prefer-template
     this.emergencyContactResource = $resource(__API_ENDPOINT__ + 'api/v1.0.0/camps/:campId/emergencycontact/:contactId', { campId: '@campId', contactId: '@contactId' });
     // eslint-disable-next-line prefer-template
     this.productSummaryResource = $resource(__API_ENDPOINT__ + 'api/camps/:campId/product/:camperId', { campId: '@campId', camperId: '@camperId' });
+    // eslint-disable-next-line prefer-template
+    this.paymentResource = $resource(__API_ENDPOINT__ + 'api/v1.0.0/invoice/:invoiceId/payment/:paymentId');
 
     this.campInfo = {};
     this.camperInfo = {};
     this.campTitle = '';
     this.waivers = [];
     this.productInfo = {};
+    this.payment = {};
     this.campMedical = {};
   }
 
@@ -109,6 +113,15 @@ class CampsService {
 
   saveEmergencyContacts(campId, contactId, contacts) {
     return this.emergencyContactResource.save({ campId, contactId }, contacts).$promise;
+  }
+
+  getCampPayment(invoiceId, paymentId) {
+    return this.paymentResource.get({ paymentId, invoiceId }, (payment) => {
+      this.payment = payment;
+    },
+    (err) => {
+      this.log.error(err);
+    }).$promise;
   }
 }
 

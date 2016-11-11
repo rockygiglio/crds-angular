@@ -42,6 +42,10 @@ namespace MinistryPlatform.Translation.Models
 
         public string Notes { get; set; }
 
+        public int ContactId { get; set; }
+
+        public int InvoiceId { get; set; }
+
         #region Donation Distributions
         private readonly List<MpDonationDistribution> _distributions = new List<MpDonationDistribution>();
 
