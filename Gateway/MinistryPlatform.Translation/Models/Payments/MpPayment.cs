@@ -11,7 +11,7 @@ namespace MinistryPlatform.Translation.Models.Payments
         public int PaymentId { get; set; }
 
         [JsonProperty(PropertyName = "Payment_Total")]
-        public double PaymentTotal { get; set; }
+        public decimal PaymentTotal { get; set; }
 
         [JsonProperty(PropertyName = "Contact_ID")]
         public int ContactId { get; set; }

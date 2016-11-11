@@ -33,5 +33,11 @@ namespace crds_angular.Models.Crossroads.Stewardship
 
         [JsonProperty(PropertyName = "trip_deposit")]
         public bool TripDeposit { get; set; }
+
+        [JsonProperty(PropertyName = "transaction_type")]
+        public string TransactionType { get; set; }
+
+        [JsonProperty(PropertyName = "invoice_id")]
+        public int InvoiceId { get; set; }
     }
 }

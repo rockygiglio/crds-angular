@@ -303,7 +303,7 @@ namespace MinistryPlatform.Translation.Test.Services
         {
             var payment = new MpPayment
             {
-                PaymentTotal = 123.45,
+                PaymentTotal = 123.45M,
                 ContactId = 3717387,
                 PaymentDate = DateTime.Now,
                 PaymentTypeId = 11
@@ -312,7 +312,7 @@ namespace MinistryPlatform.Translation.Test.Services
             var paymentDetail = new MpPaymentDetail
             {
                 Payment = payment,
-                PaymentAmount = 123.45,
+                PaymentAmount = 123.45M,
                 InvoiceDetailId = 19
             };
             var resp = _fixture.UsingAuthenticationToken(_authToken).Post(new List<MpPaymentDetail> {paymentDetail});
@@ -385,6 +385,33 @@ namespace MinistryPlatform.Translation.Test.Services
             var searchString = $"Event_ID_Table.Event_ID={eventId} AND Participant_ID_Table_Contact_ID_Table.Contact_ID={contactId}";
             var column = "Event_ID_Table.Event_Title";
             var results = _fixture.UsingAuthenticationToken(_authToken).Search<string>(tableName, searchString, column);
+        }
+
+        [Test]
+        public void postPayment()
+        {
+            var paymentDetail = new MpPaymentDetail()
+            {
+                InvoiceDetailId = 18,
+                PaymentAmount = 2.0M,
+                Payment = new MpPayment()
+                {
+                    ContactId = 2186211,
+                    Currency = "usd",
+                    InvoiceNumber = "8",
+                    TransactionCode = "23423598",
+                    PaymentDate = DateTime.Now,
+                    PaymentTotal = 2.0M,
+                    PaymentTypeId = 4
+                }
+            };
+            var paymentList = new List<MpPaymentDetail>
+            {
+                paymentDetail
+            };
+            var result = _fixture.UsingAuthenticationToken(_authToken).PostWithReturn<MpPaymentDetail, MpPaymentDetailReturn>(paymentList);
+            Assert.IsNotNull(result);
+            Assert.AreNotEqual(0, result.First().PaymentId);
         }
 
     }

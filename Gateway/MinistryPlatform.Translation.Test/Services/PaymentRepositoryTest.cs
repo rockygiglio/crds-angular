@@ -30,12 +30,20 @@ namespace MinistryPlatform.Translation.Test.Services
         {
             var paymentDetail = FakePaymentInfo();
 
-            var paymentList = new List<MpPaymentDetail> {paymentDetail};
-            _ministryPlatformRest.Setup(p => p.Post(paymentList)).Returns(200);
+            var paymentList = new List<MpPaymentDetail> { paymentDetail };
+            _ministryPlatformRest.Setup(p => p.PostWithReturn<MpPaymentDetail, MpPaymentDetailReturn>(paymentList)).Returns(
+                new List<MpPaymentDetailReturn> {
+                    new MpPaymentDetailReturn()
+                    {
+                        InvoiceDetailId = paymentDetail.InvoiceDetailId,
+                        PaymentId = 1234,
+                        PaymentAmount = paymentDetail.PaymentAmount
+                    }
+                });
             _apiUserRepository.Setup(a => a.GetToken()).Returns(token);
 
             var response = _fixture.CreatePaymentAndDetail(paymentDetail);
-            Assert.AreEqual(true, response);
+            Assert.AreEqual(true, response.Status);
         }
 
         [Test]
@@ -44,18 +52,21 @@ namespace MinistryPlatform.Translation.Test.Services
             var paymentDetail = FakePaymentInfo();
 
             var paymentList = new List<MpPaymentDetail> { paymentDetail };
-            _ministryPlatformRest.Setup(p => p.Post(paymentList)).Returns(500);
+            _ministryPlatformRest.Setup(p => p.PostWithReturn<MpPaymentDetail, MpPaymentDetailReturn>(paymentList)).Returns(
+                new List<MpPaymentDetailReturn>());
             _apiUserRepository.Setup(a => a.GetToken()).Returns(token);
 
             var response = _fixture.CreatePaymentAndDetail(paymentDetail);
-            Assert.AreEqual(false, response);
+            Assert.AreEqual(false, response.Status);
         }
+
+        
 
         private static MpPaymentDetail FakePaymentInfo()
         {
             var payment = new MpPayment
             {
-                PaymentTotal = 123.45,
+                PaymentTotal = 123.45M,
                 ContactId = 3717387,
                 PaymentDate = DateTime.Now,
                 PaymentTypeId = 11
@@ -64,10 +75,11 @@ namespace MinistryPlatform.Translation.Test.Services
             var paymentDetail = new MpPaymentDetail
             {
                 Payment = payment,
-                PaymentAmount = 123.45,
+                PaymentAmount = 123.45M,
                 InvoiceDetailId = 19
             };
             return paymentDetail;
         }
     }
 }
+

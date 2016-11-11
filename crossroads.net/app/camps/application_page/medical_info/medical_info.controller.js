@@ -11,9 +11,9 @@ class MedicalInfoController {
   }
 
   $onInit() {
-    this.viewReady = true;
     this.model = this.medicalInfoForm.getModel();
     this.fields = this.medicalInfoForm.getFields();
+    this.viewReady = true;
     this.update = this.stateParams.update;
   }
 
@@ -22,24 +22,26 @@ class MedicalInfoController {
   }
 
   submit() {
-    this.submitting = true;
+    if (!this.submitting) {
+      this.submitting = true;
 
-    if (this.medicalInfo.$valid) {
-      this.medicalInfoForm.save(this.stateParams.contactId).then(() => {
-        this.rootScope.$emit('notify', this.rootScope.MESSAGES.successfulSubmission);
-        this.nextPage(this.model.contactId);
-        if (this.update) {
-          // navigate back to mycamps page
-          this.go('camps-dashboard');
-        }
-      }).catch(() => {
-        this.rootScope.$emit('notify', this.rootScope.MESSAGES.generalError);
-      }).finally(() => {
+      if (this.medicalInfo.$valid) {
+        this.medicalInfoForm.save(this.stateParams.contactId).then(() => {
+          this.rootScope.$emit('notify', this.rootScope.MESSAGES.successfulSubmission);
+          this.nextPage(this.model.contactId);
+          if (this.update) {
+            // navigate back to mycamps page
+            this.go('camps-dashboard');
+          }
+        }).catch(() => {
+          this.rootScope.$emit('notify', this.rootScope.MESSAGES.generalError);
+        }).finally(() => {
+          this.submitting = false;
+        });
+      } else {
         this.submitting = false;
-      });
-    } else {
-      this.submitting = false;
-      this.rootScope.$emit('notify', this.rootScope.MESSAGES.generalError);
+        this.rootScope.$emit('notify', this.rootScope.MESSAGES.generalError);
+      }
     }
   }
 

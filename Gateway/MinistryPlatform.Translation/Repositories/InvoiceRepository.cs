@@ -24,6 +24,14 @@ namespace MinistryPlatform.Translation.Repositories
            return GetInvoice(invoiceId) != null;
         }
 
+        public bool InvoiceExistsForEventParticipant(int eventParticipantId)
+        {
+            var filter = new Dictionary<string, object> { { "Event_Participant_ID", eventParticipantId } };
+
+            var apiToken = _apiUserRepository.GetToken();
+            return  _ministryPlatformRest.UsingAuthenticationToken(apiToken).Get<MpInvoiceDetail>("Invoice_Detail", filter).FirstOrDefault() != null;
+        }
+
         public void SetInvoiceStatus(int invoiceId, int statusId)
         {
             var dict = new Dictionary<string, object> {{"Invoice_ID", invoiceId}, {"Invoice_Status_ID", statusId}};
@@ -48,7 +56,7 @@ namespace MinistryPlatform.Translation.Repositories
             return _ministryPlatformRest.UsingAuthenticationToken(apiToken).Get<MpInvoiceDetail>("Invoice_Detail", filter).FirstOrDefault();
         }
 
-        public bool CreateInvoiceAndDetail(int productId, int? productOptionPriceId, int purchaserContactId, int recipientContactId)
+        public bool CreateInvoiceAndDetail(int productId, int? productOptionPriceId, int purchaserContactId, int recipientContactId, int eventParticipantId)
         {
             var product = _productRepository.GetProduct(productId);
             var productOptionPrice = productOptionPriceId != null ?_productRepository.GetProductOptionPrice((int)productOptionPriceId).OptionPrice : 0;
@@ -66,7 +74,8 @@ namespace MinistryPlatform.Translation.Repositories
                 Quantity = 1,
                 ProductOptionPriceId = productOptionPriceId,
                 LineTotal = product.BasePrice + productOptionPrice,
-                RecipientContactId = recipientContactId
+                RecipientContactId = recipientContactId,
+                EventParticipantId = eventParticipantId
             };
             var apiToken = _apiUserRepository.GetToken();
             return _ministryPlatformRest.UsingAuthenticationToken(apiToken).Post(new List<MpNestedInvoiceDetail>(new List<MpNestedInvoiceDetail> { invoice })) == 200;

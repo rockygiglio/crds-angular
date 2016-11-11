@@ -123,7 +123,7 @@
         vm.countries = response.countries;
         vm.crossroadsLocations = response.crossroadsLocations;
         if (!vm.profileData) {
-          Profile.Personal.get(function(data) {
+          Profile.Person.get({contactId: vm.contactId}).$promise.then (function(data) {
             vm.profileData = { person: data };
 
             // TODO: This is a continuation of the hack above. Remove this as part of fixing that hack.

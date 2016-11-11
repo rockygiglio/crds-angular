@@ -137,6 +137,11 @@ function CampHelpers() {
         endDate: '2016-12-01T00:00:00'
       }]
     },
+    payment: {
+      paymentAmount: 200.0000,
+      paymentLeft: 650.0000,
+      recipientEmail: 'chris@tallented.net'
+    },
     medicalInfoDto: {
       contactId: 1234,
       medicalInformationId: 5,
