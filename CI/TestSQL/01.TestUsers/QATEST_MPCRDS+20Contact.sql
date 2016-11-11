@@ -16,7 +16,7 @@ INSERT INTO [dbo].Contacts
 (0      ,'Guest Giver','Guest Giver',1                ,null        ,1                    ,null              ,null        ,'mpcrds+20@gmail.com',null          ,0                 ,0               ,null        ,null          ,null                 ,null         ,null       ,null     ,null        ,null    ,null                 ,null       ,null         ,null         ,null     ,null            ,null              ,null          ,NEWID()     ,null   ,1        );
 
 DECLARE @contactID as int
-SET @contactID = (select contact_id from contacts where email_address = 'mpcrds+20@gmail.com' and last_name is null);
+SET @contactID = (select top 1 contact_id from contacts where email_address = 'mpcrds+20@gmail.com' and last_name is null);
 
 --Donor RECORD
 INSERT INTO [dbo].Donors 
