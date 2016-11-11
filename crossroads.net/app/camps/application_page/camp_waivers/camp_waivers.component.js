@@ -1,13 +1,13 @@
 import CampWaiversController from './camp_waivers.controller';
 import template from './camp_waivers.html';
-import getCampWaivers from './camp_waivers.resolve';
+import { getCampWaivers, getCamperFamily, getCamperInfo } from '../../camps.resolves';
 
 const CampWaiversComponent = {
   bindings: {},
   template,
   controller: CampWaiversController,
   controllerAs: 'campWaivers',
-  resolve: [getCampWaivers]
+  resolve: [getCampWaivers, getCamperInfo, getCamperFamily]
 };
 
 export default CampWaiversComponent;

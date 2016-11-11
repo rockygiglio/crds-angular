@@ -18,6 +18,22 @@ export function getCampProductInfo(CampsService, $state) {
 export function getCamperPayment(CampsService, $state) {
   const invoiceId = $state.toParams.invoiceId;
   const paymentId = $state.toParams.paymentId;
-
   return CampsService.getCampPayment(invoiceId, paymentId);
+}
+
+export function getCampMedical(CampsService, $state) {
+  const campId = $state.toParams.campId;
+  const contactId = $state.toParams.contactId;
+  return CampsService.getCampMedical(campId, contactId);
+}
+
+export function getCamperFamily(CampsService, $state) {
+  const id = $state.toParams.campId;
+  return CampsService.getCampFamily(id);
+}
+
+export function getCampWaivers(CampsService, $state) {
+  const campId = $state.toParams.campId;
+  const contactId = $state.toParams.contactId;
+  return CampsService.getCampWaivers(campId, contactId);
 }

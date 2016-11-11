@@ -1,12 +1,6 @@
 import { invokeResolve } from './application_page/resolve_registry';
 
-import { getCampInfo, getCamperInfo, getCampProductInfo, getCamperPayment } from './camps.resolves';
-
-function getCampMedical(CampsService, $stateParams) {
-  const campId = $stateParams.campId;
-  const contactId = $stateParams.contactId;
-  return CampsService.getCampMedical(campId, contactId);
-}
+import { getCampInfo, getCampProductInfo, getCamperFamily, getCamperPayment } from './camps.resolves';
 
 export default function CampRoutes($stateProvider) {
   $stateProvider
@@ -42,25 +36,16 @@ export default function CampRoutes($stateProvider) {
         loggedin: crds_utilities.checkLoggedin,
         campsService: 'CampsService',
         getCampInfo,
-        $stateParams: '$stateParams',
-
-        family: (campsService, $stateParams) => {
-          const id = $stateParams.campId;
-          return campsService.getCampFamily(id);
-        }
+        $stateParams: '$stateParams'
       }
     })
     .state('campsignup.family', {
       url: '/family',
       template: '<camps-family></camps-family>',
-    })
-    .state('campsignup.camper', {
-      url: '/:camperId',
-      template: '<camper-info></camper-info>',
       resolve: {
+        $stateParams: '$stateParams',
         campsService: 'CampsService',
-        getCamperInfo,
-        $stateParams: '$stateParams'
+        getCamperFamily
       }
     })
     .state('campsignup.thankyou', {
@@ -87,7 +72,6 @@ export default function CampRoutes($stateProvider) {
         $stateParams: '$stateParams',
         CampsService: 'CampsService',
         register: invokeResolve,
-        getCampMedical,
         getCampProductInfo
       }
     })
