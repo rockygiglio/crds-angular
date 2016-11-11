@@ -55,10 +55,10 @@ namespace crds_angular.Controllers.API
         }
 
         /// <summary>
-        /// Retrieves a list of "quick" recommended donation amounts for in-line giving 
+        /// Retrieves a list of "quick" recommended donation amounts for in-line giving
         /// </summary>
         /// <returns>A list of donation amounts (int)</returns>
-        [VersionedRoute(template: "donations/predefinedAmounts", minimumVersion: "1.0.0")]
+        [VersionedRoute(template: "donations/predefined-amounts", minimumVersion: "1.0.0")]
         [Route("donations/predefinedamounts")]
         [HttpGet]
         public IHttpActionResult GetPredefinedDonationAmounts()
@@ -68,7 +68,7 @@ namespace crds_angular.Controllers.API
         }
 
         /// <summary>
-        /// Function serves TWO Routes - api/donations AND api/donations/{donationYear} 
+        /// Function serves TWO Routes - api/donations AND api/donations/{donationYear}
         /// Retrieve list of donations for the logged-in donor, optionally for the specified year, and optionally returns only soft credit donations (by default returns only direct gifts), and optionally include recurring gifts.
         /// </summary>
         /// <param name="softCredit">A bool indicating if the result should contain only soft-credit (true), only direct (false), or all (null) donations.  Defaults to null.</param>
@@ -91,7 +91,7 @@ namespace crds_angular.Controllers.API
         {
             return (Authorized(token =>
             {
-                var impersonateUserId = impersonateDonorId == null ? string.Empty : _mpDonorService.GetEmailViaDonorId(impersonateDonorId.Value).Email;                
+                var impersonateUserId = impersonateDonorId == null ? string.Empty : _mpDonorService.GetEmailViaDonorId(impersonateDonorId.Value).Email;
                 try
                 {
                     var donations = (impersonateDonorId != null)
@@ -170,7 +170,7 @@ namespace crds_angular.Controllers.API
         }
 
         [RequiresAuthorization]
-        [VersionedRoute(template: "gpExport/file/{selectionId}/{depositId}", minimumVersion: "1.0.0")]
+        [VersionedRoute(template: "gp-export/file/{selectionId}/{depositId}", minimumVersion: "1.0.0")]
         [Route("gpexport/file/{selectionId}/{depositId}")]
         [HttpGet]
         public IHttpActionResult GetGPExportFile(int selectionId, int depositId)
@@ -194,7 +194,7 @@ namespace crds_angular.Controllers.API
         }
 
         [ResponseType(typeof (List<DepositDTO>))]
-        [VersionedRoute(template: "gpExport/filenames/{selectionId}", minimumVersion: "1.0.0")]
+        [VersionedRoute(template: "gp-export/filenames/{selectionId}", minimumVersion: "1.0.0")]
         [Route("gpexport/filenames/{selectionId}")]
         [HttpGet]
         public IHttpActionResult GetGPExportFileNames(int selectionId)
@@ -315,7 +315,7 @@ namespace crds_angular.Controllers.API
                         var apiError = new ApiErrorDto("SavePayment Failed", e);
                         throw new HttpResponseException(apiError.HttpResponseMessage);
                     }
-                }                
+                }
             }
             catch (PaymentProcessorException stripeException)
             {

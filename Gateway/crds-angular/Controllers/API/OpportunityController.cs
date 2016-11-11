@@ -47,7 +47,7 @@ namespace crds_angular.Controllers.API
         }
 
         [ResponseType(typeof (int))]
-        [VersionedRoute(template: "opportunity/saveQualifiedServer", minimumVersion: "1.0.0")]
+        [VersionedRoute(template: "opportunity/save-qualified-server", minimumVersion: "1.0.0")]
         [Route("opportunity/save-qualified-server")]
         public IHttpActionResult Post([FromBody] MpRespondToOpportunityDto opportunityResponse)
         {
@@ -76,7 +76,7 @@ namespace crds_angular.Controllers.API
         }
 
         [ResponseType(typeof (List<long>))]
-        [VersionedRoute(template: "opportunity/getAllOpportunityDates/{opportunityId}", minimumVersion: "1.0.0")]
+        [VersionedRoute(template: "opportunity/get-all-opportunity-dates/{opportunityId}", minimumVersion: "1.0.0")]
         [Route("opportunity/getAllOpportunityDates/{opportunityId}")]
         public IHttpActionResult GetAllOpportunityDates(int opportunityId)
         {
@@ -90,7 +90,7 @@ namespace crds_angular.Controllers.API
         }
 
         [ResponseType(typeof (Dictionary<string, long>))]
-        [VersionedRoute(template: "opportunity/getLastOpportunityDate/{opportunityId}", minimumVersion: "1.0.0")]
+        [VersionedRoute(template: "opportunity/get-last-opportunity-date/{opportunityId}", minimumVersion: "1.0.0")]
         [Route("opportunity/getLastOpportunityDate/{opportunityId}")]
         public IHttpActionResult GetLastOpportunityDate(int opportunityId)
         {
@@ -117,7 +117,7 @@ namespace crds_angular.Controllers.API
         }
 
         [ResponseType(typeof (OpportunityResponseDto))]
-        [VersionedRoute(template: "opportunity/getResponseForOpportunity/{opportunityId}/{contactId}", minimumVersion: "1.0.0")]
+        [VersionedRoute(template: "opportunity/get-response-for-opportunity/{opportunityId}/{contactId}", minimumVersion: "1.0.0")]
         [Route("opportunity/getResponseForOpportunity/{opportunityId}/{contactId}")]
         public IHttpActionResult GetResponseForOpportunity(int opportunityId, int contactId)
         {
