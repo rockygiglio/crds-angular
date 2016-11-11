@@ -52,34 +52,34 @@ class MedicalInfoForm {
     const dto = {
       contactId: this.formModel.contactId,
       medicalInformationId: this.campsService.campMedical.medicalInformationId,
-      insuranceCompany: this.formModel.insuranceCompany,
-      policyHolder: this.formModel.policyHolder,
-      physicianName: this.formModel.physicianName,
-      physicianPhone: this.formModel.physicianPhone,
+      insuranceCompany: this.formModel.insuranceCompany || undefined,
+      policyHolder: this.formModel.policyHolder || undefined,
+      physicianName: this.formModel.physicianName || undefined,
+      physicianPhone: this.formModel.physicianPhone || undefined,
       allergies: [
         { allergyType: 'Medicine',
-          allergyId: this.medicineAllergyId,
-          allergyDescription: this.formModel.medicineAllergies,
-          medicalInformationAllergyId: this.medicineMedAllergyId,
-          allergyTypeId: this.medicineAllergyTypeId
+          allergyId: this.medicineAllergyId || undefined,
+          allergyDescription: this.formModel.medicineAllergies || undefined,
+          medicalInformationAllergyId: this.medicineMedAllergyId || undefined,
+          allergyTypeId: this.medicineAllergyTypeId || undefined
         },
         { allergyType: 'Food',
-          allergyId: this.foodAllergyId,
-          allergyDescription: this.formModel.foodAllergies,
-          medicalInformationAllergyId: this.foodMedAllergyId,
-          allergyTypeId: this.foodAllergyTypeId
+          allergyId: this.foodAllergyId || undefined,
+          allergyDescription: this.formModel.foodAllergies || undefined,
+          medicalInformationAllergyId: this.foodMedAllergyId || undefined,
+          allergyTypeId: this.foodAllergyTypeId || undefined
         },
         { allergyType: 'Environmental',
-          allergyId: this.environmentalAllergyId,
-          allergyDescription: this.formModel.environmentalAllergies,
-          medicalInformationAllergyId: this.environmentalMedAllergyId,
-          allergyTypeId: this.environmentAllergyTypeId
+          allergyId: this.environmentalAllergyId || undefined,
+          allergyDescription: this.formModel.environmentalAllergies || undefined,
+          medicalInformationAllergyId: this.environmentalMedAllergyId || undefined,
+          allergyTypeId: this.environmentAllergyTypeId || undefined
         },
         { allergyType: 'Other',
-          allergyId: this.otherAllergyId,
-          allergyDescription: this.formModel.otherAllergies,
-          medicalInformationAllergyId: this.otherMedAllergyId,
-          allergyTypeId: this.otherAllergyTypeId
+          allergyId: this.otherAllergyId || undefined,
+          allergyDescription: this.formModel.otherAllergies || undefined,
+          medicalInformationAllergyId: this.otherMedAllergyId || undefined,
+          allergyTypeId: this.otherAllergyTypeId || undefined
         }]
     };
     return dto;
