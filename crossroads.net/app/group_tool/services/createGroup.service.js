@@ -510,9 +510,9 @@ export default class CreateGroupService {
             }]
         }
 
-        return [profileAboutFields, profileAddressFields, groupMeetingDateTimeFields,
+        return [groupCategoryFields, groupMeetingDateTimeFields,
             groupMeetingLocationFields, groupTypeFields, groupAgeFields,
-            groupCategoryFields, groupAboutFields, groupVisibilityFields];
+            groupAboutFields, groupVisibilityFields, profileAboutFields, profileAddressFields];
     }
 
     createGroupCategoryOptionList(categories) {
