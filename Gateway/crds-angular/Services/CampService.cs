@@ -89,7 +89,7 @@ namespace crds_angular.Services
             var eventProductOptionPrices = _productRepository.GetProductOptionPricesForProduct(eventProduct.ProductId).OrderByDescending(m => m.DaysOutToHide).ToList();
             var invoiceDetails = _invoiceRepository.GetInvoiceDetailsForProductAndCamperAndContact(eventProduct.ProductId, camperContactId, me.Contact_ID);
             var answer = _formSubmissionRepository.GetFormResponseAnswer(formId, camperContactId, formFieldId);
-            var financialAssistance = (string.IsNullOrEmpty(answer) ? false : Convert.ToBoolean(answer));
+            var financialAssistance = (!string.IsNullOrEmpty(answer) && Convert.ToBoolean(answer));
 
             var campProductInfo = new ProductDTO
             {
@@ -483,7 +483,10 @@ namespace crds_angular.Services
                 throw new ContactNotFoundException(contactId);
             }
             var camperMed = _medicalInformationRepository.GetMedicalInformation(contactId);
-            if (camperMed == null) { return null; }
+            if (camperMed == null)
+            {
+                return new MedicalInfoDTO();
+            }
 
             var allergies = _medicalInformationRepository.GetMedicalAllergyInfo(contactId);
             

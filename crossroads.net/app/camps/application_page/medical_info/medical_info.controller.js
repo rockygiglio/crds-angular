@@ -19,6 +19,7 @@ class MedicalInfoController {
 
   cancel() {
     this.go('camps-dashboard');
+    this.options.resetModel();
   }
 
   submit() {
