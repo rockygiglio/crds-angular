@@ -104,8 +104,8 @@ namespace crds_angular.Controllers.API
         }
 
         [ResponseType(typeof(CampReservationDTO))]
-        [VersionedRoute(template: "camps/{eventId}/{contactId}", minimumVersion: "1.0.0")]
-        [Route("camps/{eventId}/{contactId}")]
+        [VersionedRoute(template: "camps/{eventId}/campers/{contactId}", minimumVersion: "1.0.0")]
+        [Route("camps/{eventId}/campers/{contactId}")]
         [HttpGet]
         public IHttpActionResult GetCamperInfo(int eventId, int contactId)
         {
@@ -152,8 +152,8 @@ namespace crds_angular.Controllers.API
             });
         }
 
-        [VersionedRoute(template: "camps/{eventId}", minimumVersion: "1.0.0")]
-        [Route("camps/{eventid}")]
+        [VersionedRoute(template: "camps/{eventId}/campers", minimumVersion: "1.0.0")]
+        [Route("camps/{eventid}/campers")]
         [HttpPost]
         public IHttpActionResult SaveCampReservation([FromBody] CampReservationDTO campReservation, int eventId)
         {

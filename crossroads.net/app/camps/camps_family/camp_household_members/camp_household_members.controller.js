@@ -1,12 +1,20 @@
 export default class CampHouseholdMembersController {
   /* @ngInject */
-  constructor(CampsService) {
+  constructor(CampsService, $state) {
     this.campsService = CampsService;
+    this.state = $state;
   }
 
   // eslint-disable-next-line class-methods-use-this
   isSignedUp(member) {
     return member.signedUpDate !== null;
+  }
+
+  signUp(member) {
+    // Since we might be selected a new camper, ensure that the CampService does not have cached data
+    // from the prior camper
+    this.campsService.initializeCamperData();
+    this.state.go('campsignup.application', { page: 'camper-info', contactId: member.contactId });
   }
 
   divClass(member) {

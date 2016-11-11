@@ -21,7 +21,6 @@ describe('Camps Emergency Contact Component', () => {
   beforeEach(inject((_$componentController_, _EmergencyContactForm_, _CampsService_, _$log_, _$rootScope_, _$stateParams_, _$q_) => {
     $componentController = _$componentController_;
     // log = _$log_;
-    emergencyContactForm = _EmergencyContactForm_;
     campsService = _CampsService_;
     stateParams = _$stateParams_;
     rootScope = _$rootScope_;
@@ -29,6 +28,10 @@ describe('Camps Emergency Contact Component', () => {
 
     stateParams.campId = campId;
     stateParams.contactId = contactId;
+
+    // Set up the form instance
+    emergencyContactForm = _EmergencyContactForm_.createForm();
+    spyOn(_EmergencyContactForm_, 'createForm').and.callFake(() => emergencyContactForm);
 
     spyOn(emergencyContactForm, 'getModel').and.callThrough();
     spyOn(emergencyContactForm, 'getFields').and.callThrough();
