@@ -44,7 +44,14 @@ namespace MinistryPlatform.Translation.Repositories
                 return mpMedicalInfo;
             }
             _ministryPlatformRest.UsingAuthenticationToken(apiToken).Post(records);
-            return GetMedicalInformation(contactId);
+            var medicalInformation =  GetMedicalInformation(contactId);
+            _ministryPlatformRest.UsingAuthenticationToken(apiToken)
+                .UpdateRecord("Contacts", contactId, new Dictionary<string, object>
+                {
+                    {"Contact_ID", contactId },
+                    {"MedicalInformation_ID", medicalInformation.MedicalInformationId}
+                });
+            return medicalInformation;
         }
 
         public void UpdateOrCreateMedAllergy(List<MpMedicalAllergy> updateToAllergyList, List<MpMedicalAllergy> createToAllergyList  )
