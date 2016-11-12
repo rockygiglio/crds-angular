@@ -494,10 +494,10 @@ namespace crds_angular.Services
             {
                 ContactId = contactId,
                 MedicalInformationId = camperMed.MedicalInformationId,              
-                InsuranceCompany = camperMed.InsuranceCompany,
-                PolicyHolder = camperMed.PolicyHolder,
-                PhysicianName = camperMed.PhysicianName,
-                PhysicianPhone = camperMed.PhysicianPhone
+                InsuranceCompany = camperMed.InsuranceCompany=="N/A"? null :camperMed.InsuranceCompany,
+                PolicyHolder = camperMed.PolicyHolder == "N/A"? null : camperMed.PolicyHolder,
+                PhysicianName = camperMed.PhysicianName == "N/A" ? null : camperMed.PhysicianName,
+                PhysicianPhone = camperMed.PhysicianPhone == "N/A" ? null : camperMed.PhysicianPhone
             };
             camperMedInfo.Allergies = new List<Allergy>();
             foreach (var medInfo in allergies )

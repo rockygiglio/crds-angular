@@ -49,7 +49,7 @@ namespace MinistryPlatform.Translation.Repositories
                 .UpdateRecord("Contacts", contactId, new Dictionary<string, object>
                 {
                     {"Contact_ID", contactId },
-                    {"MedicalInformation_ID_Table.MedicalInformation_ID", medicalInformation.MedicalInformationId}
+                    {"MedicalInformation_ID", medicalInformation.MedicalInformationId}
                 });
             return medicalInformation;
         }
