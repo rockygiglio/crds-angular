@@ -7,11 +7,13 @@
  *    paymentRemaining
  */
 class CampCardController {
-  constructor($state) {
+  constructor($state, CampsService) {
     this.state = $state;
+    this.campsService = CampsService;
   }
 
   updateMedical() {
+    this.campsService.initializeCamperData();
     this.state.go('campsignup.application', { page: 'medical-info', contactId: this.camperId, campId: this.campId, update: true });
   }
 
