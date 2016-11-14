@@ -640,6 +640,15 @@ namespace crds_angular.test.Services
                     MobileNumber = "123456789",
                     Relationship = "friend",
                     PrimaryEmergencyContact = true
+                },
+                 new CampEmergencyContactDTO
+                {
+                    FirstName = "Bob",
+                    LastName = "Horner",
+                    Email = "lknair@gmail.com",
+                    MobileNumber = "123456780",
+                    Relationship = "friend",
+                    PrimaryEmergencyContact = false
                 }
             };
         }
