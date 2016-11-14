@@ -431,6 +431,13 @@ namespace crds_angular.Services
                     PolicyHolder = medicalInfo.PolicyHolder ?? "N/A"
                 };
                 var medicalInformation =  _medicalInformationRepository.SaveMedicalInfo(mpMedicalInfo, contactId);
+                var updateToDictionary = new Dictionary<String, Object>
+                {
+                    {"Contact_ID", contactId},
+                    {"Medicalinformation_ID",medicalInformation.MedicalInformationId}
+                };
+                _contactRepository.UpdateContact(contactId, updateToDictionary);
+                
                 var updateToAllergyList = new List<MpMedicalAllergy>();
                 var createToAllergyList = new List<MpMedicalAllergy>();
                 foreach (var allergy in medicalInfo.Allergies)
