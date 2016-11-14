@@ -484,6 +484,23 @@ describe('Group Tool Group Service', () => {
       });
     });
 
+    it('should search by groupid', () => {
+      let groupId = 123;
+      httpBackend.expectGET(`${endpoint}/grouptool/grouptype/${CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS}/group/search/${groupId}`).
+                  respond(200, groups);
+      let promise = fixture.search(null, null, groupId);
+      httpBackend.flush();
+      expect(promise.$$state.status).toEqual(1);
+      promise.then(function(data) {
+        expect(data).toBeDefined();
+        expect(data.length).toEqual(groups.length);
+        for(let i = 0; i < data.length; i++) {
+          expect(data[i] instanceof SmallGroup).toBeTruthy();
+          expect(data[i].groupName).toEqual(groups[i].groupName);
+        }
+      });
+    });
+
     it('should throw 404 error if no groups found', () => {
       let keyword = 'keywords';
       let loc = 'oakley';
