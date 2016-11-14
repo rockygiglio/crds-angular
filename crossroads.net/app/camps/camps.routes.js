@@ -1,13 +1,6 @@
-function getCampInfo(CampsService, $stateParams) {
-  const id = $stateParams.campId;
-  return CampsService.getCampInfo(id);
-}
+import { invokeResolve } from './application_page/resolve_registry';
 
-function getCamperInfo(CampsService, $stateParams) {
-  const camperId = $stateParams.camperId;
-  const campId = $stateParams.campId;
-  return CampsService.getCamperInfo(campId, camperId);
-}
+import { getCampInfo, getCampProductInfo, getCamperFamily, getCamperPayment } from './camps.resolves';
 
 export default function CampRoutes($stateProvider) {
   $stateProvider
@@ -43,29 +36,45 @@ export default function CampRoutes($stateProvider) {
         loggedin: crds_utilities.checkLoggedin,
         campsService: 'CampsService',
         getCampInfo,
-        $stateParams: '$stateParams',
-        family: (campsService, $stateParams) => {
-          const id = $stateParams.campId;
-          return campsService.getCampFamily(id);
-        }
+        $stateParams: '$stateParams'
       }
     })
     .state('campsignup.family', {
       url: '/family',
       template: '<camps-family></camps-family>',
+      resolve: {
+        $stateParams: '$stateParams',
+        campsService: 'CampsService',
+        getCamperFamily
+      }
     })
+    .state('campsignup.thankyou', {
+      url: '/thankyou/:contactId?paymentId&invoiceId',
+      template: '<camp-thank-you></camp-thank-you>',
+      resolve: {
+        CampsService: 'CampsService',
+        $state: '$state',
+        getCamperPayment,
+        getCamperFamily
+      }
+    })
+    //
+    // THIS MUST BE THE LAST DEFINED STATE
+    //
     .state('campsignup.application', {
       url: '/:page/:contactId',
-      template: '<camps-application-page></camps-application-page>'
-    })
-    .state('campsignup.camper', {
-      url: '/:camperId',
-      template: '<camper-info></camper-info>',
+      template: '<camps-application-page></camps-application-page>',
+      params: {
+        update: false
+      },
       resolve: {
-        campsService: 'CampsService',
-        getCamperInfo,
-        $stateParams: '$stateParams'
+        $injector: '$injector',
+        $state: '$state',
+        $stateParams: '$stateParams',
+        CampsService: 'CampsService',
+        register: invokeResolve,
+        getCampProductInfo
       }
-    });
+    })
+    ;
 }
-

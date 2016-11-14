@@ -55,7 +55,7 @@ namespace MinistryPlatform.Translation.Test.Services
             Console.WriteLine("TestCallingAStoredProcedure");
             var parms = new Dictionary<string, object>()
             {
-                {"@ContactID", 100030266},
+                {"@ContactId", 100030266},
                 {"@EventGroupID", 172309}
             };
             var results = _fixture.UsingAuthenticationToken(_authToken).GetFromStoredProc<MPRspvd>("api_crds_childrsvpd", parms);
@@ -116,7 +116,7 @@ namespace MinistryPlatform.Translation.Test.Services
             var fields = new Dictionary<string, object>
             {
                 {"@PledgeCampaignID", 10000000},
-                {"@ContactID", 2186211 }
+                {"@ContactId", 2186211 }
             };
             var results = _fixture.UsingAuthenticationToken(_authToken).GetFromStoredProc<MpPledge>("api_crds_Add_As_TripParticipant", fields);
             Console.WriteLine("Result\t" + results.ToString());
@@ -138,6 +138,16 @@ namespace MinistryPlatform.Translation.Test.Services
 
         }
 
+        [Test]
+        public void TestGetEvents2()
+        {
+            var eventId = 4525285;
+
+            var mpevent = _fixture.UsingAuthenticationToken(_authToken).Get<MpEvent>(eventId);
+            mpevent.PrimaryContact = _fixture.UsingAuthenticationToken(_authToken).Get<MpContact>(mpevent.PrimaryContactId);
+
+            Assert.AreNotEqual(mpevent.PrimaryContact.ContactId, null);
+        }
         [Test]
         public void TestSearchAllPaymentTypes()
         {
@@ -262,7 +272,7 @@ namespace MinistryPlatform.Translation.Test.Services
         {
             var storedProcOpts = new Dictionary<string, object>
             {
-                {"@ContactID", 1234 },
+                {"@ContactId", 1234 },
                 {"@EventID", 4525285}
             };
             var result = _fixture.UsingAuthenticationToken(_authToken).GetFromStoredProc<MpStoredProcBool>("api_crds_Grade_Group_Participant_For_Camps", storedProcOpts);
@@ -278,7 +288,7 @@ namespace MinistryPlatform.Translation.Test.Services
         {
             var storedProcOpts = new Dictionary<string, object>
             {
-                {"@ContactID", 7672203},
+                {"@ContactId", 7672203},
                 {"@EventID", 4525325}
             };
             var result = _fixture.UsingAuthenticationToken(_authToken).GetFromStoredProc<MpStoredProcBool>("api_crds_Grade_Group_Participant_For_Camps", storedProcOpts);
@@ -293,7 +303,7 @@ namespace MinistryPlatform.Translation.Test.Services
         {
             var payment = new MpPayment
             {
-                PaymentTotal = 123.45,
+                PaymentTotal = 123.45M,
                 ContactId = 3717387,
                 PaymentDate = DateTime.Now,
                 PaymentTypeId = 11
@@ -302,7 +312,7 @@ namespace MinistryPlatform.Translation.Test.Services
             var paymentDetail = new MpPaymentDetail
             {
                 Payment = payment,
-                PaymentAmount = 123.45,
+                PaymentAmount = 123.45M,
                 InvoiceDetailId = 19
             };
             var resp = _fixture.UsingAuthenticationToken(_authToken).Post(new List<MpPaymentDetail> {paymentDetail});
@@ -353,7 +363,57 @@ namespace MinistryPlatform.Translation.Test.Services
             };
             var results = _fixture.UsingAuthenticationToken(_authToken).Get<MpPayment>("Payments", fields);
             Console.WriteLine("Result\t" + results.ToString());
-        }       
+        }
+
+        [Test]
+        public void TestGetASingleIntValue()
+        {
+            var contactId = 7681520;
+            var eventId = 4525325;
+            var tableName = "Event_Participants";
+            var searchString = $"Event_ID_Table.Event_ID={eventId} AND Participant_ID_Table_Contact_ID_Table.Contact_ID={contactId}";
+            var column = "Event_Participant_ID";
+            var results = _fixture.UsingAuthenticationToken(_authToken).Search<int>(tableName, searchString, column);
+        }
+
+        [Test]
+        public void TestGetASingleStringValue()
+        {
+            var contactId = 7681520;
+            var eventId = 4525325;
+            var tableName = "Event_Participants";
+            var searchString = $"Event_ID_Table.Event_ID={eventId} AND Participant_ID_Table_Contact_ID_Table.Contact_ID={contactId}";
+            var column = "Event_ID_Table.Event_Title";
+            var results = _fixture.UsingAuthenticationToken(_authToken).Search<string>(tableName, searchString, column);
+        }
+
+        [Test]
+        public void postPayment()
+        {
+            var paymentDetail = new MpPaymentDetail()
+            {
+                InvoiceDetailId = 18,
+                PaymentAmount = 2.0M,
+                Payment = new MpPayment()
+                {
+                    ContactId = 2186211,
+                    Currency = "usd",
+                    InvoiceNumber = "8",
+                    TransactionCode = "23423598",
+                    PaymentDate = DateTime.Now,
+                    PaymentTotal = 2.0M,
+                    PaymentTypeId = 4
+                }
+            };
+            var paymentList = new List<MpPaymentDetail>
+            {
+                paymentDetail
+            };
+            var result = _fixture.UsingAuthenticationToken(_authToken).PostWithReturn<MpPaymentDetail, MpPaymentDetailReturn>(paymentList);
+            Assert.IsNotNull(result);
+            Assert.AreNotEqual(0, result.First().PaymentId);
+        }
+
     }
 
     [MpRestApiTable(Name = "Payment_Types")]

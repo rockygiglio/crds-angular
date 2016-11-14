@@ -75,13 +75,6 @@
       US_FREQUENT_FLYER: 3980,
       VICTIM_OF_ABUSE: 3973
     },
-    ATTRIBUTE_CATEGORY_IDS: {
-      LIFE_STAGES: 17,
-      NEIGHBORHOODS: 18,
-      SPIRITUAL_GROWTH: 19,
-      INTEREST: 20,
-      HEALING: 21
-    },
     NON_CROSSROADS_LOCATIONS: {
       I_DO_NOT_ATTEND_CROSSROADS: 2,
       NOT_SITE_SPECIFIC: 5
@@ -149,7 +142,10 @@
       UPCOMING: 'Upcoming',
       OFF: 'Off'
     },
-    PRE_STREAM_HOURS: 15
-
+    PRE_STREAM_HOURS: 15,
+    COOKIES: {
+      SESSION_ID: __CRDS_ENV__+'sessionId',
+      REFRESH_TOKEN: __CRDS_ENV__+'refreshToken'
+    }
   };
 })();

@@ -110,6 +110,8 @@ describe('ServeTeamLeaderController', () => {
 			return deferred.promise;
 		});
 
+		const onUpdateTeamSpy = jasmine.createSpy('onTeamUpdate');
+		fixture.onUpdateTeam = onUpdateTeamSpy;
 		fixture.team = team;
 		fixture.team.serveOpportunities.push(notAvailableOpp);		
 		fixture.oppServeDate = '10/10/2016';
@@ -144,10 +146,9 @@ describe('ServeTeamLeaderController', () => {
 		expect(fixture.individuals.length).toBe(2);
 		let returnVal = fixture.saveRsvp();
 		rootScope.$digest(); //makes qApi.all resolve
-		expect(serveOpportunities.SaveRsvp.save.calls.count()).toBe(2);
 
-		
-		expect(fixture.team.serveOpportunities[0].rsvpMembers.length).toBe(4);
+		expect(serveOpportunities.SaveRsvp.save.calls.count()).toBe(2);
+		expect(onUpdateTeamSpy.calls.count()).toBe(2);		
 
 	});
 

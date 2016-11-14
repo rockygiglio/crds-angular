@@ -11,6 +11,7 @@ using crds_angular.Util;
 using log4net;
 using MinistryPlatform.Translation.PlatformService;
 using MPInterfaces = MinistryPlatform.Translation.Repositories.Interfaces;
+using Crossroads.ApiVersioning;
 
 namespace crds_angular.Controllers.API
 {
@@ -45,7 +46,8 @@ namespace crds_angular.Controllers.API
         /// </summary>
         /// <param name="fileId"></param>
         /// <returns>A byte stream?</returns>
-        [Route("api/image/{fileId:int}")]
+        [VersionedRoute(template: "image/{fileId}", minimumVersion: "1.0.0")]
+        [Route("image/{fileId:int}")]
         [HttpGet]
         public IHttpActionResult GetImage(Int32 fileId)
         {
@@ -70,7 +72,8 @@ namespace crds_angular.Controllers.API
         /// </summary>
         /// <param name="contactId"></param>
         /// <returns>A byte stream?</returns>
-        [Route("api/image/profile/{contactId:int}")]
+        [VersionedRoute(template: "image/profile/{contactId}", minimumVersion: "1.0.0")]
+        [Route("image/profile/{contactId:int}")]
         [HttpGet]
         public IHttpActionResult GetProfileImage(Int32 contactId)
         {
@@ -87,7 +90,8 @@ namespace crds_angular.Controllers.API
         /// </summary>
         /// <param name="recordId"></param>
         /// <returns>A byte stream?</returns>
-        [Route("api/image/pledgecampaign/{recordId:int}")]
+        [VersionedRoute(template: "image/pledgeCampaign/{recordId}", minimumVersion: "1.0.0")]
+        [Route("image/pledgecampaign/{recordId:int}")]
         [HttpGet]
         public IHttpActionResult GetCampaignImage(Int32 recordId)
         {
@@ -99,7 +103,8 @@ namespace crds_angular.Controllers.API
                 (RestHttpActionResult<ApiErrorDto>.WithStatus(HttpStatusCode.NotFound, new ApiErrorDto("No campaign image found")));
         }
 
-        [Route("api/image/profile/")]
+        [VersionedRoute(template: "image/profile", minimumVersion: "1.0.0")]
+        [Route("image/profile")]
         [HttpPost]
         public IHttpActionResult Post()
         {

@@ -22,5 +22,8 @@ namespace crds_angular.Models.Crossroads.Camp
 
         [JsonProperty(PropertyName = "endDate")]
         public DateTime CampEndDate { get; set; }
+
+        [JsonProperty(PropertyName = "eventId")]
+        public int EventId { get; set; }
     }
 }

@@ -159,6 +159,18 @@ namespace MinistryPlatform.Translation.Repositories
             return responseId;
         }
 
+        public string GetFormResponseAnswer(int formId, int contactId, int formFieldId)
+        {
+            var apiToken = ApiLogin();
+            const string selectColumns = "Response";
+
+            var formResponseId = GetFormResponseIdForFormContact(formId, contactId);
+            var formResponseAnswerId = GetFormResponseAnswerIdForFormFeildFormResponse(formResponseId,formFieldId);
+            var responseAnswer =_ministryPlatformRestRepository.UsingAuthenticationToken(apiToken).Get<MpFormAnswer>(formResponseAnswerId, selectColumns);
+
+            return responseAnswer == null ? string.Empty : responseAnswer.Response;
+        }
+
         public DateTime? GetTripFormResponseByContactId(int contactId, int pledgeId)
         {
             var searchString = $",{contactId},,{pledgeId}";
@@ -168,6 +180,16 @@ namespace MinistryPlatform.Translation.Repositories
                 return null;
             }
             return DateTime.Parse(signedUp.First()["Response_Date"].ToString());
+        }
+
+        public MpFormResponse GetFormResponse(int formId, int contactId)
+        {
+            var apiToken = ApiLogin();
+            var searchString = $"Form_ID={formId} AND Contact_ID={contactId}";
+            var response = _ministryPlatformRestRepository.UsingAuthenticationToken(apiToken).Search<MpFormResponse>(searchString).FirstOrDefault();
+            searchString = $"Form_Response_ID={response.FormResponseId}";
+            response.FormAnswers = _ministryPlatformRestRepository.UsingAuthenticationToken(apiToken).Search<MpFormAnswer>(searchString);
+            return response;
         }
 
         private int CreateOrUpdateFormResponse(MpFormResponse formResponse, string token)

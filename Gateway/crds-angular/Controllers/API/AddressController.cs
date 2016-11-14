@@ -5,6 +5,7 @@ using crds_angular.Exceptions;
 using crds_angular.Exceptions.Models;
 using crds_angular.Models.Crossroads;
 using crds_angular.Services.Interfaces;
+using Crossroads.ApiVersioning;
 
 namespace crds_angular.Controllers.API
 {
@@ -23,7 +24,8 @@ namespace crds_angular.Controllers.API
         /// <param name="address">An <see cref="AddressDTO">AddressDTO</see> with individual components populated</param>
         /// <returns>An <see cref="AddressDTO">AddressDTO</see> with parsed components including latitude and longitude.  This will return a 404/Not Found if the input address could not be located.</returns>
         [ResponseType(typeof(AddressDTO))]
-        [Route("api/address/validate")]
+        [VersionedRoute(template: "address/validate", minimumVersion: "1.0.0")]
+        [Route("address/validate")]
         [HttpPost]
         public IHttpActionResult ValidateAddress(AddressDTO address)
         {
@@ -36,7 +38,8 @@ namespace crds_angular.Controllers.API
         /// <param name="address">An address string</param>
         /// <returns>An <see cref="AddressDTO">AddressDTO</see> with parsed components including latitude and longitude.  This will return a 404/Not Found if the input address could not be located.</returns>
         [ResponseType(typeof(AddressDTO))]
-        [Route("api/address/validate")]
+        [VersionedRoute(template: "address/validate", minimumVersion: "1.0.0")]
+        [Route("address/validate")]
         [HttpGet]
         public IHttpActionResult ValidateAddress([FromUri(Name = "address")]string address)
         {

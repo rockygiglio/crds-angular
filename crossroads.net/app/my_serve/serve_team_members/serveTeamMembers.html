@@ -4,12 +4,14 @@
     <strong>{{role.name}}</strong>
   </div>
   <div class="col-sm-9">
-    <closable-tag ng-repeat="member in role.members | unique:'Participant_ID'"
-                  name="member.NickName +' '+ member.Last_Name"
+    <closable-tag ng-repeat="member in role.members | unique:'participantId'"
+                  name="member.nickName +' '+ member.lastName"
                   age="member.age"
                   on-click="serveTeamMembers.memberClick(member)"
                   on-close="serveTeamMembers.memberRemove(member)"
-                  class="push-half-right push-half-bottom"></closable-tag>
+                  class="push-half-right push-half-bottom"
+                  is-leader="serveTeamMembers.isLeader"
+                  opportunity-id="member.opportunityId"></closable-tag>
     <span ng-if="role.members == null || role.members.length < 1">None</span>
   </div>
 </div>

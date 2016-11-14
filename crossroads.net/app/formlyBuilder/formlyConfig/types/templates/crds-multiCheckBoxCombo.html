@@ -9,7 +9,7 @@
               class="formly-field-checkbox ng-valid ng-not-empty ng-valid-parse">
         <strong>{{option[to.labelProp || 'name']}}</strong>
       </label>
-      <p class="soft-left ng-binding" dynamic-content="{{option[to.descProp]}}"></p>    
+      <p class="soft-left ng-binding">{{option[to.descProp]}}</p>    
     </div>
     <div class="soft-left">
         <input type="input"
@@ -19,6 +19,7 @@
                 ng-if="multiCheckboxCombo.checked[$index]"
                 maxlength="{{to.maxFieldLength}}"
                 placeholder="{{option[to.placeholder]}}"
+                ng-disabled="{{option['disabled']}}"
                 class="form-control ng-pristine ng-valid ng-empty push-half-bottom">
     </div>
   </div>

@@ -13,24 +13,47 @@ describe('CategoryFilter', () => {
   describe('the constructor', () => {
     it('should load categories', () => {
       let categories = [
-        {label: 'Interest', categoryId: 123, labelDesc: 'interest123'},
-        {label: 'Neighborhoods', categoryId: 456, labelDesc: 'neighborhoods456'},
+        {
+        categoryId: 9987878,
+        name: 'Journey',
+        desc: 'The current Journey',
+        exampleText: 'Journey Group',
+        requiresActiveAtribute: true,
+        attribute: {
+          id: '1',
+          name: 'I Am ______',
+          startDate: '',
+          endDate: ''
+        }
+      }, {
+        categoryId: 2,
+        name: 'Interest',
+        desc: 'desc',
+        exampleText: 'Ex. Boxing, XBox',
+        requiresActiveAtribute: false,
+        attribute: {
+          id: '',
+          name: '',
+          startDate: '',
+          endDate: ''
+        }
+      }
       ];
 
       let deferred = qApi.defer();
       deferred.resolve(categories);
-      let groupService = jasmine.createSpyObj('groupServiceMock', ['getGroupCategories']);
-      groupService.getGroupCategories.and.returnValue(deferred.promise);
+      let groupService = jasmine.createSpyObj('groupServiceMock', ['getGroupTypeCategories']);
+      groupService.getGroupTypeCategories.and.returnValue(deferred.promise);
 
       let filter = new CategoryFilter('Category', groupService);
       rootScope.$apply();
-      expect(groupService.getGroupCategories).toHaveBeenCalled();
+      expect(groupService.getGroupTypeCategories).toHaveBeenCalled();
       expect(filter.getValues()).toBeDefined();
       expect(filter.getValues().length).toEqual(categories.length);
       for(let i = 0; i < categories.length; i++) {
-        expect(filter.getValues()[i].getName()).toEqual(categories[i].label);
+        expect(filter.getValues()[i].getName()).toEqual(categories[i].name);
         expect(filter.getValues()[i].getValue()).toEqual(categories[i].categoryId);
-        expect(filter.getValues()[i].getHelpText()).toEqual(categories[i].labelDesc);
+        expect(filter.getValues()[i].getHelpText()).toEqual(categories[i].desc);
         expect(filter.getValues()[i].isSelected()).toBeFalsy();
       }
     });
@@ -43,8 +66,8 @@ describe('CategoryFilter', () => {
       let deferred = qApi.defer();
       deferred.resolve([]);
 
-      let groupService = jasmine.createSpyObj('groupServiceMock', ['getGroupCategories']);
-      groupService.getGroupCategories.and.returnValue(deferred.promise);
+      let groupService = jasmine.createSpyObj('groupServiceMock', ['getGroupTypeCategories']);
+      groupService.getGroupTypeCategories.and.returnValue(deferred.promise);
       fixture = new CategoryFilter('Category', groupService);
       rootScope.$apply();
     });

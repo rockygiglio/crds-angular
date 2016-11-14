@@ -10,7 +10,6 @@ using crds_angular.Models.Crossroads.Attribute;
 using crds_angular.Models.Crossroads.Events;
 using crds_angular.Models.Crossroads.Groups;
 using crds_angular.Models.Crossroads.Opportunity;
-using crds_angular.Models.Crossroads.Participants;
 using crds_angular.Models.Crossroads.Profile;
 using crds_angular.Models.Crossroads.Serve;
 using crds_angular.Models.Crossroads.Stewardship;
@@ -36,7 +35,6 @@ namespace crds_angular.App_Start
             Mapper.Initialize(cfg =>
             {
                 cfg.AddProfile<EventProfile>();
-                cfg.AddProfile<ParticipantProfile>();
                 cfg.AddProfile<ServeProfile>();
             });
 
@@ -300,10 +298,44 @@ namespace crds_angular.App_Start
             Mapper.CreateMap<MpInquiry, Inquiry>();
             Mapper.CreateMap<ObjectAttributeDTO, MpAttribute>();
             Mapper.CreateMap<MpAttribute, ObjectAttributeDTO>();
-            Mapper.CreateMap<RsvpMembers, MpRsvpMember>();
-            Mapper.CreateMap<MpRsvpMember, RsvpMembers>();
+            Mapper.CreateMap<MpAttribute, AttributeDTO>()
+                .ForMember(dest => dest.CategoryId, opts => opts.MapFrom(src => src.CategoryId))
+                .ForMember(dest => dest.AttributeId, opts => opts.MapFrom(src => src.AttributeId))
+                .ForMember(dest => dest.AttributeTypeId, opts => opts.MapFrom(src => src.AttributeTypeId))
+                .ForMember(dest => dest.Category, opts => opts.MapFrom(src => src.Category))
+                .ForMember(dest => dest.CategoryDescription, opts => opts.MapFrom(src => src.CategoryDescription))
+                .ForMember(dest => dest.Description, opts => opts.MapFrom(src => src.Description))
+                .ForMember(dest => dest.Name, opts => opts.MapFrom(src => src.Name))
+                .ForMember(dest => dest.SortOrder, opts => opts.MapFrom(src => src.SortOrder));
+
+            Mapper.CreateMap<AttributeDTO, MpAttribute>()
+                .ForMember(dest => dest.CategoryId, opts => opts.MapFrom(src => src.CategoryId))
+                .ForMember(dest => dest.AttributeId, opts => opts.MapFrom(src => src.AttributeId))
+                .ForMember(dest => dest.AttributeTypeId, opts => opts.MapFrom(src => src.AttributeTypeId))
+                .ForMember(dest => dest.Category, opts => opts.MapFrom(src => src.Category))
+                .ForMember(dest => dest.CategoryDescription, opts => opts.MapFrom(src => src.CategoryDescription))
+                .ForMember(dest => dest.Description, opts => opts.MapFrom(src => src.Description))
+                .ForMember(dest => dest.Name, opts => opts.MapFrom(src => src.Name))
+                .ForMember(dest => dest.SortOrder, opts => opts.MapFrom(src => src.SortOrder));
+
+            Mapper.CreateMap<RsvpMember, MpRsvpMember>();
+            Mapper.CreateMap<MpRsvpMember, RsvpMember>();
             Mapper.CreateMap<MpSU2SOpportunity, ServeOpportunity>();
             Mapper.CreateMap<ServeOpportunity, MpSU2SOpportunity>();
+            Mapper.CreateMap<MpAttributeCategory, AttributeCategoryDTO>()
+                .ForMember(dest => dest.CategoryId, opts => opts.MapFrom(src => src.Attribute_Category_ID))
+                .ForMember(dest => dest.AttributeCategory, opts => opts.MapFrom(src => src.Attribute_Category))
+                .ForMember(dest => dest.Attribute, opts => opts.MapFrom(src => src.Attribute))
+                .ForMember(dest => dest.RequiresActiveAttribute, opts => opts.MapFrom(src => src.Requires_Active_Attribute))
+                .ForMember(dest => dest.Description, opts => opts.MapFrom(src => src.Description))
+                .ForMember(dest => dest.ExampleText, opts => opts.MapFrom(src => src.Example_Text));
+            Mapper.CreateMap<AttributeCategoryDTO, MpAttributeCategory>()
+                .ForMember(dest => dest.Attribute_Category_ID, opts => opts.MapFrom(src => src.CategoryId))
+                .ForMember(dest => dest.Attribute_Category, opts => opts.MapFrom(src => src.AttributeCategory))
+                .ForMember(dest => dest.Attribute, opts => opts.MapFrom(src => src.Attribute))
+                .ForMember(dest => dest.Requires_Active_Attribute, opts => opts.MapFrom(src => src.RequiresActiveAttribute))
+                .ForMember(dest => dest.Description, opts => opts.MapFrom(src => src.Description))
+                .ForMember(dest => dest.Example_Text, opts => opts.MapFrom(src => src.ExampleText));
         }
     }
 }

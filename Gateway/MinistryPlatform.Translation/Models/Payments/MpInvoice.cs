@@ -14,7 +14,7 @@ namespace MinistryPlatform.Translation.Models.Payments
         [JsonProperty(PropertyName = "Invoice_Status_ID")]
         public int InvoiceStatusId { get; set; }
         [JsonProperty(PropertyName = "Invoice_Total")]
-        public double InvoiceTotal { get; set; }
+        public decimal InvoiceTotal { get; set; }
         [JsonProperty(PropertyName = "Invoice_Date")]
         public DateTime InvoiceDate { get; set; }
         [JsonProperty(PropertyName = "Notes")]

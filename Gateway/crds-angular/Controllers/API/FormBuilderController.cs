@@ -8,7 +8,7 @@ using crds_angular.Models.Crossroads.Groups;
 using crds_angular.Security;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 using log4net;
-
+using Crossroads.ApiVersioning;
 
 namespace crds_angular.Controllers.API
 {
@@ -30,7 +30,8 @@ namespace crds_angular.Controllers.API
         /// </summary>
         [RequiresAuthorization]
         [ResponseType(typeof(List<GroupDTO>))]
-        [Route("api/formbuilder/groups/{templateType}")]
+        [VersionedRoute(template: "formBuilder/groups/{templateType}", minimumVersion: "1.0.0")]
+        [Route("formbuilder/groups/{templateType}")]
         [HttpGet]
         public IHttpActionResult GetGroupsUndivided(string templateType)
         {
@@ -52,7 +53,8 @@ namespace crds_angular.Controllers.API
         /// <summary>
         /// Omnibus endpoint for form builder
         /// </summary>
-        [Route("api/formbuilder/hugeEndPoint")]
+        [VersionedRoute(template: "formBuilder/hugeEndPoint", minimumVersion: "1.0.0")]
+        [Route("formbuilder/hugeEndPoint")]
         [HttpPost]
         public IHttpActionResult SaveFormbuilderForm(dynamic jsonModel)
         {

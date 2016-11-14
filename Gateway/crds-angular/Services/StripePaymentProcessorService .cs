@@ -284,7 +284,7 @@ namespace crds_angular.Services
             return defaultSource;
         }
 
-        public StripeCharge ChargeCustomer(string customerToken, decimal amount, int donorId)
+        public StripeCharge ChargeCustomer(string customerToken, decimal amount, int donorId, bool isPayment)
         {
             var request = new RestRequest("charges", Method.POST);
             request.AddParameter("amount", (int)(amount * Constants.StripeDecimalConversionValue));
@@ -292,6 +292,11 @@ namespace crds_angular.Services
             request.AddParameter("customer", customerToken);
             request.AddParameter("description", "Donor ID #" + donorId);
             request.AddParameter("expand[]", "balance_transaction");
+
+            if (isPayment)
+            {
+              request.AddParameter("metadata[crossroads_transaction_type]", "payment");
+            }
 
             var response = _stripeRestClient.Execute<StripeCharge>(request);
             CheckStripeResponse("Invalid charge request", response, true);

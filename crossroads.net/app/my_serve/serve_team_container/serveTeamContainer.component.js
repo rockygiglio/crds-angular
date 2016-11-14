@@ -12,5 +12,5 @@ export default function serveTeamContainerComponent() {
     template,
     controller: ServeTeamContainerController,
     controllerAs: 'serveTeamContainer'
-  }
+  };
 }
