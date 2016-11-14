@@ -26,7 +26,7 @@ namespace crds_angular.Controllers.API
         private readonly IConfigurationWrapper _configurationWrapper;
 
         public GroupToolController(Services.Interfaces.IGroupToolService groupToolService,
-            IConfigurationWrapper configurationWrapper)
+                                   IConfigurationWrapper configurationWrapper)
         {
             _groupToolService = groupToolService;
             _configurationWrapper = configurationWrapper;
@@ -47,18 +47,18 @@ namespace crds_angular.Controllers.API
         public IHttpActionResult GetInvitations(int sourceId, int invitationTypeId)
         {
             return Authorized(token =>
-            {
-                try
-                {
-                    var invitess = _groupToolService.GetInvitations(sourceId, invitationTypeId, token);
-                    return Ok(invitess);
-                }
-                catch (Exception exception)
-                {
-                    var apiError = new ApiErrorDto("GetInvitations Failed", exception);
-                    throw new HttpResponseException(apiError.HttpResponseMessage);
-                }
-            });
+                              {
+                                  try
+                                  {
+                                      var invitess = _groupToolService.GetInvitations(sourceId, invitationTypeId, token);
+                                      return Ok(invitess);
+                                  }
+                                  catch (Exception exception)
+                                  {
+                                      var apiError = new ApiErrorDto("GetInvitations Failed", exception);
+                                      throw new HttpResponseException(apiError.HttpResponseMessage);
+                                  }
+                              });
         }
 
         [AcceptVerbs("GET")]
@@ -93,18 +93,18 @@ namespace crds_angular.Controllers.API
         public IHttpActionResult GetInquiries(int groupId)
         {
             return Authorized(token =>
-            {
-                try
-                {
-                    var requestors = _groupToolService.GetInquiries(groupId, token);
-                    return Ok(requestors);
-                }
-                catch (Exception exception)
-                {
-                    var apiError = new ApiErrorDto("GetInquires Failed", exception);
-                    throw new HttpResponseException(apiError.HttpResponseMessage);
-                }
-            });
+                              {
+                                  try
+                                  {
+                                      var requestors = _groupToolService.GetInquiries(groupId, token);
+                                      return Ok(requestors);
+                                  }
+                                  catch (Exception exception)
+                                  {
+                                      var apiError = new ApiErrorDto("GetInquires Failed", exception);
+                                      throw new HttpResponseException(apiError.HttpResponseMessage);
+                                  }
+                              });
         }
 
         /// <summary>
@@ -118,22 +118,22 @@ namespace crds_angular.Controllers.API
         [VersionedRoute(template: "groupTool/{groupId}/endSmallGroup", minimumVersion: "1.0.0")]
         [Route("grouptool/{groupId:int}/endsmallgroup")]
         [HttpPost]
-        public IHttpActionResult EndSmallGroup([FromUri]int groupId, [FromUri]int groupReasonEndedId)
+        public IHttpActionResult EndSmallGroup([FromUri] int groupId, [FromUri] int groupReasonEndedId)
         {
             return Authorized(token =>
-            {
-                try
-                {
-                    _groupToolService.VerifyCurrentUserIsGroupLeader(token, groupId);
-                    _groupToolService.EndGroup(groupId, groupReasonEndedId);
-                    return Ok();
-                }
-                catch (Exception e)
-                {
-                    _logger.Error("Could not end group: " + groupId, e);
-                    return BadRequest();
-                }
-            });
+                              {
+                                  try
+                                  {
+                                      _groupToolService.VerifyCurrentUserIsGroupLeader(token, groupId);
+                                      _groupToolService.EndGroup(groupId, groupReasonEndedId);
+                                      return Ok();
+                                  }
+                                  catch (Exception e)
+                                  {
+                                      _logger.Error("Could not end group: " + groupId, e);
+                                      return BadRequest();
+                                  }
+                              });
         }
 
         /// <summary>
@@ -148,26 +148,29 @@ namespace crds_angular.Controllers.API
         [VersionedRoute(template: "grouptool/groupType/{groupTypeId}/group/{groupId}/participant/{groupParticipantId}", minimumVersion: "1.0.0")]
         [Route("grouptool/grouptype/{groupTypeId:int}/group/{groupId:int}/participant/{groupParticipantId:int}")]
         [HttpDelete]
-        public IHttpActionResult RemoveParticipantFromMyGroup([FromUri]int groupTypeId, [FromUri]int groupId, [FromUri]int groupParticipantId, [FromUri(Name = "removalMessage")]string removalMessage = null)
+        public IHttpActionResult RemoveParticipantFromMyGroup([FromUri] int groupTypeId,
+                                                              [FromUri] int groupId,
+                                                              [FromUri] int groupParticipantId,
+                                                              [FromUri(Name = "removalMessage")] string removalMessage = null)
         {
             return Authorized(token =>
-            {
-                try
-                {
-                    _groupToolService.RemoveParticipantFromMyGroup(token, groupTypeId, groupId, groupParticipantId, removalMessage);
-                    return Ok();
-                }
-                catch (GroupParticipantRemovalException e)
-                {
-                    var apiError = new ApiErrorDto(e.Message, null, e.StatusCode);
-                    throw new HttpResponseException(apiError.HttpResponseMessage);
-                }
-                catch (Exception ex)
-                {
-                    var apiError = new ApiErrorDto(string.Format("Error removing group participant {0} from group {1}", groupParticipantId, groupId), ex);
-                    throw new HttpResponseException(apiError.HttpResponseMessage);
-                }
-            });
+                              {
+                                  try
+                                  {
+                                      _groupToolService.RemoveParticipantFromMyGroup(token, groupTypeId, groupId, groupParticipantId, removalMessage);
+                                      return Ok();
+                                  }
+                                  catch (GroupParticipantRemovalException e)
+                                  {
+                                      var apiError = new ApiErrorDto(e.Message, null, e.StatusCode);
+                                      throw new HttpResponseException(apiError.HttpResponseMessage);
+                                  }
+                                  catch (Exception ex)
+                                  {
+                                      var apiError = new ApiErrorDto(string.Format("Error removing group participant {0} from group {1}", groupParticipantId, groupId), ex);
+                                      throw new HttpResponseException(apiError.HttpResponseMessage);
+                                  }
+                              });
         }
 
         /// <summary>
@@ -177,15 +180,15 @@ namespace crds_angular.Controllers.API
         /// <param name="keywords">The optional keywords to search for</param>
         /// <param name="location">The optional location/address to search for - if specified, the search results will include approximate distances from this address</param>
         /// <returns>A list of groups matching the terms</returns>
-        [VersionedRoute(template: "groupTool/groupType/{groupTypeId}/group/search", minimumVersion: "1.0.0")]
-        [Route("grouptool/grouptype/{groupTypeId:int}/group/search")]
+        [VersionedRoute(template: "groupTool/groupType/{groupTypeId}/group/search/{groupId}", minimumVersion: "1.0.0")]
+        [Route("grouptool/grouptype/{groupTypeId:int}/group/search/{groupId:int?}")]
         [ResponseType(typeof(List<GroupDTO>))]
         [HttpGet]
-        public IHttpActionResult SearchGroups([FromUri] int groupTypeId, [FromUri(Name = "s")] string keywords = null, [FromUri(Name = "loc")] string location = null)
+        public IHttpActionResult SearchGroups([FromUri] int groupTypeId, [FromUri(Name = "s")] string keywords = null, [FromUri(Name = "loc")] string location = null, [FromUri] int? groupId = null)
         {
             try
             {
-                var result = _groupToolService.SearchGroups(groupTypeId, keywords, location);
+                var result = _groupToolService.SearchGroups(groupTypeId, keywords, location, groupId);
                 if (result == null || !result.Any())
                 {
                     return RestHttpActionResult<List<GroupDTO>>.WithStatus(HttpStatusCode.NotFound, new List<GroupDTO>());
@@ -199,7 +202,6 @@ namespace crds_angular.Controllers.API
                 throw new HttpResponseException(apiError.HttpResponseMessage);
             }
         }
-
         /// <summary>
         /// Allows a group leader to accept or deny a group inquirier.
         /// </summary>

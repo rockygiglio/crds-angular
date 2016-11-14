@@ -623,7 +623,8 @@ namespace crds_angular.Services
             _communicationRepository.SendMessage(message, false);
         }
 
-        public List<GroupDTO> SearchGroups(int groupTypeId, string keywords = null, string location = null)
+
+        public List<GroupDTO> SearchGroups(int groupTypeId, string keywords = null, string location = null, int? groupId = null)
         {
             // Split single search term into multiple words, broken on whitespace
             // TODO Should remove stopwords from search - possibly use a configurable list of words (http://www.link-assistant.com/seo-stop-words.html)
@@ -634,7 +635,7 @@ namespace crds_angular.Services
                     .Replace("&", "%26") // Replace & with the hex representation, to avoid looking like a stored proc parameter
                     .Split((char[]) null, StringSplitOptions.RemoveEmptyEntries);
 
-            var results = _groupToolRepository.SearchGroups(groupTypeId, search);
+            var results = _groupToolRepository.SearchGroups(groupTypeId, search, groupId);
             if (results == null || !results.Any())
             {
                 return null;
