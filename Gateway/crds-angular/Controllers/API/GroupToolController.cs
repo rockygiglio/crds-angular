@@ -180,11 +180,11 @@ namespace crds_angular.Controllers.API
         /// <param name="keywords">The optional keywords to search for</param>
         /// <param name="location">The optional location/address to search for - if specified, the search results will include approximate distances from this address</param>
         /// <returns>A list of groups matching the terms</returns>
-        [VersionedRoute(template: "groupTool/groupType/{groupTypeId}/group/search/{groupId}", minimumVersion: "1.0.0")]
-        [Route("grouptool/grouptype/{groupTypeId:int}/group/search/{groupId:int?}")]
+        [VersionedRoute(template: "groupTool/groupType/{groupTypeId}/group/search/", minimumVersion: "1.0.0")]
+        [Route("grouptool/grouptype/{groupTypeId:int}/group/search/")]
         [ResponseType(typeof(List<GroupDTO>))]
         [HttpGet]
-        public IHttpActionResult SearchGroups([FromUri] int groupTypeId, [FromUri(Name = "s")] string keywords = null, [FromUri(Name = "loc")] string location = null, [FromUri] int? groupId = null)
+        public IHttpActionResult SearchGroups([FromUri] int groupTypeId, [FromUri(Name = "s")] string keywords = null, [FromUri(Name = "loc")] string location = null, [FromUri(Name = "groupId")] int? groupId = null)
         {
             try
             {

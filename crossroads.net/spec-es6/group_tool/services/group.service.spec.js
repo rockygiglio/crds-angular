@@ -486,7 +486,7 @@ describe('Group Tool Group Service', () => {
 
     it('should search by groupid', () => {
       let groupId = 123;
-      httpBackend.expectGET(`${endpoint}/grouptool/grouptype/${CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS}/group/search/${groupId}`).
+      httpBackend.expectGET(`${endpoint}/grouptool/grouptype/${CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS}/group/search?groupId=${groupId}`).
                   respond(200, groups);
       let promise = fixture.search(null, null, groupId);
       httpBackend.flush();
