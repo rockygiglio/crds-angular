@@ -117,15 +117,16 @@ describe('Group Tool Group Service', () => {
         labelDesc: 'The current Journey',
         placeholder: 'Journey Group',
         static: 'I Am ______',
-        disabled: true
-      },{
-        categoryId: 2,
-        label: 'Interest',
-        labelDesc: 'desc',
-        placeholder: 'Ex. Boxing, XBox',
-        static: '',
-        disabled: false
-      }]
+        disabled: true,
+        endDate: ''
+      }, {
+          categoryId: 2,
+          label: 'Interest',
+          labelDesc: 'desc',
+          placeholder: 'Ex. Boxing, XBox',
+          disabled:false,
+          static: ''
+        }]
 
       var mappedCategories = fixture.createGroupCategoryOptionList(backendCategories);
       expect(mappedCategories).toEqual(mappedCategoriesMock);
@@ -231,7 +232,7 @@ describe('Group Tool Group Service', () => {
         = {
           90: {
             attributeTypeId: 90,
-            attributes: [{ attributeId: 123, name: 'My interest', selected: true, category:'My interest' },]
+            attributes: [{ attributeId: 123, name: 'My interest', selected: true, category: 'My interest' },]
           }
         };
       fixture.parsedCategories = [{
