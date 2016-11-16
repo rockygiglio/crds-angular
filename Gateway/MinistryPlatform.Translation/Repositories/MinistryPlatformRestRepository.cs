@@ -231,7 +231,7 @@ namespace MinistryPlatform.Translation.Repositories
             var orderBy = string.IsNullOrWhiteSpace(orderByString) ? string.Empty : $"&$orderby={MpRestEncode(orderByString)}";
             var distinctString = $"&$distinct={distinct.ToString()}";
 
-            var url = AddColumnSelection(string.Format("/tables/{0}{1}{2}{3}", GetTableName<T1>(), search, orderBy, distinctString), selectColumns);
+            var url = AddColumnSelection($"/tables/{GetTableName<T1>()}{search}{orderBy}{distinctString}", selectColumns);
             var request = new RestRequest(url, Method.GET);
             AddAuthorization(request);
 
