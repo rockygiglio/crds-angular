@@ -17,6 +17,7 @@ class CamperInfoController {
 
   submit() {
     this.submitting = true;
+
     if (this.infoForm.$valid) {
       this.camperInfoForm.save(this.stateParams.campId).then(() => {
         this.rootScope.$emit('notify', this.rootScope.MESSAGES.successfullRegistration);
@@ -29,7 +30,7 @@ class CamperInfoController {
       });
     } else {
       this.submitting = false;
-      this.rootScope.$emit('notify', this.rootScope.MESSAGES.generalError);
+      this.rootScope.$emit('notify', this.rootScope.MESSAGES.invalidFormFields);
     }
   }
 }
