@@ -20,6 +20,7 @@ namespace crds_angular.Services
 
         private readonly int _paidinfullStatus;
         private readonly int _somepaidStatus;
+        private readonly int _defaultPaymentStatus;
 
         public PaymentService(IInvoiceRepository invoiceRepository, IPaymentRepository paymentRepository, IConfigurationWrapper configurationWrapper, IContactRepository contactRepository, IPaymentTypeRepository paymentTypeRepository)
         {
@@ -30,6 +31,7 @@ namespace crds_angular.Services
             
             _paidinfullStatus = configurationWrapper.GetConfigIntValue("PaidInFull");
             _somepaidStatus = configurationWrapper.GetConfigIntValue("SomePaid");
+            _defaultPaymentStatus = configurationWrapper.GetConfigIntValue("DonationStatusPending");
         }
 
         public MpPaymentDetailReturn PostPayment(MpDonationAndDistributionRecord paymentRecord)
@@ -67,7 +69,8 @@ namespace crds_angular.Services
                 TransactionCode = paymentRecord.ProcessorId,
                 PaymentDate = DateTime.Now,
                 PaymentTotal = paymentRecord.DonationAmt,
-                PaymentTypeId = pymtId                
+                PaymentTypeId = pymtId,
+                PaymentStatus = _defaultPaymentStatus
             };
             var paymentDetail = new MpPaymentDetail
             {
