@@ -1,15 +1,13 @@
 USE MinistryPlatform
 GO
 
-IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = N'Payments')
+IF NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = N'Payments' AND COLUMN_NAME = 'Batch_ID')
 BEGIN
 	ALTER TABLE dbo.Payments ADD Batch_ID INT NULL;
+
+	ALTER TABLE [dbo].[Payments]  WITH CHECK ADD  CONSTRAINT [FK_Payments_Batches] FOREIGN KEY([Batch_ID])
+	REFERENCES [dbo].[Batches] ([Batch_ID]);
+
+	ALTER TABLE [dbo].[Payments] CHECK CONSTRAINT [FK_Payments_Batches]
 END
-GO
-
-ALTER TABLE [dbo].[Payments]  WITH CHECK ADD  CONSTRAINT [FK_Payments_Batches] FOREIGN KEY([Batch_ID])
-REFERENCES [dbo].[Batches] ([Batch_ID])
-GO
-
-ALTER TABLE [dbo].[Payments] CHECK CONSTRAINT [FK_Payments_Batches]
 GO
