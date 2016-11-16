@@ -13,7 +13,6 @@ using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 using RestSharp.Extensions;
 using IDonationService = crds_angular.Services.Interfaces.IDonationService;
-using IDonorService = crds_angular.Services.Interfaces.IDonorService;
 
 namespace crds_angular.test.Services
 {

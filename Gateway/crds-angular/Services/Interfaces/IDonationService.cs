@@ -35,5 +35,6 @@ namespace crds_angular.Services.Interfaces
         List<DepositDTO> GenerateGPExportFileNames(int selectionId, string token);
 
         void SendMessageToDonor(int donorId, int donationDistributionId, int fromContactId, string body, string tripName);
+        DepositDTO GetDepositByProcessorTransferId(string processorTransferId);
     }
 }

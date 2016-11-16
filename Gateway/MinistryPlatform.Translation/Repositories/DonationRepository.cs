@@ -110,6 +110,14 @@ namespace MinistryPlatform.Translation.Repositories
             
         }
 
+        public MpDeposit GetDepositByProcessorTransferId(string processorTransferId)
+        {
+            var apiToken = _apiUserRepository.GetToken();
+            var searchString = $"Processor_Transfer_ID={processorTransferId}";
+
+            return _ministryPlatformRest.UsingAuthenticationToken(apiToken).Search<MpDeposit>(searchString).ToList().FirstOrDefault();
+        }
+
         public MpDonationBatch GetDonationBatch(int batchId)
         {
             return (WithApiLogin(token => (Mapper.Map<Dictionary<string,object>, MpDonationBatch>(_ministryPlatformService.GetRecordDict(_batchesPageId, batchId, token)))));

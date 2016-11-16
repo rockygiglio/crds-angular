@@ -5,7 +5,6 @@ using crds_angular.Controllers.API;
 using crds_angular.Models.Crossroads.Stewardship;
 using crds_angular.Services.Interfaces;
 using log4net;
-using System.Text;
 using Crossroads.Utilities;
 using Crossroads.Utilities.Interfaces;
 using MinistryPlatform.Translation.Exceptions;
@@ -19,9 +18,9 @@ namespace crds_angular.Services
     public class StripeEventService : IStripeEventService
     {
         private readonly ILog _logger = LogManager.GetLogger(typeof(StripeEventController));
-        private readonly IPaymentProcessorService _paymentService;
+        private readonly IPaymentProcessorService _paymentProcessorService;
         private readonly IDonationService _donationService;
-        private readonly MinistryPlatform.Translation.Repositories.Interfaces.IDonorRepository _mpDonorService;
+        private readonly MinistryPlatform.Translation.Repositories.Interfaces.IDonorRepository _mpDonorRepository;
         private readonly int _donationStatusDeclined;
         private readonly int _donationStatusDeposited;
         private readonly int _donationStatusSucceeded;
@@ -30,11 +29,11 @@ namespace crds_angular.Services
         // This value is used when creating the batch name for exporting to GP.  It must be 15 characters or less.
         private const string BatchNameDateFormat = @"\M\PyyyyMMddHHmm";
        
-        public StripeEventService(IPaymentProcessorService paymentService, IDonationService donationService, MinistryPlatform.Translation.Repositories.Interfaces.IDonorRepository mpDonorService, IConfigurationWrapper configuration)
+        public StripeEventService(IPaymentProcessorService paymentProcessorService, IDonationService donationService, MinistryPlatform.Translation.Repositories.Interfaces.IDonorRepository mpDonorRepository, IConfigurationWrapper configuration)
         {
-            _paymentService = paymentService;
+            _paymentProcessorService = paymentProcessorService;
             _donationService = donationService;
-            _mpDonorService = mpDonorService;
+            _mpDonorRepository = mpDonorRepository;
 
             _donationStatusDeclined = configuration.GetConfigIntValue("DonationStatusDeclined");
             _donationStatusDeposited = configuration.GetConfigIntValue("DonationStatusDeposited");
@@ -51,34 +50,34 @@ namespace crds_angular.Services
         public void ChargeFailed(DateTime? eventTimestamp, StripeCharge charge)
         {
             _logger.Debug("Processing charge.failed event for charge id " + charge.Id);
-            var notes = string.Format("{0}: {1}", charge.FailureCode ?? "No Stripe Failure Code", charge.FailureMessage ?? "No Stripe Failure Message");
+            var notes = $"{charge.FailureCode ?? "No Stripe Failure Code"}: {charge.FailureMessage ?? "No Stripe Failure Message"}";
             _donationService.UpdateDonationStatus(charge.Id, _donationStatusDeclined, eventTimestamp, notes);
             _donationService.ProcessDeclineEmail(charge.Id);
 
             // Create a refund if it is a bank account failure
-            if (charge.Source != null && "bank_account".Equals(charge.Source.Object) && charge.Refunds != null && charge.Refunds.Data != null && charge.Refunds.Data.Any())
+            if (charge.Source != null && "bank_account".Equals(charge.Source.Object) && charge.Refunds?.Data != null && charge.Refunds.Data.Any())
             {
-                var refundData = _paymentService.GetRefund(charge.Refunds.Data[0].Id);
+                var refundData = _paymentProcessorService.GetRefund(charge.Refunds.Data[0].Id);
                 _donationService.CreateDonationForBankAccountErrorRefund(new StripeRefund { Data = new List<StripeRefundData> { refundData } } );
             }
         }
 
         public void InvoicePaymentSucceeded(DateTime? eventTimestamp, StripeInvoice invoice)
         {
-            _logger.Debug(string.Format("Processing invoice.payment_succeeded event for subscription id {0}", invoice.Subscription));
+            _logger.Debug($"Processing invoice.payment_succeeded event for subscription id {invoice.Subscription}");
             _donationService.CreateDonationForInvoice(invoice);
         }
 
         private void InvoicePaymentFailed(DateTime? created, StripeInvoice invoice)
         {
-            _mpDonorService.ProcessRecurringGiftDecline(invoice.Subscription);
-            var gift = _mpDonorService.GetRecurringGiftForSubscription(invoice.Subscription);
+            _mpDonorRepository.ProcessRecurringGiftDecline(invoice.Subscription);
+            var gift = _mpDonorRepository.GetRecurringGiftForSubscription(invoice.Subscription);
            
             if (gift.ConsecutiveFailureCount > 2)
             {
-                var subscription = _paymentService.CancelSubscription(gift.StripeCustomerId, gift.SubscriptionId);
-                _paymentService.CancelPlan(subscription.Plan.Id);
-                _mpDonorService.CancelRecurringGift(gift.RecurringGiftId.Value);
+                var subscription = _paymentProcessorService.CancelSubscription(gift.StripeCustomerId, gift.SubscriptionId);
+                _paymentProcessorService.CancelPlan(subscription.Plan.Id);
+                _mpDonorRepository.CancelRecurringGift(gift.RecurringGiftId.Value);
             }
         }
 
@@ -87,12 +86,12 @@ namespace crds_angular.Services
             _logger.Debug("Processing transfer.paid event for transfer id " + transfer.Id);
 
             var response = new TransferPaidResponseDTO();
-            
-            // Don't process this transfer if we already have a batch for the same transfer id
-            var existingBatch = _donationService.GetDonationBatchByProcessorTransferId(transfer.Id);
-            if (existingBatch != null)
+
+            // Don't process this transfer if we already have a deposit for the same transfer id
+            var existingDeposit = _donationService.GetDepositByProcessorTransferId(transfer.Id);
+            if (existingDeposit != null)
             {
-                var msg = string.Format("Batch {0} already created for transfer {1}", existingBatch.Id, existingBatch.ProcessorTransferId);
+                var msg = $"Deposit {existingDeposit.Id} already created for transfer {existingDeposit.ProcessorTransferId}";
                 _logger.Debug(msg);
                 response.TotalTransactionCount = 0;
                 response.Message = msg;
@@ -101,7 +100,7 @@ namespace crds_angular.Services
             }
 
             // Don't process this transfer if we can't find any charges for the transfer
-            var charges = _paymentService.GetChargesForTransfer(transfer.Id);
+            var charges = _paymentProcessorService.GetChargesForTransfer(transfer.Id);
             if (charges == null || charges.Count <= 0)
             {
                 var msg = "No charges found for transfer: " + transfer.Id;
@@ -111,6 +110,8 @@ namespace crds_angular.Services
                 response.Exception = new ApplicationException(msg);
                 return (response);
             }
+
+            //TODO: now we have a list of charges. process for donations and for payments
 
             var now = DateTime.Now;
             var batchName = now.ToString(BatchNameDateFormat);
@@ -128,7 +129,7 @@ namespace crds_angular.Services
             };
 
             response.TotalTransactionCount = charges.Count;
-            _logger.Debug(string.Format("{0} charges to update for transfer {1}", charges.Count, transfer.Id));
+            _logger.Debug($"{charges.Count} charges to update for transfer {transfer.Id}");
 
             // Sort charges so we process refunds for payments in the same transfer after the actual payment is processed
             var sortedCharges = charges.OrderBy(charge => charge.Type);
@@ -141,12 +142,12 @@ namespace crds_angular.Services
                     StripeRefund refund = null;
                     if ("refund".Equals(charge.Type)) // Credit Card Refund
                     {
-                        refund = _paymentService.GetChargeRefund(charge.Id);
+                        refund = _paymentProcessorService.GetChargeRefund(charge.Id);
                         paymentId = refund.Data[0].Id;
                     }
                     else if ("payment_refund".Equals(charge.Type)) // Bank Account Refund
                     {
-                        var refundData = _paymentService.GetRefund(charge.Id);
+                        var refundData = _paymentProcessorService.GetRefund(charge.Id);
                         refund = new StripeRefund
                         {
                             Data = new List<StripeRefundData>
@@ -172,13 +173,13 @@ namespace crds_angular.Services
                         if (string.IsNullOrWhiteSpace(b.ProcessorTransferId))
                         {
                             // If this donation exists on another batch that does not have a Stripe transfer ID, we'll move it to our batch instead
-                            var msg = string.Format("Charge {0} already exists on batch {1}, moving to new batch", charge.Id, b.Id);
+                            var msg = $"Charge {charge.Id} already exists on batch {b.Id}, moving to new batch";
                             _logger.Debug(msg);
                         } 
                         else 
                         {
                             // If this donation exists on another batch that has a Stripe transfer ID, skip it
-                            var msg = string.Format("Charge {0} already exists on batch {1} with transfer id {2}", charge.Id, b.Id, b.ProcessorTransferId);
+                            var msg = $"Charge {charge.Id} already exists on batch {b.Id} with transfer id {b.ProcessorTransferId}";
                             _logger.Debug(msg);
                             response.FailedUpdates.Add(new KeyValuePair<string, string>(charge.Id, msg));
                             continue;
@@ -187,14 +188,12 @@ namespace crds_angular.Services
 
                     if (donation.Status != DonationStatus.Declined && donation.Status != DonationStatus.Refunded)
                     {
-                        _logger.Debug(string.Format("Updating charge id {0} to Deposited status", charge.Id));
+                        _logger.Debug($"Updating charge id {charge.Id} to Deposited status");
                         _donationService.UpdateDonationStatus(int.Parse(donation.Id), _donationStatusDeposited, eventTimestamp);
                     }
                     else
                     {
-                        _logger.Debug(string.Format("Not updating charge id {0} to Deposited status - it was already {1}",
-                                                    charge.Id,
-                                                    System.Enum.GetName(typeof (DonationStatus), donation.Status)));
+                        _logger.Debug($"Not updating charge id {charge.Id} to Deposited status - it was already {System.Enum.GetName(typeof(DonationStatus), donation.Status)}");
                     }
                     response.SuccessfulUpdates.Add(charge.Id);
                     batch.ItemCount++;
@@ -261,26 +260,26 @@ namespace crds_angular.Services
             DonationDTO donation;
             if (refund != null)
             {
-                _logger.Warn(string.Format("Payment not found for refund {0} on transfer {1} - may be a refund due to a bank account error", paymentId, transfer.Id));
+                _logger.Warn($"Payment not found for refund {paymentId} on transfer {transfer.Id} - may be a refund due to a bank account error");
                 // If this is a refund that doesn't exist in MP, create it, assuming it is a refund due to a bank account error (NSF, etc)
                 if (_donationService.CreateDonationForBankAccountErrorRefund(refund) != null)
                 {
                     donation = _donationService.GetDonationByProcessorPaymentId(paymentId);
-                    _logger.Debug(string.Format("Updating charge id {0} to Declined status", charge.Id));
+                    _logger.Debug($"Updating charge id {charge.Id} to Declined status");
                     _donationService.UpdateDonationStatus(refund.Data[0].ChargeId, _donationStatusDeclined, refund.Data[0].BalanceTransaction.Created);
                 }
                 else
                 {
-                    _logger.Error(string.Format("Payment not found for refund {0} on transfer {1}, probably not a bank account error", paymentId, transfer.Id), e);
+                    _logger.Error($"Payment not found for refund {paymentId} on transfer {transfer.Id}, probably not a bank account error", e);
                     // ReSharper disable once PossibleIntendedRethrow
                     throw e;
                 }
             }
             else
             {
-                _logger.Warn(string.Format("Payment not found for charge {0} on transfer {1} - may be an ACH recurring gift that has not yet processed", paymentId, transfer.Id));
-                var stripeCharge = _paymentService.GetCharge(charge.Id);
-                if (stripeCharge != null && stripeCharge.Source != null && "bank_account".Equals(stripeCharge.Source.Object) && stripeCharge.HasInvoice())
+                _logger.Warn($"Payment not found for charge {paymentId} on transfer {transfer.Id} - may be an ACH recurring gift that has not yet processed");
+                var stripeCharge = _paymentProcessorService.GetCharge(charge.Id);
+                if (stripeCharge?.Source != null && "bank_account".Equals(stripeCharge.Source.Object) && stripeCharge.HasInvoice())
                 {
                     // We're making an assumption that if an ACH payment is included in a transfer, 
                     // and if we don't have the corresponding Donation in our system yet, that
@@ -289,19 +288,19 @@ namespace crds_angular.Services
                     // In this scenario, we will go ahead and create the donation.
                     if (_donationService.CreateDonationForInvoice(stripeCharge.Invoice) != null)
                     {
-                        _logger.Debug(string.Format("Creating donation for recurring gift payment {0}", charge.Id));
+                        _logger.Debug($"Creating donation for recurring gift payment {charge.Id}");
                         donation = _donationService.GetDonationByProcessorPaymentId(paymentId);
                     }
                     else
                     {
-                        _logger.Error(string.Format("Donation not found for charge {0} on transfer {1}, and failed to create a donation", charge.Id, transfer.Id), e);
+                        _logger.Error($"Donation not found for charge {charge.Id} on transfer {transfer.Id}, and failed to create a donation", e);
                         // ReSharper disable once PossibleIntendedRethrow
                         throw e;
                     }
                 }
                 else
                 {
-                    _logger.Error(string.Format("Donation not found for charge {0} on transfer {1}, charge does not appear to be related to an ACH recurring gift", charge.Id, transfer.Id));
+                    _logger.Error($"Donation not found for charge {charge.Id} on transfer {transfer.Id}, charge does not appear to be related to an ACH recurring gift");
                     // ReSharper disable once PossibleIntendedRethrow
                     throw e;
                 }
@@ -335,7 +334,7 @@ namespace crds_angular.Services
                         _logger.Debug("Ignoring event " + stripeEvent.Type);
                         break;
                 }
-                if (response != null && response.Exception != null)
+                if (response?.Exception != null)
                 {
                     RecordFailedEvent(stripeEvent, response);
                 }
