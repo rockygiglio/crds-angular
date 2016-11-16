@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Crossroads.Utilities.FunctionalHelpers;
 using MinistryPlatform.Translation.Models.Payments;
@@ -42,6 +43,26 @@ namespace MinistryPlatform.Translation.Repositories
             var payments = _ministryPlatformRest.UsingAuthenticationToken(apiToken).Get<MpPayment>("Payments", parms);
 
             return payments ?? new List<MpPayment>();
+        }
+
+        public void AddPaymentToBatch(int batchId, int paymentId)
+        {
+            var apiToken = _apiUserRepository.GetToken();
+            var parms = new Dictionary<string, object>
+            {
+                {"Payment_ID", paymentId},
+                {"Batch_ID", batchId}
+            };
+            var parmList = new List<Dictionary<string, object>> {parms};
+
+            try
+            {
+                _ministryPlatformRest.UsingAuthenticationToken(apiToken).Put("Payments",parmList);
+            }
+            catch (Exception e)
+            {
+                throw new ApplicationException($"AddPaymentToBatch failed. batchId: {batchId}, paymentId: {paymentId}", e);
+            }
         }
     }
 }
