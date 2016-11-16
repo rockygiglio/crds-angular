@@ -94,9 +94,6 @@ namespace crds_angular.test.Services
             _configurationWrapper.Setup(mocked => mocked.GetConfigIntValue("Users")).Returns(789);
             _ministryPlatformService.Setup(mocked => mocked.CreateRecord(789, It.IsAny<Dictionary<string, object>>(), "1234567890", true)).Returns(987);
 
-            _configurationWrapper.Setup(mocked => mocked.GetConfigIntValue("ContactHouseholds")).Returns(234);
-            _ministryPlatformService.Setup(mocked => mocked.CreateRecord(234, It.IsAny<Dictionary<string, object>>(), "1234567890", false)).Returns(432);
-
             _configurationWrapper.Setup(mocked => mocked.GetConfigIntValue("Users_Roles")).Returns(345);
             _ministryPlatformService.Setup(mocked => mocked.CreateSubRecord(345, 987, It.IsAny<Dictionary<string, object>>(), "1234567890", false)).Returns(543);
 
