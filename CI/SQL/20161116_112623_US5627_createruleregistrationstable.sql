@@ -8,6 +8,9 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[cr_Rule_Registrations]') AND type in (N'U'))
+BEGIN
+
 CREATE TABLE [dbo].[cr_Rule_Registrations](
 	[Rule_Registration_ID] [int] IDENTITY(1,1) NOT NULL,
 	[Ruleset_ID] [int] NOT NULL,
@@ -22,18 +25,15 @@ CREATE TABLE [dbo].[cr_Rule_Registrations](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 
-GO
-
 ALTER TABLE [dbo].[cr_Rule_Registrations]  WITH CHECK ADD  CONSTRAINT [FK_cr_Rule_Registrations_dp_Domains] FOREIGN KEY([Domain_ID])
 REFERENCES [dbo].[dp_Domains] ([Domain_ID])
-GO
 
 ALTER TABLE [dbo].[cr_Rule_Registrations] CHECK CONSTRAINT [FK_cr_Rule_Registrations_dp_Domains]
-GO
 
 ALTER TABLE [dbo].[cr_Rule_Registrations]  WITH CHECK ADD  CONSTRAINT [FK_cr_Rule_Registrations_cr_Ruleset] FOREIGN KEY([Ruleset_ID])
 REFERENCES [dbo].[cr_Ruleset] ([Ruleset_ID])
-GO
 
 ALTER TABLE [dbo].[cr_Rule_Registrations] CHECK CONSTRAINT [FK_cr_Rule_Registrations_cr_Ruleset]
+
+END
 GO

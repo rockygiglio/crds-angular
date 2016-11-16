@@ -7,6 +7,8 @@ GO
 
 SET QUOTED_IDENTIFIER ON
 GO
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[cr_Product_Ruleset]') AND type in (N'U'))
+BEGIN
 
 CREATE TABLE [dbo].[cr_Product_Ruleset](
 	[Product_Ruleset_ID] [int] IDENTITY(1,1) NOT NULL,
@@ -21,25 +23,26 @@ CREATE TABLE [dbo].[cr_Product_Ruleset](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 
-GO
 
 ALTER TABLE [dbo].[cr_Product_Ruleset]  WITH CHECK ADD  CONSTRAINT [FK_cr_Product_Ruleset_dp_Domains] FOREIGN KEY([Domain_ID])
 REFERENCES [dbo].[dp_Domains] ([Domain_ID])
-GO
+
 
 ALTER TABLE [dbo].[cr_Product_Ruleset] CHECK CONSTRAINT [FK_cr_Product_Ruleset_dp_Domains]
-GO
+
 
 ALTER TABLE [dbo].[cr_Product_Ruleset]  WITH CHECK ADD  CONSTRAINT [FK_cr_Product_Ruleset_Products] FOREIGN KEY([Product_ID])
 REFERENCES [dbo].[Products] ([Product_ID])
-GO
+
 
 ALTER TABLE [dbo].[cr_Product_Ruleset] CHECK CONSTRAINT [FK_cr_Product_Ruleset_Products]
-GO
+
 
 ALTER TABLE [dbo].[cr_Product_Ruleset]  WITH CHECK ADD  CONSTRAINT [FK_cr_Product_Ruleset_cr_Ruleset] FOREIGN KEY([Ruleset_ID])
 REFERENCES [dbo].[cr_Ruleset] ([Ruleset_ID])
-GO
+
 
 ALTER TABLE [dbo].[cr_Product_Ruleset] CHECK CONSTRAINT [FK_cr_Product_Ruleset_cr_Ruleset]
+
+END
 GO
