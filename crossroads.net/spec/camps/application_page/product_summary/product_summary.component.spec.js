@@ -1,8 +1,7 @@
+import moment from 'moment';
 import applicationModule from '../../../../app/camps/application_page/application_page.module';
 import campsModule from '../../../../app/camps/camps.module';
 import campHelpers from '../../campHelpers';
-
-import moment from 'moment';
 
 describe('Camp Product Summary Component', () => {
   let $componentController;
@@ -10,7 +9,7 @@ describe('Camp Product Summary Component', () => {
   let productSummaryForm;
   let campsService;
   let rootScope;
-  let stateParams;
+  let state;
   let q;
 
   const campId = 123;
@@ -19,17 +18,19 @@ describe('Camp Product Summary Component', () => {
   beforeEach(angular.mock.module(campsModule));
   beforeEach(angular.mock.module(applicationModule));
 
-  beforeEach(inject((_$componentController_, _ProductSummaryForm_, _CampsService_, _$rootScope_, _$stateParams_, _$q_) => {
+  beforeEach(inject((_$componentController_, _ProductSummaryForm_, _CampsService_, _$rootScope_, _$state_, _$q_) => {
     $componentController = _$componentController_;
     campsService = _CampsService_;
-    stateParams = _$stateParams_;
+    state = _$state_;
     rootScope = _$rootScope_;
     q = _$q_;
 
     campsService.productInfo = campHelpers().productInfo;
 
-    stateParams.campId = campId;
-    stateParams.contactId = contactId;
+    state.toParams = {
+      campId,
+      contactId
+    };
 
     // Set up the form instance
     productSummaryForm = _ProductSummaryForm_.createForm();
