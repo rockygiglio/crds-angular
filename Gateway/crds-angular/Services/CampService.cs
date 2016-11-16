@@ -154,6 +154,22 @@ namespace crds_angular.Services
             var participant = _participantRepository.GetParticipant(contactId);
             var eventParticipantId = _eventRepository.SafeRegisterParticipant(eventId, participant.ParticipantId);
             var answers = new List<MpFormAnswer>();
+            if (emergencyContacts.Count == 1)
+            {
+                var existingEmergencyContacts = GetCamperEmergencyContactInfo(eventId, contactId, token);
+                if (existingEmergencyContacts.Count > 1)
+                {
+                    emergencyContacts.Add(new CampEmergencyContactDTO
+                    {
+                        Email = "",
+                        FirstName = "",
+                        LastName = "",
+                        MobileNumber = "",
+                        PrimaryEmergencyContact = false,
+                        Relationship = ""
+                    });
+                }
+            }
 
             foreach (var emergencyContact in emergencyContacts)
             {
@@ -431,6 +447,13 @@ namespace crds_angular.Services
                     PolicyHolder = medicalInfo.PolicyHolder ?? "N/A"
                 };
                 var medicalInformation =  _medicalInformationRepository.SaveMedicalInfo(mpMedicalInfo, contactId);
+                var updateToDictionary = new Dictionary<String, Object>
+                {
+                    {"Contact_ID", contactId},
+                    {"Medicalinformation_ID",medicalInformation.MedicalInformationId}
+                };
+                _contactRepository.UpdateContact(contactId, updateToDictionary);
+                
                 var updateToAllergyList = new List<MpMedicalAllergy>();
                 var createToAllergyList = new List<MpMedicalAllergy>();
                 foreach (var allergy in medicalInfo.Allergies)
