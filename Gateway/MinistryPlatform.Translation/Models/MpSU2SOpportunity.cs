@@ -6,10 +6,10 @@ namespace MinistryPlatform.Translation.Models
     public class MpSU2SOpportunity
     {
         [JsonProperty(PropertyName = "Opportunity_ID")]
-        public int OpportunityId;
+        public int OpportunityId { get; set; }
 
         [JsonProperty(PropertyName = "Opportunity_Title")]
-        public string OpportunityTitle;
+        public string OpportunityTitle { get; set; }
 
         [JsonProperty(PropertyName = "rsvpMembers")]
         public List<MpRsvpMember> RsvpMembers { get; set; }

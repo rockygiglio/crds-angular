@@ -1,16 +1,25 @@
 class EmergencyContactController {
-  constructor(EmergencyContactForm, $rootScope, $stateParams) {
-    this.emergencyContactForm = EmergencyContactForm;
+  /* @ngInject */
+  constructor(EmergencyContactForm, $rootScope, $state, $stateParams) {
+    this.emergencyContactForm = EmergencyContactForm.createForm();
     this.rootScope = $rootScope;
+    this.state = $state;
     this.stateParams = $stateParams;
     this.viewReady = false;
     this.submitting = false;
   }
 
   $onInit() {
-    this.viewReady = true;
-    this.model = this.emergencyContactForm.getModel();
-    this.fields = this.emergencyContactForm.getFields();
+    this.emergencyContactForm.load(this.stateParams.campId, this.stateParams.contactId)
+      .then((formModel) => {
+        this.viewReady = true;
+        this.model = formModel;
+        this.fields = this.emergencyContactForm.getFields();
+      }).catch(() => {
+        this.rootScope.$emit('notify', this.rootScope.MESSAGES.generalError);
+      }).finally(() => {
+        this.submitting = false;
+      });
   }
 
   submit() {
@@ -18,6 +27,10 @@ class EmergencyContactController {
     if (this.emergencyContact.$valid) {
       this.emergencyContactForm.save(this.stateParams.campId, this.stateParams.contactId).then(() => {
         this.rootScope.$emit('notify', this.rootScope.MESSAGES.successfulSubmission);
+        this.state.go('campsignup.application', {
+          page: 'camp-waivers',
+          contactId: this.stateParams.contactId
+        });
       }).catch(() => {
         this.rootScope.$emit('notify', this.rootScope.MESSAGES.generalError);
       }).finally(() => {

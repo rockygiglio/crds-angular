@@ -9,9 +9,9 @@ DELETE FROM Responses where event_id in (select event_id from events where event
 
 DELETE FROM Responses where event_id in (SELECT event_id from events where event_title like '(t) KC Nursery Oakley%');
 
-DELETE FROM Opportunities WHERE Add_to_Group IN (SELECT Group_ID FROM Groups WHERE Group_Name = '(t) KidsClub Oakley Group');
+DELETE FROM Opportunities WHERE Opportunity_Title like '(t) KC Oakley%';
 
-DELETE FROM Opportunities WHERE Add_to_Group IN (SELECT Group_ID FROM Groups WHERE Group_Name = '(t) Superbowl Oakley Group');
+DELETE FROM Opportunities WHERE Opportunity_Title like '(t) Superbowl Oakley%';
 
 DELETE FROM Event_Groups WHERE Group_ID IN (SELECT Group_ID FROM Groups WHERE Group_Name = '(t) KidsClub Oakley Group');
 

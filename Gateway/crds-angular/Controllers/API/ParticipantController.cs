@@ -3,6 +3,7 @@ using crds_angular.Models.Crossroads.Profile;
 using crds_angular.Security;
 using crds_angular.Services.Interfaces;
 using System.Web.Http.Description;
+using Crossroads.ApiVersioning;
 
 namespace crds_angular.Controllers.API
 {
@@ -20,11 +21,24 @@ namespace crds_angular.Controllers.API
         /// <returns>A <see cref="Participant">Participant</see> record for the logged-in user.</returns>
         [RequiresAuthorization]
         [ResponseType(typeof(Participant))]
-        [Route("api/participant")]
+        [VersionedRoute(template: "participant", minimumVersion: "1.0.0")]
+        [Route("participant")]
         [HttpGet]
         public IHttpActionResult GetParticipant()
         {
             return Authorized(token => Ok(_groupService.GetParticipantRecord(token)));
+        }
+
+        [RequiresAuthorization]
+        [Route("api/participant/event/{eventId}")]
+        [HttpGet]
+        public IHttpActionResult GetEventParticipant(int eventId)
+        {
+            return Authorized(token =>
+            {
+                var eventParticipantId = 1;
+                return Ok(eventParticipantId);
+            });
         }
     }
 }

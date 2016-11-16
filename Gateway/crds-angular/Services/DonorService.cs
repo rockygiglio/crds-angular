@@ -111,8 +111,7 @@ namespace crds_angular.Services
         ///    to take some of the decision logic out of the frontend on whether a new Donor needs to be created or not, 
         ///    whether a Customer needs to be created at the payment processor, etc.
         /// </summary>
-        /// <param name="mpContactDonorAn existing MpContactDonor, looked up from either GetDonorForEmail or GetDonorForAuthenticatedUser.  This may be null, indicating there is no existing mpContact or donor.</param>
-        /// <param name="mpContactDonor"></param>
+        /// <param name="mpContactDonor">An existing MpContactDonor, looked up from either GetDonorForEmail or GetDonorForAuthenticatedUser.  This may be null, indicating there is no existing mpContact or donor.</param>
         /// <param name="encryptedKey"> The encrypted routing and account number</param>
         /// <param name="dto"></param>
         /// <param name="lastName"></param>

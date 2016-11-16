@@ -21,6 +21,7 @@
     "_": false,
     "crds_utilities": false,
     "_$location_": false,
-    "__API_ENDPOINT__": false
+    "__API_ENDPOINT__": false,
+    "moment": false
   }
 }

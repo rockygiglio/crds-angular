@@ -29,16 +29,22 @@ namespace MinistryPlatform.Translation.Repositories
             Convert.ToInt32(AppSettings("EventsReadyForReminder"));
 
         private readonly IMinistryPlatformService _ministryPlatformService;
+        private readonly IMinistryPlatformRestRepository _ministryPlatformRestRepository;
         private readonly IGroupRepository _groupService;
+        private readonly IEventParticipantRepository _eventParticipantRepository;
 
         public EventRepository(IMinistryPlatformService ministryPlatformService,
                             IAuthenticationRepository authenticationService,
                             IConfigurationWrapper configurationWrapper,
-                            IGroupRepository groupService)
+                            IGroupRepository groupService,
+                            IMinistryPlatformRestRepository ministryPlatformRestRepository,
+                            IEventParticipantRepository eventParticipantRepository)
             : base(authenticationService, configurationWrapper)
         {
             _ministryPlatformService = ministryPlatformService;
+            _ministryPlatformRestRepository = ministryPlatformRestRepository;
             _groupService = groupService;
+            _eventParticipantRepository = eventParticipantRepository;
         }
 
         public int CreateEvent(MpEventReservationDto eventReservationReservation)
@@ -152,59 +158,29 @@ namespace MinistryPlatform.Translation.Repositories
             catch (Exception ex)
             {
                 throw new ApplicationException(
-                    string.Format("unRegisterParticipantForEvent failed.  Participant Id: {0}, Event Id: {1}",
-                                  participantId,
-                                  eventId),
+                    $"unRegisterParticipantForEvent failed.  Participant Id: {participantId}, Event Id: {eventId}",
                     ex.InnerException);
             }
 
-            _logger.Debug(string.Format("Removed participant {0} from event {1}; record id: {2}",
-                                        participantId,
-                                        eventId,
-                                        eventParticipantId));
+            _logger.Debug($"Removed participant {participantId} from event {eventId}; record id: {eventParticipantId}");
             return (eventParticipantId);
         }
 
         public MpEvent GetEvent(int eventId)
         {
-            var token = ApiLogin();
-            var searchString = string.Format("{0},", eventId);
-            var r = _ministryPlatformService.GetPageViewRecords("EventsWithDetail", token, searchString);
-            if (r.Count == 1)
-            {
-                var record = r[0];
-                var e = new MpEvent
-                {
-                    CongregationId = record.ToInt("Congregation_ID"),
-                    EventEndDate = record.ToDate("Event_End_Date"),
-                    EventId = record.ToInt("Event_ID"),
-                    EventStartDate = record.ToDate("Event_Start_Date"),
-                    EventTitle = record.ToString("Event_Title"),
-                    ParentEventId = record.ToNullableInt("Parent_Event_ID"),
-                    PrimaryContact = new MpContact
-                    {
-                        ContactId = record.ToInt("Contact_ID"),
-                        EmailAddress = record.ToString("Email_Address")
-                    },
-                    ReminderDaysPriorId = record.ToInt("Reminder_Days_Prior_ID"),
-                    Cancelled = record.ToBool("Cancelled")
-                };
+            var apiToken = ApiLogin();
+            
+            var mpevent = _ministryPlatformRestRepository.UsingAuthenticationToken(apiToken).Get<MpEvent>(eventId);
+            mpevent.PrimaryContact = _ministryPlatformRestRepository.UsingAuthenticationToken(apiToken).Get<MpContact>(mpevent.PrimaryContactId, "Email_Address");
 
-
-                return e;
-            }
-            if (r.Count == 0)
-            {
-                return null;
-            }
-            throw new ApplicationException(string.Format("Duplicate Event ID detected: {0}", eventId));
+            return mpevent;
         }
 
         public int GetEventParticipantRecordId(int eventId, int participantId)
         {
             var search = "," + eventId + "," + participantId;
             var participant = _ministryPlatformService.GetPageViewRecords("EventParticipantByEventIdAndParticipantId", ApiLogin(), search).FirstOrDefault();
-            return participant == null ? 0 : participant.ToInt("Event_Participant_ID");
+            return participant?.ToInt("Event_Participant_ID") ?? 0;
         }
 
         public bool EventHasParticipant(int eventId, int participantId)
@@ -519,6 +495,49 @@ namespace MinistryPlatform.Translation.Repositories
                 Congregation = record.ToString("Congregation_Name"),
                 EventTitle = record.ToString("Event_Title"),
             }).ToList();
-        } 
+        }
+
+        public List<MpWaivers> GetWaivers(int eventId, int contactId)
+        {
+            var apiToken = ApiLogin();
+            var eventParticipantId = _eventParticipantRepository.GetEventParticipantByContactId(eventId, contactId);
+            if (eventParticipantId == 0)
+            {
+                throw new ApplicationException("Event Participant not found for Contact");
+            }
+
+            const string columnList = "Waiver_ID_Table.[Waiver_ID], Waiver_ID_Table.[Waiver_Name], Waiver_ID_Table.[Waiver_Text], cr_Event_Waivers.[Required]";
+            var campWaivers = _ministryPlatformRestRepository.UsingAuthenticationToken(apiToken).Search<MpWaivers>($"Event_ID = {eventId} AND Active=1", columnList).ToList();
+            
+            //for each event/waiver, see if someone has signed. 
+            const string columns = "cr_Event_Participant_Waivers.Waiver_ID, cr_Event_Participant_Waivers.Event_Participant_ID, Accepted, Signee_Contact_ID";
+            foreach (var waiver in campWaivers)
+            {
+                var searchString = $"Waiver_ID_Table.Waiver_ID = {waiver.WaiverId} AND Event_Participant_ID_Table_Event_ID_Table.Event_ID = {eventId} AND cr_Event_Participant_Waivers.Event_Participant_ID = {eventParticipantId}";
+                var response = _ministryPlatformRestRepository.UsingAuthenticationToken(apiToken).Search<MpWaiverResponse>(searchString, columns).FirstOrDefault();
+                if (response != null)
+                {
+                    waiver.Accepted = response.Accepted;
+                    waiver.SigneeContactId = response.SigneeContactId;
+                }
+            }
+
+            return campWaivers;
+        }
+
+        public void SetWaivers(List<MpWaiverResponse> waiverResponses)
+        {
+            var apiToken = ApiLogin();
+
+            foreach (var waiver in waiverResponses)
+            {
+                var searchString = $"Event_Participant_ID={waiver.EventParticipantId} AND Waiver_ID={waiver.WaiverId}";
+                waiver.EventParticipantWaiverId = _ministryPlatformRestRepository.UsingAuthenticationToken(apiToken).Search<int>("cr_Event_Participant_Waivers", searchString, "Event_Participant_Waiver_ID");
+            }
+            
+            _ministryPlatformRestRepository.UsingAuthenticationToken(apiToken).Post(waiverResponses.Where(w => w.EventParticipantWaiverId == 0).ToList());
+
+            _ministryPlatformRestRepository.UsingAuthenticationToken(apiToken).Put(waiverResponses.Where(w => w.EventParticipantWaiverId != 0).ToList());
+        }
     }
 }

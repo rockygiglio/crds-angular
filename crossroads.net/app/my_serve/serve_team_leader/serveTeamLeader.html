@@ -20,9 +20,9 @@
 				<label>
                 <input type="radio"
                        ng-model="serveTeamLeader.model.selectedOpp"
-                       ng-value="opp.Opportunity_ID"
+                       ng-value="opp.opportunityId"
                        name="radio_{{team.index}}">
-                <div>{{::opp.Opportunity_Title}} {{::opp.roleTitle}}</div>
+                <div>{{::opp.opportunityTitle}} {{::opp.roleTitle}}</div>
                 <div ng-if="opp.shiftStartTime && opp.shiftEndTime">{{ opp.shiftStartTime | time}} - {{ opp.shiftEndTime | time}} </div>
                 <div ng-if="opp.room"> {{ opp.room }} </div>
                 <span class="label {{ opp.capacity.badgeType }}" ng-show="opp.capacity.display">{{ opp.capacity.message }}</span>

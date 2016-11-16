@@ -6,7 +6,8 @@ export default function serveTeamMembersComponent() {
     bindings: {
       opportunities: '<',
       onMemberClick: '&',
-      onMemberRemove: '&'
+      onMemberRemove: '&',
+      isLeader: '='
     },
     template,
     controller: ServeTeamMembersController,

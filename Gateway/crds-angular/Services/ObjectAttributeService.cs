@@ -60,7 +60,7 @@ namespace crds_angular.Services
                               mpAttributeType => new ObjectAttributeTypeDTO()
                               {
                                   AttributeTypeId = mpAttributeType.AttributeTypeId,
-                                  Name = mpAttributeType.AttributeTypeName,
+                                  Name = mpAttributeType.AttributeTypeName
                               });
 
 
@@ -74,7 +74,8 @@ namespace crds_angular.Services
                     SortOrder = mpAttribute.SortOrder,
                     Selected = false,
                     Category = mpAttribute.Category,
-                    CategoryDescription = mpAttribute.CategoryDescription
+                    CategoryDescription = mpAttribute.CategoryDescription,
+                    EndDate = mpAttribute.EndDate
                 };
 
                 attributeTypesDictionary[mpAttribute.AttributeTypeId].Attributes.Add(objectAttribute);
@@ -88,6 +89,12 @@ namespace crds_angular.Services
                 }
 
                 var objectAttributeType = attributeTypesDictionary[mpObjectAttribute.AttributeTypeId];
+
+                // Is the attribute ID in the collection (if not, was most likely end dated)
+                if (!objectAttributeType.Attributes.Exists(x => x.AttributeId == mpObjectAttribute.AttributeId))
+                {
+                    continue;
+                }
                 var objectAttribute = objectAttributeType.Attributes.First(x => x.AttributeId == mpObjectAttribute.AttributeId);
                 objectAttribute.StartDate = mpObjectAttribute.StartDate;
                 objectAttribute.EndDate = mpObjectAttribute.EndDate;
@@ -116,7 +123,10 @@ namespace crds_angular.Services
                 {
                     continue;
                 }
-
+                if (!mpAttributes.Exists(x => x.AttributeId == mpObjectAttribute.AttributeId))
+                {
+                    continue;
+                }
                 var mpAttribute = mpAttributes.First(x => x.AttributeId == mpObjectAttribute.AttributeId);
 
                 var attribute = _attributeService.ConvertAttributeToAttributeDto(mpAttribute);
