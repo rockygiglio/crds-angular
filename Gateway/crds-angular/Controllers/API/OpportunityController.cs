@@ -104,8 +104,8 @@ namespace crds_angular.Controllers.API
         }
 
         [ResponseType(typeof (OpportunityGroup))]
-        [VersionedRoute(template: "opportunity/{opportunityId}", minimumVersion: "1.0.0")]
-        [Route("opportunity/{opportunityId}")]
+        [VersionedRoute(template: "opportunity/getGroupParticipantsForOpportunity/{opportunityId}", minimumVersion: "1.0.0")]
+        [Route("opportunity/getGroupParticipantsForOpportunity/{opportunityId}")]
         public IHttpActionResult GetGroupParticipantsForOpportunity(int opportunityId)
         {
             return Authorized(token =>
