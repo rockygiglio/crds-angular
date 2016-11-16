@@ -32,7 +32,10 @@ class ProductSummaryController {
 
     if (this.productInfo) {
       if (this.productInfo.options) {
-        option = find(this.productInfo.options, each => moment(each.endDate).isAfter(now));
+        option = find(this.productInfo.options, (each) => {
+          const endDate = moment(each.endDate);
+          return endDate.isSame(now, 'day') || endDate.isAfter(now, 'day');
+        });
       }
 
       if (option) {

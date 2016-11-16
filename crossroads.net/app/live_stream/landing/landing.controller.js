@@ -35,7 +35,7 @@ export default class LandingController {
   }
 
   moveCountdown() {
-    let el = angular.element('#intro .upcoming p.lead');
+    let el = angular.element('countdown-upcoming');
     if (el.length) {
       angular.element('countdown-intro').insertAfter(el)
     }
