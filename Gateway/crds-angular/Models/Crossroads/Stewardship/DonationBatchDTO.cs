@@ -43,5 +43,7 @@ namespace crds_angular.Models.Crossroads.Stewardship
 
         [JsonProperty("program_id")]
         public int ProgramId { get; set; }
+
+        public decimal BatchFeeTotal { get; set; }
     }
 }

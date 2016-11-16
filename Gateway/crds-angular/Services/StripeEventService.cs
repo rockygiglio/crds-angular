@@ -112,10 +112,66 @@ namespace crds_angular.Services
             }
 
             //TODO: now we have a list of charges. process for donations and for payments
+            var depositName = DateTime.Now.ToString(BatchNameDateFormat);
+
+            var paymentcharges = charges.Where(m => m.Metadata["crossroads_transaction_type"].ToString() == "payment").ToList();
+            var donationcharges = charges.Where(m => m.Metadata["crossroads_transaction_type"].ToString() != "payment").ToList();
+
+            var paymentBatch = CreateBatchDTOFromCharges(paymentcharges,depositName+"P",eventTimestamp,transfer);
+            var donationBatch = CreateBatchDTOFromCharges(donationcharges,depositName+"D",eventTimestamp,transfer);
+
+            var stripeTotalFees = paymentBatch.BatchFeeTotal + donationBatch.BatchFeeTotal;
+            
+            // Create the deposit
+            var deposit = new DepositDTO
+            {
+                // Account number must be non-null, and non-empty; using a single space to fulfill this requirement
+                AccountNumber = " ",
+                BatchCount = 1,
+                DepositDateTime = DateTime.Now,
+                DepositName = depositName,
+                // This is the amount from Stripe - will show out of balance if does not match batch total above
+                DepositTotalAmount = ((transfer.Amount / Constants.StripeDecimalConversionValue) + (stripeTotalFees / Constants.StripeDecimalConversionValue)),
+                ProcessorFeeTotal = stripeTotalFees / Constants.StripeDecimalConversionValue,
+                DepositAmount = transfer.Amount /Constants.StripeDecimalConversionValue,
+                Exported = false,
+                Notes = null,
+                ProcessorTransferId = transfer.Id
+            };
+            try
+            {
+                response.Deposit = _donationService.CreateDeposit(deposit);
+            }
+            catch (Exception e)
+            {
+                _logger.Error("Failed to create batch deposit", e);
+                throw;
+            }
+
+            // Create the batch, with the above deposit id
+            paymentBatch.DepositId = response.Deposit.Id;
+            donationBatch.DepositId = response.Deposit.Id;
+            try
+            {
+                response.Batch = _donationService.CreateDonationBatch(paymentBatch);
+                response.Batch = _donationService.CreateDonationBatch(donationBatch);
+            }
+            catch (Exception e)
+            {
+                _logger.Error("Failed to create donation batch", e);
+                throw;
+            }
+
+            return (response);
+        }
+
+        private DonationBatchDTO CreateBatchDTOFromCharges(List<StripeCharge> charges, string batchName, DateTime? eventTimestamp, StripeTransfer transfer)
+        {
+            //TODO: THIS IS WRONG. REMOVE THIS!!!!!!!!!!!!!!!!!!!!!!!!!!!! PLACEHOLDER ONLY
+            var response = new TransferPaidResponseDTO();
 
             var now = DateTime.Now;
-            var batchName = now.ToString(BatchNameDateFormat);
-
+            
             var batch = new DonationBatchDTO()
             {
                 BatchName = batchName,
@@ -166,7 +222,7 @@ namespace crds_angular.Services
                     {
                         donation = HandleDonationNotFoundException(transfer, refund, paymentId, e, charge);
                     }
-                    
+
                     if (donation.BatchId != null)
                     {
                         var b = _donationService.GetDonationBatch(donation.BatchId.Value);
@@ -175,8 +231,8 @@ namespace crds_angular.Services
                             // If this donation exists on another batch that does not have a Stripe transfer ID, we'll move it to our batch instead
                             var msg = $"Charge {charge.Id} already exists on batch {b.Id}, moving to new batch";
                             _logger.Debug(msg);
-                        } 
-                        else 
+                        }
+                        else
                         {
                             // If this donation exists on another batch that has a Stripe transfer ID, skip it
                             var msg = $"Charge {charge.Id} already exists on batch {b.Id} with transfer id {b.ProcessorTransferId}";
@@ -197,7 +253,7 @@ namespace crds_angular.Services
                     }
                     response.SuccessfulUpdates.Add(charge.Id);
                     batch.ItemCount++;
-                    batch.BatchTotalAmount += (charge.Amount /Constants.StripeDecimalConversionValue);
+                    batch.BatchTotalAmount += (charge.Amount / Constants.StripeDecimalConversionValue);
                     batch.Donations.Add(new DonationDTO { Id = donation.Id, Amount = charge.Amount, Fee = charge.Fee });
                 }
                 catch (Exception e)
@@ -212,47 +268,9 @@ namespace crds_angular.Services
                 response.Exception = new ApplicationException("Could not update all charges to 'deposited' status, see message for details");
             }
 
-            var stripeTotalFees = batch.Donations.Sum(f => f.Fee);
-            
-            // Create the deposit
-            var deposit = new DepositDTO
-            {
-                // Account number must be non-null, and non-empty; using a single space to fulfill this requirement
-                AccountNumber = " ",
-                BatchCount = 1,
-                DepositDateTime = now,
-                DepositName = batchName,
-                // This is the amount from Stripe - will show out of balance if does not match batch total above
-                DepositTotalAmount = ((transfer.Amount / Constants.StripeDecimalConversionValue) + (stripeTotalFees / Constants.StripeDecimalConversionValue)),
-                ProcessorFeeTotal = stripeTotalFees / Constants.StripeDecimalConversionValue,
-                DepositAmount = transfer.Amount /Constants.StripeDecimalConversionValue,
-                Exported = false,
-                Notes = null,
-                ProcessorTransferId = transfer.Id
-            };
-            try
-            {
-                response.Deposit = _donationService.CreateDeposit(deposit);
-            }
-            catch (Exception e)
-            {
-                _logger.Error("Failed to create batch deposit", e);
-                throw;
-            }
+            batch.BatchFeeTotal = batch.Donations.Sum(f => f.Fee);
 
-            // Create the batch, with the above deposit id
-            batch.DepositId = response.Deposit.Id;
-            try
-            {
-                response.Batch = _donationService.CreateDonationBatch(batch);
-            }
-            catch (Exception e)
-            {
-                _logger.Error("Failed to create donation batch", e);
-                throw;
-            }
-
-            return (response);
+            return batch;
         }
 
         private DonationDTO HandleDonationNotFoundException(StripeTransfer transfer, StripeRefund refund, string paymentId, DonationNotFoundException e, StripeCharge charge)
