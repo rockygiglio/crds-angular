@@ -2,7 +2,10 @@ USE [MinistryPlatform]
 GO
 
 SET IDENTITY_INSERT [dbo].dp_Sub_Pages ON
-INSERT INTO [dbo].[dp_Sub_Pages]
+
+IF NOT EXISTS (SELECT * FROM dp_Sub_Pages WHERE Sub_Page_ID = 610)
+BEGIN
+  INSERT INTO [dbo].[dp_Sub_Pages]
            ([Sub_Page_ID]
 		   ,[Display_Name]
            ,[Singular_Name]
@@ -15,7 +18,7 @@ INSERT INTO [dbo].[dp_Sub_Pages]
            ,[Filter_Key]
            ,[Relation_Type_ID]
            ,[Display_Copy])
-     VALUES
+      VALUES
            (610,
 		   'Registration Rules'
            ,'Registration Rule'
@@ -28,9 +31,12 @@ INSERT INTO [dbo].[dp_Sub_Pages]
            ,'Ruleset_ID'
            ,2
            ,1)
+END
 GO
 
-INSERT INTO [dbo].[dp_Sub_Pages]
+IF NOT EXISTS (SELECT * FROM dp_Sub_Pages WHERE Sub_Page_ID = 612)
+BEGIN
+   INSERT INTO [dbo].[dp_Sub_Pages]
            ([Sub_Page_ID]
 		   ,[Display_Name]
            ,[Singular_Name]
@@ -43,7 +49,7 @@ INSERT INTO [dbo].[dp_Sub_Pages]
            ,[Filter_Key]
            ,[Relation_Type_ID]
            ,[Display_Copy])
-     VALUES
+       VALUES
            (612,
 		   'Gender Rules'
            ,'Gender Rule'
@@ -56,6 +62,8 @@ INSERT INTO [dbo].[dp_Sub_Pages]
            ,'Ruleset_ID'
            ,2
            ,1)
+
+END
 GO
 
 SET IDENTITY_INSERT [dbo].dp_Sub_Pages OFF

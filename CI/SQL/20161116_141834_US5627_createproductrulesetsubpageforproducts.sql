@@ -2,7 +2,10 @@ USE [MinistryPlatform]
 GO
 
 SET IDENTITY_INSERT [dbo].dp_Sub_Pages ON
-INSERT INTO [dbo].[dp_Sub_Pages]
+
+IF NOT EXISTS (SELECT * FROM dp_Sub_Pages WHERE Sub_Page_ID = 611)
+BEGIN	
+   INSERT INTO [dbo].[dp_Sub_Pages]
            ([Sub_Page_ID]
 		   ,[Display_Name]
            ,[Singular_Name]
@@ -17,7 +20,7 @@ INSERT INTO [dbo].[dp_Sub_Pages]
            ,[Filter_Key]
            ,[Relation_Type_ID]
            ,[Display_Copy])
-     VALUES
+       VALUES
            (611,
 		   'Rulesets'
            ,'Ruleset'
@@ -32,7 +35,7 @@ INSERT INTO [dbo].[dp_Sub_Pages]
            ,'Product_ID'
            ,2
            ,1)
-
+END
 GO
 SET IDENTITY_INSERT [dbo].dp_Sub_Pages OFF
 GO
