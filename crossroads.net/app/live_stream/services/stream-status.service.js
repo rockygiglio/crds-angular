@@ -1,5 +1,6 @@
 import CONSTANTS from 'crds-constants';
 import Event from '../models/event';
+import moment from 'moment';
 
 export default class StreamStatusService {
 
@@ -17,15 +18,11 @@ export default class StreamStatusService {
     this.time = 0;
   }
 
-  getStatus(){
+  getStatus() {
     return this.streamStatus;
   }
 
-  setStreamStatus(status){
-    this.streamStatus = status;
-  }
-
-  presetStreamStatus(){
+  presetStreamStatus() {
 
     var deferred = this.q.defer();
 
@@ -58,31 +55,30 @@ export default class StreamStatusService {
         .value();
   }
 
-  setStreamStatus(events, isBroadcasting){
+  setStreamStatus(events, isBroadcasting) {
     let streamStatus = this.determineStreamStatus(events, isBroadcasting);
     let isChanged = this.didStreamStatusChange(events, isBroadcasting);
 
-    if (isChanged){
+    if (isChanged) {
       this.streamStatus = status;
       this.rootScope.$broadcast('streamStatusChanged', streamStatus);
     }
   };
 
-  didStreamStatusChange(events, isBroadcasting){
+  didStreamStatusChange(events, isBroadcasting) {
     let oldStreamStatus = this.streamStatus;
     let newStreamStatus = this.determineStreamStatus(events, isBroadcasting);
-    let didStreamStatusChange = newStreamStatus !== oldStreamStatus;
 
-    return didStreamStatusChange;
+    return newStreamStatus !== oldStreamStatus;
   };
 
-  determineStreamStatus(events, isBroadcasting){
+  determineStreamStatus(events, isBroadcasting) {
     let streamStatus;
     let hrsToNextEvent = this.getHoursToNextEvent(events);
-    
+
     let isStreamSoon = ( CONSTANTS.PRE_STREAM_HOURS > hrsToNextEvent && hrsToNextEvent !== false );
 
-    if (isBroadcasting){
+    if (isBroadcasting) {
       streamStatus = CONSTANTS.STREAM_STATUS.LIVE;
     } else if (isStreamSoon) {
       streamStatus = CONSTANTS.STREAM_STATUS.UPCOMING;
@@ -93,14 +89,14 @@ export default class StreamStatusService {
     return streamStatus;
   }
 
-  getHoursToNextEvent(events){
+  getHoursToNextEvent(events) {
 
     let hoursUntilNextEvent = false;
     if ( events.length > 0 ) {
 
       let eventsStartingAfterCurrentTime = this.filterOutEventsStartingBeforeCurrentTime(events);
       let nextEvent = _.sortBy(eventsStartingAfterCurrentTime, ['event', 'start'])[0];
-      
+
       if ( nextEvent !== undefined ) {
 
         let currentTime = moment();
@@ -110,17 +106,17 @@ export default class StreamStatusService {
 
       }
     }
-    
+
     return hoursUntilNextEvent;
   }
 
-  filterOutEventsStartingBeforeCurrentTime(events){
+  filterOutEventsStartingBeforeCurrentTime(events) {
     let eventsStartingAfterCurrentTime = [];
 
     for (let i = 0; i < events.length; i++) {
       let iteratedEvent = events[i];
       let doesEventStartAfterCurrentTime = this.doesEventStartAfterCurrentTime(iteratedEvent);
-      if( doesEventStartAfterCurrentTime){
+      if( doesEventStartAfterCurrentTime) {
         eventsStartingAfterCurrentTime.push(events[i]);
       }
     }
@@ -128,21 +124,20 @@ export default class StreamStatusService {
     return eventsStartingAfterCurrentTime;
   }
 
-  doesEventStartAfterCurrentTime(event){
+  doesEventStartAfterCurrentTime(event) {
     let currentTime = moment();
-    let eventStartTime = (typeof event.start === moment) ? event.start : moment(event.start);        
-    let isEventStartBeforeCurrentTime = eventStartTime.isAfter(currentTime);
+    let eventStartTime = (typeof event.start === moment) ? event.start : moment(event.start);
 
-    return isEventStartBeforeCurrentTime;
+    return eventStartTime.isAfter(currentTime);
   }
 
-  isBroadcasting(events){
+  isBroadcasting(events) {
     let areAnyEventsBroadcasting = false;
 
     for (let i = 0; i < events.length; i++) {
       let iteratedEvent = events[i];
       let isEventLive = this.isEventCurrentlyLive(iteratedEvent);
-      if (isEventLive){
+      if (isEventLive) {
         areAnyEventsBroadcasting = true;
       }
     }
@@ -150,13 +145,12 @@ export default class StreamStatusService {
     return areAnyEventsBroadcasting;
   };
 
-  isEventCurrentlyLive(event){
+  isEventCurrentlyLive(event) {
     let currentTime = moment();
     let eventStartTime = (typeof event.start === moment) ? event.start : moment(event.start);
     let eventEndTime = (typeof event.end === moment) ? event.end : moment(event.end);
-    let isEventLive = eventStartTime.isBefore(currentTime) && eventEndTime.isAfter(currentTime);
 
-    return isEventLive;
+    return eventStartTime.isBefore(currentTime) && eventEndTime.isAfter(currentTime);
   }
 
 };
