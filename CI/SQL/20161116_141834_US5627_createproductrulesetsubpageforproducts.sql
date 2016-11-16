@@ -8,6 +8,8 @@ INSERT INTO [dbo].[dp_Sub_Pages]
            ,[Singular_Name]
            ,[Page_ID]
            ,[View_Order]
+		   ,[Link_To_Page_ID]
+		   ,[Link_From_Field_Name]
            ,[Primary_Table]
            ,[Primary_Key]
            ,[Default_Field_List]
@@ -21,6 +23,8 @@ INSERT INTO [dbo].[dp_Sub_Pages]
            ,'Ruleset'
            ,(SELECT Page_ID FROM dp_Pages WHERE Display_Name = 'Products')
            ,5
+		   ,620
+		   ,'Ruleset_ID_Table.Ruleset_Name'
            ,'cr_Product_Ruleset'
            ,'Product_Ruleset_ID'
            ,'Ruleset_ID_Table.Ruleset_Name, Start_date, End_Date'
