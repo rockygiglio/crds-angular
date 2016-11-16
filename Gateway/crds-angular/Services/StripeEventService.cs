@@ -117,6 +117,16 @@ namespace crds_angular.Services
             var paymentcharges = charges.Where(m => m.Metadata["crossroads_transaction_type"].ToString() == "payment").ToList();
             var donationcharges = charges.Where(m => m.Metadata["crossroads_transaction_type"].ToString() != "payment").ToList();
 
+            if (paymentcharges.Count + donationcharges.Count != charges.Count)
+            {
+                var msg = "Donation and Payment charges count error for transfer: " + transfer.Id;
+                _logger.Debug(msg);
+                response.TotalTransactionCount = 0;
+                response.Message = msg;
+                response.Exception = new ApplicationException(msg);
+                return (response);
+            }
+
             var paymentBatch = CreateBatchDTOFromCharges(paymentcharges,depositName+"P",eventTimestamp,transfer);
             var donationBatch = CreateBatchDTOFromCharges(donationcharges,depositName+"D",eventTimestamp,transfer);
 
@@ -153,6 +163,7 @@ namespace crds_angular.Services
             donationBatch.DepositId = response.Deposit.Id;
             try
             {
+                //TODO: response.Batch should be a list
                 response.Batch = _donationService.CreateDonationBatch(paymentBatch);
                 response.Batch = _donationService.CreateDonationBatch(donationBatch);
             }
@@ -190,6 +201,7 @@ namespace crds_angular.Services
             // Sort charges so we process refunds for payments in the same transfer after the actual payment is processed
             var sortedCharges = charges.OrderBy(charge => charge.Type);
 
+            //TODO: break this loop out 
             foreach (var charge in sortedCharges)
             {
                 try
@@ -213,9 +225,11 @@ namespace crds_angular.Services
                         };
                     }
 
+                    //TODO: Similar block like this needed for Payment
                     DonationDTO donation;
                     try
                     {
+                        
                         donation = _donationService.GetDonationByProcessorPaymentId(paymentId);
                     }
                     catch (DonationNotFoundException e)

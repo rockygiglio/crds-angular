@@ -68,6 +68,7 @@ namespace crds_angular.Services
             return(_mpDonationRepository.UpdateDonationStatus(processorPaymentId, statusId, statusDate ?? DateTime.Now, statusNote));
         }
 
+        //TODO: Method similar to this for Payment Batches
         public DonationBatchDTO CreateDonationBatch(DonationBatchDTO batch)
         {
             var batchId = _mpDonationRepository.CreateDonationBatch(batch.BatchName, batch.SetupDateTime, batch.BatchTotalAmount,batch.ItemCount, batch.BatchEntryType, batch.DepositId, batch.FinalizedDateTime, batch.ProcessorTransferId);
