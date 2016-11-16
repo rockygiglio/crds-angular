@@ -185,7 +185,6 @@ namespace crds_angular.Services
             var householdRecordId = CreateHouseholdRecord(newUserData, token);
             var contactRecordId = CreateContactRecord(newUserData, token, householdRecordId);
             var userRecordId = CreateUserRecord(newUserData, token, contactRecordId);
-            CreateContactHouseholdRecord(token, householdRecordId, contactRecordId);
             CreateUserRoleSubRecord(token, userRecordId);
             _participantService.CreateParticipantRecord(contactRecordId);
             CreateNewUserSubscriptions(contactRecordId, token);
