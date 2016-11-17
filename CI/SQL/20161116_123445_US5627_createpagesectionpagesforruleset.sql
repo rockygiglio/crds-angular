@@ -34,20 +34,26 @@ BEGIN
 END
 GO
 
-INSERT INTO [dbo].[dp_Page_Sections]
+IF NOT EXISTS (SELECT * FROM dp_Page_Sections WHERE Page_Section = 'Rules')
+BEGIN
+    INSERT INTO [dbo].[dp_Page_Sections]
            ([Page_Section]
            ,[View_Order])
-     VALUES
+       VALUES
            ('Rules'
            ,10)
+END
 GO
 
-INSERT INTO [dbo].[dp_Page_Section_Pages]
+IF NOT EXISTS (SELECT * FROM dp_Page_Section_Pages WHERE Page_Section_ID = (SELECT Page_Section_ID FROM dp_Page_Sections WHERE Page_Section = 'Rules') AND Page_ID = 620)
+BEGIN
+    INSERT INTO [dbo].[dp_Page_Section_Pages]
            ([Page_ID]
            ,[Page_Section_ID])
-     VALUES
+       VALUES
            (620
            ,(SELECT Page_Section_ID FROM dp_Page_Sections WHERE Page_Section = 'Rules'))
+END
 GO
 
 

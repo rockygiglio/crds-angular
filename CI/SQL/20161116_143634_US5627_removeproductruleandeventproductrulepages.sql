@@ -16,16 +16,14 @@ DELETE FROM [dbo].[dp_Page_Section_Pages]
 
 IF EXISTS (SELECT * FROM dp_Role_Pages WHERE Page_ID = @ProductPageId)
 BEGIN
-   SET @ProductRoleId = (SELECT TOP 1 Role_ID FROM dp_Role_Pages WHERE Page_ID = @ProductPageId);
    DELETE FROM [dbo].[dp_Role_Pages]
-      WHERE Role_ID = @ProductRoleId AND Page_ID = @ProductPageId;
+      WHERE Role_ID IN (SELECT Role_ID FROM dp_Role_Pages WHERE Page_ID = @ProductPageId);
 END
 
 IF EXISTS (SELECT * FROM dp_Role_Pages WHERE Page_ID = @EventProductPageId)
 BEGIN
-    SET @EventProductRoleId = (SELECT TOP 1 Role_ID FROM dp_Role_Pages WHERE Page_ID = @EventProductPageId);
-    DELETE FROM [dbo].[dp_Role_Pages]
-         WHERE Role_ID = @EventProductRoleId AND Page_ID = @EventProductPageId;
+   DELETE FROM [dbo].[dp_Role_Pages]
+      WHERE Role_ID IN (SELECT Role_ID FROM dp_Role_Pages WHERE Page_ID = @ProductPageId);
 END
 
 IF EXISTS (SELECT * FROM dp_Pages WHERE Page_ID =@ProductPageId)
