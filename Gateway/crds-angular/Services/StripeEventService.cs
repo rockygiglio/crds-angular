@@ -130,8 +130,8 @@ namespace crds_angular.Services
                 return (response);
             }
 
-            var paymentBatch = CreateBatchDTOFromCharges(paymentcharges,depositName+"P",eventTimestamp,transfer);
-            var donationBatch = CreateBatchDTOFromCharges(donationcharges,depositName+"D",eventTimestamp,transfer);
+            var paymentBatch = CreateBatchDTOFromCharges(paymentcharges,depositName+"P",eventTimestamp,transfer, ref response);
+            var donationBatch = CreateBatchDTOFromCharges(donationcharges,depositName+"D",eventTimestamp,transfer, ref response);
 
             var stripeTotalFees = paymentBatch.BatchFeeTotal + donationBatch.BatchFeeTotal;
             
@@ -166,9 +166,8 @@ namespace crds_angular.Services
             donationBatch.DepositId = response.Deposit.Id;
             try
             {
-                //TODO: response.Batch should be a list
-                response.Batch = _donationService.CreateDonationBatch(paymentBatch);
-                response.Batch = _donationService.CreateDonationBatch(donationBatch);
+                response.Batch.Add(_donationService.CreateDonationBatch(paymentBatch));
+                response.Batch.Add(_donationService.CreateDonationBatch(donationBatch));
             }
             catch (Exception e)
             {
@@ -179,10 +178,10 @@ namespace crds_angular.Services
             return (response);
         }
 
-        private DonationBatchDTO CreateBatchDTOFromCharges(List<StripeCharge> charges, string batchName, DateTime? eventTimestamp, StripeTransfer transfer)
+        private DonationBatchDTO CreateBatchDTOFromCharges(List<StripeCharge> charges, string batchName, DateTime? eventTimestamp, StripeTransfer transfer, ref TransferPaidResponseDTO response)
         {
             //TODO: THIS IS WRONG. REMOVE THIS!!!!!!!!!!!!!!!!!!!!!!!!!!!! PLACEHOLDER ONLY
-            var response = new TransferPaidResponseDTO();
+            //var response = new TransferPaidResponseDTO();
 
             var now = DateTime.Now;
             
@@ -198,9 +197,8 @@ namespace crds_angular.Services
                 ProcessorTransferId = transfer.Id
             };
 
-            response.TotalTransactionCount = charges.Count;
-            _logger.Debug($"{charges.Count} charges to update for transfer {transfer.Id}");
-
+            response.TotalTransactionCount += charges.Count;
+            
             // Sort charges so we process refunds for payments in the same transfer after the actual payment is processed
             var sortedCharges = charges.OrderBy(charge => charge.Type);
 
@@ -470,7 +468,7 @@ namespace crds_angular.Services
         private readonly List<KeyValuePair<string, string>> _failedUpdates = new List<KeyValuePair<string, string>>();
 
         [JsonProperty("donation_batch")]
-        public DonationBatchDTO Batch;
+        public List<DonationBatchDTO> Batch;
 
         [JsonProperty("deposit")]
         public DepositDTO Deposit;
