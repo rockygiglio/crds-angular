@@ -3,7 +3,10 @@ GO
 
 SET IDENTITY_INSERT [dp_Pages] ON
 
-INSERT INTO [dbo].[dp_Pages]
+IF NOT EXISTS (SELECT * FROM dp_Pages WHERE Page_ID = 620)
+BEGIN
+
+   INSERT INTO [dbo].[dp_Pages]
            ([Page_ID]
 		   ,[Display_Name]
            ,[Singular_Name]
@@ -15,7 +18,7 @@ INSERT INTO [dbo].[dp_Pages]
            ,[Default_Field_List]
            ,[Selected_Record_Expression]
            ,[Display_Copy])
-     VALUES
+       VALUES
            (620
 		   ,'Rulesets'
            ,'Ruleset'
@@ -27,6 +30,8 @@ INSERT INTO [dbo].[dp_Pages]
            ,'Ruleset_Name, Description, Ruleset_Start_Date, Ruleset_End_Date'
            ,'Ruleset_Name'
            ,1)
+
+END
 GO
 
 INSERT INTO [dbo].[dp_Page_Sections]

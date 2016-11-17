@@ -7,8 +7,6 @@ DECLARE @EventProductPageId AS INT = 602;
 DECLARE @ProductRoleId AS INT = (SELECT Role_ID FROM dp_Role_Pages WHERE Page_ID = @ProductPageId);
 DECLARE @EventProductRoleId AS INT = (SELECT Role_ID FROM dp_Role_Pages WHERE Page_ID = @EventProductPageId);
 
-
-
 DELETE FROM [dbo].[dp_Page_Section_Pages]
       WHERE Page_Section_ID = @PageSectionId AND Page_ID = @ProductPageId ;
 
