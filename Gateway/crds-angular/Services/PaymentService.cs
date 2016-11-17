@@ -126,9 +126,9 @@ namespace crds_angular.Services
 
             batch.Id = batchId;
 
-            foreach (var donation in batch.Donations)
+            foreach (var payment in batch.Donations)
             {
-                _paymentRepository.AddPaymentToBatch(batchId, int.Parse(donation.Id));
+                _paymentRepository.AddPaymentToBatch(batchId, int.Parse(payment.Id));
             }
 
             return (batch);
