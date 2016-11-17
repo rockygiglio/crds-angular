@@ -4,7 +4,7 @@ export default class CampPaymentController {
     this.campsService = CampsService;
     this.state = $state;
     this.sce = $sce;
-    this.iframeSelector = '.hasResize';
+    this.iframeSelector = '.camp-payment-widget';
   }
 
   $onInit() {
@@ -12,10 +12,7 @@ export default class CampPaymentController {
     this.iFrameResizer = require('iframe-resizer/js/iframeResizer.min.js');
 
     this.iFrames = this.iFrameResizer({
-      heightCalculationMethod: 'taggedElement',
-      log: true,
       checkOrigin: false,
-      sizeHeight: true,
     }, this.iframeSelector);
 
     // eslint-disable-next-line no-undef
