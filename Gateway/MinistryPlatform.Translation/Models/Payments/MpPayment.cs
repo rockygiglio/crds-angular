@@ -46,13 +46,13 @@ namespace MinistryPlatform.Translation.Models.Payments
         [JsonProperty(PropertyName = "Invoice_Number")]
         public string InvoiceNumber { get; set; }
 
+        [JsonProperty(PropertyName = "Batch_ID")]
+        public int BatchId { get; set; }
+
         [JsonProperty(PropertyName = "Payment_Status")]
         public int PaymentStatus { get; set; }
 
         [JsonProperty(PropertyName = "Processor_Fee_Amount")]
         public decimal? ProcessorFeeAmount { get; set; }
-
-        [JsonProperty(PropertyName = "Batch_ID")]
-        public int? BatchId { get; set; }
     }
 }

@@ -9,6 +9,7 @@ using Crossroads.Utilities.Interfaces;
 using MinistryPlatform.Translation.Exceptions;
 using MinistryPlatform.Translation.Models.DTO;
 using Moq;
+using MvcContrib;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 using RestSharp.Extensions;
@@ -200,6 +201,9 @@ namespace crds_angular.test.Services
                 }
             };
 
+            var paymentmetadata = new Dictionary<string, object> {{"crossroads_transaction_type", "payment"}};
+            var donationmetadata = new Dictionary<string, object> { { "crossroads_transaction_type", "donation" } };
+
             var dateCreated = DateTime.Now;
             var charges = new List<StripeCharge>
             {
@@ -209,7 +213,8 @@ namespace crds_angular.test.Services
                     Amount = 111,
                     Fee = 1,
                     Type = "charge",
-                    Created = dateCreated.AddDays(1)
+                    Created = dateCreated.AddDays(1),
+                    Metadata = paymentmetadata
                 },
                 new StripeCharge
                 {
@@ -217,7 +222,8 @@ namespace crds_angular.test.Services
                     Amount = 222,
                     Fee = 2,
                     Type = "charge",
-                    Created = dateCreated.AddDays(2)
+                    Created = dateCreated.AddDays(2),
+                    Metadata = paymentmetadata
                 },
                 new StripeCharge
                 {
@@ -225,7 +231,8 @@ namespace crds_angular.test.Services
                     Amount = 333,
                     Fee = 3,
                     Type = "charge",
-                    Created = dateCreated.AddDays(3)
+                    Created = dateCreated.AddDays(3),
+                    Metadata = donationmetadata
                 },
                 new StripeCharge
                 {
@@ -233,7 +240,8 @@ namespace crds_angular.test.Services
                     Amount = 777, 
                     Fee = 7,
                     Type = "charge",
-                    Created = dateCreated.AddDays(4)
+                    Created = dateCreated.AddDays(4),
+                    Metadata = donationmetadata
                 },
                 new StripeCharge
                 {
@@ -241,7 +249,8 @@ namespace crds_angular.test.Services
                     Amount = 888, 
                     Fee = 8,
                     Type = "charge",
-                    Created = dateCreated.AddDays(5)
+                    Created = dateCreated.AddDays(5),
+                    Metadata = donationmetadata
                 },
                 new StripeCharge
                 {
@@ -249,7 +258,8 @@ namespace crds_angular.test.Services
                     Amount = 999,
                     Fee = 9,
                     Type = "payment_refund",
-                    Created = dateCreated.AddDays(8)
+                    Created = dateCreated.AddDays(8),
+                    Metadata = donationmetadata
                 },
                 new StripeCharge
                 {
@@ -257,7 +267,8 @@ namespace crds_angular.test.Services
                     Amount = 444,
                     Fee = 4,
                     Type = "charge",
-                    Created = dateCreated.AddDays(6)
+                    Created = dateCreated.AddDays(6),
+                    Metadata = donationmetadata
                 },
                 new StripeCharge
                 {
@@ -265,7 +276,8 @@ namespace crds_angular.test.Services
                     Amount = 555,
                     Fee = 5,
                     Type = "refund",
-                    Created = dateCreated.AddDays(7)
+                    Created = dateCreated.AddDays(7),
+                    Metadata = donationmetadata
                 }
             };
 
@@ -412,6 +424,8 @@ namespace crds_angular.test.Services
 
             _donationService.Setup(mocked => mocked.GetDonationBatchByProcessorTransferId("tx9876")).Returns((DonationBatchDTO)null);
             _paymentProcessorService.Setup(mocked => mocked.GetChargesForTransfer("tx9876")).Returns(charges);
+            _donationService.Setup(mocked => mocked.GetDepositByProcessorTransferId("tx9876")).Returns((DepositDTO)null);
+
             _donationService.Setup(
                 mocked => mocked.CreatePaymentProcessorEventError(e, It.IsAny<StripeEventResponseDTO>()));
             _donationService.Setup(mocked => mocked.UpdateDonationStatus(1111, 999, e.Created, null)).Returns(1111);

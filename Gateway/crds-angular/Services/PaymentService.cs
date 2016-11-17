@@ -2,13 +2,14 @@
 using System.Linq;
 using crds_angular.Exceptions;
 using crds_angular.Models.Crossroads.Payment;
+using crds_angular.Models.Crossroads.Stewardship;
 using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Interfaces;
-using MinistryPlatform.Translation.Enum;
 using MinistryPlatform.Translation.Exceptions;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Models.Payments;
 using MinistryPlatform.Translation.Repositories.Interfaces;
+using PaymentType = MinistryPlatform.Translation.Enum.PaymentType;
 
 namespace crds_angular.Services
 {
@@ -118,7 +119,20 @@ namespace crds_angular.Services
                 };
             }
             throw new Exception("No Payment found for " + me.Email_Address + " with id " + paymentId);
-           
+        }
+
+        public DonationBatchDTO CreatePaymentBatch(DonationBatchDTO batch)
+        {
+            var batchId = _paymentRepository.CreatePaymentBatch(batch.BatchName, batch.SetupDateTime, batch.BatchTotalAmount, batch.ItemCount, batch.BatchEntryType, batch.DepositId, batch.FinalizedDateTime, batch.ProcessorTransferId);
+
+            batch.Id = batchId;
+
+            foreach (var donation in batch.Donations)
+            {
+                _paymentRepository.AddPaymentToBatch(batchId, int.Parse(donation.Id));
+            }
+
+            return (batch);
         }
 
         public PaymentDTO GetPaymentByTransactionCode(string stripePaymentId)
