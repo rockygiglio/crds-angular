@@ -6,6 +6,7 @@ using crds_angular.Models.Crossroads.Camp;
 using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Interfaces;
 using log4net;
+using Microsoft.Ajax.Utilities;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Models.Product;
 using MinistryPlatform.Translation.Repositories.Interfaces;
@@ -464,10 +465,7 @@ namespace crds_angular.Services
                         {
                             Allergy = new MpAllergy { 
                                 AllergyID = allergy.AllergyId,
-                                AllergyType = new MpAllergyType {
-                                    AllergyType = allergy.AllergyType,
-                                    AllergyTypeID = allergy.AllergyTypeId
-                                },
+                                AllergyType = allergy.AllergyTypeId,
                                 AllergyDescription = allergy.AllergyDescription
                             },
                             MedicalInformationId = medicalInformation.MedicalInformationId,
@@ -480,10 +478,7 @@ namespace crds_angular.Services
                         {
                             Allergy = new MpAllergy
                             {
-                                AllergyType = new MpAllergyType {
-                                    AllergyType = allergy.AllergyType,
-                                    AllergyTypeID = allergy.AllergyTypeId
-                                },
+                                AllergyType = GetAllergyType(allergy.AllergyType),
                                 AllergyDescription = allergy.AllergyDescription
                             },
                             MedicalInformationId = medicalInformation.MedicalInformationId,
@@ -494,6 +489,8 @@ namespace crds_angular.Services
                 _medicalInformationRepository.UpdateOrCreateMedAllergy(updateToAllergyList, createToAllergyList);
             }           
         }
+
+        
 
         public MedicalInfoDTO GetCampMedicalInfo(int eventId, int contactId, string token)
         {
@@ -600,6 +597,27 @@ namespace crds_angular.Services
                 Gender = Convert.ToInt32(camperContact.Gender_ID),
                 CurrentGrade = groupResult.Status ? groupResult.Value.GroupName : null
             };
+        }
+
+        private int GetAllergyType(String type)
+        {
+            int ret = 0;
+            switch (type)
+            {
+                case "Medicine":
+                    ret = _configurationWrapper.GetConfigIntValue("MedicineAllergyType");
+                    break;
+                case "Environmental":
+                    ret = _configurationWrapper.GetConfigIntValue("EnvironmentalAllergyType");
+                    break;
+                case "Other":
+                    ret = _configurationWrapper.GetConfigIntValue("OtherAllergyType");
+                    break;
+                case "Food":
+                    ret = _configurationWrapper.GetConfigIntValue("FoodAllergyType");
+                    break;
+            }
+            return ret;
         }
 
         private static List<ProductOptionDTO> ConvertProductOptionPricetoDto(List<MpProductOptionPrice> options, decimal basePrice, DateTime registrationEnd)
