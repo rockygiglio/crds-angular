@@ -46,6 +46,30 @@ namespace MinistryPlatform.Translation.Repositories
             return payments ?? new List<MpPayment>();
         }
 
+        public MpPayment GetPaymentByTransactionCode(string stripePaymentId)
+        {
+            var apiToken = _apiUserRepository.GetToken();
+            var searchString = $"Transaction_Code='{stripePaymentId}'";
+            var payment = _ministryPlatformRest.UsingAuthenticationToken(apiToken).Search<MpPayment>(searchString);
+            return payment.FirstOrDefault() ?? new MpPayment();
+        }
+
+        public MpPayment GetPaymentById(int paymentId)
+        {
+            var apiToken = _apiUserRepository.GetToken();
+            return _ministryPlatformRest.UsingAuthenticationToken(apiToken).Get<MpPayment>(paymentId);
+        }
+
+        public int UpdateDonationStatus(int paymentId, int statusId, DateTime dateTime, string statusNote)
+        {
+            var apiToken = _apiUserRepository.GetToken();
+
+            var payment = GetPaymentById(paymentId);
+            payment.PaymentStatus = statusId;
+
+            return _ministryPlatformRest.UsingAuthenticationToken(apiToken).Put<MpPayment>(new List<MpPayment> {payment});
+        }
+
         public void AddPaymentToBatch(int batchId, int paymentId)
         {
             var apiToken = _apiUserRepository.GetToken();

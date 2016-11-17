@@ -53,6 +53,6 @@ namespace MinistryPlatform.Translation.Models.Payments
         public int PaymentStatus { get; set; }
 
         [JsonProperty(PropertyName = "Processor_Fee_Amount")]
-        public decimal ProcessorFeeAmount { get; set; }
+        public decimal? ProcessorFeeAmount { get; set; }
     }
 }

@@ -5,6 +5,7 @@ using crds_angular.Models.Crossroads.Payment;
 using crds_angular.Models.Crossroads.Stewardship;
 using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Interfaces;
+using MinistryPlatform.Translation.Exceptions;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Models.Payments;
 using MinistryPlatform.Translation.Repositories.Interfaces;
@@ -132,6 +133,34 @@ namespace crds_angular.Services
             }
 
             return (batch);
+        }
+
+        public PaymentDTO GetPaymentByTransactionCode(string stripePaymentId)
+        {
+            try
+            {
+                var payment = _paymentRepository.GetPaymentByTransactionCode(stripePaymentId);
+
+                return new PaymentDTO
+                {
+                    Amount = (double) payment.PaymentTotal,
+                    ContactId = payment.ContactId,
+                    InvoiceId = int.Parse(payment.InvoiceNumber),
+                    PaymentId = payment.PaymentId,
+                    PaymentTypeId = payment.PaymentTypeId,
+                    StripeTransactionId = payment.TransactionCode,
+                    BatchId = payment.BatchId
+                };
+            }
+            catch (Exception e)
+            {
+                throw new PaymentNotFoundException(stripePaymentId);
+            }
+        }
+
+        public int UpdatePaymentStatus(int paymentId, int statusId, DateTime? statusDate, string statusNote = null)
+        {
+            return (_paymentRepository.UpdateDonationStatus(paymentId, statusId, statusDate ?? DateTime.Now, statusNote));
         }
     }
 }

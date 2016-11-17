@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using crds_angular.Models.Crossroads.Payment;
 using Newtonsoft.Json;
 
 namespace crds_angular.Models.Crossroads.Stewardship
@@ -36,6 +37,13 @@ namespace crds_angular.Models.Crossroads.Stewardship
         private readonly List<DonationDTO> _donations = new List<DonationDTO>();
         [JsonProperty("donations")]
         public List<DonationDTO> Donations { get { return (_donations); } }
+        #endregion
+
+        #region Payments property and accessor
+        [JsonIgnore]
+        private readonly List<PaymentDTO> _payments = new List<PaymentDTO>();
+        [JsonProperty("payments")]
+        public List<PaymentDTO> Payments { get { return (_payments); } }
         #endregion
 
         [JsonProperty("processor_transfer_id")]
