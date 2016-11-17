@@ -117,5 +117,11 @@ namespace MinistryPlatform.Translation.Repositories
                 throw new ApplicationException($"CreatPaymentBatch failed. batchName: {batchName}, setupDateTime: {setupDateTime}, batchTotalAmount: {batchTotalAmount}, itemCount: {itemCount}, batchEntryType: {batchEntryType}, depositId: {depositId}, finalizedDateTime: {finalizedDateTime}", e);
             }
         }
+
+        public MpBatch GetPaymentBatch(int batchId)
+        {
+            var apiToken = _apiUserRepository.GetToken();
+            return _ministryPlatformRest.UsingAuthenticationToken(apiToken).Get<MpBatch>(batchId);
+        }
     }
 }

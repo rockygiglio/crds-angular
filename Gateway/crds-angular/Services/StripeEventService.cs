@@ -199,7 +199,6 @@ namespace crds_angular.Services
             // Sort charges so we process refunds for payments in the same transfer after the actual payment is processed
             var sortedCharges = charges.OrderBy(charge => charge.Type);
 
-            //TODO: break this loop out 
             foreach (var charge in sortedCharges)
             {
                 try
@@ -222,7 +221,7 @@ namespace crds_angular.Services
                             }
                         };
                     }
-
+                    //TODO: Pull these out into methods? 
                     if (charge.Metadata.ContainsKey("crossroads_transaction_type") && charge.Metadata["crossroads_transaction_type"].ToString() == "payment")
                     {
                         PaymentDTO payment;
@@ -237,7 +236,21 @@ namespace crds_angular.Services
 
                         if (payment.BatchId != null)
                         {
-                            //TODO: Check if payment is on another batch that doesn't have a stripe transfer id on it
+                            var b = _paymentService.GetPaymentBatch(payment.BatchId.Value);
+                            if (string.IsNullOrWhiteSpace(b.ProcessorTransferId))
+                            {
+                                // If this payment exists on another batch that does not have a Stripe transfer ID, we'll move it to our batch instead
+                                var msg = $"Charge {charge.Id} already exists on batch {b.Id}, moving to new batch";
+                                _logger.Debug(msg);
+                            }
+                            else
+                            {
+                                // If this payment exists on another batch that has a Stripe transfer ID, skip it
+                                var msg = $"Charge {charge.Id} already exists on batch {b.Id} with transfer id {b.ProcessorTransferId}";
+                                _logger.Debug(msg);
+                                response.FailedUpdates.Add(new KeyValuePair<string, string>(charge.Id, msg));
+                                continue;
+                            }
                         }
 
                         if (payment.Status != DonationStatus.Declined && payment.Status != DonationStatus.Refunded)
@@ -253,8 +266,6 @@ namespace crds_angular.Services
                         batch.ItemCount++;
                         batch.BatchTotalAmount += (charge.Amount / Constants.StripeDecimalConversionValue);
                         batch.Payments.Add(new PaymentDTO { PaymentId = payment.PaymentId, Amount = charge.Amount, ProcessorFee = charge.Fee });
-
-
                     }
                     else
                     {

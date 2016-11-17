@@ -162,5 +162,21 @@ namespace crds_angular.Services
         {
             return (_paymentRepository.UpdateDonationStatus(paymentId, statusId, statusDate ?? DateTime.Now, statusNote));
         }
+
+        public DonationBatchDTO GetPaymentBatch(int batchId)
+        {
+            var batch = _paymentRepository.GetPaymentBatch(batchId);
+            return new DonationBatchDTO
+            {
+                BatchEntryType = batch.BatchEntryTypeId,
+                BatchName = batch.BatchName,
+                BatchTotalAmount = batch.BatchTotal,
+                DepositId = batch.DepositId,
+                FinalizedDateTime = batch.FinalizeDate,
+                ItemCount = batch.ItemCount,
+                ProcessorTransferId = batch.ProcessorTransferId,
+                SetupDateTime = batch.SetupDate
+            };
+        }
     }
 }

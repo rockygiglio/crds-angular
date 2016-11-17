@@ -1,6 +1,7 @@
 ﻿
 using System;
 using crds_angular.Models.Crossroads.Payment;
+using crds_angular.Models.Crossroads.Stewardship;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Models.Payments;
 
@@ -12,5 +13,6 @@ namespace crds_angular.Services.Interfaces
         PaymentDetailDTO GetPaymentDetails(int paymentId, int invoiceId, string token);
         PaymentDTO GetPaymentByTransactionCode(string stripePaymentId);
         int UpdatePaymentStatus(int paymentId, int statusId, DateTime? statusDate, string statusNote = null);
+        DonationBatchDTO GetPaymentBatch(int batchId);
     }
 }
