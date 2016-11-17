@@ -169,8 +169,11 @@ namespace crds_angular.test.Services
                 }
             };
 
-            _donationService.Setup(mocked => mocked.GetDonationBatchByProcessorTransferId("tx9876")).Returns((DonationBatchDTO)null);
+            _donationService.Setup(mocked => mocked.GetDepositByProcessorTransferId("tx9876")).Returns((DepositDTO)null);
             _paymentProcessorService.Setup(mocked => mocked.GetChargesForTransfer("tx9876")).Returns(new List<StripeCharge>());
+
+
+       
             var result = _fixture.ProcessStripeEvent(e);
             Assert.IsNotNull(_fixture.ProcessStripeEvent(e));
             Assert.IsInstanceOf<TransferPaidResponseDTO>(result);
