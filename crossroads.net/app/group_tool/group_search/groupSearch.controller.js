@@ -27,11 +27,11 @@ export default class GroupSearchController {
         this.processing = false;
         form.location.$setValidity('pattern', valid);
         if(valid) {
-          this.state.go('grouptool.search-results', {query: this.search.query, location: this.search.location});
+          this.state.go('grouptool.search-results', {query: this.search.query, location: this.search.location, age: '30s'});
         }
       });
     } else {
-      this.state.go('grouptool.search-results', {query: this.search.query, location: this.search.location});
+      this.state.go('grouptool.search-results', {query: this.search.query, location: this.search.location, age: '30s'});
     }
   }
 }

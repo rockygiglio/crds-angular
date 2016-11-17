@@ -3,7 +3,7 @@ import Address from '../model/address';
 
 export default class GroupSearchResultsController {
   /*@ngInject*/
-  constructor(NgTableParams, GroupService, $state, AuthModalService, $rootScope, AddressValidationService, $location) {
+  constructor(NgTableParams, GroupService, $state, AuthModalService, $rootScope, AddressValidationService, $location, $log) {
     this.groupService = GroupService;
     this.authModalService = AuthModalService;
     this.rootScope = $rootScope;
@@ -16,31 +16,50 @@ export default class GroupSearchResultsController {
     this.ready = false;
     this.results = [];
 
+    this.filters = {};
+
     this.showLocationInput = false;
     this.searchedWithLocation = false;
 
     this.tableParams = new NgTableParams({}, {});
+
+    $rootScope.$on('$stateChangeStart', (event, toState, toParams, fromState, fromParams) => {
+      debugger;
+      $log.debug(toState);
+    });
   }
 
   $onInit() {
+    this.filters = {
+      age: this.state.params.age,
+      category: this.state.params.category,
+      type: this.state.params.type,
+      kids: this.state.params.kids,
+      groupLocation: this.state.params.groupLocation,
+      day: this.state.params.day,
+      time: this.state.params.time,
+      frequency: this.state.params.frequency,
+      site: this.state.params.site
+    }
     this.search = {
       query: this.state.params.query,
       location: this.state.params.location
     };
     this.doSearch(this.state.params.query, this.state.params.location);
+    debugger;
   }
 
   doSearch(query, location) {
     this.searchedWithLocation = location && location.length > 0;
 
     let queryString = {};
-    if(this.searchedWithLocation) {
+    if (this.searchedWithLocation) {
       queryString.location = location;
     }
-    if(query && query.length > 0) {
+    if (query && query.length > 0) {
       queryString.query = query;
     }
-    if(age && age.length > 0) {
+    if(this.filters.age && this.filters.age.length > 0) {
       queryString.age = age;
     }
     this.locationService.search(queryString);
@@ -73,7 +92,7 @@ export default class GroupSearchResultsController {
         this.tableParams.parameters(parms);
         this.ready = true;
       }
-    );
+      );
   }
 
   hasResults() {
@@ -94,7 +113,7 @@ export default class GroupSearchResultsController {
   }
 
   hideLocationForm(form) {
-    if(form.location.$invalid) {
+    if (form.location.$invalid) {
       this.search.location = '';
       form.location.$setValidity('pattern', true);
     }
@@ -103,7 +122,7 @@ export default class GroupSearchResultsController {
   }
 
   submit(form) {
-    if(form && this.search.location && this.search.location.length > 0) {
+    if (form && this.search.location && this.search.location.length > 0) {
       this.processing = true;
       let valid = false;
       this.addressValidationService.validateAddressString(this.search.location).then((data) => {
@@ -115,7 +134,7 @@ export default class GroupSearchResultsController {
       }).finally(() => {
         this.processing = false;
         form.location.$setValidity('pattern', valid);
-        if(valid) {
+        if (valid) {
           this.doSearch(this.search.query, this.search.location);
         }
       });
@@ -124,10 +143,10 @@ export default class GroupSearchResultsController {
     }
   }
 
-  requestToJoinOrEmailGroupLeader(group, email=false) {
+  requestToJoinOrEmailGroupLeader(group, email = false) {
     let modalOptions = {
       template: '<confirm-request email-leader="confirmRequestModal.emailLeader" group="confirmRequestModal.group" modal-instance="confirmRequestModal.modalInstance"></confirm-request>',
-      controller: function(group, emailLeader, $modalInstance) {
+      controller: function (group, emailLeader, $modalInstance) {
         this.group = group;
         this.emailLeader = emailLeader;
         this.modalInstance = $modalInstance;

@@ -37,17 +37,17 @@ export default class GroupSearchResultsController {
 
   initializeFilters() {
     this.allFilters = new FilterGroup('All Filters', [
-      new AgeRangeFilter('Age Range', this.groupService),
-      new CategoryFilter('Category', this.groupService),
-      new GroupTypeFilter('Group Type', this.groupService),
-      new KidsWelcomeFilter('Kids Welcome'),
-      new LocationFilter('Location'),
+      new AgeRangeFilter('Age Range', this.groupService, this.selectedFilters.age),
+      new CategoryFilter('Category', this.groupService, this.selectedFilters.category),
+      new GroupTypeFilter('Group Type', this.groupService, this.selectedFilters.type),
+      new KidsWelcomeFilter('Kids Welcome', this.selectedFilters.kids),
+      new LocationFilter('Location', this.selectedFilters.location),
       new FilterGroup('Day / Time / Frequency', [
-        new MeetingDayFilter('Day', this.groupService),
-        new MeetingTimeFilter('Time'),
-        new FrequencyFilter('Frequency', this.createGroupService),
+        new MeetingDayFilter('Day', this.groupService, this.selectedFilters.day),
+        new MeetingTimeFilter('Time', this.selectedFilters.time),
+        new FrequencyFilter('Frequency', this.createGroupService, this.selectedFilters.frequency),
       ]),
-      new LeadersSiteFilter('Leaders Site', this.groupService)
+      new LeadersSiteFilter('Leaders Site', this.groupService, this.selectedFilters.site),
     ], true);
   }
 

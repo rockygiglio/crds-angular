@@ -212,6 +212,38 @@ export default function GroupToolRouter($httpProvider, $stateProvider) {
         age: {
           value: null,
           squash: true
+        },
+        category: {
+          value: null,
+          squash: true
+        },
+        type: {
+          value: null,
+          squash: true
+        },
+        kids: {
+          value: null,
+          squash: true
+        },
+        groupLocation: {
+          value: null,
+          squash: true
+        },
+        day: {
+          value: null,
+          squash: true
+        },
+        time: {
+          value: null,
+          squash: true
+        },
+        frequency: {
+          value: null,
+          squash: true
+        },
+        site: {
+          value: null,
+          squash: true
         }
       },
       template: '<group-search-results></group-search-results>',

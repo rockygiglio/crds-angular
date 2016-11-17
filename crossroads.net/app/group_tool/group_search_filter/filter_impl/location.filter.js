@@ -2,10 +2,17 @@
 import {SearchFilter, SearchFilterValue} from './searchFilter'; 
 
 export default class LocationFilter extends SearchFilter {
-  constructor(filterName) {
+  constructor(filterName, selectedFilters) {
+
+    if (selectedFilters == null || selectedFilters == undefined)
+      selectedFilters="";
+    let selectedArray = selectedFilters.split(',');
+    let inPersonSelected = _.findIndex(selectedArray, (s) => { return s.toUpperCase() == 'IN PERSON'}) != -1;
+    let onlineSelected = _.findIndex(selectedArray, (s) => { return s.toUpperCase() == 'ONLINE'}) != -1
+
     let filterValues = [
-      new SearchFilterValue('In Person', true, false),
-      new SearchFilterValue('Online', false, false)
+      new SearchFilterValue('In Person', true, inPersonSelected),
+      new SearchFilterValue('Online', false, onlineSelected)
     ];
 
     super(filterName, filterValues, this._matchingFunction);

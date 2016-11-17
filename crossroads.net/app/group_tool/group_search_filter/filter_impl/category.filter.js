@@ -2,13 +2,18 @@
 import {SearchFilter, SearchFilterValue} from './searchFilter';
 
 export default class CategoryFilter extends SearchFilter {
-  constructor(filterName, groupService) {
+  constructor(filterName, groupService, selectedFilters) {
     super(filterName, [], this._matchingFunction);
+
+    if (selectedFilters == null || selectedFilters == undefined)
+      selectedFilters = "";
+    let selectedArray = selectedFilters.split(',');
 
     groupService.getGroupTypeCategories().then(
       (data) => {
         this.getValues().push.apply(this.getValues(), data.map((c) => {
-          return new SearchFilterValue(c.name, c.categoryId, false, c.desc);
+          let selected = _.findIndex(selectedArray, (s) => { return s.toUpperCase() == c.name.toUpperCase() }) != -1;
+          return new SearchFilterValue(c.name, c.categoryId, selected, c.desc);
         }));
       },
       (/*err*/) => {

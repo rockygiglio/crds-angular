@@ -2,13 +2,18 @@
 import {SearchFilter, SearchFilterValue} from './searchFilter';
 
 export default class AgeRangeFilter extends SearchFilter {
-  constructor(filterName, groupService) {
+  constructor(filterName, groupService, selectedFilters) {
     super(filterName, [], this._matchingFunction);
+
+    if (selectedFilters == null || selectedFilters == undefined)
+      selectedFilters = "";
+    let selectedArray = selectedFilters.split(',');
 
     groupService.getAgeRanges().then(
       (data) => {
         this.getValues().push.apply(this.getValues(), data.attributes.map((a) => {
-          return new SearchFilterValue(a.name, a.attributeId, false);
+          let selected = _.findIndex(selectedArray, (s) => { return s.toUpperCase() == a.name.toUpperCase() }) != -1;
+          return new SearchFilterValue(a.name, a.attributeId, selected);
         }));
       },
       (err) => {
