@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Models.Payments;
 using MinistryPlatform.Translation.Repositories;
 using MinistryPlatform.Translation.Repositories.Interfaces;
@@ -60,7 +61,28 @@ namespace MinistryPlatform.Translation.Test.Services
             Assert.AreEqual(false, response.Status);
         }
 
-        
+        [Test]
+        public void CreatePaymentBatchShouldThrow()
+        {
+            const string batchName = "name";
+            var setupDate = DateTime.Now;
+
+            var batchRecord = new MpBatch
+            {
+                BatchName = batchName,
+                SetupDate = setupDate,
+                BatchTotal = (decimal)123.45,
+                ItemCount = 2,
+                BatchEntryTypeId = 1,
+                DepositId = 777,
+                FinalizeDate = setupDate,
+                ProcessorTransferId = "philiscool"
+            };
+
+            _ministryPlatformRest.Setup(p => p.PostWithReturn<MpBatch, MpBatch>(new List<MpBatch>() { batchRecord })).Returns(new List<MpBatch>());
+            
+            Assert.Throws<ApplicationException>(() => _fixture.CreatePaymentBatch(batchName, setupDate, (decimal) 123.45, 2, 1, 777, DateTime.Now, "philiscool"));
+        }
 
         private static MpPaymentDetail FakePaymentInfo()
         {
