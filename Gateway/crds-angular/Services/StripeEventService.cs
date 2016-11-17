@@ -114,7 +114,6 @@ namespace crds_angular.Services
                 return (response);
             }
 
-            //TODO: now we have a list of charges. process for donations and for payments
             var depositName = DateTime.Now.ToString(BatchNameDateFormat);
 
             var paymentcharges = charges.Where(m => m.Metadata["crossroads_transaction_type"].ToString() == "payment").ToList();
@@ -166,6 +165,7 @@ namespace crds_angular.Services
             donationBatch.DepositId = response.Deposit.Id;
             try
             {
+                //TODO need a Creat Payment Batch in paymentservice
                 response.Batch.Add(_donationService.CreateDonationBatch(paymentBatch));
                 response.Batch.Add(_donationService.CreateDonationBatch(donationBatch));
             }
@@ -180,9 +180,6 @@ namespace crds_angular.Services
 
         private DonationBatchDTO CreateBatchDTOFromCharges(List<StripeCharge> charges, string batchName, DateTime? eventTimestamp, StripeTransfer transfer, ref TransferPaidResponseDTO response)
         {
-            //TODO: THIS IS WRONG. REMOVE THIS!!!!!!!!!!!!!!!!!!!!!!!!!!!! PLACEHOLDER ONLY
-            //var response = new TransferPaidResponseDTO();
-
             var now = DateTime.Now;
             
             var batch = new DonationBatchDTO()
