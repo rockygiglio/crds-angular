@@ -19,8 +19,9 @@ namespace crds_angular.test.Services
     public class StripeEventServiceTest
     {
         private StripeEventService _fixture;
-        private Mock<IPaymentProcessorService> _paymentService;
+        private Mock<IPaymentProcessorService> _paymentProcessorService;
         private Mock<IDonationService> _donationService;
+        private Mock<IPaymentService> _paymentService;
         private Mock<MinistryPlatform.Translation.Repositories.Interfaces.IDonorRepository> _mpDonorService;
 
         [SetUp]
@@ -32,11 +33,11 @@ namespace crds_angular.test.Services
             configuration.Setup(mocked => mocked.GetConfigIntValue("DonationStatusDeclined")).Returns(777);
             configuration.Setup(mocked => mocked.GetConfigIntValue("BatchEntryTypePaymentProcessor")).Returns(555);
 
-            _paymentService = new Mock<IPaymentProcessorService>(MockBehavior.Strict);
+            _paymentProcessorService = new Mock<IPaymentProcessorService>(MockBehavior.Strict);
             _donationService = new Mock<IDonationService>(MockBehavior.Strict);
             _mpDonorService = new Mock<MinistryPlatform.Translation.Repositories.Interfaces.IDonorRepository>(MockBehavior.Strict);
 
-            _fixture = new StripeEventService(_paymentService.Object, _donationService.Object, _mpDonorService.Object, configuration.Object);
+            _fixture = new StripeEventService(_paymentProcessorService.Object, _donationService.Object, _paymentService.Object, _mpDonorService.Object, configuration.Object);
         }
 
         [Test]
@@ -49,7 +50,7 @@ namespace crds_angular.test.Services
             };
 
             Assert.IsNull(_fixture.ProcessStripeEvent(e));
-            _paymentService.VerifyAll();
+            _paymentProcessorService.VerifyAll();
             _donationService.VerifyAll();
         }
 
@@ -72,7 +73,7 @@ namespace crds_angular.test.Services
 
             _donationService.Setup(mocked => mocked.UpdateDonationStatus("9876", 888, e.Created, null)).Returns(123);
             Assert.IsNull(_fixture.ProcessStripeEvent(e));
-            _paymentService.VerifyAll();
+            _paymentProcessorService.VerifyAll();
             _donationService.VerifyAll();
         }
 
@@ -98,7 +99,7 @@ namespace crds_angular.test.Services
             _donationService.Setup(mocked => mocked.UpdateDonationStatus("9876", 777, e.Created, "invalid_routing_number: description from stripe")).Returns(123);
             _donationService.Setup(mocked => mocked.ProcessDeclineEmail("9876"));
             Assert.IsNull(_fixture.ProcessStripeEvent(e));
-            _paymentService.VerifyAll();
+            _paymentProcessorService.VerifyAll();
             _donationService.VerifyAll();
         }
 
@@ -139,12 +140,12 @@ namespace crds_angular.test.Services
 
             _donationService.Setup(mocked => mocked.UpdateDonationStatus("9876", 777, e.Created, "invalid_routing_number: description from stripe")).Returns(123);
             _donationService.Setup(mocked => mocked.ProcessDeclineEmail("9876"));
-            _paymentService.Setup(mocked => mocked.GetRefund("re999")).Returns(stripeRefund);
+            _paymentProcessorService.Setup(mocked => mocked.GetRefund("re999")).Returns(stripeRefund);
             _donationService.Setup(mocked => mocked.CreateDonationForBankAccountErrorRefund(It.Is<StripeRefund>(r => r.Data != null && r.Data.Any() && r.Data[0] == stripeRefund)))
                 .Returns(123);
 
             Assert.IsNull(_fixture.ProcessStripeEvent(e));
-            _paymentService.VerifyAll();
+            _paymentProcessorService.VerifyAll();
             _donationService.VerifyAll();
         }
 
@@ -166,7 +167,7 @@ namespace crds_angular.test.Services
             };
 
             _donationService.Setup(mocked => mocked.GetDonationBatchByProcessorTransferId("tx9876")).Returns((DonationBatchDTO)null);
-            _paymentService.Setup(mocked => mocked.GetChargesForTransfer("tx9876")).Returns(new List<StripeCharge>());
+            _paymentProcessorService.Setup(mocked => mocked.GetChargesForTransfer("tx9876")).Returns(new List<StripeCharge>());
             var result = _fixture.ProcessStripeEvent(e);
             Assert.IsNotNull(_fixture.ProcessStripeEvent(e));
             Assert.IsInstanceOf<TransferPaidResponseDTO>(result);
@@ -175,7 +176,7 @@ namespace crds_angular.test.Services
             Assert.AreEqual(0, tp.SuccessfulUpdates.Count);
             Assert.AreEqual(0, tp.FailedUpdates.Count);
 
-            _paymentService.VerifyAll();
+            _paymentProcessorService.VerifyAll();
             _donationService.VerifyAll();
         }
 
@@ -292,7 +293,7 @@ namespace crds_angular.test.Services
 
             _donationService.Setup(mocked => mocked.GetDonationByProcessorPaymentId("ch444")).Throws(new Exception("Not gonna do it, wouldn't be prudent."));
 
-            _paymentService.Setup(mocked => mocked.GetChargeRefund("ch555")).Returns(new StripeRefund
+            _paymentProcessorService.Setup(mocked => mocked.GetChargeRefund("ch555")).Returns(new StripeRefund
             {
                 Data = new List<StripeRefundData>
                 { new StripeRefundData()
@@ -338,7 +339,7 @@ namespace crds_angular.test.Services
                     stripeRefundData
                 }
             };
-            _paymentService.Setup(mocked => mocked.GetRefund("re999")).Returns(stripeRefundData);
+            _paymentProcessorService.Setup(mocked => mocked.GetRefund("re999")).Returns(stripeRefundData);
 
             _donationService.Setup(
                 mocked => mocked.CreateDonationForBankAccountErrorRefund(It.Is<StripeRefund>(r => r.Data != null && r.Data.Count == 1 && r.Data[0].Equals(stripeRefundData))))
@@ -398,7 +399,7 @@ namespace crds_angular.test.Services
                 Amount = 100,
                 Id = "in_888"
             };
-            _paymentService.Setup(mocked => mocked.GetCharge("ch888")).Returns(new StripeCharge
+            _paymentProcessorService.Setup(mocked => mocked.GetCharge("ch888")).Returns(new StripeCharge
             {
                 Source = new StripeSource
                 {
@@ -410,7 +411,7 @@ namespace crds_angular.test.Services
             _donationService.Setup(mocked => mocked.CreateDonationForInvoice(invoice)).Returns(88);
 
             _donationService.Setup(mocked => mocked.GetDonationBatchByProcessorTransferId("tx9876")).Returns((DonationBatchDTO)null);
-            _paymentService.Setup(mocked => mocked.GetChargesForTransfer("tx9876")).Returns(charges);
+            _paymentProcessorService.Setup(mocked => mocked.GetChargesForTransfer("tx9876")).Returns(charges);
             _donationService.Setup(
                 mocked => mocked.CreatePaymentProcessorEventError(e, It.IsAny<StripeEventResponseDTO>()));
             _donationService.Setup(mocked => mocked.UpdateDonationStatus(1111, 999, e.Created, null)).Returns(1111);
@@ -466,7 +467,7 @@ namespace crds_angular.test.Services
                 && o.ProcessorTransferId.Equals("tx9876")
             )));
 
-            _paymentService.VerifyAll();
+            _paymentProcessorService.VerifyAll();
             _donationService.VerifyAll();
         }
 
@@ -483,7 +484,7 @@ namespace crds_angular.test.Services
             _donationService.Setup(mocked => mocked.CreateDonationForInvoice(invoice)).Returns(987);
 
             _fixture.InvoicePaymentSucceeded(DateTime.Now, invoice);
-            _paymentService.VerifyAll();
+            _paymentProcessorService.VerifyAll();
             _donationService.VerifyAll();
         }
 
@@ -581,15 +582,15 @@ namespace crds_angular.test.Services
 
             _mpDonorService.Setup(mocked => mocked.ProcessRecurringGiftDecline(subscriptionId));
             _mpDonorService.Setup(mocked => mocked.GetRecurringGiftForSubscription(subscriptionId, "")).Returns(gift);
-            _paymentService.Setup(mocked => mocked.CancelSubscription(donorAccountProcessorId, subscriptionId)).Returns(subscription);
-            _paymentService.Setup(mocked => mocked.CancelPlan(subscription.Plan.Id)).Returns(plan);
+            _paymentProcessorService.Setup(mocked => mocked.CancelSubscription(donorAccountProcessorId, subscriptionId)).Returns(subscription);
+            _paymentProcessorService.Setup(mocked => mocked.CancelPlan(subscription.Plan.Id)).Returns(plan);
             _mpDonorService.Setup(mocked => mocked.CancelRecurringGift(recurringGiftId));
 
 
             Assert.IsNull(_fixture.ProcessStripeEvent(e));
             _fixture.ProcessStripeEvent(e);
             _mpDonorService.VerifyAll();
-            _paymentService.VerifyAll();
+            _paymentProcessorService.VerifyAll();
         }
     }
 }

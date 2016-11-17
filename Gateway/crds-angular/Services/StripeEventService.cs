@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using crds_angular.Controllers.API;
+using crds_angular.Models.Crossroads.Payment;
 using crds_angular.Models.Crossroads.Stewardship;
 using crds_angular.Services.Interfaces;
 using log4net;
@@ -19,6 +20,7 @@ namespace crds_angular.Services
     {
         private readonly ILog _logger = LogManager.GetLogger(typeof(StripeEventController));
         private readonly IPaymentProcessorService _paymentProcessorService;
+        private readonly IPaymentService _paymentService;
         private readonly IDonationService _donationService;
         private readonly MinistryPlatform.Translation.Repositories.Interfaces.IDonorRepository _mpDonorRepository;
         private readonly int _donationStatusDeclined;
@@ -29,11 +31,12 @@ namespace crds_angular.Services
         // This value is used when creating the batch name for exporting to GP.  It must be 15 characters or less.
         private const string BatchNameDateFormat = @"\M\PyyyyMMddHHmm";
        
-        public StripeEventService(IPaymentProcessorService paymentProcessorService, IDonationService donationService, MinistryPlatform.Translation.Repositories.Interfaces.IDonorRepository mpDonorRepository, IConfigurationWrapper configuration)
+        public StripeEventService(IPaymentProcessorService paymentProcessorService, IDonationService donationService, IPaymentService paymentService, MinistryPlatform.Translation.Repositories.Interfaces.IDonorRepository mpDonorRepository, IConfigurationWrapper configuration)
         {
             _paymentProcessorService = paymentProcessorService;
             _donationService = donationService;
             _mpDonorRepository = mpDonorRepository;
+            _paymentService = paymentService;
 
             _donationStatusDeclined = configuration.GetConfigIntValue("DonationStatusDeclined");
             _donationStatusDeposited = configuration.GetConfigIntValue("DonationStatusDeposited");
@@ -225,50 +228,84 @@ namespace crds_angular.Services
                         };
                     }
 
-                    //TODO: Similar block like this needed for Payment
-                    DonationDTO donation;
-                    try
+                    if (charge.Metadata.ContainsKey("crossroads_transaction_type") && charge.Metadata["crossroads_transaction_type"].ToString() == "payment")
                     {
-                        
-                        donation = _donationService.GetDonationByProcessorPaymentId(paymentId);
-                    }
-                    catch (DonationNotFoundException e)
-                    {
-                        donation = HandleDonationNotFoundException(transfer, refund, paymentId, e, charge);
-                    }
-
-                    if (donation.BatchId != null)
-                    {
-                        var b = _donationService.GetDonationBatch(donation.BatchId.Value);
-                        if (string.IsNullOrWhiteSpace(b.ProcessorTransferId))
+                        PaymentDTO payment;
+                        try
                         {
-                            // If this donation exists on another batch that does not have a Stripe transfer ID, we'll move it to our batch instead
-                            var msg = $"Charge {charge.Id} already exists on batch {b.Id}, moving to new batch";
-                            _logger.Debug(msg);
+                            payment = _paymentService.GetPaymentByTransactionCode(paymentId);
+                        }
+                        catch (PaymentNotFoundException e)
+                        {
+                            payment = HandlePaymentNotFoundException(transfer, refund, paymentId, e, charge);
+                        }
+
+                        if (payment.BatchId != null)
+                        {
+                            //TODO: Check if payment is on another batch that doesn't have a stripe transfer id on it
+                        }
+
+                        if (payment.Status != DonationStatus.Declined && payment.Status != DonationStatus.Refunded)
+                        {
+                            _logger.Debug($"Updating charge id {charge.Id} to Deposited status");
+                            _paymentService.UpdatePaymentStatus(payment.PaymentId, _donationStatusDeposited, eventTimestamp);
                         }
                         else
                         {
-                            // If this donation exists on another batch that has a Stripe transfer ID, skip it
-                            var msg = $"Charge {charge.Id} already exists on batch {b.Id} with transfer id {b.ProcessorTransferId}";
-                            _logger.Debug(msg);
-                            response.FailedUpdates.Add(new KeyValuePair<string, string>(charge.Id, msg));
-                            continue;
+                            _logger.Debug($"Not updating charge id {charge.Id} to Deposited status - it was already {System.Enum.GetName(typeof(DonationStatus), payment.Status)}");
                         }
-                    }
+                        response.SuccessfulUpdates.Add(charge.Id);
+                        batch.ItemCount++;
+                        batch.BatchTotalAmount += (charge.Amount / Constants.StripeDecimalConversionValue);
+                        batch.Payments.Add(new PaymentDTO { PaymentId = payment.PaymentId, Amount = charge.Amount, ProcessorFee = charge.Fee });
 
-                    if (donation.Status != DonationStatus.Declined && donation.Status != DonationStatus.Refunded)
-                    {
-                        _logger.Debug($"Updating charge id {charge.Id} to Deposited status");
-                        _donationService.UpdateDonationStatus(int.Parse(donation.Id), _donationStatusDeposited, eventTimestamp);
+
                     }
                     else
                     {
-                        _logger.Debug($"Not updating charge id {charge.Id} to Deposited status - it was already {System.Enum.GetName(typeof(DonationStatus), donation.Status)}");
+                        DonationDTO donation;
+                        try
+                        {
+                            donation = _donationService.GetDonationByProcessorPaymentId(paymentId);
+                        }
+                        catch (DonationNotFoundException e)
+                        {
+                            donation = HandleDonationNotFoundException(transfer, refund, paymentId, e, charge);
+                        }
+
+                        if (donation.BatchId != null)
+                        {
+                            var b = _donationService.GetDonationBatch(donation.BatchId.Value);
+                            if (string.IsNullOrWhiteSpace(b.ProcessorTransferId))
+                            {
+                                // If this donation exists on another batch that does not have a Stripe transfer ID, we'll move it to our batch instead
+                                var msg = $"Charge {charge.Id} already exists on batch {b.Id}, moving to new batch";
+                                _logger.Debug(msg);
+                            }
+                            else
+                            {
+                                // If this donation exists on another batch that has a Stripe transfer ID, skip it
+                                var msg = $"Charge {charge.Id} already exists on batch {b.Id} with transfer id {b.ProcessorTransferId}";
+                                _logger.Debug(msg);
+                                response.FailedUpdates.Add(new KeyValuePair<string, string>(charge.Id, msg));
+                                continue;
+                            }
+                        }
+
+                        if (donation.Status != DonationStatus.Declined && donation.Status != DonationStatus.Refunded)
+                        {
+                            _logger.Debug($"Updating charge id {charge.Id} to Deposited status");
+                            _donationService.UpdateDonationStatus(int.Parse(donation.Id), _donationStatusDeposited, eventTimestamp);
+                        }
+                        else
+                        {
+                            _logger.Debug($"Not updating charge id {charge.Id} to Deposited status - it was already {System.Enum.GetName(typeof(DonationStatus), donation.Status)}");
+                        }
+                        response.SuccessfulUpdates.Add(charge.Id);
+                        batch.ItemCount++;
+                        batch.BatchTotalAmount += (charge.Amount/Constants.StripeDecimalConversionValue);
+                        batch.Donations.Add(new DonationDTO {Id = donation.Id, Amount = charge.Amount, Fee = charge.Fee});
                     }
-                    response.SuccessfulUpdates.Add(charge.Id);
-                    batch.ItemCount++;
-                    batch.BatchTotalAmount += (charge.Amount / Constants.StripeDecimalConversionValue);
-                    batch.Donations.Add(new DonationDTO { Id = donation.Id, Amount = charge.Amount, Fee = charge.Fee });
                 }
                 catch (Exception e)
                 {
@@ -285,6 +322,12 @@ namespace crds_angular.Services
             batch.BatchFeeTotal = batch.Donations.Sum(f => f.Fee);
 
             return batch;
+        }
+
+        private PaymentDTO HandlePaymentNotFoundException(StripeTransfer transfer, StripeRefund refund, string paymentId, PaymentNotFoundException e, StripeCharge charge)
+        {
+            //TODO: IMPLEMENT ME!
+            throw new NotImplementedException();
         }
 
         private DonationDTO HandleDonationNotFoundException(StripeTransfer transfer, StripeRefund refund, string paymentId, DonationNotFoundException e, StripeCharge charge)
