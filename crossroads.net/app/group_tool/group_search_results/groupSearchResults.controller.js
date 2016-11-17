@@ -40,6 +40,9 @@ export default class GroupSearchResultsController {
     if(query && query.length > 0) {
       queryString.query = query;
     }
+    if(age && age.length > 0) {
+      queryString.age = age;
+    }
     this.locationService.search(queryString);
 
     this.showLocationInput = false;
