@@ -152,7 +152,7 @@ namespace crds_angular.Services
                     BatchId = payment.BatchId
                 };
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 throw new PaymentNotFoundException(stripePaymentId);
             }

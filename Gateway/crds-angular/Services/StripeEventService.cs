@@ -165,8 +165,7 @@ namespace crds_angular.Services
             donationBatch.DepositId = response.Deposit.Id;
             try
             {
-                //TODO need a Creat Payment Batch in paymentservice
-                response.Batch.Add(_donationService.CreateDonationBatch(paymentBatch));
+                response.Batch.Add(_paymentService.CreatePaymentBatch(paymentBatch));
                 response.Batch.Add(_donationService.CreateDonationBatch(donationBatch));
             }
             catch (Exception e)
@@ -266,6 +265,7 @@ namespace crds_angular.Services
                         batch.ItemCount++;
                         batch.BatchTotalAmount += (charge.Amount / Constants.StripeDecimalConversionValue);
                         batch.Payments.Add(new PaymentDTO { PaymentId = payment.PaymentId, Amount = charge.Amount, ProcessorFee = charge.Fee });
+                        batch.BatchFeeTotal = batch.Payments.Sum(f => f.ProcessorFee);
                     }
                     else
                     {
@@ -311,6 +311,7 @@ namespace crds_angular.Services
                         batch.ItemCount++;
                         batch.BatchTotalAmount += (charge.Amount/Constants.StripeDecimalConversionValue);
                         batch.Donations.Add(new DonationDTO {Id = donation.Id, Amount = charge.Amount, Fee = charge.Fee});
+                        batch.BatchFeeTotal = batch.Donations.Sum(f => f.Fee);
                     }
                 }
                 catch (Exception e)
@@ -325,7 +326,7 @@ namespace crds_angular.Services
                 response.Exception = new ApplicationException("Could not update all charges to 'deposited' status, see message for details");
             }
 
-            batch.BatchFeeTotal = batch.Donations.Sum(f => f.Fee);
+           
 
             return batch;
         }
@@ -468,15 +469,13 @@ namespace crds_angular.Services
         public int TotalTransactionCount { get; set; }
 
         [JsonProperty("successful_updates")]
-        public List<string> SuccessfulUpdates { get { return (_successfulUpdates); } }
-        private readonly List<string> _successfulUpdates = new List<string>();
+        public List<string> SuccessfulUpdates { get; } = new List<string>();
 
         [JsonProperty("failed_updates")]
-        public List<KeyValuePair<string, string>> FailedUpdates { get { return (_failedUpdates); } }
-        private readonly List<KeyValuePair<string, string>> _failedUpdates = new List<KeyValuePair<string, string>>();
+        public List<KeyValuePair<string, string>> FailedUpdates { get; } = new List<KeyValuePair<string, string>>();
 
         [JsonProperty("donation_batch")]
-        public List<DonationBatchDTO> Batch;
+        public List<DonationBatchDTO> Batch { get; } = new List<DonationBatchDTO>();
 
         [JsonProperty("deposit")]
         public DepositDTO Deposit;

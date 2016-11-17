@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using crds_angular.Models.Crossroads.Payment;
 using crds_angular.Models.Crossroads.Stewardship;
 using crds_angular.Services;
 using crds_angular.Services.Interfaces;
@@ -283,16 +284,16 @@ namespace crds_angular.test.Services
             };
 
            
-            _donationService.Setup(mocked => mocked.GetDonationByProcessorPaymentId("ch111")).Returns(new DonationDTO
+            _paymentService.Setup(mocked => mocked.GetPaymentByTransactionCode("ch111")).Returns(new PaymentDTO
             {
-                Id = "1111",
+                PaymentId = 1111,
                 BatchId = null,
                 Status = DonationStatus.Pending
             });
 
-            _donationService.Setup(mocked => mocked.GetDonationByProcessorPaymentId("ch222")).Returns(new DonationDTO
+            _paymentService.Setup(mocked => mocked.GetPaymentByTransactionCode("ch222")).Returns(new PaymentDTO
             {
-                Id = "2222",
+                PaymentId = 2222,
                 BatchId = null,
                 Status = DonationStatus.Pending
             });
@@ -423,14 +424,14 @@ namespace crds_angular.test.Services
 
             _donationService.Setup(mocked => mocked.CreateDonationForInvoice(invoice)).Returns(88);
 
-            _donationService.Setup(mocked => mocked.GetDonationBatchByProcessorTransferId("tx9876")).Returns((DonationBatchDTO)null);
+            //_donationService.Setup(mocked => mocked.GetDonationBatchByProcessorTransferId("tx9876")).Returns((DonationBatchDTO)null);
             _paymentProcessorService.Setup(mocked => mocked.GetChargesForTransfer("tx9876")).Returns(charges);
             _donationService.Setup(mocked => mocked.GetDepositByProcessorTransferId("tx9876")).Returns((DepositDTO)null);
 
             _donationService.Setup(
                 mocked => mocked.CreatePaymentProcessorEventError(e, It.IsAny<StripeEventResponseDTO>()));
-            _donationService.Setup(mocked => mocked.UpdateDonationStatus(1111, 999, e.Created, null)).Returns(1111);
-            _donationService.Setup(mocked => mocked.UpdateDonationStatus(2222, 999, e.Created, null)).Returns(2222);
+            _paymentService.Setup(mocked => mocked.UpdatePaymentStatus(1111, 999, e.Created, null)).Returns(1111);
+            _paymentService.Setup(mocked => mocked.UpdatePaymentStatus(2222, 999, e.Created, null)).Returns(2222);
             _donationService.Setup(mocked => mocked.UpdateDonationStatus(3333, 999, e.Created, null)).Returns(3333);
             _donationService.Setup(mocked => mocked.UpdateDonationStatus(7777, 999, e.Created, null)).Returns(7777);
             _donationService.Setup(mocked => mocked.UpdateDonationStatus(9999, 999, e.Created, null)).Returns(9999);
@@ -441,6 +442,7 @@ namespace crds_angular.test.Services
                     return (o);
                 });
             _donationService.Setup(mocked => mocked.CreateDonationBatch(It.IsAny<DonationBatchDTO>())).Returns((DonationBatchDTO o) => o);
+            _paymentService.Setup(mocked => mocked.CreatePaymentBatch(It.IsAny<DonationBatchDTO>())).Returns((DonationBatchDTO o) => o);
 
             var result = _fixture.ProcessStripeEvent(e);
             Assert.IsNotNull(result);
@@ -458,28 +460,28 @@ namespace crds_angular.test.Services
             Assert.IsNotNull(tp.Exception);
 
             _donationService.Verify(mocked => mocked.CreateDonationBatch(It.Is<DonationBatchDTO>(o =>
-                o.BatchName.Matches(@"MP\d{12}")
-                && o.SetupDateTime == o.FinalizedDateTime
-                && o.BatchEntryType == 555
-                && o.ItemCount == 6
-                && o.BatchTotalAmount == ((111 + 222 + 333 + 777 + 888 + 999) / Constants.StripeDecimalConversionValue)
-                && o.Donations != null
-                && o.Donations.Count == 6
-                && o.DepositId == 98765
-                && o.ProcessorTransferId.Equals("tx9876")
+                o.BatchName.Matches(@"MP\d{12}D") &&
+                o.SetupDateTime == o.FinalizedDateTime &&
+                o.BatchEntryType == 555 &&
+                o.ItemCount == 4 &&
+                o.BatchTotalAmount == ((333 + 777 + 888 + 999) / Constants.StripeDecimalConversionValue) &&
+                o.Donations != null &&
+                o.Donations.Count == 4 &&
+                o.DepositId == 98765 &&
+                o.ProcessorTransferId.Equals("tx9876")
             )));
 
             _donationService.Verify(mocked => mocked.CreateDeposit(It.Is<DepositDTO>(o =>
-                o.DepositName.Matches(@"MP\d{12}")
-                && !o.Exported
-                && o.AccountNumber.Equals(" ")
-                && o.BatchCount == 1
-                && o.DepositDateTime != null
-                && o.DepositTotalAmount == ((transfer.Amount + 30) / Constants.StripeDecimalConversionValue)
-                && o.ProcessorFeeTotal == (30 / Constants.StripeDecimalConversionValue)
-                && o.DepositAmount == (transfer.Amount / Constants.StripeDecimalConversionValue)
-                && o.Notes == null
-                && o.ProcessorTransferId.Equals("tx9876")
+                o.DepositName.Matches(@"MP\d{12}") &&
+                !o.Exported &&
+                o.AccountNumber.Equals(" ") &&
+                o.BatchCount == 1 &&
+                o.DepositDateTime != null &&
+                o.DepositTotalAmount == ((transfer.Amount + 30) / Constants.StripeDecimalConversionValue) &&
+                o.ProcessorFeeTotal == (30 / Constants.StripeDecimalConversionValue) &&
+                o.DepositAmount == (transfer.Amount / Constants.StripeDecimalConversionValue) &&
+                o.Notes == null &&
+                o.ProcessorTransferId.Equals("tx9876")
             )));
 
             _paymentProcessorService.VerifyAll();

@@ -27,7 +27,7 @@ namespace crds_angular.Models.Crossroads.Payment
         public int? BatchId { get; set; }
 
         [JsonProperty(PropertyName = "processorFee")]
-        public double ProcessorFee { get; set; }
+        public decimal ProcessorFee { get; set; }
 
         [JsonProperty(PropertyName = "paymentStatus")]
         public DonationStatus Status { get; set; }

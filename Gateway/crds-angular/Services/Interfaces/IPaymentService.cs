@@ -14,5 +14,6 @@ namespace crds_angular.Services.Interfaces
         PaymentDTO GetPaymentByTransactionCode(string stripePaymentId);
         int UpdatePaymentStatus(int paymentId, int statusId, DateTime? statusDate, string statusNote = null);
         DonationBatchDTO GetPaymentBatch(int batchId);
+        DonationBatchDTO CreatePaymentBatch(DonationBatchDTO batch);
     }
 }
