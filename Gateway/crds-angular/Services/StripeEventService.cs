@@ -333,8 +333,33 @@ namespace crds_angular.Services
 
         private PaymentDTO HandlePaymentNotFoundException(StripeTransfer transfer, StripeRefund refund, string paymentId, PaymentNotFoundException e, StripeCharge charge)
         {
-            //TODO: IMPLEMENT ME!
-            throw new NotImplementedException();
+            PaymentDTO payment;
+            if (refund != null)
+            {
+                _logger.Warn($"Payment not found for refund {paymentId} on transfer {transfer.Id} - may be a refund due to a bank account error");
+                // If this is a refund that doesn't exist in MP, create it, assuming it is a refund due to a bank account error (NSF, etc)
+                if (_donationService.CreateDonationForBankAccountErrorRefund(refund) != null)
+                {
+                    payment = _paymentService.GetPaymentByTransactionCode(paymentId);
+                    _logger.Debug($"Updating charge id {charge.Id} to Declined status");
+                    _paymentService.UpdatePaymentStatus(Convert.ToInt32(refund.Data[0].ChargeId), _donationStatusDeclined, refund.Data[0].BalanceTransaction.Created);
+                }
+                else
+                {
+                    _logger.Error($"Payment not found for refund {paymentId} on transfer {transfer.Id}, probably not a bank account error", e);
+                    // ReSharper disable once PossibleIntendedRethrow
+                    throw e;
+                }
+            }
+            else
+            {
+                _logger.Warn($"Payment not found for charge {paymentId} on transfer {transfer.Id} - may be an ACH recurring gift that has not yet processed");
+                
+                _logger.Error($"Donation not found for charge {charge.Id} on transfer {transfer.Id}, charge does not appear to be related to an ACH recurring gift");
+                // ReSharper disable once PossibleIntendedRethrow
+                throw e;
+            }
+            return payment;
         }
 
         private DonationDTO HandleDonationNotFoundException(StripeTransfer transfer, StripeRefund refund, string paymentId, DonationNotFoundException e, StripeCharge charge)
