@@ -704,7 +704,7 @@ namespace crds_angular.Services
             var leaders = group.Participants.
                 Where(groupParticipant => groupParticipant.GroupRoleId == _groupRoleLeaderId).ToList();
 
-            var Requestor = "<i>" + contact.Nickname + " " + contact.Last_Name + " (" + participant.EmailAddress + ")</i>";
+            var Requestor = "<i>" + contact.Nickname + " " + contact.Last_Name + "</i> ";
 
             foreach (var leader in leaders)
             {

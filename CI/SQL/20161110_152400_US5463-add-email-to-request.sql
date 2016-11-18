@@ -14,5 +14,5 @@ IF NOT EXISTS(SELECT * FROM [dbo].dp_Communications WHERE communication_id = 200
 END
 
 UPDATE [dbo].dp_Communications 
-SET [Body] = N'Hello [Name],<p>[Requestor] has requested to join your group. Please review this request by visiting your “My Groups” dashboard in <a href="https://www.crossroads.net/groups/mygroups">crossroads.net</a>.</p><p>If everything looks good, press “approve” to allow this person to join your group.</p>'
+SET [Body] = N'Hello [Name],<p>[Requestor] has requested to join your group. Visit your My Groups dashboard in <a href="http://www.crossroads.net/groups/mygroups">crossroads.net</a>, and select "approve" to add this person to your group.</p><p>If your group is full, kindly let the person know you are at capacity, and switch your group from public to private.</p>'
 WHERE Communication_ID = 2002
