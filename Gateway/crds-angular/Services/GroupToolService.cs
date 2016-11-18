@@ -666,6 +666,10 @@ namespace crds_angular.Services
                 {
                     groups[i].Proximity = drivingProximities[i];
                 }
+
+                // order again in case proximties changed because of driving directions
+                groups = groups.OrderBy(r => r.Proximity ?? decimal.MaxValue).ToList();
+
             }
             catch (InvalidAddressException e)
             {
