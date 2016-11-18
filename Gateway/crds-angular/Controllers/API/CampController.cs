@@ -305,6 +305,26 @@ namespace crds_angular.Controllers.API
             });
         }
 
+        [VersionedRoute(template: "camps/{eventId}/confirmation/{contactId}", minimumVersion: "1.0.0")]
+        [Route("camps/{eventId}/confirmation/{contactId}")]       
+        [AcceptVerbs("POST")]
+        public IHttpActionResult CamperConfirmation(int eventId, int contactId, int invoiceId, int paymentId)
+        {
+            return Authorized(token =>
+            {
+                try
+                {
+                    _campService.SendCampConfirmationEmail(eventId, invoiceId, paymentId, token);
+                    return Ok();
+                }
+                catch (Exception e)
+                {
+                    var apiError = new ApiErrorDto("Camp Confirmation failed", e);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+            });
+        }
+
         [VersionedRoute(template: "camps/{eventId}/emergencyContact/{contactId}", minimumVersion: "1.0.0")]
         [ResponseType(typeof(List<CampEmergencyContactDTO>))]
         [AcceptVerbs("GET")]
