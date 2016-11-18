@@ -7,6 +7,7 @@ using crds_angular.Services;
 using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.FunctionalHelpers;
 using Crossroads.Utilities.Interfaces;
+using MinistryPlatform.Translation.Exceptions;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Models.Payments;
 using MinistryPlatform.Translation.Repositories.Interfaces;
@@ -288,6 +289,16 @@ namespace crds_angular.test.Services
             _paymentTypeRepository.VerifyAll();
             _paymentRepository.VerifyAll();
             _configWrapper.VerifyAll();
+        }
+
+        [Test]
+        public void GetPaymentByTransactionCodeShoudThrow()
+        {
+            var stripepaymentid = "qwerty";
+            var e = new Exception("bad things");
+            _paymentRepository.Setup(w => w.GetPaymentByTransactionCode(stripepaymentid)).Throws(e);
+
+            Assert.Throws<PaymentNotFoundException>(() => _fixture.GetPaymentByTransactionCode(stripepaymentid));
         }
 
         private static List<MpPayment> fakePayments(int payerId, decimal paymentTotal, int paymentIdOfOne = 34525)
