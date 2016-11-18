@@ -50,13 +50,23 @@
     vm.mapContentBlocks = mapContentBlocks;
     vm.stayLoggedInPrompt = stayLoggedInPrompt;
 
+    vm.bodyClasses = {
+      'crds-legacy-styles': true,
+      'crds-styles': false
+    };
+
     ////////////////////////////
     // State Change Listeners //
     ////////////////////////////
     $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
+
       if ((toState.resolve || toState.data.resolve) && !event.defaultPrevented) {
         vm.resolving = true;
       }
+
+      var useLegacyStyles = !(toState.data.legacyStyles != undefined && !toState.data.legacyStyles);
+      vm.bodyClasses['crds-legacy-styles'] = useLegacyStyles;
+      vm.bodyClasses['crds-styles'] = !useLegacyStyles;
 
       if (fromState.name == 'explore') {
         $('#fullpage').hide();
@@ -139,6 +149,8 @@
         position: position,
         animation: false
       };
+
+      vm.bodyClasses[position] = position;
 
       function postClose() {
         vm.asideState.open = false;
