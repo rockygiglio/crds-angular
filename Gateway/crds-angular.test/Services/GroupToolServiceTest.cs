@@ -1280,6 +1280,7 @@ namespace crds_angular.test.Services
             }
         }
 
+        [Test]
         public void TestSearchGroupsWithLocation()
         {
             const int groupTypeId = 1;
