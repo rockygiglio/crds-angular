@@ -79,6 +79,11 @@ export default class CampWaiversController {
     this.campsService.submitWaivers(this.$stateParams.campId, this.$stateParams.contactId, params)
       .then(() => {
         this.rootScope.$emit('notify', this.rootScope.MESSAGES.successfulSubmission);
+
+        this.state.go('campsignup.application', {
+          page: 'medical-info',
+          contactId: this.$stateParams.contactId
+        });
       }, () => {
         this.rootScope.$emit('notify', this.rootScope.MESSAGES.generalError);
       }).finally(() => {
