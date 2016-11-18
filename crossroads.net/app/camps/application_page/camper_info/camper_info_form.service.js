@@ -45,7 +45,8 @@ class CamperInfoForm {
   getFields() {
     return [
       {
-        className: 'row',
+        className: '',
+        wrapper: 'campBootstrapRow',
         fieldGroup: [
           {
             className: 'form-group col-xs-6',
@@ -58,27 +59,19 @@ class CamperInfoForm {
           },
           {
             className: 'form-group col-xs-6',
-            key: 'middleName',
-            type: 'crdsInput',
-            templateOptions: {
-              label: 'Middle Name',
-              required: false
-            }
-          }
-        ]
-      },
-      {
-        className: 'row',
-        fieldGroup: [
-          {
-            className: 'form-group col-xs-6',
             key: 'lastName',
             type: 'crdsInput',
             templateOptions: {
               label: 'Last Name',
               required: true
             }
-          },
+          }
+        ]
+      },
+      {
+        className: '',
+        wrapper: 'campBootstrapRow',
+        fieldGroup: [
           {
             className: 'form-group col-xs-6',
             key: 'preferredName',
@@ -86,22 +79,6 @@ class CamperInfoForm {
             templateOptions: {
               label: 'Preferred Name',
               required: false
-            }
-          }
-        ]
-      },
-      {
-        className: 'row',
-        fieldGroup: [
-          {
-            className: 'form-group col-xs-6',
-            key: 'birthDate',
-            type: 'crdsDatepicker',
-            templateOptions: {
-              label: 'Birth Date',
-              required: true,
-              type: 'text',
-              datepickerPopup: 'MM/dd/yyyy'
             }
           },
           {
@@ -126,8 +103,20 @@ class CamperInfoForm {
         ]
       },
       {
-        className: 'row',
+        className: '',
+        wrapper: 'campBootstrapRow',
         fieldGroup: [
+          {
+            className: 'form-group col-xs-6',
+            key: 'birthDate',
+            type: 'crdsDatepicker',
+            templateOptions: {
+              label: 'Birth Date',
+              required: true,
+              type: 'text',
+              datepickerPopup: 'MM/dd/yyyy'
+            }
+          },
           {
             className: 'form-group col-xs-6',
             key: 'currentGrade',
@@ -148,7 +137,13 @@ class CamperInfoForm {
               // valueProp: 'grade',
               // labelProp: 'grade'
             }
-          },
+          }
+        ]
+      },
+      {
+        className: '',
+        wrapper: 'campBootstrapRow',
+        fieldGroup: [
           {
             className: 'form-group col-xs-6',
             key: 'schoolAttending',
@@ -157,32 +152,28 @@ class CamperInfoForm {
               label: 'School Currently Attending ',
               required: true
             }
-          }
-        ]
-      },
-      {
-        className: 'row',
-        fieldGroup: [
+          },
           {
             className: 'form-group col-xs-6',
             key: 'schoolAttendingNext',
             type: 'crdsInput',
             templateOptions: {
-              label: 'School Attending Next Year',
+              label: 'School Attending Next School Year',
               required: true
             }
           }
         ]
       },
       {
-        className: 'row',
+        className: '',
+        wrapper: 'campBootstrapRow',
         fieldGroup: [
           {
             className: 'form-group col-xs-6',
             key: 'crossroadsSite',
             type: 'crdsSelect',
             templateOptions: {
-              label: 'What site do you regularly attend service?',
+              label: 'Student’s Crossroads Site',
               required: true,
               valueProp: 'dp_RecordID',
               labelProp: 'dp_RecordName',
