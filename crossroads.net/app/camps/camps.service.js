@@ -23,6 +23,7 @@ class CampsService {
     this.productSummaryResource = $resource(__API_ENDPOINT__ + 'api/camps/:campId/product/:camperId', { campId: '@campId', camperId: '@camperId' });
     // eslint-disable-next-line prefer-template
     this.paymentResource = $resource(__API_ENDPOINT__ + 'api/v1.0.0/invoice/:invoiceId/payment/:paymentId');
+    this.confirmationResource = $resource(`${__API_ENDPOINT__}api/camps/:campId/confirmation/:contactId`);
 
     this.campInfo = null;
     this.campTitle = null;
@@ -136,6 +137,10 @@ class CampsService {
     (err) => {
       this.log.error(err);
     }).$promise;
+  }
+
+  sendConfirmation(invoiceId, paymentId, campId, contactId) {
+    this.confirmationResource.save({ contactId, campId, invoiceId, paymentId }, {});
   }
 }
 
