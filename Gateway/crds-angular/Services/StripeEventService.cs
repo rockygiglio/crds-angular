@@ -116,8 +116,8 @@ namespace crds_angular.Services
 
             var depositName = DateTime.Now.ToString(BatchNameDateFormat);
 
-            var paymentcharges = charges.Where(m => m.Metadata["crossroads_transaction_type"].ToString() == "payment").ToList();
-            var donationcharges = charges.Where(m => m.Metadata["crossroads_transaction_type"].ToString() != "payment").ToList();
+            var paymentcharges = charges.Where(m => m.Metadata != null && m.Metadata["crossroads_transaction_type"].ToString() == "payment").ToList();
+            var donationcharges = charges.Except(paymentcharges).ToList();
 
             if (paymentcharges.Count + donationcharges.Count != charges.Count)
             {
@@ -221,7 +221,7 @@ namespace crds_angular.Services
                         };
                     }
                     //TODO: Pull these out into methods? 
-                    if (charge.Metadata.ContainsKey("crossroads_transaction_type") && charge.Metadata["crossroads_transaction_type"].ToString() == "payment")
+                    if (charge.Metadata != null && charge.Metadata.ContainsKey("crossroads_transaction_type") && charge.Metadata["crossroads_transaction_type"].ToString() == "payment")
                     {
                         PaymentDTO payment;
                         try
