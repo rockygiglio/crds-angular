@@ -33,21 +33,19 @@ namespace MinistryPlatform.Translation.Repositories
         private readonly IMinistryPlatformRestRepository _ministryPlatformRestRepository;
         private readonly IGroupRepository _groupService;
         private readonly IEventParticipantRepository _eventParticipantRepository;
-        private readonly IApiUserRepository _apiUserRepository;
 
         public EventRepository(IMinistryPlatformService ministryPlatformService,
                             IAuthenticationRepository authenticationService,
                             IConfigurationWrapper configurationWrapper,
                             IGroupRepository groupService,
                             IMinistryPlatformRestRepository ministryPlatformRestRepository,
-                            IEventParticipantRepository eventParticipantRepository, IApiUserRepository apiUserRepository)
+                            IEventParticipantRepository eventParticipantRepository)
             : base(authenticationService, configurationWrapper)
         {
             _ministryPlatformService = ministryPlatformService;
             _ministryPlatformRestRepository = ministryPlatformRestRepository;
             _groupService = groupService;
-            _eventParticipantRepository = eventParticipantRepository;
-            _apiUserRepository = apiUserRepository;
+            _eventParticipantRepository = eventParticipantRepository;           
         }
 
         public int CreateEvent(MpEventReservationDto eventReservationReservation)
