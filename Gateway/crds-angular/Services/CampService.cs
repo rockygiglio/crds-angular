@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using crds_angular.Exceptions;
@@ -6,6 +6,7 @@ using crds_angular.Models.Crossroads.Camp;
 using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Interfaces;
 using log4net;
+using Microsoft.Ajax.Utilities;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Models.Product;
 using MinistryPlatform.Translation.Repositories.Interfaces;
@@ -83,15 +84,17 @@ namespace crds_angular.Services
         {
             var formId = _configurationWrapper.GetConfigIntValue("SummerCampFormID");
             var formFieldId = _configurationWrapper.GetConfigIntValue("SummerCampForm.FinancialAssistance");
-            
+            var me = _contactRepository.GetMyProfile(token);
             var campEvent = _eventRepository.GetEvent(eventId);
             var eventProduct = _productRepository.GetProductForEvent(eventId);
-            var eventProductOptionPrices = _productRepository.GetProductOptionPricesForProduct(eventProduct.ProductId);
+            var eventProductOptionPrices = _productRepository.GetProductOptionPricesForProduct(eventProduct.ProductId).OrderByDescending(m => m.DaysOutToHide).ToList();
+            var invoiceDetails = _invoiceRepository.GetInvoiceDetailsForProductAndCamperAndContact(eventProduct.ProductId, camperContactId, me.Contact_ID);
             var answer = _formSubmissionRepository.GetFormResponseAnswer(formId, camperContactId, formFieldId);
-            var financialAssistance = (string.IsNullOrEmpty(answer) ? false : Convert.ToBoolean(answer));
+            var financialAssistance = (!string.IsNullOrEmpty(answer) && Convert.ToBoolean(answer));
 
             var campProductInfo = new ProductDTO
             {
+                InvoiceId = invoiceDetails.Status ? invoiceDetails.Value.InvoiceId : 0,
                 ProductId = eventProduct.ProductId,
                 ProductName = eventProduct.ProductName,
                 BasePrice = eventProduct.BasePrice,
@@ -152,6 +155,22 @@ namespace crds_angular.Services
             var participant = _participantRepository.GetParticipant(contactId);
             var eventParticipantId = _eventRepository.SafeRegisterParticipant(eventId, participant.ParticipantId);
             var answers = new List<MpFormAnswer>();
+            if (emergencyContacts.Count == 1)
+            {
+                var existingEmergencyContacts = GetCamperEmergencyContactInfo(eventId, contactId, token);
+                if (existingEmergencyContacts.Count > 1)
+                {
+                    emergencyContacts.Add(new CampEmergencyContactDTO
+                    {
+                        Email = "",
+                        FirstName = "",
+                        LastName = "",
+                        MobileNumber = "",
+                        PrimaryEmergencyContact = false,
+                        Relationship = ""
+                    });
+                }
+            }
 
             foreach (var emergencyContact in emergencyContacts)
             {
@@ -318,7 +337,8 @@ namespace crds_angular.Services
                                 CamperLastName = member.LastName,
                                 CampName = camp.EventTitle,
                                 CampStartDate = camp.EventStartDate,
-                                CampEndDate = camp.EventEndDate
+                                CampEndDate = camp.EventEndDate,
+                                EventId = camp.EventId
                             });
                         }
                     }
@@ -392,15 +412,18 @@ namespace crds_angular.Services
 
             _formSubmissionRepository.SubmitFormResponse(formResponse);
 
+            // if an invoice exists for this eventparticipant then don't create a new one
+            if (_invoiceRepository.InvoiceExistsForEventParticipant(eventParticipantId)) return;
+
             // create the invoice with product from event and best pricing for the current date
             //get the product id for this event
             var campEvent = _eventRepository.GetEvent(campProductDto.EventId);
             var product = _productRepository.GetProductForEvent(campProductDto.EventId);
             var optionPrices = _productRepository.GetProductOptionPricesForProduct(product.ProductId);
             //find current option price (if any)
-            var productOptionPriceId = optionPrices.Count>0 ? ConvertProductOptionPricetoDto(optionPrices, product.BasePrice, campEvent.EventStartDate).Where(i => i.EndDate > DateTime.Now).OrderByDescending(i => i.EndDate).FirstOrDefault()?.ProductOptionPriceId : (int?)null;
+            var productOptionPriceId = optionPrices.Count > 0 ? ConvertProductOptionPricetoDto(optionPrices, product.BasePrice, campEvent.EventStartDate).Where(i => i.EndDate > DateTime.Now).OrderByDescending(i => i.EndDate).FirstOrDefault()?.ProductOptionPriceId : (int?)null;
 
-            _invoiceRepository.CreateInvoiceAndDetail(product.ProductId, productOptionPriceId, loggedInContact.Contact_ID, campProductDto.ContactId);
+            _invoiceRepository.CreateInvoiceAndDetail(product.ProductId, productOptionPriceId, loggedInContact.Contact_ID, campProductDto.ContactId, eventParticipantId);
         }
 
         public void SaveCamperMedicalInfo(MedicalInfoDTO medicalInfo, int contactId, string token)
@@ -425,6 +448,13 @@ namespace crds_angular.Services
                     PolicyHolder = medicalInfo.PolicyHolder ?? "N/A"
                 };
                 var medicalInformation =  _medicalInformationRepository.SaveMedicalInfo(mpMedicalInfo, contactId);
+                var updateToDictionary = new Dictionary<String, Object>
+                {
+                    {"Contact_ID", contactId},
+                    {"Medicalinformation_ID",medicalInformation.MedicalInformationId}
+                };
+                _contactRepository.UpdateContact(contactId, updateToDictionary);
+                
                 var updateToAllergyList = new List<MpMedicalAllergy>();
                 var createToAllergyList = new List<MpMedicalAllergy>();
                 foreach (var allergy in medicalInfo.Allergies)
@@ -435,10 +465,7 @@ namespace crds_angular.Services
                         {
                             Allergy = new MpAllergy { 
                                 AllergyID = allergy.AllergyId,
-                                AllergyType = new MpAllergyType {
-                                    AllergyType = allergy.AllergyType,
-                                    AllergyTypeID = allergy.AllergyTypeId
-                                },
+                                AllergyType = allergy.AllergyTypeId,
                                 AllergyDescription = allergy.AllergyDescription
                             },
                             MedicalInformationId = medicalInformation.MedicalInformationId,
@@ -451,10 +478,7 @@ namespace crds_angular.Services
                         {
                             Allergy = new MpAllergy
                             {
-                                AllergyType = new MpAllergyType {
-                                    AllergyType = allergy.AllergyType,
-                                    AllergyTypeID = allergy.AllergyTypeId
-                                },
+                                AllergyType = GetAllergyType(allergy.AllergyType),
                                 AllergyDescription = allergy.AllergyDescription
                             },
                             MedicalInformationId = medicalInformation.MedicalInformationId,
@@ -466,6 +490,8 @@ namespace crds_angular.Services
             }           
         }
 
+        
+
         public MedicalInfoDTO GetCampMedicalInfo(int eventId, int contactId, string token)
         {
             var loggedInContact = _contactRepository.GetMyProfile(token);
@@ -476,19 +502,25 @@ namespace crds_angular.Services
             {
                 throw new ContactNotFoundException(contactId);
             }
-            var medInfoList = _medicalInformationRepository.GetMedicalAllergyInfo(contactId);
-            if (medInfoList.Count <= 0) {return null;}
+            var camperMed = _medicalInformationRepository.GetMedicalInformation(contactId);
+            if (camperMed == null)
+            {
+                return new MedicalInfoDTO();
+            }
+
+            var allergies = _medicalInformationRepository.GetMedicalAllergyInfo(contactId);
+            
             var camperMedInfo = new MedicalInfoDTO
             {
                 ContactId = contactId,
-                MedicalInformationId = medInfoList[0].MedicalInformationId,              
-                InsuranceCompany = medInfoList[0].InsuranceCompany,
-                PolicyHolder = medInfoList[0].PolicyHolderName,
-                PhysicianName = medInfoList[0].PhysicianName,
-                PhysicianPhone = medInfoList[0].PhysicianPhone
+                MedicalInformationId = camperMed.MedicalInformationId,              
+                InsuranceCompany = camperMed.InsuranceCompany=="N/A"? null :camperMed.InsuranceCompany,
+                PolicyHolder = camperMed.PolicyHolder == "N/A"? null : camperMed.PolicyHolder,
+                PhysicianName = camperMed.PhysicianName == "N/A" ? null : camperMed.PhysicianName,
+                PhysicianPhone = camperMed.PhysicianPhone == "N/A" ? null : camperMed.PhysicianPhone
             };
             camperMedInfo.Allergies = new List<Allergy>();
-            foreach (var medInfo in medInfoList )
+            foreach (var medInfo in allergies )
             {
                 if (medInfo.AllergyType != string.Empty)
                 {
@@ -567,7 +599,28 @@ namespace crds_angular.Services
             };
         }
 
-        private static List<ProductOptionDTO> ConvertProductOptionPricetoDto(List<MpProductOptionPrice> options, double basePrice, DateTime registrationEnd)
+        private int GetAllergyType(String type)
+        {
+            int ret = 0;
+            switch (type)
+            {
+                case "Medicine":
+                    ret = _configurationWrapper.GetConfigIntValue("MedicineAllergyType");
+                    break;
+                case "Environmental":
+                    ret = _configurationWrapper.GetConfigIntValue("EnvironmentalAllergyType");
+                    break;
+                case "Other":
+                    ret = _configurationWrapper.GetConfigIntValue("OtherAllergyType");
+                    break;
+                case "Food":
+                    ret = _configurationWrapper.GetConfigIntValue("FoodAllergyType");
+                    break;
+            }
+            return ret;
+        }
+
+        private static List<ProductOptionDTO> ConvertProductOptionPricetoDto(List<MpProductOptionPrice> options, decimal basePrice, DateTime registrationEnd)
         {
             
             return options.Select(option => new ProductOptionDTO

@@ -18,7 +18,7 @@ namespace MinistryPlatform.Translation.Models
         [JsonProperty(PropertyName = "Description")]
         public string AllergyDescription { get; set; }
 
-        [JsonProperty(PropertyName = "MedicalInformation_ID")]
+        [JsonProperty(PropertyName = "MedicalInformationId")]
         public int MedicalInformationId { get; set; }
 
         [JsonProperty(PropertyName = "InsuranceCompany")]

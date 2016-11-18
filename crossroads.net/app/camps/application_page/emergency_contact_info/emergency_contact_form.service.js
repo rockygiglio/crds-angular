@@ -1,6 +1,18 @@
-class EmergencyContactForm {
+class EmergencyContactFormFactory {
   /* ngInject */
-  constructor($resource, CampsService) {
+  constructor(CampsService) {
+    this.campsService = CampsService;
+  }
+
+  createForm() {
+    return new EmergencyContactForm(this.campsService);
+  }
+}
+
+export default EmergencyContactFormFactory;
+
+class EmergencyContactForm {
+  constructor(CampsService) {
     this.campsService = CampsService;
     this.formModel = {};
   }
@@ -105,7 +117,7 @@ class EmergencyContactForm {
           key: 'contacts[0].relationship',
           type: 'crdsInput',
           templateOptions: {
-            label: 'Relationship to Student',
+            label: 'Relationship to Camper',
             required: true
           }
         }]
@@ -193,7 +205,7 @@ class EmergencyContactForm {
             'templateOptions.required': 'model.additionalContact'
           },
           templateOptions: {
-            label: 'Relationship to Student',
+            label: 'Relationship to Camper',
           }
         }]
       },
@@ -201,5 +213,3 @@ class EmergencyContactForm {
   }
 
 }
-
-export default EmergencyContactForm;

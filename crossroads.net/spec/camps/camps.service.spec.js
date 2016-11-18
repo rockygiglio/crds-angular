@@ -22,6 +22,16 @@ describe('Camp Service', () => {
     httpBackend.flush();
   });
 
+  it('Should make the API call to get a Camper', () => {
+    const eventId = 4525285;
+    const camperId = 1234;
+    httpBackend.expectGET(`${endpoint}/camps/${eventId}/campers/${camperId}`)
+      .respond(200, {});
+    campsService.getCamperInfo(eventId, camperId);
+
+    httpBackend.flush();
+  });
+
   it('should make the API call to get my dashboard', () => {
     httpBackend.expectGET(`${endpoint}/my-camp`).respond(200, []);
     campsService.getCampDashboard();
@@ -50,6 +60,28 @@ describe('Camp Service', () => {
     campsService.getCampFamily(campId);
     httpBackend.flush();
     expect(campsService.family).toBeUndefined();
+  });
+
+  it('should make the API call to get my camp payment', () => {
+    const invoiceId = 111;
+    const paymentId = 222;
+    expect(campsService.payment).toEqual({});
+
+    httpBackend.expectGET(`${endpoint}/v1.0.0/invoice/${invoiceId}/payment/${paymentId}`).respond(200, []);
+    campsService.getCampPayment(invoiceId, paymentId);
+    httpBackend.flush();
+    expect(campsService.payment).toBeDefined();
+  });
+
+  it('should make the API call to get my camp payment and handle error', () => {
+    const invoiceId = 111;
+    const paymentId = 222;
+
+    expect(campsService.payment).toEqual({});
+    httpBackend.expectGET(`${endpoint}/v1.0.0/invoice/${invoiceId}/payment/${paymentId}`).respond(500, []);
+    campsService.getCampPayment(invoiceId, paymentId);
+    httpBackend.flush();
+    expect(campsService.payment).toEqual({});
   });
 
   afterEach(() => {

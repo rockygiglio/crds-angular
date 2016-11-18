@@ -1,3 +1,4 @@
+import applicationModule from '../../../../app/camps/application_page/application_page.module';
 import campsModule from '../../../../app/camps/camps.module';
 import campHelpers from '../../campHelpers';
 
@@ -10,10 +11,11 @@ describe('Camps Medical Info Form', () => {
   const contactId = 456;
   const campId = 4321;
 
+  beforeEach(angular.mock.module(applicationModule));
   beforeEach(angular.mock.module(campsModule));
 
   beforeEach(inject((_MedicalInfoForm_, _$httpBackend_) => {
-    fixture = _MedicalInfoForm_;
+    fixture = _MedicalInfoForm_.createForm();
     httpBackend = _$httpBackend_;
   }));
 

@@ -1,7 +1,7 @@
 class EmergencyContactController {
   /* @ngInject */
   constructor(EmergencyContactForm, $rootScope, $state, $stateParams) {
-    this.emergencyContactForm = EmergencyContactForm;
+    this.emergencyContactForm = EmergencyContactForm.createForm();
     this.rootScope = $rootScope;
     this.state = $state;
     this.stateParams = $stateParams;

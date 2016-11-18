@@ -17,6 +17,8 @@ namespace MinistryPlatform.Translation.Test.Services
         private Mock<IMinistryPlatformRestRepository> _ministryPlatformRestService;
         private Mock<IAuthenticationRepository> _authService;
         private Mock<IConfigurationWrapper> _configWrapper;
+        private Mock<IApiUserRepository> _apiUserService;
+        private Mock<IMinistryPlatformRestRepository> _ministryPlatformRest;
 
         private readonly string _tokenValue = "ABC";
 
@@ -27,6 +29,8 @@ namespace MinistryPlatform.Translation.Test.Services
             _ministryPlatformRestService = new Mock<IMinistryPlatformRestRepository>();
             _authService = new Mock<IAuthenticationRepository>();
             _configWrapper = new Mock<IConfigurationWrapper>();
+            _apiUserService = new Mock<IApiUserRepository>();
+            _ministryPlatformRest = new Mock<IMinistryPlatformRestRepository>();
 
             var authenticateResults =
                 new Dictionary<string, object>()
@@ -35,9 +39,10 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"exp", "123"}
                 };
             _authService.Setup(m => m.Authenticate(It.IsAny<string>(), It.IsAny<string>())).Returns(authenticateResults);
+
             _ministryPlatformRestService.Setup(mocked => mocked.UsingAuthenticationToken(It.IsAny<string>())).Returns(_ministryPlatformRestService.Object);
 
-            _fixture = new AttributeRepository(_ministryPlatformService.Object, _authService.Object, _configWrapper.Object, _ministryPlatformRestService.Object);
+            _fixture = new AttributeRepository(_ministryPlatformService.Object, _authService.Object, _configWrapper.Object, _apiUserService.Object, _ministryPlatformRestService.Object);
         }
 
         [Test]
@@ -86,6 +91,32 @@ namespace MinistryPlatform.Translation.Test.Services
             Assert.AreEqual(null, attribute.Category);
             Assert.AreEqual(9, attribute.AttributeTypeId);
             Assert.AreEqual("AttributeType #2", attribute.AttributeTypeName);
+        }
+
+        [Test]
+        public void Given_An_AttributeTypeId_GetAttributeCategory_Returns_Distinct_Attribute_Categories_In_Sorted_Order()
+        {
+            int attributeTypeId = 123456;
+            var response = GetMpAttributeCategoryResponse();
+            string catCols = "Attribute_Category_ID_table.*";
+            string catSearch = $"attribute_type_id = {attributeTypeId}";
+            var orderBy = "Attribute_Category_ID_table.Sort_Order";
+            bool distinct = true;
+
+            _ministryPlatformRestService.Setup(
+                mocked =>
+                    mocked.Search<MpAttribute, MpAttributeCategory>(
+                        It.Is<string>(m => m.Equals(catSearch)),
+                        It.Is<string>(m => m.Equals(catCols)),
+                             It.Is<string>(m=>m.Equals(orderBy)),
+                             It.Is<bool>(m=>m.Equals(distinct)))).Returns(response);
+
+            var attributeCategories = _fixture.GetAttributeCategory(attributeTypeId);
+
+            _ministryPlatformRestService.VerifyAll();
+
+            Assert.IsNotNull(attributeCategories);
+            Assert.AreEqual(4, attributeCategories.Count());
         }
 
         [Test]
@@ -180,6 +211,41 @@ namespace MinistryPlatform.Translation.Test.Services
                     AttributeTypeName = "AttributeType #2",
                     PreventMultipleSelection = true,
                     SortOrder = 0
+                }
+            };
+        }
+
+        private static List<MpAttributeCategory> GetMpAttributeCategoryResponse()
+        {
+            return new List<MpAttributeCategory>
+            {
+                new MpAttributeCategory()
+                {
+                    Attribute_Category_ID = 1,
+                    Attribute_Category = "Category 1",
+                    Description = "Attribute Category Description #1",
+                    Sort_Order = 0
+                },
+                new MpAttributeCategory()
+                {
+                    Attribute_Category_ID = 1,
+                    Attribute_Category = "Category 1",
+                    Description = "Attribute Category Description #1",
+                    Sort_Order = 1
+                },
+                new MpAttributeCategory()
+                {
+                    Attribute_Category_ID = 1,
+                    Attribute_Category = "Category 1",
+                    Description = "Attribute Category Description #1",
+                    Sort_Order = 2
+                },
+                new MpAttributeCategory()
+                {
+                    Attribute_Category_ID = 1,
+                    Attribute_Category = "Category 1",
+                    Description = "Attribute Category Description #1",
+                    Sort_Order = 3
                 }
             };
         }

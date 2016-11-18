@@ -119,6 +119,7 @@ function CampHelpers() {
       productName: 'Phil\'s Really Cool Camp',
       basePrice: 900.0,
       basePriceEndDate: '2017-02-19T00:00:00',
+      financialAssistance: true,
       depositPrice: 200.0,
       options: [{
         productOptionPriceId: 13,
@@ -135,6 +136,11 @@ function CampHelpers() {
         totalWithOptionPrice: 850.0,
         endDate: '2016-12-01T00:00:00'
       }]
+    },
+    payment: {
+      paymentAmount: 200.0000,
+      paymentLeft: 650.0000,
+      recipientEmail: 'chris@tallented.net'
     },
     medicalInfoDto: {
       contactId: 1234,

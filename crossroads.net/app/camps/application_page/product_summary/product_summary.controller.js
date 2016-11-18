@@ -3,11 +3,11 @@ import moment from 'moment';
 
 class ProductSummaryController {
   /* @ngInject */
-  constructor(ProductSummaryForm, CampsService, $rootScope, $stateParams) {
-    this.productSummaryForm = ProductSummaryForm;
+  constructor(ProductSummaryForm, CampsService, $rootScope, $state) {
+    this.productSummaryForm = ProductSummaryForm.createForm();
     this.campsService = CampsService;
     this.rootScope = $rootScope;
-    this.stateParams = $stateParams;
+    this.state = $state;
     this.viewReady = false;
     this.submitting = false;
     this.financialAssistanceDeposit = 50;
@@ -32,7 +32,10 @@ class ProductSummaryController {
 
     if (this.productInfo) {
       if (this.productInfo.options) {
-        option = find(this.productInfo.options, each => moment(each.endDate).isAfter(now));
+        option = find(this.productInfo.options, (each) => {
+          const endDate = moment(each.endDate);
+          return endDate.isSame(now, 'day') || endDate.isAfter(now, 'day');
+        });
       }
 
       if (option) {
@@ -54,8 +57,9 @@ class ProductSummaryController {
   submit() {
     this.submitting = true;
     if (this.productSummary.$valid) {
-      this.productSummaryForm.save(this.stateParams.campId, this.stateParams.contactId).then(() => {
+      this.productSummaryForm.save(this.state.toParams.campId, this.state.toParams.contactId).then(() => {
         this.rootScope.$emit('notify', this.rootScope.MESSAGES.successfulSubmission);
+        this.state.go('campsignup.application', { page: 'camps-payment' });
       }).catch(() => {
         this.rootScope.$emit('notify', this.rootScope.MESSAGES.generalError);
       }).finally(() => {

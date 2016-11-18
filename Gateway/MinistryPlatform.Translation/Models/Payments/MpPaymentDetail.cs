@@ -6,6 +6,8 @@ namespace MinistryPlatform.Translation.Models.Payments
     [MpRestApiTable(Name = "Payment_Detail")]
     public class MpPaymentDetail
     {
+        public int PaymentId { get; set; }
+
         [JsonProperty(PropertyName = "Payment_Detail_ID")]
         public int PaymentDetailId { get; set; }
        
@@ -13,7 +15,7 @@ namespace MinistryPlatform.Translation.Models.Payments
         public MpPayment Payment { get; set; }
         
         [JsonProperty(PropertyName = "Payment_Amount")]
-        public double PaymentAmount { get; set; }
+        public decimal PaymentAmount { get; set; }
     
         [JsonProperty(PropertyName = "Invoice_Detail_ID")]
         public int InvoiceDetailId { get; set; }

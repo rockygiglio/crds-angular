@@ -11,6 +11,7 @@ using log4net;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 using System.Text.RegularExpressions;
+using crds_angular.Models.Crossroads.Attribute;
 using Crossroads.Utilities.Extensions;
 
 namespace crds_angular.Services
@@ -28,6 +29,7 @@ namespace crds_angular.Services
         private readonly IContactRepository _contactRepository;
         private readonly IAddressProximityService _addressMatrixService;
         private readonly IEmailCommunication _emailCommunicationService;
+        private readonly IAttributeService _attributeService;
 
         private readonly int _defaultGroupContactEmailId;
         private readonly int _defaultAuthorUserId;
@@ -40,6 +42,7 @@ namespace crds_angular.Services
         private readonly int _addressMatrixSearchDepth;
         private readonly int _groupRequestToJoinEmailTemplate;
         private readonly int _groupRequestPendingReminderEmailTemplateId;
+        private readonly int _attributeTypeGroupCategory;
 
         private const string GroupToolRemoveParticipantEmailTemplateTextTitle = "groupToolRemoveParticipantEmailTemplateText";
         private const string GroupToolRemoveParticipantSubjectTemplateText = "groupToolRemoveParticipantSubjectTemplateText";
@@ -62,7 +65,8 @@ namespace crds_angular.Services
             IAddressProximityService addressProximityService,
             IContactRepository contactRepository,
             IAddressProximityService addressMatrixService,
-            IEmailCommunication emailCommunicationService)
+            IEmailCommunication emailCommunicationService,
+            IAttributeService attributeService)
         {
             _groupToolRepository = groupToolRepository;
             _groupRepository = groupRepository;
@@ -75,12 +79,14 @@ namespace crds_angular.Services
             _contactRepository = contactRepository;
             _addressMatrixService = addressMatrixService;
             _emailCommunicationService = emailCommunicationService;
+            _attributeService = attributeService;
 
             _defaultGroupContactEmailId = configurationWrapper.GetConfigIntValue("DefaultGroupContactEmailId");
             _defaultAuthorUserId = configurationWrapper.GetConfigIntValue("DefaultAuthorUser");
             _groupRoleLeaderId = configurationWrapper.GetConfigIntValue("GroupRoleLeader");
             _defaultGroupRoleId = configurationWrapper.GetConfigIntValue("Group_Role_Default_ID");
             _groupRequestPendingReminderEmailTemplateId = configurationWrapper.GetConfigIntValue("GroupRequestPendingReminderEmailTemplateId");
+            _attributeTypeGroupCategory = configurationWrapper.GetConfigIntValue("GroupCategoryAttributeTypeId");
 
             _removeParticipantFromGroupEmailTemplateId = configurationWrapper.GetConfigIntValue("RemoveParticipantFromGroupEmailTemplateId");
 
@@ -732,6 +738,24 @@ namespace crds_angular.Services
                 _logger.Error("Exception retrieving pending inquiries", e);
                 throw;
             }
+        }
+
+        public List<AttributeCategoryDTO> GetGroupCategories()
+        {
+            List<AttributeCategoryDTO> cats = _attributeService.GetAttributeCategory(_attributeTypeGroupCategory);
+            
+            foreach (AttributeCategoryDTO cat in cats)
+            {
+                if (cat.RequiresActiveAttribute)
+                {
+                    cat.Attribute = _attributeService.GetOneAttributeByCategoryId(cat.CategoryId);
+                }
+            }
+
+            //do not return any categories where it requires an active attribute but there are no active attributes
+            cats.RemoveAll(cat => cat.RequiresActiveAttribute && cat.Attribute == null );
+
+            return cats;
         }
 
         private void SendPendingInquiryReminderEmail(MpGroup group, IReadOnlyCollection<MpInquiry> inquiries)

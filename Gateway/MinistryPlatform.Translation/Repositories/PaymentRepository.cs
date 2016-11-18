@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Crossroads.Utilities.FunctionalHelpers;
 using MinistryPlatform.Translation.Models.Payments;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 
@@ -17,10 +18,17 @@ namespace MinistryPlatform.Translation.Repositories
             _apiUserRepository = apiUserRepository;
         }
 
-        public bool CreatePaymentAndDetail(MpPaymentDetail paymentInfo)
+        public Result<MpPaymentDetailReturn> CreatePaymentAndDetail(MpPaymentDetail paymentInfo)
         {
             var apiToken = _apiUserRepository.GetToken();
-            return _ministryPlatformRest.UsingAuthenticationToken(apiToken).Post(new List<MpPaymentDetail>(new List<MpPaymentDetail> {paymentInfo})) == 200;
+            var paymentList = new List<MpPaymentDetail>
+            {
+                paymentInfo
+            };
+            var result =  _ministryPlatformRest.UsingAuthenticationToken(apiToken).PostWithReturn<MpPaymentDetail, MpPaymentDetailReturn>(paymentList);
+            return result != null && result.Count > 0
+                ? new Result<MpPaymentDetailReturn>(true, result.First())
+                : new Result<MpPaymentDetailReturn>(false, "Unable to add new payment");
         }
 
         public List<MpPayment> GetPaymentsForInvoice(int invoiceId)

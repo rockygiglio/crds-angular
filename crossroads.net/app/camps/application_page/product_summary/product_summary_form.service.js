@@ -1,6 +1,17 @@
-/* ngInject */
-class ProductSummaryForm {
+class ProductSummaryFormFactory {
+  /* ngInject */
+  constructor($resource) {
+    this.$resource = $resource;
+  }
 
+  createForm() {
+    return new ProductSummaryForm(this.$resource);
+  }
+}
+
+export default ProductSummaryFormFactory;
+
+class ProductSummaryForm {
   constructor($resource) {
     this.formModel = {
       financialAssistance: false
@@ -23,5 +34,3 @@ class ProductSummaryForm {
     return this.formModel;
   }
 }
-
-export default ProductSummaryForm;

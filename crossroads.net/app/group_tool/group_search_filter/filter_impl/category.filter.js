@@ -5,10 +5,10 @@ export default class CategoryFilter extends SearchFilter {
   constructor(filterName, groupService) {
     super(filterName, [], this._matchingFunction);
 
-    groupService.getGroupCategories().then(
+    groupService.getGroupTypeCategories().then(
       (data) => {
         this.getValues().push.apply(this.getValues(), data.map((c) => {
-          return new SearchFilterValue(c.label, c.categoryId, false, c.labelDesc);
+          return new SearchFilterValue(c.name, c.categoryId, false, c.desc);
         }));
       },
       (/*err*/) => {

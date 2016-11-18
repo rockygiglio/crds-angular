@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Web.Http;
 using System.Web.Http.Description;
@@ -30,6 +31,7 @@ namespace crds_angular.Controllers.API
         private readonly IUserImpersonationService _impersonationService;
         private readonly MPInterfaces.IDonationRepository _mpDonationService;
         private readonly MPInterfaces.IPledgeRepository _mpPledgeService;
+        private readonly IPaymentService _paymentService;
 
         public DonationController(MPInterfaces.IDonorRepository mpDonorService,
                                   IPaymentProcessorService stripeService,
@@ -38,7 +40,8 @@ namespace crds_angular.Controllers.API
                                   IDonationService gatewayDonationService,
                                   MPInterfaces.IDonationRepository mpDonationService,
                                   MPInterfaces.IPledgeRepository mpPledgeService,
-                                  IUserImpersonationService impersonationService)
+                                  IUserImpersonationService impersonationService,
+                                  IPaymentService paymentService)
         {
             _mpDonorService = mpDonorService;
             _stripeService = stripeService;
@@ -48,6 +51,7 @@ namespace crds_angular.Controllers.API
             _impersonationService = impersonationService;
             _mpDonationService = mpDonationService;
             _mpPledgeService = mpPledgeService;
+            _paymentService = paymentService;
         }
 
         /// <summary>
@@ -212,11 +216,13 @@ namespace crds_angular.Controllers.API
 
         private IHttpActionResult CreateDonationAndDistributionAuthenticated(String token, CreateDonationDTO dto)
         {
+            var isPayment = (dto.TransactionType != null && dto.TransactionType.Equals("PAYMENT"));
+
             try
             {
                 var contactId = _authenticationService.GetContactId(token);
                 var donor = _mpDonorService.GetContactDonor(contactId);
-                var charge = _stripeService.ChargeCustomer(donor.ProcessorId, dto.Amount, donor.DonorId);
+                var charge = _stripeService.ChargeCustomer(donor.ProcessorId, dto.Amount, donor.DonorId, isPayment);
                 var fee = charge.BalanceTransaction != null ? charge.BalanceTransaction.Fee : null;
 
                 int? pledgeId = null;
@@ -229,35 +235,87 @@ namespace crds_angular.Controllers.API
                     }
                 }
 
-                var donationAndDistribution = new MpDonationAndDistributionRecord
+                if (dto.TransactionType == null || !dto.TransactionType.Equals("PAYMENT"))
                 {
-                    DonationAmt = dto.Amount,
-                    FeeAmt = fee,
-                    DonorId = donor.DonorId,
-                    ProgramId = dto.ProgramId,
-                    PledgeId = pledgeId,
-                    ChargeId = charge.Id,
-                    PymtType = dto.PaymentType,
-                    ProcessorId = donor.ProcessorId,
-                    SetupDate = DateTime.Now,
-                    RegisteredDonor = true,
-                    Anonymous = dto.Anonymous
-                };
+                    var donationAndDistribution = new MpDonationAndDistributionRecord
+                    {
+                        DonationAmt = dto.Amount,
+                        FeeAmt = fee,
+                        DonorId = donor.DonorId,
+                        ProgramId = dto.ProgramId,
+                        PledgeId = pledgeId,
+                        ChargeId = charge.Id,
+                        PymtType = dto.PaymentType,
+                        ProcessorId = donor.ProcessorId,
+                        SetupDate = DateTime.Now,
+                        RegisteredDonor = true,
+                        Anonymous = dto.Anonymous
+                    };
 
-                var donationId = _mpDonorService.CreateDonationAndDistributionRecord(donationAndDistribution, !dto.TripDeposit);
-                if (!dto.GiftMessage.IsNullOrWhiteSpace() && pledgeId != null)
-                {
-                    SendMessageFromDonor(pledgeId.Value, donationId, dto.GiftMessage);
+                    var donationId = _mpDonorService.CreateDonationAndDistributionRecord(donationAndDistribution, !dto.TripDeposit);
+                    if (!dto.GiftMessage.IsNullOrWhiteSpace() && pledgeId != null)
+                    {
+                        SendMessageFromDonor(pledgeId.Value, donationId, dto.GiftMessage);
+                    }
+                    var response = new DonationDTO
+                    {
+                        ProgramId = dto.ProgramId,
+                        Amount = (int) dto.Amount,
+                        Id = donationId.ToString(),
+                        Email = donor.Email
+                    };
+
+                    return Ok(response);
                 }
-                var response = new DonationDTO
+                else //Payment flow (non-contribution transaction)
                 {
-                    ProgramId = dto.ProgramId,
-                    Amount = (int) dto.Amount,
-                    Id = donationId.ToString(),
-                    Email = donor.Email
-                };
+                    if (!ModelState.IsValid)
+                    {
+                        var errors = ModelState.Values.SelectMany(val => val.Errors).Aggregate("", (current, err) => current + err.Exception.Message);
+                        var dataError = new ApiErrorDto("Payment data Invalid", new InvalidOperationException("Invalid Payment Data" + errors));
+                        throw new HttpResponseException(dataError.HttpResponseMessage);
+                    }
 
-                return Ok(response);
+                    try
+                    {
+                        var payment = new MpDonationAndDistributionRecord
+                        {
+                            DonationAmt = dto.Amount,
+                            PymtType = dto.PaymentType,
+                            ProcessorId = charge.Id,
+                            ContactId = contactId,
+                            InvoiceId = dto.InvoiceId
+                        };
+                        var paymentReturn = _paymentService.PostPayment(payment);
+                        var response = new DonationDTO
+                        {
+                            Amount = (int)dto.Amount,
+                            Email = donor.Email,
+                            PaymentId = paymentReturn.PaymentId
+                        };
+                        return Ok(response);
+                    }
+                    catch (InvoiceNotFoundException e)
+                    {
+                        var apiError = new ApiErrorDto("Invoice Not Found", e);
+                        throw new HttpResponseException(apiError.HttpResponseMessage);
+                    }
+                    catch (ContactNotFoundException e)
+                    {
+                        var apiError = new ApiErrorDto("Contact Not Found", e);
+                        throw new HttpResponseException(apiError.HttpResponseMessage);
+                    }
+                    catch (PaymentTypeNotFoundException e)
+                    {
+                        var apiError = new ApiErrorDto("PaymentType Not Found", e);
+                        throw new HttpResponseException(apiError.HttpResponseMessage);
+                    }
+                    catch (Exception e)
+                    {
+                        var apiError = new ApiErrorDto("SavePayment Failed", e);
+                        throw new HttpResponseException(apiError.HttpResponseMessage);
+                    }
+                }                
             }
             catch (PaymentProcessorException stripeException)
             {
@@ -265,17 +323,19 @@ namespace crds_angular.Controllers.API
             }
             catch (Exception exception)
             {
-                var apiError = new ApiErrorDto("Donation Post Failed", exception);
+                var apiError = new ApiErrorDto("Donation/Payment Post Failed", exception);
                 throw new HttpResponseException(apiError.HttpResponseMessage);
             }
         }
 
         private IHttpActionResult CreateDonationAndDistributionUnauthenticated(CreateDonationDTO dto)
         {
+            bool isPayment = false;
+
             try
             {
                 var donor = _gatewayDonorService.GetContactDonorForEmail(dto.EmailAddress);
-                var charge = _stripeService.ChargeCustomer(donor.ProcessorId, dto.Amount, donor.DonorId);
+                var charge = _stripeService.ChargeCustomer(donor.ProcessorId, dto.Amount, donor.DonorId, isPayment);
                 var fee = charge.BalanceTransaction != null ? charge.BalanceTransaction.Fee : null;
                 int? pledgeId = null;
                 if (dto.PledgeCampaignId != null && dto.PledgeDonorId != null)
