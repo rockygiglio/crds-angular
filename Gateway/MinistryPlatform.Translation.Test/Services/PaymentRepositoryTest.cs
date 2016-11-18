@@ -84,6 +84,25 @@ namespace MinistryPlatform.Translation.Test.Services
             Assert.Throws<ApplicationException>(() => _fixture.CreatePaymentBatch(batchName, setupDate, (decimal) 123.45, 2, 1, 777, DateTime.Now, "philiscool"));
         }
 
+        [Test]
+        public void AddPaymentToBatchShouldThrow()
+        {
+            var paymentId = 1;
+            var batchId = 2;
+            var parms = new Dictionary<string, object>
+            {
+                {"Payment_ID", paymentId},
+                {"Batch_ID", batchId}
+            };
+            var parmList = new List<Dictionary<string, object>> { parms };
+            var e = new Exception("bad things happened");
+            
+            _ministryPlatformRest.Setup(p => p.Put("Payments", parmList)).Throws(e);
+
+            Assert.Throws<ApplicationException> (() => _fixture.AddPaymentToBatch(batchId,paymentId));
+
+        }
+
         private static MpPaymentDetail FakePaymentInfo()
         {
             var payment = new MpPayment
