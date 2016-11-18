@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using System.Text;
+using Crossroads.Utilities.FunctionalHelpers;
 using Crossroads.Utilities.Interfaces;
 using MinistryPlatform.Translation.Extensions;
 using MinistryPlatform.Translation.Models;
@@ -32,19 +33,21 @@ namespace MinistryPlatform.Translation.Repositories
         private readonly IMinistryPlatformRestRepository _ministryPlatformRestRepository;
         private readonly IGroupRepository _groupService;
         private readonly IEventParticipantRepository _eventParticipantRepository;
+        private readonly IApiUserRepository _apiUserRepository;
 
         public EventRepository(IMinistryPlatformService ministryPlatformService,
                             IAuthenticationRepository authenticationService,
                             IConfigurationWrapper configurationWrapper,
                             IGroupRepository groupService,
                             IMinistryPlatformRestRepository ministryPlatformRestRepository,
-                            IEventParticipantRepository eventParticipantRepository)
+                            IEventParticipantRepository eventParticipantRepository, IApiUserRepository apiUserRepository)
             : base(authenticationService, configurationWrapper)
         {
             _ministryPlatformService = ministryPlatformService;
             _ministryPlatformRestRepository = ministryPlatformRestRepository;
             _groupService = groupService;
             _eventParticipantRepository = eventParticipantRepository;
+            _apiUserRepository = apiUserRepository;
         }
 
         public int CreateEvent(MpEventReservationDto eventReservationReservation)
@@ -538,6 +541,6 @@ namespace MinistryPlatform.Translation.Repositories
             _ministryPlatformRestRepository.UsingAuthenticationToken(apiToken).Post(waiverResponses.Where(w => w.EventParticipantWaiverId == 0).ToList());
 
             _ministryPlatformRestRepository.UsingAuthenticationToken(apiToken).Put(waiverResponses.Where(w => w.EventParticipantWaiverId != 0).ToList());
-        }
+        }        
     }
 }
