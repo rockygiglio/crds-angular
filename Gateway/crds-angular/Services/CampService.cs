@@ -28,6 +28,8 @@ namespace crds_angular.Services
         private readonly IMedicalInformationRepository _medicalInformationRepository;
         private readonly IProductRepository _productRepository;
         private readonly IInvoiceRepository _invoiceRepository;
+        private readonly ICommunicationRepository _communicationRepository;
+        private readonly IPaymentRepository _paymentRepository;
 
         private readonly ILog _logger = LogManager.GetLogger(typeof (CampService));
 
@@ -44,7 +46,9 @@ namespace crds_angular.Services
             IEventParticipantRepository eventParticipantRepository,
             IMedicalInformationRepository medicalInformationRepository,
             IProductRepository productRepository,
-            IInvoiceRepository invoiceRepository)
+            IInvoiceRepository invoiceRepository,
+            ICommunicationRepository communicationRepository,
+            IPaymentRepository paymentRepository)
         {
             _campService = campService;
             _formSubmissionRepository = formSubmissionRepository;
@@ -59,6 +63,8 @@ namespace crds_angular.Services
             _medicalInformationRepository = medicalInformationRepository;
             _productRepository = productRepository;
             _invoiceRepository = invoiceRepository;
+            _paymentRepository = paymentRepository;
+            _communicationRepository = communicationRepository;
         }
 
         public CampDTO GetCampEventDetails(int eventId)
@@ -424,6 +430,48 @@ namespace crds_angular.Services
             var productOptionPriceId = optionPrices.Count > 0 ? ConvertProductOptionPricetoDto(optionPrices, product.BasePrice, campEvent.EventStartDate).Where(i => i.EndDate > DateTime.Now).OrderByDescending(i => i.EndDate).FirstOrDefault()?.ProductOptionPriceId : (int?)null;
 
             _invoiceRepository.CreateInvoiceAndDetail(product.ProductId, productOptionPriceId, loggedInContact.Contact_ID, campProductDto.ContactId, eventParticipantId);
+        }
+
+        public bool SendCampConfirmationEmail(int eventId, int invoiceId, int paymentId, string token)
+        {
+            var baseUrl = _configurationWrapper.GetConfigValue("BaseUrl");
+            var templateId = _configurationWrapper.GetConfigIntValue("CampConfirmationEmailTemplate");
+            var mpEvent = _eventRepository.GetEvent(eventId);
+            var payments = _paymentRepository.GetPaymentsForInvoice(invoiceId);
+            var thisPayment = payments.Where(p => p.PaymentId == paymentId).ToList().FirstOrDefault();
+
+            if (thisPayment != null)
+            {
+                var from = _contactRepository.GetContactById(mpEvent.PrimaryContactId);
+                var recipient = _contactRepository.GetContactById(thisPayment.ContactId);
+
+                var mergeData = new Dictionary<string, object>
+                {
+                    {"BASE_URL", baseUrl },
+                    {"EVENT_URL", mpEvent.RegistrationURL },
+                    {"EVENT_START_DATE", mpEvent.EventStartDate.ToShortDateString()},
+                    {"EVENT_END_DATE", mpEvent.EventEndDate.ToShortDateString()},
+                    {"EVENT_TITLE", mpEvent.EventTitle},
+                    {"PAYMENT_AMOUNT", $"${thisPayment.PaymentTotal.ToString("0.00")}"},
+                    {"DISPLAY_NAME", $"{from.First_Name} {from.Last_Name}" },
+                    {"EMAIL_ADDRESS", mpEvent.PrimaryContact.EmailAddress }
+                };
+
+                var template = _communicationRepository.GetTemplateAsCommunication(templateId,
+                                                                                   mpEvent.PrimaryContactId,
+                                                                                   mpEvent.PrimaryContact.EmailAddress,
+                                                                                   mpEvent.PrimaryContactId,
+                                                                                   mpEvent.PrimaryContact.EmailAddress,
+                                                                                   recipient.Contact_ID,
+                                                                                   recipient.Email_Address,
+                                                                                   mergeData);
+                var result = _communicationRepository.SendMessage(template);
+                return result > 0;
+            }
+            else
+            {
+                throw new PaymentTypeNotFoundException(paymentId);
+            }
         }
 
         public void SaveCamperMedicalInfo(MedicalInfoDTO medicalInfo, int contactId, string token)

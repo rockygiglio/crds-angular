@@ -35,6 +35,9 @@ namespace MinistryPlatform.Translation.Models
         [JsonProperty(PropertyName = "Registration_End")]
         public DateTime RegistrationEndDate { get; set; }
 
+        [JsonProperty(PropertyName = "External_Registration_URL")]
+        public string RegistrationURL { get; set; }
+
         private IList<int> participants = new List<int>();
 
         public string Congregation { get; set; }
