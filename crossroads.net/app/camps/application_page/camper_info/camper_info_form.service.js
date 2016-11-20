@@ -216,10 +216,16 @@ class CamperInfoForm {
           {
             className: 'form-group col-xs-6',
             key: 'shirtSize',
-            type: 'crdsInput',
+            type: 'crdsSelect',
             templateOptions: {
               label: 'T-Shirt Size',
-              required: true
+              required: true,
+              valueProp: 'attributeId',
+              labelProp: 'name',
+              options: []
+            },
+            controller: /* @ngInject */ ($scope, CampsService) => {
+              $scope.to.options = CampsService.shirtSizes;
             }
           }
         ]
