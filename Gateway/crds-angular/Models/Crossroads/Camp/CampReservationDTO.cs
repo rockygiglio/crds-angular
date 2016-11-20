@@ -39,5 +39,11 @@ namespace crds_angular.Models.Crossroads.Camp
 
         [JsonProperty(PropertyName = "roommate")]
         public string RoomMate { get; set; }
+
+        [JsonProperty(PropertyName = "mobilePhone")]
+        public string MobilePhone { get; set; }
+
+        [JsonProperty(PropertyName = "shirtSize")]
+        public string ShirtSize { get; set; }
     }
 }

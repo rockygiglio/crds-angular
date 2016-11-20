@@ -232,11 +232,11 @@ namespace crds_angular.Services
             MpParticipant participant;
             var contactId = Convert.ToInt32(campReservation.ContactId);
 
-            var minorContact = new MpContact
-            {
+            var minorContact = new MpContact {
                 FirstName = campReservation.FirstName,
                 LastName = campReservation.LastName,
                 MiddleName = campReservation.MiddleName,
+                MobilePhone = campReservation.MobilePhone,
                 BirthDate = Convert.ToDateTime(campReservation.BirthDate),
                 Gender = campReservation.Gender,
                 Nickname = nickName,
@@ -260,6 +260,7 @@ namespace crds_angular.Services
                     {"Last_Name", minorContact.LastName},
                     {"Middle_Name", minorContact.MiddleName},
                     {"Nickname", nickName},
+                    {"Mobile_Phone", minorContact.MobilePhone},
                     {"Gender_ID", campReservation.Gender},
                     {"Date_Of_Birth", minorContact.BirthDate},
                     {"Current_School", minorContact.SchoolAttending},
@@ -639,6 +640,7 @@ namespace crds_angular.Services
                 LastName = camperContact.Last_Name,
                 MiddleName = camperContact.Middle_Name,
                 PreferredName = camperContact.Nickname,
+                MobilePhone = camperContact.Mobile_Phone,
                 CrossroadsSite = Convert.ToInt32(camperContact.Congregation_ID),
                 BirthDate = Convert.ToString(camperContact.Date_Of_Birth),
                 SchoolAttending = camperContact.Current_School,

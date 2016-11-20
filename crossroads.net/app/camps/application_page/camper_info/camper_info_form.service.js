@@ -23,6 +23,7 @@ class CamperInfoForm {
       lastName: this.campsService.camperInfo.lastName || undefined,
       middleName: this.campsService.camperInfo.middleName || undefined,
       preferredName: this.campsService.camperInfo.preferredName || undefined,
+      mobilePhone: this.campsService.camperInfo.mobilePhone || undefined,
       birthDate: this.campsService.camperInfo.birthDate || undefined,
       gender: this.campsService.camperInfo.gender || undefined,
       currentGrade: this.campsService.camperInfo.currentGrade || undefined,
@@ -193,6 +194,32 @@ class CamperInfoForm {
             templateOptions: {
               label: 'Preferred Roommate First and Last Name',
               required: false
+            }
+          }
+        ]
+      },
+      {
+        className: '',
+        wrapper: 'campBootstrapRow',
+        fieldGroup: [
+          {
+            className: 'form-group col-xs-6',
+            key: 'mobilePhone',
+            type: 'crdsInput',
+            optionsTypes: ['phoneNumber'],
+            templateOptions: {
+              label: 'Student Mobile Number',
+              required: false,
+              helpBlock: 'By providing your mobile number, you are agreeing to receive text message updates from Crossroads.'
+            }
+          },
+          {
+            className: 'form-group col-xs-6',
+            key: 'shirtSize',
+            type: 'crdsInput',
+            templateOptions: {
+              label: 'T-Shirt Size',
+              required: true
             }
           }
         ]
