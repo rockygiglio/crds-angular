@@ -15,5 +15,6 @@ namespace crds_angular.Services.Interfaces
         int UpdatePaymentStatus(int paymentId, int statusId, DateTime? statusDate, string statusNote = null);
         DonationBatchDTO GetPaymentBatch(int batchId);
         DonationBatchDTO CreatePaymentBatch(DonationBatchDTO batch);
+        int? CreatePaymentForBankAccountErrorRefund(StripeRefund refund);
     }
 }

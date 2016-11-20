@@ -4,7 +4,9 @@ using crds_angular.Exceptions;
 using crds_angular.Models.Crossroads.Payment;
 using crds_angular.Models.Crossroads.Stewardship;
 using crds_angular.Services.Interfaces;
+using Crossroads.Utilities;
 using Crossroads.Utilities.Interfaces;
+using log4net;
 using MinistryPlatform.Translation.Exceptions;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Models.Payments;
@@ -15,6 +17,8 @@ namespace crds_angular.Services
 {
     public class PaymentService : IPaymentService
     {
+        private readonly ILog _logger = LogManager.GetLogger(typeof(DonationService));
+
         private readonly IInvoiceRepository _invoiceRepository;
         private readonly IPaymentRepository _paymentRepository;
         private readonly IContactRepository _contactRepository;
@@ -23,6 +27,7 @@ namespace crds_angular.Services
         private readonly int _paidinfullStatus;
         private readonly int _somepaidStatus;
         private readonly int _defaultPaymentStatus;
+        private readonly int _bankErrorRefundDonorId;
 
         public PaymentService(IInvoiceRepository invoiceRepository, IPaymentRepository paymentRepository, IConfigurationWrapper configurationWrapper, IContactRepository contactRepository, IPaymentTypeRepository paymentTypeRepository)
         {
@@ -34,6 +39,7 @@ namespace crds_angular.Services
             _paidinfullStatus = configurationWrapper.GetConfigIntValue("PaidInFull");
             _somepaidStatus = configurationWrapper.GetConfigIntValue("SomePaid");
             _defaultPaymentStatus = configurationWrapper.GetConfigIntValue("DonationStatusPending");
+            _bankErrorRefundDonorId = configurationWrapper.GetConfigIntValue("DonorIdForBankErrorRefund");
         }
 
         public MpPaymentDetailReturn PostPayment(MpDonationAndDistributionRecord paymentRecord)
@@ -177,6 +183,52 @@ namespace crds_angular.Services
                 ProcessorTransferId = batch.ProcessorTransferId,
                 SetupDateTime = batch.SetupDate
             };
+        }
+
+        public int? CreatePaymentForBankAccountErrorRefund(StripeRefund refund)
+        {
+            if (refund.Data[0].BalanceTransaction == null || !"payment_failure_refund".Equals(refund.Data[0].BalanceTransaction.Type))
+            {
+                _logger.Error($"Balance transaction was not set, or was not a payment_failure_refund for refund ID {refund.Data[0].Id}");
+                return (null);
+            }
+
+            if (string.IsNullOrWhiteSpace(refund.Data[0].Charge?.Id))
+            {
+                _logger.Error($"No associated Charge for Refund {refund.Data[0].Id}");
+                return (null);
+            }
+
+            MpPayment payment;
+            try
+            {
+                payment = _paymentRepository.GetPaymentByTransactionCode(refund.Data[0].Charge.Id);
+            }
+            catch (PaymentNotFoundException)
+            {
+                _logger.Error($"No Payment with payment processor ID {refund.Data[0].Charge.Id} in MP for Refund {refund.Data[0].Id}");
+                return (null);
+            }
+
+            var paymentReverse = new MpPayment
+            {
+                InvoiceNumber = payment.InvoiceNumber,
+                PaymentDate = DateTime.Now,
+                PaymentStatus = (int) DonationStatus.Declined,
+                ContactId = _bankErrorRefundDonorId,
+                ProcessorFeeAmount = refund.Data[0].BalanceTransaction.Fee
+            };
+
+            var invoicedetail = _invoiceRepository.GetInvoiceDetailForInvoice(Convert.ToInt32(payment.InvoiceNumber));
+
+            var detail = new MpPaymentDetail
+            {
+                PaymentAmount = -(int.Parse(refund.Data[0].Amount)/Constants.StripeDecimalConversionValue),
+                InvoiceDetailId = invoicedetail.InvoiceDetailId,
+                Payment = paymentReverse
+            };
+            
+            return (_paymentRepository.CreatePaymentAndDetail(detail).Value.PaymentId);
         }
     }
 }

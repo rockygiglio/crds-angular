@@ -338,7 +338,7 @@ namespace crds_angular.Services
             {
                 _logger.Warn($"Payment not found for refund {paymentId} on transfer {transfer.Id} - may be a refund due to a bank account error");
                 // If this is a refund that doesn't exist in MP, create it, assuming it is a refund due to a bank account error (NSF, etc)
-                if (_donationService.CreateDonationForBankAccountErrorRefund(refund) != null)
+                if (_paymentService.CreatePaymentForBankAccountErrorRefund(refund) != null)
                 {
                     payment = _paymentService.GetPaymentByTransactionCode(paymentId);
                     _logger.Debug($"Updating charge id {charge.Id} to Declined status");
