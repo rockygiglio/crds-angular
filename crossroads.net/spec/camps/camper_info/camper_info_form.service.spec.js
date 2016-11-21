@@ -3,6 +3,7 @@ import campHelpers from '../campHelpers';
 
 describe('Camper Info Form Service', () => {
   let camperInfoForm;
+  let campsService;
   let httpBackend;
 
   // eslint-disable-next-line no-underscore-dangle
@@ -10,8 +11,9 @@ describe('Camper Info Form Service', () => {
 
   beforeEach(angular.mock.module(campsModule));
 
-  beforeEach(inject((_LookupService_, _CamperInfoForm_, _$httpBackend_) => {
+  beforeEach(inject((_LookupService_, _CamperInfoForm_, _CampsService_, _$httpBackend_) => {
     camperInfoForm = _CamperInfoForm_.createForm();
+    campsService = _CampsService_;
     httpBackend = _$httpBackend_;
   }));
 
@@ -43,5 +45,12 @@ describe('Camper Info Form Service', () => {
     expect(camperInfoForm.getModel()).toEqual(
      campHelpers().camperInfoModel
     );
+  });
+
+  it('should prepopulate shirt size', () => {
+    campsService.camperInfo = campHelpers().camperInfoModelWithShirtSize;
+    camperInfoForm.initFormModel();
+
+    expect(camperInfoForm.formModel.shirtSize).toEqual(6846);
   });
 });

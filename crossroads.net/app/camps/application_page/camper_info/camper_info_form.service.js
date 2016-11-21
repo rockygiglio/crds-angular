@@ -21,6 +21,11 @@ class CamperInfoForm {
   constructor(CampsService, LookupService) {
     this.campsService = CampsService;
     this.lookupService = LookupService;
+
+    this.initFormModel();
+  }
+
+  initFormModel() {
     this.formModel = {
       contactId: this.campsService.camperInfo.contactId || undefined,
       firstName: this.campsService.camperInfo.firstName || undefined,
