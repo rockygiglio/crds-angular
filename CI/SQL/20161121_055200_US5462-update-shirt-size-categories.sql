@@ -1,4 +1,3 @@
--- noinspection SqlNoDataSourceInspectionForFile
 USE [MinistryPlatform]
 GO
 
@@ -53,9 +52,9 @@ IF NOT EXISTS(SELECT * FROM [dbo].[Attribute_Categories] WHERE Attribute_Categor
   END
 
 UPDATE [dbo].[Attributes]
-SET [Attribute_Category] = @adultCat
+SET [Attribute_Category_ID] = @adultCat
 WHERE [Attribute_Id] in (@adultXS, @adultS, @adultM, @adultL, @adultXL, @adultXXL, @adultXXXL);
 
 UPDATE [dbo].[Attributes]
-SET [Attribute_Category] = @childCat
+SET [Attribute_Category_ID] = @childCat
 WHERE [Attribute_Id] in (@childS, @childM, @childL);
