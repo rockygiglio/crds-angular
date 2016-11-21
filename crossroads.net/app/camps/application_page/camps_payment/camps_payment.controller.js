@@ -12,6 +12,7 @@ export default class CampPaymentController {
     this.iFrameResizer = require('iframe-resizer/js/iframeResizer.min.js');
 
     this.iFrames = this.iFrameResizer({
+      heightCalculationMethod: 'max',
       checkOrigin: false,
     }, this.iframeSelector);
 
