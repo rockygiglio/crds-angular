@@ -41,9 +41,9 @@ class CamperInfoForm {
 
     // In order to default the T Shirt select, set the shirt size in the form model from the
     // Shirt Size single attribute that is set, if any
-    const shirtSizeAttribute = this.formModel.singleAttributes[crdsConstants.ATTRIBUTE_TYPE_IDS.TSHIRT_SIZES].attribute;
-    if (shirtSizeAttribute) {
-      this.formModel.shirtSize = shirtSizeAttribute.attributeId;
+    const shirtSizeAttribute = this.formModel.singleAttributes[crdsConstants.ATTRIBUTE_TYPE_IDS.TSHIRT_SIZES];
+    if (shirtSizeAttribute && shirtSizeAttribute.attribute) {
+      this.formModel.shirtSize = shirtSizeAttribute.attribute.attributeId;
     }
   }
 

@@ -12,7 +12,10 @@ function CampHelpers() {
       schoolAttending: undefined,
       schoolAttendingNext: null,
       crossroadsSite: undefined,
-      roomate: null
+      roomate: null,
+      mobilePhone: undefined,
+      attributeTypes: {},
+      singleAttributes: {}
     },
     campInfoOpen: {
       endDate: '2017-01-14T00:00:00',
