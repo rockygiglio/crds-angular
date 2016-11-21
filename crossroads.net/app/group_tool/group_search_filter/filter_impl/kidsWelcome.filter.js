@@ -1,4 +1,4 @@
-
+import CONSTANTS from 'crds-constants';
 import {SearchFilter, SearchFilterValue} from './searchFilter'; 
 
 export default class KidsWelcomeFilter extends SearchFilter {
@@ -15,7 +15,7 @@ export default class KidsWelcomeFilter extends SearchFilter {
       new SearchFilterValue('No', false, noSelected)
     ];
 
-    super(filterName, filterValues, this._matchingFunction, 'kids');
+    super(filterName, filterValues, this._matchingFunction, CONSTANTS.GROUP.SEARCH_FILTERS_QUERY_PARAM_NAMES.KIDS_WELCOME);
   }
 
   _matchingFunction(result) {

@@ -1,4 +1,4 @@
-
+import CONSTANTS from 'crds-constants';
 import Address from '../model/address';
 
 export default class GroupSearchResultsController {
@@ -16,7 +16,7 @@ export default class GroupSearchResultsController {
     this.ready = false;
     this.results = [];
 
-    this.filters = {};
+    this.initialFilters = {};
 
     this.showLocationInput = false;
     this.searchedWithLocation = false;
@@ -25,17 +25,12 @@ export default class GroupSearchResultsController {
   }
 
   $onInit() {
-    this.initialFilters = {
-      age: this.state.params.age,
-      category: this.state.params.category,
-      type: this.state.params.type,
-      kids: this.state.params.kids,
-      grouplocation: this.state.params.grouplocation,
-      day: this.state.params.day,
-      time: this.state.params.time,
-      frequency: this.state.params.frequency,
-      site: this.state.params.site
-    }
+    this.initialFilters = {};
+
+    _.forOwn(CONSTANTS.GROUP.SEARCH_FILTERS_QUERY_PARAM_NAMES, (v, k) => {
+      this.initialFilters[v] = this.state.params[v];
+    })
+
     this.search = {
       query: this.state.params.query,
       location: this.state.params.location
@@ -54,8 +49,8 @@ export default class GroupSearchResultsController {
       queryString.query = query;
     }
 
-    _.forOwn(this.initialFilters, (value, key) => { 
-      if (value && value.length > 0){
+    _.forOwn(this.initialFilters, (value, key) => {
+      if (value && value.length > 0) {
         queryString[key] = value;
       }
     });

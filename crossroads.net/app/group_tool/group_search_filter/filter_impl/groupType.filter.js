@@ -1,9 +1,9 @@
-
+import CONSTANTS from 'crds-constants';
 import {SearchFilter, SearchFilterValue} from './searchFilter';
 
 export default class GroupTypeFilter extends SearchFilter {
   constructor(filterName, groupService, selectedFilters) {
-    super(filterName, [], this._matchingFunction, 'type');
+    super(filterName, [], this._matchingFunction, CONSTANTS.GROUP.SEARCH_FILTERS_QUERY_PARAM_NAMES.GROUP_TYPE);
 
     if (selectedFilters == null || selectedFilters == undefined)
       selectedFilters = "";
@@ -12,7 +12,9 @@ export default class GroupTypeFilter extends SearchFilter {
     groupService.getGroupGenderMixType().then(
       (data) => {
         this.getValues().push.apply(this.getValues(), data.attributes.map((a) => {
-          let selected = _.findIndex(selectedArray, (s) => { return s.toUpperCase() == a.name.toUpperCase() }) != -1;
+          let selected = false;
+          if (a.name)
+            selected = _.findIndex(selectedArray, (s) => { return s.toUpperCase() == a.name.toUpperCase() }) != -1;
           return new SearchFilterValue(a.name, a.attributeId, selected);
         }));
       },

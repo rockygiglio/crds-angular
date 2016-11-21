@@ -1,6 +1,18 @@
-GroupToolRouter.$inject = ['$httpProvider', '$stateProvider'];
+import CONSTANTS from 'crds-constants';
 
+GroupToolRouter.$inject = ['$httpProvider', '$stateProvider'];
 export default function GroupToolRouter($httpProvider, $stateProvider) {
+
+// wanted the params for the group search and group search results routes
+// to be constants because they are being referenced elsewhere.
+  let groupSearchParams = {};
+  _.forOwn(CONSTANTS.GROUP.SEARCH_FILTERS_QUERY_PARAM_NAMES, (v, k) => {
+    groupSearchParams[v] = {value: null, squash: true, dynamic: true};
+  })
+  let groupSearchResultsParams = angular.copy(groupSearchParams);
+  groupSearchResultsParams['query'] = {value: null, squash: true};
+  groupSearchResultsParams['location'] = {value: null, squash: true};
+
   $httpProvider.defaults.useXDomain = true;
 
   //TODO: I think this is done globally, not needed here, I think the above needs to be done globally
@@ -190,53 +202,7 @@ export default function GroupToolRouter($httpProvider, $stateProvider) {
       parent: 'noSideBar',
       url: '/groups/search?age&category&type&kids&grouplocation&day&time&frequency&site',
       template: '<group-search></group-search>',
-      params: {
-        age: {
-          value: null,
-          squash: true,
-          dynamic: true
-        },
-        category: {
-          value: null,
-          squash: true,
-          dynamic: true
-        },
-        type: {
-          value: null,
-          squash: true,
-          dynamic: true
-        },
-        kids: {
-          value: null,
-          squash: true,
-          dynamic: true
-        },
-        grouplocation: {
-          value: null,
-          squash: true,
-          dynamic: true
-        },
-        day: {
-          value: null,
-          squash: true,
-          dynamic: true
-        },
-        time: {
-          value: null,
-          squash: true,
-          dynamic: true
-        },
-        frequency: {
-          value: null,
-          squash: true,
-          dynamic: true
-        },
-        site: {
-          value: null,
-          squash: true,
-          dynamic: true
-        }
-      },
+      params: groupSearchParams,
       data: {
         meta: {
           title: 'Find a Group',
@@ -247,61 +213,7 @@ export default function GroupToolRouter($httpProvider, $stateProvider) {
     .state('grouptool.search-results', {
       parent: 'noSideBar',
       url: '/groups/search/results?query&location&age&category&type&kids&grouplocation&day&time&frequency&site',
-      params: {
-        query: {
-          value: null,
-          squash: true
-        },
-        location: {
-          value: null,
-          squash: true
-        },
-        age: {
-          value: null,
-          squash: true,
-          dynamic: true
-        },
-        category: {
-          value: null,
-          squash: true,
-          dynamic: true
-        },
-        type: {
-          value: null,
-          squash: true,
-          dynamic: true
-        },
-        kids: {
-          value: null,
-          squash: true,
-          dynamic: true
-        },
-        grouplocation: {
-          value: null,
-          squash: true,
-          dynamic: true
-        },
-        day: {
-          value: null,
-          squash: true,
-          dynamic: true
-        },
-        time: {
-          value: null,
-          squash: true,
-          dynamic: true
-        },
-        frequency: {
-          value: null,
-          squash: true,
-          dynamic: true
-        },
-        site: {
-          value: null,
-          squash: true,
-          dynamic: true
-        }
-      },
+      params: groupSearchResultsParams,
       template: '<group-search-results></group-search-results>',
       data: {
         meta: {

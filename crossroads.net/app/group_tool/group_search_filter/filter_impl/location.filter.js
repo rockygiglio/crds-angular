@@ -1,4 +1,4 @@
-
+import CONSTANTS from 'crds-constants';
 import {SearchFilter, SearchFilterValue} from './searchFilter'; 
 
 export default class LocationFilter extends SearchFilter {
@@ -15,7 +15,7 @@ export default class LocationFilter extends SearchFilter {
       new SearchFilterValue('Online', false, onlineSelected)
     ];
 
-    super(filterName, filterValues, this._matchingFunction, 'grouplocation');
+    super(filterName, filterValues, this._matchingFunction, CONSTANTS.GROUP.SEARCH_FILTERS_QUERY_PARAM_NAMES.GROUP_LOCATION);
   }
 
   _matchingFunction(result) {

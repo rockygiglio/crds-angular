@@ -1,4 +1,4 @@
-
+import CONSTANTS from 'crds-constants';
 import {SearchFilter, SearchFilterValue} from './searchFilter'; 
 
 class TimeRange {
@@ -34,7 +34,7 @@ export default class MeetingTimeFilter extends SearchFilter {
       new SearchFilterValue('Evenings (after 5pm)', new TimeRange('17:00:01', '23:59:59'), eveningSelected)
     ];
 
-    super(filterName, filterValues, this._matchingFunction, 'time');
+    super(filterName, filterValues, this._matchingFunction, CONSTANTS.GROUP.SEARCH_FILTERS_QUERY_PARAM_NAMES.MEETING_TIME);
   }
 
   _matchingFunction(result) {

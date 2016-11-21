@@ -74,7 +74,7 @@ export default class GroupSearchResultsController {
     // but you have to or it will overwrite the parameters that are passed in
     // because when it get constructed it doesn not contain all the parameters
     if (!this.firstRun) {
-      let stateParams = this._reconstructUrl();
+      let stateParams = this._reconstructUrlParams();
       this.state.go(this.state.current, stateParams, {location: true, inherit:true, notify:false})
     }
     angular.extend(this.tableParams.settings(), settings);
@@ -87,7 +87,7 @@ export default class GroupSearchResultsController {
     this.applyFilters();
   }
 
-  _reconstructUrl() {
+  _reconstructUrlParams() {
     //get the params object of all the filters (this includes filters with no filter
     //values selected -- this enables us to set filter values that have been previously used
     //but are now deselected to null)

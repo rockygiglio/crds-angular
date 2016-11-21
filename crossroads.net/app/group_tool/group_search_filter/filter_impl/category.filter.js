@@ -1,9 +1,9 @@
-
+import CONSTANTS from 'crds-constants';
 import {SearchFilter, SearchFilterValue} from './searchFilter';
 
 export default class CategoryFilter extends SearchFilter {
   constructor(filterName, groupService, selectedFilters) {
-    super(filterName, [], this._matchingFunction, 'category');
+    super(filterName, [], this._matchingFunction, CONSTANTS.GROUP.SEARCH_FILTERS_QUERY_PARAM_NAMES.GROUP_CATEGORY);
 
     if (selectedFilters == null || selectedFilters == undefined)
       selectedFilters = "";
@@ -12,7 +12,9 @@ export default class CategoryFilter extends SearchFilter {
     groupService.getGroupTypeCategories().then(
       (data) => {
         this.getValues().push.apply(this.getValues(), data.map((c) => {
-          let selected = _.findIndex(selectedArray, (s) => { return s.toUpperCase() == c.name.toUpperCase() }) != -1;
+          let selected = false;
+          if (c.name)
+            selected = _.findIndex(selectedArray, (s) => { return s.toUpperCase() == c.name.toUpperCase() }) != -1;
           return new SearchFilterValue(c.name, c.categoryId, selected, c.desc);
         }));
       },

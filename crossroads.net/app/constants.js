@@ -123,6 +123,17 @@
         LEADER: 22,
         APPRENTICE: 66
       },
+      SEARCH_FILTERS_QUERY_PARAM_NAMES: {
+        AGE: 'age',
+        GROUP_CATEGORY: 'category',
+        GROUP_TYPE: 'type',
+        KIDS_WELCOME: 'kids',
+        GROUP_LOCATION: 'grouplocation',
+        MEETING_DAY: 'day',
+        MEETING_TIME: 'time',
+        MEETING_FREQUENCY: 'frequency',
+        LEADER_SITE: 'site'
+      }
     },
     GEOLOCATION: {
       MODAL_TIMEOUT: 3000,
