@@ -41,7 +41,6 @@
     vm.showNameInput = showNameInput;
 
     $rootScope.$on('$stateChangeStart', function(event, toState, toParams) {
-
       // Short-circuit this handler if we're not transitioning TO a give state
       if (toState && !/^tripgiving.*/.test(toState.name)) {
         return;
@@ -62,10 +61,11 @@
     });
 
     $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams) {
-    // Short-circuit this handler if we're not transitioning TO a give state
+      // Short-circuit this handler if we're not transitioning TO a give state
       if (toState && !/^tripgiving.*/.test(toState.name)) {
         return;
       }
+      
       vm.dto.processing = false;
       if ((!vm.dto.initialized || toState.name === 'tripgiving') && toState.name !== GiveFlow.thankYou) {
         event.preventDefault();

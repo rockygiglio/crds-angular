@@ -11,7 +11,7 @@
           <div class="col-xs-12 col-sm-3 col-md-2 hard-sides mobile-soft-half-sides mobile-push-half-ends">
             <a href="#" data-ng-if="$ctrl.isSignedUp(member)" disabled class="table-btn btn-standard disabled">Sign Up </a>
             <a href="#" ng-if="!member.isEligible && !$ctrl.isSignedUp(member)" disabled class="table-btn btn-standard disabled">Sign Up</a>
-            <a ui-sref="campsignup.camper({camperId: member.contactId})" ng-if="!$ctrl.isSignedUp(member) && member.isEligible" class="table-btn btn-standard">Sign Up</a>
+            <a ng-click="$ctrl.signUp(member)" ng-if="!$ctrl.isSignedUp(member) && member.isEligible" class="table-btn btn-standard">Sign Up</a>
           </div>
         </div>
       </li>

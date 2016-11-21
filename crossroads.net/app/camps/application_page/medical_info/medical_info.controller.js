@@ -1,7 +1,7 @@
 /* @ngInject */
 class MedicalInfoController {
   constructor(MedicalInfoForm, $rootScope, $state) {
-    this.medicalInfoForm = MedicalInfoForm;
+    this.medicalInfoForm = MedicalInfoForm.createForm();
     this.rootScope = $rootScope;
     this.go = $state.go;
     this.stateParams = $state.params;
@@ -19,6 +19,7 @@ class MedicalInfoController {
 
   cancel() {
     this.go('camps-dashboard');
+    this.options.resetModel();
   }
 
   submit() {

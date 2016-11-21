@@ -6,6 +6,7 @@ using crds_angular.Models.Crossroads.Camp;
 using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Interfaces;
 using log4net;
+using Microsoft.Ajax.Utilities;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Models.Product;
 using MinistryPlatform.Translation.Repositories.Interfaces;
@@ -27,6 +28,8 @@ namespace crds_angular.Services
         private readonly IMedicalInformationRepository _medicalInformationRepository;
         private readonly IProductRepository _productRepository;
         private readonly IInvoiceRepository _invoiceRepository;
+        private readonly ICommunicationRepository _communicationRepository;
+        private readonly IPaymentRepository _paymentRepository;
 
         private readonly ILog _logger = LogManager.GetLogger(typeof (CampService));
 
@@ -43,7 +46,9 @@ namespace crds_angular.Services
             IEventParticipantRepository eventParticipantRepository,
             IMedicalInformationRepository medicalInformationRepository,
             IProductRepository productRepository,
-            IInvoiceRepository invoiceRepository)
+            IInvoiceRepository invoiceRepository,
+            ICommunicationRepository communicationRepository,
+            IPaymentRepository paymentRepository)
         {
             _campService = campService;
             _formSubmissionRepository = formSubmissionRepository;
@@ -58,6 +63,8 @@ namespace crds_angular.Services
             _medicalInformationRepository = medicalInformationRepository;
             _productRepository = productRepository;
             _invoiceRepository = invoiceRepository;
+            _paymentRepository = paymentRepository;
+            _communicationRepository = communicationRepository;
         }
 
         public CampDTO GetCampEventDetails(int eventId)
@@ -89,7 +96,7 @@ namespace crds_angular.Services
             var eventProductOptionPrices = _productRepository.GetProductOptionPricesForProduct(eventProduct.ProductId).OrderByDescending(m => m.DaysOutToHide).ToList();
             var invoiceDetails = _invoiceRepository.GetInvoiceDetailsForProductAndCamperAndContact(eventProduct.ProductId, camperContactId, me.Contact_ID);
             var answer = _formSubmissionRepository.GetFormResponseAnswer(formId, camperContactId, formFieldId);
-            var financialAssistance = (string.IsNullOrEmpty(answer) ? false : Convert.ToBoolean(answer));
+            var financialAssistance = (!string.IsNullOrEmpty(answer) && Convert.ToBoolean(answer));
 
             var campProductInfo = new ProductDTO
             {
@@ -154,6 +161,22 @@ namespace crds_angular.Services
             var participant = _participantRepository.GetParticipant(contactId);
             var eventParticipantId = _eventRepository.SafeRegisterParticipant(eventId, participant.ParticipantId);
             var answers = new List<MpFormAnswer>();
+            if (emergencyContacts.Count == 1)
+            {
+                var existingEmergencyContacts = GetCamperEmergencyContactInfo(eventId, contactId, token);
+                if (existingEmergencyContacts.Count > 1)
+                {
+                    emergencyContacts.Add(new CampEmergencyContactDTO
+                    {
+                        Email = "",
+                        FirstName = "",
+                        LastName = "",
+                        MobileNumber = "",
+                        PrimaryEmergencyContact = false,
+                        Relationship = ""
+                    });
+                }
+            }
 
             foreach (var emergencyContact in emergencyContacts)
             {
@@ -409,6 +432,48 @@ namespace crds_angular.Services
             _invoiceRepository.CreateInvoiceAndDetail(product.ProductId, productOptionPriceId, loggedInContact.Contact_ID, campProductDto.ContactId, eventParticipantId);
         }
 
+        public bool SendCampConfirmationEmail(int eventId, int invoiceId, int paymentId, string token)
+        {
+            var baseUrl = _configurationWrapper.GetConfigValue("BaseUrl");
+            var templateId = _configurationWrapper.GetConfigIntValue("CampConfirmationEmailTemplate");
+            var mpEvent = _eventRepository.GetEvent(eventId);
+            var payments = _paymentRepository.GetPaymentsForInvoice(invoiceId);
+            var thisPayment = payments.Where(p => p.PaymentId == paymentId).ToList().FirstOrDefault();
+
+            if (thisPayment != null)
+            {
+                var from = _contactRepository.GetContactById(mpEvent.PrimaryContactId);
+                var recipient = _contactRepository.GetContactById(thisPayment.ContactId);
+
+                var mergeData = new Dictionary<string, object>
+                {
+                    {"BASE_URL", baseUrl },
+                    {"EVENT_URL", mpEvent.RegistrationURL },
+                    {"EVENT_START_DATE", mpEvent.EventStartDate.ToShortDateString()},
+                    {"EVENT_END_DATE", mpEvent.EventEndDate.ToShortDateString()},
+                    {"EVENT_TITLE", mpEvent.EventTitle},
+                    {"PAYMENT_AMOUNT", $"${thisPayment.PaymentTotal.ToString("0.00")}"},
+                    {"DISPLAY_NAME", $"{from.First_Name} {from.Last_Name}" },
+                    {"EMAIL_ADDRESS", mpEvent.PrimaryContact.EmailAddress }
+                };
+
+                var template = _communicationRepository.GetTemplateAsCommunication(templateId,
+                                                                                   mpEvent.PrimaryContactId,
+                                                                                   mpEvent.PrimaryContact.EmailAddress,
+                                                                                   mpEvent.PrimaryContactId,
+                                                                                   mpEvent.PrimaryContact.EmailAddress,
+                                                                                   recipient.Contact_ID,
+                                                                                   recipient.Email_Address,
+                                                                                   mergeData);
+                var result = _communicationRepository.SendMessage(template);
+                return result > 0;
+            }
+            else
+            {
+                throw new PaymentTypeNotFoundException(paymentId);
+            }
+        }
+
         public void SaveCamperMedicalInfo(MedicalInfoDTO medicalInfo, int contactId, string token)
         {
             var loggedInContact = _contactRepository.GetMyProfile(token);
@@ -431,6 +496,13 @@ namespace crds_angular.Services
                     PolicyHolder = medicalInfo.PolicyHolder ?? "N/A"
                 };
                 var medicalInformation =  _medicalInformationRepository.SaveMedicalInfo(mpMedicalInfo, contactId);
+                var updateToDictionary = new Dictionary<String, Object>
+                {
+                    {"Contact_ID", contactId},
+                    {"Medicalinformation_ID",medicalInformation.MedicalInformationId}
+                };
+                _contactRepository.UpdateContact(contactId, updateToDictionary);
+                
                 var updateToAllergyList = new List<MpMedicalAllergy>();
                 var createToAllergyList = new List<MpMedicalAllergy>();
                 foreach (var allergy in medicalInfo.Allergies)
@@ -441,10 +513,7 @@ namespace crds_angular.Services
                         {
                             Allergy = new MpAllergy { 
                                 AllergyID = allergy.AllergyId,
-                                AllergyType = new MpAllergyType {
-                                    AllergyType = allergy.AllergyType,
-                                    AllergyTypeID = allergy.AllergyTypeId
-                                },
+                                AllergyType = allergy.AllergyTypeId,
                                 AllergyDescription = allergy.AllergyDescription
                             },
                             MedicalInformationId = medicalInformation.MedicalInformationId,
@@ -457,10 +526,7 @@ namespace crds_angular.Services
                         {
                             Allergy = new MpAllergy
                             {
-                                AllergyType = new MpAllergyType {
-                                    AllergyType = allergy.AllergyType,
-                                    AllergyTypeID = allergy.AllergyTypeId
-                                },
+                                AllergyType = GetAllergyType(allergy.AllergyType),
                                 AllergyDescription = allergy.AllergyDescription
                             },
                             MedicalInformationId = medicalInformation.MedicalInformationId,
@@ -471,6 +537,8 @@ namespace crds_angular.Services
                 _medicalInformationRepository.UpdateOrCreateMedAllergy(updateToAllergyList, createToAllergyList);
             }           
         }
+
+        
 
         public MedicalInfoDTO GetCampMedicalInfo(int eventId, int contactId, string token)
         {
@@ -483,7 +551,10 @@ namespace crds_angular.Services
                 throw new ContactNotFoundException(contactId);
             }
             var camperMed = _medicalInformationRepository.GetMedicalInformation(contactId);
-            if (camperMed == null) { return null; }
+            if (camperMed == null)
+            {
+                return new MedicalInfoDTO();
+            }
 
             var allergies = _medicalInformationRepository.GetMedicalAllergyInfo(contactId);
             
@@ -491,10 +562,10 @@ namespace crds_angular.Services
             {
                 ContactId = contactId,
                 MedicalInformationId = camperMed.MedicalInformationId,              
-                InsuranceCompany = camperMed.InsuranceCompany,
-                PolicyHolder = camperMed.PolicyHolder,
-                PhysicianName = camperMed.PhysicianName,
-                PhysicianPhone = camperMed.PhysicianPhone
+                InsuranceCompany = camperMed.InsuranceCompany=="N/A"? null :camperMed.InsuranceCompany,
+                PolicyHolder = camperMed.PolicyHolder == "N/A"? null : camperMed.PolicyHolder,
+                PhysicianName = camperMed.PhysicianName == "N/A" ? null : camperMed.PhysicianName,
+                PhysicianPhone = camperMed.PhysicianPhone == "N/A" ? null : camperMed.PhysicianPhone
             };
             camperMedInfo.Allergies = new List<Allergy>();
             foreach (var medInfo in allergies )
@@ -574,6 +645,27 @@ namespace crds_angular.Services
                 Gender = Convert.ToInt32(camperContact.Gender_ID),
                 CurrentGrade = groupResult.Status ? groupResult.Value.GroupName : null
             };
+        }
+
+        private int GetAllergyType(String type)
+        {
+            int ret = 0;
+            switch (type)
+            {
+                case "Medicine":
+                    ret = _configurationWrapper.GetConfigIntValue("MedicineAllergyType");
+                    break;
+                case "Environmental":
+                    ret = _configurationWrapper.GetConfigIntValue("EnvironmentalAllergyType");
+                    break;
+                case "Other":
+                    ret = _configurationWrapper.GetConfigIntValue("OtherAllergyType");
+                    break;
+                case "Food":
+                    ret = _configurationWrapper.GetConfigIntValue("FoodAllergyType");
+                    break;
+            }
+            return ret;
         }
 
         private static List<ProductOptionDTO> ConvertProductOptionPricetoDto(List<MpProductOptionPrice> options, decimal basePrice, DateTime registrationEnd)

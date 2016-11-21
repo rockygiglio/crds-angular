@@ -14,7 +14,7 @@ describe('Camp Product Summary Form', () => {
   beforeEach(angular.mock.module(applicationModule));
 
   beforeEach(inject((_ProductSummaryForm_, _$httpBackend_) => {
-    fixture = _ProductSummaryForm_;
+    fixture = _ProductSummaryForm_.createForm();
     httpBackend = _$httpBackend_;
   }));
 

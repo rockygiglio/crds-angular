@@ -19,7 +19,6 @@ describe('Camper Info Component', () => {
 
   beforeEach(inject((_$componentController_, _$httpBackend_, _CamperInfoForm_, _$q_, _$stateParams_, _$rootScope_) => {
     $componentController = _$componentController_;
-    camperInfoForm = _CamperInfoForm_;
     $httpBackend = _$httpBackend_;
     q = _$q_;
     stateParams = _$stateParams_;
@@ -28,6 +27,10 @@ describe('Camper Info Component', () => {
       successfullRegistration: { content: 'success' },
       generalError: { content: 'error' }
     };
+
+    // Set up the camper info form instance that will be returned by the CamperInfoForm.createForm() factory function
+    camperInfoForm = _CamperInfoForm_.createForm();
+    spyOn(_CamperInfoForm_, 'createForm').and.callFake(() => camperInfoForm);
 
     spyOn(camperInfoForm, 'getFields').and.callThrough();
     spyOn(camperInfoForm, 'getModel').and.callThrough();
@@ -87,4 +90,8 @@ describe('Camper Info Component', () => {
     rootScope.$apply(); // must be called to resolve the promise
     expect(camperInfo.submitting).toBeFalsy();
   });
+
+  it('should get new data when selecting another family member', () => {
+
+  })
 });

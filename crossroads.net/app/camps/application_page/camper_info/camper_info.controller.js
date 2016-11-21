@@ -1,9 +1,10 @@
-/* @ngInject */
 class CamperInfoController {
-  constructor(LookupService, CamperInfoForm, $rootScope, $stateParams) {
-    this.camperInfoForm = CamperInfoForm;
+  /* @ngInject */
+  constructor(LookupService, CamperInfoForm, $rootScope, $state, $stateParams) {
+    this.camperInfoForm = CamperInfoForm.createForm();
     this.lookupService = LookupService;
     this.rootScope = $rootScope;
+    this.state = $state;
     this.stateParams = $stateParams;
     this.submitting = false;
     this.viewReady = false;
@@ -20,6 +21,11 @@ class CamperInfoController {
     if (this.infoForm.$valid) {
       this.camperInfoForm.save(this.stateParams.campId).then(() => {
         this.rootScope.$emit('notify', this.rootScope.MESSAGES.successfullRegistration);
+
+        this.state.go('campsignup.application', {
+          page: 'emergency-contact',
+          contactId: this.stateParams.contactId
+        });
       },
 
       () => {

@@ -22,7 +22,7 @@ namespace MinistryPlatform.Translation.Repositories
         {
             var apiToken = _apiUserRepository.GetToken();
             string columns = "Allergy_ID_Table.[Description],Allergy_ID_Table.[Allergy_ID], " +
-                             "Allergy_ID_Table_Allergy_Type_ID_Table.[Allergy_Type],Allergy_ID_Table_Allergy_Type_ID_Table.[Allergy_Type_ID], cr_Medical_Information_Allergies.[Medical_Information_Allergy_ID]";
+                             "Allergy_ID_Table_Allergy_Type_ID_Table.[Allergy_Type_ID],Allergy_ID_Table_Allergy_Type_ID_Table.[Allergy_Type],cr_Medical_Information_Allergies.[Medical_Information_Allergy_ID]";
             return _ministryPlatformRest.UsingAuthenticationToken(apiToken)
                 .Search<MpMedical>($"Medical_Information_ID_Table_Contact_ID_Table.Contact_ID={contactId}",columns ).ToList();           
         }
@@ -44,7 +44,14 @@ namespace MinistryPlatform.Translation.Repositories
                 return mpMedicalInfo;
             }
             _ministryPlatformRest.UsingAuthenticationToken(apiToken).Post(records);
-            return GetMedicalInformation(contactId);
+            var medicalInformation =  GetMedicalInformation(contactId);
+            _ministryPlatformRest.UsingAuthenticationToken(apiToken)
+                .UpdateRecord("Contacts", contactId, new Dictionary<string, object>
+                {
+                    {"Contact_ID", contactId },
+                    {"MedicalInformation_ID", medicalInformation.MedicalInformationId}
+                });
+            return medicalInformation;
         }
 
         public void UpdateOrCreateMedAllergy(List<MpMedicalAllergy> updateToAllergyList, List<MpMedicalAllergy> createToAllergyList  )

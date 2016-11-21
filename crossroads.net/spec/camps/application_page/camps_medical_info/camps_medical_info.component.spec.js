@@ -20,13 +20,16 @@ describe('Camps Medical Info Component', () => {
   beforeEach(inject((_$componentController_, _MedicalInfoForm_, _$log_, _$rootScope_, _$state_, _$q_) => {
     $componentController = _$componentController_;
     // log = _$log_;
-    medicalInfoForm = _MedicalInfoForm_;
     stateParams = _$state_.params;
     rootScope = _$rootScope_;
     q = _$q_;
 
     stateParams.campId = campId;
     stateParams.contactId = contactId;
+
+    // Set up the form
+    medicalInfoForm = _MedicalInfoForm_.createForm();
+    spyOn(_MedicalInfoForm_, 'createForm').and.callFake(() => medicalInfoForm);
 
     spyOn(medicalInfoForm, 'getModel').and.callThrough();
     spyOn(medicalInfoForm, 'getFields').and.callThrough();
