@@ -16,7 +16,7 @@
       FORMLY_BUILDER: 'crossroads.formly_builder',
       GIVE: 'crossroads.give',
       GO_VOLUNTEER: 'crossroads.go_volunteer',
-      //GROUP_FINDER: 'crossroads.group_finder',
+      // GROUP_FINDER: 'crossroads.group_finder',
       MEDIA: 'crossroads.media',
       MY_SERVE: 'crossroads.my_serve',
       LIVE_STREAM: 'crossroads.live_stream',
@@ -79,13 +79,13 @@
       I_DO_NOT_ATTEND_CROSSROADS: 2,
       NOT_SITE_SPECIFIC: 5
     },
-    SERVING_RESPONSES :{
+    SERVING_RESPONSES: {
       NOT_AVAILABLE: 2,
       AVAILABLE: 1
     },
     SERVING: {
       MAXSTUDENTVOLUNTEERAGE: 17,
-      STUDENTVOLUNTEERTEXT: " (SV)"
+      STUDENTVOLUNTEERTEXT: ' (SV)'
     },
     CMS: {
       PAGENAMES: {

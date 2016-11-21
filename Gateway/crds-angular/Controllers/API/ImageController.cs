@@ -80,8 +80,8 @@ namespace crds_angular.Controllers.API
             var token = _apiUserService.GetToken();
             var files = _mpService.GetFileDescriptions("Contacts", contactId, token);
             var file = files.FirstOrDefault(f => f.IsDefaultImage);
-            return file != null ? 
-                GetImage(file.FileId, file.FileName, token) : 
+            return file != null ?
+                GetImage(file.FileId, file.FileName, token) :
                 (RestHttpActionResult<ApiErrorDto>.WithStatus(HttpStatusCode.NotFound, new ApiErrorDto("No matching image found")));
         }
 
@@ -90,7 +90,7 @@ namespace crds_angular.Controllers.API
         /// </summary>
         /// <param name="recordId"></param>
         /// <returns>A byte stream?</returns>
-        [VersionedRoute(template: "image/pledgeCampaign/{recordId}", minimumVersion: "1.0.0")]
+        [VersionedRoute(template: "image/pledge-campaign/{recordId}", minimumVersion: "1.0.0")]
         [Route("image/pledgecampaign/{recordId:int}")]
         [HttpGet]
         public IHttpActionResult GetCampaignImage(Int32 recordId)
@@ -154,4 +154,3 @@ namespace crds_angular.Controllers.API
         }
     }
 }
-

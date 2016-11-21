@@ -43,7 +43,7 @@ namespace crds_angular.Controllers.API
         /// <param name="to">Optional- The end date</param>
         /// <returns></returns>
         [ResponseType(typeof(List<ServingDay>))]
-        [VersionedRoute(template: "serve/familyServeDays/{contactId}", minimumVersion: "1.0.0")]
+        [VersionedRoute(template: "serve/family-serve-days/{contactId}", minimumVersion: "1.0.0")]
         [Route("serve/family-serve-days/{contactId}")]
         public IHttpActionResult GetFamilyServeDays(int contactId, long from = 0, long to = 0)
         {
@@ -63,7 +63,7 @@ namespace crds_angular.Controllers.API
         }
 
         [ResponseType(typeof(ServingTeam))]
-        [VersionedRoute(template: "serve/getTeamRsvps", minimumVersion: "1.0.0")]
+        [VersionedRoute(template: "serve/get-team-rsvps", minimumVersion: "1.0.0")]
         [Route("serve/getTeamRsvps")]
         [HttpPost]
         public IHttpActionResult GetServingTeamRsvps([FromBody] ServingTeam team)
@@ -106,7 +106,7 @@ namespace crds_angular.Controllers.API
         }
 
         [ResponseType(typeof (List<QualifiedServerDto>))]
-        [VersionedRoute(template: "serve/qualifiedServers/{groupId}/{opportunityId}", minimumVersion: "1.0.0")]
+        [VersionedRoute(template: "serve/qualified-servers/{groupId}/{opportunityId}", minimumVersion: "1.0.0")]
         [Route("serve/qualifiedservers/{groupId}/{opportunityId}")]
         public IHttpActionResult GetQualifiedServers(int groupId, int opportunityId)
         {
@@ -127,7 +127,7 @@ namespace crds_angular.Controllers.API
 
         [RequiresAuthorization]
         [ResponseType(typeof(List<GroupDTO>))]
-        [VersionedRoute(template: "serve/GetLoggedInLeadersGroups", minimumVersion: "1.0.0")]
+        [VersionedRoute(template: "serve/get-logged-in-leaders-groups", minimumVersion: "1.0.0")]
         [Route("serve/GetLoggedInLeadersGroups")]
         public IHttpActionResult GetLoggedInLeadersGroups()
         {
@@ -148,7 +148,7 @@ namespace crds_angular.Controllers.API
 
         [RequiresAuthorization]
         [ResponseType(typeof(List<GroupParticipantDTO>))]
-        [VersionedRoute(template: "serve/GetLoggedInLeadersGroupsParticipants", minimumVersion: "1.0.0")]
+        [VersionedRoute(template: "serve/get-logged-in-leaders-groups-participants", minimumVersion: "1.0.0")]
         [Route("serve/GetLoggedInLeadersGroupsParticipants")]
         public IHttpActionResult GetLoggedInLeadersGroupsParticipants(int? groupId = null)
         {
@@ -169,7 +169,7 @@ namespace crds_angular.Controllers.API
 
         [RequiresAuthorization]
         [ResponseType(typeof(object))]
-        [VersionedRoute(template: "serve/GetIsLeader", minimumVersion: "1.0.0")]
+        [VersionedRoute(template: "serve/get-is-leader", minimumVersion: "1.0.0")]
         [Route("serve/GetIsLeader")]
         public IHttpActionResult GetIsLeader(int? groupId = null)
         {
@@ -188,7 +188,7 @@ namespace crds_angular.Controllers.API
             });
         }
 
-        [VersionedRoute(template: "serve/saveRsvp", minimumVersion: "1.0.0")]
+        [VersionedRoute(template: "serve/save-rsvp", minimumVersion: "1.0.0")]
         [Route("serve/save-rsvp")]
         public IHttpActionResult SaveRsvp([FromBody] SaveRsvpDto saveRsvp)
         {
@@ -210,7 +210,7 @@ namespace crds_angular.Controllers.API
                 var message = _messageFactory.CreateMessage(saveRsvp);
                 _eventQueue.Send(message, MessageQueueTransactionType.None);
 
-                // get updated events and return them               
+                // get updated events and return them
                 var updatedEvents = new UpdatedEvents();
                 try
                 {
@@ -226,7 +226,7 @@ namespace crds_angular.Controllers.API
         }
 
         [ResponseType(typeof (Capacity))]
-        [VersionedRoute(template: "serve/opportunityCapacity", minimumVersion: "1.0.0")]
+        [VersionedRoute(template: "serve/opportunity-capacity", minimumVersion: "1.0.0")]
         [Route("serve/opp-capacity")]
         public IHttpActionResult GetOpportunityCapacity([FromUri] OpportunityCapacityDto oppCap)
         {

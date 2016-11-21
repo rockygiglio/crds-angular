@@ -23,7 +23,7 @@ namespace crds_angular.Controllers.API
         }
 
         [ResponseType(typeof (List<FamilyMemberTripDto>))]
-        [VersionedRoute(template: "trip/{campaignId}/familyMembers", minimumVersion: "1.0.0")]
+        [VersionedRoute(template: "trip/{campaignId}/family-members", minimumVersion: "1.0.0")]
         [Route("trip/{campaignId}/family-members")]
         [HttpGet]
         public IHttpActionResult GetFamilyWithTripInfo(int campaignId)
@@ -40,8 +40,8 @@ namespace crds_angular.Controllers.API
                     var apiError = new ApiErrorDto("Get Family With Trip Info", ex);
                     throw new HttpResponseException(apiError.HttpResponseMessage);
                 }
-                
-            });         
+
+            });
         }
 
         [VersionedRoute(template: "trip/scholarship/{campaignId}/{contactId}", minimumVersion: "1.0.0")]
@@ -69,7 +69,7 @@ namespace crds_angular.Controllers.API
         }
 
         [ResponseType(typeof (TripFormResponseDto))]
-        [VersionedRoute(template: "trip/formResponses/{selectionId}/{selectionCount}/{recordId}", minimumVersion: "1.0.0")]
+        [VersionedRoute(template: "trip/form-responses/{selectionId}/{selectionCount}/{recordId}", minimumVersion: "1.0.0")]
         [Route("trip/form-responses/{selectionId}/{selectionCount}/{recordId}")]
         [HttpGet]
         public IHttpActionResult TripFormResponses(int selectionId, int selectionCount, int recordId)
@@ -110,7 +110,7 @@ namespace crds_angular.Controllers.API
             });
         }
 
-        [VersionedRoute(template: "trip/generatePrivateInvite", minimumVersion: "1.0.0")]
+        [VersionedRoute(template: "trip/generate-private-invite", minimumVersion: "1.0.0")]
         [Route("trip/generate-private-invite")]
         [HttpPost]
         public IHttpActionResult GeneratePrivateInvite([FromBody] PrivateInviteDto dto)
@@ -176,7 +176,7 @@ namespace crds_angular.Controllers.API
         }
 
         [ResponseType(typeof (MyTripsDto))]
-        [VersionedRoute(template: "trip/myTrips", minimumVersion: "1.0.0")]
+        [VersionedRoute(template: "trip/my-trips", minimumVersion: "1.0.0")]
         [Route("trip/mytrips")]
         [HttpGet]
         public IHttpActionResult MyTrips()
@@ -197,7 +197,7 @@ namespace crds_angular.Controllers.API
         }
 
         [ResponseType(typeof (ValidatePrivateInviteDto))]
-        [VersionedRoute(template: "trip/validatePrivateInvite/{campaignId}/{invitationKey}", minimumVersion: "1.0.0")]
+        [VersionedRoute(template: "trip/validate-private-invite/{campaignId}/{invitationKey}", minimumVersion: "1.0.0")]
         [Route("trip/validate-private-invite/{campaignId}/{invitationKey}")]
         [HttpGet]
         public IHttpActionResult ValidatePrivateInvite(int campaignId, string invitationKey)

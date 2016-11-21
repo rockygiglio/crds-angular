@@ -10,9 +10,9 @@ function CampHelpers() {
       gender: undefined,
       currentGrade: undefined,
       schoolAttending: undefined,
-      schoolAttendingNext: null,
+      schoolAttendingNext: undefined,
       crossroadsSite: undefined,
-      roomate: null
+      roommate: undefined
     },
     campInfoOpen: {
       endDate: '2017-01-14T00:00:00',

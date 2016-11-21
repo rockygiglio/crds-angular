@@ -94,6 +94,32 @@ namespace MinistryPlatform.Translation.Test.Services
         }
 
         [Test]
+        public void Given_An_AttributeTypeId_GetAttributeCategory_Returns_Distinct_Attribute_Categories_In_Sorted_Order()
+        {
+            int attributeTypeId = 123456;
+            var response = GetMpAttributeCategoryResponse();
+            string catCols = "Attribute_Category_ID_table.*";
+            string catSearch = $"attribute_type_id = {attributeTypeId}";
+            var orderBy = "Attribute_Category_ID_table.Sort_Order";
+            bool distinct = true;
+
+            _ministryPlatformRestService.Setup(
+                mocked =>
+                    mocked.Search<MpAttribute, MpAttributeCategory>(
+                        It.Is<string>(m => m.Equals(catSearch)),
+                        It.Is<string>(m => m.Equals(catCols)),
+                             It.Is<string>(m=>m.Equals(orderBy)),
+                             It.Is<bool>(m=>m.Equals(distinct)))).Returns(response);
+
+            var attributeCategories = _fixture.GetAttributeCategory(attributeTypeId);
+
+            _ministryPlatformRestService.VerifyAll();
+
+            Assert.IsNotNull(attributeCategories);
+            Assert.AreEqual(4, attributeCategories.Count());
+        }
+
+        [Test]
         public void Given_An_Null_AttributeTypeId_When_Queried_It_Should_Not_Filter_Records_And_Return_Records()
         {
             var response = GetMpAttributeResponse();
@@ -185,6 +211,41 @@ namespace MinistryPlatform.Translation.Test.Services
                     AttributeTypeName = "AttributeType #2",
                     PreventMultipleSelection = true,
                     SortOrder = 0
+                }
+            };
+        }
+
+        private static List<MpAttributeCategory> GetMpAttributeCategoryResponse()
+        {
+            return new List<MpAttributeCategory>
+            {
+                new MpAttributeCategory()
+                {
+                    Attribute_Category_ID = 1,
+                    Attribute_Category = "Category 1",
+                    Description = "Attribute Category Description #1",
+                    Sort_Order = 0
+                },
+                new MpAttributeCategory()
+                {
+                    Attribute_Category_ID = 1,
+                    Attribute_Category = "Category 1",
+                    Description = "Attribute Category Description #1",
+                    Sort_Order = 1
+                },
+                new MpAttributeCategory()
+                {
+                    Attribute_Category_ID = 1,
+                    Attribute_Category = "Category 1",
+                    Description = "Attribute Category Description #1",
+                    Sort_Order = 2
+                },
+                new MpAttributeCategory()
+                {
+                    Attribute_Category_ID = 1,
+                    Attribute_Category = "Category 1",
+                    Description = "Attribute Category Description #1",
+                    Sort_Order = 3
                 }
             };
         }

@@ -46,7 +46,7 @@ namespace crds_angular.Controllers.API
             }));
         }
 
-        [VersionedRoute(template: "subscriptions/optIn", minimumVersion: "1.0.0")]
+        [VersionedRoute(template: "subscriptions/opt-in", minimumVersion: "1.0.0")]
         [Route("subscriptions/optin")]
         [HttpPost]
         public IHttpActionResult PostOptIn(OptInRequest request)

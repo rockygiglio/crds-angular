@@ -19,7 +19,7 @@ namespace crds_angular.Controllers.API
         }
 
         [ResponseType(typeof (List<Dictionary<string, object>>))]
-        [VersionedRoute(template: "staffContacts", minimumVersion: "1.0.0")]
+        [VersionedRoute(template: "staff-contacts", minimumVersion: "1.0.0")]
         [Route("staffcontacts")]
         public IHttpActionResult Get()
         {

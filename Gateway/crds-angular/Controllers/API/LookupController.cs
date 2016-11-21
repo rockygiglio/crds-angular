@@ -118,11 +118,11 @@ namespace crds_angular.Controllers.API
         /// Get lookup values for group ended reasons
         /// </summary>
         [ResponseType(typeof(List<Dictionary<string, object>>))]
-        [VersionedRoute(template: "lookup/groupReasonEnded", minimumVersion: "1.0.0")]
+        [VersionedRoute(template: "lookup/group-reason-ended", minimumVersion: "1.0.0")]
         [Route("lookup/groupreasonended")]
         [HttpGet]
         public IHttpActionResult LookupGroupReasonEnded()
-        {        
+        {
             return LookupValues("groupreasonended","");
         }
 
@@ -166,7 +166,7 @@ namespace crds_angular.Controllers.API
         /// </summary>
         [RequiresAuthorization]
         [ResponseType(typeof(List<Dictionary<string, object>>))]
-        [VersionedRoute(template: "lookup/childcareTimes/{congregationId}", minimumVersion: "1.0.0")]
+        [VersionedRoute(template: "lookup/childcare-times/{congregationId}", minimumVersion: "1.0.0")]
         [Route("lookup/childcaretimes/{congregationId}")]
         [HttpGet]
         public IHttpActionResult FindChildcareTimes(string congregationId)

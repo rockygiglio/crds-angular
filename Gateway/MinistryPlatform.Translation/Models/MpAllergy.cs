@@ -10,7 +10,7 @@ namespace MinistryPlatform.Translation.Models
         public int AllergyID { get; set; }
 
         [JsonProperty(PropertyName = "Allergy_Type_ID")]
-        public MpAllergyType AllergyType { get; set; }
+        public int AllergyType { get; set; }
 
         [JsonProperty(PropertyName = "Description")]
         public string AllergyDescription { get; set; }
