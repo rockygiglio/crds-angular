@@ -27,7 +27,7 @@ namespace crds_angular.Services
         private readonly int _paidinfullStatus;
         private readonly int _somepaidStatus;
         private readonly int _defaultPaymentStatus;
-        private readonly int _bankErrorRefundDonorId;
+        private readonly int _bankErrorRefundContactId;
 
         public PaymentService(IInvoiceRepository invoiceRepository, IPaymentRepository paymentRepository, IConfigurationWrapper configurationWrapper, IContactRepository contactRepository, IPaymentTypeRepository paymentTypeRepository)
         {
@@ -39,7 +39,7 @@ namespace crds_angular.Services
             _paidinfullStatus = configurationWrapper.GetConfigIntValue("PaidInFull");
             _somepaidStatus = configurationWrapper.GetConfigIntValue("SomePaid");
             _defaultPaymentStatus = configurationWrapper.GetConfigIntValue("DonationStatusPending");
-            _bankErrorRefundDonorId = configurationWrapper.GetConfigIntValue("DonorIdForBankErrorRefund");
+            _bankErrorRefundContactId = configurationWrapper.GetConfigIntValue("ContactIdForBankErrorRefund");
         }
 
         public MpPaymentDetailReturn PostPayment(MpDonationAndDistributionRecord paymentRecord)
@@ -215,8 +215,9 @@ namespace crds_angular.Services
                 InvoiceNumber = payment.InvoiceNumber,
                 PaymentDate = DateTime.Now,
                 PaymentStatus = (int) DonationStatus.Declined,
-                ContactId = _bankErrorRefundDonorId,
+                ContactId = _bankErrorRefundContactId, // get the proper contact id
                 ProcessorFeeAmount = refund.Data[0].BalanceTransaction.Fee
+                // add not 
             };
 
             var invoicedetail = _invoiceRepository.GetInvoiceDetailForInvoice(Convert.ToInt32(payment.InvoiceNumber));

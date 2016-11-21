@@ -82,11 +82,6 @@ namespace crds_angular.Services
             return (batch);
         }
 
-        public DonationBatchDTO GetDonationBatchByProcessorTransferId(string processorTransferId)
-        {
-            return (Mapper.Map<MpDonationBatch, DonationBatchDTO>(_mpDonationRepository.GetDonationBatchByProcessorTransferId(processorTransferId)));
-        }
-
         public DepositDTO GetDepositByProcessorTransferId(string processorTransferId)
         {
             return (Mapper.Map<MpDeposit, DepositDTO>(_mpDonationRepository.GetDepositByProcessorTransferId(processorTransferId)));

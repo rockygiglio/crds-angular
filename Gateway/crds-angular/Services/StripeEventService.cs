@@ -104,6 +104,7 @@ namespace crds_angular.Services
 
             // Don't process this transfer if we can't find any charges for the transfer
             var charges = _paymentProcessorService.GetChargesForTransfer(transfer.Id);
+
             if (charges == null || charges.Count <= 0)
             {
                 var msg = "No charges found for transfer: " + transfer.Id;
@@ -116,7 +117,7 @@ namespace crds_angular.Services
 
             var depositName = DateTime.Now.ToString(BatchNameDateFormat);
 
-            var paymentcharges = charges.Where(m => m.Metadata != null && m.Metadata["crossroads_transaction_type"].ToString() == "payment").ToList();
+            var paymentcharges = charges.Where(m => m.Metadata != null &&  m.Metadata.ContainsKey("crossroads_transaction_type") && m.Metadata["crossroads_transaction_type"].ToString() == "payment").ToList();
             var donationcharges = charges.Except(paymentcharges).ToList();
 
             if (paymentcharges.Count + donationcharges.Count != charges.Count)
@@ -139,7 +140,7 @@ namespace crds_angular.Services
             {
                 // Account number must be non-null, and non-empty; using a single space to fulfill this requirement
                 AccountNumber = " ",
-                BatchCount = 1,
+                BatchCount = paymentBatch.ItemCount>0 && donationBatch.ItemCount>0 ? 2 : 1,
                 DepositDateTime = DateTime.Now,
                 DepositName = depositName,
                 // This is the amount from Stripe - will show out of balance if does not match batch total above
@@ -163,14 +164,32 @@ namespace crds_angular.Services
             // Create the batch, with the above deposit id
             paymentBatch.DepositId = response.Deposit.Id;
             donationBatch.DepositId = response.Deposit.Id;
+
+            //donation Batch
             try
             {
-                response.Batch.Add(_paymentService.CreatePaymentBatch(paymentBatch));
-                response.Batch.Add(_donationService.CreateDonationBatch(donationBatch));
+                if (donationBatch.ItemCount > 0)
+                {
+                    response.Batch.Add(_donationService.CreateDonationBatch(donationBatch));
+                }
             }
             catch (Exception e)
             {
                 _logger.Error("Failed to create donation batch", e);
+                throw;
+            }
+
+            // payment Batch
+            try
+            {
+                if (paymentBatch.ItemCount > 0)
+                {
+                    response.Batch.Add(_paymentService.CreatePaymentBatch(paymentBatch));
+                }
+            }
+            catch (Exception e)
+            {
+                _logger.Error("Failed to create payment batch", e);
                 throw;
             }
 

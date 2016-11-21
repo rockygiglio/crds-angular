@@ -323,7 +323,7 @@ namespace crds_angular.Services
 
         public List<StripeCharge> GetChargesForTransfer(string transferId)
         {
-            var url = string.Format("transfers/{0}/transactions", transferId);
+            var url = $"transfers/{transferId}/transactions";
             var request = new RestRequest(url, Method.GET);
             request.AddParameter("count", _maxQueryResultsPerPage);
 
@@ -341,6 +341,13 @@ namespace crds_angular.Services
                 request.AddParameter("count", _maxQueryResultsPerPage);
                 request.AddParameter("starting_after", charges.Last().Id);
             } while (nextPage.HasMore);
+
+            //get the metadata for all of the charges
+            foreach (var charge in charges)
+            {
+                var singlecharge = GetCharge(charge.Id);
+                charge.Metadata = singlecharge.Metadata;
+            }
 
             return (charges);
         }

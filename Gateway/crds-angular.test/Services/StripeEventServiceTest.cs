@@ -427,7 +427,6 @@ namespace crds_angular.test.Services
 
             _donationService.Setup(mocked => mocked.CreateDonationForInvoice(invoice)).Returns(88);
 
-            //_donationService.Setup(mocked => mocked.GetDonationBatchByProcessorTransferId("tx9876")).Returns((DonationBatchDTO)null);
             _paymentProcessorService.Setup(mocked => mocked.GetChargesForTransfer("tx9876")).Returns(charges);
             _donationService.Setup(mocked => mocked.GetDepositByProcessorTransferId("tx9876")).Returns((DepositDTO)null);
 
@@ -478,7 +477,7 @@ namespace crds_angular.test.Services
                 o.DepositName.Matches(@"MP\d{12}") &&
                 !o.Exported &&
                 o.AccountNumber.Equals(" ") &&
-                o.BatchCount == 1 &&
+                o.BatchCount == 2 &&
                 o.DepositDateTime != null &&
                 o.DepositTotalAmount == ((transfer.Amount + 30) / Constants.StripeDecimalConversionValue) &&
                 o.ProcessorFeeTotal == (30 / Constants.StripeDecimalConversionValue) &&
