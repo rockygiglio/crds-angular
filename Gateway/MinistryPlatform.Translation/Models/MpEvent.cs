@@ -30,10 +30,10 @@ namespace MinistryPlatform.Translation.Models
         public int? OnlineProductId { get; set; }
 
         [JsonProperty(PropertyName = "Registration_Start")]
-        public DateTime RegistrationStartDate { get; set; }
+        public DateTime? RegistrationStartDate { get; set; }
 
         [JsonProperty(PropertyName = "Registration_End")]
-        public DateTime RegistrationEndDate { get; set; }
+        public DateTime? RegistrationEndDate { get; set; }
 
         [JsonProperty(PropertyName = "External_Registration_URL")]
         public string RegistrationURL { get; set; }
