@@ -30,7 +30,7 @@ class CamperInfoController {
       });
     } else {
       this.submitting = false;
-      this.rootScope.$emit('notify', this.rootScope.MESSAGES.invalidFormFields);
+      this.rootScope.$emit('notify', this.rootScope.MESSAGES.generalError);
     }
   }
 }
