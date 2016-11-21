@@ -15,7 +15,7 @@ namespace crds_angular.Controllers.API
 {
     public class EventController : MPAuth
     {
-        private IMinistryPlatformService _ministryPlatformService;        
+        private IMinistryPlatformService _ministryPlatformService;
         private readonly IApiUserRepository _apiUserService;
         private readonly IEventService _eventService;
 
@@ -80,13 +80,13 @@ namespace crds_angular.Controllers.API
                                            catch (Exception e)
                                            {
                                                var apiError = new ApiErrorDto("Get Event by Id failed", e);
-                                               throw new HttpResponseException(apiError.HttpResponseMessage);   
+                                               throw new HttpResponseException(apiError.HttpResponseMessage);
                                            }
-                
+
             });
         }
 
-        [VersionedRoute(template: "event/copyEventSetup", minimumVersion: "1.0.0")]
+        [VersionedRoute(template: "event/copy-event-setup", minimumVersion: "1.0.0")]
         [Route("event/copyeventsetup")]
         public IHttpActionResult CopyEventSetup(EventCopyRequest request)
         {
@@ -104,9 +104,9 @@ namespace crds_angular.Controllers.API
             });
         }
 
-        [VersionedRoute(template: "event/eventsBySite/{site}", minimumVersion: "1.0.0")]
+        [VersionedRoute(template: "event/events-by-site/{site}", minimumVersion: "1.0.0")]
         [Route("event/eventsbysite/{site}")]
-        public IHttpActionResult GetEventsBySite(string site, 
+        public IHttpActionResult GetEventsBySite(string site,
             [FromUri(Name = "startDate")] DateTime startDate, [FromUri(Name = "endDate")] DateTime endDate)
         {
             return Authorized(token => {
@@ -123,7 +123,7 @@ namespace crds_angular.Controllers.API
             });
         }
 
-        [VersionedRoute(template: "event/eventTemplatesBySite/{site}", minimumVersion: "1.0.0")]
+        [VersionedRoute(template: "event/event-templates-by-site/{site}", minimumVersion: "1.0.0")]
         [Route("event/eventtemplatesbysite/{site}")]
         public IHttpActionResult GetEventTemplatesBySite(string site)
         {
