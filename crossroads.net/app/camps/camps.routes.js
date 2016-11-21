@@ -48,6 +48,16 @@ export default function CampRoutes($stateProvider) {
         getCamperFamily
       }
     })
+    .state('campsignup.confirmation', {
+      url: '/confirmation/:contactId?paymentId&invoiceId',
+      controller: (CampsService, $state) => {
+        CampsService.sendConfirmation($state.toParams.invoiceId,
+                                      $state.toParams.paymentId,
+                                      $state.toParams.campId,
+                                      $state.toParams.contactId);
+        $state.go('campsignup.thankyou', $state.toParams, { location: 'replace' });
+      }
+    })
     .state('campsignup.thankyou', {
       url: '/thankyou/:contactId?paymentId&invoiceId',
       template: '<camp-thank-you></camp-thank-you>',

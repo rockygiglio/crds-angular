@@ -42,7 +42,7 @@ export default class CampPaymentController {
     const campId = this.state.toParams.campId;
     const contactId = this.state.toParams.contactId;
     const invoiceId = this.campsService.productInfo.invoiceId;
-    const url = encodeURIComponent(`${this.returnUrl}/${campId}/thankyou/${contactId}`);
+    const url = encodeURIComponent(`${this.returnUrl}/${campId}/confirmation/${contactId}`);
 
     return this.sce.trustAsResourceUrl(`${this.baseUrl}?type=payment&min_payment=${this.depositPrice}&invoice_id=${invoiceId}&total_cost=${this.totalPrice}&title=${this.campsService.campTitle}&url=${url}`);
   }

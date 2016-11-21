@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using System.Text;
+using Crossroads.Utilities.FunctionalHelpers;
 using Crossroads.Utilities.Interfaces;
 using MinistryPlatform.Translation.Extensions;
 using MinistryPlatform.Translation.Models;
@@ -44,7 +45,7 @@ namespace MinistryPlatform.Translation.Repositories
             _ministryPlatformService = ministryPlatformService;
             _ministryPlatformRestRepository = ministryPlatformRestRepository;
             _groupService = groupService;
-            _eventParticipantRepository = eventParticipantRepository;
+            _eventParticipantRepository = eventParticipantRepository;           
         }
 
         public int CreateEvent(MpEventReservationDto eventReservationReservation)
@@ -538,6 +539,6 @@ namespace MinistryPlatform.Translation.Repositories
             _ministryPlatformRestRepository.UsingAuthenticationToken(apiToken).Post(waiverResponses.Where(w => w.EventParticipantWaiverId == 0).ToList());
 
             _ministryPlatformRestRepository.UsingAuthenticationToken(apiToken).Put(waiverResponses.Where(w => w.EventParticipantWaiverId != 0).ToList());
-        }
+        }        
     }
 }
