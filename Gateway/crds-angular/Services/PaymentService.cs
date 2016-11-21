@@ -166,7 +166,7 @@ namespace crds_angular.Services
 
         public int UpdatePaymentStatus(int paymentId, int statusId, DateTime? statusDate, string statusNote = null)
         {
-            return (_paymentRepository.UpdatePaymentStatus(paymentId, statusId, statusDate ?? DateTime.Now, statusNote));
+            return (_paymentRepository.UpdatePaymentStatus(paymentId, statusId));
         }
 
         public DonationBatchDTO GetPaymentBatch(int batchId)

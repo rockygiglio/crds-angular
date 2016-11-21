@@ -60,7 +60,7 @@ namespace MinistryPlatform.Translation.Repositories
             return _ministryPlatformRest.UsingAuthenticationToken(apiToken).Get<MpPayment>(paymentId);
         }
 
-        public int UpdatePaymentStatus(int paymentId, int statusId, DateTime dateTime, string statusNote)
+        public int UpdatePaymentStatus(int paymentId, int statusId)
         {
             var apiToken = _apiUserRepository.GetToken();
 
