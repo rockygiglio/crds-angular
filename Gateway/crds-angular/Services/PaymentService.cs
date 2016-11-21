@@ -215,9 +215,9 @@ namespace crds_angular.Services
                 InvoiceNumber = payment.InvoiceNumber,
                 PaymentDate = DateTime.Now,
                 PaymentStatus = (int) DonationStatus.Declined,
-                ContactId = _bankErrorRefundContactId, // get the proper contact id
-                ProcessorFeeAmount = refund.Data[0].BalanceTransaction.Fee
-                // add not 
+                ContactId = _bankErrorRefundContactId, 
+                ProcessorFeeAmount = refund.Data[0].BalanceTransaction.Fee,
+                Notes = "Payment created for Stripe Refund"
             };
 
             var invoicedetail = _invoiceRepository.GetInvoiceDetailForInvoice(Convert.ToInt32(payment.InvoiceNumber));
