@@ -22,20 +22,15 @@ export default class GroupSearchResultsController {
     this.searchedWithLocation = false;
 
     this.tableParams = new NgTableParams({}, {});
-
-    $rootScope.$on('$stateChangeStart', (event, toState, toParams, fromState, fromParams) => {
-      debugger;
-      $log.debug(toState);
-    });
   }
 
   $onInit() {
-    this.filters = {
+    this.initialFilters = {
       age: this.state.params.age,
       category: this.state.params.category,
       type: this.state.params.type,
       kids: this.state.params.kids,
-      groupLocation: this.state.params.groupLocation,
+      grouplocation: this.state.params.grouplocation,
       day: this.state.params.day,
       time: this.state.params.time,
       frequency: this.state.params.frequency,
@@ -46,7 +41,6 @@ export default class GroupSearchResultsController {
       location: this.state.params.location
     };
     this.doSearch(this.state.params.query, this.state.params.location);
-    debugger;
   }
 
   doSearch(query, location) {
@@ -59,9 +53,13 @@ export default class GroupSearchResultsController {
     if (query && query.length > 0) {
       queryString.query = query;
     }
-    if(this.filters.age && this.filters.age.length > 0) {
-      queryString.age = age;
-    }
+
+    _.forOwn(this.initialFilters, (value, key) => { 
+      if (value && value.length > 0){
+        queryString[key] = value;
+      }
+    });
+
     this.locationService.search(queryString);
 
     this.showLocationInput = false;

@@ -3,7 +3,7 @@ import {SearchFilter, SearchFilterValue} from './searchFilter';
 
 export default class AgeRangeFilter extends SearchFilter {
   constructor(filterName, groupService, selectedFilters) {
-    super(filterName, [], this._matchingFunction);
+    super(filterName, [], this._matchingFunction, 'age');
 
     if (selectedFilters == null || selectedFilters == undefined)
       selectedFilters = "";

@@ -82,7 +82,7 @@
   <div class="relative">
     <preloader full-screen='false' ng-show='!groupSearchResults.ready'> </preloader>
 
-    <group-search-filter ng-show='groupSearchResults.ready' table-params="groupSearchResults.tableParams" search-results="groupSearchResults.results" selected-filters="groupSearchResults.filters"></group-search-filter>
+    <group-search-filter ng-show='groupSearchResults.ready' table-params="groupSearchResults.tableParams" search-results="groupSearchResults.results" selected-filters="groupSearchResults.initialFilters"></group-search-filter>
 
     <!--
       DESKTOP ONLY results

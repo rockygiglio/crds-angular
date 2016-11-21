@@ -15,7 +15,7 @@ export default class LocationFilter extends SearchFilter {
       new SearchFilterValue('Online', false, onlineSelected)
     ];
 
-    super(filterName, filterValues, this._matchingFunction);
+    super(filterName, filterValues, this._matchingFunction, 'grouplocation');
   }
 
   _matchingFunction(result) {

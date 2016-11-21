@@ -15,7 +15,7 @@ export default class KidsWelcomeFilter extends SearchFilter {
       new SearchFilterValue('No', false, noSelected)
     ];
 
-    super(filterName, filterValues, this._matchingFunction);
+    super(filterName, filterValues, this._matchingFunction, 'kids');
   }
 
   _matchingFunction(result) {

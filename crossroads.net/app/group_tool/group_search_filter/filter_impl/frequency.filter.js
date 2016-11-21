@@ -3,7 +3,7 @@ import {SearchFilter, SearchFilterValue} from './searchFilter';
 
 export default class FrequencyFilter extends SearchFilter {
     constructor(filterName, createGroupService, selectedFilters) {
-      super(filterName, [], this._matchingFunction);
+      super(filterName, [], this._matchingFunction, 'frequency');
 
       if (selectedFilters == null || selectedFilters == undefined)
       selectedFilters = "";

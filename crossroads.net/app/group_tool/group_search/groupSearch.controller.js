@@ -13,7 +13,11 @@ export default class GroupSearchController {
 
   submit(form) {
     let valid = true;
-    if(this.search.location && this.search.location.length > 0) {
+    let params = {};
+    if (this.state.params){
+      params = this.state.params;
+    }
+    if (this.search.location && this.search.location.length > 0) {
       this.processing = true;
       valid = false;
       this.addressValidationService.validateAddressString(this.search.location).then((data) => {
@@ -26,12 +30,16 @@ export default class GroupSearchController {
       }).finally(() => {
         this.processing = false;
         form.location.$setValidity('pattern', valid);
-        if(valid) {
-          this.state.go('grouptool.search-results', {query: this.search.query, location: this.search.location, age: '30s'});
+        if (valid) {
+          params['query'] = this.search.query;
+          params['location'] = this.search.location;
+          this.state.go('grouptool.search-results', params);
         }
       });
     } else {
-      this.state.go('grouptool.search-results', {query: this.search.query, location: this.search.location, age: '30s'});
+      params['query'] = this.search.query;
+      params['location'] = this.search.location;
+      this.state.go('grouptool.search-results', params);
     }
   }
 }

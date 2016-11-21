@@ -21,9 +21,6 @@ class TimeRange {
 
 export default class MeetingTimeFilter extends SearchFilter {
   constructor(filterName, selectedFilters) {
-
-
-
     if (selectedFilters == null || selectedFilters == undefined)
       selectedFilters="";
     let selectedArray = selectedFilters.split(',');
@@ -37,7 +34,7 @@ export default class MeetingTimeFilter extends SearchFilter {
       new SearchFilterValue('Evenings (after 5pm)', new TimeRange('17:00:01', '23:59:59'), eveningSelected)
     ];
 
-    super(filterName, filterValues, this._matchingFunction);
+    super(filterName, filterValues, this._matchingFunction, 'time');
   }
 
   _matchingFunction(result) {

@@ -188,8 +188,55 @@ export default function GroupToolRouter($httpProvider, $stateProvider) {
     })
     .state('grouptool.search', {
       parent: 'noSideBar',
-      url: '/groups/search',
+      url: '/groups/search?age&category&type&kids&grouplocation&day&time&frequency&site',
       template: '<group-search></group-search>',
+      params: {
+        age: {
+          value: null,
+          squash: true,
+          dynamic: true
+        },
+        category: {
+          value: null,
+          squash: true,
+          dynamic: true
+        },
+        type: {
+          value: null,
+          squash: true,
+          dynamic: true
+        },
+        kids: {
+          value: null,
+          squash: true,
+          dynamic: true
+        },
+        grouplocation: {
+          value: null,
+          squash: true,
+          dynamic: true
+        },
+        day: {
+          value: null,
+          squash: true,
+          dynamic: true
+        },
+        time: {
+          value: null,
+          squash: true,
+          dynamic: true
+        },
+        frequency: {
+          value: null,
+          squash: true,
+          dynamic: true
+        },
+        site: {
+          value: null,
+          squash: true,
+          dynamic: true
+        }
+      },
       data: {
         meta: {
           title: 'Find a Group',
@@ -199,7 +246,7 @@ export default function GroupToolRouter($httpProvider, $stateProvider) {
     })
     .state('grouptool.search-results', {
       parent: 'noSideBar',
-      url: '/groups/search/results?query&location&age',
+      url: '/groups/search/results?query&location&age&category&type&kids&grouplocation&day&time&frequency&site',
       params: {
         query: {
           value: null,
@@ -211,39 +258,48 @@ export default function GroupToolRouter($httpProvider, $stateProvider) {
         },
         age: {
           value: null,
-          squash: true
+          squash: true,
+          dynamic: true
         },
         category: {
           value: null,
-          squash: true
+          squash: true,
+          dynamic: true
         },
         type: {
           value: null,
-          squash: true
+          squash: true,
+          dynamic: true
         },
         kids: {
           value: null,
-          squash: true
+          squash: true,
+          dynamic: true
         },
-        groupLocation: {
+        grouplocation: {
           value: null,
-          squash: true
+          squash: true,
+          dynamic: true
         },
         day: {
           value: null,
-          squash: true
+          squash: true,
+          dynamic: true
         },
         time: {
           value: null,
-          squash: true
+          squash: true,
+          dynamic: true
         },
         frequency: {
           value: null,
-          squash: true
+          squash: true,
+          dynamic: true
         },
         site: {
           value: null,
-          squash: true
+          squash: true,
+          dynamic: true
         }
       },
       template: '<group-search-results></group-search-results>',
