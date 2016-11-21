@@ -1,5 +1,5 @@
 <div ng-if="myGroups.error" class="alert alert-danger" role="alert">
-   Error: {{myGroups.errorMsg}}
+  Error: {{myGroups.errorMsg}}
 </div>
 
 <span dynamic-content="$root.MESSAGES.myGroupsHeader.content | html"></span>
@@ -10,6 +10,8 @@
 
   <div class="row">
     <div class="col-md-9 col-sm-12">
+      <div dynamic-content="$root.MESSAGES.groupDashboardGeneralMessage.content | html" class="text-muted">
+      </div>
       <div ng-if="!myGroups.groups.length" dynamic-content="$root.MESSAGES.groupToolMyGroupsHelpText.content | html" class="push-bottom">
       </div>
 
