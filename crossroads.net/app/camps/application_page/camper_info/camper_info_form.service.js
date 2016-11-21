@@ -1,3 +1,6 @@
+import crdsConstants from 'crds-constants';
+import find from 'lodash/collection/find';
+
 class CamperInfoFormFactory {
   /* ngInject */
   constructor(CampsService, LookupService) {
@@ -30,11 +33,30 @@ class CamperInfoForm {
       schoolAttending: this.campsService.camperInfo.schoolAttending || undefined,
       schoolAttendingNext: null,
       crossroadsSite: this.campsService.camperInfo.crossroadsSite || undefined,
+      attributeTypes: this.campsService.camperInfo.attributeTypes || {},
+      singleAttributes: this.campsService.camperInfo.singleAttributes || {},
       roomate: null
     };
+
+    // In order to default the T Shirt select, set the shirt size in the form model from the
+    // Shirt Size single attribute that is set, if any
+    const shirtSizeAttribute = this.formModel.singleAttributes[crdsConstants.ATTRIBUTE_TYPE_IDS.TSHIRT_SIZES].attribute;
+    if (shirtSizeAttribute) {
+      this.formModel.shirtSize = shirtSizeAttribute.attributeId;
+    }
   }
 
   save(campId) {
+    // Find the actual single attribute shirt size from the forml selected attribute id
+    const selected = find(this.campsService.shirtSizes, (each) => { return each.attributeId === this.formModel.shirtSize });
+
+    // Set the shirt size single attribute on the DTO to be submitted to the API
+    this.formModel.singleAttributes[crdsConstants.ATTRIBUTE_TYPE_IDS.TSHIRT_SIZES] = {
+      attribute: selected,
+      notes: null,
+      description: null
+    };
+
     return this.campsService.camperResource.save({ campId }, this.formModel).$promise;
   }
 

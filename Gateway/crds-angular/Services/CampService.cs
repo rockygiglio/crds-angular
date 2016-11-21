@@ -30,6 +30,7 @@ namespace crds_angular.Services
         private readonly IInvoiceRepository _invoiceRepository;
         private readonly ICommunicationRepository _communicationRepository;
         private readonly IPaymentRepository _paymentRepository;
+        private readonly IObjectAttributeService _objectAttributeService;
 
         private readonly ILog _logger = LogManager.GetLogger(typeof (CampService));
 
@@ -48,7 +49,9 @@ namespace crds_angular.Services
             IProductRepository productRepository,
             IInvoiceRepository invoiceRepository,
             ICommunicationRepository communicationRepository,
-            IPaymentRepository paymentRepository)
+            IPaymentRepository paymentRepository,
+            IObjectAttributeService objectAttributeService
+)
         {
             _campService = campService;
             _formSubmissionRepository = formSubmissionRepository;
@@ -65,6 +68,7 @@ namespace crds_angular.Services
             _invoiceRepository = invoiceRepository;
             _paymentRepository = paymentRepository;
             _communicationRepository = communicationRepository;
+            _objectAttributeService = objectAttributeService;
         }
 
         public CampDTO GetCampEventDetails(int eventId)
@@ -270,6 +274,10 @@ namespace crds_angular.Services
                 _contactRepository.UpdateContact(Convert.ToInt32(campReservation.ContactId), updateToDictionary);
                 participant = _participantRepository.GetParticipant(Convert.ToInt32(campReservation.ContactId));
             }
+
+            // Save shirt size if set
+            var configuration = MpObjectAttributeConfigurationFactory.Contact();
+            _objectAttributeService.SaveObjectAttributes(contactId, campReservation.AttributeTypes, campReservation.SingleAttributes, configuration);
 
             int eventParticipantId = _eventRepository.GetEventParticipantRecordId(eventId, participant.ParticipantId);
             if (eventParticipantId == 0)
@@ -633,7 +641,7 @@ namespace crds_angular.Services
             // get camper grade if they have one
             var groupResult = _groupRepository.GetGradeGroupForContact(contactId, apiToken);
 
-            return new CampReservationDTO
+            CampReservationDTO camper = new CampReservationDTO
             {
                 ContactId = camperContact.Contact_ID,
                 FirstName = camperContact.First_Name,
@@ -647,6 +655,14 @@ namespace crds_angular.Services
                 Gender = Convert.ToInt32(camperContact.Gender_ID),
                 CurrentGrade = groupResult.Status ? groupResult.Value.GroupName : null
             };
+
+            var configuration = MpObjectAttributeConfigurationFactory.Contact();
+            var attributesTypes = _objectAttributeService.GetObjectAttributes(apiToken, contactId, configuration);
+
+            camper.AttributeTypes = attributesTypes.MultiSelect;
+            camper.SingleAttributes = attributesTypes.SingleSelect;
+
+            return camper;
         }
 
         private int GetAllergyType(String type)
