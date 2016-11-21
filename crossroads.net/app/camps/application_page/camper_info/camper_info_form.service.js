@@ -9,7 +9,9 @@ class CamperInfoFormFactory {
   }
 
   createForm() {
+    /* eslint-disable no-use-before-define */
     return new CamperInfoForm(this.campsService, this.lookupService);
+    /* eslint-enable */
   }
 }
 
@@ -19,7 +21,6 @@ class CamperInfoForm {
   constructor(CampsService, LookupService) {
     this.campsService = CampsService;
     this.lookupService = LookupService;
-
     this.formModel = {
       contactId: this.campsService.camperInfo.contactId || undefined,
       firstName: this.campsService.camperInfo.firstName || undefined,
@@ -43,6 +44,14 @@ class CamperInfoForm {
     const shirtSizeAttribute = this.formModel.singleAttributes[crdsConstants.ATTRIBUTE_TYPE_IDS.TSHIRT_SIZES].attribute;
     if (shirtSizeAttribute) {
       this.formModel.shirtSize = shirtSizeAttribute.attributeId;
+    }
+  }
+
+  confirmSite(resp) {
+    const match = _.find(resp, site => this.formModel.crossroadsSite === site.dp_RecordID);
+
+    if (!match) {
+      this.formModel.crossroadsSite = undefined;
     }
   }
 
@@ -117,10 +126,12 @@ class CamperInfoForm {
               options: []
             },
             controller: /* @ngInject */ ($scope, LookupService) => {
+              /* eslint-disable no-param-reassign */
               $scope.to.loading = LookupService.Genders.query().$promise.then((response) => {
                 $scope.to.options = response;
                 return response;
               }).catch(err => console.error(err));
+              /* eslint-enable */
             }
           }
         ]
@@ -203,10 +214,13 @@ class CamperInfoForm {
               options: []
             },
             controller: /* @ngInject */ ($scope, LookupService) => {
+              /* eslint-disable no-param-reassign */
               $scope.to.loading = LookupService.Sites.query().$promise.then((response) => {
                 $scope.to.options = response;
+                this.confirmSite(response);
                 return response;
               });
+              /* eslint-enable */
             }
           },
           {

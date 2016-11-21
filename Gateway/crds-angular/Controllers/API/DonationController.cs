@@ -32,6 +32,7 @@ namespace crds_angular.Controllers.API
         private readonly MPInterfaces.IDonationRepository _mpDonationService;
         private readonly MPInterfaces.IPledgeRepository _mpPledgeService;
         private readonly IPaymentService _paymentService;
+        private readonly MPInterfaces.IInvoiceRepository _invoiceRepository;
 
         public DonationController(MPInterfaces.IDonorRepository mpDonorService,
                                   IPaymentProcessorService stripeService,
@@ -41,7 +42,8 @@ namespace crds_angular.Controllers.API
                                   MPInterfaces.IDonationRepository mpDonationService,
                                   MPInterfaces.IPledgeRepository mpPledgeService,
                                   IUserImpersonationService impersonationService,
-                                  IPaymentService paymentService)
+                                  IPaymentService paymentService,
+                                  MPInterfaces.IInvoiceRepository invoiceRepository)
         {
             _mpDonorService = mpDonorService;
             _stripeService = stripeService;
@@ -49,6 +51,7 @@ namespace crds_angular.Controllers.API
             _gatewayDonorService = gatewayDonorService;
             _gatewayDonationService = gatewayDonationService;
             _impersonationService = impersonationService;
+            _invoiceRepository = invoiceRepository;
             _mpDonationService = mpDonationService;
             _mpPledgeService = mpPledgeService;
             _paymentService = paymentService;
@@ -220,6 +223,16 @@ namespace crds_angular.Controllers.API
 
             try
             {
+                if (dto.TransactionType != null && dto.TransactionType.Equals("PAYMENT"))
+                {
+                    //check if invoice exists before create Stripe Charge
+                    if (!_invoiceRepository.InvoiceExists(dto.InvoiceId))
+                    {                        
+                      var apiError = new ApiErrorDto("Invoice Not Found", new InvoiceNotFoundException(dto.InvoiceId));
+                      throw new HttpResponseException(apiError.HttpResponseMessage);
+                    }
+                }
+
                 var contactId = _authenticationService.GetContactId(token);
                 var donor = _mpDonorService.GetContactDonor(contactId);
                 var charge = _stripeService.ChargeCustomer(donor.ProcessorId, dto.Amount, donor.DonorId, isPayment);
