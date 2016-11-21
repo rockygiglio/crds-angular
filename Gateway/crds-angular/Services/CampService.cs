@@ -632,6 +632,13 @@ namespace crds_angular.Services
             // get camper grade if they have one
             var groupResult = _groupRepository.GetGradeGroupForContact(contactId, apiToken);
 
+            var campFormId = _configurationWrapper.GetConfigIntValue("SummerCampFormID");
+            var nextYearSchoolFormFieldId = _configurationWrapper.GetConfigIntValue("SummerCampForm.SchoolAttendingNextYear");
+            var nextYearSchool = _formSubmissionRepository.GetFormResponseAnswer(campFormId, camperContact.Contact_ID, nextYearSchoolFormFieldId);
+
+            var preferredRoommateFieldId = _configurationWrapper.GetConfigIntValue("SummerCampForm.PreferredRoommate");
+            var preferredRoommate = _formSubmissionRepository.GetFormResponseAnswer(campFormId, camperContact.Contact_ID, preferredRoommateFieldId);
+
             return new CampReservationDTO
             {
                 ContactId = camperContact.Contact_ID,
@@ -642,8 +649,10 @@ namespace crds_angular.Services
                 CrossroadsSite = Convert.ToInt32(camperContact.Congregation_ID),
                 BirthDate = Convert.ToString(camperContact.Date_Of_Birth),
                 SchoolAttending = camperContact.Current_School,
+                SchoolAttendingNext = nextYearSchool,
                 Gender = Convert.ToInt32(camperContact.Gender_ID),
-                CurrentGrade = groupResult.Status ? groupResult.Value.GroupName : null
+                CurrentGrade = groupResult.Status ? groupResult.Value.GroupName : null,
+                RoomMate = preferredRoommate
             };
         }
 
