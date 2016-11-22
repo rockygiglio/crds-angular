@@ -219,7 +219,7 @@ namespace crds_angular.Services
                 PaymentDate = DateTime.Now,
                 PaymentStatus = (int) DonationStatus.Declined,
                 ContactId = _bankErrorRefundContactId, 
-                ProcessorFeeAmount = refund.Data[0].BalanceTransaction.Fee,
+                ProcessorFeeAmount = refund.Data[0].BalanceTransaction.Fee / Constants.StripeDecimalConversionValue,
                 Notes = "Payment created for Stripe Refund",
                 PaymentTypeId = _paymentTypeReimbursement,
                 TransactionCode = refund.Data[0].Id,
