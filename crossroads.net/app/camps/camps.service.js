@@ -29,6 +29,7 @@ class CampsService {
     // eslint-disable-next-line prefer-template
     this.paymentResource = $resource(__API_ENDPOINT__ + 'api/v1.0.0/invoice/:invoiceId/payment/:paymentId');
     this.confirmationResource = $resource(`${__API_ENDPOINT__}api/camps/:campId/confirmation/:contactId`);
+    this.hasPaymentsResource = $resource(`${__API_ENDPOINT__}api/v1.0.0/invoice/:invoiceId/has-payment`);
 
     this.campInfo = null;
     this.campTitle = null;
@@ -156,6 +157,10 @@ class CampsService {
         this.shirtSizes = filter(shirtSizes.attributes, (attribute) => { return attribute.category === 'Adult'; });
         return shirtSizes;
       });
+  }
+
+  invoiceHasPayment(invoiceId) {
+    return this.hasPaymentsResource.get({ invoiceId }).$promise;
   }
 }
 

@@ -10,9 +10,9 @@ function CampHelpers() {
       gender: undefined,
       currentGrade: undefined,
       schoolAttending: undefined,
-      schoolAttendingNext: null,
+      schoolAttendingNext: undefined,
       crossroadsSite: undefined,
-      roomate: null,
+      roommate: undefined,
       mobilePhone: undefined,
       attributeTypes: {},
       singleAttributes: {}

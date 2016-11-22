@@ -116,5 +116,13 @@ namespace crds_angular.Services
             throw new Exception("No Payment found for " + me.Email_Address + " with id " + paymentId);
            
         }
+
+        public bool DepositExists(int invoiceId, string token)
+        {
+            var me = _contactRepository.GetMyProfile(token);
+            var payments = _paymentRepository.GetPaymentsForInvoice(invoiceId);
+            payments = payments.Where(p => p.ContactId == me.Contact_ID).ToList();
+            return payments.Any();
+        }
     }
 }

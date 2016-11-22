@@ -42,7 +42,7 @@ namespace crds_angular.Controllers.API
         }
 
         [ResponseType(typeof(List<MyCampDTO>))]
-        [VersionedRoute(template: "myCamp", minimumVersion: "1.0.0")]
+        [VersionedRoute(template: "my-camp", minimumVersion: "1.0.0")]
         [Route("my-camp")]
         [HttpGet]
         public IHttpActionResult GetMyCampsInfo()
@@ -306,7 +306,7 @@ namespace crds_angular.Controllers.API
         }
 
         [VersionedRoute(template: "camps/{eventId}/confirmation/{contactId}", minimumVersion: "1.0.0")]
-        [Route("camps/{eventId}/confirmation/{contactId}")]       
+        [Route("camps/{eventId}/confirmation/{contactId}")]
         [AcceptVerbs("POST")]
         public IHttpActionResult CamperConfirmation(int eventId, int contactId, int invoiceId, int paymentId)
         {
@@ -325,7 +325,7 @@ namespace crds_angular.Controllers.API
             });
         }
 
-        [VersionedRoute(template: "camps/{eventId}/emergencyContact/{contactId}", minimumVersion: "1.0.0")]
+        [VersionedRoute(template: "camps/{eventId}/emergencycontact/{contactId}", minimumVersion: "1.0.0")]
         [ResponseType(typeof(List<CampEmergencyContactDTO>))]
         [AcceptVerbs("GET")]
         public IHttpActionResult GetCamperEmergencyContact(int eventId, int contactId)

@@ -37,11 +37,11 @@ class CamperInfoForm {
       gender: this.campsService.camperInfo.gender || undefined,
       currentGrade: this.campsService.camperInfo.currentGrade || undefined,
       schoolAttending: this.campsService.camperInfo.schoolAttending || undefined,
-      schoolAttendingNext: null,
+      schoolAttendingNext: this.campsService.camperInfo.schoolAttendingNext || undefined,
       crossroadsSite: this.campsService.camperInfo.crossroadsSite || undefined,
       attributeTypes: this.campsService.camperInfo.attributeTypes || {},
       singleAttributes: this.campsService.camperInfo.singleAttributes || {},
-      roomate: null
+      roommate: this.campsService.camperInfo.roommate || undefined
     };
 
     // In order to default the T Shirt select, set the shirt size in the form model from the
@@ -230,7 +230,7 @@ class CamperInfoForm {
           },
           {
             className: 'form-group col-xs-6',
-            key: 'roomate',
+            key: 'roommate',
             type: 'crdsInput',
             templateOptions: {
               label: 'Preferred Roommate First and Last Name',

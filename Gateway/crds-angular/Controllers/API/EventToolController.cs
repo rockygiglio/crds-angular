@@ -23,7 +23,7 @@ namespace crds_angular.Controllers.API
         }
 
         [ResponseType(typeof (EventToolDto))]
-        [VersionedRoute(template: "eventTool/{eventId}", minimumVersion: "1.0.0")]
+        [VersionedRoute(template: "event-tool/{eventId}", minimumVersion: "1.0.0")]
         [Route("eventTool/{eventId}")]
         [HttpGet]
         public IHttpActionResult GetEventReservation(int eventId)
@@ -46,7 +46,7 @@ namespace crds_angular.Controllers.API
         }
 
         [ResponseType(typeof(EventToolDto))]
-        [VersionedRoute(template: "eventTool/{eventId}/rooms", minimumVersion: "1.0.0")]
+        [VersionedRoute(template: "event-tool/{eventId}/rooms", minimumVersion: "1.0.0")]
         [Route("eventTool/{eventId:int}/rooms")]
         [HttpGet]
         public IHttpActionResult GetEventRoomDetails(int eventId)
@@ -68,7 +68,7 @@ namespace crds_angular.Controllers.API
             });
         }
 
-        [VersionedRoute(template: "eventTool", minimumVersion: "1.0.0")]
+        [VersionedRoute(template: "event-tool", minimumVersion: "1.0.0")]
         [Route("eventTool")]
         [HttpPost]
         public IHttpActionResult Post([FromBody] EventToolDto eventReservation)
@@ -96,7 +96,7 @@ namespace crds_angular.Controllers.API
             throw new HttpResponseException(dataError.HttpResponseMessage);
         }
 
-        [VersionedRoute(template: "eventTool/{eventId}", minimumVersion: "1.0.0")]
+        [VersionedRoute(template: "event-tool/{eventId}", minimumVersion: "1.0.0")]
         [Route("eventTool/{eventId}")]
         [HttpPut]
         public IHttpActionResult Put([FromBody] EventToolDto eventReservation, int eventId)
@@ -129,7 +129,7 @@ namespace crds_angular.Controllers.API
         }
 
 
-        [VersionedRoute(template: "eventTool/{eventId}/rooms", minimumVersion: "1.0.0")]
+        [VersionedRoute(template: "event-tool/{eventId}/rooms", minimumVersion: "1.0.0")]
         [Route("eventTool/{eventId:int}/rooms")]
         [HttpPut]
         public IHttpActionResult UpdateEventRoom([FromBody] EventRoomDto room, int eventId)
@@ -144,7 +144,7 @@ namespace crds_angular.Controllers.API
                         {
                             throw new ApplicationException("Invalid Event Id");
                         }
-                        
+
                         return Ok(_eventService.UpdateEventRoom(room, eventId, token));
                     }
                     catch (Exception e)

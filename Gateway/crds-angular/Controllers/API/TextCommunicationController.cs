@@ -41,7 +41,7 @@ namespace crds_angular.Controllers.API
         /// <summary>
         /// Schedule a text message to a specific contactId/number at a specific time
         /// </summary>
-        [VersionedRoute(template: "sendTextMessageReminder", minimumVersion: "1.0.0")]
+        [VersionedRoute(template: "send-text-message-reminder", minimumVersion: "1.0.0")]
         [Route("sendTextMessageReminder")]
         public IHttpActionResult PostReminder(TextCommunicationDto textCommunicationData)
         {
