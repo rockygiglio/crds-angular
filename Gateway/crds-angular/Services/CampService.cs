@@ -117,13 +117,13 @@ namespace crds_angular.Services
             return campProductInfo;
         }
 
-        
+
 
         public List<CampFamilyMember> GetEligibleFamilyMembers(int eventId, string token)
         {
             var apiToken = _apiUserRepository.GetToken();
-            var myContact = _contactRepository.GetMyProfile(token);            
-            var family = _contactRepository.GetHouseholdFamilyMembers(myContact.Household_ID);            
+            var myContact = _contactRepository.GetMyProfile(token);
+            var family = _contactRepository.GetHouseholdFamilyMembers(myContact.Household_ID);
             var me = family.Where(member => member.ContactId == myContact.Contact_ID).ToList();
 
             if ((me.First().HouseholdPosition == null || !me.First().HouseholdPosition.ToLower().StartsWith("head")) )
@@ -136,7 +136,7 @@ namespace crds_angular.Services
                     LastName = member.LastName,
                     PreferredName = member.Nickname ?? member.FirstName
                 }).ToList();
-            } 
+            }
 
             var otherFamily = _contactRepository.GetOtherHouseholdMembers(myContact.Contact_ID);
             family.AddRange(otherFamily);
@@ -512,7 +512,7 @@ namespace crds_angular.Services
                     {"Medicalinformation_ID",medicalInformation.MedicalInformationId}
                 };
                 _contactRepository.UpdateContact(contactId, updateToDictionary);
-                
+
                 var updateToAllergyList = new List<MpMedicalAllergy>();
                 var createToAllergyList = new List<MpMedicalAllergy>();
                 foreach (var allergy in medicalInfo.Allergies)
@@ -521,7 +521,7 @@ namespace crds_angular.Services
                     {
                         updateToAllergyList.Add(new MpMedicalAllergy
                         {
-                            Allergy = new MpAllergy { 
+                            Allergy = new MpAllergy {
                                 AllergyID = allergy.AllergyId,
                                 AllergyType = allergy.AllergyTypeId,
                                 AllergyDescription = allergy.AllergyDescription
@@ -545,10 +545,10 @@ namespace crds_angular.Services
                     }
                 }
                 _medicalInformationRepository.UpdateOrCreateMedAllergy(updateToAllergyList, createToAllergyList);
-            }           
+            }
         }
 
-        
+
 
         public MedicalInfoDTO GetCampMedicalInfo(int eventId, int contactId, string token)
         {
@@ -567,11 +567,11 @@ namespace crds_angular.Services
             }
 
             var allergies = _medicalInformationRepository.GetMedicalAllergyInfo(contactId);
-            
+
             var camperMedInfo = new MedicalInfoDTO
             {
                 ContactId = contactId,
-                MedicalInformationId = camperMed.MedicalInformationId,              
+                MedicalInformationId = camperMed.MedicalInformationId,
                 InsuranceCompany = camperMed.InsuranceCompany=="N/A"? null :camperMed.InsuranceCompany,
                 PolicyHolder = camperMed.PolicyHolder == "N/A"? null : camperMed.PolicyHolder,
                 PhysicianName = camperMed.PhysicianName == "N/A" ? null : camperMed.PhysicianName,
@@ -591,8 +591,8 @@ namespace crds_angular.Services
                         AllergyId = medInfo.AllergyId
                     };
                     camperMedInfo.Allergies.Add(allergy);
-                }                    
-            }             
+                }
+            }
             if (camperMedInfo.Allergies.Count > 0) { camperMedInfo.ShowAllergies = true; }
             return camperMedInfo;
         }
@@ -689,7 +689,7 @@ namespace crds_angular.Services
 
         private static List<ProductOptionDTO> ConvertProductOptionPricetoDto(List<MpProductOptionPrice> options, decimal basePrice, DateTime registrationEnd)
         {
-            
+
             return options.Select(option => new ProductOptionDTO
                                   {
                                       ProductOptionPriceId = option.ProductOptionPriceId,
