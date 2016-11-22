@@ -10,8 +10,11 @@
 
   <div class="row">
     <div class="col-md-9 col-sm-12">
-      <div dynamic-content="$root.MESSAGES.groupDashboardGeneralMessage.content | html" class="general-group-message">
+      <div ng-if="myGroups.approvedLeader" dynamic-content="$root.MESSAGES.groupDashboardLeaderGeneralMessage.content | html" class="general-group-message">
       </div>
+      <div ng-if="!myGroups.approvedLeader" dynamic-content="$root.MESSAGES.groupDashboardMemberGeneralMessage.content | html" class="general-group-message">
+      </div>
+      
       <div ng-if="!myGroups.groups.length" dynamic-content="$root.MESSAGES.groupToolMyGroupsHelpText.content | html" class="push-bottom">
       </div>
 
