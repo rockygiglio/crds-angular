@@ -6,7 +6,9 @@ class CamperInfoFormFactory {
   }
 
   createForm() {
+    /* eslint-disable no-use-before-define */
     return new CamperInfoForm(this.campsService, this.lookupService);
+    /* eslint-enable */
   }
 }
 
@@ -16,7 +18,6 @@ class CamperInfoForm {
   constructor(CampsService, LookupService) {
     this.campsService = CampsService;
     this.lookupService = LookupService;
-
     this.formModel = {
       contactId: this.campsService.camperInfo.contactId || undefined,
       firstName: this.campsService.camperInfo.firstName || undefined,
@@ -27,10 +28,18 @@ class CamperInfoForm {
       gender: this.campsService.camperInfo.gender || undefined,
       currentGrade: this.campsService.camperInfo.currentGrade || undefined,
       schoolAttending: this.campsService.camperInfo.schoolAttending || undefined,
-      schoolAttendingNext: null,
+      schoolAttendingNext: this.campsService.camperInfo.schoolAttendingNext || undefined,
       crossroadsSite: this.campsService.camperInfo.crossroadsSite || undefined,
-      roomate: null
+      roommate: this.campsService.camperInfo.roommate || undefined
     };
+  }
+
+  confirmSite(resp) {
+    const match = _.find(resp, site => this.formModel.crossroadsSite === site.dp_RecordID);
+
+    if (!match) {
+      this.formModel.crossroadsSite = undefined;
+    }
   }
 
   save(campId) {
@@ -94,10 +103,12 @@ class CamperInfoForm {
               options: []
             },
             controller: /* @ngInject */ ($scope, LookupService) => {
+              /* eslint-disable no-param-reassign */
               $scope.to.loading = LookupService.Genders.query().$promise.then((response) => {
                 $scope.to.options = response;
                 return response;
               }).catch(err => console.error(err));
+              /* eslint-enable */
             }
           }
         ]
@@ -180,15 +191,18 @@ class CamperInfoForm {
               options: []
             },
             controller: /* @ngInject */ ($scope, LookupService) => {
+              /* eslint-disable no-param-reassign */
               $scope.to.loading = LookupService.Sites.query().$promise.then((response) => {
                 $scope.to.options = response;
+                this.confirmSite(response);
                 return response;
               });
+              /* eslint-enable */
             }
           },
           {
             className: 'form-group col-xs-6',
-            key: 'roomate',
+            key: 'roommate',
             type: 'crdsInput',
             templateOptions: {
               label: 'Preferred Roommate First and Last Name',

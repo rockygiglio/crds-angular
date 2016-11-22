@@ -92,6 +92,7 @@ describe('Camper Info Component', () => {
   });
 
   it('should get new data when selecting another family member', () => {
-
-  })
+    // FIXME: do we need to implement this test case?
+    //   Jonathan Horner
+  });
 });

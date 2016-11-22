@@ -27,6 +27,7 @@ namespace crds_angular.test.controllers
     {
         private DonationController fixture;
         private Mock<MinistryPlatform.Translation.Repositories.Interfaces.IDonorRepository> donorServiceMock;
+        private Mock<MinistryPlatform.Translation.Repositories.Interfaces.IInvoiceRepository> invoiceServiceMock;
         private Mock<IPaymentProcessorService> stripeServiceMock;
         private Mock<IAuthenticationRepository> authenticationServiceMock;
         private Mock<IDonorService> gatewayDonorServiceMock;
@@ -42,6 +43,7 @@ namespace crds_angular.test.controllers
         public void SetUp()
         {
             donorServiceMock = new Mock<MinistryPlatform.Translation.Repositories.Interfaces.IDonorRepository>();
+            invoiceServiceMock = new Mock<MinistryPlatform.Translation.Repositories.Interfaces.IInvoiceRepository>();
             gatewayDonorServiceMock = new Mock<IDonorService>();
             stripeServiceMock = new Mock<IPaymentProcessorService>();
             authenticationServiceMock = new Mock<IAuthenticationRepository>();
@@ -53,7 +55,7 @@ namespace crds_angular.test.controllers
 
             fixture = new DonationController(donorServiceMock.Object, stripeServiceMock.Object
                 , authenticationServiceMock.Object, gatewayDonorServiceMock.Object, gatewayDonationServiceMock.Object
-                , mpDonationService.Object, mpPledgeService.Object, impersonationService.Object, paymentServiceMock.Object);
+                , mpDonationService.Object, mpPledgeService.Object, impersonationService.Object, paymentServiceMock.Object, invoiceServiceMock.Object);
 
             authType = "auth_type";
             authToken = "auth_token";
