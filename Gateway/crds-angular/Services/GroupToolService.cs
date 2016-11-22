@@ -667,6 +667,10 @@ namespace crds_angular.Services
                 {
                     groups[i].Proximity = drivingProximities[i];
                 }
+
+                // order again in case proximties changed because of driving directions
+                groups = groups.OrderBy(r => r.Proximity ?? decimal.MaxValue).ToList();
+
             }
             catch (InvalidAddressException e)
             {
@@ -711,9 +715,11 @@ namespace crds_angular.Services
             var leaders = group.Participants.
                 Where(groupParticipant => groupParticipant.GroupRoleId == _groupRoleLeaderId).ToList();
 
+            var Requestor = "<i>" + contact.Nickname + " " + contact.Last_Name + "</i> ";
+
             foreach (var leader in leaders)
             {
-                var mergeData = new Dictionary<string, object> {{"Name", leader.NickName}};
+                var mergeData = new Dictionary<string, object> {{"Name", leader.NickName}, {"Requestor", Requestor} };
                 SendSingleGroupParticipantEmail(leader, _groupRequestToJoinEmailTemplate, mergeData);
             }
         }

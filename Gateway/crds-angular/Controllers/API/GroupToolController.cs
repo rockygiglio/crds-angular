@@ -41,7 +41,7 @@ namespace crds_angular.Controllers.API
         /// <returns>A list of Invitation DTOs</returns>
         [RequiresAuthorization]
         [ResponseType(typeof(List<Invitation>))]
-        [VersionedRoute(template: "groupTool/invitations/{sourceId}/{invitationTypeId}", minimumVersion: "1.0.0")]
+        [VersionedRoute(template: "group-tool/invitations/{sourceId}/{invitationTypeId}", minimumVersion: "1.0.0")]
         [Route("grouptool/invitations/{sourceId}/{invitationTypeId}")]
         [HttpGet]
         public IHttpActionResult GetInvitations(int sourceId, int invitationTypeId)
@@ -63,7 +63,7 @@ namespace crds_angular.Controllers.API
 
         [AcceptVerbs("GET")]
         [ResponseType(typeof(List<AttributeCategoryDTO>))]
-        [VersionedRoute(template: "grouptool/categories", minimumVersion: "1.0.0")]
+        [VersionedRoute(template: "group-tool/categories", minimumVersion: "1.0.0")]
         [Route("grouptool/categories")]
         public IHttpActionResult GetCategories()
         {
@@ -87,7 +87,7 @@ namespace crds_angular.Controllers.API
         /// <returns>A list of Invitation DTOs</returns>
         [RequiresAuthorization]
         [ResponseType(typeof(List<Inquiry>))]
-        [VersionedRoute(template: "groupTool/inquiries/{groupId}", minimumVersion: "1.0.0")]
+        [VersionedRoute(template: "group-tool/inquiries/{groupId}", minimumVersion: "1.0.0")]
         [Route("grouptool/inquiries/{groupId}")]
         [HttpGet]
         public IHttpActionResult GetInquiries(int groupId)
@@ -115,7 +115,7 @@ namespace crds_angular.Controllers.API
         /// <param name="groupReasonEndedId">The id of the reason the group was ended</param>
         /// <returns>Http Result</returns>
         [RequiresAuthorization]
-        [VersionedRoute(template: "groupTool/{groupId}/endSmallGroup", minimumVersion: "1.0.0")]
+        [VersionedRoute(template: "group-tool/{groupId}/end-small-group", minimumVersion: "1.0.0")]
         [Route("grouptool/{groupId:int}/endsmallgroup")]
         [HttpPost]
         public IHttpActionResult EndSmallGroup([FromUri] int groupId, [FromUri] int groupReasonEndedId)
@@ -145,7 +145,7 @@ namespace crds_angular.Controllers.API
         /// <param name="removalMessage">An optional message to send to the participant when they are removed.  This is sent along with a boilerplate message.</param>
         /// <returns>An empty response with 200 status code if everything worked, 403 if the caller does not have permission to remove a participant, or another non-success status code on any other failure</returns>
         [RequiresAuthorization]
-        [VersionedRoute(template: "grouptool/groupType/{groupTypeId}/group/{groupId}/participant/{groupParticipantId}", minimumVersion: "1.0.0")]
+        [VersionedRoute(template: "group-tool/group-type/{groupTypeId}/group/{groupId}/participant/{groupParticipantId}", minimumVersion: "1.0.0")]
         [Route("grouptool/grouptype/{groupTypeId:int}/group/{groupId:int}/participant/{groupParticipantId:int}")]
         [HttpDelete]
         public IHttpActionResult RemoveParticipantFromMyGroup([FromUri] int groupTypeId,
@@ -180,7 +180,7 @@ namespace crds_angular.Controllers.API
         /// <param name="keywords">The optional keywords to search for</param>
         /// <param name="location">The optional location/address to search for - if specified, the search results will include approximate distances from this address</param>
         /// <returns>A list of groups matching the terms</returns>
-        [VersionedRoute(template: "groupTool/groupType/{groupTypeId}/group/search/", minimumVersion: "1.0.0")]
+        [VersionedRoute(template: "groupTool/groupType/{groupTypeId}/group/search", minimumVersion: "1.0.0")]
         [Route("grouptool/grouptype/{groupTypeId:int}/group/search/")]
         [ResponseType(typeof(List<GroupDTO>))]
         [HttpGet]
@@ -210,7 +210,7 @@ namespace crds_angular.Controllers.API
         /// <param name="approve">A boolean showing if the inquiry is being approved or denied. It defaults to approved</param>
         /// <param name="inquiry">An Inquiry JSON Object.</param>
         [RequiresAuthorization]
-        [VersionedRoute(template: "groupTool/groupType/{groupTypeId}/group/{groupId}/inquiry/approve/{approve}", minimumVersion: "1.0.0")]
+        [VersionedRoute(template: "group-tool/group-type/{groupTypeId}/group/{groupId}/inquiry/approve/{approve}", minimumVersion: "1.0.0")]
         [Route("grouptool/grouptype/{groupTypeId:int}/group/{groupId:int}/inquiry/approve/{approve:bool}")]
         [HttpPost]
         public IHttpActionResult ApproveDenyInquiryFromMyGroup([FromUri]int groupTypeId, [FromUri]int groupId, [FromUri]bool approve, [FromBody]Inquiry inquiry)
@@ -234,7 +234,7 @@ namespace crds_angular.Controllers.API
                 }
             });
         }
-        
+
         /// <summary>
         /// Allows an invitee to accept or deny a group invitation.
         /// </summary>
@@ -248,7 +248,7 @@ namespace crds_angular.Controllers.API
         //        the GroopTool and all subsequent controller APIs not to show on the page. This is a
         //        stupid fix for a bug that is out of our control.
         [RequiresAuthorization]
-        [VersionedRoute(template: "groupTool/group/{groupId}/invitation/{invitationKey}", minimumVersion: "1.0.0")]
+        [VersionedRoute(template: "group-tool/group/{groupId}/invitation/{invitationKey}", minimumVersion: "1.0.0")]
         [Route("grouptool/group/{groupId:int}/invitation/{invitationKey}")]
         [HttpPost]
         public IHttpActionResult ApproveDenyGroupInvitation([FromUri]int groupId, [FromUri]string invitationKey, [FromBody]bool accept)
@@ -284,7 +284,7 @@ namespace crds_angular.Controllers.API
         /// <param name="groupId">An integer identifying the group that the inquiry is associated to.</param>
         /// <param name="message">A Group Message DTO that holds the subject and body of the email</param>
         [RequiresAuthorization]
-        [VersionedRoute(template: "groupTool/group/{groupId}/leaderMessage", minimumVersion: "1.0.0")]
+        [VersionedRoute(template: "group-tool/group/{groupId}/leader-message", minimumVersion: "1.0.0")]
         [Route("grouptool/{groupId}/leadermessage")]
         public IHttpActionResult PostGroupLeaderMessage([FromUri()] int groupId, GroupMessageDTO message)
         {
@@ -313,7 +313,7 @@ namespace crds_angular.Controllers.API
         /// Will return a 404 if the user is not a Leader of the group
         /// </summary>
         [RequiresAuthorization]
-        [VersionedRoute(template: "groupTool/{groupId}/{groupTypeId}/groupMessage", minimumVersion: "1.0.0")]
+        [VersionedRoute(template: "group-tool/{groupId}/{groupTypeId}/group-message", minimumVersion: "1.0.0")]
         [Route("grouptool/{groupId}/{groupTypeId}/groupmessage")]
         public IHttpActionResult PostGroupMessage([FromUri()] int groupId, [FromUri()] int groupTypeId, GroupMessageDTO message)
         {
@@ -344,7 +344,7 @@ namespace crds_angular.Controllers.API
         /// <returns>MyGroup</returns>
         [RequiresAuthorization]
         [ResponseType(typeof(MyGroup))]
-        [VersionedRoute(template: "groupTool/{groupId}/{groupTypeId}/isLeader", minimumVersion: "1.0.0")]
+        [VersionedRoute(template: "group-tool/{groupId}/{groupTypeId}/is-leader", minimumVersion: "1.0.0")]
         [Route("grouptool/{groupId}/{groupTypeId}/isleader")]
         [HttpGet]
         public IHttpActionResult GetIfIsGroupLeader(int groupId, int groupTypeId)
@@ -380,7 +380,7 @@ namespace crds_angular.Controllers.API
         /// <param name="groupId">An integer identifying the group</param>
         /// <param name="inquiry">The inquiry object submitted by a client.</param>
         [RequiresAuthorization]
-        [VersionedRoute(template: "groupTool/group/{groupId}/submitInquiry", minimumVersion: "1.0.0")]
+        [VersionedRoute(template: "group-tool/group/{groupId}/submit-inquiry", minimumVersion: "1.0.0")]
         [Route("grouptool/group/{groupId:int}/submitinquiry")]
         [HttpPost]
         public IHttpActionResult SubmitGroupInquiry([FromUri()] int groupId)

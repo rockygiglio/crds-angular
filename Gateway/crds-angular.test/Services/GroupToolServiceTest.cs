@@ -1280,6 +1280,7 @@ namespace crds_angular.test.Services
             }
         }
 
+        [Test]
         public void TestSearchGroupsWithLocation()
         {
             const int groupTypeId = 1;
@@ -1329,11 +1330,12 @@ namespace crds_angular.test.Services
             var geoResults = new List<decimal?> { null, 9, 3 };
             var distanceMatrixResults = new List<decimal?> { 2, 5 };
             _groupToolRepository.Setup(mocked => mocked.SearchGroups(groupTypeId, It.IsAny<string[]>(), null)).Returns(searchResults);
-            _addressProximityService.Setup(mocked => mocked.GetProximity(location, groups.Select(g => g.Address).ToList())).Returns(geoResults);
-            _addressMatrixService.Setup(mocked => mocked.GetProximity(location, groups.Select(g => g.Address).Skip(1).Take(AddressMatrixSearchDepth).Reverse().ToList()))
-                .Returns(distanceMatrixResults);
+            _addressProximityService.Setup(mocked => mocked.GetProximity(location, It.IsAny<List<AddressDTO>>())).Returns(geoResults);
+            _addressMatrixService.Setup(mocked => mocked.GetProximity(location, It.IsAny<List<AddressDTO>>())).Returns(distanceMatrixResults);
 
             var results = _fixture.SearchGroups(groupTypeId, null, location);
+            _addressProximityService.VerifyAll();
+            _addressMatrixService.VerifyAll();
             _groupToolRepository.VerifyAll();
             Assert.IsNotNull(results);
             Assert.AreEqual(searchResults.Count, results.Count);

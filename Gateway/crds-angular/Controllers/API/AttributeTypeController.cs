@@ -10,7 +10,7 @@ namespace crds_angular.Controllers.API
 {
     public class AttributeTypeController : MPAuth
     {
-        private readonly IAttributeService _attributeService;        
+        private readonly IAttributeService _attributeService;
 
         public AttributeTypeController(IAttributeService attributeService)
         {
@@ -18,7 +18,7 @@ namespace crds_angular.Controllers.API
         }
 
         [ResponseType(typeof (List<AttributeTypeDTO>))]
-        [VersionedRoute(template: "attributeType", minimumVersion: "1.0.0")]
+        [VersionedRoute(template: "attribute-type", minimumVersion: "1.0.0")]
         [Route("attributetype")]
         public IHttpActionResult Get()
         {
@@ -27,10 +27,10 @@ namespace crds_angular.Controllers.API
         }
 
         [ResponseType(typeof(AttributeTypeDTO))]
-        [VersionedRoute(template: "attributeType/{attributeTypeId}", minimumVersion: "1.0.0")]
+        [VersionedRoute(template: "attribute-type/{attributeTypeId}", minimumVersion: "1.0.0")]
         [Route("attributetype/{attributeTypeId}")]
         public IHttpActionResult Get(int attributeTypeId)
-        {   
+        {
             var attributeTypes = _attributeService.GetAttributeTypes(attributeTypeId);
             return this.Ok(attributeTypes[0]);
         }

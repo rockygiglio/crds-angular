@@ -1,20 +1,19 @@
-<h3> Camp Deposit </h3>
+<div class="row">
+  <div class="col-sm-6 col-sm-offset-3">
+    <h3> Camp Deposit </h3>
 
-<div> 
-    <div class="row">
-      <div class="col-md-12">
-        The total amount for camp is <strong> {{ $ctrl.totalPrice | currency }} </strong>
-      A minimum deposit of <strong> {{ $ctrl.depositPrice | currency}}  </strong> is required to complete registration.
-      </div>
-
-      <div class="row"> </div>
-
-      <div class="row">
-        <iframe 
-           src="{{$ctrl.buildUrl()}}" 
-          frameborder="0" 
-          class="hasResize"
-          style="width: 100%; min-height: 300px;margin-top:40px"> </iframe>
-      </div>
+    <div>
+      The total amount for camp is <strong> {{ $ctrl.totalPrice | currency }}</strong>.
+      A minimum deposit of <strong> {{ $ctrl.depositPrice | currency}}  </strong> is required to complete registration for camp.
     </div>
+
+    <div class="push-top row">
+      <iframe
+        src="{{$ctrl.buildUrl()}}"
+        frameborder="0"
+        class="camp-payment-widget"
+        scrolling="no"> </iframe>
+    </div>
+
+  </div>
 </div>

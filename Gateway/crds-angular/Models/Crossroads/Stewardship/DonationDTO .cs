@@ -36,7 +36,7 @@ namespace crds_angular.Models.Crossroads.Stewardship
         public decimal Fee { get; set; }
 
         [JsonProperty("payment_id")]
-        public decimal PaymentId { get; set; }
+        public int PaymentId { get; set; }
 
         [JsonProperty(PropertyName = "source", NullValueHandling = NullValueHandling.Ignore)]
         public DonationSourceDTO Source { get; set; }

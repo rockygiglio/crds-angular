@@ -21,7 +21,7 @@ namespace crds_angular.Controllers.API
 
 
         [ResponseType(typeof(DonorStatementDTO))]
-        [VersionedRoute(template: "donorStatement", minimumVersion: "1.0.0")]
+        [VersionedRoute(template: "donor-statement", minimumVersion: "1.0.0")]
         [Route("donor-statement")]
         [HttpGet]
         public IHttpActionResult Get()
@@ -32,7 +32,7 @@ namespace crds_angular.Controllers.API
                 {
                     var donorStatement = _donorStatementService.GetDonorStatement(token);
                     return Ok(donorStatement);
-                }                                
+                }
                 catch (Exception ex)
                 {
                     var apiError = new ApiErrorDto("Get Donor Statement", ex);
@@ -41,7 +41,7 @@ namespace crds_angular.Controllers.API
             }));
         }
 
-        [VersionedRoute(template: "donorStatement", minimumVersion: "1.0.0")]
+        [VersionedRoute(template: "donor-statement", minimumVersion: "1.0.0")]
         [Route("donor-statement")]
         [HttpPost]
         public IHttpActionResult Post(DonorStatementDTO donorStatement)
@@ -59,7 +59,6 @@ namespace crds_angular.Controllers.API
                     throw new HttpResponseException(apiError.HttpResponseMessage);
                 }
             }));
-        }  
+        }
     }
 }
-

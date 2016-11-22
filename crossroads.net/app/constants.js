@@ -16,7 +16,7 @@
       FORMLY_BUILDER: 'crossroads.formly_builder',
       GIVE: 'crossroads.give',
       GO_VOLUNTEER: 'crossroads.go_volunteer',
-      //GROUP_FINDER: 'crossroads.group_finder',
+      // GROUP_FINDER: 'crossroads.group_finder',
       MEDIA: 'crossroads.media',
       MY_SERVE: 'crossroads.my_serve',
       LIVE_STREAM: 'crossroads.live_stream',
@@ -79,13 +79,13 @@
       I_DO_NOT_ATTEND_CROSSROADS: 2,
       NOT_SITE_SPECIFIC: 5
     },
-    SERVING_RESPONSES :{
+    SERVING_RESPONSES: {
       NOT_AVAILABLE: 2,
       AVAILABLE: 1
     },
     SERVING: {
       MAXSTUDENTVOLUNTEERAGE: 17,
-      STUDENTVOLUNTEERTEXT: " (SV)"
+      STUDENTVOLUNTEERTEXT: ' (SV)'
     },
     CMS: {
       PAGENAMES: {
@@ -123,6 +123,17 @@
         LEADER: 22,
         APPRENTICE: 66
       },
+      SEARCH_FILTERS_QUERY_PARAM_NAMES: {
+        AGE: 'age',
+        GROUP_CATEGORY: 'category',
+        GROUP_TYPE: 'type',
+        KIDS_WELCOME: 'kids',
+        GROUP_LOCATION: 'grouplocation',
+        MEETING_DAY: 'day',
+        MEETING_TIME: 'time',
+        MEETING_FREQUENCY: 'frequency',
+        LEADER_SITE: 'site'
+      }
     },
     GEOLOCATION: {
       MODAL_TIMEOUT: 3000,
