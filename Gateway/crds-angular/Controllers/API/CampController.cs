@@ -276,7 +276,7 @@ namespace crds_angular.Controllers.API
             });
         }
 
-        [VersionedRoute(template:"camps/{eventId}/emergency-contact/{contactId}", minimumVersion: "1.0.0")]
+        [VersionedRoute(template:"camps/{eventId}/emergencycontact/{contactId}", minimumVersion: "1.0.0")]
         [Route("camps/{eventId}/emergencycontact/{contactId}")]
         [AcceptVerbs("POST")]
         public IHttpActionResult SaveCamperEmergencyContact([FromBody] List<CampEmergencyContactDTO> emergencyContacts, int eventId, int contactId)
@@ -325,7 +325,7 @@ namespace crds_angular.Controllers.API
             });
         }
 
-        [VersionedRoute(template: "camps/{eventId}/emergency-contact/{contactId}", minimumVersion: "1.0.0")]
+        [VersionedRoute(template: "camps/{eventId}/emergencycontact/{contactId}", minimumVersion: "1.0.0")]
         [ResponseType(typeof(List<CampEmergencyContactDTO>))]
         [AcceptVerbs("GET")]
         public IHttpActionResult GetCamperEmergencyContact(int eventId, int contactId)
