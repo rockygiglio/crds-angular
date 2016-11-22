@@ -283,7 +283,7 @@ namespace crds_angular.Services
                         response.SuccessfulUpdates.Add(charge.Id);
                         batch.ItemCount++;
                         batch.BatchTotalAmount += (charge.Amount / Constants.StripeDecimalConversionValue);
-                        batch.Payments.Add(new PaymentDTO { PaymentId = payment.PaymentId, Amount = charge.Amount, ProcessorFee = charge.Fee });
+                        batch.Payments.Add(new PaymentDTO { PaymentId = payment.PaymentId, Amount = charge.Amount, ProcessorFee = charge.Fee, BatchId = payment.BatchId, ContactId = payment.ContactId, InvoiceId = payment.InvoiceId, StripeTransactionId = payment.StripeTransactionId});
                         batch.BatchFeeTotal = batch.Payments.Sum(f => f.ProcessorFee);
                     }
                     else
