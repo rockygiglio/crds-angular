@@ -12,7 +12,44 @@ function CampHelpers() {
       schoolAttending: undefined,
       schoolAttendingNext: undefined,
       crossroadsSite: undefined,
-      roommate: undefined
+      roommate: undefined,
+      mobilePhone: undefined,
+      attributeTypes: {},
+      singleAttributes: {}
+    },
+    camperInfoModelWithShirtSize: {
+      contactId: undefined,
+      firstName: undefined,
+      lastName: undefined,
+      middleName: undefined,
+      preferredName: undefined,
+      birthDate: undefined,
+      gender: undefined,
+      currentGrade: undefined,
+      schoolAttending: undefined,
+      schoolAttendingNext: null,
+      crossroadsSite: undefined,
+      roomate: null,
+      mobilePhone: undefined,
+      attributeTypes: {},
+      singleAttributes: {
+        21: {
+          attribute: {
+            attributeId: 6846,
+            attributeTypeId: null,
+            category: 'Adult',
+            categoryDescription: null,
+            categoryId: 1006,
+            description: null,
+            endDate: null,
+            name: 'Adult S',
+            sortOrder: 0,
+            startDate: null
+          },
+          description: null,
+          notes: null
+        }
+      }
     },
     campInfoOpen: {
       endDate: '2017-01-14T00:00:00',
