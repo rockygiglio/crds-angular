@@ -1,10 +1,8 @@
 class CampThankYouController {
   /* @ngInject */
-  constructor(CampsService, $stateParams, $rootScope, $scope) {
+  constructor(CampsService, $stateParams) {
     this.campsService = CampsService;
     this.stateParams = $stateParams;
-    this.rootScope = $rootScope;
-    this.scope = $scope;
 
     this.viewReady = false;
     this.submitting = false;
