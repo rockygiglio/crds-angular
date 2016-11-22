@@ -176,6 +176,7 @@ namespace crds_angular.Services
             var batch = _paymentRepository.GetPaymentBatch(batchId);
             return new DonationBatchDTO
             {
+                Id = batch.BatchId,
                 BatchEntryType = batch.BatchEntryTypeId,
                 BatchName = batch.BatchName,
                 BatchTotalAmount = batch.BatchTotal,
