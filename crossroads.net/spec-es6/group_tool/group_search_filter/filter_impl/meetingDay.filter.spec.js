@@ -17,12 +17,14 @@ describe('MeetingDayFilter', () => {
         {dp_RecordName: 'Monday', dp_RecordID: 456},
       ];
 
+      let daysParam = "Sunday";
+
       let deferred = qApi.defer();
       deferred.resolve(days);
       let groupService = jasmine.createSpyObj('groupServiceMock', ['getDaysOfTheWeek']);
       groupService.getDaysOfTheWeek.and.returnValue(deferred.promise);
 
-      let filter = new MeetingDayFilter('Days', groupService);
+      let filter = new MeetingDayFilter('Days', groupService, '');
       rootScope.$apply();
       expect(groupService.getDaysOfTheWeek).toHaveBeenCalled();
       expect(filter.getValues()).toBeDefined();
@@ -31,6 +33,38 @@ describe('MeetingDayFilter', () => {
         expect(filter.getValues()[i].getName()).toEqual(days[i].dp_RecordName);
         expect(filter.getValues()[i].getValue()).toEqual(days[i].dp_RecordName);
         expect(filter.getValues()[i].isSelected()).toBeFalsy();
+      }
+      expect(filter.getValues()[days.length].getName()).toEqual('Flexible');
+      expect(filter.getValues()[days.length].getValue()).toEqual('Flexible Meeting Time');
+      expect(filter.getValues()[days.length].isSelected()).toBeFalsy();
+    });
+
+    it('should load days of the week and preset value', () => {
+      let days = [
+        {dp_RecordName: 'Sunday', dp_RecordID: 123},
+        {dp_RecordName: 'Monday', dp_RecordID: 456},
+      ];
+
+      let daysParam = "Sunday";
+
+      let deferred = qApi.defer();
+      deferred.resolve(days);
+      let groupService = jasmine.createSpyObj('groupServiceMock', ['getDaysOfTheWeek']);
+      groupService.getDaysOfTheWeek.and.returnValue(deferred.promise);
+
+      let filter = new MeetingDayFilter('Days', groupService, 'Sunday');
+      rootScope.$apply();
+      expect(groupService.getDaysOfTheWeek).toHaveBeenCalled();
+      expect(filter.getValues()).toBeDefined();
+      expect(filter.getValues().length).toEqual(days.length + 1);
+      for(let i = 0; i < days.length; i++) {
+        expect(filter.getValues()[i].getName()).toEqual(days[i].dp_RecordName);
+        expect(filter.getValues()[i].getValue()).toEqual(days[i].dp_RecordName);
+        if (filter.getValues()[i].getName() == 'Sunday')
+          expect(filter.getValues()[i].isSelected()).toBeTruthy();
+        else
+          expect(filter.getValues()[i].isSelected()).toBeFalsy();
+
       }
       expect(filter.getValues()[days.length].getName()).toEqual('Flexible');
       expect(filter.getValues()[days.length].getValue()).toEqual('Flexible Meeting Time');
@@ -47,7 +81,7 @@ describe('MeetingDayFilter', () => {
 
       let groupService = jasmine.createSpyObj('groupServiceMock', ['getDaysOfTheWeek']);
       groupService.getDaysOfTheWeek.and.returnValue(deferred.promise);
-      fixture = new MeetingDayFilter('Days', groupService);
+      fixture = new MeetingDayFilter('Days', groupService, 'Sunday');
       rootScope.$apply();
     });
 
