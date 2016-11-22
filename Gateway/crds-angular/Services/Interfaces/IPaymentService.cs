@@ -9,5 +9,6 @@ namespace crds_angular.Services.Interfaces
     {
         MpPaymentDetailReturn PostPayment(MpDonationAndDistributionRecord payment);
         PaymentDetailDTO GetPaymentDetails(int paymentId, int invoiceId, string token);
+        bool DepositExists(int invoiceId, string token);
     }
 }
