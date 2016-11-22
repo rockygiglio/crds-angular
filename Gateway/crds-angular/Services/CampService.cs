@@ -649,6 +649,9 @@ namespace crds_angular.Services
             var preferredRoommateFieldId = _configurationWrapper.GetConfigIntValue("SummerCampForm.PreferredRoommate");
             var preferredRoommate = _formSubmissionRepository.GetFormResponseAnswer(campFormId, camperContact.Contact_ID, preferredRoommateFieldId);
 
+            var configuration = MpObjectAttributeConfigurationFactory.Contact();
+            var attributesTypes = _objectAttributeService.GetObjectAttributes(apiToken, contactId, configuration);
+
             return new CampReservationDTO
             {
                 ContactId = camperContact.Contact_ID,
@@ -663,16 +666,10 @@ namespace crds_angular.Services
                 SchoolAttendingNext = nextYearSchool,
                 Gender = Convert.ToInt32(camperContact.Gender_ID),
                 CurrentGrade = groupResult.Status ? groupResult.Value.GroupName : null,
-                RoomMate = preferredRoommate
+                RoomMate = preferredRoommate,
+                AttributeTypes = attributesTypes.MultiSelect,
+                SingleAttributes = attributesTypes.SingleSelect
             };
-
-            var configuration = MpObjectAttributeConfigurationFactory.Contact();
-            var attributesTypes = _objectAttributeService.GetObjectAttributes(apiToken, contactId, configuration);
-
-            camper.AttributeTypes = attributesTypes.MultiSelect;
-            camper.SingleAttributes = attributesTypes.SingleSelect;
-
-            return camper;
         }
 
         private int GetAllergyType(String type)
