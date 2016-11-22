@@ -345,7 +345,7 @@ namespace crds_angular.Services
             //get the metadata for all of the charges
             foreach (var charge in charges)
             {
-                if (charge.Type == "payment")
+                if (charge.Type == "payment" || charge.Type == "charge")
                 {
                     var singlecharge = GetCharge(charge.Id);
                     charge.Metadata = singlecharge.Metadata;
