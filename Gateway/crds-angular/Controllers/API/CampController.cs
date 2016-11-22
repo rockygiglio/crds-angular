@@ -1,13 +1,16 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using crds_angular.Security;
 using crds_angular.Services.Interfaces;
 using System.Web.Http;
 using System.Web.Http.Description;
+using System.Web.Http.Results;
 using crds_angular.Exceptions.Models;
 using crds_angular.Models.Crossroads.Camp;
 using Crossroads.ApiVersioning;
+using RestSharp;
 
 namespace crds_angular.Controllers.API
 {

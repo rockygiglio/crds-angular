@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Net;
 using System.Web.Http;
+using System.Web.Http.Results;
 using crds_angular.Exceptions.Models;
 using crds_angular.Security;
 using crds_angular.Services.Interfaces;
@@ -13,6 +15,29 @@ namespace crds_angular.Controllers.API
         public PaymentController(IPaymentService paymentService)
         {
             _paymentService = paymentService;
+        }
+
+        [VersionedRoute(template: "invoice/{invoiceId}/has-payment", minimumVersion: "1.0.0")]
+        [HttpGet]
+        public IHttpActionResult AlreadyPaidDeposit(int invoiceId)
+        {
+            return Authorized(token =>
+            {
+                try
+                {
+                    if (_paymentService.DepositExists(invoiceId, token))
+                    {
+                        return new StatusCodeResult(HttpStatusCode.Found, this);
+                    }
+                    return Ok();
+
+                }
+                catch (Exception e)
+                {
+                    var apiError = new ApiErrorDto("Deposit Status", e);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+            });
         }
 
         [VersionedRoute(template: "invoice/{invoiceId}/payment/{paymentId}", minimumVersion: "1.0.0")]
