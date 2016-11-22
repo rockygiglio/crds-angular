@@ -345,8 +345,16 @@ namespace crds_angular.Services
             //get the metadata for all of the charges
             foreach (var charge in charges)
             {
-                var singlecharge = GetCharge(charge.Id);
-                charge.Metadata = singlecharge.Metadata;
+                if (charge.Type == "payment")
+                {
+                    var singlecharge = GetCharge(charge.Id);
+                    charge.Metadata = singlecharge.Metadata;
+                }
+                else //its a refund
+                {
+                    var singlerefund = GetRefund(charge.Id);
+                    charge.Metadata = singlerefund.Charge.Metadata;
+                }
             }
 
             return (charges);

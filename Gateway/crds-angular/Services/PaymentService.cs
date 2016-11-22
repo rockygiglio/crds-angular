@@ -28,6 +28,7 @@ namespace crds_angular.Services
         private readonly int _somepaidStatus;
         private readonly int _defaultPaymentStatus;
         private readonly int _bankErrorRefundContactId;
+        private readonly int _paymentTypeReimbursement;
 
         public PaymentService(IInvoiceRepository invoiceRepository, IPaymentRepository paymentRepository, IConfigurationWrapper configurationWrapper, IContactRepository contactRepository, IPaymentTypeRepository paymentTypeRepository)
         {
@@ -40,6 +41,7 @@ namespace crds_angular.Services
             _somepaidStatus = configurationWrapper.GetConfigIntValue("SomePaid");
             _defaultPaymentStatus = configurationWrapper.GetConfigIntValue("DonationStatusPending");
             _bankErrorRefundContactId = configurationWrapper.GetConfigIntValue("ContactIdForBankErrorRefund");
+            _paymentTypeReimbursement = configurationWrapper.GetConfigIntValue("PaymentTypeReimbursement");
         }
 
         public MpPaymentDetailReturn PostPayment(MpDonationAndDistributionRecord paymentRecord)
@@ -158,7 +160,7 @@ namespace crds_angular.Services
                     BatchId = payment.BatchId
                 };
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 throw new PaymentNotFoundException(stripePaymentId);
             }
@@ -217,7 +219,10 @@ namespace crds_angular.Services
                 PaymentStatus = (int) DonationStatus.Declined,
                 ContactId = _bankErrorRefundContactId, 
                 ProcessorFeeAmount = refund.Data[0].BalanceTransaction.Fee,
-                Notes = "Payment created for Stripe Refund"
+                Notes = "Payment created for Stripe Refund",
+                PaymentTypeId = _paymentTypeReimbursement,
+                TransactionCode = refund.Data[0].Id,
+                PaymentTotal = -(int.Parse(refund.Data[0].Amount) / Constants.StripeDecimalConversionValue)
             };
 
             var invoicedetail = _invoiceRepository.GetInvoiceDetailForInvoice(Convert.ToInt32(payment.InvoiceNumber));
