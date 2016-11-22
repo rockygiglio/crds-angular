@@ -36,6 +36,7 @@ namespace crds_angular.test.Services
         private readonly Mock<IInvoiceRepository> _invoiceRepository;
         private readonly Mock<ICommunicationRepository> _communicationRepository;
         private readonly Mock<IPaymentRepository> _paymentRepository;
+        private readonly Mock<IObjectAttributeService> _objectAttributeService;
 
         public CampServiceTest()
         {
@@ -56,6 +57,7 @@ namespace crds_angular.test.Services
             _invoiceRepository = new Mock<IInvoiceRepository>();
             _communicationRepository = new Mock<ICommunicationRepository>();
             _paymentRepository = new Mock<IPaymentRepository>();
+            _objectAttributeService = new Mock<IObjectAttributeService>();
 
             _fixture = new CampService(_campService.Object, 
                                        _formSubmissionRepository.Object, 
@@ -71,7 +73,8 @@ namespace crds_angular.test.Services
                                        _productRepository.Object,
                                        _invoiceRepository.Object,
                                        _communicationRepository.Object,
-                                       _paymentRepository.Object);
+                                       _paymentRepository.Object,
+                                       _objectAttributeService.Object);
         }
 
         [Test]

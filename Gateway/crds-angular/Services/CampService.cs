@@ -236,7 +236,8 @@ namespace crds_angular.Services
             MpParticipant participant;
             var contactId = Convert.ToInt32(campReservation.ContactId);
 
-            var minorContact = new MpContact {
+            var minorContact = new MpContact
+            {
                 FirstName = campReservation.FirstName,
                 LastName = campReservation.LastName,
                 MiddleName = campReservation.MiddleName,
