@@ -8,6 +8,15 @@ export default class CampPaymentController {
   }
 
   $onInit() {
+    this.campsService.invoiceHasPayment(this.campsService.productInfo.invoiceId)
+      .then(() => {
+        // Do Nothing
+      }).catch((err) => {
+        if (err.status === 302) {
+          this.state.go('campsignup.family', {}, { inherit: true, location: 'replace' });
+        }
+      });
+
     // eslint-disable-next-line global-require
     this.iFrameResizer = require('iframe-resizer/js/iframeResizer.min.js');
 
