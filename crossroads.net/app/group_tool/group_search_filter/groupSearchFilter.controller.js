@@ -60,6 +60,14 @@ export default class GroupSearchResultsController {
   }
 
   _internalApplyFilters() {
+    // I really don't like having to do this (checking if it is the first run)
+    // but you have to or it will overwrite the parameters that are passed in
+    // because when it get constructed it doesn not contain all the parameters
+    if (!this.firstRun) {
+      let stateParams = this._reconstructUrlParams();
+      this.state.go(this.state.current, stateParams, {location: true, inherit:true, notify:false})
+    }
+
     let settings = {
       dataset: this.searchResults.filter((r) => {
         for (let i = 0; i < this.allFilters.getValues().length; i++) {
@@ -70,13 +78,7 @@ export default class GroupSearchResultsController {
         return true;
       })
     };
-    // I really don't like having to do this (checking if it is the first run)
-    // but you have to or it will overwrite the parameters that are passed in
-    // because when it get constructed it doesn not contain all the parameters
-    if (!this.firstRun) {
-      let stateParams = this._reconstructUrlParams();
-      this.state.go(this.state.current, stateParams, {location: true, inherit:true, notify:false})
-    }
+    
     angular.extend(this.tableParams.settings(), settings);
     this.tableParams.reload();
     this.firstRun = false;
