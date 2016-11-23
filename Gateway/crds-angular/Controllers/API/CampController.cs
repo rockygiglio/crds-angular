@@ -1,16 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using crds_angular.Security;
 using crds_angular.Services.Interfaces;
 using System.Web.Http;
 using System.Web.Http.Description;
-using System.Web.Http.Results;
 using crds_angular.Exceptions.Models;
 using crds_angular.Models.Crossroads.Camp;
 using Crossroads.ApiVersioning;
-using RestSharp;
 
 namespace crds_angular.Controllers.API
 {
@@ -45,7 +42,7 @@ namespace crds_angular.Controllers.API
         }
 
         [ResponseType(typeof(List<MyCampDTO>))]
-        [VersionedRoute(template: "myCamp", minimumVersion: "1.0.0")]
+        [VersionedRoute(template: "my-camp", minimumVersion: "1.0.0")]
         [Route("my-camp")]
         [HttpGet]
         public IHttpActionResult GetMyCampsInfo()
@@ -309,7 +306,7 @@ namespace crds_angular.Controllers.API
         }
 
         [VersionedRoute(template: "camps/{eventId}/confirmation/{contactId}", minimumVersion: "1.0.0")]
-        [Route("camps/{eventId}/confirmation/{contactId}")]       
+        [Route("camps/{eventId}/confirmation/{contactId}")]
         [AcceptVerbs("POST")]
         public IHttpActionResult CamperConfirmation(int eventId, int contactId, int invoiceId, int paymentId)
         {
@@ -328,7 +325,7 @@ namespace crds_angular.Controllers.API
             });
         }
 
-        [VersionedRoute(template: "camps/{eventId}/emergencyContact/{contactId}", minimumVersion: "1.0.0")]
+        [VersionedRoute(template: "camps/{eventId}/emergencycontact/{contactId}", minimumVersion: "1.0.0")]
         [ResponseType(typeof(List<CampEmergencyContactDTO>))]
         [AcceptVerbs("GET")]
         public IHttpActionResult GetCamperEmergencyContact(int eventId, int contactId)

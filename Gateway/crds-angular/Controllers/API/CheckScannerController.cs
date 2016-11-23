@@ -54,7 +54,7 @@ namespace crds_angular.Controllers.API
         }
 
         [RequiresAuthorization]
-        [VersionedRoute(template: "checkScanner/batches", minimumVersion: "1.0.0")]
+        [VersionedRoute(template: "check-scanner/batches", minimumVersion: "1.0.0")]
         [Route("checkscanner/batches")]
         public IHttpActionResult GetBatches([FromUri(Name = "onlyOpen")] bool onlyOpen = true)
         {
@@ -66,7 +66,7 @@ namespace crds_angular.Controllers.API
         }
 
         [RequiresAuthorization]
-        [VersionedRoute(template: "checkScanner/batches/{batchName}/checks", minimumVersion: "1.0.0")]
+        [VersionedRoute(template: "check-scanner/batches/{batchName}/checks", minimumVersion: "1.0.0")]
         [Route("checkscanner/batches/{batchName}/checks")]
         public IHttpActionResult GetChecksForBatch(string batchName)
         {
@@ -78,7 +78,7 @@ namespace crds_angular.Controllers.API
         }
 
         [RequiresAuthorization]
-        [VersionedRoute(template: "checkScanner/batches", minimumVersion: "1.0.0")]
+        [VersionedRoute(template: "check-scanner/batches", minimumVersion: "1.0.0")]
         [Route("checkscanner/batches")]
         [HttpPost]
         public IHttpActionResult CreateDonationsForBatch([FromBody] CheckScannerBatch batch)
@@ -107,7 +107,7 @@ namespace crds_angular.Controllers.API
         /// <returns>The created or updated donor record.</returns>
         [RequiresAuthorization]
         [ResponseType(typeof(EZScanDonorDetails))]
-        [VersionedRoute(template: "checkScanner/getDonor", minimumVersion: "1.0.0")]
+        [VersionedRoute(template: "check-scanner/get-donor", minimumVersion: "1.0.0")]
         [Route("checkscanner/getdonor")]
         [HttpPost]
         public IHttpActionResult GetDonorForCheck([FromBody] CheckAccount checkAccount)
@@ -125,7 +125,7 @@ namespace crds_angular.Controllers.API
                 {
                     return NotFound();
                 }
-                return (Ok(donorDetail)); 
+                return (Ok(donorDetail));
             }));
         }
 
@@ -141,7 +141,7 @@ namespace crds_angular.Controllers.API
                 return(RestHttpActionResult<ApiErrorDto>.WithStatus(HttpStatusCode.Unauthorized, new ApiErrorDto("Could not authenticate to MinistryPlatform", e)));
             }
         }
-        
+
         /// <summary>
         /// Creates a donor record in Ministry Platform based off of the check details passed in.
         /// </summary>
@@ -149,7 +149,7 @@ namespace crds_angular.Controllers.API
         /// <returns>The created donor record.</returns>
         [RequiresAuthorization]
         [ResponseType(typeof(MpContactDonor))]
-        [VersionedRoute(template: "checkScanner/donor", minimumVersion: "1.0.0")]
+        [VersionedRoute(template: "check-scanner/donor", minimumVersion: "1.0.0")]
         [Route("checkscanner/donor")]
         [HttpPost]
         public IHttpActionResult CreateDonor([FromBody] CheckScannerCheck checkDetails)
@@ -178,7 +178,7 @@ namespace crds_angular.Controllers.API
         //QA needed the ability encrypt account and routing numbers for testing
         [RequiresAuthorization]
         [ResponseType(typeof(EncryptValue))]
-        [VersionedRoute(template: "checkScanner/encrypt/{*value}", minimumVersion: "1.0.0")]
+        [VersionedRoute(template: "check-scanner/encrypt/{*value}", minimumVersion: "1.0.0")]
         [Route("checkscanner/encrypt/{*value}")]
         public IHttpActionResult GetEncrypted(string value = "")
         {

@@ -37,3 +37,7 @@ export function getCampWaivers(CampsService, $state) {
   const contactId = $state.toParams.contactId;
   return CampsService.getCampWaivers(campId, contactId);
 }
+
+export function getShirtSizes(CampsService) {
+  return CampsService.getShirtSizes();
+}

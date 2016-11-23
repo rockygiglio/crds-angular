@@ -1,6 +1,18 @@
-GroupToolRouter.$inject = ['$httpProvider', '$stateProvider'];
+import CONSTANTS from 'crds-constants';
 
+GroupToolRouter.$inject = ['$httpProvider', '$stateProvider'];
 export default function GroupToolRouter($httpProvider, $stateProvider) {
+
+// wanted the params for the group search and group search results routes
+// to be constants because they are being referenced elsewhere.
+  let groupSearchParams = {};
+  _.forOwn(CONSTANTS.GROUP.SEARCH_FILTERS_QUERY_PARAM_NAMES, (v, k) => {
+    groupSearchParams[v] = {value: null, squash: true, dynamic: true};
+  })
+  let groupSearchResultsParams = angular.copy(groupSearchParams);
+  groupSearchResultsParams['query'] = {value: null, squash: true};
+  groupSearchResultsParams['location'] = {value: null, squash: true};
+
   $httpProvider.defaults.useXDomain = true;
 
   //TODO: I think this is done globally, not needed here, I think the above needs to be done globally
@@ -188,8 +200,9 @@ export default function GroupToolRouter($httpProvider, $stateProvider) {
     })
     .state('grouptool.search', {
       parent: 'noSideBar',
-      url: '/groups/search',
+      url: '/groups/search?age&category&type&kids&grouplocation&day&time&frequency&site',
       template: '<group-search></group-search>',
+      params: groupSearchParams,
       data: {
         meta: {
           title: 'Find a Group',
@@ -199,17 +212,8 @@ export default function GroupToolRouter($httpProvider, $stateProvider) {
     })
     .state('grouptool.search-results', {
       parent: 'noSideBar',
-      url: '/groups/search/results?query&location',
-      params: {
-        query: {
-          value: null,
-          squash: true
-        },
-        location: {
-          value: null,
-          squash: true
-        }
-      },
+      url: '/groups/search/results?query&location&age&category&type&kids&grouplocation&day&time&frequency&site',
+      params: groupSearchResultsParams,
       template: '<group-search-results></group-search-results>',
       data: {
         meta: {

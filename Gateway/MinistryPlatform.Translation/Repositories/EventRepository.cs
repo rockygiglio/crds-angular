@@ -338,7 +338,7 @@ namespace MinistryPlatform.Translation.Repositories
                 EventRoomId = record.ToNullableInt("Event_Room_ID"),
                 GroupTypeId = record.ToInt("Group_Type_ID")
             }).ToList();
-        }
+        } 
 
         public List<MpEventGroup> GetEventGroupsForGroup(int groupId, string token)
         {

@@ -15,10 +15,16 @@ describe('GroupSearchController', () => {
   beforeEach(inject(function ($injector) {
     addressValidationService = jasmine.createSpyObj('addressValidationService', ['validateAddressString']);
     state = $injector.get('$state');
+    state.params = {
+      age: '30s'
+    };
     rootScope = $injector.get('$rootScope');
     rootScope.MESSAGES = {
       groupToolSearchInvalidAddressGrowler: '123'
     };
+
+
+
     qApi = $injector.get('$q');
     fixture = new GroupSearchController(addressValidationService, state, rootScope);
   }));
@@ -37,7 +43,17 @@ describe('GroupSearchController', () => {
 
       fixture.submit();
 
-      expect(state.go).toHaveBeenCalledWith('grouptool.search-results', {query: fixture.search.query, location: undefined});
+      expect(state.go).toHaveBeenCalledWith('grouptool.search-results', {query: fixture.search.query, location: undefined, age: '30s'});
+      expect(addressValidationService.validateAddressString).not.toHaveBeenCalled();
+    });
+
+    it('should append search parameters to state.go params', () => {
+      fixture.search.query = 'query1';
+      spyOn(state, 'go').and.callFake(() => {});
+
+      fixture.submit();
+
+      expect(state.go).toHaveBeenCalledWith('grouptool.search-results', {query: fixture.search.query, location: undefined, age: '30s'});
       expect(addressValidationService.validateAddressString).not.toHaveBeenCalled();
     });
 
@@ -68,7 +84,7 @@ describe('GroupSearchController', () => {
       rootScope.$digest();
 
       expect(addressValidationService.validateAddressString).toHaveBeenCalledWith('location1');
-      expect(state.go).toHaveBeenCalledWith('grouptool.search-results', {query: 'query1', location: address.toSearchString()});
+      expect(state.go).toHaveBeenCalledWith('grouptool.search-results', {query: 'query1', location: address.toSearchString(), age: '30s'});
       expect(form.location.$setValidity).toHaveBeenCalledWith('pattern', true);
       expect(fixture.processing).toBeFalsy();
     });

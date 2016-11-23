@@ -1,14 +1,14 @@
 
 import FilterGroup from '../../../../app/group_tool/group_search_filter/filter_impl/filterGroup';
-import {SearchFilter, SearchFilterValue} from '../../../../app/group_tool/group_search_filter/filter_impl/searchFilter';
+import { SearchFilter, SearchFilterValue } from '../../../../app/group_tool/group_search_filter/filter_impl/searchFilter';
 
 describe('FilterGroup', () => {
   let fixture, filter1, filter2, matchingFunction1, matchingFunction2;
   beforeEach(() => {
     matchingFunction1 = jasmine.createSpy('matchingFunction1');
     matchingFunction2 = jasmine.createSpy('matchingFunction2');
-    filter1 = new SearchFilter('filter1', [new SearchFilterValue('value1', 1, false)], matchingFunction1);
-    filter2 = new SearchFilter('filter2', [new SearchFilterValue('value2', 2, false)], matchingFunction2);
+    filter1 = new SearchFilter('filter1', [new SearchFilterValue('value1', 1, false)], matchingFunction1, 'f1');
+    filter2 = new SearchFilter('filter2', [new SearchFilterValue('value2', 2, false)], matchingFunction2, 'f2');
 
     fixture = new FilterGroup('fixture', [filter1, filter2], false);
   });
@@ -41,6 +41,30 @@ describe('FilterGroup', () => {
     });
   });
 
+  describe('getAllValues function', () => {
+    it('should return current values for all filters', () => {
+      filter1.getValues()[0].selected = false;
+      filter2.getValues()[0].selected = true;
+      expect(fixture.getAllFilters().length).toEqual(2);
+      expect(fixture.getAllFilters()).toEqual([filter1, filter2]);
+    });
+  });
+
+  describe('BuildQuery function', () => {
+    it('should build query params', () => {
+      filter1.getValues()[0].selected = false;
+      filter2.getValues()[0].selected = true;
+
+      expect(fixture.buildQuery()).toEqual({ f1: null, f2: 'value2' });
+    });
+  });
+
+  describe('getAllQueryParamNames function', () => {
+    it('should return all query param names', () => {
+      expect(fixture.getAllQueryParamNames()).toEqual(['f1', 'f2']);
+    });
+  });
+
   describe('getCurrentFilters function', () => {
     it('should return nothing if no active filters', () => {
       spyOn(filter1, 'isActive').and.returnValue(false);
@@ -62,7 +86,7 @@ describe('FilterGroup', () => {
       spyOn(filter1, 'matches').and.returnValue(false);
       spyOn(filter2, 'matches').and.returnValue(false);
 
-      let result = { p1: 1, p2: 2};
+      let result = { p1: 1, p2: 2 };
       expect(fixture.matches(result)).toBeFalsy();
       expect(filter1.matches).toHaveBeenCalledWith(result);
       expect(filter2.matches).not.toHaveBeenCalled();
@@ -72,7 +96,7 @@ describe('FilterGroup', () => {
       spyOn(filter1, 'matches').and.returnValue(true);
       spyOn(filter2, 'matches').and.returnValue(false);
 
-      let result = { p1: 1, p2: 2};
+      let result = { p1: 1, p2: 2 };
       expect(fixture.matches(result)).toBeFalsy();
       expect(filter1.matches).toHaveBeenCalledWith(result);
       expect(filter2.matches).toHaveBeenCalledWith(result);
@@ -82,7 +106,7 @@ describe('FilterGroup', () => {
       spyOn(filter1, 'matches').and.returnValue(true);
       spyOn(filter2, 'matches').and.returnValue(true);
 
-      let result = { p1: 1, p2: 2};
+      let result = { p1: 1, p2: 2 };
       expect(fixture.matches(result)).toBeTruthy();
       expect(filter1.matches).toHaveBeenCalledWith(result);
       expect(filter2.matches).toHaveBeenCalledWith(result);
@@ -120,8 +144,8 @@ describe('FilterGroup', () => {
 
   describe('clear() function', () => {
     it('should clear all contained filters', () => {
-      spyOn(filter1, 'clear').and.callFake(() => {});
-      spyOn(filter2, 'clear').and.callFake(() => {});
+      spyOn(filter1, 'clear').and.callFake(() => { });
+      spyOn(filter2, 'clear').and.callFake(() => { });
 
       fixture.clear();
       expect(filter1.clear).toHaveBeenCalled();
@@ -131,13 +155,13 @@ describe('FilterGroup', () => {
 
   describe('filterGroup function', () => {
     it('setFilterGroup() should set the filter group', () => {
-      let filterGroup = {group: 1};
+      let filterGroup = { group: 1 };
       fixture.setFilterGroup(filterGroup);
       expect(fixture.getFilterGroup()).toBe(filterGroup);
     });
 
     it('belongsToFilterGroup() should return true if it has a filter group', () => {
-      let filterGroup = {group: 1};
+      let filterGroup = { group: 1 };
       fixture.setFilterGroup(filterGroup);
       expect(fixture.belongsToFilterGroup()).toBeTruthy();
     });

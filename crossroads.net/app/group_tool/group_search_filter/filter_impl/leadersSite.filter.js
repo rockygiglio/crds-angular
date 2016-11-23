@@ -1,15 +1,22 @@
-
+import CONSTANTS from 'crds-constants';
 import {SearchFilter, SearchFilterValue} from './searchFilter';
 
 export default class LeadersSiteFilter extends SearchFilter {
-  constructor(filterName, groupService) {
-    super(filterName, [], this._matchingFunction);
+  constructor(filterName, groupService, selectedFilters) {
+    super(filterName, [], this._matchingFunction, CONSTANTS.GROUP.SEARCH_FILTERS_QUERY_PARAM_NAMES.LEADER_SITE);
+
+    if (selectedFilters == null || selectedFilters == undefined)
+      selectedFilters = "";
+    let selectedArray = selectedFilters.split(',');
 
     groupService.getSites().then(
       (data) => {
         data = _.sortBy( data, 'dp_RecordID' );
         this.getValues().push.apply(this.getValues(), data.map((a) => {
-          return new SearchFilterValue(a.dp_RecordName, a.dp_RecordID, false);
+          let selected = false;
+          if (a.dp_RecordName)
+            selected = _.findIndex(selectedArray, (s) => { return s.toUpperCase() == a.dp_RecordName.toUpperCase() }) != -1;
+          return new SearchFilterValue(a.dp_RecordName, a.dp_RecordID, selected);
         }));
       },
       (/*err*/) => {

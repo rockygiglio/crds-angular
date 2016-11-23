@@ -1,9 +1,14 @@
+import crdsConstants from 'crds-constants';
+import filter from 'lodash/collection/filter';
+
 /* ngInject */
 class CampsService {
-  constructor($resource, $stateParams, $log) {
+  constructor($resource, $stateParams, $log, AttributeTypeService) {
     this.log = $log;
     this.stateParams = $stateParams;
     this.resource = $resource;
+    this.attributeTypeService = AttributeTypeService;
+
     // eslint-disable-next-line prefer-template
     this.campResource = $resource(__API_ENDPOINT__ + 'api/camps/:campId');
     // eslint-disable-next-line prefer-template
@@ -28,12 +33,12 @@ class CampsService {
 
     this.campInfo = null;
     this.campTitle = null;
+    this.shirtSizes = null;
     this.camperInfo = null;
     this.waivers = null;
     this.productInfo = null;
     this.payment = null;
     this.campMedical = null;
-    this.alreadyPaid = false;
 
     this.initializeCampData();
     this.initializeCamperData();
@@ -42,6 +47,7 @@ class CampsService {
   initializeCampData() {
     this.campInfo = {};
     this.campTitle = '';
+    this.shirtSizes = [];
   }
 
   initializeCamperData() {
@@ -145,8 +151,12 @@ class CampsService {
     this.confirmationResource.save({ contactId, campId, invoiceId, paymentId }, {});
   }
 
-  setPaidStatus(status) {
-    this.alreadyPaid = status;
+  getShirtSizes() {
+    return this.attributeTypeService.AttributeTypes().get({ id: crdsConstants.ATTRIBUTE_TYPE_IDS.TSHIRT_SIZES }).$promise
+      .then((shirtSizes) => {
+        this.shirtSizes = filter(shirtSizes.attributes, attribute => attribute.category === 'Adult');
+        return shirtSizes;
+      });
   }
 
   invoiceHasPayment(invoiceId) {
