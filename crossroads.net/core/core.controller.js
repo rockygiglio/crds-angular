@@ -49,24 +49,20 @@
     vm.state = $state;
     vm.mapContentBlocks = mapContentBlocks;
     vm.stayLoggedInPrompt = stayLoggedInPrompt;
-
-    vm.bodyClasses = {
-      'crds-legacy-styles': true,
-      'crds-styles': false
-    };
+    vm.bodyClasses = {};
 
     ////////////////////////////
     // State Change Listeners //
     ////////////////////////////
     $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
 
+      // Determine whether to render legacy stylesheet based on data object defined in routes.js
+      // This covers any page defined in routes.js (ie. not populated by the CMS)
+      $rootScope.renderLegacyStyles = (toState.data.renderLegacyStyles !== false);
+
       if ((toState.resolve || toState.data.resolve) && !event.defaultPrevented) {
         vm.resolving = true;
       }
-
-      var useLegacyStyles = !(toState.data.legacyStyles != undefined && !toState.data.legacyStyles);
-      vm.bodyClasses['crds-legacy-styles'] = useLegacyStyles;
-      vm.bodyClasses['crds-styles'] = !useLegacyStyles;
 
       if (fromState.name == 'explore') {
         $('#fullpage').hide();
@@ -75,6 +71,11 @@
     });
 
     $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
+
+      // Toggle ngClass values based on $rootScope.renderLegacyStyles
+      vm.bodyClasses['crds-legacy-styles'] = $rootScope.renderLegacyStyles;
+      vm.bodyClasses['crds-styles'] = ! $rootScope.renderLegacyStyles;
+
       ResponsiveImageService.updateResponsiveImages();
       PageRenderedService.pageLoaded();
       vm.resolving = false;

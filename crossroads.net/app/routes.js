@@ -517,7 +517,7 @@
           url: '/stylesTest',
           template: '/stylesTest',
           data: {
-            legacyStyles: false,
+            renderLegacyStyles: false,
             meta: {
               title: 'Styles Test',
               description: ''

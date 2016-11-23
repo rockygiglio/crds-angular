@@ -130,6 +130,10 @@
                     statusCode: ContentPageService.page.errorCode
                   };
 
+                  // Determine whether to render legacy stylesheet based on CMS template
+                  // NOTE: Templates not defined below are returning a pageType of 'Page'...
+                  $rootScope.renderLegacyStyles = true;
+
                   switch (ContentPageService.page.pageType) {
                     case 'NoHeaderOrFooter':
                       return $templateFactory.fromUrl('templates/noHeaderOrFooter.html');
