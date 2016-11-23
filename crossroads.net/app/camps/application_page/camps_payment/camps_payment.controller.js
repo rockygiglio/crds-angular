@@ -5,12 +5,13 @@ export default class CampPaymentController {
     this.state = $state;
     this.sce = $sce;
     this.iframeSelector = '.camp-payment-widget';
+    this.viewReady = false;
   }
 
   $onInit() {
     this.campsService.invoiceHasPayment(this.campsService.productInfo.invoiceId)
       .then(() => {
-        // Do Nothing
+        this.viewReady = true;
       }).catch((err) => {
         if (err.status === 302) {
           this.state.go('campsignup.family', {}, { inherit: true, location: 'replace' });

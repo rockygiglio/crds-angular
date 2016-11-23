@@ -1,4 +1,6 @@
-<div class="row">
+<preloader full-screen='true' ng-show='!$ctrl.viewReady'> </preloader>
+
+<div ng-show='$ctrl.viewReady' class="row">
   <div class="col-sm-6 col-sm-offset-3">
     <h3> Camp Deposit </h3>
 
@@ -14,6 +16,5 @@
         class="camp-payment-widget"
         scrolling="no"> </iframe>
     </div>
-
   </div>
 </div>

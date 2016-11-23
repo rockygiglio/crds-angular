@@ -33,6 +33,7 @@ class CampsService {
     this.productInfo = null;
     this.payment = null;
     this.campMedical = null;
+    this.alreadyPaid = false;
 
     this.initializeCampData();
     this.initializeCamperData();
@@ -142,6 +143,10 @@ class CampsService {
 
   sendConfirmation(invoiceId, paymentId, campId, contactId) {
     this.confirmationResource.save({ contactId, campId, invoiceId, paymentId }, {});
+  }
+
+  setPaidStatus(status) {
+    this.alreadyPaid = status;
   }
 
   invoiceHasPayment(invoiceId) {

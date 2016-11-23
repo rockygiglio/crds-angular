@@ -1,12 +1,13 @@
 import template from './camps_payment.html';
 import controller from './camps_payment.controller';
+import { getCampProductInfo } from '../../camps.resolves';
 
 const CampsPayment = {
   bindings: {},
   template,
   controller,
   resolve: [
-    // when thankyou page changes are merged, add resolve for productInfo
+    getCampProductInfo
   ]
 };
 
