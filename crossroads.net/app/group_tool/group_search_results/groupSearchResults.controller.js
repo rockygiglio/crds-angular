@@ -33,12 +33,13 @@ export default class GroupSearchResultsController {
 
     this.search = {
       query: this.state.params.query,
-      location: this.state.params.location
+      location: this.state.params.location,
+      id:this.state.params.id
     };
-    this.doSearch(this.state.params.query, this.state.params.location);
+    this.doSearch(this.state.params.query, this.state.params.location, this.state.params.id);
   }
 
-  doSearch(query, location) {
+  doSearch(query, location, id) {
     this.searchedWithLocation = location && location.length > 0;
 
     let queryString = {};
@@ -60,7 +61,7 @@ export default class GroupSearchResultsController {
     this.showLocationInput = false;
     this.ready = false;
     this.results = [];
-    this.groupService.search(query, location).then(
+    this.groupService.search(query, location, id).then(
       (data) => {
         this.results = data;
       },

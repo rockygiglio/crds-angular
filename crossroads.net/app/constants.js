@@ -132,7 +132,8 @@
         MEETING_DAY: 'day',
         MEETING_TIME: 'time',
         MEETING_FREQUENCY: 'frequency',
-        LEADER_SITE: 'site'
+        LEADER_SITE: 'site',
+        GROUP_ID: 'id'
       }
     },
     GEOLOCATION: {

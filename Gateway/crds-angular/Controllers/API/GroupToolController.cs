@@ -184,7 +184,7 @@ namespace crds_angular.Controllers.API
         [Route("grouptool/grouptype/{groupTypeId:int}/group/search/")]
         [ResponseType(typeof(List<GroupDTO>))]
         [HttpGet]
-        public IHttpActionResult SearchGroups([FromUri] int groupTypeId, [FromUri(Name = "s")] string keywords = null, [FromUri(Name = "loc")] string location = null, [FromUri(Name = "groupId")] int? groupId = null)
+        public IHttpActionResult SearchGroups([FromUri] int groupTypeId, [FromUri(Name = "s")] string keywords = null, [FromUri(Name = "loc")] string location = null, [FromUri(Name = "id")] int? groupId = null)
         {
             try
             {
