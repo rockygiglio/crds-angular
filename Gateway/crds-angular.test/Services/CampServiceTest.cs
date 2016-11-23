@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using crds_angular.Models.Crossroads.Attribute;
 using crds_angular.Models.Crossroads.Camp;
 
 using crds_angular.Services;
@@ -36,6 +37,7 @@ namespace crds_angular.test.Services
         private readonly Mock<IInvoiceRepository> _invoiceRepository;
         private readonly Mock<ICommunicationRepository> _communicationRepository;
         private readonly Mock<IPaymentRepository> _paymentRepository;
+        private readonly Mock<IObjectAttributeService> _objectAttributeService;
 
         public CampServiceTest()
         {
@@ -56,6 +58,7 @@ namespace crds_angular.test.Services
             _invoiceRepository = new Mock<IInvoiceRepository>();
             _communicationRepository = new Mock<ICommunicationRepository>();
             _paymentRepository = new Mock<IPaymentRepository>();
+            _objectAttributeService = new Mock<IObjectAttributeService>();
 
             _fixture = new CampService(_campService.Object, 
                                        _formSubmissionRepository.Object, 
@@ -71,7 +74,8 @@ namespace crds_angular.test.Services
                                        _productRepository.Object,
                                        _invoiceRepository.Object,
                                        _communicationRepository.Object,
-                                       _paymentRepository.Object);
+                                       _paymentRepository.Object,
+                                       _objectAttributeService.Object);
         }
 
         [Test]
@@ -426,7 +430,8 @@ namespace crds_angular.test.Services
             const int childContactId = 123456789;
 
             var participant = new Result<MpGroupParticipant>(true, new MpGroupParticipant() {GroupName = "6th Grade"});
-            
+            var attributesDto = new ObjectAllAttributesDTO();
+
             var loggedInContact = new MpMyContact
             {
                 Contact_ID = 56789,
@@ -455,6 +460,7 @@ namespace crds_angular.test.Services
             _contactService.Setup(m => m.GetContactById(contactId)).Returns(myContact);
             _apiUserRepository.Setup(m => m.GetToken()).Returns(apiToken);
             _groupRepository.Setup(m => m.GetGradeGroupForContact(contactId, apiToken)).Returns(participant);
+            _objectAttributeService.Setup(m => m.GetObjectAttributes(apiToken, contactId, It.IsAny<MpObjectAttributeConfiguration>())).Returns(attributesDto);
 
             var result = _fixture.GetCamperInfo(token, eventId, contactId);
             Assert.AreEqual(result.ContactId, 2187211);
@@ -474,6 +480,7 @@ namespace crds_angular.test.Services
             const int childContactId = 123456789;
 
             var participant = new Result<MpGroupParticipant>(false, "some error message");
+            var attributesDto = new ObjectAllAttributesDTO();
 
             var loggedInContact = new MpMyContact
             {
@@ -503,6 +510,7 @@ namespace crds_angular.test.Services
             _contactService.Setup(m => m.GetContactById(contactId)).Returns(myContact);
             _apiUserRepository.Setup(m => m.GetToken()).Returns(apiToken);
             _groupRepository.Setup(m => m.GetGradeGroupForContact(contactId, apiToken)).Returns(participant);
+            _objectAttributeService.Setup(m => m.GetObjectAttributes(apiToken, contactId, It.IsAny<MpObjectAttributeConfiguration>())).Returns(attributesDto);
 
             var result = _fixture.GetCamperInfo(token, eventId, contactId);
             Assert.AreEqual(result.ContactId, 2187211);
