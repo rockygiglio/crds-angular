@@ -1,6 +1,6 @@
 import CamperInfoController from './camper_info.controller';
 import InfoTemplate from './camper_info.html';
-import { getCamperInfo, getCampInfo } from '../../camps.resolves';
+import { getCamperInfo, getCampInfo, getShirtSizes } from '../../camps.resolves';
 
 const CamperInfo = {
   bindings: {},
@@ -9,7 +9,8 @@ const CamperInfo = {
   controllerAs: 'camperInfo',
   resolve: [
     getCamperInfo,
-    getCampInfo
+    getCampInfo,
+    getShirtSizes
   ]
 };
 

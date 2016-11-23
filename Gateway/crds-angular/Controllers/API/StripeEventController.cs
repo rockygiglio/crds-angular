@@ -44,7 +44,7 @@ namespace crds_angular.Controllers.API
             }
         }
 
-        [VersionedRoute(template: "stripeEvent", minimumVersion: "1.0.0")]
+        [VersionedRoute(template: "stripe-event", minimumVersion: "1.0.0")]
         [Route("stripe-event")]
         [HttpPost]
         public IHttpActionResult ProcessStripeEvent([FromBody]StripeEvent stripeEvent)

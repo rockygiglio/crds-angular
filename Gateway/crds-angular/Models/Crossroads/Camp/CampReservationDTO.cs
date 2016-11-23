@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using System.Collections.Generic;
+using crds_angular.Models.Crossroads.Attribute;
+using Newtonsoft.Json;
 
 namespace crds_angular.Models.Crossroads.Camp
 {
@@ -39,5 +41,14 @@ namespace crds_angular.Models.Crossroads.Camp
 
         [JsonProperty(PropertyName = "roommate")]
         public string RoomMate { get; set; }
+
+        [JsonProperty(PropertyName = "mobilePhone")]
+        public string MobilePhone { get; set; }
+
+        [JsonProperty(PropertyName = "attributeTypes")]
+        public Dictionary<int, ObjectAttributeTypeDTO> AttributeTypes { get; set; }
+
+        [JsonProperty(PropertyName = "singleAttributes")]
+        public Dictionary<int, ObjectSingleAttributeDTO> SingleAttributes { get; set; }
     }
 }

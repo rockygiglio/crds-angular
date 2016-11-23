@@ -301,6 +301,39 @@ namespace crds_angular.test.Services
             Assert.Throws<PaymentNotFoundException>(() => _fixture.GetPaymentByTransactionCode(stripepaymentid));
         }
 
+        public void DepositAlreadyExists()
+        {
+            const string token = "letmein";
+            const int payerId = 3333;           
+            const int invoiceId = 89989;
+
+            var payments = fakePayments(payerId, 500);
+            var me = fakeMyContact(payerId, "faekemail@jon.com");
+
+            _contactRepository.Setup(m => m.GetMyProfile(token)).Returns(me);
+            _paymentRepository.Setup(m => m.GetPaymentsForInvoice(invoiceId)).Returns(payments);            
+                
+            var result = _fixture.DepositExists(invoiceId, token);
+            Assert.IsTrue(result);
+        }
+
+        [Test]
+        public void DepositDoesNotExist()
+        {
+            const string token = "letmein";
+            const int payerId = 3333;
+            const int invoiceId = 89989;
+
+            var payments = fakePayments(1234, 500);
+            var me = fakeMyContact(payerId, "faekemail@jon.com");
+
+            _contactRepository.Setup(m => m.GetMyProfile(token)).Returns(me);
+            _paymentRepository.Setup(m => m.GetPaymentsForInvoice(invoiceId)).Returns(payments);
+
+            var result = _fixture.DepositExists(invoiceId, token);
+            Assert.IsFalse(result);
+        }
+
         private static List<MpPayment> fakePayments(int payerId, decimal paymentTotal, int paymentIdOfOne = 34525)
         {
             return new List<MpPayment>

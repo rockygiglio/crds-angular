@@ -16,5 +16,6 @@ namespace crds_angular.Services.Interfaces
         DonationBatchDTO GetPaymentBatch(int batchId);
         DonationBatchDTO CreatePaymentBatch(DonationBatchDTO batch);
         int? CreatePaymentForBankAccountErrorRefund(StripeRefund refund);
+        bool DepositExists(int invoiceId, string token);
     }
 }

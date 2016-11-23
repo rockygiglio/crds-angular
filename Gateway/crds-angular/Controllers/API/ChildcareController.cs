@@ -95,7 +95,7 @@ namespace crds_angular.Controllers.API
 
 
         [ResponseType(typeof(List<FamilyMember>))]
-        [VersionedRoute(template: "childcare/eligibleChildren", minimumVersion: "1.0.0")]
+        [VersionedRoute(template: "childcare/eligible-children", minimumVersion: "1.0.0")]
         [Route("childcare/eligible-children")]
         [HttpGet]
         public IHttpActionResult ChildrenEligibleForChildcare()
@@ -138,11 +138,11 @@ namespace crds_angular.Controllers.API
                     var apiError = new ApiErrorDto("Create Childcare Request Failed", e);
                     throw new HttpResponseException(apiError.HttpResponseMessage);
                 }
-                
+
             });
         }
 
-        [VersionedRoute(template: "childcare/updateRequest", minimumVersion: "1.0.0")]
+        [VersionedRoute(template: "childcare/update-request", minimumVersion: "1.0.0")]
         [Route("childcare/updaterequest")]
         [HttpPost]
         public IHttpActionResult UpdateChildcareRequest([FromBody] ChildcareRequestDto request)
@@ -249,7 +249,7 @@ namespace crds_angular.Controllers.API
             });
         }
 
-        [VersionedRoute(template: "childcare/getRequest/{requestId}", minimumVersion: "1.0.0")]
+        [VersionedRoute(template: "childcare/get-request/{requestId}", minimumVersion: "1.0.0")]
         [Route("childcare/getrequest/{requestId}")]
         [HttpGet]
         public IHttpActionResult GetChildcareRequest(int requestId)
@@ -295,16 +295,16 @@ namespace crds_angular.Controllers.API
                     var apiError = new ApiErrorDto("Get Childcare Dashboard Failed", e);
                     throw new HttpResponseException(apiError.HttpResponseMessage);
                 }
-                
+
             });
-            
+
         }
 
         private class DateError
         {
             public List<DateTime> Errors { get; set;}
             public string Message { get; set;}
-            public DateTime Error { get; set; } 
+            public DateTime Error { get; set; }
         }
     }
 }

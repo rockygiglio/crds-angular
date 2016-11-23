@@ -238,5 +238,13 @@ namespace crds_angular.Services
             
             return (_paymentRepository.CreatePaymentAndDetail(detail).Value.PaymentId);
         }
+
+        public bool DepositExists(int invoiceId, string token)
+        {
+            var me = _contactRepository.GetMyProfile(token);
+            var payments = _paymentRepository.GetPaymentsForInvoice(invoiceId);
+            payments = payments.Where(p => p.ContactId == me.Contact_ID).ToList();
+            return payments.Any();
+        }
     }
 }
