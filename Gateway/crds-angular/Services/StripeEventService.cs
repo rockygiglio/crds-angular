@@ -29,7 +29,7 @@ namespace crds_angular.Services
         private readonly int _batchEntryTypePaymentProcessor;
 
         // This value is used when creating the batch name for exporting to GP.  It must be 15 characters or less.
-        private const string BatchNameDateFormat = @"\M\PyyyyMMddHHmm";
+        private const string BatchNameDateFormat = @"\M\PyyMMddHHmmss";
        
         public StripeEventService(IPaymentProcessorService paymentProcessorService, IDonationService donationService, IPaymentService paymentService, MinistryPlatform.Translation.Repositories.Interfaces.IDonorRepository mpDonorRepository, IConfigurationWrapper configuration)
         {
