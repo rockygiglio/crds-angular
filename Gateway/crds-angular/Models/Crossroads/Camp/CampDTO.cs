@@ -27,10 +27,10 @@ namespace crds_angular.Models.Crossroads.Camp
         public int OnlineProductId { get; set; }
 
         [JsonProperty(PropertyName = "registrationStartDate")]
-        public DateTime RegistrationStartDate { get; set; }
+        public DateTime? RegistrationStartDate { get; set; }
 
         [JsonProperty(PropertyName = "registrationEndDate")]
-        public DateTime RegistrationEndDate { get; set; }
+        public DateTime? RegistrationEndDate { get; set; }
 
     }
 }

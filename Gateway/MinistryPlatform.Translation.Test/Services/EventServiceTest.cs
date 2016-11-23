@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Crossroads.Utilities.FunctionalHelpers;
 using Crossroads.Utilities.Interfaces;
 using FsCheck;
 using MinistryPlatform.Translation.Models;
@@ -20,7 +21,7 @@ namespace MinistryPlatform.Translation.Test.Services
         {
             _ministryPlatformService = new Mock<IMinistryPlatformService>(MockBehavior.Strict);
             _ministryPlatformRestService = new Mock<IMinistryPlatformRestRepository>(MockBehavior.Strict);
-            _authService = new Mock<IAuthenticationRepository>(MockBehavior.Strict);
+            _authService = new Mock<IAuthenticationRepository>(MockBehavior.Strict);           
             _configWrapper = new Mock<IConfigurationWrapper>(MockBehavior.Strict);
             _groupService = new Mock<IGroupRepository>(MockBehavior.Strict);
             _eventParticipantRepository = new Mock<IEventParticipantRepository>(MockBehavior.Strict);
@@ -38,6 +39,7 @@ namespace MinistryPlatform.Translation.Test.Services
         private Mock<IMinistryPlatformService> _ministryPlatformService;
         private Mock<IMinistryPlatformRestRepository> _ministryPlatformRestService;
         private Mock<IAuthenticationRepository> _authService;
+        private Mock<IApiUserRepository> _apiRepository;
         private Mock<IConfigurationWrapper> _configWrapper;
         private Mock<IGroupRepository> _groupService;
         private Mock<IEventParticipantRepository> _eventParticipantRepository;
@@ -454,6 +456,7 @@ namespace MinistryPlatform.Translation.Test.Services
 
             _ministryPlatformRestService.VerifyAll();
         }
+
 
         private static List<MpWaivers> mockWaivers()
         {

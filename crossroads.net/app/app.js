@@ -1,4 +1,4 @@
-//require('./group_finder');
+// require('./group_finder');
 
 require('./childcare');
 require('./mp_tools');
@@ -6,7 +6,7 @@ require('./group_tool');
 require('./live_stream');
 require('ui-select/dist/select.css');
 
-(function() {
+(function () {
   'use strict()';
 
   var constants = require('./constants');

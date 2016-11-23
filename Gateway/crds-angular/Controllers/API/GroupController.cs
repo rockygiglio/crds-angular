@@ -20,7 +20,7 @@ namespace crds_angular.Controllers.API
     public class GroupController : MPAuth
     {
         private readonly ILog _logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-        private readonly IGroupService _groupService;        
+        private readonly IGroupService _groupService;
         private readonly IAuthenticationRepository _authenticationService;
         private readonly IParticipantRepository _participantService;
         private readonly IAddressService _addressService;
@@ -111,7 +111,7 @@ namespace crds_angular.Controllers.API
         /// Send an email message to certain group participants
         /// </summary>
         [RequiresAuthorization]
-        [VersionedRoute(template: "group/messageSelectParticipants", minimumVersion: "1.0.0")]
+        [VersionedRoute(template: "group/message-select-participants", minimumVersion: "1.0.0")]
         [Route("group/messageselectparticipants")]
         [HttpPost]
         public IHttpActionResult SendParticipantsMessage(GroupMessageDTO message)
@@ -138,7 +138,7 @@ namespace crds_angular.Controllers.API
         /// <summary>
         /// Enroll the currently logged-in user into a Community Group, and register this user for all events for the CG.
         /// Also send email confirmation to user if joining a CG
-        /// Or Add Journey/Small Group Participant to a Group 
+        /// Or Add Journey/Small Group Participant to a Group
         /// </summary>
         [RequiresAuthorization]
         [ResponseType(typeof (GroupDTO))]
@@ -285,7 +285,7 @@ namespace crds_angular.Controllers.API
         /// <returns>A list of all groups for the given user based on the Group Type ID passed in.</returns>
         [RequiresAuthorization]
         [ResponseType(typeof (List<GroupContactDTO>))]
-        [VersionedRoute(template: "group/groupType/{groupTypeId}", minimumVersion: "1.0.0")]
+        [VersionedRoute(template: "group/group-type/{groupTypeId}", minimumVersion: "1.0.0")]
         [Route("group/groupType/{groupTypeId}")]
         public IHttpActionResult GetGroups(int groupTypeId)
         {
@@ -344,7 +344,7 @@ namespace crds_angular.Controllers.API
         /// <returns></returns>
         [RequiresAuthorization]
         [ResponseType(typeof(List<GroupDTO>))]
-        [VersionedRoute(template: "group/groupType/{groupTypeId}/search", minimumVersion: "1.0.0")]
+        [VersionedRoute(template: "group/group-type/{groupTypeId}/search", minimumVersion: "1.0.0")]
         [Route("group/groupType/{groupTypeId}/search")]
         [HttpPost]
         public IHttpActionResult GetSearchMatches(int groupTypeId, [FromBody] GroupParticipantDTO participant)
@@ -395,7 +395,7 @@ namespace crds_angular.Controllers.API
         /// Update the participant for a particular group
         /// </summary>
         [RequiresAuthorization]
-        [VersionedRoute(template: "group/updateParticipants", minimumVersion: "1.0.0")]
+        [VersionedRoute(template: "group/update-participants", minimumVersion: "1.0.0")]
         [Route("group/updateParticipantRole")]
         public IHttpActionResult UpdateParticipant([FromBody] GroupParticipantDTO participant)
         {
@@ -424,7 +424,7 @@ namespace crds_angular.Controllers.API
         /// Will return a 404 if the user is not a Member or Leader of the group
         /// </summary>
         [RequiresAuthorization]
-        [VersionedRoute(template: "journey/emailInvite", minimumVersion: "1.0.0")]
+        [VersionedRoute(template: "journey/email-invite", minimumVersion: "1.0.0")]
         [Route("journey/emailinvite")]
         public IHttpActionResult PostInvitation([FromBody] EmailCommunicationDTO communication)
         {

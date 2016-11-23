@@ -1,14 +1,21 @@
-
+import CONSTANTS from 'crds-constants';
 import {SearchFilter, SearchFilterValue} from './searchFilter';
 
 export default class AgeRangeFilter extends SearchFilter {
-  constructor(filterName, groupService) {
-    super(filterName, [], this._matchingFunction);
+  constructor(filterName, groupService, selectedFilters) {
+    super(filterName, [], this._matchingFunction, CONSTANTS.GROUP.SEARCH_FILTERS_QUERY_PARAM_NAMES.AGE);
+
+    if (selectedFilters == null || selectedFilters == undefined)
+      selectedFilters = "";
+    let selectedArray = selectedFilters.split(',');
 
     groupService.getAgeRanges().then(
       (data) => {
         this.getValues().push.apply(this.getValues(), data.attributes.map((a) => {
-          return new SearchFilterValue(a.name, a.attributeId, false);
+          let selected = false;
+          if (a.name)
+            selected = _.findIndex(selectedArray, (s) => { return s.toUpperCase() == a.name.toUpperCase() }) != -1;
+          return new SearchFilterValue(a.name, a.attributeId, selected);
         }));
       },
       (err) => {

@@ -22,7 +22,7 @@ namespace crds_angular.Controllers.API
             _volunteerApplicationService = volunteerApplicationService;
         }
 
-        [VersionedRoute(template: "volunteerApplication/adult", minimumVersion: "1.0.0")]
+        [VersionedRoute(template: "volunteer-application/adult", minimumVersion: "1.0.0")]
         [Route("volunteer-application/adult")]
         public IHttpActionResult SaveAdult([FromBody] AdultApplicationDto application)
         {
@@ -48,7 +48,7 @@ namespace crds_angular.Controllers.API
             throw new HttpResponseException(dataError.HttpResponseMessage);
         }
 
-        [VersionedRoute(template: "volunteerApplication/student", minimumVersion: "1.0.0")]
+        [VersionedRoute(template: "volunteer-application/student", minimumVersion: "1.0.0")]
         [Route("volunteer-application/student")]
         public IHttpActionResult SaveStudent([FromBody] StudentApplicationDto application)
         {
@@ -77,7 +77,7 @@ namespace crds_angular.Controllers.API
         }
 
         [ResponseType(typeof(List<FamilyMember>))]
-        [VersionedRoute(template: "volunteerApplication/family/{contactId}", minimumVersion: "1.0.0")]
+        [VersionedRoute(template: "volunteer-application/family/{contactId}", minimumVersion: "1.0.0")]
         [Route("volunteer-application/family/{contactId}")]
         public IHttpActionResult GetFamily(int contactId)
         {//TODO: I don't think you need to pass in contactId, use the token instead

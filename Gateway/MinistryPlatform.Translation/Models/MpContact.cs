@@ -42,5 +42,8 @@ namespace MinistryPlatform.Translation.Models
 
         [JsonProperty(PropertyName = "Current_School")]
         public string SchoolAttending { get; set; }
+
+        [JsonProperty(PropertyName = "Mobile_Phone")]
+        public string MobilePhone { get; set; }
     }
 }

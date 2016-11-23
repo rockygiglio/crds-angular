@@ -388,6 +388,13 @@ namespace MinistryPlatform.Translation.Test.Services
         }
 
         [Test]
+        public void TestRegistrantMessage()
+        {
+            var searchString = $"Events.[Event_ID]={452345685}";
+            _fixture.UsingAuthenticationToken(_authToken).Search<int>("Events", searchString, "Registrant_Message");
+        }
+
+        [Test]
         public void postPayment()
         {
             var paymentDetail = new MpPaymentDetail()

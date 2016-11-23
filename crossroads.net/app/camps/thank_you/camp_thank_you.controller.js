@@ -13,6 +13,7 @@ class CampThankYouController {
   $onInit() {
     this.viewReady = true;
   }
+
 }
 
 export default CampThankYouController;

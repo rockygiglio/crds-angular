@@ -1,3 +1,6 @@
+import crdsConstants from 'crds-constants';
+import find from 'lodash/collection/find';
+
 class CamperInfoFormFactory {
   /* ngInject */
   constructor(CampsService, LookupService) {
@@ -6,7 +9,9 @@ class CamperInfoFormFactory {
   }
 
   createForm() {
+    /* eslint-disable no-use-before-define */
     return new CamperInfoForm(this.campsService, this.lookupService);
+    /* eslint-enable */
   }
 }
 
@@ -17,23 +22,55 @@ class CamperInfoForm {
     this.campsService = CampsService;
     this.lookupService = LookupService;
 
+    this.initFormModel();
+  }
+
+  initFormModel() {
     this.formModel = {
       contactId: this.campsService.camperInfo.contactId || undefined,
       firstName: this.campsService.camperInfo.firstName || undefined,
       lastName: this.campsService.camperInfo.lastName || undefined,
       middleName: this.campsService.camperInfo.middleName || undefined,
       preferredName: this.campsService.camperInfo.preferredName || undefined,
+      mobilePhone: this.campsService.camperInfo.mobilePhone || undefined,
       birthDate: this.campsService.camperInfo.birthDate || undefined,
       gender: this.campsService.camperInfo.gender || undefined,
       currentGrade: this.campsService.camperInfo.currentGrade || undefined,
       schoolAttending: this.campsService.camperInfo.schoolAttending || undefined,
-      schoolAttendingNext: null,
+      schoolAttendingNext: this.campsService.camperInfo.schoolAttendingNext || undefined,
       crossroadsSite: this.campsService.camperInfo.crossroadsSite || undefined,
-      roomate: null
+      attributeTypes: this.campsService.camperInfo.attributeTypes || {},
+      singleAttributes: this.campsService.camperInfo.singleAttributes || {},
+      roommate: this.campsService.camperInfo.roommate || undefined
     };
+
+    // In order to default the T Shirt select, set the shirt size in the form model from the
+    // Shirt Size single attribute that is set, if any
+    const shirtSizeAttribute = this.formModel.singleAttributes[crdsConstants.ATTRIBUTE_TYPE_IDS.TSHIRT_SIZES];
+    if (shirtSizeAttribute && shirtSizeAttribute.attribute) {
+      this.formModel.shirtSize = shirtSizeAttribute.attribute.attributeId;
+    }
+  }
+
+  confirmSite(resp) {
+    const match = _.find(resp, site => this.formModel.crossroadsSite === site.dp_RecordID);
+
+    if (!match) {
+      this.formModel.crossroadsSite = undefined;
+    }
   }
 
   save(campId) {
+    // Find the actual single attribute shirt size from the forml selected attribute id
+    const selected = find(this.campsService.shirtSizes, (each) => { return each.attributeId === this.formModel.shirtSize });
+
+    // Set the shirt size single attribute on the DTO to be submitted to the API
+    this.formModel.singleAttributes[crdsConstants.ATTRIBUTE_TYPE_IDS.TSHIRT_SIZES] = {
+      attribute: selected,
+      notes: null,
+      description: null
+    };
+
     return this.campsService.camperResource.save({ campId }, this.formModel).$promise;
   }
 
@@ -45,7 +82,8 @@ class CamperInfoForm {
   getFields() {
     return [
       {
-        className: 'row',
+        className: '',
+        wrapper: 'campBootstrapRow',
         fieldGroup: [
           {
             className: 'form-group col-xs-6',
@@ -58,27 +96,19 @@ class CamperInfoForm {
           },
           {
             className: 'form-group col-xs-6',
-            key: 'middleName',
-            type: 'crdsInput',
-            templateOptions: {
-              label: 'Middle Name',
-              required: false
-            }
-          }
-        ]
-      },
-      {
-        className: 'row',
-        fieldGroup: [
-          {
-            className: 'form-group col-xs-6',
             key: 'lastName',
             type: 'crdsInput',
             templateOptions: {
               label: 'Last Name',
               required: true
             }
-          },
+          }
+        ]
+      },
+      {
+        className: '',
+        wrapper: 'campBootstrapRow',
+        fieldGroup: [
           {
             className: 'form-group col-xs-6',
             key: 'preferredName',
@@ -86,22 +116,6 @@ class CamperInfoForm {
             templateOptions: {
               label: 'Preferred Name',
               required: false
-            }
-          }
-        ]
-      },
-      {
-        className: 'row',
-        fieldGroup: [
-          {
-            className: 'form-group col-xs-6',
-            key: 'birthDate',
-            type: 'crdsDatepicker',
-            templateOptions: {
-              label: 'Birth Date',
-              required: true,
-              type: 'text',
-              datepickerPopup: 'MM/dd/yyyy'
             }
           },
           {
@@ -117,17 +131,31 @@ class CamperInfoForm {
               options: []
             },
             controller: /* @ngInject */ ($scope, LookupService) => {
+              /* eslint-disable no-param-reassign */
               $scope.to.loading = LookupService.Genders.query().$promise.then((response) => {
                 $scope.to.options = response;
                 return response;
               }).catch(err => console.error(err));
+              /* eslint-enable */
             }
           }
         ]
       },
       {
-        className: 'row',
+        className: '',
+        wrapper: 'campBootstrapRow',
         fieldGroup: [
+          {
+            className: 'form-group col-xs-6',
+            key: 'birthDate',
+            type: 'crdsDatepicker',
+            templateOptions: {
+              label: 'Birth Date',
+              required: true,
+              type: 'text',
+              datepickerPopup: 'MM/dd/yyyy'
+            }
+          },
           {
             className: 'form-group col-xs-6',
             key: 'currentGrade',
@@ -148,7 +176,13 @@ class CamperInfoForm {
               // valueProp: 'grade',
               // labelProp: 'grade'
             }
-          },
+          }
+        ]
+      },
+      {
+        className: '',
+        wrapper: 'campBootstrapRow',
+        fieldGroup: [
           {
             className: 'form-group col-xs-6',
             key: 'schoolAttending',
@@ -157,51 +191,82 @@ class CamperInfoForm {
               label: 'School Currently Attending ',
               required: true
             }
-          }
-        ]
-      },
-      {
-        className: 'row',
-        fieldGroup: [
+          },
           {
             className: 'form-group col-xs-6',
             key: 'schoolAttendingNext',
             type: 'crdsInput',
             templateOptions: {
-              label: 'School Attending Next Year',
+              label: 'School Attending Next School Year',
               required: true
             }
           }
         ]
       },
       {
-        className: 'row',
+        className: '',
+        wrapper: 'campBootstrapRow',
         fieldGroup: [
           {
             className: 'form-group col-xs-6',
             key: 'crossroadsSite',
             type: 'crdsSelect',
             templateOptions: {
-              label: 'What site do you regularly attend service?',
+              label: 'Student’s Crossroads Site',
               required: true,
               valueProp: 'dp_RecordID',
               labelProp: 'dp_RecordName',
               options: []
             },
             controller: /* @ngInject */ ($scope, LookupService) => {
+              /* eslint-disable no-param-reassign */
               $scope.to.loading = LookupService.Sites.query().$promise.then((response) => {
                 $scope.to.options = response;
+                this.confirmSite(response);
                 return response;
               });
+              /* eslint-enable */
             }
           },
           {
             className: 'form-group col-xs-6',
-            key: 'roomate',
+            key: 'roommate',
             type: 'crdsInput',
             templateOptions: {
               label: 'Preferred Roommate First and Last Name',
               required: false
+            }
+          }
+        ]
+      },
+      {
+        className: '',
+        wrapper: 'campBootstrapRow',
+        fieldGroup: [
+          {
+            className: 'form-group col-xs-6',
+            key: 'mobilePhone',
+            type: 'crdsInput',
+            optionsTypes: ['phoneNumber'],
+            templateOptions: {
+              label: 'Student Mobile Number',
+              required: false,
+              helpBlock: 'By providing your mobile number, you are agreeing to receive text message updates from Crossroads.'
+            }
+          },
+          {
+            className: 'form-group col-xs-6',
+            key: 'shirtSize',
+            type: 'crdsSelect',
+            templateOptions: {
+              label: 'T-Shirt Size',
+              required: true,
+              valueProp: 'attributeId',
+              labelProp: 'name',
+              options: []
+            },
+            controller: /* @ngInject */ ($scope, CampsService) => {
+              $scope.to.options = CampsService.shirtSizes;
             }
           }
         ]
