@@ -200,7 +200,7 @@ export default function GroupToolRouter($httpProvider, $stateProvider) {
     })
     .state('grouptool.search', {
       parent: 'noSideBar',
-      url: '/groups/search?age&category&type&kids&grouplocation&day&time&frequency&site',
+      url: '/groups/search?age&category&type&kids&grouplocation&day&time&frequency&site&groupId',
       template: '<group-search></group-search>',
       params: groupSearchParams,
       data: {
@@ -212,7 +212,7 @@ export default function GroupToolRouter($httpProvider, $stateProvider) {
     })
     .state('grouptool.search-results', {
       parent: 'noSideBar',
-      url: '/groups/search/results?query&location&age&category&type&kids&grouplocation&day&time&frequency&site',
+      url: '/groups/search/results?query&location&age&category&type&kids&grouplocation&day&time&frequency&site&groupId',
       params: groupSearchResultsParams,
       template: '<group-search-results></group-search-results>',
       data: {
