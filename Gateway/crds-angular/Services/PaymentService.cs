@@ -80,7 +80,8 @@ namespace crds_angular.Services
                 PaymentDate = DateTime.Now,
                 PaymentTotal = paymentRecord.DonationAmt,
                 PaymentTypeId = pymtId,
-                PaymentStatus = _defaultPaymentStatus
+                PaymentStatus = _defaultPaymentStatus,
+                ProcessorFeeAmount = paymentRecord.FeeAmt
             };
             var paymentDetail = new MpPaymentDetail
             {
