@@ -302,7 +302,7 @@ class MedicalInfoForm {
                 key: 'medicationType',
                 type: 'crdsRadio',
                 templateOptions: {
-                  required: false,
+                  required: true,
                   labelProp: 'label',
                   valueProp: 'medicationType',
                   inline: true,
