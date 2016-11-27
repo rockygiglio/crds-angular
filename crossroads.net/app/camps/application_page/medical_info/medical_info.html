@@ -11,6 +11,7 @@
               <formly-form model="$ctrl.model" fields="$ctrl.fields" options="$ctrl.options" form="$ctrl.medicalInfo">
               </formly-form>
             </fieldset>
+
             <button type="submit" class="btn btn-primary pull-right" ng-if="!$ctrl.submitting && !$ctrl.update"> Next </button>
             <button type="submit" class="btn btn-primary pull-right disabled" disabled ng-if="$ctrl.submitting && !$ctrl.update"> Next... </button>
 
