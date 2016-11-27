@@ -12,12 +12,14 @@
               </formly-form>
             </fieldset>
 
-            <button type="submit" class="btn btn-primary pull-right" ng-if="!$ctrl.submitting && !$ctrl.update"> Next </button>
-            <button type="submit" class="btn btn-primary pull-right disabled" disabled ng-if="$ctrl.submitting && !$ctrl.update"> Next... </button>
+            <div class="push-top">
+              <button type="submit" class="btn btn-primary pull-right" ng-if="!$ctrl.submitting && !$ctrl.update"> Next </button>
+              <button type="submit" class="btn btn-primary pull-right disabled" disabled ng-if="$ctrl.submitting && !$ctrl.update"> Next... </button>
 
-            <button type="submit"class="btn btn-primary pull-right" ng-if="!$ctrl.submitting && $ctrl.update"> Update </button>
-            <button type="submit"class="btn btn-primary pull-right" ng-if="$ctrl.submitting && $ctrl.update"> Updating... </button>
-            <button type="button"class="btn  pull-right " ng-if="!$ctrl.submitting && $ctrl.update" ng-click='$ctrl.cancel()'> Cancel </button>
+              <button type="submit"class="btn btn-primary pull-right" ng-if="!$ctrl.submitting && $ctrl.update"> Update </button>
+              <button type="submit"class="btn btn-primary pull-right" ng-if="$ctrl.submitting && $ctrl.update"> Updating... </button>
+              <button type="button"class="btn  pull-right " ng-if="!$ctrl.submitting && $ctrl.update" ng-click='$ctrl.cancel()'> Cancel </button>
+            </div>
           </form>
         </div>
       </div>

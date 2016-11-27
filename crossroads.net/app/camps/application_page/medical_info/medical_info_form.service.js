@@ -39,6 +39,9 @@ class MedicalInfoForm {
       foodAllergies: this.foodAllergies(),
       environmentalAllergies: this.environmentalAllergies(),
       otherAllergies: this.otherAllergies(),
+      medicines: [
+        {}
+      ]
     };
 
     this.medicalInfoResource = $resource(`${__API_ENDPOINT__}api/v1.0.0/camps/medical/:contactId`);
@@ -266,9 +269,56 @@ class MedicalInfoForm {
         }
       },
       {
-        key: 'campMedicines',
+        key: 'medicines',
         type: 'campMedicines',
         hideExpression: () => !this.formModel.anyMedications,
+        templateOptions: {
+          fields: [
+            {
+              className: '',
+              fieldGroup: [{
+                className: 'form-group col-md-3 col-xs-6',
+                key: 'medicationName',
+                type: 'crdsInput',
+                templateOptions: {
+                  required: true
+                }
+              }, {
+                className: 'form-group col-md-2 col-xs-6',
+                key: 'timeOfDay',
+                type: 'crdsInput',
+                templateOptions: {
+                  required: true
+                }
+              }, {
+                className: 'form-group col-md-2 col-xs-6',
+                key: 'dosage',
+                type: 'crdsInput',
+                templateOptions: {
+                  required: true
+                }
+              }, {
+                className: 'form-group col-md-4 col-xs-5',
+                key: 'medicationType',
+                type: 'crdsRadio',
+                templateOptions: {
+                  required: false,
+                  labelProp: 'label',
+                  valueProp: 'medicationType',
+                  inline: true,
+                  options: [{
+                    label: 'Prescription',
+                    medicationType: 'prescription'
+                  }, {
+                    label: 'Over the Counter',
+                    medicationType: 'otc'
+                  }]
+                }
+              }
+              ]
+            }
+          ]
+        }
       }
     ];
   }
