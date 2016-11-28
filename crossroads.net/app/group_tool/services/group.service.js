@@ -7,11 +7,12 @@ import GroupInquiry from '../model/groupInquiry';
 
 export default class GroupService {
   /*@ngInject*/
-  constructor($log, $resource, $q, AuthService, LookupService, Profile, ImageService) {
+  constructor($log, $resource, $q, $location, AuthService, LookupService, Profile, ImageService) {
     this.log = $log;
     this.resource = $resource;
     this.profile = Profile;
     this.qApi = $q;
+    this.location = $location;
     this.auth = AuthService;
     this.lookupService = LookupService;
     this.imgService = ImageService;
@@ -308,5 +309,9 @@ export default class GroupService {
   submitJoinRequest(groupId) {
     return this.resource(`${__API_ENDPOINT__}api/grouptool/group/:groupId/submitinquiry`)
       .save({ groupId: groupId }, {}).$promise;
+  }
+
+  shareUrl(groupId) {
+    return $location.protocol() + '://' + $location.host() + '/groups/search/results?id=' + groupId;
   }
 }
