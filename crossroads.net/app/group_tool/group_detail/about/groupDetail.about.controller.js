@@ -22,11 +22,16 @@ export default class GroupDetailAboutController {
   $onInit() {
     this.groupId = this.state.params.groupId || this.data.groupId;
 
+    console.log(this.state);
+
     this.showFooter = this.state.params.groupId !== undefined && this.state.params.groupId !== null;
     if (this.showFooter) {
       this.groupService.getGroup(this.groupId).then((data) => {
         this.data = data;
         this.setGroupImageUrl();
+        if (this.showShareButtons == null) {
+          this.showShareButtons = data.availableOnline;
+        }
       },
         (err) => {
           this.log.error(`Unable to get group details: ${err.status} - ${err.statusText}`);
