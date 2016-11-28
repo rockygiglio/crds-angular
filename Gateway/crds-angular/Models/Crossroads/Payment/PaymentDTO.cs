@@ -1,5 +1,4 @@
-﻿using crds_angular.Models.Crossroads.Stewardship;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
 namespace crds_angular.Models.Crossroads.Payment
 {
@@ -22,14 +21,5 @@ namespace crds_angular.Models.Crossroads.Payment
 
         [JsonProperty(PropertyName = "paymentTypeId")]
         public int PaymentTypeId { get; set; }
-
-        [JsonProperty(PropertyName = "batchId")]
-        public int? BatchId { get; set; }
-
-        [JsonProperty(PropertyName = "processorFee")]
-        public decimal ProcessorFee { get; set; }
-
-        [JsonProperty(PropertyName = "paymentStatus")]
-        public DonationStatus Status { get; set; }
     }
 }

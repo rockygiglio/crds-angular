@@ -148,21 +148,6 @@ namespace MinistryPlatform.Translation.Test.Services
 
             Assert.AreNotEqual(mpevent.PrimaryContact.ContactId, null);
         }
-
-        [Test]
-        public void TestUpdatePayment()
-        {
-            var parms = new Dictionary<string, object>
-            {
-                {"Payment_ID", 8},
-                {"Batch_ID", 399484}
-            };
-            var parmList = new List<Dictionary<string, object>> {parms};
-            var results = _fixture.UsingAuthenticationToken(_authToken).Put("Payments", parmList);
-
-            Assert.IsTrue(results > 0);
-        }
-
         [Test]
         public void TestSearchAllPaymentTypes()
         {
