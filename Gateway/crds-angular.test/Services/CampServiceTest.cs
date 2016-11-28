@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using crds_angular.Models.Crossroads.Attribute;
 using crds_angular.Models.Crossroads.Camp;
 
 using crds_angular.Services;
@@ -34,6 +35,9 @@ namespace crds_angular.test.Services
         private readonly Mock<IMedicalInformationRepository> _medicalInformationRepository;
         private readonly Mock<IProductRepository> _productRepository;
         private readonly Mock<IInvoiceRepository> _invoiceRepository;
+        private readonly Mock<ICommunicationRepository> _communicationRepository;
+        private readonly Mock<IPaymentRepository> _paymentRepository;
+        private readonly Mock<IObjectAttributeService> _objectAttributeService;
 
         public CampServiceTest()
         {
@@ -52,6 +56,10 @@ namespace crds_angular.test.Services
             _medicalInformationRepository = new Mock<IMedicalInformationRepository>();
             _productRepository = new Mock<IProductRepository>();
             _invoiceRepository = new Mock<IInvoiceRepository>();
+            _communicationRepository = new Mock<ICommunicationRepository>();
+            _paymentRepository = new Mock<IPaymentRepository>();
+            _objectAttributeService = new Mock<IObjectAttributeService>();
+
             _fixture = new CampService(_campService.Object, 
                                        _formSubmissionRepository.Object, 
                                        _configurationWrapper.Object, 
@@ -64,7 +72,10 @@ namespace crds_angular.test.Services
                                        _eventParticipantRepository.Object,
                                        _medicalInformationRepository.Object,
                                        _productRepository.Object,
-                                       _invoiceRepository.Object);
+                                       _invoiceRepository.Object,
+                                       _communicationRepository.Object,
+                                       _paymentRepository.Object,
+                                       _objectAttributeService.Object);
         }
 
         [Test]
@@ -419,7 +430,8 @@ namespace crds_angular.test.Services
             const int childContactId = 123456789;
 
             var participant = new Result<MpGroupParticipant>(true, new MpGroupParticipant() {GroupName = "6th Grade"});
-            
+            var attributesDto = new ObjectAllAttributesDTO();
+
             var loggedInContact = new MpMyContact
             {
                 Contact_ID = 56789,
@@ -448,6 +460,7 @@ namespace crds_angular.test.Services
             _contactService.Setup(m => m.GetContactById(contactId)).Returns(myContact);
             _apiUserRepository.Setup(m => m.GetToken()).Returns(apiToken);
             _groupRepository.Setup(m => m.GetGradeGroupForContact(contactId, apiToken)).Returns(participant);
+            _objectAttributeService.Setup(m => m.GetObjectAttributes(apiToken, contactId, It.IsAny<MpObjectAttributeConfiguration>())).Returns(attributesDto);
 
             var result = _fixture.GetCamperInfo(token, eventId, contactId);
             Assert.AreEqual(result.ContactId, 2187211);
@@ -467,6 +480,7 @@ namespace crds_angular.test.Services
             const int childContactId = 123456789;
 
             var participant = new Result<MpGroupParticipant>(false, "some error message");
+            var attributesDto = new ObjectAllAttributesDTO();
 
             var loggedInContact = new MpMyContact
             {
@@ -496,6 +510,7 @@ namespace crds_angular.test.Services
             _contactService.Setup(m => m.GetContactById(contactId)).Returns(myContact);
             _apiUserRepository.Setup(m => m.GetToken()).Returns(apiToken);
             _groupRepository.Setup(m => m.GetGradeGroupForContact(contactId, apiToken)).Returns(participant);
+            _objectAttributeService.Setup(m => m.GetObjectAttributes(apiToken, contactId, It.IsAny<MpObjectAttributeConfiguration>())).Returns(attributesDto);
 
             var result = _fixture.GetCamperInfo(token, eventId, contactId);
             Assert.AreEqual(result.ContactId, 2187211);
@@ -565,6 +580,98 @@ namespace crds_angular.test.Services
             Assert.IsTrue(result.Options.Count == 2);
             Assert.IsTrue(result.ProductId == 111);
         }
+
+        [Test]
+        public void shouldSendConfirmationEmail()
+        {
+            const int eventId = 1234554;
+            const string token = "letmein";
+            const int paymentId = 98789;
+            const int invoiceId = 8767;
+            const int contactId = 67676;
+            const int templateId = 12345;
+            const string baseUrl = "localhost:3000";
+
+            var startDate = DateTime.Now;
+            var endDate = new DateTime(2017, 8, 20); 
+
+            var mpEvent = fakeEvent(eventId, startDate, endDate, contactId);
+            var mpTemplate = fakeTemplate();
+            var mpPayment = fakePayments(contactId, paymentId);
+
+            _configurationWrapper.Setup(m => m.GetConfigValue("BaseUrl")).Returns(baseUrl);
+            _configurationWrapper.Setup(m => m.GetConfigIntValue("CampConfirmationEmailTemplate")).Returns(templateId);
+
+            // get the event and the message Id
+            _eventRepository.Setup(m => m.GetEvent(eventId)).Returns(mpEvent);
+            _paymentRepository.Setup(m => m.GetPaymentsForInvoice(invoiceId)).Returns(mpPayment);
+            _communicationRepository.Setup(m => m.GetTemplateAsCommunication(templateId, contactId, "some@email2.com", contactId, "some@email2.com", contactId, "Some@email.com", It.IsAny<Dictionary<string,object>>()));
+            _contactService.Setup(m => m.GetContactById(mpPayment.First().ContactId)).Returns(new MpMyContact() { Contact_ID = contactId, Email_Address = "some@email2.com", First_Name = "Natt", Last_Name = "last"});
+            _contactService.Setup(m => m.GetContactById(mpPayment.First().ContactId)).Returns(new MpMyContact() {Contact_ID = contactId, Email_Address = "some@email.com"});
+          
+            _communicationRepository.Setup(m => m.SendMessage(It.IsAny<MpCommunication>(), false)).Returns(1);
+
+            var resp = _fixture.SendCampConfirmationEmail(eventId, invoiceId, paymentId, token);
+           
+            _paymentRepository.VerifyAll();
+            _contactService.VerifyAll();
+            _configurationWrapper.VerifyAll();
+            _eventRepository.VerifyAll();
+
+            Assert.IsTrue(resp);
+        }
+
+        private static List<MpPayment> fakePayments(int contactId, int paymentId)
+        {
+            return new List<MpPayment>
+            {
+                new MpPayment()
+                {
+                    ContactId = contactId,
+                    PaymentTotal = 900,
+                    PaymentId = paymentId
+                },
+                new MpPayment()
+                {
+                    ContactId = contactId,
+                    PaymentTotal = 100,
+                    PaymentId = 8989
+                }
+            };
+        }
+
+        private static MpEvent fakeEvent(int eventId, DateTime startDate, DateTime endDate, int contactId)
+        {
+            return new MpEvent()
+            {
+                EventId = eventId,
+                EventTitle = "Awesome Camp",
+                EventStartDate = startDate,
+                EventEndDate = endDate,
+                RegistrationURL = "https://blah.com/some/url",
+                PrimaryContactId = contactId,
+                PrimaryContact = new MpContact()
+                {
+                    ContactId = contactId,
+                    EmailAddress = "some@email2.com"
+                }
+            };
+        }
+
+        private static MpMessageTemplate fakeTemplate()
+        {
+            return new MpMessageTemplate()
+            {
+                Body = "Some Body",
+                FromContactId = 1234,
+                FromEmailAddress = "some@email.com",
+                ReplyToContactId = 1234,
+                ReplyToEmailAddress = "some@email.com",
+                Subject = "RE: Your Brains"
+            };
+
+        }
+
         private List<MpHouseholdMember> getFakeHouseholdMembers(MpMyContact me, bool isHead = true, string positionIfNotHead = null)
         {
             return new List<MpHouseholdMember>

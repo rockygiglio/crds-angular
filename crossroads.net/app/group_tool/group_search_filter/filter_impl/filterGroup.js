@@ -5,7 +5,7 @@ export default class FilterGroup {
     this.filters = filters;
 
     // Only set parent group if this is not the top-level group
-    if(topLevel !== true) {
+    if (topLevel !== true) {
       this.filters.forEach((f) => {
         f.setFilterGroup(this);
       });
@@ -14,6 +14,32 @@ export default class FilterGroup {
 
   getName() {
     return this.filterName;
+  }
+
+
+  buildQuery() {
+    var query = {};
+    _.forEach(this.getAllFilters(), (f) => {
+      let filterQueryStringValuesCSV = "";
+      _.forEach(f.getSelectedValues(), (fv) => {
+        filterQueryStringValuesCSV += fv.name + ',';
+      });
+      if (filterQueryStringValuesCSV.length > 0)
+        query[f.getQueryParamName()] = filterQueryStringValuesCSV.replace(/,\s*$/, "");
+      else 
+        query[f.getQueryParamName()] = null;
+    })
+    return query;
+  }
+
+  getAllQueryParamNames() {
+    let queryParamList = [];
+
+    _.forEach(this.getAllFilters(), (f) => {
+      queryParamList.push(f.getQueryParamName());
+    });
+
+    return queryParamList;
   }
 
   getFilterName() {
@@ -30,11 +56,17 @@ export default class FilterGroup {
     return selected;
   }
 
+  getAllValues() {
+    let fv = [];
+    this.filters.forEach((v) => { fv.push.apply(fv, v.getValues()); });
+    return fv;
+  }
+
   getCurrentFilters() {
     let current = [];
     this.filters.forEach((f) => {
-      if(f.isActive()) {
-        if(f.constructor.name !== 'FilterGroup') {
+      if (f.isActive()) {
+        if (f.constructor.name !== 'FilterGroup') {
           current.push(f);
         } else {
           current.push.apply(current, f.getCurrentFilters());
@@ -42,6 +74,18 @@ export default class FilterGroup {
       }
     });
     return current;
+  }
+
+  getAllFilters() {
+    let filters = [];
+    this.filters.forEach((f) => {
+      if (f.constructor.name !== 'FilterGroup') {
+        filters.push(f);
+      } else {
+        filters.push.apply(filters, f.getAllFilters());
+      }
+    });
+    return filters;
   }
 
   matches(result) {
@@ -56,7 +100,7 @@ export default class FilterGroup {
   isActive() {
     // A filter group is active if any of the contained filters are active
     return this.filters.find((f) => { return f.isActive() === true; }) !== undefined;
-  }  
+  }
 
   clear() {
     this.filters.forEach((f) => { f.clear(); });

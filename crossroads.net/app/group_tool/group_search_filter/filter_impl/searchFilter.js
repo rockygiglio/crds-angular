@@ -1,10 +1,12 @@
 
 export class SearchFilter {
   // Don't instantiate this class directly, subclass it for a specific filter
-  constructor(filterName, filterValues, matchingFunction) {
+  /*@ngInject*/
+  constructor(filterName, filterValues, matchingFunction, queryParamName) {
     this.filterName = filterName;
     this.filterValues = filterValues;
     this.matchingFunction = matchingFunction;
+    this.queryParamName = queryParamName;
   }
 
   getName() {
@@ -13,6 +15,10 @@ export class SearchFilter {
 
   getFilterName() {
     return _.camelCase(this.getName());
+  }
+
+  getQueryParamName() {
+    return this.queryParamName;
   }
 
   getSelectedValues() {
@@ -24,7 +30,7 @@ export class SearchFilter {
   }
 
   matches(result) {
-    if(!this.isActive()) {
+    if (!this.isActive()) {
       return true;
     }
     return this.matchingFunction(result);
@@ -35,8 +41,7 @@ export class SearchFilter {
   }
 
   clear() {
-    for(let i = 0; i < this.filterValues.length; i++)
-    {
+    for (let i = 0; i < this.filterValues.length; i++) {
       this.filterValues[i].selected = false;
     }
   }

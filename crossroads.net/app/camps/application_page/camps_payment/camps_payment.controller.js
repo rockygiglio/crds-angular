@@ -4,16 +4,26 @@ export default class CampPaymentController {
     this.campsService = CampsService;
     this.state = $state;
     this.sce = $sce;
-    this.iframeSelector = '.hasResize';
+    this.iframeSelector = '.camp-payment-widget';
+    this.viewReady = false;
   }
 
   $onInit() {
+    this.campsService.invoiceHasPayment(this.campsService.productInfo.invoiceId)
+      .then(() => {
+        this.viewReady = true;
+      }).catch((err) => {
+        if (err.status === 302) {
+          this.state.go('campsignup.family', {}, { inherit: true, location: 'replace' });
+        }
+      });
+
     // eslint-disable-next-line global-require
     this.iFrameResizer = require('iframe-resizer/js/iframeResizer.min.js');
 
     this.iFrames = this.iFrameResizer({
-      heightCalculationMethod: 'bodyScroll',
-      log: this.debug
+      heightCalculationMethod: 'max',
+      checkOrigin: false,
     }, this.iframeSelector);
 
     // eslint-disable-next-line no-undef
@@ -31,8 +41,7 @@ export default class CampPaymentController {
         this.returnUrl = 'https://crossroads.net/camps';
         break;
     }
-
-    this.totalPrice = this.campsService.productInfo.basePrice;
+    this.totalPrice = this.campsService.productInfo.basePrice + this.getOptionPrice();
     this.depositPrice = (this.campsService.productInfo.financialAssistance) ? 50 : this.campsService.productInfo.depositPrice;
   }
 
@@ -44,7 +53,7 @@ export default class CampPaymentController {
     const campId = this.state.toParams.campId;
     const contactId = this.state.toParams.contactId;
     const invoiceId = this.campsService.productInfo.invoiceId;
-    const url = encodeURIComponent(`${this.returnUrl}/${campId}/thank-you/${contactId}`);
+    const url = encodeURIComponent(`${this.returnUrl}/${campId}/confirmation/${contactId}`);
 
     return this.sce.trustAsResourceUrl(`${this.baseUrl}?type=payment&min_payment=${this.depositPrice}&invoice_id=${invoiceId}&total_cost=${this.totalPrice}&title=${this.campsService.campTitle}&url=${url}`);
   }
@@ -55,5 +64,19 @@ export default class CampPaymentController {
         frame.iFrameResizer.close();
       }
     });
+  }
+
+  getOptionPrice() {
+    if (this.campsService.productInfo.options) {
+      const now = moment();
+      const currentOption = _.find(this.campsService.productInfo.options, (opt) => {
+        const endDate = moment(opt.endDate);
+        return endDate.isSame(now, 'day') || endDate.isAfter(now, 'day');
+      });
+      if (currentOption) {
+        return currentOption.optionPrice;
+      }
+    }
+    return 0;
   }
 }

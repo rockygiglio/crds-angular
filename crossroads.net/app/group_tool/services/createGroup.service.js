@@ -529,6 +529,7 @@ export default class CreateGroupService {
             if (category.requiresActiveAttribute == true) {
                 parsed.static = category.attribute.name;
                 parsed.disabled = true;
+                parsed.endDate = category.attribute.endDate;
             } else {
                 parsed.disabled = false;
                 parsed.static = '';
@@ -820,7 +821,7 @@ export default class CreateGroupService {
                     description: category.description,
                     selected: true,
                     startDate: category.startDate,
-                    endDate: null,
+                    endDate: this.getCategoryFromID(category.value).endDate,
                     notes: null,
                     sortOrder: 0,
                     category: this.getCategoryFromID(category.value).label,

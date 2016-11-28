@@ -1,6 +1,6 @@
 import { invokeResolve } from './application_page/resolve_registry';
 
-import { getCampInfo, getCampProductInfo, getCamperFamily, getCamperPayment } from './camps.resolves';
+import { getCampInfo, getCamperFamily, getCamperPayment } from './camps.resolves';
 
 export default function CampRoutes($stateProvider) {
   $stateProvider
@@ -48,6 +48,16 @@ export default function CampRoutes($stateProvider) {
         getCamperFamily
       }
     })
+    .state('campsignup.confirmation', {
+      url: '/confirmation/:contactId?paymentId&invoiceId',
+      controller: (CampsService, $state) => {
+        CampsService.sendConfirmation($state.toParams.invoiceId,
+                                      $state.toParams.paymentId,
+                                      $state.toParams.campId,
+                                      $state.toParams.contactId);
+        $state.go('campsignup.thankyou', $state.toParams, { location: 'replace' });
+      }
+    })
     .state('campsignup.thankyou', {
       url: '/thankyou/:contactId?paymentId&invoiceId',
       template: '<camp-thank-you></camp-thank-you>',
@@ -70,10 +80,10 @@ export default function CampRoutes($stateProvider) {
       resolve: {
         $injector: '$injector',
         $state: '$state',
+        $q: '$q',
         $stateParams: '$stateParams',
         CampsService: 'CampsService',
-        register: invokeResolve,
-        getCampProductInfo
+        register: invokeResolve
       }
     })
     ;
