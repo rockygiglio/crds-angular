@@ -69,24 +69,7 @@ namespace crds_angular.test.Services
             Assert.IsNull(result);
         }
 
-        [Test]
-        public void TestGetDonationBatchByProcessorTransferId()
-        {
-            _mpDonationService.Setup(mocked => mocked.GetDonationBatchByProcessorTransferId("123")).Returns(new MpDonationBatch
-            {
-                Id = 123,
-                DepositId = 456,
-                ProcessorTransferId = "789"
-            });
-            var result = _fixture.GetDonationBatchByProcessorTransferId("123");
-            _mpDonationService.VerifyAll();
-            Assert.IsNotNull(result);
-            Assert.AreEqual(123, result.Id);
-            Assert.AreEqual(456, result.DepositId);
-            Assert.AreEqual("789", result.ProcessorTransferId);
-        }
-
-        [Test]
+       [Test]
         public void TestGetDonationByProcessorPaymentIdDonationNotFound()
         {
             _mpDonationService.Setup(mocked => mocked.GetDonationByProcessorPaymentId("123", false)).Returns((MpDonation) null);

@@ -297,7 +297,8 @@ namespace crds_angular.Controllers.API
                             PymtType = dto.PaymentType,
                             ProcessorId = charge.Id,
                             ContactId = contactId,
-                            InvoiceId = dto.InvoiceId
+                            InvoiceId = dto.InvoiceId,
+                            FeeAmt = fee
                         };
                         var paymentReturn = _paymentService.PostPayment(payment);
                         var response = new DonationDTO

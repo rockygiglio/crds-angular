@@ -29,5 +29,6 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
         void FinishSendMessageFromDonor(int donationId, bool success);
         void AddDonationCommunication(int donationId, int communicationId);
         List<int> GetPredefinedDonationAmounts();
+        MpDeposit GetDepositByProcessorTransferId(string processorTransferId);
     }
 }
