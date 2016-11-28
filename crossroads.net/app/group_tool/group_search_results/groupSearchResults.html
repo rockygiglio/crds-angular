@@ -101,8 +101,8 @@
           <group-detail-about data="group" for-search="true" class="clearfix"></group-detail-about>
           <div class="text-right push-top push-half-bottom soft-half-right">
             <span>
-            <sn-addthis-toolbox ng-if="true" class="addthis_crossroads_sharing clearfix addthis_32x32_style push-half-bottom sm-pull-right"
-              data-url="{{groupService.shareURL(group.groupId)}}">
+            <sn-addthis-toolbox class="addthis_crossroads_sharing clearfix addthis_32x32_style push-half-bottom sm-pull-right"
+              data-url="{{groupSearchResults.shareUrl({{group.groupId}})}}">
               <a href class="addthis_button_facebook" tooltip="Share your group with friends and family on Facebook" tooltip-append-to-body="true"
                 tooltip-placement="right">
               </a>
@@ -113,7 +113,7 @@
                 tooltip-placement="right">
               </a>
             </sn-addthis-toolbox>  
-            </span>  
+            </span>
             <span>        
             <button type="button" class="btn btn-standard" ng-click="group.expanded = false">Close</button>
             <button type="button" class="btn btn-standard-dark" ng-click="groupSearchResults.requestToJoinOrEmailGroupLeader(group, true)">Contact Group Leader</button>
@@ -150,7 +150,7 @@
         <group-detail-about data="group" for-search="true"></group-detail-about>
         <div class="">
           <sn-addthis-toolbox ng-if="true" class="addthis_crossroads_sharing clearfix addthis_32x32_style push-half-bottom sm-pull-right"
-            data-url="{{groupService.shareURL(group.groupId)}}">
+            data-url="groupSearchResults.shareUrl({{group.groupId}})">
             <a href class="addthis_button_facebook" tooltip="Share your group with friends and family on Facebook" tooltip-append-to-body="true"
               tooltip-placement="right">
             </a>

@@ -312,6 +312,6 @@ export default class GroupService {
   }
 
   shareUrl(groupId) {
-    return $location.protocol() + '://' + $location.host() + '/groups/search/results?id=' + groupId;
+    return this.location.protocol() + '://' + this.location.host() + '/groups/search/results?id=' + groupId;
   }
 }

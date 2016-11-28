@@ -35,7 +35,7 @@ export default class GroupSearchResultsController {
     this.search = {
       query: this.state.params.query,
       location: this.state.params.location,
-      id:this.state.params.id
+      id: this.state.params.id
     };
     this.doSearch(this.state.params.query, this.state.params.location, this.state.params.id);
   }
@@ -158,6 +158,8 @@ export default class GroupSearchResultsController {
       }
     };
 
+
+
     var modalInstance = this.authModalService.open({
       loginTitle: 'Sign In',
       loginContentBlockId: 'groupToolAuthModalLoginText',
@@ -166,5 +168,9 @@ export default class GroupSearchResultsController {
       cancelButton: 'Back to Search Results',
       modal: modalOptions
     });
+  }
+
+  shareUrl(groupId) {
+    return this.groupService.shareUrl(groupId);
   }
 }

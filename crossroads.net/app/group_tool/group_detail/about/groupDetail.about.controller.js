@@ -1,13 +1,14 @@
 
 export default class GroupDetailAboutController {
   /*@ngInject*/
-  constructor(GroupService, ImageService, $state, $stateParams, $log, $cookies) {
+  constructor(GroupService, ImageService, $state, $stateParams, $log, $cookies, $location) {
     this.groupService = GroupService;
     this.imageService = ImageService;
     this.state = $state;
     this.stateParams = $stateParams;
     this.log = $log;
     this.cookies = $cookies;
+    this.location = $location;
 
     this.defaultProfileImageUrl = this.imageService.DefaultProfileImage;
     this.ready = false;
@@ -27,13 +28,13 @@ export default class GroupDetailAboutController {
         this.data = data;
         this.setGroupImageUrl();
       },
-      (err) => {
-        this.log.error(`Unable to get group details: ${err.status} - ${err.statusText}`);
-        this.error = true;
-      }).finally(() => {
-        this.ready = true;
-      });
-    } else if(this.data != null) {
+        (err) => {
+          this.log.error(`Unable to get group details: ${err.status} - ${err.statusText}`);
+          this.error = true;
+        }).finally(() => {
+          this.ready = true;
+        });
+    } else if (this.data != null) {
       this.setGroupImageUrl();
       this.ready = true;
     } else {
@@ -64,11 +65,11 @@ export default class GroupDetailAboutController {
 
   //this is not efficient, gets called every time the digest cycle runs
   getAddress() {
-    if(!this.ready) {
+    if (!this.ready) {
       return undefined;
     }
 
-    if(!this.data.hasAddress()) {
+    if (!this.data.hasAddress()) {
       return 'Online';
     }
 
@@ -89,17 +90,21 @@ export default class GroupDetailAboutController {
   }
 
   userInGroup() {
-    if (this.data){
+    if (this.data) {
       return this.data.participantInGroup(this.cookies.get("userId"));
     }
     return false;
   }
 
   goToEdit() {
-    this.state.go('grouptool.edit', {groupId: this.state.params.groupId});
+    this.state.go('grouptool.edit', { groupId: this.state.params.groupId });
   }
 
   goToEnd() {
-    this.state.go('grouptool.end-group', {groupId: this.state.params.groupId});
+    this.state.go('grouptool.end-group', { groupId: this.state.params.groupId });
+  }
+
+  shareUrl() {
+    return this.location.protocol() + '://' + this.location.host() + '/groups/search/results?id=' + this.groupId;
   }
 }
