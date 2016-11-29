@@ -1,6 +1,6 @@
 import { invokeResolve } from './application_page/resolve_registry';
 
-import { getCampInfo, getCampProductInfo, getCamperFamily, getCamperPayment } from './camps.resolves';
+import { getCampInfo, getCamperFamily, getCamperPayment } from './camps.resolves';
 
 export default function CampRoutes($stateProvider) {
   $stateProvider
@@ -80,10 +80,10 @@ export default function CampRoutes($stateProvider) {
       resolve: {
         $injector: '$injector',
         $state: '$state',
+        $q: '$q',
         $stateParams: '$stateParams',
         CampsService: 'CampsService',
-        register: invokeResolve,
-        getCampProductInfo
+        register: invokeResolve
       }
     })
     ;

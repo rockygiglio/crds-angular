@@ -154,7 +154,7 @@ class CampsService {
   getShirtSizes() {
     return this.attributeTypeService.AttributeTypes().get({ id: crdsConstants.ATTRIBUTE_TYPE_IDS.TSHIRT_SIZES }).$promise
       .then((shirtSizes) => {
-        this.shirtSizes = filter(shirtSizes.attributes, (attribute) => { return attribute.category === 'Adult'; });
+        this.shirtSizes = filter(shirtSizes.attributes, attribute => attribute.category === 'Adult');
         return shirtSizes;
       });
   }

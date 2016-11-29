@@ -16,7 +16,6 @@ namespace crds_angular.Services.Interfaces
         void ProcessDeclineEmail(string processorPaymentId);
         DepositDTO CreateDeposit(DepositDTO deposit);
         void CreatePaymentProcessorEventError(StripeEvent stripeEvent, StripeEventResponseDTO stripeEventResponse);
-        DonationBatchDTO GetDonationBatchByProcessorTransferId(string processorTransferId);
         DonationBatchDTO GetDonationBatch(int batchId);
         DonationsDTO GetDonationsForAuthenticatedUser(string userToken, string donationYear = null, int? limit = null, bool? softCredit = null, bool? includeRecurring = true);
         DonationYearsDTO GetDonationYearsForAuthenticatedUser(string userToken);
@@ -35,5 +34,6 @@ namespace crds_angular.Services.Interfaces
         List<DepositDTO> GenerateGPExportFileNames(int selectionId, string token);
 
         void SendMessageToDonor(int donorId, int donationDistributionId, int fromContactId, string body, string tripName);
+        DepositDTO GetDepositByProcessorTransferId(string processorTransferId);
     }
 }

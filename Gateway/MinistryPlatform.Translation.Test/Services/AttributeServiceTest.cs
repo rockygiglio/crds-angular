@@ -116,7 +116,7 @@ namespace MinistryPlatform.Translation.Test.Services
             _ministryPlatformRestService.VerifyAll();
 
             Assert.IsNotNull(attributeCategories);
-            Assert.AreEqual(4, attributeCategories.Count());
+            Assert.AreEqual(5, attributeCategories.Count());
         }
 
         [Test]
@@ -221,30 +221,37 @@ namespace MinistryPlatform.Translation.Test.Services
             {
                 new MpAttributeCategory()
                 {
-                    Attribute_Category_ID = 1,
-                    Attribute_Category = "Category 1",
-                    Description = "Attribute Category Description #1",
+                  Attribute_Category_ID = 1,
+                  Attribute_Category = "Category 1",
+                  Description = "Attribute Category Description #1",
+                  Sort_Order = null
+                },
+                new MpAttributeCategory()
+                {
+                    Attribute_Category_ID = 2,
+                    Attribute_Category = "Category 2",
+                    Description = "Attribute Category Description #2",
                     Sort_Order = 0
                 },
                 new MpAttributeCategory()
                 {
-                    Attribute_Category_ID = 1,
-                    Attribute_Category = "Category 1",
-                    Description = "Attribute Category Description #1",
+                    Attribute_Category_ID = 3,
+                    Attribute_Category = "Category 3",
+                    Description = "Attribute Category Description #3",
                     Sort_Order = 1
                 },
                 new MpAttributeCategory()
                 {
-                    Attribute_Category_ID = 1,
-                    Attribute_Category = "Category 1",
-                    Description = "Attribute Category Description #1",
+                    Attribute_Category_ID = 4,
+                    Attribute_Category = "Category 4",
+                    Description = "Attribute Category Description #4",
                     Sort_Order = 2
                 },
                 new MpAttributeCategory()
                 {
-                    Attribute_Category_ID = 1,
-                    Attribute_Category = "Category 1",
-                    Description = "Attribute Category Description #1",
+                    Attribute_Category_ID = 5,
+                    Attribute_Category = "Category 5",
+                    Description = "Attribute Category Description #5",
                     Sort_Order = 3
                 }
             };
