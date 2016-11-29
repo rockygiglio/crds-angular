@@ -25,7 +25,8 @@ describe('GroupSearchResultsController', () => {
     state.params = {
       query: 'kw1 kw2 kw3',
       location: 'oakley',
-      age: '30s'
+      age: '30s',
+      groupId: undefined
     };
     qApi = $injector.get('$q');
     rootScope = $injector.get('$rootScope');
@@ -57,7 +58,7 @@ describe('GroupSearchResultsController', () => {
       fixture.$onInit();
       expect(fixture.search.query).toEqual(state.params.query);
       expect(fixture.search.location).toEqual(state.params.location);
-      expect(fixture.doSearch).toHaveBeenCalledWith(state.params.query, state.params.location);
+      expect(fixture.doSearch).toHaveBeenCalledWith(state.params.query, state.params.location, state.params.groupId);
       expect(fixture.initialFilters['age']).toEqual('30s');
       expect(fixture.initialFilters['category']).toBeUndefined();
       expect(fixture.initialFilters['type']).toBeUndefined();
@@ -174,10 +175,10 @@ describe('GroupSearchResultsController', () => {
         return deferred.promise;
       });
       spyOn(locationService, 'search').and.callFake(() => { });
-      fixture.doSearch('123', '456');
+      fixture.doSearch('123', '456', null);
       rootScope.$apply();
 
-      expect(groupService.search).toHaveBeenCalledWith('123', '456');
+      expect(groupService.search).toHaveBeenCalledWith('123', '456', null);
       expect(locationService.search).toHaveBeenCalledWith({ query: '123', location: '456', age: '30s' });
       expect(fixture.showLocationInput).toBeFalsy();
       expect(fixture.searchedWithLocation).toBeTruthy();
@@ -203,10 +204,10 @@ describe('GroupSearchResultsController', () => {
         return deferred.promise;
       });
       spyOn(locationService, 'search').and.callFake(() => { });
-      fixture.doSearch('123', '');
+      fixture.doSearch('123', '', null);
       rootScope.$apply();
 
-      expect(groupService.search).toHaveBeenCalledWith('123', '');
+      expect(groupService.search).toHaveBeenCalledWith('123', '', null);
       expect(locationService.search).toHaveBeenCalledWith({ query: '123' });
       expect(fixture.showLocationInput).toBeFalsy();
       expect(fixture.searchedWithLocation).toBeFalsy();

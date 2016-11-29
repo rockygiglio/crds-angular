@@ -15,7 +15,6 @@ export default class GroupSearchResultsController {
     this.state = $state;
     this.ready = false;
     this.results = [];
-    this.shareUrl = this.groupService.shareUrl()
 
     this.initialFilters = {};
 
@@ -168,9 +167,5 @@ export default class GroupSearchResultsController {
       cancelButton: 'Back to Search Results',
       modal: modalOptions
     });
-  }
-
-  shareUrl(groupId) {
-    return this.groupService.shareUrl(groupId);
   }
 }
