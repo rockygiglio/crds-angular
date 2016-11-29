@@ -4,7 +4,7 @@ GroupDetailAboutComponent.$inject = [ ];
 
 export default function GroupDetailAboutComponent() {
 
-  let groupDetailAboutComponent = {
+  const groupDetailAboutComponent = {
     bindings: {
       data: '<',
       edit: '<',
@@ -15,11 +15,10 @@ export default function GroupDetailAboutComponent() {
     },
     restrict: 'E',
     templateUrl: 'about/groupDetail.about.html',
-    controller: controller,
+    controller,
     controllerAs: 'groupDetailAbout',
     bindToController: true
   };
 
   return groupDetailAboutComponent;
-
 }

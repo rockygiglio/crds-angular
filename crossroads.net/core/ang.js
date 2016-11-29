@@ -31,6 +31,8 @@
   require('ng-tags-input');
   require('angular-ui-tinymce');
   require('angular-bootstrap-confirm');
+  require('clipboard');
+  require('ngclipboard');
 
   require('../node_modules/angularjs-slider/dist/rzslider.min.css');
   require('../node_modules/angular-toggle-switch/angular-toggle-switch-bootstrap.css');

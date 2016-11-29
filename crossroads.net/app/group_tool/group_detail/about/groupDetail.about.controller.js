@@ -1,7 +1,7 @@
 
 export default class GroupDetailAboutController {
   /*@ngInject*/
-  constructor(GroupService, ImageService, $state, $stateParams, $log, $cookies, $location) {
+  constructor(GroupService, ImageService, $state, $stateParams, $log, $cookies, $location, $rootScope) {
     this.groupService = GroupService;
     this.imageService = ImageService;
     this.state = $state;
@@ -9,11 +9,13 @@ export default class GroupDetailAboutController {
     this.log = $log;
     this.cookies = $cookies;
     this.location = $location;
+    this.rootScope = $rootScope;
 
     this.defaultProfileImageUrl = this.imageService.DefaultProfileImage;
     this.ready = false;
     this.error = false;
     this.showFooter = false;
+    this.popoverHtml = '<div class="label label-success">Copied to clipboard!</div>';
 
     this.forInvitation = (this.forInvitation === undefined || this.forInvitation === null) ? false : this.forInvitation;
     this.forSearch = (this.forSearch === undefined || this.forSearch === null) ? false : this.forSearch;
@@ -21,8 +23,6 @@ export default class GroupDetailAboutController {
 
   $onInit() {
     this.groupId = this.state.params.groupId || this.data.groupId;
-
-    console.log(this.state);
 
     this.showFooter = this.state.params.groupId !== undefined && this.state.params.groupId !== null;
     if (this.showFooter) {
@@ -44,7 +44,7 @@ export default class GroupDetailAboutController {
       this.ready = true;
     } else {
       // TODO map object posted from create into data object, then call this.setGroupImageUrl()
-      //this.setGroupImageUrl();
+      // this.setGroupImageUrl();
       this.ready = true;
     }
 
@@ -61,14 +61,14 @@ export default class GroupDetailAboutController {
   }
 
   setGroupImageUrl() {
-    var primaryContactId = this.data.contactId;
+    const primaryContactId = this.data.contactId;
     this.data.primaryContact = {
       imageUrl: `${this.imageService.ProfileImageBaseURL}${primaryContactId}`,
       contactId: primaryContactId
     };
   }
 
-  //this is not efficient, gets called every time the digest cycle runs
+  // this is not efficient, gets called every time the digest cycle runs
   getAddress() {
     if (!this.ready) {
       return undefined;
@@ -96,7 +96,7 @@ export default class GroupDetailAboutController {
 
   userInGroup() {
     if (this.data) {
-      return this.data.participantInGroup(this.cookies.get("userId"));
+      return this.data.participantInGroup(this.cookies.get('userId'));
     }
     return false;
   }
@@ -110,6 +110,10 @@ export default class GroupDetailAboutController {
   }
 
   shareUrl() {
-    return this.location.protocol() + '://' + this.location.host() + '/groups/search/results?id=' + this.groupId;
+    return `${this.location.protocol()}://${this.location.host()}/groups/search/results?id=${this.groupId}`;
+  }
+
+  onSuccess() {
+    this.rootScope.$emit('notify', this.rootScope.MESSAGES.copiedToClipBoard);
   }
 }

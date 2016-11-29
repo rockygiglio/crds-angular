@@ -64,6 +64,9 @@ export default class GroupSearchResultsController {
     this.groupService.search(query, location, id).then(
       (data) => {
         this.results = data;
+        if (this.results.length === 1) {
+          this.results[0].expanded = true;
+        }
       },
       (err) => {
         // TODO what happens on error? (could be 404/no results, or other error)
