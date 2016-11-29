@@ -13,6 +13,6 @@ namespace MinistryPlatform.Translation.Models
         public string Example_Text { get; set; }
         public bool Requires_Active_Attribute { get; set; }
         public string Attribute_Category { get; set; }
-        public int Sort_Order { get; set; }
+        public int? Sort_Order { get; set; }
     }
 }
