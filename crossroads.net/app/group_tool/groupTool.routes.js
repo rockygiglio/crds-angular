@@ -12,6 +12,7 @@ export default function GroupToolRouter($httpProvider, $stateProvider) {
   let groupSearchResultsParams = angular.copy(groupSearchParams);
   groupSearchResultsParams['query'] = {value: null, squash: true};
   groupSearchResultsParams['location'] = {value: null, squash: true};
+  groupSearchResultsParams['id'] = {value: null, squash: true};
 
   $httpProvider.defaults.useXDomain = true;
 

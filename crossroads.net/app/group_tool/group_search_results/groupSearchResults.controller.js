@@ -41,11 +41,17 @@ export default class GroupSearchResultsController {
 
   doSearch(query, location, id) {
     this.searchedWithLocation = location && location.length > 0;
+    this.searchedWithId = id;
 
     let queryString = {};
     if (this.searchedWithLocation) {
       queryString.location = location;
     }
+
+    if (this.searchedWithId) {
+      queryString.id = id;
+    }
+
     if (query && query.length > 0) {
       queryString.query = query;
     }
