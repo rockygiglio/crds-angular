@@ -24,6 +24,7 @@ export default class CampPaymentController {
     this.iFrames = this.iFrameResizer({
       heightCalculationMethod: 'max',
       checkOrigin: false,
+      resizeFrom: 'child'
     }, this.iframeSelector);
 
     // eslint-disable-next-line no-undef
