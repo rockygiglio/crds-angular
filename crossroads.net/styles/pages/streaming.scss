@@ -1009,13 +1009,21 @@ streaming, landing {
     &__container {
       display: flex;
       flex-wrap: wrap;
+
+      &.container {
+        padding-left: 0;
+        padding-right: 0;
+      }
     }
 
     &__item {
       flex: 1 1 auto;
+      padding-left: 15px;
+      padding-right: 15px;
 
       &.digital-program__giving {
         background-color: #151515;
+        margin-bottom: 2em;
 
         @media (min-width: $screen-md) {
           flex: 1 1 0;
@@ -1085,6 +1093,11 @@ streaming, landing {
         @media (min-width: $screen-md) {
           margin-top: 1em;
         }
+      }
+
+      @media (min-width: $screen-md) {
+        padding-left: 0;
+        padding-right: 0;
       }
     }
   }
