@@ -9,14 +9,6 @@
   <ng-form name="roomForm">
     <div class="form-group" ng-class="{'has-error': room.validation.showErrors(roomForm, 'layout')}">
       <label class="required"> Layout </label><br />
-      <!--<select class="form-control"
-              name="layout"
-              ng-model="room.currentRoom.layout"
-              ng-options="layout.layoutName for layout in room.layouts track by layout.id"
-              required
-              ng-disabled="room.existing()">
-        <option value="">-- Choose a Layout --</option>
-      </select>-->
       <label class="weight-normal" ng-repeat="layout in room.layouts track by layout.id">
         <input type="radio" name="layout" ng-required="!room.currentRoom.layout" ng-model="room.currentRoom.layout" ng-value="layout" />
         {{layout.layoutName}}&nbsp;
