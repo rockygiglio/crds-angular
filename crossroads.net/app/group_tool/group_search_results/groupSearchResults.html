@@ -6,14 +6,8 @@
         <label for="query">{{$root.MESSAGES.groupToolSearchPageKeywordLabel.content | htmlToPlainText}}</label>
 
         <div class="group-search-input-wrapper input-group">
-          <input id="query"
-                 name="query"
-                 ng-model="groupSearchResults.search.query"
-                 type="text"
-                 class="form-control"
-                 ng-class="{ 'group-input-clear-visible': groupSearchForm.query.$viewValue.length > 0 }"
-                 placeholder="{{$root.MESSAGES.groupToolSearchPageKeywordPlaceholderText.content | htmlToPlainText}}"
-                 autofocus>
+          <input id="query" name="query" ng-model="groupSearchResults.search.query" type="text" class="form-control" ng-class="{ 'group-input-clear-visible': groupSearchForm.query.$viewValue.length > 0 }"
+            placeholder="{{$root.MESSAGES.groupToolSearchPageKeywordPlaceholderText.content | htmlToPlainText}}" autofocus>
           <span class="group-search-icon input-group-btn">
             <a ng-if="!groupSearchResults.processing && groupSearchForm.query.$viewValue.length > 0"
                ng-click="groupSearchForm.query.$setViewValue(''); groupSearchForm.query.$render()"
@@ -40,17 +34,12 @@
       </div>
       <div ng-show="groupSearchResults.showLocationInput">
         <form role="form" name="groupLocationForm" ng-submit="groupSearchResults.submit(groupLocationForm)" ng-class='{"has-error": groupLocationForm.$submitted && groupLocationForm.location.$invalid}'>
-            <label for="location" class='control-label'>{{$root.MESSAGES.groupToolSearchPageLocationLabel.content | htmlToPlainText}}</label>
-            <div class="group-location-input-wrapper input-group">
-              <input id="location"
-                     name="location"
-                     ng-model="groupSearchResults.search.location"
-                     ng-model-options="{ updateOn: 'submit' }"
-                     type="text"
-                     class="group-location-input form-control"
-                     ng-class="{ 'group-input-clear-visible': groupLocationForm.location.$viewValue.length > 0 }"
-                     placeholder="{{$root.MESSAGES.groupToolSearchPageLocationPlaceholderText.content | htmlToPlainText}}"/>
-              <span class="input-group-btn">
+          <label for="location" class='control-label'>{{$root.MESSAGES.groupToolSearchPageLocationLabel.content | htmlToPlainText}}</label>
+          <div class="group-location-input-wrapper input-group">
+            <input id="location" name="location" ng-model="groupSearchResults.search.location" ng-model-options="{ updateOn: 'submit' }"
+              type="text" class="group-location-input form-control" ng-class="{ 'group-input-clear-visible': groupLocationForm.location.$viewValue.length > 0 }"
+              placeholder="{{$root.MESSAGES.groupToolSearchPageLocationPlaceholderText.content | htmlToPlainText}}" />
+            <span class="input-group-btn">
                 <a ng-if="!groupSearchResults.processing && groupLocationForm.location.$viewValue.length > 0"
                    ng-click="groupLocationForm.location.$setViewValue(''); groupLocationForm.location.$render()"
                    class="group-input-clear">
@@ -66,10 +55,10 @@
                   loading-class='disabled'
                   input-classes='group-location-loading btn btn-default'></loading-button>
               </span>
-            </div>
-            <ng-messages for="groupLocationForm.location.$error" ng-if="groupLocationForm.$submitted && groupLocationForm.location.$invalid">
-              <ng-messages-include src="on-pause-messages"></ng-messages-include>
-            </ng-messages>
+          </div>
+          <ng-messages for="groupLocationForm.location.$error" ng-if="groupLocationForm.$submitted && groupLocationForm.location.$invalid">
+            <ng-messages-include src="on-pause-messages"></ng-messages-include>
+          </ng-messages>
         </form>
       </div>
       <div ng-show="!groupSearchResults.showLocationInput && groupSearchResults.search.location.length > 0" class="group-location-toggle">
@@ -82,7 +71,8 @@
   <div class="relative">
     <preloader full-screen='false' ng-show='!groupSearchResults.ready'> </preloader>
 
-    <group-search-filter ng-show='groupSearchResults.ready' table-params="groupSearchResults.tableParams" search-results="groupSearchResults.results" selected-filters="groupSearchResults.initialFilters"></group-search-filter>
+    <group-search-filter ng-show='groupSearchResults.ready' table-params="groupSearchResults.tableParams" search-results="groupSearchResults.results"
+      selected-filters="groupSearchResults.initialFilters"></group-search-filter>
 
     <!--
       DESKTOP ONLY results
@@ -101,15 +91,15 @@
           <span ng-if="group.hasAddress() && group.proximity !== undefined && group.proximity !== null">{{group.proximity}} mi</span>
           <span ng-if="!group.hasAddress()">Online</span>
         </td>
-        <td ng-if="!groupSearchResults.searchedWithLocation" data-title="'Location'" class="group-location text-center" >
+        <td ng-if="!groupSearchResults.searchedWithLocation" data-title="'Location'" class="group-location text-center">
           <a href="https://www.google.com/maps/place/{{group.address.zip}}" target="_blank" ng-if="group.hasAddress()">Map</a>
           <span ng-if="!group.hasAddress()">Online</span>
         </td>
       </tr>
       <tr ng-if="group.expanded" ng-repeat-end class="group-search-detail">
         <td colspan="8">
-          <group-detail-about data="group" for-search="true" class="clearfix"></group-detail-about>
-          <div class="text-right push-top push-half-bottom soft-half-right">
+          <group-detail-about data="group" for-search="true" class="clearfix" show-share-buttons="true"></group-detail-about>
+          <div class="text-right push-top push-half-bottom soft-half-right">       
             <button type="button" class="btn btn-standard" ng-click="group.expanded = false">Close</button>
             <button type="button" class="btn btn-standard-dark" ng-click="groupSearchResults.requestToJoinOrEmailGroupLeader(group, true)">Contact Group Leader</button>
             <button type="button" class="btn btn-primary" ng-click="groupSearchResults.requestToJoinOrEmailGroupLeader(group, false)">Request to Join</button>
@@ -123,9 +113,8 @@
       WARNING!!! If you make a change here, apply it to the desktop results list above
       -->
     <div ng-show='groupSearchResults.ready && groupSearchResults.hasResults()' class="group-results-mobile pointer hidden-md hidden-lg push-half-top">
-      <div ng-repeat-start="group in groupSearchResults.tableParams.settings().dataset"
-           class="group-result soft-half-bottom soft-half-top"
-           ng-click="group.expanded = true" ng-if="!group.expanded">
+      <div ng-repeat-start="group in groupSearchResults.tableParams.settings().dataset" class="group-result soft-half-bottom soft-half-top"
+        ng-click="group.expanded = true" ng-if="!group.expanded">
         <div class="row">
           <strong class="col-xs-9">{{group.groupName}}</strong>
 
@@ -134,7 +123,7 @@
             <span ng-if="!group.hasAddress()">Online</span>
           </div>
           <div ng-if="!groupSearchResults.searchedWithLocation" class="col-xs-3 text-right">
-            <a ng-if="group.hasAddress()" href="https://www.google.com/maps/place/{{group.address.zip}}" target="_blank" >Map</a>
+            <a ng-if="group.hasAddress()" href="https://www.google.com/maps/place/{{group.address.zip}}" target="_blank">Map</a>
             <span ng-if="!group.hasAddress()">Online</span>
           </div>
         </div>
@@ -142,7 +131,7 @@
         <div>{{group.meetingDay}}<span ng-if='group.meetingTime'> at {{group.meetingTime | time}}</span></div>
       </div>
       <div ng-if="group.expanded" ng-repeat-end class="group-search-detail soft-bottom">
-        <group-detail-about data="group" for-search="true"></group-detail-about>
+        <group-detail-about data="group" for-search="true" show-share-buttons="true"></group-detail-about>
         <div class="soft-half push-half-top">
           <button type="button" class="btn btn-primary btn-block" ng-click="groupSearchResults.requestToJoinOrEmailGroupLeader(group, false)">Request to Join</button>
           <button type="button" class="btn btn-standard-dark btn-block" ng-click="groupSearchResults.requestToJoinOrEmailGroupLeader(group, true)">Contact Group Leader</button>

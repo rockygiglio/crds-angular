@@ -4,21 +4,21 @@ GroupDetailAboutComponent.$inject = [ ];
 
 export default function GroupDetailAboutComponent() {
 
-  let groupDetailAboutComponent = {
+  const groupDetailAboutComponent = {
     bindings: {
       data: '<',
       edit: '<',
       forInvitation: '<',
       forSearch: '<',
-      isLeader: '<'
+      isLeader: '<',
+      showShareButtons: '<'
     },
     restrict: 'E',
     templateUrl: 'about/groupDetail.about.html',
-    controller: controller,
+    controller,
     controllerAs: 'groupDetailAbout',
     bindToController: true
   };
 
   return groupDetailAboutComponent;
-
 }
