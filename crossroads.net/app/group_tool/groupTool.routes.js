@@ -201,8 +201,8 @@ export default function GroupToolRouter($httpProvider, $stateProvider) {
     })
     .state('grouptool.search', {
       parent: 'noSideBar',
-      url: '/groups/search?age&category&type&kids&grouplocation&day&time&frequency&site&id',
-      template: '<group-search></group-search>',
+      url: '/groups/search?age&category&type&kids&grouplocation&day&time&frequency&site',
+      template: '<group-search></group-search>', 
       params: groupSearchParams,
       data: {
         meta: {

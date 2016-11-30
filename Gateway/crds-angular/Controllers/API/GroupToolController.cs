@@ -47,18 +47,18 @@ namespace crds_angular.Controllers.API
         public IHttpActionResult GetInvitations(int sourceId, int invitationTypeId)
         {
             return Authorized(token =>
-                              {
-                                  try
-                                  {
-                                      var invitess = _groupToolService.GetInvitations(sourceId, invitationTypeId, token);
-                                      return Ok(invitess);
-                                  }
-                                  catch (Exception exception)
-                                  {
-                                      var apiError = new ApiErrorDto("GetInvitations Failed", exception);
-                                      throw new HttpResponseException(apiError.HttpResponseMessage);
-                                  }
-                              });
+            {
+                try
+                {
+                    var invitess = _groupToolService.GetInvitations(sourceId, invitationTypeId, token);
+                    return Ok(invitess);
+                }
+                catch (Exception exception)
+                {
+                    var apiError = new ApiErrorDto("GetInvitations Failed", exception);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+            });
         }
 
         [AcceptVerbs("GET")]
@@ -93,18 +93,18 @@ namespace crds_angular.Controllers.API
         public IHttpActionResult GetInquiries(int groupId)
         {
             return Authorized(token =>
-                              {
-                                  try
-                                  {
-                                      var requestors = _groupToolService.GetInquiries(groupId, token);
-                                      return Ok(requestors);
-                                  }
-                                  catch (Exception exception)
-                                  {
-                                      var apiError = new ApiErrorDto("GetInquires Failed", exception);
-                                      throw new HttpResponseException(apiError.HttpResponseMessage);
-                                  }
-                              });
+            {
+                try
+                {
+                    var requestors = _groupToolService.GetInquiries(groupId, token);
+                    return Ok(requestors);
+                }
+                catch (Exception exception)
+                {
+                    var apiError = new ApiErrorDto("GetInquires Failed", exception);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+            });
         }
 
         /// <summary>
@@ -121,19 +121,19 @@ namespace crds_angular.Controllers.API
         public IHttpActionResult EndSmallGroup([FromUri] int groupId, [FromUri] int groupReasonEndedId)
         {
             return Authorized(token =>
-                              {
-                                  try
-                                  {
-                                      _groupToolService.VerifyCurrentUserIsGroupLeader(token, groupId);
-                                      _groupToolService.EndGroup(groupId, groupReasonEndedId);
-                                      return Ok();
-                                  }
-                                  catch (Exception e)
-                                  {
-                                      _logger.Error("Could not end group: " + groupId, e);
-                                      return BadRequest();
-                                  }
-                              });
+            {
+                try
+                {
+                    _groupToolService.VerifyCurrentUserIsGroupLeader(token, groupId);
+                    _groupToolService.EndGroup(groupId, groupReasonEndedId);
+                    return Ok();
+                }
+                catch (Exception e)
+                {
+                    _logger.Error("Could not end group: " + groupId, e);
+                    return BadRequest();
+                }
+            });
         }
 
         /// <summary>
@@ -154,23 +154,23 @@ namespace crds_angular.Controllers.API
                                                               [FromUri(Name = "removalMessage")] string removalMessage = null)
         {
             return Authorized(token =>
-                              {
-                                  try
-                                  {
-                                      _groupToolService.RemoveParticipantFromMyGroup(token, groupTypeId, groupId, groupParticipantId, removalMessage);
-                                      return Ok();
-                                  }
-                                  catch (GroupParticipantRemovalException e)
-                                  {
-                                      var apiError = new ApiErrorDto(e.Message, null, e.StatusCode);
-                                      throw new HttpResponseException(apiError.HttpResponseMessage);
-                                  }
-                                  catch (Exception ex)
-                                  {
-                                      var apiError = new ApiErrorDto(string.Format("Error removing group participant {0} from group {1}", groupParticipantId, groupId), ex);
-                                      throw new HttpResponseException(apiError.HttpResponseMessage);
-                                  }
-                              });
+            {
+                try
+                {
+                    _groupToolService.RemoveParticipantFromMyGroup(token, groupTypeId, groupId, groupParticipantId, removalMessage);
+                    return Ok();
+                }
+                catch (GroupParticipantRemovalException e)
+                {
+                    var apiError = new ApiErrorDto(e.Message, null, e.StatusCode);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+                catch (Exception ex)
+                {
+                    var apiError = new ApiErrorDto(string.Format("Error removing group participant {0} from group {1}", groupParticipantId, groupId), ex);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+            });
         }
 
         /// <summary>
@@ -184,7 +184,10 @@ namespace crds_angular.Controllers.API
         [Route("grouptool/grouptype/{groupTypeId:int}/group/search/")]
         [ResponseType(typeof(List<GroupDTO>))]
         [HttpGet]
-        public IHttpActionResult SearchGroups([FromUri] int groupTypeId, [FromUri(Name = "s")] string keywords = null, [FromUri(Name = "loc")] string location = null, [FromUri(Name = "id")] int? groupId = null)
+        public IHttpActionResult SearchGroups([FromUri] int groupTypeId,
+                                              [FromUri(Name = "s")] string keywords = null,
+                                              [FromUri(Name = "loc")] string location = null,
+                                              [FromUri(Name = "id")] int? groupId = null)
         {
             try
             {
@@ -202,6 +205,7 @@ namespace crds_angular.Controllers.API
                 throw new HttpResponseException(apiError.HttpResponseMessage);
             }
         }
+
         /// <summary>
         /// Allows a group leader to accept or deny a group inquirier.
         /// </summary>
@@ -213,7 +217,7 @@ namespace crds_angular.Controllers.API
         [VersionedRoute(template: "group-tool/group-type/{groupTypeId}/group/{groupId}/inquiry/approve/{approve}", minimumVersion: "1.0.0")]
         [Route("grouptool/grouptype/{groupTypeId:int}/group/{groupId:int}/inquiry/approve/{approve:bool}")]
         [HttpPost]
-        public IHttpActionResult ApproveDenyInquiryFromMyGroup([FromUri]int groupTypeId, [FromUri]int groupId, [FromUri]bool approve, [FromBody]Inquiry inquiry)
+        public IHttpActionResult ApproveDenyInquiryFromMyGroup([FromUri] int groupTypeId, [FromUri] int groupId, [FromUri] bool approve, [FromBody] Inquiry inquiry)
         {
             return Authorized(token =>
             {
@@ -251,7 +255,7 @@ namespace crds_angular.Controllers.API
         [VersionedRoute(template: "group-tool/group/{groupId}/invitation/{invitationKey}", minimumVersion: "1.0.0")]
         [Route("grouptool/group/{groupId:int}/invitation/{invitationKey}")]
         [HttpPost]
-        public IHttpActionResult ApproveDenyGroupInvitation([FromUri]int groupId, [FromUri]string invitationKey, [FromBody]bool accept)
+        public IHttpActionResult ApproveDenyGroupInvitation([FromUri] int groupId, [FromUri] string invitationKey, [FromBody] bool accept)
         {
             return Authorized(token =>
             {
@@ -297,7 +301,7 @@ namespace crds_angular.Controllers.API
                 }
                 catch (InvalidOperationException)
                 {
-                    return (IHttpActionResult)NotFound();
+                    return (IHttpActionResult) NotFound();
                 }
                 catch (Exception ex)
                 {
@@ -326,7 +330,7 @@ namespace crds_angular.Controllers.API
                 }
                 catch (InvalidOperationException)
                 {
-                    return (IHttpActionResult)NotFound();
+                    return (IHttpActionResult) NotFound();
                 }
                 catch (Exception ex)
                 {
