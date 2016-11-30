@@ -792,7 +792,7 @@ streaming, landing {
     color: darken(#FFF, 70%);
     font-family: $cr-streaming-font-sans;
     font-weight: 300;
-    font-size: 170%;
+    font-size: 1.75em;
     letter-spacing: -0.05em;
   }
 
@@ -1026,6 +1026,12 @@ streaming, landing {
       &.digital-program__articles {
         background-color: #151515;
 
+        h2 {
+          @media (min-width: $screen-md) {
+            margin-left: 1.25em;
+          }
+        }
+
         @media (min-width: $screen-md) {
           margin-right: 28px;
           flex: 2 1 0;
@@ -1062,6 +1068,7 @@ streaming, landing {
           .media-body {
             color: #FFF;
             font-family: "Helvetica Neue", Roboto, Helvetica, Arial, sans-serif;
+            font-size: .875em;
             position: relative;
             top: -8px;
           }
@@ -1069,7 +1076,7 @@ streaming, landing {
           .media-heading {
             color: #FFF;
             font-family: "acumin-pro-extra-condensed", sans-serif;
-            font-size: 28px;
+            font-size: 2em;
             margin-bottom: 8px;
             text-transform: uppercase;
           }
