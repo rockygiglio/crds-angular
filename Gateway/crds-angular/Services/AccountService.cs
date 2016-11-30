@@ -124,17 +124,6 @@ namespace crds_angular.Services
             return recordId;
         }
 
-        private void CreateContactHouseholdRecord(string token, int householdRecordId, int contactRecordId)
-        {
-            var contactHouseholdDictionary = new Dictionary<string, object>();
-            contactHouseholdDictionary["Contact_ID"] = contactRecordId;
-            contactHouseholdDictionary["Household_ID"] = householdRecordId;
-            contactHouseholdDictionary["Household_Position_ID"] = _configurationWrapper.GetConfigIntValue("Household_Position_Default_ID");
-            contactHouseholdDictionary["Household_Type_ID"] = _configurationWrapper.GetConfigIntValue("Household_Type_Default_ID");
-
-            _ministryPlatformService.CreateRecord(_configurationWrapper.GetConfigIntValue("ContactHouseholds"), contactHouseholdDictionary, token);
-        }
-
         private int CreateUserRecord(User newUserData, string token, int contactRecordId)
         {
             var userDictionary = new Dictionary<string, object>();
@@ -185,7 +174,6 @@ namespace crds_angular.Services
             var householdRecordId = CreateHouseholdRecord(newUserData, token);
             var contactRecordId = CreateContactRecord(newUserData, token, householdRecordId);
             var userRecordId = CreateUserRecord(newUserData, token, contactRecordId);
-            CreateContactHouseholdRecord(token, householdRecordId, contactRecordId);
             CreateUserRoleSubRecord(token, userRecordId);
             _participantService.CreateParticipantRecord(contactRecordId);
             CreateNewUserSubscriptions(contactRecordId, token);

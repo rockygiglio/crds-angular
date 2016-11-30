@@ -24,7 +24,7 @@ namespace crds_angular.Controllers.API
             _personService = personService;
         }
 
-        [VersionedRoute(template: "requestPasswordReset", minimumVersion: "1.0.0")]
+        [VersionedRoute(template: "request-password-reset", minimumVersion: "1.0.0")]
         [Route("requestpasswordreset")]
         [HttpPost]
         public IHttpActionResult RequestPasswordReset(PasswordResetRequest request)
@@ -40,7 +40,7 @@ namespace crds_angular.Controllers.API
             }
         }
 
-        [VersionedRoute(template: "verifyResetToken/{token}", minimumVersion: "1.0.0")]
+        [VersionedRoute(template: "verify-reset-token/{token}", minimumVersion: "1.0.0")]
         [Route("verifyresettoken/{token}")]
         [HttpGet]
         public IHttpActionResult VerifyResetTokenRequest(string token)
@@ -57,7 +57,7 @@ namespace crds_angular.Controllers.API
             }
         }
 
-        [VersionedRoute(template: "resetPassword", minimumVersion: "1.0.0")]
+        [VersionedRoute(template: "reset-password", minimumVersion: "1.0.0")]
         [Route("resetpassword")]
         [HttpPost]
         public IHttpActionResult ResetPassword(PasswordReset request)
@@ -111,7 +111,7 @@ namespace crds_angular.Controllers.API
         {
             try
             {
-                // try to login 
+                // try to login
                 var authData = TranslationService.Login(cred.username, cred.password);
                 var token = authData["token"].ToString();
                 var exp = authData["exp"].ToString();
@@ -150,7 +150,7 @@ namespace crds_angular.Controllers.API
             }
         }
 
-        [VersionedRoute(template: "verifyCredentials", minimumVersion: "1.0.0")]
+        [VersionedRoute(template: "verify-credentials", minimumVersion: "1.0.0")]
         [Route("verifycredentials")]
         [HttpPost]
         public IHttpActionResult VerifyCredentials([FromBody] Credentials cred)
@@ -169,7 +169,7 @@ namespace crds_angular.Controllers.API
                     else
                     {
                         return this.Ok();
-                    } 
+                    }
                 }
                 catch (Exception e)
                 {

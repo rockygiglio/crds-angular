@@ -36,7 +36,7 @@ namespace crds_angular.Controllers.API
         }
 
         [ResponseType(typeof(TripParticipantPledgeDto))]
-        [VersionedRoute(template: "tripApplication/{contactId}/{campaignId}", minimumVersion: "1.0.0")]
+        [VersionedRoute(template: "trip-application/{contactId}/{campaignId}", minimumVersion: "1.0.0")]
         [Route("trip-application/{contactId}/{campaignId}")]
         [HttpGet]
         public IHttpActionResult GetCampaignInfo(int contactId, int campaignId)
@@ -56,7 +56,7 @@ namespace crds_angular.Controllers.API
             });
         }
 
-        [VersionedRoute(template: "tripApplication", minimumVersion: "1.0.0")]
+        [VersionedRoute(template: "trip-application", minimumVersion: "1.0.0")]
         [Route("trip-application")]
         [HttpPost]
         public IHttpActionResult Save([FromBody] TripApplicationDto dto)

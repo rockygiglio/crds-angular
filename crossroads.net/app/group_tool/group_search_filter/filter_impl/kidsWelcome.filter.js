@@ -1,14 +1,21 @@
-
+import CONSTANTS from 'crds-constants';
 import {SearchFilter, SearchFilterValue} from './searchFilter'; 
 
 export default class KidsWelcomeFilter extends SearchFilter {
-  constructor(filterName) {
+  constructor(filterName, selectedFilters) {
+    
+    if (selectedFilters == null || selectedFilters == undefined)
+      selectedFilters="";
+    let selectedArray = selectedFilters.split(',');
+    let yesSelected = _.findIndex(selectedArray, (s) => { return s.toUpperCase() == 'YES'}) != -1;
+    let noSelected = _.findIndex(selectedArray, (s) => { return s.toUpperCase() == 'NO'}) != -1
+
     let filterValues = [
-      new SearchFilterValue('Yes', true, false),
-      new SearchFilterValue('No', false, false)
+      new SearchFilterValue('Yes', true, yesSelected),
+      new SearchFilterValue('No', false, noSelected)
     ];
 
-    super(filterName, filterValues, this._matchingFunction);
+    super(filterName, filterValues, this._matchingFunction, CONSTANTS.GROUP.SEARCH_FILTERS_QUERY_PARAM_NAMES.KIDS_WELCOME);
   }
 
   _matchingFunction(result) {

@@ -25,7 +25,7 @@ namespace crds_angular.Controllers.API
         /// Send an email to a specific contactId
         /// </summary>
         [RequiresAuthorization]
-        [VersionedRoute(template: "sendEmail", minimumVersion: "1.0.0")]
+        [VersionedRoute(template: "send-email", minimumVersion: "1.0.0")]
         [Route("sendemail")]
         public IHttpActionResult Post(EmailCommunicationDTO email)
         {
@@ -48,7 +48,7 @@ namespace crds_angular.Controllers.API
         /// Send an email to a group, takes in a list of contactId's
         /// </summary>
         [RequiresAuthorization]
-        [VersionedRoute(template: "sendGroupEmail", minimumVersion: "1.0.0")]
+        [VersionedRoute(template: "send-group-email", minimumVersion: "1.0.0")]
         [Route("sendgroupemail")]
         public IHttpActionResult Post([FromBody] CommunicationDTO communication)
         {
@@ -69,7 +69,7 @@ namespace crds_angular.Controllers.API
         /// <summary>
         /// Schedule an email to a specific contactId/emailAddress at a specific time
         /// </summary>
-        [VersionedRoute(template: "sendEmailReminder", minimumVersion: "1.0.0")]
+        [VersionedRoute(template: "send-email-reminder", minimumVersion: "1.0.0")]
         [Route("sendEmailReminder")]
         public IHttpActionResult PostReminder(EmailCommunicationDTO email)
         {

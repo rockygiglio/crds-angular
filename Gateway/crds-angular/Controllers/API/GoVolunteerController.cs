@@ -43,7 +43,7 @@ namespace crds_angular.Controllers.API
         }
 
         [ResponseType(typeof (List<ChildrenOptions>))]
-        [VersionedRoute(template: "goVolunteer/children", minimumVersion: "1.0.0")]
+        [VersionedRoute(template: "go-volunteer/children", minimumVersion: "1.0.0")]
         [Route("govolunteer/children")]
         [HttpGet]
         public IHttpActionResult GetGoChildrenOptions()
@@ -60,7 +60,7 @@ namespace crds_angular.Controllers.API
             }
         }
 
-        [VersionedRoute(template: "goVolunteer/prepTimes", minimumVersion: "1.0.0")]
+        [VersionedRoute(template: "go-volunteer/prep-times", minimumVersion: "1.0.0")]
         [ResponseType(typeof (List<AttributeDTO>))]
         [Route("govolunteer/prep-times")]
         [HttpGet]
@@ -78,7 +78,7 @@ namespace crds_angular.Controllers.API
         }
 
         [ResponseType(typeof (List<AttributeDTO>))]
-        [VersionedRoute(template: "goVolunteer/equipment", minimumVersion: "1.0.0")]
+        [VersionedRoute(template: "go-volunteer/equipment", minimumVersion: "1.0.0")]
         [Route("govolunteer/equipment")]
         [HttpGet]
         public IHttpActionResult GetGoEquipment()
@@ -102,7 +102,7 @@ namespace crds_angular.Controllers.API
         }
 
         [ResponseType(typeof (List<GoSkills>))]
-        [VersionedRoute(template: "goVolunteer/skills", minimumVersion: "1.0.0")]
+        [VersionedRoute(template: "go-volunteer/skills", minimumVersion: "1.0.0")]
         [Route("govolunteer/skills")]
         [HttpGet]
         public IHttpActionResult GetGoSkills()
@@ -125,7 +125,7 @@ namespace crds_angular.Controllers.API
         }
 
         [ResponseType(typeof (List<GroupConnector>))]
-        [VersionedRoute(template: "groupConnectors/openOrgs/{initiativeId}", minimumVersion: "1.0.0")]
+        [VersionedRoute(template: "group-connectors/open-orgs/{initiativeId}", minimumVersion: "1.0.0")]
         [Route("group-connectors/open-orgs/{initiativeId}")]
         [HttpGet]
         public IHttpActionResult GetGetGroupConnectorsOpenOrgs(int initiativeId)
@@ -150,7 +150,7 @@ namespace crds_angular.Controllers.API
         }
 
         [ResponseType(typeof (List<GroupConnector>))]
-        [VersionedRoute(template: "groupConnectors/{organizationId}/{initiativeId}", minimumVersion: "1.0.0")]
+        [VersionedRoute(template: "group-connectors/{organizationId}/{initiativeId}", minimumVersion: "1.0.0")]
         [Route("group-connectors/{organizationId}/{initiativeId}")]
         [HttpGet]
         public IHttpActionResult GetGroupConnectorsForOrg(int organizationId, int initiativeId)
@@ -233,7 +233,7 @@ namespace crds_angular.Controllers.API
         }
 
         [ResponseType(typeof (List<ProjectType>))]
-        [VersionedRoute(template: "goVolunteer/projectTypes", minimumVersion: "1.0.0")]
+        [VersionedRoute(template: "go-volunteer/project-types", minimumVersion: "1.0.0")]
         [Route("goVolunteer/projectTypes")]
         [HttpGet]
         public IHttpActionResult GetProjectTypes()
@@ -250,7 +250,7 @@ namespace crds_angular.Controllers.API
             }
         }
 
-        [VersionedRoute(template: "goVolunteer/registration", minimumVersion: "1.0.0")]
+        [VersionedRoute(template: "go-volunteer/registration", minimumVersion: "1.0.0")]
         [Route("govolunteer/registration")]
         [ResponseType(typeof (Registration))]
         [HttpPost]
@@ -271,7 +271,7 @@ namespace crds_angular.Controllers.API
             try
             {
                 goVolunteerRegistration.InitiativeId = _configurationWrapper.GetConfigIntValue("GoCincinnatiInitativeId");
-                var reg = _goVolunteerService.CreateRegistration(goVolunteerRegistration, token);                                
+                var reg = _goVolunteerService.CreateRegistration(goVolunteerRegistration, token);
                 return Ok(reg);
             }
             catch (Exception e)
