@@ -186,70 +186,70 @@ class MedicalInfoForm {
           }
         }]
       },
-      {
-        className: '',
-        wrapper: 'campBootstrapRow',
-        fieldGroup: [{
-          className: 'form-group col-xs-6',
-          key: 'showAllergies',
-          type: 'crdsRadio',
-          templateOptions: {
-            label: 'Are there any Allergy/Dietary Needs?',
-            required: true,
-            inline: true,
-            labelProp: 'label',
-            valueProp: 'id',
-            options: [{
-              label: 'Yes',
-              id: true
-            }, {
-              label: 'No',
-              id: false
-            }]
-          }
-        }]
-      },
-      {
-        className: '',
-        wrapper: 'campBootstrapRow',
-        hideExpression: () => !this.formModel.showAllergies,
-        fieldGroup: [{
-          className: 'col-xs-12',
-          template: '<p>List all allergies, reactions and treatments to allergies.</p>'
-        }, {
-          className: 'form-group col-xs-12',
-          key: 'medicineAllergies',
-          type: 'crdsTextArea',
-          templateOptions: {
-            label: 'Medicine Allergies',
-            required: false
-          }
-        }, {
-          className: 'form-group col-xs-12',
-          key: 'foodAllergies',
-          type: 'crdsTextArea',
-          templateOptions: {
-            label: 'Food Allergies',
-            required: false
-          }
-        }, {
-          className: 'form-group col-xs-12',
-          key: 'environmentalAllergies',
-          type: 'crdsTextArea',
-          templateOptions: {
-            label: 'Environmental Allergies',
-            required: false
-          }
-        }, {
-          className: 'form-group col-xs-12',
-          key: 'otherAllergies',
-          type: 'crdsTextArea',
-          templateOptions: {
-            label: 'Other Allergies',
-            required: false
-          }
-        }]
-      },
+      // {
+      //   className: '',
+      //   wrapper: 'campBootstrapRow',
+      //   fieldGroup: [{
+      //     className: 'form-group col-xs-6',
+      //     key: 'showAllergies',
+      //     type: 'crdsRadio',
+      //     templateOptions: {
+      //       label: 'Are there any Allergy/Dietary Needs?',
+      //       required: true,
+      //       inline: true,
+      //       labelProp: 'label',
+      //       valueProp: 'id',
+      //       options: [{
+      //         label: 'Yes',
+      //         id: true
+      //       }, {
+      //         label: 'No',
+      //         id: false
+      //       }]
+      //     }
+      //   }]
+      // },
+      // {
+      //   className: '',
+      //   wrapper: 'campBootstrapRow',
+      //   hideExpression: () => !this.formModel.showAllergies,
+      //   fieldGroup: [{
+      //     className: 'col-xs-12',
+      //     template: '<p>List all allergies, reactions and treatments to allergies.</p>'
+      //   }, {
+      //     className: 'form-group col-xs-12',
+      //     key: 'medicineAllergies',
+      //     type: 'crdsTextArea',
+      //     templateOptions: {
+      //       label: 'Medicine Allergies',
+      //       required: false
+      //     }
+      //   }, {
+      //     className: 'form-group col-xs-12',
+      //     key: 'foodAllergies',
+      //     type: 'crdsTextArea',
+      //     templateOptions: {
+      //       label: 'Food Allergies',
+      //       required: false
+      //     }
+      //   }, {
+      //     className: 'form-group col-xs-12',
+      //     key: 'environmentalAllergies',
+      //     type: 'crdsTextArea',
+      //     templateOptions: {
+      //       label: 'Environmental Allergies',
+      //       required: false
+      //     }
+      //   }, {
+      //     className: 'form-group col-xs-12',
+      //     key: 'otherAllergies',
+      //     type: 'crdsTextArea',
+      //     templateOptions: {
+      //       label: 'Other Allergies',
+      //       required: false
+      //     }
+      //   }]
+      // },
       {
         key: 'anyMedications',
         type: 'crdsRadio',
@@ -271,37 +271,41 @@ class MedicalInfoForm {
       {
         key: 'medicines',
         type: 'campMedicines',
-        hideExpression: () => !this.formModel.anyMedications,
+        hideExpression: () => this.formModel.anyMedications,
         templateOptions: {
           fields: [
             {
               className: '',
               fieldGroup: [{
-                className: 'form-group col-md-3 col-xs-6',
+                className: 'form-group col-lg-4 col-md-6 col-xs-12',
                 key: 'medicationName',
                 type: 'crdsInput',
                 templateOptions: {
+                  label: 'Medication Name',
                   required: true
                 }
               }, {
-                className: 'form-group col-md-2 col-xs-6',
+                className: 'form-group col-lg-2 col-md-3 col-xs-6',
                 key: 'timeOfDay',
                 type: 'crdsInput',
                 templateOptions: {
+                  label: 'Time(s) of Day',
                   required: true
                 }
               }, {
-                className: 'form-group col-md-2 col-xs-6',
+                className: 'form-group col-lg-2 col-md-3 col-xs-6',
                 key: 'dosage',
                 type: 'crdsInput',
                 templateOptions: {
+                  label: 'Dosage',
                   required: true
                 }
               }, {
-                className: 'form-group col-md-4 col-xs-5',
+                className: 'form-group col-lg-4 col-md-12 col-xs-12',
                 key: 'medicationType',
                 type: 'crdsRadio',
                 templateOptions: {
+                  label: 'Medication Type',
                   required: true,
                   labelProp: 'label',
                   valueProp: 'medicationType',

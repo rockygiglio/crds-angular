@@ -1,18 +1,14 @@
 <!--loop through each element in model array-->
 <div class="{{hideRepeat}}">
-  <div class="row push-quarter-bottom">
-    <div class="col-md-3 col-xs-6 required bold"><strong>Medication Name</strong></div>
-    <div class="col-md-2 col-xs-6 required bold"><strong>Time(s) of Day</strong></div>
-    <div class="col-md-2 col-xs-6 required bold"><strong>Dosage</strong></div>
-    <div class="col-md-5 col-xs-6 required bold"><strong>Medication Type</strong></div>
-  </div>
   <div class="repeatsection" ng-repeat="element in model[options.key]">
-    <div class="row">
-      <formly-form fields="fields"
-                   model="element"
-                   form="form">
-      </formly-form>
-      <div class="col-xs-1">
+    <div class="camp-medicine-row" ng-class="{ 'camp-medicine-additional-row': $index > 0 }">
+      <div class="row camp-medicine-fields">
+        <formly-form fields="fields"
+                     model="element"
+                     form="form">
+        </formly-form>
+      </div>
+      <div class="camp-medicine-remove">
         <a ng-click="remove($index)" ng-if="showTrash($index)" class="black">
           <svg viewBox="0 0 25 32" class="icon icon-trash-o icon-large">
             <use xlink:href="#trash-o"></use>
@@ -20,6 +16,7 @@
         </a>
       </div>
     </div>
+    <div class="border-bottom push-half-bottom visible-xs visible-sm"></div>
   </div>
 </div>
 

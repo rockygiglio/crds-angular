@@ -3,4 +3,29 @@ crossroads-camp {
     width: 100%;
     min-height: 240px;
   }
+
+  .camp-medicine-row {
+    position: relative;
+    @media (max-width: $screen-lg-min) {
+      margin-bottom: $line-height-computed / 2;
+    }
+  }
+
+  .camp-medicine-fields {
+    width: 100%;
+  }
+
+  .camp-medicine-remove {
+    width: 30px;
+    float: right;
+  }
+
+  .camp-medicine-additional-row {
+    @media (min-width: $screen-md-min) {
+      .control-label {
+        display: none;
+      }
+    }
+  }
+
 }
