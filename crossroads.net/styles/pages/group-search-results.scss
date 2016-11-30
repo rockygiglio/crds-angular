@@ -122,4 +122,17 @@ group-search-results {
       border-bottom: 1px solid $gray-lighter;
     }
   }
+
+  .share-url-span {
+    background-color: rgb(132, 132, 132); 
+    line-height: 16px; 
+    height: 16px; 
+    width: 16px;
+  }
+
+  .share-url-svg {
+    width: 16px; 
+    height: 16px; 
+    color: white;
+  }
 }

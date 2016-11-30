@@ -166,8 +166,6 @@ export default class GroupSearchResultsController {
       }
     };
 
-
-
     var modalInstance = this.authModalService.open({
       loginTitle: 'Sign In',
       loginContentBlockId: 'groupToolAuthModalLoginText',
