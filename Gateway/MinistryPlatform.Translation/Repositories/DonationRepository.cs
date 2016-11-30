@@ -26,6 +26,7 @@ namespace MinistryPlatform.Translation.Repositories
         private readonly int _paymentProcessorErrorsPageId;
         private readonly int _tripDistributionsPageView;
         private readonly int _gpExportPageView;
+        private readonly int _paymentGPExportPageView;
         private readonly int _processingProgramId;
         private readonly int _scholarshipPaymentTypeId;
         private readonly int _tripDonationMessageTemplateId;
@@ -59,6 +60,7 @@ namespace MinistryPlatform.Translation.Repositories
             _paymentProcessorErrorsPageId = configuration.GetConfigIntValue("PaymentProcessorEventErrors");
             _tripDistributionsPageView = configuration.GetConfigIntValue("TripDistributionsView");
             _gpExportPageView = configuration.GetConfigIntValue("GPExportView");
+            _paymentGPExportPageView = configuration.GetConfigIntValue("PaymentsGPExportView");
             _processingProgramId = configuration.GetConfigIntValue("ProcessingProgramId");
             _scholarshipPaymentTypeId = configuration.GetConfigIntValue("ScholarshipPaymentTypeId");
             _tripDonationMessageTemplateId = configuration.GetConfigIntValue("TripDonationMessageTemplateId");
@@ -412,27 +414,20 @@ namespace MinistryPlatform.Translation.Repositories
             return trips;
         }
 
-        public List<MpGPExportDatum> GetGpExport(int depositId, string token)
-        {
-            var gpExport = new List<MpGPExportDatum>();
-            var glLevelGPExport = GetGLLevelGpExport(depositId, token);
-
-            foreach (var glLevelGPData in glLevelGPExport)
-            {
-                gpExport.Add(glLevelGPData);
-            }
-
-            return gpExport;
+        public List<MpGPExportDatum> GetGpExport(int depositId, bool isDonation, string token)
+        {            
+            return GetGLLevelGpExport(depositId, isDonation, token);
         }
 
-        private List<MpGPExportDatum> GetGLLevelGpExport(int depositId, string token)
+        private List<MpGPExportDatum> GetGLLevelGpExport(int depositId, bool isDonation, string token)
         {
             var processingFeeGLMapping = GetProcessingFeeGLMapping(token);
-            var gpExportDonationLevel = GetGpExportData(depositId, token);
+
+            var gpExportDonationLevel = isDonation ? GetGpExportData(depositId, token) : GetGPExportDataForPayments(depositId, token);
             
             var gpExportGLLevel= new List<MpGPExportDatum>();
 
-            var gpExportDonationSum = gpExportDonationLevel.GroupBy(r => new
+            var gpExportDonationGroup = gpExportDonationLevel.GroupBy(r => new
             {
                 r.DepositId,
                 r.ProccessFeeProgramId,
@@ -450,7 +445,9 @@ namespace MinistryPlatform.Translation.Repositories
                 r.ScholarshipExpenseAccount, 
                 r.ScholarshipPaymentTypeId, 
                 r.PaymentTypeId
-            })
+            });
+
+            var gpExportDonationSum = gpExportDonationGroup
                 .Select(x => new MpGPExportDatum()
                 {
                     DepositId = x.Key.DepositId,
@@ -549,7 +546,37 @@ namespace MinistryPlatform.Translation.Repositories
                 ProcessorFeeAmount = datum.ProcessorFeeAmount
             };
         }
-        
+
+        public List<MpGPExportDatum> GetGPExportDataForPayments(int depositId , string token)
+        {
+            var results = _ministryPlatformService.GetPageViewRecords(_paymentGPExportPageView, token, depositId.ToString());
+            return (from result in results
+                    let amount = Convert.ToDecimal(result.ToString("Payment_Amount"))
+                    select new MpGPExportDatum
+                    {
+                        ProccessFeeProgramId = _processingProgramId,
+                        DepositId = result.ToInt("Deposit_ID"),
+                        ProgramId = result.ToInt("Program_ID"),
+                        DocumentType = result.ToString("Document_Type"),
+                        DonationId = result.ToInt("Payment_ID"),
+                        BatchName = result.ToString("Batch_Name"),
+                        DonationDate = result.ToDate("Payment_Date"),
+                        DepositDate = result.ToDate("Deposit_Date"),
+                        CustomerId = result.ToString("Customer_ID"),
+                        DonationAmount = amount,
+                        DepositAmount = result.ToString("Deposit_Amount"),
+                        CheckbookId = result.ToString("Checkbook_ID"),
+                        CashAccount = result.ToString("Cash_Account"),
+                        ReceivableAccount = result.ToString("Receivable_Account"),
+                        DistributionAccount = result.ToString("Distribution_Account"),
+                        ScholarshipExpenseAccount = result.ToString("Scholarship_Expense_Account"),
+                        Amount = amount,
+                        ScholarshipPaymentTypeId = _scholarshipPaymentTypeId,
+                        PaymentTypeId = result.ToInt("Payment_Type_ID"),
+                        ProcessorFeeAmount = Convert.ToDecimal(result.ToString("Processor_Fee_Amount"))
+                    }).ToList();
+        }
+
         public List<MpGPExportDatum> GetGpExportData(int depositId, string token)
         {
             var results = _ministryPlatformService.GetPageViewRecords(_gpExportPageView, token, depositId.ToString());

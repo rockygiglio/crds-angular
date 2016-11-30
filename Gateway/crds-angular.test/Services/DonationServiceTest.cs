@@ -339,16 +339,19 @@ namespace crds_angular.test.Services
         {
             const int depositId = 789;
             var mockedExport = MockGPExport();
+            var mockedPaymentExport = MockPaymentExport();
+
             var expectedReturn = MockExpectedGpExportDto();
 
-            _mpDonationService.Setup(mocked => mocked.GetGpExport(depositId, It.IsAny<string>())).Returns(mockedExport);
+            _mpDonationService.Setup(mocked => mocked.GetGpExport(depositId, true, It.IsAny<string>())).Returns(mockedExport);
+            _mpDonationService.Setup(mocked => mocked.GetGpExport(depositId, false, It.IsAny<string>())).Returns(mockedPaymentExport);
 
             var result = _fixture.GetGpExport(depositId, "asdfafasdfas");
 
             _mpDonationService.VerifyAll();
 
             Assert.IsNotNull(result);
-            Assert.AreEqual(4, result.Count);
+            Assert.AreEqual(8, result.Count);
             Assert.AreEqual(expectedReturn[0].DocumentType, mockedExport[0].DocumentType);
             Assert.AreEqual(expectedReturn[0].DocumentNumber, mockedExport[0].DocumentNumber);
             Assert.AreEqual(expectedReturn[0].DocumentDescription, mockedExport[0].BatchName);
@@ -473,6 +476,103 @@ namespace crds_angular.test.Services
                     DistributionAccount = "77777-031-22",
                     DistributionAmount = "0.12",
                     DistributionReference = "Processor Fees " + new DateTime(2015, 3, 28, 8, 30, 0)
+                },
+            };
+        }
+
+        private List<MpGPExportDatum> MockPaymentExport()
+        {
+            return new List<MpGPExportDatum>
+            {
+                new MpGPExportDatum
+                {
+                    DocumentType = "SALE",
+                    DocumentNumber = "10002001",
+                    DepositId = 10002,
+                    BatchName = "Test Payment Batch",
+                    DonationDate = new DateTime(2015, 3, 28, 8, 30, 0),
+                    DepositDate = new DateTime(2015, 3, 28, 8, 30, 0),
+                    CustomerId = "CONTRIBUTI001",
+                    DepositAmount ="400.00",
+                    CheckbookId = "PNC001",
+                    CashAccount = "91213-031-20",
+                    ReceivableAccount = "90013-031-21",
+                    DistributionAccount = "90001-031-22",
+                    DonationAmount = Convert.ToDecimal("380.00"),
+                    Amount = Convert.ToDecimal("380.00")-Convert.ToDecimal(0.13),
+                    ProcessorFeeAmount = Convert.ToDecimal(".25"),
+                    ProgramId = 12,
+                    ProccessFeeProgramId = 127,
+                    PaymentTypeId = 9,
+                    ScholarshipExpenseAccount = "90551-031-02",
+                    ScholarshipPaymentTypeId = 9
+                },
+                new MpGPExportDatum
+                {
+                    DocumentType = "SALE",
+                    DocumentNumber = "10002001",
+                    DepositId = 10002,
+                    BatchName = "Test Payment Batch",
+                    DonationDate = new DateTime(2015, 3, 28, 8, 30, 0),
+                    DepositDate = new DateTime(2015, 3, 28, 8, 30, 0),
+                    CustomerId = "CONTRIBUTI001",
+                    DepositAmount = "400.00",
+                    CheckbookId = "PNC001",
+                    CashAccount = "77777-031-20",
+                    ReceivableAccount = "77777-031-21",
+                    DistributionAccount = "77777-031-22",
+                    DonationAmount = Convert.ToDecimal("380.00"),
+                    Amount = Convert.ToDecimal(0.13),
+                    ProgramId = 127,
+                    ProccessFeeProgramId = 127,
+                    PaymentTypeId = 9,
+                    ScholarshipExpenseAccount = "90551-031-02",
+                    ScholarshipPaymentTypeId = 9,
+                },
+                new MpGPExportDatum
+                {
+                    DocumentType = "SALE",
+                    DocumentNumber = "10002002",
+                    DepositId = 10002,
+                    BatchName = "Test Payment Batch 2",
+                    DonationDate = new DateTime(2014, 3, 28, 8, 30, 0),
+                    DepositDate = new DateTime(2014, 3, 28, 8, 30, 0),
+                    CustomerId = "CONTRIBUTI001",
+                    DepositAmount = "400.00",
+                    CheckbookId = "PNC001",
+                    CashAccount = "91213-031-20",
+                    ReceivableAccount = "90013-031-21",
+                    DistributionAccount = "90001-031-22",
+                    DonationAmount = Convert.ToDecimal("20.00"),
+                    Amount = Convert.ToDecimal(20.0)-Convert.ToDecimal(0.12),
+                    ProcessorFeeAmount = Convert.ToDecimal(".25"),
+                    ProgramId = 112,
+                    ProccessFeeProgramId = 127,
+                    PaymentTypeId = 15,
+                    ScholarshipExpenseAccount = "90551-031-02",
+                    ScholarshipPaymentTypeId = 9,
+                },
+                new MpGPExportDatum
+                {
+                    DocumentType = "SALE",
+                    DocumentNumber = "10002002",
+                    DepositId = 10002,
+                    BatchName = "Test Payment Batch 2",
+                    DonationDate = new DateTime(2015, 3, 28, 8, 30, 0),
+                    DepositDate = new DateTime(2015, 3, 28, 8, 30, 0),
+                    CustomerId = "CONTRIBUTI001",
+                    DepositAmount = "400.00",
+                    CheckbookId = "PNC001",
+                    CashAccount = "77777-031-20",
+                    ReceivableAccount = "77777-031-21",
+                    DistributionAccount = "77777-031-22",
+                    DonationAmount = Convert.ToDecimal("20.00"),
+                    Amount = Convert.ToDecimal(0.12),
+                    ProgramId = 127,
+                    ProccessFeeProgramId = 127,
+                    PaymentTypeId = 15,
+                    ScholarshipExpenseAccount = "90551-031-02",
+                    ScholarshipPaymentTypeId = 9,
                 },
             };
         }
