@@ -140,6 +140,9 @@ export default class AddEventcontroller {
     let end;
     try {
       start = this.dateTime(this.eventData.startDate, this.eventData.startTime);
+      if (this.eventData.eventType.Allow_Multiday_Event) {
+        this.eventData.endDate = this.eventData.startDate;
+      }
       end = this.dateTime(this.eventData.endDate, this.eventData.endTime);
     } catch (err) {
       form.endDate.$error.endDate = true;
