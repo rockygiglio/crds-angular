@@ -1030,8 +1030,6 @@ streaming, landing {
           margin-right: 28px;
           flex: 2 1 0;
           order: 1;
-          max-height: 475px; // review when content added
-          overflow: hidden; // review when content added
         }
       }
 
@@ -1051,9 +1049,6 @@ streaming, landing {
 
           @media (min-width: $screen-md) {
             @include make-md-column(4);
-          }
-
-          figure {
           }
 
           .media-left {
