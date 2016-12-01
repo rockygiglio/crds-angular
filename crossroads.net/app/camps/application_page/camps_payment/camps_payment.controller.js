@@ -22,9 +22,9 @@ export default class CampPaymentController {
     this.iFrameResizer = require('iframe-resizer/js/iframeResizer.min.js');
 
     this.iFrames = this.iFrameResizer({
-      heightCalculationMethod: 'max',
+      heightCalculationMethod: 'taggedElement',
       checkOrigin: false,
-      resizeFrom: 'child'
+      interval: -16
     }, this.iframeSelector);
 
     // eslint-disable-next-line no-undef
