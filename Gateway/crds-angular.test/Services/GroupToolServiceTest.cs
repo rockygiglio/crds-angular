@@ -1238,7 +1238,7 @@ namespace crds_angular.test.Services
         {
             const int groupTypeId = 1;
             var keywords = new[] {"kw1", "kw2"};
-            _groupToolRepository.Setup(mocked => mocked.SearchGroups(groupTypeId, null)).Returns(new List<MpGroupSearchResultDto>());
+            _groupToolRepository.Setup(mocked => mocked.SearchGroups(groupTypeId, null, null)).Returns(new List<MpGroupSearchResultDto>());
             var results = _fixture.SearchGroups(groupTypeId);
             _groupToolRepository.VerifyAll();
             Assert.IsNull(results);
@@ -1269,7 +1269,7 @@ namespace crds_angular.test.Services
                     GroupType = 4564
                 }
             };
-            _groupToolRepository.Setup(mocked => mocked.SearchGroups(groupTypeId, keywords)).Returns(searchResults);
+            _groupToolRepository.Setup(mocked => mocked.SearchGroups(groupTypeId, keywords, null)).Returns(searchResults);
             var results = _fixture.SearchGroups(groupTypeId, keywordString);
             _groupToolRepository.VerifyAll();
             Assert.IsNotNull(results);
@@ -1329,7 +1329,7 @@ namespace crds_angular.test.Services
             const string location = "loc loc loc";
             var geoResults = new List<decimal?> { null, 9, 3 };
             var distanceMatrixResults = new List<decimal?> { 2, 5 };
-            _groupToolRepository.Setup(mocked => mocked.SearchGroups(groupTypeId, It.IsAny<string[]>())).Returns(searchResults);
+            _groupToolRepository.Setup(mocked => mocked.SearchGroups(groupTypeId, It.IsAny<string[]>(), null)).Returns(searchResults);
             _addressProximityService.Setup(mocked => mocked.GetProximity(location, It.IsAny<List<AddressDTO>>())).Returns(geoResults);
             _addressMatrixService.Setup(mocked => mocked.GetProximity(location, It.IsAny<List<AddressDTO>>())).Returns(distanceMatrixResults);
 

@@ -26,7 +26,7 @@ namespace crds_angular.Controllers.API
         private readonly IConfigurationWrapper _configurationWrapper;
 
         public GroupToolController(Services.Interfaces.IGroupToolService groupToolService,
-            IConfigurationWrapper configurationWrapper)
+                                   IConfigurationWrapper configurationWrapper)
         {
             _groupToolService = groupToolService;
             _configurationWrapper = configurationWrapper;
@@ -118,7 +118,7 @@ namespace crds_angular.Controllers.API
         [VersionedRoute(template: "group-tool/{groupId}/end-small-group", minimumVersion: "1.0.0")]
         [Route("grouptool/{groupId:int}/endsmallgroup")]
         [HttpPost]
-        public IHttpActionResult EndSmallGroup([FromUri]int groupId, [FromUri]int groupReasonEndedId)
+        public IHttpActionResult EndSmallGroup([FromUri] int groupId, [FromUri] int groupReasonEndedId)
         {
             return Authorized(token =>
             {
@@ -148,7 +148,10 @@ namespace crds_angular.Controllers.API
         [VersionedRoute(template: "group-tool/group-type/{groupTypeId}/group/{groupId}/participant/{groupParticipantId}", minimumVersion: "1.0.0")]
         [Route("grouptool/grouptype/{groupTypeId:int}/group/{groupId:int}/participant/{groupParticipantId:int}")]
         [HttpDelete]
-        public IHttpActionResult RemoveParticipantFromMyGroup([FromUri]int groupTypeId, [FromUri]int groupId, [FromUri]int groupParticipantId, [FromUri(Name = "removalMessage")]string removalMessage = null)
+        public IHttpActionResult RemoveParticipantFromMyGroup([FromUri] int groupTypeId,
+                                                              [FromUri] int groupId,
+                                                              [FromUri] int groupParticipantId,
+                                                              [FromUri(Name = "removalMessage")] string removalMessage = null)
         {
             return Authorized(token =>
             {
@@ -177,15 +180,18 @@ namespace crds_angular.Controllers.API
         /// <param name="keywords">The optional keywords to search for</param>
         /// <param name="location">The optional location/address to search for - if specified, the search results will include approximate distances from this address</param>
         /// <returns>A list of groups matching the terms</returns>
-        [VersionedRoute(template: "group-tool/group-type/{groupTypeId}/group/search", minimumVersion: "1.0.0")]
-        [Route("grouptool/grouptype/{groupTypeId:int}/group/search")]
+        [VersionedRoute(template: "groupTool/groupType/{groupTypeId}/group/search", minimumVersion: "1.0.0")]
+        [Route("grouptool/grouptype/{groupTypeId:int}/group/search/")]
         [ResponseType(typeof(List<GroupDTO>))]
         [HttpGet]
-        public IHttpActionResult SearchGroups([FromUri] int groupTypeId, [FromUri(Name = "s")] string keywords = null, [FromUri(Name = "loc")] string location = null)
+        public IHttpActionResult SearchGroups([FromUri] int groupTypeId,
+                                              [FromUri(Name = "s")] string keywords = null,
+                                              [FromUri(Name = "loc")] string location = null,
+                                              [FromUri(Name = "id")] int? groupId = null)
         {
             try
             {
-                var result = _groupToolService.SearchGroups(groupTypeId, keywords, location);
+                var result = _groupToolService.SearchGroups(groupTypeId, keywords, location, groupId);
                 if (result == null || !result.Any())
                 {
                     return RestHttpActionResult<List<GroupDTO>>.WithStatus(HttpStatusCode.NotFound, new List<GroupDTO>());
@@ -211,7 +217,7 @@ namespace crds_angular.Controllers.API
         [VersionedRoute(template: "group-tool/group-type/{groupTypeId}/group/{groupId}/inquiry/approve/{approve}", minimumVersion: "1.0.0")]
         [Route("grouptool/grouptype/{groupTypeId:int}/group/{groupId:int}/inquiry/approve/{approve:bool}")]
         [HttpPost]
-        public IHttpActionResult ApproveDenyInquiryFromMyGroup([FromUri]int groupTypeId, [FromUri]int groupId, [FromUri]bool approve, [FromBody]Inquiry inquiry)
+        public IHttpActionResult ApproveDenyInquiryFromMyGroup([FromUri] int groupTypeId, [FromUri] int groupId, [FromUri] bool approve, [FromBody] Inquiry inquiry)
         {
             return Authorized(token =>
             {
@@ -249,7 +255,7 @@ namespace crds_angular.Controllers.API
         [VersionedRoute(template: "group-tool/group/{groupId}/invitation/{invitationKey}", minimumVersion: "1.0.0")]
         [Route("grouptool/group/{groupId:int}/invitation/{invitationKey}")]
         [HttpPost]
-        public IHttpActionResult ApproveDenyGroupInvitation([FromUri]int groupId, [FromUri]string invitationKey, [FromBody]bool accept)
+        public IHttpActionResult ApproveDenyGroupInvitation([FromUri] int groupId, [FromUri] string invitationKey, [FromBody] bool accept)
         {
             return Authorized(token =>
             {
@@ -295,7 +301,7 @@ namespace crds_angular.Controllers.API
                 }
                 catch (InvalidOperationException)
                 {
-                    return (IHttpActionResult)NotFound();
+                    return (IHttpActionResult) NotFound();
                 }
                 catch (Exception ex)
                 {
@@ -324,7 +330,7 @@ namespace crds_angular.Controllers.API
                 }
                 catch (InvalidOperationException)
                 {
-                    return (IHttpActionResult)NotFound();
+                    return (IHttpActionResult) NotFound();
                 }
                 catch (Exception ex)
                 {
