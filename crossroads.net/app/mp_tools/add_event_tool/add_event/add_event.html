@@ -220,13 +220,13 @@
   <div class="form-group" ng-class="{'has-error': evt.validation.showErrors(eventForm, 'participantsExpected')}">
     <label class="required">Number of Participants Expected</label>
     <input ng-pattern="/^([1-9]|[1-9][0-9]|[1-9][0-9][0-9]|[1-9][0-9][0-9][0-9]|[1-9][0-9][0-9][0-9][0-9])$/" type="text" name="participantsExpected"
-      class="form-control" ng-model="evt.eventData.participantsExpected" required>
+      class="form-control" maxlength="5" ng-model="evt.eventData.participantsExpected" required>
     <ng-messages for="eventForm.participantsExpected.$error" ng-if="evt.validation.showErrors(eventForm, 'participantsExpected')">
       <span ng-message="required">
           <span dynamic-content="$root.MESSAGES.fieldCanNotBeBlank.content | html"></span>
       </span>
       <span ng-message="pattern">
-          <span>Please enter between 1 and 99,999 people.</span>
+          <span>Please enter at valid number.</span>
       </span>
     </ng-messages>
   </div>
