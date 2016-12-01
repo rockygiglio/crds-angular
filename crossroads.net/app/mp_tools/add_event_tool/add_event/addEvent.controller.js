@@ -2,25 +2,24 @@ import CONSTANTS from 'crds-constants';
 
 export default class AddEventcontroller {
     /* @ngInject */
-  constructor($log, $rootScope, AddEvent, Lookup, Programs, StaffContact, Validation) {
+  constructor($log, AddEvent, Lookup, Programs, StaffContact, Validation) {
     this.log = $log;
-    this.rootScope = $rootScope;
     this.addEvent = AddEvent;
     this.lookup = Lookup;
     this.programsLookup = Programs;
     this.staffContact = StaffContact;
     this.validation = Validation;
     this.endDateOpened = false;
-    this.eventTypes = Lookup.query({ table: 'eventtypes' });
-    this.reminderDays = Lookup.query({ table: 'reminderdays' });
-    this.staffContacts = this.staffContact.query();
-    this.programs = this.programsLookup.AllPrograms.query();
     this.startDateOpened = false;
     this.childcareSelectedFlag = false;
   }
 
   $onInit() {
-        // Get the congregations
+    this.eventTypes = this.lookup.query({ table: 'eventtypes' });
+    this.reminderDays = this.lookup.query({ table: 'reminderdays' });
+    this.staffContacts = this.staffContact.query();
+    this.programs = this.programsLookup.AllPrograms.query();
+    // Get the congregations
     this.lookup.query({ table: 'crossroadslocations' }, (locations) => {
       this.crossroadsLocations = locations;
 
