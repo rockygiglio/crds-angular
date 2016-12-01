@@ -14,7 +14,6 @@ using MinistryPlatform.Translation.Exceptions;
 using MinistryPlatform.Translation.Models;
 using Newtonsoft.Json;
 using DonationStatus = crds_angular.Models.Crossroads.Stewardship.DonationStatus;
-using MinistryPlatform.Translation.Enum;
 using PaymentType = crds_angular.Models.Crossroads.Stewardship.PaymentType;
 
 namespace crds_angular.Services
@@ -383,8 +382,8 @@ namespace crds_angular.Services
 
         public List<GPExportDatumDTO> GetGpExport(int depositId, string token)
         {
-            var gpExportData = _mpDonationRepository.GetGpExport(depositId, true, token);
-            gpExportData.AddRange(_mpDonationRepository.GetGpExport(depositId, false, token));
+            var gpExportData = _mpDonationRepository.GetGpExport(depositId, Crossroads.Utilities.Enums.TransactionType.Donation, token);
+            gpExportData.AddRange(_mpDonationRepository.GetGpExport(depositId, Crossroads.Utilities.Enums.TransactionType.Payment, token));
             return gpExportData.Select(Mapper.Map<MpGPExportDatum, GPExportDatumDTO>).ToList();
         }
 

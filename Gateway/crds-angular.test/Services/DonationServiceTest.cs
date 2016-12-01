@@ -343,8 +343,8 @@ namespace crds_angular.test.Services
 
             var expectedReturn = MockExpectedGpExportDto();
 
-            _mpDonationService.Setup(mocked => mocked.GetGpExport(depositId, true, It.IsAny<string>())).Returns(mockedExport);
-            _mpDonationService.Setup(mocked => mocked.GetGpExport(depositId, false, It.IsAny<string>())).Returns(mockedPaymentExport);
+            _mpDonationService.Setup(mocked => mocked.GetGpExport(depositId, Crossroads.Utilities.Enums.TransactionType.Donation, It.IsAny<string>())).Returns(mockedExport);
+            _mpDonationService.Setup(mocked => mocked.GetGpExport(depositId, Crossroads.Utilities.Enums.TransactionType.Payment, It.IsAny<string>())).Returns(mockedPaymentExport);
 
             var result = _fixture.GetGpExport(depositId, "asdfafasdfas");
 

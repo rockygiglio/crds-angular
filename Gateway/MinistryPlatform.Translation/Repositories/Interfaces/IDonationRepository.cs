@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Crossroads.Utilities.Enums;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Models.DTO;
 
@@ -22,7 +23,7 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
             string eventMessage, string responseMessage);
 
         List<MpTripDistribution> GetMyTripDistributions(int contactId);
-        List<MpGPExportDatum> GetGpExport(int depositId, bool isDonation, string token);
+        List<MpGPExportDatum> GetGpExport(int depositId, TransactionType transactionType, string token);
         void UpdateDepositToExported(int selectionId, int depositId, string token);
         void SendMessageToDonor(int donorId, int donationDistributionId, int fromContactId, string body, string tripName);
         void SendMessageFromDonor(int pledgeId, int donationId, string message);

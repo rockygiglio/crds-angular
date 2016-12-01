@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
 using Crossroads.Utilities;
+using Crossroads.Utilities.Enums;
 using Crossroads.Utilities.Interfaces;
 using MinistryPlatform.Translation.Enum;
 using MinistryPlatform.Translation.Exceptions;
@@ -414,16 +415,16 @@ namespace MinistryPlatform.Translation.Repositories
             return trips;
         }
 
-        public List<MpGPExportDatum> GetGpExport(int depositId, bool isDonation, string token)
+        public List<MpGPExportDatum> GetGpExport(int depositId, TransactionType transaction, string token)
         {            
-            return GetGLLevelGpExport(depositId, isDonation, token);
+            return GetGLLevelGpExport(depositId, transaction, token);
         }
 
-        private List<MpGPExportDatum> GetGLLevelGpExport(int depositId, bool isDonation, string token)
+        private List<MpGPExportDatum> GetGLLevelGpExport(int depositId, TransactionType transaction, string token)
         {
             var processingFeeGLMapping = GetProcessingFeeGLMapping(token);
 
-            var gpExportDonationLevel = isDonation ? GetGpExportData(depositId, token) : GetGPExportDataForPayments(depositId, token);
+            var gpExportDonationLevel = transaction == TransactionType.Donation ? GetGpExportData(depositId, token) : GetGPExportDataForPayments(depositId, token);
             
             var gpExportGLLevel= new List<MpGPExportDatum>();
 
