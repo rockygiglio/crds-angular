@@ -56,8 +56,8 @@
     ////////////////////////////
     $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
 
-      // Determine whether to render legacy stylesheet based on data object defined in routes.js
-      // This covers any page defined in routes.js (ie. not populated by the CMS)
+      // Determine whether to render legacy stylesheet.
+      // TODO – Populate the following property based on the values returned from the CMS, per US5875. -TCM 12/01/16
       $rootScope.renderLegacyStyles = (toState.data.renderLegacyStyles !== false);
 
       if ((toState.resolve || toState.data.resolve) && !event.defaultPrevented) {

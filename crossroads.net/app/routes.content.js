@@ -130,8 +130,7 @@
                     statusCode: ContentPageService.page.errorCode
                   };
 
-                  // Determine whether to render legacy stylesheet based on CMS template
-                  // NOTE: Templates not defined below are returning a pageType of 'Page'...
+                  // TODO – Populate the following property based on the values returned from the CMS, per US5875. -TCM 12/01/16
                   $rootScope.renderLegacyStyles = true;
 
                   switch (ContentPageService.page.pageType) {
