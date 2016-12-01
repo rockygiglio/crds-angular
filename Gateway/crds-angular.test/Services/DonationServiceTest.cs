@@ -291,18 +291,14 @@ namespace crds_angular.test.Services
         public void TestGpExportFileName()
         {
             var date = DateTime.Today;
-            var fileName = string.Format("XRDReceivables-Test_Batch_Name_{0}{1}{2}.txt", date.ToString("yy"), date.ToString("MM"), date.ToString("dd"));
+            var fileName = string.Format("XRDReceivables-Test_Deposit_Name_{0}{1}{2}.txt", date.ToString("yy"), date.ToString("MM"), date.ToString("dd"));
 
-            _mpDonationService.Setup(mocked => mocked.GetDonationBatchByDepositId(456)).Returns(new MpDonationBatch
+            var deposit = new DepositDTO()
             {
-                Id = 123,
-                DepositId = 456,
-                ProcessorTransferId = "789",
-                BatchName = "Test Batch Name",
-            });
-            var result = _fixture.GPExportFileName(456);
+                DepositName = "Test Deposit Name"
+            };
 
-            _mpDonationService.VerifyAll();
+            var result = _fixture.GPExportFileName(deposit);
             Assert.AreEqual(fileName, result);
         }
 

@@ -360,6 +360,11 @@ namespace crds_angular.Services
             return deposits;
         }
 
+        public DepositDTO GetDepositById(int depositId)
+        {
+            return (Mapper.Map<MpDeposit, DepositDTO>(_mpDonationRepository.GetDepositById(depositId)));
+        }
+
         public void ProcessDeclineEmail(string processorPaymentId)
         {
             _mpDonationRepository.ProcessDeclineEmail(processorPaymentId);
@@ -408,7 +413,7 @@ namespace crds_angular.Services
 
             foreach (var deposit in deposits)
             {
-                deposit.ExportFileName = GPExportFileName(deposit.Id);
+                deposit.ExportFileName = GPExportFileName(deposit);
             }
 
             return deposits;
@@ -419,13 +424,11 @@ namespace crds_angular.Services
             _mpDonationRepository.SendMessageToDonor(donorId, donationDistributionId, fromContactId, body, tripName);
         }
 
-        public string GPExportFileName(int depositId)
-        {
-            var batch = GetDonationBatchByDepositId(depositId);
-
-            var date = DateTime.Today.ToString("yyMMdd");
-            var batchName = batch.BatchName.Replace(" ", "_");
-            return string.Format("XRDReceivables-{0}_{1}.txt", batchName, date);
+        public string GPExportFileName(DepositDTO deposit)
+        {            
+            var date = DateTime.Today.ToString("yyMMdd");            
+            var depositName = deposit.DepositName.Replace(" ", "_");
+            return string.Format("XRDReceivables-{0}_{1}.txt", depositName, date);
         }
 
         public int? CreateDonationForBankAccountErrorRefund(StripeRefund refund)

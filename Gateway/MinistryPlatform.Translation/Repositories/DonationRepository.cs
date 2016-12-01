@@ -152,7 +152,15 @@ namespace MinistryPlatform.Translation.Repositories
             }
 
             return deposits;
-        } 
+        }
+
+        public MpDeposit GetDepositById(int depositId)
+        {
+            var apiToken = ApiLogin();
+            var searchString = $"Deposit_ID = {depositId}";
+            var results = _ministryPlatformRest.UsingAuthenticationToken(apiToken).Search<MpDeposit>(searchString).ToList();
+            return results.FirstOrDefault();
+        }
 
         public int CreateDonationBatch(string batchName, DateTime setupDateTime, decimal batchTotalAmount, int itemCount,
             int batchEntryType, int? depositId, DateTime finalizedDateTime, string processorTransferId)

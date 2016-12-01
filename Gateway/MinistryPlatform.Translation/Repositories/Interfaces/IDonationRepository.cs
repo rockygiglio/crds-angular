@@ -32,5 +32,7 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
         List<int> GetPredefinedDonationAmounts();
         MpDeposit GetDepositByProcessorTransferId(string processorTransferId);
         List<MpGPExportDatum> GetGPExportDataForPayments(int depositId, string token);
+
+        MpDeposit GetDepositById(int depositId);
     }
 }
