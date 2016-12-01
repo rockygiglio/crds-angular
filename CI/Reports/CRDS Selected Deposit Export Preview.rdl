@@ -70,14 +70,16 @@
           <DataField>Statement_Title</DataField>
           <rd:UserDefined>true</rd:UserDefined>
         </Field>
-        <Field Name="DistrSum">
-          <Value>DistrSum</Value>
-        </Field>
-        <Field Name="DistrItems">
-          <Value>DistrItems</Value>
-        </Field>
         <Field Name="Deposit_ID">
           <DataField>Deposit_ID</DataField>
+          <rd:UserDefined>true</rd:UserDefined>
+        </Field>
+        <Field Name="DistrSum">
+          <DataField>DistrSum</DataField>
+          <rd:UserDefined>true</rd:UserDefined>
+        </Field>
+        <Field Name="DistrItems">
+          <DataField>DistrItems</DataField>
           <rd:UserDefined>true</rd:UserDefined>
         </Field>
       </Fields>
