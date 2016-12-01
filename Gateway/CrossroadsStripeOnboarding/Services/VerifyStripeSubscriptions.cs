@@ -17,9 +17,9 @@ namespace CrossroadsStripeOnboarding.Services
         private static readonly ILog VerifyOutput = LogManager.GetLogger("VERIFY_OUTPUT");
 
         private readonly MinistryPlatformContext _mpContext;
-        private readonly IPaymentService _paymentService;
+        private readonly IPaymentProcessorService _paymentService;
 
-        public VerifyStripeSubscriptions(MinistryPlatformContext mpContext, IPaymentService paymentService)
+        public VerifyStripeSubscriptions(MinistryPlatformContext mpContext, IPaymentProcessorService paymentService)
         {
             _mpContext = mpContext;
             _paymentService = paymentService;

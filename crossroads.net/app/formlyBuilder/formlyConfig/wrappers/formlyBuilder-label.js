@@ -10,8 +10,9 @@ export default ngModule => {
                     label: check.string.optional,
                     required: check.bool.optional,
                     labelSrOnly: check.bool.optional,
+                    helpBlock: check.string.optional,
                 }
             })
         });
     }
-}
+};

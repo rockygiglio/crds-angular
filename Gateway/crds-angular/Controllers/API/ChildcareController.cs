@@ -14,6 +14,7 @@ using crds_angular.Security;
 using crds_angular.Services.Interfaces;
 using MinistryPlatform.Translation.Exceptions;
 using Newtonsoft.Json;
+using Crossroads.ApiVersioning;
 
 namespace crds_angular.Controllers.API
 {
@@ -30,8 +31,9 @@ namespace crds_angular.Controllers.API
             _personService = personService;
         }
 
-        [Route("api/childcare/rsvp")]
-        [AcceptVerbs("POST")]
+        [VersionedRoute(template: "childcare/rsvp", minimumVersion: "1.0.0")]
+        [Route("childcare/rsvp")]
+        [HttpPost]
         public IHttpActionResult SaveRsvp([FromBody] ChildcareRsvpDto saveRsvp)
         {
             if (!ModelState.IsValid)
@@ -71,15 +73,16 @@ namespace crds_angular.Controllers.API
         }
 
         [ResponseType(typeof(Event))]
-        [Route("api/childcare/event/{eventid}")]
-        [AcceptVerbs("GET")]
-        public IHttpActionResult ChildcareEventById(int eventid)
+        [VersionedRoute(template: "childcare/event/{eventId}", minimumVersion: "1.0.0")]
+        [Route("childcare/event/{eventId}")]
+        [HttpGet]
+        public IHttpActionResult ChildcareEventById(int eventId)
         {
             return Authorized(token =>
             {
                 try
                 {
-                    return Ok(_eventService.GetMyChildcareEvent(eventid, token));
+                    return Ok(_eventService.GetMyChildcareEvent(eventId, token));
                 }
                 catch (Exception e)
                 {
@@ -92,8 +95,9 @@ namespace crds_angular.Controllers.API
 
 
         [ResponseType(typeof(List<FamilyMember>))]
-        [Route("api/childcare/eligible-children")]
-        [AcceptVerbs("GET")]
+        [VersionedRoute(template: "childcare/eligible-children", minimumVersion: "1.0.0")]
+        [Route("childcare/eligible-children")]
+        [HttpGet]
         public IHttpActionResult ChildrenEligibleForChildcare()
         {
             return Authorized(token =>
@@ -110,8 +114,9 @@ namespace crds_angular.Controllers.API
             });
         }
 
-        [Route("api/childcare/request")]
-        [AcceptVerbs("POST")]
+        [VersionedRoute(template: "childcare/request", minimumVersion: "1.0.0")]
+        [Route("childcare/request")]
+        [HttpPost]
         public IHttpActionResult CreateChildcareRequest([FromBody] ChildcareRequestDto request)
         {
             if (!ModelState.IsValid)
@@ -133,12 +138,13 @@ namespace crds_angular.Controllers.API
                     var apiError = new ApiErrorDto("Create Childcare Request Failed", e);
                     throw new HttpResponseException(apiError.HttpResponseMessage);
                 }
-                
+
             });
         }
 
-        [Route("api/childcare/updaterequest")]
-        [AcceptVerbs("POST")]
+        [VersionedRoute(template: "childcare/update-request", minimumVersion: "1.0.0")]
+        [Route("childcare/updaterequest")]
+        [HttpPost]
         public IHttpActionResult UpdateChildcareRequest([FromBody] ChildcareRequestDto request)
         {
             if (!ModelState.IsValid)
@@ -164,8 +170,9 @@ namespace crds_angular.Controllers.API
             });
         }
 
-        [Route("api/childcare/request/approve/{requestId}")]
-        [AcceptVerbs("POST")]
+        [VersionedRoute(template: "childcare/request/approve/{requestId}", minimumVersion: "1.0.0")]
+        [Route("childcare/request/approve/{requestId}")]
+        [HttpPost]
         public IHttpActionResult ApproveChildcareRequest(int requestId, ChildcareRequestDto childcareRequest)
         {
             if (!ModelState.IsValid)
@@ -214,8 +221,9 @@ namespace crds_angular.Controllers.API
             });
         }
 
-        [Route("api/childcare/request/reject/{requestId}")]
-        [AcceptVerbs("POST")]
+        [VersionedRoute(template: "childcare/request/reject/{requestId}", minimumVersion: "1.0.0")]
+        [Route("childcare/request/reject/{requestId}")]
+        [HttpPost]
         public IHttpActionResult RejectChildcareRequest(int requestId, ChildcareRequestDto childcareRequest)
         {
             if (!ModelState.IsValid)
@@ -241,16 +249,17 @@ namespace crds_angular.Controllers.API
             });
         }
 
-        [Route("api/childcare/getrequest/{requestid}")]
-        [AcceptVerbs("GET")]
-        public IHttpActionResult GetChildcareRequest(int requestid)
+        [VersionedRoute(template: "childcare/get-request/{requestId}", minimumVersion: "1.0.0")]
+        [Route("childcare/getrequest/{requestId}")]
+        [HttpGet]
+        public IHttpActionResult GetChildcareRequest(int requestId)
         {
 
             return Authorized(token =>
             {
                 try
                 {
-                    return Ok(_childcareService.GetChildcareRequestForReview(requestid, token));
+                    return Ok(_childcareService.GetChildcareRequestForReview(requestId, token));
                 }
                 catch (Exception e)
                 {
@@ -261,8 +270,9 @@ namespace crds_angular.Controllers.API
             });
         }
 
-        [Route("api/childcare/dashboard/{contactId}")]
-        [AcceptVerbs("GET")]
+        [VersionedRoute(template: "childcare/dashboard/{contactId}", minimumVersion: "1.0.0")]
+        [Route("childcare/dashboard/{contactId}")]
+        [HttpGet]
         public IHttpActionResult ChildcareDashboard(int contactId)
         {
             return Authorized(token =>
@@ -285,16 +295,16 @@ namespace crds_angular.Controllers.API
                     var apiError = new ApiErrorDto("Get Childcare Dashboard Failed", e);
                     throw new HttpResponseException(apiError.HttpResponseMessage);
                 }
-                
+
             });
-            
+
         }
 
         private class DateError
         {
             public List<DateTime> Errors { get; set;}
             public string Message { get; set;}
-            public DateTime Error { get; set; } 
+            public DateTime Error { get; set; }
         }
     }
 }

@@ -22,7 +22,7 @@ namespace crds_angular.Services
 
         private readonly IDonorRepository _mpDonorService;
         private readonly IContactRepository _mpContactService;
-        private readonly Interfaces.IPaymentService _paymentService;
+        private readonly Interfaces.IPaymentProcessorService _paymentService;
         private readonly IAuthenticationRepository _authenticationService;
         private readonly IPledgeRepository _pledgeService;
         public const string DefaultInstitutionName = "Bank";
@@ -44,7 +44,7 @@ namespace crds_angular.Services
         private readonly int _capitalCampaignPledgeTypeId;
 
         public DonorService(IDonorRepository mpDonorService, IContactRepository mpContactService,
-            Interfaces.IPaymentService paymentService, IConfigurationWrapper configurationWrapper,
+            Interfaces.IPaymentProcessorService paymentService, IConfigurationWrapper configurationWrapper,
             IAuthenticationRepository authenticationService, IPledgeRepository pledgeService)
         {
             _mpDonorService = mpDonorService;
@@ -111,8 +111,7 @@ namespace crds_angular.Services
         ///    to take some of the decision logic out of the frontend on whether a new Donor needs to be created or not, 
         ///    whether a Customer needs to be created at the payment processor, etc.
         /// </summary>
-        /// <param name="mpContactDonorAn existing MpContactDonor, looked up from either GetDonorForEmail or GetDonorForAuthenticatedUser.  This may be null, indicating there is no existing mpContact or donor.</param>
-        /// <param name="mpContactDonor"></param>
+        /// <param name="mpContactDonor">An existing MpContactDonor, looked up from either GetDonorForEmail or GetDonorForAuthenticatedUser.  This may be null, indicating there is no existing mpContact or donor.</param>
         /// <param name="encryptedKey"> The encrypted routing and account number</param>
         /// <param name="dto"></param>
         /// <param name="lastName"></param>

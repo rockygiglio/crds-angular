@@ -1,3 +1,5 @@
+import moment from 'moment';
+import 'moment-timezone';
 
 export default class ReminderService {
   constructor($http, $modal) {
@@ -11,8 +13,7 @@ export default class ReminderService {
     let result = null;
     let time = reminder.time.slice(0, reminder.time.length - 4);
 
-    reminder.startDate = moment.tz(`${reminder.day} ${time}`, 'MM/DD/YYYY h:mma', "America/New_York").format();
-
+    reminder.startDate = moment.tz(`${reminder.day} ${time}`, 'MM/DD/YYYY h:mma', "America/New_York").toISOString();
     if (reminder.isValid()) {
       switch(reminder.type) {
         case 'phone':
@@ -30,15 +31,15 @@ export default class ReminderService {
     let body = JSON.stringify({ 
       "templateId": 0,
       "mergeData": {
-        "Event_Date":       reminder.day,
-        "Event_Start_Time": reminder.time
+        "Event_Date":       reminder.userTZDateShortFormat(reminder.startDate),
+        "Event_Start_Time": reminder.userTZTimeWithTZSuffix(reminder.startDate)
       },
       "startDate":     reminder.startDate,
       "toPhoneNumber": reminder.phone
     });
 
     return this.http
-      .post(`${this.url}api/sendTextReminder`, body, this.headers);
+      .post(`${this.url}api/sendTextMessageReminder`, body, this.headers);
   }
 
   sendEmailReminder(reminder) {
@@ -47,8 +48,8 @@ export default class ReminderService {
       "emailAddress":   reminder.email,
       "startDate":      reminder.startDate,
       "mergeData": {
-        "Event_Date":       reminder.day,
-        "Event_Start_Time": reminder.time
+        "Event_Date":       reminder.userTZDateShortFormat(reminder.startDate),
+        "Event_Start_Time": reminder.userTZTimeWithTZSuffix(reminder.startDate)
       },
     })
 
@@ -61,7 +62,7 @@ export default class ReminderService {
       templateUrl: 'streaming_reminder/streamingReminder.html',
       controller: 'StreamingReminderController',
       controllerAs: 'reminder',
-      openedClass: 'crds-modal',
+      openedClass: 'crds-modal reminder-modal',
       size: 'lg'
     });
   }

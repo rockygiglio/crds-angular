@@ -7,11 +7,12 @@ import GroupInquiry from '../model/groupInquiry';
 
 export default class GroupService {
   /*@ngInject*/
-  constructor($log, $resource, $q, AuthService, LookupService, Profile, ImageService) {
+  constructor($log, $resource, $q, $location, AuthService, LookupService, Profile, ImageService) {
     this.log = $log;
     this.resource = $resource;
     this.profile = Profile;
     this.qApi = $q;
+    this.location = $location;
     this.auth = AuthService;
     this.lookupService = LookupService;
     this.imgService = ImageService;
@@ -60,38 +61,8 @@ export default class GroupService {
     return this.lookupService.Genders.query().$promise;
   }
 
-  getGroupCategories() {
-    let categories = [
-      {
-        categoryId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.INTEREST,
-        label: 'Interest',
-        labelDesc: 'groupToolInterestDetail',
-        placeholder: 'Ex. Boxing, XBox'
-      }, {
-        categoryId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.NEIGHBORHOODS,
-        label: 'Neighborhoods',
-        labelDesc: 'groupToolNeighborhoodDescription',
-        placeholder: 'Ex. Norwood, Gaslight'
-      }, {
-        categoryId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.SPIRITUAL_GROWTH,
-        label: 'Spiritual Growth',
-        labelDesc: 'groupToolSpiritualGrowthDescription',
-        placeholder: 'Ex. Huddle, James'
-      }, {
-        categoryId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.LIFE_STAGES,
-        label: 'Life Stage',
-        labelDesc: 'groupToolLifeStageDescription',
-        placeholder: 'Ex. new family, young married, college, empty nesters'
-      }, {
-        categoryId: CONSTANTS.ATTRIBUTE_CATEGORY_IDS.HEALING,
-        label: 'Healing',
-        labelDesc: 'groupToolHealingDescription',
-        placeholder: 'Ex. grief, infertility, addiction, divorce, crisis'
-      }];
-
-    let deferred = this.qApi.defer();
-    deferred.resolve(categories);
-    return deferred.promise;
+  getGroupTypeCategories() {
+    return this.resource(__API_ENDPOINT__ + 'api/grouptool/categories').query().$promise;
   }
 
   sendGroupInvitation(invitation) {
@@ -178,12 +149,12 @@ export default class GroupService {
 
   endGroup(groupId, groupReasonEndedId) {
     let promise = this.resource(`${__API_ENDPOINT__}api/grouptool/:groupId/endsmallgroup`)
-                          .save({groupId: groupId, groupReasonEndedId: groupReasonEndedId}, {}).$promise;
+      .save({ groupId: groupId, groupReasonEndedId: groupReasonEndedId }, {}).$promise;
     return promise.then((data) => {
-        return data;
-      }, (err) => {
-        throw err;
-      });
+      return data;
+    }, (err) => {
+      throw err;
+    });
   }
 
   approveDenyInquiry(groupId, approve, inquiry) {
@@ -304,9 +275,9 @@ export default class GroupService {
       });
   }
 
-  search(searchString, locationString) {
-    let promise = this.resource(`${__API_ENDPOINT__}api/grouptool/grouptype/:groupTypeId/group/search`).
-      query({ s: searchString, loc: locationString, groupTypeId: CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS }).$promise;
+  search(searchString, locationString, groupId) {
+    let promise = this.resource(`${__API_ENDPOINT__}api/grouptool/grouptype/:groupTypeId/group/search`)
+      .query({ s: searchString, loc: locationString, groupTypeId: CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS, id: groupId }).$promise;
 
     return promise.then((data) => {
       let groups = data.map((group) => {
@@ -336,7 +307,11 @@ export default class GroupService {
   }
 
   submitJoinRequest(groupId) {
-      return this.resource(`${__API_ENDPOINT__}api/grouptool/group/:groupId/submitinquiry`)
-          .save({groupId: groupId},{}).$promise;
+    return this.resource(`${__API_ENDPOINT__}api/grouptool/group/:groupId/submitinquiry`)
+      .save({ groupId: groupId }, {}).$promise;
+  }
+
+  shareUrl(groupId) {
+    return this.location.protocol() + '://' + this.location.host() + '/groups/search/results?id=' + groupId;
   }
 }

@@ -13,22 +13,27 @@ import LeadersSiteFilter from '../../../app/group_tool/group_search_filter/filte
 import FilterGroup from '../../../app/group_tool/group_search_filter/filter_impl/filterGroup';
 
 describe('GroupSearchFilter', () => {
-  let fixture, groupService, createGroupService, qApi;
+  let fixture, groupService, createGroupService, qApi, state;
 
   beforeEach(angular.mock.module(constants.MODULES.GROUP_TOOL));
 
-  beforeEach(inject(function ($injector) {
-    groupService = jasmine.createSpyObj('groupServiceMock', [ 'getAgeRanges', 
-                                                              'getGroupGenderMixType', 
-                                                              'getDaysOfTheWeek', 
-                                                              'getGroupCategories', 
-                                                              'getSites']);
+  beforeEach(inject(function ($injector, $state) {
+    groupService = jasmine.createSpyObj('groupServiceMock', ['getAgeRanges',
+      'getGroupGenderMixType',
+      'getDaysOfTheWeek',
+      'getGroupTypeCategories',
+      'getSites']);
 
     createGroupService = jasmine.createSpyObj('createGroupServiceMock', ['getMeetingFrequencies']);
 
+    state = $injector.get('$state');
+    state.params = {
+      location: 'Trenton, OH, 45067'
+    };
+
     qApi = $injector.get('$q');
 
-    fixture = new GroupSearchFilter(groupService, createGroupService);
+    fixture = new GroupSearchFilter(groupService, createGroupService, state);
   }));
 
   describe('the constructor', () => {
@@ -41,7 +46,7 @@ describe('GroupSearchFilter', () => {
 
   describe('$onInit function', () => {
     it('should initialize filters', () => {
-      spyOn(fixture, 'initializeFilters').and.callFake(() => {});
+      spyOn(fixture, 'initializeFilters').and.callFake(() => { });
       fixture.$onInit();
       expect(fixture.initializeFilters).toHaveBeenCalled();
     });
@@ -57,7 +62,7 @@ describe('GroupSearchFilter', () => {
           }
         }
       };
-      spyOn(fixture, 'applyFilters').and.callFake(() => {});
+      spyOn(fixture, 'applyFilters').and.callFake(() => { });
       fixture.$onChanges(changes);
       expect(fixture.applyFilters).toHaveBeenCalled();
       expect(fixture.searchResults).toBe(changes.searchResults.currentValue);
@@ -66,10 +71,22 @@ describe('GroupSearchFilter', () => {
 
   describe('initializeFilters function', () => {
     it('should initialize all filters', () => {
+      fixture.selectedFilters = {
+        age: '30s',
+        category: null,
+        type: null,
+        kids: null,
+        grouplocation: null,
+        day: null,
+        time: null,
+        frequency: null,
+        site: null
+      }
+
       groupService.getAgeRanges.and.callFake(() => { let d = qApi.defer(); d.reject({}); return d.promise; });
       groupService.getGroupGenderMixType.and.callFake(() => { let d = qApi.defer(); d.reject({}); return d.promise; });
       groupService.getDaysOfTheWeek.and.callFake(() => { let d = qApi.defer(); d.reject({}); return d.promise; });
-      groupService.getGroupCategories.and.callFake(() => { let d = qApi.defer(); d.reject({}); return d.promise; });
+      groupService.getGroupTypeCategories.and.callFake(() => { let d = qApi.defer(); d.reject({}); return d.promise; });
       createGroupService.getMeetingFrequencies.and.callFake(() => { let d = qApi.defer(); d.reject({}); return d.promise; });
       groupService.getSites.and.callFake(() => { let d = qApi.defer(); d.reject({}); return d.promise; });
 
@@ -89,7 +106,7 @@ describe('GroupSearchFilter', () => {
       let categoryFilter = fixture.allFilters.getValues()[i++];
       expect(categoryFilter instanceof CategoryFilter).toBeTruthy();
       expect(categoryFilter.getName()).toEqual('Category');
-      expect(groupService.getGroupCategories).toHaveBeenCalled();
+      expect(groupService.getGroupTypeCategories).toHaveBeenCalled();
 
       let groupTypeFilter = fixture.allFilters.getValues()[i++];
       expect(groupTypeFilter instanceof GroupTypeFilter).toBeTruthy();
@@ -133,23 +150,24 @@ describe('GroupSearchFilter', () => {
   describe('applyFilters function', () => {
     it('should apply filters and reload ngTable', () => {
       fixture.expanded = true;
+      fixture.firstRun = false;
 
       fixture.searchResults = [
         { 'age': 1, 'kids': false },
         { 'age': 2, 'kids': true },
         { 'age': 3, 'kids': true },
       ];
-
+      fixture.state = jasmine.createSpyObj('state', ['go'])
       fixture.allFilters = jasmine.createSpyObj('allFiltersMock', ['getValues']);
       fixture.allFilters.getValues.and.returnValue(
         [
           {
-            matches: function(r) {
+            matches: function (r) {
               return r.age === 2;
             }
           },
           {
-            matches: function(r) {
+            matches: function (r) {
               return r.kids === true;
             }
           }
@@ -157,32 +175,82 @@ describe('GroupSearchFilter', () => {
       );
 
       let settings = {
-            dataset: [{ 'age': 5 }],
-            someOtherSettingThatShouldNotChange: true
+        dataset: [{ 'age': 5 }],
+        someOtherSettingThatShouldNotChange: true
       };
 
       fixture.tableParams = {
-        settings: function() {
+        settings: function () {
           return settings;
         },
-        reload: function() {}
+        reload: function () { }
       };
 
-      spyOn(fixture.tableParams, 'reload').and.callFake(() => {});
+      spyOn(fixture.tableParams, 'reload').and.callFake(() => { });
+      spyOn(fixture, '_reconstructUrlParams').and.callFake(() => { });
 
       fixture._internalApplyFilters();
 
       expect(fixture.tableParams.reload).toHaveBeenCalled();
+      expect(fixture._reconstructUrlParams).toHaveBeenCalled();
+      expect(fixture.state.go).toHaveBeenCalled();
       expect(fixture.expanded).toBeTruthy();
       expect(fixture.tableParams.settings().dataset).toEqual([{ 'age': 2, 'kids': true }]);
       expect(fixture.tableParams.settings().someOtherSettingThatShouldNotChange).toBeTruthy();
     });
   });
 
+  describe('reconstruct url params function', () => {
+    it('url params should be constructed properly', () => {
+      fixture.allFilters = jasmine.createSpyObj('allFiltersMock', ['buildQuery', 'getAllQueryParamNames']);
+      fixture.allFilters.buildQuery.and.returnValue(
+        {
+          age: '30s',
+          category: null,
+          type: null,
+          kids: null,
+          grouplocation: null,
+          day: null,
+          time: null,
+          frequency: null,
+          site: null
+        }
+      );
+      fixture.allFilters.getAllQueryParamNames.and.returnValue(
+        [
+          'age',
+          'category',
+          'type',
+          'kids',
+          'grouplocation',
+          'day',
+          'time',
+          'frequency',
+          'site'
+        ]
+      );
+
+      let urlParams = fixture._reconstructUrlParams();
+
+      expect(fixture.allFilters.buildQuery).toHaveBeenCalled();
+      expect(fixture.allFilters.getAllQueryParamNames).toHaveBeenCalled();
+      expect(urlParams['age']).toEqual('30s');
+      expect(urlParams['location']).toEqual('Trenton, OH, 45067');
+      expect(urlParams['category']).toBeNull();
+      expect(urlParams['type']).toBeNull();
+      expect(urlParams['kids']).toBeNull();
+      expect(urlParams['grouplocation']).toBeNull();
+      expect(urlParams['day']).toBeNull();
+      expect(urlParams['time']).toBeNull();
+      expect(urlParams['frequency']).toBeNull();
+      expect(urlParams['site']).toBeNull();
+    });
+  })
+
   describe('filter manipulation function', () => {
     it('clearFilters should clear and re-apply all filters', () => {
       fixture.allFilters = jasmine.createSpyObj('allFiltersMock', ['clear']);
-      spyOn(fixture, 'applyFilters').and.callFake(() => {});
+      spyOn(fixture, 'applyFilters').and.callFake(() => { });
 
       fixture.clearFilters();
       expect(fixture.allFilters.clear).toHaveBeenCalled();
@@ -195,7 +263,7 @@ describe('GroupSearchFilter', () => {
 
       expect(fixture.expanded).toBeTruthy();
     });
-    
+
     it('closeFilters should set expanded to false', () => {
       fixture.expanded = true;
       let form = {
@@ -211,7 +279,7 @@ describe('GroupSearchFilter', () => {
 
       expect(fixture.hasFilters()).toBeFalsy();
       expect(fixture.allFilters.hasFilters).toHaveBeenCalled();
-    });    
+    });
 
     it('hasFilters should return true if one or more active filters', () => {
       fixture.allFilters = jasmine.createSpyObj('allFiltersMock', ['hasFilters']);
@@ -219,6 +287,6 @@ describe('GroupSearchFilter', () => {
 
       expect(fixture.hasFilters()).toBeTruthy();
       expect(fixture.allFilters.hasFilters).toHaveBeenCalled();
-    });    
+    });
   });
 });

@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace crds_angular.Models.Crossroads.Groups
 {
@@ -9,5 +10,8 @@ namespace crds_angular.Models.Crossroads.Groups
 
         [JsonProperty(PropertyName = "body")]
         public string Body { get; set; }
+
+        [JsonProperty(PropertyName = "participants")]
+        public List<GroupParticipantDTO> Participants { get; set; }
     }
 }

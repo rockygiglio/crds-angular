@@ -16,9 +16,9 @@ namespace CrossroadsStripeOnboarding.Services
         private static readonly ILog Logger = LogManager.GetLogger(typeof (ListStripeSubscriptions));
         private static readonly ILog ListOutput = LogManager.GetLogger("LIST_OUTPUT");
 
-        private readonly IPaymentService _paymentService;
+        private readonly IPaymentProcessorService _paymentService;
 
-        public ListStripeSubscriptions(IPaymentService paymentService)
+        public ListStripeSubscriptions(IPaymentProcessorService paymentService)
         {
             _paymentService = paymentService;
         }

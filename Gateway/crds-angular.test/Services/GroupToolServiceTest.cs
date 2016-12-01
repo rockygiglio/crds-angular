@@ -5,6 +5,7 @@ using AutoMapper;
 using crds_angular.App_Start;
 using crds_angular.Exceptions;
 using crds_angular.Models.Crossroads;
+using crds_angular.Models.Crossroads.Attribute;
 using crds_angular.Models.Crossroads.Groups;
 using crds_angular.Services;
 using crds_angular.Services.Interfaces;
@@ -32,6 +33,7 @@ namespace crds_angular.test.Services
         private Mock<MPServices.IContactRepository> _contactRepository;
         private Mock<IAddressProximityService> _addressMatrixService;
         private Mock<IEmailCommunication> _emailCommunicationService;
+        private Mock<IAttributeService> _attributeService;
 
         private const int GroupRoleLeader = 987;
         private const int RemoveParticipantFromGroupEmailTemplateId = 654;
@@ -43,6 +45,8 @@ namespace crds_angular.test.Services
         private const int DefaultGroupContactId = 999;
         private const int RequestToJoinEmailTemplateId = 954;
         private const int GroupRequestPendingReminderEmailTemplateId = 5150;
+        private const int AttributeCategoryGroupCategory = 90;
+
 
         [SetUp]
         public void SetUp()
@@ -60,6 +64,7 @@ namespace crds_angular.test.Services
             _contactRepository = new Mock<MPServices.IContactRepository>();
             _addressMatrixService = new Mock<IAddressProximityService>(MockBehavior.Strict);
             _emailCommunicationService = new Mock<IEmailCommunication>(MockBehavior.Strict);
+            _attributeService = new Mock<IAttributeService>(MockBehavior.Strict);
 
             var configuration = new Mock<IConfigurationWrapper>();
 
@@ -73,6 +78,7 @@ namespace crds_angular.test.Services
             configuration.Setup(mocked => mocked.GetConfigIntValue("DefaultGroupContactEmailId")).Returns(DefaultGroupContactId);
             configuration.Setup(mocked => mocked.GetConfigIntValue("GroupRequestToJoinEmailTemplate")).Returns(RequestToJoinEmailTemplateId);
             configuration.Setup(mocked => mocked.GetConfigIntValue("GroupRequestPendingReminderEmailTemplateId")).Returns(GroupRequestPendingReminderEmailTemplateId);
+            configuration.Setup(mocked => mocked.GetConfigIntValue("GroupCategoryAttributeTypeId")).Returns(AttributeCategoryGroupCategory);
 
             _fixture = new GroupToolService(_groupToolRepository.Object,
                                             _groupRepository.Object,
@@ -85,7 +91,8 @@ namespace crds_angular.test.Services
                                             _addressProximityService.Object,
                                             _contactRepository.Object,
                                             _addressMatrixService.Object,
-                                            _emailCommunicationService.Object);
+                                            _emailCommunicationService.Object,
+                                            _attributeService.Object);
         }
 
         [ExpectedException(typeof(GroupNotFoundForParticipantException))]
@@ -445,6 +452,148 @@ namespace crds_angular.test.Services
             _fixture.AcceptDenyGroupInvitation(token, groupId, invitationGuid, false);
             _invitationRepositor.VerifyAll();
         }
+
+        [Test]
+        public void TestGetGroupCategories()
+        {
+            var cats = new List<AttributeCategoryDTO>()
+            {
+                new AttributeCategoryDTO()
+                {
+                    CategoryId= 1,
+                    AttributeCategory= "Journey",
+                    Description= "The current Journey",
+                    ExampleText= "Journey Group",
+                    RequiresActiveAttribute= true
+                },
+                new AttributeCategoryDTO()
+                {
+                    CategoryId= 2,
+                    AttributeCategory= "Interest",
+                    Description= "desc",
+                    ExampleText= "Ex. Boxing, XBox",
+                    RequiresActiveAttribute= false
+                },
+                new AttributeCategoryDTO()
+                {
+                    CategoryId= 3,
+                    AttributeCategory= "Neighborhoods",
+                    Description= "desc",
+                    ExampleText= "Ex. Boxing, XBox",
+                    RequiresActiveAttribute= false
+                },
+                new AttributeCategoryDTO()
+                {
+                    CategoryId= 4,
+                    AttributeCategory= "Spiritual growth",
+                    Description= "desc",
+                    ExampleText= "Ex. Boxing, XBox",
+                    RequiresActiveAttribute= false
+                },
+                new AttributeCategoryDTO()
+                {
+                    CategoryId= 5,
+                    AttributeCategory= "Life Stages",
+                    Description= "desc",
+                    ExampleText= "Ex. Boxing, XBox",
+                    RequiresActiveAttribute= false
+                },
+                new AttributeCategoryDTO()
+                {
+                    CategoryId= 6,
+                    AttributeCategory= "Healing",
+                    Description= "desc",
+                    ExampleText= "Ex. Boxing, XBox",
+                    RequiresActiveAttribute= false
+                }
+            };
+
+            var attribute = new AttributeDTO()
+            {
+                AttributeId = 1,
+                Name = "I am _______",
+            };
+
+            _attributeService.Setup(mocked => mocked.GetAttributeCategory(It.Is<int>(id => id.Equals(AttributeCategoryGroupCategory)))).Returns(cats);
+            _attributeService.Setup(mocked => mocked.GetOneAttributeByCategoryId(It.Is<int>(id => id.Equals(1)))).Returns(attribute);
+
+
+            List<AttributeCategoryDTO> returnedCats = _fixture.GetGroupCategories();
+
+            Assert.AreEqual(returnedCats.First(c => c.CategoryId == 1).Attribute.AttributeId, attribute.AttributeId);
+            Assert.IsTrue(returnedCats.Count(c => c.Attribute == null) == 5);
+            _attributeService.VerifyAll();
+        }
+
+        [Test]
+        public void TestGetGroupCategoriesNoActiveAttribute()
+        {
+            var cats = new List<AttributeCategoryDTO>()
+            {
+                new AttributeCategoryDTO()
+                {
+                    CategoryId= 1,
+                    AttributeCategory= "Journey",
+                    Description= "The current Journey",
+                    ExampleText= "Journey Group",
+                    RequiresActiveAttribute= true
+                },
+                new AttributeCategoryDTO()
+                {
+                    CategoryId= 2,
+                    AttributeCategory= "Interest",
+                    Description= "desc",
+                    ExampleText= "Ex. Boxing, XBox",
+                    RequiresActiveAttribute= false
+                },
+                new AttributeCategoryDTO()
+                {
+                    CategoryId= 3,
+                    AttributeCategory= "Neighborhoods",
+                    Description= "desc",
+                    ExampleText= "Ex. Boxing, XBox",
+                    RequiresActiveAttribute= false
+                },
+                new AttributeCategoryDTO()
+                {
+                    CategoryId= 4,
+                    AttributeCategory= "Spiritual growth",
+                    Description= "desc",
+                    ExampleText= "Ex. Boxing, XBox",
+                    RequiresActiveAttribute= false
+                },
+                new AttributeCategoryDTO()
+                {
+                    CategoryId= 5,
+                    AttributeCategory= "Life Stages",
+                    Description= "desc",
+                    ExampleText= "Ex. Boxing, XBox",
+                    RequiresActiveAttribute= false
+                },
+                new AttributeCategoryDTO()
+                {
+                    CategoryId= 6,
+                    AttributeCategory= "Healing",
+                    Description= "desc",
+                    ExampleText= "Ex. Boxing, XBox",
+                    RequiresActiveAttribute= false
+                }
+            };
+
+            AttributeDTO attribute = null;
+
+            _attributeService.Setup(mocked => mocked.GetAttributeCategory(It.Is<int>(id => id.Equals(AttributeCategoryGroupCategory)))).Returns(cats);
+            _attributeService.Setup(mocked => mocked.GetOneAttributeByCategoryId(It.Is<int>(id => id.Equals(1)))).Returns(attribute);
+
+
+            List<AttributeCategoryDTO> returnedCats = _fixture.GetGroupCategories();
+            
+            Assert.IsNull(returnedCats.First(c => c.CategoryId == 2).Attribute);
+            Assert.IsTrue(returnedCats.Count(c => c.Attribute == null) == 5);
+            Assert.IsTrue(returnedCats.Count() == 5);
+            _attributeService.VerifyAll();
+        }
+
 
         [Test]
         [ExpectedException(typeof(GroupNotFoundForParticipantException))]
@@ -972,6 +1121,71 @@ namespace crds_angular.test.Services
         }
 
         [Test]
+        public void TestSendAllGroupParticipantsEmailOnlyDistinct()
+        {
+            string token = "123ABC";
+
+            var groupParticipantDTO = new MpParticipant
+            {
+                ContactId = 123,
+                EmailAddress = "leader@test.com",
+                ParticipantId = 456
+            };
+
+            var groups = new List<GroupDTO>();
+
+            var group1 = new GroupDTO();
+            group1.Participants = new List<GroupParticipantDTO>();
+
+            List<GroupParticipantDTO> groupParticipants = new List<GroupParticipantDTO>()
+            {
+
+
+                new GroupParticipantDTO()
+                {
+                    ContactId = 123,
+                    Email = "leader@test.com",
+                    ParticipantId = 456,
+                    GroupRoleId = 987,
+                },
+                new GroupParticipantDTO()
+                {
+                    ContactId = 123,
+                    Email = "leader@test.com",
+                    ParticipantId = 456,
+                    GroupRoleId = 765,
+                },
+                new GroupParticipantDTO()
+                {
+                    ContactId = 012,
+                    Email = "different@email.com",
+                    ParticipantId = 345,
+                    GroupRoleId = 765,
+                },
+                new GroupParticipantDTO()
+                {
+                    ContactId = 555,
+                    Email = "member@test.com",
+                    ParticipantId = 777,
+                    GroupRoleId = 765,
+                }
+            };
+
+            // There are 3 Distinct email addresses 
+            int expectedToContactsCount = 3;
+
+            group1.Participants = groupParticipants;
+            groups.Add(group1);
+
+            _communicationRepository.Setup(m => m.SendMessage(It.Is<MpCommunication>(email => email.ToContacts.Count() == expectedToContactsCount), false)).Returns(1);
+            _participantRepository.Setup(m => m.GetParticipantRecord(token)).Returns(groupParticipantDTO);
+            _groupService.Setup(m => m.GetGroupsByTypeForAuthenticatedUser(token, 123, 1)).Returns(groups);
+
+            _fixture.SendAllGroupParticipantsEmail(token, 1, 123, "aaa", "bbb");
+            _communicationRepository.VerifyAll();
+        }
+
+        [Test]
         public void TestSendAllGroupLeadersEmail()
         {
             string token = "123ABC";
@@ -1024,7 +1238,7 @@ namespace crds_angular.test.Services
         {
             const int groupTypeId = 1;
             var keywords = new[] {"kw1", "kw2"};
-            _groupToolRepository.Setup(mocked => mocked.SearchGroups(groupTypeId, null)).Returns(new List<MpGroupSearchResultDto>());
+            _groupToolRepository.Setup(mocked => mocked.SearchGroups(groupTypeId, null, null)).Returns(new List<MpGroupSearchResultDto>());
             var results = _fixture.SearchGroups(groupTypeId);
             _groupToolRepository.VerifyAll();
             Assert.IsNull(results);
@@ -1055,7 +1269,7 @@ namespace crds_angular.test.Services
                     GroupType = 4564
                 }
             };
-            _groupToolRepository.Setup(mocked => mocked.SearchGroups(groupTypeId, keywords)).Returns(searchResults);
+            _groupToolRepository.Setup(mocked => mocked.SearchGroups(groupTypeId, keywords, null)).Returns(searchResults);
             var results = _fixture.SearchGroups(groupTypeId, keywordString);
             _groupToolRepository.VerifyAll();
             Assert.IsNotNull(results);
@@ -1066,6 +1280,7 @@ namespace crds_angular.test.Services
             }
         }
 
+        [Test]
         public void TestSearchGroupsWithLocation()
         {
             const int groupTypeId = 1;
@@ -1114,12 +1329,13 @@ namespace crds_angular.test.Services
             const string location = "loc loc loc";
             var geoResults = new List<decimal?> { null, 9, 3 };
             var distanceMatrixResults = new List<decimal?> { 2, 5 };
-            _groupToolRepository.Setup(mocked => mocked.SearchGroups(groupTypeId, It.IsAny<string[]>())).Returns(searchResults);
-            _addressProximityService.Setup(mocked => mocked.GetProximity(location, groups.Select(g => g.Address).ToList())).Returns(geoResults);
-            _addressMatrixService.Setup(mocked => mocked.GetProximity(location, groups.Select(g => g.Address).Skip(1).Take(AddressMatrixSearchDepth).Reverse().ToList()))
-                .Returns(distanceMatrixResults);
+            _groupToolRepository.Setup(mocked => mocked.SearchGroups(groupTypeId, It.IsAny<string[]>(), null)).Returns(searchResults);
+            _addressProximityService.Setup(mocked => mocked.GetProximity(location, It.IsAny<List<AddressDTO>>())).Returns(geoResults);
+            _addressMatrixService.Setup(mocked => mocked.GetProximity(location, It.IsAny<List<AddressDTO>>())).Returns(distanceMatrixResults);
 
             var results = _fixture.SearchGroups(groupTypeId, null, location);
+            _addressProximityService.VerifyAll();
+            _addressMatrixService.VerifyAll();
             _groupToolRepository.VerifyAll();
             Assert.IsNotNull(results);
             Assert.AreEqual(searchResults.Count, results.Count);

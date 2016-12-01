@@ -9,12 +9,13 @@ using crds_angular.Models.Json;
 using crds_angular.Security;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 using IEventService = crds_angular.Services.Interfaces.IEventService;
+using Crossroads.ApiVersioning;
 
 namespace crds_angular.Controllers.API
 {
     public class EventController : MPAuth
     {
-        private IMinistryPlatformService _ministryPlatformService;        
+        private IMinistryPlatformService _ministryPlatformService;
         private readonly IApiUserRepository _apiUserService;
         private readonly IEventService _eventService;
 
@@ -25,8 +26,9 @@ namespace crds_angular.Controllers.API
             _apiUserService = apiUserService;
         }
 
-        [AcceptVerbs("POST")]
-        [Route("api/event")]
+        [VersionedRoute(template: "event", minimumVersion: "1.0.0")]
+        [Route("event")]
+        [HttpPost]
         public IHttpActionResult RsvpToEvent([FromBody] EventRsvpDto eventRsvp)
         {
             if (ModelState.IsValid)
@@ -51,7 +53,8 @@ namespace crds_angular.Controllers.API
         }
 
         [ResponseType(typeof(List<Event>))]
-        [Route("api/events/{site}")]
+        [VersionedRoute(template: "events/{site}", minimumVersion: "1.0.0")]
+        [Route("events/{site}")]
         public IHttpActionResult Get(string site)
         {
             var token = _apiUserService.GetToken();
@@ -64,8 +67,9 @@ namespace crds_angular.Controllers.API
         }
 
         [ResponseType(typeof (Event))]
-        [Route("api/event/{eventid}")]
-        [AcceptVerbs("GET")]
+        [VersionedRoute(template: "event/{eventId}", minimumVersion: "1.0.0")]
+        [Route("event/{eventId}")]
+        [HttpGet]
         public IHttpActionResult EventById(int eventId)
         {
             return Authorized(token => {
@@ -76,13 +80,14 @@ namespace crds_angular.Controllers.API
                                            catch (Exception e)
                                            {
                                                var apiError = new ApiErrorDto("Get Event by Id failed", e);
-                                               throw new HttpResponseException(apiError.HttpResponseMessage);   
+                                               throw new HttpResponseException(apiError.HttpResponseMessage);
                                            }
-                
+
             });
         }
 
-        [Route("api/event/copyeventsetup")]
+        [VersionedRoute(template: "event/copy-event-setup", minimumVersion: "1.0.0")]
+        [Route("event/copyeventsetup")]
         public IHttpActionResult CopyEventSetup(EventCopyRequest request)
         {
             return Authorized(token => {
@@ -99,8 +104,9 @@ namespace crds_angular.Controllers.API
             });
         }
 
-        [Route("api/event/eventsbysite/{site}")]
-        public IHttpActionResult GetEventsBySite(string site, 
+        [VersionedRoute(template: "event/events-by-site/{site}", minimumVersion: "1.0.0")]
+        [Route("event/eventsbysite/{site}")]
+        public IHttpActionResult GetEventsBySite(string site,
             [FromUri(Name = "startDate")] DateTime startDate, [FromUri(Name = "endDate")] DateTime endDate)
         {
             return Authorized(token => {
@@ -117,7 +123,8 @@ namespace crds_angular.Controllers.API
             });
         }
 
-        [Route("api/event/eventtemplatesbysite/{site}")]
+        [VersionedRoute(template: "event/event-templates-by-site/{site}", minimumVersion: "1.0.0")]
+        [Route("event/eventtemplatesbysite/{site}")]
         public IHttpActionResult GetEventTemplatesBySite(string site)
         {
             return Authorized(token => {

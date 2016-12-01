@@ -9,7 +9,7 @@
     '$log',
     'Session',
     'ServeOpportunities',
-    'Capacity',
+    'OpportunityCapacityService',
     '$modal',
     'growl'
   ];
@@ -85,7 +85,20 @@
       scope.showIcon = showIcon;
       scope.togglePanel = togglePanel;
 
+      scope.isTeamTab = isTeamTab;
+      scope.isTeamLeader = isTeamLeader;
+      
       //////////////////////////////////////
+
+      function isTeamTab() {
+        // TODO UI!!! VERIFY LOGIC
+        return scope.currentMember && !!scope.currentMember.groupId;
+      }
+
+      function isTeamLeader(team) {
+        // TODO UI!!! IMPLEMENT THIS
+        return true;
+      }
 
       function allowProfileEdit() {
         var cookieId = Session.exists('userId');

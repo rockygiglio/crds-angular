@@ -16,7 +16,7 @@
                      $urlMatcherFactory,
                      $locationProvider) {
 
-    crds_utilities.preventRouteTypeUrlEncoding($urlMatcherFactory, 'contentRouteType', /^\/.*/);    
+    crds_utilities.preventRouteTypeUrlEncoding($urlMatcherFactory, 'contentRouteType', /^\/.*/);
 
     $stateProvider
         .state('content', {
@@ -29,12 +29,16 @@
                                           $templateFactory,
                                           $stateParams,
                                           Page,
+                                          PageById,
                                           ContentPageService,
                                           Session,
                                           $state,
                                           $q,
-                                          FormBuilderResolverService) {
+                                          FormBuilderResolverService,
+                                          $location,
+                                          $window) {
                 var promise;
+                var redirectFlag = false;
 
                 var link = addTrailingSlashIfNecessary($stateParams.link);
                 promise = Page.get({url: link}).$promise;
@@ -42,6 +46,20 @@
                 var childPromise = promise.then(function (originalPromise) {
                   if (originalPromise.pages.length > 0) {
                     ContentPageService.page = originalPromise.pages[0];
+                    // check if page is redirect
+                    if (ContentPageService.page.pageType === "RedirectorPage") {
+                      if (ContentPageService.page.redirectionType === "External") {
+                        $window.location.href = ContentPageService.page.externalURL;
+                        return ;
+                      } else {
+                        redirectFlag = true;
+                        return PageById.get({id: ContentPageService.page.linkTo}).$promise;
+                      }
+                    } else if (ContentPageService.page.pageType === "AngularRedirectPage") {
+                        $state.go(ContentPageService.page.angularRoute);
+                        return ;
+                    }
+
                     return originalPromise;
                   }
 
@@ -62,7 +80,11 @@
                   return notFoundPromise;
                 });
 
-                childPromise = childPromise.then(function() {
+                childPromise = childPromise.then(function(result) {
+                  if (redirectFlag && result.pages.length > 0) {
+                    $location.path(result.pages[0].link);
+                  }
+
                   if (ContentPageService.page.canViewType === 'LoggedInUsers') {
                     $state.next.data.isProtected = true;
                     var promise = Session.verifyAuthentication(null, $state.next.name, $state.next.data, $state.toParams);

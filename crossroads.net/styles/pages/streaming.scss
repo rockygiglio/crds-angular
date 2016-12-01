@@ -20,26 +20,65 @@ streaming, landing {
     font-weight: 300;
   }
 
+  .countdown {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+
+    &__timer {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
+      .list-inline {
+        margin-bottom: 0;
+        min-width: 141px;
+      }
+    }
+
+    &__text {
+      padding-bottom: 3px;
+    }
+
+    .btn-reminder {
+      display: flex;
+      align-items: center;
+    }
+  }
+
+  @media (min-width: 500px) {
+    .countdown__timer {
+      flex-flow: row nowrap;
+      align-items: center;
+    }
+
+    .countdown__text {
+      padding-bottom: 0;
+      padding-right: 3px;
+    }
+  }
+
   > .wrapper {
     @include make-row();
     @include clearfix();
     overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
 
     .navbar-section .container {
       display: flex;
       justify-content: center;
+      align-items: center;
     }
-    
   }
 
   .fixed-header {
+
     .navbar-section {
       position: fixed;
       z-index: 1000;
       left: 0;
       right: 0;
       top: 0;
-      -webkit-overflow-scrolling: touch;
     }
   }
 
@@ -50,9 +89,23 @@ streaming, landing {
     padding: 1em 0;
     font-size: 90%;
     min-height: 52px;
+    transform: translateZ(0);
+
 
     @media (min-width: $screen-sm-min) {
       min-height: 66px;
+    }
+
+    @media (max-width: $screen-sm-min) {
+      countdown .countdown {
+        .btn-reminder {
+          padding-left: 5px;
+          padding-right: 5px;
+        }
+        .list-inline {
+          min-width: 150px;
+        }
+      }
     }
 
     #conuntdown-header {
@@ -61,10 +114,6 @@ streaming, landing {
           -ms-animation-duration: 1.5s;
            -o-animation-duration: 1.5s;
               animation-duration: 1.5s;
-
-      countdown {
-        display: inline;
-      }
     }
 
 
@@ -79,7 +128,7 @@ streaming, landing {
       @media (max-width: $screen-sm-min) {
         font-size: 70%;
       }
-    } 
+    }
 
     .see-schedule {
       text-transform: uppercase;
@@ -111,8 +160,8 @@ streaming, landing {
       }
 
       i, ul, .btn-reminder {
-        display: table-cell;
-        vertical-align: middle;
+        // display: table-cell;
+        // vertical-align: middle;
       }
 
       i {
@@ -121,10 +170,17 @@ streaming, landing {
         font-size: 123%;
         letter-spacing: -0.015em;
         padding-right: 1em;
+        @media (max-width: $screen-sm-min) {
+          // padding-right: 0;
+          font-size: 100%;
+        }
       }
 
       ul {
         padding-right: 20px;
+        @media (max-width: $screen-sm-min) {
+          padding-right: 7px;
+        }
       }
 
       li {
@@ -204,6 +260,14 @@ streaming, landing {
       font-size: 125%;
     }
 
+    p {
+      font-size: initial;
+
+      &.lead {
+        font-size: 125%;
+      }
+    }
+
     h1 {
       font-size: 238%;
       @media (min-width: $screen-md-min) {
@@ -214,9 +278,43 @@ streaming, landing {
     }
 
     @media (min-width: $screen-sm-min) {
-      height: 792px;
+      min-height: 550px;
+    }
+
+    countdown-intro {
+      &.hidden {
+        display: none;
+      }
+      ul {
+        background: rgba(0,0,0,0.1);
+        border: 1px solid rgba(255,255,255,0.3);
+        padding: 22px 0 15px;
+
+        @media (min-width: $screen-lg-min) {
+          display: inline-block;
+          padding: 22px 25px 15px;
+
+        }
+      }
+      li {
+        line-height: 120%;
+        min-width: 45px;
+        strong {
+          font-size: 150%;
+          display: block;
+
+          &.muted {
+            color: $cr-grey;
+          }
+        }
+        small {
+          color: $cr-grey;
+        }
+      }
     }
   }
+
+
 
   .current-series {
 
@@ -271,7 +369,7 @@ streaming, landing {
 
       li {
         display: inline;
-        
+
         &:after {
           content: ", ";
           margin-left: -4px;
@@ -410,14 +508,14 @@ streaming, landing {
       font-size: 210%;
       top: -0.85em;
       word-wrap: break-word;
-      
+
     }
 
     section {
       top: -1em;
     }
 
-    @media (max-width: $screen-xs-max) { 
+    @media (max-width: $screen-xs-max) {
       figcaption {
         top: -1.15em;
       }
@@ -488,7 +586,7 @@ streaming, landing {
         font-weight: 600;
         margin-top: 0.3em;
         word-wrap: break-word;
-        
+
 
         span {
           font-weight: normal;
@@ -499,21 +597,46 @@ streaming, landing {
 
   .community {
     @include clearfix();
-    background: #1D3C50;
-    background-repeat: no-repeat;
-    background-position: center center;
-    background-size: cover;
+    background-color: rgba(29,60,80,0.6);
+    position: relative;
     @media (min-width: $screen-sm-min) {
       height: 622px;
     }
-    &, h2 {
-      color: #FFF;
+
+    .background {
+      height: 100%;
+      width: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: -100;
+      background-repeat: no-repeat;
+      background-position: center center;
+      background-size: cover;
+      background-image: url(https://crds-cms-uploads.s3.amazonaws.com/content/images/live-map.gif);
     }
 
-    .addthis_crossroads_sharing {
-      a {
-        float: none;
+    .overlay {
+      z-index: 100;
+
+      &, h2 {
+        color: #FFF;
       }
+
+      .addthis_crossroads_sharing {
+        a {
+          float: none;
+        }
+      }
+
+    }
+
+    img {
+      position: fixed;
+      left: 50%; top: 50%;
+      margin-left: -350px;
+      margin-top: -300px;
+      width: 700px; height: auto;
     }
   }
 
@@ -545,17 +668,20 @@ streaming, landing {
     @media (min-width: $screen-sm-min) {
       .container {
         display: flex;
-        flex-direction:column;
+        flex-direction: column;
         height: 100%;
+
         > div {
           flex: 1 0 auto;
           display:flex;
         }
+
         article {
           margin-bottom: 0;
           width: 33%;
           padding: 0 2em;
           border-left: 1px solid $gray-lighter;
+
           &:first-child {
             border-left: none;
           }
@@ -640,7 +766,7 @@ streaming, landing {
       width: 100%;
     }
 
-    @media (max-width: $screen-xs-max) { 
+    @media (max-width: $screen-xs-max) {
       figcaption {
         top: -1.15em;
       }
@@ -674,6 +800,20 @@ streaming, landing {
     padding-top: 1em;
     padding-bottom: 1em;
     background: #000;
+
+    header > a:hover,
+    header > a:focus {
+      transition: color 0.5s ease;
+      text-decoration: none;
+      > svg {
+        transition: fill 0.5s ease;
+      }
+      &, .icon {
+        color: $gray-light !important;
+        fill: $gray-light;
+      }
+    }
+
     .video-player {
       margin: 0 auto;
     }
@@ -751,10 +891,11 @@ streaming, landing {
 
     .promo {
       @include make-md-column(12);
+      padding-bottom: 20px;
     }
 
     @media (min-width: $screen-md-min) {
-      header, 
+      header,
       .promo {
         padding-left: 30px;
         padding-right: 30px;
@@ -864,7 +1005,14 @@ streaming, landing {
     }
   }
 } // .live-stream
-
+.reminder-modal {
+  .modal {
+    @media(max-width: $screen-md) {
+      position: absolute;
+      overflow: scroll;
+    }
+  }
+}
 .reminder-content {
 
   margin-bottom: 2em;
@@ -875,7 +1023,7 @@ streaming, landing {
 
   label.text-uppercase {
     font-size: 85%;
-    margin: 1em 0 0.5em; 
+    margin: 1em 0 0.5em;
   }
 
   .btn {
@@ -889,7 +1037,7 @@ streaming, landing {
         color: $cr-streaming-blue;
         background: #FFF;
         box-shadow: none;
-      } 
+      }
     }
   }
 
@@ -926,7 +1074,7 @@ streaming, landing {
       margin-bottom: 0.5em;
     }
   }
-  
+
   .schedule {
     @include make-sm-column(5);
     @include make-sm-column-offset(1);
@@ -1052,7 +1200,7 @@ modal.watch-now {
   }
   &.in .modal-dialog { @include translate(0, 0) }
   .modal-header {
-    border: none; 
+    border: none;
   }
   .modal-dialog {
     width: 100%;
@@ -1083,9 +1231,82 @@ modal.watch-now {
   .modal-body {
     padding: 0;
     height: 450px;
+    background-color: black;
   }
   iframe {
     height: 450px;
     width: 900px;
   }
 } // .current-series-trailer
+
+geolocation {
+  .warn {
+    p {
+      font-size: 60%;
+      color:#ea5151;
+      padding-top: 7vh;
+    }
+  }
+}
+
+.geolocation-modal {
+  @media (min-width: $screen-sm) {
+    geolocation > .container {
+      padding-top: 25vh;
+    }
+  }
+  .small {
+    p {
+      font-size: 53%;
+      color: #96B4D4;
+    }
+  }
+
+  footer {
+    margin-top: 3.25em;
+    font-size: 51.5%;
+    &, .btn-link {
+      color: #96B4D4;
+    }
+  }
+  .btn-link {
+    font-size: 87%;
+    margin-top: 1em;
+    margin-bottom: 3em;
+
+    @include button-variant(#96B4D4, $cr-blue, $cr-blue)
+  }
+  .modal-backdrop {
+    background: #113556;
+    opacity: 0.95;
+    -webkit-transform-style: preserve-3d;
+    -moz-transform-style: preserve-3d;
+    transform-style: preserve-3d;
+  }
+  .modal-lg {
+    width: 100%;
+    margin: 0;
+  }
+  .modal-content {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    color: #FFF;
+    position: relative;
+    top: 50%;
+    .container {
+      width: auto;
+    }
+    .btn-standard {
+      @include button-variant($cr-streaming-blue, #FFF, #FFF)
+    }
+    .close {
+      font-size: 210%;
+      font-weight: 100;
+      color: #FFF;
+      opacity: 1;
+      line-height: 30%;
+      margin: 0.5em;
+    }
+  }
+}

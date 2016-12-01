@@ -19,18 +19,20 @@ describe('GroupSearchResultsController', () => {
   beforeEach(inject(function ($injector) {
     ngTableParams = $injector.get('NgTableParams');
     groupService = {
-      search: function() {}
+      search: function () { }
     };
     state = $injector.get('$state');
     state.params = {
       query: 'kw1 kw2 kw3',
-      location: 'oakley'
+      location: 'oakley',
+      age: '30s',
+      groupId: undefined
     };
     qApi = $injector.get('$q');
     rootScope = $injector.get('$rootScope');
     rootScope.MESSAGES = {
       groupToolSearchInvalidAddressGrowler: '123'
-    };    
+    };
     addressValidationService = jasmine.createSpyObj('addressValidationService', ['validateAddressString']);
     locationService = $injector.get('$location');
     modal = $injector.get('$modal');
@@ -52,17 +54,26 @@ describe('GroupSearchResultsController', () => {
 
   describe('$onInit() function', () => {
     it('should set search model and call doSearch', () => {
-      spyOn(fixture, 'doSearch').and.callFake(() => {});
+      spyOn(fixture, 'doSearch').and.callFake(() => { });
       fixture.$onInit();
       expect(fixture.search.query).toEqual(state.params.query);
       expect(fixture.search.location).toEqual(state.params.location);
-      expect(fixture.doSearch).toHaveBeenCalledWith(state.params.query, state.params.location);
+      expect(fixture.doSearch).toHaveBeenCalledWith(state.params.query, state.params.location, state.params.groupId);
+      expect(fixture.initialFilters['age']).toEqual('30s');
+      expect(fixture.initialFilters['category']).toBeUndefined();
+      expect(fixture.initialFilters['type']).toBeUndefined();
+      expect(fixture.initialFilters['kids']).toBeUndefined();
+      expect(fixture.initialFilters['grouplocation']).toBeUndefined();
+      expect(fixture.initialFilters['day']).toBeUndefined();
+      expect(fixture.initialFilters['time']).toBeUndefined();
+      expect(fixture.initialFilters['frequency']).toBeUndefined();
+      expect(fixture.initialFilters['site']).toBeUndefined();
     });
   });
 
   describe('submit() function', () => {
     it('should call doSearch with search model', () => {
-      spyOn(fixture, 'doSearch').and.callFake(() => {});
+      spyOn(fixture, 'doSearch').and.callFake(() => { });
       fixture.search = {
         query: '123',
         location: '456'
@@ -73,7 +84,7 @@ describe('GroupSearchResultsController', () => {
 
     it('should validate address and call doSearch with search model', () => {
       let deferred = qApi.defer();
-      let addressResponse = {addressLine1: 'line1', city: 'city', state: 'state', zip: 'zip'};
+      let addressResponse = { addressLine1: 'line1', city: 'city', state: 'state', zip: 'zip' };
       let address = new Address(addressResponse);
       deferred.resolve(addressResponse);
       deferred.promise.then(() => {
@@ -81,7 +92,7 @@ describe('GroupSearchResultsController', () => {
       });
 
       addressValidationService.validateAddressString.and.returnValue(deferred.promise);
-      spyOn(fixture, 'doSearch').and.callFake(() => {});
+      spyOn(fixture, 'doSearch').and.callFake(() => { });
       fixture.search = {
         query: '123',
         location: '456'
@@ -89,12 +100,12 @@ describe('GroupSearchResultsController', () => {
 
       let form = {
         location: {
-          $setValidity: function() {}
+          $setValidity: function () { }
         }
       };
       spyOn(form.location, '$setValidity');
 
-      spyOn(state, 'go').and.callFake(() => {});
+      spyOn(state, 'go').and.callFake(() => { });
 
       fixture.processing = true;
 
@@ -109,12 +120,12 @@ describe('GroupSearchResultsController', () => {
 
     it('should validate address and emit error with bad location', () => {
       let deferred = qApi.defer();
-      let addressResponse = {status: 404, statusText: 'not found'};
+      let addressResponse = { status: 404, statusText: 'not found' };
       deferred.reject(addressResponse);
 
 
       addressValidationService.validateAddressString.and.returnValue(deferred.promise);
-      spyOn(fixture, 'doSearch').and.callFake(() => {});
+      spyOn(fixture, 'doSearch').and.callFake(() => { });
       fixture.search = {
         query: '123',
         location: '456'
@@ -122,14 +133,14 @@ describe('GroupSearchResultsController', () => {
 
       let form = {
         location: {
-          $setValidity: function() {}
+          $setValidity: function () { }
         }
       };
       spyOn(form.location, '$setValidity');
 
-      spyOn(state, 'go').and.callFake(() => {});
+      spyOn(state, 'go').and.callFake(() => { });
 
-      spyOn(rootScope, '$emit').and.callFake(() => {});
+      spyOn(rootScope, '$emit').and.callFake(() => { });
 
       fixture.processing = true;
 
@@ -146,25 +157,29 @@ describe('GroupSearchResultsController', () => {
 
   describe('doSearch() function', () => {
     it('should replace the results on successful service call', () => {
+      
       let originalResults = fixture.results;
       fixture.results.length = 0;
-      fixture.results.push({groupName: 'name'});
+      fixture.results.push({ groupName: 'name' });
       fixture.showLocationInput = true;
       fixture.ready = false;
       fixture.tableParams.parameters().count = 1;
+      fixture.initialFilters = {
+        age: '30s'
+      };
 
-      let groups = [{groupName: 'group1'},{groupName: 'group2'}];
+      let groups = [{ groupName: 'group1' }, { groupName: 'group2' }];
       let deferred = qApi.defer();
       deferred.resolve(groups);
       spyOn(groupService, 'search').and.callFake(() => {
         return deferred.promise;
       });
-      spyOn(locationService, 'search').and.callFake(() => {});
-      fixture.doSearch('123', '456');
+      spyOn(locationService, 'search').and.callFake(() => { });
+      fixture.doSearch('123', '456', null);
       rootScope.$apply();
 
-      expect(groupService.search).toHaveBeenCalledWith('123', '456');
-      expect(locationService.search).toHaveBeenCalledWith({query: '123', location: '456'});
+      expect(groupService.search).toHaveBeenCalledWith('123', '456', null);
+      expect(locationService.search).toHaveBeenCalledWith({ query: '123', location: '456', age: '30s' });
       expect(fixture.showLocationInput).toBeFalsy();
       expect(fixture.searchedWithLocation).toBeTruthy();
       expect(fixture.ready).toBeTruthy();
@@ -178,7 +193,7 @@ describe('GroupSearchResultsController', () => {
     it('should reset results if error calling service', () => {
       let originalResults = fixture.results;
       fixture.results.length = 0;
-      fixture.results.push({meetingDay: 'name'});
+      fixture.results.push({ meetingDay: 'name' });
       fixture.showLocationInput = true;
       fixture.ready = false;
       fixture.tableParams.parameters().count = 1;
@@ -188,12 +203,12 @@ describe('GroupSearchResultsController', () => {
       spyOn(groupService, 'search').and.callFake(() => {
         return deferred.promise;
       });
-      spyOn(locationService, 'search').and.callFake(() => {});
-      fixture.doSearch('123', '');
+      spyOn(locationService, 'search').and.callFake(() => { });
+      fixture.doSearch('123', '', null);
       rootScope.$apply();
 
-      expect(groupService.search).toHaveBeenCalledWith('123', '');
-      expect(locationService.search).toHaveBeenCalledWith({query: '123'});
+      expect(groupService.search).toHaveBeenCalledWith('123', '', null);
+      expect(locationService.search).toHaveBeenCalledWith({ query: '123' });
       expect(fixture.showLocationInput).toBeFalsy();
       expect(fixture.searchedWithLocation).toBeFalsy();
       expect(fixture.ready).toBeTruthy();
@@ -209,7 +224,7 @@ describe('GroupSearchResultsController', () => {
     it('should reset the view value and set the show property to true', () => {
       let form = {
         location: {
-          $rollbackViewValue: function() {}
+          $rollbackViewValue: function () { }
         }
       };
       spyOn(form.location, '$rollbackViewValue');
@@ -226,9 +241,9 @@ describe('GroupSearchResultsController', () => {
     it('should reset the view value and set the show property to false if value is valid', () => {
       let form = {
         location: {
-          $rollbackViewValue: function() {},
+          $rollbackViewValue: function () { },
           $invalid: false,
-          $setValidity: function() {}
+          $setValidity: function () { }
         }
       };
       spyOn(form.location, '$rollbackViewValue');
@@ -250,9 +265,9 @@ describe('GroupSearchResultsController', () => {
     it('should reset the view value, the location, and set the show property to false if value is invalid', () => {
       let form = {
         location: {
-          $rollbackViewValue: function() {},
+          $rollbackViewValue: function () { },
           $invalid: true,
-          $setValidity: function() {}
+          $setValidity: function () { }
         }
       };
       spyOn(form.location, '$rollbackViewValue');

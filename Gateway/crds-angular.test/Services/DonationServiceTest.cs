@@ -22,7 +22,7 @@ namespace crds_angular.test.Services
         private DonationService _fixture;
         private Mock<MPServices.IDonationRepository> _mpDonationService;
         private Mock<MPServices.IDonorRepository> _mpDonorService;
-        private Mock<IPaymentService> _paymentService;
+        private Mock<IPaymentProcessorService> _paymentService;
         private Mock<MPServices.IContactRepository> _contactService;
         private Mock<IConfigurationWrapper> _configurationWrapper;
 
@@ -33,7 +33,7 @@ namespace crds_angular.test.Services
 
             _mpDonationService = new Mock<MPServices.IDonationRepository>(MockBehavior.Strict);
             _mpDonorService = new Mock<MPServices.IDonorRepository>(MockBehavior.Strict);
-            _paymentService = new Mock<IPaymentService>();
+            _paymentService = new Mock<IPaymentProcessorService>();
             _contactService = new Mock<MPServices.IContactRepository>();
             _configurationWrapper = new Mock<IConfigurationWrapper>();
 
@@ -69,24 +69,7 @@ namespace crds_angular.test.Services
             Assert.IsNull(result);
         }
 
-        [Test]
-        public void TestGetDonationBatchByProcessorTransferId()
-        {
-            _mpDonationService.Setup(mocked => mocked.GetDonationBatchByProcessorTransferId("123")).Returns(new MpDonationBatch
-            {
-                Id = 123,
-                DepositId = 456,
-                ProcessorTransferId = "789"
-            });
-            var result = _fixture.GetDonationBatchByProcessorTransferId("123");
-            _mpDonationService.VerifyAll();
-            Assert.IsNotNull(result);
-            Assert.AreEqual(123, result.Id);
-            Assert.AreEqual(456, result.DepositId);
-            Assert.AreEqual("789", result.ProcessorTransferId);
-        }
-
-        [Test]
+       [Test]
         public void TestGetDonationByProcessorPaymentIdDonationNotFound()
         {
             _mpDonationService.Setup(mocked => mocked.GetDonationByProcessorPaymentId("123", false)).Returns((MpDonation) null);
@@ -725,7 +708,7 @@ namespace crds_angular.test.Services
                     softCreditDonorId = 0,
                 }
             };
-            _mpDonorService.Setup(mocked => mocked.GetDonationsForAuthenticatedUser("auth token", false, "1999")).Returns(donations);
+            _mpDonorService.Setup(mocked => mocked.GetDonationsForAuthenticatedUser("auth token", false, "1999", true)).Returns(donations);
             _paymentService.Setup(mocked => mocked.GetCharge("tx_67")).Returns(new StripeCharge
             {
                 Source = new StripeSource
@@ -893,7 +876,7 @@ namespace crds_angular.test.Services
                 "1996"
             };
 
-            _mpDonorService.Setup(mocked => mocked.GetDonationsForAuthenticatedUser("auth token", null, null)).Returns(donations.Concat(softCreditDonations).ToList());
+            _mpDonorService.Setup(mocked => mocked.GetDonationsForAuthenticatedUser("auth token", null, null, true)).Returns(donations.Concat(softCreditDonations).ToList());
 
             var response = _fixture.GetDonationYearsForAuthenticatedUser("auth token");
             _mpDonorService.VerifyAll();
@@ -1037,7 +1020,7 @@ namespace crds_angular.test.Services
                 }
             };
 
-            _mpDonorService.Setup(mocked => mocked.GetDonationsForAuthenticatedUser("auth token", true, "1999")).Returns(donations);
+            _mpDonorService.Setup(mocked => mocked.GetDonationsForAuthenticatedUser("auth token", true, "1999", true)).Returns(donations);
             var response = _fixture.GetDonationsForAuthenticatedUser("auth token", "1999", null, true);
             _mpDonorService.VerifyAll();
             _paymentService.VerifyAll();
@@ -1113,7 +1096,7 @@ namespace crds_angular.test.Services
                 }
             };
 
-            _mpDonorService.Setup(mocked => mocked.GetDonationsForAuthenticatedUser("auth token", null, "1999")).Returns(donations);
+            _mpDonorService.Setup(mocked => mocked.GetDonationsForAuthenticatedUser("auth token", null, "1999", true)).Returns(donations);
             _paymentService.Setup(mocked => mocked.GetCharge("tx_67")).Returns(new StripeCharge
             {
                 Source = new StripeSource
@@ -1248,7 +1231,7 @@ namespace crds_angular.test.Services
                 }
             );
 
-            _mpDonorService.Setup(mocked => mocked.GetDonationsForAuthenticatedUser("auth token", null, "1999")).Returns(donations);
+            _mpDonorService.Setup(mocked => mocked.GetDonationsForAuthenticatedUser("auth token", null, "1999", true)).Returns(donations);
             _paymentService.Setup(mocked => mocked.GetCharge("tx_67")).Returns(new StripeCharge
             {
                 Source = new StripeSource
@@ -1368,7 +1351,7 @@ namespace crds_angular.test.Services
                 }
             );
 
-            _mpDonorService.Setup(mocked => mocked.GetDonationsForAuthenticatedUser("auth token", null, "1999")).Returns(donations);
+            _mpDonorService.Setup(mocked => mocked.GetDonationsForAuthenticatedUser("auth token", null, "1999", true)).Returns(donations);
             _paymentService.Setup(mocked => mocked.GetCharge("tx_67")).Returns(new StripeCharge
             {
                 Source = new StripeSource

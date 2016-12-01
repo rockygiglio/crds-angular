@@ -9,6 +9,7 @@ using crds_angular.Exceptions.Models;
 using crds_angular.Models.Crossroads;
 using crds_angular.Security;
 using log4net;
+using Crossroads.ApiVersioning;
 
 namespace crds_angular.Controllers.API
 {
@@ -31,7 +32,8 @@ namespace crds_angular.Controllers.API
         /// <returns>An <see cref="Invitation"/>, with the GUID and ID populated</returns>
         [RequiresAuthorization]
         [ResponseType(typeof(Invitation))]
-        [Route("api/invitation"), HttpPost]
+        [VersionedRoute(template: "invitation", minimumVersion: "1.0.0")]
+        [Route("invitation"), HttpPost]
         public IHttpActionResult CreateInvitation([FromBody] Invitation invitation)
         {
             if (!ModelState.IsValid)

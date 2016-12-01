@@ -99,7 +99,7 @@
 	</ng-form>
     <button 
       ng-click="tripGiving.donationService.submitBankInfo(tripGiving.tripForm)" 
-      ng-class="{disabled: tripGiving.dto.processing}" 
+      ng-disabled="tripGiving.dto.processing"
       class="btn btn-primary btn-lg btn-block-mobile tripGiving-button">
       <span ng-if="tripGiving.dto.processing">Giving...</span>
       <span ng-if="!tripGiving.dto.processing">Give {{tripGiving.dto.amount | currency}}</span>

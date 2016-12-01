@@ -128,7 +128,10 @@ namespace MinistryPlatform.Translation.Repositories
                     {"Subject", ParseTemplateBody(communication.EmailSubject, communication.MergeData)},
                     {"Body", ParseTemplateBody(communication.EmailBody, communication.MergeData)}
                 };
-                _ministryPlatformService.CreateSubRecord(_recipientsSubPageId, communicationId, dictionary, token);
+                if (contact.EmailAddress != "" && contact.EmailAddress != null)
+                {
+                    _ministryPlatformService.CreateSubRecord(_recipientsSubPageId, communicationId, dictionary, token);
+                }
             }
         }
 

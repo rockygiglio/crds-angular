@@ -171,7 +171,7 @@ namespace MinistryPlatform.Translation.Test.Services
                     mocked.Search<MpPledge>(
                         "Donor_ID_Table_Contact_ID_Table.Contact_ID=" + mockContact + " AND Pledge_Campaign_ID_Table.Pledge_Campaign_ID=" + mockCampaign +
                         " AND Pledge_Status_ID_Table.Pledge_Status_ID=1",
-                        mockColumns)).Returns(mockPledges);
+                        mockColumns, It.IsAny<string>(), It.IsAny<bool>())).Returns(mockPledges);
 
             var record =_fixture.GetPledgeByCampaignAndContact(mockCampaign, mockContact);
             Assert.AreEqual(mockPledge.CampaignName, record.CampaignName);
@@ -231,7 +231,7 @@ namespace MinistryPlatform.Translation.Test.Services
                     mocked.Search<MpPledge>(
                         "Pledge_Campaign_ID_Table.Pledge_Campaign_ID=" + mockCampaign +
                         " AND Pledge_Status_ID_Table.Pledge_Status_ID=1",
-                        mockColumns)).Returns(mockPledges);
+                        mockColumns, It.IsAny<string>(), It.IsAny<bool>())).Returns(mockPledges);
 
             List<MpPledge> records = _fixture.GetPledgesByCampaign(mockCampaign, "ABC");
             _ministryPlatformRestRepository.VerifyAll();
@@ -267,7 +267,7 @@ namespace MinistryPlatform.Translation.Test.Services
                     mocked.Search<MpPledge>(
                         "Pledge_Campaign_ID_Table.Pledge_Campaign_ID=" + mockCampaign +
                         " AND Pledge_Status_ID_Table.Pledge_Status_ID=1",
-                        mockColumns)).Returns(mockPledges);
+                        mockColumns, It.IsAny<string>(), It.IsAny<bool>())).Returns(mockPledges);
 
             List<MpPledge> records = _fixture.GetPledgesByCampaign(mockCampaign, "ABC");
             _ministryPlatformRestRepository.VerifyAll();
@@ -317,7 +317,7 @@ namespace MinistryPlatform.Translation.Test.Services
                     mocked.Search<MpPledge>(
                         "Pledge_Campaign_ID_Table.Pledge_Campaign_ID=" + mockCampaign +
                         " AND Pledge_Status_ID_Table.Pledge_Status_ID=1",
-                        mockColumns)).Throws<Exception>();
+                        mockColumns, It.IsAny<string>(), It.IsAny<bool>())).Throws<Exception>();
 
             Assert.Throws<Exception>(() =>
             {

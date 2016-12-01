@@ -123,6 +123,7 @@
     <Compile Include="LookupTest.cs" />
     <Compile Include="Services\BulkEmailRepositoryTest.cs" />
     <Compile Include="Services\CommunicationServiceTest.cs" />
+    <Compile Include="Services\GroupParticipantRepositoryTest.cs" />
     <Compile Include="Services\GroupToolRepositoryTest.cs" />
     <Compile Include="Services\InvitationRepositoryTest.cs" />
     <Compile Include="Services\LookupServiceTest.cs" />
@@ -141,6 +142,7 @@
     <Compile Include="Services\OpportunityServiceTest.cs" />
     <Compile Include="Services\OrganizationServiceTest.cs" />
     <Compile Include="Services\ParticipantServiceTest.cs" />
+    <Compile Include="Services\PaymentRepositoryTest.cs" />
     <Compile Include="Services\PledgeRepositoryTest.cs" />
     <Compile Include="Services\ProgramServiceTest.cs" />
     <Compile Include="Services\ResponseServiceTest.cs" />

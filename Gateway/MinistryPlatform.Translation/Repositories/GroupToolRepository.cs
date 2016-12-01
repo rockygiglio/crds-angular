@@ -76,7 +76,7 @@ namespace MinistryPlatform.Translation.Repositories
             return mpInvitations;
         }
 
-        public List<MpGroupSearchResultDto> SearchGroups(int groupTypeId, string[] keywords = null)
+        public List<MpGroupSearchResultDto> SearchGroups(int groupTypeId, string[] keywords = null, int? groupId = null)
         {
             var token = _apiUserRepository.GetToken();
 
@@ -87,6 +87,11 @@ namespace MinistryPlatform.Translation.Repositories
             if (keywords != null && keywords.Any())
             {
                 parms.Add("@SearchString", string.Join(",", keywords));
+            }
+
+            if(groupId != null)
+            {
+                parms.Add("@GroupId", groupId);
             }
 
             var results = _mpRestRepository.UsingAuthenticationToken(token).GetFromStoredProc<MpGroupSearchResultDto>(SearchGroupsProcName, parms);

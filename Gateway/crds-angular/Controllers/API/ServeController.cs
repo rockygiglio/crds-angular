@@ -2,15 +2,19 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Messaging;
+using System.Web;
+using System.Web.Helpers;
 using System.Web.Http;
 using System.Web.Http.Description;
 using crds_angular.Exceptions.Models;
+using crds_angular.Models.Crossroads.Groups;
 using crds_angular.Models.Crossroads.Opportunity;
 using crds_angular.Models.Crossroads.Serve;
 using crds_angular.Security;
 using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Interfaces;
 using Crossroads.Utilities.Messaging.Interfaces;
+using Crossroads.ApiVersioning;
 
 namespace crds_angular.Controllers.API
 {
@@ -38,27 +42,51 @@ namespace crds_angular.Controllers.API
         /// <param name="from">Optional- The starting date</param>
         /// <param name="to">Optional- The end date</param>
         /// <returns></returns>
-        [ResponseType(typeof (List<ServingDay>))]
-        [Route("api/serve/family-serve-days/{contactId}")]
+        [ResponseType(typeof(List<ServingDay>))]
+        [VersionedRoute(template: "serve/family-serve-days/{contactId}", minimumVersion: "1.0.0")]
+        [Route("serve/family-serve-days/{contactId}")]
         public IHttpActionResult GetFamilyServeDays(int contactId, long from = 0, long to = 0)
         {
             return Authorized(token =>
-            {
-                try
-                {
-                    var servingDays = _serveService.GetServingDays(token, contactId, from, to);
-                    return Ok(servingDays);
-                }
-                catch (Exception exception)
-                {
-                    var apiError = new ApiErrorDto("Get Family Serve Days Failed", exception);
-                    throw new HttpResponseException(apiError.HttpResponseMessage);
-                }
-            });
+                              {
+                                  try
+                                  {
+                                      var servingDays = _serveService.GetServingDays(token, contactId, from, to);
+                                      return Ok(servingDays);
+                                  }
+                                  catch (Exception exception)
+                                  {
+                                      var apiError = new ApiErrorDto("Get Family Serve Days Failed", exception);
+                                      throw new HttpResponseException(apiError.HttpResponseMessage);
+                                  }
+                              });
         }
 
+        [ResponseType(typeof(ServingTeam))]
+        [VersionedRoute(template: "serve/get-team-rsvps", minimumVersion: "1.0.0")]
+        [Route("serve/getTeamRsvps")]
+        [HttpPost]
+        public IHttpActionResult GetServingTeamRsvps([FromBody] ServingTeam team)
+        {
+            return Authorized(token =>
+                              {
+                                  try
+                                  {
+                                      var rsvpTeam = _serveService.GetServingTeamRsvps(team);
+                                      return Ok(rsvpTeam);
+                                  }
+                                  catch (Exception exception)
+                                  {
+                                      var apiError = new ApiErrorDto($"Get RSVP for {team.GroupId} group failed", exception);
+                                      throw new HttpResponseException(apiError.HttpResponseMessage);
+                                  }
+                              });
+        }
+
+
         [ResponseType(typeof (List<FamilyMember>))]
-        [Route("api/serve/family/{contactId?}")]
+        [VersionedRoute(template: "serve/family/{contactId?}", minimumVersion: "1.0.0")]
+        [Route("serve/family/{contactId?}")]
         public IHttpActionResult GetFamily(int contactId = 0)
         {
             //TODO: I don't think you need to pass in contactId here, use the token
@@ -78,7 +106,8 @@ namespace crds_angular.Controllers.API
         }
 
         [ResponseType(typeof (List<QualifiedServerDto>))]
-        [Route("api/serve/qualifiedservers/{groupId}/{opportunityId}")]
+        [VersionedRoute(template: "serve/qualified-servers/{groupId}/{opportunityId}", minimumVersion: "1.0.0")]
+        [Route("serve/qualifiedservers/{groupId}/{opportunityId}")]
         public IHttpActionResult GetQualifiedServers(int groupId, int opportunityId)
         {
             return Authorized(token =>
@@ -96,7 +125,71 @@ namespace crds_angular.Controllers.API
             });
         }
 
-        [Route("api/serve/save-rsvp")]
+        [RequiresAuthorization]
+        [ResponseType(typeof(List<GroupDTO>))]
+        [VersionedRoute(template: "serve/get-logged-in-leaders-groups", minimumVersion: "1.0.0")]
+        [Route("serve/GetLoggedInLeadersGroups")]
+        public IHttpActionResult GetLoggedInLeadersGroups()
+        {
+            return Authorized(token =>
+            {
+                try
+                {
+                    var list = _serveService.GetLeaderGroups(token);
+                    return Ok(list);
+                }
+                catch (Exception ex)
+                {
+                    var apiError = new ApiErrorDto("Get Leaders Groups Failed", ex);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+            });
+        }
+
+        [RequiresAuthorization]
+        [ResponseType(typeof(List<GroupParticipantDTO>))]
+        [VersionedRoute(template: "serve/get-logged-in-leaders-groups-participants", minimumVersion: "1.0.0")]
+        [Route("serve/GetLoggedInLeadersGroupsParticipants")]
+        public IHttpActionResult GetLoggedInLeadersGroupsParticipants(int? groupId = null)
+        {
+            return Authorized(token =>
+            {
+                try
+                {
+                    var list = _serveService.GetLeaderGroupsParticipants(token, groupId);
+                    return Ok(list);
+                }
+                catch (Exception ex)
+                {
+                    var apiError = new ApiErrorDto("Get Leaders Groups Participants Failed", ex);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+            });
+        }
+
+        [RequiresAuthorization]
+        [ResponseType(typeof(object))]
+        [VersionedRoute(template: "serve/get-is-leader", minimumVersion: "1.0.0")]
+        [Route("serve/GetIsLeader")]
+        public IHttpActionResult GetIsLeader(int? groupId = null)
+        {
+            return Authorized(token =>
+            {
+                try
+                {
+                    bool isLeader = _serveService.GetIsLeader(token, groupId);
+                    return Ok(new {isLeader = isLeader});
+                }
+                catch (Exception ex)
+                {
+                    var apiError = new ApiErrorDto("Get Is Leader failed", ex);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+            });
+        }
+
+        [VersionedRoute(template: "serve/save-rsvp", minimumVersion: "1.0.0")]
+        [Route("serve/save-rsvp")]
         public IHttpActionResult SaveRsvp([FromBody] SaveRsvpDto saveRsvp)
         {
             if (!ModelState.IsValid)
@@ -117,7 +210,7 @@ namespace crds_angular.Controllers.API
                 var message = _messageFactory.CreateMessage(saveRsvp);
                 _eventQueue.Send(message, MessageQueueTransactionType.None);
 
-                // get updated events and return them               
+                // get updated events and return them
                 var updatedEvents = new UpdatedEvents();
                 try
                 {
@@ -133,7 +226,8 @@ namespace crds_angular.Controllers.API
         }
 
         [ResponseType(typeof (Capacity))]
-        [Route("api/serve/opp-capacity")]
+        [VersionedRoute(template: "serve/opportunity-capacity", minimumVersion: "1.0.0")]
+        [Route("serve/opp-capacity")]
         public IHttpActionResult GetOpportunityCapacity([FromUri] OpportunityCapacityDto oppCap)
         {
             return Authorized(token =>

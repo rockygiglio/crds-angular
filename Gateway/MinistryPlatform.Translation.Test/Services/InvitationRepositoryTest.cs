@@ -123,7 +123,7 @@ namespace MinistryPlatform.Translation.Test.Services
         [Test]
         public void MarkInvitationAsUsedTest()
         {
-            const string invitationGuid = "329129741-adsfads-3281234-asdfasdf";
+            const string invitationGuid = "FAFAF87C-5555-4446-BB86-DCA23BD5A43C";
 
             var returned = new List<Dictionary<string, object>>
             {

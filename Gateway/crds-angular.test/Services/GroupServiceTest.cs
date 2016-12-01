@@ -44,7 +44,6 @@ namespace crds_angular.test.Services
         private Mock<MPServices.IUserRepository> _userRespository;
         private Mock<MPServices.IInvitationRepository> _invitationRepository;
         private Mock<IAttributeService> _attributeService;
-        private const int DomainId = 66;
 
         private readonly List<ParticipantSignup> mockParticipantSignup = new List<ParticipantSignup>
         {
@@ -65,6 +64,7 @@ namespace crds_angular.test.Services
         private const int GROUP_ROLE_DEFAULT_ID = 123;
         private const int JOURNEY_GROUP_ID = 19;
         private const int GROUP_ROLE_LEADER = 22;
+        private const int DOMAIN_ID = 66;
 
         [SetUp]
         public void SetUp()
@@ -96,6 +96,7 @@ namespace crds_angular.test.Services
             config.Setup(mocked => mocked.GetConfigIntValue("GroupRoleLeader")).Returns(GROUP_ROLE_LEADER);
             config.Setup(mocked => mocked.GetConfigIntValue("Group_Role_Default_ID")).Returns(GROUP_ROLE_DEFAULT_ID);
             config.Setup(mocked => mocked.GetConfigIntValue("JourneyGroupId")).Returns(JOURNEY_GROUP_ID);
+            config.Setup(mocked => mocked.GetConfigIntValue("DomainId")).Returns(DOMAIN_ID);
 
             fixture = new GroupService(groupRepository.Object,
                                        config.Object,
@@ -836,7 +837,7 @@ namespace crds_angular.test.Services
                    mocked.SendMessage(
                        It.Is<MpCommunication>(
                            c =>
-                               c.AuthorUserId == 5 && c.DomainId == DomainId && c.EmailBody.Equals(template.Body) && c.EmailSubject.Equals(template.Subject) &&
+                               c.AuthorUserId == 5 && c.DomainId == DOMAIN_ID && c.EmailBody.Equals(template.Body) && c.EmailSubject.Equals(template.Subject) &&
                                c.FromContact.ContactId == template.FromContactId && c.FromContact.EmailAddress.Equals(template.FromEmailAddress) &&
                                c.ReplyToContact.ContactId == template.ReplyToContactId && c.ReplyToContact.EmailAddress.Equals(template.ReplyToEmailAddress) &&
                                c.ToContacts.Count == 1 && c.ToContacts[0].EmailAddress.Equals(toEmail) &&
@@ -915,7 +916,7 @@ namespace crds_angular.test.Services
                    mocked.SendMessage(
                        It.Is<MpCommunication>(
                            c =>
-                               c.AuthorUserId == 5 && c.DomainId == DomainId && c.EmailBody.Equals(template.Body) && c.EmailSubject.Equals(template.Subject) &&
+                               c.AuthorUserId == 5 && c.DomainId == DOMAIN_ID && c.EmailBody.Equals(template.Body) && c.EmailSubject.Equals(template.Subject) &&
                                c.FromContact.ContactId == template.FromContactId && c.FromContact.EmailAddress.Equals(template.FromEmailAddress) &&
                                c.ReplyToContact.ContactId == template.ReplyToContactId && c.ReplyToContact.EmailAddress.Equals(template.ReplyToEmailAddress) &&
                                c.ToContacts.Count == 1 && c.ToContacts[0].EmailAddress.Equals(toEmail) &&
@@ -990,7 +991,78 @@ namespace crds_angular.test.Services
 
             fixture.UpdateGroupParticipantRole(participant);
             groupRepository.Verify(x => x.SendNewStudentMinistryGroupAlertEmail(part), Times.Never);
+        }
 
+        [Test]
+        public void ShouldSendEmailToParticipants()
+        {
+            var token = "123";
+            var sender = new Participant()
+            {
+                ContactId = 123,
+                EmailAddress = "testSender@test.com"
+            };
+            List<GroupParticipantDTO> participants = new List<GroupParticipantDTO>()
+            {
+                new GroupParticipantDTO() {
+                    ParticipantId = 1,
+                    GroupParticipantId = 1,
+                    ContactId = 456,
+                    Email = "1@1.com"
+                    
+                },
+                new GroupParticipantDTO() {
+                    ParticipantId = 2,
+                    GroupParticipantId = 2,
+                    ContactId = 789,
+                    Email = "2@2.com"
+                },
+                new GroupParticipantDTO() {
+                    ParticipantId = 3,
+                    GroupParticipantId = 3,
+                    ContactId = 012,
+                    Email = "3@3.com"
+                },
+                new GroupParticipantDTO() {
+                    ParticipantId = 4,
+                    GroupParticipantId = 4,
+                    ContactId = 345,
+                    Email = "4@4.com"
+                }
+            };
+
+            string subject = "Test email subject from 'ShouldSendEmailToParticipants()' test";
+            string body = "Test email body from 'ShouldSendEmailToParticipants()' test";
+            int authorId = 5;
+            var fromContact = new MpContact()
+            {
+                ContactId = 1519180,
+                EmailAddress = "updates@crossroads.net"
+            };
+            var replyToContact = new MpContact()
+            {
+                ContactId = sender.ContactId,
+                EmailAddress = sender.EmailAddress
+            };
+
+            var toContacts = participants.Select(p => new MpContact
+            {
+                ContactId = p.ContactId,
+                EmailAddress = p.Email
+            }).ToList();
+
+            participantService.Setup(mocked => mocked.GetParticipantRecord(token)).Returns(sender);
+            _communicationService.Setup(mocked => mocked.SendMessage(It.Is<MpCommunication>(
+                           c =>
+                               c.AuthorUserId == authorId && c.DomainId == DOMAIN_ID && c.EmailBody.Equals(body) && c.EmailSubject.Equals(subject) &&
+                               c.FromContact.ContactId == fromContact.ContactId && c.FromContact.EmailAddress.Equals(fromContact.EmailAddress) &&
+                               c.ReplyToContact.ContactId == replyToContact.ContactId && c.ReplyToContact.EmailAddress.Equals(replyToContact.EmailAddress) &&
+                               c.ToContacts.Count == 4 && c.ToContacts[0].EmailAddress.Equals(participants[0].Email))
+                               , false)).Returns(33);
+
+            fixture.SendParticipantsEmail(token, participants, subject, body);
+            groupRepository.VerifyAll();
+            _communicationService.VerifyAll();
         }
     }
 }

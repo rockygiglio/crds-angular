@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using crds_angular.App_Start;
 using crds_angular.Models;
+using crds_angular.Models.Crossroads;
 using crds_angular.Models.Crossroads.Opportunity;
 using crds_angular.Models.Crossroads.Profile;
 using crds_angular.Models.Crossroads.Serve;
@@ -116,6 +117,7 @@ namespace crds_angular.test.Services
             _communicationService.Setup(m => m.GetTemplate(rsvpYesId)).Returns(mockRsvpYesTemplate);
             _communicationService.Setup(m => m.GetTemplate(rsvpNoId)).Returns(mockRsvpNoTemplate);
             _communicationService.Setup(m => m.GetTemplate(rsvpChangeId)).Returns(mockRsvpChangedTemplate);
+            _configurationWrapper.Setup(m => m.GetConfigIntValue("RSVPYesId")).Returns(1);
 
 
             _authenticationService.Setup(mocked => mocked.GetContactId(It.IsAny<string>())).Returns(123456);
@@ -267,6 +269,8 @@ namespace crds_angular.test.Services
                 .Returns(new Participant {ParticipantId = 1});
 
             _groupParticipantService.Setup(g => g.GetServingParticipants(It.IsAny<List<int>>(), It.IsAny<long>(), It.IsAny<long>(), contactId)).Returns(MockGroupServingParticipants());
+            _groupParticipantService.Setup(g => g.GetListOfOpportunitiesByEventAndGroup(It.IsAny<int>(), It.IsAny<int>())).Returns(new List<MpSU2SOpportunity>());
+            _groupParticipantService.Setup(g => g.GetRsvpMembers(It.IsAny<int>(), It.IsAny<int>())).Returns(new List<MpRsvpMember>());
 
             var servingDays = _fixture.GetServingDays(It.IsAny<string>(), contactId, It.IsAny<long>(), It.IsAny<long>());
             _contactRelationshipService.VerifyAll();
@@ -294,6 +298,7 @@ namespace crds_angular.test.Services
                 new MpGroupServingParticipant
                 {
                     ContactId = 2,
+                    DeadlinePassedMessage = 1,
                     DomainId = 1,
                     EventId = 3,
                     EventStartDateTime = startDate,
@@ -321,6 +326,7 @@ namespace crds_angular.test.Services
                 new MpGroupServingParticipant
                 {
                     ContactId = 2,
+                    DeadlinePassedMessage = 1,
                     DomainId = 1,
                     EventId = 3,
                     EventStartDateTime = startDate.AddHours(4),
@@ -348,6 +354,7 @@ namespace crds_angular.test.Services
                 new MpGroupServingParticipant
                 {
                     ContactId = 2,
+                    DeadlinePassedMessage = 1,
                     DomainId = 1,
                     EventId = 3,
                     EventStartDateTime = startDate.AddDays(1),
@@ -375,6 +382,7 @@ namespace crds_angular.test.Services
                 new MpGroupServingParticipant
                 {
                     ContactId = 2,
+                    DeadlinePassedMessage = 1,
                     DomainId = 1,
                     EventId = 3,
                     EventStartDateTime = startDate.AddDays(1).AddHours(4),
@@ -430,7 +438,7 @@ namespace crds_angular.test.Services
             opportunity.OpportunityId = opportunityId;
             opportunity.Responses = mockResponses;
 
-            _opportunityService.Setup(m => m.GetOpportunityResponses(opportunityId, It.IsAny<string>()))
+            _opportunityService.Setup(m => m.GetOpportunityResponses(opportunityId, eventId))
                 .Returns(opportunity.Responses);
 
             var capacity = _fixture.OpportunityCapacity(opportunityId, eventId, min, max);
@@ -527,7 +535,7 @@ namespace crds_angular.test.Services
             opportunity.OpportunityId = opportunityId;
             opportunity.Responses = new List<MinistryPlatform.Translation.Models.MpResponse>();
 
-            _opportunityService.Setup(m => m.GetOpportunityResponses(opportunityId, It.IsAny<string>()))
+            _opportunityService.Setup(m => m.GetOpportunityResponses(opportunityId, eventId))
                 .Returns(opportunity.Responses);
 
             var capacity = _fixture.OpportunityCapacity(opportunityId, eventId, opportunity.MinimumNeeded,
@@ -880,6 +888,30 @@ namespace crds_angular.test.Services
                 Times.Exactly(3));
         }
 
+        [Test]
+        public void getRsvpMembersShouldReturnFilledOutTeam()
+        {
+            ServingTeam team = new ServingTeam
+            {
+                EventId = 4510561,
+                GroupId = 23
+            };
+
+            _groupParticipantService.Setup(m => m.GetRsvpMembers(team.GroupId, team.EventId)).Returns(getRSVPMembersList());
+
+            _groupParticipantService.Setup(m => m.GetListOfOpportunitiesByEventAndGroup(team.GroupId, team.EventId)).Returns(getServeOpportunities());
+
+            var result = _fixture.GetServingTeamRsvps(team);
+            _groupParticipantService.VerifyAll();
+
+            Assert.AreEqual(result.Opportunities.Count, 2);
+
+            foreach(var opp in result.Opportunities)
+            {
+                Assert.AreEqual(opp.RsvpMembers.Count, 2);
+            }
+        }
+
         private static readonly object[] AllMockEvents =
         {
             new[] {SetupMockEvents()},
@@ -1104,7 +1136,7 @@ namespace crds_angular.test.Services
             var responses = new List<MinistryPlatform.Translation.Models.MpResponse>();
             for (var i = 0; i < 20; i++)
             {
-                responses.Add(new MinistryPlatform.Translation.Models.MpResponse { Event_ID = 1000});
+                responses.Add(new MinistryPlatform.Translation.Models.MpResponse { Event_ID = 1000, Response_Result_ID = 1});
             }
             return responses;
         }
@@ -1114,9 +1146,87 @@ namespace crds_angular.test.Services
             var responses = new List<MinistryPlatform.Translation.Models.MpResponse>();
             for (var i = 0; i < 15; i++)
             {
-                responses.Add(new MinistryPlatform.Translation.Models.MpResponse { Event_ID = 1000});
+                responses.Add(new MinistryPlatform.Translation.Models.MpResponse { Event_ID = 1000, Response_Result_ID = 1});
             }
             return responses;
         }
+
+        private static List<MpSU2SOpportunity> getServeOpportunities()
+        {
+            var opps = new List<MpSU2SOpportunity>();
+            opps.Add(new MpSU2SOpportunity()
+            {
+                Group_Role_Id = 16,
+                OpportunityId = 2218712,
+                OpportunityTitle = "(t) Kindergarten K213 Sun 8:30",
+                RsvpMembers = new List<MpRsvpMember>()             
+            });
+
+            opps.Add(new MpSU2SOpportunity()
+            {
+                Group_Role_Id = 22,
+                OpportunityId = 2218735,
+                OpportunityTitle = "Kindergarten Leader",
+                RsvpMembers = new List<MpRsvpMember>()
+            });
+
+            return opps;
+        }
+
+        private static List<MpRsvpMember> getRSVPMembersList()
+        {
+            var rsvpMembers = new List<MpRsvpMember>()
+            {
+                
+                    new MpRsvpMember()
+                    {
+                        EventId = 4510561,
+                        GroupRoleId = 16,
+                        LastName = "Strick",
+                        Name = "JC",
+                        Opportunity = 2218712,
+                        ParticipantId = 7572172,
+                        ResponseResultId = 1,
+                        Age = 18
+                    },
+
+                    new MpRsvpMember()
+                    {
+                        EventId = 4510561,
+                        GroupRoleId = 16,
+                        LastName = "Nukem",
+                        Name = "Duke",
+                        Opportunity = 2218712,
+                        ParticipantId = 7572183,
+                        ResponseResultId = 2,
+                        Age = null
+                    },
+                    new MpRsvpMember()
+                    {
+                        EventId = 4510561,
+                        GroupRoleId = 22,
+                        LastName = "Trujillo",
+                        Name = "Liz",
+                        Opportunity = 2218735,
+                        ParticipantId = 7547422,
+                        ResponseResultId = 1,
+                        Age = 21
+                    },
+                    new MpRsvpMember()
+                    {
+                        EventId = 4510561,
+                        GroupRoleId = 22,
+                        LastName = "Strife",
+                        Name = "Cloud",
+                        Opportunity = 2218735,
+                        ParticipantId = 7547423,
+                        ResponseResultId = 2,
+                        Age = 21
+                    }
+            };
+
+            return rsvpMembers;
+        }
+
     }
 }

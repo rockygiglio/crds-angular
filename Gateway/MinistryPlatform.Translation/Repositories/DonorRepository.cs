@@ -730,12 +730,33 @@ namespace MinistryPlatform.Translation.Repositories
             return MapDonationRecords(records);
         }
 
-        public List<MpDonation> GetDonationsForAuthenticatedUser(string userToken, bool? softCredit = null, string donationYear = null)
+        public List<MpDonation> GetDonationsForAuthenticatedUser(string userToken, bool? softCredit = null, string donationYear = null, bool? includeRecurring = true)
         {
             var search = string.Format("{0},{1}", YearSearch(donationYear), softCredit.HasValue ? softCredit.Value.ToString() : string.Empty);
+            //TODO update search string for includeRecurring, instead of looping through list below
+            // like this,  var search = string.Format("{0},{1},,,,,,,,,,,,,,,,,,,,{2}", YearSearch(donationYear), softCredit.HasValue ? softCredit.Value.ToString() : string.Empty, includeRecurring.HasValue ? includeRecurring.Value.ToString() : "true");            
             var records = _ministryPlatformService.GetRecordsDict(_myHouseholdDonationDistributions, userToken, search);
+            
+            if (includeRecurring.HasValue ? includeRecurring.Value : true)
+            {
+                return MapDonationRecords(records);
+            }
 
-            return MapDonationRecords(records);
+            var donations = MapDonationRecords(records);
+            var nonRecurringDonations = new List<MpDonation>();
+
+            if (donations != null)
+            {
+                
+                foreach (MpDonation donation in donations)
+                {
+                    if (!donation.recurringGift)
+                    {
+                        nonRecurringDonations.Add(donation);
+                    }
+                }
+            }
+            return nonRecurringDonations;
         }
 
         private List<MpDonation> MapDonationRecords(List<Dictionary<string, Object>> records)
@@ -783,7 +804,8 @@ namespace MinistryPlatform.Translation.Repositories
                 transactionCode = record["Transaction_Code"] as string,
                 softCreditDonorId = record["Soft_Credit_Donor_ID"] as int? ?? 0,
                 donorDisplayName = record["Donor_Display_Name"] as string,
-                itemNumber = record["Item_Number"] as string
+                itemNumber = record["Item_Number"] as string,
+                recurringGift = record["Is_Recurring_Gift"] as bool? ?? false
             };
 
             var status = statuses.Find(x => x.Id == donation.donationStatus) ?? new MpDonationStatus();

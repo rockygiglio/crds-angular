@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Crossroads.Utilities.FunctionalHelpers;
 using MinistryPlatform.Translation.Models;
 
 namespace MinistryPlatform.Translation.Repositories.Interfaces
@@ -69,5 +70,9 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
         MpGroupParticipant GetAuthenticatedUserParticipationByGroupID(string token, int groupId);
 
         bool ParticipantGroupHasStudents(string token, int participantId, int groupParticipantId);
+
+        bool IsMemberOfEventGroup(int contactId, int eventId, string token);
+
+        Result<MpGroupParticipant> GetGradeGroupForContact(int contactId, string apiToken);
     }
 }

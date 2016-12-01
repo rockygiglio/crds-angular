@@ -38,6 +38,7 @@
   require('./passwordField');
   require('./register');
   require('./cms/services/cms_services_module');
+  require('./linked_content');
 
   require('./profile/picture');
 

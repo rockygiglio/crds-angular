@@ -1153,7 +1153,8 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Amount", 1000.00M},
                     {"dp_RecordName", "Program 1"},
                     {"Donor_Display_Name", "Test Name"},
-                    {"Item_Number", null}
+                    {"Item_Number", null},
+                    {"Is_Recurring_Gift", false }
                 },
                 new Dictionary<string, object>
                 {
@@ -1168,7 +1169,8 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Amount", 2000.00M},
                     {"dp_RecordName", "Program 2"},
                     {"Donor_Display_Name", "Test Name"},
-                    {"Item_Number", null}
+                    {"Item_Number", null},
+                    {"Is_Recurring_Gift", false }
                 },
                 new Dictionary<string, object>
                 {
@@ -1183,7 +1185,8 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Amount", 9000.00M},
                     {"dp_RecordName", "Program 9"},
                     {"Donor_Display_Name", "Test Name"},
-                    {"Item_Number", null}
+                    {"Item_Number", null},
+                    {"Is_Recurring_Gift", false }
                 }
             };
 
@@ -1255,7 +1258,8 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Amount", 1000.00M},
                     {"dp_RecordName", "Program 1"},
                     {"Donor_Display_Name", "Test Name"},
-                    {"Item_Number", null}
+                    {"Item_Number", null},
+                    {"Is_Recurring_Gift", false }
                 },
                 new Dictionary<string, object>
                 {
@@ -1270,7 +1274,8 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Amount", 2000.00M},
                     {"dp_RecordName", "Program 2"},
                     {"Donor_Display_Name", "Test Name"},
-                    {"Item_Number", ""}
+                    {"Item_Number", ""},
+                    {"Is_Recurring_Gift", false }
                 },
                 new Dictionary<string, object>
                 {
@@ -1284,7 +1289,8 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Transaction_Code", "tx_1000"},
                     {"Amount", 9000.00M},
                     {"dp_RecordName", "Program 9"},
-                    {"Donor_Display_Name", "Test Name"}
+                    {"Donor_Display_Name", "Test Name"},
+                    {"Is_Recurring_Gift", false }
                 },
                 new Dictionary<string, object>
                 {
@@ -1299,7 +1305,8 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Amount", 9000.00M},
                     {"dp_RecordName", "Program 9"},
                     {"Donor_Display_Name", "Test Name"},
-                    {"Item_Number", "1234"}
+                    {"Item_Number", "1234"},
+                    {"Is_Recurring_Gift", false }
                 },
             };
 
@@ -1326,6 +1333,88 @@ namespace MinistryPlatform.Translation.Test.Services
 
             Assert.AreEqual("1234", result[2].itemNumber);
             
+        }
+
+        [Test]
+        public void TestGetLastDonationForAuthenticatedUser()
+        {
+            var records = new List<Dictionary<string, object>>
+            {
+                new Dictionary<string, object>
+                {
+                    {"Donation_Date", DateTime.Now.AddDays(-1)},
+                    {"Donation_ID", 1000},
+                    {"Soft_Credit_Donor_ID", null},
+                    {"Donation_Status_ID", 1},
+                    {"Donation_Status_Date", DateTime.Now},
+                    {"Donor_ID", 1100},
+                    {"Payment_Type_ID", 1110},
+                    {"Transaction_Code", "tx_1000"},
+                    {"Amount", 1000.00M},
+                    {"dp_RecordName", "Program 1"},
+                    {"Donor_Display_Name", "Test Name"},
+                    {"Item_Number", null},
+                    {"Is_Recurring_Gift", true }
+                },
+                new Dictionary<string, object>
+                {
+                    {"Donation_Date", DateTime.Now.AddDays(-2)},
+                    {"Donation_ID", 2000},
+                    {"Soft_Credit_Donor_ID", null},
+                    {"Donation_Status_ID", 2},
+                    {"Donation_Status_Date", DateTime.Now},
+                    {"Donor_ID", 2200},
+                    {"Payment_Type_ID", 2220},
+                    {"Transaction_Code", "tx_2000"},
+                    {"Amount", 2000.00M},
+                    {"dp_RecordName", "Program 2"},
+                    {"Donor_Display_Name", "Test Name"},
+                    {"Item_Number", ""},
+                    {"Is_Recurring_Gift", true }
+                },
+                new Dictionary<string, object>
+                {
+                    {"Donation_Date", DateTime.Now.AddDays(-3)},
+                    {"Donation_ID", 1000},
+                    {"Soft_Credit_Donor_ID", null},
+                    {"Donation_Status_ID", 1},
+                    {"Donation_Status_Date", DateTime.Now},
+                    {"Donor_ID", 1100},
+                    {"Payment_Type_ID", 1110},
+                    {"Transaction_Code", "tx_1000"},
+                    {"Amount", 5000.00M},
+                    {"dp_RecordName", "Program 9"},
+                    {"Donor_Display_Name", "Test Name"},
+                    {"Is_Recurring_Gift", false }
+                },
+                new Dictionary<string, object>
+                {
+                    {"Donation_Date", DateTime.Now},
+                    {"Donation_ID", 3000},
+                    {"Soft_Credit_Donor_ID", null},
+                    {"Donation_Status_ID", 1},
+                    {"Donation_Status_Date", DateTime.Now},
+                    {"Donor_ID", 1100},
+                    {"Payment_Type_ID", 1110},
+                    {"Transaction_Code", "tx_1000"},
+                    {"Amount", 9000.00M},
+                    {"dp_RecordName", "Program 9"},
+                    {"Donor_Display_Name", "Test Name"},
+                    {"Item_Number", "1234"},
+                    {"Is_Recurring_Gift", false }
+                },
+            };
+
+            var searchString = string.Format("{0},{1}", null, false);
+            _ministryPlatformService.Setup(mocked => mocked.GetRecordsDict(516, "auth token", searchString, It.IsAny<string>())).Returns(records);            
+
+            var result = _fixture.GetDonationsForAuthenticatedUser("auth token", false, null, false);
+
+            _ministryPlatformService.VerifyAll();
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(1, result.Count);            
+            Assert.AreEqual(900000, result[0].donationAmt);
         }
 
         [Test]
@@ -1366,7 +1455,8 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Amount", 1000.00M},
                     {"dp_RecordName", "Program 1"},
                     {"Donor_Display_Name", "Test Name"},
-                    {"Item_Number", null}
+                    {"Item_Number", null},
+                    {"Is_Recurring_Gift", false }
                 },
                 new Dictionary<string, object>
                 {
@@ -1381,7 +1471,8 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Amount", 2000.00M},
                     {"dp_RecordName", "Program 2"},
                     {"Donor_Display_Name", "Test Name"},
-                    {"Item_Number", null}
+                    {"Item_Number", null},
+                    {"Is_Recurring_Gift", false }
                 },
                 new Dictionary<string, object>
                 {
@@ -1396,7 +1487,8 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Amount", 9000.00M},
                     {"dp_RecordName", "Program 9"},
                     {"Donor_Display_Name", "Test Name"},
-                    {"Item_Number", null}
+                    {"Item_Number", null},
+                    {"Is_Recurring_Gift", false }
                 }
             };
 
@@ -1461,7 +1553,8 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Amount", 1000.00M},
                     {"dp_RecordName", "Program 1"},
                     {"Donor_Display_Name", "Test Name"},
-                    {"Item_Number", null}
+                    {"Item_Number", null},
+                    {"Is_Recurring_Gift", false }
                 },
                 new Dictionary<string, object>
                 {
@@ -1476,7 +1569,8 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Amount", 2000.00M},
                     {"dp_RecordName", "Program 2"},
                     {"Donor_Display_Name", "Test Name"},
-                    {"Item_Number", null}
+                    {"Item_Number", null},
+                    {"Is_Recurring_Gift", false }
                 },
                 new Dictionary<string, object>
                 {

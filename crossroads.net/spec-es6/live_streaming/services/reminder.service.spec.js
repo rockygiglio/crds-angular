@@ -26,7 +26,7 @@ describe('Reminder Service', () => {
     reminder.isDayValid = true;
     reminder.isTimeValid = true;
 
-  }))
+  }));
 
   afterEach(() => {
     httpBackend.verifyNoOutstandingExpectation();
@@ -36,7 +36,7 @@ describe('Reminder Service', () => {
   describe('Reminder', () => {
     it('should send email notification', () => {
       let url = `${reminderEndpoint}api/sendEmailReminder`;
-      let result = {}
+      let result = {};
       
       reminder.type = 'email';
       reminder.email = 'test@test.com';

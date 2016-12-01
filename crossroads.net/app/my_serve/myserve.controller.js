@@ -8,11 +8,13 @@
     '$rootScope',
     '$window',
     '$log',
-    'filterState',
+    'ServeTeamFilterState',
     'Session',
     'ServeOpportunities',
     'Groups',
-    'AUTH_EVENTS'
+    'leader',
+    'AUTH_EVENTS',
+    'ServeTeamService'
   ];
 
   function MyServeController(
@@ -24,7 +26,9 @@
     Session,
     ServeOpportunities,
     Groups,
-    AUTH_EVENTS
+    leader,
+    AUTH_EVENTS,
+    ServeTeamService
     ) {
 
     var vm = this;
@@ -39,6 +43,7 @@
     vm.original = [];
     vm.showButton = showButton;
     vm.showNoOpportunitiesMsg = showNoOpportunitiesMsg;
+    vm.isLeader = leader.isLeader;
 
     activate();
 

@@ -19,7 +19,6 @@
     '$window',
     '$location',
     'STATE_CHANGE_EVENTS',
-    'contentMessageService',
     'CMSService'
   ];
 
@@ -38,8 +37,7 @@
     $anchorScroll,
     $window,
     $location,
-    STATE_CHANGE_EVENTS,
-    contentMessageService
+    STATE_CHANGE_EVENTS
   ) {
 
     var vm = this;
@@ -133,7 +131,6 @@
         messages[cb.title] = cb;
         return (messages);
       }, MESSAGES);
-      contentMessageService.set(MESSAGES);
     }
 
     function openAside(position, backdrop) {

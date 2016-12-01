@@ -11,6 +11,8 @@ using log4net;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 using System.Text.RegularExpressions;
+using crds_angular.Models.Crossroads.Attribute;
+using Crossroads.Utilities.Extensions;
 
 namespace crds_angular.Services
 {
@@ -27,6 +29,7 @@ namespace crds_angular.Services
         private readonly IContactRepository _contactRepository;
         private readonly IAddressProximityService _addressMatrixService;
         private readonly IEmailCommunication _emailCommunicationService;
+        private readonly IAttributeService _attributeService;
 
         private readonly int _defaultGroupContactEmailId;
         private readonly int _defaultAuthorUserId;
@@ -39,6 +42,7 @@ namespace crds_angular.Services
         private readonly int _addressMatrixSearchDepth;
         private readonly int _groupRequestToJoinEmailTemplate;
         private readonly int _groupRequestPendingReminderEmailTemplateId;
+        private readonly int _attributeTypeGroupCategory;
 
         private const string GroupToolRemoveParticipantEmailTemplateTextTitle = "groupToolRemoveParticipantEmailTemplateText";
         private const string GroupToolRemoveParticipantSubjectTemplateText = "groupToolRemoveParticipantSubjectTemplateText";
@@ -61,7 +65,8 @@ namespace crds_angular.Services
             IAddressProximityService addressProximityService,
             IContactRepository contactRepository,
             IAddressProximityService addressMatrixService,
-            IEmailCommunication emailCommunicationService)
+            IEmailCommunication emailCommunicationService,
+            IAttributeService attributeService)
         {
             _groupToolRepository = groupToolRepository;
             _groupRepository = groupRepository;
@@ -74,12 +79,14 @@ namespace crds_angular.Services
             _contactRepository = contactRepository;
             _addressMatrixService = addressMatrixService;
             _emailCommunicationService = emailCommunicationService;
+            _attributeService = attributeService;
 
             _defaultGroupContactEmailId = configurationWrapper.GetConfigIntValue("DefaultGroupContactEmailId");
             _defaultAuthorUserId = configurationWrapper.GetConfigIntValue("DefaultAuthorUser");
             _groupRoleLeaderId = configurationWrapper.GetConfigIntValue("GroupRoleLeader");
             _defaultGroupRoleId = configurationWrapper.GetConfigIntValue("Group_Role_Default_ID");
             _groupRequestPendingReminderEmailTemplateId = configurationWrapper.GetConfigIntValue("GroupRequestPendingReminderEmailTemplateId");
+            _attributeTypeGroupCategory = configurationWrapper.GetConfigIntValue("GroupCategoryAttributeTypeId");
 
             _removeParticipantFromGroupEmailTemplateId = configurationWrapper.GetConfigIntValue("RemoveParticipantFromGroupEmailTemplateId");
 
@@ -402,7 +409,7 @@ namespace crds_angular.Services
                     // make sure the person isn't already in a group
                     var groupParticipants = _groupRepository.GetGroupParticipants(groupId, true);
 
-                    if (groupParticipants.Any())
+                    if (groupParticipants.Any(p => p.ParticipantId == participant.ParticipantId))
                     {
                         // mark as used here, too, because of exception flow
                         _invitationRepository.MarkInvitationAsUsed(invitationGuid);
@@ -489,7 +496,15 @@ namespace crds_angular.Services
             var leaderRecord = _participantRepository.GetParticipantRecord(token);
             var groups = _groupService.GetGroupsByTypeForAuthenticatedUser(token, groupTypeId, groupId);
 
-            ValidateUserAsLeader(token, groupId, groupTypeId, leaderRecord.ParticipantId, groups);
+            if (groups == null || !groups.Any())
+            {
+                throw new GroupNotFoundForParticipantException($"Could not find group {groupId} for groupParticipant {leaderRecord.ParticipantId}");
+            }
+
+            if (!ValidateUserAsLeader(token, groupTypeId, groupId, leaderRecord.ParticipantId, groups.First()))
+            {
+                throw new NotGroupLeaderException($"Group participant ID {leaderRecord.ParticipantId} is not a leader of group {groupId}");
+            }
 
             var fromContact = new MpContact
             {
@@ -507,7 +522,7 @@ namespace crds_angular.Services
                                                                             {
                                                                                 ContactId = groupParticipant.ContactId,
                                                                                 EmailAddress = groupParticipant.Email
-                                                                            }).ToList();
+                                                                            }).DistinctBy(c => c.EmailAddress).ToList();
 
             var email = new MpCommunication
             {
@@ -523,21 +538,28 @@ namespace crds_angular.Services
             _communicationRepository.SendMessage(email);
         }
 
-        public void ValidateUserAsLeader(string token, int groupTypeId, int groupId, int groupParticipantId, List<GroupDTO> groups)
+        public bool ValidateUserAsLeader(string token, int groupTypeId, int groupId, int groupParticipantId, GroupDTO group)
         {
-            if (groups == null || !groups.Any())
-            {
-                throw new GroupNotFoundForParticipantException($"Could not find group {groupId} for groupParticipant {groupParticipantId}");
-            }
-
-            var groupParticipants = groups.First().Participants;
+            var groupParticipants = group.Participants;
             var me = _participantRepository.GetParticipantRecord(token);
 
-            if (groupParticipants == null || groupParticipants.Find(p => p.ParticipantId == me.ParticipantId) == null ||
-                groupParticipants.Find(p => p.ParticipantId == me.ParticipantId).GroupRoleId != _groupRoleLeaderId)
+            if (groupParticipants == null || groupParticipants.Find(p => p.ParticipantId == me.ParticipantId) == null)
             {
                 throw new NotGroupLeaderException($"Group participant {groupParticipantId} is not a leader of group {groupId}");
+
             }
+            var isLeader = false;
+            foreach (var part in groupParticipants)
+            {
+                if ( (me.ParticipantId == part.ParticipantId) &&
+                        (_groupRoleLeaderId == part.GroupRoleId) )
+                {
+                    isLeader = true;
+                    break;
+
+                }
+            }
+            return isLeader;
         }
 
         public void EndGroup(int groupId, int reasonEndedId)
@@ -601,7 +623,8 @@ namespace crds_angular.Services
             _communicationRepository.SendMessage(message, false);
         }
 
-        public List<GroupDTO> SearchGroups(int groupTypeId, string keywords = null, string location = null)
+
+        public List<GroupDTO> SearchGroups(int groupTypeId, string keywords = null, string location = null, int? groupId = null)
         {
             // Split single search term into multiple words, broken on whitespace
             // TODO Should remove stopwords from search - possibly use a configurable list of words (http://www.link-assistant.com/seo-stop-words.html)
@@ -612,7 +635,7 @@ namespace crds_angular.Services
                     .Replace("&", "%26") // Replace & with the hex representation, to avoid looking like a stored proc parameter
                     .Split((char[]) null, StringSplitOptions.RemoveEmptyEntries);
 
-            var results = _groupToolRepository.SearchGroups(groupTypeId, search);
+            var results = _groupToolRepository.SearchGroups(groupTypeId, search, groupId);
             if (results == null || !results.Any())
             {
                 return null;
@@ -644,6 +667,10 @@ namespace crds_angular.Services
                 {
                     groups[i].Proximity = drivingProximities[i];
                 }
+
+                // order again in case proximties changed because of driving directions
+                groups = groups.OrderBy(r => r.Proximity ?? decimal.MaxValue).ToList();
+
             }
             catch (InvalidAddressException e)
             {
@@ -688,9 +715,11 @@ namespace crds_angular.Services
             var leaders = group.Participants.
                 Where(groupParticipant => groupParticipant.GroupRoleId == _groupRoleLeaderId).ToList();
 
+            var Requestor = "<i>" + contact.Nickname + " " + contact.Last_Name + "</i> ";
+
             foreach (var leader in leaders)
             {
-                var mergeData = new Dictionary<string, object> {{"Name", leader.NickName}};
+                var mergeData = new Dictionary<string, object> {{"Name", leader.NickName}, {"Requestor", Requestor} };
                 SendSingleGroupParticipantEmail(leader, _groupRequestToJoinEmailTemplate, mergeData);
             }
         }
@@ -714,6 +743,24 @@ namespace crds_angular.Services
                 _logger.Error("Exception retrieving pending inquiries", e);
                 throw;
             }
+        }
+
+        public List<AttributeCategoryDTO> GetGroupCategories()
+        {
+            List<AttributeCategoryDTO> cats = _attributeService.GetAttributeCategory(_attributeTypeGroupCategory);
+            
+            foreach (AttributeCategoryDTO cat in cats)
+            {
+                if (cat.RequiresActiveAttribute)
+                {
+                    cat.Attribute = _attributeService.GetOneAttributeByCategoryId(cat.CategoryId);
+                }
+            }
+
+            //do not return any categories where it requires an active attribute but there are no active attributes
+            cats.RemoveAll(cat => cat.RequiresActiveAttribute && cat.Attribute == null );
+
+            return cats;
         }
 
         private void SendPendingInquiryReminderEmail(MpGroup group, IReadOnlyCollection<MpInquiry> inquiries)

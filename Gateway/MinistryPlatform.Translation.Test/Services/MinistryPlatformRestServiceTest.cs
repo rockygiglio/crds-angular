@@ -50,7 +50,7 @@ namespace MinistryPlatform.Translation.Test.Services
                 mocked =>
                     mocked.Execute(
                         It.Is<IRestRequest>(
-                            r => r.Resource.Contains("/tables/MP_Table_Name?") && r.Resource.Contains("$filter=search string") && r.Resource.Contains("$select=col1,col2"))))
+                            r => r.Resource.Contains("/tables/MP_Table_Name?") && r.Resource.Contains("$filter=search%20string") && r.Resource.Contains("$select=col1,col2"))))
                 .Returns(restResponse.Object);
 
             var results = _fixture.Search<TestModelWithRestApiTable>("search string", "col1,col2");
@@ -78,7 +78,7 @@ namespace MinistryPlatform.Translation.Test.Services
                 mocked =>
                     mocked.Execute(
                         It.Is<IRestRequest>(
-                            r => r.Resource.Contains("/tables/MP_Table_Name?") && r.Resource.Contains("$filter=search string") && r.Resource.Contains("$select=col1,col2"))))
+                            r => r.Resource.Contains("/tables/MP_Table_Name?") && r.Resource.Contains("$filter=search%20string") && r.Resource.Contains("$select=col1,col2"))))
                 .Returns(restResponse.Object);
 
             var results = _fixture.Search<TestModelWithRestApiTable>("search string", "col1,col2");

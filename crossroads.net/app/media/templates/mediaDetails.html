@@ -22,25 +22,43 @@
           </header>
           <div class="message-body" dynamic-content="singleMedia.media.description | html" >
           </div><!--/message-body-->
-          <div class="message-tags">
-            <div class="row push-top">
-              <div class="col-xs-3 col-md-2">
-                <span class="small-heading text-muted" data-ng-show="singleMedia.media.speakers">SPEAKER: </span>
-              </div>
-              <div class="col-xs-9 col-md-10" >
-                <a ng-repeat="speaker in singleMedia.media.speakers" ui-sref="search({type:'media',q:'speakers: \''+speaker.title+'\''})" class="label label-block label-standard-dark">{{ speaker.title }}</a>
-              </div>
-              <div class="col-xs-3 col-md-2" data-ng-show="singleMedia.mediaTags.length > 0">
-                <span class="small-heading">TOPICS: </span>
-              </div>
-              <div class="col-xs-9 col-md-10">
-                <a ng-repeat="tag in singleMedia.mediaTags" ui-sref="search({type:'media',q:'tags: \''+tag.title+'\''})" class="label label-block label-standard-dark">{{ tag.title }}</a>
-              </div>
-            </div><!--/row-->
+
+          <div ng-if='singleMedia.weekendSummaryExists()' class="message-weekend-summary">
+            <a ng-click="singleMedia.toggleWeekendSummary()">
+              <svg viewBox="0 0 18 32" class="icon">
+                <use xlink:href="{{singleMedia.showWeekendSummary ? '#caret-up' : '#caret-down'}}"></use>
+              </svg>
+              <span ng-if="!singleMedia.showWeekendSummary" dynamic-content="$root.MESSAGES.singleMessageShowWeekendSummary.content | html"></span>
+              <span ng-if="singleMedia.showWeekendSummary" dynamic-content="$root.MESSAGES.singleMessageHideWeekendSummary.content | html"></span>
+            </a>
+
+            <div collapse="!singleMedia.showWeekendSummary">
+
+              <div class="message-body" ng-if="singleMedia.media.keyPoints" dynamic-content="singleMedia.media.keyPoints | html" ></div>
+              <div class="message-body" ng-if="singleMedia.media.discussion" dynamic-content="singleMedia.media.discussion | html" ></div>
+              <div class="message-body" ng-if="singleMedia.media.resources" dynamic-content="singleMedia.media.resources | html" ></div>
+            </div>
           </div>
         </div><!--/message-info-->
 
-        <ng-include src="'templates/messageActionButtons.html'"> </ng-include>
+        <div class="col-sm-4 col-lg-2 push-top">
+          <ng-include src="'templates/messageActionButtons.html'"> </ng-include>
+
+          <div class="message-tags">
+            <div class="push-top" ng-if="singleMedia.media.speakers">
+              <span class="small-heading text-muted">SPEAKER: </span>
+            </div>
+            <div>
+              <a ng-repeat="speaker in singleMedia.media.speakers" ui-sref="search({type:'media',q:'speakers: \''+speaker.title+'\''})" class="label label-block label-standard-dark">{{ speaker.title }}</a>
+            </div>
+            <div class="push-top" ng-if="singleMedia.mediaTags.length > 0">
+              <span class="small-heading">TOPICS: </span>
+            </div>
+            <div>
+              <a ng-repeat="tag in singleMedia.mediaTags" ui-sref="search({type:'media',q:'tags: \''+tag.title+'\''})" class="label label-block label-standard-dark">{{ tag.title }}</a>
+            </div>
+          </div>
+        </div>
 
       </div><!--/media-details-->
     </div><!--/col-sm-12-->

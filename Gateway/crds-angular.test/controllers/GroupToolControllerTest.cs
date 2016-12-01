@@ -172,7 +172,7 @@ namespace crds_angular.test.controllers
             const string keywords = "kw1,kw2";
             const string location = "123 main st";
 
-            _groupToolService.Setup(mocked => mocked.SearchGroups(groupTypeId, keywords, location)).Returns(new List<GroupDTO>());
+            _groupToolService.Setup(mocked => mocked.SearchGroups(groupTypeId, keywords, location, null)).Returns(new List<GroupDTO>());
             var result = _fixture.SearchGroups(groupTypeId, keywords, location);
             _groupToolService.VerifyAll();
             Assert.IsNotNull(result);
@@ -190,7 +190,7 @@ namespace crds_angular.test.controllers
             const string location = "123 main st";
             var exception = new Exception("whoa nelly");
 
-            _groupToolService.Setup(mocked => mocked.SearchGroups(groupTypeId, keywords, location)).Throws(exception);
+            _groupToolService.Setup(mocked => mocked.SearchGroups(groupTypeId, keywords, location, null)).Throws(exception);
             _fixture.SearchGroups(groupTypeId, keywords, location);
         }
 
@@ -206,8 +206,27 @@ namespace crds_angular.test.controllers
                 new GroupDTO()
             };
 
-            _groupToolService.Setup(mocked => mocked.SearchGroups(groupTypeId, keywords, location)).Returns(searchResults);
+            _groupToolService.Setup(mocked => mocked.SearchGroups(groupTypeId, keywords, location, null)).Returns(searchResults);
             var result = _fixture.SearchGroups(groupTypeId, keywords, location);
+            _groupToolService.VerifyAll();
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOf<OkNegotiatedContentResult<List<GroupDTO>>>(result);
+            var restResult = (OkNegotiatedContentResult<List<GroupDTO>>)result;
+            Assert.AreSame(searchResults, restResult.Content);
+        }
+
+        [Test]
+        public void TestSearchGroupsWithGroupId()
+        {
+            const int groupTypeId = 123;
+            const int groupId = 42;
+            var searchResults = new List<GroupDTO>
+            {
+                new GroupDTO()
+            };
+
+            _groupToolService.Setup(mocked => mocked.SearchGroups(groupTypeId, null, null, groupId)).Returns(searchResults);
+            var result = _fixture.SearchGroups(groupTypeId, null, null, groupId);
             _groupToolService.VerifyAll();
             Assert.IsNotNull(result);
             Assert.IsInstanceOf<OkNegotiatedContentResult<List<GroupDTO>>>(result);

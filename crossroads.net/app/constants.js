@@ -4,6 +4,8 @@
     //TODO Should this be moved to core?
     // MODULE NAMES
     MODULES: {
+      CAMPS: 'crossroads.camps',
+      CAMPS_APPLICATION_PAGE: 'crossroads.camps.applicationPages',
       CHILDCARE: 'crossroads.childcare',
       CHILDCARE_DASHBOARD: 'crossroads.childcare_dashboard',
       CORE: 'crossroads.core',
@@ -14,8 +16,9 @@
       FORMLY_BUILDER: 'crossroads.formly_builder',
       GIVE: 'crossroads.give',
       GO_VOLUNTEER: 'crossroads.go_volunteer',
-      //GROUP_FINDER: 'crossroads.group_finder',
+      // GROUP_FINDER: 'crossroads.group_finder',
       MEDIA: 'crossroads.media',
+      MY_SERVE: 'crossroads.my_serve',
       LIVE_STREAM: 'crossroads.live_stream',
       GROUP_TOOL: 'crossroads.grouptool',
       MPTOOLS: 'crossroads.mptools',
@@ -24,6 +27,7 @@
       SEARCH: 'crossroads.search',
       SIGNUP: 'crossroads.signup',
       TRIPS: 'crossroads.trips',
+
     },
     ATTRIBUTE_TYPE_IDS: {
       ABUSE_HISTORY: 69,
@@ -71,16 +75,17 @@
       US_FREQUENT_FLYER: 3980,
       VICTIM_OF_ABUSE: 3973
     },
-    ATTRIBUTE_CATEGORY_IDS: {
-      LIFE_STAGES: 17,
-      NEIGHBORHOODS: 18,
-      SPIRITUAL_GROWTH: 19,
-      INTEREST: 20,
-      HEALING: 21
-    },
     NON_CROSSROADS_LOCATIONS: {
       I_DO_NOT_ATTEND_CROSSROADS: 2,
       NOT_SITE_SPECIFIC: 5
+    },
+    SERVING_RESPONSES: {
+      NOT_AVAILABLE: 2,
+      AVAILABLE: 1
+    },
+    SERVING: {
+      MAXSTUDENTVOLUNTEERAGE: 17,
+      STUDENTVOLUNTEERTEXT: ' (SV)'
     },
     CMS: {
       PAGENAMES: {
@@ -111,12 +116,28 @@
       GROUP_TYPE_ID: {
         UNDIVIDED: 26,
         SMALL_GROUPS: 1,
+        MY_SERVE: 9
       },
       ROLES: {
         MEMBER: 16,
         LEADER: 22,
         APPRENTICE: 66
       },
+      SEARCH_FILTERS_QUERY_PARAM_NAMES: {
+        AGE: 'age',
+        GROUP_CATEGORY: 'category',
+        GROUP_TYPE: 'type',
+        KIDS_WELCOME: 'kids',
+        GROUP_LOCATION: 'grouplocation',
+        MEETING_DAY: 'day',
+        MEETING_TIME: 'time',
+        MEETING_FREQUENCY: 'frequency',
+        LEADER_SITE: 'site'
+      }
+    },
+    GEOLOCATION: {
+      MODAL_TIMEOUT: 3000,
+      FORMS_KEY: '1rupjr7gvqUU203fwjmeUlIiVwCA8BdkD-mP6M6s3wxQ'
     },
     INVITATION: {
       TYPES: {
@@ -127,5 +148,15 @@
     MINISTRY: {
       SPIRITUAL_GROWTH: '8'
     },
+    STREAM_STATUS: {
+      LIVE: 'Live',
+      UPCOMING: 'Upcoming',
+      OFF: 'Off'
+    },
+    PRE_STREAM_HOURS: 15,
+    COOKIES: {
+      SESSION_ID: __CRDS_ENV__+'sessionId',
+      REFRESH_TOKEN: __CRDS_ENV__+'refreshToken'
+    }
   };
 })();

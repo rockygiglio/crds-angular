@@ -1,4 +1,4 @@
-
+import CONSTANTS from 'crds-constants';
 import {SearchFilter, SearchFilterValue} from './searchFilter'; 
 
 class TimeRange {
@@ -20,14 +20,21 @@ class TimeRange {
 }
 
 export default class MeetingTimeFilter extends SearchFilter {
-  constructor(filterName) {
+  constructor(filterName, selectedFilters) {
+    if (selectedFilters == null || selectedFilters == undefined)
+      selectedFilters="";
+    let selectedArray = selectedFilters.split(',');
+    let mornSelected = _.findIndex(selectedArray, (s) => { return s.toUpperCase() == 'Mornings (before noon)'.toUpperCase()}) != -1;
+    let noonSelected = _.findIndex(selectedArray, (s) => { return s.toUpperCase() == 'Afternoons (12 - 5pm)'.toUpperCase()}) != -1;
+    let eveningSelected = _.findIndex(selectedArray, (s) => { return s.toUpperCase() == 'Evenings (after 5pm)'.toUpperCase()}) != -1;
+
     let filterValues = [
-      new SearchFilterValue('Mornings (before noon)', new TimeRange('00:00:00', '11:59:59'), false),
-      new SearchFilterValue('Afternoons (12 - 5pm)', new TimeRange('12:00:00', '17:00:00'), false),
-      new SearchFilterValue('Evenings (after 5pm)', new TimeRange('17:00:01', '23:59:59'), false)
+      new SearchFilterValue('Mornings (before noon)', new TimeRange('00:00:00', '11:59:59'), mornSelected),
+      new SearchFilterValue('Afternoons (12 - 5pm)', new TimeRange('12:00:00', '17:00:00'), noonSelected),
+      new SearchFilterValue('Evenings (after 5pm)', new TimeRange('17:00:01', '23:59:59'), eveningSelected)
     ];
 
-    super(filterName, filterValues, this._matchingFunction);
+    super(filterName, filterValues, this._matchingFunction, CONSTANTS.GROUP.SEARCH_FILTERS_QUERY_PARAM_NAMES.MEETING_TIME);
   }
 
   _matchingFunction(result) {

@@ -3,6 +3,6 @@
   "requireTrailingComma": null,
   "requireDotNotation": "except_snake_case",
   "safeContextKeyword": "vm",
-  "validateLineBreaks": "CRLF",
+  "validateLineBreaks": null,
   "requireCamelCaseOrUpperCaseIdentifiers": null 
 }

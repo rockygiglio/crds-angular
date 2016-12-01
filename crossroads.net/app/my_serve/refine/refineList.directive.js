@@ -5,7 +5,7 @@
   
   module.exports = RefineDirective;
 
-  RefineDirective.$inject = ['$rootScope', 'filterState', 'screenSize', '$modal'];
+  RefineDirective.$inject = ['$rootScope', 'ServeTeamFilterState', 'screenSize', '$modal'];
 
   function RefineDirective($rootScope, filterState, screenSize, $modal) {
     return {

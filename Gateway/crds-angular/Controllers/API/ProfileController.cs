@@ -13,9 +13,11 @@ using crds_angular.Security;
 using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Interfaces;
 using log4net;
+using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 using IPersonService = crds_angular.Services.Interfaces.IPersonService;
 using IDonorService = crds_angular.Services.Interfaces.IDonorService;
+using Crossroads.ApiVersioning;
 
 namespace crds_angular.Controllers.API
 {
@@ -45,7 +47,8 @@ namespace crds_angular.Controllers.API
 
         [RequiresAuthorization]
         [ResponseType(typeof (Person))]
-        [Route("api/profile")]
+        [VersionedRoute(template: "profile", minimumVersion: "1.0.0")]
+        [Route("profile")]
         [HttpGet]
         public IHttpActionResult GetProfile([FromUri(Name = "impersonateDonorId")]int? impersonateDonorId = null)
         {
@@ -71,7 +74,8 @@ namespace crds_angular.Controllers.API
         }
 
         [ResponseType(typeof(Person))]
-        [Route("api/profile/{contactId}")]
+        [VersionedRoute(template: "profile/{contactId}", minimumVersion: "1.0.0")]
+        [Route("profile/{contactId}")]
         [HttpGet]
         public IHttpActionResult GetProfile(int contactId)
         {
@@ -101,9 +105,10 @@ namespace crds_angular.Controllers.API
                 }
             });
         }
-
+        
         [ResponseType(typeof(Person))]
-        [Route("api/profile/{contactId}/admin")]
+        [VersionedRoute(template: "profile/{contactId}/admin", minimumVersion: "1.0.0")]
+        [Route("profile/{contactId}/admin")]
         [HttpGet]
         public IHttpActionResult AdminGetProfile(int contactId)
         {
@@ -135,7 +140,8 @@ namespace crds_angular.Controllers.API
         }
 
         [ResponseType(typeof(FamilyMember))]
-        [Route("api/profile/{contactId}/spouse")]
+        [VersionedRoute(template: "profile/{contactId}/spouse", minimumVersion: "1.0.0")]
+        [Route("profile/{contactId}/spouse")]
         [HttpGet]
         public IHttpActionResult GetMySpouse(int contactid)
         {
@@ -165,7 +171,8 @@ namespace crds_angular.Controllers.API
             });
         }
 
-        [Route("api/profile")]
+        [VersionedRoute(template: "profile", minimumVersion: "1.0.0")]
+        [Route("profile")]
         public IHttpActionResult Post([FromBody] Person person)
         {
             if (ModelState.IsValid)

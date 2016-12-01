@@ -59,6 +59,10 @@
     vm.sanitizedDescription = $sanitize(vm.media.description);
     vm.mediaTags = vm.media.tags;
 
+    vm.weekendSummaryExists = weekendSummaryExists;
+    vm.showWeekendSummary = false;
+    vm.toggleWeekendSummary = toggleWeekendSummary;
+
     if (vm.isMessage) {
       vm.videoSectionIsOpen = !_.isEmpty(vm.media.messageVideo);
       vm.audio = vm.media.messageAudio;
@@ -188,6 +192,14 @@
 
     function showProgramDownloadLink() {
       return ((vm.programDownloadLink === undefined) ? false : true);
+    }
+
+    function weekendSummaryExists() {
+      return vm.media.keyPoints || vm.media.discussion || vm.media.resources;
+    }
+
+    function toggleWeekendSummary() {
+      vm.showWeekendSummary = !vm.showWeekendSummary;
     }
   }
 })();

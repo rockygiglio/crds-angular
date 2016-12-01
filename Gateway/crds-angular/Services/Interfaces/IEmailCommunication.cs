@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using crds_angular.Models.Crossroads;
+using crds_angular.Models.Crossroads.Groups;
 
 namespace crds_angular.Services.Interfaces
 {

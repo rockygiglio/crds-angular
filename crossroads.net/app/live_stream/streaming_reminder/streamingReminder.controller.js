@@ -1,11 +1,13 @@
 import Reminder from '../models/reminder';
-
+import Event from '../models/event';
 
 export default class StreamingReminderController {
-  constructor($modalInstance, StreamspotService, ReminderService) {
+
+  constructor($modalInstance, StreamspotService, ReminderService, Session, $scope, $rootScope) {
     this.modalInstance = $modalInstance;
     this.streamspotService = StreamspotService;
     this.reminderService = ReminderService;
+    this.session = Session;
 
     this.streamspotService.events.then((response) => {
       this.upcoming = response;
@@ -30,14 +32,28 @@ export default class StreamingReminderController {
       display: 'dddd, MMMM Do',
       time: 'h:mma z'
     };
+
+    this.rootScope = $rootScope;
+    this.scope = $scope;
+    $scope.selectedTime = '';
+
+    if (typeof $ !== 'undefined') {
+      $(document).on('click', '.btn-group > .btn', (e) => {
+        let el = $(e.target);
+        el.addClass('active');
+        el.siblings().removeClass('active');
+      });
+    }
+
+    this.setUserDefaults();     
   }
 
   validate(form) {
     if (form) {
       this.model.isDayValid   = form.day.$viewValue !== '';
       this.model.isTimeValid  = form.time.$viewValue !== '';
-      this.model.isEmailValid = form.email.$touched && form.email.$valid
-      this.model.isPhoneValid = form.phone.$touched && form.phone.$valid
+      this.model.isEmailValid = form.email.$valid
+      this.model.isPhoneValid = form.phone.$valid
     }
   }
 
@@ -69,11 +85,12 @@ export default class StreamingReminderController {
   $onInit() {
     this.streamspotService.events.then((response) => {
       this.upcoming = response;
-    })
+    });
   }
 
   close() {
     this.modalInstance.close();
+    this.scope.selectedTime = '';
   }
 
   nextDate() {
@@ -95,9 +112,21 @@ export default class StreamingReminderController {
   groupedDates() {
     return _
       .chain(this.upcoming)
-      .groupBy((event) => event.start.format(this.dateFormats.key))
+      .groupBy((event) => Event.formatGeneralDateTimeToLocalDate(event.start))
       .value()
     ;
+  }
+
+  setUserDefaults() {
+    // If the user is logged in, set default user info
+    if (this.session.isActive()) {
+      if (this.rootScope.phone) {
+        this.model.phone = this.rootScope.phone;
+      }
+      if (this.rootScope.email) {
+        this.model.email = this.rootScope.email;
+      }
+    }
   }
 
   selectedDate(date) {
@@ -113,7 +142,7 @@ export default class StreamingReminderController {
     this.model.day = day;
     
     if (day) {
-      this.model.day = day.start.format(this.dateFormats.key)
+      this.model.day = Event.formatGeneralDateTimeToLocalDate(day.start);
     } else {
       this.model.time = '';
     }
@@ -121,11 +150,17 @@ export default class StreamingReminderController {
 
   setTime(event) {
     this.model.time = event.start.format(this.dateFormats.time);
+    this.scope.selectedTime = event.title;
   }
 
+
   resetForm() {
+
+    let firstEventStartDate = this.uniqueDates()[0].start;
+
     this.model = new Reminder();
-    this.model.day = this.nextDate();
+    this.model.day =  Event.formatGeneralDateTimeToLocalDate(firstEventStartDate);
+    this.setUserDefaults();
 
     this.formError     = false;
     this.dateTimeError = false;

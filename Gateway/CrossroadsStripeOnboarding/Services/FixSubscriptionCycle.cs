@@ -17,9 +17,9 @@ namespace CrossroadsStripeOnboarding.Services
         private static readonly ILog FixSubOutput = LogManager.GetLogger("FIX_SUB_OUTPUT");
 
         private readonly MinistryPlatformContext _mpContext;
-        private readonly IPaymentService _paymentService;
+        private readonly IPaymentProcessorService _paymentService;
 
-        public FixSubscriptionCycle(MinistryPlatformContext mpContext, IPaymentService paymentService)
+        public FixSubscriptionCycle(MinistryPlatformContext mpContext, IPaymentProcessorService paymentService)
         {
             _mpContext = mpContext;
             _paymentService = paymentService;

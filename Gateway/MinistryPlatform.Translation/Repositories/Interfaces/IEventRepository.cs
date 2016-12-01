@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Crossroads.Utilities.FunctionalHelpers;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Models.EventReservations;
 using Participant = MinistryPlatform.Translation.Models.MpParticipant;
@@ -15,6 +16,7 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
         List<MpEvent> GetEvents(string eventType, string token);
         List<MpEvent> GetEventsByTypeForRange(int eventTypeId, DateTime startDate, DateTime endDate, string token);
         List<MpGroup> GetGroupsForEvent(int eventId);
+        int GetEventParticipantRecordId(int eventId, int participantId);
         bool EventHasParticipant(int eventId, int participantId);
         MpEvent GetEvent(int eventId);
         List<MpEvent> GetEventsByParentEventId(int parentEventId);
@@ -32,5 +34,9 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
         List<MpEvent> GetEventsBySite(string site, string token, DateTime startDate, DateTime endDate);
         List<MpEvent> GetEventTemplatesBySite(string site, string token);
         void DeleteEventGroupsForEvent(int eventId, string token);
+
+        List<MpWaivers> GetWaivers(int eventId, int contactId);
+        void SetWaivers(List<MpWaiverResponse> waiverResponses);
+
     }
 }

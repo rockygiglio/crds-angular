@@ -390,39 +390,6 @@
             }
           }
         })
-        .state('live', {
-          parent: 'screenWidth',
-          url: '/live',
-          template: '<streaming></streaming>',
-          data: {
-            meta: {
-              title: 'Live',
-              description: ''
-            }
-          }
-        })
-        .state('livestream', {
-          parent: 'noHeaderOrFooter',
-          url: '/live/stream',
-          template: '<streaming-video></streaming-video>',
-          data: {
-            meta: {
-              title: 'Live',
-              description: ''
-            }
-          }
-        })
-        .state('livestreamvjs', {
-          parent: 'noHeaderOrFooter',
-          url: '/live/videojs',
-          template: '<videojs-landing></videojs-landing>',
-          data: {
-            meta: {
-              title: 'Live VideoJS',
-              description: ''
-            }
-          }
-        })
         .state('superbowl', {
           parent: 'screenWidth',
           url: '/superbowl',
@@ -455,29 +422,6 @@
           parent: 'noSideBar',
           url: '/event-registration-desired',
           templateUrl: 'my_serve/event_registration_mockup_desired.html'
-        })
-        .state('serve-signup', {
-          parent: 'noSideBar',
-          url: '/serve-signup',
-          controller: 'MyServeController as serve',
-          templateUrl: 'my_serve/myserve.html',
-          data: {
-            isProtected: true,
-            meta: {
-              title: 'Signup to Serve',
-              description: ''
-            }
-          },
-          resolve: {
-            loggedin: crds_utilities.checkLoggedin,
-            ServeOpportunities: 'ServeOpportunities',
-            $cookies: '$cookies',
-            Groups: function(ServeOpportunities, $cookies) {
-              return ServeOpportunities.ServeDays.query({
-                id: $cookies.get('userId')
-              }).$promise;
-            }
-          }
         })
         .state('styleguide', {
           parent: 'noHeaderOrFooter',

@@ -18,6 +18,7 @@ namespace MinistryPlatform.Translation.Test.Services
         private Mock<IAuthenticationRepository> _authService;
         private Mock<IConfigurationWrapper> _configWrapper;
         private Mock<IDbConnection> _dbConnection;
+        private Mock<IMinistryPlatformRestRepository> _ministryPlatformRest;
         private MpFormResponse _mockForm;
         private MpFormAnswer _mockAnswer1, _mockAnswer2, _mockAnswer3;
         private const int formResponsePageId = 424;
@@ -31,19 +32,21 @@ namespace MinistryPlatform.Translation.Test.Services
             _authService = new Mock<IAuthenticationRepository>();
             _configWrapper = new Mock<IConfigurationWrapper>();
             _dbConnection = new Mock<IDbConnection>();
+            _ministryPlatformRest = new Mock<IMinistryPlatformRestRepository>();
 
             _configWrapper.Setup(m => m.GetEnvironmentVarAsString("API_USER")).Returns("uid");
             _configWrapper.Setup(m => m.GetEnvironmentVarAsString("API_PASSWORD")).Returns("pwd");
             _authService.Setup(m => m.Authenticate(It.IsAny<string>(), It.IsAny<string>())).Returns(new Dictionary<string, object> { { "token", "ABC" }, { "exp", "123" } });
 
-            _fixture = new FormSubmissionRepository(_ministryPlatformService.Object, _dbConnection.Object, _authService.Object, _configWrapper.Object);
+            _fixture = new FormSubmissionRepository(_ministryPlatformService.Object, _dbConnection.Object, _authService.Object, _configWrapper.Object, _ministryPlatformRest.Object);
 
             _mockAnswer1 = new MpFormAnswer
             {
                 FieldId = 375,
                 FormResponseId = responseId,
                 OpportunityResponseId = 7329,
-                Response = "Test Last Name"
+                Response = "Test Last Name",
+                EventParticipantId = null
             };
 
             _mockAnswer2 = new MpFormAnswer
@@ -51,7 +54,8 @@ namespace MinistryPlatform.Translation.Test.Services
                 FieldId = 376,
                 FormResponseId = responseId,
                 OpportunityResponseId = 7329,
-                Response = "Test First Name"
+                Response = "Test First Name",
+                EventParticipantId = null
             };
 
             _mockAnswer3 = new MpFormAnswer
@@ -59,7 +63,8 @@ namespace MinistryPlatform.Translation.Test.Services
                 FieldId = 377,
                 FormResponseId = responseId,
                 OpportunityResponseId = 7329,
-                Response = "Test Middle Initial"
+                Response = "Test Middle Initial",
+                EventParticipantId = null
             };
 
             _mockForm = new MpFormResponse
@@ -95,7 +100,8 @@ namespace MinistryPlatform.Translation.Test.Services
                 {"Form_Response_ID", _mockAnswer1.FormResponseId},
                 {"Form_Field_ID", _mockAnswer1.FieldId},
                 {"Response", _mockAnswer1.Response},
-                {"Opportunity_Response", _mockAnswer1.OpportunityResponseId}
+                {"Opportunity_Response", _mockAnswer1.OpportunityResponseId},
+                {"Event_Participant_ID", null}
             };
 
             var expectedAnswerDict2 = new Dictionary<string, object>
@@ -103,7 +109,8 @@ namespace MinistryPlatform.Translation.Test.Services
                 {"Form_Response_ID", _mockAnswer2.FormResponseId},
                 {"Form_Field_ID", _mockAnswer2.FieldId},
                 {"Response", _mockAnswer2.Response},
-                {"Opportunity_Response", _mockAnswer2.OpportunityResponseId}
+                {"Opportunity_Response", _mockAnswer2.OpportunityResponseId},
+                {"Event_Participant_ID", null}
             };
 
             var expectedAnswerDict3 = new Dictionary<string, object>
@@ -111,14 +118,28 @@ namespace MinistryPlatform.Translation.Test.Services
                 {"Form_Response_ID", _mockAnswer3.FormResponseId},
                 {"Form_Field_ID", _mockAnswer3.FieldId},
                 {"Response", _mockAnswer3.Response},
-                {"Opportunity_Response", _mockAnswer3.OpportunityResponseId}
+                {"Opportunity_Response", _mockAnswer3.OpportunityResponseId},
+                {"Event_Participant_ID", null}
             };
 
+            
             _ministryPlatformService.Setup(m => m.CreateRecord(formResponsePageId, expectedResponseDict, It.IsAny<string>(), true)).Returns(responseId);
             _ministryPlatformService.Setup(m => m.CreateRecord(formAnswerPageId, expectedAnswerDict1, It.IsAny<string>(), true));
             _ministryPlatformService.Setup(m => m.CreateRecord(formAnswerPageId, expectedAnswerDict2, It.IsAny<string>(), true));
             _ministryPlatformService.Setup(m => m.CreateRecord(formAnswerPageId, expectedAnswerDict3, It.IsAny<string>(), true));
 
+            _ministryPlatformRest.Setup(m => m.UsingAuthenticationToken(It.IsAny<string>())).Returns(_ministryPlatformRest.Object);
+
+            var formResult = new List<MpFormResponse>();
+            var f = new MpFormResponse {FormResponseId = 0};
+            formResult.Add(f);
+            _ministryPlatformRest.Setup(m => m.Search<MpFormResponse>(It.IsAny<string>(), It.IsAny<string>(),null,true)).Returns(formResult);
+
+            var ansResult = new List<MpFormAnswer>();
+            var a = new MpFormAnswer {FormResponseAnswerId = 0};
+            _ministryPlatformRest.Setup(m => m.Search<MpFormAnswer>(It.IsAny<string>(), It.IsAny<string>(), null, true)).Returns(ansResult);
+
+            
             var result = _fixture.SubmitFormResponse(_mockForm);
 
             Assert.AreEqual(responseId, result);

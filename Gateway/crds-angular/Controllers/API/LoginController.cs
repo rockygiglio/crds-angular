@@ -8,6 +8,7 @@ using crds_angular.Security;
 using crds_angular.Services;
 using crds_angular.Services.Interfaces;
 using MinistryPlatform.Translation.Models.DTO;
+using Crossroads.ApiVersioning;
 
 namespace crds_angular.Controllers.API
 {
@@ -23,8 +24,9 @@ namespace crds_angular.Controllers.API
             _personService = personService;
         }
 
+        [VersionedRoute(template: "request-password-reset", minimumVersion: "1.0.0")]
+        [Route("requestpasswordreset")]
         [HttpPost]
-        [Route("api/requestpasswordreset/")]
         public IHttpActionResult RequestPasswordReset(PasswordResetRequest request)
         {
             try
@@ -38,8 +40,9 @@ namespace crds_angular.Controllers.API
             }
         }
 
+        [VersionedRoute(template: "verify-reset-token/{token}", minimumVersion: "1.0.0")]
+        [Route("verifyresettoken/{token}")]
         [HttpGet]
-        [Route("api/verifyresettoken/{token}")]
         public IHttpActionResult VerifyResetTokenRequest(string token)
         {
             try
@@ -54,8 +57,9 @@ namespace crds_angular.Controllers.API
             }
         }
 
+        [VersionedRoute(template: "reset-password", minimumVersion: "1.0.0")]
+        [Route("resetpassword")]
         [HttpPost]
-        [Route("api/resetpassword/")]
         public IHttpActionResult ResetPassword(PasswordReset request)
         {
             try
@@ -70,8 +74,9 @@ namespace crds_angular.Controllers.API
         }
 
         [ResponseType(typeof (LoginReturn))]
+        [VersionedRoute(template: "authenticated", minimumVersion: "1.0.0")]
+        [Route("authenticated")]
         [HttpGet]
-        [Route("api/authenticated")]
         public IHttpActionResult isAuthenticated()
         {
             return Authorized(token =>
@@ -88,7 +93,7 @@ namespace crds_angular.Controllers.API
                     else
                     {
                         var roles = _personService.GetLoggedInUserRoles(token);
-                        var l = new LoginReturn(token, person.ContactId, person.FirstName, person.EmailAddress, roles);
+                        var l = new LoginReturn(token, person.ContactId, person.FirstName, person.EmailAddress, person.MobilePhone, roles);
                         return this.Ok(l);
                     }
                 }
@@ -99,13 +104,14 @@ namespace crds_angular.Controllers.API
             });
         }
 
-
+        [VersionedRoute(template: "login", minimumVersion: "1.0.0")]
+        [Route("login")]
         [ResponseType(typeof (LoginReturn))]
         public IHttpActionResult Post([FromBody] Credentials cred)
         {
             try
             {
-                // try to login 
+                // try to login
                 var authData = TranslationService.Login(cred.username, cred.password);
                 var token = authData["token"].ToString();
                 var exp = authData["exp"].ToString();
@@ -127,7 +133,8 @@ namespace crds_angular.Controllers.API
                     username = p.FirstName,
                     userEmail = p.EmailAddress,
                     roles = userRoles,
-                    age = p.Age
+                    age = p.Age,
+                    userPhone = p.MobilePhone
                 };
 
                 _loginService.ClearResetToken(cred.username);
@@ -143,8 +150,9 @@ namespace crds_angular.Controllers.API
             }
         }
 
+        [VersionedRoute(template: "verify-credentials", minimumVersion: "1.0.0")]
+        [Route("verifycredentials")]
         [HttpPost]
-        [Route("api/verifycredentials")]
         public IHttpActionResult VerifyCredentials([FromBody] Credentials cred)
         {
             return Authorized(token =>
@@ -161,7 +169,7 @@ namespace crds_angular.Controllers.API
                     else
                     {
                         return this.Ok();
-                    } 
+                    }
                 }
                 catch (Exception e)
                 {
@@ -176,11 +184,12 @@ namespace crds_angular.Controllers.API
     public class LoginReturn
     {
         public LoginReturn(){}
-        public LoginReturn(string userToken, int userId, string username, string userEmail, List<MpRoleDto> roles){
+        public LoginReturn(string userToken, int userId, string username, string userEmail, string userPhone, List<MpRoleDto> roles){
             this.userId = userId;
             this.userToken = userToken;
             this.username = username;
             this.userEmail = userEmail;
+            this.userPhone = userPhone;
             this.roles = roles;
         }
         public string userToken { get; set; }
@@ -191,6 +200,7 @@ namespace crds_angular.Controllers.API
         public string userEmail { get; set;  }
         public List<MpRoleDto> roles { get; set; }
         public int age { get; set; }
+        public string userPhone { get; set; }
     }
 
     public class Credentials

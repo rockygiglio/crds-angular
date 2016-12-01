@@ -1,9 +1,9 @@
 <form name="form" novalidate ng-submit="reminder.submit(form)">
   <modal-header ng-reflect-show-close="true">
   <div class="modal-header">
-    <button aria-label="Close" class="close" ng-click="reminder.close()" type="button">
+    <a aria-label="Close" class="close" ng-click="reminder.close()">
       <span aria-hidden="true">×</span>
-    </button>
+    </a>
     <div dynamic-content="$root.MESSAGES.streamingReminderTitle.content | html"></div>
   </div>
   </modal-header>
@@ -22,7 +22,7 @@
           <div ng-hide="reminder.model.day">
             <div data-toggle="buttons">
               <label class="btn btn-lg btn-date-select" ng-repeat="date in reminder.uniqueDates()" ng-click="reminder.setDay(date)">
-                <input name="day" autocomplete="off" type="radio" ng-model="reminder.model.day" value="{{date.start.format(reminder.dateFormats.display)}}"> {{date.start.format(reminder.dateFormats.display)}}
+                <input name="day" autocomplete="off" type="radio" ng-model="reminder.model.day" value="{{date.start.format(reminder.dateFormats.display)}}"> {{date.formatToLocalTZDate(date.start)}}
               </label>
             </div>
             <div class="alert alert-danger" ng-if="reminder.dateTimeError" dynamic-content="$root.MESSAGES.streamingLandingDateTimeError.content | html"></div>
@@ -31,14 +31,13 @@
           <div ng-if="reminder.model.day">
             <div dynamic-content="$root.MESSAGES.streamingReminderLabelTime.content | html"></div>
             <div data-toggle="buttons">
-              <label class="btn btn-sm btn-time-select" ng-repeat="event in reminder.selectedDate(reminder.model.day)" ng-click="reminder.setTime(event)">
-                <input name="time" autocomplete="off" type="radio" ng-model="reminder.model.time"> {{event.start.format(reminder.dateFormats.time)}}
+              <label class="btn btn-sm btn-time-select" ng-repeat="event in reminder.selectedDate(reminder.model.day)" ng-class="{'active': event.title == selectedTime}" ng-click="reminder.setTime(event)">
+                <input name="time" autocomplete="off" type="radio" ng-model="reminder.model.time"> {{event.formatToLocalTZTime(event.start)}}
               </label>
             </div>
             <div class="alert alert-danger" ng-if="reminder.dateTimeError" dynamic-content="$root.MESSAGES.streamingLandingDateTimeError.content | html"></div>
           </div>
         </div>
-
 
         <div class="contact">
           <div dynamic-content="$root.MESSAGES.streamingReminderTypeSelect.content | html"></div>
@@ -51,11 +50,11 @@
             </label>
           </div>
           <div class="form-group validation-control" ng-show="reminder.model.type=='phone'">
-            <input class="form-control" name="phone" ng-model="reminder.model.phone" placeholder="Enter your phone number" type="tel" pattern="^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$">
+            <input class="form-control" name="phone" ng-model="reminder.model.phone" placeholder="Enter your phone number" type="tel" pattern="^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$" required>
             <div class="alert alert-danger" ng-if="reminder.model.isPhoneValid===false" dynamic-content="$root.MESSAGES.invalidPhone.content | html"></div>
           </div>
           <div class="form-group validation-control" ng-show="reminder.model.type=='email'">
-            <input class="form-control" name="email" ng-model="reminder.model.email" placeholder="Enter your email address" type="email">
+            <input class="form-control" name="email" ng-model="reminder.model.email" placeholder="Enter your email address" type="email" required>
             <div class="alert alert-danger" ng-if="reminder.model.isEmailValid===false" dynamic-content="$root.MESSAGES.invalidEmail.content | html"></div>
           </div>
         </div>
@@ -71,3 +70,5 @@
   </div>
   </modal-footer>
 </form>
+
+

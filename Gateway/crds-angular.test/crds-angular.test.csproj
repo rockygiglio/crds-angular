@@ -257,6 +257,7 @@
     <Compile Include="Services\AccountServiceTest.cs" />
     <Compile Include="Services\AddressServiceTest.cs" />
     <Compile Include="Services\AttributeServiceTest.cs" />
+    <Compile Include="Services\CampServiceTest.cs" />
     <Compile Include="Services\ChildcareServiceTest.cs" />
     <Compile Include="Services\DonationServiceTest.cs" />
     <Compile Include="Services\DonorServiceTest.cs" />
@@ -274,6 +275,7 @@
     <Compile Include="Services\ListHandlerTest.cs" />
     <Compile Include="Services\LoginServiceTest.cs" />
     <Compile Include="Services\OrganizationServiceTest.cs" />
+    <Compile Include="Services\PaymentServiceTest.cs" />
     <Compile Include="Services\PersonServiceTest.cs" />
     <Compile Include="Services\ProgramServiceTest.cs" />
     <Compile Include="Services\EventServiceTest.cs" />

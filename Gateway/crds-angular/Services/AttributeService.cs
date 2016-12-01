@@ -2,6 +2,8 @@
 using System.Net;
 using System.Collections.Generic;
 using System.Linq;
+using AutoMapper;
+using crds_angular.Models.Crossroads;
 using crds_angular.Models.Crossroads.Attribute;
 using crds_angular.Services.Interfaces;
 using MinistryPlatform.Translation.Models;
@@ -52,7 +54,8 @@ namespace crds_angular.Services
                 SortOrder = attribute.SortOrder,
                 CategoryId = attribute.CategoryId,
                 Category = attribute.Category,
-                CategoryDescription = attribute.CategoryDescription
+                CategoryDescription = attribute.CategoryDescription,
+                EndDate = attribute.EndDate               
             };
             return attributeDto;
         }
@@ -80,7 +83,7 @@ namespace crds_angular.Services
 
             var attributesToSearch = attributes.Select(a => $"(Attribute_Name='{a.Name.Replace("'", "''")}' AND Attribute_Category_Id={a.CategoryId})");
 
-            string searchFilter = WebUtility.UrlEncode($"Attribute_Type_ID={attributeType} AND (" + String.Join(" OR ", attributesToSearch) + ")")?.Replace("+", "%20");
+            string searchFilter = $"Attribute_Type_ID={attributeType} AND (" + String.Join(" OR ", attributesToSearch) + ")";
 
             var foundNames = _ministryPlatformRestRepository.UsingAuthenticationToken(_apiUserRepository.GetToken()).Search<MpRestAttribute>(searchFilter, "Attribute_ID, Attribute_Name, ATTRIBUTE_CATEGORY_ID");
 
@@ -99,6 +102,20 @@ namespace crds_angular.Services
             }
 
             return attributes;
+        }
+
+        public List<AttributeCategoryDTO> GetAttributeCategory(int attributeTypeId)
+        {
+            List<MpAttributeCategory> mpCats = _attributeRepository.GetAttributeCategory(attributeTypeId);
+
+            return Mapper.Map<List<AttributeCategoryDTO>>(mpCats);
+        }
+
+        public AttributeDTO GetOneAttributeByCategoryId(int categoryId)
+        {
+            MpAttribute mpCat = _attributeRepository.GetOneAttributeByCategoryId(categoryId);
+
+            return Mapper.Map<AttributeDTO>(mpCat);
         }
     }
 }

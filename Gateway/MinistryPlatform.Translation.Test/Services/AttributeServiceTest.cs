@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Crossroads.Utilities.Interfaces;
+using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Repositories;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 using Moq;
@@ -13,8 +14,11 @@ namespace MinistryPlatform.Translation.Test.Services
     {
         private AttributeRepository _fixture;
         private Mock<IMinistryPlatformService> _ministryPlatformService;
+        private Mock<IMinistryPlatformRestRepository> _ministryPlatformRestService;
         private Mock<IAuthenticationRepository> _authService;
         private Mock<IConfigurationWrapper> _configWrapper;
+        private Mock<IApiUserRepository> _apiUserService;
+        private Mock<IMinistryPlatformRestRepository> _ministryPlatformRest;
 
         private readonly string _tokenValue = "ABC";
 
@@ -22,8 +26,11 @@ namespace MinistryPlatform.Translation.Test.Services
         public void SetUp()
         {
             _ministryPlatformService = new Mock<IMinistryPlatformService>();
+            _ministryPlatformRestService = new Mock<IMinistryPlatformRestRepository>();
             _authService = new Mock<IAuthenticationRepository>();
             _configWrapper = new Mock<IConfigurationWrapper>();
+            _apiUserService = new Mock<IApiUserRepository>();
+            _ministryPlatformRest = new Mock<IMinistryPlatformRestRepository>();
 
             var authenticateResults =
                 new Dictionary<string, object>()
@@ -32,26 +39,31 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"exp", "123"}
                 };
             _authService.Setup(m => m.Authenticate(It.IsAny<string>(), It.IsAny<string>())).Returns(authenticateResults);
-            _fixture = new AttributeRepository(_ministryPlatformService.Object, _authService.Object, _configWrapper.Object);
+
+            _ministryPlatformRestService.Setup(mocked => mocked.UsingAuthenticationToken(It.IsAny<string>())).Returns(_ministryPlatformRestService.Object);
+
+            _fixture = new AttributeRepository(_ministryPlatformService.Object, _authService.Object, _configWrapper.Object, _apiUserService.Object, _ministryPlatformRestService.Object);
         }
 
         [Test]
         public void Given_An_AttributeTypeId_When_Queried_It_Should_Filter_Records_And_Return_Records()
         {
             int? attributeTypeId = 123456;
-            var response = GetPageViewRecordsResponse();
-            _ministryPlatformService.Setup(
+            var response = GetMpAttributeResponse();
+            _ministryPlatformRestService.Setup(
                 mocked =>
-                    mocked.GetPageViewRecords("AttributesPageView",
-                                              _tokenValue,
-                                              It.Is<string>((x => x.Contains(string.Format("\"{0}\"", attributeTypeId)))),
-                                              string.Empty,
-                                              0))
-                .Returns(response);
+                    mocked.Search<MpAttribute>(
+                        It.Is<string>(
+                            m =>
+                                m.Equals(
+                                    $"Attributes.Attribute_Type_ID = {attributeTypeId}  AND (Attributes.Start_Date Is Null OR Attributes.Start_Date <= GetDate()) AND (Attributes.End_Date Is Null OR Attributes.End_Date >= GetDate())")),
+                        It.Is<string>(m => m.Equals("Attribute_ID, Attribute_Name, Attributes.Description, Attribute_Category_ID_Table.Attribute_Category, Attributes.Attribute_Category_ID, Attribute_Category_ID_Table.Description as Attribute_Category_Description, Attributes.Sort_Order, Attribute_Type_ID_Table.Attribute_Type_ID, Attribute_Type_ID_Table.Attribute_Type, Attribute_Type_ID_Table.Prevent_Multiple_Selection, Start_Date, End_Date")),
+                             It.IsAny<string>(),
+                             It.IsAny<bool>())).Returns(response);
 
-            var attributes = _fixture.GetAttributes(attributeTypeId).ToList();
+            var attributes = _fixture.GetAttributes(attributeTypeId);
 
-            _ministryPlatformService.VerifyAll();
+            _ministryPlatformRestService.VerifyAll();
 
             Assert.IsNotNull(attributes);
             Assert.AreEqual(3, attributes.Count());
@@ -82,17 +94,49 @@ namespace MinistryPlatform.Translation.Test.Services
         }
 
         [Test]
+        public void Given_An_AttributeTypeId_GetAttributeCategory_Returns_Distinct_Attribute_Categories_In_Sorted_Order()
+        {
+            int attributeTypeId = 123456;
+            var response = GetMpAttributeCategoryResponse();
+            string catCols = "Attribute_Category_ID_table.*";
+            string catSearch = $"attribute_type_id = {attributeTypeId}";
+            var orderBy = "Attribute_Category_ID_table.Sort_Order";
+            bool distinct = true;
+
+            _ministryPlatformRestService.Setup(
+                mocked =>
+                    mocked.Search<MpAttribute, MpAttributeCategory>(
+                        It.Is<string>(m => m.Equals(catSearch)),
+                        It.Is<string>(m => m.Equals(catCols)),
+                             It.Is<string>(m=>m.Equals(orderBy)),
+                             It.Is<bool>(m=>m.Equals(distinct)))).Returns(response);
+
+            var attributeCategories = _fixture.GetAttributeCategory(attributeTypeId);
+
+            _ministryPlatformRestService.VerifyAll();
+
+            Assert.IsNotNull(attributeCategories);
+            Assert.AreEqual(5, attributeCategories.Count());
+        }
+
+        [Test]
         public void Given_An_Null_AttributeTypeId_When_Queried_It_Should_Not_Filter_Records_And_Return_Records()
         {
-            var response = GetPageViewRecordsResponse();
-            _ministryPlatformService.Setup(
+            var response = GetMpAttributeResponse();
+            _ministryPlatformRestService.Setup(
                 mocked =>
-                    mocked.GetPageViewRecords("AttributesPageView", _tokenValue, string.Empty, string.Empty, 0))
-                .Returns(response);
+                    mocked.Search<MpAttribute>(
+                        It.Is<string>(
+                            m =>
+                                m.Equals(
+                                    "(Attributes.Start_Date Is Null OR Attributes.Start_Date <= GetDate()) AND (Attributes.End_Date Is Null OR Attributes.End_Date >= GetDate())")),
+                        It.Is<string>(m => m.Equals("Attribute_ID, Attribute_Name, Attributes.Description, Attribute_Category_ID_Table.Attribute_Category, Attributes.Attribute_Category_ID, Attribute_Category_ID_Table.Description as Attribute_Category_Description, Attributes.Sort_Order, Attribute_Type_ID_Table.Attribute_Type_ID, Attribute_Type_ID_Table.Attribute_Type, Attribute_Type_ID_Table.Prevent_Multiple_Selection, Start_Date, End_Date")),
+                             It.IsAny<string>(),
+                             It.IsAny<bool>())).Returns(response);
 
-            var attributes = _fixture.GetAttributes(null).ToList();
+            var attributes = _fixture.GetAttributes(null);
 
-            _ministryPlatformService.VerifyAll();
+            _ministryPlatformRestService.VerifyAll();
 
             Assert.IsNotNull(attributes);
             Assert.AreEqual(3, attributes.Count());
@@ -125,48 +169,90 @@ namespace MinistryPlatform.Translation.Test.Services
             Assert.AreEqual(true, attribute.PreventMultipleSelection);
         }
 
-        private static List<Dictionary<string, object>> GetPageViewRecordsResponse()
+        private static List<MpAttribute> GetMpAttributeResponse()
         {
-            return new List<Dictionary<string, object>>
+            return new List<MpAttribute>
             {
-                new Dictionary<string, object>()
+                new MpAttribute()
                 {
-                    {"Attribute_ID", 1},
-                    {"Attribute_Name", "Attribute #1"},
-                    {"Attribute_Description", "Attribute Description #1"},
-                    {"Attribute_Category_ID", 2},
-                    {"Attribute_Category", "Category #1"},
-                    {"Attribute_Category_Description", "Category Description #1"},
-                    {"Attribute_Type_ID", 3},
-                    {"Attribute_Type", "AttributeType #1"},
-                    {"Prevent_Multiple_Selection", "False"},
-                    {"Sort_Order", "0"}
+                    AttributeId = 1,
+                    Name ="Attribute #1",
+                    Description = "Attribute Description #1",
+                    CategoryId = 2,
+                    Category = "Category #1",
+                    CategoryDescription = "Category Description #1",
+                    AttributeTypeId = 3,
+                    AttributeTypeName = "AttributeType #1",
+                    PreventMultipleSelection = false,
+                    SortOrder = 0
                 },
-                new Dictionary<string, object>()
+                new MpAttribute()
                 {
-                    {"Attribute_ID", 4},
-                    {"Attribute_Name", "Attribute #2"},
-                    {"Attribute_Description", "Attribute Description #2"},
-                    {"Attribute_Category_ID", 5},
-                    {"Attribute_Category", "Category #2"},
-                    {"Attribute_Category_Description", "Category Description #2"},
-                    {"Attribute_Type_ID", 6},
-                    {"Attribute_Type", "AttributeType #1"},
-                    {"Prevent_Multiple_Selection", "False"},
-                    {"Sort_Order", "0"}
+                    AttributeId = 4,
+                    Name ="Attribute #2",
+                    Description = "Attribute Description #2",
+                    CategoryId = 5,
+                    Category = "Category #2",
+                    CategoryDescription = "Category Description #2",
+                    AttributeTypeId = 6,
+                    AttributeTypeName = "AttributeType #1",
+                    PreventMultipleSelection = false,
+                    SortOrder = 0
                 },
-                new Dictionary<string, object>()
+                new MpAttribute()
                 {
-                    {"Attribute_ID", 7},
-                    {"Attribute_Name", "Attribute #3"},
-                    {"Attribute_Description", "Attribute Description #3"},
-                    {"Attribute_Category_ID", null},
-                    {"Attribute_Category", null},
-                    {"Attribute_Category_Description", null},
-                    {"Attribute_Type_ID", 9},
-                    {"Attribute_Type", "AttributeType #2"},
-                    {"Prevent_Multiple_Selection", "True"},
-                    {"Sort_Order", "0"}
+                    AttributeId = 7,
+                    Name ="Attribute #3",
+                    Description = "Attribute Description #3",
+                    CategoryId = null,
+                    Category = null,
+                    CategoryDescription = null,
+                    AttributeTypeId = 9,
+                    AttributeTypeName = "AttributeType #2",
+                    PreventMultipleSelection = true,
+                    SortOrder = 0
+                }
+            };
+        }
+
+        private static List<MpAttributeCategory> GetMpAttributeCategoryResponse()
+        {
+            return new List<MpAttributeCategory>
+            {
+                new MpAttributeCategory()
+                {
+                  Attribute_Category_ID = 1,
+                  Attribute_Category = "Category 1",
+                  Description = "Attribute Category Description #1",
+                  Sort_Order = null
+                },
+                new MpAttributeCategory()
+                {
+                    Attribute_Category_ID = 2,
+                    Attribute_Category = "Category 2",
+                    Description = "Attribute Category Description #2",
+                    Sort_Order = 0
+                },
+                new MpAttributeCategory()
+                {
+                    Attribute_Category_ID = 3,
+                    Attribute_Category = "Category 3",
+                    Description = "Attribute Category Description #3",
+                    Sort_Order = 1
+                },
+                new MpAttributeCategory()
+                {
+                    Attribute_Category_ID = 4,
+                    Attribute_Category = "Category 4",
+                    Description = "Attribute Category Description #4",
+                    Sort_Order = 2
+                },
+                new MpAttributeCategory()
+                {
+                    Attribute_Category_ID = 5,
+                    Attribute_Category = "Category 5",
+                    Description = "Attribute Category Description #5",
+                    Sort_Order = 3
                 }
             };
         }
