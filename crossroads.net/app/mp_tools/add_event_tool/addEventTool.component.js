@@ -111,7 +111,7 @@
             return;
           }
         }
-        
+
         vm.processing = true;
         AddEvent.eventData.rooms = vm.rooms;
         if (vm.allData.roomForm) {
@@ -139,7 +139,6 @@
               $rootScope.$emit('notify', $rootScope.MESSAGES.eventToolProblemSaving);
             });
           } else {
-            debugger;
             EventService.create.save(event, function(result) {
               $rootScope.$emit('notify', $rootScope.MESSAGES.eventSuccess);
               AddEvent.currentPage = 1;
