@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
 using Crossroads.Utilities;
+using Crossroads.Utilities.Enums;
 using Crossroads.Utilities.Interfaces;
 using MinistryPlatform.Translation.Enum;
 using MinistryPlatform.Translation.Exceptions;
@@ -448,7 +449,8 @@ namespace MinistryPlatform.Translation.Repositories
                 r.DistributionAccount,
                 r.ScholarshipExpenseAccount, 
                 r.ScholarshipPaymentTypeId, 
-                r.PaymentTypeId
+                r.PaymentTypeId,
+                r.TransactionType
             });
 
             var gpExportDonationSum = gpExportDonationGroup
@@ -472,7 +474,8 @@ namespace MinistryPlatform.Translation.Repositories
                     Amount = x.Sum(g => g.Amount),
                     ScholarshipPaymentTypeId = x.Key.ScholarshipPaymentTypeId,
                     PaymentTypeId = x.Key.PaymentTypeId,
-                    ProcessorFeeAmount = x.Sum(g => g.ProcessorFeeAmount)
+                    ProcessorFeeAmount = x.Sum(g => g.ProcessorFeeAmount),
+                    TransactionType = x.Key.TransactionType
                 }).ToList();
 
             //loop through each group of donations and add it to the the correct GL Mapping
@@ -547,7 +550,8 @@ namespace MinistryPlatform.Translation.Repositories
                 Amount = processorFeeAmount,
                 ScholarshipPaymentTypeId = datum.ScholarshipPaymentTypeId,
                 PaymentTypeId = datum.PaymentTypeId,
-                ProcessorFeeAmount = datum.ProcessorFeeAmount
+                ProcessorFeeAmount = datum.ProcessorFeeAmount,
+                TransactionType = datum.TransactionType
             };
         }
 
@@ -577,7 +581,8 @@ namespace MinistryPlatform.Translation.Repositories
                         Amount = amount,
                         ScholarshipPaymentTypeId = _scholarshipPaymentTypeId,
                         PaymentTypeId = result.ToInt("Payment_Type_ID"),
-                        ProcessorFeeAmount = Convert.ToDecimal(result.ToString("Processor_Fee_Amount"))
+                        ProcessorFeeAmount = Convert.ToDecimal(result.ToString("Processor_Fee_Amount")),
+                        TransactionType = TransactionType.Payment
                     }).ToList();
         }
 
@@ -608,7 +613,8 @@ namespace MinistryPlatform.Translation.Repositories
                     ScholarshipExpenseAccount = result.ToString("Scholarship_Expense_Account"),
                     Amount = amount, ScholarshipPaymentTypeId = _scholarshipPaymentTypeId,
                     PaymentTypeId = result.ToInt("Payment_Type_ID"),
-                    ProcessorFeeAmount = Convert.ToDecimal(result.ToString("Processor_Fee_Amount"))
+                    ProcessorFeeAmount = Convert.ToDecimal(result.ToString("Processor_Fee_Amount")),
+                    TransactionType = TransactionType.Donation
                 }).ToList();
         }
 

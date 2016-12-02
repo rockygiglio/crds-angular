@@ -1,4 +1,5 @@
 ﻿using System;
+using Crossroads.Utilities.Enums;
 
 namespace MinistryPlatform.Translation.Models
 {
@@ -25,5 +26,6 @@ namespace MinistryPlatform.Translation.Models
         public int ScholarshipPaymentTypeId { get; set; }
         public int PaymentTypeId { get; set; }
         public decimal ProcessorFeeAmount { get; set; }
+        public TransactionType TransactionType {get; set;}
     }
 }

@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using crds_angular.App_Start;
 using Crossroads.Utilities;
+using Crossroads.Utilities.Enums;
 using Crossroads.Utilities.Interfaces;
 using MinistryPlatform.Translation.PlatformService;
 using MinistryPlatform.Translation.Repositories;
@@ -425,19 +427,27 @@ namespace MinistryPlatform.Translation.Test.Services
         }
 
         [Test]
-        public void TestGetGPExportForDonations()
+        public void TestGetGPExport()
         {
             const int viewId = 92198;
+            const int paymentViewId = 1112;
             const int depositId = 789;
             var mockGPExportData = MockGPExportDataTest2();
 
             _ministryPlatformService.Setup(mock => mock.GetPageViewRecords(viewId, It.IsAny<string>(), depositId.ToString(), "", 0)).Returns(MockGPExport());
+            _ministryPlatformService.Setup(mock => mock.GetPageViewRecords(paymentViewId, It.IsAny<string>(), depositId.ToString(), "", 0)).Returns(MockGPPaymentExport());
             _ministryPlatformService.Setup(mock => mock.GetPageViewRecords(2213, It.IsAny<string>(), 127.ToString(), "", 0)).Returns(MockProcessingFeeGLMapping());
 
             var result = _fixture.GetGpExport(depositId, It.IsAny<string>());
             _ministryPlatformService.VerifyAll();
             Assert.IsNotNull(result);
-            Assert.AreEqual(6, result.Count);
+            Assert.AreEqual(12, result.Count);
+
+            var payments = result.Where(p => p.TransactionType == TransactionType.Payment);
+            var donations = result.Where(p => p.TransactionType == TransactionType.Donation);
+
+            Assert.AreEqual(6, payments.Count());
+            Assert.AreEqual(6, donations.Count());            
 
             Assert.AreEqual(mockGPExportData[0].DocumentType, result[0].DocumentType);
             Assert.AreEqual(mockGPExportData[0].BatchName, result[0].BatchName);
@@ -478,62 +488,8 @@ namespace MinistryPlatform.Translation.Test.Services
             Assert.AreEqual(mockGPExportData[3].DocumentNumber, result[3].DocumentNumber);
             Assert.AreEqual(mockGPExportData[4].DocumentNumber, result[4].DocumentNumber);
             Assert.AreEqual(mockGPExportData[5].DocumentNumber, result[5].DocumentNumber);
-        }
 
-        [Test]
-        public void TestGetGPExportForPayments()
-        {
-            const int viewId = 1112;
-            const int depositId = 789;
-            var mockGPExportData = MockGPExportDataTest2();
-
-            _ministryPlatformService.Setup(mock => mock.GetPageViewRecords(viewId, It.IsAny<string>(), depositId.ToString(), "", 0)).Returns(MockGPPaymentExport());
-            _ministryPlatformService.Setup(mock => mock.GetPageViewRecords(2213, It.IsAny<string>(), 127.ToString(), "", 0)).Returns(MockProcessingFeeGLMapping());
-
-            var result = _fixture.GetGpExport(depositId, It.IsAny<string>());
-            _ministryPlatformService.VerifyAll();
-            Assert.IsNotNull(result);
-            Assert.AreEqual(6, result.Count);
-
-            Assert.AreEqual(mockGPExportData[0].DocumentType, result[0].DocumentType);
-            Assert.AreEqual(mockGPExportData[0].BatchName, result[0].BatchName);
-            Assert.AreEqual(mockGPExportData[0].DonationDate, result[0].DonationDate);
-            Assert.AreEqual(mockGPExportData[0].DepositDate, result[0].DepositDate);
-            Assert.AreEqual(mockGPExportData[0].CustomerId, result[0].CustomerId);
-            Assert.AreEqual(mockGPExportData[0].DepositAmount, result[0].DepositAmount);
-            Assert.AreEqual(mockGPExportData[0].CheckbookId, result[0].CheckbookId);
-            Assert.AreEqual(mockGPExportData[0].CashAccount, result[0].CashAccount);
-            Assert.AreEqual(mockGPExportData[0].ReceivableAccount, result[0].ReceivableAccount);
-            Assert.AreEqual(mockGPExportData[0].DistributionAccount, result[0].DistributionAccount);
-            Assert.AreEqual(mockGPExportData[0].Amount, result[0].Amount);
-            Assert.AreEqual(mockGPExportData[0].ProcessorFeeAmount, result[0].ProcessorFeeAmount);
-            Assert.AreEqual(mockGPExportData[0].ProgramId, result[0].ProgramId);
-            Assert.AreEqual(mockGPExportData[0].ProccessFeeProgramId, result[0].ProccessFeeProgramId);
-            Assert.AreEqual(mockGPExportData[0].PaymentTypeId, result[0].PaymentTypeId);
-            Assert.AreEqual(mockGPExportData[0].ScholarshipExpenseAccount, result[0].ScholarshipExpenseAccount);
-            Assert.AreEqual(mockGPExportData[0].ScholarshipPaymentTypeId, result[0].ScholarshipPaymentTypeId);
-            Assert.AreEqual(mockGPExportData[0].DonationAmount, result[0].DonationAmount);
-
-            Assert.AreEqual(mockGPExportData[1].DocumentType, result[1].DocumentType);
-            Assert.AreEqual(mockGPExportData[1].Amount, result[1].Amount);
-            Assert.AreEqual(mockGPExportData[1].CashAccount, result[1].CashAccount);
-            Assert.AreEqual(mockGPExportData[1].DistributionAccount, result[1].DistributionAccount);
-            Assert.AreEqual(mockGPExportData[1].DonationAmount, result[1].DonationAmount);
-
-            Assert.AreEqual(mockGPExportData[4].DocumentType, result[4].DocumentType);
-            Assert.AreEqual(mockGPExportData[4].DonationAmount, result[4].DonationAmount);
-            Assert.AreEqual(mockGPExportData[4].Amount, result[4].Amount);
-
-            Assert.AreEqual(mockGPExportData[5].DocumentType, result[5].DocumentType);
-            Assert.AreEqual(mockGPExportData[5].DonationAmount, result[5].DonationAmount);
-            Assert.AreEqual(mockGPExportData[5].Amount, result[5].Amount);
-
-            Assert.AreEqual(mockGPExportData[0].DocumentNumber, result[0].DocumentNumber);
-            Assert.AreEqual(mockGPExportData[1].DocumentNumber, result[1].DocumentNumber);
-            Assert.AreEqual(mockGPExportData[2].DocumentNumber, result[2].DocumentNumber);
-            Assert.AreEqual(mockGPExportData[3].DocumentNumber, result[3].DocumentNumber);
-            Assert.AreEqual(mockGPExportData[4].DocumentNumber, result[4].DocumentNumber);
-            Assert.AreEqual(mockGPExportData[5].DocumentNumber, result[5].DocumentNumber);
+            Assert.AreEqual(mockGPExportData[11].DocumentType, result[11].DocumentType);
         }
 
         [Test]
@@ -631,7 +587,7 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Program_ID", "15"},
                     {"Payment_Type_ID", 8},
                     {"Scholarship_Expense_Account", "19948-900-11"},
-                    {"Processor_Fee_Amount", "0.25"}
+                    {"Processor_Fee_Amount", "0.25"}                   
                 },
                 new Dictionary<string, object>
                 {
@@ -706,10 +662,10 @@ namespace MinistryPlatform.Translation.Test.Services
         {
             var one = new Dictionary<string, object>
             {
-                {"dp_RecordID", 100},
+                {"dp_RecordID", 105},
                 {"Document_Type", "SALE"},
-                {"Deposit_ID", "12341234"},
-                {"Payment_ID", "10002"},
+                {"Deposit_ID", "123412345"},
+                {"Payment_ID", "100025"},
                 {"Batch_Name", "Test Batch"},
                 {"Payment_Date", new DateTime(2015, 3, 28, 8, 30, 0)},
                 {"Deposit_Date", new DateTime(2015, 3, 28, 8, 30, 0)},
@@ -721,7 +677,7 @@ namespace MinistryPlatform.Translation.Test.Services
                 {"Receivable_Account", "90013-031-21"},
                 {"Distribution_Account", "90001-031-22"},
                 {"Payment_Amount", "185.00"},
-                {"Program_ID", "15"},
+                {"Program_ID", "155"},
                 {"Payment_Type_ID", 8},
                 {"Scholarship_Expense_Account", "19948-900-11"},
                 {"Processor_Fee_Amount", "0.25"}
@@ -729,10 +685,10 @@ namespace MinistryPlatform.Translation.Test.Services
 
             var two = new Dictionary<string, object>
             {
-                {"dp_RecordID", 200},
+                {"dp_RecordID", 205},
                 {"Document_Type", "SALE"},
-                {"Deposit_ID", "12341234"},
-                {"Payment_ID", "10002"},
+                {"Deposit_ID", "123412345"},
+                {"Payment_ID", "100025"},
                 {"Batch_Name", "Test Batch"},
                 {"Payment_Date", new DateTime(2015, 3, 28, 8, 30, 0)},
                 {"Deposit_Date", new DateTime(2015, 3, 28, 8, 30, 0)},
@@ -744,17 +700,17 @@ namespace MinistryPlatform.Translation.Test.Services
                 {"Receivable_Account", "90013-031-21"},
                 {"Distribution_Account", "90001-031-22"},
                 {"Payment_Amount", "15.00"},
-                {"Program_ID", "15"},
+                {"Program_ID", "155"},
                 {"Payment_Type_ID", 7},
                 {"Scholarship_Expense_Account", "19948-900-11"},
                 {"Processor_Fee_Amount", "0.25"}
             };
             var three = new Dictionary<string, object>
             {
-                {"dp_RecordID", 300},
+                {"dp_RecordID", 305},
                 {"Document_Type", "SALE"},
-                {"Deposit_ID", "12341234"},
-                {"Payment_ID", "10003"},
+                {"Deposit_ID", "123412345"},
+                {"Payment_ID", "100035"},
                 {"Batch_Name", "Test Batch"},
                 {"Payment_Date", new DateTime(2015, 3, 28, 8, 30, 0)},
                 {"Deposit_Date", new DateTime(2015, 3, 28, 8, 30, 0)},
@@ -766,7 +722,7 @@ namespace MinistryPlatform.Translation.Test.Services
                 {"Receivable_Account", "90013-031-21"},
                 {"Distribution_Account", "90001-031-22"},
                 {"Payment_Amount", "300.00"},
-                {"Program_ID", "15"},
+                {"Program_ID", "155"},
                 {"Payment_Type_ID", 8},
                 {"Scholarship_Expense_Account", "19948-900-11"},
                 {"Processor_Fee_Amount", "0.25"}
@@ -774,10 +730,10 @@ namespace MinistryPlatform.Translation.Test.Services
 
             var four = new Dictionary<string, object>
             {
-                {"dp_RecordID", 300},
-                {"Deposit_ID", "12341234"},
+                {"dp_RecordID", 305},
+                {"Deposit_ID", "123412345"},
                 {"Document_Type", "RETURNS"},
-                {"Payment_ID", "10004"},
+                {"Payment_ID", "100045"},
                 {"Batch_Name", "Test Batch"},
                 {"Payment_Date", new DateTime(2015, 3, 10, 8, 30, 0)},
                 {"Deposit_Date", new DateTime(2015, 3, 10, 8, 30, 0)},
@@ -906,8 +862,8 @@ namespace MinistryPlatform.Translation.Test.Services
             };
 
             return dict;
-        }
-        
+        }   
+
         private List<MpGPExportDatum> MockGPExportDataTest2()
         {
             return new List<MpGPExportDatum>
@@ -934,7 +890,8 @@ namespace MinistryPlatform.Translation.Test.Services
                     ProccessFeeProgramId = 127,
                     PaymentTypeId = 8,
                     ScholarshipExpenseAccount = "19948-900-11",
-                    ScholarshipPaymentTypeId = 9
+                    ScholarshipPaymentTypeId = 9,
+                    TransactionType = TransactionType.Donation
                 },
                 new MpGPExportDatum
                 {
@@ -958,7 +915,8 @@ namespace MinistryPlatform.Translation.Test.Services
                     ProccessFeeProgramId = 127,
                     PaymentTypeId = 8,
                     ScholarshipExpenseAccount = "19998-900-11",
-                    ScholarshipPaymentTypeId = 9
+                    ScholarshipPaymentTypeId = 9,
+                    TransactionType = TransactionType.Donation
                 },
                 new MpGPExportDatum
                 {
@@ -983,6 +941,7 @@ namespace MinistryPlatform.Translation.Test.Services
                     PaymentTypeId = 7,
                     ScholarshipExpenseAccount = "19948-900-11",
                     ScholarshipPaymentTypeId = 9,
+                    TransactionType = TransactionType.Donation
                 },
                 new MpGPExportDatum
                 {
@@ -1006,7 +965,8 @@ namespace MinistryPlatform.Translation.Test.Services
                     ProccessFeeProgramId = 127,
                     PaymentTypeId = 8,
                     ScholarshipExpenseAccount = "19998-900-11",
-                    ScholarshipPaymentTypeId = 9
+                    ScholarshipPaymentTypeId = 9,
+                    TransactionType = TransactionType.Donation
                 },
                 new MpGPExportDatum
                 {
@@ -1030,7 +990,8 @@ namespace MinistryPlatform.Translation.Test.Services
                     ProccessFeeProgramId = 127,
                     PaymentTypeId = 2,
                     ScholarshipExpenseAccount = "49998-900-11",
-                    ScholarshipPaymentTypeId = 9
+                    ScholarshipPaymentTypeId = 9,
+                    TransactionType = TransactionType.Donation
                 },
                 new MpGPExportDatum
                 {
@@ -1054,7 +1015,158 @@ namespace MinistryPlatform.Translation.Test.Services
                     ProccessFeeProgramId = 127,
                     PaymentTypeId = 8,
                     ScholarshipExpenseAccount = "19998-900-11",
-                    ScholarshipPaymentTypeId = 9
+                    ScholarshipPaymentTypeId = 9,
+                    TransactionType = TransactionType.Donation
+                },
+                new MpGPExportDatum
+                {
+                    DocumentNumber = "1234123450004",
+                    DepositId = 123412345,
+                    DocumentType = "SALE",
+                    DonationId = 100025,
+                    BatchName = "Test Batch",
+                    DonationDate = new DateTime(2015, 3, 28, 8, 30, 0),
+                    DepositDate = new DateTime(2015, 3, 28, 8, 30, 0),
+                    CustomerId = "CONTRIBUTI001",
+                    DepositAmount = "400.00",
+                    DonationAmount = Convert.ToDecimal("185.00") + Convert.ToDecimal("300.00"),
+                    CheckbookId = "PNC001",
+                    CashAccount = "91213-031-20",
+                    ReceivableAccount = "90013-031-21",
+                    DistributionAccount = "90001-031-22",
+                    Amount = Convert.ToDecimal("185.00") + Convert.ToDecimal("300.00") - Convert.ToDecimal(".25") - Convert.ToDecimal(".25"),
+                    ProcessorFeeAmount = Convert.ToDecimal(".50"),
+                    ProgramId = 155,
+                    ProccessFeeProgramId = 127,
+                    PaymentTypeId = 8,
+                    ScholarshipExpenseAccount = "19948-900-11",
+                    ScholarshipPaymentTypeId = 9,
+                    TransactionType = TransactionType.Payment
+                },
+                new MpGPExportDatum
+                {
+                    DocumentNumber = "1234123450004",
+                    DepositId = 123412345,
+                    DocumentType = "SALE",
+                    DonationId = 100025,
+                    BatchName = "Test Batch",
+                    DonationDate = new DateTime(2015, 3, 28, 8, 30, 0),
+                    DepositDate = new DateTime(2015, 3, 28, 8, 30, 0),
+                    CustomerId = "CONTRIBUTI001",
+                    DepositAmount = "400.00",
+                    DonationAmount = Convert.ToDecimal("185.00") + Convert.ToDecimal("300.00"),
+                    CheckbookId = "PNC001",
+                    CashAccount = "77777-031-20",
+                    ReceivableAccount = "90287-031-21",
+                    DistributionAccount = "77777-031-22",
+                    Amount = Convert.ToDecimal(".25") + Convert.ToDecimal(".25"),
+                    ProcessorFeeAmount = Convert.ToDecimal(".25"),
+                    ProgramId = 155,
+                    ProccessFeeProgramId = 127,
+                    PaymentTypeId = 8,
+                    ScholarshipExpenseAccount = "19998-900-11",
+                    ScholarshipPaymentTypeId = 9,
+                    TransactionType = TransactionType.Payment
+                },
+                new MpGPExportDatum
+                {
+                    DocumentNumber = "1234123450005",
+                    DepositId = 123412345,
+                    DocumentType = "SALE",
+                    DonationId = 100025,
+                    BatchName = "Test Batch",
+                    DonationDate = new DateTime(2015, 3, 28, 8, 30, 0),
+                    DepositDate = new DateTime(2015, 3, 28, 8, 30, 0),
+                    CustomerId = "CONTRIBUTI001",
+                    DepositAmount = "400.00",
+                    DonationAmount = Convert.ToDecimal("15.00"),
+                    CheckbookId = "PNC001",
+                    CashAccount = "91213-031-20",
+                    ReceivableAccount = "90013-031-21",
+                    DistributionAccount = "90001-031-22",
+                    Amount = Convert.ToDecimal("15"),
+                    ProgramId = 127,
+                    ProcessorFeeAmount = Convert.ToDecimal("0.25"),
+                    ProccessFeeProgramId = 127,
+                    PaymentTypeId = 7,
+                    ScholarshipExpenseAccount = "19948-900-11",
+                    ScholarshipPaymentTypeId = 9,
+                    TransactionType = TransactionType.Payment
+                },
+                new MpGPExportDatum
+                {
+                    DocumentNumber = "1234123450005",
+                    DepositId = 123412345,
+                    DocumentType = "SALE",
+                    DonationId = 100025,
+                    BatchName = "Test Batch",
+                    DonationDate = new DateTime(2015, 3, 28, 8, 30, 0),
+                    DepositDate = new DateTime(2015, 3, 28, 8, 30, 0),
+                    CustomerId = "CONTRIBUTI001",
+                    DepositAmount = "400.00",
+                    DonationAmount = Convert.ToDecimal("15.00"),
+                    CheckbookId = "PNC001",
+                    CashAccount = "77777-031-20",
+                    ReceivableAccount = "90013-031-21",
+                    DistributionAccount = "90001-031-22",
+                    Amount = Convert.ToDecimal(".12"),
+                    ProcessorFeeAmount = Convert.ToDecimal(".25"),
+                    ProgramId = 155,
+                    ProccessFeeProgramId = 127,
+                    PaymentTypeId = 8,
+                    ScholarshipExpenseAccount = "19998-900-11",
+                    ScholarshipPaymentTypeId = 9,
+                    TransactionType = TransactionType.Payment
+                },
+                new MpGPExportDatum
+                {
+                    DocumentNumber = "1234123450006",
+                    DepositId = 123412345,
+                    DocumentType = "RETURNS",
+                    DonationId = 100045,
+                    BatchName = "Test Batch",
+                    DonationDate = new DateTime(2015, 3, 28, 8, 30, 0),
+                    DepositDate = new DateTime(2015, 3, 28, 8, 30, 0),
+                    CustomerId = "CONTRIBUTI001",
+                    DepositAmount = "400.00",
+                    DonationAmount = Convert.ToDecimal("300.25"),
+                    CheckbookId = "PNC001",
+                    CashAccount = "90287-031-20",
+                    ReceivableAccount = "90287-031-21",
+                    DistributionAccount = "90287-031-22",
+                    Amount = Convert.ToDecimal("300.00"),
+                    ProcessorFeeAmount = Convert.ToDecimal(".25"),
+                    ProgramId = 150,
+                    ProccessFeeProgramId = 127,
+                    PaymentTypeId = 2,
+                    ScholarshipExpenseAccount = "49998-900-11",
+                    ScholarshipPaymentTypeId = 9,
+                    TransactionType = TransactionType.Payment
+                },
+                new MpGPExportDatum
+                {
+                    DocumentNumber = "1234123450006",
+                    DepositId = 123412345,
+                    DocumentType = "RETURNS",
+                    DonationId = 100045,
+                    BatchName = "Test Batch",
+                    DonationDate = new DateTime(2015, 3, 28, 8, 30, 0),
+                    DepositDate = new DateTime(2015, 3, 28, 8, 30, 0),
+                    CustomerId = "CONTRIBUTI001",
+                    DepositAmount = "400.00",
+                    DonationAmount = Convert.ToDecimal("300.25"),
+                    CheckbookId = "PNC001",
+                    CashAccount = "77777-031-20",
+                    ReceivableAccount = "90287-031-21",
+                    DistributionAccount = "90287-031-22",
+                    Amount = Convert.ToDecimal(".25"),
+                    ProcessorFeeAmount = Convert.ToDecimal(".25"),
+                    ProgramId = 155,
+                    ProccessFeeProgramId = 127,
+                    PaymentTypeId = 8,
+                    ScholarshipExpenseAccount = "19998-900-11",
+                    ScholarshipPaymentTypeId = 9,
+                    TransactionType = TransactionType.Payment
                 },
             };
         }
