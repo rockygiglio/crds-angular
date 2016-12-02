@@ -76,9 +76,12 @@
       vm.bodyClasses['crds-legacy-styles'] = $rootScope.renderLegacyStyles;
       vm.bodyClasses['crds-styles'] = !$rootScope.renderLegacyStyles;
 
-      $rootScope.bodyClasses.forEach(function(klass) {
-        vm.bodyClasses[klass] = true;
-      });
+      if (typeof $rootScope.bodyClasses !== 'undefined') {
+        $rootScope.bodyClasses.forEach(function(klass) {
+          vm.bodyClasses[klass] = true;
+        });
+      }
+
 
       ResponsiveImageService.updateResponsiveImages();
       PageRenderedService.pageLoaded();
