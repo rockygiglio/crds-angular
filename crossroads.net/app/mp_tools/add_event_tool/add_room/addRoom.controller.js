@@ -2,14 +2,12 @@ import CONSTANTS from 'crds-constants';
 
 export default class AddRoomController {
     /* @ngInject */
-    constructor($log, $rootScope, AddEvent, Lookup, Room, StaffContact, Validation) {
+    constructor($log, $rootScope, AddEvent, Lookup, Room) {
         this.log = $log;
         this.rootScope = $rootScope;
         this.addEvent = AddEvent;
         this.lookup = Lookup;
         this.room = Room;
-        this.staffContact = StaffContact;
-        this.validation = Validation;
         this.equipmentList = [];
         this.layouts = Room.Layouts.query();
         this.roomError = false;
