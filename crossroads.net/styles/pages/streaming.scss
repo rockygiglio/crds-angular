@@ -777,15 +777,6 @@ streaming, landing {
         top: -0.95em;
       }
     }
-
-    @media (min-width:  $screen-md-min) {
-      @include make-md-column(6);
-      // NOTE: The following rule will break content-cards after every 2 elements...
-      // &:nth-child(3n+1) {
-      //   clear: left;
-      // }
-    }
-
   }
 
   h2 {
@@ -1040,9 +1031,70 @@ streaming, landing {
           }
         }
 
+        .crds-card-carousel {
+          height: 450px; // Review
+          margin-bottom: 3em;
+          overflow: hidden;
+          position: relative;
+          white-space: nowrap;
+          width: 100%;
+        }
+
+        .crds-carousel {
+          &__controls {
+            float: right;
+            height: 50px;
+            white-space: nowrap;
+            width: 60px;
+          }
+
+          &__control {
+            display: inline-block;
+            &--prev {
+
+            }
+
+            &--next {
+
+            }
+          }
+
+          &__content-wrap {
+            bottom: 0;
+            position: absolute;
+            top: 30px; // Review
+            white-space: nowrap;
+            width: 100%; // Review
+          }
+
+          &__list {
+            display: block;
+            list-style: none;
+            overflow-x: scroll;
+            overflow-y: hidden;
+            padding: 0;
+            white-space: nowrap;
+          }
+
+          &__item {
+            display: inline-block;
+            white-space: normal;
+            vertical-align: top;
+            z-index: 1;
+          }
+        }
+
         content-card {
-          margin: 10px;
-          width: 235px;
+          display: inline-block;
+          margin-right: 1em;
+
+          &:last-of-type {
+            margin-right: 0;
+          }
+
+          article {
+            margin-bottom: 0;
+          }
         }
 
         .crds-card {
