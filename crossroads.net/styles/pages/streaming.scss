@@ -1040,6 +1040,27 @@ streaming, landing {
           }
         }
 
+        content-card {
+          margin: 10px;
+          width: 235px;
+        }
+
+        .crds-card {
+          width: 225px;
+
+          figcaption {
+            top: -0.6em;
+
+            @media (min-width: $screen-sm) {
+              top: -0.8em;
+            }
+
+            @media (min-width: $screen-md) {
+              top: -0.6em;
+            }
+          }
+        }
+
         @media (min-width: $screen-md) {
           margin-right: 28px;
           flex: 2 1 0;
