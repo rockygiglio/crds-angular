@@ -9,12 +9,12 @@ export default class AddRoomController {
         this.lookup = Lookup;
         this.room = Room;
         this.equipmentList = [];
-        this.layouts = Room.Layouts.query();
         this.roomError = false;
         this.viewReady = false;
     }
 
     $onInit() {
+        this.layouts = this.room.Layouts.query();
         if (this.addEvent.editMode) {
             Lookup.query({ table: 'crossroadslocations' }, function (locations) {
                 this.addEvent.eventData.event.congregation = _.find(locations, function (l) {
@@ -23,7 +23,7 @@ export default class AddRoomController {
             });
         }
         if (this.addEvent.eventData.event.congregation !== undefined) {
-            Room.ByCongregation.query({
+            this.room.ByCongregation.query({
                 congregationId: this.addEvent.eventData.event.congregation.dp_RecordID
             }, function (data) {
                 this.roomData = _.filter(this.roomData, function (r) {
@@ -43,7 +43,7 @@ export default class AddRoomController {
                     return true;
                 });
 
-                Room.Equipment.query({ congregationId: this.addEvent.eventData.event.congregation.dp_RecordID }, function (data) {
+                this.room.Equipment.query({ congregationId: this.addEvent.eventData.event.congregation.dp_RecordID }, function (data) {
                     this.equipmentList = data;
                     _.forEach(this.roomData, function (roomD) {
                         roomD.equipment = mapEquipment(data, roomD.equipment);
@@ -81,10 +81,10 @@ export default class AddRoomController {
     }
 
     onAdd() {
-        if (vm.choosenRoom) {
+        if (this.choosenRoom) {
             // is this room already added?
-            var alreadyAdded = _.find(vm.roomData, function (r) {
-                return r.id === vm.choosenRoom.id;
+            var alreadyAdded = _.find(this.roomData, function (r) {
+                return r.id === this.choosenRoom.id;
             });
 
             if (alreadyAdded) {
@@ -97,7 +97,7 @@ export default class AddRoomController {
                 return;
             }
 
-            vm.roomData.push(vm.choosenRoom);
+            this.roomData.push(this.choosenRoom);
             return;
         }
 
@@ -126,7 +126,7 @@ export default class AddRoomController {
 
         modalInstance.result.then(function () {
             if (!_.has(currentRoom, 'cancelled')) {
-                vm.roomData = _.filter(vm.roomData, function (r) {
+                this.roomData = _.filter(this.roomData, function (r) {
                     // only return elements that aren't currentRoom
                     return r.id !== currentRoom.id;
                 });
@@ -147,7 +147,7 @@ export default class AddRoomController {
     }
 
     showNoRoomsMessage() {
-        return (!vm.viewReady || vm.rooms === undefined || vm.rooms.length < 1);
+        return (!this.viewReady || this.rooms === undefined || this.rooms.length < 1);
     }
 
 };
