@@ -82,10 +82,10 @@
 				<div class="col-sm-6">
 					<sn-addthis-toolbox ng-if="groupDetailAbout.showShareButtons" class="addthis_crossroads_sharing clearfix addthis_32x32_style push-half-bottom sm-pull-right"
 						data-url="{{groupDetailAbout.shareUrl()}}">
-						<a class = "white" href class="addthis_button_facebook" tooltip="Share your group with friends and family on Facebook" tooltip-append-to-body="true"
+						<a class="white" href class="addthis_button_facebook" tooltip="Share your group with friends and family on Facebook" tooltip-append-to-body="true"
 							tooltip-placement="right">
 						</a>
-						<a class="white"href class="addthis_button_twitter" tooltip="Share your group with friends and family on Twitter" tooltip-append-to-body="true"
+						<a class="white" href class="addthis_button_twitter" tooltip="Share your group with friends and family on Twitter" tooltip-append-to-body="true"
 							tooltip-placement="right">
 						</a>
 						<a class="white" ngclipboard data-clipboard-text="{{groupDetailAbout.shareUrl()}}" ngclipboard-success="groupDetailAbout.onShareSuccess()" ngclipboard-error="groupDetailAbout.onShareError()" tooltip="Copy Share URL to clipboard"
