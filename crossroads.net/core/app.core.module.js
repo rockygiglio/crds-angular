@@ -28,7 +28,8 @@
     'formlyBootstrap',
     'ngTable',
     'ui.tinymce',
-    'mwl.confirm'
+    'mwl.confirm',
+    'ngclipboard'
     ])
     .constant('AUTH_EVENTS', {
       loginSuccess: 'auth-login-success',

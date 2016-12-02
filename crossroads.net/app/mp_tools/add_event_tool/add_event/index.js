@@ -1,11 +1,8 @@
-(function() {
-  'use strict';
+import CONSTANTS from 'crds-constants';
+import './add_event.html';
+import addEventComponent from './addEvent.component';
 
-  var MODULE = require('crds-constants').MODULES.MPTOOLS;
-
-  require('./add_event.html');
-
-  angular.module(MODULE)
-  .directive('addEvent', require('./addEvent.component'));
-
-})();
+export default angular
+.module(CONSTANTS.MODULES.MPTOOLS)
+.component('addEvent', addEventComponent())
+;

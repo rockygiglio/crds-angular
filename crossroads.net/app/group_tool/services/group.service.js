@@ -7,11 +7,12 @@ import GroupInquiry from '../model/groupInquiry';
 
 export default class GroupService {
   /*@ngInject*/
-  constructor($log, $resource, $q, AuthService, LookupService, Profile, ImageService) {
+  constructor($log, $resource, $q, $location, AuthService, LookupService, Profile, ImageService) {
     this.log = $log;
     this.resource = $resource;
     this.profile = Profile;
     this.qApi = $q;
+    this.location = $location;
     this.auth = AuthService;
     this.lookupService = LookupService;
     this.imgService = ImageService;
@@ -274,9 +275,9 @@ export default class GroupService {
       });
   }
 
-  search(searchString, locationString) {
-    let promise = this.resource(`${__API_ENDPOINT__}api/grouptool/grouptype/:groupTypeId/group/search`).
-      query({ s: searchString, loc: locationString, groupTypeId: CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS }).$promise;
+  search(searchString, locationString, groupId) {
+    let promise = this.resource(`${__API_ENDPOINT__}api/grouptool/grouptype/:groupTypeId/group/search`)
+      .query({ s: searchString, loc: locationString, groupTypeId: CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS, id: groupId }).$promise;
 
     return promise.then((data) => {
       let groups = data.map((group) => {
@@ -308,5 +309,9 @@ export default class GroupService {
   submitJoinRequest(groupId) {
     return this.resource(`${__API_ENDPOINT__}api/grouptool/group/:groupId/submitinquiry`)
       .save({ groupId: groupId }, {}).$promise;
+  }
+
+  shareUrl(groupId) {
+    return this.location.protocol() + '://' + this.location.host() + '/groups/search/results?id=' + groupId;
   }
 }

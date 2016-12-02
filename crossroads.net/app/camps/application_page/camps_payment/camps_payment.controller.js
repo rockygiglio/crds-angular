@@ -22,22 +22,23 @@ export default class CampPaymentController {
     this.iFrameResizer = require('iframe-resizer/js/iframeResizer.min.js');
 
     this.iFrames = this.iFrameResizer({
-      heightCalculationMethod: 'max',
+      heightCalculationMethod: 'taggedElement',
       checkOrigin: false,
+      interval: -16
     }, this.iframeSelector);
 
     // eslint-disable-next-line no-undef
     switch (__CRDS_ENV__) {
       case 'int':
-        this.baseUrl = 'https://embedint.crossroads.net/payment';
+        this.baseUrl = 'https://embedint.crossroads.net';
         this.returnUrl = 'https://int.crossroads.net/camps';
         break;
       case 'demo':
-        this.baseUrl = 'https://embeddemo.crossroads.net/payment';
+        this.baseUrl = 'https://embeddemo.crossroads.net';
         this.returnUrl = 'https://demo.crossroads.net/camps';
         break;
       default:
-        this.baseUrl = 'https://embed.crossroads.net/payment';
+        this.baseUrl = 'https://embed.crossroads.net';
         this.returnUrl = 'https://crossroads.net/camps';
         break;
     }
