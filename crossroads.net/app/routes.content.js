@@ -130,8 +130,14 @@
                     statusCode: ContentPageService.page.errorCode
                   };
 
-                  // TODO – Populate the following property based on the values returned from the CMS, per US5875. -TCM 12/01/16
-                  $rootScope.renderLegacyStyles = true;
+                  $rootScope.renderLegacyStyles = (typeof ContentPageService.page.legacyStyles !== 'undefined'
+                    ? Boolean(parseInt(ContentPageService.page.legacyStyles))
+                    : true);
+
+                  $rootScope.bodyClasses = [];
+                  if (typeof ContentPageService.page.bodyClasses !== 'undefined') {
+                    $rootScope.bodyClasses = ContentPageService.page.bodyClasses.replace(/\s/g, '').split(',');
+                  }
 
                   switch (ContentPageService.page.pageType) {
                     case 'NoHeaderOrFooter':
