@@ -27,8 +27,23 @@
             <h2>don't miss</h2>
           </header>
 
-          <content-card ng-repeat="event in stream.dontMiss" content="event"></content-card>
+          <!-- Carousel Wrapper -->
+          <div class="crds-card-carousel">
+            <!-- Carousel Controls -->
+            <div class="crds-carousel__controls">
+              <a href="#" class="crds-carousel__control crds-carousel__control--prev">&lt;</a>
+              <a href="#" class="crds-carousel__control crds-carousel__control--next">&gt;</a>
+            </div>
 
+            <!-- Carousel Content -->
+            <div class="crds-carousel__content-wrap">
+              <ul class="crds-carousel__list">
+                <li class="crds-carousel__item">
+                  <content-card ng-repeat="event in stream.dontMiss" content="event"></content-card>
+                </li>
+              </ul>
+            </div>
+          </div>
         </section>
       </div>
     </div>
