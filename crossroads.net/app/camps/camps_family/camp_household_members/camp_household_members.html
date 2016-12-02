@@ -16,5 +16,8 @@
         </div>
       </li>
     </ul>
+    <p ng-show='$ctrl.isHeadOfHousehold'>
+      Student not listed? <a ng-click="$ctrl.signUp(undefined)">Sign up</a> another family member for MSM Summer Camp.
+    </p>
   </div>
 </div>
