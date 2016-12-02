@@ -80,7 +80,7 @@
 			<div class="row">
 				<div class="col-sm-6"></div>
 				<div class="col-sm-6">
-					<sn-addthis-toolbox ng-if="groupDetailAbout.showShareButtons" class="addthis_crossroads_sharing clearfix addthis_32x32_style push-half-bottom sm-pull-right"
+					<sn-addthis-toolbox ng-if="groupDetailAbout.showShareButtons" class="addthis_crossroads_sharing clearfix addthis_32x32_style push-half-bottom sm-pull-right white"
 						data-url="{{groupDetailAbout.shareUrl()}}">
 						<a href class="addthis_button_facebook" tooltip="Share your group with friends and family on Facebook" tooltip-append-to-body="true"
 							tooltip-placement="right">
@@ -90,7 +90,7 @@
 						</a>
 						<a ngclipboard data-clipboard-text="{{groupDetailAbout.shareUrl()}}" ngclipboard-success="groupDetailAbout.onShareSuccess()" ngclipboard-error="groupDetailAbout.onShareError()" tooltip="Copy Share URL to clipboard"
 							tooltip-placement="right">
-							<span class="at-icon-wrapper white">
+							<span class="at-icon-wrapper">
 								<svg  viewBox="0 0 32 32" class="at-icon icon-link">
     								<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#link"></use>
 								</svg>
