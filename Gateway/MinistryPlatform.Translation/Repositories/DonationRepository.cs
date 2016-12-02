@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
 using Crossroads.Utilities;
-using Crossroads.Utilities.Enums;
 using Crossroads.Utilities.Interfaces;
 using MinistryPlatform.Translation.Enum;
 using MinistryPlatform.Translation.Exceptions;
@@ -423,7 +422,7 @@ namespace MinistryPlatform.Translation.Repositories
             return trips;
         }
 
-        public List<MpGPExportDatum> GetGpExport(int depositId, TransactionType transaction, string token)
+        public List<MpGPExportDatum> GetGpExport(int depositId, string token)
         {            
             var processingFeeGLMapping = GetProcessingFeeGLMapping(token);
 
