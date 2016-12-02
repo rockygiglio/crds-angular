@@ -1015,9 +1015,15 @@ streaming, landing {
       &.digital-program__giving {
         background-color: #151515;
         margin-bottom: 2em;
+        padding: 0 1.25em 1.25em;
+
+        h2 {
+          margin-bottom: 1em;
+        }
 
         @media (min-width: $screen-md) {
           flex: 1 1 0;
+          margin-bottom: 0;
           order: 2;
         }
       }
@@ -1026,14 +1032,17 @@ streaming, landing {
         background-color: #151515;
 
         h2 {
+          float: left;
+
           @media (min-width: $screen-md) {
-            margin-left: 1.25em;
+            margin-left: .75em;
           }
         }
 
         .crds-card-carousel {
-          height: 450px; // Review
-          margin-bottom: 3em;
+          height: 400px; // Review
+          margin-bottom: 2em;
+          margin-top: 1em;
           overflow: hidden;
           position: relative;
           white-space: nowrap;
@@ -1043,28 +1052,32 @@ streaming, landing {
         .crds-carousel {
           &__controls {
             float: right;
-            height: 50px;
-            white-space: nowrap;
-            width: 60px;
+            margin-top: 1.5em;
+
+            @media (min-width: $screen-md) {
+              margin-right: 1em;
+            }
           }
 
           &__control {
+            background: #4D4D4D;
+            border-radius: 4px;
+            color: #FFF;
             display: inline-block;
-            &--prev {
+            padding: .25em .75em;
+            text-align: center;
+            vertical-align: middle;
 
-            }
-
-            &--next {
-
+            &:hover,
+            &:focus {
+              background: darken(#4D4D4D, 10);
             }
           }
 
           &__content-wrap {
-            bottom: 0;
             position: absolute;
-            top: 30px; // Review
             white-space: nowrap;
-            width: 100%; // Review
+            width: 100%;
           }
 
           &__list {
