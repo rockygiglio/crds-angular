@@ -230,7 +230,7 @@ namespace crds_angular.Services
             _formSubmissionRepository.SubmitFormResponse(formResponse);
         }
 
-        public void SaveCampReservation(CampReservationDTO campReservation, int eventId, string token)
+        public CampReservationDTO SaveCampReservation(CampReservationDTO campReservation, int eventId, string token)
         {
             var nickName = campReservation.PreferredName ?? campReservation.FirstName;
             MpParticipant participant;
@@ -255,6 +255,7 @@ namespace crds_angular.Services
                 var newMinorContact = _contactRepository.CreateContact(minorContact);
                 contactId = newMinorContact[0].RecordId;
                 participant = _participantRepository.GetParticipant(contactId);
+                campReservation.ContactId = contactId;
             }
             else
             {
@@ -323,6 +324,8 @@ namespace crds_angular.Services
             };
 
             _formSubmissionRepository.SubmitFormResponse(formResponse);
+
+            return campReservation;
         }
 
         public List<MyCampDTO> GetMyCampInfo(string token)
