@@ -1,27 +1,29 @@
 let WOW = require('wow.js/dist/wow.min.js');
+var $ = require('jquery');
 
 export default class StreamingController {
   /*@ngInject*/
-  constructor(CMSService, StreamspotService, GeolocationService, $rootScope, $modal, $location) {
+  constructor(CMSService, StreamspotService, GeolocationService, $rootScope, $modal, $location, $document) {
     this.cmsService         = CMSService;
     this.streamspotService  = StreamspotService;
     this.geolocationService = GeolocationService;
     this.rootScope          = $rootScope;
     this.modal              = $modal;
-
+    this.document           = $document;
     this.inProgress     = false;
     this.numberOfPeople = 2;
     this.displayCounter = true;
     this.countSubmit    = false;
     this.dontMiss       = [];
     this.beTheChurch    = [];
-
+    this.carouselList   = $document.find(".carousel__list");
+    console.log(this.carouselList);
     let debug = false;
     if ( $location != undefined ) {
       let params = $location.search();
       debug = params.debug;
     }
-    
+
     if ( debug === "true" ) {
       this.inProgress = true;
     } else {
@@ -32,14 +34,14 @@ export default class StreamingController {
         }
       });
     }
-    
-    
+
+
     this.cmsService
         .getDigitalProgram()
         .then((data) => {
           this.sortDigitalProgram(data);
         });
-    
+
     new WOW({
       mobile: false
     }).init();
@@ -89,5 +91,17 @@ export default class StreamingController {
         size: 'lg'
       });
     }
+  }
+
+  carouselNext() {
+    event.preventDefault();
+    var pos = $(".crds-carousel__list").scrollLeft() + 100;
+    $(".crds-carousel__list").scrollLeft(pos);
+  }
+
+  carouselPrev() {
+    event.preventDefault();
+    var pos = $(".crds-carousel__list").scrollLeft() - 100;
+    $(".crds-carousel__list").scrollLeft(pos);
   }
 }
