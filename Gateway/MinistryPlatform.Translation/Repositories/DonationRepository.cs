@@ -28,7 +28,7 @@ namespace MinistryPlatform.Translation.Repositories
         private readonly int _tripDistributionsPageView;
         private readonly int _gpExportPageView;
         private readonly int _paymentGPExportPageView;
-        private readonly int _processingProgramId;
+        //private readonly int _processingProgramId;
         private readonly int _scholarshipPaymentTypeId;
         private readonly int _tripDonationMessageTemplateId;
         private readonly int _donationCommunicationsPageId;
@@ -45,8 +45,8 @@ namespace MinistryPlatform.Translation.Repositories
 
         private readonly int _donationStatusSucceeded;
        
-        public DonationRepository(IMinistryPlatformService ministryPlatformService, IDonorRepository donorService, ICommunicationRepository communicationService, IPledgeRepository pledgeService, IConfigurationWrapper configuration, IAuthenticationRepository authenticationService, IConfigurationWrapper configurationWrapper, IApiUserRepository apiUserRepository, IMinistryPlatformRestRepository ministryPlatformRest)
-            : base(authenticationService, configurationWrapper)
+        public DonationRepository(IMinistryPlatformService ministryPlatformService, IDonorRepository donorService, ICommunicationRepository communicationService, IPledgeRepository pledgeService, IConfigurationWrapper configuration, IAuthenticationRepository authenticationService, IApiUserRepository apiUserRepository, IMinistryPlatformRestRepository ministryPlatformRest)
+            : base(authenticationService, configuration)
         {
             _ministryPlatformService = ministryPlatformService;
             _donorService = donorService;
@@ -62,7 +62,7 @@ namespace MinistryPlatform.Translation.Repositories
             _tripDistributionsPageView = configuration.GetConfigIntValue("TripDistributionsView");
             _gpExportPageView = configuration.GetConfigIntValue("GPExportView");
             _paymentGPExportPageView = configuration.GetConfigIntValue("PaymentsGPExportView");
-            _processingProgramId = configuration.GetConfigIntValue("ProcessingProgramId");
+            //_processingProgramId = configuration.GetConfigIntValue("ProcessingProgramId");
             _scholarshipPaymentTypeId = configuration.GetConfigIntValue("ScholarshipPaymentTypeId");
             _tripDonationMessageTemplateId = configuration.GetConfigIntValue("TripDonationMessageTemplateId");
             _donationStatusSucceeded = configuration.GetConfigIntValue("DonationStatusSucceeded");
@@ -425,6 +425,7 @@ namespace MinistryPlatform.Translation.Repositories
 
         public List<MpGPExportDatum> GetGpExport(int depositId, string token)
         {            
+            
             var processingFeeGLMapping = GetProcessingFeeGLMapping(token);
 
             var gpExportDonationLevel = GetGpExportData(depositId, token);
@@ -531,8 +532,8 @@ namespace MinistryPlatform.Translation.Repositories
             return new MpGPExportDatum 
             {
                 DocumentNumber = datum.DocumentNumber,
-                ProccessFeeProgramId = _processingProgramId,
-                ProgramId = _processingProgramId,
+                ProccessFeeProgramId = processingFeeGLMapping.ToInt("Program_ID"),
+                ProgramId = processingFeeGLMapping.ToInt("Program_ID"),
                 DocumentType = datum.DocumentType,
                 DepositId = datum.DepositId,
                 DonationId = datum.DonationId,
@@ -560,9 +561,11 @@ namespace MinistryPlatform.Translation.Repositories
             var results = _ministryPlatformService.GetPageViewRecords(_paymentGPExportPageView, token, depositId.ToString());
             return (from result in results
                     let amount = Convert.ToDecimal(result.ToString("Payment_Amount"))
+                    // TODO: Find the correct program ID for the Processing Fees
+
                     select new MpGPExportDatum
                     {
-                        ProccessFeeProgramId = _processingProgramId,
+                        //ProccessFeeProgramId = _processingProgramId,
                         DepositId = result.ToInt("Deposit_ID"),
                         ProgramId = result.ToInt("Program_ID"),
                         DocumentType = result.ToString("Document_Type"),
@@ -586,6 +589,14 @@ namespace MinistryPlatform.Translation.Repositories
                     }).ToList();
         }
 
+        public int GetProcessingFeeProgramID(int programId, int congregationId, string token)
+        {
+            var pId = _ministryPlatformRest.Search<int>("GL_Account_Mapping",
+                                              $"GL_Account_Mapping.Program_ID={programId} AND GL_Account_Mapping.Congregation_ID={congregationId}",
+                                              "Processor_Fee_Mapping_ID_Table.Program_ID");
+            return pId;
+        }
+
         public List<MpGPExportDatum> GetGpExportData(int depositId, string token)
         {
             var results = _ministryPlatformService.GetPageViewRecords(_gpExportPageView, token, depositId.ToString());
@@ -593,9 +604,11 @@ namespace MinistryPlatform.Translation.Repositories
 
             return (from result in results
                 let amount = Convert.ToDecimal(result.ToString("Amount"))
+
+                // TODO: Find the correct program ID for the Processing Fees
                 select new MpGPExportDatum
                 {
-                    ProccessFeeProgramId = _processingProgramId,
+                    //ProccessFeeProgramId = _processingProgramId,
                     DepositId = result.ToInt("Deposit_ID"),
                     ProgramId = result.ToInt("Program_ID"),
                     DocumentType = result.ToString("Document_Type"),
@@ -620,7 +633,8 @@ namespace MinistryPlatform.Translation.Repositories
 
         private Dictionary<string, object> GetProcessingFeeGLMapping(string token)
         {
-            return _ministryPlatformService.GetPageViewRecords(_glAccountMappingByProgramPageView, token, _processingProgramId.ToString()).First();
+            //TODO: function should take the ID of the procssing fee program and return the data
+            return _ministryPlatformService.GetPageViewRecords(_glAccountMappingByProgramPageView, token, /* _processingProgramId.ToString()*/ "1").First();
         }
 
         public void UpdateDepositToExported(int selectionId, int depositId, string token)
