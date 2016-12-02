@@ -132,7 +132,7 @@
 
                   $rootScope.renderLegacyStyles = (typeof ContentPageService.page.legacyStyles !== 'undefined'
                     ? Boolean(parseInt(ContentPageService.page.legacyStyles))
-                    : true);
+                    : $rootScope.renderLegacyStyles); // revert to value set on route
 
                   $rootScope.bodyClasses = [];
                   if (typeof ContentPageService.page.bodyClasses !== 'undefined') {
