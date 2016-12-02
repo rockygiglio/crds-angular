@@ -283,7 +283,13 @@ namespace crds_angular.Services
             int eventParticipantId = _eventRepository.GetEventParticipantRecordId(eventId, participant.ParticipantId);
             if (eventParticipantId == 0)
             {
-                eventParticipantId = _eventRepository.RegisterParticipantForEvent(participant.ParticipantId, eventId);
+                // Need to look up the event in order to set the event participant's end date based on the event timeout
+                var camp = _eventRepository.GetEvent(eventId);
+                int timeout = camp.MinutesUntilTimeout ?? _configurationWrapper.GetConfigIntValue("Event_Participant_Default_Minutes_Until_Timeout");
+
+                DateTime endDate = DateTime.Now.AddMinutes(timeout);
+
+                eventParticipantId = _eventRepository.RegisterInterestedParticipantWithEndDate(participant.ParticipantId, eventId, endDate);
             }
             else
             {
