@@ -425,14 +425,10 @@ namespace MinistryPlatform.Translation.Repositories
 
         public List<MpGPExportDatum> GetGpExport(int depositId, TransactionType transaction, string token)
         {            
-            return GetGLLevelGpExport(depositId, transaction, token);
-        }
-
-        private List<MpGPExportDatum> GetGLLevelGpExport(int depositId, TransactionType transaction, string token)
-        {
             var processingFeeGLMapping = GetProcessingFeeGLMapping(token);
 
-            var gpExportDonationLevel = transaction == TransactionType.Donation ? GetGpExportData(depositId, token) : GetGPExportDataForPayments(depositId, token);
+            var gpExportDonationLevel = GetGpExportData(depositId, token);
+            gpExportDonationLevel.AddRange(GetGPExportDataForPayments(depositId, token));
             
             var gpExportGLLevel= new List<MpGPExportDatum>();
 
