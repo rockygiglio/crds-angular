@@ -388,7 +388,6 @@ namespace crds_angular.Services
         public List<GPExportDatumDTO> GetGpExport(int depositId, string token)
         {
             var gpExportData = _mpDonationRepository.GetGpExport(depositId, token);
-            gpExportData.AddRange(_mpDonationRepository.GetGpExport(depositId, token));
             return gpExportData.Select(Mapper.Map<MpGPExportDatum, GPExportDatumDTO>).ToList();
         }
 
