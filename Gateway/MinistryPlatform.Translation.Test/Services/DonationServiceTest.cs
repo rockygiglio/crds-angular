@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using crds_angular.App_Start;
 using Crossroads.Utilities;
-using Crossroads.Utilities.Enums;
 using Crossroads.Utilities.Interfaces;
 using MinistryPlatform.Translation.PlatformService;
 using MinistryPlatform.Translation.Repositories;
@@ -435,7 +434,7 @@ namespace MinistryPlatform.Translation.Test.Services
             _ministryPlatformService.Setup(mock => mock.GetPageViewRecords(viewId, It.IsAny<string>(), depositId.ToString(), "", 0)).Returns(MockGPExport());
             _ministryPlatformService.Setup(mock => mock.GetPageViewRecords(2213, It.IsAny<string>(), 127.ToString(), "", 0)).Returns(MockProcessingFeeGLMapping());
 
-            var result = _fixture.GetGpExport(depositId, TransactionType.Donation, It.IsAny<string>());
+            var result = _fixture.GetGpExport(depositId, It.IsAny<string>());
             _ministryPlatformService.VerifyAll();
             Assert.IsNotNull(result);
             Assert.AreEqual(6, result.Count);
@@ -491,7 +490,7 @@ namespace MinistryPlatform.Translation.Test.Services
             _ministryPlatformService.Setup(mock => mock.GetPageViewRecords(viewId, It.IsAny<string>(), depositId.ToString(), "", 0)).Returns(MockGPPaymentExport());
             _ministryPlatformService.Setup(mock => mock.GetPageViewRecords(2213, It.IsAny<string>(), 127.ToString(), "", 0)).Returns(MockProcessingFeeGLMapping());
 
-            var result = _fixture.GetGpExport(depositId, TransactionType.Payment, It.IsAny<string>());
+            var result = _fixture.GetGpExport(depositId, It.IsAny<string>());
             _ministryPlatformService.VerifyAll();
             Assert.IsNotNull(result);
             Assert.AreEqual(6, result.Count);
