@@ -122,6 +122,12 @@ namespace crds_angular.test.Services
             };
 
             var eventId = 4;
+            int timeout = 20;
+            var camp = new MpEvent
+            {
+                EventId = eventId,
+                MinutesUntilTimeout = timeout
+            };
 
             var participant = new MpParticipant
             {
@@ -137,14 +143,22 @@ namespace crds_angular.test.Services
             _contactService.Setup(m => m.GetMyProfile(token)).Returns(household);
             _contactService.Setup(m => m.CreateContact(It.IsAny<MpContact>())).Returns(contact);
             _participantRepository.Setup(m => m.GetParticipant(contact[0].RecordId)).Returns(participant);
-            _eventRepository.Setup(m => m.RegisterParticipantForEvent(participant.ParticipantId, eventId, 0, 0)).Returns(eventParticipantId);
+            _eventRepository.Setup(m => m.GetEvent(eventId)).Returns(camp);
             _configurationWrapper.Setup(m => m.GetConfigIntValue("SummerCampFormID")).Returns(formId);
             _configurationWrapper.Setup(m => m.GetConfigIntValue("SummerCampForm.CurrentGrade")).Returns(10);
             _configurationWrapper.Setup(m => m.GetConfigIntValue("SummerCampForm.SchoolAttendingNextYear")).Returns(12);
             _configurationWrapper.Setup(m => m.GetConfigIntValue("SummerCampForm.PreferredRoommate")).Returns(14);
             _eventRepository.Setup(m => m.GetEventParticipantRecordId(eventId, participant.ParticipantId)).Returns(newEventparticipantId);
 
+            _eventRepository.Setup(m => m.RegisterInterestedParticipantWithEndDate(
+                participant.ParticipantId,
+                eventId, 
+                It.Is<DateTime>(d => d <= DateTime.Now.AddMinutes(timeout) && d > DateTime.Now.AddMinutes(timeout).AddSeconds(-1))
+                ))
+                .Returns(eventParticipantId);
+
             _fixture.SaveCampReservation(MockCampReservationDTO(), eventId, token);
+
             _eventRepository.VerifyAll();
             _participantRepository.VerifyAll();
             _contactService.VerifyAll();
