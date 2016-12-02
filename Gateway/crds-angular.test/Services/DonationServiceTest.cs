@@ -306,10 +306,10 @@ namespace crds_angular.test.Services
         public void TestGenerateGpExportFileNames()
         {
             var date = DateTime.Today;
-            var fileName = string.Format("XRDReceivables-Test_BatchName_{0}{1}{2}.txt", date.ToString("yy"), date.ToString("MM"), date.ToString("dd"));
+            var fileName = string.Format("XRDReceivables-Test_Deposit_Name_1_{0}{1}{2}.txt", date.ToString("yy"), date.ToString("MM"), date.ToString("dd"));
 
             _mpDonationService.Setup(mocked => mocked.GetSelectedDonationBatches(12424, "afdasfsafd")).Returns(MockDepositList);
-            _mpDonationService.Setup(mocked => mocked.GetDonationBatchByDepositId(456)).Returns(new MpDonationBatch
+            /*_mpDonationService.Setup(mocked => mocked.GetDonationBatchByDepositId(456)).Returns(new MpDonationBatch
             {
                 Id = 123,
                 DepositId = 456,
@@ -323,6 +323,7 @@ namespace crds_angular.test.Services
                 ProcessorTransferId = "7846469",
                 BatchName = "TestBatchName2",
             });
+            */
 
             var results = _fixture.GenerateGPExportFileNames(12424, "afdasfsafd");
 
@@ -340,14 +341,13 @@ namespace crds_angular.test.Services
             var expectedReturn = MockExpectedGpExportDto();
 
             _mpDonationService.Setup(mocked => mocked.GetGpExport(depositId, It.IsAny<string>())).Returns(mockedExport);
-            _mpDonationService.Setup(mocked => mocked.GetGpExport(depositId, It.IsAny<string>())).Returns(mockedPaymentExport);
-
+            
             var result = _fixture.GetGpExport(depositId, "asdfafasdfas");
 
             _mpDonationService.VerifyAll();
 
             Assert.IsNotNull(result);
-            Assert.AreEqual(8, result.Count);
+            Assert.AreEqual(4, result.Count);
             Assert.AreEqual(expectedReturn[0].DocumentType, mockedExport[0].DocumentType);
             Assert.AreEqual(expectedReturn[0].DocumentNumber, mockedExport[0].DocumentNumber);
             Assert.AreEqual(expectedReturn[0].DocumentDescription, mockedExport[0].BatchName);
