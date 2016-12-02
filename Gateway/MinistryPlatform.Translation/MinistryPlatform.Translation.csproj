@@ -321,7 +321,7 @@
     <Compile Include="Repositories\Interfaces\ISelectionRepository.cs" />
     <Compile Include="Repositories\Interfaces\IUserRepository.cs" />
     <Compile Include="Repositories\Interfaces\IResponseRepository.cs" />
-    <Compile Include="Repositories\LookupRepository..cs" />
+    <Compile Include="Repositories\LookupRepository.cs" />
     <Compile Include="Repositories\MinistryPlatformService.cs" />
     <Compile Include="Repositories\MinistryPlatformServiceImpl.cs" />
     <Compile Include="Repositories\OpportunityRepository.cs" />

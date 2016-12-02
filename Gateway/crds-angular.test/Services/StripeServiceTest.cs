@@ -394,6 +394,7 @@ namespace crds_angular.test.Services
                     && o.Parameters.Matches("customer", "cust_token")
                     && o.Parameters.Matches("description", "Donor ID #98765")
                     && o.Parameters.Matches("expand[]", "balance_transaction")
+                    && o.Parameters.Matches("metadata[crossroads_transaction_type]", "donation")
                     )));
 
             _restClient.VerifyAll();
