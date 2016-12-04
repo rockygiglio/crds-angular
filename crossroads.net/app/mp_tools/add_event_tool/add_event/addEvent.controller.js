@@ -133,13 +133,13 @@ export default class AddEventcontroller {
     if (form === undefined) {
       return false;
     }
-
-        // verify that dates are valid;
+    
+    // verify that dates are valid;
     let start;
     let end;
     try {
       start = this.dateTime(this.eventData.startDate, this.eventData.startTime);
-      if (!this.eventData.eventType.Allow_Multiday_Event) {
+      if (this.eventData.eventType && !this.eventData.eventType.Allow_Multiday_Event) {
         this.eventData.endDate = this.eventData.startDate;
       }
       end = this.dateTime(this.eventData.endDate, this.eventData.endTime);
