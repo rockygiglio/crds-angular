@@ -10,6 +10,10 @@ export default class CampHouseholdMembersController {
     return member.signedUpDate !== null;
   }
 
+  isPending(member) {
+    return member.isPending;
+  }
+
   signUp(member) {
     // Since we might be selected a new camper, ensure that the CampService does not have cached data
     // from the prior camper

@@ -9,9 +9,9 @@
             <span class="label label-success" data-ng-if="$ctrl.isSignedUp(member)"> Signed Up on {{member.signedUpDate | date : "M/dd/yyyy" }} </span>
           </div>
           <div class="col-xs-12 col-sm-3 col-md-2 hard-sides mobile-soft-half-sides mobile-push-half-ends">
-            <a href="#" data-ng-if="$ctrl.isSignedUp(member)" disabled class="table-btn btn-standard disabled">Sign Up </a>
+            <a href="#" data-ng-if="$ctrl.isSignedUp(member) && !$ctrl.isPending(member)" disabled class="table-btn btn-standard disabled">Sign Up </a>
             <a href="#" ng-if="!member.isEligible && !$ctrl.isSignedUp(member)" disabled class="table-btn btn-standard disabled">Sign Up</a>
-            <a ng-click="$ctrl.signUp(member)" ng-if="!$ctrl.isSignedUp(member) && member.isEligible" class="table-btn btn-standard">Sign Up</a>
+            <a ng-click="$ctrl.signUp(member)" ng-if="(!$ctrl.isSignedUp(member) || $ctrl.isPending(member)) && member.isEligible" class="table-btn btn-standard">Sign Up</a>
           </div>
         </div>
       </li>

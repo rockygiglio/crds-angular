@@ -48,5 +48,8 @@ namespace MinistryPlatform.Translation.Models
 
         [JsonProperty(PropertyName = "Setup_Date")]
         public DateTime? SetupDate { get; set; }
+
+        [JsonProperty(PropertyName = "End_Date")]
+        public DateTime? EndDate { get; set; }
     }
 }

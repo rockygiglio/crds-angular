@@ -11,6 +11,7 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
         List<MpEventParticipant> GetChildCareParticipants(int daysBeforeEvent);
         List<MpEventParticipant> GetEventParticipants(int eventId, int? roomId = null);
         int GetEventParticipantByContactId(int eventId, int contactId);
+        MpEventParticipant GetEventParticipantEligibility(int eventId, int contactId);
         DateTime? EventParticipantSignupDate(int contactId , int eventId , string apiToken);
     }
 }

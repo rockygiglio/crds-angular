@@ -128,27 +128,35 @@ namespace crds_angular.Services
 
             if ((me.First().HouseholdPosition == null || !me.First().HouseholdPosition.ToLower().StartsWith("head")) )
             {
-                return me.Select(member => new CampFamilyMember
-                {
-                    ContactId = member.ContactId,
-                    IsEligible = _groupRepository.IsMemberOfEventGroup(member.ContactId, eventId, apiToken),
-                    SignedUpDate = _eventParticipantRepository.EventParticipantSignupDate(member.ContactId, eventId, apiToken),
-                    LastName = member.LastName,
-                    PreferredName = member.Nickname ?? member.FirstName
-                }).ToList();
+                return me.Select(member => NewCampFamilyMember(member, eventId, apiToken)).ToList();
             }
 
             var otherFamily = _contactRepository.GetOtherHouseholdMembers(myContact.Contact_ID);
             family.AddRange(otherFamily);
             family = family.Where((member) => member.HouseholdPosition == "Minor Child").ToList();
-            return family.Select(member => new CampFamilyMember()
+            return family.Select(member => NewCampFamilyMember(member, eventId, apiToken)).ToList();
+        }
+
+        private CampFamilyMember NewCampFamilyMember(MpHouseholdMember member, int eventId , string apiToken)
+        {
+            DateTime? signedUpDate = null;
+            bool isPending = false;
+            var participant = _eventParticipantRepository.GetEventParticipantEligibility(eventId, member.ContactId);
+            if (participant != null)
+            {
+                signedUpDate = participant.SetupDate;
+                isPending = participant.ParticipantStatus == 1 && participant.EndDate != null && DateTime.Now < participant.EndDate;
+            }
+
+            return new CampFamilyMember
             {
                 ContactId = member.ContactId,
                 IsEligible = _groupRepository.IsMemberOfEventGroup(member.ContactId, eventId, apiToken),
-                SignedUpDate = _eventParticipantRepository.EventParticipantSignupDate(member.ContactId, eventId, apiToken),
+                SignedUpDate = signedUpDate,
+                IsPending = isPending,
                 LastName = member.LastName,
                 PreferredName = member.Nickname ?? member.FirstName
-            }).ToList();
+            };
         }
 
         public void SaveCamperEmergencyContactInfo(List<CampEmergencyContactDTO> emergencyContacts, int eventId, int contactId, string token)
