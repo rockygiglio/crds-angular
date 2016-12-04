@@ -19,5 +19,6 @@ namespace crds_angular.Services.Interfaces
         ProductDTO GetCampProductDetails(int eventId, int contactId, string token);
         void SaveInvoice(CampProductDTO campProductDto, string token);
         bool SendCampConfirmationEmail(int eventId, int invoiceId, int paymentId, string token);
+        void SetCamperAsRegistered(int eventId, int contactId);
     }
 }

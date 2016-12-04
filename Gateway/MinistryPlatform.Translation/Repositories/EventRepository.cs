@@ -198,6 +198,31 @@ namespace MinistryPlatform.Translation.Repositories
             return (eventParticipantId);
         }
 
+        public void SetParticipantAsRegistered(int eventId, int participantId)
+        {
+            try
+            {
+                Console.WriteLine("SetParticipantAsRegistered");
+                var apiToken = ApiLogin();
+                var eventParticipantId = GetEventParticipantRecordId(eventId, participantId);
+
+                var fields = new Dictionary<string, object>
+                {
+                    {"Event_Participant_ID", eventParticipantId},
+                    {"End_Date", null},
+                    {"Participation_Status_ID", _configurationWrapper.GetConfigIntValue("Participant_Status_Registered")}
+                };
+
+                _ministryPlatformRestRepository.UsingAuthenticationToken(apiToken).UpdateRecord("Event_Participants", eventParticipantId, fields);
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException(
+                    $"SetParticipantAsRegistered failed.  Participant Id: {participantId}, Event Id: {eventId}",
+                    ex.InnerException);
+            }       
+        }
+
         public MpEvent GetEvent(int eventId)
         {
             var apiToken = ApiLogin();

@@ -150,6 +150,21 @@ namespace MinistryPlatform.Translation.Test.Services
         }
 
         [Test]
+        public void TestRegisterParticipant()
+        {
+            Console.WriteLine("TestRegisterParticipant");
+            var eventParticipantId = 7676452;
+            var participantStatus = 2;
+            var fields = new Dictionary<string, object>
+            {
+                {"Event_Participant_ID", eventParticipantId},
+                {"End_Date", null},
+                {"Participation_Status_ID", participantStatus}
+            };
+            _fixture.UsingAuthenticationToken(_authToken).UpdateRecord("Event_Participants", eventParticipantId, fields);
+        }
+
+        [Test]
         public void TestUpdatePayment()
         {
             var parms = new Dictionary<string, object>

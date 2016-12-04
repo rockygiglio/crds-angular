@@ -331,6 +331,12 @@ namespace crds_angular.Services
             _formSubmissionRepository.SubmitFormResponse(formResponse);
         }
 
+        public void SetCamperAsRegistered(int eventId, int contactId)
+        {
+            var participant = _participantRepository.GetParticipant(contactId);
+            _eventRepository.SetParticipantAsRegistered(eventId, participant.ParticipantId);
+        }
+
         public List<MyCampDTO> GetMyCampInfo(string token)
         {
             var apiToken = _apiUserRepository.GetToken();
