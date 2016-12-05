@@ -5,7 +5,6 @@
     .at4-icon, .at-icon-wrapper, .at-icon {
       height: 32px !important;
       width: 32px !important;
-      color: white !important;
     }
   }
 
@@ -27,6 +26,7 @@
     display: inline-block;
     float: left;
     margin-right: $padding-base-horizontal/2;
+    color: white;
 
     &.gray-share {
       .at4-icon {
