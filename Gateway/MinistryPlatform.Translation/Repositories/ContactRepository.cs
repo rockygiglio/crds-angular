@@ -234,8 +234,12 @@ namespace MinistryPlatform.Translation.Repositories
         public List<Dictionary<string, object>> StaffContacts()
         {
             var token = ApiLogin();
-            var userRoleStaff = _configurationWrapper.GetConfigIntValue("StaffUserRoleId");
-            var records = _ministryPlatformService.GetSubpageViewRecords("UserDetails", userRoleStaff, token);
+            var staffContactAttribute = _configurationWrapper.GetConfigIntValue("StaffContactAttribute");
+            const string columns = "Contact_ID_Table.*";
+            string filter = $"Attribute_ID = {staffContactAttribute}";
+
+            var records = _ministryPlatformRest.UsingAuthenticationToken(token).Search<MpContactAttribute, Dictionary<string, object>>(filter, columns, null, true);
+
             return records;
         }
 
