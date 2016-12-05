@@ -9,8 +9,7 @@ const CampCard = {
     paymentRemaining: '<',
     campTitle: '<',
     camperId: '<',
-    campId: '<',
-    campPrimaryContact: '<'
+    campId: '<'
   },
   template: cardTemplate,
   controller: campCardController,
