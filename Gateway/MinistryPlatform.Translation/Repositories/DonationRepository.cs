@@ -653,8 +653,7 @@ namespace MinistryPlatform.Translation.Repositories
         public MPGLAccountMapping GetProcessingFeeGLMapping(int programId, int congregationId, string token)
         {
             var searchString = $"Program_ID = {programId} AND Congregation_ID = {congregationId}";
-            var blah = _ministryPlatformRest.UsingAuthenticationToken(token).Search<MPGLAccountMapping>(searchString);
-            return blah.FirstOrDefault();
+            return _ministryPlatformRest.UsingAuthenticationToken(token).Search<MPGLAccountMapping>(searchString).FirstOrDefault();
         }
 
         public void UpdateDepositToExported(int selectionId, int depositId, string token)
