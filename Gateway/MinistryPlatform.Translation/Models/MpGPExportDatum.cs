@@ -9,6 +9,7 @@ namespace MinistryPlatform.Translation.Models
         public int DepositId { get; set; }
         public int ProccessFeeProgramId { get; set; }
         public int ProgramId { get; set; }
+        public int CongregationId { get; set; }
         public string DocumentType { get; set; }
         public int DonationId { get; set; }
         public string BatchName { get; set; }

@@ -121,6 +121,7 @@
     <Compile Include="Models\MpAllergy.cs" />
     <Compile Include="Models\MpBatch.cs" />
     <Compile Include="Models\MpCamp.cs" />
+    <Compile Include="Models\MPGLAccountMapping.cs" />
     <Compile Include="Models\MpMedical.cs" />
     <Compile Include="Models\MpMedicalAllergy.cs" />
     <Compile Include="Models\MpWaivers.cs" />
