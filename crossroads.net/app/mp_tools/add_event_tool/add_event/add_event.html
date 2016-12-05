@@ -215,7 +215,7 @@
     <div class="row">
       <div class="col-sm-12">
         <div class="form-group well" ng-class="{'has-error': evt.validation.showErrors(eventForm, 'startDate')}">
-          <label class="required">Event Date</label>
+          <label class="required">Start Date</label>
           <p class="input-group">
             <input type="text"
                    class="form-control"
@@ -245,7 +245,8 @@
             </span>
           </ng-messages>
           
-          <div class="form-group" ng-show="evt.eventData.eventType.Allow_Multiday_Event" ng-class="{'has-error': evt.validDateRange(eventForm)}">
+          <div class="form-group" ng-class="{'has-error': evt.validDateRange(eventForm)}">
+            <div ng-show="evt.eventData.eventType.Allow_Multiday_Event">
           <label class="required">End Date</label>
           <p class="input-group">
             <input type="text"
@@ -264,6 +265,7 @@
               </button>
             </span>
           </p>
+          </div>
           <ng-messages for="eventForm.endDate.$error" ng-if="evt.validDateRange(eventForm)">
             <span ng-message="required">
               <span dynamic-content="$root.MESSAGES.fieldCanNotBeBlank.content | html"></span>

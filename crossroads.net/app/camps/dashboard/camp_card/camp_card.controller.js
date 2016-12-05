@@ -5,7 +5,6 @@
  *    startDate
  *    endDate
  *    paymentRemaining
- *    primary contact
  */
 class CampCardController {
   constructor($state, CampsService) {
@@ -19,11 +18,11 @@ class CampCardController {
   }
 
   formatDate() {
-    const startDateMoment = moment(this.startDate);
-    const endDateMoment = moment(this.endDate);
-    const monthDayStart = startDateMoment.format('MMMM Do');
-    const monthDayEnd = endDateMoment.format('MMMM Do');
-    const year = startDateMoment.format('YYYY');
+    let startDateMoment = moment(this.startDate);
+    let endDateMoment = moment(this.endDate);
+    let monthDayStart = startDateMoment.format('MMMM Do');
+    let monthDayEnd = endDateMoment.format('MMMM Do');
+    let year = startDateMoment.format('YYYY');
     return `${monthDayStart} - ${monthDayEnd}, ${year}`;
   }
 }

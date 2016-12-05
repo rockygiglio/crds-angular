@@ -80,8 +80,9 @@
 			<div class="row">
 				<div class="col-sm-6"></div>
 				<div class="col-sm-6">
+					
 					<sn-addthis-toolbox ng-if="groupDetailAbout.showShareButtons" class="addthis_crossroads_sharing clearfix addthis_32x32_style push-half-bottom sm-pull-right white"
-						data-url="{{groupDetailAbout.shareUrl()}}">
+						data-url="{{groupDetailAbout.shareUrl()}}" data-title="{{groupDetailAbout.data.groupName}}" data-description="{{groupDetailAbout.data.groupDescription}}">
 						<a href class="addthis_button_facebook" tooltip="Share your group with friends and family on Facebook" tooltip-append-to-body="true"
 							tooltip-placement="right">
 						</a>
@@ -96,7 +97,7 @@
 								</svg>
 							<span>
 						</a>
-					</sn-addthis-toolbox>			
+					</sn-addthis-toolbox>	
 				</div>
 			</div>
 
