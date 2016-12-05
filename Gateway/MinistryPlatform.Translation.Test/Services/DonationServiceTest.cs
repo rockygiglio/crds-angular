@@ -431,19 +431,20 @@ namespace MinistryPlatform.Translation.Test.Services
             const int viewId = 92198;
             const int paymentViewId = 1112;
             const int depositId = 789;
+            const string token = "faketoken";
 
             var mockGPExportData = MockGPExportDataTest2();
 
             _ministryPlatformService.Setup(mock => mock.GetPageViewRecords(viewId, It.IsAny<string>(), depositId.ToString(), "", 0)).Returns(MockGPExport());
             _ministryPlatformService.Setup(mock => mock.GetPageViewRecords(paymentViewId, It.IsAny<string>(), depositId.ToString(), "", 0)).Returns(MockGPPaymentExport());
-            _ministryPlatformService.Setup(mock => mock.GetPageViewRecords(2213, It.IsAny<string>(), 1.ToString(), "", 0)).Returns(MockProcessingFeeGLMapping());
 
             _ministryPlatformRest.Setup(m => m.UsingAuthenticationToken(It.IsAny<string>())).Returns(_ministryPlatformRest.Object);
             _ministryPlatformRest.Setup(m => m.Search<int>("GL_Account_Mapping", $"GL_Account_Mapping.Program_ID={It.IsAny<int>()} AND GL_Account_Mapping.Congregation_ID={It.IsAny<int>()}", "Processor_Fee_Mapping_ID_Table.Program_ID"))
                 .Returns(0);
+            _ministryPlatformRest.Setup(mock => mock.Search<MPGLAccountMapping>(It.IsAny<string>(), null as string, null, false)).Returns(MockGLAccountMapping());
             _config.Setup(mocked => mocked.GetConfigIntValue("ProcessingProgramId")).Returns(127);
-
-            var result = _fixture.GetGpExport(depositId, It.IsAny<string>());
+            
+            var result = _fixture.GetGpExport(depositId, token);
             _ministryPlatformService.VerifyAll();
             Assert.IsNotNull(result);
             Assert.AreEqual(12, result.Count);
@@ -495,6 +496,27 @@ namespace MinistryPlatform.Translation.Test.Services
             Assert.AreEqual(mockGPExportData[5].DocumentNumber, result[5].DocumentNumber);
 
             Assert.AreEqual(mockGPExportData[11].DocumentType, result[11].DocumentType);
+        }
+
+        private List<MPGLAccountMapping> MockGLAccountMapping()
+        {
+            return new List<MPGLAccountMapping>
+            {
+                new MPGLAccountMapping
+                {
+                    ProgramId = 1,
+                    CongregationId = 1,
+                    CashAccount = "77777-031-20",
+                    CheckbookId = "PNC001",
+                    CustomerId = "CONTRIBUTI001",
+                    DistributionAccount = "77777-031-22",
+                    DocumentType = "SALE",
+                    GLAccount = "",
+                    ProcessorFeeMappingId = 1,
+                    ReceivableAccount = "77777-031-21",
+                    ScholarshipExpenseAccount = "77777-900-11"
+                }
+            };
         }
 
         [Test]
@@ -613,25 +635,6 @@ namespace MinistryPlatform.Translation.Test.Services
             Assert.AreEqual(defaultProcessingFeeProgramId, result);
             _ministryPlatformRest.VerifyAll();
 
-        }
-
-        private List<Dictionary<string, object>> MockProcessingFeeGLMapping(int programId = 127)
-        {
-            return new List<Dictionary<string, object>>
-            {
-                new Dictionary<string, object>
-                {
-                    {"dp_RecordID", 100},
-                    {"Document_Type", "SALE"},
-                    {"Customer_ID", "CONTRIBUTI001"},
-                    {"Checkbook_ID", "PNC001"},
-                    {"Cash_Account", "77777-031-20"},
-                    {"Receivable_Account", "77777-031-21"},
-                    {"Distribution_Account", "77777-031-22"},
-                    {"Scholarship_Expense_Account", "77777-900-11"},
-                    {"Program_ID",  programId}
-                }
-            };
         }
 
         private List<Dictionary<string, object>> MockGPExport(int programId = 0,  int congregationId = 0)

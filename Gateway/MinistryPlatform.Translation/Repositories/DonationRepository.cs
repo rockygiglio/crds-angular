@@ -33,7 +33,6 @@ namespace MinistryPlatform.Translation.Repositories
         private readonly int _tripDonationMessageTemplateId;
         private readonly int _donationCommunicationsPageId;
         private readonly int _messagesPageId;
-        private readonly int _glAccountMappingByProgramPageView;
         private readonly int _donationDistributionsSubPage;
 
         private readonly IMinistryPlatformService _ministryPlatformService;
@@ -71,7 +70,6 @@ namespace MinistryPlatform.Translation.Repositories
             _donationStatusSucceeded = configuration.GetConfigIntValue("DonationStatusSucceeded");
             _donationCommunicationsPageId = configuration.GetConfigIntValue("DonationCommunications");
             _messagesPageId = configuration.GetConfigIntValue("Messages");
-            _glAccountMappingByProgramPageView = configuration.GetConfigIntValue("GLAccountMappingByProgramPageView");
             _donationDistributionsSubPage = configuration.GetConfigIntValue("DonationDistributionsApiSubPageView");
             _apiUserRepository = apiUserRepository;
             _ministryPlatformRest = ministryPlatformRest;
@@ -483,8 +481,7 @@ namespace MinistryPlatform.Translation.Repositories
             var indx = 1;
             foreach (var gpExportDistLevel in gpExportDonationSum)
             {
-                //TODO: FIX THIS!!! We need a CongregationId!
-                var processingFeeGLMapping = GetProcessingFeeGLMapping(gpExportDistLevel.ProgramId, gpExportDistLevel.ProgramId, token);
+                var processingFeeGLMapping = GetProcessingFeeGLMapping(gpExportDistLevel.ProgramId, gpExportDistLevel.CongregationId, token);
                 GenerateGLLevelGpExport(gpExportGLLevel, gpExportDistLevel, processingFeeGLMapping, indx);
                 indx++;
             }
@@ -567,7 +564,7 @@ namespace MinistryPlatform.Translation.Repositories
 
                     select new MpGPExportDatum
                     {
-                        ProccessFeeProgramId = GetProcessingFeeProgramID(result.ToInt("Program_ID"), result.ToInt("Congregation_ID"), token),
+                        //ProccessFeeProgramId = _processingProgramId,
                         DepositId = result.ToInt("Deposit_ID"),
                         ProgramId = result.ToInt("Program_ID"),
                         CongregationId = result.ToInt("Congregation_ID"),
@@ -656,7 +653,8 @@ namespace MinistryPlatform.Translation.Repositories
         public MPGLAccountMapping GetProcessingFeeGLMapping(int programId, int congregationId, string token)
         {
             var searchString = $"Program_ID = {programId} AND Congregation_ID = {congregationId}";
-            return _ministryPlatformRest.UsingAuthenticationToken(token).Search<MPGLAccountMapping>(searchString).FirstOrDefault();
+            var blah = _ministryPlatformRest.UsingAuthenticationToken(token).Search<MPGLAccountMapping>(searchString);
+            return blah.FirstOrDefault();
         }
 
         public void UpdateDepositToExported(int selectionId, int depositId, string token)
