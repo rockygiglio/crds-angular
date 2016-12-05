@@ -566,7 +566,7 @@ namespace MinistryPlatform.Translation.Repositories
 
                     select new MpGPExportDatum
                     {
-                        //ProccessFeeProgramId = _processingProgramId,
+                        ProccessFeeProgramId = GetProcessingFeeProgramID(result.ToInt("Program_ID"), result.ToInt("Congregation_ID"), token),
                         DepositId = result.ToInt("Deposit_ID"),
                         ProgramId = result.ToInt("Program_ID"),
                         DocumentType = result.ToString("Document_Type"),
