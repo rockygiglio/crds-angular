@@ -133,7 +133,7 @@ export default class AddEventcontroller {
     if (form === undefined) {
       return false;
     }
-    
+
     // verify that dates are valid;
     let start;
     let end;
