@@ -4,19 +4,22 @@
 
 // Global
 
-html & {
-  font-size: $font-size-base;
-}
+@at-root {
 
-& {
-  font-weight: 300;
-  font-size: 1em; /* equivalent to 14px */
-  line-height: $line-height-base; /* equivalent to 22.75px */
-  -webkit-font-smoothing: antialiased;
-}
+  html {
+    font-size: $font-size-base;
+  }
 
-&, caption, th, td, input, textarea, select, option, legend, fieldset, h1, h2, h3, h4, h5, h6 {
-  font-size-adjust: 0.5; //http://caniuse.com/#search=font-size-adjust
+  body {
+    font-weight: 300;
+    font-size: 1em; /* equivalent to 14px */
+    line-height: $line-height-base; /* equivalent to 22.75px */
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body, caption, th, td, input, textarea, select, option, legend, fieldset, h1, h2, h3, h4, h5, h6 {
+    font-size-adjust: 0.5; //http://caniuse.com/#search=font-size-adjust
+  }
 }
 p {
   line-height: 1.425;
