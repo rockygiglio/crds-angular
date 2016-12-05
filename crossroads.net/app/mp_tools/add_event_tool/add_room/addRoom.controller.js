@@ -11,6 +11,7 @@ export default class AddRoomController {
         this.equipmentList = [];
         this.roomError = false;
         this.viewReady = false;
+        this.roomData = [];
     }
 
     $onInit() {
@@ -41,8 +42,7 @@ export default class AddRoomController {
                     }
 
                     return true;
-                });
-
+                }),
                 this.room.Equipment.query({ congregationId: this.addEvent.eventData.event.congregation.dp_RecordID }, function (data) {
                     this.equipmentList = data;
                     _.forEach(this.roomData, function (roomD) {

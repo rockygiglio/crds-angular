@@ -1,12 +1,22 @@
-(function() {
-  'use strict';
+import CONSTANTS from 'crds-constants';
+import './equipment_form.html';
+import equipmentFormComponent from './equipment_form.component';
+import uniqueEqupment from './uniqueEquipment.directive.js';
 
-  var MODULE = require('crds-constants').MODULES.MPTOOLS;
+export default angular
+.module(CONSTANTS.MODULES.MPTOOLS)
+.component('equipmentFormComponent', equipmentFormComponent())
+.directive('uniqueEquipment');//, require('./uniqueEquipment.directive'));
 
-  angular.module(MODULE)
-    .directive('equipmentForm', require('./equipmentForm.component'))
-    .directive('uniqueEquipment', require('./uniqueEquipment.directive'))
-  ;
+// (function() {
+//   'use strict';
 
-  require('./equipmentForm.html');
-})();
+//   var MODULE = require('crds-constants').MODULES.MPTOOLS;
+
+//   angular.module(MODULE)
+//     .directive('equipmentForm', require('./equipmentForm.component'))
+//     .directive('uniqueEquipment', require('./uniqueEquipment.directive'))
+//   ;
+
+//   require('./equipmentForm.html');
+// })();
