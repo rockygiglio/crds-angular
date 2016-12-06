@@ -394,7 +394,7 @@ namespace MinistryPlatform.Translation.Test.Services
             };
 
             const string columns = "Contact_ID_Table.*";
-            string filter = $"Attribute_ID = 7088";
+            string filter = $"Attribute_ID = 7088 Start_Date <= GETDATE() and (end_date is null OR end_Date > GETDATE())";
 
             _ministryPlatformRest.Setup(m => m.Search<MpContactAttribute, Dictionary<string, object>>(filter, columns, null, true)).Returns(returnData);
 
