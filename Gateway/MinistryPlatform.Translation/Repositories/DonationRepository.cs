@@ -28,7 +28,6 @@ namespace MinistryPlatform.Translation.Repositories
         private readonly int _tripDistributionsPageView;
         private readonly int _gpExportPageView;
         private readonly int _paymentGPExportPageView;
-        //private readonly int _processingProgramId;
         private readonly int _scholarshipPaymentTypeId;
         private readonly int _tripDonationMessageTemplateId;
         private readonly int _donationCommunicationsPageId;
@@ -64,7 +63,6 @@ namespace MinistryPlatform.Translation.Repositories
             _tripDistributionsPageView = configuration.GetConfigIntValue("TripDistributionsView");
             _gpExportPageView = configuration.GetConfigIntValue("GPExportView");
             _paymentGPExportPageView = configuration.GetConfigIntValue("PaymentsGPExportView");
-            //_processingProgramId = configuration.GetConfigIntValue("ProcessingProgramId");
             _scholarshipPaymentTypeId = configuration.GetConfigIntValue("ScholarshipPaymentTypeId");
             _tripDonationMessageTemplateId = configuration.GetConfigIntValue("TripDonationMessageTemplateId");
             _donationStatusSucceeded = configuration.GetConfigIntValue("DonationStatusSucceeded");
