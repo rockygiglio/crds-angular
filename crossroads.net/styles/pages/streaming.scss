@@ -1009,8 +1009,8 @@ streaming, landing {
 
     &__item {
       flex: 1 1 100%;
-      padding-left: 15px;
-      padding-right: 15px;
+      padding-left: 20px;
+      padding-right: 20px;
 
       &.digital-program__giving {
         background-color: #171717;
@@ -1035,88 +1035,25 @@ streaming, landing {
       &.digital-program__articles {
         background-color: #171717;
 
-        h2 {
-          float: left;
-
-          @media (min-width: $screen-md) {
-            margin-left: .75em;
-          }
+        header {
+          margin-bottom: 1em;
         }
 
-        .crds-card-carousel {
-          height: 400px;
-          margin-bottom: 2em;
-          margin-top: 1em;
-          overflow: hidden;
-          position: relative;
-          white-space: nowrap;
-          width: 100%;
-        }
+        .row {
+          content-card {
+            @include make-xs-column(12);
 
-        .crds-carousel {
-          &__controls {
-            float: right;
-            margin-top: 1.5em;
-
-            @media (min-width: $screen-md) {
-              margin-right: 1em;
+            @media (min-width: $screen-xs) {
+              @include make-xs-column(6);
             }
-          }
 
-          &__control {
-            background: #4D4D4D;
-            border-radius: 4px;
-            color: #FFF;
-            display: inline-block;
-            padding: .25em .75em;
-            text-align: center;
-            vertical-align: middle;
-
-            &:hover,
-            &:focus {
-              background: darken(#4D4D4D, 10);
+            @media (min-width: $screen-lg) {
+              @include make-xs-column(4);
             }
-          }
-
-          &__content-wrap {
-            position: absolute;
-            white-space: nowrap;
-            width: 100%;
-          }
-
-          &__list {
-            display: block;
-            list-style: none;
-            overflow-x: scroll;
-            overflow-y: hidden;
-            padding: 0;
-            white-space: nowrap;
-          }
-
-          &__item {
-            display: inline-block;
-            white-space: normal;
-            vertical-align: top;
-            z-index: 1;
-          }
-        }
-
-        content-card {
-          display: inline-block;
-          margin-right: 1em;
-
-          &:last-of-type {
-            margin-right: 0;
-          }
-
-          article {
-            margin-bottom: 0;
           }
         }
 
         .crds-card {
-          width: 225px;
-
           figcaption {
             top: -0.6em;
 
@@ -1184,11 +1121,6 @@ streaming, landing {
         @media (min-width: $screen-md) {
           margin-top: 1em;
         }
-      }
-
-      @media (min-width: $screen-md) {
-        padding-left: 0;
-        padding-right: 0;
       }
     }
   }
