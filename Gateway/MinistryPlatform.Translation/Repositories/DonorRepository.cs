@@ -790,7 +790,7 @@ namespace MinistryPlatform.Translation.Repositories
             {
                 return donationMap[donationId];
             }
-            
+
             var donation = new MpDonation
             {
                 donationDate = record["Donation_Date"] as DateTime? ?? DateTime.Now,
@@ -805,12 +805,14 @@ namespace MinistryPlatform.Translation.Repositories
                 softCreditDonorId = record["Soft_Credit_Donor_ID"] as int? ?? 0,
                 donorDisplayName = record["Donor_Display_Name"] as string,
                 itemNumber = record["Item_Number"] as string,
-                recurringGift = record["Is_Recurring_Gift"] as bool? ?? false
+                recurringGift = record["Is_Recurring_Gift"] as bool? ?? false,
+                AccountingCompanyName = record["Company_Name"] as string,
+                AccountingCompanyIncludeOnPrintedStatement = (record["Show_Online"] as int? ?? 0) > 0
             };
 
             var status = statuses.Find(x => x.Id == donation.donationStatus) ?? new MpDonationStatus();
             donation.IncludeOnGivingHistory = status.DisplayOnGivingHistory;
-            donation.IncludeOnPrintedStatement = status.DisplayOnStatement;
+            donation.IncludeOnPrintedStatement = status.DisplayOnStatement && donation.AccountingCompanyIncludeOnPrintedStatement;
 
             return donation;
         }
