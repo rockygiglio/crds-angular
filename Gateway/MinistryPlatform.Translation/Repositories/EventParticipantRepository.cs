@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Crossroads.Utilities.FunctionalHelpers;
 using Crossroads.Utilities.Interfaces;
 using MinistryPlatform.Translation.Extensions;
 using MinistryPlatform.Translation.Models;
@@ -170,6 +171,25 @@ namespace MinistryPlatform.Translation.Repositories
                 if (ret != null) return ret.SetupDate;
             }
             return null;
+        }
+
+        public Result<MpEventParticipant> GetEventParticipantByContactAndEvent(int contactId, int eventId, string token)
+        {
+            try
+            {
+                var filter = $"Event_ID_Table.[Event_ID] = {eventId} AND Participant_ID_Table_Contact_ID_Table.[Contact_ID] = {contactId}";
+                var participants = _ministryPlatformRestRepository.UsingAuthenticationToken(token)
+                    .Search<MpEventParticipant>(filter, new List<string>());
+                if (participants.Count > 0)
+                {
+                    return new Ok<MpEventParticipant>(participants.FirstOrDefault());
+                }
+                return new Err<MpEventParticipant>("No Participants Found");
+            }
+            catch (Exception e)
+            {
+                return new Err<MpEventParticipant>(e);
+            }
         }
     }
 }

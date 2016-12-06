@@ -451,6 +451,21 @@ namespace MinistryPlatform.Translation.Test.Services
             Assert.AreNotEqual(0, result.First().PaymentId);
         }
 
+        [Test]
+        public void GetFamilyMembersOfContactId()
+        {
+            Console.WriteLine("TestCallingAStoredProcedure");
+            var parms = new Dictionary<string, object>()
+            {
+                {"@Contact_ID", 2186211}
+            };
+            var results = _fixture.UsingAuthenticationToken(_authToken).GetFromStoredProc<MpContact>("api_crds_All_Family_Members", parms);
+            foreach (var p in results)
+            {
+                Console.WriteLine("Result\t{0}", p.FirstOrDefault());
+            }
+        }
+
     }
 
     [MpRestApiTable(Name = "Payment_Types")]
