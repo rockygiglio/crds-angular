@@ -8,8 +8,8 @@ export default function EquipmentFormComponent() {
         currentEquipment: '=',
         equipmentLookup: '='
     },
-    template: template,
-    controller: controller,
+    template,
+    controller,
     controllerAs: 'equipment'
   };
 };

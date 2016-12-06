@@ -5,10 +5,10 @@ export default function AddRoomComponent() {
   return {
     restrict: 'E',
     bindings: {
-      roomData: '='
+      chosenSite: '<'
     },
-    template: template,
-    controller: controller,
+    template,
+    controller,
     controllerAs: 'addRoom'
   };
 };

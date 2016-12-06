@@ -2,9 +2,9 @@
 <div class="form-group" ng-if="addRoom.viewReady" >
   <span ng-show="addRoom.showNoRoomsMessage()"> There are no rooms for this site </span>
   <span ng-hide="addRoom.showNoRoomsMessage()">
-    <label>Rooms for {{addRoom.choosenSite() }}</label>
+    <label>Rooms for {{ addRoom.chosenSite }}</label>
     <div class="input-group">
-      <ui-select ng-model="addRoom.choosenRoom" name="rooms" >
+      <ui-select ng-model="addRoom.chosenRoom" name="chosenRoom" >
         <ui-select-match >
           {{ $select.selected.name}}
         </ui-select-match>
@@ -22,18 +22,19 @@
         <button class="btn btn-standard" ng-click="addRoom.onAdd()"> Add Room </button>
       </span>
     </div>
-    <div ng-if="addRoom.viewReady && addRoom.roomData.length == 0" ng-hide="addRoom.showNoRoomsMessage()">
+    <div ng-if="addRoom.viewReady && addRoom.selectedRooms.length == 0" ng-hide="addRoom.showNoRoomsMessage()">
       <p class="lead"><span class="badge brand-warning">No Room(s) Added</span></p>
     </div>
   </span>
 
 <!-- The rooms choosen -->
-  <span ng-repeat="currentRoom in addRoom.roomData">
+  <span ng-repeat="currentRoom in addRoom.selectedRooms">
     <room-form current-room="currentRoom"
                layouts="addRoom.layouts"
                equipment-lookup="addRoom.equipmentList"
                ng-hide="addRoom.isCancelled(currentRoom)"
                remove-room="addRoom.removeRoom(currentRoom)">
+               Why?
     </room-form>
   </span>
 
