@@ -91,7 +91,6 @@ export default class AddEventToolController {
             let event = this.AddEvent.getEventDto(this.AddEvent.eventData);
             event.startDateTime = moment(event.startDateTime).utc().format();
             event.endDateTime = moment(event.endDateTime).utc().format();
-            debugger;
             if (this.AddEvent.editMode) {
                 this.processEdit(event);
             } else {
