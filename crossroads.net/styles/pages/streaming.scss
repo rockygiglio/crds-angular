@@ -777,22 +777,13 @@ streaming, landing {
         top: -0.95em;
       }
     }
-
-    @media (min-width:  $screen-md-min) {
-      @include make-md-column(6);
-      // NOTE: The following rule will break content-cards after every 2 elements...
-      // &:nth-child(3n+1) {
-      //   clear: left;
-      // }
-    }
-
   }
 
   h2 {
     color: darken(#FFF, 70%);
     font-family: $cr-streaming-font-sans;
     font-weight: 300;
-    font-size: 170%;
+    font-size: 1.75em;
     letter-spacing: -0.05em;
   }
 
@@ -830,7 +821,7 @@ streaming, landing {
 
   .digital-program-container {
     @media only screen and (max-width:  $screen-sm-min){
-      background: #151515;
+      // background: #151515;
     }
   }
 
@@ -1018,27 +1009,36 @@ streaming, landing {
 
     &__item {
       flex: 1 1 100%;
-      padding-left: 15px;
-      padding-right: 15px;
+      padding-left: 20px;
+      padding-right: 20px;
+
+      @media (min-width: $screen-md) {
+        padding-left: 0;
+        padding-right: 0;
+      }
 
       &.digital-program__giving {
-        background-color: #151515;
+        background-color: #171717;
         margin-bottom: 2em;
-        padding: 0 1.25em 1.25em;
+        padding: 0;
 
-        h2 {
-          margin-bottom: 1em;
+        iframe {
+          padding: 0 6px;
+        }
+
+        header {
+          padding: 0 1.25em;
         }
 
         @media (min-width: $screen-md) {
-          flex: 1 1 0;
+          flex: 1 1 50px;
           margin-bottom: 0;
           order: 2;
         }
       }
 
       &.digital-program__articles {
-        background-color: #151515;
+        background-color: #171717;
 
         h2 {
           float: left;
@@ -1191,14 +1191,10 @@ streaming, landing {
           margin-top: 1em;
         }
       }
-
-      @media (min-width: $screen-md) {
-        padding-left: 0;
-        padding-right: 0;
-      }
     }
   }
 } // .live-stream
+
 .reminder-modal {
   .modal {
     @media(max-width: $screen-md) {
@@ -1503,4 +1499,6 @@ geolocation {
       margin: 0.5em;
     }
   }
+
+
 }

@@ -1,14 +1,15 @@
 let WOW = require('wow.js/dist/wow.min.js');
+let iFrameResizer = require('iframe-resizer/js/iframeResizer.min.js');
+var $ = require('jquery');
 
 export default class StreamingController {
   /*@ngInject*/
-  constructor(CMSService, StreamspotService, GeolocationService, $rootScope, $modal, $location) {
+  constructor(CMSService, StreamspotService, GeolocationService, $rootScope, $modal, $location, $timeout, $sce) {
     this.cmsService         = CMSService;
     this.streamspotService  = StreamspotService;
     this.geolocationService = GeolocationService;
     this.rootScope          = $rootScope;
     this.modal              = $modal;
-
     this.inProgress     = false;
     this.numberOfPeople = 2;
     this.displayCounter = true;
@@ -20,7 +21,9 @@ export default class StreamingController {
     this.carouselList    = document.querySelector(".crds-carousel__list");
     this.pos             = 0;
 
+    this.sce = $sce;
     let debug = false;
+
     if ( $location != undefined ) {
       let params = $location.search();
       debug = params.debug;
@@ -48,6 +51,33 @@ export default class StreamingController {
     }).init();
 
     this.openGeolocationModal();
+
+    switch (__CRDS_ENV__) {
+      case 'int':
+        this.baseUrl = 'https://embedint.crossroads.net';
+        break;
+      case 'demo':
+        this.baseUrl = 'https://embeddemo.crossroads.net';
+        break;
+      default:
+        this.baseUrl = 'https://embed.crossroads.net';
+        break;
+    }
+
+    $timeout(this.resizeIframe);
+  }
+
+  resizeIframe() {
+    iFrameResizer({
+      heightCalculationMethod: 'taggedElement',
+      minHeight: 275,
+      checkOrigin: false,
+      interval: -16
+    }, ".donation-widget");
+  }
+
+  buildUrl() {
+    return this.sce.trustAsResourceUrl(`${this.baseUrl}?type=donation&theme=dark`);
   }
 
   sortDigitalProgram(data) {
