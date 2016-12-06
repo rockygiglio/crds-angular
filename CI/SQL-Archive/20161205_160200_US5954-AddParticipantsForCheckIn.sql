@@ -1,5 +1,5 @@
 --This is an INSERT script to add active minor children to the Participants table that are not currently there
---INSERT INTO  [MinistryPlatform].[dbo].[Participants] 
+INSERT INTO  [MinistryPlatform].[dbo].[Participants] 
 ([Contact_ID],[Participant_Type_ID],[Participant_Start_Date],[Notes],[Domain_ID],[Approved_Small_Group_Leader])
 select 
 c.Contact_ID, 
