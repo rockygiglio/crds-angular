@@ -65,7 +65,7 @@ export default class StreamingController {
   resizeIframe() {
     iFrameResizer({
       heightCalculationMethod: 'taggedElement',
-      minHeight: 300,
+      minHeight: 275,
       checkOrigin: false,
       interval: -16
     }, ".donation-widget");
