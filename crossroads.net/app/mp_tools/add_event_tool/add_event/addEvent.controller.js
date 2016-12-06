@@ -54,7 +54,6 @@ export default class AddEventcontroller {
 
     this.staffContact.query({}, (contacts) => {
       this.staffContacts = contacts;
-      debugger;
       this.eventData.primaryContact = _.findWhere(this.staffContacts, { contactId: parseInt(this.session.exists('userId')) });
       this.ready = true;
     });
@@ -126,7 +125,6 @@ export default class AddEventcontroller {
   eventTypeChanged() {
         // if childcare is selected then show additional fields
         // constrain congregations
-        debugger;
     if (this.eventData.eventType.dp_RecordName === 'Childcare') {
       this.childcareSelectedFlag = true;
       this.lookup.query({ table: 'childcarelocations' }, (locations) => { this.crossroadsLocations = locations; });
