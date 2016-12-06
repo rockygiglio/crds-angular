@@ -361,7 +361,7 @@ namespace crds_angular.Services
                 {
                     payment = _paymentService.GetPaymentByTransactionCode(paymentId);
                     _logger.Debug($"Updating charge id {charge.Id} to Declined status");
-                    _paymentService.UpdatePaymentStatus(Convert.ToInt32(refund.Data[0].ChargeId), _donationStatusDeclined, refund.Data[0].BalanceTransaction.Created);
+                    _paymentService.UpdatePaymentStatus(payment.PaymentId, _donationStatusDeclined, refund.Data[0].BalanceTransaction.Created);
                 }
                 else
                 {

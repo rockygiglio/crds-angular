@@ -224,7 +224,8 @@ namespace crds_angular.Services
                 Notes = "Payment created for Stripe Refund",
                 PaymentTypeId = _paymentTypeReimbursement,
                 TransactionCode = refund.Data[0].Id,
-                PaymentTotal = -(int.Parse(refund.Data[0].Amount) / Constants.StripeDecimalConversionValue)
+                PaymentTotal = -(int.Parse(refund.Data[0].Amount) / Constants.StripeDecimalConversionValue),
+                BatchId = payment.BatchId
             };
 
             var invoicedetail = _invoiceRepository.GetInvoiceDetailForInvoice(Convert.ToInt32(payment.InvoiceNumber));

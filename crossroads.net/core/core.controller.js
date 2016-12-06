@@ -49,11 +49,17 @@
     vm.state = $state;
     vm.mapContentBlocks = mapContentBlocks;
     vm.stayLoggedInPrompt = stayLoggedInPrompt;
+    vm.bodyClasses = {};
 
     ////////////////////////////
     // State Change Listeners //
     ////////////////////////////
     $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
+
+      // Determine whether to render legacy stylesheet.
+      // TODO – Populate the following property based on the values returned from the CMS, per US5875. -TCM 12/01/16
+      $rootScope.renderLegacyStyles = (toState.data.renderLegacyStyles !== false);
+
       if ((toState.resolve || toState.data.resolve) && !event.defaultPrevented) {
         vm.resolving = true;
       }
@@ -65,6 +71,18 @@
     });
 
     $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
+
+      // Toggle ngClass values based on $rootScope.renderLegacyStyles
+      vm.bodyClasses['crds-legacy-styles'] = $rootScope.renderLegacyStyles;
+      vm.bodyClasses['crds-styles'] = !$rootScope.renderLegacyStyles;
+
+      if (typeof $rootScope.bodyClasses !== 'undefined') {
+        $rootScope.bodyClasses.forEach(function(klass) {
+          vm.bodyClasses[klass] = true;
+        });
+      }
+
+
       ResponsiveImageService.updateResponsiveImages();
       PageRenderedService.pageLoaded();
       vm.resolving = false;
@@ -139,6 +157,8 @@
         position: position,
         animation: false
       };
+
+      vm.bodyClasses[position] = position;
 
       function postClose() {
         vm.asideState.open = false;

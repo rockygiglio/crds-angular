@@ -106,6 +106,10 @@
           <DataField>congregation_name</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
+        <Field Name="Approved_Small_Group_Leader">
+          <DataField>Approved_Small_Group_Leader</DataField>
+          <rd:UserDefined>true</rd:UserDefined>
+        </Field>
         <Field Name="TripGuardianFirstName">
           <DataField>tripguardianfirstname</DataField>
           <rd:TypeName>System.String</rd:TypeName>
@@ -413,6 +417,9 @@
           <Tablix Name="Tablix2">
             <TablixBody>
               <TablixColumns>
+                <TablixColumn>
+                  <Width>1in</Width>
+                </TablixColumn>
                 <TablixColumn>
                   <Width>1in</Width>
                 </TablixColumn>
@@ -3388,6 +3395,36 @@
                         </Textbox>
                       </CellContents>
                     </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox10">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>Approved Group Leader</Value>
+                                  <Style />
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox10</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
                   </TablixCells>
                 </TablixRow>
                 <TablixRow>
@@ -6093,12 +6130,43 @@
                         </Textbox>
                       </CellContents>
                     </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Approved_Small_Group_Leader">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=Fields!Approved_Small_Group_Leader.Value</Value>
+                                  <Style />
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Approved_Small_Group_Leader</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
                   </TablixCells>
                 </TablixRow>
               </TablixRows>
             </TablixBody>
             <TablixColumnHierarchy>
               <TablixMembers>
+                <TablixMember />
                 <TablixMember />
                 <TablixMember />
                 <TablixMember />
@@ -6205,7 +6273,7 @@
             <Top>0.83958in</Top>
             <Left>0.1in</Left>
             <Height>0.5in</Height>
-            <Width>90in</Width>
+            <Width>91in</Width>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -6252,7 +6320,7 @@
           </Border>
         </Style>
       </Body>
-      <Width>90.1in</Width>
+      <Width>91.1in</Width>
       <Page>
         <PageFooter>
           <Height>0.45in</Height>
@@ -6314,7 +6382,7 @@
           <Value>1</Value>
         </Values>
       </DefaultValue>
-      <Prompt>Domain ID</Prompt>
+      <Prompt>DomainID</Prompt>
       <Hidden>true</Hidden>
     </ReportParameter>
     <ReportParameter Name="UserID">
@@ -6325,7 +6393,7 @@
           <Value>0</Value>
         </Values>
       </DefaultValue>
-      <Prompt>User ID</Prompt>
+      <Prompt>UserID</Prompt>
       <Hidden>true</Hidden>
     </ReportParameter>
     <ReportParameter Name="PageID">
@@ -6335,7 +6403,7 @@
           <Value>0</Value>
         </Values>
       </DefaultValue>
-      <Prompt>Page ID</Prompt>
+      <Prompt>PageID</Prompt>
       <Hidden>true</Hidden>
     </ReportParameter>
     <ReportParameter Name="EventID">
@@ -6351,6 +6419,6 @@
     </ReportParameter>
   </ReportParameters>
   <rd:ReportUnitType>Inch</rd:ReportUnitType>
-  <rd:ReportServerUrl>http://adminint.crossroads.net/ReportServer</rd:ReportServerUrl>
+  <rd:ReportServerUrl>http://localhost/ReportServer</rd:ReportServerUrl>
   <rd:ReportID>44f9c7b7-40b4-436a-9c0d-f5f72a9fd403</rd:ReportID>
 </Report>
