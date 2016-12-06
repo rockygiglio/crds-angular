@@ -4,7 +4,7 @@ var $ = require('jquery');
 
 export default class StreamingController {
   /*@ngInject*/
-  constructor(CMSService, StreamspotService, GeolocationService, $rootScope, $modal, $location, $timeout) {
+  constructor(CMSService, StreamspotService, GeolocationService, $rootScope, $modal, $location, $timeout, $sce) {
     this.cmsService         = CMSService;
     this.streamspotService  = StreamspotService;
     this.geolocationService = GeolocationService;
@@ -16,6 +16,7 @@ export default class StreamingController {
     this.countSubmit    = false;
     this.dontMiss       = [];
     this.beTheChurch    = [];
+    this.sce = $sce;
     let debug = false;
 
     if ( $location != undefined ) {
@@ -46,6 +47,18 @@ export default class StreamingController {
 
     this.openGeolocationModal();
 
+    switch (__CRDS_ENV__) {
+      case 'int':
+        this.baseUrl = 'https://embedint.crossroads.net';
+        break;
+      case 'demo':
+        this.baseUrl = 'https://embeddemo.crossroads.net';
+        break;
+      default:
+        this.baseUrl = 'https://embed.crossroads.net';
+        break;
+    }
+
     $timeout(this.resizeIframe);
   }
 
@@ -56,6 +69,10 @@ export default class StreamingController {
       checkOrigin: false,
       interval: -16
     }, ".donation-widget");
+  }
+
+  buildUrl() {
+    return this.sce.trustAsResourceUrl(`${this.baseUrl}?type=donation&theme=dark`);
   }
 
   sortDigitalProgram(data) {
