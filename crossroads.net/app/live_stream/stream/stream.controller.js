@@ -3,22 +3,21 @@ var $ = require('jquery');
 
 export default class StreamingController {
   /*@ngInject*/
-  constructor(CMSService, StreamspotService, GeolocationService, $rootScope, $modal, $location, $document) {
+  constructor(CMSService, StreamspotService, GeolocationService, $rootScope, $modal, $location) {
     this.cmsService         = CMSService;
     this.streamspotService  = StreamspotService;
     this.geolocationService = GeolocationService;
     this.rootScope          = $rootScope;
     this.modal              = $modal;
-    this.document           = $document;
     this.inProgress     = false;
     this.numberOfPeople = 2;
     this.displayCounter = true;
     this.countSubmit    = false;
     this.dontMiss       = [];
     this.beTheChurch    = [];
-    this.carouselList   = $document.find(".carousel__list");
-    console.log(this.carouselList);
+    this.iframeSelector = ".donation-widget";
     let debug = false;
+
     if ( $location != undefined ) {
       let params = $location.search();
       debug = params.debug;
@@ -35,7 +34,6 @@ export default class StreamingController {
       });
     }
 
-
     this.cmsService
         .getDigitalProgram()
         .then((data) => {
@@ -48,6 +46,25 @@ export default class StreamingController {
 
     this.openGeolocationModal();
   }
+
+  $onInit() {
+    window.iFrameResizer = require('iframe-resizer/js/iframeResizer.min.js');
+
+    this.iFrames = window.iFrameResizer({
+      // heightCalculationMethod: 'taggedElement',
+      minHeight: 500,
+      checkOrigin: false,
+      interval: -16,
+      initCallback: function(iframe) {
+        console.log(iframe);
+      }
+    }, '.donation-widget');
+
+    console.log($(this.iframeSelector));
+  }
+
+
+
 
   sortDigitalProgram(data) {
     data.forEach((feature, i, data) => {
@@ -91,17 +108,5 @@ export default class StreamingController {
         size: 'lg'
       });
     }
-  }
-
-  carouselNext() {
-    event.preventDefault();
-    var pos = $(".crds-carousel__list").scrollLeft() + 100;
-    $(".crds-carousel__list").scrollLeft(pos);
-  }
-
-  carouselPrev() {
-    event.preventDefault();
-    var pos = $(".crds-carousel__list").scrollLeft() - 100;
-    $(".crds-carousel__list").scrollLeft(pos);
   }
 }
