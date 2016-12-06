@@ -39,6 +39,7 @@
           maximumAge: eventData.event.maximumAge,
           minimumChildren: eventData.event.minimumChildren,
           maximumChildren: eventData.event.maximumChildren,
+          participantsExpected: eventData.event.participantsExpected,
           group: getGroupDto(eventData.event),
           rooms: _.map(eventData.rooms, function(r) { return getRoomDto(r); })
          
@@ -72,6 +73,7 @@
             startTime: new Date(event.startDateTime),
             endTime: new Date(event.endDateTime),
             eventTitle: event.title,
+            participantsExpected: event.participantsExpected,
             maximumAge: event.maximumAge,
             minimumChildren: event.minimumChildren,
             maximumChildren: event.maximumChildren

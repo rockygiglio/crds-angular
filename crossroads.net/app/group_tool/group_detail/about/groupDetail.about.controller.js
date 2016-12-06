@@ -113,7 +113,12 @@ export default class GroupDetailAboutController {
     return `${this.location.protocol()}://${this.location.host()}/groups/search/results?id=${this.groupId}`;
   }
 
-  onSuccess() {
+  onShareSuccess() {
     this.rootScope.$emit('notify', this.rootScope.MESSAGES.copiedToClipBoard);
+  }
+
+  onShareError() {
+    this.location.path('/groups/search/results').search('id', this.groupId);
+    this.rootScope.$emit('notify', this.rootScope.MESSAGES.copiedToClipBoardError);
   }
 }
