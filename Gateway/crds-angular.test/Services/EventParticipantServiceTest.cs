@@ -20,7 +20,7 @@ namespace crds_angular.test.Services
         private readonly EventParticipantService _fixture;
 
         public EventParticipantServiceTest()
-        {
+        {            
             Factories.EventParticipant();
             Factories.EventParticipantDTO();           
             _eventParticipantRepository = new Mock<IEventParticipantRepository>();

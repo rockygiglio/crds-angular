@@ -322,7 +322,6 @@
     <Compile Include="Exceptions\InvalidAddressException.cs" />
     <Compile Include="Exceptions\InvoiceNotFoundException.cs" />
     <Compile Include="Exceptions\MoreThanOneRecordException.cs" />
-    <Compile Include="Exceptions\NotFamilyMemberException.cs" />
     <Compile Include="Exceptions\NotHeadOfHouseholdException.cs" />
     <Compile Include="Exceptions\PaymentTypeNotFoundException.cs" />
     <Compile Include="Exceptions\TripFullException.cs" />
