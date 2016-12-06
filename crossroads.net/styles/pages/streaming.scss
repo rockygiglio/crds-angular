@@ -1004,6 +1004,200 @@ streaming, landing {
       }
     }
   }
+
+  .flex {
+    &__container {
+      display: flex;
+      flex-wrap: wrap;
+
+      &.container {
+        padding-left: 0;
+        padding-right: 0;
+      }
+    }
+
+    &__item {
+      flex: 1 1 100%;
+      padding-left: 15px;
+      padding-right: 15px;
+
+      &.digital-program__giving {
+        background-color: #151515;
+        margin-bottom: 2em;
+        padding: 0 1.25em 1.25em;
+
+        h2 {
+          margin-bottom: 1em;
+        }
+
+        @media (min-width: $screen-md) {
+          flex: 1 1 0;
+          margin-bottom: 0;
+          order: 2;
+        }
+      }
+
+      &.digital-program__articles {
+        background-color: #151515;
+
+        h2 {
+          float: left;
+
+          @media (min-width: $screen-md) {
+            margin-left: .75em;
+          }
+        }
+
+        .crds-card-carousel {
+          height: 400px;
+          margin-bottom: 2em;
+          margin-top: 1em;
+          overflow: hidden;
+          position: relative;
+          white-space: nowrap;
+          width: 100%;
+        }
+
+        .crds-carousel {
+          &__controls {
+            float: right;
+            margin-top: 1.5em;
+
+            @media (min-width: $screen-md) {
+              margin-right: 1em;
+            }
+          }
+
+          &__control {
+            background: #4D4D4D;
+            border-radius: 4px;
+            color: #FFF;
+            display: inline-block;
+            padding: .25em .75em;
+            text-align: center;
+            vertical-align: middle;
+
+            &:hover,
+            &:focus {
+              background: darken(#4D4D4D, 10);
+            }
+          }
+
+          &__content-wrap {
+            position: absolute;
+            white-space: nowrap;
+            width: 100%;
+          }
+
+          &__list {
+            display: block;
+            list-style: none;
+            overflow-x: scroll;
+            overflow-y: hidden;
+            padding: 0;
+            transition: margin-left 0.5s ease;
+            white-space: nowrap;
+          }
+
+          &__item {
+            display: inline-block;
+            white-space: normal;
+            vertical-align: top;
+            z-index: 1;
+          }
+        }
+
+        content-card {
+          display: inline-block;
+          margin-right: 1em;
+
+          &:last-of-type {
+            margin-right: 0;
+          }
+
+          article {
+            margin-bottom: 0;
+          }
+        }
+
+        .crds-card {
+          width: 225px;
+
+          figcaption {
+            top: -0.6em;
+
+            @media (min-width: $screen-sm) {
+              top: -0.8em;
+            }
+
+            @media (min-width: $screen-md) {
+              top: -0.6em;
+            }
+          }
+        }
+
+        @media (min-width: $screen-md) {
+          margin-right: 28px;
+          flex: 2 1 0;
+          order: 1;
+        }
+      }
+
+      &.digital-program__participate {
+        .media {
+          @include make-xs-column(12);
+
+          margin-top: 10px;
+          margin-bottom: 20px;
+
+          @media (min-width: $screen-sm) {
+            @include make-sm-column(6);
+
+            padding-left: 20px;
+            padding-right: 20px;
+          }
+
+          @media (min-width: $screen-md) {
+            @include make-md-column(4);
+          }
+
+          .media-left {
+            padding-right: 20px;
+          }
+
+          .media-object {
+            max-width: 100px;
+          }
+
+          .media-body {
+            color: #FFF;
+            font-family: "acumin-pro", sans-serif;
+            font-size: .875em;
+            position: relative;
+            top: -8px;
+          }
+
+          .media-heading {
+            color: #FFF;
+            font-family: "acumin-pro-extra-condensed", sans-serif;
+            font-size: 1.72em;
+            font-weight: 600;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+          }
+        }
+
+        @media (min-width: $screen-md) {
+          margin-top: 1em;
+        }
+      }
+
+      @media (min-width: $screen-md) {
+        padding-left: 0;
+        padding-right: 0;
+      }
+    }
+  }
 } // .live-stream
 .reminder-modal {
   .modal {

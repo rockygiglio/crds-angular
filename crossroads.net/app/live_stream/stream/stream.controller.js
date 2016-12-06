@@ -16,12 +16,16 @@ export default class StreamingController {
     this.dontMiss       = [];
     this.beTheChurch    = [];
 
+    this.carouselWrapper = document.querySelector(".crds-carousel__content-wrap");
+    this.carouselList    = document.querySelector(".crds-carousel__list");
+    this.pos             = 0;
+
     let debug = false;
     if ( $location != undefined ) {
       let params = $location.search();
       debug = params.debug;
     }
-    
+
     if ( debug === "true" ) {
       this.inProgress = true;
     } else {
@@ -32,14 +36,13 @@ export default class StreamingController {
         }
       });
     }
-    
-    
+
     this.cmsService
         .getDigitalProgram()
         .then((data) => {
           this.sortDigitalProgram(data);
         });
-    
+
     new WOW({
       mobile: false
     }).init();
@@ -88,6 +91,20 @@ export default class StreamingController {
         backdrop: 'static',
         size: 'lg'
       });
+    }
+  }
+
+  carouselNext(event) {
+    if (pos < 0) {
+      pos += 100;
+      carouselList.style.marginLeft = pos + "px";
+    }
+  }
+
+  carouselPrev(event) {
+    if (pos > ((carouselList.scrollWidth * -1) + (carouselWrapper.offsetWidth))) {
+      pos -= 100;
+      carouselList.style.marginLeft = pos + "px";
     }
   }
 }
