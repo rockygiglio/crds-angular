@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Crossroads.Utilities.FunctionalHelpers;
 using MinistryPlatform.Translation.Models;
 
 namespace MinistryPlatform.Translation.Repositories.Interfaces
@@ -13,5 +14,6 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
         int GetEventParticipantByContactId(int eventId, int contactId);
         MpEventParticipant GetEventParticipantEligibility(int eventId, int contactId);
         DateTime? EventParticipantSignupDate(int contactId , int eventId , string apiToken);
+        Result<MpEventParticipant> GetEventParticipantByContactAndEvent(int contactId, int eventId, string token);
     }
 }

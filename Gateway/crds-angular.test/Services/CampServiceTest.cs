@@ -619,7 +619,7 @@ namespace crds_angular.test.Services
             // get the event and the message Id
             _eventRepository.Setup(m => m.GetEvent(eventId)).Returns(mpEvent);
             _paymentRepository.Setup(m => m.GetPaymentsForInvoice(invoiceId)).Returns(mpPayment);
-            _communicationRepository.Setup(m => m.GetTemplateAsCommunication(templateId, contactId, "some@email2.com", contactId, "some@email2.com", contactId, "Some@email.com", It.IsAny<Dictionary<string,object>>()));
+            _communicationRepository.Setup(m => m.GetTemplateAsCommunication(templateId, contactId, "some@email2.com", contactId, "some@email2.com", contactId, "Ok@email.com", It.IsAny<Dictionary<string,object>>()));
             _contactService.Setup(m => m.GetContactById(mpPayment.First().ContactId)).Returns(new MpMyContact() { Contact_ID = contactId, Email_Address = "some@email2.com", First_Name = "Natt", Last_Name = "last"});
             _contactService.Setup(m => m.GetContactById(mpPayment.First().ContactId)).Returns(new MpMyContact() {Contact_ID = contactId, Email_Address = "some@email.com"});
           
@@ -676,7 +676,7 @@ namespace crds_angular.test.Services
         {
             return new MpMessageTemplate()
             {
-                Body = "Some Body",
+                Body = "Ok Body",
                 FromContactId = 1234,
                 FromEmailAddress = "some@email.com",
                 ReplyToContactId = 1234,
