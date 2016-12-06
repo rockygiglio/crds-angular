@@ -26,7 +26,7 @@ namespace MinistryPlatform.Translation.Repositories
         public List<Dictionary<string, object>> EventTypes(string token)
         {
             token = ApiLogonIfNotAuthenticated(token);
-            return _ministryPlatformServiceImpl.GetLookupRecords(AppSettings("EventTypesLookup"), token);
+            return _ministryPlatformServiceImpl.GetRecordsDict(AppSettings("EventTypesLookup"), token);
         }
 
         public List<Dictionary<string, object>> Genders(string token = "")

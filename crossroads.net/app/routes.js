@@ -512,6 +512,18 @@
             }
           }
         })
+        .state('crdsStylesTest', {
+          parent: 'noSideBar',
+          url: '/stylesTest',
+          template: '/stylesTest',
+          data: {
+            renderLegacyStyles: false,
+            meta: {
+              title: 'Styles Test',
+              description: ''
+            }
+          }
+        })
         .state('thedaily', {
           parent: 'noSideBar',
           url: '/thedaily',
