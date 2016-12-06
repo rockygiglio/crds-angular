@@ -1,9 +1,10 @@
 let WOW = require('wow.js/dist/wow.min.js');
+let iFrameResizer = require('iframe-resizer/js/iframeResizer.min.js');
 var $ = require('jquery');
 
 export default class StreamingController {
   /*@ngInject*/
-  constructor(CMSService, StreamspotService, GeolocationService, $rootScope, $modal, $location) {
+  constructor(CMSService, StreamspotService, GeolocationService, $rootScope, $modal, $location, $timeout) {
     this.cmsService         = CMSService;
     this.streamspotService  = StreamspotService;
     this.geolocationService = GeolocationService;
@@ -15,7 +16,6 @@ export default class StreamingController {
     this.countSubmit    = false;
     this.dontMiss       = [];
     this.beTheChurch    = [];
-    this.iframeSelector = ".donation-widget";
     let debug = false;
 
     if ( $location != undefined ) {
@@ -45,26 +45,18 @@ export default class StreamingController {
     }).init();
 
     this.openGeolocationModal();
+
+    $timeout(this.resizeIframe);
   }
 
-  $onInit() {
-    window.iFrameResizer = require('iframe-resizer/js/iframeResizer.min.js');
-
-    this.iFrames = window.iFrameResizer({
-      // heightCalculationMethod: 'taggedElement',
-      minHeight: 500,
+  resizeIframe() {
+    iFrameResizer({
+      heightCalculationMethod: 'taggedElement',
+      minHeight: 300,
       checkOrigin: false,
-      interval: -16,
-      initCallback: function(iframe) {
-        console.log(iframe);
-      }
-    }, '.donation-widget');
-
-    console.log($(this.iframeSelector));
+      interval: -16
+    }, ".donation-widget");
   }
-
-
-
 
   sortDigitalProgram(data) {
     data.forEach((feature, i, data) => {
