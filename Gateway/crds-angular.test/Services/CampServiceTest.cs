@@ -422,6 +422,7 @@ namespace crds_angular.test.Services
 
             var result = _fixture.GetMyCampInfo(token);
             Assert.AreEqual(result.Count, 1);
+            _eventRepository.VerifyAll();
             _contactService.VerifyAll();
         }
 
