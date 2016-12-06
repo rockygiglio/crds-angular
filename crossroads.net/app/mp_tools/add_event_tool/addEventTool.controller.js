@@ -6,14 +6,12 @@ export default class AddEventToolController {
         this.log = $log;
         this.MPTools = MPTools;
         this.AuthService = AuthService;
-        this.AuthService = AuthService;
         this.EventService = EventService;
         this.CRDS_TOOLS_CONSTANTS = CRDS_TOOLS_CONSTANTS;
         this.AddEvent = AddEvent;
     }
 
     $onInit() {
-        debugger;
         this.event = this.AddEvent.eventData.event;
         this.params = this.MPTools.getParams();
         this.processing = false;
@@ -67,7 +65,6 @@ export default class AddEventToolController {
             this.allData.eventForm.maximumChildren.$valid &&
             this.allData.eventForm.minimumChildren.$valid
         ) {
-
             this.AddEvent.currentPage = 2;
         } else {
             this.rootScope.$emit('notify', this.rootScope.MESSAGES.generalError);
@@ -96,36 +93,9 @@ export default class AddEventToolController {
             event.endDateTime = moment(event.endDateTime).utc().format();
             debugger;
             if (this.AddEvent.editMode) {
-                this.EventService.eventTool.update({ eventId: this.currentEventSelected }, event, (result) => {
-                    debugger;
-                    this.rootScope.$emit('notify', this.rootScope.MESSAGES.eventUpdateSuccess);
-                    this.AddEvent.eventData = {};
-                    this.processing = false;
-                    this.window.close();
-                },
-                (err) => {
-                    debugger;
-                    this.log.error(err);
-                    this.processing = false;
-                    this.rootScope.$emit('notify', this.rootScope.MESSAGES.eventToolProblemSaving);
-                });
+                this.processEdit(event);
             } else {
-                this.EventService.create.save(event, (result) => {
-                    debugger;
-                    this.rootScope.$emit('notify', this.rootScope.MESSAGES.eventSuccess);
-                    this.AddEvent.currentPage = 1;
-                    this.AddEvent.eventData = {};
-                    this.rooms = [];
-                    this.event = {};
-                    this.processing = false;
-                    this.window.close();
-                },
-                (result) => {
-                    debugger;
-                    this.log.error(result);
-                    this.processing = false;
-                    this.rootScope.$emit('notify', this.rootScope.MESSAGES.eventToolProblemSaving);
-                });
+                this.processSave(event);
             }
 
             return;
@@ -134,5 +104,37 @@ export default class AddEventToolController {
         this.processing = false;
         this.rootScope.$emit('notify', this.rootScope.MESSAGES.generalError);
         console.log('form errors');
+    }
+
+    processEdit(event) {
+        this.EventService.eventTool.update({ eventId: this.currentEventSelected }, event, (result) => {
+                this.rootScope.$emit('notify', this.rootScope.MESSAGES.eventUpdateSuccess);
+                this.AddEvent.eventData = {};
+                this.processing = false;
+                this.window.close();
+            },
+            (err) => {
+                this.log.error(err);
+                this.processing = false;
+                this.rootScope.$emit('notify', this.rootScope.MESSAGES.eventToolProblemSaving);
+            }
+        );
+    }
+
+    processSave(event) {
+        this.EventService.create.save(event, (result) => {
+            this.rootScope.$emit('notify', this.rootScope.MESSAGES.eventSuccess);
+            this.AddEvent.currentPage = 1;
+            this.AddEvent.eventData = {};
+            this.rooms = [];
+            this.event = {};
+            this.processing = false;
+            this.window.close();
+        },
+            (result) => {
+                this.log.error(result);
+                this.processing = false;
+                this.rootScope.$emit('notify', this.rootScope.MESSAGES.eventToolProblemSaving);
+            });
     }
 }
