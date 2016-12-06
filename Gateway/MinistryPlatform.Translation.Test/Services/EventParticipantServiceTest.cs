@@ -117,6 +117,7 @@ namespace MinistryPlatform.Translation.Test.Services
                 }   
             };
 
+            _configWrapper.Setup(m => m.GetConfigIntValue("Event_Participant_Status_ID_Cancelled")).Returns(5);
             var filter = $"Event_ID_Table.[Event_ID] = {eventId} AND Participant_ID_Table_Contact_ID_Table.[Contact_ID] = {contactId} AND Participation_Status_ID_Table.[Participation_Status_ID] <> 5";
 
             _ministryPlatformRest.Setup(m => m.UsingAuthenticationToken(apiToken)).Returns(_ministryPlatformRest.Object);
@@ -134,6 +135,8 @@ namespace MinistryPlatform.Translation.Test.Services
             const int contactId = 587878745;
             const string apiToken = "letmein";
             var expected = new List<MpEventParticipant>();
+
+            _configWrapper.Setup(m => m.GetConfigIntValue("Event_Participant_Status_ID_Cancelled")).Returns(5);
 
             var filter = $"Event_ID_Table.[Event_ID] = {eventId} AND Participant_ID_Table_Contact_ID_Table.[Contact_ID] = {contactId} AND Participation_Status_ID_Table.[Participation_Status_ID] <> 5";
 

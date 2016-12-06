@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using crds_angular.Models.Crossroads.Attribute;
@@ -366,6 +367,63 @@ namespace crds_angular.test.Services
             Assert.AreEqual(result.Count, 0);
             _contactService.VerifyAll();
         }
+        [Test]
+        public void ShouldGetMyCampInfo()
+        {
+            var token = "asdfasdfasdfasdf";
+            var apiToken = "apiToken";
+            var myContactId = 2187211;
+            var myContact = getFakeContact(myContactId);
+            var campType = "Camp";
+            var camps = new List<MpEvent>
+            {
+                new MpEvent
+                {
+                    EventId = 123,
+                    EventEndDate = new DateTime(2017, 5, 20),
+                    EventStartDate = new DateTime(2017, 5, 15),
+                    EventTitle = "Summer Camp",
+                    PrimaryContact = new MpContact
+                    {
+                        ContactId =  90876,
+                        EmailAddress = "studentministry@crossroads.com"
+                    }
+                }
+            };
+
+            IEnumerable<MinistryPlatform.Translation.Models.MpParticipant> campers = new List<MinistryPlatform.Translation.Models.MpParticipant>
+            {
+                new MinistryPlatform.Translation.Models.MpParticipant
+                {
+                    ContactId = 123,
+                    ParticipantId = 77777,
+                    EmailAddress = "x@x",
+                    DisplayName = "Jony",
+                    Nickname = "campell",
+                    GroupName = ""
+                }
+            };
+                  
+
+
+            // Get a family list with only me in it i.e. no family
+            var family = getFakeHouseholdMembers(myContact).ToList();
+
+            _apiUserRepository.Setup(m => m.GetToken()).Returns(apiToken);
+            _configurationWrapper.Setup(m => m.GetConfigValue("CampEventTypeName")).Returns(campType);
+            _contactService.Setup(m => m.GetMyProfile(token)).Returns(myContact);
+            _contactService.Setup(m => m.GetHouseholdFamilyMembers(myContact.Household_ID)).Returns(family);
+            _contactService.Setup(m => m.GetOtherHouseholdMembers(myContactId)).Returns(new List<MpHouseholdMember>());
+           
+
+            _eventRepository.Setup(m => m.GetEvents(campType, apiToken)).Returns(camps);
+            _eventRepository.Setup(m => m.EventParticipants(apiToken, camps.First().EventId)).Returns(campers);
+            _eventRepository.Setup(m => m.GetEvent(camps.First().EventId)).Returns(camps.First());
+
+            var result = _fixture.GetMyCampInfo(token);
+            Assert.AreEqual(result.Count, 1);
+            _contactService.VerifyAll();
+        }
 
         //[Test]
         //public void ShouldSaveMedicalInfo()
@@ -415,7 +473,7 @@ namespace crds_angular.test.Services
         //    _contactService.Setup(m => m.GetOtherHouseholdMembers(myContact.Contact_ID)).Returns(otherHousehold);
 
         //    _medicalInformationRepository.Setup(m => m.SaveMedicalInformation(mpMedInfo, 123));
-           
+
         //    Assert.DoesNotThrow(() =>_fixture.SaveCamperMedicalInfo(medicalInfo, contactId, token));
         //}
 
