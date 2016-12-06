@@ -1156,7 +1156,7 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Item_Number", null},
                     {"Is_Recurring_Gift", false },
                     {"Company_Name", "Company Name" },
-                    {"Show_Online", 1 }
+                    {"Show_Online", true }
                 },
                 new Dictionary<string, object>
                 {
@@ -1174,7 +1174,7 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Item_Number", null},
                     {"Is_Recurring_Gift", false },
                     {"Company_Name", "Company Name" },
-                    {"Show_Online", 1 }
+                    {"Show_Online", true }
                 },
                 new Dictionary<string, object>
                 {
@@ -1192,7 +1192,7 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Item_Number", null},
                     {"Is_Recurring_Gift", false },
                     {"Company_Name", "Company Name" },
-                    {"Show_Online", 1 }
+                    {"Show_Online", true }
                 }
             };
 
@@ -1267,7 +1267,7 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Item_Number", null},
                     {"Is_Recurring_Gift", false },
                     {"Company_Name", "Company Name" },
-                    {"Show_Online", 1 }
+                    {"Show_Online", true }
                 },
                 new Dictionary<string, object>
                 {
@@ -1285,7 +1285,7 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Item_Number", ""},
                     {"Is_Recurring_Gift", false },
                     {"Company_Name", "Company Name" },
-                    {"Show_Online", 1 }
+                    {"Show_Online", true }
                 },
                 new Dictionary<string, object>
                 {
@@ -1302,7 +1302,7 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Donor_Display_Name", "Test Name"},
                     {"Is_Recurring_Gift", false },
                     {"Company_Name", "Company Name" },
-                    {"Show_Online", 1 }
+                    {"Show_Online", true }
                 },
                 new Dictionary<string, object>
                 {
@@ -1320,7 +1320,7 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Item_Number", "1234"},
                     {"Is_Recurring_Gift", false },
                     {"Company_Name", "Company Name" },
-                    {"Show_Online", 1 }
+                    {"Show_Online", true }
                 },
             };
 
@@ -1398,7 +1398,7 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Item_Number", null},
                     {"Is_Recurring_Gift", false },
                     {"Company_Name", "Company Name3" },
-                    {"Show_Online", 0 }
+                    {"Show_Online", false }
                 },
                 new Dictionary<string, object>
                 {
@@ -1416,7 +1416,7 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Item_Number", ""},
                     {"Is_Recurring_Gift", false },
                     {"Company_Name", "Company Name2" },
-                    {"Show_Online", 1 }
+                    {"Show_Online", true }
                 },
                 new Dictionary<string, object>
                 {
@@ -1433,7 +1433,7 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Donor_Display_Name", "Test Name"},
                     {"Is_Recurring_Gift", false },
                     {"Company_Name", "Company Name3" },
-                    {"Show_Online", 0 }
+                    {"Show_Online", false }
                 },
                 new Dictionary<string, object>
                 {
@@ -1451,7 +1451,7 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Item_Number", "1234"},
                     {"Is_Recurring_Gift", false },
                     {"Company_Name", "Company Name4" },
-                    {"Show_Online", 1 }
+                    {"Show_Online", true }
                 },
             };
 
@@ -1502,7 +1502,7 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Item_Number", null},
                     {"Is_Recurring_Gift", true },
                     {"Company_Name", "Company Name" },
-                    {"Show_Online", 1 }
+                    {"Show_Online", true }
                 },
                 new Dictionary<string, object>
                 {
@@ -1520,7 +1520,7 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Item_Number", ""},
                     {"Is_Recurring_Gift", true },
                     {"Company_Name", "Company Name" },
-                    {"Show_Online", 1 }
+                    {"Show_Online", true }
                 },
                 new Dictionary<string, object>
                 {
@@ -1537,7 +1537,7 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Donor_Display_Name", "Test Name"},
                     {"Is_Recurring_Gift", false },
                     {"Company_Name", "Company Name" },
-                    {"Show_Online", 1 }
+                    {"Show_Online", true }
                 },
                 new Dictionary<string, object>
                 {
@@ -1555,7 +1555,7 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Item_Number", "1234"},
                     {"Is_Recurring_Gift", false },
                     {"Company_Name", "Company Name" },
-                    {"Show_Online", 1 }
+                    {"Show_Online", true }
                 },
             };
 
@@ -1612,7 +1612,7 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Item_Number", null},
                     {"Is_Recurring_Gift", false },
                     {"Company_Name", "Company Name" },
-                    {"Show_Online", 1 }
+                    {"Show_Online", true }
                 },
                 new Dictionary<string, object>
                 {
@@ -1630,7 +1630,7 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Item_Number", null},
                     {"Is_Recurring_Gift", false },
                     {"Company_Name", "Company Name" },
-                    {"Show_Online", 1 }
+                    {"Show_Online", true }
                 },
                 new Dictionary<string, object>
                 {
@@ -1648,7 +1648,7 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Item_Number", null},
                     {"Is_Recurring_Gift", false },
                     {"Company_Name", "Company Name" },
-                    {"Show_Online", 1 }
+                    {"Show_Online", true }
                 }
             };
 
@@ -1716,7 +1716,7 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Item_Number", null},
                     {"Is_Recurring_Gift", false },
                     {"Company_Name", "Company Name" },
-                    {"Show_Online", 1 }
+                    {"Show_Online", true }
                 },
                 new Dictionary<string, object>
                 {
@@ -1734,7 +1734,7 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Item_Number", null},
                     {"Is_Recurring_Gift", false },
                     {"Company_Name", "Company Name" },
-                    {"Show_Online", 1 }
+                    {"Show_Online", true }
                 },
                 new Dictionary<string, object>
                 {
@@ -1751,7 +1751,7 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Donor_Display_Name", "Test Name"},
                     {"Is_Recurring_Gift", false },
                     {"Company_Name", "Company Name" },
-                    {"Show_Online", 1 }
+                    {"Show_Online", true }
                 }
             };
 

@@ -8,12 +8,13 @@
   <tbody>
     <tr ng-repeat-start="donation in donations track by $index"></tr>
     <tr ng-repeat-start="distribution in donation.distributions track by $index"></tr>
-    <tr ng-repeat-end ng-class="{'hidden-print' : donation.status == 'Pending'}">
+    <tr ng-repeat-end ng-class="{'hidden-print' : donation.status == 'Pending' || !donation.accounting_company_include_on_printed_statement}">
       <td>
         {{distribution.program_name}}
         <span ng-if="donation.status == 'Pending'" class="label label-default" tooltip-placement="right" tooltip="This payment is still in the process of being cleared by our accounting team.">Pending</span>
         <span ng-if="donation.status == 'Declined'" class="label label-danger" tooltip-placement="right" tooltip="This payment has been declined.">Declined</span>
         <span ng-if="donation.status == 'Refunded'" class="label label-info" tooltip-placement="right" tooltip="This is a refund that has been issued to you.">Refund</span>
+        <span ng-if="!donation.accounting_company_include_on_printed_statement" class="label label-secondary" tooltip-placement="right" tooltip="This is a gift made to {{donation.accounting_company_name}}, not to be included in tax statements from Crossroads.">{{donation.accounting_company_name}}</span>
         <div class="text-muted">
             <small>
               <span ng-show="donation.source.icon">

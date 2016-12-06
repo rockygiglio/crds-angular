@@ -807,7 +807,7 @@ namespace MinistryPlatform.Translation.Repositories
                 itemNumber = record["Item_Number"] as string,
                 recurringGift = record["Is_Recurring_Gift"] as bool? ?? false,
                 AccountingCompanyName = record["Company_Name"] as string,
-                AccountingCompanyIncludeOnPrintedStatement = (record["Show_Online"] as int? ?? 0) > 0
+                AccountingCompanyIncludeOnPrintedStatement = record["Show_Online"] as bool? ?? false
             };
 
             var status = statuses.Find(x => x.Id == donation.donationStatus) ?? new MpDonationStatus();
