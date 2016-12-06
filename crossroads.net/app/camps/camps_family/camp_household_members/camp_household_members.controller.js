@@ -5,15 +5,6 @@ export default class CampHouseholdMembersController {
     this.state = $state;
   }
 
-  // eslint-disable-next-line class-methods-use-this
-  isSignedUp(member) {
-    return member.signedUpDate !== null;
-  }
-
-  isPending(member) {
-    return member.isPending;
-  }
-
   signUp(member) {
     // Since we might be selected a new camper, ensure that the CampService does not have cached data
     // from the prior camper
@@ -22,14 +13,14 @@ export default class CampHouseholdMembersController {
   }
 
   divClass(member) {
-    if (!this.isSignedUp(member) && member.isEligible) {
+    if (!member.isSignedUp && member.isEligible) {
       return 'col-sm-9 col-md-10';
     }
     return '';
   }
 
   pClass(member) {
-    if (!this.isSignedUp(member)) {
+    if (!member.isSignedUp) {
       return 'flush-bottom';
     }
 

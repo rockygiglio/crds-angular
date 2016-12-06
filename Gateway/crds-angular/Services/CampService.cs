@@ -141,11 +141,15 @@ namespace crds_angular.Services
         {
             DateTime? signedUpDate = null;
             bool isPending = false;
+            bool isExpired = false;
+            bool isSignedUp = false;
             var participant = _eventParticipantRepository.GetEventParticipantEligibility(eventId, member.ContactId);
             if (participant != null)
             {
                 signedUpDate = participant.SetupDate;
-                isPending = participant.ParticipantStatus == 1 && participant.EndDate != null && DateTime.Now < participant.EndDate;
+                isPending = participant.ParticipantStatus == 1 && participant.EndDate != null && DateTime.Now <= participant.EndDate;
+                isExpired = participant.ParticipantStatus == 1 && participant.EndDate != null && DateTime.Now > participant.EndDate;
+                isSignedUp = signedUpDate != null && participant.EndDate == null;
             }
 
             return new CampFamilyMember
@@ -154,6 +158,8 @@ namespace crds_angular.Services
                 IsEligible = _groupRepository.IsMemberOfEventGroup(member.ContactId, eventId, apiToken),
                 SignedUpDate = signedUpDate,
                 IsPending = isPending,
+                IsExpired = isExpired,
+                IsSignedUp = isSignedUp,
                 LastName = member.LastName,
                 PreferredName = member.Nickname ?? member.FirstName
             };
@@ -288,20 +294,25 @@ namespace crds_angular.Services
             var configuration = MpObjectAttributeConfigurationFactory.Contact();
             _objectAttributeService.SaveObjectAttributes(contactId, campReservation.AttributeTypes, campReservation.SingleAttributes, configuration);
 
-            int eventParticipantId = _eventRepository.GetEventParticipantRecordId(eventId, participant.ParticipantId);
-            if (eventParticipantId == 0)
+            int eventParticipantId;
+            var eventParticipant = _eventParticipantRepository.GetEventParticipantEligibility(eventId, contactId);
+
+            // This is a new event participant, determine their pending timeout and create their entry in the database
+            if (eventParticipant == null)
             {
-                // Need to look up the event in order to set the event participant's end date based on the event timeout
-                var camp = _eventRepository.GetEvent(eventId);
-                int timeout = camp.MinutesUntilTimeout ?? _configurationWrapper.GetConfigIntValue("Event_Participant_Default_Minutes_Until_Timeout");
-
-                DateTime endDate = DateTime.Now.AddMinutes(timeout);
-
+                var endDate = DetermineEndDate(eventId);
                 eventParticipantId = _eventRepository.RegisterInterestedParticipantWithEndDate(participant.ParticipantId, eventId, endDate);
             }
             else
             {
-                _logger.Error("The person is already an event participant");
+                eventParticipantId = eventParticipant.EventParticipantId;
+
+                // If the participant had previously started an application which expired, update its End Date now
+                if (eventParticipant.EndDate != null && eventParticipant.EndDate < DateTime.Now)
+                {
+                    var endDate = DetermineEndDate(eventId);
+                    _eventRepository.UpdateParticipantEndDate(eventParticipantId, endDate);
+                }
             }
 
 
@@ -337,6 +348,15 @@ namespace crds_angular.Services
             };
 
             _formSubmissionRepository.SubmitFormResponse(formResponse);
+        }
+
+        private DateTime DetermineEndDate(int eventId)
+        {
+            // Need to look up the event in order to set the event participant's end date based on the event timeout
+            var camp = _eventRepository.GetEvent(eventId);
+            int timeout = camp.MinutesUntilTimeout ?? _configurationWrapper.GetConfigIntValue("Event_Participant_Default_Minutes_Until_Timeout");
+
+           return DateTime.Now.AddMinutes(timeout);
         }
 
         public void SetCamperAsRegistered(int eventId, int contactId)

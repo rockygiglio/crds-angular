@@ -223,6 +223,29 @@ namespace MinistryPlatform.Translation.Repositories
             }       
         }
 
+        public void UpdateParticipantEndDate(int eventParticipantId, DateTime? endDate)
+        {
+            try
+            {
+                Console.WriteLine("UpdateParticipantEndDate");
+                var apiToken = ApiLogin();
+
+                var fields = new Dictionary<string, object>
+                {
+                    {"Event_Participant_ID", eventParticipantId},
+                    {"End_Date", endDate}
+                };
+
+                _ministryPlatformRestRepository.UsingAuthenticationToken(apiToken).UpdateRecord("Event_Participants", eventParticipantId, fields);
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException(
+                    $"UpdateParticipantEndDate failed.  Event Participant Id: {eventParticipantId}",
+                    ex.InnerException);
+            }
+        }
+
         public MpEvent GetEvent(int eventId)
         {
             var apiToken = ApiLogin();
