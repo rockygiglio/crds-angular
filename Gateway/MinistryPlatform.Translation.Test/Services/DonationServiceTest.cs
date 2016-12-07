@@ -442,7 +442,7 @@ namespace MinistryPlatform.Translation.Test.Services
             _ministryPlatformRest.Setup(m => m.Search<int>("GL_Account_Mapping", $"GL_Account_Mapping.Program_ID={It.IsAny<int>()} AND GL_Account_Mapping.Congregation_ID={It.IsAny<int>()}", "Processor_Fee_Mapping_ID_Table.Program_ID"))
                 .Returns(0);
             _ministryPlatformRest.Setup(mock => mock.Search<MPGLAccountMapping>(It.IsAny<string>(), null as string, null, false)).Returns(MockGLAccountMapping());
-            _config.Setup(mocked => mocked.GetConfigIntValue("ProcessingProgramId")).Returns(127);
+            _config.Setup(mocked => mocked.GetConfigIntValue("ProcessingMappingId")).Returns(127);
             
             var result = _fixture.GetGpExport(depositId, token);
             _ministryPlatformService.VerifyAll();
@@ -468,7 +468,7 @@ namespace MinistryPlatform.Translation.Test.Services
             Assert.AreEqual(mockGPExportData[0].Amount, result[0].Amount);
             Assert.AreEqual(mockGPExportData[0].ProcessorFeeAmount, result[0].ProcessorFeeAmount);
             Assert.AreEqual(mockGPExportData[0].ProgramId, result[0].ProgramId);
-            Assert.AreEqual(mockGPExportData[0].ProccessFeeProgramId, result[0].ProccessFeeProgramId);
+            Assert.AreEqual(mockGPExportData[0].ProccessorFeeMappingId, result[0].ProccessorFeeMappingId);
             Assert.AreEqual(mockGPExportData[0].PaymentTypeId, result[0].PaymentTypeId);
             Assert.AreEqual(mockGPExportData[0].ScholarshipExpenseAccount, result[0].ScholarshipExpenseAccount);
             Assert.AreEqual(mockGPExportData[0].ScholarshipPaymentTypeId, result[0].ScholarshipPaymentTypeId);
@@ -569,7 +569,7 @@ namespace MinistryPlatform.Translation.Test.Services
             _ministryPlatformRest.Setup(m => m.UsingAuthenticationToken(It.IsAny<string>())).Returns(_ministryPlatformRest.Object);
             _ministryPlatformRest.Setup(m => m.Search<int>("GL_Account_Mapping", $"GL_Account_Mapping.Program_ID={programId} AND GL_Account_Mapping.Congregation_ID={congregationId}", "Processor_Fee_Mapping_ID_Table.Program_ID"))
                 .Returns(0);
-            _config.Setup(mocked => mocked.GetConfigIntValue("ProcessingProgramId")).Returns(127);          
+            _config.Setup(mocked => mocked.GetConfigIntValue("ProcessingMappingId")).Returns(127);          
 
             var result = _fixture.GetGpExportData(depositId, It.IsAny<string>());
             _ministryPlatformService.VerifyAll();
@@ -590,7 +590,7 @@ namespace MinistryPlatform.Translation.Test.Services
             Assert.AreEqual(mockGPExportData[0].Amount, result[0].Amount);
             Assert.AreEqual(mockGPExportData[0].ProcessorFeeAmount, result[0].ProcessorFeeAmount);
             Assert.AreEqual(mockGPExportData[0].ProgramId, result[0].ProgramId);
-            Assert.AreEqual(mockGPExportData[0].ProccessFeeProgramId, result[0].ProccessFeeProgramId);
+            Assert.AreEqual(mockGPExportData[0].ProccessorFeeMappingId, result[0].ProccessorFeeMappingId);
             Assert.AreEqual(mockGPExportData[0].PaymentTypeId, result[0].PaymentTypeId);
             Assert.AreEqual(mockGPExportData[0].ScholarshipExpenseAccount, result[0].ScholarshipExpenseAccount);
             Assert.AreEqual(mockGPExportData[0].ScholarshipPaymentTypeId, result[0].ScholarshipPaymentTypeId);
@@ -608,7 +608,7 @@ namespace MinistryPlatform.Translation.Test.Services
             Assert.AreEqual(mockGPExportData[1].DistributionAccount, result[1].DistributionAccount);
             Assert.AreEqual(mockGPExportData[1].Amount, result[1].Amount);
             Assert.AreEqual(mockGPExportData[1].ProgramId, result[1].ProgramId);
-            Assert.AreEqual(mockGPExportData[1].ProccessFeeProgramId, result[1].ProccessFeeProgramId);
+            Assert.AreEqual(mockGPExportData[1].ProccessorFeeMappingId, result[1].ProccessorFeeMappingId);
             Assert.AreEqual(mockGPExportData[1].PaymentTypeId, result[1].PaymentTypeId);
 
             Assert.AreEqual(mockGPExportData[3].DocumentType, result[3].DocumentType);
@@ -621,14 +621,14 @@ namespace MinistryPlatform.Translation.Test.Services
             const string token = "letmein";
             const int programId = 1234;
             const int congregationId = 9;
-            const int processingProgramId = 56787;
+            const int processingMappingId = 56787;
 
             _ministryPlatformRest.Setup(m => m.UsingAuthenticationToken(token)).Returns(_ministryPlatformRest.Object);
-            _ministryPlatformRest.Setup(m => m.Search<int>("GL_Account_Mapping", $"GL_Account_Mapping.Program_ID={programId} AND GL_Account_Mapping.Congregation_ID={congregationId}", "Processor_Fee_Mapping_ID_Table.Program_ID"))
-                .Returns(processingProgramId);
+            _ministryPlatformRest.Setup(m => m.Search<int>("GL_Account_Mapping", $"GL_Account_Mapping.Program_ID={programId} AND GL_Account_Mapping.Congregation_ID={congregationId}", "Processor_Fee_Mapping_ID"))
+                .Returns(processingMappingId);
 
-            var result = _fixture.GetProcessingFeeProgramID(programId, congregationId, token);
-            Assert.AreEqual(processingProgramId, result);
+            var result = _fixture.GetProcessingFeeMappingID(programId, congregationId, token);
+            Assert.AreEqual(processingMappingId, result);
 
             _ministryPlatformRest.VerifyAll();
         }
@@ -639,15 +639,15 @@ namespace MinistryPlatform.Translation.Test.Services
             const string token = "letmein";
             const int programId = 1234;
             const int congregationId = 9;
-            const int defaultProcessingFeeProgramId = 127;
+            const int defaultProcessingFeeMappingId = 127;
 
             _ministryPlatformRest.Setup(m => m.UsingAuthenticationToken(token)).Returns(_ministryPlatformRest.Object);
-            _ministryPlatformRest.Setup(m => m.Search<int>("GL_Account_Mapping", $"GL_Account_Mapping.Program_ID={programId} AND GL_Account_Mapping.Congregation_ID={congregationId}", "Processor_Fee_Mapping_ID_Table.Program_ID"))
+            _ministryPlatformRest.Setup(m => m.Search<int>("GL_Account_Mapping", $"GL_Account_Mapping.Program_ID={programId} AND GL_Account_Mapping.Congregation_ID={congregationId}", "Processor_Fee_Mapping_ID"))
                 .Throws<Exception>();
-            _config.Setup(mocked => mocked.GetConfigIntValue("ProcessingProgramId")).Returns(defaultProcessingFeeProgramId);
+            _config.Setup(mocked => mocked.GetConfigIntValue("ProcessingMappingId")).Returns(defaultProcessingFeeMappingId);
 
-            var result = _fixture.GetProcessingFeeProgramID(programId, congregationId, token);
-            Assert.AreEqual(defaultProcessingFeeProgramId, result);
+            var result = _fixture.GetProcessingFeeMappingID(programId, congregationId, token);
+            Assert.AreEqual(defaultProcessingFeeMappingId, result);
             _ministryPlatformRest.VerifyAll();
         }
 
@@ -661,11 +661,11 @@ namespace MinistryPlatform.Translation.Test.Services
             const int defaultProcessingFeeProgramId = 127;
 
             _ministryPlatformRest.Setup(m => m.UsingAuthenticationToken(token)).Returns(_ministryPlatformRest.Object);
-            _ministryPlatformRest.Setup(m => m.Search<int>("GL_Account_Mapping", $"GL_Account_Mapping.Program_ID={programId} AND GL_Account_Mapping.Congregation_ID={congregationId}", "Processor_Fee_Mapping_ID_Table.Program_ID"))
+            _ministryPlatformRest.Setup(m => m.Search<int>("GL_Account_Mapping", $"GL_Account_Mapping.Program_ID={programId} AND GL_Account_Mapping.Congregation_ID={congregationId}", "Processor_Fee_Mapping_ID"))
                 .Returns(processingProgramId);
-            _config.Setup(mocked => mocked.GetConfigIntValue("ProcessingProgramId")).Returns(defaultProcessingFeeProgramId);
+            _config.Setup(mocked => mocked.GetConfigIntValue("ProcessingMappingId")).Returns(defaultProcessingFeeProgramId);
 
-            var result = _fixture.GetProcessingFeeProgramID(programId, congregationId, token);
+            var result = _fixture.GetProcessingFeeMappingID(programId, congregationId, token);
             Assert.AreEqual(defaultProcessingFeeProgramId, result);
             _ministryPlatformRest.VerifyAll();
 
@@ -901,7 +901,7 @@ namespace MinistryPlatform.Translation.Test.Services
                     Amount = Convert.ToDecimal("185.00"),
                     ProcessorFeeAmount = Convert.ToDecimal(".25"),
                     ProgramId = programId,
-                    ProccessFeeProgramId = 127,
+                    ProccessorFeeMappingId = 127,
                     PaymentTypeId = 8,
                     ScholarshipExpenseAccount = "19948-900-11",
                     ScholarshipPaymentTypeId = 9
@@ -924,7 +924,7 @@ namespace MinistryPlatform.Translation.Test.Services
                     Amount = Convert.ToDecimal("15"),
                     ProgramId = programId,
                     ProcessorFeeAmount = Convert.ToDecimal("0.25"),
-                    ProccessFeeProgramId = 127,
+                    ProccessorFeeMappingId = 127,
                     PaymentTypeId = 7,
                     ScholarshipExpenseAccount = "19948-900-11",
                     ScholarshipPaymentTypeId = 9,
@@ -947,7 +947,7 @@ namespace MinistryPlatform.Translation.Test.Services
                     Amount = Convert.ToDecimal("300.00"),
                     ProcessorFeeAmount = Convert.ToDecimal(".25"),
                     ProgramId = programId,
-                    ProccessFeeProgramId = 127,
+                    ProccessorFeeMappingId = 127,
                     PaymentTypeId = 2,
                     ScholarshipExpenseAccount = "49998-900-11",
                     ScholarshipPaymentTypeId = 9
@@ -970,7 +970,7 @@ namespace MinistryPlatform.Translation.Test.Services
                     Amount = Convert.ToDecimal("300.00") * -1,
                     ProcessorFeeAmount = Convert.ToDecimal(".25"),
                     ProgramId = programId,
-                    ProccessFeeProgramId = 127,
+                    ProccessorFeeMappingId = 127,
                     PaymentTypeId = 2,
                     ScholarshipExpenseAccount = "49998-900-11",
                     ScholarshipPaymentTypeId = 9
@@ -1003,7 +1003,7 @@ namespace MinistryPlatform.Translation.Test.Services
                     Amount = Convert.ToDecimal("185.00") + Convert.ToDecimal("300.00") - Convert.ToDecimal(".25") - Convert.ToDecimal(".25"),
                     ProcessorFeeAmount = Convert.ToDecimal(".50"),
                     ProgramId = 15,
-                    ProccessFeeProgramId = 127,
+                    ProccessorFeeMappingId = 127,
                     PaymentTypeId = 8,
                     ScholarshipExpenseAccount = "19948-900-11",
                     ScholarshipPaymentTypeId = 9,
@@ -1028,7 +1028,7 @@ namespace MinistryPlatform.Translation.Test.Services
                     Amount = Convert.ToDecimal(".25") + Convert.ToDecimal(".25"),
                     ProcessorFeeAmount = Convert.ToDecimal(".25"),
                     ProgramId = 15,
-                    ProccessFeeProgramId = 127,
+                    ProccessorFeeMappingId = 127,
                     PaymentTypeId = 8,
                     ScholarshipExpenseAccount = "19998-900-11",
                     ScholarshipPaymentTypeId = 9,
@@ -1053,7 +1053,7 @@ namespace MinistryPlatform.Translation.Test.Services
                     Amount = Convert.ToDecimal("15"),
                     ProgramId = 127,
                     ProcessorFeeAmount = Convert.ToDecimal("0.25"),
-                    ProccessFeeProgramId = 127,
+                    ProccessorFeeMappingId = 127,
                     PaymentTypeId = 7,
                     ScholarshipExpenseAccount = "19948-900-11",
                     ScholarshipPaymentTypeId = 9,
@@ -1078,7 +1078,7 @@ namespace MinistryPlatform.Translation.Test.Services
                     Amount = Convert.ToDecimal(".12"),
                     ProcessorFeeAmount = Convert.ToDecimal(".25"),
                     ProgramId = 15,
-                    ProccessFeeProgramId = 127,
+                    ProccessorFeeMappingId = 127,
                     PaymentTypeId = 8,
                     ScholarshipExpenseAccount = "19998-900-11",
                     ScholarshipPaymentTypeId = 9,
@@ -1103,7 +1103,7 @@ namespace MinistryPlatform.Translation.Test.Services
                     Amount = Convert.ToDecimal("300.00"),
                     ProcessorFeeAmount = Convert.ToDecimal(".25"),
                     ProgramId = 150,
-                    ProccessFeeProgramId = 127,
+                    ProccessorFeeMappingId = 127,
                     PaymentTypeId = 2,
                     ScholarshipExpenseAccount = "49998-900-11",
                     ScholarshipPaymentTypeId = 9,
@@ -1128,7 +1128,7 @@ namespace MinistryPlatform.Translation.Test.Services
                     Amount = Convert.ToDecimal(".25"),
                     ProcessorFeeAmount = Convert.ToDecimal(".25"),
                     ProgramId = 15,
-                    ProccessFeeProgramId = 127,
+                    ProccessorFeeMappingId = 127,
                     PaymentTypeId = 8,
                     ScholarshipExpenseAccount = "19998-900-11",
                     ScholarshipPaymentTypeId = 9,
@@ -1153,7 +1153,7 @@ namespace MinistryPlatform.Translation.Test.Services
                     Amount = Convert.ToDecimal("185.00") + Convert.ToDecimal("300.00") - Convert.ToDecimal(".25") - Convert.ToDecimal(".25"),
                     ProcessorFeeAmount = Convert.ToDecimal(".50"),
                     ProgramId = 155,
-                    ProccessFeeProgramId = 127,
+                    ProccessorFeeMappingId = 127,
                     PaymentTypeId = 8,
                     ScholarshipExpenseAccount = "19948-900-11",
                     ScholarshipPaymentTypeId = 9,
@@ -1178,7 +1178,7 @@ namespace MinistryPlatform.Translation.Test.Services
                     Amount = Convert.ToDecimal(".25") + Convert.ToDecimal(".25"),
                     ProcessorFeeAmount = Convert.ToDecimal(".25"),
                     ProgramId = 155,
-                    ProccessFeeProgramId = 127,
+                    ProccessorFeeMappingId = 127,
                     PaymentTypeId = 8,
                     ScholarshipExpenseAccount = "19998-900-11",
                     ScholarshipPaymentTypeId = 9,
@@ -1203,7 +1203,7 @@ namespace MinistryPlatform.Translation.Test.Services
                     Amount = Convert.ToDecimal("15"),
                     ProgramId = 127,
                     ProcessorFeeAmount = Convert.ToDecimal("0.25"),
-                    ProccessFeeProgramId = 127,
+                    ProccessorFeeMappingId = 127,
                     PaymentTypeId = 7,
                     ScholarshipExpenseAccount = "19948-900-11",
                     ScholarshipPaymentTypeId = 9,
@@ -1228,7 +1228,7 @@ namespace MinistryPlatform.Translation.Test.Services
                     Amount = Convert.ToDecimal(".12"),
                     ProcessorFeeAmount = Convert.ToDecimal(".25"),
                     ProgramId = 155,
-                    ProccessFeeProgramId = 127,
+                    ProccessorFeeMappingId = 127,
                     PaymentTypeId = 8,
                     ScholarshipExpenseAccount = "19998-900-11",
                     ScholarshipPaymentTypeId = 9,
@@ -1253,7 +1253,7 @@ namespace MinistryPlatform.Translation.Test.Services
                     Amount = Convert.ToDecimal("300.00"),
                     ProcessorFeeAmount = Convert.ToDecimal(".25"),
                     ProgramId = 150,
-                    ProccessFeeProgramId = 127,
+                    ProccessorFeeMappingId = 127,
                     PaymentTypeId = 2,
                     ScholarshipExpenseAccount = "49998-900-11",
                     ScholarshipPaymentTypeId = 9,
@@ -1278,7 +1278,7 @@ namespace MinistryPlatform.Translation.Test.Services
                     Amount = Convert.ToDecimal(".25"),
                     ProcessorFeeAmount = Convert.ToDecimal(".25"),
                     ProgramId = 155,
-                    ProccessFeeProgramId = 127,
+                    ProccessorFeeMappingId = 127,
                     PaymentTypeId = 8,
                     ScholarshipExpenseAccount = "19998-900-11",
                     ScholarshipPaymentTypeId = 9,

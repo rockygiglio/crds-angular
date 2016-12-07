@@ -481,7 +481,7 @@ namespace MinistryPlatform.Translation.Repositories
             var indx = 1;
             foreach (var gpExportDistLevel in gpExportDonationSum)
             {
-                var processingFeeGLMapping = GetProcessingFeeGLMapping(gpExportDistLevel.ProccessFeeProgramId, gpExportDistLevel.CongregationId, token);
+                var processingFeeGLMapping = GetProcessingFeeGLMapping(gpExportDistLevel.ProccessorFeeMappingId, gpExportDistLevel.CongregationId, token);
                 GenerateGLLevelGpExport(gpExportGLLevel, gpExportDistLevel, processingFeeGLMapping, indx);
                 indx++;
             }
