@@ -37,6 +37,6 @@ namespace MinistryPlatform.Translation.Models
         public string ScholarshipExpenseAccount { get; set; }
 
         [JsonProperty(PropertyName = "Processor_Fee_Mapping_ID")]
-        public int ProcessorFeeMappingId { get; set; }
+        public int? ProcessorFeeMappingId { get; set; }
     }
 }

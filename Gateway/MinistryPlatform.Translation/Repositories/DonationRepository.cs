@@ -432,7 +432,7 @@ namespace MinistryPlatform.Translation.Repositories
             var gpExportDonationGroup = gpExportDonationLevel.GroupBy(r => new
             {
                 r.DepositId,
-                r.ProccessFeeProgramId,
+                r.ProccessorFeeMappingId,
                 r.ProgramId,
                 r.DocumentType,
                 r.BatchName,
@@ -447,20 +447,22 @@ namespace MinistryPlatform.Translation.Repositories
                 r.ScholarshipExpenseAccount, 
                 r.ScholarshipPaymentTypeId, 
                 r.PaymentTypeId,
-                r.TransactionType
+                r.TransactionType,
+                r.CongregationId
             });
 
             var gpExportDonationSum = gpExportDonationGroup
                 .Select(x => new MpGPExportDatum()
                 {
                     DepositId = x.Key.DepositId,
-                    ProccessFeeProgramId = x.Key.ProccessFeeProgramId,
+                    ProccessorFeeMappingId = x.Key.ProccessorFeeMappingId,
                     ProgramId = x.Key.ProgramId,
                     DocumentType = x.Key.DocumentType,
                     BatchName = x.Key.BatchName,
                     DonationDate = x.Key.DonationDate,
                     DepositDate = x.Key.DepositDate,
-                    CustomerId = x.Key.CustomerId,
+                    CustomerId = x.Key.CustomerId,     
+                    CongregationId = x.Key.CongregationId,
                     DepositAmount = x.Key.DepositAmount,
                     DonationAmount = x.Sum(g => g.DonationAmount),
                     CheckbookId = x.Key.CheckbookId,
@@ -472,14 +474,14 @@ namespace MinistryPlatform.Translation.Repositories
                     ScholarshipPaymentTypeId = x.Key.ScholarshipPaymentTypeId,
                     PaymentTypeId = x.Key.PaymentTypeId,
                     ProcessorFeeAmount = x.Sum(g => g.ProcessorFeeAmount),
-                    TransactionType = x.Key.TransactionType
+                    TransactionType = x.Key.TransactionType,                    
                 }).ToList();
 
             //loop through each group of donations and add it to the the correct GL Mapping
             var indx = 1;
             foreach (var gpExportDistLevel in gpExportDonationSum)
             {
-                var processingFeeGLMapping = GetProcessingFeeGLMapping(gpExportDistLevel.ProgramId, gpExportDistLevel.CongregationId, token);
+                var processingFeeGLMapping = GetProcessingFeeGLMapping(gpExportDistLevel.ProccessFeeProgramId, gpExportDistLevel.CongregationId, token);
                 GenerateGLLevelGpExport(gpExportGLLevel, gpExportDistLevel, processingFeeGLMapping, indx);
                 indx++;
             }
@@ -518,6 +520,7 @@ namespace MinistryPlatform.Translation.Repositories
                 //not a refund
                 datum.Amount = datum.Amount - datum.ProcessorFeeAmount;
             }
+            datum.DistributionReference = datum.TransactionType == TransactionType.Payment ? $"Payment {datum.DonationDate}" : $"Contribution {datum.DonationDate}";
             datum.DocumentNumber = string.Format("{0}000{1}", datum.DepositId, indx);
             return datum;
         }
@@ -549,7 +552,8 @@ namespace MinistryPlatform.Translation.Repositories
                 ScholarshipPaymentTypeId = datum.ScholarshipPaymentTypeId,
                 PaymentTypeId = datum.PaymentTypeId,
                 ProcessorFeeAmount = datum.ProcessorFeeAmount,
-                TransactionType = datum.TransactionType
+                TransactionType = datum.TransactionType,
+                DistributionReference = $"Processor Fees {datum.DonationDate}"
             };
         }
 
@@ -558,11 +562,10 @@ namespace MinistryPlatform.Translation.Repositories
             var results = _ministryPlatformService.GetPageViewRecords(_paymentGPExportPageView, token, depositId.ToString());
             return (from result in results
                     let amount = Convert.ToDecimal(result.ToString("Payment_Amount"))
-                    // TODO: Find the correct program ID for the Processing Fees
 
                     select new MpGPExportDatum
                     {
-                        //ProccessFeeProgramId = _processingProgramId,
+                        ProccessorFeeMappingId = GetProcessingFeeMappingID(result.ToInt("Program_ID"), result.ToInt("Congregation_ID"), token),
                         DepositId = result.ToInt("Deposit_ID"),
                         ProgramId = result.ToInt("Program_ID"),
                         CongregationId = result.ToInt("Congregation_ID"),
@@ -596,23 +599,24 @@ namespace MinistryPlatform.Translation.Repositories
         /// <param name="congregationId"> The id of the congregation we are looking for the processing fee for.  </param>
         /// <param name="token"> The authentication token</param>
         /// <returns>The processing fee program id or the default.</returns>
-        public int GetProcessingFeeProgramID(int programId, int congregationId, string token)
+        public int GetProcessingFeeMappingID(int programId, int congregationId, string token)
         {
             try
             {
                 var pId = _ministryPlatformRest.UsingAuthenticationToken(token).Search<int>("GL_Account_Mapping",
                                                                                             $"GL_Account_Mapping.Program_ID={programId} AND GL_Account_Mapping.Congregation_ID={congregationId}",
-                                                                                            "Processor_Fee_Mapping_ID_Table.Program_ID");
+                                                                                            "Processor_Fee_Mapping_ID");
                 if (pId == 0)
                 {
-                    return _configurationWrapper.GetConfigIntValue("ProcessingProgramId");
+                    pId = _configurationWrapper.GetConfigIntValue("ProcessingMappingId");
                 }
                 return pId;
             }
             catch (Exception e)
             {
                 log.Debug($"Got an exception trying to get the Processing Fee ProgramID based on the program with ID={programId} and congregation with ID={congregationId}", e);
-                return _configurationWrapper.GetConfigIntValue("ProcessingProgramId");                
+                var pid =  _configurationWrapper.GetConfigIntValue("ProcessingMappingId");
+                return pid;
             }
         }
 
@@ -624,7 +628,7 @@ namespace MinistryPlatform.Translation.Repositories
             return (from result in results let amount = Convert.ToDecimal(result.ToString("Amount"))                
                 select new MpGPExportDatum
                 {
-                    ProccessFeeProgramId = GetProcessingFeeProgramID(result.ToInt("Program_ID"), result.ToInt("Congregation_ID"), token),
+                    ProccessorFeeMappingId = GetProcessingFeeMappingID(result.ToInt("Program_ID"), result.ToInt("Congregation_ID"), token),
                     DepositId = result.ToInt("Deposit_ID"),
                     ProgramId = result.ToInt("Program_ID"),
                     CongregationId = result.ToInt("Congregation_ID"),

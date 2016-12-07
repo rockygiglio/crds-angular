@@ -598,7 +598,8 @@ namespace crds_angular.test.Services
                     ProccessFeeProgramId = 127,
                     PaymentTypeId = 9,
                     ScholarshipExpenseAccount = "90551-031-02",
-                    ScholarshipPaymentTypeId = 9
+                    ScholarshipPaymentTypeId = 9, 
+                    DistributionReference = $"Contribution {new DateTime(2015, 3, 28, 8, 30, 0)}"
                 },
                 new MpGPExportDatum
                 {
@@ -621,6 +622,7 @@ namespace crds_angular.test.Services
                     PaymentTypeId = 9,
                     ScholarshipExpenseAccount = "90551-031-02",
                     ScholarshipPaymentTypeId = 9,
+                    DistributionReference = $"Processor Fees {new DateTime(2015, 3, 28, 8, 30, 0)}"
                 },
                 new MpGPExportDatum
                 {
@@ -644,6 +646,7 @@ namespace crds_angular.test.Services
                     PaymentTypeId = 15,
                     ScholarshipExpenseAccount = "90551-031-02",
                     ScholarshipPaymentTypeId = 9,
+                    DistributionReference = $"Contribution {new DateTime(2014, 3, 28, 8, 30, 0)}",
                 },
                 new MpGPExportDatum
                 {
@@ -666,6 +669,7 @@ namespace crds_angular.test.Services
                     PaymentTypeId = 15,
                     ScholarshipExpenseAccount = "90551-031-02",
                     ScholarshipPaymentTypeId = 9,
+                    DistributionReference = $"Processor Fees {new DateTime(2015, 3, 28, 8, 30, 0)}",
                 },
             };
         }
