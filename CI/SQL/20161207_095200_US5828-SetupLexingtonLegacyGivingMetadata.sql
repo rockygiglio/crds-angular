@@ -183,11 +183,11 @@ BEGIN TRY
     ('Georgetown Giving', '7/1/2014', '12/31/2016', 'Georgetown Giving', 1, NULL),
     ('Richmond Giving', '7/1/2014', '12/31/2016', 'Richmond Giving', 1, NULL),
     ('Other Giving', '7/1/2014', '12/31/2016', 'Other Giving', 6, NULL),
-    ('Game Change - Andover', '1/1/2016', '12/31/2016', 'Game Change - Andover', 3, 'Game Change - Andover'),
-    ('Game Change - Downtown Lex', '1/1/2016', '12/31/2016', 'Game Change - Downtown Lex', 3, 'Game Change - Downtown Lex'),
-    ('Game Change - Georgetown', '1/1/2016', '12/31/2016', 'Game Change - Georgetown', 3, 'Game Change - Georgetown'),
-    ('Game Change - Richmond', '1/1/2016', '12/31/2016', 'Game Change - Richmond', 3, 'Game Change - Richmond'),
-    ('Game Change - No Campus', '1/1/2016', '12/31/2016', 'Game Change - No Campus', 3, 'Game Change - No Campus'),
+    ('Game Change - Andover', '1/1/2016', '12/31/2016', 'Game Change - Andover', 6, 'Game Change - Andover'),
+    ('Game Change - Downtown Lex', '1/1/2016', '12/31/2016', 'Game Change - Downtown Lex', 6, 'Game Change - Downtown Lex'),
+    ('Game Change - Georgetown', '1/1/2016', '12/31/2016', 'Game Change - Georgetown', 6, 'Game Change - Georgetown'),
+    ('Game Change - Richmond', '1/1/2016', '12/31/2016', 'Game Change - Richmond', 6, 'Game Change - Richmond'),
+    ('Game Change - No Campus', '1/1/2016', '12/31/2016', 'Game Change - No Campus', 6, 'Game Change - No Campus'),
     ('10 for 10 (Student Ministries)', '7/1/2014', '12/31/2016', '10 for 10 (Student Ministries)', 6, NULL);
 
   DECLARE @Pledge_Campaigns TABLE (
