@@ -532,7 +532,7 @@ namespace MinistryPlatform.Translation.Repositories
             return new MpGPExportDatum 
             {
                 DocumentNumber = datum.DocumentNumber,
-                ProccessFeeProgramId = processingFeeGLMapping.ProgramId,
+                //ProccessFeeProgramId = processingFeeGLMapping.ProgramId,
                 ProgramId = processingFeeGLMapping.ProgramId,
                 DocumentType = datum.DocumentType,
                 DepositId = datum.DepositId,
