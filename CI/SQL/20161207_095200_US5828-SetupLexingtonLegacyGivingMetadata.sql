@@ -320,6 +320,7 @@ BEGIN TRY
         ELSE
           BEGIN -- Update Pledge_Campaign for Program
             PRINT 'Updating Pledge Campaign ' + @Pledge_Campaign_Name;
+            SELECT @PC_Campaign_Name=Campaign_Name, @PC_Nickname=Nickname, @PC_Description=Description FROM @Pledge_Campaigns WHERE Campaign_Name = @Pledge_Campaign_Name;
             UPDATE Pledge_Campaigns SET
               Campaign_Name = @PC_Campaign_Name
               , Nickname = @PC_Nickname
