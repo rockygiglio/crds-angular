@@ -1,4 +1,5 @@
 import controller from './stream.controller';
+import ContentCardController from '../content_card/contentCard.controller';
 
 StreamComponent.$inject = [];
 
