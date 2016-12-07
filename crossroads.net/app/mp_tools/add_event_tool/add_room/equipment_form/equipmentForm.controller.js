@@ -20,12 +20,12 @@ export default class EquipmentController {
     }
 
     isCancelled(equipment) {
-      return existing(equipment) && equipment.cancelled;
+      return this.existing(equipment) && equipment.cancelled;
     }
 
     remove(idx) {
       if (this.currentEquipment[idx] !== undefined) {
-        if (existing(this.currentEquipment[idx].equipment)) {
+        if (this.existing(this.currentEquipment[idx].equipment)) {
           this.currentEquipment[idx].equipment.cancelled = true;
         } else {
           this.currentEquipment.splice(idx, 1);
@@ -34,17 +34,17 @@ export default class EquipmentController {
     }
 
     showError(form) {
-      return Validation.showErrors(form, 'equipmentChooser') ||
-        Validation.showErrors(form, 'equip.quantity');
+      return this.validation.showErrors(form, 'equipmentChooser') ||
+        this.validation.showErrors(form, 'equip.quantity');
     }
 
     showFieldError(form, name) {
-      return Validation.showErrors(form, name);
+      return this.validation.showErrors(form, name);
     }
 
     undo(idx) {
       if (this.currentEquipment[idx] !== undefined) {
-        if (existing(this.currentEquipment[idx].equipment)) {
+        if (this.existing(this.currentEquipment[idx].equipment)) {
           this.currentEquipment[idx].equipment.cancelled = false;
         }
       }
