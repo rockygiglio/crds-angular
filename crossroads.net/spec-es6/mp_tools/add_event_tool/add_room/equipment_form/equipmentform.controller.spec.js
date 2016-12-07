@@ -134,9 +134,7 @@ describe('AddEventTool EquipmentForm', () => {
         expect(fixture.currentEquipment[2].equipment.cancelled).toBe(false);
     });
 
-    fit('should return true for showErrors()', () => {
-        let ecResults, eqResults, form;
-
+    it('should return true for showErrors()', () => {
         Validation.showErrors.and.callFake((form, params) => {
             if (params == 'equipmentChooser') {
                 return true;
@@ -148,8 +146,7 @@ describe('AddEventTool EquipmentForm', () => {
         expect(result).toBe(true);
     });
 
-    fit('should return false for showErrors() because equipmentChooser is false', () => {
-        let ecResults, eqResults, form;
+    it('should return false for showErrors() because equipmentChooser is false', () => {
         Validation.showErrors.and.callFake((form, params) => {
             if (params == 'equipmentChooser') {
                 return false;
@@ -161,8 +158,7 @@ describe('AddEventTool EquipmentForm', () => {
         expect(result).toBe(true);
     });
 
-    fit('should return false for showErrors() because equip.quantity is false', () => {
-        let ecResults, eqResults, form;
+    it('should return false for showErrors() because equip.quantity is false', () => {
         Validation.showErrors.and.callFake((form, params) => {
             if (params == 'equipmentChooser') {
                 return true;
@@ -175,8 +171,7 @@ describe('AddEventTool EquipmentForm', () => {
         expect(result).toBe(true);
     });
 
-    fit('should return false for showErrors() because both are false', () => {
-        let ecResults, eqResults, form;
+    it('should return false for showErrors() because both are false', () => {
         Validation.showErrors.and.callFake((form, params) => {
             if (params == 'equipmentChooser') {
                 return false;
@@ -187,5 +182,90 @@ describe('AddEventTool EquipmentForm', () => {
         let result = fixture.showError({});
 
         expect(result).toBe(false);
+    });
+
+    it('should return true from showFieldError()', () => {
+        Validation.showErrors.and.callFake((form, params) => {
+            if (params == 'testField')
+                return true;
+        });
+        let result = fixture.showFieldError({}, 'testField');
+
+        expect(result).toBe(true);
+    });
+
+    it('should return false from showFieldError()', () => {
+        Validation.showErrors.and.callFake((form, params) => {
+            if (params == 'testField')
+                return false;
+        });
+        let result = fixture.showFieldError({}, 'testField');
+
+        expect(result).toBe(false);
+    });
+
+    it('should not undo() anything because equipment is undefined', () => {
+        let idx = 3000;
+        fixture.currentEquipment = [{
+            equipment: {
+                id: 1
+            }
+        }, {
+            equipment: {
+                id: 2
+            }
+        }, {
+            equipment: {
+                id: 3
+            }
+        }];
+        spyOn(fixture, 'existing');
+        fixture.undo(idx);
+        expect(fixture.existing).not.toHaveBeenCalled();
+    });
+
+    it('should not undo() anything because equipment is not existing', () => {
+        let idx = 1;
+        fixture.currentEquipment = [{
+            equipment: {
+                id: 1
+            }
+        }, {
+            equipment: {
+                id: 2
+            }
+        }, {
+            equipment: {
+                id: 3
+            }
+        }];
+        spyOn(fixture, 'existing').and.returnValue(false);
+        fixture.undo(idx);
+        expect(fixture.existing).toHaveBeenCalled();
+        expect(fixture.currentEquipment[1].equipment.cancelled).toBe(undefined);
+    });
+
+    it('should undo()', () => {
+        let idx = 1;
+        fixture.currentEquipment = [{
+            equipment: {
+                id: 1,
+                cancelled: true
+            }
+        }, {
+            equipment: {
+                id: 2,
+                cancelled: true
+            }
+        }, {
+            equipment: {
+                id: 3,
+                cancelled: true
+            }
+        }];
+        spyOn(fixture, 'existing').and.returnValue(true);
+        fixture.undo(idx);
+        expect(fixture.existing).toHaveBeenCalled();
+        expect(fixture.currentEquipment[1].equipment.cancelled).toBe(false);
     });
 });
