@@ -59,16 +59,19 @@ export default class StreamingController {
         break;
     }
 
-    $timeout(this.resizeIframe);
+    $timeout(this.resizeIframe, 500);
   }
 
   resizeIframe() {
+    var el = document.querySelector(".donation-widget iframe");
+        el.removeAttribute('height');
+
     iFrameResizer({
       heightCalculationMethod: 'taggedElement',
-      minHeight: 275,
+      minHeight: 350,
       checkOrigin: false,
       interval: -16
-    }, ".donation-widget");
+    }, ".donation-widget iframe");
   }
 
   buildUrl() {
