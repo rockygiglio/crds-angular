@@ -17,10 +17,6 @@ export default class StreamingController {
     this.dontMiss       = [];
     this.beTheChurch    = [];
 
-    this.carouselWrapper = document.querySelector(".crds-carousel__content-wrap");
-    this.carouselList    = document.querySelector(".crds-carousel__list");
-    this.pos             = 0;
-
     this.sce = $sce;
     let debug = false;
 
@@ -63,8 +59,17 @@ export default class StreamingController {
         this.baseUrl = 'https://embed.crossroads.net';
         break;
     }
+    $timeout(this.afterViewInit.bind(this));
+  }
 
-    $timeout(this.resizeIframe);
+  afterViewInit() {
+    this.resizeIframe();
+
+    // Carousel variables
+    this.wrapper  = document.querySelector(".crds-carousel__content-wrap");
+    this.content  = document.querySelector(".crds-carousel__list");
+    this.content.style.marginLeft = "0px";
+    this.pos = 0;
   }
 
   resizeIframe() {
@@ -124,17 +129,17 @@ export default class StreamingController {
     }
   }
 
-  carouselNext(event) {
-    if (pos < 0) {
-      pos += 100;
-      carouselList.style.marginLeft = pos + "px";
+  carouselPrev(event) {
+    if (this.pos < 0) {
+      this.pos += carouselCardWidth(); // programmatically evaluate the width of each card
+      this.content.style.marginLeft = this.pos + "px";
     }
   }
 
-  carouselPrev(event) {
-    if (pos > ((carouselList.scrollWidth * -1) + (carouselWrapper.offsetWidth))) {
-      pos -= 100;
-      carouselList.style.marginLeft = pos + "px";
+  carouselNext(event) {
+    if (this.pos > ((this.content.scrollWidth * -1) + (this.wrapper.offsetWidth))) {
+      this.pos -= carouselCardWidth();
+      this.content.style.marginLeft = this.pos + "px";
     }
   }
 }
