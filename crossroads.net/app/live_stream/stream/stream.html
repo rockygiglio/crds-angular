@@ -23,7 +23,7 @@
         <header class="clearfix">
           <h2>give</h2>
         </header>
-        <div class="donation-widget" dynamic-content="$root.MESSAGES.StreamPageInlineGivingIframe.content | html"></div>
+        <iframe src="{{ stream.buildUrl() }}" frameborder="0" class="donation-widget" scrolling="no" width="100%" ng-if="stream.renderInlineGiving"></iframe>
       </div>
 
       <div class="flex__item digital-program__articles">

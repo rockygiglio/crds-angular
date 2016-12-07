@@ -9,7 +9,9 @@ export default class StreamingController {
     this.streamspotService  = StreamspotService;
     this.geolocationService = GeolocationService;
     this.rootScope          = $rootScope;
+    this.timeout            = $timeout;
     this.modal              = $modal;
+    this.renderInlineGiving = false;
     this.inProgress     = false;
     this.numberOfPeople = 2;
     this.displayCounter = true;
@@ -59,23 +61,40 @@ export default class StreamingController {
         break;
     }
 
-    $timeout(this.resizeIframe, 500);
+    this.timeout(this.afterViewInit.bind(this), 500);
+  }
+
+  afterViewInit() {
+    this.setupInlineGiving();
+  }
+
+  setupInlineGiving() {
+    var contentBlockTitle = 'streamingInlineGivingIframeParams';
+
+    if(Object.keys(this.rootScope.MESSAGES).indexOf(contentBlockTitle) > 0) {
+      var html = this.rootScope.MESSAGES[contentBlockTitle].content;
+      var div = document.createElement("div");
+          div.innerHTML = html;
+      this.queryStringParams = div.textContent || div.innerText || "";
+    } else {
+      this.queryStringParams = '?type=donation&theme=dark';
+    }
+
+    this.renderInlineGiving = true;
+    this.timeout(this.resizeIframe.bind(this));
   }
 
   resizeIframe() {
-    var el = document.querySelector(".donation-widget iframe");
-        el.removeAttribute('height');
-
     iFrameResizer({
       heightCalculationMethod: 'taggedElement',
       minHeight: 350,
       checkOrigin: false,
       interval: -16
-    }, ".donation-widget iframe");
+    }, ".donation-widget");
   }
 
   buildUrl() {
-    return this.sce.trustAsResourceUrl(`${this.baseUrl}?type=donation&theme=dark`);
+    return this.sce.trustAsResourceUrl(`${this.baseUrl}${this.queryStringParams}`);
   }
 
   sortDigitalProgram(data) {
