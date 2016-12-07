@@ -1,7 +1,7 @@
 import CONSTANTS from 'crds-constants';
 import RoomFormController from '../../../../../app/mp_tools/add_event_tool/add_room/room_form/roomForm.controller';
 
-describe('AddEventTool EquipmentForm', () => {
+describe('AddEventTool RoomForm', () => {
     let fixture,
         AddEvent,
         Validation
