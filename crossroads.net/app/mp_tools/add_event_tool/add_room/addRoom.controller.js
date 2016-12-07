@@ -2,9 +2,10 @@ import CONSTANTS from 'crds-constants';
 
 export default class AddRoomController {
     /* @ngInject */
-    constructor($log, $rootScope, AddEvent, Lookup, Room) {
+    constructor($log, $rootScope, $modal, AddEvent, Lookup, Room) {
         this.log = $log;
         this.rootScope = $rootScope;
+        this.modal = $modal;
         this.addEvent = AddEvent;
         this.lookup = Lookup;
         this.room = Room;
@@ -69,8 +70,8 @@ export default class AddRoomController {
     };
 
     removeRoomModal(room) {
-        var modalInstance = $modal.open({
-            controller: 'RemoveRoomController as removeRoom',
+        var modalInstance = this.modal.open({
+            controllerAs: 'removeRoom',
             templateUrl: 'remove_room/remove_room.html',
             resolve: {
                 items: function () {
@@ -92,7 +93,7 @@ export default class AddRoomController {
                 if (alreadyAdded.cancelled) {
                     alreadyAdded.cancelled = false;
                 } else {
-                    $rootScope.$emit('notify', $rootScope.MESSAGES.allReadyAdded);
+                    this.rootScope.$emit('notify', this.rootScope.MESSAGES.allReadyAdded);
                 }
 
                 return;
@@ -102,7 +103,7 @@ export default class AddRoomController {
             return;
         }
 
-        $rootScope.$emit('notify', $rootScope.MESSAGES.chooseARoom);
+        this.rootScope.$emit('notify', this.rootScope.MESSAGES.chooseARoom);
     };
 
     mapEquipment(equipmentLookup, currentEquipmentList) {
@@ -122,8 +123,8 @@ export default class AddRoomController {
     };
 
     removeRoom(currentRoom) {
-        $log.debug('remove room: ' + currentRoom);
-        var modalInstance = removeRoomModal(currentRoom);
+        this.log.debug('remove room: ' + currentRoom);
+        var modalInstance = this.removeRoomModal(currentRoom);
 
         modalInstance.result.then(function () {
             if (!_.has(currentRoom, 'cancelled')) {
@@ -141,7 +142,7 @@ export default class AddRoomController {
 
             function () {
                 if (!_.has(currentRoom, 'cancelled') && currentRoom.cancelled) {
-                    $log.info('user doesn\'t want to delete this room...');
+                    this.log.info('user doesn\'t want to delete this room...');
                     currentRoom.cancelled = false;
                 }
             });
