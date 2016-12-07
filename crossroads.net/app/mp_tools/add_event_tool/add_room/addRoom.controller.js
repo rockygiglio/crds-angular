@@ -12,7 +12,7 @@ export default class AddRoomController {
     this.equipmentList = [];
     this.roomError = false;
     this.viewReady = false;
-    //this.selectedRooms = [];
+    // this.selectedRooms = [];
     this.rooms = [];
     // this.chosenSite = ''; from binding
   }
@@ -53,7 +53,7 @@ export default class AddRoomController {
                     (data) => {
                       this.equipmentList = data;
                       _.forEach(this.roomData, (roomD) => {
-                        roomD.equipment = self.mapEquipment(data, roomD.equipment);
+                        roomD.equipment = this.mapEquipment(data, roomD.equipment);
                       });
                     });
       }));
@@ -82,7 +82,6 @@ export default class AddRoomController {
   }
 
   onAdd() {
-    debugger;
     if (this.chosenRoom) {
             // is this room already added?
       const alreadyAdded = _.find(this.roomData, (r) => {

@@ -36,7 +36,7 @@ export default class AddEventToolController {
       this.viewReady = true;
     }
   }
-  
+
   allowAccess() {
     const authenticated = this.AuthService.isAuthenticated();
     const authorized = this.AuthService.isAuthorized(this.CRDS_TOOLS_CONSTANTS.SECURITY_ROLES.EventsRoomsEquipment);
@@ -79,7 +79,6 @@ export default class AddEventToolController {
         return;
       }
     }
-    debugger;
     this.processing = true;
     this.AddEvent.eventData.rooms = this.rooms;
     if (this.allData.roomForm) {
@@ -123,17 +122,15 @@ export default class AddEventToolController {
 
   processSave(event) {
     this.EventService.create.save(event, (result) => {
-      debugger;
       this.rootScope.$emit('notify', this.rootScope.MESSAGES.eventSuccess);
       this.AddEvent.currentPage = 1;
-      this.AddEvent.eventData = {};
+      this.AddEvent.eventData = { event: {}, rooms: [], group: {} };
       this.rooms = [];
       this.event = {};
       this.processing = false;
       this.window.close();
     },
             (result) => {
-                debugger;
               this.log.error(result);
               this.processing = false;
               this.rootScope.$emit('notify', this.rootScope.MESSAGES.eventToolProblemSaving);
