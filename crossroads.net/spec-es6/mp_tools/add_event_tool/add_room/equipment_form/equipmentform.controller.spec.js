@@ -158,7 +158,7 @@ describe('AddEventTool EquipmentForm', () => {
             }
         });
         let result = fixture.showError({});
-        expect(result).toBe(false);
+        expect(result).toBe(true);
     });
 
     fit('should return false for showErrors() because equip.quantity is false', () => {
@@ -172,7 +172,7 @@ describe('AddEventTool EquipmentForm', () => {
         });
         let result = fixture.showError({});
 
-        expect(result).toBe(false);
+        expect(result).toBe(true);
     });
 
     fit('should return false for showErrors() because both are false', () => {
