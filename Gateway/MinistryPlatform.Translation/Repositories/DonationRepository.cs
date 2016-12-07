@@ -481,7 +481,7 @@ namespace MinistryPlatform.Translation.Repositories
             var indx = 1;
             foreach (var gpExportDistLevel in gpExportDonationSum)
             {
-                var processingFeeGLMapping = GetProcessingFeeGLMapping(gpExportDistLevel.ProccessorFeeMappingId, gpExportDistLevel.CongregationId, token);
+                var processingFeeGLMapping = GetProcessingFeeGLMapping(gpExportDistLevel.ProccessorFeeMappingId, token);
                 GenerateGLLevelGpExport(gpExportGLLevel, gpExportDistLevel, processingFeeGLMapping, indx);
                 indx++;
             }
@@ -652,10 +652,9 @@ namespace MinistryPlatform.Translation.Repositories
                 }).ToList();
         }
 
-        public MPGLAccountMapping GetProcessingFeeGLMapping(int programId, int congregationId, string token)
+        public MPGLAccountMapping GetProcessingFeeGLMapping(int processingFeeMapping, string token)
         {
-            var searchString = $"Program_ID = {programId} AND Congregation_ID = {congregationId}";
-            return _ministryPlatformRest.UsingAuthenticationToken(token).Search<MPGLAccountMapping>(searchString).FirstOrDefault();
+            return _ministryPlatformRest.UsingAuthenticationToken(token).Get<MPGLAccountMapping>(processingFeeMapping);
         }
 
         public void UpdateDepositToExported(int selectionId, int depositId, string token)

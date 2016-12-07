@@ -31,7 +31,7 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
         MpDeposit GetDepositByProcessorTransferId(string processorTransferId);
         List<MpGPExportDatum> GetGPExportDataForPayments(int depositId, string token);
         int GetProcessingFeeMappingID(int programId, int congregationId, string token);
-        MPGLAccountMapping GetProcessingFeeGLMapping(int programId, int congregationId, string token);
+        MPGLAccountMapping GetProcessingFeeGLMapping(int processingFeeMapping, string token);
         MpDeposit GetDepositById(int depositId);
     }
 }
