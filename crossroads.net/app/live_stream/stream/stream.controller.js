@@ -1,6 +1,4 @@
-let WOW = require('wow.js/dist/wow.min.js');
 let iFrameResizer = require('iframe-resizer/js/iframeResizer.min.js');
-var $ = require('jquery');
 
 export default class StreamingController {
   /*@ngInject*/
@@ -41,10 +39,6 @@ export default class StreamingController {
         .then((data) => {
           this.sortDigitalProgram(data);
         });
-
-    new WOW({
-      mobile: false
-    }).init();
 
     this.openGeolocationModal();
 
