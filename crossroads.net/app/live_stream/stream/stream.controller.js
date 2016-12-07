@@ -123,16 +123,22 @@ export default class StreamingController {
     }
   }
 
+  carouselCardWidth() {
+    this.article  = document.querySelector(".crds-carousel__item");
+
+    return this.article.offsetWidth;
+  }
+
   carouselPrev(event) {
     if (this.pos < 0) {
-      this.pos += carouselCardWidth(); // programmatically evaluate the width of each card
+      this.pos += this.carouselCardWidth();
       this.content.style.marginLeft = this.pos + "px";
     }
   }
 
   carouselNext(event) {
     if (this.pos > ((this.content.scrollWidth * -1) + (this.wrapper.offsetWidth))) {
-      this.pos -= carouselCardWidth();
+      this.pos -= this.carouselCardWidth();
       this.content.style.marginLeft = this.pos + "px";
     }
   }
