@@ -57,7 +57,6 @@
     $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
 
       // Determine whether to render legacy stylesheet.
-      // TODO – Populate the following property based on the values returned from the CMS, per US5875. -TCM 12/01/16
       $rootScope.renderLegacyStyles = (toState.data.renderLegacyStyles !== false);
 
       if ((toState.resolve || toState.data.resolve) && !event.defaultPrevented) {
@@ -73,6 +72,9 @@
     $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
 
       // Toggle ngClass values based on $rootScope.renderLegacyStyles
+      if ($rootScope.renderLegacyStyles === false) {
+        document.body.classList.remove('crds-legacy-styles');
+      }
       vm.bodyClasses['crds-legacy-styles'] = $rootScope.renderLegacyStyles;
       vm.bodyClasses['crds-styles'] = !$rootScope.renderLegacyStyles;
 
