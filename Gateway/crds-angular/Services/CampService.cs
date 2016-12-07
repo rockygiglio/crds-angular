@@ -354,7 +354,8 @@ namespace crds_angular.Services
                                 CampName = camp.EventTitle,
                                 CampStartDate = camp.EventStartDate,
                                 CampEndDate = camp.EventEndDate,
-                                EventId = camp.EventId
+                                EventId = camp.EventId,
+                                CampPrimaryContactEmail = _eventRepository.GetEvent(camp.EventId).PrimaryContact.EmailAddress
                             });
                         }
                     }
