@@ -1022,6 +1022,12 @@ streaming, landing {
         margin-bottom: 2em;
         padding: 0;
 
+        @media (min-width: $screen-md) {
+          flex: 1 1 50px;
+          margin-bottom: 0;
+          order: 2;
+        }
+
         iframe {
           padding: 0 6px;
         }
@@ -1029,16 +1035,16 @@ streaming, landing {
         header {
           padding: 0 1.25em;
         }
-
-        @media (min-width: $screen-md) {
-          flex: 1 1 50px;
-          margin-bottom: 0;
-          order: 2;
-        }
       }
 
       &.digital-program__articles {
         background-color: #171717;
+
+        @media (min-width: $screen-md) {
+          margin-right: 28px;
+          flex: 2 1 0;
+          order: 1;
+        }
 
         h2 {
           float: left;
@@ -1101,8 +1107,8 @@ streaming, landing {
 
           &__item {
             display: inline-block;
-            white-space: normal;
             vertical-align: top;
+            white-space: normal;
             z-index: 1;
           }
         }
@@ -1135,15 +1141,13 @@ streaming, landing {
             }
           }
         }
-
-        @media (min-width: $screen-md) {
-          margin-right: 28px;
-          flex: 2 1 0;
-          order: 1;
-        }
       }
 
       &.digital-program__participate {
+        @media (min-width: $screen-md) {
+          margin-top: 1em;
+        }
+
         .media {
           @include make-xs-column(12);
 
@@ -1185,10 +1189,6 @@ streaming, landing {
             margin-bottom: 8px;
             text-transform: uppercase;
           }
-        }
-
-        @media (min-width: $screen-md) {
-          margin-top: 1em;
         }
       }
     }
