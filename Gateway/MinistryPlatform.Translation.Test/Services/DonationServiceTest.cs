@@ -441,7 +441,7 @@ namespace MinistryPlatform.Translation.Test.Services
             _ministryPlatformRest.Setup(m => m.UsingAuthenticationToken(It.IsAny<string>())).Returns(_ministryPlatformRest.Object);
             _ministryPlatformRest.Setup(m => m.Search<int>("GL_Account_Mapping", $"GL_Account_Mapping.Program_ID={It.IsAny<int>()} AND GL_Account_Mapping.Congregation_ID={It.IsAny<int>()}", "Processor_Fee_Mapping_ID_Table.Program_ID"))
                 .Returns(0);
-            _ministryPlatformRest.Setup(mock => mock.Search<MPGLAccountMapping>(It.IsAny<string>(), null as string, null, false)).Returns(MockGLAccountMapping());
+            _ministryPlatformRest.Setup(mock => mock.Get<MPGLAccountMapping>(It.IsAny<int>(), null)).Returns(MockGLAccountMapping());
             _config.Setup(mocked => mocked.GetConfigIntValue("ProcessingMappingId")).Returns(127);
             
             var result = _fixture.GetGpExport(depositId, token);
@@ -501,41 +501,38 @@ namespace MinistryPlatform.Translation.Test.Services
         [Test]
         public void TestGettingGLMappingForFees()
         {
-            const int programId = 1;
-            const int congregationId = 2;
+            const int feeMapping = 1;
             const string token = "mockToken";
             var mockMapping = MockGLAccountMapping();
 
             _ministryPlatformRest.Setup(m => m.UsingAuthenticationToken(It.IsAny<string>())).Returns(_ministryPlatformRest.Object);
-            _ministryPlatformRest.Setup(mock => mock.Search<MPGLAccountMapping>(It.IsAny<string>(), null as string, null, false)).Returns(mockMapping);
+            _ministryPlatformRest.Setup(mock => mock.Get<MPGLAccountMapping>(It.IsAny<int>(),null)).Returns(mockMapping);
 
-            var result = _fixture.GetProcessingFeeGLMapping(programId, congregationId, token);
+            var result = _fixture.GetProcessingFeeGLMapping(feeMapping, token);
 
             Assert.IsNotNull(result);
-            Assert.AreEqual(mockMapping.FirstOrDefault(), result);
+            Assert.AreEqual(mockMapping, result);
             _ministryPlatformRest.VerifyAll();
         }
 
         [Test]
         public void TestNotGettingGLMappingForFees()
         {
-            const int programId = 1;
-            const int congregationId = 2;
+            const int feeMapping = 1;
             const string token = "mockToken";
             
             _ministryPlatformRest.Setup(m => m.UsingAuthenticationToken(It.IsAny<string>())).Returns(_ministryPlatformRest.Object);
-            _ministryPlatformRest.Setup(mock => mock.Search<MPGLAccountMapping>(It.IsAny<string>(), null as string, null, false)).Returns(new List<MPGLAccountMapping>());
+            _ministryPlatformRest.Setup(mock => mock.Get<MPGLAccountMapping>(It.IsAny<int>(), null)).Returns( (MPGLAccountMapping) null);
 
-            var result = _fixture.GetProcessingFeeGLMapping(programId, congregationId, token);
+            var result = _fixture.GetProcessingFeeGLMapping(feeMapping, token);
 
             Assert.IsNull(result);
             _ministryPlatformRest.VerifyAll();
         }
 
-        private List<MPGLAccountMapping> MockGLAccountMapping()
+        private MPGLAccountMapping MockGLAccountMapping()
         {
-            return new List<MPGLAccountMapping>
-            {
+            return
                 new MPGLAccountMapping
                 {
                     ProgramId = 1,
@@ -549,8 +546,7 @@ namespace MinistryPlatform.Translation.Test.Services
                     ProcessorFeeMappingId = 1,
                     ReceivableAccount = "77777-031-21",
                     ScholarshipExpenseAccount = "77777-900-11"
-                }
-            };
+                };
         }
 
         [Test]
