@@ -22,13 +22,13 @@
         <button class="btn btn-standard" ng-click="addRoom.onAdd()"> Add Room </button>
       </span>
     </div>
-    <div ng-if="addRoom.viewReady && addRoom.selectedRooms.length == 0" ng-hide="addRoom.showNoRoomsMessage()">
+    <div ng-if="addRoom.viewReady && addRoom.roomData.length == 0" ng-hide="addRoom.showNoRoomsMessage()">
       <p class="lead"><span class="badge brand-warning">No Room(s) Added</span></p>
     </div>
   </span>
 
 <!-- The rooms choosen -->
-  <span ng-repeat="currentRoom in addRoom.selectedRooms">
+  <span ng-repeat="currentRoom in addRoom.roomData">
     <room-form current-room="currentRoom"
                layouts="addRoom.layouts"
                equipment-lookup="addRoom.equipmentList"

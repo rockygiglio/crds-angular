@@ -54,7 +54,9 @@ export default class AddEventcontroller {
 
     this.staffContact.query({}, (contacts) => {
       this.staffContacts = contacts;
-      this.eventData.primaryContact = _.findWhere(this.staffContacts, { contactId: parseInt(this.session.exists('userId')) });
+      if (this.eventData.primaryContact == null) {
+        this.eventData.primaryContact = _.findWhere(this.staffContacts, { contactId: parseInt(this.session.exists('userId')) });
+      }
       this.ready = true;
     });
   }
