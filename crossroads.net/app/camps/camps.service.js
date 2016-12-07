@@ -30,6 +30,7 @@ class CampsService {
     this.paymentResource = $resource(__API_ENDPOINT__ + 'api/v1.0.0/invoice/:invoiceId/payment/:paymentId');
     this.confirmationResource = $resource(`${__API_ENDPOINT__}api/camps/:campId/confirmation/:contactId`);
     this.hasPaymentsResource = $resource(`${__API_ENDPOINT__}api/v1.0.0/invoice/:invoiceId/has-payment`);
+    this.interestedInResource = $resource(`${__API_ENDPOINT__}api/v1.0.0/contact/:contactId/interested-in/:eventId`);
 
     this.campInfo = null;
     this.campTitle = null;
@@ -161,6 +162,10 @@ class CampsService {
 
   invoiceHasPayment(invoiceId) {
     return this.hasPaymentsResource.get({ invoiceId }).$promise;
+  }
+
+  isEventParticipantInterested(contactId, eventId) {
+    return this.interestedInResource.get({ eventId, contactId }).$promise;
   }
 }
 
