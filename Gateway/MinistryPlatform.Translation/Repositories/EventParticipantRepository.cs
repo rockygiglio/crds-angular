@@ -178,8 +178,17 @@ namespace MinistryPlatform.Translation.Repositories
             try
             {
                 var filter = $"Event_ID_Table.[Event_ID] = {eventId} AND Participant_ID_Table_Contact_ID_Table.[Contact_ID] = {contactId}";
+                var columns = new List<string>
+                {
+                    "Participant_ID_Table_Contact_ID_Table.[Contact_ID]",
+                    "Event_ID_Table.[Event_ID]",
+                    "Event_Participant_ID",
+                    "Event_ID_Table.Event_Title",
+                    "Participation_Status_ID",
+                    "End_Date"
+                };
                 var participants = _ministryPlatformRestRepository.UsingAuthenticationToken(token)
-                    .Search<MpEventParticipant>(filter, new List<string>());
+                    .Search<MpEventParticipant>(filter, columns);
                 if (participants.Count > 0)
                 {
                     return new Ok<MpEventParticipant>(participants.FirstOrDefault());

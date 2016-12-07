@@ -153,13 +153,21 @@ namespace MinistryPlatform.Translation.Test.Services
         {
             const string token = "LETMEIN";
             const int contactId = 89898;
-            const int eventId = 9876;            
-
+            const int eventId = 9876;
+            var columns = new List<string>
+            {
+                "Participant_ID_Table_Contact_ID_Table.[Contact_ID]",
+                "Event_ID_Table.[Event_ID]",
+                "Event_Participant_ID",
+                "Event_ID_Table.Event_Title",
+                "Participation_Status_ID",
+                "End_Date"
+            };
             var eventParticipants = FactoryGirl.NET.FactoryGirl.Build<MpEventParticipant>();
 
             _ministryPlatformRest.Setup(m => m.UsingAuthenticationToken(token)).Returns(_ministryPlatformRest.Object);
             _ministryPlatformRest.Setup(
-                m => m.Search<MpEventParticipant>($"Event_ID_Table.[Event_ID] = {eventId} AND Participant_ID_Table_Contact_ID_Table.[Contact_ID] = {contactId}", new List<string>(), null, false))
+                m => m.Search<MpEventParticipant>($"Event_ID_Table.[Event_ID] = {eventId} AND Participant_ID_Table_Contact_ID_Table.[Contact_ID] = {contactId}", columns, null, false))
                 .Returns(new List<MpEventParticipant>() {eventParticipants});
 
             var result = _fixture.GetEventParticipantByContactAndEvent(contactId, eventId, token);
@@ -175,10 +183,18 @@ namespace MinistryPlatform.Translation.Test.Services
             const string token = "LETMEIN";
             const int contactId = 89898;
             const int eventId = 9876;
-
+            var columns = new List<string>
+            {
+                "Participant_ID_Table_Contact_ID_Table.[Contact_ID]",
+                "Event_ID_Table.[Event_ID]",
+                "Event_Participant_ID",
+                "Event_ID_Table.Event_Title",
+                "Participation_Status_ID",
+                "End_Date"
+            };
             _ministryPlatformRest.Setup(m => m.UsingAuthenticationToken(token)).Returns(_ministryPlatformRest.Object);
             _ministryPlatformRest.Setup(
-                m => m.Search<MpEventParticipant>($"Event_ID_Table.[Event_ID] = {eventId} AND Participant_ID_Table_Contact_ID_Table.[Contact_ID] = {contactId}", new List<string>(), null, false))
+                m => m.Search<MpEventParticipant>($"Event_ID_Table.[Event_ID] = {eventId} AND Participant_ID_Table_Contact_ID_Table.[Contact_ID] = {contactId}", columns, null, false))
                 .Returns(new List<MpEventParticipant>());
 
             var result = _fixture.GetEventParticipantByContactAndEvent(contactId, eventId, token);
@@ -193,12 +209,21 @@ namespace MinistryPlatform.Translation.Test.Services
             const string token = "LETMEIN";
             const int contactId = 89898;
             const int eventId = 9876;
+            var columns = new List<string>
+            {
+                "Participant_ID_Table_Contact_ID_Table.[Contact_ID]",
+                "Event_ID_Table.[Event_ID]",
+                "Event_Participant_ID",
+                "Event_ID_Table.Event_Title",
+                "Participation_Status_ID",
+                "End_Date"
+            };
 
             _ministryPlatformRest.Setup(m => m.UsingAuthenticationToken(token)).Returns(_ministryPlatformRest.Object);
             _ministryPlatformRest.Setup(
                 m =>
                     m.Search<MpEventParticipant>($"Event_ID_Table.[Event_ID] = {eventId} AND Participant_ID_Table_Contact_ID_Table.[Contact_ID] = {contactId}",
-                                                 new List<string>(),
+                                                 columns,
                                                  null,
                                                  false))
                 .Throws<Exception>();

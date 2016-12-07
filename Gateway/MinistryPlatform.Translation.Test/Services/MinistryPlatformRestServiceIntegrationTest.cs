@@ -466,6 +466,24 @@ namespace MinistryPlatform.Translation.Test.Services
             }
         }
 
+        [Test]
+        public void GetEventParticipant()
+        {
+            var eventId = 4525285;
+            var contactId = 7646177;
+            var filter = $"Event_ID_Table.[Event_ID]={eventId} AND Participant_ID_Table_Contact_ID_Table.[Contact_ID] = {contactId}";
+            var columns = new List<string>
+            {
+                "Participant_ID_Table_Contact_ID_Table.[Contact_ID]",
+                "Event_ID_Table.[Event_ID]",
+                "Event_Participant_ID",
+                "Event_ID_Table.Event_Title",
+                "Participation_Status_ID",
+                "End_Date"
+            };
+            var participants = _fixture.UsingAuthenticationToken(_authToken).Search<MpEventParticipant>(filter, columns);
+        }
+
     }
 
     [MpRestApiTable(Name = "Payment_Types")]

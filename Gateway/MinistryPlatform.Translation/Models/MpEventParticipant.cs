@@ -40,7 +40,7 @@ namespace MinistryPlatform.Translation.Models
         [JsonProperty(PropertyName = "Email_Address")]
         public string ParticipantEmail { get; set; }
 
-        [JsonProperty(PropertyName = "Participation_Status")]
+        [JsonProperty(PropertyName = "Participation_Status_ID")]
         public int ParticipantStatus { get; set; }
 
         [JsonProperty(PropertyName = "Room_ID")]
