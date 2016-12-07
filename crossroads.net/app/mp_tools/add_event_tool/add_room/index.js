@@ -8,3 +8,4 @@ export default angular
 
 import roomForm from './room_form';
 import equipmentForm from './equipment_form';
+//import removeRoom from '../remove_room'
