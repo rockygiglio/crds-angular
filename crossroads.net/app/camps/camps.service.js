@@ -3,8 +3,9 @@ import filter from 'lodash/collection/filter';
 
 /* ngInject */
 class CampsService {
-  constructor($resource, $stateParams, $log, AttributeTypeService) {
+  constructor($resource, $scope, $stateParams, $log, AttributeTypeService) {
     this.log = $log;
+    this.scope = $scope;
     this.stateParams = $stateParams;
     this.resource = $resource;
     this.attributeTypeService = AttributeTypeService;
@@ -126,7 +127,11 @@ class CampsService {
     }).$promise;
 
     if (checkForDeposit) {
-      prom = prom.then(() => this.invoiceHasPayment(this.productInfo.invoiceId));
+      prom = prom.then(() => {
+        const hasPayment = this.invoiceHasPayment(this.productInfo.invoiceId);
+        this.scope.apply();
+        return hasPayment;
+      });
     }
     return prom;
   }
@@ -157,11 +162,13 @@ class CampsService {
   }
 
   getShirtSizes() {
+    /* eslint-disable new-cap */
     return this.attributeTypeService.AttributeTypes().get({ id: crdsConstants.ATTRIBUTE_TYPE_IDS.TSHIRT_SIZES }).$promise
       .then((shirtSizes) => {
         this.shirtSizes = filter(shirtSizes.attributes, attribute => attribute.category === 'Adult');
         return shirtSizes;
       });
+    /* eslint-enable */
   }
 
   invoiceHasPayment(invoiceId) {
