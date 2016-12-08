@@ -67,15 +67,20 @@
     });
 
     $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
-
+      if (typeof fromParams.renderLegacyStyles !== 'undefined') {
+        $rootScope.renderLegacyStyles = fromParams.renderLegacyStyles;
+      }
+      if (typeof fromParams.bodyClasses !== 'undefined') {
+        $rootScope.bodyClasses = fromParams.bodyClasses;
+      }
       // Toggle ngClass values based on $rootScope.renderLegacyStyles
       if ($rootScope.renderLegacyStyles === false) {
         document.body.classList.remove('crds-legacy-styles');
       }
-      vm.bodyClasses['crds-legacy-styles'] = $rootScope.renderLegacyStyles || fromParams.renderLegacyStyles;
+      vm.bodyClasses['crds-legacy-styles'] = $rootScope.renderLegacyStyles;
       vm.bodyClasses['crds-styles'] = !$rootScope.renderLegacyStyles;
 
-      if (typeof $rootScope.bodyClasses !== 'undefined' || typeof fromParams.bodyClasses !== 'undefined') {
+      if (typeof $rootScope.bodyClasses !== 'undefined') {
         var bodyClasses = $rootScope.bodyClasses || fromParams.bodyClasses;
         bodyClasses.forEach(function(klass) {
           vm.bodyClasses[klass] = true;
