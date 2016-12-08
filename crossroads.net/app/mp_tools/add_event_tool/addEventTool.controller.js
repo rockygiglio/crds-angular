@@ -28,10 +28,10 @@ export default class AddEventToolController {
         this.AddEvent.currentPage = 2;
         this.viewReady = true;
       },
-                (err) => {
-                  console.error(`failed to get event ${this.currentEventSelected} + with error ${err}`);
-                  this.viewReady = true;
-                });
+        (err) => {
+          console.error(`failed to get event ${this.currentEventSelected} + with error ${err}`);
+          this.viewReady = true;
+        });
     } else {
       this.viewReady = true;
     }
