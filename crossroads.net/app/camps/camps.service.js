@@ -30,10 +30,12 @@ class CampsService {
     this.paymentResource = $resource(__API_ENDPOINT__ + 'api/v1.0.0/invoice/:invoiceId/payment/:paymentId');
     this.confirmationResource = $resource(`${__API_ENDPOINT__}api/camps/:campId/confirmation/:contactId`);
     this.hasPaymentsResource = $resource(`${__API_ENDPOINT__}api/v1.0.0/invoice/:invoiceId/has-payment`);
+    this.interestedInResource = $resource(`${__API_ENDPOINT__}api/v1.0.0/contact/:contactId/interested-in/:eventId`);
 
     this.campInfo = null;
     this.campTitle = null;
     this.shirtSizes = null;
+    this.family = null;
     this.camperInfo = null;
     this.waivers = null;
     this.productInfo = null;
@@ -48,6 +50,7 @@ class CampsService {
     this.campInfo = {};
     this.campTitle = '';
     this.shirtSizes = [];
+    this.family = [];
   }
 
   initializeCamperData() {
@@ -148,7 +151,11 @@ class CampsService {
   }
 
   sendConfirmation(invoiceId, paymentId, campId, contactId) {
-    this.confirmationResource.save({ contactId, campId, invoiceId, paymentId }, {});
+    return this.confirmationResource.save({ contactId, campId, invoiceId, paymentId }, {}).$promise
+      .then(() => {
+        this.initializeCampData();
+        this.initializeCamperData();
+      });
   }
 
   getShirtSizes() {
@@ -161,6 +168,10 @@ class CampsService {
 
   invoiceHasPayment(invoiceId) {
     return this.hasPaymentsResource.get({ invoiceId }).$promise;
+  }
+
+  isEventParticipantInterested(contactId, eventId) {
+    return this.interestedInResource.get({ eventId, contactId }).$promise;
   }
 }
 

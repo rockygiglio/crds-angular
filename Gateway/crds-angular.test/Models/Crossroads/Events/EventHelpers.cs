@@ -9,7 +9,7 @@ namespace crds_angular.test.Models.Crossroads.Events
     {
         private const int _eventId = 1222;
         private const string _location = "Atrium";
-        private const string _title = "Some Test title";
+        private const string _title = "Ok Test title";
         private static readonly DateTime _startDate = new DateTime();
         private static readonly DateTime _endDate = new DateTime();
 

@@ -315,6 +315,7 @@ namespace crds_angular.Controllers.API
                 try
                 {
                     _campService.SendCampConfirmationEmail(eventId, invoiceId, paymentId, token);
+                    _campService.SetCamperAsRegistered(eventId, contactId);
                     return Ok();
                 }
                 catch (Exception e)

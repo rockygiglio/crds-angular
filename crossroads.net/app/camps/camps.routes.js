@@ -50,12 +50,22 @@ export default function CampRoutes($stateProvider) {
     })
     .state('campsignup.confirmation', {
       url: '/confirmation/:contactId?paymentId&invoiceId',
-      controller: (CampsService, $state) => {
-        CampsService.sendConfirmation($state.toParams.invoiceId,
-                                      $state.toParams.paymentId,
-                                      $state.toParams.campId,
-                                      $state.toParams.contactId);
-        $state.go('campsignup.thankyou', $state.toParams, { location: 'replace' });
+      resolve: {
+        CampsService: 'CampsService',
+        $state: '$state',
+        $timeout: '$timeout',
+        sendConfirmation: (CampsService, $state, $timeout) => {
+          return CampsService.sendConfirmation($state.toParams.invoiceId,
+            $state.toParams.paymentId,
+            $state.toParams.campId,
+            $state.toParams.contactId)
+            .then(() => {
+              // When the confirmation API calls returns, forward to the thank you page
+              $timeout(() => {
+                $state.go('campsignup.thankyou', $state.toParams, { location: 'replace' });
+              }, 0);
+            });
+        }
       }
     })
     .state('campsignup.thankyou', {
@@ -81,6 +91,7 @@ export default function CampRoutes($stateProvider) {
         $injector: '$injector',
         $state: '$state',
         $q: '$q',
+        $timeout: '$timeout',
         $stateParams: '$stateParams',
         CampsService: 'CampsService',
         register: invokeResolve

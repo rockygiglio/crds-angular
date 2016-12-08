@@ -12,6 +12,13 @@ namespace MinistryPlatform.Translation.Test.Services
     [TestFixture]
     public class ContactServiceTest
     {
+        private Mock<IMinistryPlatformService> _ministryPlatformService;
+        private Mock<IAuthenticationRepository> _authService;
+        private ContactRepository _fixture;
+        private Mock<IConfigurationWrapper> _configuration;
+        private Mock<IMinistryPlatformRestRepository> _ministryPlatformRest;
+        private Mock<IApiUserRepository> _apiUserService;
+
         [SetUp]
         public void SetUp()
         {
@@ -33,17 +40,9 @@ namespace MinistryPlatform.Translation.Test.Services
             _ministryPlatformRest.Setup(m => m.UsingAuthenticationToken("ABC")).Returns(_ministryPlatformRest.Object);
 
             _authService.Setup(m => m.Authenticate(It.IsAny<string>(), It.IsAny<string>())).Returns(new Dictionary<string, object> {{"token", "ABC"}, {"exp", "123"}});
-
-
             _fixture = new ContactRepository(_ministryPlatformService.Object, _authService.Object, _configuration.Object, _ministryPlatformRest.Object, _apiUserService.Object);
         }
 
-        private Mock<IMinistryPlatformService> _ministryPlatformService;
-        private Mock<IAuthenticationRepository> _authService;
-        private ContactRepository _fixture;
-        private Mock<IConfigurationWrapper> _configuration;
-        private Mock<IMinistryPlatformRestRepository> _ministryPlatformRest;
-        private Mock<IApiUserRepository> _apiUserService;
 
         [Test]
         public void GetContactByParticipantId()

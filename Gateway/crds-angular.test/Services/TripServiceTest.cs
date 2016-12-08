@@ -226,7 +226,7 @@ namespace crds_angular.test.Services
                 TemplateId = templateId,
                 AuthorUserId = 1,
                 DomainId = 1,
-                EmailBody = "<p> Some random body of text </p>",
+                EmailBody = "<p> Ok random body of text </p>",
                 EmailSubject = "more randomness",
                 FromContact = new MpContact() {ContactId = 5, EmailAddress = "updates@crossroads.net"},
                 MergeData = mergeData,

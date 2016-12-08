@@ -150,6 +150,21 @@ namespace MinistryPlatform.Translation.Test.Services
         }
 
         [Test]
+        public void TestRegisterParticipant()
+        {
+            Console.WriteLine("TestRegisterParticipant");
+            var eventParticipantId = 7676452;
+            var participantStatus = 2;
+            var fields = new Dictionary<string, object>
+            {
+                {"Event_Participant_ID", eventParticipantId},
+                {"End_Date", null},
+                {"Participation_Status_ID", participantStatus}
+            };
+            _fixture.UsingAuthenticationToken(_authToken).UpdateRecord("Event_Participants", eventParticipantId, fields);
+        }
+
+        [Test]
         public void TestUpdatePayment()
         {
             var parms = new Dictionary<string, object>
@@ -441,6 +456,39 @@ namespace MinistryPlatform.Translation.Test.Services
             var result = _fixture.UsingAuthenticationToken(_authToken).PostWithReturn<MpPaymentDetail, MpPaymentDetailReturn>(paymentList);
             Assert.IsNotNull(result);
             Assert.AreNotEqual(0, result.First().PaymentId);
+        }
+
+        [Test]
+        public void GetFamilyMembersOfContactId()
+        {
+            Console.WriteLine("TestCallingAStoredProcedure");
+            var parms = new Dictionary<string, object>()
+            {
+                {"@Contact_ID", 2186211}
+            };
+            var results = _fixture.UsingAuthenticationToken(_authToken).GetFromStoredProc<MpContact>("api_crds_All_Family_Members", parms);
+            foreach (var p in results)
+            {
+                Console.WriteLine("Result\t{0}", p.FirstOrDefault());
+            }
+        }
+
+        [Test]
+        public void GetEventParticipant()
+        {
+            var eventId = 4525285;
+            var contactId = 7646177;
+            var filter = $"Event_ID_Table.[Event_ID]={eventId} AND Participant_ID_Table_Contact_ID_Table.[Contact_ID] = {contactId}";
+            var columns = new List<string>
+            {
+                "Participant_ID_Table_Contact_ID_Table.[Contact_ID]",
+                "Event_ID_Table.[Event_ID]",
+                "Event_Participant_ID",
+                "Event_ID_Table.Event_Title",
+                "Participation_Status_ID",
+                "End_Date"
+            };
+            var participants = _fixture.UsingAuthenticationToken(_authToken).Search<MpEventParticipant>(filter, columns);
         }
 
     }
