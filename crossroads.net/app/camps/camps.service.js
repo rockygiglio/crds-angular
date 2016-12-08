@@ -3,9 +3,9 @@ import filter from 'lodash/collection/filter';
 
 /* ngInject */
 class CampsService {
-  constructor($resource, $scope, $stateParams, $log, AttributeTypeService) {
+  constructor($resource, $rootScope, $stateParams, $log, AttributeTypeService) {
     this.log = $log;
-    this.scope = $scope;
+    this.scope = $rootScope;
     this.stateParams = $stateParams;
     this.resource = $resource;
     this.attributeTypeService = AttributeTypeService;
@@ -129,7 +129,7 @@ class CampsService {
     if (checkForDeposit) {
       prom = prom.then(() => {
         const hasPayment = this.invoiceHasPayment(this.productInfo.invoiceId);
-        this.scope.apply();
+        //this.scope.$apply();
         return hasPayment;
       });
     }
