@@ -146,6 +146,7 @@ IF @@ROWCOUNT = 0
       ,[Company]
       ,[Display_Name]
       ,[Contact_Status_ID]
+      ,[Email_Address]
       ,[Bulk_Email_Opt_Out]
       ,[Bulk_SMS_Opt_Out]
       ,[Contact_GUID]
@@ -156,6 +157,7 @@ IF @@ROWCOUNT = 0
       ,0
       ,'Stone, Brad'
       ,1
+      ,'bstone@xroadschurch.org'
       ,0
       ,0
       ,NEWID()
@@ -315,6 +317,7 @@ IF @@ROWCOUNT = 0
       ,[Company]
       ,[Display_Name]
       ,[Contact_Status_ID]
+      ,[Email_Address]
       ,[Bulk_Email_Opt_Out]
       ,[Bulk_SMS_Opt_Out]
       ,[Contact_GUID]
@@ -325,6 +328,7 @@ IF @@ROWCOUNT = 0
       ,0
       ,'Reichley, David'
       ,1
+      ,'dreichley@xroadschurch.org'
       ,0
       ,0
       ,NEWID()
