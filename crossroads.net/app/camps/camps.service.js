@@ -35,6 +35,7 @@ class CampsService {
     this.campInfo = null;
     this.campTitle = null;
     this.shirtSizes = null;
+    this.family = null;
     this.camperInfo = null;
     this.waivers = null;
     this.productInfo = null;
@@ -49,6 +50,7 @@ class CampsService {
     this.campInfo = {};
     this.campTitle = '';
     this.shirtSizes = [];
+    this.family = [];
   }
 
   initializeCamperData() {
@@ -149,7 +151,11 @@ class CampsService {
   }
 
   sendConfirmation(invoiceId, paymentId, campId, contactId) {
-    this.confirmationResource.save({ contactId, campId, invoiceId, paymentId }, {});
+    return this.confirmationResource.save({ contactId, campId, invoiceId, paymentId }, {}).$promise
+      .then(() => {
+        this.initializeCampData();
+        this.initializeCamperData();
+      });
   }
 
   getShirtSizes() {

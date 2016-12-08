@@ -1,6 +1,6 @@
 import { invokeResolve } from './application_page/resolve_registry';
 
-import { getCampInfo, getCamperFamily, getCamperPayment, checkApplicationExpiration } from './camps.resolves';
+import { getCampInfo, getCamperFamily, getCamperPayment } from './camps.resolves';
 
 export default function CampRoutes($stateProvider) {
   $stateProvider
@@ -84,8 +84,7 @@ export default function CampRoutes($stateProvider) {
         $timeout: '$timeout',
         $stateParams: '$stateParams',
         CampsService: 'CampsService',
-        register: invokeResolve,
-        checkApplicationExpiration: checkApplicationExpiration
+        register: invokeResolve
       }
     })
     ;
