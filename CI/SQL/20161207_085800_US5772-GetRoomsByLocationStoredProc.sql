@@ -55,8 +55,7 @@ BEGIN
 								WHEN rr.RoomStatus = 0 THEN '0'
 								WHEN rr.RoomStatus = 1 THEN '1'
 						    END
-						WHEN (rr.RoomStatus IS NULL)
-						   THEN NULL
+						ELSE rr.RoomStatus)
 					END AS RoomStatus
 	FROM dbo.Rooms r
 		INNER JOIN dbo.Buildings b on b.Building_ID = r.Building_ID
