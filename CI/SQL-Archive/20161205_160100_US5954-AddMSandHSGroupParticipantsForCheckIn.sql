@@ -1,5 +1,5 @@
 --Bring back all active minor contacts and attempt to assign them a Check-In group by adding them as a group participant
---INSERT INTO [dbo].[Group_Participants] 
+INSERT INTO [dbo].[Group_Participants]
 ([Group_ID],[Participant_ID],[Group_Role_ID],[Domain_ID],[Start_Date],[Employee_Role],[Notes],[Child_Care_Requested],[Need_Book])
 Select T1.Group_ID
 ,T1.Participant_ID

@@ -525,7 +525,8 @@ and c.Household_id is not null
 and (c.[HS_Graduation_Year] is null or c.[HS_Graduation_Year] > 2029)) as T1
 join ministryplatform.[dbo].[Groups] as g
 on g.group_name = T1.Group_name
-and g.Group_Type_ID = 4 and g.Ministry_ID = 2
+and g.Group_Type_ID = 4
+and g.Ministry_ID = 2
 where T1.group_name is not null;
 
 
