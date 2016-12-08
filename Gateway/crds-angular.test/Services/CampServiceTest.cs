@@ -232,9 +232,7 @@ namespace crds_angular.test.Services
             var myContactId = 2187211;
             var eventId = 5433;
             var myContact = getFakeContact(myContactId);
-            var eventParticipant = new MpEventParticipant
-            {
-            };
+            var eventParticipant = new MpEventParticipant();
 
             _contactService.Setup(m => m.GetMyProfile(token)).Returns(myContact);
             _contactService.Setup(m => m.GetHouseholdFamilyMembers(myContact.Household_ID)).Returns(getFakeHouseholdMembers(myContact));
@@ -259,9 +257,7 @@ namespace crds_angular.test.Services
             const int myContactId = 2187211;
             const int eventId = 5433;
             var myContact = getFakeContact(myContactId);
-            var eventParticipant = new MpEventParticipant
-            {
-            };
+            var eventParticipant = new MpEventParticipant();
 
             _contactService.Setup(m => m.GetMyProfile(token)).Returns(myContact);
             _contactService.Setup(m => m.GetHouseholdFamilyMembers(myContact.Household_ID)).Returns(getFakeHouseholdMembers(myContact, false, "Adult Child"));            
@@ -286,9 +282,7 @@ namespace crds_angular.test.Services
             const int myContactId = 2187211;
             const int eventId = 5433;
             var myContact = getFakeContact(myContactId);
-            var eventParticipant = new MpEventParticipant
-            {
-            };
+            var eventParticipant = new MpEventParticipant();
 
             _contactService.Setup(m => m.GetMyProfile(token)).Returns(myContact);
             _contactService.Setup(m => m.GetHouseholdFamilyMembers(myContact.Household_ID)).Returns(getFakeHouseholdMembers(myContact, false));

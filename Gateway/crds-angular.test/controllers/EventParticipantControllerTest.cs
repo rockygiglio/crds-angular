@@ -5,7 +5,6 @@ using System.Net.Http.Headers;
 using System.Web.Http.Controllers;
 using System.Web.Http.Results;
 using crds_angular.Controllers.API;
-using crds_angular.Exceptions;
 using crds_angular.Exceptions.Models;
 using crds_angular.Models.Crossroads.Events;
 using crds_angular.Models.Json;

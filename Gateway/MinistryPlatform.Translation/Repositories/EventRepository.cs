@@ -113,9 +113,7 @@ namespace MinistryPlatform.Translation.Repositories
 
         public int RegisterParticipantForEvent(int participantId, int eventId, int groupId = 0, int groupParticipantId = 0)
         {
-            var values = new Dictionary<string, object>
-            {
-            };
+            var values = new Dictionary<string, object>();
 
             if (groupId != 0)
             {
