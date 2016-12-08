@@ -93,7 +93,7 @@ namespace MinistryPlatform.Translation.Repositories
                 {"Event_ID", roomReservation.EventId},
                 {"Event_Room_ID", roomReservation.EventRoomId},
                 {"Room_ID", roomReservation.RoomId},
-                {"Notes", roomReservation.Notes},
+                { "Notes", roomReservation.Notes},
                 {"Hidden", roomReservation.Hidden},
                 {"Cancelled", roomReservation.Cancelled},
                 {"Capacity", roomReservation.Capacity},

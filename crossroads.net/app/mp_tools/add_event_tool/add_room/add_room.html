@@ -8,7 +8,7 @@
         <ui-select-match >
           {{ $select.selected.name}}
         </ui-select-match>
-        <ui-select-choices ui-disable-choice='false' repeat="room in ( addRoom.rooms | filter: {name: $select.search}) track by room.id">
+        <ui-select-choices ui-disable-choice="room.roomStatus != addRoom.AVAILABLE" repeat="room in ( addRoom.rooms | filter: {name: $select.search}) track by room.id">
           <div>
             <span ng-bind="room.name"></span>
             <table class="table table-condensed">

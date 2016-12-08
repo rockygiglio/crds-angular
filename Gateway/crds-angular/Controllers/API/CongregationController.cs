@@ -54,6 +54,9 @@ namespace crds_angular.Controllers.API
             {
                 try
                 {
+                    startDate = new DateTime(2016, 12, 21, 13, 30, 00);
+                    endDate = new DateTime(2016, 12, 21, 17, 00, 00);
+
                     var rooms = _congregationService.GetRooms(congregationId, startDate, endDate);
                     return Ok(rooms);
                 }

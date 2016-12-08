@@ -17,7 +17,7 @@ BEGIN
 		[API_Procedure_ID],
 		[Domain_ID])
 		VALUES
-		(116,
+		(62,
 		@ID,
 		1)
 	END
