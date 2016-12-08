@@ -36,6 +36,15 @@
                         $state.next.data = {};
                       }
 
+                      $state.params.renderLegacyStyles = (typeof systemPage.systemPages[0].legacyStyles !== 'undefined'
+                        ? Boolean(parseInt(systemPage.systemPages[0].legacyStyles))
+                        : true); // revert to value set on route
+
+                      $state.params.bodyClasses = [];
+                      if (typeof systemPage.systemPages[0].bodyClasses !== 'undefined' && systemPage.systemPages[0].bodyClasses !== null) {
+                        $state.params.bodyClasses = systemPage.systemPages[0].bodyClasses.replace(/\s/g, '').split(',');
+                      }
+
                       $state.next.data.meta = systemPage.systemPages[0];
                     }
                   });
