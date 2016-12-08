@@ -70,6 +70,7 @@ export default class AddRoomController {
 
   removeRoomModal(room) {
     const modalInstance = this.modal.open({
+      controller: 'RemoveRoomController',
       controllerAs: 'removeRoom',
       templateUrl: 'remove_room/remove_room.html',
       resolve: {
