@@ -1,27 +1,31 @@
 let WOW = require('wow.js/dist/wow.min.js');
+let iFrameResizer = require('iframe-resizer/js/iframeResizer.min.js');
+var $ = require('jquery');
 
 export default class StreamingController {
   /*@ngInject*/
-  constructor(CMSService, StreamspotService, GeolocationService, $rootScope, $modal, $location) {
+  constructor(CMSService, StreamspotService, GeolocationService, $rootScope, $modal, $location, $timeout, $sce) {
     this.cmsService         = CMSService;
     this.streamspotService  = StreamspotService;
     this.geolocationService = GeolocationService;
     this.rootScope          = $rootScope;
+    this.timeout            = $timeout;
     this.modal              = $modal;
-
+    this.renderInlineGiving = false;
     this.inProgress     = false;
     this.numberOfPeople = 2;
     this.displayCounter = true;
     this.countSubmit    = false;
     this.dontMiss       = [];
     this.beTheChurch    = [];
-
+    this.sce = $sce;
     let debug = false;
+
     if ( $location != undefined ) {
       let params = $location.search();
       debug = params.debug;
     }
-    
+
     if ( debug === "true" ) {
       this.inProgress = true;
     } else {
@@ -32,19 +36,65 @@ export default class StreamingController {
         }
       });
     }
-    
-    
+
     this.cmsService
         .getDigitalProgram()
         .then((data) => {
           this.sortDigitalProgram(data);
         });
-    
+
     new WOW({
       mobile: false
     }).init();
 
     this.openGeolocationModal();
+
+    switch (__CRDS_ENV__) {
+      case 'int':
+        this.baseUrl = 'https://embedint.crossroads.net';
+        break;
+      case 'demo':
+        this.baseUrl = 'https://embeddemo.crossroads.net';
+        break;
+      default:
+        this.baseUrl = 'https://embed.crossroads.net';
+        break;
+    }
+
+    this.timeout(this.afterViewInit.bind(this), 500);
+  }
+
+  afterViewInit() {
+    this.setupInlineGiving();
+  }
+
+  setupInlineGiving() {
+    var contentBlockTitle = 'streamingInlineGivingIframeParams';
+
+    if(Object.keys(this.rootScope.MESSAGES).indexOf(contentBlockTitle) > 0) {
+      var html = this.rootScope.MESSAGES[contentBlockTitle].content;
+      var div = document.createElement("div");
+          div.innerHTML = html;
+      this.queryStringParams = div.textContent || div.innerText || "";
+    } else {
+      this.queryStringParams = '?type=donation&theme=dark';
+    }
+
+    this.renderInlineGiving = true;
+    this.timeout(this.resizeIframe.bind(this));
+  }
+
+  resizeIframe() {
+    iFrameResizer({
+      heightCalculationMethod: 'taggedElement',
+      minHeight: 350,
+      checkOrigin: false,
+      interval: -16
+    }, ".donation-widget");
+  }
+
+  buildUrl() {
+    return this.sce.trustAsResourceUrl(`${this.baseUrl}${this.queryStringParams}`);
   }
 
   sortDigitalProgram(data) {

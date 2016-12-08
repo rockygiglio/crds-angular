@@ -162,7 +162,9 @@ namespace MinistryPlatform.Translation.Repositories
 
         public DateTime? EventParticipantSignupDate(int contactId, int eventId, string apiToken)
         {
-            var filter = $"Event_ID_Table.[Event_ID] = {eventId} AND Participant_ID_Table_Contact_ID_Table.[Contact_ID] = {contactId}";
+
+            var cancelledcamperstatus = _configurationWrapper.GetConfigIntValue("Event_Participant_Status_ID_Cancelled");
+            var filter = $"Event_ID_Table.[Event_ID] = {eventId} AND Participant_ID_Table_Contact_ID_Table.[Contact_ID] = {contactId} AND Participation_Status_ID_Table.[Participation_Status_ID] <> {cancelledcamperstatus}";
             var participants = _ministryPlatformRestRepository.UsingAuthenticationToken(apiToken)
                 .Search<MpEventParticipant>(filter, "Event_Participants.[Event_Participant_ID],Event_Participants.[_Setup_Date] as [Setup_Date]");
             if (participants.Count > 0)
