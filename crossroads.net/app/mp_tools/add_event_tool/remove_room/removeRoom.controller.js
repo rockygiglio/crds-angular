@@ -2,8 +2,8 @@ import CONSTANTS from 'crds-constants';
 
 export default class RemoveRoomController {
   /* @ngInject */
-  constructor(modalInstance, items) {
-    this.modalInstance = modalInstance;
+  constructor($modalInstance, items) {
+    this.modalInstance = $modalInstance;
     this.room = items;
   }
 

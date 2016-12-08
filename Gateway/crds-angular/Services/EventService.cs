@@ -358,6 +358,7 @@ namespace crds_angular.Services
             eventDto.MinutesSetup = eventTool.MinutesSetup;
             eventDto.MinutesTeardown = eventTool.MinutesTeardown;
             eventDto.ProgramId = eventTool.ProgramId;
+            eventDto.ParticipantsExpected = eventTool.ParticipantsExpected;
             if (eventTool.ReminderDaysId > 0)
             {
                 eventDto.ReminderDaysId = eventTool.ReminderDaysId;

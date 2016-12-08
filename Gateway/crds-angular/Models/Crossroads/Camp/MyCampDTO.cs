@@ -17,6 +17,9 @@ namespace crds_angular.Models.Crossroads.Camp
         [JsonProperty(PropertyName = "eventTitle")]
         public string CampName { get; set; }
 
+        [JsonProperty(PropertyName = "eventPrimaryContact")]
+        public string CampPrimaryContactEmail { get; set; }
+
         [JsonProperty(PropertyName = "startDate")]
         public DateTime CampStartDate { get; set; }
 

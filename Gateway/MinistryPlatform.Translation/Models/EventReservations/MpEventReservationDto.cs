@@ -18,5 +18,6 @@ namespace MinistryPlatform.Translation.Models.EventReservations
         public bool SendReminder { get; set; }
         public DateTime StartDateTime { get; set; }
         public string Title { get; set; }
+        public int ParticipantsExpected { get; set; }
     }
 }

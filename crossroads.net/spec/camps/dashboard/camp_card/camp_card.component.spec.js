@@ -13,7 +13,8 @@ describe('Camp Card Directive', () => {
     startDate: '2017-06-20 00:00:00',
     endDate: '2017-06-27 00:00:00',
     campTitle: 'awesome Camp',
-    paymentRemaining: 300
+    paymentRemaining: 300,
+    campPrimaryContact: 'studentministry@gmail.com'
   };
 
   beforeEach(angular.mock.module(constants.MODULES.CAMPS));
@@ -28,6 +29,7 @@ describe('Camp Card Directive', () => {
     expect(cardComponent.endDate).toBe(bindings.endDate);
     expect(cardComponent.paymentRemaining).toBe(bindings.paymentRemaining);
     expect(cardComponent.campTitle).toBe(bindings.campTitle);
+    expect(cardComponent.campPrimaryContact).toBe(bindings.campPrimaryContact);
   });
 
   it('should format the dates for display', () => {
