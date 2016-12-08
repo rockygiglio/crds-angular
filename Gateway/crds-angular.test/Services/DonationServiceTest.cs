@@ -309,21 +309,6 @@ namespace crds_angular.test.Services
             var fileName = string.Format("XRDReceivables-Test_Deposit_Name_1_{0}{1}{2}.txt", date.ToString("yy"), date.ToString("MM"), date.ToString("dd"));
 
             _mpDonationService.Setup(mocked => mocked.GetSelectedDonationBatches(12424, "afdasfsafd")).Returns(MockDepositList);
-            /*_mpDonationService.Setup(mocked => mocked.GetDonationBatchByDepositId(456)).Returns(new MpDonationBatch
-            {
-                Id = 123,
-                DepositId = 456,
-                ProcessorTransferId = "789",
-                BatchName = "Test BatchName",
-            });
-            _mpDonationService.Setup(mocked => mocked.GetDonationBatchByDepositId(4557657)).Returns(new MpDonationBatch
-            {
-                Id = 1212213,
-                DepositId = 4557657,
-                ProcessorTransferId = "7846469",
-                BatchName = "TestBatchName2",
-            });
-            */
 
             var results = _fixture.GenerateGPExportFileNames(12424, "afdasfsafd");
 

@@ -15,7 +15,6 @@ using MinistryPlatform.Translation.Extensions;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Models.DTO;
 
-
 namespace MinistryPlatform.Translation.Test.Services
 {
     public class DonationServiceTest
