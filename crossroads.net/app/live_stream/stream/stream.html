@@ -17,37 +17,67 @@
 
   <geolocation ng-show="stream.showGeolocationBanner()"></geolocation>
 
-  <div class="container digital-program-container">
+  <div class="digital-program-container">
+    <div class="flex__container container">
+      <div class="flex__item digital-program__giving">
+        <header class="clearfix">
+          <h2>give</h2>
+        </header>
+        <iframe src="{{ stream.buildUrl() }}" frameborder="0" class="donation-widget" scrolling="no" width="100%" ng-if="stream.renderInlineGiving"></iframe>
+      </div>
 
-    <section class="related digital-program bg" ng-show="stream.dontMiss.length">
-      <header class="clearfix">
-        <h2>don't miss</h2>
-      </header>
+      <div class="flex__item digital-program__articles">
+        <section class="" ng-show="stream.dontMiss.length">
+          <header class="clearfix">
+            <h2>don't miss</h2>
+          </header>
 
-      <content-card ng-repeat="event in stream.dontMiss" content="event"></content-card>
+          <div class="row">
+            <content-card ng-repeat="event in stream.dontMiss" content="event"></content-card>
+          </div>
+        </section>
+      </div>
+    </div>
 
-    </section>
-    <section class="participate digital-program bg" ng-show="stream.beTheChurch.length">
-      <div class="row">
+    <div class="flex__container container">
+      <div class="flex__item digital-program__participate"
+           ng-show="stream.beTheChurch.length">
 
         <header class="clearfix">
           <h2>be the church</h2>
         </header>
 
-        <article class="promo" ng-repeat="promo in stream.beTheChurch">
-          <figure>
-            <linked-content href="{{ promo.url }}" target="_blank">
-              <img ng-src="{{ promo.image }}" alt="" class="img-responsive"  title="{{ promo.title }}">
-            </linked-content>
-          </figure>
-          <section>
-            <h3 title="{{ promo.title }}"><linked-content href="{{ promo.url }}" target="_blank" ng-bind-html="promo.title | truncate: 38"></linked-content></h3>
-            <div ng-bind-html="promo.description"></div>
-          </section>
-        </article>
+        <div class="row">
+          <article class="media"
+                  ng-repeat="promo in stream.beTheChurch">
 
+            <figure class="media-left">
+                <linked-content href="{{ promo.url }}"
+                                target="_blank">
+
+                  <img ng-src="{{ promo.image }}"
+                      alt=""
+                      class="img-responsive media-object"
+                      title="{{ promo.title }}">
+
+                </linked-content>
+            </figure>
+
+            <section class="media-body">
+              <h3 class="media-heading"
+                  title="{{ promo.title }}">
+
+                <linked-content href="{{ promo.url }}"
+                                target="_blank"
+                                ng-bind-html="promo.title | truncate: 38"></linked-content>
+
+              </h3>
+
+              <div ng-bind-html="promo.description"></div>
+            </section>
+          </article>
+        </div>
       </div>
-    </section>
-
+    </div>
   </div>
 </div>

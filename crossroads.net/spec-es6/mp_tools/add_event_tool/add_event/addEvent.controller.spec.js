@@ -10,6 +10,7 @@ describe('component: addEvent controller', () => {
   let validation;
   let qApi;
   let addEvent;
+  let session;
 
   beforeEach(angular.mock.module(CONSTANTS.MODULES.MPTOOLS));
 
@@ -17,8 +18,7 @@ describe('component: addEvent controller', () => {
     log = $injector.get('$log');
     lookup = jasmine.createSpyObj('lookup', ['query']);
     lookup.query.and.callFake((params) => {
-      switch (params.table)
-        {
+      switch (params.table) {
         case 'eventtypes':
           return [{
             dp_RecordID: 1,
@@ -40,16 +40,18 @@ describe('component: addEvent controller', () => {
       }
     }
     );
-    programs = {AllPrograms: jasmine.createSpyObj('programs.AllPrograms', ['query'])};
+    programs = { AllPrograms: jasmine.createSpyObj('programs.AllPrograms', ['query']) };
     programs.AllPrograms.query.and.returnValue([{ programId: 1, programName: 'Program1' }, { programid: 2, programName: 'Program2' }]);
     staffContact = jasmine.createSpyObj('staffContact', ['query']);
-    staffContact.query.and.returnValue([{ contactId: 1, displayName: 'Nukem, Duke', email: 'daduke@compuserve.net' },
-        { contactId: 2, displayName: 'JoeKer', email: 'joker@gmail.com' }]);
+    staffContact.query.and.callFake((obj, callback) => { callback([{ contactId: 1, displayName: 'Nukem, Duke', email: 'daduke@compuserve.net' },
+        { contactId: 2, displayName: 'JoeKer', email: 'joker@gmail.com' }])});
     validation = $injector.get('Validation');
     qApi = $injector.get('$q');
     addEvent = { eventData: { rooms: [] } };
+    session = jasmine.createSpyObj('session', ['exists']);
+    session.exists.and.callFake(function (userId) { return '1'; });
 
-    fixture = new AddEventController(log, addEvent, lookup, programs, staffContact, validation);
+    fixture = new AddEventController(log, addEvent, lookup, programs, staffContact, validation, session);
   }));
 
   beforeEach(() => {
@@ -83,6 +85,7 @@ describe('component: addEvent controller', () => {
     expect(fixture.programs[0].programId).toBe(1);
     expect(fixture.eventData).not.toBeUndefined();
     expect(fixture.eventData).not.toBeNull();
+    expect(fixture.eventData.primaryContact.contactId).toBe(1);
     expect(fixture.eventData.donationBatch).toBe(0);
 
   });
