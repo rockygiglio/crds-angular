@@ -1,7 +1,7 @@
 import CONSTANTS from 'crds-constants';
 
 export default class AddRoomController {
-    /* @ngInject */
+  /* @ngInject */
   constructor($log, $rootScope, $modal, AddEvent, Lookup, Room) {
     this.log = $log;
     this.rootScope = $rootScope;
@@ -20,48 +20,57 @@ export default class AddRoomController {
   $onInit() {
     this.layouts = this.room.Layouts.query();
     if (this.addEvent.editMode) {
-      this.lookup.query({ table: 'crossroadslocations' }, (locations) => {
-        this.addEvent.eventData.event.congregation = _.find(locations, (l) => {
-          return l.dp_RecordID === this.addEvent.eventData.event.congregation.dp_RecordID;
-        });
-      });
+      this.setLocation();
     }
     if (this.addEvent.eventData.event.congregation !== undefined) {
       this.chosenSite = this.addEvent.eventData.event.congregation.dp_RecordName;
-      this.room.ByCongregation.query({
-        congregationId: this.addEvent.eventData.event.congregation.dp_RecordID
-      }, ((data) => {
-        this.rooms = data;
-        this.viewReady = true;
-        this.roomData = _.filter(this.roomData, (r) => {
-          if (r.name === undefined) {
-            const tempRoom = _.find(data, (roo) => {
-              return roo.id === r.id;
-            });
-
-            if (tempRoom) {
-              r.name = tempRoom.name;
-              return true;
-            }
-
-            return false;
-          }
-
-          return true;
-        });
-        this.room.Equipment.query({ congregationId: this.addEvent.eventData.event.congregation.dp_RecordID },
-                    (data) => {
-                      this.equipmentList = data;
-                      _.forEach(this.roomData, (roomD) => {
-                        roomD.equipment = this.mapEquipment(data, roomD.equipment);
-                      });
-                    });
-      }));
-     // this.viewReady = true;
+      this.room.ByCongregation.query({ congregationId: this.addEvent.eventData.event.congregation.dp_RecordID }, (data) => {
+        this.setRoomData(data);
+        this.setEquipmentData();
+      });
       return;
     }
     this.log.error('The congregation was not passed in so we can\'t get the list of rooms or equipment');
     return;
+  }
+
+  setLocation() {
+    this.lookup.query({ table: 'crossroadslocations' }, (locations) => {
+      this.addEvent.eventData.event.congregation = _.find(locations, (l) => {
+        return l.dp_RecordID === this.addEvent.eventData.event.congregation.dp_RecordID;
+      });
+    });
+  }
+
+  setRoomData(data) {
+    this.rooms = data;
+    this.viewReady = true;
+    this.roomData = _.filter(this.roomData, (r) => {
+      if (r.name === undefined) {
+        const tempRoom = _.find(data, (roo) => {
+          return roo.id === r.id;
+        });
+
+        if (tempRoom) {
+          r.name = tempRoom.name;
+          return true;
+        }
+
+        return false;
+      }
+
+      return true;
+    });
+  }
+
+  setEquipmentData() {
+    this.room.Equipment.query({ congregationId: this.addEvent.eventData.event.congregation.dp_RecordID },
+      (data) => {
+        this.equipmentList = data;
+        _.forEach(this.roomData, (roomD) => {
+          roomD.equipment = this.mapEquipment(data, roomD.equipment);
+        });
+      });
   }
 
   isCancelled(currentRoom) {
@@ -84,7 +93,7 @@ export default class AddRoomController {
 
   onAdd() {
     if (this.chosenRoom) {
-            // is this room already added?
+      // is this room already added?
       const alreadyAdded = _.find(this.roomData, (r) => {
         return r.id === this.chosenRoom.id;
       });
@@ -129,7 +138,7 @@ export default class AddRoomController {
     modalInstance.result.then(() => {
       if (!_.has(currentRoom, 'cancelled')) {
         this.roomData = _.filter(this.roomData, (r) => {
-                    // only return elements that aren't currentRoom
+          // only return elements that aren't currentRoom
           return r.id !== currentRoom.id;
         });
       } else {
@@ -140,12 +149,12 @@ export default class AddRoomController {
       }
     },
 
-            () => {
-              if (!_.has(currentRoom, 'cancelled') && currentRoom.cancelled) {
-                this.log.info('user doesn\'t want to delete this room...');
-                currentRoom.cancelled = false;
-              }
-            });
+      () => {
+        if (!_.has(currentRoom, 'cancelled') && currentRoom.cancelled) {
+          this.log.info('user doesn\'t want to delete this room...');
+          currentRoom.cancelled = false;
+        }
+      });
   }
 
   showNoRoomsMessage() {
