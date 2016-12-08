@@ -11,7 +11,6 @@ export default class StreamingController {
     this.rootScope          = $rootScope;
     this.timeout            = $timeout;
     this.modal              = $modal;
-    this.renderInlineGiving = false;
     this.inProgress     = false;
     this.numberOfPeople = 2;
     this.displayCounter = true;
@@ -61,40 +60,24 @@ export default class StreamingController {
         break;
     }
 
-    this.timeout(this.afterViewInit.bind(this), 500);
-  }
-
-  afterViewInit() {
-    this.setupInlineGiving();
-  }
-
-  setupInlineGiving() {
-    var contentBlockTitle = 'streamingInlineGivingIframeParams';
-
-    if(Object.keys(this.rootScope.MESSAGES).indexOf(contentBlockTitle) > 0) {
-      var html = this.rootScope.MESSAGES[contentBlockTitle].content;
-      var div = document.createElement("div");
-          div.innerHTML = html;
-      this.queryStringParams = div.textContent || div.innerText || "";
-    } else {
-      this.queryStringParams = '?type=donation&theme=dark';
-    }
-
-    this.renderInlineGiving = true;
-    this.timeout(this.resizeIframe.bind(this));
+    this.timeout(this.resizeIframe.bind(this), 500);
   }
 
   resizeIframe() {
+    var el = document.querySelector('.digital-program__giving iframe');
+        el.removeAttribute('height');
+
     iFrameResizer({
       heightCalculationMethod: 'taggedElement',
       minHeight: 350,
       checkOrigin: false,
       interval: -16
-    }, ".donation-widget");
+    }, el);
   }
 
   buildUrl() {
-    return this.sce.trustAsResourceUrl(`${this.baseUrl}${this.queryStringParams}`);
+    var params = this.queryStringParams || 'type=donation&theme=dark';
+    return this.sce.trustAsResourceUrl(`${this.baseUrl}?${params}`);
   }
 
   sortDigitalProgram(data) {
