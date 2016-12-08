@@ -10,6 +10,7 @@
         public int BanquetCapacity { get; set; }
         public string Description { get; set; }
         public int TheaterCapacity { get; set; }
+        public bool Reserved { get; set; }
     }
 
     public class RoomLayout

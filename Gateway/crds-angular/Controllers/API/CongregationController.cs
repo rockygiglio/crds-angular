@@ -46,13 +46,15 @@ namespace crds_angular.Controllers.API
         [ResponseType(typeof (List<Room>))]
         [VersionedRoute(template: "congregation/{congregationId}/rooms", minimumVersion: "1.0.0")]
         [Route("congregation/{congregationId}/rooms")]
-        public IHttpActionResult GetRooms(int congregationId)
+        public IHttpActionResult GetRooms(int congregationId, 
+                                            [FromUri(Name="startDate")] DateTime startDate, 
+                                            [FromUri(Name="endDate")]DateTime endDate)
         {
             return Authorized(t =>
             {
                 try
                 {
-                    var rooms = _congregationService.GetRooms(congregationId);
+                    var rooms = _congregationService.GetRooms(congregationId, startDate, endDate);
                     return Ok(rooms);
                 }
                 catch (Exception e)

@@ -29,7 +29,9 @@ export default class AddRoomController {
         if (this.addEvent.eventData.event.congregation !== undefined) {
             this.chosenSite = this.addEvent.eventData.event.congregation.dp_RecordName;
             this.room.ByCongregation.query({
-                congregationId: this.addEvent.eventData.event.congregation.dp_RecordID
+                congregationId: this.addEvent.eventData.event.congregation.dp_RecordID,
+                startDate: this.addEvent.eventData.event.startTime,
+                endDate: this.addEvent.eventData.event.endTime
             }, ((data) => {
                 this.rooms = data;
                 this.rooms = _.filter(this.rooms, function (r) {

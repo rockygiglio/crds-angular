@@ -22,9 +22,9 @@ GO
 --               particular time or not
 -- =============================================
 ALTER PROCEDURE [dbo].[api_crds_GetReservedAndAvailableRoomsByLocation]
-	@startDate DateTime,
-	@endDate DateTime,
-	@locationId int = 3
+	@StartDate DateTime,
+	@EndDate DateTime,
+	@LocationId int = 3
 AS
 BEGIN
 
@@ -35,17 +35,17 @@ BEGIN
 	FROM dbo.Events e
 		inner join dbo.Event_Rooms er on e.Event_ID = er.Event_ID
 		inner join dbo.Rooms r on er.Room_ID = r.Room_ID
-	WHERE ( (e.Event_Start_Date >= @startDate AND e.Event_Start_Date < @endDate)
-		OR (e.Event_End_Date > @startDate AND e.Event_End_Date <= @endDate) )
+	WHERE ( (e.Event_Start_Date >= @StartDate AND e.Event_Start_Date < @EndDate)
+		OR (e.Event_End_Date > @StartDate AND e.Event_End_Date <= @EndDate) )
 		AND er._Approved = 1
-		AND e.Location_ID = @locationId
+		AND e.Location_ID = @LocationId
 	)
 	SELECT r.Room_ID, r.Room_Name, r.Room_Number, b.Building_ID, b.Building_Name, b.Location_ID, 
 			r.Description, r.Theater_Capacity, r.Banquet_Capacity, ISNULL(rr._Approved, 0)
 	FROM dbo.Rooms r
 		INNER JOIN dbo.Buildings b on b.Building_ID = r.Building_ID
 		LEFT OUTER JOIN Reserved_Rooms rr on rr.Room_ID = r.Room_ID
-	WHERE r.Bookable = 1 and b.Location_ID = @locationId
+	WHERE r.Bookable = 1 and b.Location_ID = @LocationId
 	ORDER BY r.Room_ID
 
 END

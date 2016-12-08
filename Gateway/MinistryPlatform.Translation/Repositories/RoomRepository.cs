@@ -13,13 +13,21 @@ namespace MinistryPlatform.Translation.Repositories
 {
     public class RoomRepository : BaseRepository, IRoomRepository
     {
-        private readonly IMinistryPlatformService _ministryPlatformService;
-        private readonly ILog _logger = LogManager.GetLogger(typeof (RoomRepository));
+        public const string GetRoomsProcName = "api_crds_GetReservedAndAvailableRoomsByLocation";
 
-        public RoomRepository(IMinistryPlatformService ministryPlatformService, IAuthenticationRepository authenticationService, IConfigurationWrapper configuration)
+        private readonly IMinistryPlatformService _ministryPlatformService;
+        private readonly IMinistryPlatformRestRepository _ministryPlatformRestRepository;
+
+        private readonly ILog _logger = LogManager.GetLogger(typeof(RoomRepository));
+
+        public RoomRepository(IMinistryPlatformService ministryPlatformService,
+                              IMinistryPlatformRestRepository ministryPlatformRestRepository,
+                              IAuthenticationRepository authenticationService,
+                              IConfigurationWrapper configuration)
             : base(authenticationService, configuration)
         {
             _ministryPlatformService = ministryPlatformService;
+            _ministryPlatformRestRepository = ministryPlatformRestRepository;
         }
 
         public List<MpRoomReservationDto> GetRoomReservations(int eventId)
@@ -85,7 +93,7 @@ namespace MinistryPlatform.Translation.Repositories
                 {"Event_ID", roomReservation.EventId},
                 {"Event_Room_ID", roomReservation.EventRoomId},
                 {"Room_ID", roomReservation.RoomId},
-                { "Notes", roomReservation.Notes},
+                {"Notes", roomReservation.Notes},
                 {"Hidden", roomReservation.Hidden},
                 {"Cancelled", roomReservation.Cancelled},
                 {"Capacity", roomReservation.Capacity},
@@ -118,23 +126,19 @@ namespace MinistryPlatform.Translation.Repositories
             _ministryPlatformService.DeleteRecord(roomReservationPageId, roomReservation.EventRoomId, null, token);
         }
 
-        public List<MpRoom> GetRoomsByLocationId(int locationId)
+        public List<MpRoom> GetRoomsByLocationId(int locationId, DateTime startDate, DateTime endDate)
         {
-            var t = ApiLogin();
-            var search = string.Format(",,,,{0}", locationId);
-            var records = _ministryPlatformService.GetPageViewRecords("RoomsByLocationId", t, search);
-
-            return records.Select(record => new MpRoom
+            var token = ApiLogin();
+            var parms = new Dictionary<string, object>
             {
-                BuildingId = record.ToInt("Building_ID"),
-                LocationId = record.ToInt("Location_ID"),
-                RoomId = record.ToInt("Room_ID"),
-                RoomName = record.ToString("Room_Name"),
-                RoomNumber = record.ToString("Room_Number"),
-                BanquetCapacity = record.ToInt("Banquet_Capacity"),
-                Description = record.ToString("Description"),
-                TheaterCapacity = record.ToInt("Theater_Capacity")
-            }).ToList();
+                {"@StartDate", startDate}
+            };
+            parms.Add("@EndDate", string.Join(",", endDate));
+            parms.Add("@LocationId", string.Join(",", locationId));
+
+            var records = _ministryPlatformRestRepository.UsingAuthenticationToken(token).GetFromStoredProc<MpRoom>(GetRoomsProcName, parms);
+
+            return records.FirstOrDefault();
         }
 
         public List<RoomLayout> GetRoomLayouts()

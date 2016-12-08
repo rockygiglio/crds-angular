@@ -13,6 +13,8 @@ namespace MinistryPlatform.Translation.Test.Services
     public class RoomServiceTest
     {
         private Mock<IMinistryPlatformService> _ministryPlatformService;
+        private Mock<IMinistryPlatformRestRepository> _ministryPlatformRestRepository;
+
         private Mock<IConfigurationWrapper> _config;
         private Mock<IAuthenticationRepository> _authenticationService;
 
@@ -21,7 +23,7 @@ namespace MinistryPlatform.Translation.Test.Services
         [SetUp]
         public void SetUp()
         {
-            _ministryPlatformService = new Mock<IMinistryPlatformService>();
+            _ministryPlatformRestRepository = new Mock<IMinistryPlatformRestRepository>();
             _config = new Mock<IConfigurationWrapper>();
             _authenticationService = new Mock<IAuthenticationRepository>();
 
@@ -30,7 +32,7 @@ namespace MinistryPlatform.Translation.Test.Services
                 {"token", "abc"}
             });
 
-            _fixture = new RoomRepository(_ministryPlatformService.Object, _authenticationService.Object, _config.Object);
+            _fixture = new RoomRepository(_ministryPlatformService.Object, _ministryPlatformRestRepository.Object, _authenticationService.Object, _config.Object);
         }
 
         [Test]
