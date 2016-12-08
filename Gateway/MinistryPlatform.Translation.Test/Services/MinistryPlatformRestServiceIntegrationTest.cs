@@ -410,6 +410,13 @@ namespace MinistryPlatform.Translation.Test.Services
         }
 
         [Test]
+        public void TestProcessingFeeProgramId()
+        {
+            var res = _fixture.UsingAuthenticationToken(_authToken).Search<int>("GL_Account_Mapping", "GL_Account_Mapping.Program_ID=395 AND GL_Account_Mapping.Congregation_ID=5", "Processor_Fee_Mapping_ID_Table.Program_ID");
+            Assert.AreEqual(127, res);
+        }
+
+        [Test]
         public void postPayment()
         {
             var paymentDetail = new MpPaymentDetail()

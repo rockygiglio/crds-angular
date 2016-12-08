@@ -29,11 +29,12 @@ namespace crds_angular.Services.Interfaces
         // ReSharper disable once InconsistentNaming
         MemoryStream CreateGPExport(int selectionId, int depositId, string token);
         // ReSharper disable once InconsistentNaming
-        string GPExportFileName(int depositId);
+        string GPExportFileName(DepositDTO deposit);
         // ReSharper disable once InconsistentNaming
         List<DepositDTO> GenerateGPExportFileNames(int selectionId, string token);
 
         void SendMessageToDonor(int donorId, int donationDistributionId, int fromContactId, string body, string tripName);
         DepositDTO GetDepositByProcessorTransferId(string processorTransferId);
+        DepositDTO GetDepositById(int depositId);
     }
 }
