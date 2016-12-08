@@ -1,0 +1,7 @@
+USE MinistryPlatform
+GO
+
+IF NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = N'Events' AND COLUMN_NAME = 'Minutes_Until_Timeout')
+BEGIN
+	ALTER TABLE dbo.Events ADD Minutes_Until_Timeout INT NULL;
+END

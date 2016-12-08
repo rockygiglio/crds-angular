@@ -46,7 +46,7 @@ describe('Camp Service', () => {
 
   it('should make the API call to get my camp family', () => {
     const campId = 21312;
-    expect(campsService.family).toBeUndefined();
+    expect(campsService.family).toEqual([]);
     httpBackend.expectGET(`${endpoint}/v1.0.0/camps/${campId}/family`).respond(200, []);
     campsService.getCampFamily(campId);
     httpBackend.flush();
@@ -55,11 +55,11 @@ describe('Camp Service', () => {
 
   it('should make the API call to get my camp family and handle error', () => {
     const campId = 21312;
-    expect(campsService.family).toBeUndefined();
+    expect(campsService.family).toEqual([]);
     httpBackend.expectGET(`${endpoint}/v1.0.0/camps/${campId}/family`).respond(500, []);
     campsService.getCampFamily(campId);
     httpBackend.flush();
-    expect(campsService.family).toBeUndefined();
+    expect(campsService.family).toEqual([]);
   });
 
   it('should make the API call to get my camp payment', () => {
@@ -82,6 +82,33 @@ describe('Camp Service', () => {
     campsService.getCampPayment(invoiceId, paymentId);
     httpBackend.flush();
     expect(campsService.payment).toEqual({});
+  });
+
+  it('should only get camp product info', () => {
+    const campId = 123456;
+    const camperId = 654321;
+    const productInfo = {
+      invoiceId: 123
+    };
+
+    httpBackend.expectGET(`${endpoint}/camps/${campId}/product/${camperId}`).respond(200, productInfo);
+    expect(campsService.getCampProductInfo(campId, camperId));
+    httpBackend.flush();
+    expect(campsService.productInfo.invoiceId).toEqual(123);
+  });
+
+  it('should get camp product info and check for deposit', () => {
+    const campId = 123456;
+    const camperId = 654321;
+    const productInfo = {
+      invoiceId: 123
+    };
+
+    httpBackend.expectGET(`${endpoint}/camps/${campId}/product/${camperId}`).respond(200, productInfo);
+    httpBackend.whenGET(`${endpoint}/v1.0.0/invoice/${productInfo.invoiceId}/has-payment`).respond(200, {});
+    expect(campsService.getCampProductInfo(campId, camperId, true));
+    httpBackend.flush();
+    expect(campsService.productInfo.invoiceId).toEqual(123);
   });
 
   afterEach(() => {

@@ -1,6 +1,4 @@
-let WOW = require('wow.js/dist/wow.min.js');
 let iFrameResizer = require('iframe-resizer/js/iframeResizer.min.js');
-var $ = require('jquery');
 
 export default class StreamingController {
   /*@ngInject*/
@@ -9,13 +7,16 @@ export default class StreamingController {
     this.streamspotService  = StreamspotService;
     this.geolocationService = GeolocationService;
     this.rootScope          = $rootScope;
+    this.timeout            = $timeout;
     this.modal              = $modal;
+    this.renderInlineGiving = false;
     this.inProgress     = false;
     this.numberOfPeople = 2;
     this.displayCounter = true;
     this.countSubmit    = false;
     this.dontMiss       = [];
     this.beTheChurch    = [];
+
     this.sce = $sce;
     let debug = false;
 
@@ -41,10 +42,6 @@ export default class StreamingController {
           this.sortDigitalProgram(data);
         });
 
-    new WOW({
-      mobile: false
-    }).init();
-
     this.openGeolocationModal();
 
     switch (__CRDS_ENV__) {
@@ -59,20 +56,46 @@ export default class StreamingController {
         break;
     }
 
-    $timeout(this.resizeIframe);
+    this.timeout(this.afterViewInit.bind(this), 500);
+  }
+
+  afterViewInit() {
+    this.setupInlineGiving();
+
+    // Carousel variables
+    this.wrapper  = document.querySelector(".crds-carousel__content-wrap");
+    this.content  = document.querySelector(".crds-carousel__list");
+    this.content.style.marginLeft = "0px";
+    this.pos = 0;
+  }
+
+  setupInlineGiving() {
+    var contentBlockTitle = 'streamingInlineGivingIframeParams';
+
+    if(Object.keys(this.rootScope.MESSAGES).indexOf(contentBlockTitle) > 0) {
+      var html = this.rootScope.MESSAGES[contentBlockTitle].content;
+      var div = document.createElement("div");
+          div.innerHTML = html;
+      this.queryStringParams = div.textContent || div.innerText || "";
+    } else {
+      this.queryStringParams = '?type=donation&theme=dark';
+    }
+
+    this.renderInlineGiving = true;
+    this.timeout(this.resizeIframe.bind(this));
   }
 
   resizeIframe() {
     iFrameResizer({
       heightCalculationMethod: 'taggedElement',
-      minHeight: 275,
+      minHeight: 350,
       checkOrigin: false,
       interval: -16
     }, ".donation-widget");
   }
 
   buildUrl() {
-    return this.sce.trustAsResourceUrl(`${this.baseUrl}?type=donation&theme=dark`);
+    return this.sce.trustAsResourceUrl(`${this.baseUrl}${this.queryStringParams}`);
   }
 
   sortDigitalProgram(data) {
@@ -116,6 +139,26 @@ export default class StreamingController {
         backdrop: 'static',
         size: 'lg'
       });
+    }
+  }
+
+  carouselCardWidth() {
+    this.article  = document.querySelector(".crds-carousel__item");
+
+    return this.article.offsetWidth;
+  }
+
+  carouselPrev(event) {
+    if (this.pos < 0) {
+      this.pos += this.carouselCardWidth();
+      this.content.style.marginLeft = this.pos + "px";
+    }
+  }
+
+  carouselNext(event) {
+    if (this.pos > ((this.content.scrollWidth * -1) + (this.wrapper.offsetWidth))) {
+      this.pos -= this.carouselCardWidth();
+      this.content.style.marginLeft = this.pos + "px";
     }
   }
 }

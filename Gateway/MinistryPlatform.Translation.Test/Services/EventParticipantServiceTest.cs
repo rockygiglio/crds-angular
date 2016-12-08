@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using Crossroads.Utilities;
+using Crossroads.Utilities.FunctionalHelpers;
 using Crossroads.Utilities.Interfaces;
 using FsCheck;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Repositories;
 using MinistryPlatform.Translation.Repositories.Interfaces;
+using MinistryPlatform.Translation.Test.Helpers;
 using Moq;
 using NUnit.Framework;
 
@@ -20,7 +23,8 @@ namespace MinistryPlatform.Translation.Test.Services
 
         [SetUp]
         public void Setup()
-        {
+        {            
+            Factories.EventParticipant();
             _ministryPlatformService = new Mock<IMinistryPlatformService>();
             _ministryPlatformRest = new Mock<IMinistryPlatformRestRepository>();
             _authService = new Mock<IAuthenticationRepository>();
@@ -145,6 +149,93 @@ namespace MinistryPlatform.Translation.Test.Services
 
             var result = _fixture.EventParticipantSignupDate(contactId, eventId, apiToken);
             Assert.IsNull(result);
-        }       
+        }
+
+        [Test]
+        public void ShouldFindEventParticipant()
+        {
+            const string token = "LETMEIN";
+            const int contactId = 89898;
+            const int eventId = 9876;
+            var columns = new List<string>
+            {
+                "Participant_ID_Table_Contact_ID_Table.[Contact_ID]",
+                "Event_ID_Table.[Event_ID]",
+                "Event_Participant_ID",
+                "Event_ID_Table.Event_Title",
+                "Participation_Status_ID",
+                "End_Date"
+            };
+            var eventParticipants = FactoryGirl.NET.FactoryGirl.Build<MpEventParticipant>();
+
+            _ministryPlatformRest.Setup(m => m.UsingAuthenticationToken(token)).Returns(_ministryPlatformRest.Object);
+            _ministryPlatformRest.Setup(
+                m => m.Search<MpEventParticipant>($"Event_ID_Table.[Event_ID] = {eventId} AND Participant_ID_Table_Contact_ID_Table.[Contact_ID] = {contactId}", columns, null, false))
+                .Returns(new List<MpEventParticipant>() {eventParticipants});
+
+            var result = _fixture.GetEventParticipantByContactAndEvent(contactId, eventId, token);
+
+            Assert.IsInstanceOf<Ok<MpEventParticipant>>(result);
+            Assert.NotNull(result.Value);
+            Assert.AreEqual(eventParticipants.EndDate, result.Value.EndDate);
+        }
+
+        [Test]
+        public void ShouldHandleNoEventParticpant()
+        {
+            const string token = "LETMEIN";
+            const int contactId = 89898;
+            const int eventId = 9876;
+            var columns = new List<string>
+            {
+                "Participant_ID_Table_Contact_ID_Table.[Contact_ID]",
+                "Event_ID_Table.[Event_ID]",
+                "Event_Participant_ID",
+                "Event_ID_Table.Event_Title",
+                "Participation_Status_ID",
+                "End_Date"
+            };
+            _ministryPlatformRest.Setup(m => m.UsingAuthenticationToken(token)).Returns(_ministryPlatformRest.Object);
+            _ministryPlatformRest.Setup(
+                m => m.Search<MpEventParticipant>($"Event_ID_Table.[Event_ID] = {eventId} AND Participant_ID_Table_Contact_ID_Table.[Contact_ID] = {contactId}", columns, null, false))
+                .Returns(new List<MpEventParticipant>());
+
+            var result = _fixture.GetEventParticipantByContactAndEvent(contactId, eventId, token);
+
+            Assert.IsInstanceOf<Err<MpEventParticipant>>(result);
+            Assert.IsFalse(result.Status);            
+        }
+
+        [Test]
+        public void ShouldHandleExceptionFindingEventParticipant()
+        {
+            const string token = "LETMEIN";
+            const int contactId = 89898;
+            const int eventId = 9876;
+            var columns = new List<string>
+            {
+                "Participant_ID_Table_Contact_ID_Table.[Contact_ID]",
+                "Event_ID_Table.[Event_ID]",
+                "Event_Participant_ID",
+                "Event_ID_Table.Event_Title",
+                "Participation_Status_ID",
+                "End_Date"
+            };
+
+            _ministryPlatformRest.Setup(m => m.UsingAuthenticationToken(token)).Returns(_ministryPlatformRest.Object);
+            _ministryPlatformRest.Setup(
+                m =>
+                    m.Search<MpEventParticipant>($"Event_ID_Table.[Event_ID] = {eventId} AND Participant_ID_Table_Contact_ID_Table.[Contact_ID] = {contactId}",
+                                                 columns,
+                                                 null,
+                                                 false))
+                .Throws<Exception>();
+
+            var result = _fixture.GetEventParticipantByContactAndEvent(contactId, eventId, token);
+
+            Assert.IsInstanceOf<Err<MpEventParticipant>>(result);
+            Assert.IsFalse(result.Status);
+        }
+
     }
 }

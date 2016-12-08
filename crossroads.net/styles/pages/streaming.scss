@@ -136,6 +136,7 @@ streaming, landing {
       color: #FFF;
       position: absolute;
       right: 0;
+      bottom: 0;
       display: none;
 
       @media (min-width: $screen-md) {
@@ -1012,10 +1013,21 @@ streaming, landing {
       padding-left: 20px;
       padding-right: 20px;
 
+      @media (min-width: $screen-md) {
+        padding-left: 0;
+        padding-right: 0;
+      }
+
       &.digital-program__giving {
         background-color: #171717;
         margin-bottom: 2em;
         padding: 0;
+
+        @media (min-width: $screen-md) {
+          flex: 1 1 50px;
+          margin-bottom: 0;
+          order: 2;
+        }
 
         iframe {
           padding: 0 6px;
@@ -1024,36 +1036,100 @@ streaming, landing {
         header {
           padding: 0 1.25em;
         }
-
-        @media (min-width: $screen-md) {
-          flex: 1 1 50px;
-          margin-bottom: 0;
-          order: 2;
-        }
       }
 
       &.digital-program__articles {
         background-color: #171717;
 
-        header {
-          margin-bottom: 1em;
+        @media (min-width: $screen-md) {
+          margin-right: 28px;
+          flex: 2 1 0;
+          order: 1;
         }
 
-        .row {
-          content-card {
-            @include make-xs-column(12);
+        h2 {
+          float: left;
 
-            @media (min-width: $screen-xs) {
-              @include make-xs-column(6);
-            }
+          @media (min-width: $screen-md) {
+            margin-left: .75em;
+          }
+        }
 
-            @media (min-width: $screen-lg) {
-              @include make-xs-column(4);
+        .crds-card-carousel {
+          height: 400px;
+          margin-bottom: 2em;
+          margin-top: 1em;
+          overflow: hidden;
+          position: relative;
+          white-space: nowrap;
+          width: 100%;
+        }
+
+        .crds-carousel {
+          &__controls {
+            float: right;
+            margin-top: 1.5em;
+
+            @media (min-width: $screen-md) {
+              margin-right: 1em;
             }
+          }
+
+          &__control {
+            background: #4D4D4D;
+            border-radius: 4px;
+            color: #FFF;
+            display: inline-block;
+            padding: .25em .75em;
+            text-align: center;
+            vertical-align: middle;
+
+            &:hover,
+            &:focus {
+              background: darken(#4D4D4D, 10);
+            }
+          }
+
+          &__content-wrap {
+            position: absolute;
+            white-space: nowrap;
+            width: 100%;
+          }
+
+          &__list {
+            display: block;
+            list-style: none;
+            overflow-x: scroll;
+            overflow-y: hidden;
+            padding: 0;
+            transition: margin-left 0.5s ease;
+            white-space: nowrap;
+          }
+
+          &__item {
+            display: inline-block;
+            vertical-align: top;
+            white-space: normal;
+            z-index: 1;
+          }
+        }
+
+        content-card {
+          display: inline-block;
+          margin-right: 1em;
+
+          &:last-of-type {
+            margin-right: 0;
+          }
+
+          article {
+            margin-bottom: 0;
           }
         }
 
         .crds-card {
+          width: 250px;
+
           figcaption {
             top: -0.6em;
 
@@ -1066,15 +1142,13 @@ streaming, landing {
             }
           }
         }
-
-        @media (min-width: $screen-md) {
-          margin-right: 28px;
-          flex: 2 1 0;
-          order: 1;
-        }
       }
 
       &.digital-program__participate {
+        @media (min-width: $screen-md) {
+          margin-top: 1em;
+        }
+
         .media {
           @include make-xs-column(12);
 
@@ -1116,10 +1190,6 @@ streaming, landing {
             margin-bottom: 8px;
             text-transform: uppercase;
           }
-        }
-
-        @media (min-width: $screen-md) {
-          margin-top: 1em;
         }
       }
     }
@@ -1370,7 +1440,7 @@ geolocation {
   }
 }
 
-.geolocation-modal {
+&.geolocation-modal {
   @media (min-width: $screen-sm) {
     geolocation > .container {
       padding-top: 25vh;
