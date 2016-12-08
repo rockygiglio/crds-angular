@@ -99,8 +99,7 @@ namespace MinistryPlatform.Translation.Test.Services
             
             _ministryPlatformRest.Setup(p => p.Put("Payments", parmList)).Throws(e);
 
-            Assert.Throws<ApplicationException> (() => _fixture.AddPaymentToBatch(batchId,paymentId));
-
+            Assert.Throws<ApplicationException> (() => _fixture.AddPaymentToBatch(batchId,paymentId));     
         }
 
         private static MpPaymentDetail FakePaymentInfo()

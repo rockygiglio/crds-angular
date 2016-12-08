@@ -128,7 +128,7 @@ namespace crds_angular.App_Start
                 .ForMember(dest => dest.ReceivablesAccount, opts => opts.MapFrom(src => src.ReceivableAccount))
                 .ForMember(dest => dest.DistributionAmount, opts => opts.MapFrom(src => src.Amount.ToString()))
                 .ForMember(dest => dest.CashAccount, opts => opts.MapFrom(src => (src.ScholarshipPaymentTypeId == src.PaymentTypeId ? src.ScholarshipExpenseAccount : src.CashAccount)))
-                .ForMember(dest => dest.DistributionReference, opts => opts.MapFrom(src => (src.ProccessFeeProgramId == src.ProgramId ? "Processor Fees " + src.DonationDate : "Contribution " + src.DonationDate  )));
+                .ForMember(dest => dest.DistributionReference, opts => opts.MapFrom(src => src.DistributionReference));
 
             Mapper.CreateMap<MpDonation, DonationDTO>()
                 .ForMember(dest => dest.Amount, opts => opts.MapFrom(src => src.donationAmt))

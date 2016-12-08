@@ -176,7 +176,7 @@ namespace crds_angular.test.Services
 
             var fakeServeReminder = new ServeReminder()
             {
-                OpportunityTitle = "Some Title",
+                OpportunityTitle = "Ok Title",
                 EventEndDate = now,
                 EventStartDate = now,
                 EventTitle = "Whatever",
@@ -232,7 +232,7 @@ namespace crds_angular.test.Services
                 {
                     AuthorUserId = fakeGroupContact.Contact_ID,
                     DomainId = 1,
-                    EmailBody = "Some Email Body",
+                    EmailBody = "Ok Email Body",
                     EmailSubject = "Whatever",
                     FromContact = contact,
                     MergeData = mergeData,

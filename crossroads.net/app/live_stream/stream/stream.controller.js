@@ -1,6 +1,4 @@
-let WOW = require('wow.js/dist/wow.min.js');
 let iFrameResizer = require('iframe-resizer/js/iframeResizer.min.js');
-var $ = require('jquery');
 
 export default class StreamingController {
   /*@ngInject*/
@@ -18,6 +16,7 @@ export default class StreamingController {
     this.countSubmit    = false;
     this.dontMiss       = [];
     this.beTheChurch    = [];
+
     this.sce = $sce;
     let debug = false;
 
@@ -43,10 +42,6 @@ export default class StreamingController {
           this.sortDigitalProgram(data);
         });
 
-    new WOW({
-      mobile: false
-    }).init();
-
     this.openGeolocationModal();
 
     switch (__CRDS_ENV__) {
@@ -66,6 +61,12 @@ export default class StreamingController {
 
   afterViewInit() {
     this.setupInlineGiving();
+
+    // Carousel variables
+    this.wrapper  = document.querySelector(".crds-carousel__content-wrap");
+    this.content  = document.querySelector(".crds-carousel__list");
+    this.content.style.marginLeft = "0px";
+    this.pos = 0;
   }
 
   setupInlineGiving() {
@@ -138,6 +139,26 @@ export default class StreamingController {
         backdrop: 'static',
         size: 'lg'
       });
+    }
+  }
+
+  carouselCardWidth() {
+    this.article  = document.querySelector(".crds-carousel__item");
+
+    return this.article.offsetWidth;
+  }
+
+  carouselPrev(event) {
+    if (this.pos < 0) {
+      this.pos += this.carouselCardWidth();
+      this.content.style.marginLeft = this.pos + "px";
+    }
+  }
+
+  carouselNext(event) {
+    if (this.pos > ((this.content.scrollWidth * -1) + (this.wrapper.offsetWidth))) {
+      this.pos -= this.carouselCardWidth();
+      this.content.style.marginLeft = this.pos + "px";
     }
   }
 }

@@ -194,7 +194,7 @@ namespace crds_angular.test.Services
 
             var template = new MpMessageTemplate()
             {
-                Body = "Some long string of text",
+                Body = "Ok long string of text",
                 Subject = "A subject"
             };
 
