@@ -293,10 +293,7 @@ namespace crds_angular.Services
             request.AddParameter("description", "Donor ID #" + donorId);
             request.AddParameter("expand[]", "balance_transaction");
 
-            if (isPayment)
-            {
-              request.AddParameter("metadata[crossroads_transaction_type]", "payment");
-            }
+            request.AddParameter("metadata[crossroads_transaction_type]", isPayment ? "payment" : "donation");
 
             var response = _stripeRestClient.Execute<StripeCharge>(request);
             CheckStripeResponse("Invalid charge request", response, true);

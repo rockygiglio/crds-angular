@@ -103,6 +103,8 @@ namespace Crossroads.AsyncJobs
                 .ForMember(dest => dest.Distributions, opts => opts.MapFrom(src => src.Distributions))
                 .ForMember(dest => dest.IncludeOnGivingHistory, opts => opts.MapFrom(src => src.IncludeOnGivingHistory))
                 .ForMember(dest => dest.IncludeOnPrintedStatement, opts => opts.MapFrom(src => src.IncludeOnPrintedStatement))
+                .ForMember(dest => dest.AccountingCompanyName, opts => opts.MapFrom(src => src.AccountingCompanyName))
+                .ForMember(dest => dest.AccountingCompanyIncludeOnPrintedStatement, opts => opts.MapFrom(src => src.AccountingCompanyIncludeOnPrintedStatement))
                 .AfterMap((src, dest) =>
                 {
                     dest.Source = new DonationSourceDTO

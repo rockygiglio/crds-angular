@@ -26,9 +26,11 @@ namespace MinistryPlatform.Translation.Test.Services
             _configuration.Setup(mocked => mocked.GetConfigIntValue("Congregation_Default_ID")).Returns(5);
             _configuration.Setup(mocked => mocked.GetConfigIntValue("Household_Default_Source_ID")).Returns(30);
             _configuration.Setup(mocked => mocked.GetConfigIntValue("Household_Position_Default_ID")).Returns(1);
+            _configuration.Setup(mocked => mocked.GetConfigIntValue("StaffContactAttribute")).Returns(7088);
             _configuration.Setup(mocked => mocked.GetConfigIntValue("Addresses")).Returns(271);
             _configuration.Setup(m => m.GetEnvironmentVarAsString("API_USER")).Returns("uid");
             _configuration.Setup(m => m.GetEnvironmentVarAsString("API_PASSWORD")).Returns("pwd");
+            _ministryPlatformRest.Setup(m => m.UsingAuthenticationToken("ABC")).Returns(_ministryPlatformRest.Object);
 
             _authService.Setup(m => m.Authenticate(It.IsAny<string>(), It.IsAny<string>())).Returns(new Dictionary<string, object> {{"token", "ABC"}, {"exp", "123"}});
 
@@ -370,6 +372,37 @@ namespace MinistryPlatform.Translation.Test.Services
 
             Assert.AreEqual(family.Count,2);
             Assert.AreEqual(family[0].Age,4);
+        }
+
+        [Test]
+        public void ShouldGetStaffContacts()
+        {
+            var returnData = new List<Dictionary<string, object>>
+            {
+                new Dictionary<string, object>
+                {
+                    {"Contact_ID", 1},
+                    {"Display_Name", "Nukem, Duke"},
+                    {"Email_Address", "Duke.Nukem@compuserv.net"},
+                    {"Extra_Data", 3 }
+                } ,
+                new Dictionary<string, object> {
+                    {"Contact_ID", 2 },
+                    {"Display_Name", "Croft, Lara"},
+                    {"Email_Address", "Lara.Croft@gmail.com"}
+                }
+            };
+
+            const string columns = "Contact_ID_Table.*";
+            string filter = $"Attribute_ID = 7088 AND Start_Date <= GETDATE() AND (end_date is null OR end_Date > GETDATE())";
+
+            _ministryPlatformRest.Setup(m => m.Search<MpContactAttribute, Dictionary<string, object>>(filter, columns, null, true)).Returns(returnData);
+
+            var result = _fixture.StaffContacts();
+
+            _ministryPlatformRest.VerifyAll();
+
+            Assert.AreEqual(result, returnData);
         }
     }
 }

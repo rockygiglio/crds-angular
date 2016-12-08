@@ -14,7 +14,9 @@ describe('Stream Controller', () => {
       geolocationService,
       httpBackend,
       modal,
-      results;
+      results,
+      sce,
+      timeout;
 
   beforeEach(angular.mock.module(constants.MODULES.LIVE_STREAM));
 
@@ -25,8 +27,10 @@ describe('Stream Controller', () => {
     rootScope          = $injector.get('$rootScope');
     modal              = $injector.get('$modal');
     location           = $injector.get('$location');
+    timeout            = $injector.get('$timeout');
+    sce                = $injector.get('$sce');
 
-    fixture = new StreamController(cmsService, streamspotService, geolocationService, rootScope, modal, location);
+    fixture = new StreamController(cmsService, streamspotService, geolocationService, rootScope, modal, location, timeout, sce);
     results = [
       {
         "id": 7,

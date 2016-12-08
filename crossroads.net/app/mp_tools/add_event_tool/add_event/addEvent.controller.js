@@ -2,7 +2,7 @@ import CONSTANTS from 'crds-constants';
 
 export default class AddEventcontroller {
     /* @ngInject */
-  constructor($log, AddEvent, Lookup, Programs, StaffContact, Validation) {
+  constructor($log, AddEvent, Lookup, Programs, StaffContact, Validation, Session) {
     this.log = $log;
     this.addEvent = AddEvent;
     this.lookup = Lookup;
@@ -12,12 +12,13 @@ export default class AddEventcontroller {
     this.endDateOpened = false;
     this.startDateOpened = false;
     this.childcareSelectedFlag = false;
+    this.session = Session;
+    this.ready = false;
   }
 
   $onInit() {
     this.eventTypes = this.lookup.query({ table: 'eventtypes' });
     this.reminderDays = this.lookup.query({ table: 'reminderdays' });
-    this.staffContacts = this.staffContact.query();
     this.programs = this.programsLookup.AllPrograms.query();
     // Get the congregations
     this.lookup.query({ table: 'crossroadslocations' }, (locations) => {
@@ -30,7 +31,6 @@ export default class AddEventcontroller {
             //   });
             // }
     });
-
     if (_.isEmpty(this.eventData)) {
       const startDate = new Date();
       startDate.setMinutes(0);
@@ -51,6 +51,12 @@ export default class AddEventcontroller {
     else {
       this.eventTypeChanged();
     }
+
+    this.staffContact.query({}, (contacts) => {
+      this.staffContacts = contacts;
+      this.eventData.primaryContact = _.findWhere(this.staffContacts, { contactId: parseInt(this.session.exists('userId')) });
+      this.ready = true;
+    });
   }
 
   dateTime(dateForDate, dateForTime) {
@@ -134,12 +140,12 @@ export default class AddEventcontroller {
       return false;
     }
 
-        // verify that dates are valid;
+    // verify that dates are valid;
     let start;
     let end;
     try {
       start = this.dateTime(this.eventData.startDate, this.eventData.startTime);
-      if (!this.eventData.eventType.Allow_Multiday_Event) {
+      if (this.eventData.eventType && !this.eventData.eventType.Allow_Multiday_Event) {
         this.eventData.endDate = this.eventData.startDate;
       }
       end = this.dateTime(this.eventData.endDate, this.eventData.endTime);
