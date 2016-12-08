@@ -31,7 +31,8 @@ BEGIN
 	WITH Reserved_Rooms (Room_ID, RoomStatus)
 	AS
 	(
-		SELECT DISTINCT r.Room_ID, er._Approved AS RoomStatus
+		SELECT DISTINCT r.Room_ID, 
+						er._Approved AS RoomStatus					
 		FROM dbo.Events e
 			inner join dbo.Event_Rooms er on e.Event_ID = er.Event_ID
 			inner join dbo.Rooms r on er.Room_ID = r.Room_ID
@@ -39,12 +40,29 @@ BEGIN
 			OR (e.Event_End_Date > @StartDate AND e.Event_End_Date <= @EndDate) )
 			AND e.Location_ID = @LocationId
 	)
-	SELECT r.Room_ID, r.Room_Name, r.Room_Number, b.Building_ID, b.Building_Name, b.Location_ID, 
-			r.Description, r.Theater_Capacity, r.Banquet_Capacity, rr.RoomStatus
+	SELECT DISTINCT r.Room_ID AS RoomId, 
+					r.Room_Name AS RoomName, 
+					r.Room_Number AS RoomNumber, 
+					b.Building_ID AS BuildingId, 
+					b.Building_Name AS BuildingName, 
+					b.Location_ID AS LocationId, 
+					r.Description, 
+					ISNULL(r.Theater_Capacity, 0) AS TheaterCapacity, 
+					ISNULL(r.Banquet_Capacity,0) AS BanquetCapacity, 
+					CASE
+						WHEN (rr.RoomStatus IS NOT NULL)
+							THEN CASE
+								WHEN rr.RoomStatus = 0 THEN '0'
+								WHEN rr.RoomStatus = 1 THEN '1'
+						    END
+						WHEN (rr.RoomStatus IS NULL)
+						   THEN NULL
+					END AS RoomStatus
 	FROM dbo.Rooms r
 		INNER JOIN dbo.Buildings b on b.Building_ID = r.Building_ID
 		LEFT OUTER JOIN Reserved_Rooms rr on rr.Room_ID = r.Room_ID
-	WHERE r.Bookable = 1 and b.Location_ID = @LocationId
+	WHERE r.Bookable = 1 
+			and b.Location_ID = @LocationId
 	ORDER BY r.Room_ID
 
 END

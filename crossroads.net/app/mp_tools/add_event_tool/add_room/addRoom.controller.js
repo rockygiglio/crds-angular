@@ -12,9 +12,7 @@ export default class AddRoomController {
     this.equipmentList = [];
     this.roomError = false;
     this.viewReady = false;
-    // this.selectedRooms = [];
     this.rooms = [];
-    // this.chosenSite = ''; from binding
   }
 
   $onInit() {
@@ -24,7 +22,11 @@ export default class AddRoomController {
     }
     if (this.addEvent.eventData.event.congregation !== undefined) {
       this.chosenSite = this.addEvent.eventData.event.congregation.dp_RecordName;
-      this.room.ByCongregation.query({ congregationId: this.addEvent.eventData.event.congregation.dp_RecordID }, (data) => {
+      this.room.ByCongregation.query({
+        congregationId: this.addEvent.eventData.event.congregation.dp_RecordID,
+        startDate: this.addEvent.eventData.event.startDate,
+        endDate: this.addEvent.eventData.event.endDate
+      }, (data) => {
         this.setRoomData(data);
         this.setEquipmentData();
       });
@@ -42,9 +44,6 @@ export default class AddRoomController {
     });
   }
 
-        congregationId: this.addEvent.eventData.event.congregation.dp_RecordID
-                startDate: this.addEvent.eventData.event.startTime,
-                endDate: this.addEvent.eventData.event.endTime
   setRoomData(data) {
     this.rooms = data;
     this.viewReady = true;
