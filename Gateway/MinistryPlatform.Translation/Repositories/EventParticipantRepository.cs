@@ -123,7 +123,7 @@ namespace MinistryPlatform.Translation.Repositories
 
             try
             {
-                var records = 
+                var records =
                     WithApiLogin(
                         apiToken => _ministryPlatformService.GetSubpageViewRecords("EventParticipantAssignedToRoomApiSubPageView", eventId, apiToken, searchString));
                 return records.Select(viewRecord => new MpEventParticipant
