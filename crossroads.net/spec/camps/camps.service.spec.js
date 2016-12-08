@@ -84,6 +84,33 @@ describe('Camp Service', () => {
     expect(campsService.payment).toEqual({});
   });
 
+  it('should only get camp product info', () => {
+    const campId = 123456;
+    const camperId = 654321;
+    const productInfo = {
+      invoiceId: 123
+    };
+
+    httpBackend.expectGET(`${endpoint}/camps/${campId}/product/${camperId}`).respond(200, productInfo);
+    expect(campsService.getCampProductInfo(campId, camperId));
+    httpBackend.flush();
+    expect(campsService.productInfo.invoiceId).toEqual(123);
+  });
+
+  it('should get camp product info and check for deposit', () => {
+    const campId = 123456;
+    const camperId = 654321;
+    const productInfo = {
+      invoiceId: 123
+    };
+
+    httpBackend.expectGET(`${endpoint}/camps/${campId}/product/${camperId}`).respond(200, productInfo);
+    httpBackend.whenGET(`${endpoint}/v1.0.0/invoice/${productInfo.invoiceId}/has-payment`).respond(200, {});
+    expect(campsService.getCampProductInfo(campId, camperId, true));
+    httpBackend.flush();
+    expect(campsService.productInfo.invoiceId).toEqual(123);
+  });
+
   afterEach(() => {
     httpBackend.verifyNoOutstandingExpectation();
     httpBackend.verifyNoOutstandingRequest();

@@ -127,11 +127,7 @@ class CampsService {
     }).$promise;
 
     if (checkForDeposit) {
-      prom = prom.then(() => {
-        const hasPayment = this.invoiceHasPayment(this.productInfo.invoiceId);
-        //this.scope.$apply();
-        return hasPayment;
-      });
+      prom = prom.then(res => this.invoiceHasPayment(res.invoiceId));
     }
     return prom;
   }

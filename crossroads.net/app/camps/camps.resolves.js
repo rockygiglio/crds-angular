@@ -24,6 +24,7 @@ export function getCampProductInfo(CampsService, $state, $q) {
     });
     return deferred.promise;
   }
+
   return CampsService.getCampProductInfo(campId, camperId);
 }
 
