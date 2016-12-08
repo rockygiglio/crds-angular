@@ -64,6 +64,7 @@ namespace crds_angular.Services
             }
 
             var pymtId = PaymentType.GetPaymentType(paymentRecord.PymtType).id;
+            var fee = paymentRecord.FeeAmt.HasValue ? paymentRecord.FeeAmt / Constants.StripeDecimalConversionValue : null;
 
             //check if payment type exists
             if (!_paymentTypeRepository.PaymentTypeExists(pymtId))
@@ -81,7 +82,7 @@ namespace crds_angular.Services
                 PaymentTotal = paymentRecord.DonationAmt,
                 PaymentTypeId = pymtId,
                 PaymentStatus = _defaultPaymentStatus,
-                ProcessorFeeAmount = paymentRecord.FeeAmt
+                ProcessorFeeAmount = fee
             };
             var paymentDetail = new MpPaymentDetail
             {
