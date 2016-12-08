@@ -9,6 +9,7 @@ using crds_angular.Services;
 using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.FunctionalHelpers;
 using Crossroads.Utilities.Interfaces;
+using FsCheck;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 using Moq;
@@ -106,8 +107,7 @@ namespace crds_angular.test.Services
         [Test]
         public void shouldCreateNewContactAndCampReservation()
         {
-
-            var campReservation = MockCampReservationDTO();
+            var apiToken = "asfgrds";
             var token = "1234";
             var household = new MpMyContact
             {
@@ -121,6 +121,9 @@ namespace crds_angular.test.Services
                     RecordId = 3
                 }
             };
+
+            // var group = new Result<MpGroupParticipant>(true, new MpGroupParticipant() { GroupId = 1234, GroupParticipantId = 7890 });
+            var group = new Result<MpGroupParticipant>(true , "");
 
             var eventId = 4;
 
@@ -138,6 +141,8 @@ namespace crds_angular.test.Services
             _contactService.Setup(m => m.GetMyProfile(token)).Returns(household);
             _contactService.Setup(m => m.CreateContact(It.IsAny<MpContact>())).Returns(contact);
             _participantRepository.Setup(m => m.GetParticipant(contact[0].RecordId)).Returns(participant);
+            _apiUserRepository.Setup(m => m.GetToken()).Returns(apiToken);
+            _groupRepository.Setup(m => m.GetGradeGroupForContact(contact[0].RecordId, apiToken)).Returns(group);
             _eventRepository.Setup(m => m.RegisterParticipantForEvent(participant.ParticipantId, eventId, 0, 0)).Returns(eventParticipantId);
             _configurationWrapper.Setup(m => m.GetConfigIntValue("SummerCampFormID")).Returns(formId);
             _configurationWrapper.Setup(m => m.GetConfigIntValue("SummerCampForm.CurrentGrade")).Returns(10);
@@ -780,7 +785,7 @@ namespace crds_angular.test.Services
         {
             return new CampReservationDTO
             {
-                ContactId = 0,
+                ContactId = null,
                 FirstName = "Jon",
                 LastName = "Horner",
                 MiddleName = "",
@@ -788,7 +793,7 @@ namespace crds_angular.test.Services
                 Gender = 1,
                 PreferredName = "Jon",
                 SchoolAttending = "Mason",
-                CurrentGrade = "6th Grade",
+                CurrentGrade = 12345,
                 SchoolAttendingNext = "Mason",
                 CrossroadsSite = 3,
                 RoomMate = ""
@@ -830,7 +835,7 @@ namespace crds_angular.test.Services
                 Gender = 1,
                 PreferredName = "Jon",
                 SchoolAttending = "Mason",
-                CurrentGrade = "6th Grade",
+                CurrentGrade = 34567,
                 SchoolAttendingNext = "Mason",
                 CrossroadsSite = 3,
                 RoomMate = ""
