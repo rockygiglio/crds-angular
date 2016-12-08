@@ -291,18 +291,14 @@ namespace crds_angular.test.Services
         public void TestGpExportFileName()
         {
             var date = DateTime.Today;
-            var fileName = string.Format("XRDReceivables-Test_Batch_Name_{0}{1}{2}.txt", date.ToString("yy"), date.ToString("MM"), date.ToString("dd"));
+            var fileName = string.Format("XRDReceivables-Test_Deposit_Name_{0}{1}{2}.txt", date.ToString("yy"), date.ToString("MM"), date.ToString("dd"));
 
-            _mpDonationService.Setup(mocked => mocked.GetDonationBatchByDepositId(456)).Returns(new MpDonationBatch
+            var deposit = new DepositDTO()
             {
-                Id = 123,
-                DepositId = 456,
-                ProcessorTransferId = "789",
-                BatchName = "Test Batch Name",
-            });
-            var result = _fixture.GPExportFileName(456);
+                DepositName = "Test Deposit Name"
+            };
 
-            _mpDonationService.VerifyAll();
+            var result = _fixture.GPExportFileName(deposit);
             Assert.AreEqual(fileName, result);
         }
 
@@ -310,23 +306,9 @@ namespace crds_angular.test.Services
         public void TestGenerateGpExportFileNames()
         {
             var date = DateTime.Today;
-            var fileName = string.Format("XRDReceivables-Test_BatchName_{0}{1}{2}.txt", date.ToString("yy"), date.ToString("MM"), date.ToString("dd"));
+            var fileName = string.Format("XRDReceivables-Test_Deposit_Name_1_{0}{1}{2}.txt", date.ToString("yy"), date.ToString("MM"), date.ToString("dd"));
 
             _mpDonationService.Setup(mocked => mocked.GetSelectedDonationBatches(12424, "afdasfsafd")).Returns(MockDepositList);
-            _mpDonationService.Setup(mocked => mocked.GetDonationBatchByDepositId(456)).Returns(new MpDonationBatch
-            {
-                Id = 123,
-                DepositId = 456,
-                ProcessorTransferId = "789",
-                BatchName = "Test BatchName",
-            });
-            _mpDonationService.Setup(mocked => mocked.GetDonationBatchByDepositId(4557657)).Returns(new MpDonationBatch
-            {
-                Id = 1212213,
-                DepositId = 4557657,
-                ProcessorTransferId = "7846469",
-                BatchName = "TestBatchName2",
-            });
 
             var results = _fixture.GenerateGPExportFileNames(12424, "afdasfsafd");
 
@@ -339,10 +321,12 @@ namespace crds_angular.test.Services
         {
             const int depositId = 789;
             var mockedExport = MockGPExport();
+            var mockedPaymentExport = MockPaymentExport();
+
             var expectedReturn = MockExpectedGpExportDto();
 
             _mpDonationService.Setup(mocked => mocked.GetGpExport(depositId, It.IsAny<string>())).Returns(mockedExport);
-
+            
             var result = _fixture.GetGpExport(depositId, "asdfafasdfas");
 
             _mpDonationService.VerifyAll();
@@ -477,6 +461,103 @@ namespace crds_angular.test.Services
             };
         }
 
+        private List<MpGPExportDatum> MockPaymentExport()
+        {
+            return new List<MpGPExportDatum>
+            {
+                new MpGPExportDatum
+                {
+                    DocumentType = "SALE",
+                    DocumentNumber = "10002001",
+                    DepositId = 10002,
+                    BatchName = "Test Payment Batch",
+                    DonationDate = new DateTime(2015, 3, 28, 8, 30, 0),
+                    DepositDate = new DateTime(2015, 3, 28, 8, 30, 0),
+                    CustomerId = "CONTRIBUTI001",
+                    DepositAmount ="400.00",
+                    CheckbookId = "PNC001",
+                    CashAccount = "91213-031-20",
+                    ReceivableAccount = "90013-031-21",
+                    DistributionAccount = "90001-031-22",
+                    DonationAmount = Convert.ToDecimal("380.00"),
+                    Amount = Convert.ToDecimal("380.00")-Convert.ToDecimal(0.13),
+                    ProcessorFeeAmount = Convert.ToDecimal(".25"),
+                    ProgramId = 12,
+                    ProccessorFeeMappingId = 127,
+                    PaymentTypeId = 9,
+                    ScholarshipExpenseAccount = "90551-031-02",
+                    ScholarshipPaymentTypeId = 9
+                },
+                new MpGPExportDatum
+                {
+                    DocumentType = "SALE",
+                    DocumentNumber = "10002001",
+                    DepositId = 10002,
+                    BatchName = "Test Payment Batch",
+                    DonationDate = new DateTime(2015, 3, 28, 8, 30, 0),
+                    DepositDate = new DateTime(2015, 3, 28, 8, 30, 0),
+                    CustomerId = "CONTRIBUTI001",
+                    DepositAmount = "400.00",
+                    CheckbookId = "PNC001",
+                    CashAccount = "77777-031-20",
+                    ReceivableAccount = "77777-031-21",
+                    DistributionAccount = "77777-031-22",
+                    DonationAmount = Convert.ToDecimal("380.00"),
+                    Amount = Convert.ToDecimal(0.13),
+                    ProgramId = 127,
+                    ProccessorFeeMappingId = 127,
+                    PaymentTypeId = 9,
+                    ScholarshipExpenseAccount = "90551-031-02",
+                    ScholarshipPaymentTypeId = 9,
+                },
+                new MpGPExportDatum
+                {
+                    DocumentType = "SALE",
+                    DocumentNumber = "10002002",
+                    DepositId = 10002,
+                    BatchName = "Test Payment Batch 2",
+                    DonationDate = new DateTime(2014, 3, 28, 8, 30, 0),
+                    DepositDate = new DateTime(2014, 3, 28, 8, 30, 0),
+                    CustomerId = "CONTRIBUTI001",
+                    DepositAmount = "400.00",
+                    CheckbookId = "PNC001",
+                    CashAccount = "91213-031-20",
+                    ReceivableAccount = "90013-031-21",
+                    DistributionAccount = "90001-031-22",
+                    DonationAmount = Convert.ToDecimal("20.00"),
+                    Amount = Convert.ToDecimal(20.0)-Convert.ToDecimal(0.12),
+                    ProcessorFeeAmount = Convert.ToDecimal(".25"),
+                    ProgramId = 112,
+                    ProccessorFeeMappingId = 127,
+                    PaymentTypeId = 15,
+                    ScholarshipExpenseAccount = "90551-031-02",
+                    ScholarshipPaymentTypeId = 9,
+                },
+                new MpGPExportDatum
+                {
+                    DocumentType = "SALE",
+                    DocumentNumber = "10002002",
+                    DepositId = 10002,
+                    BatchName = "Test Payment Batch 2",
+                    DonationDate = new DateTime(2015, 3, 28, 8, 30, 0),
+                    DepositDate = new DateTime(2015, 3, 28, 8, 30, 0),
+                    CustomerId = "CONTRIBUTI001",
+                    DepositAmount = "400.00",
+                    CheckbookId = "PNC001",
+                    CashAccount = "77777-031-20",
+                    ReceivableAccount = "77777-031-21",
+                    DistributionAccount = "77777-031-22",
+                    DonationAmount = Convert.ToDecimal("20.00"),
+                    Amount = Convert.ToDecimal(0.12),
+                    ProgramId = 127,
+                    ProccessorFeeMappingId = 127,
+                    PaymentTypeId = 15,
+                    ScholarshipExpenseAccount = "90551-031-02",
+                    ScholarshipPaymentTypeId = 9,
+                },
+            };
+        }
+
         private List<MpGPExportDatum> MockGPExport()
         {
             return new List<MpGPExportDatum>
@@ -499,10 +580,11 @@ namespace crds_angular.test.Services
                     Amount = Convert.ToDecimal("380.00")-Convert.ToDecimal(0.13),
                     ProcessorFeeAmount = Convert.ToDecimal(".25"),
                     ProgramId = 12,
-                    ProccessFeeProgramId = 127,
+                    ProccessorFeeMappingId = 127,
                     PaymentTypeId = 9,
                     ScholarshipExpenseAccount = "90551-031-02",
-                    ScholarshipPaymentTypeId = 9
+                    ScholarshipPaymentTypeId = 9, 
+                    DistributionReference = $"Contribution {new DateTime(2015, 3, 28, 8, 30, 0)}"
                 },
                 new MpGPExportDatum
                 {
@@ -521,10 +603,11 @@ namespace crds_angular.test.Services
                     DonationAmount = Convert.ToDecimal("380.00"),
                     Amount = Convert.ToDecimal(0.13),
                     ProgramId = 127,
-                    ProccessFeeProgramId = 127,
+                    ProccessorFeeMappingId = 127,
                     PaymentTypeId = 9,
                     ScholarshipExpenseAccount = "90551-031-02",
                     ScholarshipPaymentTypeId = 9,
+                    DistributionReference = $"Processor Fees {new DateTime(2015, 3, 28, 8, 30, 0)}"
                 },
                 new MpGPExportDatum
                 {
@@ -544,10 +627,11 @@ namespace crds_angular.test.Services
                     Amount = Convert.ToDecimal(20.0)-Convert.ToDecimal(0.12),
                     ProcessorFeeAmount = Convert.ToDecimal(".25"),
                     ProgramId = 112,
-                    ProccessFeeProgramId = 127,
+                    ProccessorFeeMappingId = 127,
                     PaymentTypeId = 15,
                     ScholarshipExpenseAccount = "90551-031-02",
                     ScholarshipPaymentTypeId = 9,
+                    DistributionReference = $"Contribution {new DateTime(2014, 3, 28, 8, 30, 0)}",
                 },
                 new MpGPExportDatum
                 {
@@ -566,10 +650,11 @@ namespace crds_angular.test.Services
                     DonationAmount = Convert.ToDecimal("20.00"),
                     Amount = Convert.ToDecimal(0.12),
                     ProgramId = 127,
-                    ProccessFeeProgramId = 127,
+                    ProccessorFeeMappingId = 127,
                     PaymentTypeId = 15,
                     ScholarshipExpenseAccount = "90551-031-02",
                     ScholarshipPaymentTypeId = 9,
+                    DistributionReference = $"Processor Fees {new DateTime(2015, 3, 28, 8, 30, 0)}",
                 },
             };
         }

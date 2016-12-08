@@ -56,6 +56,10 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="FactoryGirl.NET, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\FactoryGirl.NET.1.0.0.0\lib\net40-Client\FactoryGirl.NET.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="FsCheck, Version=2.2.4.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\FsCheck.2.2.4\lib\net45\FsCheck.dll</HintPath>
       <Private>True</Private>
@@ -112,6 +116,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Extensions\RestSharpExtensionsTest.cs" />
+    <Compile Include="Helpers\Factories.cs" />
     <Compile Include="Helpers\Conversions.cs" />
     <Compile Include="Services\CampaignRepositoryTest.cs" />
     <Compile Include="Services\ChildcareRepositoryTest.cs" />

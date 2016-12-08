@@ -1,4 +1,3 @@
-const WOW = require('wow.js/dist/wow.min.js');
 const iFrameResizer = require('iframe-resizer/js/iframeResizer.min.js');
 
 export default class StreamingController {
@@ -15,6 +14,7 @@ export default class StreamingController {
     this.countSubmit = false;
     this.dontMiss = [];
     this.beTheChurch = [];
+
     this.sce = $sce;
     let debug = false;
 
@@ -40,10 +40,6 @@ export default class StreamingController {
           this.sortDigitalProgram(data);
         });
 
-    new WOW({
-      mobile: false
-    }).init();
-
     this.openGeolocationModal();
 
     switch (__CRDS_ENV__) {
@@ -58,7 +54,17 @@ export default class StreamingController {
         break;
     }
 
-    this.timeout(this.resizeIframe.bind(this), 500);
+    this.timeout(this.afterViewInit.bind(this), 500);
+  }
+
+  afterViewInit() {
+    this.resizeIframe.bind(this);
+
+    // Carousel variables
+    this.wrapper = document.querySelector('.crds-carousel__content-wrap');
+    this.content = document.querySelector('.crds-carousel__list');
+    this.content.style.marginLeft = '0px';
+    this.pos = 0;
   }
 
   resizeIframe() {
@@ -118,6 +124,26 @@ export default class StreamingController {
         backdrop: 'static',
         size: 'lg'
       });
+    }
+  }
+
+  carouselCardWidth() {
+    this.article = document.querySelector('.crds-carousel__item');
+
+    return this.article.offsetWidth;
+  }
+
+  carouselPrev() {
+    if (this.pos < 0) {
+      this.pos += this.carouselCardWidth();
+      this.content.style.marginLeft = `${this.pos}px`;
+    }
+  }
+
+  carouselNext() {
+    if (this.pos > ((this.content.scrollWidth * -1) + (this.wrapper.offsetWidth))) {
+      this.pos -= this.carouselCardWidth();
+      this.content.style.marginLeft = `${this.pos}px`;
     }
   }
 }

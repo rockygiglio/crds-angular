@@ -1,4 +1,4 @@
-export function getCamperInfo(CampsService, $state) {
+export function getCamperInfo(CampsService, $state)  {
   const camperId = $state.toParams.contactId;
   const campId = $state.toParams.campId;
   return CampsService.getCamperInfo(campId, camperId);
@@ -9,9 +9,22 @@ export function getCampInfo(CampsService, $state) {
   return CampsService.getCampInfo(id);
 }
 
-export function getCampProductInfo(CampsService, $state) {
+export function getCampProductInfo(CampsService, $state, $q) {
   const campId = $state.toParams.campId;
   const camperId = $state.toParams.contactId;
+  if ($state.toParams.page === 'camps-payment') {
+    const deferred = $q.defer();
+    CampsService.getCampProductInfo(campId, camperId, true).then((result) => {
+      deferred.resolve();
+    }).catch((err) => {
+      if (err.status === 302) {
+        $state.go('campsignup.family', { campId }, { location: 'replace' });
+      }
+      deferred.reject();
+    });
+    return deferred.promise;
+  }
+
   return CampsService.getCampProductInfo(campId, camperId);
 }
 
@@ -40,4 +53,24 @@ export function getCampWaivers(CampsService, $state) {
 
 export function getShirtSizes(CampsService) {
   return CampsService.getShirtSizes();
+}
+
+export function checkApplicationExpiration(CampsService, $state, $q, $timeout) {
+  const deferred = $q.defer();
+
+  const campId = $state.toParams.campId;
+  const contactId = $state.toParams.contactId;
+
+  CampsService.isEventParticipantInterested(contactId, campId)
+    .then(() => {
+      deferred.resolve();
+    }, (error) => {
+      console.log('CampService application expiration check failed', error);
+      deferred.resolve();
+      $timeout(() => {
+        $state.go('campsignup.family', { campId });
+      }, 0);
+    });
+
+  return deferred.promise;
 }
