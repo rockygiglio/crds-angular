@@ -178,7 +178,7 @@ IF @@ROWCOUNT = 0
       ,[Update_Permitted]
       ,[Delete_Permitted]
     ) VALUES (
-       'Brad Stone'
+       'bstone@xroadschurch.org'
       ,'bstone@xroadschurch.org'
       ,0
       ,1
@@ -349,7 +349,7 @@ IF @@ROWCOUNT = 0
       ,[Update_Permitted]
       ,[Delete_Permitted]
     ) VALUES (
-       'David Reichley'
+       'dreichley@xroadschurch.org'
       ,'dreichley@xroadschurch.org'
       ,0
       ,1
