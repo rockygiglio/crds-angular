@@ -1,31 +1,29 @@
-let iFrameResizer = require('iframe-resizer/js/iframeResizer.min.js');
+const iFrameResizer = require('iframe-resizer/js/iframeResizer.min.js');
 
 export default class StreamingController {
-  /*@ngInject*/
   constructor(CMSService, StreamspotService, GeolocationService, $rootScope, $modal, $location, $timeout, $sce) {
-    this.cmsService         = CMSService;
-    this.streamspotService  = StreamspotService;
+    this.cmsService = CMSService;
+    this.streamspotService = StreamspotService;
     this.geolocationService = GeolocationService;
-    this.rootScope          = $rootScope;
-    this.timeout            = $timeout;
-    this.modal              = $modal;
-    this.renderInlineGiving = false;
-    this.inProgress     = false;
+    this.rootScope = $rootScope;
+    this.timeout = $timeout;
+    this.modal = $modal;
+    this.inProgress = false;
     this.numberOfPeople = 2;
     this.displayCounter = true;
-    this.countSubmit    = false;
-    this.dontMiss       = [];
-    this.beTheChurch    = [];
+    this.countSubmit = false;
+    this.dontMiss = [];
+    this.beTheChurch = [];
 
     this.sce = $sce;
     let debug = false;
 
-    if ( $location != undefined ) {
-      let params = $location.search();
+    if ($location !== undefined) {
+      const params = $location.search();
       debug = params.debug;
     }
 
-    if ( debug === "true" ) {
+    if (debug === 'true') {
       this.inProgress = true;
     } else {
       this.rootScope.$on('isBroadcasting', (e, inProgress) => {
@@ -60,49 +58,36 @@ export default class StreamingController {
   }
 
   afterViewInit() {
-    this.setupInlineGiving();
+    this.resizeIframe.bind(this);
 
     // Carousel variables
-    this.wrapper  = document.querySelector(".crds-carousel__content-wrap");
-    this.content  = document.querySelector(".crds-carousel__list");
-    this.content.style.marginLeft = "0px";
+    this.wrapper = document.querySelector('.crds-carousel__content-wrap');
+    this.content = document.querySelector('.crds-carousel__list');
+    this.content.style.marginLeft = '0px';
     this.pos = 0;
   }
 
-  setupInlineGiving() {
-    var contentBlockTitle = 'streamingInlineGivingIframeParams';
-
-    if(Object.keys(this.rootScope.MESSAGES).indexOf(contentBlockTitle) > 0) {
-      var html = this.rootScope.MESSAGES[contentBlockTitle].content;
-      var div = document.createElement("div");
-          div.innerHTML = html;
-      this.queryStringParams = div.textContent || div.innerText || "";
-    } else {
-      this.queryStringParams = '?type=donation&theme=dark';
-    }
-
-    this.renderInlineGiving = true;
-    this.timeout(this.resizeIframe.bind(this));
-  }
-
   resizeIframe() {
-    iFrameResizer({
+    const el = document.querySelector('.digital-program__giving iframe');
+    el.removeAttribute('height');
+    this.inlineGiving = iFrameResizer({
       heightCalculationMethod: 'taggedElement',
       minHeight: 350,
       checkOrigin: false,
       interval: -16
-    }, ".donation-widget");
+    }, el);
   }
 
   buildUrl() {
-    return this.sce.trustAsResourceUrl(`${this.baseUrl}${this.queryStringParams}`);
+    const params = this.queryStringParams || 'type=donation&theme=dark';
+    return this.sce.trustAsResourceUrl(`${this.baseUrl}?${params}`);
   }
 
   sortDigitalProgram(data) {
-    data.forEach((feature, i, data) => {
+    data.forEach((feature, i) => {
       // null status indicates a published feature
       if (feature.status === null || feature.status.toLowerCase() !== 'draft') {
-        feature.delay = i * 100
+        feature.delay = i * 100;
         feature.url = 'javascript:;';
 
         if (feature.link !== null) {
@@ -114,15 +99,15 @@ export default class StreamingController {
         if (typeof feature.image !== 'undefined' && typeof feature.image.filename !== 'undefined') {
           feature.image = feature.image.filename;
         } else {
-          feature.image = 'https://crds-cms-uploads.imgix.net/content/images/register-bg.jpg'
+          feature.image = 'https://crds-cms-uploads.imgix.net/content/images/register-bg.jpg';
         }
-        if (feature.section === 1 ) {
-          this.dontMiss.push(feature)
-        } else if (feature.section === 2 ) {
+        if (feature.section === 1) {
+          this.dontMiss.push(feature);
+        } else if (feature.section === 2) {
           this.beTheChurch.push(feature);
         }
       }
-    })
+    });
   }
 
   showGeolocationBanner() {
@@ -143,22 +128,22 @@ export default class StreamingController {
   }
 
   carouselCardWidth() {
-    this.article  = document.querySelector(".crds-carousel__item");
+    this.article = document.querySelector('.crds-carousel__item');
 
     return this.article.offsetWidth;
   }
 
-  carouselPrev(event) {
+  carouselPrev() {
     if (this.pos < 0) {
       this.pos += this.carouselCardWidth();
-      this.content.style.marginLeft = this.pos + "px";
+      this.content.style.marginLeft = `${this.pos}px`;
     }
   }
 
-  carouselNext(event) {
+  carouselNext() {
     if (this.pos > ((this.content.scrollWidth * -1) + (this.wrapper.offsetWidth))) {
       this.pos -= this.carouselCardWidth();
-      this.content.style.marginLeft = this.pos + "px";
+      this.content.style.marginLeft = `${this.pos}px`;
     }
   }
 }
