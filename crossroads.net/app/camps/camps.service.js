@@ -29,7 +29,7 @@ class CampsService {
     // eslint-disable-next-line prefer-template
     this.paymentResource = $resource(__API_ENDPOINT__ + 'api/v1.0.0/invoice/:invoiceId/payment/:paymentId');
     this.confirmationResource = $resource(`${__API_ENDPOINT__}api/camps/:campId/confirmation/:contactId`);
-    this.hasPaymentsResource = $resource(`${__API_ENDPOINT__}api/v1.0.0/invoice/:invoiceId/has-payment`);
+    this.hasPaymentsResource = $resource(`${__API_ENDPOINT__}api/v1.0.0/invoice/:invoiceId/has-payment`, { method: 'GET', cache: false });
 
     this.campInfo = null;
     this.campTitle = null;
@@ -116,14 +116,19 @@ class CampsService {
     }).$promise;
   }
 
-  getCampProductInfo(campId, camperId) {
-    return this.productSummaryResource.get({ campId, camperId }, (productInfo) => {
+  getCampProductInfo(campId, camperId, checkForDeposit = false) {
+    let prom = this.productSummaryResource.get({ campId, camperId }, (productInfo) => {
       this.productInfo = productInfo;
     },
 
     (err) => {
       this.log.error(err);
     }).$promise;
+
+    if (checkForDeposit) {
+      prom = prom.then(() => this.invoiceHasPayment(this.productInfo.invoiceId));
+    }
+    return prom;
   }
 
   submitWaivers(campId, contactId, waivers) {
