@@ -11,9 +11,7 @@
       restrict: 'A',
       require: 'ngModel',
       link: function(scope, el, attr, ctrl) {
-        debugger;
         ctrl.$validators.uniqueEquipment = function(value) {
-          debugger;
           if (scope.equipment.currentEquipment !== undefined &&
               scope.equipment.currentEquipment.length > 0 &&
               value != null &&
