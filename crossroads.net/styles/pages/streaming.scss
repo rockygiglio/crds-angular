@@ -1059,10 +1059,13 @@ streaming, landing {
           height: 400px;
           margin-bottom: 2em;
           margin-top: 1em;
-          overflow: hidden;
+          overflow-x: scroll;
           position: relative;
           white-space: nowrap;
           width: 100%;
+          &::-webkit-scrollbar {
+            display: none;
+          }
         }
 
         .crds-carousel {
@@ -1099,11 +1102,7 @@ streaming, landing {
           &__list {
             display: block;
             list-style: none;
-            overflow-x: scroll;
-            overflow-y: hidden;
             padding: 0;
-            transition: margin-left 0.5s ease;
-            white-space: nowrap;
           }
 
           &__item {

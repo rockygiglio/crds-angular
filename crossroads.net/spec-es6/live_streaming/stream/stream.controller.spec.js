@@ -16,21 +16,23 @@ describe('Stream Controller', () => {
       modal,
       results,
       sce,
-      timeout;
+      timeout,
+      document;
 
   beforeEach(angular.mock.module(constants.MODULES.LIVE_STREAM));
 
   beforeEach(inject(function ($injector) {
-    cmsService         = $injector.get('CMSService');
-    streamspotService  = $injector.get('StreamspotService');
+    cmsService = $injector.get('CMSService');
+    streamspotService = $injector.get('StreamspotService');
     geolocationService = $injector.get('GeolocationService');
-    rootScope          = $injector.get('$rootScope');
-    modal              = $injector.get('$modal');
-    location           = $injector.get('$location');
-    timeout            = $injector.get('$timeout');
-    sce                = $injector.get('$sce');
+    rootScope = $injector.get('$rootScope');
+    modal = $injector.get('$modal');
+    location = $injector.get('$location');
+    timeout = $injector.get('$timeout');
+    sce = $injector.get('$sce');
+    document = $injector.get('$document');
 
-    fixture = new StreamController(cmsService, streamspotService, geolocationService, rootScope, modal, location, timeout, sce);
+    fixture = new StreamController(cmsService, streamspotService, geolocationService, rootScope, modal, location, timeout, sce, document);
     results = [
       {
         "id": 7,
