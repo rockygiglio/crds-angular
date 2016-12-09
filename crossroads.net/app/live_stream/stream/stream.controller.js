@@ -1,12 +1,13 @@
 const iFrameResizer = require('iframe-resizer/js/iframeResizer.min.js');
 
 export default class StreamingController {
-  constructor(CMSService, StreamspotService, GeolocationService, $rootScope, $modal, $location, $timeout, $sce) {
+  constructor(CMSService, StreamspotService, GeolocationService, $rootScope, $modal, $location, $timeout, $sce, $document) {
     this.cmsService = CMSService;
     this.streamspotService = StreamspotService;
     this.geolocationService = GeolocationService;
     this.rootScope = $rootScope;
     this.timeout = $timeout;
+    this.document = $document;
     this.modal = $modal;
     this.inProgress = false;
     this.numberOfPeople = 2;
@@ -58,13 +59,13 @@ export default class StreamingController {
   }
 
   afterViewInit() {
-    this.resizeIframe.bind(this);
+    this.carouselCard = document.querySelector('content-card');
+    this.carouselCardTotal = document.querySelectorAll('content-card').length;
+    this.carouselWrapper = document.querySelector('.crds-carousel__content-wrap');
+    this.carousel = document.querySelector('.crds-card-carousel');
+    this.carouselElement = angular.element(document.querySelector('.crds-card-carousel'));
 
-    // Carousel variables
-    this.wrapper = document.querySelector('.crds-carousel__content-wrap');
-    this.content = document.querySelector('.crds-carousel__list');
-    this.content.style.marginLeft = '0px';
-    this.pos = 0;
+    this.resizeIframe();
   }
 
   resizeIframe() {
@@ -127,23 +128,44 @@ export default class StreamingController {
     }
   }
 
-  carouselCardWidth() {
-    this.article = document.querySelector('.crds-carousel__item');
-
-    return this.article.offsetWidth;
+  getCarouselCardWidth() {
+    let marginRight = parseInt(window.getComputedStyle(this.carouselCard).marginRight, 0); // eslint-disable-line prefer-const
+    return this.carouselCard.offsetWidth + marginRight;
   }
 
-  carouselPrev() {
-    if (this.pos < 0) {
-      this.pos += this.carouselCardWidth();
-      this.content.style.marginLeft = `${this.pos}px`;
-    }
+  getCurrentScrollPosition() {
+    return this.carousel.scrollLeft;
   }
 
   carouselNext() {
-    if (this.pos > ((this.content.scrollWidth * -1) + (this.wrapper.offsetWidth))) {
-      this.pos -= this.carouselCardWidth();
-      this.content.style.marginLeft = `${this.pos}px`;
-    }
+    /* eslint-disable prefer-const */
+    let cardWidth = this.getCarouselCardWidth();
+    let n = Math.floor(this.getCurrentScrollPosition() / cardWidth);
+    let scrollLeft = (n + 1) * cardWidth;
+    /* eslint-enable prefer-const */
+    this.scrollTo(scrollLeft);
   }
+
+  carouselPrev() {
+    let cardWidth = this.getCarouselCardWidth(); // eslint-disable-line prefer-const
+    let scrollPos = this.getCurrentScrollPosition(); // eslint-disable-line prefer-const
+    let n = 0;
+    if (scrollPos > cardWidth) {
+      n = Math.floor(scrollPos / cardWidth);
+    }
+    let scrollLeft = n * cardWidth; // eslint-disable-line prefer-const
+    this.scrollTo(scrollLeft);
+  }
+
+  scrollTo(x, duration = 250) {
+    this.carouselElement.scrollLeftAnimated(x, duration);
+  }
+
+  static getMargins(el) {
+    return {
+      marginRight: parseInt(window.getComputedStyle(el).marginRight, 0),
+      marginLeft: parseInt(window.getComputedStyle(el).marginLeft, 0)
+    };
+  }
+
 }
