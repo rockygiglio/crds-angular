@@ -1,7 +1,7 @@
 const iFrameResizer = require('iframe-resizer/js/iframeResizer.min.js');
 
 export default class StreamingController {
-  constructor(CMSService, StreamspotService, GeolocationService, $rootScope, $modal, $location, $timeout, $sce, $document) {
+  constructor(CMSService, StreamspotService, GeolocationService, $rootScope, $modal, $location, $timeout, $sce, $document, $interval) {
     this.cmsService = CMSService;
     this.streamspotService = StreamspotService;
     this.geolocationService = GeolocationService;
@@ -15,6 +15,9 @@ export default class StreamingController {
     this.countSubmit = false;
     this.dontMiss = [];
     this.beTheChurch = [];
+    this.inlineGiving = [];
+    this.iframeInterval = null;
+    this.interval = $interval;
 
     this.sce = $sce;
     let debug = false;
@@ -65,18 +68,20 @@ export default class StreamingController {
     this.carousel = document.querySelector('.crds-card-carousel');
     this.carouselElement = angular.element(document.querySelector('.crds-card-carousel'));
 
-    this.resizeIframe();
+    this.iframeInterval = this.interval(this.resizeIframe.bind(this), 100);
   }
 
   resizeIframe() {
-    const el = document.querySelector('.digital-program__giving iframe');
-    el.removeAttribute('height');
-    this.inlineGiving = iFrameResizer({
-      heightCalculationMethod: 'taggedElement',
-      minHeight: 350,
-      checkOrigin: false,
-      interval: -16
-    }, el);
+    if (this.inlineGiving.length < 1) {
+      const el = document.querySelector('.digital-program__giving iframe');
+      this.inlineGiving = iFrameResizer({
+        heightCalculationMethod: 'taggedElement',
+        minHeight: 350,
+        checkOrigin: false,
+        interval: 32
+      }, el);
+      this.interval.cancel(this.iframeInterval);
+    }
   }
 
   buildUrl() {
