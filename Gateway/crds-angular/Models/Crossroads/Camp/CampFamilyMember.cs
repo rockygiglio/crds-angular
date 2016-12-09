@@ -28,5 +28,12 @@ namespace crds_angular.Models.Crossroads.Camp
 
         [JsonProperty(PropertyName = "isExpired")]
         public bool IsExpired { get; set; }
+
+        [JsonProperty(PropertyName = "isCancelled")]
+        public bool IsCancelled { get; set; }
+
+        [JsonProperty(PropertyName = "endDate")]
+        public DateTime? EndDate { get; set; }
+
     }
 }

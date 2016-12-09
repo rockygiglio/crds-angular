@@ -155,7 +155,7 @@ namespace MinistryPlatform.Translation.Repositories
 
             var filter = $"Event_ID_Table.[Event_ID] = {eventId} AND Participant_ID_Table_Contact_ID_Table.[Contact_ID] = {contactId}";
             var participants = _ministryPlatformRestRepository.UsingAuthenticationToken(apiToken)
-                .Search<MpEventParticipant>(filter, "Event_Participants.[Event_Participant_ID], Event_Participants.[_Setup_Date] as [Setup_Date], Event_Participants.[End_Date], Event_Participants.[Participation_Status_ID] as [Participation_Status]");
+                .Search<MpEventParticipant>(filter, "Event_Participants.[Event_Participant_ID], Event_Participants.[_Setup_Date] as [Setup_Date], Event_Participants.[End_Date], Event_Participants.[Participation_Status_ID]");
 
             return participants.FirstOrDefault();
         }

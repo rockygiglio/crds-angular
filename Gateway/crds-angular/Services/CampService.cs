@@ -146,17 +146,25 @@ namespace crds_angular.Services
 
         private CampFamilyMember NewCampFamilyMember(MpHouseholdMember member, int eventId , string apiToken)
         {
+            var cancelledStatus = _configurationWrapper.GetConfigIntValue("Participant_Status_Cancelled");
+            var interestedStatus = _configurationWrapper.GetConfigIntValue("Participant_Status_Interested");
+
             DateTime? signedUpDate = null;
             bool isPending = false;
             bool isExpired = false;
             bool isSignedUp = false;
+            bool isCancelled = false;
+            DateTime? endDate = null;
+
             var participant = _eventParticipantRepository.GetEventParticipantEligibility(eventId, member.ContactId);
             if (participant != null)
             {
                 signedUpDate = participant.SetupDate;
-                isPending = participant.ParticipantStatus == 1 && participant.EndDate != null && DateTime.Now <= participant.EndDate;
-                isExpired = participant.ParticipantStatus == 1 && participant.EndDate != null && DateTime.Now > participant.EndDate;
-                isSignedUp = signedUpDate != null && participant.EndDate == null;
+                isPending = participant.ParticipantStatus == interestedStatus && participant.EndDate != null && DateTime.Now <= participant.EndDate;
+                isExpired = participant.ParticipantStatus == interestedStatus && participant.EndDate != null && DateTime.Now > participant.EndDate;
+                isSignedUp = signedUpDate != null && participant.EndDate == null && participant.ParticipantStatus != cancelledStatus;
+                isCancelled = participant.ParticipantStatus == cancelledStatus;
+                endDate = participant.EndDate;
             }
 
             return new CampFamilyMember
@@ -167,8 +175,11 @@ namespace crds_angular.Services
                 IsPending = isPending,
                 IsExpired = isExpired,
                 IsSignedUp = isSignedUp,
+                IsCancelled = isCancelled,
+                EndDate = endDate,
                 LastName = member.LastName,
-                PreferredName = member.Nickname ?? member.FirstName
+                PreferredName = member.Nickname ?? member.FirstName,
+
             };
         }
 
