@@ -253,8 +253,7 @@ namespace crds_angular.Services
 
         public CampReservationDTO SaveCampReservation(CampReservationDTO campReservation, int eventId, string token)
         {
-            var nickName = campReservation.PreferredName ?? campReservation.FirstName;
-            MpParticipant participant;
+            var nickName = campReservation.PreferredName ?? campReservation.FirstName;            
             var contactId = Convert.ToInt32(campReservation.ContactId);
 
             var minorContact = new MpContact
@@ -271,6 +270,7 @@ namespace crds_angular.Services
                 HouseholdPositionId = 2
             };
 
+            MpParticipant participant;
             if (campReservation.ContactId == null || campReservation.ContactId == 0)
             {
                 var newMinorContact = _contactRepository.CreateContact(minorContact);
@@ -314,7 +314,7 @@ namespace crds_angular.Services
                                                       false,
                                                       DateTime.Now);
             }
-            else if (!group.Status && group.Value == null)
+            else if (!group.Status)
             {
                 _groupRepository.addParticipantToGroup(participant.ParticipantId,
                                                        campReservation.CurrentGrade,

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using crds_angular.Models.Crossroads.Camp;
 using crds_angular.Models.Crossroads.Events;
 using MinistryPlatform.Translation.Models;
 
@@ -7,8 +8,20 @@ namespace crds_angular.test.Helpers
 {
     public class Factories
     {
-        public static void EventParticipant()
+        public static void MpGroupParticipant()
         {
+            if (!FactoryGirl.NET.FactoryGirl.DefinedFactories.Contains(typeof(MpGroupParticipant)))
+            {
+                FactoryGirl.NET.FactoryGirl.Define<MpGroupParticipant>(() => new MpGroupParticipant
+                {
+                    GroupId = 2123,        
+                    GroupParticipantId = 1243
+                });
+            }
+        }
+
+        public static void EventParticipant()
+        {      
             if (!FactoryGirl.NET.FactoryGirl.DefinedFactories.Contains(typeof(MpEventParticipant)))
             {
 
@@ -43,6 +56,28 @@ namespace crds_angular.test.Helpers
                                                                             ParticipantId = 2561,
                                                                             ParticipationStatus = 5
                                                                         });
+            }
+        }
+
+        public static void CampReservationDTO()
+        {
+            if (!FactoryGirl.NET.FactoryGirl.DefinedFactories.Contains(typeof(CampReservationDTO)))
+            {
+                FactoryGirl.NET.FactoryGirl.Define(() => new CampReservationDTO
+                {
+                    ContactId = 0,
+                    FirstName = "Jon",
+                    LastName = "Horner",
+                    MiddleName = "",
+                    BirthDate = new DateTime(2006, 04, 03) + "",
+                    Gender = 1,
+                    PreferredName = "Jon",
+                    SchoolAttending = "Mason",
+                    CurrentGrade = 3,
+                    SchoolAttendingNext = "Mason",
+                    CrossroadsSite = 3,
+                    RoomMate = ""
+                });
             }
         }
     }    
