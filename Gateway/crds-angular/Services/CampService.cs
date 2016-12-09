@@ -264,13 +264,14 @@ namespace crds_angular.Services
 
         public CampReservationDTO SaveCampReservation(CampReservationDTO campReservation, int eventId, string token)
         {
-            var nickName = campReservation.PreferredName ?? campReservation.FirstName;            
+            var nickName = campReservation.PreferredName ?? campReservation.FirstName;
             var contactId = Convert.ToInt32(campReservation.ContactId);
 
             var minorContact = new MpContact
             {
                 FirstName = campReservation.FirstName,
                 LastName = campReservation.LastName,
+                PreferredName = $"{campReservation.LastName}, {campReservation.FirstName}",
                 MiddleName = campReservation.MiddleName,
                 MobilePhone = campReservation.MobilePhone,
                 BirthDate = Convert.ToDateTime(campReservation.BirthDate),
