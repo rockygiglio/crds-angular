@@ -24,8 +24,8 @@ export default class AddRoomController {
       this.chosenSite = this.addEvent.eventData.event.congregation.dp_RecordName;
       this.room.ByCongregation.query({
         congregationId: this.addEvent.eventData.event.congregation.dp_RecordID,
-        startDate: this.addEvent.eventData.event.startDate,
-        endDate: this.addEvent.eventData.event.endDate
+        startDate: this.addEvent.dateTime(this.addEvent.eventData.event.startDate, this.addEvent.eventData.event.startTime),
+        endDate: this.addEvent.dateTime(this.addEvent.eventData.event.endDate, this.addEvent.eventData.event.endTime)
       }, (data) => {
         this.setRoomData(data);
         this.setEquipmentData();
