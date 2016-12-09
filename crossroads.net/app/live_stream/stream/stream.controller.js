@@ -151,7 +151,7 @@ export default class StreamingController {
     let scrollPos = this.getCurrentScrollPosition(); // eslint-disable-line prefer-const
     let n = 0;
     if (scrollPos > cardWidth) {
-      n = Math.floor(scrollPos / cardWidth);
+      n = Math.round(scrollPos / cardWidth) - 1;
     }
     let scrollLeft = n * cardWidth; // eslint-disable-line prefer-const
     this.scrollTo(scrollLeft);
