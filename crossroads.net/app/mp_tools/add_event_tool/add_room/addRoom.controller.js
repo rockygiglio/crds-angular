@@ -13,6 +13,7 @@ export default class AddRoomController {
     this.roomError = false;
     this.viewReady = false;
     this.rooms = [];
+    this.available = CONSTANTS.EVENTS.ROOM_AVAILABLE;
   }
 
   $onInit() {
