@@ -1063,12 +1063,14 @@ streaming, landing {
           margin-bottom: 2em;
           margin-top: 1em;
           overflow-x: scroll;
+          overflow-y: hidden;
           position: relative;
           white-space: nowrap;
           width: 100%;
           &::-webkit-scrollbar {
             display: none;
           }
+          overflow: -moz-scrollbars-none;
         }
 
         .crds-carousel {
