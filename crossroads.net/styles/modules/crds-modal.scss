@@ -1,11 +1,12 @@
 &.crds-modal {
 
-  position: fixed;
-
-  .modal {
-    overflow: scroll;
-  }
   .modal-dialog {
+    overflow-x: hidden;
+    overflow-y: auto;
+    height: 90vh;
+    &::-webkit-scrollbar {
+      display: none;
+    }
 
     h2 {
       font-family: $cr-streaming-font-extra-cond;
