@@ -55,7 +55,7 @@
     // State Change Listeners //
     ////////////////////////////
     $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
-
+      $rootScope.renderLegacyStyles = (toState.data.renderLegacyStyles !== false);
       if ((toState.resolve || toState.data.resolve) && !event.defaultPrevented) {
         vm.resolving = true;
       }
