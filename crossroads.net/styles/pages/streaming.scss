@@ -1076,11 +1076,8 @@ streaming, landing {
         .crds-carousel {
           &__controls {
             float: right;
+            margin-right: 20px;
             margin-top: 1.5em;
-
-            @media (min-width: $screen-md) {
-              margin-right: 20px;
-            }
           }
 
           &__control {
@@ -1459,6 +1456,7 @@ geolocation {
   footer {
     .btn-standard {
       background: rgba(77,77,77,0.75);
+      border: none;
       color: #FFF;
       font-size: 16px;
       padding: 8px 14px;
