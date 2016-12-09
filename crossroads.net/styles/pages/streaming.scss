@@ -1498,7 +1498,7 @@ geolocation {
 
     @include button-variant(#96B4D4, $cr-blue, $cr-blue)
   }
-  .modal-backdrop {
+  div.modal-backdrop {
     background: #113556;
     opacity: 0.95;
     -webkit-transform-style: preserve-3d;
