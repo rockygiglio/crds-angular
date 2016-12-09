@@ -26,8 +26,16 @@
             <h2>don't miss</h2>
 
             <div class="crds-carousel__controls">
-              <a href="#prev" ng-click="stream.carouselPrev()" class="crds-carousel__control crds-carousel__control--prev">&lt;</a>
-              <a href="#next" ng-click="stream.carouselNext()" class="crds-carousel__control crds-carousel__control--next">&gt;</a>
+              <a href="#prev" ng-click="stream.carouselPrev()" class="crds-carousel__control crds-carousel__control--prev">
+                <svg viewBox="0 0 32 32" class="icon-medium icon-arrow-left9">
+                  <use xlink:href="#arrow-left9"></use>
+                </svg>
+              </a>
+              <a href="#next" ng-click="stream.carouselNext()" class="crds-carousel__control crds-carousel__control--next">
+                <svg viewBox="0 0 32 32" class="icon-medium icon-arrow-right9">
+                  <use xlink:href="#arrow-right9"></use>
+                </svg>
+              </a>
             </div>
           </header>
 
