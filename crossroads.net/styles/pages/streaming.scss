@@ -1063,22 +1063,21 @@ streaming, landing {
           margin-bottom: 2em;
           margin-top: 1em;
           overflow-x: scroll;
+          overflow-y: hidden;
           position: relative;
           white-space: nowrap;
           width: 100%;
           &::-webkit-scrollbar {
             display: none;
           }
+          overflow: -moz-scrollbars-none;
         }
 
         .crds-carousel {
           &__controls {
             float: right;
+            margin-right: 20px;
             margin-top: 1.5em;
-
-            @media (min-width: $screen-md) {
-              margin-right: 20px;
-            }
           }
 
           &__control {
@@ -1457,6 +1456,7 @@ geolocation {
   footer {
     .btn-standard {
       background: rgba(77,77,77,0.75);
+      border: none;
       color: #FFF;
       font-size: 16px;
       padding: 8px 14px;
