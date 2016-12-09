@@ -211,7 +211,7 @@ describe('AddEventTool', () => {
             fixture.processSave({});
             expect(fixture.processing).toBe(false);
             expect(fixture.rootScope.$emit).toHaveBeenCalled();
-            expect(fixture.AddEvent.eventData).toEqual({});
+            expect(fixture.AddEvent.eventData.event).toEqual({});
             expect(window.close).toHaveBeenCalled();
             expect(fixture.rooms).toEqual([]);
             expect(fixture.event).toEqual({});
