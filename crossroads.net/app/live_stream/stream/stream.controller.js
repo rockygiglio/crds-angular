@@ -58,13 +58,13 @@ export default class StreamingController {
   }
 
   afterViewInit() {
-    this.resizeIframe.bind(this);
-
     // Carousel variables
     this.wrapper = document.querySelector('.crds-carousel__content-wrap');
     this.content = document.querySelector('.crds-carousel__list');
     this.content.style.marginLeft = '0px';
     this.pos = 0;
+
+    this.resizeIframe();
   }
 
   resizeIframe() {
