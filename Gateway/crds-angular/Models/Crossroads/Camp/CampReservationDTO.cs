@@ -28,7 +28,7 @@ namespace crds_angular.Models.Crossroads.Camp
         public int Gender { get; set; }
 
         [JsonProperty(PropertyName = "currentGrade")]
-        public string CurrentGrade { get; set; }
+        public int CurrentGrade { get; set; }
 
         [JsonProperty(PropertyName = "schoolAttending")]
         public string SchoolAttending { get; set; }

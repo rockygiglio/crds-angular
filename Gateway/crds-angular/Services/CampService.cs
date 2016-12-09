@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using crds_angular.Exceptions;
 using crds_angular.Models.Crossroads.Camp;
+using crds_angular.Models.Crossroads.Groups;
 using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Interfaces;
 using log4net;
-using Microsoft.Ajax.Utilities;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Models.Product;
 using MinistryPlatform.Translation.Repositories.Interfaces;
@@ -74,6 +74,12 @@ namespace crds_angular.Services
         public CampDTO GetCampEventDetails(int eventId)
         {
             var campEvent = _campService.GetCampEventDetails(eventId);
+
+            var eligibleGradeGroups = campEvent.CampGradesList.Select(campGrade => new GroupDTO
+            {
+                GroupId = campGrade.GroupId, GroupName = campGrade.GroupName
+            }).ToList();
+
             var campEventInfo = new CampDTO
             {
                 EventId = campEvent.EventId,
@@ -83,8 +89,9 @@ namespace crds_angular.Services
                 EndDate = campEvent.EndDate,
                 OnlineProductId = campEvent.OnlineProductId,
                 RegistrationEndDate = campEvent.RegistrationEndDate,
-                RegistrationStartDate = campEvent.RegistrationStartDate,
-                ProgramId = campEvent.ProgramId
+                RegistrationStartDate = campEvent.RegistrationStartDate,  
+                ProgramId = campEvent.ProgramId,
+                EligibleGradesList = eligibleGradeGroups
             };
 
             return campEventInfo;
@@ -255,10 +262,9 @@ namespace crds_angular.Services
             _formSubmissionRepository.SubmitFormResponse(formResponse);
         }
 
-        public void SaveCampReservation(CampReservationDTO campReservation, int eventId, string token)
+        public CampReservationDTO SaveCampReservation(CampReservationDTO campReservation, int eventId, string token)
         {
-            var nickName = campReservation.PreferredName ?? campReservation.FirstName;
-            MpParticipant participant;
+            var nickName = campReservation.PreferredName ?? campReservation.FirstName;            
             var contactId = Convert.ToInt32(campReservation.ContactId);
 
             var minorContact = new MpContact
@@ -275,11 +281,13 @@ namespace crds_angular.Services
                 HouseholdPositionId = 2
             };
 
+            MpParticipant participant;
             if (campReservation.ContactId == null || campReservation.ContactId == 0)
             {
                 var newMinorContact = _contactRepository.CreateContact(minorContact);
                 contactId = newMinorContact[0].RecordId;
                 participant = _participantRepository.GetParticipant(contactId);
+                campReservation.ContactId = contactId;
             }
             else
             {
@@ -305,6 +313,29 @@ namespace crds_angular.Services
             var configuration = MpObjectAttributeConfigurationFactory.Contact();
             _objectAttributeService.SaveObjectAttributes(contactId, campReservation.AttributeTypes, campReservation.SingleAttributes, configuration);
 
+            // Save students in selected grade group
+            var group = _groupRepository.GetGradeGroupForContact(contactId, _apiUserRepository.GetToken());
+
+            if (group.Status && group.Value.GroupId != campReservation.CurrentGrade)
+            {
+                _groupRepository.endDateGroupParticipant(group.Value.GroupParticipantId, group.Value.GroupId, DateTime.Now);
+                _groupRepository.addParticipantToGroup(participant.ParticipantId,
+                                                      campReservation.CurrentGrade,
+                                                      _configurationWrapper.GetConfigIntValue("Group_Role_Default_ID"),
+                                                      false,
+                                                      DateTime.Now);
+            }
+            else if (!group.Status)
+            {
+                _groupRepository.addParticipantToGroup(participant.ParticipantId,
+                                                       campReservation.CurrentGrade,
+                                                       _configurationWrapper.GetConfigIntValue("Group_Role_Default_ID"),
+                                                       false,
+                                                       DateTime.Now);
+            }
+
+
+            //Create eventParticipant 
             int eventParticipantId;
             var eventParticipant = _eventParticipantRepository.GetEventParticipantEligibility(eventId, contactId);
 
@@ -325,17 +356,10 @@ namespace crds_angular.Services
                     _eventRepository.UpdateParticipantEndDate(eventParticipantId, endDate);
                 }
             }
-
-
+            
             //form response
             var answers = new List<MpFormAnswer>
             {
-                new MpFormAnswer
-                {
-                    Response = campReservation.CurrentGrade,
-                    FieldId = _configurationWrapper.GetConfigIntValue("SummerCampForm.CurrentGrade"),
-                    EventParticipantId = eventParticipantId
-                },
                 new MpFormAnswer
                 {
                     Response = campReservation.SchoolAttendingNext,
@@ -359,6 +383,8 @@ namespace crds_angular.Services
             };
 
             _formSubmissionRepository.SubmitFormResponse(formResponse);
+
+            return campReservation;
         }
 
         private DateTime DetermineEndDate(int eventId)
@@ -717,7 +743,7 @@ namespace crds_angular.Services
                 SchoolAttending = camperContact.Current_School,
                 SchoolAttendingNext = nextYearSchool,
                 Gender = Convert.ToInt32(camperContact.Gender_ID),
-                CurrentGrade = groupResult.Status ? groupResult.Value.GroupName : null,
+                CurrentGrade = groupResult.Status ? groupResult.Value.GroupId : 0,
                 RoomMate = preferredRoommate,
                 AttributeTypes = attributesTypes.MultiSelect,
                 SingleAttributes = attributesTypes.SingleSelect

@@ -10,16 +10,18 @@ describe('Camper Info Component', () => {
       camperInfoForm,
       q,
       stateParams,
-      rootScope;
+      rootScope,
+      state;
 
   const endpoint = window.__env__['CRDS_API_ENDPOINT'] + 'api';
   const eventId = 12323;
 
   beforeEach(angular.mock.module(constants.MODULES.CAMPS));
 
-  beforeEach(inject((_$componentController_, _$httpBackend_, _CamperInfoForm_, _$q_, _$stateParams_, _$rootScope_) => {
+  beforeEach(inject((_$state_, _$componentController_, _$httpBackend_, _CamperInfoForm_, _$q_, _$stateParams_, _$rootScope_) => {
     $componentController = _$componentController_;
     $httpBackend = _$httpBackend_;
+    state = _$state_;
     q = _$q_;
     stateParams = _$stateParams_;
     rootScope = _$rootScope_.$new();
@@ -35,6 +37,10 @@ describe('Camper Info Component', () => {
     spyOn(camperInfoForm, 'getFields').and.callThrough();
     spyOn(camperInfoForm, 'getModel').and.callThrough();
     spyOn(rootScope, '$emit').and.callThrough();
+
+    state.toParams = {
+      campId: eventId
+    };
 
     stateParams.campId = eventId;
 

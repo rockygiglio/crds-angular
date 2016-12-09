@@ -1,5 +1,10 @@
 export function getCamperInfo(CampsService, $state)  {
   const camperId = $state.toParams.contactId;
+
+  if (camperId === 'new') {
+    return Promise.resolve();
+  }
+
   const campId = $state.toParams.campId;
   return CampsService.getCamperInfo(campId, camperId);
 }
