@@ -89,8 +89,12 @@ namespace crds_angular.test.Services
             var signedUpDate = DateTime.Now;
             var eventId = 5433;
             var myContact = getFakeContact(myContactId);
+            const int interested = 5;
+            const int cancelled = 3;
             var eventParticipant = new MpEventParticipant
             {
+                ParticipantStatus = interested,  
+                EndDate = DateTime.Now.AddMinutes(10)
             };
 
             _contactService.Setup(m => m.GetMyProfile(token)).Returns(myContact);
@@ -98,10 +102,13 @@ namespace crds_angular.test.Services
             _contactService.Setup(m => m.GetOtherHouseholdMembers(myContactId)).Returns(new List<MpHouseholdMember>());
             _apiUserRepository.Setup(m => m.GetToken()).Returns(apiToken);
             _groupRepository.Setup(m => m.IsMemberOfEventGroup(123, eventId, apiToken)).Returns(true);
+            _configurationWrapper.Setup(m => m.GetConfigIntValue("Participant_Status_Cancelled")).Returns(cancelled);
+            _configurationWrapper.Setup(m => m.GetConfigIntValue("Participant_Status_Interested")).Returns(interested);
             _eventParticipantRepository.Setup(m => m.GetEventParticipantEligibility(It.IsAny<int>(), It.IsAny<int>())).Returns(eventParticipant);
 
             var result = _fixture.GetEligibleFamilyMembers(eventId, token);
             Assert.AreEqual(result.Count, 1);
+            Assert.IsTrue(result.First().IsPending);
             _contactService.VerifyAll();
             _groupRepository.VerifyAll();
             _eventParticipantRepository.VerifyAll();
