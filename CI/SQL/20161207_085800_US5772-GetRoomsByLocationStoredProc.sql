@@ -49,14 +49,7 @@ BEGIN
 					r.Description, 
 					ISNULL(r.Theater_Capacity, 0) AS TheaterCapacity, 
 					ISNULL(r.Banquet_Capacity,0) AS BanquetCapacity, 
-					CASE
-						WHEN (rr.RoomStatus IS NOT NULL)
-							THEN CASE
-								WHEN rr.RoomStatus = 0 THEN '0'
-								WHEN rr.RoomStatus = 1 THEN '1'
-						    END
-						ELSE rr.RoomStatus)
-					END AS RoomStatus
+					rr.RoomStatus
 	FROM dbo.Rooms r
 		INNER JOIN dbo.Buildings b on b.Building_ID = r.Building_ID
 		LEFT OUTER JOIN Reserved_Rooms rr on rr.Room_ID = r.Room_ID

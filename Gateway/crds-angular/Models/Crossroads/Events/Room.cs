@@ -26,6 +26,6 @@ namespace crds_angular.Models.Crossroads.Events
         public int TheaterCapacity { get; set; }
 
         [JsonProperty(PropertyName = "roomStatus")]
-        public string RoomStatus { get; set; }
+        public bool? RoomStatus { get; set; }
     }
 }
