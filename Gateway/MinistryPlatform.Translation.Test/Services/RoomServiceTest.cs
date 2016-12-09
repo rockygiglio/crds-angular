@@ -24,6 +24,7 @@ namespace MinistryPlatform.Translation.Test.Services
         public void SetUp()
         {
             _ministryPlatformRestRepository = new Mock<IMinistryPlatformRestRepository>();
+            _ministryPlatformService = new Mock<IMinistryPlatformService>();
             _config = new Mock<IConfigurationWrapper>();
             _authenticationService = new Mock<IAuthenticationRepository>();
 
