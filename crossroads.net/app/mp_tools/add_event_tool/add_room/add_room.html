@@ -1,5 +1,5 @@
 <preloader full-screen ng-if="!addRoom.viewReady"> </preloader>
-<div class="form-group" ng-if="addRoom.viewReady" >
+<div class="form-group" ng-if="addRoom.viewReady">
   <span ng-show="addRoom.showNoRoomsMessage()"> There are no rooms for this site </span>
   <span ng-hide="addRoom.showNoRoomsMessage()">
     <label>Rooms for {{ addRoom.chosenSite }}</label>
@@ -8,27 +8,36 @@
         <ui-select-match >
           {{ $select.selected.name}}
         </ui-select-match>
-        <ui-select-choices ui-disable-choice="room.roomStatus !== addRoom.available" repeat="room in ( addRoom.rooms | filter: {name: $select.search}) track by room.id">
-          <div>
-            <span ng-bind="room.name"></span>
-            <table class="table table-condensed">
-              <tr> <td> <small> Theater capacity: {{ room.theaterCapacity }} </small> </td> </tr>
-              <tr> <td> <small> Banquet capacity: {{ room.banquetCapacity }} </small> </td> </tr>
-            </table>
+        <ui-select-choices class="ui-select-dropdown dropdown-menu" ui-disable-choice="room.roomStatus !== addRoom.available" repeat="room in ( addRoom.rooms | filter: {name: $select.search}) track by room.id">
+          <div class="ui-select-choices-group">
+            <li>
+            <div class="row">
+              <h4 class="soft-half-left">{{room.name}}</h4>
+            </div>
+            <div class="row">
+              <div class="col-md-4">
+                <div><span class="bold">Chairs only</span> capacity</div>
+                <div><span class="bold">Chairs with tables</span> capacity</div>
+              </div>
+              <div class="col-md-1">
+                <div class="text-right">{{room.theaterCapacity}}</div>
+                <div class="text-right">{{room.banquetCapacity}}</div>
+              </div>
+            </div>
           </div>
         </ui-select-choices>
       </ui-select>
       <span class="input-group-btn">
         <button class="btn btn-standard" ng-click="addRoom.onAdd()"> Add Room </button>
       </span>
-    </div>
-    <div ng-if="addRoom.viewReady && addRoom.roomData.length == 0" ng-hide="addRoom.showNoRoomsMessage()">
-      <p class="lead"><span class="badge brand-warning">No Room(s) Added</span></p>
-    </div>
-  </span>
+</div>
+<div ng-if="addRoom.viewReady && addRoom.roomData.length == 0" ng-hide="addRoom.showNoRoomsMessage()">
+  <p class="lead"><span class="badge brand-warning">No Room(s) Added</span></p>
+</div>
+</span>
 
 <!-- The rooms choosen -->
-  <span ng-repeat="currentRoom in addRoom.roomData">
+<span ng-repeat="currentRoom in addRoom.roomData">
     <room-form current-room="currentRoom"
                layouts="addRoom.layouts"
                equipment-lookup="addRoom.equipmentList"
@@ -36,4 +45,3 @@
                remove-room="addRoom.removeRoom(currentRoom)">
     </room-form>
   </span>
-
