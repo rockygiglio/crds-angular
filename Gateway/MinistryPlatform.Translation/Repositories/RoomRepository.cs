@@ -131,14 +131,14 @@ namespace MinistryPlatform.Translation.Repositories
             var token = ApiLogin();
             var parms = new Dictionary<string, object>
             {
-                {"@StartDate", startDate}
+                {"@StartDate", startDate},
+                {"@EndDate", string.Join(",", endDate)},
+                {"@LocationId", string.Join(",", locationId)}
             };
-            parms.Add("@EndDate", string.Join(",", endDate));
-            parms.Add("@LocationId", string.Join(",", locationId));
 
             var records = _ministryPlatformRestRepository.UsingAuthenticationToken(token).GetFromStoredProc<MpRoom>(GetRoomsProcName, parms);
 
-            return records.FirstOrDefault();
+            return records?.FirstOrDefault();
         }
 
         public List<RoomLayout> GetRoomLayouts()

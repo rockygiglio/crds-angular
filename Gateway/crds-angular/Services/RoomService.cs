@@ -25,7 +25,7 @@ namespace crds_angular.Services
         {
             var records = _roomService.GetRoomsByLocationId(id, startDate, endDate);
 
-            return records.Select(record => new Room
+            return records?.Select(record => new Room
             {
                 BuildingId = record.BuildingId,
                 Id = record.RoomId,
