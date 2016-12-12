@@ -8,7 +8,9 @@ class CampsFamilyController {
 
   $onInit() {
     this.log.debug('Camps Family Controller Initialized!');
-    this.cmsMessage = this.rootScope.MESSAGES[`camps_intro_${this.state.toParams.campId}`].content || this.rootScope.MESSAGES.summercampIntro.content;
+    this.cmsMessage = (this.rootScope.MESSAGES[`campIntro_${this.state.toParams.campId}`]) ?
+      this.rootScope.MESSAGES[`campIntro_${this.state.toParams.campId}`].content :
+      this.rootScope.MESSAGES.summercampIntro.content;
   }
 }
 

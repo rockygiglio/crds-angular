@@ -27,7 +27,7 @@ describe('Camps Family Select Tool', () => {
     spyOn(log, 'debug').and.callThrough();
 
     rootScope.MESSAGES = {
-      camps_intro_123: { content: 'success' },
+      campIntro_123: { content: 'success' },
       summercampIntro: {
         content: 'summer camp intro text'
       }
@@ -35,10 +35,26 @@ describe('Camps Family Select Tool', () => {
 
     const bindings = { };
     familySelectController = $componentController('campsFamily', null, bindings);
-    familySelectController.$onInit();
   }));
 
   it('should initialize the component', () => {
+    familySelectController.$onInit();
     expect(log.debug).toHaveBeenCalled();
+  });
+
+  it('should get the default cms block if no specific cms block exists', () => {
+    state.toParams = {
+      campId: 12
+    };
+    familySelectController.$onInit();
+    expect(familySelectController.cmsMessage).toBe('summer camp intro text');
+  });
+
+  it('should get the camp specific content block', () => {
+    state.toParams = {
+      campId: 123
+    };
+    familySelectController.$onInit();
+    expect(familySelectController.cmsMessage).toBe('success');
   });
 });
