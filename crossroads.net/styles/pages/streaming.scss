@@ -1090,8 +1090,7 @@ streaming, landing {
             text-align: center;
             vertical-align: middle;
 
-            &:hover,
-            &:focus {
+            &:hover {
               background: lighten(rgba(77,77,77,0.75), 10);
               border: none;
               text-decoration: none;
