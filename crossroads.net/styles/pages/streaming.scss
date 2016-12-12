@@ -1072,6 +1072,7 @@ streaming, landing {
           }
           overflow: -moz-scrollbars-none;
           -ms-overflow-style: -ms-autohiding-scrollbar;
+          -webkit-overflow-scrolling: touch;
         }
 
         .crds-carousel {
