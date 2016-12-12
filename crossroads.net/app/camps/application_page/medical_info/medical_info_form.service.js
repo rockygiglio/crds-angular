@@ -141,7 +141,8 @@ class MedicalInfoForm {
   getFields() {
     return [
       {
-        className: 'row',
+        className: '',
+        wrapper: 'campBootstrapRow',
         fieldGroup: [{
           className: 'form-group col-xs-6',
           key: 'insuranceCompany',
@@ -161,7 +162,8 @@ class MedicalInfoForm {
         }]
       },
       {
-        className: 'row',
+        className: '',
+        wrapper: 'campBootstrapRow',
         fieldGroup: [{
           className: 'form-group col-xs-6',
           key: 'physicianName',
@@ -182,7 +184,8 @@ class MedicalInfoForm {
         }]
       },
       {
-        className: 'row',
+        className: '',
+        wrapper: 'campBootstrapRow',
         fieldGroup: [{
           className: 'form-group col-xs-6',
           key: 'showAllergies',
@@ -204,7 +207,8 @@ class MedicalInfoForm {
         }]
       },
       {
-        className: 'row',
+        className: '',
+        wrapper: 'campBootstrapRow',
         hideExpression: () => !this.formModel.showAllergies,
         fieldGroup: [{
           className: 'col-xs-12',

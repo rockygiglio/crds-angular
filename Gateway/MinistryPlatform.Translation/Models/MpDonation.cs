@@ -21,6 +21,8 @@ namespace MinistryPlatform.Translation.Models
         public bool IncludeOnGivingHistory { get; set; }
         public bool IncludeOnPrintedStatement { get; set; }
         public bool recurringGift { get; set; }
+        public string AccountingCompanyName {get; set; }
+        public bool AccountingCompanyIncludeOnPrintedStatement { get; set; }
 
         #region Distributions property
         private readonly List<MpDonationDistribution> _distributions = new List<MpDonationDistribution>();

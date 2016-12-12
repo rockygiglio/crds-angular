@@ -168,8 +168,8 @@ namespace crds_angular.Controllers.API
             {
                 try
                 {
-                    _campService.SaveCampReservation(campReservation, eventId, token);
-                    return Ok();
+                    var newCamperInfo = _campService.SaveCampReservation(campReservation, eventId, token);
+                    return Ok(newCamperInfo);
                 }
 
                 catch (Exception e)
@@ -315,6 +315,7 @@ namespace crds_angular.Controllers.API
                 try
                 {
                     _campService.SendCampConfirmationEmail(eventId, invoiceId, paymentId, token);
+                    _campService.SetCamperAsRegistered(eventId, contactId);
                     return Ok();
                 }
                 catch (Exception e)

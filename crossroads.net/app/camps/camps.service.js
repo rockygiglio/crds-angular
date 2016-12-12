@@ -3,8 +3,9 @@ import filter from 'lodash/collection/filter';
 
 /* ngInject */
 class CampsService {
-  constructor($resource, $stateParams, $log, AttributeTypeService) {
+  constructor($resource, $rootScope, $stateParams, $log, AttributeTypeService) {
     this.log = $log;
+    this.scope = $rootScope;
     this.stateParams = $stateParams;
     this.resource = $resource;
     this.attributeTypeService = AttributeTypeService;
@@ -29,11 +30,13 @@ class CampsService {
     // eslint-disable-next-line prefer-template
     this.paymentResource = $resource(__API_ENDPOINT__ + 'api/v1.0.0/invoice/:invoiceId/payment/:paymentId');
     this.confirmationResource = $resource(`${__API_ENDPOINT__}api/camps/:campId/confirmation/:contactId`);
-    this.hasPaymentsResource = $resource(`${__API_ENDPOINT__}api/v1.0.0/invoice/:invoiceId/has-payment`);
+    this.hasPaymentsResource = $resource(`${__API_ENDPOINT__}api/v1.0.0/invoice/:invoiceId/has-payment`, { method: 'GET', cache: false });
+    this.interestedInResource = $resource(`${__API_ENDPOINT__}api/v1.0.0/contact/:contactId/interested-in/:eventId`);
 
     this.campInfo = null;
     this.campTitle = null;
     this.shirtSizes = null;
+    this.family = null;
     this.camperInfo = null;
     this.waivers = null;
     this.productInfo = null;
@@ -48,6 +51,7 @@ class CampsService {
     this.campInfo = {};
     this.campTitle = '';
     this.shirtSizes = [];
+    this.family = [];
   }
 
   initializeCamperData() {
@@ -116,14 +120,19 @@ class CampsService {
     }).$promise;
   }
 
-  getCampProductInfo(campId, camperId) {
-    return this.productSummaryResource.get({ campId, camperId }, (productInfo) => {
+  getCampProductInfo(campId, camperId, checkForDeposit = false) {
+    let prom = this.productSummaryResource.get({ campId, camperId }, (productInfo) => {
       this.productInfo = productInfo;
     },
 
     (err) => {
       this.log.error(err);
     }).$promise;
+
+    if (checkForDeposit) {
+      prom = prom.then(res => this.invoiceHasPayment(res.invoiceId));
+    }
+    return prom;
   }
 
   submitWaivers(campId, contactId, waivers) {
@@ -148,19 +157,29 @@ class CampsService {
   }
 
   sendConfirmation(invoiceId, paymentId, campId, contactId) {
-    this.confirmationResource.save({ contactId, campId, invoiceId, paymentId }, {});
+    return this.confirmationResource.save({ contactId, campId, invoiceId, paymentId }, {}).$promise
+      .then(() => {
+        this.initializeCampData();
+        this.initializeCamperData();
+      });
   }
 
   getShirtSizes() {
+    /* eslint-disable new-cap */
     return this.attributeTypeService.AttributeTypes().get({ id: crdsConstants.ATTRIBUTE_TYPE_IDS.TSHIRT_SIZES }).$promise
       .then((shirtSizes) => {
         this.shirtSizes = filter(shirtSizes.attributes, attribute => attribute.category === 'Adult');
         return shirtSizes;
       });
+    /* eslint-enable */
   }
 
   invoiceHasPayment(invoiceId) {
     return this.hasPaymentsResource.get({ invoiceId }).$promise;
+  }
+
+  isEventParticipantInterested(contactId, eventId) {
+    return this.interestedInResource.get({ eventId, contactId }).$promise;
   }
 }
 

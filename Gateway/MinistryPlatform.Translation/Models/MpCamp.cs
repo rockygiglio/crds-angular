@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using MinistryPlatform.Translation.Models.Attributes;
 using Newtonsoft.Json;
 
@@ -33,6 +34,9 @@ namespace MinistryPlatform.Translation.Models
 
         [JsonProperty(PropertyName = "Registration_End")]
         public DateTime RegistrationEndDate { get; set; }
+
+        [JsonProperty(PropertyName = "Group_Name")]
+        public List<MpEventGroup> CampGradesList { get; set; }
 
     }
 }

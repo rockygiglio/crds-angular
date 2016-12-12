@@ -128,7 +128,7 @@ namespace crds_angular.App_Start
                 .ForMember(dest => dest.ReceivablesAccount, opts => opts.MapFrom(src => src.ReceivableAccount))
                 .ForMember(dest => dest.DistributionAmount, opts => opts.MapFrom(src => src.Amount.ToString()))
                 .ForMember(dest => dest.CashAccount, opts => opts.MapFrom(src => (src.ScholarshipPaymentTypeId == src.PaymentTypeId ? src.ScholarshipExpenseAccount : src.CashAccount)))
-                .ForMember(dest => dest.DistributionReference, opts => opts.MapFrom(src => (src.ProccessFeeProgramId == src.ProgramId ? "Processor Fees " + src.DonationDate : "Contribution " + src.DonationDate  )));
+                .ForMember(dest => dest.DistributionReference, opts => opts.MapFrom(src => src.DistributionReference));
 
             Mapper.CreateMap<MpDonation, DonationDTO>()
                 .ForMember(dest => dest.Amount, opts => opts.MapFrom(src => src.donationAmt))
@@ -138,6 +138,8 @@ namespace crds_angular.App_Start
                 .ForMember(dest => dest.Distributions, opts => opts.MapFrom(src => src.Distributions))
                 .ForMember(dest => dest.IncludeOnGivingHistory, opts => opts.MapFrom(src => src.IncludeOnGivingHistory))
                 .ForMember(dest => dest.IncludeOnPrintedStatement, opts => opts.MapFrom(src => src.IncludeOnPrintedStatement))
+                .ForMember(dest => dest.AccountingCompanyName, opts => opts.MapFrom(src => src.AccountingCompanyName))
+                .ForMember(dest => dest.AccountingCompanyIncludeOnPrintedStatement, opts => opts.MapFrom(src => src.AccountingCompanyIncludeOnPrintedStatement))
                 .AfterMap((src, dest) =>
                 {
                     dest.Source = new DonationSourceDTO

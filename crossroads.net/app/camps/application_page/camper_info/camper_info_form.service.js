@@ -159,22 +159,18 @@ class CamperInfoForm {
           {
             className: 'form-group col-xs-6',
             key: 'currentGrade',
-            type: 'crdsInput',
+            type: 'crdsSelect',
             templateOptions: {
               label: 'Current Grade',
-              disabled: true
-              // options: [
-              //   { grade: '5th' },
-              //   { grade: '6th' },
-              //   { grade: '7th' },
-              //   { grade: '8th' },
-              //   { grade: '9th' },
-              //   { grade: '10th' },
-              //   { grade: '11th' },
-              //   { grade: '12th' }
-              // ],
-              // valueProp: 'grade',
-              // labelProp: 'grade'
+              required: true,
+              valueProp: 'groupId',
+              labelProp: 'groupName',
+              options: []
+            },
+            controller: /* @ngInject */ ($scope, CampsService) => {
+              /* eslint-disable no-param-reassign */
+              $scope.to.options = CampsService.campInfo.eligibleGrades;
+              /* eslint-enable */
             }
           }
         ]

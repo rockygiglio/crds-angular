@@ -183,7 +183,8 @@ namespace crds_angular.Controllers.API
                 try
                 {
                     // get export file and name
-                    var fileName = _gatewayDonationService.GPExportFileName(depositId);
+                    var deposit = _gatewayDonationService.GetDepositById(depositId);
+                    var fileName = _gatewayDonationService.GPExportFileName(deposit);
                     var stream = _gatewayDonationService.CreateGPExport(selectionId, depositId, token);
 
                     return new FileResult(stream, fileName);
@@ -206,8 +207,8 @@ namespace crds_angular.Controllers.API
             {
                 try
                 {
-                    var batches = _gatewayDonationService.GenerateGPExportFileNames(selectionId, token);
-                    return Ok(batches);
+                    var deposits = _gatewayDonationService.GenerateGPExportFileNames(selectionId, token);
+                    return Ok(deposits);
                 }
                 catch (Exception ex)
                 {

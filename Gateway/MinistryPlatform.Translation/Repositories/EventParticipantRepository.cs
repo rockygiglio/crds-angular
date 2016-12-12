@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Crossroads.Utilities.FunctionalHelpers;
 using Crossroads.Utilities.Interfaces;
 using MinistryPlatform.Translation.Extensions;
 using MinistryPlatform.Translation.Models;
@@ -122,7 +123,7 @@ namespace MinistryPlatform.Translation.Repositories
 
             try
             {
-                var records = 
+                var records =
                     WithApiLogin(
                         apiToken => _ministryPlatformService.GetSubpageViewRecords("EventParticipantAssignedToRoomApiSubPageView", eventId, apiToken, searchString));
                 return records.Select(viewRecord => new MpEventParticipant
@@ -148,6 +149,17 @@ namespace MinistryPlatform.Translation.Repositories
             return eventParticipant;
         }
 
+        public MpEventParticipant GetEventParticipantEligibility(int eventId, int contactId)
+        {
+            var apiToken = ApiLogin();
+
+            var filter = $"Event_ID_Table.[Event_ID] = {eventId} AND Participant_ID_Table_Contact_ID_Table.[Contact_ID] = {contactId}";
+            var participants = _ministryPlatformRestRepository.UsingAuthenticationToken(apiToken)
+                .Search<MpEventParticipant>(filter, "Event_Participants.[Event_Participant_ID], Event_Participants.[_Setup_Date] as [Setup_Date], Event_Participants.[End_Date], Event_Participants.[Participation_Status_ID]");
+
+            return participants.FirstOrDefault();
+        }
+
         public DateTime? EventParticipantSignupDate(int contactId, int eventId, string apiToken)
         {
 
@@ -161,6 +173,34 @@ namespace MinistryPlatform.Translation.Repositories
                 if (ret != null) return ret.SetupDate;
             }
             return null;
+        }
+
+        public Result<MpEventParticipant> GetEventParticipantByContactAndEvent(int contactId, int eventId, string token)
+        {
+            try
+            {
+                var filter = $"Event_ID_Table.[Event_ID] = {eventId} AND Participant_ID_Table_Contact_ID_Table.[Contact_ID] = {contactId}";
+                var columns = new List<string>
+                {
+                    "Participant_ID_Table_Contact_ID_Table.[Contact_ID]",
+                    "Event_ID_Table.[Event_ID]",
+                    "Event_Participant_ID",
+                    "Event_ID_Table.Event_Title",
+                    "Participation_Status_ID",
+                    "End_Date"
+                };
+                var participants = _ministryPlatformRestRepository.UsingAuthenticationToken(token)
+                    .Search<MpEventParticipant>(filter, columns);
+                if (participants.Count > 0)
+                {
+                    return new Ok<MpEventParticipant>(participants.FirstOrDefault());
+                }
+                return new Err<MpEventParticipant>("No Participants Found");
+            }
+            catch (Exception e)
+            {
+                return new Err<MpEventParticipant>(e);
+            }
         }
     }
 }

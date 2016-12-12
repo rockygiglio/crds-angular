@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using MinistryPlatform.Translation.Models;
-using MinistryPlatform.Translation.Models.DTO;
 
 namespace MinistryPlatform.Translation.Repositories.Interfaces
 {
@@ -30,5 +29,9 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
         void AddDonationCommunication(int donationId, int communicationId);
         List<int> GetPredefinedDonationAmounts();
         MpDeposit GetDepositByProcessorTransferId(string processorTransferId);
+        List<MpGPExportDatum> GetGPExportDataForPayments(int depositId, string token);
+        int GetProcessingFeeMappingID(int programId, int congregationId, string token);
+        MPGLAccountMapping GetProcessingFeeGLMapping(int processingFeeMapping, string token);
+        MpDeposit GetDepositById(int depositId);
     }
 }
