@@ -157,6 +157,11 @@
     COOKIES: {
       SESSION_ID: __CRDS_ENV__+'sessionId',
       REFRESH_TOKEN: __CRDS_ENV__+'refreshToken'
+    },
+    EVENTS: {
+      ROOM_AVAILABLE: null,
+      ROOM_PENDING: 0,
+      ROOM_BOOKED: 1
     }
   };
 })();
