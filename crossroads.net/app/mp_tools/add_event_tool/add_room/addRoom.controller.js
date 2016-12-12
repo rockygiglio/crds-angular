@@ -20,7 +20,7 @@ export default class AddRoomController {
   $onInit() {
     this.layouts = this.room.Layouts.query();
     if (this.addEvent.editMode) {
-      this.setLocation();
+      this.setCongregation();
     }
     if (this.addEvent.eventData.event.congregation !== undefined) {
       this.chosenSite = this.addEvent.eventData.event.congregation.dp_RecordName;
@@ -31,10 +31,9 @@ export default class AddRoomController {
       return;
     }
     this.log.error('The congregation was not passed in so we can\'t get the list of rooms or equipment');
-    return;
   }
 
-  setLocation() {
+  setCongregation() {
     this.lookup.query({ table: 'crossroadslocations' }, (locations) => {
       this.addEvent.eventData.event.congregation = _.find(locations, (l) => {
         return l.dp_RecordID === this.addEvent.eventData.event.congregation.dp_RecordID;
@@ -50,15 +49,12 @@ export default class AddRoomController {
         const tempRoom = _.find(data, (roo) => {
           return roo.id === r.id;
         });
-
         if (tempRoom) {
           r.name = tempRoom.name;
           return true;
         }
-
         return false;
       }
-
       return true;
     });
   }
