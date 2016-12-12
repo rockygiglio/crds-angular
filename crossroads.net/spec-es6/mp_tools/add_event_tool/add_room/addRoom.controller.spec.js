@@ -1,7 +1,7 @@
 import CONSTANTS from 'crds-constants';
 import AddRoomController from '../../../../app/mp_tools/add_event_tool/add_room/addRoom.controller';
 
-describe('component: addEvent controller', () => {
+describe('component: addRoom controller', () => {
   let fixture,
     log,
     lookup,
@@ -20,7 +20,7 @@ describe('component: addEvent controller', () => {
     congregationId = 1;
     let selectedCongregation = { dp_RecordID: 15, dp_RecordName: 'Anywhere' };
     log = $injector.get('$log');
-    rootScope = jasmine.createSpyObj('$rootScope', ['$emit']);
+    rootScope = $injector.get('$rootScope');
     modal = jasmine.createSpyObj('$modal', ['open']);
     lookup = jasmine.createSpyObj('lookup', ['query']);
     lookup.query.and.callFake((params, callback) => {
@@ -49,6 +49,7 @@ describe('component: addEvent controller', () => {
       }
     });
 
+    qApi = $injector.get('$q');
     room = {
       Layouts: jasmine.createSpyObj('Layouts', ['query']),
       ByCongregation: jasmine.createSpyObj('ByCongregation', ['query']),
@@ -57,6 +58,7 @@ describe('component: addEvent controller', () => {
 
     modal.open.and.returnValue({});
     room.Layouts.query.and.returnValue({});
+    spyOn(rootScope, '$emit');
 
     
     allReadyAdded = 'already chosen';
@@ -375,7 +377,7 @@ describe('component: addEvent controller', () => {
     expect(modal.open.calls.mostRecent().args[0].resolve.items).toEqual(jasmine.any(Function));
   })
 
-  it('add stuff onAdd()', () => {
+  it('should add stuff onAdd()', () => {
     let chosenRoom, roomData, dougsRoom, kensRoom, joesRoom;
     dougsRoom = {id:3, name: 'dougs room'};
     kensRoom = {id:2, name: 'kens room'};
@@ -394,7 +396,7 @@ describe('component: addEvent controller', () => {
     expect(fixture.rootScope.$emit).not.toHaveBeenCalledWith('notify', chooseARoom);
   })
 
-  it('add stuff onAdd() alreadyAdded, but cancelled', () => {
+  it('should add stuff onAdd() alreadyAdded, but cancelled', () => {
     let chosenRoom, roomData, dougsRoom, kensRoom, joesRoom, joesRoomCancelled, joesRoomNotCancelled, message;
 
     dougsRoom = {id:3, name: 'dougs room'};
@@ -416,7 +418,7 @@ describe('component: addEvent controller', () => {
     expect(fixture.rootScope.$emit).not.toHaveBeenCalledWith('notify', chooseARoom);
   })
 
-  it('add stuff onAdd() alreadyAdded, room data shouldnt change', () => {
+  it('should add stuff onAdd() alreadyAdded, room data shouldnt change', () => {
     let chosenRoom, roomData, dougsRoom, kensRoom, joesRoom, message;
 
     dougsRoom = {id:3, name: 'dougs room'};
@@ -436,7 +438,7 @@ describe('component: addEvent controller', () => {
     expect(fixture.rootScope.$emit).not.toHaveBeenCalledWith('notify', chooseARoom);
   })
 
-  it('add stuff onAdd() selectedRoom is null, room data shouldnt change', () => {
+  it('should add stuff onAdd() selectedRoom is null, room data shouldnt change', () => {
     let chosenRoom, roomData, dougsRoom, kensRoom, joesRoom, message;
 
     dougsRoom = {id:3, name: 'dougs room'};
