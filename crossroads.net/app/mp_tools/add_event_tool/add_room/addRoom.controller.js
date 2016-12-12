@@ -96,7 +96,7 @@ export default class AddRoomController {
 
       if (alreadyAdded) {
         if (alreadyAdded.cancelled) {
-          alreadyAdded.cancelled = false;
+          this.roomData[_.findIndex(this.roomData, (r)=>{return r.id === alreadyAdded.id})].cancelled = false;
         } else {
           this.rootScope.$emit('notify', this.rootScope.MESSAGES.allReadyAdded);
         }
