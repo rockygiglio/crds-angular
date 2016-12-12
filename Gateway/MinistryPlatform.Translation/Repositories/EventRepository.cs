@@ -69,7 +69,8 @@ namespace MinistryPlatform.Translation.Repositories
                 {"Send_Reminder", eventReservationReservation.SendReminder},
                 {"Event_Start_Date", eventReservationReservation.StartDateTime},
                 {"Event_Title", eventReservationReservation.Title},
-                {"Visibility_Level_ID", _configurationWrapper.GetConfigIntValue("EventVisibilityLevel")}
+                {"Visibility_Level_ID", _configurationWrapper.GetConfigIntValue("EventVisibilityLevel")},
+                {"Participants_Expected", eventReservationReservation.ParticipantsExpected }
             };
 
             try
@@ -95,15 +96,24 @@ namespace MinistryPlatform.Translation.Repositories
             return eventParticipantId;
         }
 
-        public int RegisterParticipantForEvent(int participantId, int eventId, int groupId = 0, int groupParticipantId = 0)
+        public int RegisterInterestedParticipantWithEndDate(int participantId, int eventId, DateTime? endDate)
         {
-            _logger.Debug("Adding participant " + participantId + " to event " + eventId);
             var values = new Dictionary<string, object>
             {
-                {"Participant_ID", participantId},
-                {"Event_ID", eventId},
-                {"Participation_Status_ID", _eventParticipantStatusDefaultId},
+                {"Participation_Status_ID", _configurationWrapper.GetConfigIntValue("Participant_Status_Interested")}
             };
+
+            if (endDate != null)
+            {
+                values["End_Date"] = endDate;
+            }
+
+            return RegisterParticipantForEvent(participantId, eventId, values);
+        }
+
+        public int RegisterParticipantForEvent(int participantId, int eventId, int groupId = 0, int groupParticipantId = 0)
+        {
+            var values = new Dictionary<string, object>();
 
             if (groupId != 0)
             {
@@ -112,6 +122,26 @@ namespace MinistryPlatform.Translation.Repositories
             if (groupParticipantId != 0)
             {
                 values.Add("Group_Participant_ID", groupParticipantId);
+            }
+
+            return RegisterParticipantForEvent(participantId, eventId, values);
+        }
+
+        private int RegisterParticipantForEvent(int participantId, int eventId, Dictionary<string, object> values)
+        {
+            _logger.Debug("Adding participant " + participantId + " to event " + eventId);
+
+            if (values == null)
+            {
+                values = new Dictionary<string, object>();
+            }
+
+            values["Participant_ID"] = participantId;
+            values["Event_ID"] = eventId;
+
+            if (!values.ContainsKey("Participation_Status_ID"))
+            {
+                values["Participation_Status_ID"] = _eventParticipantStatusDefaultId;
             }
 
             int eventParticipantId;
@@ -165,6 +195,54 @@ namespace MinistryPlatform.Translation.Repositories
 
             _logger.Debug($"Removed participant {participantId} from event {eventId}; record id: {eventParticipantId}");
             return (eventParticipantId);
+        }
+
+        public void SetParticipantAsRegistered(int eventId, int participantId)
+        {
+            try
+            {
+                Console.WriteLine("SetParticipantAsRegistered");
+                var apiToken = ApiLogin();
+                var eventParticipantId = GetEventParticipantRecordId(eventId, participantId);
+
+                var fields = new Dictionary<string, object>
+                {
+                    {"Event_Participant_ID", eventParticipantId},
+                    {"End_Date", null},
+                    {"Participation_Status_ID", _configurationWrapper.GetConfigIntValue("Participant_Status_Registered")}
+                };
+
+                _ministryPlatformRestRepository.UsingAuthenticationToken(apiToken).UpdateRecord("Event_Participants", eventParticipantId, fields);
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException(
+                    $"SetParticipantAsRegistered failed.  Participant Id: {participantId}, Event Id: {eventId}",
+                    ex.InnerException);
+            }       
+        }
+
+        public void UpdateParticipantEndDate(int eventParticipantId, DateTime? endDate)
+        {
+            try
+            {
+                Console.WriteLine("UpdateParticipantEndDate");
+                var apiToken = ApiLogin();
+
+                var fields = new Dictionary<string, object>
+                {
+                    {"Event_Participant_ID", eventParticipantId},
+                    {"End_Date", endDate}
+                };
+
+                _ministryPlatformRestRepository.UsingAuthenticationToken(apiToken).UpdateRecord("Event_Participants", eventParticipantId, fields);
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException(
+                    $"UpdateParticipantEndDate failed.  Event Participant Id: {eventParticipantId}",
+                    ex.InnerException);
+            }
         }
 
         public MpEvent GetEvent(int eventId)

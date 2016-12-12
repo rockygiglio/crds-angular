@@ -23,7 +23,7 @@ namespace crds_angular.Services
             {
                 ContactId = mpContact.ToInt("Contact_ID"),
                 DisplayName = mpContact.ToString("Display_Name"),
-                Email = mpContact.ToString("dp_RecordName")
+                Email = mpContact.ToString("Email_Address")
             }).ToList();
         }
     }

@@ -130,6 +130,15 @@
                     statusCode: ContentPageService.page.errorCode
                   };
 
+                  $rootScope.renderLegacyStyles = (typeof ContentPageService.page.legacyStyles !== 'undefined'
+                    ? Boolean(parseInt(ContentPageService.page.legacyStyles))
+                    : $rootScope.renderLegacyStyles); // revert to value set on route
+
+                  $rootScope.bodyClasses = [];
+                  if (typeof ContentPageService.page.bodyClasses !== 'undefined' && ContentPageService.page.bodyClasses !== null) {
+                    $rootScope.bodyClasses = ContentPageService.page.bodyClasses.replace(/\s/g, '').split(',');
+                  }
+
                   switch (ContentPageService.page.pageType) {
                     case 'NoHeaderOrFooter':
                       return $templateFactory.fromUrl('templates/noHeaderOrFooter.html');

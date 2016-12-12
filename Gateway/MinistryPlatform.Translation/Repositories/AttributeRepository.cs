@@ -59,10 +59,10 @@ namespace MinistryPlatform.Translation.Repositories
         public List<MpAttributeCategory> GetAttributeCategory(int attributeTypeId)
         {
             //cat cols haha
-            string catCols = "Attribute_Category_ID_table.*";
+            const string catCols = "Attribute_Category_ID_table.*";
             string catSearch = $"attribute_type_id = {attributeTypeId}";
-            var orderBy = "Attribute_Category_ID_table.Sort_Order";
-            bool distinct = true;
+            const string orderBy = "Attribute_Category_ID_table.Sort_Order";
+            const bool distinct = true;
 
             return _ministryPlatformRest.UsingAuthenticationToken(_apiUserService.GetToken()).Search<MpAttribute, MpAttributeCategory>(catSearch, catCols, orderBy, distinct);
         }
