@@ -27,5 +27,8 @@ namespace crds_angular.Models.Crossroads.Events
 
         [JsonProperty(PropertyName = "roomStatus")]
         public bool? RoomStatus { get; set; }
+
+        [JsonProperty(PropertyName = "displayName")]
+        public string DisplayName { get; set; }
     }
 }

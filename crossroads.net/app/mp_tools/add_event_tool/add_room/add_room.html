@@ -2,10 +2,29 @@
 <div class="form-group" ng-if="addRoom.viewReady">
   <span ng-show="addRoom.showNoRoomsMessage()"> There are no rooms for this site </span>
   <span ng-hide="addRoom.showNoRoomsMessage()">
-    <label>Rooms for {{ addRoom.chosenSite }}</label>
+    <div class="row create-event-wrapper">
+      <div class="col-md-3">
+        <label>Add Rooms</label>
+      </div>
+      <div class="col-md-3 push-right text-right">
+          <svg viewBox="0 0 32 32" class="icon icon-check-circle">
+	            <use xlink:href="#check-circle"></use>
+          </svg> Available
+      </div>
+      <div class="col-md-2 push-right text-right">
+          <svg viewBox="0 0 32 32" class="icon icon-clock3">
+	            <use xlink:href="#clock3"></use>
+          </svg> Pending
+      </div>
+      <div class="col-md-2 push-right text-right">
+          <svg viewBox="0 0 32 32" class="icon icon-minus-circle">
+	            <use xlink:href="#minus-circle"></use>
+          </svg>Reserved
+      </div>
+    </div>
     <div class="input-group">
-      <ui-select ng-model="addRoom.chosenRoom" name="chosenRoom" >
-        <ui-select-match >
+      <ui-select ng-model="addRoom.chosenRoom" name="chosenRoom">
+        <ui-select-match placeholder="Select {{addRoom.chosenSite}} Rooms" >
           {{ $select.selected.name}}
         </ui-select-match>
         <ui-select-choices class="ui-select-dropdown dropdown-menu" ui-disable-choice="room.roomStatus !== addRoom.available" repeat="room in ( addRoom.rooms | filter: {name: $select.search}) track by room.id">
@@ -22,6 +41,12 @@
               <div class="col-md-1">
                 <div class="text-right">{{room.theaterCapacity}}</div>
                 <div class="text-right">{{room.banquetCapacity}}</div>
+              </div>
+              <div class="col-md-3 pull-right text-right create-event-wrapper">
+                <svg-icon icon="check-circle" ng-show="room.roomStatus === null"> </svg-icon>
+                <svg-icon icon="minus-circle" ng-show="room.roomStatus === true"> </svg-icon>
+                <svg-icon icon="clock3" ng-show="room.roomStatus === false"> </svg-icon>
+                {{room.displayName}}
               </div>
             </div>
           </div>

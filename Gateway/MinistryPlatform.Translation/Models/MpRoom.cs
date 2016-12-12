@@ -11,6 +11,7 @@
         public string Description { get; set; }
         public int TheaterCapacity { get; set; }
         public bool? RoomStatus { get; set; }
+        public string DisplayName { get; set; }
     }
 
     public class RoomLayout

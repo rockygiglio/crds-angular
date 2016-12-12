@@ -34,7 +34,9 @@ namespace crds_angular.Services
                 BanquetCapacity = record.BanquetCapacity,
                 Description = record.Description,
                 TheaterCapacity = record.TheaterCapacity,
-                RoomStatus = record.RoomStatus
+                RoomStatus = record.RoomStatus,
+                DisplayName = record.DisplayName
+
             }).OrderBy(x => x.Name).ToList();
         }
 
