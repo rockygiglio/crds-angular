@@ -10,7 +10,7 @@ BEGIN
 
 	SET @ID = SCOPE_IDENTITY();
 
-	IF NOT EXISTS(select * from [dbo].[dp_Role_API_Procedures] WHERE API_Procedure_ID =@ID AND Role_ID = 112)
+	IF NOT EXISTS(select * from [dbo].[dp_Role_API_Procedures] WHERE API_Procedure_ID =@ID AND Role_ID = 62)
 	BEGIN
 		INSERT INTO [dbo].[dp_Role_API_Procedures]
 		([Role_ID],

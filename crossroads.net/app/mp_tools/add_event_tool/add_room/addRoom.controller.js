@@ -41,6 +41,8 @@ export default class AddRoomController {
       this.addEvent.eventData.event.congregation = _.find(locations, (l) => {
         return l.dp_RecordID === this.addEvent.eventData.event.congregation.dp_RecordID;
       });
+    }, (error) => {
+      this.log.error(`Error getting congregations: ${error}`);
     });
   }
 

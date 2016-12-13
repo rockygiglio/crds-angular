@@ -13,7 +13,7 @@ namespace MinistryPlatform.Translation.Repositories
 {
     public class RoomRepository : BaseRepository, IRoomRepository
     {
-        public const string GetRoomsProcName = "api_crds_GetReservedAndAvailableRoomsByLocation";
+        private readonly string GetRoomsProcName = "api_crds_GetReservedAndAvailableRoomsByLocation";
 
         private readonly IMinistryPlatformService _ministryPlatformService;
         private readonly IMinistryPlatformRestRepository _ministryPlatformRestRepository;
