@@ -9,6 +9,10 @@ class CampDashboardController {
     this.viewReady = true;
   }
 
+  isDashboardEmpty() {
+    return this.data.length < 1;
+  }
+
   fullName(lastName, nickName) {
     return `${nickName} ${lastName}`;
   }
