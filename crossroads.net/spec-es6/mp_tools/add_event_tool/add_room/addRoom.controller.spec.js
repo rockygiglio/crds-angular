@@ -219,7 +219,7 @@ describe('component: addRoom controller', () => {
         };
         fixture.addEvent = addEvent;
         fixture.setCongregation();
-        expect(lookup.query).toHaveBeenCalledWith({ table: 'crossroadslocations' }, jasmine.any(Function));
+        expect(lookup.query).toHaveBeenCalledWith({ table: 'crossroadslocations' }, jasmine.any(Function), jasmine.any(Function));
         expect(fixture.addEvent.eventData.event.congregation).toEqual({ dp_RecordID: 15, dp_RecordName: 'Anywhere' });
     });
 
@@ -236,7 +236,7 @@ describe('component: addRoom controller', () => {
         };
         fixture.addEvent = addEvent;
         fixture.setCongregation();
-        expect(lookup.query).toHaveBeenCalledWith({ table: 'crossroadslocations' }, jasmine.any(Function));
+        expect(lookup.query).toHaveBeenCalledWith({ table: 'crossroadslocations' }, jasmine.any(Function), jasmine.any(Function));
         expect(fixture.addEvent.eventData.event.congregation).toEqual(undefined);
     });
 
@@ -297,7 +297,7 @@ describe('component: addRoom controller', () => {
             callBack(data);
         });
         fixture.setEquipmentData();
-        expect(room.Equipment.query).toHaveBeenCalledWith({ congregationId: congregationId }, jasmine.any(Function))
+        expect(room.Equipment.query).toHaveBeenCalledWith({ congregationId: congregationId }, jasmine.any(Function), jasmine.any(Function))
         expect(fixture.equipmentList).toEqual(data);
         expect(fixture.roomData[0].equipment).toEqual(eOne);
         expect(fixture.roomData[1].equipment).toEqual(eTwo);
@@ -328,7 +328,7 @@ describe('component: addRoom controller', () => {
             callBack(data);
         });
         fixture.setEquipmentData();
-        expect(room.Equipment.query).toHaveBeenCalledWith({ congregationId: congregationId }, jasmine.any(Function))
+        expect(room.Equipment.query).toHaveBeenCalledWith({ congregationId: congregationId }, jasmine.any(Function), jasmine.any(Function))
         expect(fixture.equipmentList).toEqual(data);
         expect(fixture.roomData[0]).toBe(undefined);
         expect(fixture.roomData[1]).toEqual(undefined);

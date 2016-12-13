@@ -71,6 +71,8 @@ export default class AddRoomController {
         _.forEach(this.roomData, (roomD) => {
           roomD.equipment = this.mapEquipment(data, roomD.equipment);
         });
+      }, (error) => {
+        this.log.error(`Error getting available equipment: ${error}`);
       });
   }
 
