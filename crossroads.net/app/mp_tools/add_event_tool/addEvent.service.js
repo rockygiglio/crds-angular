@@ -1,21 +1,20 @@
-(function() {
-  'use strict';
-
+(function () {
   module.exports = AddEventToolService;
 
   AddEventToolService.$inject = [];
 
   function AddEventToolService() {
-    var obj = {
+    const obj = {
       currentPage: 1,
       editMode: false,
+      dateTime: dateTime,
       eventData: {
         event: {},
         rooms: [],
         group: {}
       },
-      getEventDto: function(eventData) {
-        var reminderDays = null;
+      getEventDto(eventData) {
+        let reminderDays = null;
         if (eventData.event.reminderDays !== undefined) {
           reminderDays = (eventData.event.reminderDays.dp_RecordID > 0) ? eventData.event.reminderDays.dp_RecordID : null;
         }
@@ -41,12 +40,12 @@
           maximumChildren: eventData.event.maximumChildren,
           participantsExpected: eventData.event.participantsExpected,
           group: getGroupDto(eventData.event),
-          rooms: _.map(eventData.rooms, function(r) { return getRoomDto(r); })
-         
+          rooms: _.map(eventData.rooms, (r) => { return getRoomDto(r); })
+
         };
       },
 
-      fromEventDto: function(event) {
+      fromEventDto(event) {
         return {
           event: {
             congregation: {
@@ -78,7 +77,7 @@
             minimumChildren: event.minimumChildren,
             maximumChildren: event.maximumChildren
           },
-          rooms: _.map(event.rooms, function(r) { return fromRoomDto(r); })
+          rooms: _.map(event.rooms, (r) => { return fromRoomDto(r); })
         };
       }
     };
@@ -92,28 +91,28 @@
         return null;
       }
 
-      var groupDto = {
-        groupname: "__childcaregroup",
+      const groupDto = {
+        groupname: '__childcaregroup',
         grouptypeid: 27,
         ministryid: 2,
         congregationid: groupData.congregation.Congregation_ID,
         contactid: groupData.primaryContact.contactId,
-        startdate: moment(dateTime(groupData.startDate,groupData.startTime)).utc().format(),
+        startdate: moment(dateTime(groupData.startDate, groupData.startTime)).utc().format(),
         maximumage: groupData.maximumAge,
         minimumparticipants: groupData.minimumChildren,
         tartgetsize: groupData.maximumChildren
-      }
+      };
 
       return groupDto;
     }
 
     function getRoomDto(room) {
-      var roomDto = {
+      const roomDto = {
         hidden: room.hidden,
         roomId: room.id,
         notes: room.description,
         layoutId: room.layout.id,
-        equipment: _.map(room.equipment, function(e) { return getEquipmentDto(e.equipment); })
+        equipment: _.map(room.equipment, (e) => { return getEquipmentDto(e.equipment); })
       };
       if (_.has(room, 'cancelled')) {
         roomDto.cancelled = room.cancelled;
@@ -127,7 +126,7 @@
     }
 
     function getEquipmentDto(equipment) {
-      var equipmentDto = {
+      const equipmentDto = {
         equipmentId: equipment.name.id,
         quantityRequested: equipment.choosenQuantity
       };
@@ -152,7 +151,7 @@
         notes: roomDto.notes,
         roomReservationId: roomDto.roomReservationId,
         cancelled: roomDto.cancelled,
-        equipment: _.map(roomDto.equipment, function(e) {
+        equipment: _.map(roomDto.equipment, (e) => {
           return fromEquipmentDto(e);
         })
       };
@@ -184,5 +183,4 @@
 
     return obj;
   }
-
-})();
+}());

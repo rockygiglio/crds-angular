@@ -1,60 +1,18 @@
-(function() {
-  'use strict';
+import controller from './roomForm.controller';
+import template from './room_form.html';
 
-  module.exports = RoomForm;
-
-  RoomForm.$inject = ['AddEvent', 'Validation'];
-
-  function RoomForm(AddEvent, Validation) {
-    return {
-      restrict: 'E',
-      scope: {
+export default function RoomFormComponent() {
+  return {
+    restrict: 'E',
+    bindings: {
         currentRoom: '=',
         layouts: '=',
         equipmentLookup: '=',
         removeRoom: '&',
         editMode: '='
-      },
-      templateUrl: 'room_form/roomForm.html',
-      bindToController: true,
-      controller: RoomController,
-      controllerAs: 'room'
-    };
-
-    function RoomController() {
-      var vm = this;
-      vm.existing = existing;
-      vm.isCancelled = isCancelled;
-      vm.remove = remove;
-      vm.validation = Validation;
-
-      activate();
-
-      ////////////////////
-
-      function activate() {
-
-        if (vm.currentRoom.equipment === undefined) {
-          vm.currentRoom.equipment = [];
-        }
-      }
-
-      function existing() {
-        if (_.has(vm.currentRoom, 'cancelled')) {
-          return vm.currentRoom.cancelled;
-        }
-
-        return false;
-      }
-
-      function isCancelled() {
-        return existing() && vm.currentRoom.cancelled;
-      }
-
-      function remove() {
-        vm.removeRoom();
-      }
-
-    }
-  }
-})();
+    },
+    template: template,
+    controller: controller,
+    controllerAs: 'room'
+  };
+};
