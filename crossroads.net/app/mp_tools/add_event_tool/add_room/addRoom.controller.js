@@ -115,7 +115,7 @@ export default class AddRoomController {
   }
 
   mapEquipment(equipmentLookup, currentEquipmentList) {
-    return _.map(currentEquipmentList, (current) => {
+    let values = _.map(currentEquipmentList, (current) => {
       if (current.equipment.name.quantity === undefined) {
         const found = _.find(equipmentLookup, (e) => {
           return e.id === current.equipment.name.id;
@@ -127,6 +127,10 @@ export default class AddRoomController {
 
         return current;
       }
+    });
+
+    return _.filter(values, (v) => {
+      return v !== undefined;
     });
   }
 
