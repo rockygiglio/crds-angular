@@ -23,7 +23,7 @@
         <ui-select-match placeholder="Select {{addRoom.chosenSite}} Rooms" >
           {{ $select.selected.name}}
         </ui-select-match>
-        <ui-select-choices class="ui-select-dropdown dropdown-menu" ui-disable-choice="room.roomStatus !== addRoom.available" repeat="room in ( addRoom.rooms | filter: {name: $select.search}) track by room.id+room.reservationStart+room.reservationEnd">
+        <ui-select-choices class="ui-select-dropdown dropdown-menu" ui-disable-choice="room.roomStatus !== addRoom.available" repeat="room in ( addRoom.rooms | filter: {name: $select.search}) track by room.id+room.displayName+room.reservationStart+room.reservationEnd">
           <div class="ui-select-choices-group container-fluid condensed-grid">
             <li>
             <div class="row">
@@ -45,7 +45,7 @@
                 <svg-icon icon="clock3" ng-show="room.roomStatus === false"> </svg-icon>
                 {{room.displayName}}
                 </div>
-                <div class="row">
+                <div ng-if="room.roomStatus !== null" class="row">
                   {{room.reservationStart | date: 'MMM d, y h:mm a'}} - {{room.reservationEnd | date: 'MMM d, y h:mm a'}}
               </div>
             </div>
