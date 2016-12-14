@@ -1,4 +1,6 @@
-﻿namespace MinistryPlatform.Translation.Models
+﻿using System;
+
+namespace MinistryPlatform.Translation.Models
 {
     public class MpRoom
     {
@@ -12,6 +14,8 @@
         public int TheaterCapacity { get; set; }
         public bool? RoomStatus { get; set; }
         public string DisplayName { get; set; }
+        public DateTime? ReservationStart { get; set; }
+        public DateTime? ReservationEnd { get; set; }
     }
 
     public class RoomLayout

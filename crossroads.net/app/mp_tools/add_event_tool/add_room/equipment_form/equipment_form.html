@@ -7,11 +7,11 @@
         Is Equipment Required?
       </label><br>
       <label class="weight-normal">
-        <input type="radio" name="equipRequired" required ng-model="equipment.equipmentRequired" ng-value="true"/>
+        <input type="radio" name="equipRequired" required ng-model="equipment.equipmentRequired" ng-click="eqiupment.toggleEquipmentRequired()" ng-value="true"/>
         Yes
       </label>
       <label class="weight-normal">
-        <input type="radio" name="equipRequired" required ng-model="equipment.equipmentRequired" ng-value="false"/>
+        <input type="radio" name="equipRequired" required ng-model="equipment.equipmentRequired" ng-click="equipment.toggleEquipmentRequired()" ng-value="false"/>
         No
       </label>
       <ng-messages for="roomForm.required.$error" ng-if="room.validation.showErrors(equipmentForm, 'required')">

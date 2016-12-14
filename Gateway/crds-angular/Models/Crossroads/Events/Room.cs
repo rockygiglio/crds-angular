@@ -1,3 +1,4 @@
+using System;
 using Newtonsoft.Json;
 
 namespace crds_angular.Models.Crossroads.Events
@@ -30,5 +31,12 @@ namespace crds_angular.Models.Crossroads.Events
 
         [JsonProperty(PropertyName = "displayName")]
         public string DisplayName { get; set; }
+
+        [JsonProperty(PropertyName = "reservationStart")]
+        public DateTime? ReservationStart { get; set; }
+
+        [JsonProperty(PropertyName = "reservationEnd")]
+        public DateTime? ReservationEnd { get; set; }
+
     }
 }
