@@ -6,9 +6,12 @@ export default class CampPaymentController {
     this.sce = $sce;
     this.iframeSelector = '.camp-payment-widget';
     this.viewReady = false;
+    this.update = false;
+    this.minAmount = 10;
   }
 
   $onInit() {
+    this.update = this.state.toParams.update;
     // eslint-disable-next-line global-require
     this.iFrameResizer = require('iframe-resizer/js/iframeResizer.min.js');
 
@@ -37,9 +40,18 @@ export default class CampPaymentController {
         this.returnUrl = 'https://crossroads.net/camps';
         break;
     }
-    this.totalPrice = this.campsService.productInfo.basePrice + this.getOptionPrice();
-    this.depositPrice = (this.campsService.productInfo.financialAssistance) ? 50 : this.campsService.productInfo.depositPrice;
+    this.totalPrice = this.campsService.productInfo.basePrice + this.getOptionPrice();(this.campsService.productInfo.financialAssistance) ? 50 : this.campsService.productInfo.depositPrice;
     this.viewReady = true;
+  }
+
+  depositPrice() {
+    if (this.update) {
+      this.depositPrice = this.minAmount;
+    }
+    else {
+      this.depositPrice = (this.campsService.productInfo.financialAssistance) ? 50 : this.campsService.productInfo.depositPrice;
+    }
+    return this.depositPrice;
   }
 
   $onDestroy() {
@@ -52,7 +64,7 @@ export default class CampPaymentController {
     const invoiceId = this.campsService.productInfo.invoiceId;
     const url = encodeURIComponent(`${this.returnUrl}/${campId}/confirmation/${contactId}`);
 
-    return this.sce.trustAsResourceUrl(`${this.baseUrl}?type=payment&min_payment=${this.depositPrice}&invoice_id=${invoiceId}&total_cost=${this.totalPrice}&title=${this.campsService.campTitle}&url=${url}`);
+    return this.sce.trustAsResourceUrl(`${this.baseUrl}?type=payment&min_payment=${this.depositPrice()}&invoice_id=${invoiceId}&total_cost=${this.totalPrice}&title=${this.campsService.campTitle}&url=${url}`);
   }
 
   closeIframes() {
