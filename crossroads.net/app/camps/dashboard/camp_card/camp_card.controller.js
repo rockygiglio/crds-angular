@@ -20,7 +20,7 @@ class CampCardController {
 
   makePayment() {
     this.campsService.initializeCamperData();
-    this.state.go('campsignup.application', { page: 'camps-payment' });
+    this.state.go('campsignup.application', { page: 'camps-payment', contactId: this.camperId, campId: this.campId });
   }
 
   formatDate() {
