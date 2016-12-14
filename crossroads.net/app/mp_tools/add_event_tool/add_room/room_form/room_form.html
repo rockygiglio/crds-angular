@@ -1,14 +1,12 @@
 <div class="event-room push-ends" class="push-bottom" style="border-bottom: 1px solid #DDD">
   <h2> {{ room.currentRoom.name }}
-    <button class="btn btn-standard" ng-click="room.remove()">
-      <svg viewBox="0 0 32 32" class="icon icon-trash">
-        <use xlink:href="#trash"></use>
-      </svg>
+    <button class="btn btn-standard pull-right" ng-click="room.remove()">
+      Remove Room
     </button>
   </h2>
   <ng-form name="roomForm">
     <div class="form-group" ng-class="{'has-error': room.validation.showErrors(roomForm, 'layout')}">
-      <label class="required"> Layout </label><br />
+      <label class="required">Room Layout </label><br />
       <label class="weight-normal" ng-repeat="layout in room.layouts track by layout.id">
         <input type="radio" name="layout" ng-required="!room.currentRoom.layout" ng-model="room.currentRoom.layout" ng-value="layout" />
         {{layout.layoutName}}&nbsp;
