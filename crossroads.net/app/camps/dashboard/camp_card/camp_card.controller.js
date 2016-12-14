@@ -18,6 +18,11 @@ class CampCardController {
     this.state.go('campsignup.application', { page: 'medical-info', contactId: this.camperId, campId: this.campId, update: true });
   }
 
+  makePayment() {
+    this.campsService.initializeCamperData();
+    this.state.go('campsignup.application', { page: 'camps-payment' });
+  }
+
   formatDate() {
     const startDateMoment = moment(this.startDate);
     const endDateMoment = moment(this.endDate);
