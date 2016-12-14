@@ -40,7 +40,8 @@ export default class CampPaymentController {
         this.returnUrl = 'https://crossroads.net/camps';
         break;
     }
-    this.totalPrice = this.campsService.productInfo.basePrice + this.getOptionPrice();(this.campsService.productInfo.financialAssistance) ? 50 : this.campsService.productInfo.depositPrice;
+    this.totalPrice = this.campsService.productInfo.basePrice + this.getOptionPrice();
+    this.depositPrice = this.depositPrice();
     this.viewReady = true;
   }
 
@@ -64,7 +65,7 @@ export default class CampPaymentController {
     const invoiceId = this.campsService.productInfo.invoiceId;
     const url = encodeURIComponent(`${this.returnUrl}/${campId}/confirmation/${contactId}`);
 
-    return this.sce.trustAsResourceUrl(`${this.baseUrl}?type=payment&min_payment=${this.depositPrice()}&invoice_id=${invoiceId}&total_cost=${this.totalPrice}&title=${this.campsService.campTitle}&url=${url}`);
+    return this.sce.trustAsResourceUrl(`${this.baseUrl}?type=payment&min_payment=${this.depositPrice}&invoice_id=${invoiceId}&total_cost=${this.totalPrice}&title=${this.campsService.campTitle}&url=${url}`);
   }
 
   closeIframes() {
