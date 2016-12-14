@@ -7,6 +7,8 @@ import campHelpers from '../../campHelpers';
 describe('Camp Card Directive', () => {
 
   let cardComponent;
+  let campsService;
+  let state;
 
   const bindings = {
     attendee: 'Matt Silbernagel',
@@ -14,12 +16,18 @@ describe('Camp Card Directive', () => {
     endDate: '2017-06-27 00:00:00',
     campTitle: 'awesome Camp',
     paymentRemaining: 300,
-    campPrimaryContact: 'studentministry@gmail.com'
+    campPrimaryContact: 'studentministry@gmail.com',
+    campId: 3452,
+    camperId: 1233
   };
 
   beforeEach(angular.mock.module(constants.MODULES.CAMPS));
 
-  beforeEach(inject((_$componentController_) => {
+  beforeEach(inject((_$componentController_, _CampsService_, _$state_) => {
+    campsService = _CampsService_;
+    state = _$state_;
+    spyOn(campsService, 'initializeCamperData').and.callThrough();
+    spyOn(state, 'go').and.returnValue(true);
     cardComponent = _$componentController_('campCard', null, bindings);
   }));
 
@@ -35,5 +43,16 @@ describe('Camp Card Directive', () => {
   it('should format the dates for display', () => {
     expect(cardComponent.formatDate()).toBe('June 20th - June 27th, 2017');
   });
+
+  it('should direct to the payment page with the update flag', () => {
+    cardComponent.makePayment();
+    expect(campsService.initializeCamperData).toHaveBeenCalled(); 
+    expect(state.go).toHaveBeenCalledWith('campsignup.application', {
+      page: 'camps-payment',
+      contactId: bindings.camperId,
+      campId: bindings.campId,
+      update: true
+    }); 
+  })
 
 });
