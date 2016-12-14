@@ -12,7 +12,7 @@
       require: 'ngModel',
       link: function(scope, el, attr, ctrl) {
         ctrl.$validators.uniqueEquipment = function(value) {
-          if (scope.equipment.currentEquipment !== undefined &&
+          if (ctrl.equipmentRequired && scope.equipment.currentEquipment !== undefined &&
               scope.equipment.currentEquipment.length > 0 &&
               value != null &&
               _.has(value, 'name')) {
