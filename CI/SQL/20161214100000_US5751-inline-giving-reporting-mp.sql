@@ -6,7 +6,7 @@ IF NOT EXISTS ( SELECT *
 				WHERE Name = N'Source_Url'
 				AND Object_ID = Object_ID(N'Donations') )
 	BEGIN
-		ALTER TABLE [MinistryPlatform].[dbo].[Donations]
+		ALTER TABLE [dbo].[Donations]
 		ADD Source_Url nvarchar(512)
 	END
 GO
@@ -16,7 +16,36 @@ IF NOT EXISTS ( SELECT *
 				WHERE Name = N'Predefined_Amount'
 				AND Object_ID = Object_ID(N'Donations') )
 	BEGIN
-		ALTER TABLE [MinistryPlatform].[dbo].[Donations]
+		ALTER TABLE [dbo].[Donations]
 		ADD Predefined_Amount decimal(6,2)
+	END
+GO
+
+IF EXISTS(SELECT 1 FROM [dbo].[dp_Pages] WHERE Page_ID = 297)
+	BEGIN
+		UPDATE dp_Pages
+		SET Default_Field_List = 
+        'Donations.Donation_Date
+		,Donor_ID_Table_Contact_ID_Table.Display_Name
+		,Donor_ID_Table_Contact_ID_Table.Nickname
+		,Donor_ID_Table_Contact_ID_Table.First_Name
+		,Donations.Donation_Amount
+		,Payment_Type_ID_Table.Payment_Type
+		,Item_Number
+		,Transaction_Code
+		,Subscription_Code
+		,Batch_ID_Table.Batch_ID
+		,Batch_ID_Table.Setup_Date
+		,Donations.Registered_Donor
+		,Processor_Fee_Amount
+		,Donor_ID_Table.Donor_ID
+		,Donation_Status_ID_Table.Donation_Status
+		,Donation_Status_Notes
+		,Donations.Check_Scanner_Batch
+		,Is_Recurring_Gift
+		,Donation_Status_ID_Table.Donation_Status_ID
+		,Donations.Source_Url
+		,Donations.Predefined_Amount'
+		WHERE page_id = 297
 	END
 GO
