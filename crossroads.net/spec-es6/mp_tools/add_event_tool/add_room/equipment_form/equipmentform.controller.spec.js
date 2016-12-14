@@ -268,4 +268,20 @@ describe('AddEventTool EquipmentForm', () => {
         expect(fixture.existing).toHaveBeenCalled();
         expect(fixture.currentEquipment[1].equipment.cancelled).toBe(false);
     });
+
+    it('toggleEquipmentRequired should clear current equipment if equipmentRequired is false', () => {
+        fixture.equipmentRequired = false;
+        fixture.currentEquipment = [{equipment: {id: 27, name: 'Dat Equipment', quantity:42}},{equipment: {id: 21, name: 'Dat Equipment 2', quantity:2}}];
+        fixture.toggleEquipmentRequired();
+        expect(fixture.currentEquipment[0].equipment.id).toBe(0);
+        expect(fixture.currentEquipment.length).toBe(1);
+    });
+
+    it('toggleEquipmentRequired should not clear current equipment if equipmentRequired is true', () => {
+        fixture.equipmentRequired = true;
+        fixture.currentEquipment = [{equipment: {id: 27, name: 'Dat Equipment', quantity:42}},{equipment: {id: 41, name: 'Dat Equipment 2', quantity:1}}];
+        fixture.toggleEquipmentRequired();
+        expect(fixture.currentEquipment[0].equipment.id).toBe(27);
+        expect(fixture.currentEquipment.length).toBe(2);
+    });
 });
