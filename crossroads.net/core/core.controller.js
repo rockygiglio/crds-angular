@@ -49,11 +49,13 @@
     vm.state = $state;
     vm.mapContentBlocks = mapContentBlocks;
     vm.stayLoggedInPrompt = stayLoggedInPrompt;
+    vm.bodyClasses = {};
 
     ////////////////////////////
     // State Change Listeners //
     ////////////////////////////
     $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
+      $rootScope.renderLegacyStyles = (toState.data.renderLegacyStyles !== false);
       if ((toState.resolve || toState.data.resolve) && !event.defaultPrevented) {
         vm.resolving = true;
       }
@@ -65,6 +67,27 @@
     });
 
     $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
+      if (typeof fromParams.renderLegacyStyles !== 'undefined') {
+        $rootScope.renderLegacyStyles = fromParams.renderLegacyStyles;
+      }
+      if (typeof fromParams.bodyClasses !== 'undefined') {
+        $rootScope.bodyClasses = fromParams.bodyClasses;
+      }
+      // Toggle ngClass values based on $rootScope.renderLegacyStyles
+      if ($rootScope.renderLegacyStyles === false) {
+        document.body.classList.remove('crds-legacy-styles');
+      }
+      vm.bodyClasses['crds-legacy-styles'] = $rootScope.renderLegacyStyles;
+      vm.bodyClasses['crds-styles'] = !$rootScope.renderLegacyStyles;
+
+      if (typeof $rootScope.bodyClasses !== 'undefined') {
+        var bodyClasses = $rootScope.bodyClasses || fromParams.bodyClasses;
+        bodyClasses.forEach(function(klass) {
+          vm.bodyClasses[klass] = true;
+        });
+      }
+
+
       ResponsiveImageService.updateResponsiveImages();
       PageRenderedService.pageLoaded();
       vm.resolving = false;
@@ -139,6 +162,8 @@
         position: position,
         animation: false
       };
+
+      vm.bodyClasses[position] = position;
 
       function postClose() {
         vm.asideState.open = false;

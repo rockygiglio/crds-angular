@@ -38,6 +38,12 @@ namespace crds_angular.Models.Crossroads.Stewardship
         [JsonProperty("payment_id")]
         public int PaymentId { get; set; }
 
+        [JsonProperty("accounting_company_name")]
+        public string AccountingCompanyName { get; set; }
+
+        [JsonProperty("accounting_company_include_on_printed_statement")]
+        public bool AccountingCompanyIncludeOnPrintedStatement { get; set; }
+
         [JsonProperty(PropertyName = "source", NullValueHandling = NullValueHandling.Ignore)]
         public DonationSourceDTO Source { get; set; }
 

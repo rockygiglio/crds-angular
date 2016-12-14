@@ -1,4 +1,5 @@
-﻿using System;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using crds_angular.Models.Crossroads.Attribute;
@@ -6,6 +7,7 @@ using crds_angular.Models.Crossroads.Camp;
 
 using crds_angular.Services;
 using crds_angular.Services.Interfaces;
+using crds_angular.test.Helpers;
 using Crossroads.Utilities.FunctionalHelpers;
 using Crossroads.Utilities.Interfaces;
 using MinistryPlatform.Translation.Models;
@@ -20,27 +22,31 @@ namespace crds_angular.test.Services
 {
     public class CampServiceTest
     {
-        private readonly ICampService _fixture;
-        private readonly Mock<ICampRepository> _campService;
-        private readonly Mock<IFormSubmissionRepository> _formSubmissionRepository;
-        private readonly Mock<IConfigurationWrapper> _configurationWrapper;
-        private readonly Mock<IParticipantRepository> _participantRepository;
-        private readonly Mock<IEventRepository> _eventRepository;
-        private readonly Mock<IApiUserRepository> _apiUserRepository;
-        private readonly Mock<IGroupService> _groupService;
-        private readonly Mock<IContactRepository> _contactService;
-        private readonly Mock<ICongregationRepository> _congregationRepository;
-        private readonly Mock<IGroupRepository> _groupRepository;
-        private readonly Mock<IEventParticipantRepository> _eventParticipantRepository;
-        private readonly Mock<IMedicalInformationRepository> _medicalInformationRepository;
-        private readonly Mock<IProductRepository> _productRepository;
-        private readonly Mock<IInvoiceRepository> _invoiceRepository;
-        private readonly Mock<ICommunicationRepository> _communicationRepository;
-        private readonly Mock<IPaymentRepository> _paymentRepository;
-        private readonly Mock<IObjectAttributeService> _objectAttributeService;
+        private ICampService _fixture;
+        private Mock<ICampRepository> _campService;
+        private Mock<IFormSubmissionRepository> _formSubmissionRepository;
+        private Mock<IConfigurationWrapper> _configurationWrapper;
+        private Mock<IParticipantRepository> _participantRepository;
+        private Mock<IEventRepository> _eventRepository;
+        private Mock<IApiUserRepository> _apiUserRepository;
+        private Mock<IGroupService> _groupService;
+        private Mock<IContactRepository> _contactService;
+        private Mock<ICongregationRepository> _congregationRepository;
+        private Mock<IGroupRepository> _groupRepository;
+        private Mock<IEventParticipantRepository> _eventParticipantRepository;
+        private Mock<IMedicalInformationRepository> _medicalInformationRepository;
+        private Mock<IProductRepository> _productRepository;
+        private Mock<IInvoiceRepository> _invoiceRepository;
+        private Mock<ICommunicationRepository> _communicationRepository;
+        private Mock<IPaymentRepository> _paymentRepository;
+        private Mock<IObjectAttributeService> _objectAttributeService;
 
-        public CampServiceTest()
+        [SetUp]
+        public void SetUp()
         {
+            Factories.CampReservationDTO();
+            Factories.MpGroupParticipant();
+
             _contactService = new Mock<IContactRepository>();
             _campService = new Mock<ICampRepository>();
             _formSubmissionRepository = new Mock<IFormSubmissionRepository>();
@@ -87,13 +93,16 @@ namespace crds_angular.test.Services
             var signedUpDate = DateTime.Now;
             var eventId = 5433;
             var myContact = getFakeContact(myContactId);
+            var eventParticipant = new MpEventParticipant
+            {
+            };
 
             _contactService.Setup(m => m.GetMyProfile(token)).Returns(myContact);
             _contactService.Setup(m => m.GetHouseholdFamilyMembers(myContact.Household_ID)).Returns(getFakeHouseholdMembers(myContact));
             _contactService.Setup(m => m.GetOtherHouseholdMembers(myContactId)).Returns(new List<MpHouseholdMember>());
             _apiUserRepository.Setup(m => m.GetToken()).Returns(apiToken);
             _groupRepository.Setup(m => m.IsMemberOfEventGroup(123, eventId, apiToken)).Returns(true);
-            _eventParticipantRepository.Setup(m => m.EventParticipantSignupDate(123, eventId, apiToken)).Returns(signedUpDate);
+            _eventParticipantRepository.Setup(m => m.GetEventParticipantEligibility(It.IsAny<int>(), It.IsAny<int>())).Returns(eventParticipant);
 
             var result = _fixture.GetEligibleFamilyMembers(eventId, token);
             Assert.AreEqual(result.Count, 1);
@@ -105,9 +114,21 @@ namespace crds_angular.test.Services
         [Test]
         public void shouldCreateNewContactAndCampReservation()
         {
+            const int groupId = 123;
+            var campReservation = FactoryGirl.NET.FactoryGirl.Build<CampReservationDTO>((res) =>
+            {
+                res.ContactId = 0;
+                res.CurrentGrade = groupId;
+            });
+            var group = FactoryGirl.NET.FactoryGirl.Build<MpGroupParticipant>((res) => res.GroupId = groupId);
+            const string token = "1234";
+            const int eventParticipantId = 6;
+            const int newEventparticipantId = 0;
+            const int eventId = 4;
+            const int timeout = 20;
+            const int formId = 8;
+            const int newContactId = 3;
 
-            var campReservation = MockCampReservationDTO();
-            var token = "1234";
             var household = new MpMyContact
             {
                 Household_ID = 2345
@@ -117,34 +138,52 @@ namespace crds_angular.test.Services
             {
                 new MpRecordID
                 {
-                    RecordId = 3
+                    RecordId = newContactId
                 }
             };
 
-            var eventId = 4;
+            var camp = new MpEvent
+            {
+                EventId = eventId,
+                MinutesUntilTimeout = timeout
+            };
 
             var participant = new MpParticipant
             {
                 ParticipantId = 2
             };
 
-            var eventParticipantId = 6;
-
-            var newEventparticipantId = 0;
-
-            var formId = 8;
+            var eventParticipant = new MpEventParticipant
+            {
+                EventParticipantId = newEventparticipantId
+            };
 
             _contactService.Setup(m => m.GetMyProfile(token)).Returns(household);
             _contactService.Setup(m => m.CreateContact(It.IsAny<MpContact>())).Returns(contact);
-            _participantRepository.Setup(m => m.GetParticipant(contact[0].RecordId)).Returns(participant);
-            _eventRepository.Setup(m => m.RegisterParticipantForEvent(participant.ParticipantId, eventId, 0, 0)).Returns(eventParticipantId);
-            _configurationWrapper.Setup(m => m.GetConfigIntValue("SummerCampFormID")).Returns(formId);
-            _configurationWrapper.Setup(m => m.GetConfigIntValue("SummerCampForm.CurrentGrade")).Returns(10);
+            _participantRepository.Setup(m => m.GetParticipant(newContactId)).Returns(participant);
+            _eventRepository.Setup(m => m.GetEvent(eventId)).Returns(camp);
+            _objectAttributeService.Setup(m =>
+                                              m.SaveObjectAttributes(newContactId,
+                                                                     It.IsAny<Dictionary<int, ObjectAttributeTypeDTO>>(),
+                                                                     It.IsAny<Dictionary<int, ObjectSingleAttributeDTO>>(),
+                                                                     It.IsAny<MpObjectAttributeConfiguration>()));
+            _apiUserRepository.Setup(m => m.GetToken()).Returns(token);
+            _groupRepository.Setup(g => g.GetGradeGroupForContact(newContactId, token)).Returns(new Result<MpGroupParticipant>(true, group));
+             
+            _configurationWrapper.Setup(m => m.GetConfigIntValue("SummerCampFormID")).Returns(formId);            
             _configurationWrapper.Setup(m => m.GetConfigIntValue("SummerCampForm.SchoolAttendingNextYear")).Returns(12);
             _configurationWrapper.Setup(m => m.GetConfigIntValue("SummerCampForm.PreferredRoommate")).Returns(14);
-            _eventRepository.Setup(m => m.GetEventParticipantRecordId(eventId, participant.ParticipantId)).Returns(newEventparticipantId);
+            _eventParticipantRepository.Setup(m => m.GetEventParticipantEligibility(eventId, participant.ParticipantId)).Returns(eventParticipant);
 
-            _fixture.SaveCampReservation(MockCampReservationDTO(), eventId, token);
+            _eventRepository.Setup(m => m.RegisterInterestedParticipantWithEndDate(
+                participant.ParticipantId,
+                eventId, 
+                It.Is<DateTime>(d => d <= DateTime.Now.AddMinutes(timeout) && d > DateTime.Now.AddMinutes(timeout).AddSeconds(-1))
+                ))
+                .Returns(eventParticipantId);
+
+            _fixture.SaveCampReservation(campReservation, eventId, token);
+
             _eventRepository.VerifyAll();
             _participantRepository.VerifyAll();
             _contactService.VerifyAll();
@@ -157,42 +196,64 @@ namespace crds_angular.test.Services
         public void shouldUpdateContactAndCreateCampReservation()
         {
 
-            var token = "1234";
+            const int groupId = 123;
+            const string token = "1234";
+            const int eventParticipantId = 6;
+            const int eventId = 4;
+            const int formId = 8;
+            const int contactId = 231;
+
+            var campReservation = FactoryGirl.NET.FactoryGirl.Build<CampReservationDTO>((res) =>
+            {
+                res.ContactId = contactId;
+                res.CurrentGrade = groupId;
+            });
+            var group = FactoryGirl.NET.FactoryGirl.Build<MpGroupParticipant>((res) => res.GroupId = groupId);
+           
 
             var household = new MpMyContact
             {
                 Household_ID = 2345
             };
 
-            var eventId = 4;
-
             var participant = new MpParticipant
             {
                 ParticipantId = 2
             };
 
-            var eventParticipantId = 6;
-            var formId = 8;
+            var eventParticipant = new MpEventParticipant
+            {
+                EventParticipantId = eventParticipantId
+            };
+
             var congregation = new MpCongregation
             {
                 Name = "mASON"
             };
 
             _contactService.Setup(m => m.GetMyProfile(token)).Returns(household);
+            _congregationRepository.Setup(m => m.GetCongregationById(campReservation.CrossroadsSite)).Returns(congregation);
+            _contactService.Setup(m => m.UpdateContact(contactId, It.IsAny<Dictionary<string, object>>()));
+            _participantRepository.Setup(m => m.GetParticipant(contactId)).Returns(participant);
 
-            _participantRepository.Setup(m => m.GetParticipant(Convert.ToInt32(MockCampReservationDTOwithContactId().ContactId))).Returns(participant);
+            _objectAttributeService.Setup(m =>
+                                              m.SaveObjectAttributes(contactId,
+                                                                     It.IsAny<Dictionary<int, ObjectAttributeTypeDTO>>(),
+                                                                     It.IsAny<Dictionary<int, ObjectSingleAttributeDTO>>(),
+                                                                     It.IsAny<MpObjectAttributeConfiguration>()));
+            _apiUserRepository.Setup(m => m.GetToken()).Returns(token);
+            _groupRepository.Setup(g => g.GetGradeGroupForContact(contactId, token)).Returns(new Result<MpGroupParticipant>(true, group));
+
             _configurationWrapper.Setup(m => m.GetConfigIntValue("SummerCampFormID")).Returns(formId);
-            _configurationWrapper.Setup(m => m.GetConfigIntValue("SummerCampForm.CurrentGrade")).Returns(10);
             _configurationWrapper.Setup(m => m.GetConfigIntValue("SummerCampForm.SchoolAttendingNextYear")).Returns(12);
-            _configurationWrapper.Setup(m => m.GetConfigIntValue("SummerCampForm.PreferredRoommate")).Returns(14);
-            _congregationRepository.Setup(m => m.GetCongregationById(MockCampReservationDTOwithContactId().CrossroadsSite)).Returns(congregation);
-           _eventRepository.Setup(m => m.GetEventParticipantRecordId(eventId, participant.ParticipantId)).Returns(eventParticipantId);
-            _fixture.SaveCampReservation(MockCampReservationDTOwithContactId(), eventId, token);
+            _configurationWrapper.Setup(m => m.GetConfigIntValue("SummerCampForm.PreferredRoommate")).Returns(14);            
+            _eventParticipantRepository.Setup(m => m.GetEventParticipantEligibility(eventId, It.IsAny<int>())).Returns(eventParticipant);
+            _fixture.SaveCampReservation(campReservation, eventId, token);
             _eventRepository.VerifyAll();
             _participantRepository.VerifyAll();
             _configurationWrapper.VerifyAll();
             _formSubmissionRepository.VerifyAll();
-
+            
         }
 
         [Test]
@@ -203,13 +264,14 @@ namespace crds_angular.test.Services
             var myContactId = 2187211;
             var eventId = 5433;
             var myContact = getFakeContact(myContactId);
+            var eventParticipant = new MpEventParticipant();
 
             _contactService.Setup(m => m.GetMyProfile(token)).Returns(myContact);
             _contactService.Setup(m => m.GetHouseholdFamilyMembers(myContact.Household_ID)).Returns(getFakeHouseholdMembers(myContact));
             _contactService.Setup(m => m.GetOtherHouseholdMembers(myContactId)).Returns(new List<MpHouseholdMember>());
             _apiUserRepository.Setup(m => m.GetToken()).Returns(apiToken);
             _groupRepository.Setup(m => m.IsMemberOfEventGroup(123, eventId, apiToken)).Returns(true);
-            _eventParticipantRepository.Setup(m => m.EventParticipantSignupDate(123, eventId, apiToken)).Returns((DateTime?)null);
+            _eventParticipantRepository.Setup(m => m.GetEventParticipantEligibility(eventId, It.IsAny<int>())).Returns(eventParticipant);
 
             var result = _fixture.GetEligibleFamilyMembers(eventId, token);
             Assert.AreEqual(result.Count, 1);
@@ -227,12 +289,13 @@ namespace crds_angular.test.Services
             const int myContactId = 2187211;
             const int eventId = 5433;
             var myContact = getFakeContact(myContactId);
+            var eventParticipant = new MpEventParticipant();
 
             _contactService.Setup(m => m.GetMyProfile(token)).Returns(myContact);
             _contactService.Setup(m => m.GetHouseholdFamilyMembers(myContact.Household_ID)).Returns(getFakeHouseholdMembers(myContact, false, "Adult Child"));            
             _apiUserRepository.Setup(m => m.GetToken()).Returns(apiToken);
             _groupRepository.Setup(m => m.IsMemberOfEventGroup(myContact.Contact_ID, eventId, apiToken)).Returns(true);
-            _eventParticipantRepository.Setup(m => m.EventParticipantSignupDate(myContact.Contact_ID, eventId, apiToken)).Returns((DateTime?)null);
+            _eventParticipantRepository.Setup(m => m.GetEventParticipantEligibility(eventId, It.IsAny<int>())).Returns(eventParticipant);
 
             var result = _fixture.GetEligibleFamilyMembers(eventId, token);
             Assert.AreEqual(result.Count, 1);
@@ -251,12 +314,13 @@ namespace crds_angular.test.Services
             const int myContactId = 2187211;
             const int eventId = 5433;
             var myContact = getFakeContact(myContactId);
+            var eventParticipant = new MpEventParticipant();
 
             _contactService.Setup(m => m.GetMyProfile(token)).Returns(myContact);
             _contactService.Setup(m => m.GetHouseholdFamilyMembers(myContact.Household_ID)).Returns(getFakeHouseholdMembers(myContact, false));
             _apiUserRepository.Setup(m => m.GetToken()).Returns(apiToken);
             _groupRepository.Setup(m => m.IsMemberOfEventGroup(myContact.Contact_ID, eventId, apiToken)).Returns(true);
-            _eventParticipantRepository.Setup(m => m.EventParticipantSignupDate(myContact.Contact_ID, eventId, apiToken)).Returns((DateTime?)null);
+            _eventParticipantRepository.Setup(m => m.GetEventParticipantEligibility(eventId, It.IsAny<int>())).Returns(eventParticipant);
 
             var result = _fixture.GetEligibleFamilyMembers(eventId, token);
             Assert.AreEqual(result.Count, 1);
@@ -277,12 +341,16 @@ namespace crds_angular.test.Services
             var myContact = getFakeContact(myContactId);
 
             var signedUpOn = DateTime.Now;
+            var eventParticipant = new MpEventParticipant
+            {
+                SetupDate = signedUpOn
+            };
 
             _contactService.Setup(m => m.GetMyProfile(token)).Returns(myContact);
             _contactService.Setup(m => m.GetHouseholdFamilyMembers(myContact.Household_ID)).Returns(getFakeHouseholdMembers(myContact, false, "Adult Child"));
             _apiUserRepository.Setup(m => m.GetToken()).Returns(apiToken);
             _groupRepository.Setup(m => m.IsMemberOfEventGroup(myContact.Contact_ID, eventId, apiToken)).Returns(true);
-            _eventParticipantRepository.Setup(m => m.EventParticipantSignupDate(myContact.Contact_ID, eventId, apiToken)).Returns(signedUpOn);
+            _eventParticipantRepository.Setup(m => m.GetEventParticipantEligibility(eventId, It.IsAny<int>())).Returns(eventParticipant);
 
             var result = _fixture.GetEligibleFamilyMembers(eventId, token);
             Assert.AreEqual(result.Count, 1);
@@ -366,6 +434,64 @@ namespace crds_angular.test.Services
             Assert.AreEqual(result.Count, 0);
             _contactService.VerifyAll();
         }
+        [Test]
+        public void ShouldGetMyCampInfo()
+        {
+            var token = "asdfasdfasdfasdf";
+            var apiToken = "apiToken";
+            var myContactId = 2187211;
+            var myContact = getFakeContact(myContactId);
+            var campType = "Camp";
+            var camps = new List<MpEvent>
+            {
+                new MpEvent
+                {
+                    EventId = 123,
+                    EventEndDate = new DateTime(2017, 5, 20),
+                    EventStartDate = new DateTime(2017, 5, 15),
+                    EventTitle = "Summer Camp",
+                    PrimaryContact = new MpContact
+                    {
+                        ContactId =  90876,
+                        EmailAddress = "studentministry@crossroads.com"
+                    }
+                }
+            };
+
+            IEnumerable<MinistryPlatform.Translation.Models.MpParticipant> campers = new List<MinistryPlatform.Translation.Models.MpParticipant>
+            {
+                new MinistryPlatform.Translation.Models.MpParticipant
+                {
+                    ContactId = 123,
+                    ParticipantId = 77777,
+                    EmailAddress = "x@x",
+                    DisplayName = "Jony",
+                    Nickname = "campell",
+                    GroupName = ""
+                }
+            };
+                  
+
+
+            // Get a family list with only me in it i.e. no family
+            var family = getFakeHouseholdMembers(myContact).ToList();
+
+            _apiUserRepository.Setup(m => m.GetToken()).Returns(apiToken);
+            _configurationWrapper.Setup(m => m.GetConfigValue("CampEventTypeName")).Returns(campType);
+            _contactService.Setup(m => m.GetMyProfile(token)).Returns(myContact);
+            _contactService.Setup(m => m.GetHouseholdFamilyMembers(myContact.Household_ID)).Returns(family);
+            _contactService.Setup(m => m.GetOtherHouseholdMembers(myContactId)).Returns(new List<MpHouseholdMember>());
+           
+
+            _eventRepository.Setup(m => m.GetEvents(campType, apiToken)).Returns(camps);
+            _eventRepository.Setup(m => m.EventParticipants(apiToken, camps.First().EventId)).Returns(campers);
+            _eventRepository.Setup(m => m.GetEvent(camps.First().EventId)).Returns(camps.First());
+
+            var result = _fixture.GetMyCampInfo(token);
+            Assert.AreEqual(result.Count, 1);
+            _eventRepository.VerifyAll();
+            _contactService.VerifyAll();
+        }
 
         //[Test]
         //public void ShouldSaveMedicalInfo()
@@ -415,7 +541,7 @@ namespace crds_angular.test.Services
         //    _contactService.Setup(m => m.GetOtherHouseholdMembers(myContact.Contact_ID)).Returns(otherHousehold);
 
         //    _medicalInformationRepository.Setup(m => m.SaveMedicalInformation(mpMedInfo, 123));
-           
+
         //    Assert.DoesNotThrow(() =>_fixture.SaveCamperMedicalInfo(medicalInfo, contactId, token));
         //}
 
@@ -429,7 +555,7 @@ namespace crds_angular.test.Services
             var myContact = getFakeContact(contactId);
             const int childContactId = 123456789;
 
-            var participant = new Result<MpGroupParticipant>(true, new MpGroupParticipant() {GroupName = "6th Grade"});
+            var participant = new Result<MpGroupParticipant>(true, new MpGroupParticipant() {GroupName = "6th Grade", GroupId = 34});
             var attributesDto = new ObjectAllAttributesDTO();
 
             var loggedInContact = new MpMyContact
@@ -464,7 +590,7 @@ namespace crds_angular.test.Services
 
             var result = _fixture.GetCamperInfo(token, eventId, contactId);
             Assert.AreEqual(result.ContactId, 2187211);
-            Assert.AreEqual(result.CurrentGrade, "6th Grade");
+            Assert.AreEqual(result.CurrentGrade, 34);
             _contactService.VerifyAll();
             _groupRepository.VerifyAll();
         }
@@ -513,10 +639,11 @@ namespace crds_angular.test.Services
             _objectAttributeService.Setup(m => m.GetObjectAttributes(apiToken, contactId, It.IsAny<MpObjectAttributeConfiguration>())).Returns(attributesDto);
 
             var result = _fixture.GetCamperInfo(token, eventId, contactId);
-            Assert.AreEqual(result.ContactId, 2187211);
-            Assert.IsNull(result.CurrentGrade);
             _contactService.VerifyAll();
             _groupRepository.VerifyAll();
+            Assert.AreEqual(result.ContactId, 2187211);
+            Assert.AreEqual(0, result.CurrentGrade);
+            
         }
 
         [Test]
@@ -605,7 +732,7 @@ namespace crds_angular.test.Services
             // get the event and the message Id
             _eventRepository.Setup(m => m.GetEvent(eventId)).Returns(mpEvent);
             _paymentRepository.Setup(m => m.GetPaymentsForInvoice(invoiceId)).Returns(mpPayment);
-            _communicationRepository.Setup(m => m.GetTemplateAsCommunication(templateId, contactId, "some@email2.com", contactId, "some@email2.com", contactId, "Some@email.com", It.IsAny<Dictionary<string,object>>()));
+            _communicationRepository.Setup(m => m.GetTemplateAsCommunication(templateId, contactId, "some@email2.com", contactId, "some@email2.com", contactId, "Ok@email.com", It.IsAny<Dictionary<string,object>>()));
             _contactService.Setup(m => m.GetContactById(mpPayment.First().ContactId)).Returns(new MpMyContact() { Contact_ID = contactId, Email_Address = "some@email2.com", First_Name = "Natt", Last_Name = "last"});
             _contactService.Setup(m => m.GetContactById(mpPayment.First().ContactId)).Returns(new MpMyContact() {Contact_ID = contactId, Email_Address = "some@email.com"});
           
@@ -662,7 +789,7 @@ namespace crds_angular.test.Services
         {
             return new MpMessageTemplate()
             {
-                Body = "Some Body",
+                Body = "Ok Body",
                 FromContactId = 1234,
                 FromEmailAddress = "some@email.com",
                 ReplyToContactId = 1234,
@@ -717,24 +844,24 @@ namespace crds_angular.test.Services
                 Household_ID = 23               
             };
         }
-        private CampReservationDTO MockCampReservationDTO()
-        {
-            return new CampReservationDTO
-            {
-                ContactId = 0,
-                FirstName = "Jon",
-                LastName = "Horner",
-                MiddleName = "",
-                BirthDate = new DateTime(2006, 04, 03) + "",
-                Gender = 1,
-                PreferredName = "Jon",
-                SchoolAttending = "Mason",
-                CurrentGrade = "6th Grade",
-                SchoolAttendingNext = "Mason",
-                CrossroadsSite = 3,
-                RoomMate = ""
-            };
-        }
+        //private CampReservationDTO MockCampReservationDTO()
+        //{
+        //    return new CampReservationDTO
+        //    {
+        //        ContactId = 0,
+        //        FirstName = "Jon",
+        //        LastName = "Horner",
+        //        MiddleName = "",
+        //        BirthDate = new DateTime(2006, 04, 03) + "",
+        //        Gender = 1,
+        //        PreferredName = "Jon",
+        //        SchoolAttending = "Mason",
+        //        CurrentGrade = 3,
+        //        SchoolAttendingNext = "Mason",
+        //        CrossroadsSite = 3,
+        //        RoomMate = ""
+        //    };
+        //}
         private List<CampEmergencyContactDTO> MockCampEmergencyContactDTO()
         {
             return new List<CampEmergencyContactDTO>
@@ -771,7 +898,7 @@ namespace crds_angular.test.Services
                 Gender = 1,
                 PreferredName = "Jon",
                 SchoolAttending = "Mason",
-                CurrentGrade = "6th Grade",
+                CurrentGrade = 3,
                 SchoolAttendingNext = "Mason",
                 CrossroadsSite = 3,
                 RoomMate = ""

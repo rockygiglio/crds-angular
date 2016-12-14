@@ -14,7 +14,6 @@ using MinistryPlatform.Translation.Exceptions;
 using MinistryPlatform.Translation.Models;
 using Newtonsoft.Json;
 using DonationStatus = crds_angular.Models.Crossroads.Stewardship.DonationStatus;
-using MinistryPlatform.Translation.Enum;
 using PaymentType = crds_angular.Models.Crossroads.Stewardship.PaymentType;
 
 namespace crds_angular.Services
@@ -23,26 +22,26 @@ namespace crds_angular.Services
     {
         private readonly ILog _logger = LogManager.GetLogger(typeof (DonationService));
 
-        private readonly MPServices.IDonationRepository _mpDonationService;
-        private readonly MPServices.IDonorRepository _mpDonorService;
+        private readonly MPServices.IDonationRepository _mpDonationRepository;
+        private readonly MPServices.IDonorRepository _mpDonorRepository;
         private readonly IPaymentProcessorService _paymentService;
-        private readonly MPServices.IContactRepository _contactService;
+        private readonly MPServices.IContactRepository _contactRepository;
         private readonly int _statementTypeFamily;
         private readonly int _bankErrorRefundDonorId;
 
-        public DonationService(MPServices.IDonationRepository mpDonationService, MPServices.IDonorRepository mpDonorService, IPaymentProcessorService paymentService, MPServices.IContactRepository contactService, IConfigurationWrapper config)
+        public DonationService(MPServices.IDonationRepository mpDonationRepository, MPServices.IDonorRepository mpDonorRepository, IPaymentProcessorService paymentService, MPServices.IContactRepository contactRepository, IConfigurationWrapper config)
         {
-            _mpDonationService = mpDonationService;
-            _mpDonorService = mpDonorService;
+            _mpDonationRepository = mpDonationRepository;
+            _mpDonorRepository = mpDonorRepository;
             _paymentService = paymentService;
-            _contactService = contactService;
+            _contactRepository = contactRepository;
             _statementTypeFamily = config.GetConfigIntValue("DonorStatementTypeFamily");
             _bankErrorRefundDonorId = config.GetConfigIntValue("DonorIdForBankErrorRefund");
         }
 
         public DonationDTO GetDonationByProcessorPaymentId(string processorPaymentId)
         {
-            var d = _mpDonationService.GetDonationByProcessorPaymentId(processorPaymentId);
+            var d = _mpDonationRepository.GetDonationByProcessorPaymentId(processorPaymentId);
             if (d == null)
             {
                 return (null);
@@ -60,47 +59,47 @@ namespace crds_angular.Services
 
         public int UpdateDonationStatus(int donationId, int statusId, DateTime? statusDate, string statusNote = null)
         {
-            return(_mpDonationService.UpdateDonationStatus(donationId, statusId, statusDate ?? DateTime.Now, statusNote));
+            return(_mpDonationRepository.UpdateDonationStatus(donationId, statusId, statusDate ?? DateTime.Now, statusNote));
         }
 
         public int UpdateDonationStatus(string processorPaymentId, int statusId, DateTime? statusDate, string statusNote = null)
         {
-            return(_mpDonationService.UpdateDonationStatus(processorPaymentId, statusId, statusDate ?? DateTime.Now, statusNote));
+            return(_mpDonationRepository.UpdateDonationStatus(processorPaymentId, statusId, statusDate ?? DateTime.Now, statusNote));
         }
 
         public DonationBatchDTO CreateDonationBatch(DonationBatchDTO batch)
         {
-            var batchId = _mpDonationService.CreateDonationBatch(batch.BatchName, batch.SetupDateTime, batch.BatchTotalAmount,batch.ItemCount, batch.BatchEntryType, batch.DepositId, batch.FinalizedDateTime, batch.ProcessorTransferId);
+            var batchId = _mpDonationRepository.CreateDonationBatch(batch.BatchName, batch.SetupDateTime, batch.BatchTotalAmount,batch.ItemCount, batch.BatchEntryType, batch.DepositId, batch.FinalizedDateTime, batch.ProcessorTransferId);
 
             batch.Id = batchId;
 
             foreach (var donation in batch.Donations)
             {
-                _mpDonationService.AddDonationToBatch(batchId, int.Parse(donation.Id));
+                _mpDonationRepository.AddDonationToBatch(batchId, int.Parse(donation.Id));
             }
 
             return (batch);
         }
 
-        public DonationBatchDTO GetDonationBatchByProcessorTransferId(string processorTransferId)
+        public DepositDTO GetDepositByProcessorTransferId(string processorTransferId)
         {
-            return (Mapper.Map<MpDonationBatch, DonationBatchDTO>(_mpDonationService.GetDonationBatchByProcessorTransferId(processorTransferId)));
+            return (Mapper.Map<MpDeposit, DepositDTO>(_mpDonationRepository.GetDepositByProcessorTransferId(processorTransferId)));
         }
 
         public DonationBatchDTO GetDonationBatch(int batchId)
         {
-            return (Mapper.Map<MpDonationBatch, DonationBatchDTO>(_mpDonationService.GetDonationBatch(batchId)));
+            return (Mapper.Map<MpDonationBatch, DonationBatchDTO>(_mpDonationRepository.GetDonationBatch(batchId)));
         }
 
         public DonationsDTO GetDonationsForAuthenticatedUser(string userToken, string donationYear = null, int? limit = null, bool? softCredit = null, bool? includeRecurring = true)
         {
-            var donations = _mpDonorService.GetDonationsForAuthenticatedUser(userToken, softCredit, donationYear, includeRecurring);            
+            var donations = _mpDonorRepository.GetDonationsForAuthenticatedUser(userToken, softCredit, donationYear, includeRecurring);            
             return (PostProcessDonations(donations, limit));
         }
 
         public DonationYearsDTO GetDonationYearsForAuthenticatedUser(string userToken)
         {
-            var donations = _mpDonorService.GetDonationsForAuthenticatedUser(userToken, null, null);
+            var donations = _mpDonorRepository.GetDonationsForAuthenticatedUser(userToken, null, null);
 
             var years = new HashSet<string>();
             if (donations != null && donations.Any())
@@ -116,13 +115,13 @@ namespace crds_angular.Services
 
         public DonationsDTO GetDonationsForDonor(int donorId, string donationYear = null, bool softCredit = false)
         {
-            var donor = _mpDonorService.GetEmailViaDonorId(donorId);
+            var donor = _mpDonorRepository.GetEmailViaDonorId(donorId);
             return (GetDonationsForDonor(donor, donationYear, softCredit));
         }
 
         public DonationYearsDTO GetDonationYearsForDonor(int donorId)
         {
-            var donor = _mpDonorService.GetEmailViaDonorId(donorId);
+            var donor = _mpDonorRepository.GetEmailViaDonorId(donorId);
             return (GetDonationYearsForDonor(donor));
         }
 
@@ -130,7 +129,7 @@ namespace crds_angular.Services
         {
             var donorIds = GetDonorIdsForDonor(donor);
 
-            var donations = softCredit ? _mpDonorService.GetSoftCreditDonations(donorIds, donationYear) : _mpDonorService.GetDonations(donorIds, donationYear);
+            var donations = softCredit ? _mpDonorRepository.GetSoftCreditDonations(donorIds, donationYear) : _mpDonorRepository.GetDonations(donorIds, donationYear);
             return (PostProcessDonations(donations));
         }
 
@@ -294,8 +293,8 @@ namespace crds_angular.Services
         private DonationYearsDTO GetDonationYearsForDonor(MpContactDonor donor)
         {
             var donorIds = GetDonorIdsForDonor(donor);
-            var donations = _mpDonorService.GetDonations(donorIds, null);
-            var softCreditDonations = _mpDonorService.GetSoftCreditDonations(donorIds);
+            var donations = _mpDonorRepository.GetDonations(donorIds, null);
+            var softCreditDonations = _mpDonorRepository.GetSoftCreditDonations(donorIds);
 
             var years = new HashSet<string>();
             if (softCreditDonations != null && softCreditDonations.Any())
@@ -326,7 +325,7 @@ namespace crds_angular.Services
                 return (donorIds);
             }
 
-            var household = _contactService.GetHouseholdFamilyMembers(donor.Details.HouseholdId);
+            var household = _contactRepository.GetHouseholdFamilyMembers(donor.Details.HouseholdId);
             if (household == null || !household.Any())
             {
                 return (donorIds);
@@ -345,12 +344,12 @@ namespace crds_angular.Services
 
         public DonationBatchDTO GetDonationBatchByDepositId(int depositId)
         {
-            return (Mapper.Map<MpDonationBatch, DonationBatchDTO>(_mpDonationService.GetDonationBatchByDepositId(depositId)));
+            return (Mapper.Map<MpDonationBatch, DonationBatchDTO>(_mpDonationRepository.GetDonationBatchByDepositId(depositId)));
         }
 
         public List<DepositDTO> GetSelectedDonationBatches(int selectionId, string token)
         {
-            var selectedDeposits = _mpDonationService.GetSelectedDonationBatches(selectionId, token);
+            var selectedDeposits = _mpDonationRepository.GetSelectedDonationBatches(selectionId, token);
             var deposits = new List<DepositDTO>();
 
             foreach (var deposit in selectedDeposits)
@@ -361,14 +360,19 @@ namespace crds_angular.Services
             return deposits;
         }
 
+        public DepositDTO GetDepositById(int depositId)
+        {
+            return (Mapper.Map<MpDeposit, DepositDTO>(_mpDonationRepository.GetDepositById(depositId)));
+        }
+
         public void ProcessDeclineEmail(string processorPaymentId)
         {
-            _mpDonationService.ProcessDeclineEmail(processorPaymentId);
+            _mpDonationRepository.ProcessDeclineEmail(processorPaymentId);
         }
 
         public DepositDTO CreateDeposit(DepositDTO deposit)
         {
-            deposit.Id = _mpDonationService.CreateDeposit(deposit.DepositName, deposit.DepositTotalAmount, deposit.DepositAmount, deposit.ProcessorFeeTotal, deposit.DepositDateTime,
+            deposit.Id = _mpDonationRepository.CreateDeposit(deposit.DepositName, deposit.DepositTotalAmount, deposit.DepositAmount, deposit.ProcessorFeeTotal, deposit.DepositDateTime,
                 deposit.AccountNumber, deposit.BatchCount, deposit.Exported, deposit.Notes, deposit.ProcessorTransferId);
             
             return (deposit);
@@ -377,14 +381,13 @@ namespace crds_angular.Services
 
         public void CreatePaymentProcessorEventError(StripeEvent stripeEvent, StripeEventResponseDTO stripeEventResponse)
         {
-            _mpDonationService.CreatePaymentProcessorEventError(stripeEvent.Created, stripeEvent.Id, stripeEvent.Type, JsonConvert.SerializeObject(stripeEvent, Formatting.Indented), JsonConvert.SerializeObject(stripeEventResponse, Formatting.Indented));
+            _mpDonationRepository.CreatePaymentProcessorEventError(stripeEvent.Created, stripeEvent.Id, stripeEvent.Type, JsonConvert.SerializeObject(stripeEvent, Formatting.Indented), JsonConvert.SerializeObject(stripeEventResponse, Formatting.Indented));
         }
 
 
         public List<GPExportDatumDTO> GetGpExport(int depositId, string token)
         {
-            var gpExportData = _mpDonationService.GetGpExport(depositId, token);
-
+            var gpExportData = _mpDonationRepository.GetGpExport(depositId, token);
             return gpExportData.Select(Mapper.Map<MpGPExportDatum, GPExportDatumDTO>).ToList();
         }
 
@@ -400,7 +403,7 @@ namespace crds_angular.Services
 
         private void UpdateDepositToExported(int selectionId, int depositId, string token)
         {
-            _mpDonationService.UpdateDepositToExported(selectionId, depositId, token);
+            _mpDonationRepository.UpdateDepositToExported(selectionId, depositId, token);
         }
 
         public List<DepositDTO> GenerateGPExportFileNames(int selectionId, string token)
@@ -409,7 +412,7 @@ namespace crds_angular.Services
 
             foreach (var deposit in deposits)
             {
-                deposit.ExportFileName = GPExportFileName(deposit.Id);
+                deposit.ExportFileName = GPExportFileName(deposit);
             }
 
             return deposits;
@@ -417,16 +420,14 @@ namespace crds_angular.Services
 
         public void SendMessageToDonor(int donorId, int donationDistributionId, int fromContactId, string body, string tripName)
         {
-            _mpDonationService.SendMessageToDonor(donorId, donationDistributionId, fromContactId, body, tripName);
+            _mpDonationRepository.SendMessageToDonor(donorId, donationDistributionId, fromContactId, body, tripName);
         }
 
-        public string GPExportFileName(int depositId)
-        {
-            var batch = GetDonationBatchByDepositId(depositId);
-
-            var date = DateTime.Today.ToString("yyMMdd");
-            var batchName = batch.BatchName.Replace(" ", "_");
-            return string.Format("XRDReceivables-{0}_{1}.txt", batchName, date);
+        public string GPExportFileName(DepositDTO deposit)
+        {            
+            var date = DateTime.Today.ToString("yyMMdd");            
+            var depositName = deposit.DepositName.Replace(" ", "_");
+            return string.Format("XRDReceivables-{0}_{1}.txt", depositName, date);
         }
 
         public int? CreateDonationForBankAccountErrorRefund(StripeRefund refund)
@@ -446,7 +447,7 @@ namespace crds_angular.Services
             MpDonation donation;
             try
             {
-                donation = _mpDonationService.GetDonationByProcessorPaymentId(refund.Data[0].Charge.Id, true);
+                donation = _mpDonationRepository.GetDonationByProcessorPaymentId(refund.Data[0].Charge.Id, true);
             }
             catch (DonationNotFoundException)
             {
@@ -487,7 +488,7 @@ namespace crds_angular.Services
             }
 
             // Create the refund donation and distribution(s), but do NOT send email
-            return(_mpDonorService.CreateDonationAndDistributionRecord(donationAndDist, false));
+            return(_mpDonorRepository.CreateDonationAndDistributionRecord(donationAndDist, false));
         }
 
         public int? CreateDonationForInvoice(StripeInvoice invoice)
@@ -505,7 +506,7 @@ namespace crds_angular.Services
             // Make sure we don't create duplicate donations for the same charge (could happen if we get a transfer and a invoice.payment_succeeded events near each other
             try
             {
-                var donation = _mpDonationService.GetDonationByProcessorPaymentId(invoice.Charge);
+                var donation = _mpDonationRepository.GetDonationByProcessorPaymentId(invoice.Charge);
                 if (donation != null)
                 {
                     _logger.Info(string.Format("Donation already located for charge id {0}, not creating duplicate (existing donation {1})", invoice.Charge, donation.donationId));
@@ -518,8 +519,8 @@ namespace crds_angular.Services
             }
 
             var charge = _paymentService.GetCharge(invoice.Charge);
-            var createDonation = _mpDonorService.GetRecurringGiftForSubscription(invoice.Subscription, charge.ProcessorId);
-            _mpDonorService.UpdateRecurringGiftFailureCount(createDonation.RecurringGiftId.Value, Constants.ResetFailCount);
+            var createDonation = _mpDonorRepository.GetRecurringGiftForSubscription(invoice.Subscription, charge.ProcessorId);
+            _mpDonorRepository.UpdateRecurringGiftFailureCount(createDonation.RecurringGiftId.Value, Constants.ResetFailCount);
 
             var donationStatus = charge.Status == "succeeded" ? DonationStatus.Succeeded : DonationStatus.Pending;
             var fee = charge.BalanceTransaction != null ? charge.BalanceTransaction.Fee : null;
@@ -542,7 +543,7 @@ namespace crds_angular.Services
                 DonationStatus = (int)donationStatus
             };
 
-            return (_mpDonorService.CreateDonationAndDistributionRecord(donationAndDistribution, false));
+            return (_mpDonorRepository.CreateDonationAndDistributionRecord(donationAndDistribution, false));
         }
         
     }

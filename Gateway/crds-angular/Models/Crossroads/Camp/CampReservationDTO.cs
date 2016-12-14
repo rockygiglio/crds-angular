@@ -28,7 +28,7 @@ namespace crds_angular.Models.Crossroads.Camp
         public int Gender { get; set; }
 
         [JsonProperty(PropertyName = "currentGrade")]
-        public string CurrentGrade { get; set; }
+        public int CurrentGrade { get; set; }
 
         [JsonProperty(PropertyName = "schoolAttending")]
         public string SchoolAttending { get; set; }
@@ -44,6 +44,9 @@ namespace crds_angular.Models.Crossroads.Camp
 
         [JsonProperty(PropertyName = "mobilePhone")]
         public string MobilePhone { get; set; }
+
+        [JsonProperty(PropertyName = "endDate")]
+        public string EndDate { get; set; }
 
         [JsonProperty(PropertyName = "attributeTypes")]
         public Dictionary<int, ObjectAttributeTypeDTO> AttributeTypes { get; set; }

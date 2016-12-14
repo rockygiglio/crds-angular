@@ -33,18 +33,25 @@ export default class GroupSearchResultsController {
 
     this.search = {
       query: this.state.params.query,
-      location: this.state.params.location
+      location: this.state.params.location,
+      id: this.state.params.id
     };
-    this.doSearch(this.state.params.query, this.state.params.location);
+    this.doSearch(this.state.params.query, this.state.params.location, this.state.params.id);
   }
 
-  doSearch(query, location) {
+  doSearch(query, location, id) {
     this.searchedWithLocation = location && location.length > 0;
+    this.searchedWithId = id;
 
     let queryString = {};
     if (this.searchedWithLocation) {
       queryString.location = location;
     }
+
+    if (this.searchedWithId) {
+      queryString.id = id;
+    }
+
     if (query && query.length > 0) {
       queryString.query = query;
     }
@@ -60,9 +67,12 @@ export default class GroupSearchResultsController {
     this.showLocationInput = false;
     this.ready = false;
     this.results = [];
-    this.groupService.search(query, location).then(
+    this.groupService.search(query, location, id).then(
       (data) => {
         this.results = data;
+        if (this.results.length === 1) {
+          this.results[0].expanded = true;
+        }
       },
       (err) => {
         // TODO what happens on error? (could be 404/no results, or other error)

@@ -478,7 +478,7 @@ namespace MinistryPlatform.Translation.Test.Services
                     SigneeContactId = 0,
                     WaiverName = "SomeRights",
                     WaiverId = 456,
-                    WaiverText = "I waive Some of my rights."
+                    WaiverText = "I waive Ok of my rights."
                 }
             };
         }

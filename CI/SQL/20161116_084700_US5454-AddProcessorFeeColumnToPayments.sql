@@ -1,0 +1,8 @@
+USE MinistryPlatform
+GO
+
+IF NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = N'Payments' AND COLUMN_NAME = 'Processor_Fee_Amount')
+BEGIN
+	ALTER TABLE dbo.Payments ADD Processor_Fee_Amount MONEY NULL;
+END
+GO

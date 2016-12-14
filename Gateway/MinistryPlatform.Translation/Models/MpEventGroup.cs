@@ -15,6 +15,9 @@ namespace MinistryPlatform.Translation.Models
         [JsonProperty(PropertyName = "Group_ID")]
         public int GroupId { get; set; }
 
+        [JsonProperty(PropertyName = "Group_Name")]
+        public string GroupName { get; set; }
+
         [JsonProperty(PropertyName = "Room_ID")]
         public int? RoomId { get; set; }
 

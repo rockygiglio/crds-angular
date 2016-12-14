@@ -287,7 +287,7 @@ namespace MinistryPlatform.Translation.Repositories
         public List<T> Search<T>(string searchString, List<string> columns, string orderByString = null, bool distinct = false)
         {
             string selectColumns = null;
-            if (columns != null)
+            if (columns != null && columns.Count > 0)
             {
                 selectColumns = string.Join(",", columns);
             }

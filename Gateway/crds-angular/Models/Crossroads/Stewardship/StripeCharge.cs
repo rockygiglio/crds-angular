@@ -32,6 +32,9 @@ namespace crds_angular.Models.Crossroads.Stewardship
         [JsonConverter(typeof(StripeDateTimeConverter))]
         public DateTime Created { get; set; }
 
+        [JsonProperty("metadata")]
+        public Dictionary<string, object> Metadata { get; set; }
+
         #region Expandable Balance Transaction
         public string BalanceTransactionId { get; set; }
 

@@ -112,7 +112,7 @@ $updateSql = @"
 DECLARE @apiPassword varchar(30) = '$ApiPassword';
 
 -- The internal server name, if accessible at a different URL internally versus externally
-DECLARE @internalServerName varchar(75) = '$InteralServerName';
+DECLARE @internalServerName varchar(75) = '$InternalServerName';
 
 -- The external server name
 DECLARE @externalServerName varchar(75) = '$ExternalServerName';
@@ -121,7 +121,7 @@ DECLARE @externalServerName varchar(75) = '$ExternalServerName';
 DECLARE @applicationTitle varchar(30) = '$ApplicationTitle';
 
 -- The user which will be logging in to the MP database from the ministryplatform and ministryplatformapi apps
-DECLARE @dbLoginUser varchar(50) = '$MPUser';
+DECLARE @dbLoginUser varchar(50) = '$InternalServerName\MPUser';
 
 -- The user which will be running the Windows scheduled tasks from the WEB server
 DECLARE @scheduledTasksUser varchar(50) = '$InternalServerName\MPAdmin';
@@ -244,14 +244,13 @@ BEGIN
 	GRANT SUBSCRIBE QUERY NOTIFICATIONS TO [NT AUTHORITY\NETWORK SERVICE];
 
 	-- Grant service broker permissins to Network Service
-	EXEC ('GRANT CREATE PROCEDURE TO ' + @dbLoginUser);
-	EXEC ('GRANT CREATE SERVICE TO ' + @dbLoginUser);
-	EXEC ('GRANT CREATE QUEUE TO ' + @dbLoginUser);
-	EXEC ('GRANT CONTROL ON SCHEMA::[dbo] TO ' + @dbLoginUser);
-	EXEC ('GRANT IMPERSONATE ON USER::[dbo] TO ' + @dbLoginUser);
-	EXEC ('GRANT REFERENCES ON CONTRACT::[http://schemas.microsoft.com/SQL/Notifications/PostQueryNotification] TO ' + @dbLoginUser);
-	EXEC ('GRANT SUBSCRIBE QUERY NOTIFICATIONS TO ' + @dbLoginUser);
-
+	GRANT CREATE PROCEDURE TO [$InternalServerName\MPUser]
+	GRANT CREATE SERVICE TO [$InternalServerName\MPUser]
+	GRANT CREATE QUEUE TO [$InternalServerName\MPUser]
+	GRANT CONTROL ON SCHEMA::[dbo] TO [$InternalServerName\MPUser]
+	GRANT IMPERSONATE ON USER::[dbo] TO [$InternalServerName\MPUser]
+	GRANT REFERENCES ON CONTRACT::[http://schemas.microsoft.com/SQL/Notifications/PostQueryNotification] TO [$InternalServerName\MPUser]
+	GRANT SUBSCRIBE QUERY NOTIFICATIONS TO [$InternalServerName\MPUser]
 END;
 
 USE [$DBName];

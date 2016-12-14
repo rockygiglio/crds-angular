@@ -136,6 +136,7 @@ streaming, landing {
       color: #FFF;
       position: absolute;
       right: 0;
+      bottom: 0;
       display: none;
 
       @media (min-width: $screen-md) {
@@ -777,22 +778,13 @@ streaming, landing {
         top: -0.95em;
       }
     }
-
-    @media (min-width:  $screen-md-min) {
-      @include make-md-column(6);
-      // NOTE: The following rule will break content-cards after every 2 elements...
-      // &:nth-child(3n+1) {
-      //   clear: left;
-      // }
-    }
-
   }
 
   h2 {
     color: darken(#FFF, 70%);
     font-family: $cr-streaming-font-sans;
     font-weight: 300;
-    font-size: 170%;
+    font-size: 1.75em;
     letter-spacing: -0.05em;
   }
 
@@ -830,7 +822,7 @@ streaming, landing {
 
   .digital-program-container {
     @media only screen and (max-width:  $screen-sm-min){
-      background: #151515;
+      // background: #151515;
     }
   }
 
@@ -1004,7 +996,214 @@ streaming, landing {
       }
     }
   }
+
+  .flex {
+    &__container {
+      display: flex;
+      flex-wrap: wrap;
+
+      &.container {
+        padding-left: 0;
+        padding-right: 0;
+      }
+    }
+
+    &__item {
+      flex: 1 1 100%;
+      padding-left: 20px;
+      padding-right: 20px;
+
+      @media (min-width: $screen-md) {
+        padding-left: 0;
+        padding-right: 0;
+      }
+
+      &.digital-program__giving {
+        background-color: #171717;
+        margin-bottom: 2em;
+        padding: 0;
+
+        @media (min-width: $screen-md) {
+          flex: 1 1 50px;
+          margin-bottom: 0;
+          order: 2;
+        }
+
+        iframe {
+          padding: 0 6px;
+        }
+
+        header {
+          padding: 0 1.25em;
+        }
+
+        h2 {
+          color: #777;
+        }
+      }
+
+      &.digital-program__articles {
+        background-color: #171717;
+        padding-left: 20px;
+        padding-right: 0;
+
+        @media (min-width: $screen-md) {
+          margin-right: 28px;
+          flex: 2 1 0;
+          order: 1;
+        }
+
+        h2 {
+          color: #777;
+          float: left;
+        }
+
+        .crds-card-carousel {
+          height: 400px;
+          margin-bottom: 2em;
+          margin-top: 1em;
+          overflow-x: scroll;
+          overflow-y: hidden;
+          position: relative;
+          white-space: nowrap;
+          width: 100%;
+          &::-webkit-scrollbar {
+            display: none;
+          }
+          overflow: -moz-scrollbars-none;
+        }
+
+        .crds-carousel {
+          &__controls {
+            float: right;
+            margin-right: 20px;
+            margin-top: 1.5em;
+          }
+
+          &__control {
+            background: rgba(77,77,77,0.75);
+            border-radius: 4px;
+            color: #FFF;
+            display: inline-block;
+            padding: 6px 10px;
+            text-align: center;
+            vertical-align: middle;
+
+            &:hover,
+            &:focus {
+              background: lighten(rgba(77,77,77,0.75), 10);
+              border: none;
+              text-decoration: none;
+            }
+          }
+
+          &__content-wrap {
+            position: absolute;
+            white-space: nowrap;
+            width: 100%;
+          }
+
+          &__list {
+            display: block;
+            list-style: none;
+            padding: 0;
+          }
+
+          &__item {
+            display: inline-block;
+            vertical-align: top;
+            white-space: normal;
+            z-index: 1;
+          }
+        }
+
+        content-card {
+          display: inline-block;
+          margin-right: 1em;
+
+          &:last-of-type {
+            margin-right: 0;
+          }
+
+          article {
+            margin-bottom: 0;
+          }
+        }
+
+        .crds-card {
+          width: 225px;
+
+          figcaption {
+            top: -0.6em;
+
+            @media (min-width: $screen-sm) {
+              top: -0.8em;
+            }
+
+            @media (min-width: $screen-md) {
+              top: -0.6em;
+            }
+          }
+        }
+      }
+
+      &.digital-program__participate {
+        @media (min-width: $screen-md) {
+          margin-top: 1em;
+        }
+
+        h2 {
+          color: #777;
+        }
+
+        .media {
+          @include make-xs-column(12);
+
+          margin-top: 10px;
+          margin-bottom: 20px;
+
+          @media (min-width: $screen-sm) {
+            @include make-sm-column(6);
+
+            padding-left: 20px;
+            padding-right: 20px;
+          }
+
+          @media (min-width: $screen-md) {
+            @include make-md-column(4);
+          }
+
+          .media-left {
+            padding-right: 20px;
+          }
+
+          .media-object {
+            max-width: 100px;
+          }
+
+          .media-body {
+            color: #FFF;
+            font-family: "acumin-pro", sans-serif;
+            font-size: .875em;
+            position: relative;
+            top: -8px;
+          }
+
+          .media-heading {
+            color: #FFF;
+            font-family: "acumin-pro-extra-condensed", sans-serif;
+            font-size: 1.72em;
+            font-weight: 600;
+            margin-bottom: 8px;
+            padding-top: 3px;
+            text-transform: uppercase;
+          }
+        }
+      }
+    }
+  }
 } // .live-stream
+
 .reminder-modal {
   .modal {
     @media(max-width: $screen-md) {
@@ -1247,9 +1446,32 @@ geolocation {
       padding-top: 7vh;
     }
   }
+
+  .btn-primary {
+    background-color: #0095D9;
+    border-color: darken(#0095D9, 20);
+    padding: 8px 14px;
+  }
+
+  footer {
+    .btn-standard {
+      background: rgba(77,77,77,0.75);
+      border: none;
+      color: #FFF;
+      font-size: 16px;
+      padding: 8px 14px;
+
+      &:hover,
+      &:focus {
+        background: lighten(rgba(77,77,77,0.75), 10);
+        border: none;
+        color: #FFF;
+      }
+    }
+  }
 }
 
-.geolocation-modal {
+&.geolocation-modal {
   @media (min-width: $screen-sm) {
     geolocation > .container {
       padding-top: 25vh;
@@ -1276,7 +1498,7 @@ geolocation {
 
     @include button-variant(#96B4D4, $cr-blue, $cr-blue)
   }
-  .modal-backdrop {
+  div.modal-backdrop {
     background: #113556;
     opacity: 0.95;
     -webkit-transform-style: preserve-3d;
@@ -1309,4 +1531,6 @@ geolocation {
       margin: 0.5em;
     }
   }
+
+
 }
