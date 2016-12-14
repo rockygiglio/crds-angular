@@ -112,7 +112,9 @@
         roomId: room.id,
         notes: room.description,
         layoutId: room.layout.id,
-        equipment: _.map(room.equipment, (e) => { return getEquipmentDto(e.equipment); })
+        equipment: _.map(_.filter(room.equipment, (equip) => {
+          return equip.equipment.id > 0;
+        }), (e) => { return getEquipmentDto(e.equipment); })
       };
       if (_.has(room, 'cancelled')) {
         roomDto.cancelled = room.cancelled;
