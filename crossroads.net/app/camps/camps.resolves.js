@@ -21,9 +21,9 @@ export function getCampProductInfo(CampsService, $state, $q) {
     const deferred = $q.defer();
 
     // if we are coming from the dashboard... don't check for previous payments
-    var isUpdate = $state.toParams.update ? true : false;
+    const isUpdate = $state.toParams.update;
 
-    CampsService.getCampProductInfo(campId, camperId, !isUpdate).then((result) => {
+    CampsService.getCampProductInfo(campId, camperId, !isUpdate).then(() => {
       deferred.resolve();
     }).catch((err) => {
       if (err.status === 302) {
