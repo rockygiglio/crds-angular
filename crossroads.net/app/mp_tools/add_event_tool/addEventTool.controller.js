@@ -17,7 +17,7 @@ export default class AddEventToolController {
     this.processing = false;
     this.rooms = this.AddEvent.eventData.rooms;
     this.viewReady = false;
-    this.currentEventSelected = Number(this.params.recordId);
+    this.currentEventSelected = (this.params.recordId != null) ? Number(this.params.recordId) : -1;
     if (this.currentEventSelected !== -1) {
             // tool was launched from the details view...
       this.AddEvent.editMode = true;
