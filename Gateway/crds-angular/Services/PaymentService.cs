@@ -117,7 +117,7 @@ namespace crds_angular.Services
             
             var currentPayment = payments.Where(p => p.PaymentId == paymentId && p.ContactId == me.Contact_ID).ToList();
 
-            if (currentPayment.Any())
+            if (currentPayment.Any() || paymentId == 0)
             {
                 var totalPaymentsMade = payments.Sum(p => p.PaymentTotal);
                 var leftToPay = invoice.InvoiceTotal - totalPaymentsMade;

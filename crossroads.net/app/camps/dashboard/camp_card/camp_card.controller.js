@@ -6,6 +6,9 @@
  *    endDate
  *    paymentRemaining
  *    primary contact
+ *    camperId
+ *    campId
+ *    campPrimaryContact
  */
 class CampCardController {
   constructor($state, CampsService) {
@@ -16,6 +19,11 @@ class CampCardController {
   updateMedical() {
     this.campsService.initializeCamperData();
     this.state.go('campsignup.application', { page: 'medical-info', contactId: this.camperId, campId: this.campId, update: true });
+  }
+
+  makePayment() {
+    this.campsService.initializeCamperData();
+    this.state.go('campsignup.application', { page: 'camps-payment', contactId: this.camperId, campId: this.campId, update: true });
   }
 
   formatDate() {
