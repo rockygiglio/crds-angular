@@ -11,6 +11,7 @@ namespace crds_angular.Services.Interfaces
     {
         MpPaymentDetailReturn PostPayment(MpDonationAndDistributionRecord payment);
         PaymentDetailDTO GetPaymentDetails(int paymentId, int invoiceId, string token);
+        PaymentDetailDTO GetAllPayments(int invoiceId, string token);
         PaymentDTO GetPaymentByTransactionCode(string stripePaymentId);
         int UpdatePaymentStatus(int paymentId, int statusId, DateTime? statusDate, string statusNote = null);
         DonationBatchDTO GetPaymentBatch(int batchId);

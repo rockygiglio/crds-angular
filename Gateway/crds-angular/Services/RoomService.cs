@@ -35,7 +35,9 @@ namespace crds_angular.Services
                 Description = record.Description,
                 TheaterCapacity = record.TheaterCapacity,
                 RoomStatus = record.RoomStatus,
-                DisplayName = record.DisplayName
+                DisplayName = record.DisplayName,
+                ReservationStart = record.ReservationStart,
+                ReservationEnd = record.ReservationEnd
 
             }).OrderBy(x => x.Name).ToList();
         }
