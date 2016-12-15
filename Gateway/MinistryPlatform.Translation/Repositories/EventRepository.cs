@@ -85,6 +85,45 @@ namespace MinistryPlatform.Translation.Repositories
             }
         }
 
+        public void UpdateEvent(MpEventReservationDto eventReservationReservation)
+        {
+            var token = ApiLogin();
+            var eventPageId = _configurationWrapper.GetConfigIntValue("Events");
+
+            var eventDictionary = new Dictionary<string, object>
+            {
+                {"Congregation_ID", eventReservationReservation.CongregationId},
+                {"Primary_Contact", eventReservationReservation.ContactId},
+                {"Description", eventReservationReservation.Description},
+                {"On_Donation_Batch_Tool", eventReservationReservation.DonationBatchTool},
+                {"Event_End_Date", eventReservationReservation.EndDateTime},
+                {"Event_Type_ID", eventReservationReservation.EventTypeId},
+                {"Meeting_Instructions", eventReservationReservation.MeetingInstructions},
+                {"Minutes_for_Setup", eventReservationReservation.MinutesSetup},
+                {"Minutes_for_Cleanup", eventReservationReservation.MinutesTeardown},
+                {"Program_ID", eventReservationReservation.ProgramId},
+                {"Reminder_Days_Prior_ID", eventReservationReservation.ReminderDaysId},
+                {"Send_Reminder", eventReservationReservation.SendReminder},
+                {"Event_Start_Date", eventReservationReservation.StartDateTime},
+                {"Event_Title", eventReservationReservation.Title},
+                {"Visibility_Level_ID", _configurationWrapper.GetConfigIntValue("EventVisibilityLevel")},
+                {"Participants_Expected", eventReservationReservation.ParticipantsExpected },
+                {"Event_ID", eventReservationReservation.EventId }
+
+            };
+
+            try
+            {
+                _ministryPlatformService.UpdateRecord(eventPageId, eventDictionary, token);
+            }
+            catch (Exception e)
+            {
+                var msg = string.Format("Error updating Event Reservation, eventReservationReservation: {0}", eventReservationReservation);
+                _logger.Error(msg, e);
+                throw (new ApplicationException(msg, e));
+            }
+        }
+
         public int SafeRegisterParticipant(int eventId, int participantId, int groupId = 0, int groupParticipantId = 0)
         {
             var eventParticipantId = GetEventParticipantRecordId(eventId, participantId);

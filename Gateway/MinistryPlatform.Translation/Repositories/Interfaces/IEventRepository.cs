@@ -10,6 +10,7 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
     public interface IEventRepository
     {
         int CreateEvent(MpEventReservationDto eventReservationReservation);
+        void UpdateEvent(MpEventReservationDto eventReservationReservation);
         int SafeRegisterParticipant(int participantId, int eventId, int groupId = 0, int groupParticipantId = 0);
         int RegisterParticipantForEvent(int participantId, int eventId, int groupId = 0, int groupParticipantId = 0);
         int RegisterInterestedParticipantWithEndDate(int participantId, int eventId, DateTime? endDate);

@@ -164,6 +164,7 @@ namespace crds_angular.Services
         {
             try
             {
+                UpdateEvent(eventReservation, eventId, token);
                 foreach (var room in eventReservation.Rooms)
                 {
                     UpdateEventRoom(room, eventId, token);
@@ -345,7 +346,21 @@ namespace crds_angular.Services
             _roomService.UpdateRoomReservation(roomReservation, token);
         }
 
-        private int AddEvent(EventToolDto eventTool)
+        private int AddEvent(EventToolDto eventReservation)
+        {
+            var eventDto = PopulateReservationDto(eventReservation);
+            var eventId = _eventService.CreateEvent(eventDto);
+            return eventId;
+        }
+
+        private void UpdateEvent(EventToolDto eventReservation, int eventId, string token)
+        {
+            var eventDto = PopulateReservationDto(eventReservation);
+            eventDto.EventId = eventId;
+            _eventService.UpdateEvent(eventDto);
+        }
+
+        private MpEventReservationDto PopulateReservationDto(EventToolDto eventTool)
         {
             var eventDto = new MpEventReservationDto();
             eventDto.CongregationId = eventTool.CongregationId;
@@ -366,8 +381,8 @@ namespace crds_angular.Services
             eventDto.SendReminder = eventTool.SendReminder;
             eventDto.StartDateTime = eventTool.StartDateTime;
             eventDto.Title = eventTool.Title;
-            var eventId = _eventService.CreateEvent(eventDto);
-            return eventId;
+            return eventDto;
+
         }
 
         public MpEvent GetEvent(int eventId)
