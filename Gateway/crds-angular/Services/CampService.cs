@@ -92,7 +92,8 @@ namespace crds_angular.Services
                 RegistrationEndDate = campEvent.RegistrationEndDate,
                 RegistrationStartDate = campEvent.RegistrationStartDate,  
                 ProgramId = campEvent.ProgramId,
-                EligibleGradesList = eligibleGradeGroups
+                EligibleGradesList = eligibleGradeGroups,
+                PrimaryContactEmail = campEvent.PrimaryContactEmail
             };
 
             return campEventInfo;
