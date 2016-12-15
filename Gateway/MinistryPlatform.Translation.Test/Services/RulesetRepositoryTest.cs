@@ -71,6 +71,25 @@ namespace MinistryPlatform.Translation.Test.Services
             Assert.AreEqual(1, result.Count);
         }
 
+        [Test]
+        public void ShouldPassAllRules()
+        {
+            const int ruleSetId = 1;
+            var testData = new Dictionary<string, object>
+            {
+                {"GenderId", 2},
+                {"registrantCount", 54}
+            };
+
+            _mpRestRepository.Setup(m => m.Search<MPGenderRule>($"Ruleset_ID = {ruleSetId}", null as string, null, false)).Returns(MockGenderRules());
+            _mpRestRepository.Setup(m => m.Search<MPRegistrationRule>($"Ruleset_ID = {ruleSetId}", null as string, null, false)).Returns(MockRegistrationRules());
+            var rules = _fixture.GetRulesInRuleset(ruleSetId);
+
+            var result = _fixture.AllRulesPass(rules, testData);
+            Assert.IsTrue(result.AllRulesPass);
+            Assert.AreEqual(2, result.RuleResults.Count);
+        }
+
         private List<MPGenderRule> MockGenderRules()
         {
             return new List<MPGenderRule>
