@@ -7,11 +7,17 @@ export default class CampPaymentController {
     this.iframeSelector = '.camp-payment-widget';
     this.viewReady = false;
     this.update = false;
+    this.redirectTo = undefined;
     this.minAmount = 10;
   }
 
   $onInit() {
     this.update = this.state.toParams.update;
+
+    if (this.update && this.state.toParams.redirectTo) {
+      this.redirectTo = this.state.toParams.redirectTo;
+    }
+
     // eslint-disable-next-line global-require
     this.iFrameResizer = require('iframe-resizer/js/iframeResizer.min.js');
 
@@ -63,7 +69,16 @@ export default class CampPaymentController {
     const campId = this.state.toParams.campId;
     const contactId = this.state.toParams.contactId;
     const invoiceId = this.campsService.productInfo.invoiceId;
-    const url = encodeURIComponent(`${this.returnUrl}/${campId}/confirmation/${contactId}`);
+
+    let url;
+    if (this.redirectTo === 'mycamps') {
+      const re = /.+(?=\/camps)/i;
+      url = encodeURIComponent(`${re.exec(this.returnUrl)[0]}/${this.redirectTo}`);
+    } else if (this.redirectTo) {
+      url = encodeURIComponent(`${this.returnUrl}/${this.redirectTo}`);
+    } else {
+      url = encodeURIComponent(`${this.returnUrl}/${campId}/confirmation/${contactId}`);
+    }
 
     return this.sce.trustAsResourceUrl(`${this.baseUrl}?type=payment&min_payment=${this.depositPrice}&invoice_id=${invoiceId}&total_cost=${this.totalPrice}&title=${this.campsService.campTitle}&url=${url}`);
   }

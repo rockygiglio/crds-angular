@@ -83,7 +83,8 @@ export default function CampRoutes($stateProvider) {
       url: '/:page/:contactId',
       template: '<camps-application-page></camps-application-page>',
       params: {
-        update: false
+        update: false,
+        redirectTo: undefined
       },
       resolve: {
         $injector: '$injector',

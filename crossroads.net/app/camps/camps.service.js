@@ -15,7 +15,7 @@ class CampsService {
     // eslint-disable-next-line prefer-template
     this.camperResource = $resource(__API_ENDPOINT__ + 'api/camps/:campId/campers/:camperId');
     // eslint-disable-next-line prefer-template
-    this.campDashboard = $resource(__API_ENDPOINT__ + 'api/my-camp');
+    this.campDashboard = $resource(__API_ENDPOINT__ + 'api/v1.0.0/camps/my-camp');
     // eslint-disable-next-line prefer-template
     this.campFamily = $resource(__API_ENDPOINT__ + 'api/v1.0.0/camps/:campId/family');
     // eslint-disable-next-line prefer-template
