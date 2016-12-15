@@ -491,6 +491,13 @@ namespace MinistryPlatform.Translation.Test.Services
             var participants = _fixture.UsingAuthenticationToken(_authToken).Search<MpEventParticipant>(filter, columns);
         }
 
+        [Test]
+        public void findCongregation()
+        {
+            var searchString = $"Congregations.[Congregation_Name]='Oakley'";
+            var result = _fixture.UsingAuthenticationToken(_authToken).Search<MpCongregation>(searchString);
+        }
+
     }
 
     [MpRestApiTable(Name = "Payment_Types")]
