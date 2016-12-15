@@ -42,8 +42,8 @@ namespace crds_angular.Controllers.API
         }
 
         [ResponseType(typeof(List<MyCampDTO>))]
-        [VersionedRoute(template: "my-camp", minimumVersion: "1.0.0")]
-        [Route("my-camp")]
+        [VersionedRoute(template: "camps/my-camp", minimumVersion: "1.0.0")]
+        [Route("camps/my-camp")]
         [HttpGet]
         public IHttpActionResult GetMyCampsInfo()
         {
