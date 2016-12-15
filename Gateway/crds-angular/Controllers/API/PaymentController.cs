@@ -48,16 +48,8 @@ namespace crds_angular.Controllers.API
             {
                 try
                 {
-                    if (paymentId == 0)
-                    {
-                        var res = _paymentService.GetAllPayments(invoiceId, token);
-                        return Ok(res);
-                    }
-                    else
-                    {
-                        var res = _paymentService.GetPaymentDetails(paymentId, invoiceId, token);
-                        return Ok(res);
-                    }
+                    var res = _paymentService.GetPaymentDetails(paymentId, invoiceId, token);
+                    return Ok(res);
                 }
                 catch (Exception e)
                 {

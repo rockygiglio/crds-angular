@@ -4,6 +4,7 @@ using System.Linq;
 using crds_angular.Exceptions;
 using crds_angular.Models.Crossroads.Camp;
 using crds_angular.Models.Crossroads.Groups;
+using crds_angular.Models.Crossroads.Payment;
 using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Interfaces;
 using log4net;
@@ -31,6 +32,7 @@ namespace crds_angular.Services
         private readonly ICommunicationRepository _communicationRepository;
         private readonly IPaymentRepository _paymentRepository;
         private readonly IObjectAttributeService _objectAttributeService;
+        private readonly IPaymentService _paymentService;
 
         private readonly ILog _logger = LogManager.GetLogger(typeof (CampService));
 
@@ -50,7 +52,8 @@ namespace crds_angular.Services
             IInvoiceRepository invoiceRepository,
             ICommunicationRepository communicationRepository,
             IPaymentRepository paymentRepository,
-            IObjectAttributeService objectAttributeService
+            IObjectAttributeService objectAttributeService,
+            IPaymentService paymentService
 )
         {
             _campService = campService;
@@ -69,6 +72,7 @@ namespace crds_angular.Services
             _paymentRepository = paymentRepository;
             _communicationRepository = communicationRepository;
             _objectAttributeService = objectAttributeService;
+            _paymentService = paymentService;
         }
 
         public CampDTO GetCampEventDetails(int eventId)
@@ -108,7 +112,7 @@ namespace crds_angular.Services
             var invoiceDetails = _invoiceRepository.GetInvoiceDetailsForProductAndCamperAndContact(eventProduct.ProductId, camperContactId, me.Contact_ID);
             var answer = _formSubmissionRepository.GetFormResponseAnswer(formId, camperContactId, formFieldId);
             var financialAssistance = (!string.IsNullOrEmpty(answer) && Convert.ToBoolean(answer));
-
+            var paymentDetail = _paymentService.GetPaymentDetails(0, invoiceDetails.Value.InvoiceId, token);
             var campProductInfo = new ProductDTO
             {
                 InvoiceId = invoiceDetails.Status ? invoiceDetails.Value.InvoiceId : 0,
@@ -118,13 +122,12 @@ namespace crds_angular.Services
                 DepositPrice = eventProduct.DepositPrice,
                 Options = ConvertProductOptionPricetoDto(eventProductOptionPrices,eventProduct.BasePrice,campEvent.EventStartDate),
                 BasePriceEndDate = campEvent.EventStartDate,
-                FinancialAssistance = financialAssistance
+                FinancialAssistance = financialAssistance,
+                PaymentDetail = paymentDetail
             };
 
             return campProductInfo;
         }
-
-
 
         public List<CampFamilyMember> GetEligibleFamilyMembers(int eventId, string token)
         {
