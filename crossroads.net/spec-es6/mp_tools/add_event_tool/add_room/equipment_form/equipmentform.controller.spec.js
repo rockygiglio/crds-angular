@@ -273,7 +273,7 @@ describe('AddEventTool EquipmentForm', () => {
         fixture.equipmentRequired = false;
         fixture.currentEquipment = [{equipment: {id: 27, name: 'Dat Equipment', quantity:42}},{equipment: {id: 21, name: 'Dat Equipment 2', quantity:2}}];
         fixture.toggleEquipmentRequired();
-        expect(fixture.currentEquipment[0].equipment.id).toBe(0);
+        expect(fixture.currentEquipment[0].equipment.name.id).toBe(0);
         expect(fixture.currentEquipment.length).toBe(1);
     });
 
