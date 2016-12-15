@@ -6,9 +6,12 @@ export default class CampPaymentController {
     this.sce = $sce;
     this.iframeSelector = '.camp-payment-widget';
     this.viewReady = false;
+    this.update = false;
+    this.minAmount = 10;
   }
 
   $onInit() {
+    this.update = this.state.toParams.update;
     // eslint-disable-next-line global-require
     this.iFrameResizer = require('iframe-resizer/js/iframeResizer.min.js');
 
@@ -38,8 +41,18 @@ export default class CampPaymentController {
         break;
     }
     this.totalPrice = this.campsService.productInfo.basePrice + this.getOptionPrice();
-    this.depositPrice = (this.campsService.productInfo.financialAssistance) ? 50 : this.campsService.productInfo.depositPrice;
+    this.depositPrice = this.depositPrice();
     this.viewReady = true;
+  }
+
+  depositPrice() {
+    if (this.update) {
+      this.depositPrice = this.minAmount;
+    }
+    else {
+      this.depositPrice = (this.campsService.productInfo.financialAssistance) ? 50 : this.campsService.productInfo.depositPrice;
+    }
+    return this.depositPrice;
   }
 
   $onDestroy() {
