@@ -6,12 +6,12 @@ using MinistryPlatform.Translation.Repositories.Interfaces.Rules;
 
 namespace MinistryPlatform.Translation.Repositories.Rules
 {
-    public class Ruleset
+    public class RulesetRepository : IRuleset
     {
-        public IApiUserRepository _apiUserRepository;
-        public IMinistryPlatformRestRepository _ministryPlatformRestRepository;
+        private readonly IApiUserRepository _apiUserRepository;
+        private readonly IMinistryPlatformRestRepository _ministryPlatformRestRepository;
 
-        public Ruleset(ApiUserRepository apiUserRepository, MinistryPlatformRestRepository ministryPlatformRestRepository)
+        public RulesetRepository(IApiUserRepository apiUserRepository, IMinistryPlatformRestRepository ministryPlatformRestRepository)
         {
             _apiUserRepository = apiUserRepository;
             _ministryPlatformRestRepository = ministryPlatformRestRepository;

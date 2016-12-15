@@ -154,6 +154,7 @@
     <Compile Include="Services\RegistrationRuleTest.cs" />
     <Compile Include="Services\ResponseServiceTest.cs" />
     <Compile Include="Services\RoomRepositoryTest.cs" />
+    <Compile Include="Services\RulesetRepositoryTest.cs" />
     <Compile Include="Services\SkillsServiceTest.cs" />
     <Compile Include="Services\TripRepositoryTest.cs" />
     <Compile Include="Services\UserServiceTest.cs" />

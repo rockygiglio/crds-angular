@@ -340,8 +340,9 @@
     <Compile Include="Repositories\ResponseRepository.cs" />
     <Compile Include="Repositories\RoomRepository.cs" />
     <Compile Include="Repositories\Rules\GenderRule.cs" />
+    <Compile Include="Repositories\Interfaces\Rules\IRuleset.cs" />
     <Compile Include="Repositories\Rules\RegistrationRule.cs" />
-    <Compile Include="Repositories\Rules\Ruleset.cs" />
+    <Compile Include="Repositories\Rules\RulesetRepository.cs" />
     <Compile Include="Repositories\SelectionRepository.cs" />
     <Compile Include="Repositories\SkillsRepository.cs" />
     <Compile Include="Repositories\TaskRepository.cs" />
