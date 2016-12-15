@@ -36,7 +36,7 @@ def processTemplateFile(inputFile, outputFile):
     with open(join(os.getcwd(), TEMPLATE_FILE_DIR, inputFile), 'r') as templateFile:
         templateStr = string.Template(templateFile.read())
     
-    print(templateStr.safe_substitute(os.environ))
+    print("Writing to {}".format(join(os.getcwd(), outputFile)))
     
     with open(join(os.getcwd(), outputFile), 'w') as outputConfigFile:
         outputConfigFile.write(templateStr.safe_substitute(os.environ))
