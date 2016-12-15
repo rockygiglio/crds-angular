@@ -1,4 +1,6 @@
-﻿using MinistryPlatform.Translation.Models.Rules;
+﻿using System;
+using System.Collections.Generic;
+using MinistryPlatform.Translation.Models.Rules;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 using MinistryPlatform.Translation.Repositories.Rules;
 using Moq;
@@ -34,7 +36,7 @@ namespace MinistryPlatform.Translation.Test.Services
         [Test]
         public void ShouldGetRuleset()
         {
-            var ruleSetId = 1;
+            const int ruleSetId = 1;
 
             var mockRuleSet = new MPRuleSet {Name = "MockRuleset"};
 
@@ -46,10 +48,54 @@ namespace MinistryPlatform.Translation.Test.Services
         }
 
         [Test]
-        public void ShouldDoStuff()
+        public void ShouldGetRulesInRuleset()
         {
-            
+            const int ruleSetId = 1;
+
+            _mpRestRepository.Setup(m => m.Search<MPGenderRule>($"Ruleset_ID = {ruleSetId}", null as string, null, false)).Returns(MockGenderRules());
+            _mpRestRepository.Setup(m => m.Search<MPRegistrationRule>($"Ruleset_ID = {ruleSetId}", null as string, null, false)).Returns(MockRegistrationRules());
+
+            var result = _fixture.GetRulesInRuleset(ruleSetId);
+            Assert.AreEqual(2, result.Count);
         }
 
+        [Test]
+        public void ShouldGetRulesInRulesetNoGenderRules()
+        {
+            const int ruleSetId = 1;
+
+            _mpRestRepository.Setup(m => m.Search<MPGenderRule>($"Ruleset_ID = {ruleSetId}", null as string, null, false)).Returns(new List<MPGenderRule>());
+            _mpRestRepository.Setup(m => m.Search<MPRegistrationRule>($"Ruleset_ID = {ruleSetId}", null as string, null, false)).Returns(MockRegistrationRules());
+
+            var result = _fixture.GetRulesInRuleset(ruleSetId);
+            Assert.AreEqual(1, result.Count);
+        }
+
+        private List<MPGenderRule> MockGenderRules()
+        {
+            return new List<MPGenderRule>
+            {
+                new MPGenderRule
+                {
+                    AllowedGenderId = 2,
+                    StartDate = DateTime.MinValue,
+                    EndDate = DateTime.MaxValue
+                }
+            };
+        }
+
+        private List<MPRegistrationRule> MockRegistrationRules()
+        {
+            return new List<MPRegistrationRule>
+            {
+                new MPRegistrationRule
+                {
+                    MinimumRegistrants = 0,
+                    MaximumRegistrants = 9999,
+                    StartDate = DateTime.MinValue,
+                    EndDate = DateTime.MaxValue
+                }
+            };
+        }
     }
 }
