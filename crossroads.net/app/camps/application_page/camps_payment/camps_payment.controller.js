@@ -47,7 +47,9 @@ export default class CampPaymentController {
 
   depositPrice() {
     if (this.update) {
-      this.depositPrice = this.minAmount;
+      this.payment = this.campsService.getCampPayment(this.campsService.productInfo.invoiceId, 0);
+      this.paymentRemaining = this.payment.paymentLeft;
+      this.depositPrice = this.paymentRemaining > this.minAmount ? this.minAmount : this.paymentRemaining;
     }
     else {
       this.depositPrice = (this.campsService.productInfo.financialAssistance) ? 50 : this.campsService.productInfo.depositPrice;
