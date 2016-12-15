@@ -33,9 +33,15 @@ namespace MinistryPlatform.Translation.Repositories.Rules
             return rules;
         }
 
-        public bool AllRulesPass(List<IRule> rules, Dictionary<string, object> testData)
+        public MPRuleSetResult AllRulesPass(List<IRule> rules, Dictionary<string, object> testData)
         {
-            return rules.Where(rule => rule.RuleIsActive()).All(rule => rule.RulePasses(testData).RulePassed);
+            var result = new MPRuleSetResult();
+            foreach (var rule in rules)
+            {
+                result.RuleResults.Add(rule.RulePasses(testData));
+            }
+            result.AllRulesPass = result.RuleResults.All(r => r.RulePassed);
+            return result;
         }
 
         private IEnumerable<GenderRule> GetGenderRules(int ruleSetId)

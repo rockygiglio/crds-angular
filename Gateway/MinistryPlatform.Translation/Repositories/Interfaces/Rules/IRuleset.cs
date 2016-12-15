@@ -7,6 +7,6 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces.Rules
     {
         MPRuleSet GetRulesetFromMP(int ruleSetId);
         List<IRule> GetRulesInRuleset(int ruleSetId);
-        bool AllRulesPass(List<IRule> rules, Dictionary<string, object> testData);
+        MPRuleSetResult AllRulesPass(List<IRule> rules, Dictionary<string, object> testData);
     }
 }
