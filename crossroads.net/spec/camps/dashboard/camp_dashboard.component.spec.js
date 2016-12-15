@@ -1,12 +1,8 @@
-import DashboardController from '../../../app/camps/dashboard/camps_dashboard.controller';
-
 import campsModule from '../../../app/camps/camps.module';
-import campHelpers from '../campHelpers';
 
 describe('Camp Dashboard Component', () => {
-
-  let dashboardComponent,
-      campsService;
+  let dashboardComponent;
+  let campsService;
 
   beforeEach(angular.mock.module(campsModule));
 
@@ -27,7 +23,7 @@ describe('Camp Dashboard Component', () => {
     });
 
     it('should set the full name', () => {
-      var fullName = dashboardComponent.fullName('silbernagel', 'matt');
+      const fullName = dashboardComponent.fullName('silbernagel', 'matt');
       expect(fullName).toBe('matt silbernagel');
     });
 
@@ -39,7 +35,9 @@ describe('Camp Dashboard Component', () => {
   describe('Dashboard data is not empty', () => {
     beforeEach(inject((_$componentController_, _CampsService_) => {
       campsService = _CampsService_;
-      campsService.dashboard = [{ 'key', 'value' }];
+      campsService.dashboard = [
+        { key: 'value' }
+      ];
       dashboardComponent = _$componentController_('campsDashboard', null, {});
       dashboardComponent.$onInit();
     }));
