@@ -1,5 +1,3 @@
-const iFrameResizer = require('iframe-resizer/js/iframeResizer.min.js');
-
 export default class StreamingController {
   constructor(CMSService, StreamspotService, GeolocationService, $rootScope, $modal, $location, $timeout, $sce, $document, $interval) {
     this.cmsService = CMSService;
@@ -16,7 +14,6 @@ export default class StreamingController {
     this.dontMiss = [];
     this.beTheChurch = [];
     this.inlineGiving = [];
-    this.iframeInterval = null;
     this.interval = $interval;
 
     this.sce = $sce;
@@ -45,19 +42,6 @@ export default class StreamingController {
         });
 
     this.openGeolocationModal();
-
-    switch (__CRDS_ENV__) {
-      case 'int':
-        this.baseUrl = 'https://embedint.crossroads.net';
-        break;
-      case 'demo':
-        this.baseUrl = 'https://embeddemo.crossroads.net';
-        break;
-      default:
-        this.baseUrl = 'https://embed.crossroads.net';
-        break;
-    }
-
     this.timeout(this.afterViewInit.bind(this), 500);
   }
 
@@ -67,26 +51,6 @@ export default class StreamingController {
     this.carouselWrapper = document.querySelector('.crds-carousel__content-wrap');
     this.carousel = document.querySelector('.crds-card-carousel');
     this.carouselElement = angular.element(document.querySelector('.crds-card-carousel'));
-
-    this.iframeInterval = this.interval(this.resizeIframe.bind(this), 100);
-  }
-
-  resizeIframe() {
-    if (this.inlineGiving.length < 1) {
-      const el = document.querySelector('.digital-program__giving iframe');
-      this.inlineGiving = iFrameResizer({
-        heightCalculationMethod: 'taggedElement',
-        minHeight: 350,
-        checkOrigin: false,
-        interval: 32
-      }, el);
-      this.interval.cancel(this.iframeInterval);
-    }
-  }
-
-  buildUrl() {
-    const params = this.queryStringParams || 'type=donation&theme=dark';
-    return this.sce.trustAsResourceUrl(`${this.baseUrl}?${params}`);
   }
 
   sortDigitalProgram(data) {

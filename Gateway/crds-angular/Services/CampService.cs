@@ -4,8 +4,13 @@ using System.Linq;
 using crds_angular.Exceptions;
 using crds_angular.Models.Crossroads.Camp;
 using crds_angular.Models.Crossroads.Groups;
+<<<<<<< HEAD
 using crds_angular.Models.Crossroads.Payment;
 using crds_angular.Services.Interfaces;
+=======
+using crds_angular.Services.Interfaces;
+using Crossroads.Utilities.FunctionalHelpers;
+>>>>>>> 0d5ed5dc30d46ec0796f35ae4b0546f21687bb7f
 using Crossroads.Utilities.Interfaces;
 using log4net;
 using MinistryPlatform.Translation.Models;
@@ -32,7 +37,10 @@ namespace crds_angular.Services
         private readonly ICommunicationRepository _communicationRepository;
         private readonly IPaymentRepository _paymentRepository;
         private readonly IObjectAttributeService _objectAttributeService;
+<<<<<<< HEAD
         private readonly IPaymentService _paymentService;
+=======
+>>>>>>> 0d5ed5dc30d46ec0796f35ae4b0546f21687bb7f
 
         private readonly ILog _logger = LogManager.GetLogger(typeof (CampService));
 
@@ -52,8 +60,12 @@ namespace crds_angular.Services
             IInvoiceRepository invoiceRepository,
             ICommunicationRepository communicationRepository,
             IPaymentRepository paymentRepository,
+<<<<<<< HEAD
             IObjectAttributeService objectAttributeService,
             IPaymentService paymentService
+=======
+            IObjectAttributeService objectAttributeService
+>>>>>>> 0d5ed5dc30d46ec0796f35ae4b0546f21687bb7f
 )
         {
             _campService = campService;
@@ -72,7 +84,10 @@ namespace crds_angular.Services
             _paymentRepository = paymentRepository;
             _communicationRepository = communicationRepository;
             _objectAttributeService = objectAttributeService;
+<<<<<<< HEAD
             _paymentService = paymentService;
+=======
+>>>>>>> 0d5ed5dc30d46ec0796f35ae4b0546f21687bb7f
         }
 
         public CampDTO GetCampEventDetails(int eventId)
@@ -95,7 +110,12 @@ namespace crds_angular.Services
                 RegistrationEndDate = campEvent.RegistrationEndDate,
                 RegistrationStartDate = campEvent.RegistrationStartDate,  
                 ProgramId = campEvent.ProgramId,
+<<<<<<< HEAD
                 EligibleGradesList = eligibleGradeGroups
+=======
+                EligibleGradesList = eligibleGradeGroups,
+                PrimaryContactEmail = campEvent.PrimaryContactEmail
+>>>>>>> 0d5ed5dc30d46ec0796f35ae4b0546f21687bb7f
             };
 
             return campEventInfo;
@@ -112,8 +132,11 @@ namespace crds_angular.Services
             var invoiceDetails = _invoiceRepository.GetInvoiceDetailsForProductAndCamperAndContact(eventProduct.ProductId, camperContactId, me.Contact_ID);
             var answer = _formSubmissionRepository.GetFormResponseAnswer(formId, camperContactId, formFieldId);
             var financialAssistance = (!string.IsNullOrEmpty(answer) && Convert.ToBoolean(answer));
+<<<<<<< HEAD
             PaymentDetailDTO paymentDetail;
             paymentDetail = invoiceDetails.Value == null ? null : _paymentService.GetPaymentDetails(0, invoiceDetails.Value.InvoiceId, token);
+=======
+>>>>>>> 0d5ed5dc30d46ec0796f35ae4b0546f21687bb7f
 
             var campProductInfo = new ProductDTO
             {
@@ -124,13 +147,22 @@ namespace crds_angular.Services
                 DepositPrice = eventProduct.DepositPrice,
                 Options = ConvertProductOptionPricetoDto(eventProductOptionPrices,eventProduct.BasePrice,campEvent.EventStartDate),
                 BasePriceEndDate = campEvent.EventStartDate,
+<<<<<<< HEAD
                 FinancialAssistance = financialAssistance,
                 PaymentDetail = paymentDetail
+=======
+                FinancialAssistance = financialAssistance
+>>>>>>> 0d5ed5dc30d46ec0796f35ae4b0546f21687bb7f
             };
 
             return campProductInfo;
         }
 
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> 0d5ed5dc30d46ec0796f35ae4b0546f21687bb7f
         public List<CampFamilyMember> GetEligibleFamilyMembers(int eventId, string token)
         {
             var apiToken = _apiUserRepository.GetToken();
@@ -362,7 +394,13 @@ namespace crds_angular.Services
                     _eventRepository.UpdateParticipantEndDate(eventParticipantId, endDate);
                 }
             }
+<<<<<<< HEAD
             
+=======
+
+            var crossroadsSite = _congregationRepository.GetCongregationById(campReservation.CrossroadsSite);
+
+>>>>>>> 0d5ed5dc30d46ec0796f35ae4b0546f21687bb7f
             //form response
             var answers = new List<MpFormAnswer>
             {
@@ -377,6 +415,15 @@ namespace crds_angular.Services
                     Response = campReservation.RoomMate,
                     FieldId = _configurationWrapper.GetConfigIntValue("SummerCampForm.PreferredRoommate"),
                     EventParticipantId = eventParticipantId
+<<<<<<< HEAD
+=======
+                },
+                new MpFormAnswer
+                {
+                    Response = crossroadsSite.Name,
+                    FieldId = _configurationWrapper.GetConfigIntValue("SummerCampForm.CamperCongregation"),
+                    EventParticipantId = eventParticipantId
+>>>>>>> 0d5ed5dc30d46ec0796f35ae4b0546f21687bb7f
                 }
             };
 
@@ -429,11 +476,14 @@ namespace crds_angular.Services
                     {
                         if (campers.Any(c => c.ContactId == member.ContactId))
                         {
+<<<<<<< HEAD
 
                             var product = _productRepository.GetProductForEvent(camp.EventId);
                             var invoiceDetails = _invoiceRepository.GetInvoiceDetailsForProductAndCamperAndContact(product.ProductId, member.ContactId, loggedInContact.Contact_ID);
                             PaymentDetailDTO paymentDetail;
                             paymentDetail = invoiceDetails.Value == null ? null : _paymentService.GetPaymentDetails(0, invoiceDetails.Value.InvoiceId, token);
+=======
+>>>>>>> 0d5ed5dc30d46ec0796f35ae4b0546f21687bb7f
                             dashboardData.Add(new MyCampDTO
                             {
                                 CamperContactId = member.ContactId,
@@ -443,8 +493,12 @@ namespace crds_angular.Services
                                 CampStartDate = camp.EventStartDate,
                                 CampEndDate = camp.EventEndDate,
                                 EventId = camp.EventId,
+<<<<<<< HEAD
                                 CampPrimaryContactEmail = _eventRepository.GetEvent(camp.EventId).PrimaryContact.EmailAddress,
                                 CamperInvoice = paymentDetail
+=======
+                                CampPrimaryContactEmail = _eventRepository.GetEvent(camp.EventId).PrimaryContact.EmailAddress
+>>>>>>> 0d5ed5dc30d46ec0796f35ae4b0546f21687bb7f
                             });
                         }
                     }
@@ -739,6 +793,16 @@ namespace crds_angular.Services
             var preferredRoommateFieldId = _configurationWrapper.GetConfigIntValue("SummerCampForm.PreferredRoommate");
             var preferredRoommate = _formSubmissionRepository.GetFormResponseAnswer(campFormId, camperContact.Contact_ID, preferredRoommateFieldId);
 
+<<<<<<< HEAD
+=======
+            var crossroadsSiteFieldId = _configurationWrapper.GetConfigIntValue("SummerCampForm.CamperCongregation");
+            var crossroadsSite = _formSubmissionRepository.GetFormResponseAnswer(campFormId, camperContact.Contact_ID, crossroadsSiteFieldId);
+
+            var congregation = (string.IsNullOrEmpty(crossroadsSite))
+                ? new Err<MpCongregation>("Congregation not set")
+                : _congregationRepository.GetCongregationByName(crossroadsSite, apiToken);
+
+>>>>>>> 0d5ed5dc30d46ec0796f35ae4b0546f21687bb7f
             var configuration = MpObjectAttributeConfigurationFactory.Contact();
             var attributesTypes = _objectAttributeService.GetObjectAttributes(apiToken, contactId, configuration);
 
@@ -750,7 +814,11 @@ namespace crds_angular.Services
                 MiddleName = camperContact.Middle_Name,
                 PreferredName = camperContact.Nickname,
                 MobilePhone = camperContact.Mobile_Phone,
+<<<<<<< HEAD
                 CrossroadsSite = Convert.ToInt32(camperContact.Congregation_ID),
+=======
+                CrossroadsSite = congregation.Status ? congregation.Value.CongregationId : 0,
+>>>>>>> 0d5ed5dc30d46ec0796f35ae4b0546f21687bb7f
                 BirthDate = Convert.ToString(camperContact.Date_Of_Birth),
                 SchoolAttending = camperContact.Current_School,
                 SchoolAttendingNext = nextYearSchool,

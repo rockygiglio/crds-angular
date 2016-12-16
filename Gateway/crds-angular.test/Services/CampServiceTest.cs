@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using crds_angular.Models.Crossroads.Attribute;
@@ -47,6 +46,7 @@ namespace crds_angular.test.Services
         {
             Factories.CampReservationDTO();
             Factories.MpGroupParticipant();
+            Factories.MpCongregation();
 
             _contactService = new Mock<IContactRepository>();
             _campService = new Mock<ICampRepository>();
@@ -132,6 +132,8 @@ namespace crds_angular.test.Services
             const int formId = 8;
             const int newContactId = 3;
 
+            var congregation = FactoryGirl.NET.FactoryGirl.Build<MpCongregation>();
+
             var household = new MpMyContact
             {
                 Household_ID = 2345
@@ -176,7 +178,10 @@ namespace crds_angular.test.Services
             _configurationWrapper.Setup(m => m.GetConfigIntValue("SummerCampFormID")).Returns(formId);            
             _configurationWrapper.Setup(m => m.GetConfigIntValue("SummerCampForm.SchoolAttendingNextYear")).Returns(12);
             _configurationWrapper.Setup(m => m.GetConfigIntValue("SummerCampForm.PreferredRoommate")).Returns(14);
+            _configurationWrapper.Setup(m => m.GetConfigIntValue("SummerCampForm.CamperCongregation")).Returns(9);
             _eventParticipantRepository.Setup(m => m.GetEventParticipantEligibility(eventId, participant.ParticipantId)).Returns(eventParticipant);
+            _congregationRepository.Setup(m => m.GetCongregationById(It.IsAny<int>())).Returns(congregation);
+            _congregationRepository.Setup(m => m.GetCongregationByName(It.IsAny<string>(), It.IsAny<string>())).Returns(new Ok<MpCongregation>(congregation));
 
             _eventRepository.Setup(m => m.RegisterInterestedParticipantWithEndDate(
                 participant.ParticipantId,
@@ -579,6 +584,17 @@ namespace crds_angular.test.Services
             var myContact = getFakeContact(contactId);
             const int childContactId = 123456789;
 
+            const int summerCampFormId = 28;
+            const int congregationField = 353;
+            const int preferredRoomateField = 1098;
+            const int schoolAttendingField = 987;
+
+            var congregation = FactoryGirl.NET.FactoryGirl.Build<MpCongregation>(m =>
+            {
+                m.Name = "Oakley";
+                m.CongregationId = 1;
+            });
+
             var participant = new Result<MpGroupParticipant>(true, new MpGroupParticipant() {GroupName = "6th Grade", GroupId = 34});
             var attributesDto = new ObjectAllAttributesDTO();
 
@@ -604,6 +620,19 @@ namespace crds_angular.test.Services
                 }
 
             };
+
+            _configurationWrapper.Setup(m => m.GetConfigIntValue("SummerCampFormID")).Returns(summerCampFormId);
+            _configurationWrapper.Setup(m => m.GetConfigIntValue("SummerCampForm.SchoolAttendingNextYear")).Returns(schoolAttendingField);
+            _configurationWrapper.Setup(m => m.GetConfigIntValue("SummerCampForm.PreferredRoommate")).Returns(preferredRoomateField);
+            _configurationWrapper.Setup(m => m.GetConfigIntValue("SummerCampForm.CamperCongregation")).Returns(congregationField);
+
+            _formSubmissionRepository.Setup(m => m.GetFormResponseAnswer(summerCampFormId, contactId, schoolAttendingField)).Returns("Fairview");
+            _formSubmissionRepository.Setup(m => m.GetFormResponseAnswer(summerCampFormId, contactId, preferredRoomateField)).Returns("");
+            _formSubmissionRepository.Setup(m => m.GetFormResponseAnswer(summerCampFormId, contactId, congregationField)).Returns("Oakley");
+
+            // get congregation Id by name
+            _congregationRepository.Setup(m => m.GetCongregationByName("Oakley", apiToken)).Returns(new Ok<MpCongregation>(congregation));
+
             _contactService.Setup(m => m.GetMyProfile(token)).Returns(loggedInContact);
             _contactService.Setup(m => m.GetHouseholdFamilyMembers(loggedInContact.Household_ID)).Returns(householdfamily);
             _contactService.Setup(m => m.GetOtherHouseholdMembers(loggedInContact.Contact_ID)).Returns(otherHouseholdfamily);
@@ -615,8 +644,11 @@ namespace crds_angular.test.Services
             var result = _fixture.GetCamperInfo(token, eventId, contactId);
             Assert.AreEqual(result.ContactId, 2187211);
             Assert.AreEqual(result.CurrentGrade, 34);
+            Assert.AreEqual(1, result.CrossroadsSite);
             _contactService.VerifyAll();
             _groupRepository.VerifyAll();
+            _formSubmissionRepository.VerifyAll();
+            _configurationWrapper.VerifyAll();
         }
 
         [Test]

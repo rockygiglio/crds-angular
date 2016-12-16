@@ -75,6 +75,7 @@ export default function CampRoutes($stateProvider) {
         CampsService: 'CampsService',
         $state: '$state',
         getCamperPayment,
+        getCampInfo,
         getCamperFamily
       }
     })

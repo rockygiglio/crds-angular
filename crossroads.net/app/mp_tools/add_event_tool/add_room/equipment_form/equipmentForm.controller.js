@@ -7,6 +7,21 @@ export default class EquipmentController {
     this.validation = Validation;
   }
 
+  $onInit() {
+    if (this.addEvent.editMode === true && _.has(this.currentRoom, 'cancelled')) {
+      const hasEquipment = _.filter(this.currentEquipment, (e) => {
+        return e.equipment.name.id > 0;
+      });
+
+      if (hasEquipment.length > 0) {
+        this.equipmentRequired = true;
+      }
+      else {
+        this.equipmentRequired = false;
+      }
+    }
+  }
+
   addEquipment() {
     this.currentEquipment.push({ equipment: { name: { id: 0 }, quantity: 0 } });
   }
