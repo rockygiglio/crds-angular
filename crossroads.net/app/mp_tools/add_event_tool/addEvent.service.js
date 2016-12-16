@@ -110,7 +110,7 @@
       const roomDto = {
         hidden: room.hidden,
         roomId: room.id,
-        notes: room.description,
+        notes: room.notes,
         layoutId: room.layout.id,
         equipment: _.map(_.filter(room.equipment, (equip) => {
           return equip.equipment.name.id > 0;
