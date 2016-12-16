@@ -19,10 +19,7 @@ class CampCardController {
 
   $onInit() {
     this.campsService.getCampProductInfo(this.campId, this.camperId).then((res) => {
-      console.log(res);
-      const left = res.camperInvoice.paymentLeft;
-      this.isPaidInFull = (left <= 0);
-      console.log(this.isPaidInFull);
+      this.isPaidInFull = (res.camperInvoice.paymentLeft <= 0);
     }).catch(() => {
       this.isPaidInFull = true;
     }).finally(() => {

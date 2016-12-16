@@ -1,6 +1,7 @@
 class CampDashboardController {
-  constructor(CampsService) {
+  constructor(CampsService, $state) {
     this.campsService = CampsService;
+    this.state = $state;
     this.viewReady = false;
   }
 
@@ -13,6 +14,7 @@ class CampDashboardController {
     return this.data.length < 1;
   }
 
+  // eslint-disable-next-line class-methods-use-this
   fullName(lastName, nickName) {
     return `${nickName} ${lastName}`;
   }
