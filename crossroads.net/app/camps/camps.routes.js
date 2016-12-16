@@ -19,6 +19,7 @@ export default function CampRoutes($stateProvider) {
         loggedin: crds_utilities.checkLoggedin,
         campsService: 'CampsService',
         $state: '$state',
+        $filter: '$filter',
         dashboard: campsService => campsService.getCampDashboard()
       }
     })
