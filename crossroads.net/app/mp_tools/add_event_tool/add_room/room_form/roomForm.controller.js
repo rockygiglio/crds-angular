@@ -9,7 +9,7 @@ export default class RoomController {
 
     $onInit() {
         if (this.currentRoom.equipment === undefined) {
-            this.currentRoom.equipment = [{ equipment: { id: 0, name: null, quantity: 0 } }];
+            this.currentRoom.equipment = [{ equipment: { name: { id: 0 }, quantity: 0 } }];
         }
     }
 
