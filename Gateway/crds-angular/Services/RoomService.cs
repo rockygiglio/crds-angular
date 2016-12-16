@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using crds_angular.Models.Crossroads.Events;
 using crds_angular.Services.Interfaces;
@@ -20,11 +21,11 @@ namespace crds_angular.Services
             _eventService = eventService;
         }
 
-        public List<Room> GetRoomsByLocationId(int id)
+        public List<Room> GetRoomsByLocationId(int id, DateTime startDate, DateTime endDate)
         {
-            var records = _roomService.GetRoomsByLocationId(id);
+            var records = _roomService.GetRoomsByLocationId(id, startDate, endDate);
 
-            return records.Select(record => new Room
+            return records?.Select(record => new Room
             {
                 BuildingId = record.BuildingId,
                 Id = record.RoomId,
@@ -32,7 +33,12 @@ namespace crds_angular.Services
                 Name = record.RoomName,
                 BanquetCapacity = record.BanquetCapacity,
                 Description = record.Description,
-                TheaterCapacity = record.TheaterCapacity
+                TheaterCapacity = record.TheaterCapacity,
+                RoomStatus = record.RoomStatus,
+                DisplayName = record.DisplayName,
+                ReservationStart = record.ReservationStart,
+                ReservationEnd = record.ReservationEnd
+
             }).OrderBy(x => x.Name).ToList();
         }
 

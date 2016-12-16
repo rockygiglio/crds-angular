@@ -29,6 +29,9 @@ namespace MinistryPlatform.Translation.Models
         [JsonProperty(PropertyName = "Online_Registration_Product")]
         public int OnlineProductId { get; set; }
 
+        [JsonProperty(PropertyName = "Email_Address")]
+        public string PrimaryContactEmail { get; set; }
+
         [JsonProperty(PropertyName = "Registration_Start")]
         public DateTime RegistrationStartDate { get; set; }
 

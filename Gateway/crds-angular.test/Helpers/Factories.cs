@@ -8,6 +8,19 @@ namespace crds_angular.test.Helpers
 {
     public class Factories
     {
+        public static void MpCongregation()
+        {
+            if (!FactoryGirl.NET.FactoryGirl.DefinedFactories.Contains(typeof(MpCongregation)))
+            {
+                FactoryGirl.NET.FactoryGirl.Define<MpCongregation>(() => new MpCongregation
+                {
+                    CongregationId = 12,
+                    LocationId = 4,
+                    Name = "Oakley"
+                });
+            }
+        }
+
         public static void MpGroupParticipant()
         {
             if (!FactoryGirl.NET.FactoryGirl.DefinedFactories.Contains(typeof(MpGroupParticipant)))

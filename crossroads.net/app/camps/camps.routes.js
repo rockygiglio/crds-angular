@@ -54,8 +54,7 @@ export default function CampRoutes($stateProvider) {
         CampsService: 'CampsService',
         $state: '$state',
         $timeout: '$timeout',
-        sendConfirmation: (CampsService, $state, $timeout) => {
-          return CampsService.sendConfirmation($state.toParams.invoiceId,
+        sendConfirmation: (CampsService, $state, $timeout) => CampsService.sendConfirmation($state.toParams.invoiceId,
             $state.toParams.paymentId,
             $state.toParams.campId,
             $state.toParams.contactId)
@@ -64,8 +63,7 @@ export default function CampRoutes($stateProvider) {
               $timeout(() => {
                 $state.go('campsignup.thankyou', $state.toParams, { location: 'replace' });
               }, 0);
-            });
-        }
+            })
       }
     })
     .state('campsignup.thankyou', {
@@ -75,6 +73,7 @@ export default function CampRoutes($stateProvider) {
         CampsService: 'CampsService',
         $state: '$state',
         getCamperPayment,
+        getCampInfo,
         getCamperFamily
       }
     })
@@ -92,6 +91,7 @@ export default function CampRoutes($stateProvider) {
         $state: '$state',
         $q: '$q',
         $timeout: '$timeout',
+        $log: '$log',
         $stateParams: '$stateParams',
         CampsService: 'CampsService',
         register: invokeResolve
