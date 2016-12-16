@@ -8,7 +8,6 @@ export default class EquipmentController {
   }
 
   $onInit() {
-    debugger;
     if (this.addEvent.editMode === true) {
       const hasEquipment = _.filter(this.currentEquipment, (e) => {
         return e.equipment.name.id > 0;
