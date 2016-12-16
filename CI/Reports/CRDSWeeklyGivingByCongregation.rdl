@@ -12,7 +12,7 @@
     <DataSet Name="Congregations">
       <Query>
         <DataSourceName>DataSource1</DataSourceName>
-        <CommandText>select congregation_id, Congregation_Name from congregations where end_date is null or getdate() between start_date and end_date</CommandText>
+        <CommandText>select congregation_id, Congregation_Name, AccountingCompany_ID from congregations where end_date is null or getdate() between start_date and end_date</CommandText>
       </Query>
       <Fields>
         <Field Name="congregation_id">
@@ -23,12 +23,25 @@
           <DataField>Congregation_Name</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
+        <Field Name="Accounting_Company_ID">
+          <DataField>Accounting_Company_ID</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
       </Fields>
+      <Filters>
+        <Filter>
+          <FilterExpression>=Fields!Accounting_Company_ID.Value</FilterExpression>
+          <Operator>Equal</Operator>
+          <FilterValues>
+            <FilterValue>=Parameters!AccountingCompanyID.Value</FilterValue>
+          </FilterValues>
+        </Filter>
+      </Filters>
     </DataSet>
     <DataSet Name="Programs">
       <Query>
         <DataSourceName>DataSource1</DataSourceName>
-        <CommandText>select program_id, program_name from programs 
+        <CommandText>select program_id, program_name from programs
 where program_type_id in (1,3)
 order by program_name</CommandText>
       </Query>
@@ -94,6 +107,99 @@ order by program_name</CommandText>
         <Field Name="donation_status">
           <DataField>donation_status</DataField>
           <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
+    <DataSet Name="AccountingCompanies">
+      <Query>
+        <DataSourceName>DataSource1</DataSourceName>
+        <CommandType>TableDirect</CommandType>
+        <CommandText>Accounting_Companies</CommandText>
+      </Query>
+      <Fields>
+        <Field Name="Accounting_Company_ID">
+          <DataField>Accounting_Company_ID</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="Company_Name">
+          <DataField>Company_Name</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="General_Statement_Settings">
+          <DataField>General_Statement_Settings</DataField>
+          <rd:TypeName>System.Boolean</rd:TypeName>
+        </Field>
+        <Field Name="Pledge_Campaign_ID">
+          <DataField>Pledge_Campaign_ID</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="Company_Contact_ID">
+          <DataField>Company_Contact_ID</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="Statement_Footer">
+          <DataField>Statement_Footer</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="List_Non_Cash_Gifts">
+          <DataField>List_Non_Cash_Gifts</DataField>
+          <rd:TypeName>System.Boolean</rd:TypeName>
+        </Field>
+        <Field Name="Current_Settings">
+          <DataField>Current_Settings</DataField>
+          <rd:TypeName>System.Boolean</rd:TypeName>
+        </Field>
+        <Field Name="Statement_Letter">
+          <DataField>Statement_Letter</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Online_Settings">
+          <DataField>Online_Settings</DataField>
+          <rd:TypeName>System.Boolean</rd:TypeName>
+        </Field>
+        <Field Name="Online_Sort_Order">
+          <DataField>Online_Sort_Order</DataField>
+          <rd:TypeName>System.Int16</rd:TypeName>
+        </Field>
+        <Field Name="Show_Online">
+          <DataField>Show_Online</DataField>
+          <rd:TypeName>System.Boolean</rd:TypeName>
+        </Field>
+        <Field Name="Statement_Cutoff_Date">
+          <DataField>Statement_Cutoff_Date</DataField>
+          <rd:TypeName>System.DateTime</rd:TypeName>
+        </Field>
+        <Field Name="ACH_Settings">
+          <DataField>ACH Settings</DataField>
+          <rd:TypeName>System.Boolean</rd:TypeName>
+        </Field>
+        <Field Name="Immediate_Destination_ID">
+          <DataField>Immediate_Destination_ID</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Immediate_Origin_ID">
+          <DataField>Immediate_Origin_ID</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Immediate_Destination_Name">
+          <DataField>Immediate_Destination_Name</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Immediate_Origin_Name">
+          <DataField>Immediate_Origin_Name</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Immediate_Routing_Number">
+          <DataField>Immediate_Routing_Number</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Receiving_DFI_ID">
+          <DataField>Receiving_DFI_ID</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Domain_ID">
+          <DataField>Domain_ID</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
         </Field>
       </Fields>
     </DataSet>
@@ -634,6 +740,22 @@ order by program_name</CommandText>
     <ReportParameter Name="enddate">
       <DataType>DateTime</DataType>
       <Prompt>End Date</Prompt>
+    </ReportParameter>
+    <ReportParameter Name="AccountingCompanyID">
+      <DataType>Integer</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>1</Value>
+        </Values>
+      </DefaultValue>
+      <Prompt>Accounting Company</Prompt>
+      <ValidValues>
+        <DataSetReference>
+          <DataSetName>AccountingCompanies</DataSetName>
+          <ValueField>Accounting_Company_ID</ValueField>
+          <LabelField>Company_Name</LabelField>
+        </DataSetReference>
+      </ValidValues>
     </ReportParameter>
     <ReportParameter Name="congregationid">
       <DataType>Integer</DataType>
