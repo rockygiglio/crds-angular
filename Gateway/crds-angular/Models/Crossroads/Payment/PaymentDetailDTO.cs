@@ -12,8 +12,5 @@ namespace crds_angular.Models.Crossroads.Payment
 
         [JsonProperty(PropertyName = "recipientEmail")]
         public string RecipientEmail { get; set; }
-
-        [JsonProperty(PropertyName = "TotalAmount")]
-        public decimal TotalAmount { get; set; }
     }
 }

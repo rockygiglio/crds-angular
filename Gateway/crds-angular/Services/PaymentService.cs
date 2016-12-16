@@ -125,8 +125,7 @@ namespace crds_angular.Services
                 {
                     PaymentAmount = currentPayment.Any() ? currentPayment.First().PaymentTotal : 0M,
                     RecipientEmail = me.Email_Address,
-                    TotalToPay = leftToPay,
-                    TotalAmount = invoice.InvoiceTotal
+                    TotalToPay = leftToPay
                 };
             }
             throw new Exception("No Payment found for " + me.Email_Address + " with id " + paymentId);
