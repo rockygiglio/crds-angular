@@ -15,12 +15,13 @@ class CampCardController {
     this.state = $state;
     this.campsService = CampsService;
     this.isResolving = true;
+    this.amountDue = null;
   }
 
   $onInit() {
     this.campsService.getCampProductInfo(this.campId, this.camperId).then((res) => {
-      this.amountRemaining = res.camperInvoice.paymentLeft;
-      this.isPaidInFull = (res.camperInvoice.paymentLeft <= 0);
+      this.amountDue = res.camperInvoice.paymentLeft;
+      this.isPaidInFull = (this.amountDue <= 0);
     }).catch(() => {
       this.isPaidInFull = true;
     }).finally(() => {
@@ -45,6 +46,14 @@ class CampCardController {
     const monthDayEnd = endDateMoment.format('MMMM Do');
     const year = startDateMoment.format('YYYY');
     return `${monthDayStart} - ${monthDayEnd}, ${year}`;
+  }
+
+  formatAmountDue() {
+    if (!this.amountDue) {
+      return 'Error Retrieving Product Info';
+    }
+
+    return `$${this.amountDue}`;
   }
 }
 
