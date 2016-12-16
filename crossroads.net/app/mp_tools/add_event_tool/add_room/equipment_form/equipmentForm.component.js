@@ -6,7 +6,8 @@ export default function EquipmentFormComponent() {
     restrict: 'E',
     bindings: {
         currentEquipment: '=',
-        equipmentLookup: '='
+        equipmentLookup: '=',
+        currentRoom: '='
     },
     template,
     controller,

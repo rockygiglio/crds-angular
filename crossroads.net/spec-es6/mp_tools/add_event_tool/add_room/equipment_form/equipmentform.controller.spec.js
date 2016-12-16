@@ -22,12 +22,14 @@ describe('AddEventTool EquipmentForm', () => {
 
   it('$onInit() should not set equipmentRequired if edit mode is false', () => {
     fixture.addEvent = { editMode: false };
+    fixture.currentRoom = { cancelled: false };
     fixture.$onInit();
     expect(fixture.equipmentRequired).toBeUndefined();
   });
 
   it('$onInit() should set equipmentRequired to false if edit mode is true and there is no equipment', () => {
     fixture.currentEquipment = [];
+    fixture.currentRoom = { cancelled: false };
     fixture.$onInit();
     expect(fixture.equipmentRequired).toBe(false);
   });
@@ -40,8 +42,21 @@ describe('AddEventTool EquipmentForm', () => {
         }
       }
     }];
+    fixture.currentRoom = { cancelled: false };
     fixture.$onInit();
     expect(fixture.equipmentRequired).toBe(false);
+  });
+  it('should set equipmentRequired to undefined if edit mode is true but cancelled is not set', () => {
+    fixture.currentEquipment = [{
+      equipment: {
+        name: {
+          id: 0
+        }
+      }
+    }];
+    fixture.currentRoom = {};
+    fixture.$onInit();
+    expect(fixture.equipmentRequired).toBe(undefined);
   });
 
   it('$onInit() should set equipmentRequired to true if edit mode is true and there is some equipment', () => {
@@ -52,6 +67,7 @@ describe('AddEventTool EquipmentForm', () => {
         }
       }
     }];
+    fixture.currentRoom = { cancelled: false };
     fixture.$onInit();
     expect(fixture.equipmentRequired).toBe(true);
   });
