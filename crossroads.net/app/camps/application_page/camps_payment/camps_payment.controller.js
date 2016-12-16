@@ -10,7 +10,6 @@ export default class CampPaymentController {
     this.redirectTo = undefined;
     this.minAmount = 10;
     this.paymentRemaining = 0;
-    this.updatedTotal = CampsService.productInfo.camperInvoice.TotalAmount;
   }
 
   $onInit() {
@@ -49,18 +48,18 @@ export default class CampPaymentController {
         break;
     }
     this.totalPrice = this.campsService.productInfo.basePrice + this.getOptionPrice();
-    this.depositPrice = this.depositPrice();
+    this.depositPrice();
     this.viewReady = true;
   }
 
   depositPrice() {
     if (this.update) {
       this.paymentRemaining = this.campsService.productInfo.camperInvoice.paymentLeft;
+      this.totalPrice = this.campsService.productInfo.camperInvoice.TotalAmount;
       this.depositPrice = this.paymentRemaining > this.minAmount ? this.minAmount : this.paymentRemaining;
     } else {
       this.depositPrice = (this.campsService.productInfo.financialAssistance) ? 50 : this.campsService.productInfo.depositPrice;
     }
-    return this.depositPrice;
   }
 
   $onDestroy() {
