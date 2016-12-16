@@ -17,30 +17,19 @@
     <label class="flush-bottom push-half-top">Date</label>
     <div> {{campCard.formatDate()}} </div>
 
-    <label class="flush-bottom push-half-top">Amount Due</label>
-    <div>
-      <span ng-if="campCard.isResolving">Resolving...</span>
-      <span ng-if="!campCard.isResolving">{{campCard.formatAmountDue()}}</span>
-    </div>
-
     <label class="flush-bottom push-half-top"> Amount Due </label>
-    <div> {{campCard.amountRemaining | currency}} </div>
+    <div> {{campCard.amountDue | currency}} </div>
 
     <div class="group-card-buttons push-half-top">
       <div class="row">
 
         <div class="col-md-6 col-sm-12">
           <div>
-            <button type='button' class="btn btn-primary btn-block push-half-top" ng-click="campCard.makePayment()" ng-disabled="campCard.isResolving || campCard.isPaidInFull">
+            <button type='button' class="btn btn-primary btn-block push-half-top" ng-click="campCard.makePayment()" ng-disabled="campCard.isPaidInFull">
               <svg viewBox="0 0 32 32" class="icon icon-dollar">
                 <use xlink:href="#medkit"></use>
               </svg>
-              <span ng-if="campCard.isResolving">
-                Resolving...
-              </span>
-              <span ng-if="!campCard.isResolving">
                 Make a Payment
-              </span>
             </button>
           </div>
         </div>

@@ -429,6 +429,11 @@ namespace crds_angular.Services
                     {
                         if (campers.Any(c => c.ContactId == member.ContactId))
                         {
+
+                            var product = _productRepository.GetProductForEvent(camp.EventId);
+                            var invoiceDetails = _invoiceRepository.GetInvoiceDetailsForProductAndCamperAndContact(product.ProductId, member.ContactId, loggedInContact.Contact_ID);
+                            PaymentDetailDTO paymentDetail;
+                            paymentDetail = invoiceDetails.Value == null ? null : _paymentService.GetPaymentDetails(0, invoiceDetails.Value.InvoiceId, token);
                             dashboardData.Add(new MyCampDTO
                             {
                                 CamperContactId = member.ContactId,
@@ -438,7 +443,8 @@ namespace crds_angular.Services
                                 CampStartDate = camp.EventStartDate,
                                 CampEndDate = camp.EventEndDate,
                                 EventId = camp.EventId,
-                                CampPrimaryContactEmail = _eventRepository.GetEvent(camp.EventId).PrimaryContact.EmailAddress
+                                CampPrimaryContactEmail = _eventRepository.GetEvent(camp.EventId).PrimaryContact.EmailAddress,
+                                CamperInvoice = paymentDetail
                             });
                         }
                     }

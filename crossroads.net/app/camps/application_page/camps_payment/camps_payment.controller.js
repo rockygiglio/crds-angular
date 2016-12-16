@@ -54,7 +54,7 @@ export default class CampPaymentController {
   calculateDeposit() {
     if (this.update) {
       this.paymentRemaining = this.campsService.productInfo.camperInvoice.paymentLeft;
-      this.totalPrice = this.campsService.productInfo.camperInvoice.TotalAmount;
+      this.totalPrice = this.paymentRemaining;
       this.depositPrice = this.paymentRemaining > this.minAmount ? this.minAmount : this.paymentRemaining;
     } else {
       this.depositPrice = (this.campsService.productInfo.financialAssistance) ? 50 : this.campsService.productInfo.depositPrice;
@@ -84,7 +84,7 @@ export default class CampPaymentController {
       url = encodeURIComponent(`${this.returnUrl}/${campId}/confirmation/${contactId}`);
     }
 
-    return this.sce.trustAsResourceUrl(`${this.baseUrl}?type=payment&min_payment=${this.depositPrice}&invoice_id=${invoiceId}&total_cost=${this.paymentRemaining}&title=${this.campsService.campTitle}&url=${url}`);
+    return this.sce.trustAsResourceUrl(`${this.baseUrl}?type=payment&min_payment=${this.depositPrice}&invoice_id=${invoiceId}&total_cost=${this.totalPrice}&title=${this.campsService.campTitle}&url=${url}`);
   }
 
   closeIframes() {

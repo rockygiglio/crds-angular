@@ -19,14 +19,8 @@ class CampCardController {
   }
 
   $onInit() {
-    this.campsService.getCampProductInfo(this.campId, this.camperId).then((res) => {
-      this.amountDue = res.camperInvoice.paymentLeft;
-      this.isPaidInFull = (this.amountDue <= 0);
-    }).catch(() => {
-      this.isPaidInFull = true;
-    }).finally(() => {
-      this.isResolving = false;
-    });
+    this.amountDue = this.paymentRemaining;
+    this.isPaidInFull = (this.amountDue <= 0);
   }
 
   updateMedical() {
