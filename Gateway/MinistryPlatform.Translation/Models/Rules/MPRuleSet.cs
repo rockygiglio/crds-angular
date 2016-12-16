@@ -7,6 +7,9 @@ namespace MinistryPlatform.Translation.Models.Rules
     [MpRestApiTable(Name = "cr_Ruleset")]
     public class MPRuleSet
     {
+        [JsonProperty(PropertyName = "Ruleset_ID")]
+        public int Id { get; set; }
+
         [JsonProperty(PropertyName = "Ruleset_Name")]
         public string Name { get; set; }
 

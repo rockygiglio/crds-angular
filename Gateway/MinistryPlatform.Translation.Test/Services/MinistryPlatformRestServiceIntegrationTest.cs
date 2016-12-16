@@ -499,6 +499,15 @@ namespace MinistryPlatform.Translation.Test.Services
             var genderRules = _fixture.UsingAuthenticationToken(_authToken).Search<MPGenderRule>(searchString);
         }
 
+        [Test]
+        public void GetProductRuleset()
+        {
+            const string searchString = "Product_ID_Table.[Product_ID] = 4";
+            const string columnList = "Product_ID_Table.[Product_ID],Ruleset_ID_Table.[Ruleset_ID],cr_Product_Ruleset.[Start_Date],cr_Product_Ruleset.[End_Date]";
+            var res = _fixture.UsingAuthenticationToken(_authToken).Search<MPProductRuleSet>(searchString, columnList);
+            Assert.IsNotEmpty(res);
+        }
+
     }
 
     [MpRestApiTable(Name = "Payment_Types")]
