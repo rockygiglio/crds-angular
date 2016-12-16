@@ -17,8 +17,8 @@
     <label class="flush-bottom push-half-top">Date</label>
     <div> {{campCard.formatDate() }} </div>
 
-    <!--<label class="flush-bottom push-half-top"> Remaining Payment Amount </label>-->
-    <!--<div> $140 </div>-->
+    <label class="flush-bottom push-half-top"> Amount Due </label>
+    <div> {{campCard.amountRemaining | currency}} </div>
 
     <div class="group-card-buttons push-half-top">
       <div class="row">
