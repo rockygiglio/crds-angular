@@ -311,6 +311,8 @@ namespace MinistryPlatform.Translation.Repositories
                 {"Recurring_Gift_ID", donationAndDistribution.RecurringGiftId},
                 {"Is_Recurring_Gift", donationAndDistribution.RecurringGift},
                 {"Donor_Account_ID", donationAndDistribution.DonorAcctId},
+                {"Source_Url", donationAndDistribution.SourceUrl},
+                {"Predefined_Amount", donationAndDistribution.PredefinedAmount},
             };
             if (!string.IsNullOrWhiteSpace(donationAndDistribution.CheckScannerBatchName))
             {
