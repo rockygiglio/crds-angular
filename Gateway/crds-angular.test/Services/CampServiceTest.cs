@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using crds_angular.Models.Crossroads.Attribute;
 using crds_angular.Models.Crossroads.Camp;
-
+using crds_angular.Models.Crossroads.Payment;
 using crds_angular.Services;
 using crds_angular.Services.Interfaces;
 using crds_angular.test.Helpers;
@@ -40,6 +40,7 @@ namespace crds_angular.test.Services
         private Mock<ICommunicationRepository> _communicationRepository;
         private Mock<IPaymentRepository> _paymentRepository;
         private Mock<IObjectAttributeService> _objectAttributeService;
+        private Mock<IPaymentService> _paymentService;
 
         [SetUp]
         public void SetUp()
@@ -65,6 +66,7 @@ namespace crds_angular.test.Services
             _communicationRepository = new Mock<ICommunicationRepository>();
             _paymentRepository = new Mock<IPaymentRepository>();
             _objectAttributeService = new Mock<IObjectAttributeService>();
+            _paymentService = new Mock<IPaymentService>();
 
             _fixture = new CampService(_campService.Object, 
                                        _formSubmissionRepository.Object, 
@@ -81,7 +83,8 @@ namespace crds_angular.test.Services
                                        _invoiceRepository.Object,
                                        _communicationRepository.Object,
                                        _paymentRepository.Object,
-                                       _objectAttributeService.Object);
+                                       _objectAttributeService.Object,
+                                       _paymentService.Object);
         }
 
         [Test]
@@ -692,6 +695,16 @@ namespace crds_angular.test.Services
                 DaysOutToHide = 90
             };
 
+            var paymentDetail = new PaymentDetailDTO
+            {
+                PaymentAmount = 1000,
+                RecipientEmail = "x@x.com",
+                TotalToPay = 1000
+            };
+
+            
+            var mpInvoiceResult = new Result<MpInvoiceDetail>(true, new MpInvoiceDetail() { InvoiceId = 1234 });
+
             var mpoptionlist = new List<MpProductOptionPrice>() {mpprodoption1, mpprodoption2};
             int contactid = 12345;
 
@@ -701,11 +714,13 @@ namespace crds_angular.test.Services
             _productRepository.Setup(m => m.GetProductOptionPricesForProduct(product.ProductId)).Returns(mpoptionlist);
             _formSubmissionRepository.Setup(m => m.GetFormResponseAnswer(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>())).Returns("true");
             _invoiceRepository.Setup(m => m.GetInvoiceDetailsForProductAndCamperAndContact(product.ProductId, contactid, me.Contact_ID))
-                .Returns(new Result<MpInvoiceDetail>(true, new MpInvoiceDetail() {InvoiceId = 1234}));
+                .Returns(mpInvoiceResult);
+            _paymentService.Setup(m => m.GetPaymentDetails(0, mpInvoiceResult.Value.InvoiceId, token)).Returns(paymentDetail);
 
             var result = _fixture.GetCampProductDetails(eventId,contactid, token);
             Assert.IsTrue(result.Options.Count == 2);
             Assert.IsTrue(result.ProductId == 111);
+            Assert.IsTrue(result.PaymentDetail.TotalToPay == 1000);
         }
 
         [Test]
