@@ -1,11 +1,7 @@
+/* eslint-disable import/no-extraneous-dependencies, import/no-unresolved, import/extensions */
 import constants from 'crds-constants';
 
-/* jshint unused: false */
-import campsModule from '../../../../app/camps/camps.module';
-import campHelpers from '../../campHelpers';
-
 describe('Camp Card Directive', () => {
-
   let cardComponent;
   let campsService;
   let state;
@@ -44,15 +40,15 @@ describe('Camp Card Directive', () => {
     expect(cardComponent.formatDate()).toBe('June 20th - June 27th, 2017');
   });
 
-  it('should direct to the payment page with the update flag', () => {
+  it('should direct to the payment page with the update and redirect flags', () => {
     cardComponent.makePayment();
-    expect(campsService.initializeCamperData).toHaveBeenCalled(); 
+    expect(campsService.initializeCamperData).toHaveBeenCalled();
     expect(state.go).toHaveBeenCalledWith('campsignup.application', {
       page: 'camps-payment',
       contactId: bindings.camperId,
       campId: bindings.campId,
-      update: true
-    }); 
-  })
-
+      update: true,
+      redirectTo: 'mycamps'
+    });
+  });
 });
