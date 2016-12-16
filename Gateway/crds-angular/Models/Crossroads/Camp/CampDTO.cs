@@ -28,6 +28,9 @@ namespace crds_angular.Models.Crossroads.Camp
         [JsonProperty(PropertyName = "productId")]
         public int OnlineProductId { get; set; }
 
+        [JsonProperty(PropertyName = "primaryContact")]
+        public string PrimaryContactEmail { get; set; }
+
         [JsonProperty(PropertyName = "registrationStartDate")]
         public DateTime? RegistrationStartDate { get; set; }
 
