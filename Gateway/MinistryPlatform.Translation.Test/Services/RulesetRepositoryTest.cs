@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using MinistryPlatform.Translation.Models.Rules;
 using MinistryPlatform.Translation.Repositories.Interfaces;
+using MinistryPlatform.Translation.Repositories.Interfaces.Rules;
 using MinistryPlatform.Translation.Repositories.Rules;
 using Moq;
 using NUnit.Framework;
@@ -26,13 +27,6 @@ namespace MinistryPlatform.Translation.Test.Services
             _mpRestRepository.Setup(m => m.UsingAuthenticationToken(_mockToken)).Returns(_mpRestRepository.Object);
         }
 
-        [TearDown]
-        public void TearItDown()
-        {
-            _apiUserRepository.VerifyAll();
-            _mpRestRepository.VerifyAll();
-        }
-
         [Test]
         public void ShouldGetRuleset()
         {
@@ -45,6 +39,9 @@ namespace MinistryPlatform.Translation.Test.Services
             var result = _fixture.GetRulesetFromMP(ruleSetId);
 
             Assert.AreEqual("MockRuleset", result.Name);
+
+            _apiUserRepository.VerifyAll();
+            _mpRestRepository.VerifyAll();
         }
 
         [Test]
@@ -57,6 +54,9 @@ namespace MinistryPlatform.Translation.Test.Services
 
             var result = _fixture.GetRulesInRuleset(ruleSetId);
             Assert.AreEqual(2, result.Count);
+
+            _apiUserRepository.VerifyAll();
+            _mpRestRepository.VerifyAll();
         }
 
         [Test]
@@ -69,25 +69,33 @@ namespace MinistryPlatform.Translation.Test.Services
 
             var result = _fixture.GetRulesInRuleset(ruleSetId);
             Assert.AreEqual(1, result.Count);
+
+            _apiUserRepository.VerifyAll();
+            _mpRestRepository.VerifyAll();
         }
 
         [Test]
         public void ShouldPassAllRules()
         {
-            const int ruleSetId = 1;
             var testData = new Dictionary<string, object>
             {
                 {"GenderId", 2},
                 {"registrantCount", 54}
             };
-
-            _mpRestRepository.Setup(m => m.Search<MPGenderRule>($"Ruleset_ID = {ruleSetId}", null as string, null, false)).Returns(MockGenderRules());
-            _mpRestRepository.Setup(m => m.Search<MPRegistrationRule>($"Ruleset_ID = {ruleSetId}", null as string, null, false)).Returns(MockRegistrationRules());
-            var rules = _fixture.GetRulesInRuleset(ruleSetId);
+            var rules = MockRuleset();
 
             var result = _fixture.AllRulesPass(rules, testData);
             Assert.IsTrue(result.AllRulesPass);
             Assert.AreEqual(2, result.RuleResults.Count);
+        }
+
+        private List<IRule> MockRuleset()
+        {
+            var rules = new List<IRule>();
+            var startDate = DateTime.Today.AddDays(-30);
+            rules.Add(new GenderRule(startDate, null, 2));
+            rules.Add(new RegistrationRule(startDate, null, 0, 1000));
+            return rules;
         }
 
         private List<MPGenderRule> MockGenderRules()
