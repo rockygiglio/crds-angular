@@ -111,6 +111,11 @@ describe('Camp Service', () => {
     expect(campsService.productInfo.invoiceId).toEqual(123);
   });
 
+  // FIXME: there is no test for `getShirtSizes()`
+  it('should get shirt sizes', () => {
+
+  });
+
   afterEach(() => {
     httpBackend.verifyNoOutstandingExpectation();
     httpBackend.verifyNoOutstandingRequest();

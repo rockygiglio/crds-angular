@@ -1,5 +1,6 @@
 /* eslint-disable import/no-extraneous-dependencies, import/no-unresolved, import/extensions */
 import constants from 'crds-constants';
+/* eslint-enable */
 
 describe('Camp Card Directive', () => {
   let cardComponent;
