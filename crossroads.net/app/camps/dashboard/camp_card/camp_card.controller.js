@@ -25,7 +25,6 @@ class CampCardController {
     }).catch(() => {
       this.isPaidInFull = true;
     }).finally(() => {
-      console.log(this.amountDue);
       this.isResolving = false;
     });
   }
@@ -52,9 +51,9 @@ class CampCardController {
   formatAmountDue() {
     if (!this.amountDue) {
       return 'Error Retrieving Product Info';
-    } else {
-      return `$${this.amountDue}`;
     }
+
+    return `$${this.amountDue}`;
   }
 }
 
