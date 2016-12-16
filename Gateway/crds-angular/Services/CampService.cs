@@ -10,6 +10,7 @@ using log4net;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Models.Product;
 using MinistryPlatform.Translation.Repositories.Interfaces;
+using MinistryPlatform.Translation.Repositories.Interfaces.Rules;
 
 namespace crds_angular.Services
 {
@@ -281,6 +282,14 @@ namespace crds_angular.Services
                 HouseholdId = (_contactRepository.GetMyProfile(token)).Household_ID,
                 HouseholdPositionId = 2
             };
+
+            var currentCampers = _eventParticipantRepository.GetEventParticipantCountByGender(eventId, campReservation.Gender);
+            var ruleData = new Dictionary<string, object>
+            {
+                {"GenderId", campReservation.Gender},
+                {"registrantCount", currentCampers++}
+            };
+            //TODO: Add rules check here.
 
             MpParticipant participant;
             if (campReservation.ContactId == null || campReservation.ContactId == 0)
