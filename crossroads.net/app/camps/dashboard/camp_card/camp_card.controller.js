@@ -14,16 +14,19 @@ class CampCardController {
   constructor($state, CampsService) {
     this.state = $state;
     this.campsService = CampsService;
-    this.viewReady = false;
+    this.isResolving = true;
   }
 
   $onInit() {
-    debugger;
-    // TODO: make call to check camp balance
-    this.isPaidInFull = true;
-
-    this.campsService.getCampProductInfo(this.campId, this.camperId).finally(() => {
-      this.viewReady = true;
+    this.campsService.getCampProductInfo(this.campId, this.camperId).then((res) => {
+      console.log(res);
+      const left = res.camperInvoice.paymentLeft;
+      this.isPaidInFull = (left <= 0);
+      console.log(this.isPaidInFull);
+    }).catch(() => {
+      this.isPaidInFull = true;
+    }).finally(() => {
+      this.isResolving = false;
     });
   }
 
