@@ -44,6 +44,6 @@ namespace crds_angular.Models.Crossroads.Stewardship
         public string SourceUrl { get; set; }
 
         [JsonProperty(PropertyName = "predefined_amount")]
-        public int? PredefinedAmount { get; set; }
+        public decimal? PredefinedAmount { get; set; }
     }
 }

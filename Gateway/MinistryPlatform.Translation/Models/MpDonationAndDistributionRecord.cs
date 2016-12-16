@@ -48,7 +48,7 @@ namespace MinistryPlatform.Translation.Models
 
         public string SourceUrl { get; set; }
 
-        public int? PredefinedAmount { get; set; }
+        public decimal? PredefinedAmount { get; set; }
 
         #region Donation Distributions
         private readonly List<MpDonationDistribution> _distributions = new List<MpDonationDistribution>();
