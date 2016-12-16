@@ -159,7 +159,7 @@ class CampsService {
 
   getShirtSizes() {
     // FIXME: ? should `crdsConstants` be `constants` ?
-    return this.attributeTypeService.AttributeTypes().get({ id: crdsConstants.ATTRIBUTE_TYPE_IDS.TSHIRT_SIZES }).$promise // eslint-disable-line new-cap
+    return this.attributeTypeService.AttributeTypes().get({ id: constants.ATTRIBUTE_TYPE_IDS.TSHIRT_SIZES }).$promise // eslint-disable-line new-cap
       .then((shirtSizes) => {
         this.shirtSizes = filter(shirtSizes.attributes, attribute => attribute.category === 'Adult');
         return shirtSizes;
