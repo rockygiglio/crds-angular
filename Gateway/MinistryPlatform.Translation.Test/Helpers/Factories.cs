@@ -2,11 +2,28 @@
 using System.Linq;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Models.Rules;
+using MinistryPlatform.Translation.Repositories.Rules;
 
 namespace MinistryPlatform.Translation.Test.Helpers
 {
     public class Factories
     {
+
+        public static void GenderRule()
+        {
+            if (!FactoryGirl.NET.FactoryGirl.DefinedFactories.Contains(typeof(GenderRule)))
+            {
+                FactoryGirl.NET.FactoryGirl.Define<GenderRule>(() => new GenderRule(DateTime.Now.AddDays(-30), null, 1));
+            }
+        }
+
+        public static void RegistrationRule()
+        {
+            if (!FactoryGirl.NET.FactoryGirl.DefinedFactories.Contains(typeof(RegistrationRule)))
+            {
+                FactoryGirl.NET.FactoryGirl.Define<RegistrationRule>(() => new RegistrationRule(DateTime.Now.AddDays(-30), null, 12, 200));
+            }
+        }
 
         public static void MPProductRuleset()
         {

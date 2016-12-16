@@ -343,7 +343,7 @@
     <Compile Include="Repositories\RoomRepository.cs" />
     <Compile Include="Repositories\Rules\GenderRule.cs" />
     <Compile Include="Repositories\Interfaces\Rules\IRuleset.cs" />
-    <Compile Include="Repositories\Interfaces\IProductRulesetsRepository.cs" />
+    <Compile Include="Repositories\Interfaces\Rules\IProductRulesetsRepository.cs" />
     <Compile Include="Repositories\Rules\ProductRulesetsRepository.cs" />
     <Compile Include="Repositories\Rules\RegistrationRule.cs" />
     <Compile Include="Repositories\Rules\RulesetRepository.cs" />

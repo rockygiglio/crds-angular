@@ -17,6 +17,7 @@ using NUnit.Framework;
 using MinistryPlatform.Translation.Models.MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Models.Payments;
 using MinistryPlatform.Translation.Models.Product;
+using MinistryPlatform.Translation.Repositories.Interfaces.Rules;
 
 namespace crds_angular.test.Services
 {
@@ -40,6 +41,7 @@ namespace crds_angular.test.Services
         private Mock<ICommunicationRepository> _communicationRepository;
         private Mock<IPaymentRepository> _paymentRepository;
         private Mock<IObjectAttributeService> _objectAttributeService;
+        private Mock<ICampRules> _campRules;
 
         [SetUp]
         public void SetUp()
@@ -65,6 +67,7 @@ namespace crds_angular.test.Services
             _communicationRepository = new Mock<ICommunicationRepository>();
             _paymentRepository = new Mock<IPaymentRepository>();
             _objectAttributeService = new Mock<IObjectAttributeService>();
+            _campRules = new Mock<ICampRules>();
 
             _fixture = new CampService(_campService.Object, 
                                        _formSubmissionRepository.Object, 
@@ -81,7 +84,9 @@ namespace crds_angular.test.Services
                                        _invoiceRepository.Object,
                                        _communicationRepository.Object,
                                        _paymentRepository.Object,
-                                       _objectAttributeService.Object);
+                                       _objectAttributeService.Object,
+                                       _campRules.Object
+                                       );
         }
 
         [Test]
@@ -168,6 +173,9 @@ namespace crds_angular.test.Services
                                                                      It.IsAny<Dictionary<int, ObjectSingleAttributeDTO>>(),
                                                                      It.IsAny<MpObjectAttributeConfiguration>()));
             _apiUserRepository.Setup(m => m.GetToken()).Returns(token);
+
+            _campRules.Setup(m => m.VerifyCampRules(eventId, campReservation.Gender)).Returns(true);
+
             _groupRepository.Setup(g => g.GetGradeGroupForContact(newContactId, token)).Returns(new Result<MpGroupParticipant>(true, group));
              
             _configurationWrapper.Setup(m => m.GetConfigIntValue("SummerCampFormID")).Returns(formId);            
@@ -190,6 +198,63 @@ namespace crds_angular.test.Services
             _configurationWrapper.VerifyAll();
             _formSubmissionRepository.VerifyAll();
 
+        }
+
+        [Test]
+        public void ShouldThrowExceptionIfRulesDonotPass()
+        {
+            const int groupId = 123;
+            const string token = "1234";
+            const int eventId = 4;
+            const int contactId = 231;
+
+            var campReservation = FactoryGirl.NET.FactoryGirl.Build<CampReservationDTO>((res) =>
+            {
+                res.ContactId = contactId;
+                res.CurrentGrade = groupId;
+            });
+            var group = FactoryGirl.NET.FactoryGirl.Build<MpGroupParticipant>((res) => res.GroupId = groupId);
+
+
+            var household = new MpMyContact
+            {
+                Household_ID = 2345
+            };
+
+            var participant = new MpParticipant
+            {
+                ParticipantId = 2
+            };
+
+            var congregation = new MpCongregation
+            {
+                Name = "mASON"
+            };
+
+            _contactService.Setup(m => m.GetMyProfile(token)).Returns(household);
+            _congregationRepository.Setup(m => m.GetCongregationById(campReservation.CrossroadsSite)).Returns(congregation);
+            _contactService.Setup(m => m.UpdateContact(contactId, It.IsAny<Dictionary<string, object>>()));
+            _participantRepository.Setup(m => m.GetParticipant(contactId)).Returns(participant);
+
+            _objectAttributeService.Setup(m =>
+                                              m.SaveObjectAttributes(contactId,
+                                                                     It.IsAny<Dictionary<int, ObjectAttributeTypeDTO>>(),
+                                                                     It.IsAny<Dictionary<int, ObjectSingleAttributeDTO>>(),
+                                                                     It.IsAny<MpObjectAttributeConfiguration>()));
+            _apiUserRepository.Setup(m => m.GetToken()).Returns(token);
+            _groupRepository.Setup(g => g.GetGradeGroupForContact(contactId, token)).Returns(new Result<MpGroupParticipant>(true, group));
+
+
+            _campRules.Setup(m => m.VerifyCampRules(eventId, campReservation.Gender)).Returns(false);
+            Assert.Throws<ApplicationException>(() =>
+            {
+                _fixture.SaveCampReservation(campReservation, eventId, token);
+                _eventRepository.VerifyAll();
+                _participantRepository.VerifyAll();
+                _configurationWrapper.VerifyAll();
+                _formSubmissionRepository.VerifyAll();
+            });
+            
         }
 
         [Test]
@@ -243,7 +308,7 @@ namespace crds_angular.test.Services
                                                                      It.IsAny<MpObjectAttributeConfiguration>()));
             _apiUserRepository.Setup(m => m.GetToken()).Returns(token);
             _groupRepository.Setup(g => g.GetGradeGroupForContact(contactId, token)).Returns(new Result<MpGroupParticipant>(true, group));
-
+            _campRules.Setup(m => m.VerifyCampRules(eventId, campReservation.Gender)).Returns(true);
             _configurationWrapper.Setup(m => m.GetConfigIntValue("SummerCampFormID")).Returns(formId);
             _configurationWrapper.Setup(m => m.GetConfigIntValue("SummerCampForm.SchoolAttendingNextYear")).Returns(12);
             _configurationWrapper.Setup(m => m.GetConfigIntValue("SummerCampForm.PreferredRoommate")).Returns(14);            
