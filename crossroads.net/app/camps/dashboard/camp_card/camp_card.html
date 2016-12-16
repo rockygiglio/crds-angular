@@ -15,7 +15,13 @@
     <div class="tight-line-height"> {{campCard.attendee}} </div>
 
     <label class="flush-bottom push-half-top">Date</label>
-    <div> {{campCard.formatDate() }} </div>
+    <div> {{campCard.formatDate()}} </div>
+
+    <label class="flush-bottom push-half-top">Amount Due</label>
+    <div>
+      <span ng-if="campCard.isResolving">Resolving...</span>
+      <span ng-if="!campCard.isResolving">{{campCard.formatAmountDue()}}</span>
+    </div>
 
     <!--<label class="flush-bottom push-half-top"> Remaining Payment Amount </label>-->
     <!--<div> $140 </div>-->
@@ -47,16 +53,6 @@
             Update Medical Info
           </button>
         </div>
-
-        <!-- FIXME: Remove this commented block? -->
-        <!--<div class="col-md-6 col-sm-12">-->
-          <!--<button class="btn btn-standard btn-block push-half-top" >-->
-            <!--<svg viewBox="0 0 32 32" class="icon icon-cancel">-->
-              <!--<use xlink:href="#cancel"></use>-->
-            <!--</svg>-->
-            <!--Cancel Registration-->
-          <!--</button>-->
-        <!--</div>-->
 
       </div>
     </div>
