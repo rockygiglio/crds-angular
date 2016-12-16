@@ -36,6 +36,19 @@ namespace MinistryPlatform.Translation.Repositories.Rules
         public MPRuleSetResult AllRulesPass(List<IRule> rules, Dictionary<string, object> testData)
         {
             var result = new MPRuleSetResult();
+            if (!rules.Any())
+                return new MPRuleSetResult()
+                {
+                    AllRulesPass = true,
+                    RuleResults = new List<MPRuleResult>
+                    {
+                        new MPRuleResult()
+                        {
+                            Message = "No Rules Present",
+                            RulePassed = true
+                        }
+                    }
+                };
             foreach (var rule in rules)
             {
                 result.RuleResults.Add(rule.RulePasses(testData));

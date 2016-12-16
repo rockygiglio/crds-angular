@@ -141,6 +141,7 @@
     <Compile Include="Models\Product\MpProductOptionGroup.cs" />
     <Compile Include="Models\Product\MpProductOptionPrice.cs" />
     <Compile Include="Models\Rules\MPGenderRule.cs" />
+    <Compile Include="Models\Rules\MPProductRuleSet.cs" />
     <Compile Include="Models\Rules\MPRegistrationRule.cs" />
     <Compile Include="Models\Rules\MPRuleBase.cs" />
     <Compile Include="Models\Rules\MPRuleResult.cs" />
@@ -342,6 +343,8 @@
     <Compile Include="Repositories\RoomRepository.cs" />
     <Compile Include="Repositories\Rules\GenderRule.cs" />
     <Compile Include="Repositories\Interfaces\Rules\IRuleset.cs" />
+    <Compile Include="Repositories\Interfaces\IProductRulesetsRepository.cs" />
+    <Compile Include="Repositories\Rules\ProductRulesetsRepository.cs" />
     <Compile Include="Repositories\Rules\RegistrationRule.cs" />
     <Compile Include="Repositories\Rules\RulesetRepository.cs" />
     <Compile Include="Repositories\SelectionRepository.cs" />
