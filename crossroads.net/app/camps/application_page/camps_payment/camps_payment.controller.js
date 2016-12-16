@@ -9,6 +9,8 @@ export default class CampPaymentController {
     this.update = false;
     this.redirectTo = undefined;
     this.minAmount = 10;
+    this.paymentRemaining = 0;
+    this.updatedTotal = CampsService.productInfo.camperInvoice.TotalAmount;
   }
 
   $onInit() {
