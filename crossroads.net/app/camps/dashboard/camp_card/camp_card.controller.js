@@ -14,6 +14,17 @@ class CampCardController {
   constructor($state, CampsService) {
     this.state = $state;
     this.campsService = CampsService;
+    this.isResolving = true;
+  }
+
+  $onInit() {
+    this.campsService.getCampProductInfo(this.campId, this.camperId).then((res) => {
+      this.isPaidInFull = (res.camperInvoice.paymentLeft <= 0);
+    }).catch(() => {
+      this.isPaidInFull = true;
+    }).finally(() => {
+      this.isResolving = false;
+    });
   }
 
   updateMedical() {

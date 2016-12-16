@@ -1,4 +1,6 @@
 <div class="group-card-panel panel panel-default is-flex flex-col flex-grow" >
+  <!-- don't make everything spin -->
+
   <div class="panel-heading">
     <div class="row">
       <div class="col-lg-9 col-md-8 col-sm-10 col-xs-9">
@@ -22,12 +24,19 @@
       <div class="row">
 
         <div class="col-md-6 col-sm-12">
-          <button type='button' class="btn btn-primary btn-block push-half-top" ng-click="campCard.makePayment()" >
-            <svg viewBox="0 0 32 32" class="icon icon-dollar">
-              <use xlink:href="#medkit"></use>
-            </svg>
-            Make a Payment
-          </button>
+          <div>
+            <button type='button' class="btn btn-primary btn-block push-half-top" ng-click="campCard.makePayment()" ng-disabled="campCard.isResolving || campCard.isPaidInFull">
+              <svg viewBox="0 0 32 32" class="icon icon-dollar">
+                <use xlink:href="#medkit"></use>
+              </svg>
+              <span ng-if="campCard.isResolving">
+                Resolving...
+              </span>
+              <span ng-if="!campCard.isResolving">
+                Make a Payment
+              </span>
+            </button>
+          </div>
         </div>
 
         <div class="col-md-6 col-sm-12">
@@ -39,6 +48,7 @@
           </button>
         </div>
 
+        <!-- FIXME: Remove this commented block? -->
         <!--<div class="col-md-6 col-sm-12">-->
           <!--<button class="btn btn-standard btn-block push-half-top" >-->
             <!--<svg viewBox="0 0 32 32" class="icon icon-cancel">-->
@@ -56,6 +66,6 @@
       <div class="col-lg-9">
         <p><small>If your child can no longer attend camp, please contact {{campCard.campPrimaryContact}}</small></p>
       </div>
-    </div>  
+    </div>
   </div>
 </div>
