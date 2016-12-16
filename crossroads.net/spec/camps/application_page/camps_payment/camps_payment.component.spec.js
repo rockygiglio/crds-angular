@@ -18,6 +18,4 @@ describe('Camps Payment Component', () => {
     campsService.productInfo = campHelpers.productInfo;
     fixture = _$componentController_('campsPayment', null, {});
   }));
-
 });
-

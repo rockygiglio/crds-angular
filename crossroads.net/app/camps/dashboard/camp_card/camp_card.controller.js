@@ -14,6 +14,17 @@ class CampCardController {
   constructor($state, CampsService) {
     this.state = $state;
     this.campsService = CampsService;
+    this.viewReady = false;
+  }
+
+  $onInit() {
+    debugger;
+    // TODO: make call to check camp balance
+    this.isPaidInFull = true;
+
+    this.campsService.getCampProductInfo(this.campId, this.camperId).finally(() => {
+      this.viewReady = true;
+    });
   }
 
   updateMedical() {
