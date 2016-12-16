@@ -7,8 +7,24 @@ export default class EquipmentController {
     this.validation = Validation;
   }
 
+  $onInit() {
+    debugger;
+    if (this.addEvent.editMode === true) {
+      const hasEquipment = _.filter(this.currentEquipment, (e) => {
+        return e.equipment.name.id > 0;
+      });
+
+      if (hasEquipment.length > 0) {
+        this.equipmentRequired = true;
+      }
+      else {
+        this.equipmentRequired = false;
+      }
+    }
+  }
+
   addEquipment() {
-    this.currentEquipment.push({ equipment: { name: null, quantity: 0 } });
+    this.currentEquipment.push({ equipment: { name: { id: 0 }, quantity: 0 } });
   }
 
   existing(equipment) {
@@ -52,7 +68,7 @@ export default class EquipmentController {
 
   toggleEquipmentRequired() {
     if (!this.equipmentRequired) {
-      this.currentEquipment = [{ equipment: { id: 0, name: null, quantity: 0 } }];
+      this.currentEquipment = [{ equipment: { name: { id: 0 }, quantity: 0 } }];
     }
   }
 }
