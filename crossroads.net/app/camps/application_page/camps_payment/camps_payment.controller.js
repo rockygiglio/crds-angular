@@ -10,6 +10,7 @@ export default class CampPaymentController {
     this.redirectTo = undefined;
     this.minAmount = 10;
     this.paymentRemaining = 0;
+    this.invoiceTotal = 0;
   }
 
   $onInit() {
@@ -54,6 +55,7 @@ export default class CampPaymentController {
   calculateDeposit() {
     if (this.update) {
       this.paymentRemaining = this.campsService.productInfo.camperInvoice.paymentLeft;
+      this.invoiceTotal = this.campsService.productInfo.camperInvoice.invoiceTotal;
       this.totalPrice = this.paymentRemaining;
       this.depositPrice = this.paymentRemaining > this.minAmount ? this.minAmount : this.paymentRemaining;
     } else {
