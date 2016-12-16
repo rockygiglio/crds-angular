@@ -346,14 +346,14 @@ namespace crds_angular.Services
             _roomService.UpdateRoomReservation(roomReservation, token);
         }
 
-        private int AddEvent(EventToolDto eventReservation)
+        public int AddEvent(EventToolDto eventReservation)
         {
             var eventDto = PopulateReservationDto(eventReservation);
             var eventId = _eventService.CreateEvent(eventDto);
             return eventId;
         }
 
-        private void UpdateEvent(EventToolDto eventReservation, int eventId, string token)
+        public void UpdateEvent(EventToolDto eventReservation, int eventId, string token)
         {
             var eventDto = PopulateReservationDto(eventReservation);
             eventDto.EventId = eventId;
