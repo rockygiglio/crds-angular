@@ -29,7 +29,6 @@ export default class CampPaymentController {
       interval: -16
     }, this.iframeSelector);
 
-    // eslint-disable-next-line no-undef
     switch (__CRDS_ENV__) {
       case 'local':
         this.baseUrl = 'http://local.crossroads.net:8080';
@@ -49,18 +48,17 @@ export default class CampPaymentController {
         break;
     }
     this.totalPrice = this.campsService.productInfo.basePrice + this.getOptionPrice();
-    this.depositPrice = this.depositPrice();
+    this.calculateDeposit();
     this.viewReady = true;
   }
 
-  depositPrice() {
+  calculateDeposit() {
     if (this.update) {
       this.paymentRemaining = this.campsService.productInfo.camperInvoice.paymentLeft;
       this.depositPrice = this.paymentRemaining > this.minAmount ? this.minAmount : this.paymentRemaining;
     } else {
       this.depositPrice = (this.campsService.productInfo.financialAssistance) ? 50 : this.campsService.productInfo.depositPrice;
     }
-    return this.depositPrice;
   }
 
   $onDestroy() {
@@ -74,15 +72,19 @@ export default class CampPaymentController {
 
     let url;
     if (this.redirectTo === 'mycamps') {
-      const re = /.+(?=\/camps)/i;
-      url = encodeURIComponent(`${re.exec(this.returnUrl)[0]}/${this.redirectTo}`);
+      /**
+       * Since the `mycamps` page doesn't have '/camps' in the route
+       * the following Regular Expression strips it out of `this.returnUrl`
+       */
+      const returnUrl = /.+(?=\/camps)/i.exec(this.returnUrl)[0];
+      url = encodeURIComponent(`${returnUrl}/${this.redirectTo}`);
     } else if (this.redirectTo) {
       url = encodeURIComponent(`${this.returnUrl}/${this.redirectTo}`);
     } else {
       url = encodeURIComponent(`${this.returnUrl}/${campId}/confirmation/${contactId}`);
     }
 
-    return this.sce.trustAsResourceUrl(`${this.baseUrl}?type=payment&min_payment=${this.depositPrice}&invoice_id=${invoiceId}&total_cost=${this.totalPrice}&title=${this.campsService.campTitle}&url=${url}`);
+    return this.sce.trustAsResourceUrl(`${this.baseUrl}?type=payment&min_payment=${this.depositPrice}&invoice_id=${invoiceId}&total_cost=${this.paymentRemaining}&title=${this.campsService.campTitle}&url=${url}`);
   }
 
   closeIframes() {
