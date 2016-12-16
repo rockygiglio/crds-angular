@@ -8,11 +8,10 @@ export default function RoomFormComponent() {
         currentRoom: '=',
         layouts: '=',
         equipmentLookup: '=',
-        removeRoom: '&',
-        editMode: '='
+        removeRoom: '&'
     },
-    template: template,
-    controller: controller,
+    template,
+    controller,
     controllerAs: 'room'
   };
 };
