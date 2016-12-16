@@ -11,10 +11,11 @@
  *    campPrimaryContact
  */
 class CampCardController {
-  constructor($state, CampsService) {
+  constructor($state, $filter, CampsService) {
     this.state = $state;
+    this.filter = $filter;
     this.campsService = CampsService;
-    this.isResolving = true;
+    this.isLoading = true;
     this.amountDue = null;
   }
 
@@ -25,7 +26,7 @@ class CampCardController {
     }).catch(() => {
       this.isPaidInFull = true;
     }).finally(() => {
-      this.isResolving = false;
+      this.isLoading = false;
     });
   }
 
@@ -53,7 +54,7 @@ class CampCardController {
       return 'Error Retrieving Product Info';
     }
 
-    return `$${this.amountDue}`;
+    return this.filter('currency')(this.amountDue);
   }
 }
 
