@@ -62,12 +62,6 @@ export default class StreamingController {
   }
 
   afterViewInit() {
-    this.carouselCard = document.querySelector('content-card');
-    this.carouselCardTotal = document.querySelectorAll('content-card').length;
-    this.carouselWrapper = document.querySelector('.crds-carousel__content-wrap');
-    this.carousel = document.querySelector('.crds-card-carousel');
-    this.carouselElement = angular.element(document.querySelector('.crds-card-carousel'));
-
     this.iframeInterval = this.interval(this.resizeIframe.bind(this), 100);
   }
 
@@ -131,39 +125,6 @@ export default class StreamingController {
         size: 'lg'
       });
     }
-  }
-
-  getCarouselCardWidth() {
-    let marginRight = parseInt(window.getComputedStyle(this.carouselCard).marginRight, 0); // eslint-disable-line prefer-const
-    return this.carouselCard.offsetWidth + marginRight;
-  }
-
-  getCurrentScrollPosition() {
-    return this.carousel.scrollLeft;
-  }
-
-  carouselNext() {
-    /* eslint-disable prefer-const */
-    let cardWidth = this.getCarouselCardWidth();
-    let n = Math.floor(this.getCurrentScrollPosition() / cardWidth);
-    let scrollLeft = (n + 1) * cardWidth;
-    /* eslint-enable prefer-const */
-    this.scrollTo(scrollLeft);
-  }
-
-  carouselPrev() {
-    let cardWidth = this.getCarouselCardWidth(); // eslint-disable-line prefer-const
-    let scrollPos = this.getCurrentScrollPosition(); // eslint-disable-line prefer-const
-    let n = 0;
-    if (scrollPos > cardWidth) {
-      n = Math.round(scrollPos / cardWidth) - 1;
-    }
-    let scrollLeft = n * cardWidth; // eslint-disable-line prefer-const
-    this.scrollTo(scrollLeft);
-  }
-
-  scrollTo(x, duration = 250) {
-    this.carouselElement.scrollLeftAnimated(x, duration);
   }
 
   static getMargins(el) {
