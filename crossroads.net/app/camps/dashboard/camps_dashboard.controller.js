@@ -1,11 +1,10 @@
 class CampDashboardController {
-  constructor(CampsService, $state, $rootScope, $window) {
+  constructor(CampsService, $state, $rootScope) {
     this.campsService = CampsService;
     this.state = $state;
     this.viewReady = false;
     this.state = $state;
     this.rootScope = $rootScope;
-    this.window = $window;
   }
 
   $onInit() {
@@ -15,9 +14,8 @@ class CampDashboardController {
   }
 
   onPayment() {
-    this.url = this.window.location.href.split('=');
-    this.paymentId = this.url[2];
-    if (!(this.paymentId === null)) {
+    const paymentId = this.state.toParams.paymentId;
+    if (paymentId) {
       this.rootScope.$emit('notify', this.rootScope.MESSAGES.successfulSubmission);
     }
   }
