@@ -842,7 +842,17 @@ namespace MinistryPlatform.Translation.Repositories
             return string.Join(" or ", ids.Select(id => string.Format("\"{0}\"", id)));
         }
 
-        public int CreateRecurringGiftRecord(string authorizedUserToken, int donorId, int donorAccountId, string planInterval, decimal planAmount, DateTime startDate, string program, string subscriptionId, int congregationId)
+        public int CreateRecurringGiftRecord(string authorizedUserToken, 
+                                             int donorId, 
+                                             int donorAccountId, 
+                                             string planInterval, 
+                                             decimal planAmount, 
+                                             DateTime startDate, 
+                                             string program, 
+                                             string subscriptionId, 
+                                             int congregationId, 
+                                             string sourceUrl = null, 
+                                             decimal? predefinedAmount = null)
         {
             // Make sure we're talking in UTC consistently
             startDate = startDate.ToUniversalTime().Date;
@@ -872,7 +882,9 @@ namespace MinistryPlatform.Translation.Repositories
                 {"Start_Date", startDate},
                 {"Program_ID", program},
                 {"Congregation_ID", congregationId},
-                {"Subscription_ID", subscriptionId}
+                {"Subscription_ID", subscriptionId},
+                {"Source_Url", sourceUrl},
+                {"Predefined_Amount", predefinedAmount}
             };
 
             int recurringGiftId;
