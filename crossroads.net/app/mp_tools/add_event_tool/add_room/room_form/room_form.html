@@ -8,7 +8,7 @@
     <div class="form-group" ng-class="{'has-error': room.validation.showErrors(roomForm, 'layout')}">
       <label class="required">Room Layout </label><br />
       <label class="weight-normal" ng-repeat="layout in room.layouts track by layout.id">
-        <input type="radio" name="layout" ng-required="!room.currentRoom.layout" ng-model="room.currentRoom.layout" ng-value="layout" />
+        <input type="radio" name="{{room.currentRoom.name}}layout" ng-required="!room.currentRoom.layout" ng-model="room.currentRoom.layout.id" ng-value="layout.id" />
         {{layout.layoutName}}&nbsp;
       </label>
       <ng-messages for="roomForm.layout.$error" ng-if="room.validation.showErrors(roomForm, 'layout')">
@@ -17,11 +17,11 @@
         </span>
       </ng-messages>
     </div>
-    <div class="form-group" name="description" ng-model="room.currentRoom.description">
+    <div class="form-group">
       <label>Setup Notes</label>
       <textarea class="form-control"
-                name="description"
-                ng-model="room.currentRoom.description"
+                name="notes"
+                ng-model="room.currentRoom.notes"
                 ng-disabled="room.existing()" >
       </textarea>
     </div>
@@ -31,11 +31,11 @@
         Hide from Atrium Monitors?
       </label><br>
       <label class="weight-normal">
-        <input type="radio" name="hidden" ng-required="!room.currentRoom.hidden" ng-model="room.currentRoom.hidden" ng-value="true" />
+        <input type="radio" name="{{room.currentRoom.name}}hidden" ng-required="!room.currentRoom.hidden" ng-model="room.currentRoom.hidden" ng-value="true" />
         Yes
       </label>
       <label class="weight-normal">
-        <input type="radio" name="hidden" ng-required="!room.currentRoom.hidden" ng-model="room.currentRoom.hidden" ng-value="false" />
+        <input type="radio" name="{{room.currentRoom.name}}hidden" ng-required="!room.currentRoom.hidden" ng-model="room.currentRoom.hidden" ng-value="false" />
         No
       </label>
       <span popover="Only 1 primary room per event will show on atrium monitors."
@@ -52,7 +52,8 @@
     </div>
 
     <equipment-form current-equipment="room.currentRoom.equipment"
-                    equipment-lookup="room.equipmentLookup">
+                    equipment-lookup="room.equipmentLookup"
+                    current-room="room.currentRoom">
     </equipment-form>
 
   </ng-form>
