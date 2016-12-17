@@ -57,7 +57,7 @@ namespace MinistryPlatform.Translation.Models
         [JsonProperty(PropertyName = "Congregation_ID")]
         public int CongregationId { get; set; }
         [JsonProperty(PropertyName = "Reminder_Days_Prior_ID")]
-        public int ReminderDaysPriorId { get; set; }
+        public int? ReminderDaysPriorId { get; set; }
         [JsonProperty(PropertyName = "Template")]
         public bool? Template { get; set; }
         [JsonProperty(PropertyName = "Cancelled")]
