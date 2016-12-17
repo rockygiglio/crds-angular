@@ -65,5 +65,25 @@ namespace MinistryPlatform.Translation.Models
 
         [JsonProperty(PropertyName = "Minutes_Until_Timeout")]
         public int? MinutesUntilTimeout { get; set; }
+
+        public string Description { get; set; }
+
+        [JsonProperty(PropertyName="Meeting_Instructions")]
+        public string MeetinInstructions { get; set; }
+
+        [JsonProperty(PropertyName = "Participants_Expected")]
+        public int? ParticpantsExpected { get; set; }
+
+        [JsonProperty(PropertyName = "On_Donation_Batch_Tool")]
+        public bool DonationBatchTool { get; set; }
+
+        [JsonProperty(PropertyName = "Minutes_For_Setup")]
+        public int MinutesSetup { get; set; }
+
+        [JsonProperty(PropertyName = "Minutes_For_Cleanup")]
+        public int MinutesTeardown { get; set; }
+
+        [JsonProperty(PropertyName = "Send_Reminder")]
+        public bool SendReminder { get; set; } 
     }
 }

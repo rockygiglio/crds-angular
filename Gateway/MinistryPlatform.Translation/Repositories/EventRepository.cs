@@ -318,7 +318,7 @@ namespace MinistryPlatform.Translation.Repositories
             return records.Select(record => new MpEvent
             {
                 EventTitle = (string) record["Event_Title"],
-                EventType = (string) record["Event_Type"],
+                EventType = (string) record["Event_Type_ID"],
                 EventStartDate = (DateTime) record["Event_Start_Date"],
                 EventEndDate = (DateTime) record["Event_End_Date"],
                 EventId = (int) record["dp_RecordID"]
@@ -357,7 +357,7 @@ namespace MinistryPlatform.Translation.Repositories
             var events = records.Select(record => new MpEvent
             {
                 EventTitle = record.ToString("Event_Title"),
-                EventType = record.ToString("Event_Type"),
+                EventType = record.ToString("Event_Type_ID"),
                 EventStartDate = record.ToDate("Event_Start_Date", true),
                 EventEndDate = record.ToDate("Event_End_Date", true),
                 EventId = record.ToInt("Event_ID"),
@@ -379,7 +379,7 @@ namespace MinistryPlatform.Translation.Repositories
                 EventTitle = (string) record["Event_Title"],
                 EventStartDate = (DateTime) record["Event_Start_Date"],
                 EventEndDate = (DateTime) record["Event_End_Date"],
-                EventType = record.ToString("Event_Type"),
+                EventType = record.ToString("Event_Type_ID"),
                 PrimaryContact = new MpContact()
                 {
                     ContactId = record.ToInt("Primary_Contact_ID"),
@@ -396,7 +396,7 @@ namespace MinistryPlatform.Translation.Repositories
                 EventTitle = (string) record["Event_Title"],
                 EventStartDate = (DateTime) record["Event_Start_Date"],
                 EventEndDate = (DateTime) record["Event_End_Date"],
-                EventType = record.ToString("Event_Type"),
+                EventType = record.ToString("Event_Type_ID"),
                 PrimaryContact = new MpContact()
                 {
                     ContactId = record.ToInt("Primary_Contact_ID"),

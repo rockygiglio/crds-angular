@@ -93,12 +93,21 @@ namespace crds_angular.Services
                 var dto = new EventToolDto();
 
                 var e = GetEvent(eventId);
+                dto.ContactId = e.PrimaryContactId;
                 dto.Title = e.EventTitle;
                 dto.CongregationId = e.CongregationId;
                 dto.EndDateTime = e.EventEndDate;
                 dto.StartDateTime = e.EventStartDate;
-                dto.ReminderDaysId = e.ReminderDaysPriorId;
-
+                dto.ReminderDaysId = e.ReminderDaysPriorId ?? 0;
+                dto.Description = e.Description;
+                dto.MeetingInstructions = e.MeetinInstructions;
+                dto.EventTypeId = Convert.ToInt32(e.EventType);
+                dto.ProgramId = e.ProgramId ?? 0;
+                dto.ParticipantsExpected = e.ParticpantsExpected ?? 0;
+                dto.DonationBatchTool = e.DonationBatchTool;
+                dto.MinutesSetup = e.MinutesSetup;
+                dto.MinutesTeardown = e.MinutesTeardown;
+                dto.SendReminder = e.SendReminder;
                 dto.Rooms = PopulateRoomReservations(eventId, includeEquipment, includeParticipants);
 
                 return dto;
