@@ -174,6 +174,14 @@ namespace crds_angular.Services
                 {
                     UpdateEventRoom(room, eventId, token);
                 }
+                var groups = _eventService.GetEventGroupsForEventAPILogin(eventId);
+
+                if (groups.Count > 0)
+                {
+                    eventReservation.Group.GroupId =  groups[0].GroupId;
+                    eventReservation.Group.CongregationId = eventReservation.CongregationId;
+                    UpdateGroup(eventReservation.Group);
+                }
             }
             catch (Exception ex)
             {
@@ -223,11 +231,21 @@ namespace crds_angular.Services
         {
             try
             {
+                var groupId = 0; 
                 var eventId = AddEvent(eventTool);
+
+                if (eventTool.Group != null)
+                {
+                    groupId = AddGroup(eventTool.Group);
+                }
 
                 foreach (var room in eventTool.Rooms)
                 {
-                    AddRoom(eventId, room, token);
+                    var eventRoomId = AddRoom(eventId, room, token);
+                    if (groupId > 0)
+                    {
+                        AddEventGroup(eventId, groupId, eventRoomId, room.RoomId, token);
+                    }
 
                     foreach (var equipment in room.Equipment)
                     {
@@ -235,11 +253,7 @@ namespace crds_angular.Services
                     }
                 }
 
-                if (eventTool.Group != null)
-                {
-                    var groupid = AddGroup(eventTool.Group);
-                    AddEventGroup(eventId, groupid, token);
-                }
+
             }
             catch (Exception ex)
             {
@@ -283,12 +297,48 @@ namespace crds_angular.Services
            return  _groupService.CreateGroup(mpgroup);
         }
 
-        public int AddEventGroup(int eventId, int groupId, string token)
+        private void UpdateGroup(GroupDTO group)
+        {
+            //translate the dto to the mp object
+            var mpgroup = new MpGroup
+            {
+                GroupId = @group.GroupId,
+                Name = @group.GroupName,
+                GroupType = @group.GroupTypeId,
+                Full = @group.GroupFullInd,
+                WaitList = @group.WaitListInd,
+                WaitListGroupId = @group.WaitListGroupId,
+                PrimaryContactName = @group.PrimaryContactName,
+                PrimaryContactEmail = @group.PrimaryContactEmail,
+                ChildCareAvailable = @group.ChildCareAvailable,
+                MinimumAge = @group.MaximumAge,
+                GroupDescription = @group.GroupDescription,
+                MinistryId = @group.MinistryId,
+                MeetingTime = @group.MeetingTime,
+                MeetingDayId = @group.MeetingDayId,
+                CongregationId = @group.CongregationId,
+                StartDate = @group.StartDate,
+                EndDate = @group.EndDate,
+                AvailableOnline = @group.AvailableOnline,
+                RemainingCapacity = @group.RemainingCapacity,
+                ContactId = @group.ContactId,
+                GroupRoleId = @group.GroupRoleId,
+                MaximumAge = @group.MaximumAge,
+                MinimumParticipants = @group.MinimumParticipants,
+                TargetSize = @group.TargetSize
+            };
+
+            _groupService.UpdateGroup(mpgroup);
+        }
+
+        public int AddEventGroup(int eventId, int groupId, int eventRoomId, int roomId, string token)
         {
             var eventGroup = new MpEventGroup
             {
                 EventId = eventId,
                 GroupId = groupId,
+                EventRoomId = eventRoomId,
+                RoomId = roomId,
                 DomainId = 1
             };
 
@@ -318,7 +368,7 @@ namespace crds_angular.Services
             _equipmentService.UpdateEquipmentReservation(equipmentReservation, token);
         }
 
-        private void AddRoom(int eventId, EventRoomDto room, string token)
+        private int AddRoom(int eventId, EventRoomDto room, string token)
         {
             var roomReservation = new MpRoomReservationDto();
             roomReservation.Cancelled = false;
@@ -331,7 +381,7 @@ namespace crds_angular.Services
             roomReservation.Label = room.Label;
             roomReservation.CheckinAllowed = room.CheckinAllowed;
             roomReservation.Volunteers = room.Volunteers;
-            _roomService.CreateRoomReservation(roomReservation, token);
+            return _roomService.CreateRoomReservation(roomReservation, token);
         }
 
         private void UpdateRoom(int eventId, EventRoomDto room, string token)
