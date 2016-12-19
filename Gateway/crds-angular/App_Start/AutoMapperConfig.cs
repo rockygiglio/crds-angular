@@ -215,6 +215,10 @@ namespace crds_angular.App_Start
                 .ForMember(dest => dest.SendReminder, opts => opts.MapFrom(src => src.SendReminder))
                 .ForMember(dest => dest.DonationBatchTool, opts => opts.MapFrom(src => src.DonationBatchTool))
                 .ForMember(dest => dest.ContactId, opts => opts.MapFrom(src => src.PrimaryContactId))
+                .ForMember(dest => dest.Description, opts => opts.MapFrom(src => src.Description))
+                .ForMember(dest => dest.MinutesSetup, opts => opts.MapFrom(src => src.MinutesSetup))
+                .ForMember(dest => dest.MinutesTeardown, opts => opts.MapFrom(src => src.MinutesTeardown))
+                .ForMember(dest => dest.MeetingInstructions, opts => opts.MapFrom(src => src.MeetingInstructions))
                 .ForMember(dest => dest.ParticipantsExpected, opts => opts.MapFrom(src => src.ParticipantsExpected));
 
             Mapper.CreateMap<EventToolDto, MpEvent>()
@@ -228,8 +232,11 @@ namespace crds_angular.App_Start
                 .ForMember(dest => dest.SendReminder, opts => opts.MapFrom(src => src.SendReminder))
                 .ForMember(dest => dest.DonationBatchTool, opts => opts.MapFrom(src => src.DonationBatchTool))
                 .ForMember(dest => dest.PrimaryContactId, opts => opts.MapFrom(src => src.ContactId))
-                .ForMember(dest => dest.ParticipantsExpected, opts => opts.MapFrom(src => src.ParticipantsExpected));
-
+                .ForMember(dest => dest.ParticipantsExpected, opts => opts.MapFrom(src => src.ParticipantsExpected))
+                .ForMember(dest => dest.Description, opts => opts.MapFrom(src => src.Description))
+                .ForMember(dest => dest.MinutesSetup, opts => opts.MapFrom(src => src.MinutesSetup))
+                .ForMember(dest => dest.MinutesTeardown, opts => opts.MapFrom(src => src.MinutesTeardown))
+                .ForMember(dest => dest.MeetingInstructions, opts => opts.MapFrom(src => src.MeetingInstructions));
 
             Mapper.CreateMap<MpRecurringGift, RecurringGiftDto>()
                 .ForMember(dest => dest.EmailAddress, opts => opts.MapFrom(src => src.RecurringGiftId))

@@ -92,23 +92,19 @@ namespace crds_angular.Services
             try
             {
                 var e = GetEvent(eventId);
-                //var dto = Mapper.Map<EventToolDto>(e);
-                dto.ContactId = e.PrimaryContactId;
-                dto.Title = e.EventTitle;
-                dto.CongregationId = e.CongregationId;
-                dto.EndDateTime = e.EventEndDate;
-                dto.StartDateTime = e.EventStartDate;
-                dto.ReminderDaysId = e.ReminderDaysPriorId ?? 0;
-                dto.Description = e.Description;
-                dto.MeetingInstructions = e.MeetinInstructions;
-                dto.EventTypeId = Convert.ToInt32(e.EventType);
-                dto.ProgramId = e.ProgramId ?? 0;
-                dto.ParticipantsExpected = e.ParticpantsExpected ?? 0;
-                dto.DonationBatchTool = e.DonationBatchTool;
-                dto.MinutesSetup = e.MinutesSetup;
-                dto.MinutesTeardown = e.MinutesTeardown;
-                dto.SendReminder = e.SendReminder;
+                var dto = Mapper.Map<EventToolDto>(e);
+
                 dto.Rooms = PopulateRoomReservations(eventId, includeEquipment, includeParticipants);
+
+                var groups = _eventService.GetEventGroupsForEventAPILogin(eventId);
+
+                if (groups.Count > 0)
+                {
+                    var group = _groupService.getGroupDetails(groups[0].GroupId);
+                    dto.Group = Mapper.Map<GroupDTO>(group);
+                }
+
+
 
                 return dto;
             }

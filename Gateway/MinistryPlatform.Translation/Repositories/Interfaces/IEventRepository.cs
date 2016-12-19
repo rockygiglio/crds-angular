@@ -35,6 +35,8 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
         int CreateEventGroup(MpEventGroup eventGroup, string token);
         void UpdateEventGroup(MpEventGroup eventGroup, string token);
 
+        List<MpEventGroup> GetEventGroupsForEventAPILogin(int eventId);
+
         List<MpEvent> GetEventsBySite(string site, string token, DateTime startDate, DateTime endDate);
         List<MpEvent> GetEventTemplatesBySite(string site, string token);
         void DeleteEventGroupsForEvent(int eventId, string token);

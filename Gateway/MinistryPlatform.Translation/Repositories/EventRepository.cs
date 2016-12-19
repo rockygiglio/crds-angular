@@ -435,6 +435,11 @@ namespace MinistryPlatform.Translation.Repositories
             return _groupService.GetGroupsForEvent(eventId);
         }
 
+        public List<MpEventGroup> GetEventGroupsForEventAPILogin(int eventId)
+        {
+            return GetEventGroupsForEvent(eventId, ApiLogin());
+        }
+
         public List<MpEventGroup> GetEventGroupsForEvent(int eventId, string token)
         {
             var searchString =  string.Format("\"{0}\",", eventId);
