@@ -375,6 +375,7 @@ namespace crds_angular.Services
                         _eventRepository.UpdateParticipantEndDate(eventParticipantId, endDate);
                     }
                 }
+                var crossroadsSite = _congregationRepository.GetCongregationById(campReservation.CrossroadsSite);
 
                 var crossroadsSite = _congregationRepository.GetCongregationById(campReservation.CrossroadsSite);
                 //form response
