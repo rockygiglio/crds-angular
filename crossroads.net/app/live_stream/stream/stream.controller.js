@@ -81,7 +81,8 @@ export default class StreamingController {
         feature.target = '_blank';
 
         if (typeof feature.image !== 'undefined' && typeof feature.image.filename !== 'undefined') {
-          feature.image = feature.image.filename;
+          let filename = feature.image.filename.replace('https://s3.amazonaws.com/crds-cms-uploads/', '');
+          feature.image = `https://crds-cms-uploads.imgix.net/${filename}?ixjsv=2.2.3&w=225`;
         } else {
           feature.image = 'https://crds-cms-uploads.imgix.net/content/images/register-bg.jpg';
         }
