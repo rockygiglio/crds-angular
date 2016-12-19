@@ -343,14 +343,20 @@ namespace crds_angular.Services
                                                         DateTime.Now);
             }
 
-            // ALL OF THE BELOW CODE SHOULD ONLY HAPPEN IF THE RULES PASS
-            var rulesPass = _campRules.VerifyCampRules(eventId, campReservation.Gender);
+            // Check if this person is already an event participant
+            var eventParticipant = _eventParticipantRepository.GetEventParticipantEligibility(eventId, contactId);            
+            var currentlyActive = (eventParticipant != null && (eventParticipant.EndDate == null || eventParticipant.EndDate >= DateTime.Now));
+            var rulesPass = true;
+            if (!currentlyActive)
+            {
+                rulesPass = _campRules.VerifyCampRules(eventId, campReservation.Gender);
+            }
+
+            // ALL OF THE BELOW CODE SHOULD ONLY HAPPEN IF THE RULES PASS            
             if (rulesPass)
             {
-
                 //Create eventParticipant 
                 int eventParticipantId;
-                var eventParticipant = _eventParticipantRepository.GetEventParticipantEligibility(eventId, contactId);
 
                 // This is a new event participant, determine their pending timeout and create their entry in the database
                 if (eventParticipant == null)
