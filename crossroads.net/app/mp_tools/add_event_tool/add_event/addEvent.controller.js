@@ -17,13 +17,20 @@ export default class AddEventcontroller {
   }
 
   $onInit() {
-    this.eventTypes = this.lookup.query({ table: 'eventtypes' });
+    this.eventTypes = this.lookup.query({ table: 'eventtypes' }, (types) => {
+      if (this.eventData && this.eventData.eventType && this.eventData.eventType.dp_RecordID){
+        this.eventData.eventType = _.find(types, (type) => {
+          return type.dp_RecordID = this.eventData.eventType.dp_RecordID
+        });
+      }
+    });
     this.reminderDays = this.lookup.query({ table: 'reminderdays' });
     this.programs = this.programsLookup.AllPrograms.query();
     // Get the congregations
     this.lookup.query({ table: 'crossroadslocations' }, (locations) => {
       this.crossroadsLocations = locations;
     });
+    debugger;
     if (_.isEmpty(this.eventData)) {
       const startDate = new Date();
       startDate.setMinutes(0);
