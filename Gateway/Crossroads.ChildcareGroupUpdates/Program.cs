@@ -75,7 +75,7 @@ namespace Crossroads.ChildcareGroupUpdates
                     var newgroupdto = groupService.CreateGroup(groupdto);
 
                     //link the new group to the event
-                    eventService.AddEventGroup(item.EventId, newgroupdto.GroupId, apiToken);
+                    eventService.AddEventGroup(item.EventId, newgroupdto.GroupId, 0, 0, apiToken);
                 }
 
                 ////////////////////////////////////////////////////////////////////////
@@ -118,7 +118,7 @@ namespace Crossroads.ChildcareGroupUpdates
                     var newgroupdto = groupService.CreateGroup(groupdto);
 
                     //link the new group to the event
-                    eventService.AddEventGroup(item.EventId, newgroupdto.GroupId, apiToken);
+                    eventService.AddEventGroup(item.EventId, newgroupdto.GroupId, 0, 0, apiToken);
                 }
 
                 Log.Info("Childcare Group update Complete.");

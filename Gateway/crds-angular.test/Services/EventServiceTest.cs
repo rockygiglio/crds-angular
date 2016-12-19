@@ -225,10 +225,21 @@ namespace crds_angular.test.Services
                     new MpEventParticipant()
                 }
             };
+
+            var g = new List<MpEventGroup>
+            {
+                new MpEventGroup()
+                {
+                    GroupId = 1
+                }
+            };
             _eventParticipantService.Setup(mocked => mocked.GetEventParticipants(123, 11)).Returns(p[0]);
             _eventParticipantService.Setup(mocked => mocked.GetEventParticipants(123, 22)).Returns(p[1]);
+            _eventService.Setup(mocked => mocked.GetEventGroupsForEventAPILogin(123)).Returns(g);
+            _groupService.Setup(mocked => mocked.getGroupDetails(g[0].GroupId)).Returns(new MpGroup());
 
-            var response = _fixture.GetEventRoomDetails(123);
+
+        var response = _fixture.GetEventRoomDetails(123);
             _eventService.VerifyAll();
             _roomService.VerifyAll();
             _equipmentService.VerifyAll();
@@ -340,8 +351,18 @@ namespace crds_angular.test.Services
                     }
                 }
             };
+
+            var g = new List<MpEventGroup>
+            {
+                new MpEventGroup()
+                {
+                    GroupId = 1
+                }
+            };
             _equipmentService.Setup(mocked => mocked.GetEquipmentReservations(123, r[0].RoomId)).Returns(q[0]);
             _equipmentService.Setup(mocked => mocked.GetEquipmentReservations(123, r[1].RoomId)).Returns(q[1]);
+            _eventService.Setup(mocked => mocked.GetEventGroupsForEventAPILogin(123)).Returns(g);
+            _groupService.Setup(mocked => mocked.getGroupDetails(g[0].GroupId)).Returns(new MpGroup());
 
             var response = _fixture.GetEventReservation(123);
             _eventService.VerifyAll();
