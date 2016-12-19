@@ -92,8 +92,22 @@ namespace crds_angular.Services
             try
             {
                 var e = GetEvent(eventId);
-                var dto = Mapper.Map<EventToolDto>(e);
-
+                //var dto = Mapper.Map<EventToolDto>(e);
+                dto.ContactId = e.PrimaryContactId;
+                dto.Title = e.EventTitle;
+                dto.CongregationId = e.CongregationId;
+                dto.EndDateTime = e.EventEndDate;
+                dto.StartDateTime = e.EventStartDate;
+                dto.ReminderDaysId = e.ReminderDaysPriorId ?? 0;
+                dto.Description = e.Description;
+                dto.MeetingInstructions = e.MeetinInstructions;
+                dto.EventTypeId = Convert.ToInt32(e.EventType);
+                dto.ProgramId = e.ProgramId ?? 0;
+                dto.ParticipantsExpected = e.ParticpantsExpected ?? 0;
+                dto.DonationBatchTool = e.DonationBatchTool;
+                dto.MinutesSetup = e.MinutesSetup;
+                dto.MinutesTeardown = e.MinutesTeardown;
+                dto.SendReminder = e.SendReminder;
                 dto.Rooms = PopulateRoomReservations(eventId, includeEquipment, includeParticipants);
 
                 return dto;
@@ -341,14 +355,14 @@ namespace crds_angular.Services
             _roomService.UpdateRoomReservation(roomReservation, token);
         }
 
-        private int AddEvent(EventToolDto eventReservation)
+        public int AddEvent(EventToolDto eventReservation)
         {
             var eventDto = PopulateReservationDto(eventReservation);
             var eventId = _eventService.CreateEvent(eventDto);
             return eventId;
         }
 
-        private void UpdateEvent(EventToolDto eventReservation, int eventId, string token)
+        public void UpdateEvent(EventToolDto eventReservation, int eventId, string token)
         {
             var eventDto = PopulateReservationDto(eventReservation);
             eventDto.EventId = eventId;

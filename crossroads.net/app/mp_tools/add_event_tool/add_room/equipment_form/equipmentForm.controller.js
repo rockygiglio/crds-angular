@@ -8,8 +8,7 @@ export default class EquipmentController {
   }
 
   $onInit() {
-    debugger;
-    if (this.addEvent.editMode === true) {
+    if (this.addEvent.editMode === true && _.has(this.currentRoom, 'cancelled')) {
       const hasEquipment = _.filter(this.currentEquipment, (e) => {
         return e.equipment.name.id > 0;
       });

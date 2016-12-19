@@ -579,7 +579,7 @@ namespace MinistryPlatform.Translation.Repositories
                 EventStartDate = tmpEvent.ToDate("Event_Start_Date"),
                 EventEndDate = tmpEvent.ToDate("Event_End_Date"),
                 EventTitle = tmpEvent.ToString("Event_Title"),
-                EventType = tmpEvent.ToString("Event_Type")
+                EventType = tmpEvent.ToString("Event_Type_ID")
             }).ToList();
         }
 
