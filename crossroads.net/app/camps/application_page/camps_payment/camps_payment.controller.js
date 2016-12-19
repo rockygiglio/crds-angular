@@ -47,6 +47,7 @@ export default class CampPaymentController {
         this.returnUrl = 'https://crossroads.net/camps';
         break;
     }
+
     this.totalPrice = this.campsService.productInfo.basePrice + this.getOptionPrice();
     this.calculateDeposit();
     this.viewReady = true;

@@ -52,8 +52,4 @@ describe('Camp Card Directive', () => {
       redirectTo: 'mycamps'
     });
   });
-
-  it('should get the productInfo on load', () => {
-    // TODO: add test for loading productInfo in camp cards?
-  });
 });

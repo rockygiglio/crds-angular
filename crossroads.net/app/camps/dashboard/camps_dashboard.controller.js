@@ -3,7 +3,6 @@ class CampDashboardController {
     this.campsService = CampsService;
     this.state = $state;
     this.viewReady = false;
-    this.state = $state;
     this.rootScope = $rootScope;
   }
 
