@@ -32,7 +32,7 @@ namespace crds_angular.Services
             };
             var mpEvent = _eventRepository.GetEvent(eventId);
             var productRulesets = _productRulesetsRepository.GetProductRulesets(mpEvent.OnlineProductId ?? 0);
-            productRulesets = productRulesets.Where(p => p.StartDate <= DateTime.Now && p.EndDate >= DateTime.Now).ToList();
+            productRulesets = productRulesets.Where(p => (p.StartDate <= DateTime.Now && (p.EndDate == null || p.EndDate >= DateTime.Now))).ToList();
             var rulesPass = _productRulesetsRepository.VerifyRulesets(productRulesets, ruleData);
             return rulesPass;            
         }

@@ -16,7 +16,7 @@ namespace MinistryPlatform.Translation.Repositories.Rules
             _registrationRule = registrationRule;
         }
 
-        public RegistrationRule(DateTime startDate, DateTime? endDate, int minRegistrants, int maxRegistrants)
+        public RegistrationRule(DateTime startDate, DateTime? endDate, int? minRegistrants, int maxRegistrants)
         {
             _registrationRule = new MPRegistrationRule
             {
@@ -47,7 +47,7 @@ namespace MinistryPlatform.Translation.Repositories.Rules
             try
             {
                 var registrants = data.ToInt("registrantCount", true);
-                result.RulePassed = (registrants <= _registrationRule.MaximumRegistrants && registrants > _registrationRule.MinimumRegistrants);
+                result.RulePassed = (registrants <= _registrationRule.MaximumRegistrants);
                 result.Message = result.RulePassed ? "Rule Passed" : $"Exceeded Maximum of {_registrationRule.MaximumRegistrants}";
                 return result;
             }

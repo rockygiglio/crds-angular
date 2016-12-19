@@ -29,16 +29,21 @@ namespace MinistryPlatform.Translation.Repositories.Rules
 
         public bool VerifyRulesets(List<MPProductRuleSet> productRulesets, Dictionary<string, object> testData )
         {
-            foreach (var productRule in productRulesets)
+            if (productRulesets.Any())
             {
-                var ruleset = _rulesetRepository.GetRulesInRuleset(productRule.RulesetId);
-                var result = _rulesetRepository.AllRulesPass(ruleset, testData);
-                if (result.AllRulesPass)
+                foreach (var productRule in productRulesets)
                 {
-                    return true;
-                };            
+                    var ruleset = _rulesetRepository.GetRulesInRuleset(productRule.RulesetId);
+                    var result = _rulesetRepository.AllRulesPass(ruleset, testData);
+                    if (result.AllRulesPass)
+                    {
+                        return true;
+                    }
+                    ;
+                }
+                return false;
             }
-            return false;
+            return true;
         }
     }
 }

@@ -7,7 +7,7 @@ namespace MinistryPlatform.Translation.Models.Rules
     public class MPRegistrationRule : MPRuleBase
     {
         [JsonProperty(PropertyName = "Minimum_Registrants")]
-        public int MinimumRegistrants { get; set; }
+        public int? MinimumRegistrants { get; set; }
 
         [JsonProperty(PropertyName = "Maximum_Registrants")]
         public int MaximumRegistrants { get; set; }
