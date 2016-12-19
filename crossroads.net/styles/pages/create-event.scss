@@ -11,4 +11,12 @@
       color: $brand-warning;
   }
 
+  .input-group input {
+    width: 100% !important;
+  }
+  // May be useful in the future.
+  // .ui-select-bootstrap > .ui-select-choices {
+  //   max-height: 350px;
+  // }
+
 }

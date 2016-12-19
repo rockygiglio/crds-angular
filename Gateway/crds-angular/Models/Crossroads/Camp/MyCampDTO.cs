@@ -1,4 +1,5 @@
 ﻿using System;
+using crds_angular.Models.Crossroads.Payment;
 using Newtonsoft.Json;
 
 namespace crds_angular.Models.Crossroads.Camp
@@ -28,5 +29,8 @@ namespace crds_angular.Models.Crossroads.Camp
 
         [JsonProperty(PropertyName = "eventId")]
         public int EventId { get; set; }
+
+        [JsonProperty(PropertyName = "camperInvoice")]
+        public PaymentDetailDTO CamperInvoice { get; set; }
     }
 }

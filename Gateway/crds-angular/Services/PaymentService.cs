@@ -117,7 +117,7 @@ namespace crds_angular.Services
             
             var currentPayment = payments.Where(p => p.PaymentId == paymentId && p.ContactId == me.Contact_ID).ToList();
 
-            if (currentPayment.Any())
+            if (currentPayment.Any() || paymentId == 0)
             {
                 var totalPaymentsMade = payments.Sum(p => p.PaymentTotal);
                 var leftToPay = invoice.InvoiceTotal - totalPaymentsMade;
@@ -125,11 +125,13 @@ namespace crds_angular.Services
                 {
                     PaymentAmount = currentPayment.Any() ? currentPayment.First().PaymentTotal : 0M,
                     RecipientEmail = me.Email_Address,
-                    TotalToPay = leftToPay
+                    TotalToPay = leftToPay,
+                    InvoiceTotal = invoice.InvoiceTotal
                 };
             }
             throw new Exception("No Payment found for " + me.Email_Address + " with id " + paymentId);
         }
+
 
         public DonationBatchDTO CreatePaymentBatch(DonationBatchDTO batch)
         {

@@ -1,7 +1,7 @@
-(function() {
-  'use strict';
+/* global __CRDS_ENV__ */
+(function () {
   module.exports = {
-    //TODO Should this be moved to core?
+    // TODO: Should this be moved to core?
     // MODULE NAMES
     MODULES: {
       CAMPS: 'crossroads.camps',
@@ -155,8 +155,8 @@
     },
     PRE_STREAM_HOURS: 15,
     COOKIES: {
-      SESSION_ID: __CRDS_ENV__+'sessionId',
-      REFRESH_TOKEN: __CRDS_ENV__+'refreshToken'
+      SESSION_ID: `${__CRDS_ENV__}sessionId`,
+      REFRESH_TOKEN: `${__CRDS_ENV__}refreshToken`
     },
     EVENTS: {
       ROOM_AVAILABLE: null,
@@ -164,4 +164,4 @@
       ROOM_BOOKED: 1
     }
   };
-})();
+}());
