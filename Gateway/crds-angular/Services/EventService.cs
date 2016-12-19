@@ -170,12 +170,12 @@ namespace crds_angular.Services
             try
             {
                 UpdateEvent(eventReservation, eventId, token);
+                CancelOldUnusedRooms(eventReservation, eventId, token);
                 foreach (var room in eventReservation.Rooms)
                 {
                     UpdateEventRoom(room, eventId, token);
                 }
                 var groups = _eventService.GetEventGroupsForEventAPILogin(eventId);
-
                 if (groups.Count > 0)
                 {
                     eventReservation.Group.GroupId =  groups[0].GroupId;
@@ -190,6 +190,24 @@ namespace crds_angular.Services
                 throw new Exception(msg, ex);
             }
             return true;
+        }
+
+        private void CancelOldUnusedRooms(EventToolDto eventReservation, int eventId, string token)
+        {
+            var oldEventDetails = GetEventDetails(eventId, true, false);
+
+            foreach (var room in oldEventDetails.Rooms)
+            {
+                if (!eventReservation.Rooms.Any(r => r.RoomId == room.RoomId))
+                {
+                    room.Cancelled = true;
+                    foreach (var eq in room.Equipment)
+                    {
+                        eq.Cancelled = true;
+                    }
+                    UpdateEventRoom(room, eventId, token);
+                }
+            }
         }
 
         public EventRoomDto UpdateEventRoom(EventRoomDto eventRoom, int eventId, string token)
