@@ -16,13 +16,12 @@ namespace MinistryPlatform.Translation.Repositories.Rules
             _registrationRule = registrationRule;
         }
 
-        public RegistrationRule(DateTime startDate, DateTime? endDate, int? minRegistrants, int maxRegistrants)
+        public RegistrationRule(DateTime startDate, DateTime? endDate, int maxRegistrants)
         {
             _registrationRule = new MPRegistrationRule
             {
                 StartDate = startDate,
                 EndDate = endDate,
-                MinimumRegistrants = minRegistrants,
                 MaximumRegistrants = maxRegistrants
             };
         }

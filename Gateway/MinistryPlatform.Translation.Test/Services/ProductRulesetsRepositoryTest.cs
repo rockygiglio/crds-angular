@@ -108,11 +108,11 @@ namespace MinistryPlatform.Translation.Test.Services
             var rules1 = new List<IRule>();
             var startDate = DateTime.Today.AddDays(-30);
             rules1.Add(new GenderRule(startDate, null, 1));
-            rules1.Add(new RegistrationRule(startDate, null, 0, 1000));
+            rules1.Add(new RegistrationRule(startDate, null, 1000));
 
             var rules2 = new List<IRule>();
             rules2.Add(new GenderRule(startDate, null, 1));
-            rules2.Add(new RegistrationRule(startDate, null, 0, 1000));
+            rules2.Add(new RegistrationRule(startDate, null, 1000));
 
             var result1 = new MPRuleSetResult
             {
@@ -149,7 +149,7 @@ namespace MinistryPlatform.Translation.Test.Services
             var rules1 = new List<IRule>();
             var startDate = DateTime.Today.AddDays(-30);
             rules1.Add(new GenderRule(startDate, null, 1));
-            rules1.Add(new RegistrationRule(startDate, null, 0, 1000));            
+            rules1.Add(new RegistrationRule(startDate, null, 1000));            
 
             var result1 = new MPRuleSetResult
             {

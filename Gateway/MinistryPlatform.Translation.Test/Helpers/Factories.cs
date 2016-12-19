@@ -21,7 +21,7 @@ namespace MinistryPlatform.Translation.Test.Helpers
         {
             if (!FactoryGirl.NET.FactoryGirl.DefinedFactories.Contains(typeof(RegistrationRule)))
             {
-                FactoryGirl.NET.FactoryGirl.Define<RegistrationRule>(() => new RegistrationRule(DateTime.Now.AddDays(-30), null, 12, 200));
+                FactoryGirl.NET.FactoryGirl.Define<RegistrationRule>(() => new RegistrationRule(DateTime.Now.AddDays(-30), null, 200));
             }
         }
 

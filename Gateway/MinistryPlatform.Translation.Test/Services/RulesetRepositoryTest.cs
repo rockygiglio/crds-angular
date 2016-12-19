@@ -115,7 +115,7 @@ namespace MinistryPlatform.Translation.Test.Services
             var rules = new List<IRule>();
             var startDate = DateTime.Today.AddDays(-30);
             rules.Add(new GenderRule(startDate, null, 2));
-            rules.Add(new RegistrationRule(startDate, null, 0, 1000));
+            rules.Add(new RegistrationRule(startDate, null, 1000));
             return rules;
         }
 
@@ -138,7 +138,6 @@ namespace MinistryPlatform.Translation.Test.Services
             {
                 new MPRegistrationRule
                 {
-                    MinimumRegistrants = 0,
                     MaximumRegistrants = 9999,
                     StartDate = DateTime.MinValue,
                     EndDate = DateTime.MaxValue

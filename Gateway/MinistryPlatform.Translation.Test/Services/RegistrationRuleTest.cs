@@ -14,7 +14,7 @@ namespace MinistryPlatform.Translation.Test.Services
         [Test]
         public void ShouldPassRegistrationRuleFutureEndDate()
         {
-            _fixture = new RegistrationRule(DateTime.MinValue, DateTime.MaxValue, 0, 100);
+            _fixture = new RegistrationRule(DateTime.MinValue, DateTime.MaxValue, 100);
             var data = new Dictionary<string, object> {{ "registrantCount", 1}};
             var result = _fixture.RulePasses(data);
             Assert.IsTrue(result.RulePassed);
@@ -24,7 +24,7 @@ namespace MinistryPlatform.Translation.Test.Services
         [Test]
         public void ShouldPassRegistrationRuleNoEndDate()
         {
-            _fixture = new RegistrationRule(DateTime.MinValue, null, 0, 100);
+            _fixture = new RegistrationRule(DateTime.MinValue, null, 100);
             var data = new Dictionary<string, object> {{ "registrantCount", 1}};
             var result = _fixture.RulePasses(data);
             Assert.IsTrue(result.RulePassed);
@@ -34,7 +34,7 @@ namespace MinistryPlatform.Translation.Test.Services
         [Test]
         public void ShouldPassInactiveRegistrationRuleFutureStartDate()
         {
-            _fixture = new RegistrationRule(DateTime.MaxValue, DateTime.MaxValue, 0, 100);
+            _fixture = new RegistrationRule(DateTime.MaxValue, DateTime.MaxValue, 100);
             var data = new Dictionary<string, object> {{ "registrantCount", 1}};
             var result = _fixture.RulePasses(data);
             Assert.IsTrue(result.RulePassed);
@@ -44,7 +44,7 @@ namespace MinistryPlatform.Translation.Test.Services
         [Test]
         public void ShouldPassInactiveRegistrationRulePastEndDate()
         {
-            _fixture = new RegistrationRule(DateTime.MinValue, DateTime.Today.AddDays(-1), 0, 100);
+            _fixture = new RegistrationRule(DateTime.MinValue, DateTime.Today.AddDays(-1), 100);
             var data = new Dictionary<string, object> {{ "registrantCount", 1}};
             var result = _fixture.RulePasses(data);
             Assert.IsTrue(result.RulePassed);
@@ -54,7 +54,7 @@ namespace MinistryPlatform.Translation.Test.Services
         [Test]
         public void ShouldFailRegistrationRule()
         {
-            _fixture = new RegistrationRule(DateTime.MinValue, DateTime.MaxValue, 0, 100);
+            _fixture = new RegistrationRule(DateTime.MinValue, DateTime.MaxValue, 100);
             var data = new Dictionary<string, object> {{ "registrantCount", 101}};
             var result = _fixture.RulePasses(data);
             Assert.IsFalse(result.RulePassed);
@@ -64,7 +64,7 @@ namespace MinistryPlatform.Translation.Test.Services
         [Test]
         public void ShouldFailRegistrationRuleBadData()
         {
-            _fixture = new RegistrationRule(DateTime.MinValue, DateTime.MaxValue, 0, 100);
+            _fixture = new RegistrationRule(DateTime.MinValue, DateTime.MaxValue, 100);
             var data = new Dictionary<string, object> {{ "registrantCount", "threeve"}};
             var ex = Assert.Throws<InvalidDataException>(() => _fixture.RulePasses(data));
             Assert.AreEqual("Invalid data provided to registration rule.", ex.Message);

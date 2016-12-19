@@ -70,7 +70,7 @@ namespace MinistryPlatform.Translation.Repositories.Rules
             var apiToken = _apiUserRepository.GetToken();
             var searchString = $"Ruleset_ID = {ruleSetId}";
             var registrantRules = _ministryPlatformRestRepository.UsingAuthenticationToken(apiToken).Search<MPRegistrationRule>(searchString);
-            return registrantRules.Select(g => new RegistrationRule(g.StartDate, g.EndDate, g.MinimumRegistrants, g.MaximumRegistrants));
+            return registrantRules.Select(g => new RegistrationRule(g.StartDate, g.EndDate, g.MaximumRegistrants));
         }
     }
 }
