@@ -1,7 +1,7 @@
 import CONSTANTS from 'crds-constants';
 
 export default class AddEventcontroller {
-    /* @ngInject */
+  /* @ngInject */
   constructor($log, AddEvent, Lookup, Programs, StaffContact, Validation, Session) {
     this.log = $log;
     this.addEvent = AddEvent;
@@ -18,12 +18,12 @@ export default class AddEventcontroller {
 
   $onInit() {
     this.eventTypes = this.lookup.query({ table: 'eventtypes' }, (types) => {
-      if (this.eventData && this.eventData.eventType && this.eventData.eventType.dp_RecordID){
+      if (this.eventData && this.eventData.eventType && this.eventData.eventType.dp_RecordID) {
         this.eventData.eventType = _.find(types, (type) => {
           return type.dp_RecordID == this.eventData.eventType.dp_RecordID;
         });
-        
-      this.eventTypeChanged();
+
+        this.eventTypeChanged();
       }
     });
     this.reminderDays = this.lookup.query({ table: 'reminderdays' });
@@ -72,13 +72,13 @@ export default class AddEventcontroller {
     }
 
     return new Date(
-            dateForDate.getFullYear(),
-            dateForDate.getMonth(),
-            dateForDate.getDate(),
-            dateForTime.getHours(),
-            dateForTime.getMinutes(),
-            dateForTime.getSeconds(),
-            dateForTime.getMilliseconds());
+      dateForDate.getFullYear(),
+      dateForDate.getMonth(),
+      dateForDate.getDate(),
+      dateForTime.getHours(),
+      dateForTime.getMinutes(),
+      dateForTime.getSeconds(),
+      dateForTime.getMilliseconds());
   }
 
   endDateOpen($event) {
@@ -88,7 +88,15 @@ export default class AddEventcontroller {
   }
 
   resetRooms() {
-    this.addEvent.eventData.rooms.length = 0;
+    if (this.addEvent.editMode) {
+      if (this.eventData.congregation.dp_RecordID != this.addEvent.origCongregation) {
+        this.addEvent.eventData.rooms.length = 0;
+        this.rooms.length=0;
+      }
+    } else {
+      this.addEvent.eventData.rooms.length = 0;
+      this.rooms.length=0;
+    }
   }
 
   startDateOpen($event) {
@@ -106,7 +114,7 @@ export default class AddEventcontroller {
       return false;
     }
 
-        // set the proper error state
+    // set the proper error state
     if (this.eventData.minimumChildren > this.eventData.maximumChildren) {
       form.maximumChildren.$error.minmax = true;
       form.maximumChildren.$valid = false;
@@ -126,9 +134,8 @@ export default class AddEventcontroller {
   }
 
   eventTypeChanged() {
-    debugger;
-        // if childcare is selected then show additional fields
-        // constrain congregations
+    // if childcare is selected then show additional fields
+    // constrain congregations
     if (this.eventData.eventType.dp_RecordName === 'Childcare') {
       this.childcareSelectedFlag = true;
       this.lookup.query({ table: 'childcarelocations' }, (locations) => { this.crossroadsLocations = locations; });
@@ -170,7 +177,7 @@ export default class AddEventcontroller {
       return false;
     }
 
-        // set the endDate Invalid...
+    // set the endDate Invalid...
     form.endDate.$error.endDate = true;
     form.endDate.$valid = false;
     form.endDate.$invalid = true;

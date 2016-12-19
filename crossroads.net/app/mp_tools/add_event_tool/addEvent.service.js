@@ -46,10 +46,10 @@
       },
 
       fromEventDto(event) {
-        debugger;
         if (!event.group){
           event.group = {};
         }
+        this.origCongregation = event.congregationId;
         return {
           event: {
             congregation: {

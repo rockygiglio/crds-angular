@@ -9,7 +9,7 @@
       <label class="weight-normal">
         <input type="radio" ng-disabled="(equipment.addEvent.editMode === true && equipment.equipmentRequired === true)" 
                             name="{{equipment.currentRoom.name}}equipRequired" 
-                            ng-required="!equipment.equipRequired"  
+                            ng-required="!equipment.equipRequired && !equipment.equipmentLookup.length < 1"  
                             ng-model="equipment.equipmentRequired" 
                             ng-click="eqiupment.toggleEquipmentRequired()" 
                             ng-value="true"/>
@@ -18,7 +18,7 @@
       <label class="weight-normal">
         <input type="radio" ng-disabled="(equipment.addEvent.editMode === true && equipment.equipmentRequired === true)" 
                             name="{{equipment.currentRoom.name}}equipRequired" 
-                            ng-required="!equipment.equipRequired" 
+                            ng-required="!equipment.equipRequired && !equipment.equipmentLookup.length < 1" 
                             ng-model="equipment.equipmentRequired" 
                             ng-click="equipment.toggleEquipmentRequired()" 
                             ng-value="false"/>
