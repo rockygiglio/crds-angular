@@ -20,8 +20,10 @@ export default class AddEventcontroller {
     this.eventTypes = this.lookup.query({ table: 'eventtypes' }, (types) => {
       if (this.eventData && this.eventData.eventType && this.eventData.eventType.dp_RecordID){
         this.eventData.eventType = _.find(types, (type) => {
-          return type.dp_RecordID = this.eventData.eventType.dp_RecordID
+          return type.dp_RecordID == this.eventData.eventType.dp_RecordID;
         });
+        
+      this.eventTypeChanged();
       }
     });
     this.reminderDays = this.lookup.query({ table: 'reminderdays' });
@@ -30,7 +32,6 @@ export default class AddEventcontroller {
     this.lookup.query({ table: 'crossroadslocations' }, (locations) => {
       this.crossroadsLocations = locations;
     });
-    debugger;
     if (_.isEmpty(this.eventData)) {
       const startDate = new Date();
       startDate.setMinutes(0);
@@ -125,6 +126,7 @@ export default class AddEventcontroller {
   }
 
   eventTypeChanged() {
+    debugger;
         // if childcare is selected then show additional fields
         // constrain congregations
     if (this.eventData.eventType.dp_RecordName === 'Childcare') {

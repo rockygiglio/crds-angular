@@ -46,7 +46,10 @@
       },
 
       fromEventDto(event) {
-
+        debugger;
+        if (!event.group){
+          event.group = {};
+        }
         return {
           event: {
             congregation: {
@@ -76,9 +79,9 @@
             endTime: new Date(event.endDateTime + "-0500"),
             eventTitle: event.title,
             participantsExpected: event.participantsExpected,
-            maximumAge: event.maximumAge,
-            minimumChildren: event.minimumChildren,
-            maximumChildren: event.maximumChildren
+            maximumAge: event.group.maximumAge,
+            minimumChildren: event.group.minimumParticipants,
+            maximumChildren: event.group.tartgetSize
           },
           rooms: _.map(event.rooms, (r) => { return fromRoomDto(r); })
         };
