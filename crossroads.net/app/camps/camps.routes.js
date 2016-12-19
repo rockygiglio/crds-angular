@@ -50,6 +50,24 @@ export default function CampRoutes($stateProvider) {
         getCamperFamily
       }
     })
+    // Confirmation after a successful payment
+    .state('campsignup.paymentConfirmation', {
+      url: '/payment-confirmation/:contactId?paymentId&invoiceId',
+      resolve: {
+        CampsService: 'CampsService',
+        $state: '$state',
+        sendConfirmation: (CampsService, $state) => CampsService.sendPaymentConfirmation(
+          $state.toParams.invoiceId,
+          $state.toParams.paymentId,
+          $state.toParams.campId,
+          $state.toParams.contactId)
+         .then(() => {
+           // When the confirmation API calls returns, forward to the thank you page
+           $state.go('camps-dashboard', $state.toParams);
+         })
+      }
+    })
+    // Confirmation after a successful deposit
     .state('campsignup.confirmation', {
       url: '/confirmation/:contactId?paymentId&invoiceId',
       resolve: {
