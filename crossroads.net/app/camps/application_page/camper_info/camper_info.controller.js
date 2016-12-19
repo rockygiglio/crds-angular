@@ -32,7 +32,7 @@ class CamperInfoController {
       },
 
       (data) => {
-        if (data.statusCode === 412) {
+        if (data.status === 412) {
           this.state.go('campsignup.application', {
             page: 'camps-full'
           });
