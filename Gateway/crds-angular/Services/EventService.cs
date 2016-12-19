@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using AutoMapper;
 using crds_angular.Models.Crossroads.Events;
 using crds_angular.Models.Crossroads.Groups;
 using Crossroads.Utilities.FunctionalHelpers;
@@ -90,14 +91,8 @@ namespace crds_angular.Services
         {
             try
             {
-                var dto = new EventToolDto();
-
                 var e = GetEvent(eventId);
-                dto.Title = e.EventTitle;
-                dto.CongregationId = e.CongregationId;
-                dto.EndDateTime = e.EventEndDate;
-                dto.StartDateTime = e.EventStartDate;
-                dto.ReminderDaysId = e.ReminderDaysPriorId;
+                var dto = Mapper.Map<EventToolDto>(e);
 
                 dto.Rooms = PopulateRoomReservations(eventId, includeEquipment, includeParticipants);
 

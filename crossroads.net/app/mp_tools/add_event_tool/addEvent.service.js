@@ -46,6 +46,7 @@
       },
 
       fromEventDto(event) {
+        debugger;
         return {
           event: {
             congregation: {

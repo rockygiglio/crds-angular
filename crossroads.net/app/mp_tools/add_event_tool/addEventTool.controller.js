@@ -25,7 +25,7 @@ export default class AddEventToolController {
         this.AddEvent.eventData = this.AddEvent.fromEventDto(evt);
         this.event = this.AddEvent.eventData.event;
         this.rooms = this.AddEvent.eventData.rooms;
-        this.AddEvent.currentPage = 2;
+        this.AddEvent.currentPage = 1;
         this.viewReady = true;
       },
         (err) => {
