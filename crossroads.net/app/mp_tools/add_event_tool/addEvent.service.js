@@ -110,10 +110,10 @@
       const roomDto = {
         hidden: room.hidden,
         roomId: room.id,
-        notes: room.description,
+        notes: room.notes,
         layoutId: room.layout.id,
         equipment: _.map(_.filter(room.equipment, (equip) => {
-          return equip.equipment.id > 0;
+          return equip.equipment.name.id > 0;
         }), (e) => { return getEquipmentDto(e.equipment); })
       };
       if (_.has(room, 'cancelled')) {

@@ -76,5 +76,18 @@ namespace MinistryPlatform.Translation.Test.Helpers
                 });
             }
         }
+
+        public static void MpCongregation()
+        {
+            if (!FactoryGirl.NET.FactoryGirl.DefinedFactories.Contains(typeof(MpCongregation)))
+            {
+                FactoryGirl.NET.FactoryGirl.Define<MpCongregation>(() => new MpCongregation
+                {
+                    CongregationId = 12,
+                    LocationId = 4,
+                    Name = "Oakley"
+                });
+            }
+        }
     }
 }

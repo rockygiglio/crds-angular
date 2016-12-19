@@ -22,8 +22,7 @@
           Visit the <a ui-sref="camps-dashboard">My Camps</a> page for more information.
         </p>
         <p class="push-top">
-          Please choose another student if you want to sign them up for MSM Summer Camp.
-          <!--Student not listed? Sign up another family member for MSM Summer Camp-->
+          Please choose another student if you want to sign them up for {{$ctrl.campsService.campInfo.eventTitle}}.
         </p>
 
         <div class="push-ends">
@@ -33,7 +32,7 @@
         <div class="flush-top" dynamic-content="($root.MESSAGES.campThankYou_{{$ctrl.stateParams.campId}}.content || $root.MESSAGES.campThankYouOtherCamp.content) | html"></div>
 
         <p class="push-top soft-top text-center">
-          For assistance, please contact <a href="mailto:studentministry@crossroads.net">studentministry@crossroads.net</a>.
+        For assistance, please contact <a href="mailto:{{$ctrl.campsService.campInfo.primaryContact}}">{{$ctrl.campsService.campInfo.primaryContact}}</a>.
         </p>
       </div>
     </div>

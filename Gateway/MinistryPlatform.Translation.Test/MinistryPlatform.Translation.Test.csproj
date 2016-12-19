@@ -122,6 +122,7 @@
     <Compile Include="Services\ChildcareRepositoryTest.cs" />
     <Compile Include="Services\ChildcareRequestServiceTest.cs" />
     <Compile Include="Services\GenderRuleTest.cs" />
+    <Compile Include="Services\CongregationRepositoryTest.cs" />
     <Compile Include="Services\GroupConnectorServiceTest.cs" />
     <Compile Include="Services\AddressServiceTest.cs" />
     <Compile Include="Services\AttributeServiceTest.cs" />

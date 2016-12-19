@@ -820,12 +820,6 @@ streaming, landing {
     }
   }
 
-  .digital-program-container {
-    @media only screen and (max-width:  $screen-sm-min){
-      // background: #151515;
-    }
-  }
-
   .digital-program {
     padding-bottom: 15px;
 
@@ -1071,6 +1065,8 @@ streaming, landing {
             display: none;
           }
           overflow: -moz-scrollbars-none;
+          -ms-overflow-style: none;
+          -webkit-overflow-scrolling: touch;
         }
 
         .crds-carousel {
@@ -1089,8 +1085,7 @@ streaming, landing {
             text-align: center;
             vertical-align: middle;
 
-            &:hover,
-            &:focus {
+            &:hover {
               background: lighten(rgba(77,77,77,0.75), 10);
               border: none;
               text-decoration: none;
@@ -1127,6 +1122,11 @@ streaming, landing {
 
           article {
             margin-bottom: 0;
+          }
+
+          section {
+            height: 300px;
+            text-overflow: ellipsis;
           }
         }
 

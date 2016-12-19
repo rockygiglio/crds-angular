@@ -2,19 +2,19 @@
 
 <div class="form-group" ng-show="equipment.equipmentLookup.length > 0" >
   <ng-form name="equipmentForm">
-    <div class="form-group" ng-class="{'has-error': room.validation.showErrors(equipmentForm, 'required')}">
+    <div class="form-group" ng-class="{'has-error': equipment.validation.showErrors(equipmentForm, 'equipRequired')}">
       <label class="required">
         Is Equipment Required?
       </label><br>
       <label class="weight-normal">
-        <input type="radio" name="equipRequired" required ng-model="equipment.equipmentRequired" ng-value="true"/>
+        <input type="radio" name="{{equipment.currentRoom.name}}equipRequired" ng-required="!equipment.equipRequired"  ng-model="equipment.equipmentRequired" ng-click="eqiupment.toggleEquipmentRequired()" ng-value="true"/>
         Yes
       </label>
       <label class="weight-normal">
-        <input type="radio" name="equipRequired" required ng-model="equipment.equipmentRequired" ng-value="false"/>
+        <input type="radio" name="{{equipment.currentRoom.name}}equipRequired" ng-required="!equipment.equipRequired" ng-model="equipment.equipmentRequired" ng-click="equipment.toggleEquipmentRequired()" ng-value="false"/>
         No
       </label>
-      <ng-messages for="roomForm.required.$error" ng-if="room.validation.showErrors(equipmentForm, 'required')">
+      <ng-messages for="equipmentForm.equipRequired.$error" ng-if="equipment.validation.showErrors(equipmentForm, 'equipRequired')">
         <span ng-message="required">
           <span dynamic-content="$root.MESSAGES.fieldCanNotBeBlank.content | html"></span>
         </span>

@@ -5,6 +5,7 @@ using crds_angular.Exceptions;
 using crds_angular.Models.Crossroads.Camp;
 using crds_angular.Models.Crossroads.Groups;
 using crds_angular.Services.Interfaces;
+using Crossroads.Utilities.FunctionalHelpers;
 using Crossroads.Utilities.Interfaces;
 using log4net;
 using MinistryPlatform.Translation.Models;
@@ -53,8 +54,7 @@ namespace crds_angular.Services
             ICommunicationRepository communicationRepository,
             IPaymentRepository paymentRepository,
             IObjectAttributeService objectAttributeService,
-            ICampRules campRules
-)
+            ICampRules campRules)
         {
             _campService = campService;
             _formSubmissionRepository = formSubmissionRepository;
@@ -95,7 +95,8 @@ namespace crds_angular.Services
                 RegistrationEndDate = campEvent.RegistrationEndDate,
                 RegistrationStartDate = campEvent.RegistrationStartDate,  
                 ProgramId = campEvent.ProgramId,
-                EligibleGradesList = eligibleGradeGroups
+                EligibleGradesList = eligibleGradeGroups,
+                PrimaryContactEmail = campEvent.PrimaryContactEmail
             };
 
             return campEventInfo;
@@ -286,8 +287,6 @@ namespace crds_angular.Services
                 HouseholdPositionId = 2
             };
 
-            
-
             MpParticipant participant;
             if (campReservation.ContactId == null || campReservation.ContactId == 0)
             {
@@ -320,8 +319,6 @@ namespace crds_angular.Services
             var configuration = MpObjectAttributeConfigurationFactory.Contact();
             _objectAttributeService.SaveObjectAttributes(contactId, campReservation.AttributeTypes, campReservation.SingleAttributes, configuration);
 
-            
-            
             // Save students in selected grade group
             var group = _groupRepository.GetGradeGroupForContact(contactId, _apiUserRepository.GetToken());
 
@@ -329,10 +326,10 @@ namespace crds_angular.Services
             {
                 _groupRepository.endDateGroupParticipant(group.Value.GroupParticipantId, group.Value.GroupId, DateTime.Now);
                 _groupRepository.addParticipantToGroup(participant.ParticipantId,
-                                                        campReservation.CurrentGrade,
-                                                        _configurationWrapper.GetConfigIntValue("Group_Role_Default_ID"),
-                                                        false,
-                                                        DateTime.Now);
+                                                      campReservation.CurrentGrade,
+                                                      _configurationWrapper.GetConfigIntValue("Group_Role_Default_ID"),
+                                                      false,
+                                                      DateTime.Now);
             }
             else if (!group.Status)
             {
@@ -747,6 +744,12 @@ namespace crds_angular.Services
             var preferredRoommateFieldId = _configurationWrapper.GetConfigIntValue("SummerCampForm.PreferredRoommate");
             var preferredRoommate = _formSubmissionRepository.GetFormResponseAnswer(campFormId, camperContact.Contact_ID, preferredRoommateFieldId);
 
+            var crossroadsSiteFieldId = _configurationWrapper.GetConfigIntValue("SummerCampForm.CamperCongregation");
+            var crossroadsSite = _formSubmissionRepository.GetFormResponseAnswer(campFormId, camperContact.Contact_ID, crossroadsSiteFieldId);
+
+            var congregation = (string.IsNullOrEmpty(crossroadsSite))
+                ? new Err<MpCongregation>("Congregation not set")
+                : _congregationRepository.GetCongregationByName(crossroadsSite, apiToken);
             var configuration = MpObjectAttributeConfigurationFactory.Contact();
             var attributesTypes = _objectAttributeService.GetObjectAttributes(apiToken, contactId, configuration);
 
@@ -758,7 +761,7 @@ namespace crds_angular.Services
                 MiddleName = camperContact.Middle_Name,
                 PreferredName = camperContact.Nickname,
                 MobilePhone = camperContact.Mobile_Phone,
-                CrossroadsSite = Convert.ToInt32(camperContact.Congregation_ID),
+                CrossroadsSite = congregation.Status ? congregation.Value.CongregationId : 0,
                 BirthDate = Convert.ToString(camperContact.Date_Of_Birth),
                 SchoolAttending = camperContact.Current_School,
                 SchoolAttendingNext = nextYearSchool,

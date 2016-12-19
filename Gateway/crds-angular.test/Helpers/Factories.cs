@@ -35,20 +35,33 @@ namespace crds_angular.test.Helpers
             }
         }
 
+        public static void MpCongregation()
+        {
+            if (!FactoryGirl.NET.FactoryGirl.DefinedFactories.Contains(typeof(MpCongregation)))
+            {
+                FactoryGirl.NET.FactoryGirl.Define<MpCongregation>(() => new MpCongregation
+                {
+                    CongregationId = 12,
+                    LocationId = 4,
+                    Name = "Oakley"
+                });
+            }
+        }
+
         public static void MpGroupParticipant()
         {
             if (!FactoryGirl.NET.FactoryGirl.DefinedFactories.Contains(typeof(MpGroupParticipant)))
             {
                 FactoryGirl.NET.FactoryGirl.Define<MpGroupParticipant>(() => new MpGroupParticipant
                 {
-                    GroupId = 2123,        
+                    GroupId = 2123,
                     GroupParticipantId = 1243
                 });
             }
         }
 
         public static void EventParticipant()
-        {      
+        {
             if (!FactoryGirl.NET.FactoryGirl.DefinedFactories.Contains(typeof(MpEventParticipant)))
             {
 
@@ -107,5 +120,5 @@ namespace crds_angular.test.Helpers
                 });
             }
         }
-    }    
+    }
 }
