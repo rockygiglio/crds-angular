@@ -71,6 +71,34 @@ namespace crds_angular.test.Services
         }
 
         [Test]
+        public void ShouldGetPaymentDetailDtOwithPaymentId0()
+        {
+            const int paymentId = 0;
+            const int invoiceId = 3389753;
+            const int contactId = 12323354;
+            const string emailAddress = "help_me@usa.com";
+            const string token = "NOOOOO";
+
+
+            var me = fakeMyContact(contactId, emailAddress);
+            var invoice = fakeInvoice(invoiceId, contactId, 500.00M);
+            var payments = fakePayments(contactId, 24M, paymentId);
+
+            _contactRepository.Setup(m => m.GetMyProfile(token)).Returns(me);
+            _invoiceRepository.Setup(m => m.GetInvoice(invoiceId)).Returns(invoice);
+            _paymentRepository.Setup(m => m.GetPaymentsForInvoice(invoiceId)).Returns(payments);
+
+            PaymentDetailDTO ret = _fixture.GetPaymentDetails(paymentId, invoiceId, token);
+            Assert.AreEqual(24M, ret.PaymentAmount);
+            Assert.AreEqual(emailAddress, ret.RecipientEmail);
+            Assert.AreEqual(452M, ret.TotalToPay);
+
+            _contactRepository.VerifyAll();
+            _invoiceRepository.VerifyAll();
+            _paymentRepository.VerifyAll();
+        }
+
+        [Test]
         public void shouldNotHavePaymentDetails()
         {
             const int paymentId = 12345;

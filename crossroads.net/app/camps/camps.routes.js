@@ -6,7 +6,7 @@ export default function CampRoutes($stateProvider) {
   $stateProvider
     .state('camps-dashboard', {
       parent: 'noSideBar',
-      url: '/mycamps',
+      url: '/mycamps?invoiceId&paymentId',
       template: '<camps-dashboard dashboard="$resolve.dashboard"></camps-dashboard>',
       data: {
         isProtected: true,
@@ -18,6 +18,8 @@ export default function CampRoutes($stateProvider) {
       resolve: {
         loggedin: crds_utilities.checkLoggedin,
         campsService: 'CampsService',
+        $state: '$state',
+        $filter: '$filter',
         dashboard: campsService => campsService.getCampDashboard()
       }
     })
@@ -84,7 +86,8 @@ export default function CampRoutes($stateProvider) {
       url: '/:page/:contactId',
       template: '<camps-application-page></camps-application-page>',
       params: {
-        update: false
+        update: false,
+        redirectTo: undefined
       },
       resolve: {
         $injector: '$injector',

@@ -172,7 +172,11 @@ function CampHelpers() {
         daysOutToHide: 80,
         totalWithOptionPrice: 850.0,
         endDate: '2016-12-01T00:00:00'
-      }]
+      }],
+      camperInvoice: {
+        paymentLeft: 650.0000,
+        invoiceTotal: 700.0000
+      }
     },
     payment: {
       paymentAmount: 200.0000,
