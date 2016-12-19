@@ -305,7 +305,8 @@ namespace MinistryPlatform.Translation.Repositories
                 {"@Gender", minorContact.Gender },
                 {"@SchoolAttending", minorContact.SchoolAttending },
                 {"@HouseholdId", minorContact.HouseholdId },
-                {"@HouseholdPosition", minorContact.HouseholdPositionId }
+                {"@HouseholdPosition", minorContact.HouseholdPositionId },
+                {"@MobilePhone", minorContact.MobilePhone }
              };
 
             var result = _ministryPlatformRest.UsingAuthenticationToken(apiToken).GetFromStoredProc<MpRecordID>(storedProc, fields);
