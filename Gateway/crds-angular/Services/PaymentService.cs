@@ -115,7 +115,7 @@ namespace crds_angular.Services
             var invoice = _invoiceRepository.GetInvoice(invoiceId);
             var payments = _paymentRepository.GetPaymentsForInvoice(invoiceId);
             
-                var currentPayment = payments.Where(p => p.PaymentId == paymentId && p.ContactId == me.Contact_ID).ToList();
+            var currentPayment = payments.Where(p => p.PaymentId == paymentId && p.ContactId == me.Contact_ID).ToList();
 
             if (currentPayment.Any() || paymentId == 0)
             {
