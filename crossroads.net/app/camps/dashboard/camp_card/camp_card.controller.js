@@ -16,12 +16,10 @@ class CampCardController {
     this.filter = $filter;
     this.campsService = CampsService;
     this.isLoading = true;
-    this.amountDue = null;
   }
 
   $onInit() {
-    this.amountDue = this.paymentRemaining;
-    this.isPaidInFull = (this.amountDue <= 0);
+    this.isPaidInFull = (this.paymentRemaining <= 0);
   }
 
   updateMedical() {
@@ -44,11 +42,11 @@ class CampCardController {
   }
 
   formatAmountDue() {
-    if (!this.amountDue) {
-      return 'Error Retrieving Product Info';
+    if (!this.paymentRemaining) {
+      return `Error getting payments. Please contact ${this.campPrimaryContact}`;
     }
 
-    return this.filter('currency')(this.amountDue);
+    return this.filter('currency')(this.paymentRemaining);
   }
 }
 
