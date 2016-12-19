@@ -114,7 +114,7 @@ namespace crds_angular.Services
             var answer = _formSubmissionRepository.GetFormResponseAnswer(formId, camperContactId, formFieldId);
             var financialAssistance = (!string.IsNullOrEmpty(answer) && Convert.ToBoolean(answer));
             PaymentDetailDTO paymentDetail;
-            paymentDetail = invoiceDetails.Value == null ? null : _paymentService.GetPaymentDetails(0, invoiceDetails.Value.InvoiceId, token);
+            paymentDetail = invoiceDetails.Status ? _paymentService.GetPaymentDetails(0, invoiceDetails.Value.InvoiceId, token) : null;
             var campProductInfo = new ProductDTO
             {
                 InvoiceId = invoiceDetails.Status ? invoiceDetails.Value.InvoiceId : 0,
