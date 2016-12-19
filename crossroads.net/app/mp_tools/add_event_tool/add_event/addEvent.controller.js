@@ -90,12 +90,12 @@ export default class AddEventcontroller {
   resetRooms() {
     if (this.addEvent.editMode) {
       if (this.eventData.congregation.dp_RecordID != this.addEvent.origCongregation) {
-        this.addEvent.eventData.rooms.length = 0;
-        this.rooms.length=0;
+        this.addEvent.eventData.rooms = [];
+        this.rooms = [];
       }
     } else {
-      this.addEvent.eventData.rooms.length = 0;
-      this.rooms.length=0;
+      this.addEvent.eventData.rooms = [];
+      this.rooms = [];
     }
   }
 
