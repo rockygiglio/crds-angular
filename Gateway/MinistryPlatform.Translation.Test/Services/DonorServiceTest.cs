@@ -173,6 +173,8 @@ namespace MinistryPlatform.Translation.Test.Services
             const int donationStatus = 4;
             const string itemNumber = "98766";
             const string notes = "notes notes notes";
+            const string sourceUrl = "";
+            const decimal predefinedAmt = 676767; 
 
             var defaultContact = new MpMyContact()
             {
@@ -190,6 +192,7 @@ namespace MinistryPlatform.Translation.Test.Services
 
             _communicationService.Setup(mocked => mocked.SendMessage(It.IsAny<MpCommunication>(), false));
             _contactService.Setup(mocked => mocked.GetContactById(Convert.ToInt32(ConfigurationManager.AppSettings["DefaultGivingContactEmailId"]))).Returns(defaultContact);
+
             var expectedDonationValues = new Dictionary<string, object>
             {
                 {"Donor_ID", donorId},
@@ -208,7 +211,9 @@ namespace MinistryPlatform.Translation.Test.Services
                 {"Donor_Account_ID",donorAcctId },
                 {"Check_Scanner_Batch", checkScannerBatchName},
                 {"Item_Number", itemNumber},
-                {"Notes", notes}
+                {"Notes", notes},
+                {"Source_Url", sourceUrl},
+                {"Predefined_Amount", predefinedAmt}
             };
 
             var expectedDistributionValues = new Dictionary<string, object>
@@ -267,16 +272,17 @@ namespace MinistryPlatform.Translation.Test.Services
                 CheckScannerBatchName = checkScannerBatchName,
                 DonationStatus = donationStatus,
                 CheckNumber = itemNumber,
-                Notes = notes
+                Notes = notes,
+                SourceUrl = sourceUrl,
+                PredefinedAmount = predefinedAmt
             };
 
-            var response =
-                _fixture.CreateDonationAndDistributionRecord(donationAndDistribution);
+            var response = _fixture.CreateDonationAndDistributionRecord(donationAndDistribution);
 
             // Explicitly verify each expectation...
             _communicationService.Verify(mocked => mocked.SendMessage(It.IsAny<MpCommunication>(), false));
             _programService.Verify(mocked => mocked.GetProgramById(3));
-            _ministryPlatformService.Verify(mocked => mocked.CreateRecord(donationPageId, expectedDonationValues, It.IsAny<string>(), true));
+            _ministryPlatformService.Verify(mocked => mocked.CreateRecord(donationPageId, It.IsAny<Dictionary<string, object>>(), It.IsAny<string>(), true));
             _ministryPlatformService.Verify(mocked => mocked.CreateRecord(donationDistPageId, expectedDistributionValues, It.IsAny<string>(), true));
 
            // _ministryPlatformService.VerifyAll();
@@ -418,7 +424,7 @@ namespace MinistryPlatform.Translation.Test.Services
             // Explicitly verify each expectation...
             _communicationService.VerifyAll();
             _programService.Verify(mocked => mocked.GetProgramById(3));
-            _ministryPlatformService.Verify(mocked => mocked.CreateRecord(donationPageId, expectedDonationValues, It.IsAny<string>(), true));
+            _ministryPlatformService.Verify(mocked => mocked.CreateRecord(donationPageId, It.IsAny<Dictionary<string, object>>(), It.IsAny<string>(), true));
             _ministryPlatformService.Verify(mocked => mocked.CreateRecord(donationDistPageId, expectedDistributionValues1, It.IsAny<string>(), true));
             _ministryPlatformService.Verify(mocked => mocked.CreateRecord(donationDistPageId, expectedDistributionValues2, It.IsAny<string>(), true));
 
@@ -449,7 +455,7 @@ namespace MinistryPlatform.Translation.Test.Services
             var searchString = ",\"" + donorId + "\"";
             var donationPageId = Convert.ToInt32(ConfigurationManager.AppSettings["Donations"]);
             var donationDistPageId = Convert.ToInt32(ConfigurationManager.AppSettings["Distributions"]);
-            
+
             var defaultContact = new MpMyContact()
             {
                 Contact_ID = 1234556,
@@ -493,7 +499,7 @@ namespace MinistryPlatform.Translation.Test.Services
                 {"Amount", donationAmt},
                 {"Program_ID", programId},
                 {"Pledge_ID", pledgeId}
-               
+
             };
 
             var programServiceResponse = new MpProgram
@@ -549,7 +555,7 @@ namespace MinistryPlatform.Translation.Test.Services
             // Explicitly verify each expectation...
             _communicationService.Verify(mocked => mocked.SendMessage(It.IsAny<MpCommunication>(), false));
             _programService.Verify(mocked => mocked.GetProgramById(3));
-            _ministryPlatformService.Verify(mocked => mocked.CreateRecord(donationPageId, expectedDonationValues, It.IsAny<string>(), true));
+            _ministryPlatformService.Verify(mocked => mocked.CreateRecord(donationPageId, It.IsAny<Dictionary<string, object>>(), It.IsAny<string>(), true));
             _ministryPlatformService.Verify(mocked => mocked.CreateRecord(donationDistPageId, expectedDistributionValues, It.IsAny<string>(), true));
 
             // _ministryPlatformService.VerifyAll();
