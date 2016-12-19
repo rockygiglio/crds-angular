@@ -372,6 +372,7 @@ namespace crds_angular.Services
                         _eventRepository.UpdateParticipantEndDate(eventParticipantId, endDate);
                     }
                 }
+                var crossroadsSite = _congregationRepository.GetCongregationById(campReservation.CrossroadsSite);
 
                 //form response
                 var answers = new List<MpFormAnswer>
@@ -386,6 +387,12 @@ namespace crds_angular.Services
                     {
                         Response = campReservation.RoomMate,
                         FieldId = _configurationWrapper.GetConfigIntValue("SummerCampForm.PreferredRoommate"),
+                        EventParticipantId = eventParticipantId
+                    },
+                    new MpFormAnswer
+                    {
+                        Response = crossroadsSite.Name,
+                        FieldId = _configurationWrapper.GetConfigIntValue("SummerCampForm.CamperCongregation"),
                         EventParticipantId = eventParticipantId
                     }
                 };
