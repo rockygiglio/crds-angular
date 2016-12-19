@@ -2,29 +2,29 @@
 
 <div class="form-group" ng-show="equipment.equipmentLookup.length > 0" >
   <ng-form name="equipmentForm">
-    <div class="form-group" ng-class="{'has-error': equipment.validation.showErrors(equipmentForm, 'equipRequired')}">
+    <div class="form-group" ng-class="{'has-error': equipment.validation.showErrors(equipmentForm, equipment.currentRoom.id + 'equipRequired')}">
       <label class="required">
         Is Equipment Required?
       </label><br>
       <label class="weight-normal">
-        <input type="radio" ng-disabled="(equipment.addEvent.editMode === true && equipment.equipmentRequired === true)" 
-                            name="{{equipment.currentRoom.name}}equipRequired" 
-                            ng-required="!equipment.equipRequired && !equipment.equipmentLookup.length < 1"  
+        <input type="radio" ng-disabled="(equipment.addEvent.editMode === true && equipment.equipmentRequired === true)"
+                            name="{{equipment.currentRoom.id}}equipRequired" 
+                            ng-required="!equipment.equipRequired && !equipment.equipmentLookup.length < 1" 
                             ng-model="equipment.equipmentRequired" 
                             ng-click="eqiupment.toggleEquipmentRequired()" 
                             ng-value="true"/>
         Yes
       </label>
       <label class="weight-normal">
-        <input type="radio" ng-disabled="(equipment.addEvent.editMode === true && equipment.equipmentRequired === true)" 
-                            name="{{equipment.currentRoom.name}}equipRequired" 
-                            ng-required="!equipment.equipRequired && !equipment.equipmentLookup.length < 1" 
+        <input type="radio" ng-disabled="(equipment.addEvent.editMode === true && equipment.equipmentRequired === true)"
+                            name="{{equipment.currentRoom.id}}equipRequired" 
+                            ng-required="!equipment.equipRequired && !equipment.equipmentLookup.length < 1"
                             ng-model="equipment.equipmentRequired" 
                             ng-click="equipment.toggleEquipmentRequired()" 
                             ng-value="false"/>
         No
       </label>
-      <ng-messages for="equipmentForm.equipRequired.$error" ng-if="equipment.validation.showErrors(equipmentForm, 'equipRequired')">
+      <ng-messages for="equipmentForm[equipment.currentRoom.id + 'equipRequired'].$error" ng-if="equipment.validation.showErrors(equipmentForm, equipment.currentRoom.id + 'equipRequired')">
         <span ng-message="required">
           <span dynamic-content="$root.MESSAGES.fieldCanNotBeBlank.content | html"></span>
         </span>
