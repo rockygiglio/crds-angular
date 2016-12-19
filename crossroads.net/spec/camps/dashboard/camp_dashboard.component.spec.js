@@ -3,13 +3,19 @@ import campsModule from '../../../app/camps/camps.module';
 describe('Camp Dashboard Component', () => {
   let dashboardComponent;
   let campsService;
+  let state;
 
   beforeEach(angular.mock.module(campsModule));
 
   describe('Dashboard data is empty', () => {
-    beforeEach(inject((_$componentController_, _CampsService_) => {
+    beforeEach(inject((_$componentController_, _CampsService_, _$state_) => {
       campsService = _CampsService_;
       campsService.dashboard = [];
+      state = _$state_;
+      state.toParams = {
+        paymentId: 34
+      };
+
       dashboardComponent = _$componentController_('campsDashboard', null, {});
       dashboardComponent.$onInit();
     }));
@@ -33,11 +39,15 @@ describe('Camp Dashboard Component', () => {
   });
 
   describe('Dashboard data is not empty', () => {
-    beforeEach(inject((_$componentController_, _CampsService_) => {
+    beforeEach(inject((_$componentController_, _CampsService_, _$state_) => {
       campsService = _CampsService_;
       campsService.dashboard = [
         { key: 'value' }
       ];
+      state = _$state_;
+      state.toParams = {
+        paymentId: 34
+      };
       dashboardComponent = _$componentController_('campsDashboard', null, {});
       dashboardComponent.$onInit();
     }));
