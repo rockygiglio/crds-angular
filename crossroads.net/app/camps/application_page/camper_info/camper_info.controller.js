@@ -31,8 +31,14 @@ class CamperInfoController {
         });
       },
 
-      () => {
-        this.rootScope.$emit('notify', this.rootScope.MESSAGES.generalError);
+      (data) => {
+        if (data.statusCode === 412) {
+          this.state.go('campsignup.application', {
+            page: 'camps-full'
+          });
+        } else {
+          this.rootScope.$emit('notify', this.rootScope.MESSAGES.generalError);
+        }
       }).finally(() => {
         this.submitting = false;
       });
