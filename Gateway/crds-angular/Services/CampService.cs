@@ -377,7 +377,6 @@ namespace crds_angular.Services
                 }
                 var crossroadsSite = _congregationRepository.GetCongregationById(campReservation.CrossroadsSite);
 
-                var crossroadsSite = _congregationRepository.GetCongregationById(campReservation.CrossroadsSite);
                 //form response
                 var answers = new List<MpFormAnswer>
                 {
