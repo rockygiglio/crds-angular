@@ -88,11 +88,4 @@ export default class StreamingController {
     }
   }
 
-  static getMargins(el) {
-    return {
-      marginRight: parseInt(window.getComputedStyle(el).marginRight, 0),
-      marginLeft: parseInt(window.getComputedStyle(el).marginLeft, 0)
-    };
-  }
-
 }
