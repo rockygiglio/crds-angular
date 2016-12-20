@@ -3,11 +3,66 @@ using System.Linq;
 using crds_angular.Models.Crossroads.Camp;
 using crds_angular.Models.Crossroads.Events;
 using MinistryPlatform.Translation.Models;
+using MinistryPlatform.Translation.Models.Product;
 
 namespace crds_angular.test.Helpers
 {
     public class Factories
     {
+        public static void MpProductOptionPrice()
+        {
+            if (!FactoryGirl.NET.FactoryGirl.DefinedFactories.Contains(typeof(MpProductOptionPrice)))
+            {
+                FactoryGirl.NET.FactoryGirl.Define(() => new MpProductOptionPrice());
+            }
+        }
+
+        public static void MpEvent()
+        {
+            if (!FactoryGirl.NET.FactoryGirl.DefinedFactories.Contains(typeof(MpEvent)))
+            {
+                FactoryGirl.NET.FactoryGirl.Define(() => new MpEvent());
+            }
+        }
+
+        public static void MpProduct()
+        {
+            if (!FactoryGirl.NET.FactoryGirl.DefinedFactories.Contains(typeof(MpProduct)))
+            {
+                FactoryGirl.NET.FactoryGirl.Define(() => new MpProduct());
+            }
+        }
+
+        public static void MpParticipant()
+        {
+            if (!FactoryGirl.NET.FactoryGirl.DefinedFactories.Contains(typeof(MpParticipant)))
+            {
+                FactoryGirl.NET.FactoryGirl.Define(() => new MpParticipant
+                {
+                    ContactId = 21435,
+                    Age = 10,
+                    DisplayName = "Bluth, George Micheal",
+                    EmailAddress = "george-micheal@bluthindustries.com",
+                    ParticipantId = 90898,
+                    Nickname = "George Micheal",
+                    PreferredName = "George"
+                });
+            }
+        }
+
+        public static void CampProductDTO()
+        {
+            if (!FactoryGirl.NET.FactoryGirl.DefinedFactories.Contains(typeof(CampProductDTO)))
+            {
+                FactoryGirl.NET.FactoryGirl.Define(() => new CampProductDTO
+                {
+                    ContactId = 9823,
+                    EventId = 78765,
+                    FinancialAssistance = false
+                });
+            }
+        }
+
         public static void MpCongregation()
         {
             if (!FactoryGirl.NET.FactoryGirl.DefinedFactories.Contains(typeof(MpCongregation)))
