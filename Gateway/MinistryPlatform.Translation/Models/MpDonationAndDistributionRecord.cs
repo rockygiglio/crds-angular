@@ -46,6 +46,10 @@ namespace MinistryPlatform.Translation.Models
 
         public int InvoiceId { get; set; }
 
+        public string SourceUrl { get; set; }
+
+        public decimal? PredefinedAmount { get; set; }
+
         #region Donation Distributions
         private readonly List<MpDonationDistribution> _distributions = new List<MpDonationDistribution>();
 
