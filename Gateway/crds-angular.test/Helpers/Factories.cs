@@ -22,20 +22,7 @@ namespace crds_angular.test.Helpers
                     StartDate = DateTime.Now.AddDays(-30)
                 });
             }
-        }
-
-        public static void MpEvent()
-        {
-            if (!FactoryGirl.NET.FactoryGirl.DefinedFactories.Contains(typeof(MpEvent)))
-            {
-                FactoryGirl.NET.FactoryGirl.Define(() => new MpEvent
-                {
-                    EventId = 4234,
-                    CongregationId = 767,
-                    OnlineProductId = 1234
-                });
-            }
-        }
+        }     
 
         public static void MpPayment()
 

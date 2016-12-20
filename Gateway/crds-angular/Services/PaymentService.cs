@@ -271,11 +271,11 @@ namespace crds_angular.Services
             var me = _contactRepository.GetMyProfile(token);
 
             var templateIdResult = _eventPRepository.GetProductEmailTemplate(eventId);
-            var templateId = (templateIdResult.Status) ? templateIdResult.Value : _configWrapper.GetConfigIntValue("DefaultPaymentEmailTempalte");
+            var templateId = (templateIdResult.Status) ? templateIdResult.Value : _configWrapper.GetConfigIntValue("DefaultPaymentEmailTemplate");
             var mergeData = new Dictionary<string, object>
             {
                 {"Event_Title", mpEvent.EventTitle},
-                {"Payment_Total", payment.PaymentTotal },
+                {"Payment_Total", payment.PaymentTotal.ToString(".00") },
                 {"Primary_Contact_Email", mpEvent.PrimaryContact.EmailAddress },
                 {"Primary_Contact_Display_Name", mpEvent.PrimaryContact.PreferredName},
                 {"Base_Url", _configWrapper.GetConfigValue("BaseUrl") }

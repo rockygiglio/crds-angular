@@ -382,7 +382,7 @@ namespace crds_angular.test.Services
             const string baseUrl = "some url.com";
 
             const string eventTitle = "My Awesome Event";
-            const decimal paymentTotal = 56m;
+            const decimal paymentTotal = 56M;
 
             var me = FactoryGirl.NET.FactoryGirl.Build<MpMyContact>(m =>
             {
@@ -406,11 +406,13 @@ namespace crds_angular.test.Services
             var mergeData = new Dictionary<string, object>
             {
                 {"Event_Title", mpEvent.EventTitle},
-                {"Payment_Total", paymentTotal},
+                {"Payment_Total", "56.00"},
                 {"Primary_Contact_Email", mpEvent.PrimaryContact.EmailAddress },
                 {"Primary_Contact_Display_Name", mpEvent.PrimaryContact.PreferredName },
                 {"Base_Url",  baseUrl}
             };
+
+            Assert.AreEqual("56.00", 56M.ToString(".00"));
 
             _paymentRepository.Setup(m => m.GetPaymentById(paymentId)).Returns(payment);
             _eventRepository.Setup(m => m.GetEvent(eventId)).Returns(mpEvent);
@@ -449,7 +451,7 @@ namespace crds_angular.test.Services
             const string baseUrl = "some url.com";
 
             const string eventTitle = "My Awesome Event";
-            const decimal paymentTotal = 56m;
+            const decimal paymentTotal = 56.1M;
 
             var me = FactoryGirl.NET.FactoryGirl.Build<MpMyContact>(m => m.Contact_ID = contactId);
             var payment = FactoryGirl.NET.FactoryGirl.Build<MpPayment>(m => { m.PaymentId = paymentId; m.PaymentTotal = paymentTotal; });
@@ -468,7 +470,7 @@ namespace crds_angular.test.Services
             var mergeData = new Dictionary<string, object>
             {
                 {"Event_Title", mpEvent.EventTitle},
-                {"Payment_Total", paymentTotal},
+                {"Payment_Total", "56.10"},
                 {"Primary_Contact_Email", mpEvent.PrimaryContact.EmailAddress },
                 {"Primary_Contact_Display_Name", mpEvent.PrimaryContact.PreferredName },
                 {"Base_Url",  baseUrl}
@@ -480,7 +482,7 @@ namespace crds_angular.test.Services
             _eventRepository.Setup(m => m.GetProductEmailTemplate(eventId)).Returns(new Err<int>("Template Not Found"));
 
             _configWrapper.Setup(m => m.GetConfigValue("BaseUrl")).Returns(baseUrl);
-            _configWrapper.Setup(m => m.GetConfigIntValue("DefaultPaymentEmailTempalte")).Returns(emailTemplateId);
+            _configWrapper.Setup(m => m.GetConfigIntValue("DefaultPaymentEmailTemplate")).Returns(emailTemplateId);
 
             _communicationRepository.Setup(
                 m =>

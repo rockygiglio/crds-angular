@@ -20,7 +20,7 @@ BEGIN
 		 @Template_ID
 		,5
 		,N'[Event_Title] Payment Received'
-		,N'Thanks for submitting your payment of $[Payment_Total].<div><br /></div><div>Camps must be paid if full by May 1st. If you need to make additional payments you can do so anytime by going to <a href="[Base_Url]/mycamps" target="_self">[Base_Url]/mycamps</a> and clicking the Make Payment button. Please note that these payments are <b>NOT</b> tax deductible. </div><div><br /></div><div>If you have any questions, email [Primary_Contact_Email].</div><div><br /></div><div>Thanks,</div><div>[Primary_Contact_Display_Name]</div>'
+		,N'Thanks for submitting your payment of $[Payment_Total].<div><br /></div><div>Camps must be paid if full by May 1st. If you need to make additional payments you can do so anytime by going to <a href="https://[Base_Url]/mycamps" target="_self">https://[Base_Url]/mycamps</a> and clicking the Make Payment button. Please note that these payments are <b>NOT</b> tax deductible. </div><div><br /></div><div>If you have any questions, email [Primary_Contact_Email].</div><div><br /></div><div>Thanks,</div><div>[Primary_Contact_Display_Name]</div>'
 		,1
 		,@Camp_Contact_ID
 		,@Camp_Contact_ID
