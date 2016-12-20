@@ -42,7 +42,7 @@ class CampCardController {
   }
 
   formatAmountDue() {
-    if (!this.paymentRemaining) {
+    if (!this.paymentRemaining && this.paymentRemaining < 0) {
       return `Error getting payments. Please contact ${this.campPrimaryContact}`;
     }
 
