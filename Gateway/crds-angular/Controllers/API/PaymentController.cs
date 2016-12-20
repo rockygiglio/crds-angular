@@ -61,7 +61,12 @@ namespace crds_angular.Controllers.API
             
         }
 
-
+        [VersionedRoute(template: "payment/{paymentId}/confirmation", minimumVersion: "1.0.0")]
+        [AcceptVerbs("POST")]
+        public IHttpActionResult PaymentConfirmation(int paymentId, int contactId, int invoiceId, int eventId)
+        {
+            return Ok();
+        }
 
         //[VersionedRoute(template: "payment", minimumVersion: "1.0.0")]
         //[Route("payment")]

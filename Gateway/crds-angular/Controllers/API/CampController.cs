@@ -326,6 +326,8 @@ namespace crds_angular.Controllers.API
             });
         }
 
+        
+
         [VersionedRoute(template: "camps/{eventId}/emergencycontact/{contactId}", minimumVersion: "1.0.0")]
         [ResponseType(typeof(List<CampEmergencyContactDTO>))]
         [AcceptVerbs("GET")]
