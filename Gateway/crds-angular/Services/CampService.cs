@@ -33,6 +33,7 @@ namespace crds_angular.Services
         private readonly ICommunicationRepository _communicationRepository;
         private readonly IPaymentRepository _paymentRepository;
         private readonly IObjectAttributeService _objectAttributeService;
+        private readonly ICampRules _campRules;
         private readonly IPaymentService _paymentService;
 
         private readonly ILog _logger = LogManager.GetLogger(typeof (CampService));
@@ -54,6 +55,7 @@ namespace crds_angular.Services
             ICommunicationRepository communicationRepository,
             IPaymentRepository paymentRepository,
             IObjectAttributeService objectAttributeService,
+            ICampRules campRules,
             IPaymentService paymentService)
         {
             _campService = campService;
@@ -72,6 +74,7 @@ namespace crds_angular.Services
             _paymentRepository = paymentRepository;
             _communicationRepository = communicationRepository;
             _objectAttributeService = objectAttributeService;
+            _campRules = campRules;
             _paymentService = paymentService;
         }
 
@@ -334,70 +337,81 @@ namespace crds_angular.Services
             else if (!group.Status)
             {
                 _groupRepository.addParticipantToGroup(participant.ParticipantId,
-                                                       campReservation.CurrentGrade,
-                                                       _configurationWrapper.GetConfigIntValue("Group_Role_Default_ID"),
-                                                       false,
-                                                       DateTime.Now);
+                                                        campReservation.CurrentGrade,
+                                                        _configurationWrapper.GetConfigIntValue("Group_Role_Default_ID"),
+                                                        false,
+                                                        DateTime.Now);
             }
 
-
-            //Create eventParticipant 
-            int eventParticipantId;
-            var eventParticipant = _eventParticipantRepository.GetEventParticipantEligibility(eventId, contactId);
-
-            // This is a new event participant, determine their pending timeout and create their entry in the database
-            if (eventParticipant == null)
+            // Check if this person is already an event participant
+            var eventParticipant = _eventParticipantRepository.GetEventParticipantEligibility(eventId, contactId);            
+            var currentlyActive = (eventParticipant != null && (eventParticipant.EndDate == null || eventParticipant.EndDate >= DateTime.Now));
+            var rulesPass = true;
+            if (!currentlyActive)
             {
-                var endDate = DetermineEndDate(eventId);
-                eventParticipantId = _eventRepository.RegisterInterestedParticipantWithEndDate(participant.ParticipantId, eventId, endDate);
+                rulesPass = _campRules.VerifyCampRules(eventId, campReservation.Gender);
             }
-            else
-            {
-                eventParticipantId = eventParticipant.EventParticipantId;
 
-                // If the participant had previously started an application which expired, update its End Date now
-                if (eventParticipant.EndDate != null && eventParticipant.EndDate < DateTime.Now)
+            // ALL OF THE BELOW CODE SHOULD ONLY HAPPEN IF THE RULES PASS            
+            if (rulesPass)
+            {
+                //Create eventParticipant 
+                int eventParticipantId;
+
+                // This is a new event participant, determine their pending timeout and create their entry in the database
+                if (eventParticipant == null)
                 {
                     var endDate = DetermineEndDate(eventId);
-                    _eventRepository.UpdateParticipantEndDate(eventParticipantId, endDate);
+                    eventParticipantId = _eventRepository.RegisterInterestedParticipantWithEndDate(participant.ParticipantId, eventId, endDate);
                 }
+                else
+                {
+                    eventParticipantId = eventParticipant.EventParticipantId;
+
+                    // If the participant had previously started an application which expired, update its End Date now
+                    if (eventParticipant.EndDate != null && eventParticipant.EndDate < DateTime.Now)
+                    {
+                        var endDate = DetermineEndDate(eventId);
+                        _eventRepository.UpdateParticipantEndDate(eventParticipantId, endDate);
+                    }
+                }
+                var crossroadsSite = _congregationRepository.GetCongregationById(campReservation.CrossroadsSite);
+
+                //form response
+                var answers = new List<MpFormAnswer>
+                {
+                    new MpFormAnswer
+                    {
+                        Response = campReservation.SchoolAttendingNext,
+                        FieldId = _configurationWrapper.GetConfigIntValue("SummerCampForm.SchoolAttendingNextYear"),
+                        EventParticipantId = eventParticipantId
+                    },
+                    new MpFormAnswer
+                    {
+                        Response = campReservation.RoomMate,
+                        FieldId = _configurationWrapper.GetConfigIntValue("SummerCampForm.PreferredRoommate"),
+                        EventParticipantId = eventParticipantId
+                    },
+                    new MpFormAnswer
+                    {
+                        Response = crossroadsSite.Name,
+                        FieldId = _configurationWrapper.GetConfigIntValue("SummerCampForm.CamperCongregation"),
+                        EventParticipantId = eventParticipantId
+                    }
+                };
+
+                var formId = _configurationWrapper.GetConfigIntValue("SummerCampFormID");
+                var formResponse = new MpFormResponse
+                {
+                    ContactId = contactId,
+                    FormId = formId,
+                    FormAnswers = answers
+                };
+
+                _formSubmissionRepository.SubmitFormResponse(formResponse);
+                return campReservation;
             }
-            var crossroadsSite = _congregationRepository.GetCongregationById(campReservation.CrossroadsSite);
-
-            //form response
-            var answers = new List<MpFormAnswer>
-            {
-                new MpFormAnswer
-                {
-                    Response = campReservation.SchoolAttendingNext,
-                    FieldId = _configurationWrapper.GetConfigIntValue("SummerCampForm.SchoolAttendingNextYear"),
-                    EventParticipantId = eventParticipantId
-                },
-                new MpFormAnswer
-                {
-                    Response = campReservation.RoomMate,
-                    FieldId = _configurationWrapper.GetConfigIntValue("SummerCampForm.PreferredRoommate"),
-                    EventParticipantId = eventParticipantId
-                },
-                new MpFormAnswer
-                {
-                    Response = crossroadsSite.Name,
-                    FieldId = _configurationWrapper.GetConfigIntValue("SummerCampForm.CamperCongregation"),
-                    EventParticipantId = eventParticipantId
-                }
-            };
-
-            var formId = _configurationWrapper.GetConfigIntValue("SummerCampFormID");
-            var formResponse = new MpFormResponse
-            {
-                ContactId = contactId,
-                FormId = formId,
-                FormAnswers = answers
-            };
-
-            _formSubmissionRepository.SubmitFormResponse(formResponse);
-
-            return campReservation;
+            throw new ApplicationException("Rules do not pass!");
         }
 
         private DateTime DetermineEndDate(int eventId)
@@ -772,7 +786,7 @@ namespace crds_angular.Services
                 AttributeTypes = attributesTypes.MultiSelect,
                 SingleAttributes = attributesTypes.SingleSelect
             };
-        }
+        }        
 
         private int GetAllergyType(String type)
         {

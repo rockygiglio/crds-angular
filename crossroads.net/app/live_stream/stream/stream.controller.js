@@ -1,5 +1,5 @@
 export default class StreamingController {
-  constructor(CMSService, StreamspotService, GeolocationService, $rootScope, $modal, $location, $timeout, $sce, $document, $interval) {
+  constructor(CMSService, StreamspotService, GeolocationService, $rootScope, $modal, $location, $timeout, $sce, $document) {
     this.cmsService = CMSService;
     this.streamspotService = StreamspotService;
     this.geolocationService = GeolocationService;
@@ -14,7 +14,6 @@ export default class StreamingController {
     this.dontMiss = [];
     this.beTheChurch = [];
     this.inlineGiving = [];
-    this.interval = $interval;
 
     this.sce = $sce;
     let debug = false;
@@ -42,29 +41,6 @@ export default class StreamingController {
         });
 
     this.openGeolocationModal();
-    this.timeout(this.afterViewInit.bind(this), 500);
-  }
-
-  afterViewInit() {
-    this.iframeInterval = this.interval(this.resizeIframe.bind(this), 100);
-  }
-
-  resizeIframe() {
-    if (this.inlineGiving.length < 1) {
-      const el = document.querySelector('.digital-program__giving iframe');
-      this.inlineGiving = iFrameResizer({
-        heightCalculationMethod: 'taggedElement',
-        minHeight: 350,
-        checkOrigin: false,
-        interval: 32
-      }, el);
-      this.interval.cancel(this.iframeInterval);
-    }
-  }
-
-  buildUrl() {
-    const params = this.queryStringParams || 'type=donation&theme=dark';
-    return this.sce.trustAsResourceUrl(`${this.baseUrl}?${params}`);
   }
 
   sortDigitalProgram(data) {
@@ -110,13 +86,6 @@ export default class StreamingController {
         size: 'lg'
       });
     }
-  }
-
-  static getMargins(el) {
-    return {
-      marginRight: parseInt(window.getComputedStyle(el).marginRight, 0),
-      marginLeft: parseInt(window.getComputedStyle(el).marginLeft, 0)
-    };
   }
 
 }

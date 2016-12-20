@@ -1,19 +1,21 @@
-import DashboardController from '../../../app/camps/dashboard/camps_dashboard.controller';
-
 import campsModule from '../../../app/camps/camps.module';
-import campHelpers from '../campHelpers';
 
 describe('Camp Dashboard Component', () => {
-
-  let dashboardComponent,
-      campsService;
+  let dashboardComponent;
+  let campsService;
+  let state;
 
   beforeEach(angular.mock.module(campsModule));
 
   describe('Dashboard data is empty', () => {
-    beforeEach(inject((_$componentController_, _CampsService_) => {
+    beforeEach(inject((_$componentController_, _CampsService_, _$state_) => {
       campsService = _CampsService_;
       campsService.dashboard = [];
+      state = _$state_;
+      state.toParams = {
+        paymentId: 34
+      };
+
       dashboardComponent = _$componentController_('campsDashboard', null, {});
       dashboardComponent.$onInit();
     }));
@@ -27,7 +29,7 @@ describe('Camp Dashboard Component', () => {
     });
 
     it('should set the full name', () => {
-      var fullName = dashboardComponent.fullName('silbernagel', 'matt');
+      const fullName = dashboardComponent.fullName('silbernagel', 'matt');
       expect(fullName).toBe('matt silbernagel');
     });
 
@@ -37,9 +39,15 @@ describe('Camp Dashboard Component', () => {
   });
 
   describe('Dashboard data is not empty', () => {
-    beforeEach(inject((_$componentController_, _CampsService_) => {
+    beforeEach(inject((_$componentController_, _CampsService_, _$state_) => {
       campsService = _CampsService_;
-      campsService.dashboard = [{ 'key', 'value' }];
+      campsService.dashboard = [
+        { key: 'value' }
+      ];
+      state = _$state_;
+      state.toParams = {
+        paymentId: 34
+      };
       dashboardComponent = _$componentController_('campsDashboard', null, {});
       dashboardComponent.$onInit();
     }));

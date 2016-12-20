@@ -13,7 +13,7 @@
       this.carouselWrapper = bind(this.carouselWrapper, this);
       this.carousel = bind(this.carousel, this);
       this.carouselElement = bind(this.carouselElement, this);
-      this.run = false
+      this.init = false;
     }
 
     Carousel.prototype.setup = function() {
@@ -25,10 +25,11 @@
     };
 
     Carousel.prototype.getCarouselCardWidth = function() {
-      if (!this.run) {
+      if (!this.init) {
         this.setup();
+        this.init = true;
       }
-      let marginRight = parseInt(window.getComputedStyle(this.carouselCard).marginRight, 0); // eslint-disable-line prefer-const
+      var marginRight = parseInt(window.getComputedStyle(this.carouselCard).marginRight, 0); // eslint-disable-line prefer-const
       return this.carouselCard.offsetWidth + marginRight;
     }
 
@@ -38,26 +39,28 @@
 
     Carousel.prototype.carouselNext = function() {
       /* eslint-disable prefer-const */
-      let cardWidth = this.getCarouselCardWidth();
-      let n = Math.floor(this.getCurrentScrollPosition() / cardWidth);
-      let scrollLeft = (n + 1) * cardWidth;
+      var cardWidth = this.getCarouselCardWidth();
+      var n = Math.floor(this.getCurrentScrollPosition() / cardWidth);
+      var scrollLeft = (n + 1) * cardWidth;
       /* eslint-enable prefer-const */
       this.scrollTo(scrollLeft);
     }
 
     Carousel.prototype.carouselPrev = function() {
-      let cardWidth = this.getCarouselCardWidth(); // eslint-disable-line prefer-const
-      let scrollPos = this.getCurrentScrollPosition(); // eslint-disable-line prefer-const
-      let n = 0;
+      var cardWidth = this.getCarouselCardWidth(); // eslint-disable-line prefer-const
+      var scrollPos = this.getCurrentScrollPosition(); // eslint-disable-line prefer-const
+      var n = 0;
       if (scrollPos > cardWidth) {
         n = Math.round(scrollPos / cardWidth) - 1;
       }
-      let scrollLeft = n * cardWidth; // eslint-disable-line prefer-const
+      var scrollLeft = n * cardWidth; // eslint-disable-line prefer-const
       this.scrollTo(scrollLeft);
     }
 
-    Carousel.prototype.scrollTo = function(x, duration = 250) {
-
+    Carousel.prototype.scrollTo = function(x, duration) {
+      if(duration === undefined) {
+        duration = 250;
+      }
       this.carouselElement.scrollLeftAnimated(x, duration);
     }
 
