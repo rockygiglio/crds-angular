@@ -5,6 +5,7 @@ using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Models.Attributes;
 using MinistryPlatform.Translation.Models.Childcare;
 using MinistryPlatform.Translation.Models.Payments;
+using MinistryPlatform.Translation.Models.Rules;
 using MinistryPlatform.Translation.Repositories;
 using Newtonsoft.Json;
 using NUnit.Framework;
@@ -492,6 +493,21 @@ namespace MinistryPlatform.Translation.Test.Services
         }
 
         [Test]
+        public void GetGenderRules()
+        {
+            var searchString = $"Ruleset_ID = 1";
+            var genderRules = _fixture.UsingAuthenticationToken(_authToken).Search<MPGenderRule>(searchString);
+        }
+
+        [Test]
+        public void GetProductRuleset()
+        {
+            const string searchString = "Product_ID_Table.[Product_ID] = 4";
+            const string columnList = "Product_ID_Table.[Product_ID],Ruleset_ID_Table.[Ruleset_ID],cr_Product_Ruleset.[Start_Date],cr_Product_Ruleset.[End_Date]";
+            var res = _fixture.UsingAuthenticationToken(_authToken).Search<MPProductRuleSet>(searchString, columnList);
+            Assert.IsNotEmpty(res);
+        } 
+        
         public void findCongregation()
         {
             var searchString = $"Congregations.[Congregation_Name]='Oakley'";
