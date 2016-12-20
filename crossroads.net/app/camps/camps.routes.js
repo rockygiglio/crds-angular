@@ -57,14 +57,17 @@ export default function CampRoutes($stateProvider) {
         CampsService: 'CampsService',
         $state: '$state',
         sendConfirmation: (CampsService, $state) => CampsService.sendPaymentConfirmation(
-          $state.toParams.invoiceId,
-          $state.toParams.paymentId,
-          $state.toParams.campId,
-          $state.toParams.contactId)
-         .then(() => {
-           // When the confirmation API calls returns, forward to the thank you page
-           $state.go('camps-dashboard', $state.toParams);
-         })
+            $state.toParams.invoiceId,
+            $state.toParams.paymentId,
+            $state.toParams.campId,
+            $state.toParams.contactId)
+          .then(() => {
+            // When the confirmation API calls returns, forward to the thank you page
+            $state.go('camps-dashboard', $state.toParams /* , { location: 'replace'} */);
+          }).catch((err) => {
+            // TODO: handle error
+            $state.go('camps-dashboard', $state.toParams /* , { location: 'replace'} */);
+          })
       }
     })
     // Confirmation after a successful deposit

@@ -159,7 +159,7 @@ class CampsService {
   }
 
   sendPaymentConfirmation(invoiceId, paymentId, campId, contactId) {
-    return this.paymentConfirmationResource.save({ contactId, campId, invoiceId, paymentId }, {}).$promise
+    return this.paymentConfirmationResource.save({ contactId, eventId: campId, invoiceId, paymentId }, {}).$promise
       .then(() => {
         this.initializeCampData();
         this.initializeCamperData();
