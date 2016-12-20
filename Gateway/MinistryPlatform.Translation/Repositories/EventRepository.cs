@@ -85,6 +85,45 @@ namespace MinistryPlatform.Translation.Repositories
             }
         }
 
+        public void UpdateEvent(MpEventReservationDto eventReservationReservation)
+        {
+            var token = ApiLogin();
+            var eventPageId = _configurationWrapper.GetConfigIntValue("Events");
+
+            var eventDictionary = new Dictionary<string, object>
+            {
+                {"Congregation_ID", eventReservationReservation.CongregationId},
+                {"Primary_Contact", eventReservationReservation.ContactId},
+                {"Description", eventReservationReservation.Description},
+                {"On_Donation_Batch_Tool", eventReservationReservation.DonationBatchTool},
+                {"Event_End_Date", eventReservationReservation.EndDateTime},
+                {"Event_Type_ID", eventReservationReservation.EventTypeId},
+                {"Meeting_Instructions", eventReservationReservation.MeetingInstructions},
+                {"Minutes_for_Setup", eventReservationReservation.MinutesSetup},
+                {"Minutes_for_Cleanup", eventReservationReservation.MinutesTeardown},
+                {"Program_ID", eventReservationReservation.ProgramId},
+                {"Reminder_Days_Prior_ID", eventReservationReservation.ReminderDaysId},
+                {"Send_Reminder", eventReservationReservation.SendReminder},
+                {"Event_Start_Date", eventReservationReservation.StartDateTime},
+                {"Event_Title", eventReservationReservation.Title},
+                {"Visibility_Level_ID", _configurationWrapper.GetConfigIntValue("EventVisibilityLevel")},
+                {"Participants_Expected", eventReservationReservation.ParticipantsExpected },
+                {"Event_ID", eventReservationReservation.EventId }
+
+            };
+
+            try
+            {
+                _ministryPlatformService.UpdateRecord(eventPageId, eventDictionary, token);
+            }
+            catch (Exception e)
+            {
+                var msg = string.Format("Error updating Event Reservation, eventReservationReservation: {0}", eventReservationReservation);
+                _logger.Error(msg, e);
+                throw (new ApplicationException(msg, e));
+            }
+        }
+
         public int SafeRegisterParticipant(int eventId, int participantId, int groupId = 0, int groupParticipantId = 0)
         {
             var eventParticipantId = GetEventParticipantRecordId(eventId, participantId);
@@ -279,7 +318,7 @@ namespace MinistryPlatform.Translation.Repositories
             return records.Select(record => new MpEvent
             {
                 EventTitle = (string) record["Event_Title"],
-                EventType = (string) record["Event_Type"],
+                EventType = (string) record["Event_Type_ID"],
                 EventStartDate = (DateTime) record["Event_Start_Date"],
                 EventEndDate = (DateTime) record["Event_End_Date"],
                 EventId = (int) record["dp_RecordID"]
@@ -318,7 +357,7 @@ namespace MinistryPlatform.Translation.Repositories
             var events = records.Select(record => new MpEvent
             {
                 EventTitle = record.ToString("Event_Title"),
-                EventType = record.ToString("Event_Type"),
+                EventType = record.ToString("Event_Type_ID"),
                 EventStartDate = record.ToDate("Event_Start_Date", true),
                 EventEndDate = record.ToDate("Event_End_Date", true),
                 EventId = record.ToInt("Event_ID"),
@@ -340,7 +379,7 @@ namespace MinistryPlatform.Translation.Repositories
                 EventTitle = (string) record["Event_Title"],
                 EventStartDate = (DateTime) record["Event_Start_Date"],
                 EventEndDate = (DateTime) record["Event_End_Date"],
-                EventType = record.ToString("Event_Type"),
+                EventType = record.ToString("Event_Type_ID"),
                 PrimaryContact = new MpContact()
                 {
                     ContactId = record.ToInt("Primary_Contact_ID"),
@@ -357,7 +396,7 @@ namespace MinistryPlatform.Translation.Repositories
                 EventTitle = (string) record["Event_Title"],
                 EventStartDate = (DateTime) record["Event_Start_Date"],
                 EventEndDate = (DateTime) record["Event_End_Date"],
-                EventType = record.ToString("Event_Type"),
+                EventType = record.ToString("Event_Type_ID"),
                 PrimaryContact = new MpContact()
                 {
                     ContactId = record.ToInt("Primary_Contact_ID"),
@@ -394,6 +433,11 @@ namespace MinistryPlatform.Translation.Repositories
         public List<MpGroup> GetGroupsForEvent(int eventId)
         {
             return _groupService.GetGroupsForEvent(eventId);
+        }
+
+        public List<MpEventGroup> GetEventGroupsForEventAPILogin(int eventId)
+        {
+            return GetEventGroupsForEvent(eventId, ApiLogin());
         }
 
         public List<MpEventGroup> GetEventGroupsForEvent(int eventId, string token)

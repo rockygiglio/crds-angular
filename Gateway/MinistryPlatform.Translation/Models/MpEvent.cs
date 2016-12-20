@@ -48,6 +48,9 @@ namespace MinistryPlatform.Translation.Models
 
         public MpContact PrimaryContact { get; set; }
 
+        [JsonProperty(PropertyName = "On_Donation_Batch_Tool")]
+        public bool DonationBatchTool { get; set; }
+
         [JsonProperty(PropertyName = "Primary_Contact")]
         public int PrimaryContactId { get; set; }
         public IList<int> Participants
@@ -57,7 +60,11 @@ namespace MinistryPlatform.Translation.Models
         [JsonProperty(PropertyName = "Congregation_ID")]
         public int CongregationId { get; set; }
         [JsonProperty(PropertyName = "Reminder_Days_Prior_ID")]
-        public int ReminderDaysPriorId { get; set; }
+        public int? ReminderDaysPriorId { get; set; }
+
+        [JsonProperty(PropertyName = "Send_Reminder")]
+        public bool SendReminder { get; set; }
+
         [JsonProperty(PropertyName = "Template")]
         public bool? Template { get; set; }
         [JsonProperty(PropertyName = "Cancelled")]
@@ -65,5 +72,19 @@ namespace MinistryPlatform.Translation.Models
 
         [JsonProperty(PropertyName = "Minutes_Until_Timeout")]
         public int? MinutesUntilTimeout { get; set; }
+        
+        [JsonProperty(PropertyName = "Participants_Expected")]
+        public int? ParticipantsExpected { get; set; }
+
+        public string Description { get; set; }
+
+        [JsonProperty(PropertyName="Meeting_Instructions")]
+        public string MeetingInstructions { get; set; }
+
+        [JsonProperty(PropertyName = "Minutes_For_Setup")]
+        public int MinutesSetup { get; set; }
+
+        [JsonProperty(PropertyName = "Minutes_For_Cleanup")]
+        public int MinutesTeardown { get; set; }
     }
 }

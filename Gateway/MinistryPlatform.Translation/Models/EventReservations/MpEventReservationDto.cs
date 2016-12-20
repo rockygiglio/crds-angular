@@ -19,5 +19,6 @@ namespace MinistryPlatform.Translation.Models.EventReservations
         public DateTime StartDateTime { get; set; }
         public string Title { get; set; }
         public int ParticipantsExpected { get; set; }
+        public int EventId { get; set; }
     }
 }

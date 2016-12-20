@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using AutoMapper;
 using crds_angular.Models.Crossroads.Events;
 using crds_angular.Models.Crossroads.Groups;
 using Crossroads.Utilities.FunctionalHelpers;
@@ -90,16 +91,20 @@ namespace crds_angular.Services
         {
             try
             {
-                var dto = new EventToolDto();
-
                 var e = GetEvent(eventId);
-                dto.Title = e.EventTitle;
-                dto.CongregationId = e.CongregationId;
-                dto.EndDateTime = e.EventEndDate;
-                dto.StartDateTime = e.EventStartDate;
-                dto.ReminderDaysId = e.ReminderDaysPriorId;
+                var dto = Mapper.Map<EventToolDto>(e);
 
                 dto.Rooms = PopulateRoomReservations(eventId, includeEquipment, includeParticipants);
+
+                var groups = _eventService.GetEventGroupsForEventAPILogin(eventId);
+
+                if (groups.Count > 0)
+                {
+                    var group = _groupService.getGroupDetails(groups[0].GroupId);
+                    dto.Group = Mapper.Map<GroupDTO>(group);
+                }
+
+
 
                 return dto;
             }
@@ -164,9 +169,18 @@ namespace crds_angular.Services
         {
             try
             {
+                UpdateEvent(eventReservation, eventId, token);
+                CancelOldUnusedRooms(eventReservation, eventId, token);
                 foreach (var room in eventReservation.Rooms)
                 {
                     UpdateEventRoom(room, eventId, token);
+                }
+                var groups = _eventService.GetEventGroupsForEventAPILogin(eventId);
+                if (groups.Count > 0)
+                {
+                    eventReservation.Group.GroupId =  groups[0].GroupId;
+                    eventReservation.Group.CongregationId = eventReservation.CongregationId;
+                    UpdateGroup(eventReservation.Group);
                 }
             }
             catch (Exception ex)
@@ -176,6 +190,24 @@ namespace crds_angular.Services
                 throw new Exception(msg, ex);
             }
             return true;
+        }
+
+        private void CancelOldUnusedRooms(EventToolDto eventReservation, int eventId, string token)
+        {
+            var oldEventDetails = GetEventDetails(eventId, true, false);
+
+            foreach (var room in oldEventDetails.Rooms)
+            {
+                if (!eventReservation.Rooms.Any(r => r.RoomId == room.RoomId))
+                {
+                    room.Cancelled = true;
+                    foreach (var eq in room.Equipment)
+                    {
+                        eq.Cancelled = true;
+                    }
+                    UpdateEventRoom(room, eventId, token);
+                }
+            }
         }
 
         public EventRoomDto UpdateEventRoom(EventRoomDto eventRoom, int eventId, string token)
@@ -217,11 +249,21 @@ namespace crds_angular.Services
         {
             try
             {
+                var groupId = 0; 
                 var eventId = AddEvent(eventTool);
+
+                if (eventTool.Group != null)
+                {
+                    groupId = AddGroup(eventTool.Group);
+                }
 
                 foreach (var room in eventTool.Rooms)
                 {
-                    AddRoom(eventId, room, token);
+                    var eventRoomId = AddRoom(eventId, room, token);
+                    if (groupId > 0)
+                    {
+                        AddEventGroup(eventId, groupId, eventRoomId, room.RoomId, token);
+                    }
 
                     foreach (var equipment in room.Equipment)
                     {
@@ -229,11 +271,7 @@ namespace crds_angular.Services
                     }
                 }
 
-                if (eventTool.Group != null)
-                {
-                    var groupid = AddGroup(eventTool.Group);
-                    AddEventGroup(eventId, groupid, token);
-                }
+
             }
             catch (Exception ex)
             {
@@ -277,12 +315,48 @@ namespace crds_angular.Services
            return  _groupService.CreateGroup(mpgroup);
         }
 
-        public int AddEventGroup(int eventId, int groupId, string token)
+        private void UpdateGroup(GroupDTO group)
+        {
+            //translate the dto to the mp object
+            var mpgroup = new MpGroup
+            {
+                GroupId = @group.GroupId,
+                Name = @group.GroupName,
+                GroupType = @group.GroupTypeId,
+                Full = @group.GroupFullInd,
+                WaitList = @group.WaitListInd,
+                WaitListGroupId = @group.WaitListGroupId,
+                PrimaryContactName = @group.PrimaryContactName,
+                PrimaryContactEmail = @group.PrimaryContactEmail,
+                ChildCareAvailable = @group.ChildCareAvailable,
+                MinimumAge = @group.MaximumAge,
+                GroupDescription = @group.GroupDescription,
+                MinistryId = @group.MinistryId,
+                MeetingTime = @group.MeetingTime,
+                MeetingDayId = @group.MeetingDayId,
+                CongregationId = @group.CongregationId,
+                StartDate = @group.StartDate,
+                EndDate = @group.EndDate,
+                AvailableOnline = @group.AvailableOnline,
+                RemainingCapacity = @group.RemainingCapacity,
+                ContactId = @group.ContactId,
+                GroupRoleId = @group.GroupRoleId,
+                MaximumAge = @group.MaximumAge,
+                MinimumParticipants = @group.MinimumParticipants,
+                TargetSize = @group.TargetSize
+            };
+
+            _groupService.UpdateGroup(mpgroup);
+        }
+
+        public int AddEventGroup(int eventId, int groupId, int eventRoomId, int roomId, string token)
         {
             var eventGroup = new MpEventGroup
             {
                 EventId = eventId,
                 GroupId = groupId,
+                EventRoomId = eventRoomId,
+                RoomId = roomId,
                 DomainId = 1
             };
 
@@ -312,7 +386,7 @@ namespace crds_angular.Services
             _equipmentService.UpdateEquipmentReservation(equipmentReservation, token);
         }
 
-        private void AddRoom(int eventId, EventRoomDto room, string token)
+        private int AddRoom(int eventId, EventRoomDto room, string token)
         {
             var roomReservation = new MpRoomReservationDto();
             roomReservation.Cancelled = false;
@@ -325,7 +399,7 @@ namespace crds_angular.Services
             roomReservation.Label = room.Label;
             roomReservation.CheckinAllowed = room.CheckinAllowed;
             roomReservation.Volunteers = room.Volunteers;
-            _roomService.CreateRoomReservation(roomReservation, token);
+            return _roomService.CreateRoomReservation(roomReservation, token);
         }
 
         private void UpdateRoom(int eventId, EventRoomDto room, string token)
@@ -345,7 +419,21 @@ namespace crds_angular.Services
             _roomService.UpdateRoomReservation(roomReservation, token);
         }
 
-        private int AddEvent(EventToolDto eventTool)
+        public int AddEvent(EventToolDto eventReservation)
+        {
+            var eventDto = PopulateReservationDto(eventReservation);
+            var eventId = _eventService.CreateEvent(eventDto);
+            return eventId;
+        }
+
+        public void UpdateEvent(EventToolDto eventReservation, int eventId, string token)
+        {
+            var eventDto = PopulateReservationDto(eventReservation);
+            eventDto.EventId = eventId;
+            _eventService.UpdateEvent(eventDto);
+        }
+
+        private MpEventReservationDto PopulateReservationDto(EventToolDto eventTool)
         {
             var eventDto = new MpEventReservationDto();
             eventDto.CongregationId = eventTool.CongregationId;
@@ -366,8 +454,8 @@ namespace crds_angular.Services
             eventDto.SendReminder = eventTool.SendReminder;
             eventDto.StartDateTime = eventTool.StartDateTime;
             eventDto.Title = eventTool.Title;
-            var eventId = _eventService.CreateEvent(eventDto);
-            return eventId;
+            return eventDto;
+
         }
 
         public MpEvent GetEvent(int eventId)

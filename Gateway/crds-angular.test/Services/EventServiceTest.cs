@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using crds_angular.App_Start;
+using crds_angular.Models.Crossroads.Events;
 using crds_angular.Services;
 using Crossroads.Utilities.Interfaces;
 using MinistryPlatform.Translation.Models;
@@ -13,11 +14,12 @@ using Moq;
 using MvcContrib.TestHelper.Ui;
 using NUnit.Framework;
 using MinistryPlatform.Translation.Models.EventReservations;
+using Rhino.Mocks;
 
 namespace crds_angular.test.Services
 {
     [TestFixture]
-    public class EventServiceTest 
+    public class EventServiceTest
     {
         private Mock<IContactRelationshipRepository> _contactRelationshipService;
         private Mock<IContactRepository> _contactService;
@@ -39,7 +41,7 @@ namespace crds_angular.test.Services
         public void SetUp()
         {
             AutoMapperConfig.RegisterMappings();
-          
+
             _contactRelationshipService = new Mock<IContactRelationshipRepository>(MockBehavior.Strict);
             _configurationWrapper = new Mock<IConfigurationWrapper>(MockBehavior.Strict);
             _apiUserService = new Mock<IApiUserRepository>(MockBehavior.Strict);
@@ -53,20 +55,20 @@ namespace crds_angular.test.Services
             _participantService = new Mock<IParticipantRepository>(MockBehavior.Strict);
             _eventService = new Mock<IEventRepository>();
             _roomService = new Mock<IRoomRepository>();
-            _equipmentService= new Mock<IEquipmentRepository>();
+            _equipmentService = new Mock<IEquipmentRepository>();
             _eventParticipantService = new Mock<IEventParticipantRepository>(MockBehavior.Strict);
 
 
             _configurationWrapper = new Mock<IConfigurationWrapper>();
             _configurationWrapper.Setup(mocked => mocked.GetConfigIntValue("EventsReadyForPrimaryContactReminder")).Returns(2205);
             _configurationWrapper.Setup(mocked => mocked.GetConfigIntValue("EventPrimaryContactReminderTemplateId")).Returns(14909);
-     
+
             _fixture = new EventService(_eventService.Object,
                                         _groupService.Object,
                                         _communicationService.Object,
-                                        _contactService.Object, 
-                                        _contentBlockService.Object, 
-                                        _configurationWrapper.Object,  
+                                        _contactService.Object,
+                                        _contentBlockService.Object,
+                                        _configurationWrapper.Object,
                                         _apiUserService.Object,
                                         _contactRelationshipService.Object,
                                         _groupParticipantService.Object,
@@ -75,7 +77,7 @@ namespace crds_angular.test.Services
                                         _equipmentService.Object,
                                         _eventParticipantService.Object);
         }
-        
+
         [Test]
         public void ShouldSendPrimaryContactReminderEmails()
         {
@@ -87,7 +89,7 @@ namespace crds_angular.test.Services
                 Email_Address = "default@email.com"
             };
 
-            var testEvent = new MpEvent ()
+            var testEvent = new MpEvent()
             {
                 EventId = 32,
                 EventStartDate = new DateTime(),
@@ -101,12 +103,12 @@ namespace crds_angular.test.Services
 
             var testEventList = new List<MpEvent>()
             {
-               testEvent
+                testEvent
             };
-       
+
             _apiUserService.Setup(m => m.GetToken()).Returns(apiToken);
             _eventService.Setup(m => m.EventsByPageViewId(apiToken, 2205, search)).Returns(testEventList);
-            var eventList = testEventList.Select(evt => new crds_angular.Models.Crossroads.Events.Event() 
+            var eventList = testEventList.Select(evt => new crds_angular.Models.Crossroads.Events.Event()
             {
                 name = evt.EventTitle,
                 EventId = evt.EventId,
@@ -117,7 +119,7 @@ namespace crds_angular.test.Services
                 PrimaryContactEmailAddress = evt.PrimaryContact.EmailAddress,
                 PrimaryContactId = evt.PrimaryContact.ContactId
             });
-            
+
             eventList.ForEach(evt =>
             {
                 var mergeData = new Dictionary<string, object>
@@ -125,10 +127,10 @@ namespace crds_angular.test.Services
                     {"Event_ID", evt.EventId},
                     {"Event_Title", evt.name},
                     {"Event_Start_Date", evt.StartDate.ToShortDateString()},
-                    {"Event_Start_Time", evt.StartDate.ToShortTimeString()}               
+                    {"Event_Start_Time", evt.StartDate.ToShortTimeString()}
                 };
 
-                var contact = new MpContact() { ContactId = defaultContact.Contact_ID, EmailAddress = defaultContact.Email_Address };
+                var contact = new MpContact() {ContactId = defaultContact.Contact_ID, EmailAddress = defaultContact.Email_Address};
                 var fakeCommunication = new MpCommunication()
                 {
                     AuthorUserId = defaultContact.Contact_ID,
@@ -139,7 +141,7 @@ namespace crds_angular.test.Services
                     MergeData = mergeData,
                     ReplyToContact = contact,
                     TemplateId = 14909,
-                    ToContacts = new List<MpContact>() { contact }
+                    ToContacts = new List<MpContact>() {contact}
                 };
 
                 var testContact = new MpMyContact()
@@ -148,7 +150,7 @@ namespace crds_angular.test.Services
                     Email_Address = "ghj@cr.net"
 
                 };
-              
+
                 _contactService.Setup(m => m.GetContactById(9876)).Returns(testContact);
                 _communicationService.Setup(m => m.GetTemplateAsCommunication(14909,
                                                                               testContact.Contact_ID,
@@ -164,7 +166,7 @@ namespace crds_angular.test.Services
             });
             _fixture.EventsReadyForPrimaryContactReminder(apiToken);
             _eventService.Verify();
-            
+
         }
 
         [Test]
@@ -223,10 +225,21 @@ namespace crds_angular.test.Services
                     new MpEventParticipant()
                 }
             };
+
+            var g = new List<MpEventGroup>
+            {
+                new MpEventGroup()
+                {
+                    GroupId = 1
+                }
+            };
             _eventParticipantService.Setup(mocked => mocked.GetEventParticipants(123, 11)).Returns(p[0]);
             _eventParticipantService.Setup(mocked => mocked.GetEventParticipants(123, 22)).Returns(p[1]);
+            _eventService.Setup(mocked => mocked.GetEventGroupsForEventAPILogin(123)).Returns(g);
+            _groupService.Setup(mocked => mocked.getGroupDetails(g[0].GroupId)).Returns(new MpGroup());
 
-            var response = _fixture.GetEventRoomDetails(123);
+
+        var response = _fixture.GetEventRoomDetails(123);
             _eventService.VerifyAll();
             _roomService.VerifyAll();
             _equipmentService.VerifyAll();
@@ -302,7 +315,8 @@ namespace crds_angular.test.Services
 
             var q = new List<List<MpEquipmentReservationDto>>()
             {
-                 new List<MpEquipmentReservationDto>{
+                new List<MpEquipmentReservationDto>
+                {
                     new MpEquipmentReservationDto
                     {
                         Cancelled = false,
@@ -337,8 +351,18 @@ namespace crds_angular.test.Services
                     }
                 }
             };
+
+            var g = new List<MpEventGroup>
+            {
+                new MpEventGroup()
+                {
+                    GroupId = 1
+                }
+            };
             _equipmentService.Setup(mocked => mocked.GetEquipmentReservations(123, r[0].RoomId)).Returns(q[0]);
             _equipmentService.Setup(mocked => mocked.GetEquipmentReservations(123, r[1].RoomId)).Returns(q[1]);
+            _eventService.Setup(mocked => mocked.GetEventGroupsForEventAPILogin(123)).Returns(g);
+            _groupService.Setup(mocked => mocked.getGroupDetails(g[0].GroupId)).Returns(new MpGroup());
 
             var response = _fixture.GetEventReservation(123);
             _eventService.VerifyAll();
@@ -377,6 +401,46 @@ namespace crds_angular.test.Services
             }
         }
 
+        [Test]
+        public void TestAddEvent()
+        {
+            _eventService.Setup(mocked => mocked.CreateEvent(It.IsAny<MpEventReservationDto>())).Returns(123);
+            var id = _fixture.AddEvent(GetEventToolTestObject());
+            _eventService.VerifyAll();
+            Assert.AreEqual(123, id, "Returned incorrect id");
+        }
+
+        [Test]
+        public void TestUpdateEvent()
+        {
+            _eventService.Setup(mocked => mocked.UpdateEvent(It.IsAny<MpEventReservationDto>()));
+            _fixture.UpdateEvent(GetEventToolTestObject(), 123, "Token");
+            _eventService.VerifyAll();
+            _eventService.Verify(x=>x.UpdateEvent(It.IsAny<MpEventReservationDto>()), Times.Once);
+        }
+
+        private EventToolDto GetEventToolTestObject()
+        {
+            return new EventToolDto()
+            {
+                CongregationId = 1,
+                ContactId = 1234,
+                Description = "This is a description",
+                DonationBatchTool = false,
+                StartDateTime = new DateTime(2016, 12, 16, 10, 0, 0),
+                EndDateTime = new DateTime(2016, 12, 16, 11, 0, 0),
+                EventTypeId = 78,
+                MeetingInstructions = "These are instructions",
+                MinutesSetup = 0,
+                MinutesTeardown = 0,
+                ProgramId = 102,
+                ReminderDaysId = 2,
+                SendReminder = false,
+                Title = "Test Event",
+                ParticipantsExpected = 8
+            };
+        }
     }
+
 }
       

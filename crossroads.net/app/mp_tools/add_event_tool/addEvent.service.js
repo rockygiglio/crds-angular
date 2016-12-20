@@ -46,6 +46,10 @@
       },
 
       fromEventDto(event) {
+        if (!event.group){
+          event.group = {};
+        }
+        this.origCongregation = event.congregationId;
         return {
           event: {
             congregation: {
@@ -58,7 +62,7 @@
               dp_RecordID: event.eventTypeId
             },
             description: event.description,
-            donationBatchTool: event.donationBatchTool,
+            donationBatch: event.donationBatchTool,
             endDate: new Date(event.endDateTime),
             startDate: new Date(event.startDateTime),
             meetingInstructions: event.meetingInstructions,
@@ -67,15 +71,17 @@
             program: {
               ProgramId: event.programId
             },
-            reminderDays: event.reminderDaysId,
+            reminderDays: {
+              dp_RecordID: event.reminderDaysId
+            },
             sendReminder: event.sendReminder,
-            startTime: new Date(event.startDateTime),
-            endTime: new Date(event.endDateTime),
+            startTime: new Date(event.startDateTime + "-0500"),
+            endTime: new Date(event.endDateTime + "-0500"),
             eventTitle: event.title,
             participantsExpected: event.participantsExpected,
-            maximumAge: event.maximumAge,
-            minimumChildren: event.minimumChildren,
-            maximumChildren: event.maximumChildren
+            maximumAge: event.group.maximumAge,
+            minimumChildren: event.group.minimumParticipants,
+            maximumChildren: event.group.tartgetSize
           },
           rooms: _.map(event.rooms, (r) => { return fromRoomDto(r); })
         };
