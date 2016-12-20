@@ -62,11 +62,11 @@ export default function CampRoutes($stateProvider) {
             $state.toParams.campId,
             $state.toParams.contactId)
           .then(() => {
-            // When the confirmation API calls returns, forward to the thank you page
-            $state.go('camps-dashboard', $state.toParams /* , { location: 'replace'} */);
-          }).catch((err) => {
+            // When the confirmation API calls returns, forward to the mycamps dashboard page
+            $state.go('camps-dashboard', $state.toParams, { location: 'replace' });
+          }).catch(() => {
             // TODO: handle error
-            $state.go('camps-dashboard', $state.toParams /* , { location: 'replace'} */);
+            $state.go('camps-dashboard', $state.toParams, { location: 'replace' });
           })
       }
     })
