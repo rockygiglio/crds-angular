@@ -65,7 +65,20 @@ namespace crds_angular.Controllers.API
         [AcceptVerbs("POST")]
         public IHttpActionResult PaymentConfirmation(int paymentId, int contactId, int invoiceId, int eventId)
         {
-            return Ok();
+            return Authorized((token) =>
+            {
+                try
+                {
+                    _paymentService.SendPaymentConfirmation(paymentId, eventId, token);
+                    return Ok();
+                }
+                catch (Exception e)
+                {
+                    var apiError = new ApiErrorDto("Unable to send a confirmation email", e);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+
+            });
         }
 
         //[VersionedRoute(template: "payment", minimumVersion: "1.0.0")]

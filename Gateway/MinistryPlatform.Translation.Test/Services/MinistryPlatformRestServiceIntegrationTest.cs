@@ -498,6 +498,16 @@ namespace MinistryPlatform.Translation.Test.Services
             var result = _fixture.UsingAuthenticationToken(_authToken).Search<MpCongregation>(searchString);
         }
 
+        [Test]
+        public void findProgramTemplateFromEvent()
+        {
+            var filter = $"Events.[Event_ID] = 4525626";
+            const string column = "Online_Registration_Product_Table_Program_ID_Table_Communication_ID_Table.[Communication_ID]";
+            var result = _fixture.UsingAuthenticationToken(_authToken).Search<int>("Events", filter, column);
+            Assert.AreEqual(2006, result);
+            
+        }
+
     }
 
     [MpRestApiTable(Name = "Payment_Types")]
