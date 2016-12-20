@@ -15,6 +15,9 @@ export default function CampRoutes($stateProvider) {
           description: 'What camps are you signed up for?'
         }
       },
+      params: {
+        wasPayment: undefined
+      },
       resolve: {
         loggedin: crds_utilities.checkLoggedin,
         campsService: 'CampsService',
@@ -61,12 +64,9 @@ export default function CampRoutes($stateProvider) {
             $state.toParams.paymentId,
             $state.toParams.campId,
             $state.toParams.contactId)
-          .then(() => {
-            // When the confirmation API calls returns, forward to the mycamps dashboard page
-            $state.go('camps-dashboard', $state.toParams, { location: 'replace' });
-          }).catch(() => {
-            // TODO: handle error
-            $state.go('camps-dashboard', $state.toParams, { location: 'replace' });
+          .finally(() => {
+            const toParams = Object.assign($state.toParams, { wasPayment: true });
+            $state.go('camps-dashboard', toParams, { location: 'replace' });
           })
       }
     })
