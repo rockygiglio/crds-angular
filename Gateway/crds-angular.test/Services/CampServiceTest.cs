@@ -46,6 +46,11 @@ namespace crds_angular.test.Services
             Factories.CampReservationDTO();
             Factories.MpGroupParticipant();
             Factories.MpCongregation();
+            Factories.CampProductDTO();
+            Factories.MpParticipant();
+            Factories.MpEvent();
+            Factories.MpProduct();
+            Factories.MpProductOptionPrice();
 
             _contactService = new Mock<IContactRepository>();
             _campService = new Mock<ICampRepository>();
@@ -439,6 +444,7 @@ namespace crds_angular.test.Services
             Assert.AreEqual(result.Count, 0);
             _contactService.VerifyAll();
         }
+
         [Test]
         public void ShouldGetMyCampInfo()
         {
@@ -779,6 +785,206 @@ namespace crds_angular.test.Services
 
             Assert.IsTrue(resp);
         }
+
+        [Test]
+        public void ShouldSaveInvoiceAndChooseBestOptionPrice()
+        {
+            const int loggedInContactId = 456;
+            const string token = "whyNoTestBefore?";
+            const int eventParticipantId = 7878;
+            const int summerCampFinancialAssistanceField = 99;
+            const int summerCampFormId = 9;
+            const int productId = 90;
+            const decimal productBasePrice = 450M;
+
+            var eventStartDate = DateTime.Now.AddDays(190);
+            var eventEndDate = DateTime.Now.AddDays(191);            
+
+            var myContact = getFakeContact(loggedInContactId);
+            var myFamily = getFakeHouseholdMembers(myContact);
+            var campDto = FactoryGirl.NET.FactoryGirl.Build<CampProductDTO>(m => m.ContactId = myFamily.FirstOrDefault().ContactId);
+            var participant = FactoryGirl.NET.FactoryGirl.Build<MpParticipant>(m =>
+            {
+                m.ContactId = campDto.ContactId;
+                m.Age = myFamily.First().Age;
+            });
+            var mpEvent = FactoryGirl.NET.FactoryGirl.Build<MpEvent>(m =>
+            {
+                m.EventId = campDto.EventId;
+                m.EventStartDate = eventStartDate;
+                m.EventEndDate = eventEndDate;
+            });
+            var mpProduct = FactoryGirl.NET.FactoryGirl.Build<MpProduct>(m => { m.ProductId = productId; m.BasePrice = productBasePrice; });
+            var mpProductOptions = new List<MpProductOptionPrice>
+            {
+                FactoryGirl.NET.FactoryGirl.Build<MpProductOptionPrice>(m =>
+                {
+                    m.ProductOptionPriceId = 67;
+                    m.OptionPrice = -65;
+                    m.OptionTitle = "Extra Early";
+                    m.DaysOutToHide = 131;
+                }),
+                FactoryGirl.NET.FactoryGirl.Build<MpProductOptionPrice>(m =>
+                {
+                    m.ProductOptionPriceId = 69;
+                    m.OptionPrice = -25;
+                    m.OptionTitle = "Early";
+                    m.DaysOutToHide = 101;
+                })
+            };
+
+
+            _contactService.Setup(m => m.GetMyProfile(token)).Returns(myContact);
+            _contactService.Setup(m => m.GetHouseholdFamilyMembers(myContact.Household_ID)).Returns(myFamily);
+            _contactService.Setup(m => m.GetOtherHouseholdMembers(loggedInContactId)).Returns(new List<MpHouseholdMember>());
+
+            _participantRepository.Setup(m => m.GetParticipant(campDto.ContactId)).Returns(participant);
+            _eventRepository.Setup(m => m.GetEventParticipantRecordId(campDto.EventId, participant.ParticipantId)).Returns(eventParticipantId);
+
+            _configurationWrapper.Setup(m => m.GetConfigIntValue("SummerCampForm.FinancialAssistance")).Returns(summerCampFinancialAssistanceField);
+            _configurationWrapper.Setup(m => m.GetConfigIntValue("SummerCampFormID")).Returns(summerCampFormId);
+
+            _formSubmissionRepository.Setup(m => m.SubmitFormResponse(It.IsAny<MpFormResponse>()));
+            _invoiceRepository.Setup(m => m.InvoiceExistsForEventParticipant(eventParticipantId)).Returns(false);
+
+            _eventRepository.Setup(m => m.GetEvent(campDto.EventId)).Returns(mpEvent);
+            _productRepository.Setup(m => m.GetProductForEvent(campDto.EventId)).Returns(mpProduct);
+            _productRepository.Setup(m => m.GetProductOptionPricesForProduct(productId)).Returns(mpProductOptions);
+
+            _invoiceRepository.Setup(m => m.CreateInvoiceAndDetail(productId, 67, loggedInContactId, campDto.ContactId, eventParticipantId)).Returns(true);
+
+            _fixture.SaveInvoice(campDto, token);
+
+            _contactService.VerifyAll();
+            _participantRepository.VerifyAll();
+            _eventRepository.VerifyAll();
+            _configurationWrapper.VerifyAll();
+            _formSubmissionRepository.VerifyAll();
+            _invoiceRepository.VerifyAll();
+            _productRepository.VerifyAll();
+        }
+
+        [Test]
+        public void ShouldSaveInvoiceAndFilterOutOldOptionPrices()
+        {
+            const int loggedInContactId = 456;
+            const string token = "whyNoTestBefore?";
+            const int eventParticipantId = 7878;
+            const int summerCampFinancialAssistanceField = 99;
+            const int summerCampFormId = 9;
+            const int productId = 90;
+            const decimal productBasePrice = 450M;
+
+            var eventStartDate = DateTime.Now.AddDays(190);
+            var eventEndDate = DateTime.Now.AddDays(191);
+
+            var myContact = getFakeContact(loggedInContactId);
+            var myFamily = getFakeHouseholdMembers(myContact);
+            var campDto = FactoryGirl.NET.FactoryGirl.Build<CampProductDTO>(m => m.ContactId = myFamily.FirstOrDefault().ContactId);
+            var participant = FactoryGirl.NET.FactoryGirl.Build<MpParticipant>(m =>
+            {
+                m.ContactId = campDto.ContactId;
+                m.Age = myFamily.First().Age;
+            });
+            var mpEvent = FactoryGirl.NET.FactoryGirl.Build<MpEvent>(m =>
+            {
+                m.EventId = campDto.EventId;
+                m.EventStartDate = eventStartDate;
+                m.EventEndDate = eventEndDate;
+            });
+            var mpProduct = FactoryGirl.NET.FactoryGirl.Build<MpProduct>(m => { m.ProductId = productId; m.BasePrice = productBasePrice; });
+            var mpProductOptions = new List<MpProductOptionPrice>
+            {
+                FactoryGirl.NET.FactoryGirl.Build<MpProductOptionPrice>(m =>
+                {
+                    m.ProductOptionPriceId = 67;
+                    m.OptionPrice = -65;
+                    m.OptionTitle = "Extra Early";
+                    m.DaysOutToHide = 190;
+                }),
+                FactoryGirl.NET.FactoryGirl.Build<MpProductOptionPrice>(m =>
+                {
+                    m.ProductOptionPriceId = 69;
+                    m.OptionPrice = -25;
+                    m.OptionTitle = "Early";
+                    m.DaysOutToHide = 101;
+                })
+            };
+
+
+            _contactService.Setup(m => m.GetMyProfile(token)).Returns(myContact);
+            _contactService.Setup(m => m.GetHouseholdFamilyMembers(myContact.Household_ID)).Returns(myFamily);
+            _contactService.Setup(m => m.GetOtherHouseholdMembers(loggedInContactId)).Returns(new List<MpHouseholdMember>());
+
+            _participantRepository.Setup(m => m.GetParticipant(campDto.ContactId)).Returns(participant);
+            _eventRepository.Setup(m => m.GetEventParticipantRecordId(campDto.EventId, participant.ParticipantId)).Returns(eventParticipantId);
+
+            _configurationWrapper.Setup(m => m.GetConfigIntValue("SummerCampForm.FinancialAssistance")).Returns(summerCampFinancialAssistanceField);
+            _configurationWrapper.Setup(m => m.GetConfigIntValue("SummerCampFormID")).Returns(summerCampFormId);
+
+            _formSubmissionRepository.Setup(m => m.SubmitFormResponse(It.IsAny<MpFormResponse>()));
+            _invoiceRepository.Setup(m => m.InvoiceExistsForEventParticipant(eventParticipantId)).Returns(false);
+
+            _eventRepository.Setup(m => m.GetEvent(campDto.EventId)).Returns(mpEvent);
+            _productRepository.Setup(m => m.GetProductForEvent(campDto.EventId)).Returns(mpProduct);
+            _productRepository.Setup(m => m.GetProductOptionPricesForProduct(productId)).Returns(mpProductOptions);
+
+            _invoiceRepository.Setup(m => m.CreateInvoiceAndDetail(productId, 69, loggedInContactId, campDto.ContactId, eventParticipantId)).Returns(true);
+
+            _fixture.SaveInvoice(campDto, token);
+
+            _contactService.VerifyAll();
+            _participantRepository.VerifyAll();
+            _eventRepository.VerifyAll();
+            _configurationWrapper.VerifyAll();
+            _formSubmissionRepository.VerifyAll();
+            _invoiceRepository.VerifyAll();
+            _productRepository.VerifyAll();
+        }
+
+
+        [Test]
+        public void ShouldNotCreateAnInvoiceIfOneExistsAlready()
+        {
+            const int loggedInContactId = 456;
+            const string token = "whyNoTestBefore?";
+            const int eventParticipantId = 7878;
+            const int summerCampFinancialAssistanceField = 99;
+            const int summerCampFormId = 9;
+
+            var myContact = getFakeContact(loggedInContactId);
+            var myFamily = getFakeHouseholdMembers(myContact);
+            var campDto = FactoryGirl.NET.FactoryGirl.Build<CampProductDTO>(m => m.ContactId = myFamily.FirstOrDefault().ContactId);
+            var participant = FactoryGirl.NET.FactoryGirl.Build<MpParticipant>(m =>
+            {
+                m.ContactId = campDto.ContactId;
+                m.Age = myFamily.First().Age;
+            });
+
+            _contactService.Setup(m => m.GetMyProfile(token)).Returns(myContact);
+            _contactService.Setup(m => m.GetHouseholdFamilyMembers(myContact.Household_ID)).Returns(myFamily);
+            _contactService.Setup(m => m.GetOtherHouseholdMembers(loggedInContactId)).Returns(new List<MpHouseholdMember>());
+
+            _participantRepository.Setup(m => m.GetParticipant(campDto.ContactId)).Returns(participant);
+            _eventRepository.Setup(m => m.GetEventParticipantRecordId(campDto.EventId, participant.ParticipantId)).Returns(eventParticipantId);
+
+            _configurationWrapper.Setup(m => m.GetConfigIntValue("SummerCampForm.FinancialAssistance")).Returns(summerCampFinancialAssistanceField);
+            _configurationWrapper.Setup(m => m.GetConfigIntValue("SummerCampFormID")).Returns(summerCampFormId);
+
+            _formSubmissionRepository.Setup(m => m.SubmitFormResponse(It.IsAny<MpFormResponse>()));
+            _invoiceRepository.Setup(m => m.InvoiceExistsForEventParticipant(eventParticipantId)).Returns(true);
+
+            _fixture.SaveInvoice(campDto, token);
+
+            _contactService.VerifyAll();
+            _participantRepository.VerifyAll();
+            _eventRepository.VerifyAll();
+            _configurationWrapper.VerifyAll();
+            _formSubmissionRepository.VerifyAll();
+            _invoiceRepository.VerifyAll();
+            _productRepository.VerifyAll();
+        }
+
 
         private static List<MpPayment> fakePayments(int contactId, int paymentId)
         {
