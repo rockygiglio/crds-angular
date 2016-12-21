@@ -22,12 +22,13 @@ export function getCampProductInfo(CampsService, $state, $q) {
 
     // if we are coming from the dashboard... don't check for previous payments
     const isUpdate = $state.toParams.update;
+    // TODO:  figure out if we can determine if this has already been resolved...
 
     CampsService.getCampProductInfo(campId, camperId, !isUpdate).then(() => {
       deferred.resolve();
     }).catch((err) => {
       if (err.status === 302) {
-        $state.go('campsignup.family', { campId }, { location: 'replace' });
+        $state.go('campsignup.application', { page: 'camps-payment', contactId: camperId, campId, update: true, redirectTo: 'payment-confirmation' });
       }
       deferred.reject();
     });
