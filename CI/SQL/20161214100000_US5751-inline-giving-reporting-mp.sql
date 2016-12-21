@@ -1,6 +1,15 @@
 USE [MinistryPlatform]
 GO
 
+IF NOT EXISTS(SELECT *
+              FROM sys.columns
+              WHERE Name = N'Source_Information'
+              AND Object_ID = Object_ID(N'Donations'))
+BEGIN
+    ALTER TABLE [dbo].[Donations]
+    ADD Source_Information dp_Separator NULL;
+END
+
 IF NOT EXISTS ( SELECT *
 				FROM sys.columns 
 				WHERE Name = N'Source_Url'
