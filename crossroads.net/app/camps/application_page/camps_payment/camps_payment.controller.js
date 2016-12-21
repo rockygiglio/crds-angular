@@ -82,7 +82,7 @@ export default class CampPaymentController {
       const returnUrl = /.+(?=\/camps)/i.exec(this.returnUrl)[0];
       url = encodeURIComponent(`${returnUrl}/${this.redirectTo}`);
     } else if (this.redirectTo) {
-      url = encodeURIComponent(`${this.returnUrl}/${this.redirectTo}`);
+      url = encodeURIComponent(`${this.returnUrl}/${campId}/${this.redirectTo}/${contactId}`);
     } else {
       url = encodeURIComponent(`${this.returnUrl}/${campId}/confirmation/${contactId}`);
     }

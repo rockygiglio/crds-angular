@@ -19,6 +19,7 @@ class CampCardController {
   }
 
   $onInit() {
+    // Used to disable the `Make Payment` button
     this.isPaidInFull = (this.paymentRemaining <= 0);
   }
 
@@ -29,7 +30,7 @@ class CampCardController {
 
   makePayment() {
     this.campsService.initializeCamperData();
-    this.state.go('campsignup.application', { page: 'camps-payment', contactId: this.camperId, campId: this.campId, update: true, redirectTo: 'mycamps' }, { location: false });
+    this.state.go('campsignup.application', { page: 'camps-payment', contactId: this.camperId, campId: this.campId, update: true, redirectTo: 'payment-confirmation' });
   }
 
   formatDate() {
@@ -42,8 +43,12 @@ class CampCardController {
   }
 
   formatAmountDue() {
-    if (this.paymentRemaining === null || this.paymentRemaining === undefined || this.paymentRemaining < 0) {
+    // 0 is falsy so `!this.paymentRemaining` evaluates to true when 0
+    if (this.paymentRemaining === null || this.paymentRemaining === undefined) {
       return `Error getting payments. Please contact ${this.campPrimaryContact}`;
+    } else if (this.paymentRemaining < 0) {
+      const balance = this.filter('currency')(this.paymentRemaining);
+      return `Error: Overpaid by ${balance}. Please contact ${this.campPrimaryContact}`;
     }
 
     return this.filter('currency')(this.paymentRemaining);
