@@ -1063,7 +1063,7 @@ streaming, landing {
       }
 
       .crds-card-carousel {
-        height: 400px;
+        min-height: 400px;
         margin-bottom: 2em;
         margin-top: 1em;
         overflow-x: scroll;
@@ -1106,25 +1106,28 @@ streaming, landing {
           position: absolute;
           white-space: nowrap;
           width: 100%;
+
+          display: flex;
+          flex-direction: row;
+          flex-wrap: nowrap;
+          justify-content: space-between;
+          align-items: stretch;
         }
 
         &__list {
-          display: block;
           list-style: none;
           padding: 0;
-        }
-
-        &__item {
-          display: inline-block;
-          vertical-align: top;
-          white-space: normal;
-          z-index: 1;
         }
       }
 
       content-card {
         display: inline-block;
         margin-right: 1em;
+        vertical-align: top;
+        white-space: normal;
+        z-index: 1;
+
+        flex: 1 0 225px;
 
         &:last-of-type {
           margin-right: 0;
@@ -1135,8 +1138,13 @@ streaming, landing {
         }
 
         section {
-          // height: 300px;
+          height: 100%;
           text-overflow: ellipsis;
+        }
+
+        li {
+          display: flex;
+          align-items: stretch;
         }
       }
 
@@ -1168,13 +1176,14 @@ streaming, landing {
 
       .flex {
         &__row {
-          display: flex;
-          flex-wrap: wrap;
+          @media (min-width: $screen-sm) {
+            display: flex;
+            flex-wrap: wrap;
+          }
         }
       }
 
       .media {
-        flex: 0 1 100%;
         margin-top: 10px;
         margin-bottom: 20px;
 
