@@ -547,8 +547,12 @@ namespace crds_angular.Services
             var campEvent = _eventRepository.GetEvent(campProductDto.EventId);
             var product = _productRepository.GetProductForEvent(campProductDto.EventId);
             var optionPrices = _productRepository.GetProductOptionPricesForProduct(product.ProductId);
-            //find current option price (if any)
-            var productOptionPriceId = optionPrices.Count > 0 ? ConvertProductOptionPricetoDto(optionPrices, product.BasePrice, campEvent.EventStartDate).Where(i => i.EndDate > DateTime.Now).OrderByDescending(i => i.EndDate).FirstOrDefault()?.ProductOptionPriceId : (int?)null;
+            var productOptionPriceId = optionPrices.Count > 0 ? 
+                ConvertProductOptionPricetoDto(optionPrices, product.BasePrice, campEvent.EventStartDate)
+                    .Where(i => i.EndDate > DateTime.Now)
+                    .OrderBy(i => i.EndDate).FirstOrDefault()?
+                    .ProductOptionPriceId 
+                : (int?)null;
 
             _invoiceRepository.CreateInvoiceAndDetail(product.ProductId, productOptionPriceId, loggedInContact.Contact_ID, campProductDto.ContactId, eventParticipantId);
         }
