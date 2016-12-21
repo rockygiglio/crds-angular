@@ -234,7 +234,7 @@ END
 			  ,(COUNT(*) + COUNT(DISTINCT Opportunity_Title)) AS TotalRowsForGroup
 			  ,Sort_Order
 			  ,DisplayColumn
-			  ,MAX(Opportunity_Title) AS Opportunity_Title --CAST ('zzz' AS varchar (50)) AS Opportunity_Title --Ok, it's a little hackey, but zzz should always come last and there's code in the report to not display opp title if it's zzz
+			  ,MAX(Opportunity_Title) AS Opportunity_Title 
 			  FROM #ReportData 
 			  GROUP BY Congregation_Name, Event_Type_ID, Event_Type, Event_Title, Event_Start_Date, Event_ID, GroupRow, Group_Name, Sort_Order, DisplayColumn	 
        ) AS X
