@@ -5,6 +5,9 @@ DECLARE @Rule_Registration int = 622;
 DECLARE @Product_Rulese int = 623;
 DECLARE @Gender_Rules int = 621;
 
+DECLARE @Rule_Page_Section int;
+
+SELECT @Rule_Page_Section = [Page_Section_ID] from [dbo].[dp_Page_Sections] where [Page_Section] = 'Rules';
 
 IF EXISTS (SELECT 1 FROM [dbo].[dp_Pages] WHERE [Page_ID] = @Rule_Registration)
 BEGIN
@@ -12,10 +15,6 @@ BEGIN
 	[Default_Field_List] = N'cr_Rule_Registrations.Maximum_Registrants, cr_Rule_Registrations.Rule_Start_Date, cr_Rule_Registrations.Rule_End_Date'
 	WHERE [Page_ID] = @Rule_Registration;
 END
-
-DECLARE @Rule_Page_Section int = 24;
-
-
 
 IF NOT EXISTS (SELECT 1 FROM [dbo].[dp_Page_Section_Pages] WHERE [Page_Section_ID] = @Rule_Page_Section AND [Page_ID] = @Rule_Registration) 
 BEGIN
