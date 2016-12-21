@@ -96,47 +96,51 @@
   <geolocation ng-show="stream.showGeolocationBanner()"></geolocation>
 
   <div class="digital-program-container">
-    <div class="flex__container container">
-      <div class="flex__item digital-program__giving" dynamic-content="$root.MESSAGES.streamingInlineGivingEmbed.content | html"></div>
-      <div class="flex__item digital-program__articles">
-        <section class="" ng-show="stream.dontMiss.length">
-          <header class="clearfix">
-            <h2>don't miss</h2>
+    <div class="container">
+      <div class="row">
+        <div class="digital-program__giving" dynamic-content="$root.MESSAGES.streamingInlineGivingEmbed.content | html"></div>
+        <div class="digital-program__articles">
+          <div class="digital-program__slider">
+            <section class="" ng-show="stream.dontMiss.length">
+              <header class="clearfix">
+                <h2>don't miss</h2>
 
-            <div class="crds-carousel__controls">
-              <a href="" onClick="CRDS.carousel.carouselPrev()" class="crds-carousel__control crds-carousel__control--prev">
-                <svg viewBox="0 0 32 32" class="icon-medium icon-arrow-left9">
-                  <use xlink:href="#arrow-left9"></use>
-                </svg>
-              </a>
-              <a href="" onClick="CRDS.carousel.carouselNext()" class="crds-carousel__control crds-carousel__control--next">
-                <svg viewBox="0 0 32 32" class="icon-medium icon-arrow-right9">
-                  <use xlink:href="#arrow-right9"></use>
-                </svg>
-              </a>
-            </div>
-          </header>
+                <div class="crds-carousel__controls">
+                  <a href="" onClick="CRDS.carousel.carouselPrev()" class="crds-carousel__control crds-carousel__control--prev">
+                    <svg viewBox="0 0 32 32" class="icon-medium icon-arrow-left9">
+                      <use xlink:href="#arrow-left9"></use>
+                    </svg>
+                  </a>
+                  <a href="" onClick="CRDS.carousel.carouselNext()" class="crds-carousel__control crds-carousel__control--next">
+                    <svg viewBox="0 0 32 32" class="icon-medium icon-arrow-right9">
+                      <use xlink:href="#arrow-right9"></use>
+                    </svg>
+                  </a>
+                </div>
+              </header>
 
-          <div class="crds-card-carousel">
-            <div class="crds-carousel__content-wrap">
-              <ul class="crds-carousel__list">
-                <content-card ng-repeat="event in stream.dontMiss" content="event"></content-card>
-              </ul>
-            </div>
+              <div class="crds-card-carousel">
+                <div class="crds-carousel__content-wrap">
+                  <ul class="crds-carousel__list">
+                    <content-card ng-repeat="event in stream.dontMiss" content="event"></content-card>
+                  </ul>
+                </div>
+              </div>
+            </section>
           </div>
-        </section>
+        </div>
       </div>
     </div>
 
-    <div class="flex__container container">
-      <div class="flex__item digital-program__participate"
-           ng-show="stream.beTheChurch.length">
+    <div class="container">
+      <div class="digital-program__participate"
+          ng-show="stream.beTheChurch.length">
 
         <header class="clearfix">
           <h2>be the church</h2>
         </header>
 
-        <div class="row">
+        <div class="flex__row row">
           <article class="media"
                   ng-repeat="promo in stream.beTheChurch">
 
