@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using crds_angular.Exceptions;
 using crds_angular.Models.Crossroads.Payment;
@@ -23,6 +24,9 @@ namespace crds_angular.Services
         private readonly IPaymentRepository _paymentRepository;
         private readonly IContactRepository _contactRepository;
         private readonly IPaymentTypeRepository _paymentTypeRepository;
+        private readonly IEventRepository _eventPRepository;
+        private readonly ICommunicationRepository _communicationRepository;
+        private readonly IConfigurationWrapper _configWrapper;
 
         private readonly int _paidinfullStatus;
         private readonly int _somepaidStatus;
@@ -30,13 +34,22 @@ namespace crds_angular.Services
         private readonly int _bankErrorRefundContactId;
         private readonly int _paymentTypeReimbursement;
 
-        public PaymentService(IInvoiceRepository invoiceRepository, IPaymentRepository paymentRepository, IConfigurationWrapper configurationWrapper, IContactRepository contactRepository, IPaymentTypeRepository paymentTypeRepository)
+        public PaymentService(IInvoiceRepository invoiceRepository, 
+            IPaymentRepository paymentRepository, 
+            IConfigurationWrapper configurationWrapper, 
+            IContactRepository contactRepository, 
+            IPaymentTypeRepository paymentTypeRepository, 
+            IEventRepository eventRepository,
+            ICommunicationRepository communicationRepository)
         {
             _invoiceRepository = invoiceRepository;
             _paymentRepository = paymentRepository;
             _contactRepository = contactRepository;
             _paymentTypeRepository = paymentTypeRepository;
-            
+            _communicationRepository = communicationRepository;
+            _configWrapper = configurationWrapper;
+            _eventPRepository = eventRepository;
+
             _paidinfullStatus = configurationWrapper.GetConfigIntValue("PaidInFull");
             _somepaidStatus = configurationWrapper.GetConfigIntValue("SomePaid");
             _defaultPaymentStatus = configurationWrapper.GetConfigIntValue("DonationStatusPending");
@@ -249,6 +262,34 @@ namespace crds_angular.Services
             var payments = _paymentRepository.GetPaymentsForInvoice(invoiceId);
             payments = payments.Where(p => p.ContactId == me.Contact_ID).ToList();
             return payments.Any();
+        }
+
+        public void SendPaymentConfirmation(int paymentId , int eventId , string token )
+        {
+            var payment = _paymentRepository.GetPaymentById(paymentId);
+            var mpEvent = _eventPRepository.GetEvent(eventId);
+            var me = _contactRepository.GetMyProfile(token);
+
+            var templateIdResult = _eventPRepository.GetProductEmailTemplate(eventId);
+            var templateId = (templateIdResult.Status) ? templateIdResult.Value : _configWrapper.GetConfigIntValue("DefaultPaymentEmailTemplate");
+            var mergeData = new Dictionary<string, object>
+            {
+                {"Event_Title", mpEvent.EventTitle},
+                {"Payment_Total", payment.PaymentTotal.ToString(".00") },
+                {"Primary_Contact_Email", mpEvent.PrimaryContact.EmailAddress },
+                {"Primary_Contact_Display_Name", mpEvent.PrimaryContact.PreferredName},
+                {"Base_Url", _configWrapper.GetConfigValue("BaseUrl") }
+            };
+
+            var comm = _communicationRepository.GetTemplateAsCommunication(templateId,
+                                                                mpEvent.PrimaryContactId,
+                                                                mpEvent.PrimaryContact.EmailAddress,
+                                                                mpEvent.PrimaryContactId,
+                                                                mpEvent.PrimaryContact.EmailAddress,
+                                                                me.Contact_ID,
+                                                                me.Email_Address,
+                                                                mergeData);
+            _communicationRepository.SendMessage(comm);
         }
     }
 }
