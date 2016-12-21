@@ -23,6 +23,7 @@ class CampsService {
     this.productSummaryResource = $resource(`${__API_ENDPOINT__}api/camps/:campId/product/:camperId`, { campId: '@campId', camperId: '@camperId' });
     this.paymentResource = $resource(`${__API_ENDPOINT__}api/v1.0.0/invoice/:invoiceId/payment/:paymentId`, { invoiceId: 'invoiceId', paymentId: '@paymentId' });
     this.confirmationResource = $resource(`${__API_ENDPOINT__}api/camps/:campId/confirmation/:contactId`);
+    this.paymentConfirmationResource = $resource(`${__API_ENDPOINT__}api/v1.0.0/payment/:paymentId/confirmation`);
     this.hasPaymentsResource = $resource(`${__API_ENDPOINT__}api/v1.0.0/invoice/:invoiceId/has-payment`, { method: 'GET', cache: false });
     this.interestedInResource = $resource(`${__API_ENDPOINT__}api/v1.0.0/contact/:contactId/interested-in/:eventId`);
 
@@ -151,6 +152,14 @@ class CampsService {
 
   sendConfirmation(invoiceId, paymentId, campId, contactId) {
     return this.confirmationResource.save({ contactId, campId, invoiceId, paymentId }, {}).$promise
+      .then(() => {
+        this.initializeCampData();
+        this.initializeCamperData();
+      });
+  }
+
+  sendPaymentConfirmation(invoiceId, paymentId, eventId, contactId) {
+    return this.paymentConfirmationResource.save({ contactId, eventId, invoiceId, paymentId }, {}).$promise
       .then(() => {
         this.initializeCampData();
         this.initializeCamperData();

@@ -3,6 +3,7 @@ using System.Linq;
 using crds_angular.Models.Crossroads.Camp;
 using crds_angular.Models.Crossroads.Events;
 using MinistryPlatform.Translation.Models;
+using MinistryPlatform.Translation.Models.Payments;
 using MinistryPlatform.Translation.Models.Rules;
 using MinistryPlatform.Translation.Models.Product;
 
@@ -11,6 +12,7 @@ namespace crds_angular.test.Helpers
 {
     public class Factories
     {
+
         public static void MPProductRuleSet()
         {
             if (!FactoryGirl.NET.FactoryGirl.DefinedFactories.Contains(typeof(MPProductRuleSet)))
@@ -22,18 +24,14 @@ namespace crds_angular.test.Helpers
                     StartDate = DateTime.Now.AddDays(-30)
                 });
             }
-        }
+        }     
 
-        public static void MpEvent()
+        public static void MpPayment()
+
         {
-            if (!FactoryGirl.NET.FactoryGirl.DefinedFactories.Contains(typeof(MpEvent)))
+            if (!FactoryGirl.NET.FactoryGirl.DefinedFactories.Contains(typeof(MpPayment)))
             {
-                FactoryGirl.NET.FactoryGirl.Define(() => new MpEvent
-                {
-                    EventId = 4234,
-                    CongregationId = 767,
-                    OnlineProductId = 1234
-                });
+                FactoryGirl.NET.FactoryGirl.Define(() => new MpPayment());
             }
         }
 
@@ -84,7 +82,7 @@ namespace crds_angular.test.Helpers
         }
 
         public static void MpCongregation()
-        {
+        {           
             if (!FactoryGirl.NET.FactoryGirl.DefinedFactories.Contains(typeof(MpCongregation)))
             {
                 FactoryGirl.NET.FactoryGirl.Define<MpCongregation>(() => new MpCongregation
@@ -168,5 +166,38 @@ namespace crds_angular.test.Helpers
                 });
             }
         }
-    }
+
+        public static void MpEvent()
+        {
+            if (!FactoryGirl.NET.FactoryGirl.DefinedFactories.Contains(typeof(MpEvent)))
+            {
+                FactoryGirl.NET.FactoryGirl.Define(() => new MpEvent
+                {
+                    EventId = 12349,
+                    EventTitle = "Bluth Family Christmas Party",
+                    Cancelled = false,
+                    CongregationId = 1,
+                    Congregation = "Oakley"
+                });
+            }
+        }
+
+        public static void MpMyContact()
+        {
+            if (!FactoryGirl.NET.FactoryGirl.DefinedFactories.Contains(typeof(MpMyContact)))
+            {
+                FactoryGirl.NET.FactoryGirl.Define(() => new MpMyContact
+                {
+                    Contact_ID = 2323,
+                    Address_ID = 4321,
+                    Congregation_ID = 4,
+                    First_Name = "George",
+                    Last_Name = "Bluth",
+                    Nickname = "Gob"               
+                });
+            }
+        }
+    }    
+
+
 }

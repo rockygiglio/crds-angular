@@ -62,7 +62,7 @@ describe('Camps Payment Component', () => {
       fixture.$onInit();
       fixture.buildUrl();
 
-      const url = 'https%3A%2F%2Fcrossroads.net%2Fcamps%2Fcustom';
+      const url = `https%3A%2F%2Fcrossroads.net%2Fcamps%2F${state.toParams.campId}%2F${state.toParams.redirectTo}%2F${state.toParams.contactId}`;
 
       expect(sce.trustAsResourceUrl).toHaveBeenCalledWith(`${fixture.baseUrl}?type=payment&min_payment=${fixture.depositPrice}&invoice_id=${invoiceId}&total_cost=${fixture.totalPrice}&title=${fixture.campsService.campTitle}&url=${url}`);
     });

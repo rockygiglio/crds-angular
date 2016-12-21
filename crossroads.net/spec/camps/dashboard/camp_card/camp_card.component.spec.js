@@ -49,7 +49,7 @@ describe('Camp Card Directive', () => {
       contactId: bindings.camperId,
       campId: bindings.campId,
       update: true,
-      redirectTo: 'mycamps'
+      redirectTo: 'payment-confirmation'
     });
   });
 
