@@ -64,16 +64,16 @@ describe('Camp Card Directive', () => {
 
   it('should format remaining amount when undefined', () => {
     cardComponent.paymentRemaining = undefined;
-    expect(cardComponent.formatAmountDue()).toBe('Error getting payments. Please contact studentministry@gmail.com');
+    expect(cardComponent.formatAmountDue()).toBe(`Error getting payments. Please contact ${cardComponent.campPrimaryContact}`);
   });
 
   it('should format remaining amount when undefined', () => {
     cardComponent.paymentRemaining = null;
-    expect(cardComponent.formatAmountDue()).toBe('Error getting payments. Please contact studentministry@gmail.com');
+    expect(cardComponent.formatAmountDue()).toBe(`Error getting payments. Please contact ${cardComponent.campPrimaryContact}`);
   });
 
   it('should format remaining amount when negative', () => {
     cardComponent.paymentRemaining = -10;
-    expect(cardComponent.formatAmountDue()).toBe('Error getting payments. Please contact studentministry@gmail.com');
+    expect(cardComponent.formatAmountDue()).toBe(`Error: Overpaid by -$10.00. Please contact ${cardComponent.campPrimaryContact}`);
   });
 });
