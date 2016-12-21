@@ -728,7 +728,7 @@ streaming, landing {
 
     section {
       background-color: #fff;
-      padding-bottom: 25px;
+      padding-bottom: 15px;
     }
 
     header {
@@ -1023,6 +1023,7 @@ streaming, landing {
         @include make-md-column-push(8);
 
         margin-bottom: 0;
+        padding-right: 0;
       }
 
       iframe {
@@ -1042,9 +1043,9 @@ streaming, landing {
       @media (min-width: $screen-md) {
         @include make-md-column(8);
         @include make-md-column-pull(4);
-      }
 
-      display: flex;
+        padding-left: 0;
+      }
 
       h2 {
         color: #777;
@@ -1053,24 +1054,16 @@ streaming, landing {
 
       .digital-program__slider {
         background-color: #171717;
-        flex: 1 0 100%;
         padding-left: 20px;
         padding-right: 0;
-
-        @media (min-width: $screen-md) {
-          margin-right: 1em;
-        }
+        padding-bottom: 1px;
       }
 
       .crds-card-carousel {
-        min-height: 400px;
         margin-bottom: 2em;
         margin-top: 1em;
         overflow-x: scroll;
         overflow-y: hidden;
-        position: relative;
-        white-space: nowrap;
-        width: 100%;
         &::-webkit-scrollbar {
           display: none;
         }
@@ -1103,31 +1096,13 @@ streaming, landing {
         }
 
         &__content-wrap {
-          position: absolute;
-          white-space: nowrap;
-          width: 100%;
-
           display: flex;
-          flex-direction: row;
-          flex-wrap: nowrap;
-          justify-content: space-between;
-          align-items: stretch;
-        }
-
-        &__list {
-          list-style: none;
-          padding: 0;
         }
       }
 
       content-card {
-        display: inline-block;
+        background-color: #FFF;
         margin-right: 1em;
-        vertical-align: top;
-        white-space: normal;
-        z-index: 1;
-
-        flex: 1 0 225px;
 
         &:last-of-type {
           margin-right: 0;
@@ -1139,17 +1114,13 @@ streaming, landing {
 
         section {
           height: 100%;
-          text-overflow: ellipsis;
-        }
-
-        li {
-          display: flex;
-          align-items: stretch;
         }
       }
 
       .crds-card {
+        flex: 1 0 225px;
         width: 225px;
+        height: 100%;
 
         figcaption {
           top: -0.6em;
