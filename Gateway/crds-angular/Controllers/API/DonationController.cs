@@ -377,7 +377,9 @@ namespace crds_angular.Controllers.API
                     ProcessorId = donor.ProcessorId,
                     SetupDate = DateTime.Now,
                     RegisteredDonor = false,
-                    Anonymous = dto.Anonymous
+                    Anonymous = dto.Anonymous,
+                    PredefinedAmount = dto.PredefinedAmount,
+                    SourceUrl = dto.SourceUrl
                 };
 
                 var donationId = _mpDonorService.CreateDonationAndDistributionRecord(donationAndDistribution);
