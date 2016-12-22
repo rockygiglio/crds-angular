@@ -77,16 +77,22 @@ export default function CampRoutes($stateProvider) {
         CampsService: 'CampsService',
         $state: '$state',
         $timeout: '$timeout',
-        sendConfirmation: (CampsService, $state, $timeout) => CampsService.sendConfirmation($state.toParams.invoiceId,
-            $state.toParams.paymentId,
-            $state.toParams.campId,
-            $state.toParams.contactId)
-            .then(() => {
-              // When the confirmation API calls returns, forward to the thank you page
-              $timeout(() => {
-                $state.go('campsignup.thankyou', $state.toParams, { location: 'replace' });
-              }, 0);
-            })
+        $sessionStorage: '$sessionStorage',
+        sendConfirmation: (CampsService, $state, $timeout, $sessionStorage) => {
+          CampsService.sendConfirmation($state.toParams.invoiceId,
+              $state.toParams.paymentId,
+              $state.toParams.campId,
+              $state.toParams.contactId)
+              .then(() => {
+                const { contactId, campId } = $state.toParams;
+                $sessionStorage.campDeposits[`${campId}+${contactId}`] = true;
+
+                // When the confirmation API calls returns, forward to the thank you page
+                $timeout(() => {
+                  $state.go('campsignup.thankyou', $state.toParams, { location: 'replace' });
+                }, 0);
+              });
+        }
       }
     })
     .state('campsignup.thankyou', {

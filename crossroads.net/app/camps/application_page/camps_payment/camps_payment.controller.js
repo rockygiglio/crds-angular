@@ -1,9 +1,10 @@
 /* @ngInject */
 export default class CampPaymentController {
-  constructor(CampsService, $state, $sce) {
+  constructor(CampsService, $state, $sce, $sessionStorage) {
     this.campsService = CampsService;
     this.state = $state;
     this.sce = $sce;
+    this.sessionStorage = $sessionStorage;
     this.iframeSelector = '.camp-payment-widget';
     this.viewReady = false;
     this.update = false;
@@ -54,7 +55,7 @@ export default class CampPaymentController {
   }
 
   calculateDeposit() {
-    if (this.update) {
+    if (this.update || this.sessionStorage.campDeposits[`${this.state.toParams.campId}+${this.state.toParams.contactId}`]) {
       this.paymentRemaining = this.campsService.productInfo.camperInvoice.paymentLeft;
       this.invoiceTotal = this.campsService.productInfo.camperInvoice.invoiceTotal;
       this.totalPrice = this.paymentRemaining;

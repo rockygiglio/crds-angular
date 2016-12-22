@@ -5,12 +5,13 @@ import filter from 'lodash/collection/filter';
 
 /* ngInject */
 class CampsService {
-  constructor($resource, $rootScope, $stateParams, $log, AttributeTypeService) {
+  constructor($resource, $rootScope, $stateParams, $log, AttributeTypeService, $sessionStorage) {
     this.log = $log;
     this.scope = $rootScope;
     this.stateParams = $stateParams;
     this.resource = $resource;
     this.attributeTypeService = AttributeTypeService;
+    this.sessionStorage = $sessionStorage;
 
     this.campResource = $resource(`${__API_ENDPOINT__}api/camps/:campId`);
     this.camperResource = $resource(`${__API_ENDPOINT__}api/camps/:campId/campers/:camperId`);
@@ -123,8 +124,16 @@ class CampsService {
       this.log.error(err);
     }).$promise;
 
+    this.sessionStorage.campDeposits = this.sessionStorage.campDeposits || {};
+    const hasDeposit = this.sessionStorage.campDeposits[`${campId}+${camperId}`];
     if (checkForDeposit) {
-      prom = prom.then(res => this.invoiceHasPayment(res.invoiceId));
+      prom = prom.then(res => {
+        return hasDeposit || this.invoiceHasPayment(res.invoiceId).catch((err) => {
+          if (err.status === 302) {
+            this.sessionStorage.campDeposits[`${campId}+${camperId}`] = true;
+          }
+        })
+      });
     }
     return prom;
   }
