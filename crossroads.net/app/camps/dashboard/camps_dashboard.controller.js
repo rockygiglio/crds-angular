@@ -9,12 +9,9 @@ class CampDashboardController {
   $onInit() {
     this.data = this.campsService.dashboard;
     this.viewReady = true;
-    this.onPayment();
-  }
 
-  onPayment() {
-    const paymentId = this.state.toParams.paymentId;
-    if (paymentId) {
+    // Display message if coming from the payments page
+    if (this.state.toParams.wasPayment) {
       this.rootScope.$emit('notify', this.rootScope.MESSAGES.successfulSubmission);
     }
   }

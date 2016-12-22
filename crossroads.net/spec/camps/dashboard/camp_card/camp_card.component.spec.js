@@ -49,7 +49,31 @@ describe('Camp Card Directive', () => {
       contactId: bindings.camperId,
       campId: bindings.campId,
       update: true,
-      redirectTo: 'mycamps'
+      redirectTo: 'payment-confirmation'
     });
+  });
+
+  it('should format remaining amount for display', () => {
+    expect(cardComponent.formatAmountDue()).toBe('$300.00');
+  });
+
+  it('should format remaining amount when zero', () => {
+    cardComponent.paymentRemaining = 0;
+    expect(cardComponent.formatAmountDue()).toBe('$0.00');
+  });
+
+  it('should format remaining amount when undefined', () => {
+    cardComponent.paymentRemaining = undefined;
+    expect(cardComponent.formatAmountDue()).toBe(`Error getting payments. Please contact ${cardComponent.campPrimaryContact}`);
+  });
+
+  it('should format remaining amount when undefined', () => {
+    cardComponent.paymentRemaining = null;
+    expect(cardComponent.formatAmountDue()).toBe(`Error getting payments. Please contact ${cardComponent.campPrimaryContact}`);
+  });
+
+  it('should format remaining amount when negative', () => {
+    cardComponent.paymentRemaining = -10;
+    expect(cardComponent.formatAmountDue()).toBe(`Error: Overpaid by -$10.00. Please contact ${cardComponent.campPrimaryContact}`);
   });
 });
