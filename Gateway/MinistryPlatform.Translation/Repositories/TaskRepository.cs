@@ -10,13 +10,15 @@ namespace MinistryPlatform.Translation.Repositories
     public class TaskRepository : BaseRepository, ITaskRepository
     {
         private readonly IMinistryPlatformService _ministryPlatformService;
+        private readonly IMinistryPlatformRestRepository _ministryPlatformRestRepository;
         private readonly int _autoStartedTaskPageViewId;
 
-        public TaskRepository(IAuthenticationRepository authenticationService, IConfigurationWrapper configurationWrapper, IMinistryPlatformService ministryPlatformService) :
+        public TaskRepository(IAuthenticationRepository authenticationService, IConfigurationWrapper configurationWrapper, 
+                IMinistryPlatformService ministryPlatformService, IMinistryPlatformRestRepository ministryPlatformRestRepository) :
             base(authenticationService, configurationWrapper)
         {
             _ministryPlatformService = ministryPlatformService;
-
+            _ministryPlatformRestRepository = ministryPlatformRestRepository;
             _autoStartedTaskPageViewId = _configurationWrapper.GetConfigIntValue("TasksNeedingAutoStarted");
         }
 

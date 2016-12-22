@@ -60,7 +60,6 @@ export default class AddEventcontroller {
       }
       this.ready = true;
     });
-    debugger;
   }
 
   endDateOpen($event) {

@@ -1,12 +1,13 @@
 export default class AddEventToolController {
   /* @ngInject*/
-  constructor($rootScope, $window, $log, MPTools, AuthService, EventService, CRDS_TOOLS_CONSTANTS, AddEvent) {
+  constructor($rootScope, $window, $log, $modal, MPTools, AuthService, EventService, CRDS_TOOLS_CONSTANTS, AddEvent) {
     this.rootScope = $rootScope;
     this.window = $window;
     this.log = $log;
     this.MPTools = MPTools;
     this.AuthService = AuthService;
     this.EventService = EventService;
+    this.modal = $modal;
     this.CRDS_TOOLS_CONSTANTS = CRDS_TOOLS_CONSTANTS;
     this.AddEvent = AddEvent;
   }
@@ -57,7 +58,6 @@ export default class AddEventToolController {
   }
 
   next() {
-    this.canSaveMaintainOldRequest();
     this.allData.eventForm.$setSubmitted();
 
     this.AddEvent.eventData.event = this.event;
@@ -68,54 +68,73 @@ export default class AddEventToolController {
       this.allData.eventForm.maximumChildren.$valid &&
       this.allData.eventForm.minimumChildren.$valid
     ) {
+
+      //if is editMode
+      if (this.AddEvent.editMode) {
+        if (!this.canSaveMaintainOldReservation()) {
+          this.continueEdit();
+          return;
+        }
+      }
       this.AddEvent.currentPage = 2;
     } else {
       this.rootScope.$emit('notify', this.rootScope.MESSAGES.generalError);
     }
   }
 
+  continueEditModal() {
+    const modalInstance = this.modal.open({
+      controller: 'ContinueEditController',
+      controllerAs: 'continueEdit',
+      templateUrl: 'continue_reservation_edit/continue_edit.html'
+    });
+    return modalInstance;
+  }
 
-  canSaveMaintainOldRequest() {
-    //if is editMode
-    if (this.AddEvent.editMode) {
-      //Start Date
-      let curSD = this.event.startDate;
-      let oldSD = this.AddEvent.origStartDate;
-      let sameSD = oldSD.toDateString() == curSD.toDateString();
-      //Start Time
-      let curST = this.event.startTime;
-      let oldST = this.AddEvent.origStartTime;
-      let sameST = oldST.getTime() == curST.getTime();
-      let curSDT = this.AddEvent.dateTime(curSD, curST);
-      let oldSDT = this.AddEvent.dateTime(oldSD, oldST);
-      //End Time
-      let curET = this.event.endTime;
-      let oldET = this.AddEvent.origEndTime;
-      let sameET = oldET.getTime() == curET.getTime();
-      //End Date
-      let curED = this.event.endDate;
-      let oldED = this.AddEvent.origEndDate;
-      let sameED = oldED.toDateString() == curED.toDateString();
-      let curEDT = this.AddEvent.dateTime(curED, curET);
-      let oldEDT = this.AddEvent.dateTime(oldED, oldET);
-      //Congregation
-      let sameCongregation = this.AddEvent.origCongregation == this.event.congregation.dp_RecordID;
+  continueEdit() {
+    const modalInstance = this.continueEditModal();
 
-      debugger;
-      if (sameSD && sameED && sameST && sameET && sameCongregation) {
-        return true;
+    modalInstance.result.then(() => {
+      this.rooms = [];
+      this.AddEvent.currentPage = 2;
+    }, () => {
+      return;
+    });
+  }
+
+  canSaveMaintainOldReservation() {
+    //Start Date
+    let curSD = this.event.startDate;
+    let oldSD = this.AddEvent.origStartDate;
+    let sameSD = oldSD.toDateString() == curSD.toDateString();
+    //Start Time
+    let curST = this.event.startTime;
+    let oldST = this.AddEvent.origStartTime;
+    let sameST = oldST.getTime() == curST.getTime();
+    let curSDT = this.AddEvent.dateTime(curSD, curST);
+    let oldSDT = this.AddEvent.dateTime(oldSD, oldST);
+    //End Time
+    let curET = this.event.endTime;
+    let oldET = this.AddEvent.origEndTime;
+    let sameET = oldET.getTime() == curET.getTime();
+    //End Date
+    let curED = this.event.endDate;
+    let oldED = this.AddEvent.origEndDate;
+    let sameED = oldED.toDateString() == curED.toDateString();
+    let curEDT = this.AddEvent.dateTime(curED, curET);
+    let oldEDT = this.AddEvent.dateTime(oldED, oldET);
+    //Congregation
+    let sameCongregation = this.AddEvent.origCongregation == this.event.congregation.dp_RecordID;
+
+    if (sameSD && sameED && sameST && sameET && sameCongregation) {
+      return true;
+    } else {
+      if (!sameCongregation) {
+        return false;
       } else {
-        if (!sameCongregation) {
-          return false;
-        } else {
-          return this.doesDateRangeFitInsideOtherDateRange(oldSDT, oldEDT, curSDT, curEDT);
-        }
+        return this.doesDateRangeFitInsideOtherDateRange(oldSDT, oldEDT, curSDT, curEDT);
       }
     }
-    return true;
-    // big if checking if any of the important fields changed
-    //big if checking if new dates are inside old date/times
-
   }
 
   doesDateRangeFitInsideOtherDateRange(oldStartDate, oldEndDate, newStartDate, newEndDate) {
