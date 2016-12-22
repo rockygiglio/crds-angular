@@ -33,13 +33,13 @@ describe('Camp Service', () => {
   });
 
   it('should make the API call to get my dashboard', () => {
-    httpBackend.expectGET(`${endpoint}/my-camp`).respond(200, []);
+    httpBackend.expectGET(`${endpoint}/v1.0.0/camps/my-camp`).respond(200, []);
     campsService.getCampDashboard();
     httpBackend.flush();
   });
 
   it('should make the API call to get my dashboard and handle error', () => {
-    httpBackend.expectGET(`${endpoint}/my-camp`).respond(500, []);
+    httpBackend.expectGET(`${endpoint}/v1.0.0/camps/my-camp`).respond(500, []);
     campsService.getCampDashboard();
     httpBackend.flush();
   });
@@ -109,6 +109,21 @@ describe('Camp Service', () => {
     expect(campsService.getCampProductInfo(campId, camperId, true));
     httpBackend.flush();
     expect(campsService.productInfo.invoiceId).toEqual(123);
+  });
+
+  it('should confirm a payment', () => {
+    const invoiceId = 123;
+    const contactId = 456789;
+    const eventId = 654321;
+    const paymentId = 1234;
+
+    httpBackend.whenPOST(`${endpoint}/v1.0.0/payment/:paymentId/confirmation`).respond(200, {});
+    expect(campsService.sendPaymentConfirmation(invoiceId, paymentId, eventId, contactId));
+  });
+
+  // FIXME: there is no test for `getShirtSizes()`
+  it('should get shirt sizes', () => {
+
   });
 
   afterEach(() => {

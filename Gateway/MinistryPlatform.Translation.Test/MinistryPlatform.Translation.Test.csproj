@@ -121,6 +121,7 @@
     <Compile Include="Services\CampaignRepositoryTest.cs" />
     <Compile Include="Services\ChildcareRepositoryTest.cs" />
     <Compile Include="Services\ChildcareRequestServiceTest.cs" />
+    <Compile Include="Services\GenderRuleTest.cs" />
     <Compile Include="Services\CongregationRepositoryTest.cs" />
     <Compile Include="Services\GroupConnectorServiceTest.cs" />
     <Compile Include="Services\AddressServiceTest.cs" />
@@ -150,9 +151,12 @@
     <Compile Include="Services\ParticipantServiceTest.cs" />
     <Compile Include="Services\PaymentRepositoryTest.cs" />
     <Compile Include="Services\PledgeRepositoryTest.cs" />
+    <Compile Include="Services\ProductRulesetsRepositoryTest.cs" />
     <Compile Include="Services\ProgramServiceTest.cs" />
+    <Compile Include="Services\RegistrationRuleTest.cs" />
     <Compile Include="Services\ResponseServiceTest.cs" />
-    <Compile Include="Services\RoomServiceTest.cs" />
+    <Compile Include="Services\RoomRepositoryTest.cs" />
+    <Compile Include="Services\RulesetRepositoryTest.cs" />
     <Compile Include="Services\SkillsServiceTest.cs" />
     <Compile Include="Services\TripRepositoryTest.cs" />
     <Compile Include="Services\UserServiceTest.cs" />

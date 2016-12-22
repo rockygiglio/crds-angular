@@ -1,23 +1,17 @@
-(function() {
-  'use strict';
+import CONSTANTS from 'crds-constants';
 
-  module.exports = RemoveRoomController;
-
-  RemoveRoomController.$inject = ['$modalInstance', 'items'];
-
-  function RemoveRoomController($modalInstance, items) {
-
-    var vm = this;
-    vm.cancel = cancel;
-    vm.ok = ok;
-    vm.room = items;
-
-    function ok() {
-      $modalInstance.close();
-    }
-
-    function cancel() {
-      $modalInstance.dismiss('cancel');
-    }
+export default class RemoveRoomController {
+  /* @ngInject */
+  constructor($modalInstance, items) {
+    this.modalInstance = $modalInstance;
+    this.room = items;
   }
-})();
+
+  ok() {
+    this.modalInstance.close();
+  }
+
+  cancel() {
+    this.modalInstance.dismiss('cancel');
+  }
+};

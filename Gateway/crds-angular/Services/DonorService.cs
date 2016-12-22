@@ -285,14 +285,16 @@ namespace crds_angular.Services
                 var congregation = contact.Congregation_ID ?? _notSiteSpecificCongregation;
 
                 recurGiftId = _mpDonorService.CreateRecurringGiftRecord(authorizedUserToken,
-                                                                            mpContactDonor.DonorId,
-                                                                            donorAccountId,
-                                                                            EnumMemberSerializationUtils.ToEnumString(recurringGiftDto.PlanInterval),
-                                                                            recurringGiftDto.PlanAmount,
-                                                                            recurringGiftDto.StartDate,
-                                                                            recurringGiftDto.Program,
-                                                                            stripeSubscription.Id,
-                                                                            congregation);
+                                                                        mpContactDonor.DonorId,
+                                                                        donorAccountId,
+                                                                        EnumMemberSerializationUtils.ToEnumString(recurringGiftDto.PlanInterval),
+                                                                        recurringGiftDto.PlanAmount,
+                                                                        recurringGiftDto.StartDate,
+                                                                        recurringGiftDto.Program,
+                                                                        stripeSubscription.Id,
+                                                                        congregation,
+                                                                        recurringGiftDto.SourceUrl,
+                                                                        recurringGiftDto.PredefinedAmount);
 
                 SendRecurringGiftConfirmationEmail(authorizedUserToken, _recurringGiftSetupEmailTemplateId, null, recurGiftId);
 

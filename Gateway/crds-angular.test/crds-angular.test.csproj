@@ -263,8 +263,10 @@
     <Compile Include="Services\AccountServiceTest.cs" />
     <Compile Include="Services\AddressServiceTest.cs" />
     <Compile Include="Services\AttributeServiceTest.cs" />
+    <Compile Include="Services\CampRulesTest.cs" />
     <Compile Include="Services\CampServiceTest.cs" />
     <Compile Include="Services\ChildcareServiceTest.cs" />
+    <Compile Include="Services\CongregationServiceTest.cs" />
     <Compile Include="Services\DonationServiceTest.cs" />
     <Compile Include="Services\DonorServiceTest.cs" />
     <Compile Include="Services\EmailCommunicationTest.cs" />
@@ -286,6 +288,7 @@
     <Compile Include="Services\PersonServiceTest.cs" />
     <Compile Include="Services\ProgramServiceTest.cs" />
     <Compile Include="Services\EventServiceTest.cs" />
+    <Compile Include="Services\RoomServiceTest.cs" />
     <Compile Include="Services\ServeServiceTest.cs" />
     <Compile Include="Services\StaffContactServiceTest.cs" />
     <Compile Include="Services\StripeEventServiceTest.cs" />

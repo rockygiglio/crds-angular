@@ -202,5 +202,15 @@ namespace MinistryPlatform.Translation.Repositories
                 return new Err<MpEventParticipant>(e);
             }
         }
+
+        public int GetEventParticipantCountByGender(int eventId, int genderId)
+        {
+            var apiToken = ApiLogin();
+            const string tableName = "Event_Participants";
+            var searchString = $"Event_ID = {eventId} AND Participant_ID_Table_Contact_ID_Table_Gender_ID_Table.Gender_ID = {genderId}";
+            const string columnName = "Count(*)";
+
+            return _ministryPlatformRestRepository.UsingAuthenticationToken(apiToken).Search<int>(tableName, searchString, columnName);
+        }
     }
 }

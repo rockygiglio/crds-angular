@@ -168,15 +168,4 @@ describe('Stream Controller', () => {
     expect(_.first(fixture.beTheChurch).title).toBe('Be a Giver');
   });
 
-  it('should return URL for inline giving', () => {
-    const url = fixture.buildUrl().$$unwrapTrustedValue();
-    expect(url).toBe('https://embed.crossroads.net?type=donation&theme=dark');
-  });
-
-  it('should return inline giving URL augmented by queryStringParams property', () => {
-    fixture.queryStringParams = 'something=else'
-    const url = fixture.buildUrl().$$unwrapTrustedValue();
-    expect(url).toBe('https://embed.crossroads.net?something=else');
-  });
-
 })
