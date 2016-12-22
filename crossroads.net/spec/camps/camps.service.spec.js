@@ -111,6 +111,47 @@ describe('Camp Service', () => {
     expect(campsService.productInfo.invoiceId).toEqual(123);
   });
 
+  it('should get camp product info and have cached whether there was a deposit', () => {
+    const campId = 123456;
+    const camperId = 654321;
+    const productInfo = {
+      invoiceId: 123
+    };
+
+    campsService.sessionStorage.campDeposits = undefined;
+
+    httpBackend.expectGET(`${endpoint}/camps/${campId}/product/${camperId}`).respond(200, productInfo);
+    httpBackend.expectGET(`${endpoint}/v1.0.0/invoice/${productInfo.invoiceId}/has-payment?cache=false&method=GET`).respond(302, { status: 302 });
+    expect(campsService.getCampProductInfo(campId, camperId, true));
+    httpBackend.flush();
+
+    expect(campsService.productInfo.invoiceId).toEqual(123);
+    expect(campsService.sessionStorage.campDeposits[`${campId}+${camperId}`]).toEqual(true);
+  });
+
+  it('should get camp product info and not check for deposit because of the cache', () => {
+    const campId = 123456;
+    const camperId = 654321;
+    const productInfo = {
+      invoiceId: 123
+    };
+
+    campsService.sessionStorage.campDeposits = {};
+    campsService.sessionStorage.campDeposits[`${campId}+${camperId}`] = true;
+    let checkedForDeposit = false;
+
+    httpBackend.expectGET(`${endpoint}/camps/${campId}/product/${camperId}`).respond(200, productInfo);
+    httpBackend.whenGET(`${endpoint}/v1.0.0/invoice/${productInfo.invoiceId}/has-payment?cache=false&method=GET`).respond(() => {
+      checkedForDeposit = true;
+      return [400, ''];
+    });
+    expect(campsService.getCampProductInfo(campId, camperId, true));
+    httpBackend.flush();
+
+    expect(campsService.productInfo.invoiceId).toEqual(123);
+    expect(checkedForDeposit).toEqual(false);
+  });
+
   it('should confirm a payment', () => {
     const invoiceId = 123;
     const contactId = 456789;

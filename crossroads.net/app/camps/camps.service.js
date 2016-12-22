@@ -127,13 +127,11 @@ class CampsService {
     this.sessionStorage.campDeposits = this.sessionStorage.campDeposits || {};
     const hasDeposit = this.sessionStorage.campDeposits[`${campId}+${camperId}`];
     if (checkForDeposit) {
-      prom = prom.then(res => {
-        return hasDeposit || this.invoiceHasPayment(res.invoiceId).catch((err) => {
-          if (err.status === 302) {
-            this.sessionStorage.campDeposits[`${campId}+${camperId}`] = true;
-          }
-        })
-      });
+      prom = prom.then(res => hasDeposit || this.invoiceHasPayment(res.invoiceId).catch((err) => {
+        if (err.status === 302) {
+          this.sessionStorage.campDeposits[`${campId}+${camperId}`] = true;
+        }
+      }));
     }
     return prom;
   }
