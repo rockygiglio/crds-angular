@@ -12,6 +12,9 @@ export default class GeolocationController {
     this.locationError  = false;
     this.dismiss        = false;
     this.invalidZipcode = false;
+    this.success        = false;
+    this.locationError  = false;
+    this.invalidZipcode = false;
 
     this.location = this.locationService.getLocation() || Geolocation.blank();
     if (this.location.count === 1) {
@@ -101,8 +104,6 @@ export default class GeolocationController {
    * FORM FUNCTIONALITY
    ***********************/
   submit() {
-    this.removeFormMessages();
-
     if (this.location.zipcode.length <= 0 && this.location.count === 0) {
       this.dismissed();
       return false;
@@ -123,11 +124,5 @@ export default class GeolocationController {
 
   dismissed() {
     this.locationService.dismissed();
-  }
-
-  removeFormMessages() {
-    this.success = false;
-    this.locationError = false;
-    this.invalidZipcode = false;
   }
 }
