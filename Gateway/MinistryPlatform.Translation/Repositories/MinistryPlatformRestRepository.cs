@@ -10,6 +10,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RestSharp;
 using RestSharp.Extensions;
+using MinistryPlatform.Translation.Models;
 
 namespace MinistryPlatform.Translation.Repositories
 {
@@ -214,6 +215,57 @@ namespace MinistryPlatform.Translation.Repositories
             return result.TrimEnd('&');
         }
 
+        /// <summary>
+        /// this allows us to get a task by pageID and recordID
+        /// </summary>
+        /// <param name="pageID">the pageID of the record type</param>
+        /// <param name="recordID">The recordID of the task you want</param>
+        /// <returns>List of T2</returns>
+        public MPTask FindTask(int pageID, int recordID)
+        {
+            //https://adminint.crossroads.net/ministryplatformapi/tasks?%24pageId=384&%24recordId=4588995
+            var url = $"/tasks?$pageId={pageID}&$recordId={recordID}";
+            var request = new RestRequest(url, Method.GET);
+            AddAuthorization(request);
+
+            var response = _ministryPlatformRestClient.Execute(request);
+            _authToken.Value = null;
+            response.CheckForErrors($"Error searching for task");
+
+            var content = JsonConvert.DeserializeObject<List<MPTask>>(response.Content);
+
+            return content.FirstOrDefault();
+        }
+
+        public void DeleteTask(int taskID, bool? rejected = null, string comments = null)
+        {
+            //https://adminint.crossroads.net/ministryplatformapi/tasks/164458?%24rejected=true&%24comments=dd
+            string baseURL = $"/tasks/{taskID}";
+            string rejectedS = "";
+            string commentsS = "";
+
+            if (rejected != null)
+                rejectedS = $"$rejected={rejected.ToString()}";
+
+            if (comments != null)
+                commentsS = $"$comments={comments}";
+
+            if (rejectedS != "" && commentsS == "")
+                baseURL += $"?{rejectedS}";
+            else if (rejectedS == "" && commentsS != "")
+                baseURL += $"?{commentsS}";
+            else if (rejectedS != "" && commentsS != "")
+                baseURL += $"?{rejectedS}&{commentsS}";
+
+
+            var url = $"/tasks/{taskID}?";
+            var request = new RestRequest(baseURL, Method.GET);
+            AddAuthorization(request);
+
+            var response = _ministryPlatformRestClient.Execute(request);
+            _authToken.Value = null;
+            response.CheckForErrors($"Error searching for task");
+        }
 
         /// <summary>
         /// this allows us to search one table, and return a type of another

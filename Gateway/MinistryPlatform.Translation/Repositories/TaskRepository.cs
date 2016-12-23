@@ -12,6 +12,7 @@ namespace MinistryPlatform.Translation.Repositories
         private readonly IMinistryPlatformService _ministryPlatformService;
         private readonly IMinistryPlatformRestRepository _ministryPlatformRestRepository;
         private readonly int _autoStartedTaskPageViewId;
+        private readonly int _roomReservationPageID;
 
         public TaskRepository(IAuthenticationRepository authenticationService, IConfigurationWrapper configurationWrapper, 
                 IMinistryPlatformService ministryPlatformService, IMinistryPlatformRestRepository ministryPlatformRestRepository) :
@@ -20,6 +21,7 @@ namespace MinistryPlatform.Translation.Repositories
             _ministryPlatformService = ministryPlatformService;
             _ministryPlatformRestRepository = ministryPlatformRestRepository;
             _autoStartedTaskPageViewId = _configurationWrapper.GetConfigIntValue("TasksNeedingAutoStarted");
+            _roomReservationPageID = _configurationWrapper.GetConfigIntValue("RoomReservationPageId");
         }
 
         public List<MPTask> GetTasksToAutostart()
@@ -52,6 +54,17 @@ namespace MinistryPlatform.Translation.Repositories
         {
             // note that this call needs to user impersonation
             _ministryPlatformService.CompleteTask(token, taskId, rejected, comments);
+        }
+
+        public void DeleteTasksForRoomReservations(List<int> roomReserverationIDs)
+        {
+            var apiToken = ApiLogin();
+            foreach (int roomReserverationID in roomReserverationIDs)
+            {
+                var task = _ministryPlatformRestRepository.UsingAuthenticationToken(apiToken).FindTask(_roomReservationPageID, roomReserverationID);
+                if (task != null)
+                    _ministryPlatformRestRepository.UsingAuthenticationToken(apiToken).DeleteTask(task.Task_ID, true, "Room Edited, Cancelled By User" );
+            }
         }
     }
 }
