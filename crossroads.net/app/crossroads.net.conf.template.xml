@@ -1,12 +1,12 @@
 # $$CMT is a placeholder variable to control server redirect
 # for int/demo there are no redirect, only prod has redirect
 $CMT<VirtualHost *:80>
-$CMT    ServerName $REDIRECT_SERVER_NAME
+$CMT    ServerName $CRDS_REDIRECT_SERVER_NAME
 $CMT    Redirect permanent / https://$SERVER_NAME
 $CMT</VirtualHost>
 
 $CMT<VirtualHost *:443>
-$CMT    ServerName $REDIRECT_SERVER_NAME
+$CMT    ServerName $CRDS_REDIRECT_SERVER_NAME
 $CMT    Redirect permanent / https://$SERVER_NAME
 
 $CMT    SSLEngine on
