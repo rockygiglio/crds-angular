@@ -56,6 +56,8 @@ namespace MinistryPlatform.Translation.Repositories
             _ministryPlatformService.CompleteTask(token, taskId, rejected, comments);
         }
 
+        //This is not covered in a unit test, and it has not been tested as we are not currently using it
+        //but we will pick it back up next sprint
         public void DeleteTasksForRoomReservations(List<int> roomReserverationIDs)
         {
             var apiToken = ApiLogin();

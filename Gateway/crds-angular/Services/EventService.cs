@@ -173,47 +173,26 @@ namespace crds_angular.Services
             try
             {
                 var oldEventDetails = GetEventDetails(eventId, true, false);
-                bool wasChildcare = oldEventDetails.EventTypeId == childcareEventTypeID;
-                bool isChildcare = eventReservation.EventTypeId == childcareEventTypeID;
 
                 foreach (var room in oldEventDetails.Rooms)
                 {
-                    //check if room is !cancelled
-                    if (!eventReservation.Rooms.Any(r => r.RoomId == room.RoomId))
+                    if (!room.Cancelled)
                     {
-                        room.Cancelled = true;
-                        foreach (var eq in room.Equipment)
+                        if (!eventReservation.Rooms.Any(r => r.RoomId == room.RoomId))
                         {
-                            eq.Cancelled = true;
+                            room.Cancelled = true;
+                            foreach (var eq in room.Equipment)
+                            {
+                                eq.Cancelled = true;
+                            }
+                            UpdateEventRoom(room, eventId, token);
                         }
-                        UpdateEventRoom(room, eventId, token);
                     }
                 }
 
-                //if it use to be a childcare event, but isn't anymore, remove the group
-                if (wasChildcare && !isChildcare)
-                {
-                    _eventService.DeleteEventGroupsForEvent(eventId, token);
-                    _groupService.EndDateGroup(oldEventDetails.Group.GroupId, null, null);
-                }
-                //now is a childcare event but was not before so add a group
-                else if (!wasChildcare && isChildcare)
-                {
-                    eventReservation.Group.CongregationId = eventReservation.CongregationId;
-                    var groupid = AddGroup(eventReservation.Group);
-                    AddEventGroup(eventId, groupid, token);
-                }
-                //it was and still is a childcare event
-                else if (wasChildcare && isChildcare)
-                {
-                    var group = _eventService.GetEventGroupsForEventAPILogin(eventId).FirstOrDefault();
-
-                    eventReservation.Group.GroupId = group.GroupId;
-                    eventReservation.Group.CongregationId = eventReservation.CongregationId;
-                    UpdateGroup(eventReservation.Group);
-                }
-
+                UpdateEventChildcareGroup(oldEventDetails, eventReservation, eventId, token);
                 UpdateEvent(eventReservation, eventId, token);
+
                 foreach (var room in eventReservation.Rooms)
                 {
                     UpdateEventRoom(room, eventId, token);
@@ -226,6 +205,35 @@ namespace crds_angular.Services
                 throw new Exception(msg, ex);
             }
             return true;
+        }
+
+        private void UpdateEventChildcareGroup(EventToolDto oldEventDetails, EventToolDto eventReservation, int eventId, string token)
+        {
+            bool wasChildcare = oldEventDetails.EventTypeId == childcareEventTypeID;
+            bool isChildcare = eventReservation.EventTypeId == childcareEventTypeID;
+
+            //if it use to be a childcare event, but isn't anymore, remove the group
+            if (wasChildcare && !isChildcare)
+            {
+                _eventService.DeleteEventGroupsForEvent(eventId, token);
+                _groupService.EndDateGroup(oldEventDetails.Group.GroupId, null, null);
+            }
+            //now is a childcare event but was not before so add a group
+            else if (!wasChildcare && isChildcare)
+            {
+                eventReservation.Group.CongregationId = eventReservation.CongregationId;
+                var groupid = AddGroup(eventReservation.Group);
+                AddEventGroup(eventId, groupid, token);
+            }
+            //it was and still is a childcare event
+            else if (wasChildcare && isChildcare)
+            {
+                var group = _eventService.GetEventGroupsForEventAPILogin(eventId).FirstOrDefault();
+
+                eventReservation.Group.GroupId = group.GroupId;
+                eventReservation.Group.CongregationId = eventReservation.CongregationId;
+                UpdateGroup(eventReservation.Group);
+            }
         }
 
         public EventRoomDto UpdateEventRoom(EventRoomDto eventRoom, int eventId, string token)

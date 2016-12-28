@@ -34,6 +34,7 @@ namespace crds_angular.test.Services
         private Mock<IRoomRepository> _roomService;
         private Mock<IEquipmentRepository> _equipmentService;
         private Mock<IEventParticipantRepository> _eventParticipantService;
+        private readonly int childcareEventTypeID;
 
         private EventService _fixture;
 
@@ -62,6 +63,7 @@ namespace crds_angular.test.Services
             _configurationWrapper = new Mock<IConfigurationWrapper>();
             _configurationWrapper.Setup(mocked => mocked.GetConfigIntValue("EventsReadyForPrimaryContactReminder")).Returns(2205);
             _configurationWrapper.Setup(mocked => mocked.GetConfigIntValue("EventPrimaryContactReminderTemplateId")).Returns(14909);
+            _configurationWrapper.Setup(mocked => mocked.GetConfigIntValue("ChildcareEventTypeID")).Returns(98765);
 
             _fixture = new EventService(_eventService.Object,
                                         _groupService.Object,

@@ -216,7 +216,7 @@ namespace MinistryPlatform.Translation.Repositories
         }
 
         /// <summary>
-        /// this allows us to get a task by pageID and recordID
+        /// this allows us to get a task by pageID and recordID.  NOT TESTED, NOT CURRENTLY IN USE
         /// </summary>
         /// <param name="pageID">the pageID of the record type</param>
         /// <param name="recordID">The recordID of the task you want</param>
@@ -237,6 +237,7 @@ namespace MinistryPlatform.Translation.Repositories
             return content.FirstOrDefault();
         }
 
+        //NOT TESTED NOT CURRENTLY IN USE - API USER DOESN'T HAVE RIGHT TO DELETE TASKS IT IS NOT AN OWNER OF.  THIS NEEDS FIXED.
         public void DeleteTask(int taskID, bool? rejected = null, string comments = null)
         {
             //https://adminint.crossroads.net/ministryplatformapi/tasks/164458?%24rejected=true&%24comments=dd
