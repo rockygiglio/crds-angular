@@ -183,7 +183,8 @@ namespace crds_angular.Controllers.API
                 try
                 {
                     // get export file and name
-                    var fileName = _gatewayDonationService.GPExportFileName(depositId);
+                    var deposit = _gatewayDonationService.GetDepositById(depositId);
+                    var fileName = _gatewayDonationService.GPExportFileName(deposit);
                     var stream = _gatewayDonationService.CreateGPExport(selectionId, depositId, token);
 
                     return new FileResult(stream, fileName);
@@ -206,8 +207,8 @@ namespace crds_angular.Controllers.API
             {
                 try
                 {
-                    var batches = _gatewayDonationService.GenerateGPExportFileNames(selectionId, token);
-                    return Ok(batches);
+                    var deposits = _gatewayDonationService.GenerateGPExportFileNames(selectionId, token);
+                    return Ok(deposits);
                 }
                 catch (Exception ex)
                 {
@@ -223,12 +224,12 @@ namespace crds_angular.Controllers.API
 
             try
             {
-                if (dto.TransactionType != null && dto.TransactionType.Equals("PAYMENT"))
+                if (isPayment)
                 {
                     //check if invoice exists before create Stripe Charge
-                    if (!_invoiceRepository.InvoiceExists(dto.InvoiceId))
+                    if (dto.InvoiceId != null && !_invoiceRepository.InvoiceExists(dto.InvoiceId.Value))                    
                     {                        
-                      var apiError = new ApiErrorDto("Invoice Not Found", new InvoiceNotFoundException(dto.InvoiceId));
+                      var apiError = new ApiErrorDto("Invoice Not Found", new InvoiceNotFoundException(dto.InvoiceId.Value));                      
                       throw new HttpResponseException(apiError.HttpResponseMessage);
                     }
                 }
@@ -248,7 +249,7 @@ namespace crds_angular.Controllers.API
                     }
                 }
 
-                if (dto.TransactionType == null || !dto.TransactionType.Equals("PAYMENT"))
+                if (!isPayment)
                 {
                     var donationAndDistribution = new MpDonationAndDistributionRecord
                     {
@@ -262,7 +263,9 @@ namespace crds_angular.Controllers.API
                         ProcessorId = donor.ProcessorId,
                         SetupDate = DateTime.Now,
                         RegisteredDonor = true,
-                        Anonymous = dto.Anonymous
+                        Anonymous = dto.Anonymous,
+                        SourceUrl = dto.SourceUrl,
+                        PredefinedAmount = dto.PredefinedAmount
                     };
 
                     var donationId = _mpDonorService.CreateDonationAndDistributionRecord(donationAndDistribution, !dto.TripDeposit);
@@ -290,14 +293,15 @@ namespace crds_angular.Controllers.API
                     }
 
                     try
-                    {
+                    {                        
+                        var invoiceId = dto.InvoiceId != null ? dto.InvoiceId.Value : 0;
                         var payment = new MpDonationAndDistributionRecord
                         {
                             DonationAmt = dto.Amount,
                             PymtType = dto.PaymentType,
                             ProcessorId = charge.Id,
                             ContactId = contactId,
-                            InvoiceId = dto.InvoiceId,
+                            InvoiceId = invoiceId,                            
                             FeeAmt = fee
                         };
                         var paymentReturn = _paymentService.PostPayment(payment);
@@ -373,7 +377,9 @@ namespace crds_angular.Controllers.API
                     ProcessorId = donor.ProcessorId,
                     SetupDate = DateTime.Now,
                     RegisteredDonor = false,
-                    Anonymous = dto.Anonymous
+                    Anonymous = dto.Anonymous,
+                    PredefinedAmount = dto.PredefinedAmount,
+                    SourceUrl = dto.SourceUrl
                 };
 
                 var donationId = _mpDonorService.CreateDonationAndDistributionRecord(donationAndDistribution);

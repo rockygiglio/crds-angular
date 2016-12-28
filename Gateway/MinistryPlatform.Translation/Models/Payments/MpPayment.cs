@@ -36,10 +36,7 @@ namespace MinistryPlatform.Translation.Models.Payments
     
         [JsonProperty(PropertyName = "Item_Number")]
         public string ItemNumber { get; set; }
-        
-        [JsonProperty(PropertyName = "Processed")]
-        public bool Processed { get; set; }
-    
+
         [JsonProperty(PropertyName = "Currency")]
         public string Currency { get; set; }
     

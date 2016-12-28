@@ -7,7 +7,7 @@
     <div ng-if="!$ctrl.hasProductInfo()" dynamic-content="$root.MESSAGES.campProductSummaryMissing.content | html"></div>
 
     <div ng-if="$ctrl.hasProductInfo()">
-      <div dynamic-content="$root.MESSAGES['campDepositInfo_' + $ctrl.stateParams.campId].content | html"></div>
+      <div dynamic-content="$root.MESSAGES['campDepositInfo_' + $ctrl.state.toParams.campId].content | html"></div>
 
       <ul>
         <li ng-repeat="option in $ctrl.productInfo.options" ng-class="{ bold: option.isCurrent, 'text-muted': !option.isCurrent }">

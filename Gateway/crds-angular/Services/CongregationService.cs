@@ -36,14 +36,14 @@ namespace crds_angular.Services
             return c;
         }
 
-        public List<Room> GetRooms(int congregationId)
+        public List<Room> GetRooms(int congregationId, DateTime startDate, DateTime endDate)
         {
             var congregation = _congregationService.GetCongregationById(congregationId);
             if (congregation == null)
             {
                 throw new ApplicationException("Congregation Not Found");
             }
-            var rooms = _roomService.GetRoomsByLocationId(congregation.LocationId);
+            var rooms = _roomService.GetRoomsByLocationId(congregation.LocationId, startDate, endDate);
             return rooms;
         }
 

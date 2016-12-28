@@ -32,7 +32,7 @@ namespace MinistryPlatform.Translation.Models
         public DateTime BirthDate { get; set; }
 
         [JsonProperty(PropertyName = "Gender_ID")]
-        public int Gender { get; set; }
+        public int? Gender { get; set; }
 
         [JsonProperty(PropertyName = "Household_ID")]
         public int HouseholdId { get; set; }
@@ -45,5 +45,8 @@ namespace MinistryPlatform.Translation.Models
 
         [JsonProperty(PropertyName = "Mobile_Phone")]
         public string MobilePhone { get; set; }
+
+        [JsonProperty(PropertyName = "Household_Position")]
+        public String HouseholdPosition { get; set; }
     }
 }

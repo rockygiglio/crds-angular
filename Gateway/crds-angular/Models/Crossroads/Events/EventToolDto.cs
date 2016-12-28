@@ -71,5 +71,8 @@ namespace crds_angular.Models.Crossroads.Events
 
         [JsonProperty(PropertyName = "group")]
         public GroupDTO Group { get; set; }
+
+        [JsonProperty(PropertyName = "participantsExpected")]
+        public int ParticipantsExpected { get; set; }
     }
 }

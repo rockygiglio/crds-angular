@@ -7,6 +7,8 @@ function isBetween(startDate, endDate) {
 
 /* @ngInject */
 class CampController {
+
+  // FIXME: `$stateParams` soon to be deprecated. Should change to `$state`
   constructor(CampsService, $rootScope, $stateParams) {
     this.campId = $stateParams.campId;
     this.campsService = CampsService;
@@ -23,5 +25,8 @@ class CampController {
     this.viewReady = true;
   }
 
+  showRegistrationClosed() {
+    return this.isClosed && !this.stateParams.update;
+  }
 }
 export default CampController;

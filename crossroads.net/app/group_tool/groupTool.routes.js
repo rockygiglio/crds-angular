@@ -12,6 +12,7 @@ export default function GroupToolRouter($httpProvider, $stateProvider) {
   let groupSearchResultsParams = angular.copy(groupSearchParams);
   groupSearchResultsParams['query'] = {value: null, squash: true};
   groupSearchResultsParams['location'] = {value: null, squash: true};
+  groupSearchResultsParams['id'] = {value: null, squash: true};
 
   $httpProvider.defaults.useXDomain = true;
 
@@ -22,6 +23,9 @@ export default function GroupToolRouter($httpProvider, $stateProvider) {
     .state('grouptool', {
       parent: 'noSideBar',
       abstract: true,
+      data: {
+        renderLegacyStyles: true
+      }
     })
     .state('grouptool.mygroups', {
       parent: 'noSideBar',
@@ -212,7 +216,7 @@ export default function GroupToolRouter($httpProvider, $stateProvider) {
     })
     .state('grouptool.search-results', {
       parent: 'noSideBar',
-      url: '/groups/search/results?query&location&age&category&type&kids&grouplocation&day&time&frequency&site',
+      url: '/groups/search/results?query&location&age&category&type&kids&grouplocation&day&time&frequency&site&id',
       params: groupSearchResultsParams,
       template: '<group-search-results></group-search-results>',
       data: {

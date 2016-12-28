@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using crds_angular.Security;
 using crds_angular.Services.Interfaces;
 using System.Web.Http;
@@ -42,8 +43,8 @@ namespace crds_angular.Controllers.API
         }
 
         [ResponseType(typeof(List<MyCampDTO>))]
-        [VersionedRoute(template: "my-camp", minimumVersion: "1.0.0")]
-        [Route("my-camp")]
+        [VersionedRoute(template: "camps/my-camp", minimumVersion: "1.0.0")]
+        [Route("camps/my-camp")]
         [HttpGet]
         public IHttpActionResult GetMyCampsInfo()
         {
@@ -168,10 +169,13 @@ namespace crds_angular.Controllers.API
             {
                 try
                 {
-                    _campService.SaveCampReservation(campReservation, eventId, token);
-                    return Ok();
+                    var newCamperInfo = _campService.SaveCampReservation(campReservation, eventId, token);
+                    return Ok(newCamperInfo);
                 }
-
+                catch (ApplicationException e)
+                {
+                    throw new HttpResponseException(HttpStatusCode.PreconditionFailed);
+                }
                 catch (Exception e)
                 {
                     var apiError = new ApiErrorDto("Camp Reservation failed", e);
@@ -315,6 +319,7 @@ namespace crds_angular.Controllers.API
                 try
                 {
                     _campService.SendCampConfirmationEmail(eventId, invoiceId, paymentId, token);
+                    _campService.SetCamperAsRegistered(eventId, contactId);
                     return Ok();
                 }
                 catch (Exception e)
@@ -324,6 +329,8 @@ namespace crds_angular.Controllers.API
                 }
             });
         }
+
+        
 
         [VersionedRoute(template: "camps/{eventId}/emergencycontact/{contactId}", minimumVersion: "1.0.0")]
         [ResponseType(typeof(List<CampEmergencyContactDTO>))]

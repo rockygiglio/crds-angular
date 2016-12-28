@@ -38,6 +38,12 @@ namespace crds_angular.Models.Crossroads.Stewardship
         public string TransactionType { get; set; }
 
         [JsonProperty(PropertyName = "invoice_id")]
-        public int InvoiceId { get; set; }
+        public int? InvoiceId { get; set; }
+
+        [JsonProperty(PropertyName = "source_url")]
+        public string SourceUrl { get; set; }
+
+        [JsonProperty(PropertyName = "predefined_amount")]
+        public decimal? PredefinedAmount { get; set; }
     }
 }

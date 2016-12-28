@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using MinistryPlatform.Translation.Models.Attributes;
 using Newtonsoft.Json;
 
@@ -28,11 +29,17 @@ namespace MinistryPlatform.Translation.Models
         [JsonProperty(PropertyName = "Online_Registration_Product")]
         public int OnlineProductId { get; set; }
 
+        [JsonProperty(PropertyName = "Email_Address")]
+        public string PrimaryContactEmail { get; set; }
+
         [JsonProperty(PropertyName = "Registration_Start")]
         public DateTime RegistrationStartDate { get; set; }
 
         [JsonProperty(PropertyName = "Registration_End")]
         public DateTime RegistrationEndDate { get; set; }
+
+        [JsonProperty(PropertyName = "Group_Name")]
+        public List<MpEventGroup> CampGradesList { get; set; }
 
     }
 }

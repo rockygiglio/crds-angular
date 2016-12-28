@@ -87,8 +87,8 @@ namespace MinistryPlatform.Translation.Repositories
         public Result<MpGroupParticipant> GetGradeGroupForContact(int contactId, string apiToken)
         {
             var groupType = _configurationWrapper.GetConfigIntValue("AgeorGradeGroupType");
-            var searchString = $"Participant_ID_Table_Contact_ID_Table.[Contact_ID]='{contactId}' AND Group_ID_Table_Group_Type_ID_Table.[Group_Type_ID]='{groupType}'";
-            const string selectColumns = "Group_ID_Table.[Group_Name],Group_ID_Table.[Group_ID]";
+            var searchString = $"Participant_ID_Table_Contact_ID_Table.[Contact_ID]='{contactId}' AND Group_ID_Table_Group_Type_ID_Table.[Group_Type_ID]='{groupType}' AND Group_Participants.End_Date IS NULL";
+            const string selectColumns = "Group_Participant_ID,Group_ID_Table.[Group_Name],Group_ID_Table.[Group_ID]";
             var participant = _ministryPlatformRestRepository.UsingAuthenticationToken(apiToken).Search<MpGroupParticipant>(searchString, selectColumns, null, true);
             if (participant.Count > 0)
             {

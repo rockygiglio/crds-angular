@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using crds_angular.App_Start;
 using Crossroads.Utilities;
+using Crossroads.Utilities.Enums;
 using Crossroads.Utilities.Interfaces;
 using MinistryPlatform.Translation.PlatformService;
 using MinistryPlatform.Translation.Repositories;
@@ -25,6 +27,7 @@ namespace MinistryPlatform.Translation.Test.Services
         private Mock<ICommunicationRepository> _communicationService;
         private Mock<IApiUserRepository> _apiUserRepository;
         private Mock<IMinistryPlatformRestRepository> _ministryPlatformRest;
+        private Mock<IConfigurationWrapper> _config;
 
         [SetUp]
         public void SetUp()
@@ -39,24 +42,31 @@ namespace MinistryPlatform.Translation.Test.Services
             _apiUserRepository = new Mock<IApiUserRepository>();
             _ministryPlatformRest = new Mock<IMinistryPlatformRestRepository>();
 
-            var configuration = new Mock<IConfigurationWrapper>();
-            configuration.Setup(mocked => mocked.GetConfigIntValue("Donations")).Returns(9090);
-            configuration.Setup(mocked => mocked.GetConfigIntValue("Batches")).Returns(8080);
-            configuration.Setup(mocked => mocked.GetConfigIntValue("Distributions")).Returns(1234);
-            configuration.Setup(mocked => mocked.GetConfigIntValue("Deposits")).Returns(7070);
-            configuration.Setup(mocked => mocked.GetConfigIntValue("PaymentProcessorEventErrors")).Returns(6060);
-            configuration.Setup(mocked => mocked.GetConfigIntValue("GPExportView")).Returns(92198);
-            configuration.Setup(mocked => mocked.GetConfigIntValue("ProcessingProgramId")).Returns(127);
-            configuration.Setup(mocked => mocked.GetConfigIntValue("DonationCommunications")).Returns(540);
-            configuration.Setup(mocked => mocked.GetConfigIntValue("Messages")).Returns(341);
-            configuration.Setup(mocked => mocked.GetConfigIntValue("GLAccountMappingByProgramPageView")).Returns(2213);
-            configuration.Setup(mocked => mocked.GetConfigIntValue("ScholarshipPaymentTypeId")).Returns(9);
-            configuration.Setup(mocked => mocked.GetConfigIntValue("DonationDistributionsApiSubPageView")).Returns(5050);
+            _config = new Mock<IConfigurationWrapper>();
+            _config.Setup(mocked => mocked.GetConfigIntValue("Donations")).Returns(9090);
+            _config.Setup(mocked => mocked.GetConfigIntValue("Batches")).Returns(8080);
+            _config.Setup(mocked => mocked.GetConfigIntValue("Distributions")).Returns(1234);
+            _config.Setup(mocked => mocked.GetConfigIntValue("Deposits")).Returns(7070);
+            _config.Setup(mocked => mocked.GetConfigIntValue("PaymentProcessorEventErrors")).Returns(6060);
+            _config.Setup(mocked => mocked.GetConfigIntValue("GPExportView")).Returns(92198);
+            _config.Setup(mocked => mocked.GetConfigIntValue("PaymentsGPExportView")).Returns(1112);            
+            _config.Setup(mocked => mocked.GetConfigIntValue("DonationCommunications")).Returns(540);
+            _config.Setup(mocked => mocked.GetConfigIntValue("Messages")).Returns(341);
+            _config.Setup(mocked => mocked.GetConfigIntValue("GLAccountMappingByProgramPageView")).Returns(2213);
+            _config.Setup(mocked => mocked.GetConfigIntValue("ScholarshipPaymentTypeId")).Returns(9);
+            _config.Setup(mocked => mocked.GetConfigIntValue("DonationDistributionsApiSubPageView")).Returns(5050);
 
-            configuration.Setup(m => m.GetEnvironmentVarAsString("API_USER")).Returns("uid");
-            configuration.Setup(m => m.GetEnvironmentVarAsString("API_PASSWORD")).Returns("pwd");
-            _authService.Setup(m => m.Authenticate(It.IsAny<string>(), It.IsAny<string>())).Returns(new Dictionary<string, object> { { "token", "ABC" }, { "exp", "123" } });
-            _fixture = new DonationRepository(_ministryPlatformService.Object, _donorService.Object, _communicationService.Object, _pledgeService.Object, configuration.Object, _authService.Object, configuration.Object, _apiUserRepository.Object, _ministryPlatformRest.Object);
+            _config.Setup(m => m.GetEnvironmentVarAsString("API_USER")).Returns("uid");
+            _config.Setup(m => m.GetEnvironmentVarAsString("API_PASSWORD")).Returns("pwd");
+            _authService.Setup(m => m.Authenticate(It.IsAny<string>(), It.IsAny<string>())).Returns(new Dictionary<string, object> {{"token", "ABC"}, {"exp", "123"}});
+            _fixture = new DonationRepository(_ministryPlatformService.Object,
+                                              _donorService.Object,
+                                              _communicationService.Object,
+                                              _pledgeService.Object,
+                                              _config.Object,
+                                              _authService.Object,
+                                              _apiUserRepository.Object,
+                                              _ministryPlatformRest.Object);
         }
 
         [Test]
@@ -105,14 +115,14 @@ namespace MinistryPlatform.Translation.Test.Services
                 new PredefinedDonationAmountDTO() {Id = 6, Amount = 500, DomainId = 1},
             };
 
-            List<int> expectedResults = new List<int> { 5, 10, 25, 50, 100, 500 };
+            List<int> expectedResults = new List<int> {5, 10, 25, 50, 100, 500};
 
             _apiUserRepository.Setup(mocked => mocked.GetToken()).Returns(apiToken);
 
-            _ministryPlatformRest.Setup(m => m.UsingAuthenticationToken(apiToken)).Returns(_ministryPlatformRest.Object); 
+            _ministryPlatformRest.Setup(m => m.UsingAuthenticationToken(apiToken)).Returns(_ministryPlatformRest.Object);
 
-            _ministryPlatformRest.Setup(m =>m.Get<PredefinedDonationAmountDTO>(tableName, new Dictionary<string, object>() ))
-                                             .Returns(mockedPredefinedDonationAmts);
+            _ministryPlatformRest.Setup(m => m.Get<PredefinedDonationAmountDTO>(tableName, new Dictionary<string, object>()))
+                .Returns(mockedPredefinedDonationAmts);
 
             var result = _fixture.GetPredefinedDonationAmounts();
 
@@ -127,12 +137,12 @@ namespace MinistryPlatform.Translation.Test.Services
             const int batchId = 789;
             const string batchName = "TestBatchName";
             var getResult = new Dictionary<string, object>
-                {
-                    {"Batch_ID", batchId},
-                    {"Processor_Transfer_ID", processorTransferId},
-                    {"Deposit_ID", depositId},
-                    {"Batch_Name", batchName},
-                };
+            {
+                {"Batch_ID", batchId},
+                {"Processor_Transfer_ID", processorTransferId},
+                {"Deposit_ID", depositId},
+                {"Batch_Name", batchName},
+            };
             _ministryPlatformService.Setup(mocked => mocked.GetRecordDict(8080, batchId, It.IsAny<string>(), false)).Returns(getResult);
 
             var result = _fixture.GetDonationBatch(batchId);
@@ -274,7 +284,7 @@ namespace MinistryPlatform.Translation.Test.Services
                         {"Donation_Status_Notes", donationStatusNotes},
                         {"Payment_Type", paymentType},
                         {"Batch_ID", batchId},
-                        {"Donation_Status_ID", donationStatusId+1}
+                        {"Donation_Status_ID", donationStatusId + 1}
                     }
                 }
             };
@@ -319,8 +329,14 @@ namespace MinistryPlatform.Translation.Test.Services
                 {"Default_Payment_Type", null}
             };
             _ministryPlatformService.Setup(mocked => mocked.UpdateRecord(8080, expectedUpdateParms, It.IsAny<string>()));
-            var batchId = _fixture.CreateDonationBatch(batchName, setupDateTime, batchTotalAmount, itemCount, batchEntryType,
-                depositId, finalizedDateTime, processorTransferId);
+            var batchId = _fixture.CreateDonationBatch(batchName,
+                                                       setupDateTime,
+                                                       batchTotalAmount,
+                                                       itemCount,
+                                                       batchEntryType,
+                                                       depositId,
+                                                       finalizedDateTime,
+                                                       processorTransferId);
             Assert.AreEqual(513, batchId);
             _ministryPlatformService.VerifyAll();
         }
@@ -371,8 +387,16 @@ namespace MinistryPlatform.Translation.Test.Services
 
             _ministryPlatformService.Setup(mocked => mocked.CreateRecord(7070, expectedParms, It.IsAny<string>(), false))
                 .Returns(513);
-            var depositId = _fixture.CreateDeposit(depositName, depositTotalAmount, depositAmount, depositProcessorFee, depositDateTime, accountNumber,
-                batchCount, exported, notes, processorTransferId);
+            var depositId = _fixture.CreateDeposit(depositName,
+                                                   depositTotalAmount,
+                                                   depositAmount,
+                                                   depositProcessorFee,
+                                                   depositDateTime,
+                                                   accountNumber,
+                                                   batchCount,
+                                                   exported,
+                                                   notes,
+                                                   processorTransferId);
             Assert.AreEqual(513, depositId);
             _ministryPlatformService.VerifyAll();
         }
@@ -404,16 +428,31 @@ namespace MinistryPlatform.Translation.Test.Services
         public void TestGetGPExport()
         {
             const int viewId = 92198;
+            const int paymentViewId = 1112;
             const int depositId = 789;
+            const string token = "faketoken";
+
             var mockGPExportData = MockGPExportDataTest2();
 
             _ministryPlatformService.Setup(mock => mock.GetPageViewRecords(viewId, It.IsAny<string>(), depositId.ToString(), "", 0)).Returns(MockGPExport());
-            _ministryPlatformService.Setup(mock => mock.GetPageViewRecords(2213, It.IsAny<string>(), 127.ToString(), "", 0)).Returns(MockProcessingFeeGLMapping());
+            _ministryPlatformService.Setup(mock => mock.GetPageViewRecords(paymentViewId, It.IsAny<string>(), depositId.ToString(), "", 0)).Returns(MockGPPaymentExport());
 
-            var result = _fixture.GetGpExport(depositId, It.IsAny<string>());
+            _ministryPlatformRest.Setup(m => m.UsingAuthenticationToken(It.IsAny<string>())).Returns(_ministryPlatformRest.Object);
+            _ministryPlatformRest.Setup(m => m.Search<int>("GL_Account_Mapping", $"GL_Account_Mapping.Program_ID={It.IsAny<int>()} AND GL_Account_Mapping.Congregation_ID={It.IsAny<int>()}", "Processor_Fee_Mapping_ID_Table.Program_ID"))
+                .Returns(0);
+            _ministryPlatformRest.Setup(mock => mock.Get<MPGLAccountMapping>(It.IsAny<int>(), null)).Returns(MockGLAccountMapping());
+            _config.Setup(mocked => mocked.GetConfigIntValue("ProcessingMappingId")).Returns(127);
+            
+            var result = _fixture.GetGpExport(depositId, token);
             _ministryPlatformService.VerifyAll();
             Assert.IsNotNull(result);
-            Assert.AreEqual(6, result.Count);
+            Assert.AreEqual(12, result.Count);
+
+            var payments = result.Where(p => p.TransactionType == TransactionType.Payment);
+            var donations = result.Where(p => p.TransactionType == TransactionType.Donation);
+
+            Assert.AreEqual(6, payments.Count());
+            Assert.AreEqual(6, donations.Count());
 
             Assert.AreEqual(mockGPExportData[0].DocumentType, result[0].DocumentType);
             Assert.AreEqual(mockGPExportData[0].BatchName, result[0].BatchName);
@@ -428,7 +467,7 @@ namespace MinistryPlatform.Translation.Test.Services
             Assert.AreEqual(mockGPExportData[0].Amount, result[0].Amount);
             Assert.AreEqual(mockGPExportData[0].ProcessorFeeAmount, result[0].ProcessorFeeAmount);
             Assert.AreEqual(mockGPExportData[0].ProgramId, result[0].ProgramId);
-            Assert.AreEqual(mockGPExportData[0].ProccessFeeProgramId, result[0].ProccessFeeProgramId);
+            Assert.AreEqual(mockGPExportData[0].ProccessorFeeMappingId, result[0].ProccessorFeeMappingId);
             Assert.AreEqual(mockGPExportData[0].PaymentTypeId, result[0].PaymentTypeId);
             Assert.AreEqual(mockGPExportData[0].ScholarshipExpenseAccount, result[0].ScholarshipExpenseAccount);
             Assert.AreEqual(mockGPExportData[0].ScholarshipPaymentTypeId, result[0].ScholarshipPaymentTypeId);
@@ -454,6 +493,59 @@ namespace MinistryPlatform.Translation.Test.Services
             Assert.AreEqual(mockGPExportData[3].DocumentNumber, result[3].DocumentNumber);
             Assert.AreEqual(mockGPExportData[4].DocumentNumber, result[4].DocumentNumber);
             Assert.AreEqual(mockGPExportData[5].DocumentNumber, result[5].DocumentNumber);
+
+            Assert.AreEqual(mockGPExportData[11].DocumentType, result[11].DocumentType);
+        }
+
+        [Test]
+        public void TestGettingGLMappingForFees()
+        {
+            const int feeMapping = 1;
+            const string token = "mockToken";
+            var mockMapping = MockGLAccountMapping();
+
+            _ministryPlatformRest.Setup(m => m.UsingAuthenticationToken(It.IsAny<string>())).Returns(_ministryPlatformRest.Object);
+            _ministryPlatformRest.Setup(mock => mock.Get<MPGLAccountMapping>(It.IsAny<int>(),null)).Returns(mockMapping);
+
+            var result = _fixture.GetProcessingFeeGLMapping(feeMapping, token);
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(mockMapping, result);
+            _ministryPlatformRest.VerifyAll();
+        }
+
+        [Test]
+        public void TestNotGettingGLMappingForFees()
+        {
+            const int feeMapping = 1;
+            const string token = "mockToken";
+            
+            _ministryPlatformRest.Setup(m => m.UsingAuthenticationToken(It.IsAny<string>())).Returns(_ministryPlatformRest.Object);
+            _ministryPlatformRest.Setup(mock => mock.Get<MPGLAccountMapping>(It.IsAny<int>(), null)).Returns( (MPGLAccountMapping) null);
+
+            var result = _fixture.GetProcessingFeeGLMapping(feeMapping, token);
+
+            Assert.IsNull(result);
+            _ministryPlatformRest.VerifyAll();
+        }
+
+        private MPGLAccountMapping MockGLAccountMapping()
+        {
+            return
+                new MPGLAccountMapping
+                {
+                    ProgramId = 1,
+                    CongregationId = 1,
+                    CashAccount = "77777-031-20",
+                    CheckbookId = "PNC001",
+                    CustomerId = "CONTRIBUTI001",
+                    DistributionAccount = "77777-031-22",
+                    DocumentType = "SALE",
+                    GLAccount = "",
+                    ProcessorFeeMappingId = 1,
+                    ReceivableAccount = "77777-031-21",
+                    ScholarshipExpenseAccount = "77777-900-11"
+                };
         }
 
         [Test]
@@ -461,10 +553,19 @@ namespace MinistryPlatform.Translation.Test.Services
         {
             const int viewId = 92198;
             const int depositId = 789;
-            var mockGPExportData = MockGPExportDataTest1();
+            const int programId = 345;
+            const int congregationId = 1;
+            var returnedData = MockGPExport(programId, congregationId);
 
-            _ministryPlatformService.Setup(mock => mock.GetPageViewRecords(viewId, It.IsAny<string>(), depositId.ToString(), "", 0)).Returns(MockGPExport());
+            var mockGPExportData = MockGPExportDataTest1(programId);            
             
+            _ministryPlatformService.Setup(mock => mock.GetPageViewRecords(viewId, It.IsAny<string>(), depositId.ToString(), "", 0)).Returns(returnedData);
+            
+            _ministryPlatformRest.Setup(m => m.UsingAuthenticationToken(It.IsAny<string>())).Returns(_ministryPlatformRest.Object);
+            _ministryPlatformRest.Setup(m => m.Search<int>("GL_Account_Mapping", $"GL_Account_Mapping.Program_ID={programId} AND GL_Account_Mapping.Congregation_ID={congregationId}", "Processor_Fee_Mapping_ID_Table.Program_ID"))
+                .Returns(0);
+            _config.Setup(mocked => mocked.GetConfigIntValue("ProcessingMappingId")).Returns(127);          
+
             var result = _fixture.GetGpExportData(depositId, It.IsAny<string>());
             _ministryPlatformService.VerifyAll();
             Assert.IsNotNull(result);
@@ -484,7 +585,7 @@ namespace MinistryPlatform.Translation.Test.Services
             Assert.AreEqual(mockGPExportData[0].Amount, result[0].Amount);
             Assert.AreEqual(mockGPExportData[0].ProcessorFeeAmount, result[0].ProcessorFeeAmount);
             Assert.AreEqual(mockGPExportData[0].ProgramId, result[0].ProgramId);
-            Assert.AreEqual(mockGPExportData[0].ProccessFeeProgramId, result[0].ProccessFeeProgramId);
+            Assert.AreEqual(mockGPExportData[0].ProccessorFeeMappingId, result[0].ProccessorFeeMappingId);
             Assert.AreEqual(mockGPExportData[0].PaymentTypeId, result[0].PaymentTypeId);
             Assert.AreEqual(mockGPExportData[0].ScholarshipExpenseAccount, result[0].ScholarshipExpenseAccount);
             Assert.AreEqual(mockGPExportData[0].ScholarshipPaymentTypeId, result[0].ScholarshipPaymentTypeId);
@@ -502,32 +603,70 @@ namespace MinistryPlatform.Translation.Test.Services
             Assert.AreEqual(mockGPExportData[1].DistributionAccount, result[1].DistributionAccount);
             Assert.AreEqual(mockGPExportData[1].Amount, result[1].Amount);
             Assert.AreEqual(mockGPExportData[1].ProgramId, result[1].ProgramId);
-            Assert.AreEqual(mockGPExportData[1].ProccessFeeProgramId, result[1].ProccessFeeProgramId);
+            Assert.AreEqual(mockGPExportData[1].ProccessorFeeMappingId, result[1].ProccessorFeeMappingId);
             Assert.AreEqual(mockGPExportData[1].PaymentTypeId, result[1].PaymentTypeId);
 
             Assert.AreEqual(mockGPExportData[3].DocumentType, result[3].DocumentType);
             Assert.AreEqual(mockGPExportData[3].Amount, result[3].Amount);
         }
 
-        private List<Dictionary<string, object>> MockProcessingFeeGLMapping()
+        [Test]
+        public void ShouldGetProcessorFeeProgramIdForProgram()
         {
-            return new List<Dictionary<string, object>>
-            {
-                new Dictionary<string, object>
-                {
-                    {"dp_RecordID", 100},
-                    {"Document_Type", "SALE"},
-                    {"Customer_ID", "CONTRIBUTI001"},
-                    {"Checkbook_ID", "PNC001"},
-                    {"Cash_Account", "77777-031-20"},
-                    {"Receivable_Account", "77777-031-21"},
-                    {"Distribution_Account", "77777-031-22"},
-                    {"Scholarship_Expense_Account", "77777-900-11"},
-                }
-            };
+            const string token = "letmein";
+            const int programId = 1234;
+            const int congregationId = 9;
+            const int processingMappingId = 56787;
+
+            _ministryPlatformRest.Setup(m => m.UsingAuthenticationToken(token)).Returns(_ministryPlatformRest.Object);
+            _ministryPlatformRest.Setup(m => m.Search<int>("GL_Account_Mapping", $"GL_Account_Mapping.Program_ID={programId} AND GL_Account_Mapping.Congregation_ID={congregationId}", "Processor_Fee_Mapping_ID"))
+                .Returns(processingMappingId);
+
+            var result = _fixture.GetProcessingFeeMappingID(programId, congregationId, token);
+            Assert.AreEqual(processingMappingId, result);
+
+            _ministryPlatformRest.VerifyAll();
         }
 
-        private List<Dictionary<string, object>> MockGPExport()
+        [Test]
+        public void ShouldHandleProcessingProgramException()
+        {
+            const string token = "letmein";
+            const int programId = 1234;
+            const int congregationId = 9;
+            const int defaultProcessingFeeMappingId = 127;
+
+            _ministryPlatformRest.Setup(m => m.UsingAuthenticationToken(token)).Returns(_ministryPlatformRest.Object);
+            _ministryPlatformRest.Setup(m => m.Search<int>("GL_Account_Mapping", $"GL_Account_Mapping.Program_ID={programId} AND GL_Account_Mapping.Congregation_ID={congregationId}", "Processor_Fee_Mapping_ID"))
+                .Throws<Exception>();
+            _config.Setup(mocked => mocked.GetConfigIntValue("ProcessingMappingId")).Returns(defaultProcessingFeeMappingId);
+
+            var result = _fixture.GetProcessingFeeMappingID(programId, congregationId, token);
+            Assert.AreEqual(defaultProcessingFeeMappingId, result);
+            _ministryPlatformRest.VerifyAll();
+        }
+
+        [Test]
+        public void ShouldDefaultIfProcessingProgramNotFound()
+        {
+            const string token = "letmein";
+            const int programId = 1234;
+            const int congregationId = 9;
+            const int processingProgramId = 0;
+            const int defaultProcessingFeeProgramId = 127;
+
+            _ministryPlatformRest.Setup(m => m.UsingAuthenticationToken(token)).Returns(_ministryPlatformRest.Object);
+            _ministryPlatformRest.Setup(m => m.Search<int>("GL_Account_Mapping", $"GL_Account_Mapping.Program_ID={programId} AND GL_Account_Mapping.Congregation_ID={congregationId}", "Processor_Fee_Mapping_ID"))
+                .Returns(processingProgramId);
+            _config.Setup(mocked => mocked.GetConfigIntValue("ProcessingMappingId")).Returns(defaultProcessingFeeProgramId);
+
+            var result = _fixture.GetProcessingFeeMappingID(programId, congregationId, token);
+            Assert.AreEqual(defaultProcessingFeeProgramId, result);
+            _ministryPlatformRest.VerifyAll();
+
+        }
+
+        private List<Dictionary<string, object>> MockGPExport(int programId = 0,  int congregationId = 0)
         {
             return new List<Dictionary<string, object>>
             {
@@ -538,20 +677,21 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Deposit_ID", "12341234"},
                     {"Donation_ID", "10002"},
                     {"Batch_Name", "Test Batch"},
-                    {"Donation_Date",new DateTime(2015, 3, 28, 8, 30, 0)},
+                    {"Donation_Date", new DateTime(2015, 3, 28, 8, 30, 0)},
                     {"Deposit_Date", new DateTime(2015, 3, 28, 8, 30, 0)},
                     {"Customer_ID", "CONTRIBUTI001"},
                     {"Deposit_Amount", "400.00"},
                     {"Donation_Amount", "200.00"},
                     {"Checkbook_ID", "PNC001"},
                     {"Cash_Account", "91213-031-20"},
-                    {"Receivable_Account",  "90013-031-21"},
+                    {"Congregation_ID", congregationId },
+                    {"Receivable_Account", "90013-031-21"},
                     {"Distribution_Account", "90001-031-22"},
                     {"Amount", "185.00"},
-                    {"Program_ID", "15"},
+                    {"Program_ID", programId > 0 ? programId : 15},
                     {"Payment_Type_ID", 8},
                     {"Scholarship_Expense_Account", "19948-900-11"},
-                    {"Processor_Fee_Amount", "0.25"}
+                    {"Processor_Fee_Amount", "0.25"}                   
                 },
                 new Dictionary<string, object>
                 {
@@ -567,10 +707,11 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Donation_Amount", "200.00"},
                     {"Checkbook_ID", "PNC001"},
                     {"Cash_Account", "91213-031-20"},
+                    {"Congregation_ID", congregationId },
                     {"Receivable_Account", "90013-031-21"},
-                    {"Distribution_Account","90001-031-22"},
+                    {"Distribution_Account", "90001-031-22"},
                     {"Amount", "15.00"},
-                    {"Program_ID", "15"},
+                    {"Program_ID", programId > 0 ? programId : 15},
                     {"Payment_Type_ID", 7},
                     {"Scholarship_Expense_Account", "19948-900-11"},
                     {"Processor_Fee_Amount", "0.25"}
@@ -582,17 +723,18 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Deposit_ID", "12341234"},
                     {"Donation_ID", "10003"},
                     {"Batch_Name", "Test Batch"},
-                    {"Donation_Date",new DateTime(2015, 3, 28, 8, 30, 0)},
+                    {"Donation_Date", new DateTime(2015, 3, 28, 8, 30, 0)},
                     {"Deposit_Date", new DateTime(2015, 3, 28, 8, 30, 0)},
                     {"Customer_ID", "CONTRIBUTI001"},
                     {"Deposit_Amount", "400.00"},
                     {"Donation_Amount", "300.00"},
                     {"Checkbook_ID", "PNC001"},
                     {"Cash_Account", "91213-031-20"},
+                    {"Congregation_ID", congregationId },
                     {"Receivable_Account", "90013-031-21"},
-                    {"Distribution_Account","90001-031-22"},
+                    {"Distribution_Account", "90001-031-22"},
                     {"Amount", "300.00"},
-                    {"Program_ID", "15"},
+                    {"Program_ID", programId > 0 ? programId : 15},
                     {"Payment_Type_ID", 8},
                     {"Scholarship_Expense_Account", "19948-900-11"},
                     {"Processor_Fee_Amount", "0.25"}
@@ -611,10 +753,11 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Donation_Amount", "-300.00"},
                     {"Checkbook_ID", "PNC001"},
                     {"Cash_Account", "90287-031-20"},
+                    {"Congregation_ID", congregationId },
                     {"Receivable_Account", "90287-031-21"},
                     {"Distribution_Account", "90287-031-22"},
                     {"Amount", "-300.00"},
-                    {"Program_ID", "150"},
+                    {"Program_ID", programId > 0 ? programId : 150},
                     {"Payment_Type_ID", 2},
                     {"Scholarship_Expense_Account", "49998-900-11"},
                     {"Processor_Fee_Amount", "0.25"}
@@ -622,7 +765,116 @@ namespace MinistryPlatform.Translation.Test.Services
             };
         }
 
-        private List<MpGPExportDatum> MockGPExportDataTest1()
+        private List<Dictionary<string, object>> MockGPPaymentExport()
+        {
+            var one = new Dictionary<string, object>
+            {
+                {"dp_RecordID", 105},
+                {"Document_Type", "SALE"},
+                {"Deposit_ID", "123412345"},
+                {"Payment_ID", "100025"},
+                {"Batch_Name", "Test Batch"},
+                {"Payment_Date", new DateTime(2015, 3, 28, 8, 30, 0)},
+                {"Deposit_Date", new DateTime(2015, 3, 28, 8, 30, 0)},
+                {"Customer_ID", "CONTRIBUTI001"},
+                {"Deposit_Amount", "400.00"},
+                {"Payment_Total", "185.00"},
+                {"Congregation_ID", 2 },
+                {"Checkbook_ID", "PNC001"},
+                {"Cash_Account", "91213-031-20"},
+                {"Receivable_Account", "90013-031-21"},
+                {"Distribution_Account", "90001-031-22"},
+                {"Payment_Amount", "185.00"},
+                {"Program_ID", "155"},
+                {"Payment_Type_ID", 8},
+                {"Scholarship_Expense_Account", "19948-900-11"},
+                {"Processor_Fee_Amount", "0.25"}
+            };
+
+            var two = new Dictionary<string, object>
+            {
+                {"dp_RecordID", 205},
+                {"Document_Type", "SALE"},
+                {"Deposit_ID", "123412345"},
+                {"Payment_ID", "100025"},
+                {"Batch_Name", "Test Batch"},
+                {"Payment_Date", new DateTime(2015, 3, 28, 8, 30, 0)},
+                {"Deposit_Date", new DateTime(2015, 3, 28, 8, 30, 0)},
+                {"Customer_ID", "CONTRIBUTI001"},
+                {"Deposit_Amount", "400.00"},
+                {"Payment_Total", "15.00"},
+                {"Congregation_ID", 2 },
+                {"Checkbook_ID", "PNC001"},
+                {"Cash_Account", "91213-031-20"},
+                {"Receivable_Account", "90013-031-21"},
+                {"Distribution_Account", "90001-031-22"},
+                {"Payment_Amount", "15.00"},
+                {"Program_ID", "155"},
+                {"Payment_Type_ID", 7},
+                {"Scholarship_Expense_Account", "19948-900-11"},
+                {"Processor_Fee_Amount", "0.25"}
+            };
+            var three = new Dictionary<string, object>
+            {
+                {"dp_RecordID", 305},
+                {"Document_Type", "SALE"},
+                {"Deposit_ID", "123412345"},
+                {"Payment_ID", "100035"},
+                {"Batch_Name", "Test Batch"},
+                {"Payment_Date", new DateTime(2015, 3, 28, 8, 30, 0)},
+                {"Deposit_Date", new DateTime(2015, 3, 28, 8, 30, 0)},
+                {"Customer_ID", "CONTRIBUTI001"},
+                {"Deposit_Amount", "400.00"},
+                {"Payment_Total", "300.00"},
+                {"Congregation_ID", 2 },
+                {"Checkbook_ID", "PNC001"},
+                {"Cash_Account", "91213-031-20"},
+                {"Receivable_Account", "90013-031-21"},
+                {"Distribution_Account", "90001-031-22"},
+                {"Payment_Amount", "300.00"},
+                {"Program_ID", "155"},
+                {"Payment_Type_ID", 8},
+                {"Scholarship_Expense_Account", "19948-900-11"},
+                {"Processor_Fee_Amount", "0.25"}
+            };
+
+            var four = new Dictionary<string, object>
+            {
+                {"dp_RecordID", 305},
+                {"Deposit_ID", "123412345"},
+                {"Document_Type", "RETURNS"},
+                {"Payment_ID", "100045"},
+                {"Batch_Name", "Test Batch"},
+                {"Payment_Date", new DateTime(2015, 3, 10, 8, 30, 0)},
+                {"Deposit_Date", new DateTime(2015, 3, 10, 8, 30, 0)},
+                {"Customer_ID", "CONTRIBUTI001"},
+                {"Deposit_Amount", "400.00"},
+                {"Payment_Total", "-300.00"},
+                {"Congregation_ID", 2 },
+                {"Checkbook_ID", "PNC001"},
+                {"Cash_Account", "90287-031-20"},
+                {"Receivable_Account", "90287-031-21"},
+                {"Distribution_Account", "90287-031-22"},
+                {"Payment_Amount", "-300.00"},
+                {"Program_ID", "150"},
+                {"Payment_Type_ID", 2},
+                {"Scholarship_Expense_Account", "49998-900-11"},
+                {"Processor_Fee_Amount", "0.25"}
+            };
+
+            var l =  new List<Dictionary<string, object>>
+            {
+                one,
+                two,
+                three,
+                four,
+            };
+
+            return l;
+        }
+    
+
+    private List<MpGPExportDatum> MockGPExportDataTest1(int programId)
         {
             var dict = new List<MpGPExportDatum>
             {
@@ -643,8 +895,8 @@ namespace MinistryPlatform.Translation.Test.Services
                     DistributionAccount = "90001-031-22",
                     Amount = Convert.ToDecimal("185.00"),
                     ProcessorFeeAmount = Convert.ToDecimal(".25"),
-                    ProgramId = 15,
-                    ProccessFeeProgramId = 127,
+                    ProgramId = programId,
+                    ProccessorFeeMappingId = 127,
                     PaymentTypeId = 8,
                     ScholarshipExpenseAccount = "19948-900-11",
                     ScholarshipPaymentTypeId = 9
@@ -665,9 +917,9 @@ namespace MinistryPlatform.Translation.Test.Services
                     ReceivableAccount = "90013-031-21",
                     DistributionAccount = "90001-031-22",
                     Amount = Convert.ToDecimal("15"),
-                    ProgramId = 15,
+                    ProgramId = programId,
                     ProcessorFeeAmount = Convert.ToDecimal("0.25"),
-                    ProccessFeeProgramId = 127,
+                    ProccessorFeeMappingId = 127,
                     PaymentTypeId = 7,
                     ScholarshipExpenseAccount = "19948-900-11",
                     ScholarshipPaymentTypeId = 9,
@@ -689,8 +941,8 @@ namespace MinistryPlatform.Translation.Test.Services
                     DistributionAccount = "90001-031-22",
                     Amount = Convert.ToDecimal("300.00"),
                     ProcessorFeeAmount = Convert.ToDecimal(".25"),
-                    ProgramId = 150,
-                    ProccessFeeProgramId = 127,
+                    ProgramId = programId,
+                    ProccessorFeeMappingId = 127,
                     PaymentTypeId = 2,
                     ScholarshipExpenseAccount = "49998-900-11",
                     ScholarshipPaymentTypeId = 9
@@ -712,8 +964,8 @@ namespace MinistryPlatform.Translation.Test.Services
                     DistributionAccount = "90287-031-22",
                     Amount = Convert.ToDecimal("300.00") * -1,
                     ProcessorFeeAmount = Convert.ToDecimal(".25"),
-                    ProgramId = 150,
-                    ProccessFeeProgramId = 127,
+                    ProgramId = programId,
+                    ProccessorFeeMappingId = 127,
                     PaymentTypeId = 2,
                     ScholarshipExpenseAccount = "49998-900-11",
                     ScholarshipPaymentTypeId = 9
@@ -721,8 +973,8 @@ namespace MinistryPlatform.Translation.Test.Services
             };
 
             return dict;
-        }
-        
+        }   
+
         private List<MpGPExportDatum> MockGPExportDataTest2()
         {
             return new List<MpGPExportDatum>
@@ -746,10 +998,11 @@ namespace MinistryPlatform.Translation.Test.Services
                     Amount = Convert.ToDecimal("185.00") + Convert.ToDecimal("300.00") - Convert.ToDecimal(".25") - Convert.ToDecimal(".25"),
                     ProcessorFeeAmount = Convert.ToDecimal(".50"),
                     ProgramId = 15,
-                    ProccessFeeProgramId = 127,
+                    ProccessorFeeMappingId = 127,
                     PaymentTypeId = 8,
                     ScholarshipExpenseAccount = "19948-900-11",
-                    ScholarshipPaymentTypeId = 9
+                    ScholarshipPaymentTypeId = 9,
+                    TransactionType = TransactionType.Donation
                 },
                 new MpGPExportDatum
                 {
@@ -770,10 +1023,11 @@ namespace MinistryPlatform.Translation.Test.Services
                     Amount = Convert.ToDecimal(".25") + Convert.ToDecimal(".25"),
                     ProcessorFeeAmount = Convert.ToDecimal(".25"),
                     ProgramId = 15,
-                    ProccessFeeProgramId = 127,
+                    ProccessorFeeMappingId = 127,
                     PaymentTypeId = 8,
                     ScholarshipExpenseAccount = "19998-900-11",
-                    ScholarshipPaymentTypeId = 9
+                    ScholarshipPaymentTypeId = 9,
+                    TransactionType = TransactionType.Donation
                 },
                 new MpGPExportDatum
                 {
@@ -794,10 +1048,11 @@ namespace MinistryPlatform.Translation.Test.Services
                     Amount = Convert.ToDecimal("15"),
                     ProgramId = 127,
                     ProcessorFeeAmount = Convert.ToDecimal("0.25"),
-                    ProccessFeeProgramId = 127,
+                    ProccessorFeeMappingId = 127,
                     PaymentTypeId = 7,
                     ScholarshipExpenseAccount = "19948-900-11",
                     ScholarshipPaymentTypeId = 9,
+                    TransactionType = TransactionType.Donation
                 },
                 new MpGPExportDatum
                 {
@@ -818,10 +1073,11 @@ namespace MinistryPlatform.Translation.Test.Services
                     Amount = Convert.ToDecimal(".12"),
                     ProcessorFeeAmount = Convert.ToDecimal(".25"),
                     ProgramId = 15,
-                    ProccessFeeProgramId = 127,
+                    ProccessorFeeMappingId = 127,
                     PaymentTypeId = 8,
                     ScholarshipExpenseAccount = "19998-900-11",
-                    ScholarshipPaymentTypeId = 9
+                    ScholarshipPaymentTypeId = 9,
+                    TransactionType = TransactionType.Donation
                 },
                 new MpGPExportDatum
                 {
@@ -842,10 +1098,11 @@ namespace MinistryPlatform.Translation.Test.Services
                     Amount = Convert.ToDecimal("300.00"),
                     ProcessorFeeAmount = Convert.ToDecimal(".25"),
                     ProgramId = 150,
-                    ProccessFeeProgramId = 127,
+                    ProccessorFeeMappingId = 127,
                     PaymentTypeId = 2,
                     ScholarshipExpenseAccount = "49998-900-11",
-                    ScholarshipPaymentTypeId = 9
+                    ScholarshipPaymentTypeId = 9,
+                    TransactionType = TransactionType.Donation
                 },
                 new MpGPExportDatum
                 {
@@ -866,10 +1123,161 @@ namespace MinistryPlatform.Translation.Test.Services
                     Amount = Convert.ToDecimal(".25"),
                     ProcessorFeeAmount = Convert.ToDecimal(".25"),
                     ProgramId = 15,
-                    ProccessFeeProgramId = 127,
+                    ProccessorFeeMappingId = 127,
                     PaymentTypeId = 8,
                     ScholarshipExpenseAccount = "19998-900-11",
-                    ScholarshipPaymentTypeId = 9
+                    ScholarshipPaymentTypeId = 9,
+                    TransactionType = TransactionType.Donation
+                },
+                new MpGPExportDatum
+                {
+                    DocumentNumber = "1234123450004",
+                    DepositId = 123412345,
+                    DocumentType = "SALE",
+                    DonationId = 100025,
+                    BatchName = "Test Batch",
+                    DonationDate = new DateTime(2015, 3, 28, 8, 30, 0),
+                    DepositDate = new DateTime(2015, 3, 28, 8, 30, 0),
+                    CustomerId = "CONTRIBUTI001",
+                    DepositAmount = "400.00",
+                    DonationAmount = Convert.ToDecimal("185.00") + Convert.ToDecimal("300.00"),
+                    CheckbookId = "PNC001",
+                    CashAccount = "91213-031-20",
+                    ReceivableAccount = "90013-031-21",
+                    DistributionAccount = "90001-031-22",
+                    Amount = Convert.ToDecimal("185.00") + Convert.ToDecimal("300.00") - Convert.ToDecimal(".25") - Convert.ToDecimal(".25"),
+                    ProcessorFeeAmount = Convert.ToDecimal(".50"),
+                    ProgramId = 155,
+                    ProccessorFeeMappingId = 127,
+                    PaymentTypeId = 8,
+                    ScholarshipExpenseAccount = "19948-900-11",
+                    ScholarshipPaymentTypeId = 9,
+                    TransactionType = TransactionType.Payment
+                },
+                new MpGPExportDatum
+                {
+                    DocumentNumber = "1234123450004",
+                    DepositId = 123412345,
+                    DocumentType = "SALE",
+                    DonationId = 100025,
+                    BatchName = "Test Batch",
+                    DonationDate = new DateTime(2015, 3, 28, 8, 30, 0),
+                    DepositDate = new DateTime(2015, 3, 28, 8, 30, 0),
+                    CustomerId = "CONTRIBUTI001",
+                    DepositAmount = "400.00",
+                    DonationAmount = Convert.ToDecimal("185.00") + Convert.ToDecimal("300.00"),
+                    CheckbookId = "PNC001",
+                    CashAccount = "77777-031-20",
+                    ReceivableAccount = "90287-031-21",
+                    DistributionAccount = "77777-031-22",
+                    Amount = Convert.ToDecimal(".25") + Convert.ToDecimal(".25"),
+                    ProcessorFeeAmount = Convert.ToDecimal(".25"),
+                    ProgramId = 155,
+                    ProccessorFeeMappingId = 127,
+                    PaymentTypeId = 8,
+                    ScholarshipExpenseAccount = "19998-900-11",
+                    ScholarshipPaymentTypeId = 9,
+                    TransactionType = TransactionType.Payment
+                },
+                new MpGPExportDatum
+                {
+                    DocumentNumber = "1234123450005",
+                    DepositId = 123412345,
+                    DocumentType = "SALE",
+                    DonationId = 100025,
+                    BatchName = "Test Batch",
+                    DonationDate = new DateTime(2015, 3, 28, 8, 30, 0),
+                    DepositDate = new DateTime(2015, 3, 28, 8, 30, 0),
+                    CustomerId = "CONTRIBUTI001",
+                    DepositAmount = "400.00",
+                    DonationAmount = Convert.ToDecimal("15.00"),
+                    CheckbookId = "PNC001",
+                    CashAccount = "91213-031-20",
+                    ReceivableAccount = "90013-031-21",
+                    DistributionAccount = "90001-031-22",
+                    Amount = Convert.ToDecimal("15"),
+                    ProgramId = 127,
+                    ProcessorFeeAmount = Convert.ToDecimal("0.25"),
+                    ProccessorFeeMappingId = 127,
+                    PaymentTypeId = 7,
+                    ScholarshipExpenseAccount = "19948-900-11",
+                    ScholarshipPaymentTypeId = 9,
+                    TransactionType = TransactionType.Payment
+                },
+                new MpGPExportDatum
+                {
+                    DocumentNumber = "1234123450005",
+                    DepositId = 123412345,
+                    DocumentType = "SALE",
+                    DonationId = 100025,
+                    BatchName = "Test Batch",
+                    DonationDate = new DateTime(2015, 3, 28, 8, 30, 0),
+                    DepositDate = new DateTime(2015, 3, 28, 8, 30, 0),
+                    CustomerId = "CONTRIBUTI001",
+                    DepositAmount = "400.00",
+                    DonationAmount = Convert.ToDecimal("15.00"),
+                    CheckbookId = "PNC001",
+                    CashAccount = "77777-031-20",
+                    ReceivableAccount = "90013-031-21",
+                    DistributionAccount = "90001-031-22",
+                    Amount = Convert.ToDecimal(".12"),
+                    ProcessorFeeAmount = Convert.ToDecimal(".25"),
+                    ProgramId = 155,
+                    ProccessorFeeMappingId = 127,
+                    PaymentTypeId = 8,
+                    ScholarshipExpenseAccount = "19998-900-11",
+                    ScholarshipPaymentTypeId = 9,
+                    TransactionType = TransactionType.Payment
+                },
+                new MpGPExportDatum
+                {
+                    DocumentNumber = "1234123450006",
+                    DepositId = 123412345,
+                    DocumentType = "RETURNS",
+                    DonationId = 100045,
+                    BatchName = "Test Batch",
+                    DonationDate = new DateTime(2015, 3, 28, 8, 30, 0),
+                    DepositDate = new DateTime(2015, 3, 28, 8, 30, 0),
+                    CustomerId = "CONTRIBUTI001",
+                    DepositAmount = "400.00",
+                    DonationAmount = Convert.ToDecimal("300.25"),
+                    CheckbookId = "PNC001",
+                    CashAccount = "90287-031-20",
+                    ReceivableAccount = "90287-031-21",
+                    DistributionAccount = "90287-031-22",
+                    Amount = Convert.ToDecimal("300.00"),
+                    ProcessorFeeAmount = Convert.ToDecimal(".25"),
+                    ProgramId = 150,
+                    ProccessorFeeMappingId = 127,
+                    PaymentTypeId = 2,
+                    ScholarshipExpenseAccount = "49998-900-11",
+                    ScholarshipPaymentTypeId = 9,
+                    TransactionType = TransactionType.Payment
+                },
+                new MpGPExportDatum
+                {
+                    DocumentNumber = "1234123450006",
+                    DepositId = 123412345,
+                    DocumentType = "RETURNS",
+                    DonationId = 100045,
+                    BatchName = "Test Batch",
+                    DonationDate = new DateTime(2015, 3, 28, 8, 30, 0),
+                    DepositDate = new DateTime(2015, 3, 28, 8, 30, 0),
+                    CustomerId = "CONTRIBUTI001",
+                    DepositAmount = "400.00",
+                    DonationAmount = Convert.ToDecimal("300.25"),
+                    CheckbookId = "PNC001",
+                    CashAccount = "77777-031-20",
+                    ReceivableAccount = "90287-031-21",
+                    DistributionAccount = "90287-031-22",
+                    Amount = Convert.ToDecimal(".25"),
+                    ProcessorFeeAmount = Convert.ToDecimal(".25"),
+                    ProgramId = 155,
+                    ProccessorFeeMappingId = 127,
+                    PaymentTypeId = 8,
+                    ScholarshipExpenseAccount = "19998-900-11",
+                    ScholarshipPaymentTypeId = 9,
+                    TransactionType = TransactionType.Payment
                 },
             };
         }

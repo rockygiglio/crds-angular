@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using crds_angular.Models.Crossroads.Groups;
 using Newtonsoft.Json;
 
 namespace crds_angular.Models.Crossroads.Camp
@@ -26,11 +28,17 @@ namespace crds_angular.Models.Crossroads.Camp
         [JsonProperty(PropertyName = "productId")]
         public int OnlineProductId { get; set; }
 
+        [JsonProperty(PropertyName = "primaryContact")]
+        public string PrimaryContactEmail { get; set; }
+
         [JsonProperty(PropertyName = "registrationStartDate")]
         public DateTime? RegistrationStartDate { get; set; }
 
         [JsonProperty(PropertyName = "registrationEndDate")]
         public DateTime? RegistrationEndDate { get; set; }
+
+        [JsonProperty(PropertyName = "eligibleGrades")]
+        public List<GroupDTO> EligibleGradesList  { get; set; }
 
     }
 }

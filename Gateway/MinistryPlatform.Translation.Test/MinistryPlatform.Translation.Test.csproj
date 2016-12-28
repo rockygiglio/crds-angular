@@ -56,6 +56,10 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="FactoryGirl.NET, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\FactoryGirl.NET.1.0.0.0\lib\net40-Client\FactoryGirl.NET.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="FsCheck, Version=2.2.4.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\FsCheck.2.2.4\lib\net45\FsCheck.dll</HintPath>
       <Private>True</Private>
@@ -112,10 +116,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Extensions\RestSharpExtensionsTest.cs" />
+    <Compile Include="Helpers\Factories.cs" />
     <Compile Include="Helpers\Conversions.cs" />
     <Compile Include="Services\CampaignRepositoryTest.cs" />
     <Compile Include="Services\ChildcareRepositoryTest.cs" />
     <Compile Include="Services\ChildcareRequestServiceTest.cs" />
+    <Compile Include="Services\GenderRuleTest.cs" />
+    <Compile Include="Services\CongregationRepositoryTest.cs" />
     <Compile Include="Services\GroupConnectorServiceTest.cs" />
     <Compile Include="Services\AddressServiceTest.cs" />
     <Compile Include="Services\AttributeServiceTest.cs" />
@@ -144,9 +151,12 @@
     <Compile Include="Services\ParticipantServiceTest.cs" />
     <Compile Include="Services\PaymentRepositoryTest.cs" />
     <Compile Include="Services\PledgeRepositoryTest.cs" />
+    <Compile Include="Services\ProductRulesetsRepositoryTest.cs" />
     <Compile Include="Services\ProgramServiceTest.cs" />
+    <Compile Include="Services\RegistrationRuleTest.cs" />
     <Compile Include="Services\ResponseServiceTest.cs" />
-    <Compile Include="Services\RoomServiceTest.cs" />
+    <Compile Include="Services\RoomRepositoryTest.cs" />
+    <Compile Include="Services\RulesetRepositoryTest.cs" />
     <Compile Include="Services\SkillsServiceTest.cs" />
     <Compile Include="Services\TripRepositoryTest.cs" />
     <Compile Include="Services\UserServiceTest.cs" />

@@ -15,6 +15,7 @@ using MinistryPlatform.Translation.Repositories.Interfaces;
 using crds_angular.Services.Interfaces;
 using Crossroads.Utilities;
 using MinistryPlatform.Translation.Models;
+using MinistryPlatform.Translation.Models.Payments;
 using Moq;
 using NUnit.Framework;
 using DonationStatus = crds_angular.Models.Crossroads.Stewardship.DonationStatus;
@@ -397,7 +398,9 @@ namespace crds_angular.test.controllers
                 PledgeCampaignId = 23,
                 PledgeDonorId = 42,
                 GiftMessage = "Don't look a Gift Horse in the Mouth!",
-                PaymentType = "card"
+                PaymentType = "card",
+                SourceUrl = "www.ninjas.com",
+                PredefinedAmount = 86868
             };
 
             var donor = new MpContactDonor
@@ -451,7 +454,9 @@ namespace crds_angular.test.controllers
                                                 d.DonorAcctId == null &&
                                                 d.CheckScannerBatchName == null &&
                                                 d.DonationStatus == null &&
-                                                d.CheckNumber == null), true))
+                                                d.CheckNumber == null && 
+                                                d.PredefinedAmount == createDonationDTO.PredefinedAmount &&
+                                                d.SourceUrl == createDonationDTO.SourceUrl), true))
                     .Returns(donationId);
 
 
@@ -552,6 +557,72 @@ namespace crds_angular.test.controllers
             var resultDto = ((OkNegotiatedContentResult<DonationDTO>)result).Content;
             Assert.IsNotNull(resultDto);
             Assert.AreEqual(donor.Email, resultDto.Email);
+        }
+
+        [Test]
+        public void testPostToCreateDonationAndDistributionAuthenticatedPayment()
+        {
+            var contactId = 999999;
+            var payment = new MpPaymentDetailReturn();
+            payment.PaymentId = 46546;
+
+            var charge = new StripeCharge()
+            {
+                Id = "ch_crdscharge86868",
+                BalanceTransaction = new StripeBalanceTransaction()
+                {
+                    Fee = 987
+                }
+            };
+
+            var createDonationDTO = new CreateDonationDTO
+            {               
+                Amount = 86868,
+                DonorId = 394256,
+                EmailAddress = "test@test.com",
+                PaymentType = "bank",
+                TransactionType = "PAYMENT",
+                InvoiceId = 88
+            };
+
+            var donor = new MpContactDonor
+            {
+                ContactId = contactId,
+                DonorId = 424242,
+                SetupDate = new DateTime(),
+                StatementFreq = "1",
+                StatementMethod = "2",
+                StatementType = "3",
+                ProcessorId = "cus_test1234567",
+                Email = "moc.tset@tset"
+            };
+
+            authenticationServiceMock.Setup(mocked => mocked.GetContactId(authType + " " + authToken)).Returns(contactId);
+
+            donorServiceMock.Setup(mocked => mocked.GetContactDonor(contactId))
+                .Returns(donor);
+
+            stripeServiceMock.Setup(
+                mocked => mocked.ChargeCustomer(donor.ProcessorId, createDonationDTO.Amount, donor.DonorId, true))
+                .Returns(charge);
+
+            invoiceServiceMock.Setup(mocked => mocked.InvoiceExists(It.IsAny<int>()))
+                .Returns(true);
+
+            paymentServiceMock.Setup(mocked => mocked.PostPayment(It.IsAny<MpDonationAndDistributionRecord>()))
+                .Returns(payment);
+
+            IHttpActionResult result = fixture.Post(createDonationDTO);
+
+            authenticationServiceMock.VerifyAll();
+            donorServiceMock.VerifyAll();
+            stripeServiceMock.VerifyAll();
+            donorServiceMock.VerifyAll();
+
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOf(typeof(OkNegotiatedContentResult<DonationDTO>), result);
+            var okResult = (OkNegotiatedContentResult<DonationDTO>)result;
+            Assert.AreEqual(46546, payment.PaymentId);
         }
 
     }

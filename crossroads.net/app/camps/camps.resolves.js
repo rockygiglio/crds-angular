@@ -1,5 +1,10 @@
 export function getCamperInfo(CampsService, $state) {
   const camperId = $state.toParams.contactId;
+
+  if (camperId === 'new') {
+    return Promise.resolve();
+  }
+
   const campId = $state.toParams.campId;
   return CampsService.getCamperInfo(campId, camperId);
 }
@@ -9,9 +14,27 @@ export function getCampInfo(CampsService, $state) {
   return CampsService.getCampInfo(id);
 }
 
-export function getCampProductInfo(CampsService, $state) {
+export function getCampProductInfo(CampsService, $state, $q) {
   const campId = $state.toParams.campId;
   const camperId = $state.toParams.contactId;
+  if ($state.toParams.page === 'camps-payment') {
+    const deferred = $q.defer();
+
+    // if we are coming from the dashboard... don't check for previous payments
+    const isUpdate = $state.toParams.update;
+    // TODO:  figure out if we can determine if this has already been resolved...
+
+    CampsService.getCampProductInfo(campId, camperId, !isUpdate).then(() => {
+      deferred.resolve();
+    }).catch((err) => {
+      if (err.status === 302) {
+        $state.go('campsignup.application', { page: 'camps-payment', contactId: camperId, campId, update: true, redirectTo: 'payment-confirmation' });
+      }
+      deferred.reject();
+    });
+    return deferred.promise;
+  }
+
   return CampsService.getCampProductInfo(campId, camperId);
 }
 
@@ -40,4 +63,24 @@ export function getCampWaivers(CampsService, $state) {
 
 export function getShirtSizes(CampsService) {
   return CampsService.getShirtSizes();
+}
+
+export function checkApplicationExpiration(CampsService, $state, $q, $timeout, $log) {
+  const deferred = $q.defer();
+
+  const campId = $state.toParams.campId;
+  const contactId = $state.toParams.contactId;
+
+  CampsService.isEventParticipantInterested(contactId, campId)
+    .then(() => {
+      deferred.resolve();
+    }, (error) => {
+      $log.error('CampService application expiration check failed', error);
+      deferred.resolve();
+      $timeout(() => {
+        $state.go('campsignup.family', { campId });
+      }, 0);
+    });
+
+  return deferred.promise;
 }

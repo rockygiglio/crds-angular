@@ -12,6 +12,9 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
         int CreateEvent(MpEventReservationDto eventReservationReservation);
         int SafeRegisterParticipant(int participantId, int eventId, int groupId = 0, int groupParticipantId = 0);
         int RegisterParticipantForEvent(int participantId, int eventId, int groupId = 0, int groupParticipantId = 0);
+        int RegisterInterestedParticipantWithEndDate(int participantId, int eventId, DateTime? endDate);
+        void SetParticipantAsRegistered(int eventId, int participantId);
+        void UpdateParticipantEndDate(int eventParticipantId, DateTime? endDate);
         int UnregisterParticipantForEvent(int participantId, int eventId);
         List<MpEvent> GetEvents(string eventType, string token);
         List<MpEvent> GetEventsByTypeForRange(int eventTypeId, DateTime startDate, DateTime endDate, string token);
@@ -37,6 +40,8 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
 
         List<MpWaivers> GetWaivers(int eventId, int contactId);
         void SetWaivers(List<MpWaiverResponse> waiverResponses);
+
+        Result<int> GetProductEmailTemplate(int eventId);
 
     }
 }

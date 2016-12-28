@@ -1,17 +1,3 @@
-class MedicalInfoFormFactory {
-  /* ngInject */
-  constructor(CampsService, $resource) {
-    this.campsService = CampsService;
-    this.$resource = $resource;
-  }
-
-  createForm() {
-    return new MedicalInfoForm(this.campsService, this.$resource);
-  }
-}
-
-export default MedicalInfoFormFactory;
-
 class MedicalInfoForm {
   constructor(CampsService, $resource) {
     this.campsService = CampsService;
@@ -321,8 +307,71 @@ class MedicalInfoForm {
               }
               ]
             }
-          ]
-        }
+          ] }
+      },
+      {
+        className: '',
+        wrapper: 'campBootstrapRow',
+        fieldGroup: [{
+          className: 'form-group col-xs-6',
+          key: 'showAllergies',
+          type: 'crdsRadio',
+          templateOptions: {
+            label: 'Are there any Allergy/Dietary Needs?',
+            required: true,
+            inline: true,
+            labelProp: 'label',
+            valueProp: 'id',
+            options: [{
+              label: 'Yes',
+              id: true
+            }, {
+              label: 'No',
+              id: false
+            }]
+          }
+        }]
+      },
+      {
+        className: '',
+        wrapper: 'campBootstrapRow',
+        hideExpression: () => !this.formModel.showAllergies,
+        fieldGroup: [{
+          className: 'col-xs-12',
+          template: '<p>List all allergies, reactions and treatments to allergies.</p>'
+        }, {
+          className: 'form-group col-xs-12',
+          key: 'medicineAllergies',
+          type: 'crdsTextArea',
+          templateOptions: {
+            label: 'Medicine Allergies',
+            required: false
+          }
+        }, {
+          className: 'form-group col-xs-12',
+          key: 'foodAllergies',
+          type: 'crdsTextArea',
+          templateOptions: {
+            label: 'Food Allergies',
+            required: false
+          }
+        }, {
+          className: 'form-group col-xs-12',
+          key: 'environmentalAllergies',
+          type: 'crdsTextArea',
+          templateOptions: {
+            label: 'Environmental Allergies',
+            required: false
+          }
+        }, {
+          className: 'form-group col-xs-12',
+          key: 'otherAllergies',
+          type: 'crdsTextArea',
+          templateOptions: {
+            label: 'Other Allergies',
+            required: false
+          }
+        }]
       }
     ];
   }
@@ -331,3 +380,18 @@ class MedicalInfoForm {
     return this.formModel;
   }
 }
+
+class MedicalInfoFormFactory {
+  /* ngInject */
+  constructor(CampsService, $resource) {
+    this.campsService = CampsService;
+    this.$resource = $resource;
+  }
+
+  createForm() {
+    return new MedicalInfoForm(this.campsService, this.$resource);
+  }
+}
+
+export default MedicalInfoFormFactory;
+

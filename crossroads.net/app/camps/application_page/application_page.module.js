@@ -26,11 +26,15 @@ import ProductSummaryForm from './product_summary/product_summary_form.service';
 // Payment
 import CampsPayment from './camps_payment/camps_payment.component';
 
+// Camps Full
+import CampsFullComponent from './camps_full/camps_full.component';
+
 export default angular.module(constants.MODULES.CAMPS_APPLICATION_PAGE, [
   constants.MODULES.CORE,
   constants.MODULES.COMMON])
   .component('camperInfo', CamperInfoComponent)
   .component('campsApplicationPage', ApplicationPage)
+  .component('campsFull', CampsFullComponent)
   .component('emergencyContact', EmergencyContactComponent)
   .component('campMedicalInfo', MedicalInfoComponent)
   .component('campWaivers', CampWaiversComponent)
@@ -48,6 +52,6 @@ export default angular.module(constants.MODULES.CAMPS_APPLICATION_PAGE, [
     registerResolve('medical-info', MedicalInfoComponent.resolve);
     registerResolve('product-summary', ProductSummaryComponent.resolve);
     registerResolve('camps-payment', CampsPayment.resolve);
-    // registerResolve('emergency-contact', EmergencyContactComponent.resolve);
+    registerResolve('emergency-contact', EmergencyContactComponent.resolve);
   })
   .name;

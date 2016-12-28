@@ -62,5 +62,8 @@ namespace MinistryPlatform.Translation.Models
         public bool? Template { get; set; }
         [JsonProperty(PropertyName = "Cancelled")]
         public bool Cancelled { get; set; }
+
+        [JsonProperty(PropertyName = "Minutes_Until_Timeout")]
+        public int? MinutesUntilTimeout { get; set; }
     }
 }

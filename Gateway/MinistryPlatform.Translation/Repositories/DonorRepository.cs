@@ -311,6 +311,8 @@ namespace MinistryPlatform.Translation.Repositories
                 {"Recurring_Gift_ID", donationAndDistribution.RecurringGiftId},
                 {"Is_Recurring_Gift", donationAndDistribution.RecurringGift},
                 {"Donor_Account_ID", donationAndDistribution.DonorAcctId},
+                {"Source_Url", donationAndDistribution.SourceUrl},
+                {"Predefined_Amount", donationAndDistribution.PredefinedAmount},
             };
             if (!string.IsNullOrWhiteSpace(donationAndDistribution.CheckScannerBatchName))
             {
@@ -790,7 +792,7 @@ namespace MinistryPlatform.Translation.Repositories
             {
                 return donationMap[donationId];
             }
-            
+
             var donation = new MpDonation
             {
                 donationDate = record["Donation_Date"] as DateTime? ?? DateTime.Now,
@@ -805,12 +807,14 @@ namespace MinistryPlatform.Translation.Repositories
                 softCreditDonorId = record["Soft_Credit_Donor_ID"] as int? ?? 0,
                 donorDisplayName = record["Donor_Display_Name"] as string,
                 itemNumber = record["Item_Number"] as string,
-                recurringGift = record["Is_Recurring_Gift"] as bool? ?? false
+                recurringGift = record["Is_Recurring_Gift"] as bool? ?? false,
+                AccountingCompanyName = record["Company_Name"] as string,
+                AccountingCompanyIncludeOnPrintedStatement = record["Show_Online"] as bool? ?? false
             };
 
             var status = statuses.Find(x => x.Id == donation.donationStatus) ?? new MpDonationStatus();
             donation.IncludeOnGivingHistory = status.DisplayOnGivingHistory;
-            donation.IncludeOnPrintedStatement = status.DisplayOnStatement;
+            donation.IncludeOnPrintedStatement = status.DisplayOnStatement && donation.AccountingCompanyIncludeOnPrintedStatement;
 
             return donation;
         }
@@ -838,7 +842,17 @@ namespace MinistryPlatform.Translation.Repositories
             return string.Join(" or ", ids.Select(id => string.Format("\"{0}\"", id)));
         }
 
-        public int CreateRecurringGiftRecord(string authorizedUserToken, int donorId, int donorAccountId, string planInterval, decimal planAmount, DateTime startDate, string program, string subscriptionId, int congregationId)
+        public int CreateRecurringGiftRecord(string authorizedUserToken, 
+                                             int donorId, 
+                                             int donorAccountId, 
+                                             string planInterval, 
+                                             decimal planAmount, 
+                                             DateTime startDate, 
+                                             string program, 
+                                             string subscriptionId, 
+                                             int congregationId, 
+                                             string sourceUrl = null, 
+                                             decimal? predefinedAmount = null)
         {
             // Make sure we're talking in UTC consistently
             startDate = startDate.ToUniversalTime().Date;
@@ -868,7 +882,9 @@ namespace MinistryPlatform.Translation.Repositories
                 {"Start_Date", startDate},
                 {"Program_ID", program},
                 {"Congregation_ID", congregationId},
-                {"Subscription_ID", subscriptionId}
+                {"Subscription_ID", subscriptionId},
+                {"Source_Url", sourceUrl},
+                {"Predefined_Amount", predefinedAmount}
             };
 
             int recurringGiftId;
