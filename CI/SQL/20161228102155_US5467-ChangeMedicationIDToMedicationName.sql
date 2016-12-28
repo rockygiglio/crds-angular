@@ -32,7 +32,7 @@ CREATE TABLE [dbo].[cr_Medical_Information_Medications](
 	[MedicalInformation_ID] [int] NOT NULL,
 	[Medication_Name] [nvarchar](256) NOT NULL,
 	[Medication_Type_ID] [int] NOT NULL,
-	[DosageTime] [time](7) NOT NULL,
+	[DosageTime] [nvarchar](128) NOT NULL,
 	[DosageAmount] [nvarchar](128) NOT NULL,
 	[Domain_ID] [int] NOT NULL,
  CONSTRAINT [PK_cr_Medical_Information_Medications] PRIMARY KEY CLUSTERED 
