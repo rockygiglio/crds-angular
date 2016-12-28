@@ -10,5 +10,6 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
         MpMedicalInformation GetMedicalInformation(int contactId);
         MpMedicalInformation SaveMedicalInfo(MpMedicalInformation mpMedicalInfo, int contactId);
         void UpdateOrCreateMedAllergy(List<MpMedicalAllergy> updateToAllergyList, List<MpMedicalAllergy> createToAllergyList );
+        void UpdateOrCreateMedications(List<MpMedication> medications);
     }
 }

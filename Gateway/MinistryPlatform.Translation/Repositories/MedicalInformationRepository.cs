@@ -69,5 +69,20 @@ namespace MinistryPlatform.Translation.Repositories
                 _ministryPlatformRest.UsingAuthenticationToken(apiToken).Post(createToAllergyList);
             }
         }
+
+        public void UpdateOrCreateMedications(List<MpMedication> medications)
+        {
+            var apiToken = _apiUserRepository.GetToken();
+            var updateMedications = medications.Where(m => m.MedicalInformationMedicationId > 0).ToList();
+            if (updateMedications.Count > 0)
+            {
+                _ministryPlatformRest.UsingAuthenticationToken(apiToken).Put(updateMedications);
+            }
+            var createMedications = medications.Where(m => m.MedicalInformationMedicationId == 0).ToList();
+            if (createMedications.Count > 0)
+            {
+                _ministryPlatformRest.UsingAuthenticationToken(apiToken).Post(createMedications);
+            }
+        }
     }
 }

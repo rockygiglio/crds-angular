@@ -7,6 +7,9 @@ namespace MinistryPlatform.Translation.Models
     [MpRestApiTable(Name = "cr_Medical_Information_Medications")]
     public class MpMedication
     {
+        [JsonProperty(PropertyName = "MedicalInformationMedication_ID")]
+        public int MedicalInformationMedicationId { get; set; }
+
         [JsonProperty(PropertyName = "MedicalInformation_ID")]
         public int MedicalInformationId { get; set; }
 
@@ -17,7 +20,7 @@ namespace MinistryPlatform.Translation.Models
         public int MedicationTypeId { get; set; }
 
         [JsonProperty(PropertyName = "DosageTime")]
-        public DateTime DosageTime { get; set; }
+        public string DosageTimes { get; set; }
 
         [JsonProperty(PropertyName = "DosageAmount")]
         public string DosageAmount { get; set; }

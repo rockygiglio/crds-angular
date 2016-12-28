@@ -57,6 +57,9 @@ namespace crds_angular.Models.Crossroads.Camp
 
     public class Medication
     {
+        [JsonProperty(PropertyName = "medicalInformationMedicationId")]
+        public int MedicalInformationMedicationId { get; set; }
+
         [JsonProperty(PropertyName = "medicationName")]
         public string MedicationName { get; set; }
 

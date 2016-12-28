@@ -660,6 +660,7 @@ namespace crds_angular.Services
                     }
                 }
                 _medicalInformationRepository.UpdateOrCreateMedAllergy(updateToAllergyList, createToAllergyList);
+                _medicalInformationRepository.UpdateOrCreateMedications(medicalInfo.Medications.Select(m => new MpMedication {MedicalInformationMedicationId = m.MedicalInformationMedicationId, MedicationName = m.MedicationName, MedicationTypeId = m.MedicationTypeId, DosageAmount = m.Dosage, DosageTimes = m.TimesOfDay}).ToList());
             }
         }
 
@@ -719,7 +720,7 @@ namespace crds_angular.Services
                     MedicationName = medication.MedicationName,
                     MedicationTypeId = medication.MedicationTypeId,
                     Dosage = medication.DosageAmount,
-                    TimesOfDay = medication.DosageTime.ToString()
+                    TimesOfDay = medication.DosageTimes.ToString()
                 });
             }
             if (camperMedInfo.Medications.Count > 0) { camperMedInfo.ShowMedications = true; }
