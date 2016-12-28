@@ -39,3 +39,16 @@ GO
 IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_cr_Medication_Types_dp_Domains]') AND parent_object_id = OBJECT_ID(N'[dbo].[cr_Medication_Types]'))
 ALTER TABLE [dbo].[cr_Medication_Types] CHECK CONSTRAINT [FK_cr_Medication_Types_dp_Domains]
 GO
+
+SET IDENTITY_INSERT cr_Medication_Types ON
+	INSERT INTO [dbo].[cr_Medication_Types]
+			   ([Medication_Type_ID]
+			   ,[Medication_Type]
+			   ,[Domain_ID])
+		 VALUES
+			   (1, 'Prescription', 1),
+			   (2, 'Over The Counter', 1)
+SET IDENTITY_INSERT cr_Medication_Types OFF
+GO
+
+
