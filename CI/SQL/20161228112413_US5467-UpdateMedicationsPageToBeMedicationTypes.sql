@@ -11,7 +11,7 @@ BEGIN
 		  ,[Description] = 'Medication Types'
 		  ,[Table_Name] = 'cr_Medication_Types'
 		  ,[Primary_Key] = 'Medication_Type_ID'
-		  ,[Default_Field_List] = 'MedicationType'
-		  ,[Selected_Record_Expression] = 'MedicationType'
+		  ,[Default_Field_List] = 'Medication_Type'
+		  ,[Selected_Record_Expression] = 'Medication_Type'
 	 WHERE Page_ID = @Page_ID
 END

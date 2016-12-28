@@ -21,7 +21,7 @@ IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[cr
 BEGIN
 CREATE TABLE [dbo].[cr_Medication_Types](
 	[Medication_Type_ID] [int] IDENTITY(1,1) NOT NULL,
-	[MedicationType] [nvarchar](256) NOT NULL,
+	[Medication_Type] [nvarchar](256) NOT NULL,
 	[Domain_ID] [int] NOT NULL,
  CONSTRAINT [PK_cr_Medication_Types] PRIMARY KEY CLUSTERED 
 (
