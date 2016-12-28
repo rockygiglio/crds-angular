@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using crds_angular.Models.Crossroads.Payment;
 using Newtonsoft.Json;
 
 namespace crds_angular.Models.Crossroads.Camp
@@ -29,5 +30,9 @@ namespace crds_angular.Models.Crossroads.Camp
 
         [JsonProperty(PropertyName = "options")]
         public List<ProductOptionDTO> Options { get; set; }
+
+        [JsonProperty(PropertyName = "camperInvoice")]
+        public PaymentDetailDTO PaymentDetail { get; set; }
+
     }
 }

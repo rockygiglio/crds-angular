@@ -1,12 +1,8 @@
-(function() {
-  'use strict';
+import CONSTANTS from 'crds-constants';
+import './equipment_form.html';
+import equipmentFormComponent from './equipmentForm.component';
 
-  var MODULE = require('crds-constants').MODULES.MPTOOLS;
-
-  angular.module(MODULE)
-    .directive('equipmentForm', require('./equipmentForm.component'))
-    .directive('uniqueEquipment', require('./uniqueEquipment.directive'))
-  ;
-
-  require('./equipmentForm.html');
-})();
+export default angular
+.module(CONSTANTS.MODULES.MPTOOLS)
+.component('equipmentForm', equipmentFormComponent())
+.directive('uniqueEquipment', require('./uniqueEquipment.directive'));

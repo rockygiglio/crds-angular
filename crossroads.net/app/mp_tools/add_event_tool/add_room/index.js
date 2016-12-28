@@ -1,17 +1,10 @@
-(function() {
-  'use strict';
+import CONSTANTS from 'crds-constants';
+import './add_room.html';
+import addRoomComponent from './addRoom.component';
 
-  var MODULE = require('crds-constants').MODULES.MPTOOLS;
+export default angular
+.module(CONSTANTS.MODULES.MPTOOLS)
+.component('addRoom', addRoomComponent());
 
-  // the html file
-  require('./add_room.html');
-
-  angular.module(MODULE).directive('addRoom', require('./addRoom.component'));
-
-  // the room form
-  require('./room_form');
-
-  // the equipment form
-  require('./equipment_form');
-
-})();
+import roomForm from './room_form';
+import equipmentForm from './equipment_form';

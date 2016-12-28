@@ -3,12 +3,8 @@ delete from ministryplatform.dbo.group_participants
 from ministryplatform.[dbo].[Group_Participants] as gp
 join ministryplatform.[dbo].[groups] as g
 on g.group_ID = gp.group_ID
-where g.Group_Type_ID = 4 and g.Ministry_ID = 2
+where g.Group_Type_ID = 4 and g.Ministry_ID = 2 and g.group_name not like 'Kids Club Grade 5'
 
---select group_name, group_ID
---from  ministryplatform.[dbo].[groups] as g
---where g.Group_Type_ID = 4 and g.Ministry_ID = 2
---order by group_name
 
 --Bring back all active minor contacts and attempt to assign them a Check-In group by adding them as a group participant
 INSERT INTO [dbo].[Group_Participants] 
@@ -545,7 +541,7 @@ from (
 select 
 CASE 
 --Assign by rule 3
-when c.[HS_Graduation_Year] = 2024 then  173934 --5th grade   Kids Club Grade 5
+--when c.[HS_Graduation_Year] = 2024 then  173934 --5th grade   Kids Club Grade 5
 when c.[HS_Graduation_Year] = 2025 then  173935 --4th grade   Kids Club Grade 4
 when c.[HS_Graduation_Year] = 2026 then  173936 --3rd grade   Kids Club Grade 3
 when c.[HS_Graduation_Year] = 2027 then  173937 --2nd grade   Kids Club Grade 2

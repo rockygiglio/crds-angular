@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Crossroads.Utilities.Interfaces;
 using FsCheck;
+using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.PlatformService;
 using MinistryPlatform.Translation.Repositories;
 using Moq;
@@ -10,27 +12,33 @@ using MinistryPlatform.Translation.Test.Helpers;
 
 namespace MinistryPlatform.Translation.Test.Services
 {
-    public class RoomServiceTest
+    public class RoomRepositoryTest
     {
         private Mock<IMinistryPlatformService> _ministryPlatformService;
+        private Mock<IMinistryPlatformRestRepository> _ministryPlatformRestRepository;
+
         private Mock<IConfigurationWrapper> _config;
         private Mock<IAuthenticationRepository> _authenticationService;
 
         private RoomRepository _fixture;
+        public const string GetRoomsProcName = "api_crds_GetReservedAndAvailableRoomsByLocation";
 
         [SetUp]
         public void SetUp()
         {
+            _ministryPlatformRestRepository = new Mock<IMinistryPlatformRestRepository>();
             _ministryPlatformService = new Mock<IMinistryPlatformService>();
             _config = new Mock<IConfigurationWrapper>();
             _authenticationService = new Mock<IAuthenticationRepository>();
+
+            _ministryPlatformRestRepository.Setup(m => m.UsingAuthenticationToken("abc")).Returns(_ministryPlatformRestRepository.Object);
 
             _authenticationService.Setup(mocked => mocked.Authenticate(It.IsAny<string>(), It.IsAny<string>())).Returns(new Dictionary<string, object>
             {
                 {"token", "abc"}
             });
 
-            _fixture = new RoomRepository(_ministryPlatformService.Object, _authenticationService.Object, _config.Object);
+            _fixture = new RoomRepository(_ministryPlatformService.Object, _ministryPlatformRestRepository.Object, _authenticationService.Object, _config.Object);
         }
 
         [Test]
@@ -140,6 +148,86 @@ namespace MinistryPlatform.Translation.Test.Services
                 _fixture.DeleteEventRoomsForEvent(eventId, token);
                 _ministryPlatformService.VerifyAll();
             }).QuickCheckThrowOnFailure();
+        }
+
+        [Test]
+        public void ThouShaltGetRoomsByLocation()
+        {
+            var date = DateTime.Now;
+            var rooms = GetMockedRoomsByLocation();
+            var returnList = new List<List<MpRoom>>();
+            returnList.Add(rooms);
+            var parms = new Dictionary<string, object>
+            {
+                {"@StartDate", date},
+                {"@EndDate", string.Join(",", date)},
+                {"@LocationId", string.Join(",", 1)}
+            };
+
+            _ministryPlatformRestRepository.Setup(m => m.GetFromStoredProc<MpRoom>(GetRoomsProcName, parms)).Returns(returnList);
+
+            var result = _fixture.GetRoomsByLocationId(1, date, date);
+            Assert.AreEqual(result.Count, rooms.Count);
+            Assert.AreEqual(result[0].RoomName, rooms[0].RoomName);
+
+        }
+
+        [Test]
+        public void RoomsByLocationCanBeNull()
+        {
+            var date = DateTime.Now;
+            var parms = new Dictionary<string, object>
+            {
+                {"@StartDate", date},
+                {"@EndDate", string.Join(",", date)},
+                {"@LocationId", string.Join(",", 1)}
+            };
+
+            _ministryPlatformRestRepository.Setup(m => m.GetFromStoredProc<MpRoom>(GetRoomsProcName, parms)).Returns((List<List<MpRoom>>) null);
+
+            var result = _fixture.GetRoomsByLocationId(1, date, date);
+            Assert.IsNull(result);
+        }
+
+        private List<MpRoom> GetMockedRoomsByLocation()
+        {
+            return new List<MpRoom>()
+            {
+                new MpRoom()
+                {
+                    RoomName = "Roomy McRoomFace",
+                    RoomId = 1,
+                    Description = "This is the name that won...",
+                    BanquetCapacity = 20,
+                    TheaterCapacity = 50,
+                    LocationId = 1,
+                    BuildingId = 1,
+                    DisplayName = "Kerstanoff, Joe",
+                    RoomStatus = true
+                }, new MpRoom()
+                {
+                    RoomName = "Tribute to the best room in the world",
+                    RoomId = 2,
+                    Description = "This is just a tribute",
+                    BanquetCapacity = 42,
+                    TheaterCapacity = 42,
+                    LocationId = 1,
+                    BuildingId = 1,
+                    DisplayName = null,
+                    RoomStatus = null
+                }, new MpRoom()
+                {
+                    RoomName = "Pending Room",
+                    RoomId = 3,
+                    Description = "This room has a pending reservation",
+                    BanquetCapacity = 1,
+                    TheaterCapacity = 0,
+                    LocationId = 1,
+                    BuildingId = 1,
+                    DisplayName = "Nukem, Duke",
+                    RoomStatus = false
+                }
+            };
         }
 
         private List<Dictionary<string, object>> GetMockedEventRooms(int recordsToGenerate)
