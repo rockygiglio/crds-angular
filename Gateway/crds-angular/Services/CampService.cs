@@ -682,6 +682,7 @@ namespace crds_angular.Services
             }
 
             var allergies = _medicalInformationRepository.GetMedicalAllergyInfo(contactId);
+            var medications = _medicalInformationRepository.GetMedications(contactId);
 
             var camperMedInfo = new MedicalInfoDTO
             {
@@ -709,6 +710,20 @@ namespace crds_angular.Services
                 }
             }
             if (camperMedInfo.Allergies.Count > 0) { camperMedInfo.ShowAllergies = true; }
+
+            camperMedInfo.Medications = new List<Medication>();
+            foreach (var medication in medications)
+            {
+                camperMedInfo.Medications.Add(new Medication
+                {
+                    MedicationName = medication.MedicationName,
+                    MedicationTypeId = medication.MedicationTypeId,
+                    Dosage = medication.DosageAmount,
+                    TimesOfDay = medication.DosageTime.ToString()
+                });
+            }
+            if (camperMedInfo.Medications.Count > 0) { camperMedInfo.ShowMedications = true; }
+
             return camperMedInfo;
         }
 

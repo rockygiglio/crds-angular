@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Newtonsoft.Json;
+using Swashbuckle.Swagger;
 
 namespace crds_angular.Models.Crossroads.Camp
 {
@@ -28,6 +29,12 @@ namespace crds_angular.Models.Crossroads.Camp
 
         [JsonProperty(PropertyName = "allergies")]
         public List<Allergy> Allergies  { get; set; }
+
+        [JsonProperty(PropertyName = "showMedications")]
+        public bool ShowMedications { get; set; }
+
+        [JsonProperty(PropertyName = "medications")]
+        public List<Medication> Medications { get; set; }
     }
 
     public class Allergy
@@ -46,6 +53,23 @@ namespace crds_angular.Models.Crossroads.Camp
 
         [JsonProperty(PropertyName = "medicalInformationAllergyId")]
         public int MedicalInformationAllergyId { get; set; }
+    }
+
+    public class Medication
+    {
+        [JsonProperty(PropertyName = "medicationName")]
+        public string MedicationName { get; set; }
+
+        [JsonProperty(PropertyName = "medicationType")]
+        public int MedicationTypeId { get; set; }
+
+        [JsonProperty(PropertyName = "timeOfDay")]
+        public string TimesOfDay { get; set; }
+
+        [JsonProperty(PropertyName = "dosage")]
+        public string Dosage { get; set; }
+
+
     }
    
 }

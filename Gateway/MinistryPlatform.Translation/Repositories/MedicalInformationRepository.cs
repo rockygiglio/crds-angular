@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using log4net.Repository.Hierarchy;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 
@@ -25,6 +23,12 @@ namespace MinistryPlatform.Translation.Repositories
                              "Allergy_ID_Table_Allergy_Type_ID_Table.[Allergy_Type_ID],Allergy_ID_Table_Allergy_Type_ID_Table.[Allergy_Type],cr_Medical_Information_Allergies.[Medical_Information_Allergy_ID]";
             return _ministryPlatformRest.UsingAuthenticationToken(apiToken)
                 .Search<MpMedical>($"Medical_Information_ID_Table_Contact_ID_Table.Contact_ID={contactId}",columns ).ToList();           
+        }
+
+        public List<MpMedication> GetMedications(int contactId)
+        {
+            var apiToken = _apiUserRepository.GetToken();
+            return _ministryPlatformRest.UsingAuthenticationToken(apiToken).Search<MpMedication>($"Medical_Information_ID_Table_Contact_ID_Table.Contact_ID={contactId}").ToList();
         }
 
         public MpMedicalInformation GetMedicalInformation(int contactId)
