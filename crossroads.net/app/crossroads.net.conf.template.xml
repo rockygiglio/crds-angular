@@ -1,4 +1,5 @@
 # $$CMT is a placeholder variable to control server redirect
+# basically, $$CMT will be replaced by a '#' or ''
 # for int/demo there are no redirect, only prod has redirect
 $CMT<VirtualHost *:80>
 $CMT    ServerName $CRDS_REDIRECT_SERVER_NAME
