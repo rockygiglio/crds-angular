@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using Newtonsoft.Json;
-using Swashbuckle.Swagger;
 
 namespace crds_angular.Models.Crossroads.Camp
 {
