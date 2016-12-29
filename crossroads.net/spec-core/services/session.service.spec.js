@@ -35,6 +35,11 @@ describe('Session Service', function() {
     expect(Session.getFamilyMembers()[5]).toBe(family[5]);
   });
 
+  it("should create a setInterval to monitor cookie changes", function() {
+    Session.enableReactiveSso();
+    expect(Session.reactiveSsoInterval).toBeDefined();
+  });
+
   describe("function addRedirectRoute", function() {
     it("should add redirectUrl and params cookies", function() {
       var params = {
