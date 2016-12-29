@@ -24,6 +24,8 @@ namespace MinistryPlatform.Translation.Models
 
         [JsonProperty(PropertyName = "DosageAmount")]
         public string DosageAmount { get; set; }
+
+        public bool Deleted { get; set; }
     }
 
     [MpRestApiTable(Name = "cr_Medication_Types")]

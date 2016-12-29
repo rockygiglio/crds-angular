@@ -72,7 +72,8 @@ namespace crds_angular.Models.Crossroads.Camp
         [JsonProperty(PropertyName = "dosage")]
         public string Dosage { get; set; }
 
-
+        [JsonProperty(PropertyName = "remove")]
+        public bool Deleted { get; set; }
     }
    
 }

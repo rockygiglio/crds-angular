@@ -84,6 +84,11 @@ namespace MinistryPlatform.Translation.Repositories
             {
                 _ministryPlatformRest.UsingAuthenticationToken(apiToken).Post(createMedications);
             }
+            var deletedMedications = medications.Where(m => m.Deleted).ToList();
+            if (deletedMedications.Count > 0)
+            {
+                _ministryPlatformRest.UsingAuthenticationToken(apiToken).Delete<MpMedication>(deletedMedications.Select(d => d.MedicalInformationMedicationId));
+            }
         }
     }
 }
