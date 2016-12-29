@@ -1,5 +1,4 @@
-﻿using System;
-using MinistryPlatform.Translation.Models.Attributes;
+﻿using MinistryPlatform.Translation.Models.Attributes;
 using Newtonsoft.Json;
 
 namespace MinistryPlatform.Translation.Models
@@ -7,6 +6,7 @@ namespace MinistryPlatform.Translation.Models
     [MpRestApiTable(Name = "cr_Medical_Information_Medications")]
     public class MpMedication
     {
+        [MpRestApiPrimaryKey("MedicalInformationMedication_ID")]
         [JsonProperty(PropertyName = "MedicalInformationMedication_ID")]
         public int MedicalInformationMedicationId { get; set; }
 

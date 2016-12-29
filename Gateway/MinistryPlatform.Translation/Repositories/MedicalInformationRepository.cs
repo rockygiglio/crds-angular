@@ -74,12 +74,12 @@ namespace MinistryPlatform.Translation.Repositories
         public void UpdateOrCreateMedications(List<MpMedication> medications)
         {
             var apiToken = _apiUserRepository.GetToken();
-            var updateMedications = medications.Where(m => m.MedicalInformationMedicationId > 0).ToList();
+            var updateMedications = medications.Where(m => m.MedicalInformationMedicationId > 0 && !m.Deleted).ToList();
             if (updateMedications.Count > 0)
             {
                 _ministryPlatformRest.UsingAuthenticationToken(apiToken).Put(updateMedications);
             }
-            var createMedications = medications.Where(m => m.MedicalInformationMedicationId == 0).ToList();
+            var createMedications = medications.Where(m => m.MedicalInformationMedicationId == 0 && !m.Deleted).ToList();
             if (createMedications.Count > 0)
             {
                 _ministryPlatformRest.UsingAuthenticationToken(apiToken).Post(createMedications);
