@@ -246,6 +246,63 @@ class MedicalInfoForm {
             required: false
           }
         }]
+      },
+      {
+        className: '',
+        wrapper: 'campBootstrapRow',
+        fieldGroup: [{
+          className: 'col-xs-12',
+          template: '<br /> <p> These over the counter medications will be available by the camp nurse as needed.</p> <h4> <strong> Select any medications that can be administered to your child.</strong></h4>'
+        }, {
+          className: 'form-group-col-xs-12 camps-medication-checkbox',
+          key: 'medicationsAdministered',
+          type: 'multiCheckbox',
+          templateOptions: {
+            className: 'camps-medication-checkbox',
+            options: [{
+              name: 'Do not administer any of these medications',
+              value: 'none',
+              checked: true
+            }, {
+              name: 'Benadryl',
+              value: 'benadryl'
+            }, {
+              name: 'Claritin',
+              value: 'claritin'
+            }, {
+              name: 'Ibuprofen',
+              value: 'ibuprofen'
+            }, {
+              name: 'Pepto Bismol',
+              value: 'pepto'
+            }, {
+              name: 'Tylenol',
+              value: 'tylenol'
+            }],
+            onClick: ($modelValue, fieldOptions, scope, event) => {
+              let newValue;
+              const options = fieldOptions.templateOptions.options;
+              const other = fieldOptions.templateOptions.valueProp;
+              let element = angular.element(event.currentTarget);
+              let isNoneChecked = $modelValue.indexOf('none') > -1;
+
+              if (scope.$index === 0) {
+                if (isNoneChecked) {
+                  newValue = options.map(option => option.value);
+                } else {
+                  newValue = [];
+                }
+              }
+
+              if (newValue) {
+                fieldOptions.value(newValue);
+              }
+            },
+            controller: ($scope) => {
+
+            }
+          }
+        }]
       }
     ];
   }
