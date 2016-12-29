@@ -33,13 +33,27 @@
           </button>
         </div>
 
-        <div class="col-md-6 col-sm-12">
-          <a ng-if="groupCard.group.isLeader()" class="btn btn-standard btn-block push-half-top" href="mailto:?bcc={{groupCard.group.emailList()}}" target="_top">
-            <svg viewBox="0 0 32 32" class="icon icon-mail5">
-              <use xlink:href="#mail5"></use>
-            </svg>
-            Email Group
-          </a>
+        <div class="col-md-6 col-sm-12"  ng-if="groupCard.group.isLeader()">
+          <ui-select ng-model="groupCard.selectedEmailOption">
+            <ui-select-match class="ui-select-match" placeholder="Email Group">
+              {{$select.selected.name}}
+            </ui-select-match>
+            <ui-select-choices class="ui-select-dropdown dropdown-menu ui-select-choices" repeat="item in groupCard.emailOptions">
+              <div class="ui-select-choices-group container-fluid condensed-grid">
+                <li>
+                  <div class="row">
+                    <span class="pull-left">
+                      <svg-icon icon="{{item.icon}}">
+                      </svg-icon> 
+                      {{item.name}}
+                    </span>
+                  </div>
+                  <div class="row">
+                    <span class="pull-left">{{item.description}}</span>
+                  </div>
+            </ui-select-choices>
+
+          </ui-select>
         </div>
 
         <div class="col-md-6 col-sm-12">

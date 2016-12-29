@@ -8,7 +8,8 @@ export default function GroupCardComponent() {
   let cardComponent = {
     bindings: {
       detail: '<',
-      group: '<'
+      group: '<',
+      emailOptions: '<'
     },
     templateUrl: 'group_card/groupCard.html',
     controller: controller,
