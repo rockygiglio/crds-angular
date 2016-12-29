@@ -660,7 +660,7 @@ namespace crds_angular.Services
                     }
                 }
                 _medicalInformationRepository.UpdateOrCreateMedAllergy(updateToAllergyList, createToAllergyList);
-                _medicalInformationRepository.UpdateOrCreateMedications(medicalInfo.Medications.Select(m => new MpMedication {MedicalInformationMedicationId = m.MedicalInformationMedicationId, MedicationName = m.MedicationName, MedicationTypeId = m.MedicationTypeId, DosageAmount = m.Dosage, DosageTimes = m.TimesOfDay}).ToList());
+                _medicalInformationRepository.UpdateOrCreateMedications(medicalInfo.Medications.Select(m => new MpMedication {MedicalInformationMedicationId = m.MedicalInformationMedicationId, MedicalInformationId = medicalInformation.MedicalInformationId, MedicationName = m.MedicationName, MedicationTypeId = m.MedicationTypeId, DosageAmount = m.Dosage, DosageTimes = m.TimesOfDay}).ToList());
             }
         }
 
