@@ -717,10 +717,11 @@ namespace crds_angular.Services
             {
                 camperMedInfo.Medications.Add(new Medication
                 {
+                    MedicalInformationMedicationId = medication.MedicalInformationMedicationId,
                     MedicationName = medication.MedicationName,
                     MedicationTypeId = medication.MedicationTypeId,
                     Dosage = medication.DosageAmount,
-                    TimesOfDay = medication.DosageTimes.ToString()
+                    TimesOfDay = medication.DosageTimes
                 });
             }
             if (camperMedInfo.Medications.Count > 0) { camperMedInfo.ShowMedications = true; }
