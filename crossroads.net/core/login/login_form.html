@@ -1,7 +1,10 @@
 <div class="dd_menu">
     <div class="primary">
         <div dynamic-content="$root.MESSAGES.loginFormTop.content | html"></div>
-        <form id="navlogin" name="navlogin" ng-submit="login()" role="form" novalidate>
+        <div ng-hide="!processing">
+            <svg viewBox="0 0 102 101" class="loading-spinner"><g fill="none" fill-rule="evenodd"><g transform="translate(1 1)" stroke-width="2"><ellipse stroke="#eee" cx="50" cy="49.421" rx="50" ry="49.421"></ellipse><path d="M50 98.842c27.614 0 50-22.127 50-49.42C100 22.125 77.614 0 50 0" stroke-opacity=".631" stroke="#3B6E8F"></path></g></g></svg>
+        </div>
+        <form id="navlogin" name="navlogin" ng-submit="login()" role="form" ng-hide="processing" novalidate>
             <div class="form-group">
                 <div ng-show="!modal" class="navbar--login__input" ng-class="{'has-error': checkEmail() }">
                     <input id="{{passwordPrefix}}-email" required class="form-control" ng-model-options="{ updateOn: 'blur', debounce: {'blur': 500} }" type="email" name="username" placeholder="Email" autocomplete="off" autocapitalize="off" ng-model="credentials.username" autofocus="">
