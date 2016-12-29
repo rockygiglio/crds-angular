@@ -41,14 +41,23 @@ ALTER TABLE [dbo].[cr_Medication_Types] CHECK CONSTRAINT [FK_cr_Medication_Types
 GO
 
 SET IDENTITY_INSERT cr_Medication_Types ON
+IF NOT EXISTS (SELECT 1 FROM cr_Medication_Types WHERE [Medication_Type_ID] = 1)
+BEGIN	
 	INSERT INTO [dbo].[cr_Medication_Types]
-			   ([Medication_Type_ID]
-			   ,[Medication_Type]
-			   ,[Domain_ID])
-		 VALUES
-			   (1, 'Prescription', 1),
-			   (2, 'Over The Counter', 1)
+				([Medication_Type_ID]
+				,[Medication_Type]
+				,[Domain_ID])
+			VALUES
+				(1, 'Prescription', 1)	
+END
+
+IF NOT EXISTS (SELECT 1 FROM cr_Medication_Types WHERE [Medication_Type_ID] = 2)
+BEGIN	
+	INSERT INTO [dbo].[cr_Medication_Types]
+				([Medication_Type_ID]
+				,[Medication_Type]
+				,[Domain_ID])
+			VALUES
+				(2, 'Over The Counter', 1)	
+END
 SET IDENTITY_INSERT cr_Medication_Types OFF
-GO
-
-
