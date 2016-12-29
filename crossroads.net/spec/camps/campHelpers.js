@@ -103,9 +103,44 @@ function CampHelpers() {
       foodAllergies: undefined,
       environmentalAllergies: undefined,
       otherAllergies: undefined,
+      showMedications: false,
       medicines: [
         {}
       ]
+    },
+    cleanMedicalInfoDto: {
+      contactId: undefined,
+      medicalInformationId: undefined,
+      insuranceCompany: undefined,
+      policyHolder: undefined,
+      physicianName: undefined,
+      physicianPhone: undefined,
+      medications: [{}],
+      allergies: [
+        { allergyType: 'Medicine',
+          allergyId: undefined,
+          allergyDescription: undefined,
+          medicalInformationAllergyId: undefined,
+          allergyTypeId: undefined
+        },
+        { allergyType: 'Food',
+          allergyId: undefined,
+          allergyDescription: undefined,
+          medicalInformationAllergyId: undefined,
+          allergyTypeId: undefined
+        },
+        { allergyType: 'Environmental',
+          allergyId: undefined,
+          allergyDescription: undefined,
+          medicalInformationAllergyId: undefined,
+          allergyTypeId: undefined
+        },
+        { allergyType: 'Other',
+          allergyId: undefined,
+          allergyDescription: undefined,
+          medicalInformationAllergyId: undefined,
+          allergyTypeId: undefined
+        }]
     },
     emergencyContacts: [
       {

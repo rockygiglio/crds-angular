@@ -44,9 +44,9 @@ class MedicalInfoForm {
       allMedications = [...this.formModel.medicines || [], ...this.deletedMedicines];
     } else {
       allMedications = this.formModel.medicines ? _.map(this.formModel.medicines, ((m) => {
-        const newMed = Object.assign(m);
-        newMed.remove = true;
-        return newMed;
+        // eslint-disable-next-line no-param-reassign
+        m.remove = true;
+        return m;
       })) : [];
     }
     const dto = {
