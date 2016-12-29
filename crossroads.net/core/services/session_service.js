@@ -248,6 +248,7 @@
           $rootScope.email = null;
           $rootScope.phone = null;
           $rootScope.roles = null;
+          $rootScope.$apply();
         }
       }
     };
