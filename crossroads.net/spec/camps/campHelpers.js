@@ -102,7 +102,10 @@ function CampHelpers() {
       medicineAllergies: undefined,
       foodAllergies: undefined,
       environmentalAllergies: undefined,
-      otherAllergies: undefined
+      otherAllergies: undefined,
+      medicines: [
+        {}
+      ]
     },
     emergencyContacts: [
       {
