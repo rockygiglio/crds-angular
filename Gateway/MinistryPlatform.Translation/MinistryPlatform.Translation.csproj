@@ -125,6 +125,7 @@
     <Compile Include="Models\MpContactAttribute.cs" />
     <Compile Include="Models\MpMedical.cs" />
     <Compile Include="Models\MpMedicalAllergy.cs" />
+    <Compile Include="Models\MpMedication.cs" />
     <Compile Include="Models\MpWaivers.cs" />
     <Compile Include="Models\MpMedicalInformation.cs" />
     <Compile Include="Models\MpRecordID.cs" />
