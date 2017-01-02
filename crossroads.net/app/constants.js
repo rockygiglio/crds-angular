@@ -133,6 +133,16 @@
         MEETING_TIME: 'time',
         MEETING_FREQUENCY: 'frequency',
         LEADER_SITE: 'site'
+      },
+      EMAIL: {
+        COMPOSE_EMAIL_NAME: 'Compose Email',
+        COMPOSE_EMAIL_DESCRIPTION_LINE1: 'Opens the email application',
+        COMPOSE_EMAIL_DESCRIPTION_LINE2: 'on your computer/phone.',
+        COMPOSE_EMAIL_ICON: 'mail5',
+        COPY_EMAIL_NAME: 'Copy Email Addresses',
+        COPY_EMAIL_DESCRIPTION_LINE1: 'Copies participant email',
+        COPY_EMAIL_DESCRIPTION_LINE2: 'addresses to you clipboard.',
+       COPY_EMAIL_ICON: 'file-text-o'
       }
     },
     GEOLOCATION: {

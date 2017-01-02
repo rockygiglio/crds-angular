@@ -33,24 +33,51 @@
           </button>
         </div>
 
-        <div class="col-md-6 col-sm-12"  ng-if="groupCard.group.isLeader()">
-          <ui-select ng-model="groupCard.selectedEmailOption">
+        <div class="col-md-6 col-sm-12" ng-if="groupCard.group.isLeader()">
+          <ui-select ng-model="groupCard.selectedEmailOption" on-select="groupCard.onOptionSelected($item, $model)">
             <ui-select-match class="ui-select-match" placeholder="Email Group">
               {{$select.selected.name}}
             </ui-select-match>
             <ui-select-choices class="ui-select-dropdown dropdown-menu ui-select-choices" repeat="item in groupCard.emailOptions">
-              <div class="ui-select-choices-group container-fluid condensed-grid">
+              <div ng-show="item.name==='Compose Email'" class="ui-select-choices-group container-fluid condensed-grid">
                 <li>
-                  <div class="row">
-                    <span class="pull-left">
+                  <a href="mailto:?bcc={{groupCard.group.emailList()}}" target="_top">
+                    <div class="row" style="font-size:10pt;">
+                      <span class="pull-left">
                       <svg-icon icon="{{item.icon}}">
                       </svg-icon> 
                       {{item.name}}
                     </span>
-                  </div>
-                  <div class="row">
-                    <span class="pull-left">{{item.description}}</span>
-                  </div>
+                    </div>
+                    <div class="row" style="font-size:9pt;">
+                      <span class="pull-left">{{item.descriptionLine1}}</span>
+                    </div>
+                    <div class="row" style="font-size:10pt;">
+                      <span class="pull-left">{{item.descriptionLine2}}</span>
+                    </div>
+                  </a>
+                </li>
+              </div>
+              <div ng-show="item.name==='Copy Email Addresses'" class="ui-select-choices-group container-fluid condensed-grid">
+                <li>
+                  <a ngclipboard data-clipboard-text="{{groupCard.group.emailList()}}" ngclipboard-success="groupCard.onCopySuccess()"
+                    ngclipboard-error="groupCard.onCopyError()">
+                    <div class="row" style="font-size:10pt;">
+                      <span class="pull-left">
+                      <svg-icon icon="{{item.icon}}">
+                      </svg-icon> 
+                      {{item.name}}
+                    </span>
+                    </div>
+                    <div class="row" style="font-size:9pt;">
+                      <span class="pull-left">{{item.descriptionLine1}}</span>
+                    </div>
+                    <div class="row" style="font-size:10pt;">
+                      <span class="pull-left">{{item.descriptionLine2}}</span>
+                    </div>
+                  </a>
+                </li>
+              </div>
             </ui-select-choices>
 
           </ui-select>

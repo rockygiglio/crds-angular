@@ -1,7 +1,7 @@
 
 import controller  from './groupCard.controller';
 
-GroupCardComponent.$inject = [ ];
+GroupCardComponent.$inject = [];
 
 export default function GroupCardComponent() {
 
