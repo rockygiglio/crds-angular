@@ -35,7 +35,7 @@ namespace MinistryPlatform.Translation.Repositories
         public MpMedicalInformation GetMedicalInformation(int contactId)
         {
             var apiToken = _apiUserRepository.GetToken();
-            var medInfo = _ministryPlatformRest.UsingAuthenticationToken(apiToken).Search<MpMedicalInformation>($"Contact_ID_Table.Contact_ID={contactId}", "cr_Medical_Information.[MedicalInformation_ID], cr_Medical_Information.[InsuranceCompany],Contact_ID_Table.[Contact_ID],cr_Medical_Information.[PolicyHolderName],cr_Medical_Information.[PhysicianName] AS[PhysicianName],cr_Medical_Information.[PhysicianPhone]");
+            var medInfo = _ministryPlatformRest.UsingAuthenticationToken(apiToken).Search<MpMedicalInformation>($"Contact_ID_Table.Contact_ID={contactId}", "cr_Medical_Information.[MedicalInformation_ID], cr_Medical_Information.[InsuranceCompany],Contact_ID_Table.[Contact_ID],cr_Medical_Information.[PolicyHolderName],cr_Medical_Information.[PhysicianName] AS[PhysicianName],cr_Medical_Information.[PhysicianPhone],cr_Medical_Information.[Allowed_To_Administer_Medications]");
             return medInfo.FirstOrDefault();
         }
 
