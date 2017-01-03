@@ -1,17 +1,3 @@
-class MedicalInfoFormFactory {
-  /* ngInject */
-  constructor(CampsService, $resource) {
-    this.campsService = CampsService;
-    this.$resource = $resource;
-  }
-
-  createForm() {
-    return new MedicalInfoForm(this.campsService, this.$resource);
-  }
-}
-
-export default MedicalInfoFormFactory;
-
 class MedicalInfoForm {
   constructor(CampsService, $resource) {
     this.campsService = CampsService;
@@ -19,6 +5,8 @@ class MedicalInfoForm {
     this.medicineAllergyId = undefined;
     this.medicineMedAllergyId = undefined;
     this.medicineAllergyTypeId = undefined;
+    this.medicines = undefined;
+    this.deletedMedicines = [];
     this.foodAllergyId = undefined;
     this.foodMedAllergyId = undefined;
     this.foodAllergyTypeId = undefined;
@@ -39,6 +27,8 @@ class MedicalInfoForm {
       foodAllergies: this.foodAllergies(),
       environmentalAllergies: this.environmentalAllergies(),
       otherAllergies: this.otherAllergies(),
+      showMedications: this.campsService.campMedical.showMedications || false,
+      medicines: this.campsService.campMedical.medications || [{}]
     };
 
     this.medicalInfoResource = $resource(`${__API_ENDPOINT__}api/v1.0.0/camps/medical/:contactId`);
@@ -49,6 +39,16 @@ class MedicalInfoForm {
   }
 
   saveDto() {
+    let allMedications;
+    if (this.formModel.showMedications) {
+      allMedications = [...this.formModel.medicines || [], ...this.deletedMedicines];
+    } else {
+      allMedications = this.formModel.medicines ? _.map(this.formModel.medicines, ((m) => {
+        // eslint-disable-next-line no-param-reassign
+        m.remove = true;
+        return m;
+      })) : [];
+    }
     const dto = {
       contactId: this.formModel.contactId,
       medicalInformationId: this.campsService.campMedical.medicalInformationId,
@@ -56,6 +56,7 @@ class MedicalInfoForm {
       policyHolder: this.formModel.policyHolder || undefined,
       physicianName: this.formModel.physicianName || undefined,
       physicianPhone: this.formModel.physicianPhone || undefined,
+      medications: allMedications,
       allergies: [
         { allergyType: 'Medicine',
           allergyId: this.medicineAllergyId || undefined,
@@ -246,7 +247,95 @@ class MedicalInfoForm {
             required: false
           }
         }]
-      }
+      },
+      {
+        className: '',
+        wrapper: 'campBootstrapRow',
+        fieldGroup: [{
+          className: 'form-group col-xs-6',
+          key: 'showMedications',
+          type: 'crdsRadio',
+          templateOptions: {
+            label: 'Will any medications be taken at Camp?',
+            required: false,
+            labelProp: 'label',
+            valueProp: 'anyMedications',
+            inline: true,
+            options: [{
+              label: 'Yes',
+              anyMedications: true
+            }, {
+              label: 'No',
+              anyMedications: false
+            }]
+          }
+        }]
+      },
+      {
+        className: 'form-group col-xs-12',
+        wrapper: 'campBootstrapRow',
+        key: 'medicines',
+        type: 'campMedicines',
+        hideExpression: () => !this.formModel.showMedications,
+        templateOptions: {
+          fields: [
+            {
+              className: '',
+              fieldGroup: [{
+                type: 'input',
+                key: 'medicalInformationMedicationId',
+                defaultValue: 0,
+                templateOptions: {
+                  type: 'hidden'
+                }
+              },
+              {
+                className: 'form-group col-lg-4 col-md-6 col-xs-12',
+                key: 'medicationName',
+                type: 'crdsInput',
+                templateOptions: {
+                  label: 'Medication Name',
+                  required: true
+                }
+              }, {
+                className: 'form-group col-lg-2 col-md-3 col-xs-6',
+                key: 'timeOfDay',
+                type: 'crdsInput',
+                templateOptions: {
+                  label: 'Time(s) of Day',
+                  required: true
+                }
+              }, {
+                className: 'form-group col-lg-2 col-md-3 col-xs-6',
+                key: 'dosage',
+                type: 'crdsInput',
+                templateOptions: {
+                  label: 'Dosage',
+                  required: true
+                }
+              }, {
+                className: 'form-group col-lg-4 col-md-12 col-xs-12',
+                key: 'medicationType',
+                type: 'crdsRadio',
+                templateOptions: {
+                  label: 'Medication Type',
+                  required: true,
+                  labelProp: 'label',
+                  valueProp: 'medicationType',
+                  inline: true,
+                  options: [{
+                    label: 'Prescription',
+                    medicationType: 1
+                  }, {
+                    label: 'Over the Counter',
+                    medicationType: 2
+                  }]
+                }
+              }]
+            }
+          ]
+        }
+      },
     ];
   }
 
@@ -254,3 +343,23 @@ class MedicalInfoForm {
     return this.formModel;
   }
 }
+
+class MedicalInfoFormFactory {
+  /* ngInject */
+  constructor(CampsService, $resource) {
+    this.campsService = CampsService;
+    this.$resource = $resource;
+  }
+
+  createForm() {
+    this.form = new MedicalInfoForm(this.campsService, this.$resource);
+    return this.form;
+  }
+
+  getForm() {
+    return this.form;
+  }
+}
+
+export default MedicalInfoFormFactory;
+
