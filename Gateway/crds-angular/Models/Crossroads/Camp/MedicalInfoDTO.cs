@@ -28,12 +28,15 @@ namespace crds_angular.Models.Crossroads.Camp
 
         [JsonProperty(PropertyName = "allergies")]
         public List<Allergy> Allergies  { get; set; }
-
+        
         [JsonProperty(PropertyName = "showMedications")]
         public bool ShowMedications { get; set; }
 
         [JsonProperty(PropertyName = "medications")]
         public List<Medication> Medications { get; set; }
+
+        [JsonProperty(PropertyName = "medicationsAdministered")]
+        public List<string> MedicationsAdministered { get; set; }
     }
 
     public class Allergy
