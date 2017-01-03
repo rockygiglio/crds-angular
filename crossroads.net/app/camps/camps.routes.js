@@ -62,12 +62,16 @@ export default function CampRoutes($stateProvider) {
       resolve: {
         CampsService: 'CampsService',
         $state: '$state',
-        sendConfirmation: (CampsService, $state) => CampsService.sendPaymentConfirmation(
+        $sessionStorage: '$sessionStorage',
+        sendConfirmation: (CampsService, $state, $sessionStorage) => CampsService.sendPaymentConfirmation(
             $state.toParams.invoiceId,
             $state.toParams.paymentId,
             $state.toParams.campId,
             $state.toParams.contactId)
-          .finally(() => {
+          .then(() => {
+            const { contactId, campId } = $state.toParams;
+            $sessionStorage.campDeposits[`${campId}+${contactId}`] = true;
+          }).finally(() => {
             const toParams = Object.assign($state.toParams, { wasPayment: true });
             $state.go('camps-dashboard', toParams, { location: 'replace' });
           })
