@@ -39,6 +39,7 @@ class MedicalInfoForm {
       foodAllergies: this.foodAllergies(),
       environmentalAllergies: this.environmentalAllergies(),
       otherAllergies: this.otherAllergies(),
+      medicationsAdministered: this.campsServcie.campMedical.medicationsAdministered
     };
 
     this.medicalInfoResource = $resource(`${__API_ENDPOINT__}api/v1.0.0/camps/medical/:contactId`);
@@ -56,6 +57,7 @@ class MedicalInfoForm {
       policyHolder: this.formModel.policyHolder || undefined,
       physicianName: this.formModel.physicianName || undefined,
       physicianPhone: this.formModel.physicianPhone || undefined,
+      medicationsAdministered: this.formModel.medicationsAdministered || [],
       allergies: [
         { allergyType: 'Medicine',
           allergyId: this.medicineAllergyId || undefined,
@@ -261,8 +263,7 @@ class MedicalInfoForm {
             className: 'camps-medication-checkbox',
             options: [{
               name: 'Do not administer any of these medications',
-              value: 'none',
-              checked: true
+              value: 'none'
             }, {
               name: 'Benadryl',
               value: 'benadryl'
@@ -279,27 +280,34 @@ class MedicalInfoForm {
               name: 'Tylenol',
               value: 'tylenol'
             }],
-            onClick: ($modelValue, fieldOptions, scope, event) => {
+            onClick: ($modelValue, fieldOptions, scope) => {
               let newValue;
               const options = fieldOptions.templateOptions.options;
-              const other = fieldOptions.templateOptions.valueProp;
-              let element = angular.element(event.currentTarget);
-              let isNoneChecked = $modelValue.indexOf('none') > -1;
+              const isNoneChecked = $modelValue.indexOf('none') > -1;
 
               if (scope.$index === 0) {
                 if (isNoneChecked) {
-                  newValue = options.map(option => option.value);
-                } else {
-                  newValue = [];
+                  // the 'Do Not Administer button was checked
+                  newValue = ['none'];
                 }
+              } else if (isNoneChecked) {
+                // something else was checked...
+                newValue = options.map((option) => {
+                  if (option.value === 'none') {
+                    return undefined;
+                  }
+
+                  if (_.includes($modelValue, option.value)) {
+                    return option.value;
+                  }
+
+                  return undefined;
+                });
               }
 
               if (newValue) {
                 fieldOptions.value(newValue);
               }
-            },
-            controller: ($scope) => {
-
             }
           }
         }]
