@@ -603,7 +603,8 @@ namespace crds_angular.test.Services
                 PhysicianPhone = "123-4567",
                 PolicyHolder = "your mom",
                 MedicationsAdministered = new List<string> { "benedryl", "tylenol" },
-                Allergies = new List<Allergy>()
+                Allergies = new List<Allergy>(),
+                Medications = new List<Medication>()
             };
 
             var mpMedInfo = new MpMedicalInformation
@@ -684,7 +685,7 @@ namespace crds_angular.test.Services
                 MedicationsAdministered = "tylenol,benedryl",
                 PhysicianName = "Dr. Tobias Funke",
                 PhysicianPhone = "1-800-ido-care",
-                PolicyHolder = "Lindsey"
+                PolicyHolder = "Lindsey",               
             };
 
             _contactService.Setup(m => m.GetMyProfile(token)).Returns(me);
@@ -692,6 +693,7 @@ namespace crds_angular.test.Services
             _contactService.Setup(m => m.GetOtherHouseholdMembers(loggedInContactId)).Returns(new List<MpHouseholdMember>());
             _medicalInformationRepository.Setup(m => m.GetMedicalInformation(contactId)).Returns(mpMedInfo);
             _medicalInformationRepository.Setup(m => m.GetMedicalAllergyInfo(contactId)).Returns(new List<MpMedical>());
+            _medicalInformationRepository.Setup(m => m.GetMedications(contactId)).Returns(new List<MpMedication>());
 
             var res = _fixture.GetCampMedicalInfo(eventId, contactId, token);
             Assert.AreEqual(123, res.ContactId);
