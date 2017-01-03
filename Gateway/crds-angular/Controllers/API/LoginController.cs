@@ -9,6 +9,7 @@ using crds_angular.Services;
 using crds_angular.Services.Interfaces;
 using MinistryPlatform.Translation.Models.DTO;
 using Crossroads.ApiVersioning;
+using MinistryPlatform.Translation.Repositories.Interfaces;
 
 namespace crds_angular.Controllers.API
 {
@@ -16,12 +17,14 @@ namespace crds_angular.Controllers.API
     {
 
         private readonly IPersonService _personService;
+        private readonly IUserRepository _userService;
         private readonly ILoginService _loginService;
 
-        public LoginController(ILoginService loginService, IPersonService personService)
+        public LoginController(ILoginService loginService, IPersonService personService, IUserRepository userService)
         {
             _loginService = loginService;
             _personService = personService;
+            _userService = userService;
         }
 
         [VersionedRoute(template: "request-password-reset", minimumVersion: "1.0.0")]
@@ -93,7 +96,8 @@ namespace crds_angular.Controllers.API
                     else
                     {
                         var roles = _personService.GetLoggedInUserRoles(token);
-                        var l = new LoginReturn(token, person.ContactId, person.FirstName, person.EmailAddress, person.MobilePhone, roles);
+                        var user = _userService.GetByAuthenticationToken(token);
+                        var l = new LoginReturn(token, person.ContactId, person.FirstName, person.EmailAddress, person.MobilePhone, roles, user.CanImpersonate);
                         return this.Ok(l);
                     }
                 }
@@ -123,6 +127,7 @@ namespace crds_angular.Controllers.API
                 }
 
                 var userRoles = _personService.GetLoggedInUserRoles(token);
+                var user = _userService.GetByAuthenticationToken(token);
                 var p = _personService.GetLoggedInUserProfile(token);
                 var r = new LoginReturn
                 {
@@ -134,8 +139,9 @@ namespace crds_angular.Controllers.API
                     userEmail = p.EmailAddress,
                     roles = userRoles,
                     age = p.Age,
-                    userPhone = p.MobilePhone
-                };
+                    userPhone = p.MobilePhone,
+                    canImpersonate = user.CanImpersonate
+            };
 
                 _loginService.ClearResetToken(cred.username);
 
@@ -184,13 +190,14 @@ namespace crds_angular.Controllers.API
     public class LoginReturn
     {
         public LoginReturn(){}
-        public LoginReturn(string userToken, int userId, string username, string userEmail, string userPhone, List<MpRoleDto> roles){
+        public LoginReturn(string userToken, int userId, string username, string userEmail, string userPhone, List<MpRoleDto> roles, Boolean canImpersonate){
             this.userId = userId;
             this.userToken = userToken;
             this.username = username;
             this.userEmail = userEmail;
             this.userPhone = userPhone;
             this.roles = roles;
+            this.canImpersonate = canImpersonate;
         }
         public string userToken { get; set; }
         public string userTokenExp { get; set; }
@@ -199,6 +206,7 @@ namespace crds_angular.Controllers.API
         public string username { get; set; }
         public string userEmail { get; set;  }
         public List<MpRoleDto> roles { get; set; }
+        public Boolean canImpersonate { get; set; }
         public int age { get; set; }
         public string userPhone { get; set; }
     }
