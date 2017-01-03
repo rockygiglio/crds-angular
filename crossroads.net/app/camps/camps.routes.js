@@ -93,6 +93,9 @@ export default function CampRoutes($stateProvider) {
               $state.toParams.contactId)
               .then(() => {
                 const { contactId, campId } = $state.toParams;
+                if ($sessionStorage.campDeposits === undefined) {
+                  $sessionStorage = Object.assign($sessionStorage, { campDeposits: {} });
+                }
                 $sessionStorage.campDeposits[`${campId}+${contactId}`] = true;
 
                 // When the confirmation API calls returns, forward to the thank you page
