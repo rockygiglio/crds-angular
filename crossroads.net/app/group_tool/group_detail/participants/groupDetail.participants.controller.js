@@ -200,8 +200,13 @@ export default class GroupDetailParticipantsController {
   emailList() {
     let emailList = "";
 
-    this.data.forEach(function (participant) {
-      emailList = `${emailList}${participant.email},`;
+    this.data.forEach(function (participant, idx, array) {
+      if (idx === array.length - 1) {
+        emailList = `${emailList}${participant.email}`;
+      }
+      else {
+        emailList = `${emailList}${participant.email},`;
+      }
     }, emailList);
 
     return emailList;
