@@ -24,7 +24,7 @@ describe('GroupCardController', () => {
   }));
 
   describe('emailOptions array', () => {
-    fit('it should populate emailOptions array', () => {
+    it('it should populate emailOptions array', () => {
       expect(fixture.emailOptions.length).toEqual(2);
     });
   });
