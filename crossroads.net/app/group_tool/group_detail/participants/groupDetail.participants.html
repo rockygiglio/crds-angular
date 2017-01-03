@@ -21,16 +21,16 @@
     <div ng-if='groupDetailParticipants.data.length > 1 && groupDetailParticipants.isListView()' class="col-sm-6 col-sm-push-6 sm-text-right">
       <!--<a type='button' class='btn btn-primary btn-block-mobile push-half-bottom sm-pull-right' href="mailto:?bcc={{groupDetailParticipants.emailList()}}" target="_top">Email Group</a>-->
       <span>
-          <ui-select ng-model="groupDetailParticipants.selectedEmailOption" on-select="groupDetailParticipants.onOptionSelected($item, $model)">
-            <ui-select-match class="ui-select-match" placeholder="Email Group">
-              {{$select.selected.name}}
-            </ui-select-match>
-            <ui-select-choices class="ui-select-dropdown dropdown-menu ui-select-choices" repeat="item in groupDetailParticipants.emailOptions">
-              <div ng-show="item.name==='Compose Email'" class="ui-select-choices-group container-fluid condensed-grid">
-                <li>
-                  <a href="mailto:?bcc={{groupDetailParticipants.emailList()}}" target="_top">
-                    <div class="row" style="font-size:10pt;">
-                      <span class="pull-left">
+      <ui-select ng-model="groupDetailParticipants.selectedEmailOption" on-select="groupDetailParticipants.onOptionSelected($item, $model)">
+        <ui-select-match class="ui-select-match" placeholder="Email Group">
+          {{$select.selected.name}}
+        </ui-select-match>
+        <ui-select-choices class="ui-select-dropdown dropdown-menu ui-select-choices" repeat="item in groupDetailParticipants.emailOptions">
+          <div ng-show="item.name==='Compose Email'" class="ui-select-choices-group container-fluid condensed-grid">
+            <li>
+              <a href="mailto:?bcc={{groupDetailParticipants.emailList()}}" target="_top">
+                <div class="row" style="font-size:10pt;">
+                  <span class="pull-left">
                       <svg-icon icon="{{item.icon}}">
                       </svg-icon> 
                       {{item.name}}

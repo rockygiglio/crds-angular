@@ -141,7 +141,7 @@
         COMPOSE_EMAIL_ICON: 'mail5',
         COPY_EMAIL_NAME: 'Copy Email Addresses',
         COPY_EMAIL_DESCRIPTION_LINE1: 'Copies participant email',
-        COPY_EMAIL_DESCRIPTION_LINE2: 'addresses to you clipboard.',
+        COPY_EMAIL_DESCRIPTION_LINE2: 'addresses to your clipboard.',
        COPY_EMAIL_ICON: 'file-text-o'
       }
     },
