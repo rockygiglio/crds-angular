@@ -213,12 +213,11 @@ export default class GroupDetailParticipantsController {
   }
 
   onCopySuccess() {
-    this.rootScope.$emit('notify', this.rootScope.MESSAGES.copiedToClipBoard);
+    this.rootScope.$emit('notify', this.rootScope.MESSAGES.copiedGroupEmailAddressesToClipboard);
   }
 
   onCopyError() {
-    this.location.path('/groups/search/results').search('id', this.groupId);
-    this.rootScope.$emit('notify', this.rootScope.MESSAGES.copiedToClipBoardError);
+    this.rootScope.$emit('notify', this.rootScope.MESSAGES.copiedGroupEmailAddressesToClipboardError);
   }
 
 }
