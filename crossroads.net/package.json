@@ -86,7 +86,7 @@
     "angular-animate": "~1.5.5",
     "angular-bootstrap-npm": "^0.13.1",
     "angular-cookies": "~1.5.5",
-    "angular-formly": "~8.2.1",
+    "angular-formly": "~8.4.0",
     "angular-formly-templates-bootstrap": "~6.4.0",
     "angular-growl": "^0.1.0",
     "angular-messages": "~1.5.5",
@@ -122,9 +122,10 @@
     "ngstorage": "^0.3.11",
     "plangular-3": "^3.1.2",
     "ui-select": "^0.17.1",
-    "video.js": "5.11.7",
-    "videojs-chromecast": "^2.0.7",
-    "wow.js": "^1.2.0"
+    "video.js": "5.14.1",
+    "videojs-chromecast": "^2.0.8",
+    "wow.js": "^1.2.0",
+    "crds-styles": "crdschurch/crds-styles#development"
   },
   "browser": {
     "angular-aside": "./lib/angular-aside.js",

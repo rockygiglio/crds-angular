@@ -1,21 +1,33 @@
-(function() {
-  'use strict';
 
-  angular.module('crossroads.core').service('Session', SessionService);
+(() => {
+  function openStayLoggedInModal($injector, $state, $modal) {
+    // Only open if on a protected page? and the modal is not already shown.
+    if ($state.current.data.isProtected && !$('#stayLoggedInModal').is(':visible')) {
+      const AuthService = $injector.get('AuthService');
+      const modal = $modal.open({
+        templateUrl: 'stayLoggedInModal/stayLoggedInModal.html',
+        controller: 'StayLoggedInController as StayLoggedIn',
+        backdrop: 'static',
+        keyboard: false,
+        show: false,
+      });
 
-  var timeoutPromise;
-  var cookieNames = require('crds-constants').COOKIES;
+      modal.result.then(
+      () => {
+        // login success
+      },
+      () => {
+        // TODO:Once we stop using rootScope we can remove this and the depenedency on Injector
+        AuthService.logout();
+        $state.go('content', {
+          link: '/'
+        });
+      });
+    }
+  }
 
-  SessionService.$inject = [
-    '$log',
-    '$http',
-    '$state',
-    '$interval',
-    '$cookies',
-    '$modal',
-    '$injector',
-    '$rootScope',
-    '$q'];
+  let timeoutPromise;
+  const cookieNames = require('crds-constants').COOKIES;
 
   function SessionService(
     $log,
@@ -28,11 +40,11 @@
     $rootScope,
     $q
   ) {
-    var vm = this;
+    const vm = this;
 
-    vm.create = function(refreshToken, sessionId, userTokenExp, userId, username) {
+    vm.create = (refreshToken, sessionId, userTokenExp, userId, username) => {
       $log.debug('creating cookies!');
-      var expDate = new Date();
+      const expDate = new Date();
       expDate.setTime(expDate.getTime() + (userTokenExp * 1000));
       $cookies.put(cookieNames.SESSION_ID, sessionId, {
         expires: expDate
@@ -46,26 +58,24 @@
       $http.defaults.headers.common.RefreshToken = refreshToken;
     };
 
-    vm.refresh = function(response) {
+    vm.refresh = (response) => {
       $log.debug('updating cookies!');
-      var expDate = new Date();
-
-      //TODO: Consider how we could make this less hard coded,
+      const expDate = new Date();
+      // TODO: Consider how we could make this less hard coded,
       // put the timeout in the header also?
-      var sessionLength = 1800000;
+      const sessionLength = 1800000;
       expDate.setTime(expDate.getTime() + sessionLength);
       if (timeoutPromise) {
         $interval.cancel(timeoutPromise);
       }
 
       timeoutPromise = $interval(
-        function() {
-          openStayLoggedInModal($injector, $state, $modal, vm);
+        () => {
+          openStayLoggedInModal($injector, $state, $modal);
         },
+        sessionLength
+      );
 
-        sessionLength);
-
-        
       $cookies.put(cookieNames.SESSION_ID, response.headers('sessionId'), {
         expires: expDate
       });
@@ -82,38 +92,32 @@
      *
      * @param family - an array of participant ids
      */
-    vm.addFamilyMembers = function(family) {
-      $log.debug('Adding ' + family + ' to family cookie');
+    vm.addFamilyMembers = (family) => {
+      $log.debug(`Adding ${family} to family cookie`);
       $cookies.put('family', family.join(','));
     };
 
     /*
      * @returns an array of participant ids
      */
-    vm.getFamilyMembers = function() {
+    vm.getFamilyMembers = () => {
       if (this.exists('family')) {
-        return _.map($cookies.get('family').split(','), function(strFam) {
-          return Number(strFam);
-        });
+        return _.map($cookies.get('family').split(','), strFam => Number(strFam));
       }
-
       return [];
     };
 
-    vm.isActive = function() {
-      var ex = this.exists(cookieNames.SESSION_ID);
+    vm.isActive = () => {
+      const ex = this.exists(cookieNames.SESSION_ID);
       if (ex === undefined || ex === null) {
         return false;
       }
-
       return true;
     };
 
-    vm.exists = function(cookieId) {
-      return $cookies.get(cookieId);
-    };
+    vm.exists = cookieId => $cookies.get(cookieId);
 
-    vm.clear = function() {
+    vm.clear = () => {
       $cookies.remove(cookieNames.SESSION_ID);
       $cookies.remove(cookieNames.REFRESH_TOKEN);
       $cookies.remove('userId');
@@ -125,119 +129,159 @@
       return true;
     };
 
-    vm.getUserRole = function() {
-      return '';
-    };
+    vm.getUserRole = () => '';
 
-    //TODO: Get this working to DRY up login_controller and register_controller
-    vm.redirectIfNeeded = function($state) {
-
+    // TODO: Get this working to DRY up login_controller and register_controller
+    vm.redirectIfNeeded = ($injectedState) => {
       if (vm.hasRedirectionInfo()) {
-        var url = vm.exists('redirectUrl');
-        var params = vm.exists('params');
+        const url = vm.exists('redirectUrl');
+        const params = vm.exists('params');
         vm.removeRedirectRoute();
         if (params === undefined) {
-          $state.go(url);
+          $injectedState.go(url);
         } else {
-          $state.go(url, JSON.parse(params));
+          $injectedState.go(url, JSON.parse(params));
         }
       }
     };
 
-    vm.addRedirectRoute = function(redirectUrl, params) {
+    vm.addRedirectRoute = (redirectUrl, params) => {
       $cookies.put('redirectUrl', redirectUrl);
       $cookies.put('params', JSON.stringify(params));
     };
 
-    vm.removeRedirectRoute = function() {
+    vm.removeRedirectRoute = () => {
       $cookies.remove('redirectUrl');
       $cookies.remove('params');
     };
 
-    vm.hasRedirectionInfo = function() {
+    vm.hasRedirectionInfo = () => {
       if (this.exists('redirectUrl') !== undefined) {
         return true;
       }
-
       return false;
     };
 
-    vm.verifyAuthentication = function (event, stateName, stateData, stateToParams) {
+    vm.verifyAuthentication = (event, stateName, stateData, stateToParams) => {
       if (vm.isActive()) {
-        var promise = $http({
+        const promise = $http({
           method: 'GET',
-          url: __API_ENDPOINT__ + 'api/authenticated',
+          url: `${__API_ENDPOINT__}api/authenticated`,
           withCredentials: true,
           headers: {
             Authorization: $cookies.get(cookieNames.SESSION_ID),
             RefreshToken: $cookies.get(cookieNames.REFRESH_TOKEN)
           }
-        }).success(function (user) {
+        }).success((user) => {
           $rootScope.userid = user.userId;
           $rootScope.username = user.username;
           $rootScope.email = user.userEmail;
           $rootScope.phone = user.userPhone;
           $rootScope.roles = user.roles;
-        }).error(function (e) {
-          clearAndRedirect(event, stateName, stateToParams);
+        }).error(() => {
+          vm.clearAndRedirect(event, stateName, stateToParams);
         });
-	
         return promise;
       } else if (stateData !== undefined && stateData.isProtected) {
-        clearAndRedirect(event, stateName, stateToParams);
+        vm.clearAndRedirect(event, stateName, stateToParams);
       } else {
         $rootScope.userid = null;
         $rootScope.username = null;
       }
-
-      var deferred = $q.defer();
+      const deferred = $q.defer();
       deferred.reject('User is not logged in.');
       return deferred.promise;
-    }
-   
-    function clearAndRedirect(event, toState, toParams) {                       
+    };
+
+    // flag to determine if the current user was already
+    // logged in or not. Used in performReactiveSso()
+    vm.wasLoggedIn = vm.isActive();
+
+    /**
+    * the local property on session to bind the setInterval()
+    * to. Can be accessed on SessionService.
+    */
+    vm.reactiveSsoInterval = null;
+
+    /**
+    * Clears out the setInterval created by enableReactiveSso
+    */
+    vm.disableReactiveSso = () => {
+      clearInterval($rootScope.reactiveSsoInterval);
+    };
+
+    /**
+    * Enables the reactive sso setInterval and clears out any pre-existing
+    * intervals that may exist. Also passes the state info from core.run.js
+    * for route changes.
+    *
+    * Parameters are passed down for use in the verifyAuthentication()
+    * through performReactiveSso().
+    */
+    vm.enableReactiveSso = (event, stateName, stateData, stateToParams) => {
+      vm.disableReactiveSso();
+      vm.reactiveSsoInterval = setInterval(() => {
+        vm.performReactiveSso(event, stateName, stateData, stateToParams);
+      }, 3000);
+    };
+
+    /**
+    * Handles the logic of deciding whether the cross-domain cookies
+    * have changed since the app instantiated.
+    *
+    * If changes are detected, it resets the flags and then performs
+    * auth or logout depending on the scenario. In the case of logout
+    * and a protected page, the user is redirected to the log in page.
+    */
+    vm.performReactiveSso = (event, stateName, stateData, stateToParams) => {
+      if (vm.isActive() && vm.wasLoggedIn === false) {
+        vm.verifyAuthentication(event, stateName, stateData, stateToParams);
+        vm.wasLoggedIn = true;
+      } else if (!vm.isActive() && vm.wasLoggedIn === true) {
+        vm.wasLoggedIn = false;
+        if (stateData !== undefined && stateData.isProtected) {
+          vm.clearAndRedirect(event, stateName, stateToParams);
+        } else {
+          vm.clear();
+          $rootScope.userid = null;
+          $rootScope.username = null;
+          $rootScope.email = null;
+          $rootScope.phone = null;
+          $rootScope.roles = null;
+          $rootScope.$apply();
+        }
+      }
+    };
+
+    vm.clearAndRedirect = (event, toState, toParams) => {                     
       vm.clear();
       $rootScope.userid = null;
       $rootScope.username = null;
       $rootScope.email = null;
       $rootScope.phone = null;
       $rootScope.roles = null;
-
       vm.addRedirectRoute(toState, toParams);
-
       if (event) {
         event.preventDefault();
       }
-
       $state.go('login');
-    }
-    
-    vm.beOptimistic = false;
+    };
 
+    vm.beOptimistic = false;
     return this;
   }
 
-  function openStayLoggedInModal($injector, $state, $modal, Session) {
-    //Only open if on a protected page? and the modal is not already shown. 
-    if ($state.current.data.isProtected && !$('#stayLoggedInModal').is(':visible')) {
-      var AuthService = $injector.get('AuthService');
-      var modal = $modal.open({
-          templateUrl: 'stayLoggedInModal/stayLoggedInModal.html',
-          controller: 'StayLoggedInController as StayLoggedIn',
-          backdrop: 'static',
-          keyboard: false,
-          show: false,
-        });
+  SessionService.$inject = [
+    '$log',
+    '$http',
+    '$state',
+    '$interval',
+    '$cookies',
+    '$modal',
+    '$injector',
+    '$rootScope',
+    '$q'
+  ];
 
-      modal.result.then(function(result) {
-        //login success
-      },
-
-      function(result) {
-        //TODO:Once we stop using rootScope we can remove this and the depenedency on Injector
-        AuthService.logout();
-        $state.go('content', {link: '/'});
-      });
-    }
-  }
+  angular.module('crossroads.core').service('Session', SessionService);
 })();

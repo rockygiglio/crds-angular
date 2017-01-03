@@ -110,6 +110,8 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
         int Put(string tableName, List<Dictionary<string, object>> records);
         int PostStoredProc(string procedureName, Dictionary<string, object> parameters);
 
+        void Delete<T>(IEnumerable<int> recordIds);
+
         void UpdateRecord(string tableName, int recordId, Dictionary<string, object> fields);
     }
 }

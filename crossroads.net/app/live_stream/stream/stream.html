@@ -29,31 +29,26 @@
         this.setup();
         this.init = true;
       }
-      var marginRight = parseInt(window.getComputedStyle(this.carouselCard).marginRight, 0); // eslint-disable-line prefer-const
+      var marginRight = parseInt(window.getComputedStyle(this.carouselCard).marginRight, 0);
       return this.carouselCard.offsetWidth + marginRight;
     }
 
     Carousel.prototype.getCurrentScrollPosition = function() {
-      return this.carousel.scrollLeft;
+      var cardWidth = this.getCarouselCardWidth();
+      return Math.round(this.carousel.scrollLeft / cardWidth) * cardWidth;
     }
 
     Carousel.prototype.carouselNext = function() {
-      /* eslint-disable prefer-const */
       var cardWidth = this.getCarouselCardWidth();
-      var n = Math.floor(this.getCurrentScrollPosition() / cardWidth);
+      var n = this.getCurrentScrollPosition() / cardWidth;
       var scrollLeft = (n + 1) * cardWidth;
-      /* eslint-enable prefer-const */
       this.scrollTo(scrollLeft);
     }
 
     Carousel.prototype.carouselPrev = function() {
-      var cardWidth = this.getCarouselCardWidth(); // eslint-disable-line prefer-const
-      var scrollPos = this.getCurrentScrollPosition(); // eslint-disable-line prefer-const
-      var n = 0;
-      if (scrollPos > cardWidth) {
-        n = Math.round(scrollPos / cardWidth) - 1;
-      }
-      var scrollLeft = n * cardWidth; // eslint-disable-line prefer-const
+      var cardWidth = this.getCarouselCardWidth();
+      var n = this.getCurrentScrollPosition() / cardWidth;
+      var scrollLeft = (n - 1) * cardWidth;
       this.scrollTo(scrollLeft);
     }
 
@@ -88,7 +83,7 @@
     </header>
     <section>
       <div class="container">
-        <streamspot-player></streamspot-player>
+        <div dynamic-content="$root.MESSAGES.streamingVideoPlayer.content | html"></div>
       </div>
     </section>
   </div>
@@ -125,6 +120,8 @@
             </div>
           </section>
         </div>
+
+        <div class="digital-program__giving" dynamic-content="$root.MESSAGES.streamingInlineGivingEmbed.content | html"></div>
       </div>
     </div>
 

@@ -272,7 +272,7 @@ namespace crds_angular.Services
 
         public CampReservationDTO SaveCampReservation(CampReservationDTO campReservation, int eventId, string token)
         {
-            var nickName = campReservation.PreferredName ?? campReservation.FirstName;
+            var nickName = string.IsNullOrWhiteSpace(campReservation.PreferredName) ? campReservation.FirstName : campReservation.PreferredName;
             var contactId = Convert.ToInt32(campReservation.ContactId);
 
             var minorContact = new MpContact
@@ -660,6 +660,7 @@ namespace crds_angular.Services
                     }
                 }
                 _medicalInformationRepository.UpdateOrCreateMedAllergy(updateToAllergyList, createToAllergyList);
+                _medicalInformationRepository.UpdateOrCreateMedications(medicalInfo.Medications.Select(m => new MpMedication {MedicalInformationMedicationId = m.MedicalInformationMedicationId, MedicalInformationId = medicalInformation.MedicalInformationId, MedicationName = m.MedicationName, MedicationTypeId = m.MedicationTypeId, DosageAmount = m.Dosage, DosageTimes = m.TimesOfDay, Deleted = m.Deleted}).ToList());
             }
         }
 
@@ -682,6 +683,7 @@ namespace crds_angular.Services
             }
 
             var allergies = _medicalInformationRepository.GetMedicalAllergyInfo(contactId);
+            var medications = _medicalInformationRepository.GetMedications(contactId);
 
             var camperMedInfo = new MedicalInfoDTO
             {
@@ -709,6 +711,21 @@ namespace crds_angular.Services
                 }
             }
             if (camperMedInfo.Allergies.Count > 0) { camperMedInfo.ShowAllergies = true; }
+
+            camperMedInfo.Medications = new List<Medication>();
+            foreach (var medication in medications)
+            {
+                camperMedInfo.Medications.Add(new Medication
+                {
+                    MedicalInformationMedicationId = medication.MedicalInformationMedicationId,
+                    MedicationName = medication.MedicationName,
+                    MedicationTypeId = medication.MedicationTypeId,
+                    Dosage = medication.DosageAmount,
+                    TimesOfDay = medication.DosageTimes
+                });
+            }
+            if (camperMedInfo.Medications.Count > 0) { camperMedInfo.ShowMedications = true; }
+
             return camperMedInfo;
         }
 
