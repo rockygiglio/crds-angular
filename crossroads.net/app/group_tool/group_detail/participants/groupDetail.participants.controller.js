@@ -13,6 +13,22 @@ export default class GroupDetailParticipantsController {
     this.messageService = MessageService;
     this.groupDetailService = GroupDetailService;
 
+    this.emailOptions = [];
+    this.emailOptions.push(
+      {
+        name: CONSTANTS.GROUP.EMAIL.COMPOSE_EMAIL_NAME,
+        descriptionLine1: CONSTANTS.GROUP.EMAIL.COMPOSE_EMAIL_DESCRIPTION_LINE1,
+        descriptionLine2: CONSTANTS.GROUP.EMAIL.COMPOSE_EMAIL_DESCRIPTION_LINE2,
+        icon: CONSTANTS.GROUP.EMAIL.COMPOSE_EMAIL_ICON
+      });
+    this.emailOptions.push(
+      {
+        name: CONSTANTS.GROUP.EMAIL.COPY_EMAIL_NAME,
+        descriptionLine1: CONSTANTS.GROUP.EMAIL.COPY_EMAIL_DESCRIPTION_LINE1,
+        descriptionLine2: CONSTANTS.GROUP.EMAIL.COPY_EMAIL_DESCRIPTION_LINE2,
+        icon: CONSTANTS.GROUP.EMAIL.COPY_EMAIL_ICON
+      });
+
     this.groupId = this.state.params.groupId;
     this.ready = false;
     this.error = false;
@@ -41,20 +57,20 @@ export default class GroupDetailParticipantsController {
   loadGroupParticipants() {
     this.groupService.getGroupParticipants(this.groupId).then((data) => {
       this.data = data.slice().sort((a, b) => {
-        return(a.compareTo(b));
+        return (a.compareTo(b));
       });
-      this.data.forEach(function(participant) {
+      this.data.forEach(function (participant) {
         participant.me = participant.participantId === this.myParticipantId;
         participant.imageUrl = `${this.imageService.ProfileImageBaseURL}${participant.contactId}`;
       }, this);
       this.ready = true;
       this.groupDetailService.participants = data;
     },
-    (err) => {
-      this.log.error(`Unable to get group participants: ${err.status} - ${err.statusText}`);
-      this.error = true;
-      this.ready = true;
-    });
+      (err) => {
+        this.log.error(`Unable to get group participants: ${err.status} - ${err.statusText}`);
+        this.error = true;
+        this.ready = true;
+      });
   }
 
   setDeleteView() {
@@ -114,22 +130,22 @@ export default class GroupDetailParticipantsController {
     this.processing = true;
 
     this.groupService.removeGroupParticipant(this.groupId, person).then(() => {
-      _.remove(this.data, function(p) {
-          return p.groupParticipantId === person.groupParticipantId;
+      _.remove(this.data, function (p) {
+        return p.groupParticipantId === person.groupParticipantId;
       });
       this.rootScope.$emit('notify', this.rootScope.MESSAGES.groupToolRemoveParticipantSuccess);
       this.setListView();
       this.deleteParticipant = undefined;
       this.ready = true;
     },
-    (err) => {
-      this.log.error(`Unable to remove group participant: ${err.status} - ${err.statusText}`);
-      this.rootScope.$emit('notify', this.rootScope.MESSAGES.groupToolRemoveParticipantFailure);
-      this.error = true;
-      this.ready = true;
-    }).finally(() => {
-      this.processing = false;
-    });
+      (err) => {
+        this.log.error(`Unable to remove group participant: ${err.status} - ${err.statusText}`);
+        this.rootScope.$emit('notify', this.rootScope.MESSAGES.groupToolRemoveParticipantFailure);
+        this.error = true;
+        this.ready = true;
+      }).finally(() => {
+        this.processing = false;
+      });
   }
 
   beginChangeParticipantRole(participant) {
@@ -167,15 +183,15 @@ export default class GroupDetailParticipantsController {
     this.processing = true;
 
     this.messageService.sendGroupMessage(this.groupId, message).then(
-        () => {
-          this.groupMessage = undefined;
-          this.$onInit();
-          this.currentView = 'List';
-          this.rootScope.$emit('notify', this.rootScope.MESSAGES.emailSent);
-        },
-        (error) => {
-          this.rootScope.$emit('notify', this.rootScope.MESSAGES.emailSendingError);
-        }
+      () => {
+        this.groupMessage = undefined;
+        this.$onInit();
+        this.currentView = 'List';
+        this.rootScope.$emit('notify', this.rootScope.MESSAGES.emailSent);
+      },
+      (error) => {
+        this.rootScope.$emit('notify', this.rootScope.MESSAGES.emailSendingError);
+      }
     ).finally(() => {
       this.processing = false;
     });
@@ -184,10 +200,20 @@ export default class GroupDetailParticipantsController {
   emailList() {
     let emailList = "";
 
-    this.data.forEach(function(participant) {
+    this.data.forEach(function (participant) {
       emailList = `${emailList}${participant.email},`;
     }, emailList);
 
     return emailList;
   }
+
+  onCopySuccess() {
+    this.rootScope.$emit('notify', this.rootScope.MESSAGES.copiedToClipBoard);
+  }
+
+  onCopyError() {
+    this.location.path('/groups/search/results').search('id', this.groupId);
+    this.rootScope.$emit('notify', this.rootScope.MESSAGES.copiedToClipBoardError);
+  }
+
 }
