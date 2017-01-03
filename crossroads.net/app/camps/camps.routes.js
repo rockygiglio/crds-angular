@@ -2,6 +2,8 @@ import { invokeResolve } from './application_page/resolve_registry';
 
 import { getCampInfo, getCamperFamily, getCamperPayment } from './camps.resolves';
 
+import confirmationTemplate from './confirmation/confirmation.html';
+
 export default function CampRoutes($stateProvider) {
   $stateProvider
     .state('camps-dashboard', {
@@ -56,6 +58,7 @@ export default function CampRoutes($stateProvider) {
     // Confirmation after a successful payment
     .state('campsignup.paymentConfirmation', {
       url: '/payment-confirmation/:contactId?paymentId&invoiceId',
+      template: confirmationTemplate,
       resolve: {
         CampsService: 'CampsService',
         $state: '$state',
@@ -73,6 +76,7 @@ export default function CampRoutes($stateProvider) {
     // Confirmation after a successful deposit
     .state('campsignup.confirmation', {
       url: '/confirmation/:contactId?paymentId&invoiceId',
+      template: confirmationTemplate,
       resolve: {
         CampsService: 'CampsService',
         $state: '$state',
