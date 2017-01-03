@@ -27,7 +27,7 @@ class MedicalInfoForm {
       foodAllergies: this.foodAllergies(),
       environmentalAllergies: this.environmentalAllergies(),
       otherAllergies: this.otherAllergies(),
-      medicationsAdministered: this.campsService.campMedical.medicationsAdministered,
+      medicationsAdministered: this.campsService.campMedical.medicationsAdministered || [],
       showMedications: this.campsService.campMedical.showMedications || false,
       medicines: this.campsService.campMedical.medications || [{}]
     };
