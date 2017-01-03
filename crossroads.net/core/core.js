@@ -1,6 +1,7 @@
 (function(){
   'use strict';
 
+  require('ngstorage');
   require('lodash');
   require('api-check');
   require('expose?moment!moment');

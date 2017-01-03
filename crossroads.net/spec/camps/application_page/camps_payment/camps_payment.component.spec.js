@@ -29,6 +29,8 @@ describe('Camps Payment Component', () => {
       spyOn(sce, 'trustAsResourceUrl').and.callThrough();
 
       campsService.productInfo = campHelpers().productInfo;
+      campsService.sessionStorage.campDeposits = {};
+
       fixture = _$componentController_('campsPayment', null, {});
     }));
 
@@ -80,6 +82,8 @@ describe('Camps Payment Component', () => {
       spyOn(sce, 'trustAsResourceUrl').and.callThrough();
 
       campsService.productInfo = campHelpers().productInfo;
+      campsService.sessionStorage.campDeposits = {};
+      
       fixture = _$componentController_('campsPayment', null, {});
     }));
 

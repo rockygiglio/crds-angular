@@ -2,6 +2,8 @@ import { invokeResolve } from './application_page/resolve_registry';
 
 import { getCampInfo, getCamperFamily, getCamperPayment } from './camps.resolves';
 
+import confirmationTemplate from './confirmation/confirmation.html';
+
 export default function CampRoutes($stateProvider) {
   $stateProvider
     .state('camps-dashboard', {
@@ -56,6 +58,7 @@ export default function CampRoutes($stateProvider) {
     // Confirmation after a successful payment
     .state('campsignup.paymentConfirmation', {
       url: '/payment-confirmation/:contactId?paymentId&invoiceId',
+      template: confirmationTemplate,
       resolve: {
         CampsService: 'CampsService',
         $state: '$state',
@@ -73,20 +76,27 @@ export default function CampRoutes($stateProvider) {
     // Confirmation after a successful deposit
     .state('campsignup.confirmation', {
       url: '/confirmation/:contactId?paymentId&invoiceId',
+      template: confirmationTemplate,
       resolve: {
         CampsService: 'CampsService',
         $state: '$state',
         $timeout: '$timeout',
-        sendConfirmation: (CampsService, $state, $timeout) => CampsService.sendConfirmation($state.toParams.invoiceId,
-            $state.toParams.paymentId,
-            $state.toParams.campId,
-            $state.toParams.contactId)
-            .then(() => {
-              // When the confirmation API calls returns, forward to the thank you page
-              $timeout(() => {
-                $state.go('campsignup.thankyou', $state.toParams, { location: 'replace' });
-              }, 0);
-            })
+        $sessionStorage: '$sessionStorage',
+        sendConfirmation: (CampsService, $state, $timeout, $sessionStorage) => {
+          CampsService.sendConfirmation($state.toParams.invoiceId,
+              $state.toParams.paymentId,
+              $state.toParams.campId,
+              $state.toParams.contactId)
+              .then(() => {
+                const { contactId, campId } = $state.toParams;
+                $sessionStorage.campDeposits[`${campId}+${contactId}`] = true;
+
+                // When the confirmation API calls returns, forward to the thank you page
+                $timeout(() => {
+                  $state.go('campsignup.thankyou', $state.toParams, { location: 'replace' });
+                }, 0);
+              });
+        }
       }
     })
     .state('campsignup.thankyou', {
