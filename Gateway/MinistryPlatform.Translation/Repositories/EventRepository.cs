@@ -108,7 +108,8 @@ namespace MinistryPlatform.Translation.Repositories
                 {"Event_Title", eventReservationReservation.Title},
                 {"Visibility_Level_ID", _configurationWrapper.GetConfigIntValue("EventVisibilityLevel")},
                 {"Participants_Expected", eventReservationReservation.ParticipantsExpected },
-                {"Event_ID", eventReservationReservation.EventId }
+                {"Event_ID", eventReservationReservation.EventId },
+                {"Cancelled", eventReservationReservation.Cancelled }
 
             };
 

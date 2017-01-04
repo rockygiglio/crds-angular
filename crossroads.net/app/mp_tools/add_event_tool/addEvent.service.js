@@ -34,6 +34,7 @@
           programId: eventData.event.program.ProgramId,
           reminderDaysId: reminderDays,
           title: eventData.event.eventTitle,
+          cancelled: eventData.event.cancelled,
           sendReminder: eventData.event.sendReminder,
           maximumAge: eventData.event.maximumAge,
           minimumChildren: eventData.event.minimumChildren,

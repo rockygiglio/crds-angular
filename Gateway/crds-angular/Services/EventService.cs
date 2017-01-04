@@ -468,6 +468,7 @@ namespace crds_angular.Services
             {
                 eventDto.ReminderDaysId = eventTool.ReminderDaysId;
             }
+            eventDto.Cancelled = eventTool.Cancelled;
             eventDto.SendReminder = eventTool.SendReminder;
             eventDto.StartDateTime = eventTool.StartDateTime;
             eventDto.Title = eventTool.Title;
