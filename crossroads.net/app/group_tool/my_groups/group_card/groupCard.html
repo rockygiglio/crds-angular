@@ -33,47 +33,47 @@
           </button>
         </div>
 
-        <div class="col-md-6 col-sm-12" ng-if="groupCard.group.isLeader()">
+        <div class="col-md-6 col-sm-12 push-half-top" ng-if="groupCard.group.isLeader()">
           <ui-select ng-model="groupCard.selectedEmailOption" on-select="groupCard.onOptionSelected($item, $model)">
             <ui-select-match class="ui-select-match" placeholder="Email Group">
               {{$select.selected.name}}
             </ui-select-match>
             <ui-select-choices class="ui-select-dropdown dropdown-menu ui-select-choices" repeat="item in groupCard.emailOptions">
-              <div ng-show="item.name==='Compose Email'" class="ui-select-choices-group container-fluid condensed-grid">
+              <div ng-show="item.name==='Compose Email'" class="ui-select-choices-group condensed-grid">
                 <li>
                   <a href="mailto:?bcc={{groupCard.group.emailList()}}" target="_top">
-                    <div class="row" style="font-size:10pt;">
+                    <div class="row">
                       <span class="pull-left">
-                      <svg-icon icon="{{item.icon}}">
-                      </svg-icon> 
-                      {{item.name}}
-                    </span>
+                        <svg-icon icon="{{item.icon}}">
+                        </svg-icon>
+                        {{item.name}}
+                      </span>
                     </div>
-                    <div class="row" style="font-size:9pt;">
-                      <span class="pull-left">{{item.descriptionLine1}}</span>
+                    <div class="row">
+                      <small class="pull-left">{{item.descriptionLine1}}</small>
                     </div>
-                    <div class="row" style="font-size:10pt;">
-                      <span class="pull-left">{{item.descriptionLine2}}</span>
+                    <div class="row">
+                      <small class="pull-left">{{item.descriptionLine2}}</small>
                     </div>
                   </a>
                 </li>
               </div>
-              <div ng-show="item.name==='Copy Email Addresses'" class="ui-select-choices-group container-fluid condensed-grid">
+              <div ng-show="item.name==='Copy Addresses'" class="ui-select-choices-group condensed-grid">
                 <li>
                   <a ngclipboard data-clipboard-text="{{groupCard.group.emailList()}}" ngclipboard-success="groupCard.onCopySuccess()"
                     ngclipboard-error="groupCard.onCopyError()">
-                    <div class="row" style="font-size:10pt;">
+                    <div class="row">
                       <span class="pull-left">
-                      <svg-icon icon="{{item.icon}}">
-                      </svg-icon> 
-                      {{item.name}}
-                    </span>
+                        <svg-icon icon="{{item.icon}}">
+                        </svg-icon>
+                        {{item.name}}
+                      </span>
                     </div>
-                    <div class="row" style="font-size:9pt;">
-                      <span class="pull-left">{{item.descriptionLine1}}</span>
+                    <div class="row">
+                      <small class="pull-left">{{item.descriptionLine1}}</small>
                     </div>
-                    <div class="row" style="font-size:10pt;">
-                      <span class="pull-left">{{item.descriptionLine2}}</span>
+                    <div class="row">
+                      <small class="pull-left">{{item.descriptionLine2}}</small>
                     </div>
                   </a>
                 </li>
@@ -82,7 +82,8 @@
 
           </ui-select>
         </div>
-
+      </div>
+      <div class="row">
         <div class="col-md-6 col-sm-12">
           <button ng-if="groupCard.group.isLeader()" class="btn btn-standard btn-block push-half-top" ui-sref="grouptool.detail.requests({ groupId: groupCard.group.groupId , view: 'Invite' })">
             <svg viewBox="0 0 32 32" class="icon icon-user6">

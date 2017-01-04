@@ -31,7 +31,7 @@
                   <div class="row" style="font-size:10pt;">
                     <span class="pull-left">
                       <svg-icon icon="{{item.icon}}">
-                      </svg-icon> 
+                      </svg-icon>
                       {{item.name}}
                     </span>
                   </div>
@@ -44,14 +44,14 @@
                 </a>
               </li>
             </div>
-            <div ng-show="item.name==='Copy Email Addresses'" class="ui-select-choices-group container-fluid condensed-grid">
+            <div ng-show="item.name==='Copy Addresses'" class="ui-select-choices-group container-fluid condensed-grid">
               <li>
                 <a ngclipboard data-clipboard-text="{{groupDetailParticipants.emailList()}}" ngclipboard-success="groupDetailParticipants.onCopySuccess()"
                   ngclipboard-error="groupDetailParticipants.onCopyError()">
                   <div class="row" style="font-size:10pt;">
                     <span class="pull-left">
                       <svg-icon icon="{{item.icon}}">
-                      </svg-icon> 
+                      </svg-icon>
                       {{item.name}}
                     </span>
                   </div>

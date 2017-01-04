@@ -78,5 +78,21 @@ group-card {
     }
   }
 
-}
+  input[type="search"] {
+    min-width: 100%;
+  }
 
+  .dropdown {
+    a {
+      font-size: 11px;
+    }
+
+    small {
+      font-size: 10px;
+    }
+
+    .ui-select-choices-row.active > a {
+      background-color: $gray-lighter;
+    }
+  }
+}
