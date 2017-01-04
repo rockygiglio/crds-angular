@@ -285,7 +285,7 @@ describe('Group Tool SmallGroup', () => {
 
   describe('emailList()', () => {
     it('is should return a list of the emails', () => {
-      expect(smallGroup.emailList()).toEqual('dtkocher@callibrity.com,jim.kriz@ingagepartners.com,');
+      expect(smallGroup.emailList()).toEqual('dtkocher@callibrity.com,jim.kriz@ingagepartners.com');
     });
   });
 
