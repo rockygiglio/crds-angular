@@ -77,22 +77,27 @@ group-card {
       padding-right: 8px;
     }
   }
+}
 
-  input[type="search"] {
-    min-width: 100%;
-  }
 
-  .dropdown {
-    a {
-      font-size: 11px;
+.group-email-select {
+  .ui-select-container {
+    input[type="search"] {
+      min-width: 100%;
     }
 
-    small {
-      font-size: 10px;
-    }
+    .dropdown-menu {
+      a {
+        font-size: 11px;
+      }
 
-    .ui-select-choices-row.active > a {
-      background-color: $gray-lighter;
+      small {
+        font-size: 10px;
+      }
+
+      .ui-select-choices-row.active > a {
+        background-color: $gray-lighter;
+      }
     }
   }
 }
