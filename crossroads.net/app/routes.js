@@ -366,6 +366,15 @@
             }
           }
         })
+        .state('impersonate', {
+          parent: 'noSideBar',
+          templateUrl: 'impersonate/impersonate.html',
+          url: '/impersonate',
+          controller: 'ImpersonateController',
+          data: {
+            isProtected: false,
+          }
+        })
         .state('explore', {
           parent: 'noHeaderOrFooter',
           url: '/explore',

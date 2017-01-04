@@ -66,6 +66,9 @@
                 <li>
                   <a ui-sref="childcare-dashboard">Childcare</a>
                 </li>
+                <li ng-if="$root.canImpersonate">
+                  <a ui-sref="impersonate">Impersonate</a>
+                </li>
                 <li>
                   <a ui-sref="logout" class="ng-cloak">Sign Out</a>
                 </li>

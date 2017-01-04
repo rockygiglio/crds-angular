@@ -250,6 +250,14 @@ namespace crds_angular.App_Start
                 .ForMember(dest => dest.StartDate, opts => opts.MapFrom(src => src.EventStartDate))
                 .ForMember(dest => dest.EndDate, opts => opts.MapFrom(src => src.EventEndDate));
 
+            Mapper.CreateMap<MpUserDto, MpUser>()
+                .ForMember(dest => dest.UserId, opts => opts.MapFrom(src => src.User_Name))
+                .ForMember(dest => dest.Guid, opts => opts.MapFrom(src => src.User_GUID))
+                .ForMember(dest => dest.CanImpersonate, opts => opts.MapFrom(src => src.Can_Impersonate))
+                .ForMember(dest => dest.UserEmail, opts => opts.MapFrom(src => src.User_Email))
+                .ForMember(dest => dest.UserRecordId, opts => opts.MapFrom(src => src.User_ID))
+                .ForMember(dest => dest.DisplayName, opts => opts.MapFrom(src => src.Display_Name));
+
             Mapper.CreateMap<BulkEmailSubscriberOptDTO, MpBulkEmailSubscriberOpt>();
             Mapper.CreateMap<MpBulkEmailSubscriberOpt, BulkEmailSubscriberOptDTO>();
 

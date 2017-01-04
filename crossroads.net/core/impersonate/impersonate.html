@@ -1,0 +1,27 @@
+<div class="row">
+    <div class="col-sm-8 col-md-6 col-sm-offset-2 col-md-offset-3">
+        <h1 class="page-header">Impersonate User:</h1>
+        <select name="impersonate-user-input"
+                class="form-control col-sm-12"
+                id="impersonate-user-input"
+                ng-model="profile.startAttendReason.attribute"
+                ng-options="startAttendReason.name for startAttendReason in profile.startAttendReasons.attributes | orderBy: ['sortOrder', 'name'] track by startAttendReason.attributeId" >
+          <option value="" disabled="disabled" selected="selected" style="display:none"> -- Choose One -- </option>
+        </select>
+        <!--<div class="row">
+            <div class="col-sm-12">
+                <form role="form" novalidate>
+                    <div class="input-group" dropdown>
+                        <input type="text" class="form-control" ng-model="impersonateUser">
+                        <div class="input-group-btn">
+                            <button type="button" class="btn btn-default" dropdown-toggle><span class="caret"></span></button>
+                            <ul id="impersonate-user-dropdown" class="dropdown-menu" role="menu" dropdown-menu>
+                                <li ng-repeat="user in impersonateUsers" class="input-lg"><a href="#" ng-click="changeUser(user)">{{user.DisplayName}}</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>-->
+    </div>
+</div>

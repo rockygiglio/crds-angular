@@ -178,6 +178,7 @@
           $rootScope.email = user.userEmail;
           $rootScope.phone = user.userPhone;
           $rootScope.roles = user.roles;
+          $rootScope.canImpersonate = user.canImpersonate;
         }).error(() => {
           vm.clearAndRedirect(event, stateName, stateToParams);
         });
@@ -248,6 +249,7 @@
           $rootScope.email = null;
           $rootScope.phone = null;
           $rootScope.roles = null;
+          $rootScope.canImpersonate = false;
           $rootScope.$apply();
         }
       }
@@ -260,6 +262,7 @@
       $rootScope.email = null;
       $rootScope.phone = null;
       $rootScope.roles = null;
+      $rootScope.canImpersonate = false;
       vm.addRedirectRoute(toState, toParams);
       if (event) {
         event.preventDefault();
