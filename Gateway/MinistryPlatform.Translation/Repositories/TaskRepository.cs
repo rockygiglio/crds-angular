@@ -10,14 +10,18 @@ namespace MinistryPlatform.Translation.Repositories
     public class TaskRepository : BaseRepository, ITaskRepository
     {
         private readonly IMinistryPlatformService _ministryPlatformService;
+        private readonly IMinistryPlatformRestRepository _ministryPlatformRestRepository;
         private readonly int _autoStartedTaskPageViewId;
+        private readonly int _roomReservationPageID;
 
-        public TaskRepository(IAuthenticationRepository authenticationService, IConfigurationWrapper configurationWrapper, IMinistryPlatformService ministryPlatformService) :
+        public TaskRepository(IAuthenticationRepository authenticationService, IConfigurationWrapper configurationWrapper, 
+                IMinistryPlatformService ministryPlatformService, IMinistryPlatformRestRepository ministryPlatformRestRepository) :
             base(authenticationService, configurationWrapper)
         {
             _ministryPlatformService = ministryPlatformService;
-
+            _ministryPlatformRestRepository = ministryPlatformRestRepository;
             _autoStartedTaskPageViewId = _configurationWrapper.GetConfigIntValue("TasksNeedingAutoStarted");
+            _roomReservationPageID = _configurationWrapper.GetConfigIntValue("RoomReservationPageId");
         }
 
         public List<MPTask> GetTasksToAutostart()
@@ -50,6 +54,19 @@ namespace MinistryPlatform.Translation.Repositories
         {
             // note that this call needs to user impersonation
             _ministryPlatformService.CompleteTask(token, taskId, rejected, comments);
+        }
+
+        //This is not covered in a unit test, and it has not been tested as we are not currently using it
+        //but we will pick it back up next sprint
+        public void DeleteTasksForRoomReservations(List<int> roomReserverationIDs)
+        {
+            var apiToken = ApiLogin();
+            foreach (int roomReserverationID in roomReserverationIDs)
+            {
+                var task = _ministryPlatformRestRepository.UsingAuthenticationToken(apiToken).FindTask(_roomReservationPageID, roomReserverationID);
+                if (task != null)
+                    _ministryPlatformRestRepository.UsingAuthenticationToken(apiToken).DeleteTask(task.Task_ID, true, "Room Edited, Cancelled By User" );
+            }
         }
     }
 }

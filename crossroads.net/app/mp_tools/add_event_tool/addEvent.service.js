@@ -46,10 +46,15 @@
       },
 
       fromEventDto(event) {
-        if (!event.group){
+        if (!event.group) {
           event.group = {};
         }
+
         this.origCongregation = event.congregationId;
+        this.origStartDate = new Date(event.startDateTime.split('T')[0].replace(/-/g, '/'));
+        this.origEndDate = new Date(event.endDateTime.split('T')[0].replace(/-/g, '/'));
+        this.origStartTime = new Date(event.startDateTime + "-0500");
+        this.origEndTime = new Date(event.endDateTime + "-0500");
         return {
           event: {
             congregation: {
@@ -63,8 +68,8 @@
             },
             description: event.description,
             donationBatch: event.donationBatchTool,
-            endDate: new Date(event.endDateTime),
-            startDate: new Date(event.startDateTime),
+            endDate: this.origEndDate,
+            startDate: this.origStartDate,
             meetingInstructions: event.meetingInstructions,
             minutesSetup: event.minutesSetup,
             minutesCleanup: event.minutesTeardown,
@@ -75,8 +80,8 @@
               dp_RecordID: event.reminderDaysId
             },
             sendReminder: event.sendReminder,
-            startTime: new Date(event.startDateTime + "-0500"),
-            endTime: new Date(event.endDateTime + "-0500"),
+            startTime: this.origStartTime,
+            endTime: this.origEndTime,
             eventTitle: event.title,
             participantsExpected: event.participantsExpected,
             maximumAge: event.group.maximumAge,
@@ -179,16 +184,23 @@
     }
 
     function dateTime(dateForDate, dateForTime) {
+      if (dateForDate === undefined) {
+        return null;
+      }
+
+      if (dateForTime === undefined) {
+        return null;
+      }
       return new Date(
-          dateForDate.getFullYear(),
-          dateForDate.getMonth(),
-          dateForDate.getDate(),
-          dateForTime.getHours(),
-          dateForTime.getMinutes(),
-          dateForTime.getSeconds(),
-          dateForTime.getMilliseconds());
+        dateForDate.getFullYear(),
+        dateForDate.getMonth(),
+        dateForDate.getDate(),
+        dateForTime.getHours(),
+        dateForTime.getMinutes(),
+        dateForTime.getSeconds(),
+        dateForTime.getMilliseconds());
     }
 
     return obj;
   }
-}());
+} ());

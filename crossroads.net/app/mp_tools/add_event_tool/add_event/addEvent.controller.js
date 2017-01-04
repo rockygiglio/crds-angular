@@ -62,25 +62,6 @@ export default class AddEventcontroller {
     });
   }
 
-  dateTime(dateForDate, dateForTime) {
-    if (dateForDate === undefined) {
-      return null;
-    }
-
-    if (dateForTime === undefined) {
-      return null;
-    }
-
-    return new Date(
-      dateForDate.getFullYear(),
-      dateForDate.getMonth(),
-      dateForDate.getDate(),
-      dateForTime.getHours(),
-      dateForTime.getMinutes(),
-      dateForTime.getSeconds(),
-      dateForTime.getMilliseconds());
-  }
-
   endDateOpen($event) {
     $event.preventDefault();
     $event.stopPropagation();
@@ -150,17 +131,17 @@ export default class AddEventcontroller {
     if (form === undefined) {
       return false;
     }
-
     // verify that dates are valid;
     let start;
     let end;
     try {
-      start = this.dateTime(this.eventData.startDate, this.eventData.startTime);
-      if (this.eventData.eventType && !this.eventData.eventType.Allow_Multiday_Event) {
+      start = this.addEvent.dateTime(this.eventData.startDate, this.eventData.startTime);
+      if (this.eventData.eventType && this.eventData.eventType.Allow_Multiday_Event !== undefined && !this.eventData.eventType.Allow_Multiday_Event) {
         this.eventData.endDate = this.eventData.startDate;
       }
-      end = this.dateTime(this.eventData.endDate, this.eventData.endTime);
+      end = this.addEvent.dateTime(this.eventData.endDate, this.eventData.endTime);
     } catch (err) {
+      console.log(err);
       form.endDate.$error.endDate = true;
       form.endDate.$valid = false;
       form.endDate.$invalid = true;

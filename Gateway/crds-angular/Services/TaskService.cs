@@ -72,5 +72,9 @@ namespace crds_angular.Services
                 _logger.ErrorFormat("Could not process tasks for autocomplete, Detail: {0}", outerException);
             }
         }
+
+        //public bool DeleteTaskbyRecordId(int recordID)
+        //{
+        //}
     }
 }
