@@ -591,57 +591,154 @@ namespace crds_angular.test.Services
             _contactService.VerifyAll();
         }
 
-        //[Test]
-        //public void ShouldSaveMedicalInfo()
-        //{
-        //    const string token = "theToken";
-        //    var contactId = 123;
-        //    var medicalInfo = new MedicalInfoDTO
-        //    {
-        //        InsuranceCompany = "Ins. Co. Name",
-        //        PhysicianName = "bobby",
-        //        PhysicianPhone = "123-4567",
-        //        PolicyHolder = "your mom"
-        //    };
+        [Test]
+        public void ShouldSaveMedicalInfo()
+        {
+            const string token = "theToken";
+            const int contactId = 123;
+            var medicalInfo = new MedicalInfoDTO
+            {
+                InsuranceCompany = "Ins. Co. Name",
+                PhysicianName = "bobby",
+                PhysicianPhone = "123-4567",
+                PolicyHolder = "your mom",
+                MedicationsAdministered = new List<string> { "benedryl", "tylenol" },
+                Allergies = new List<Allergy>(),
+                Medications = new List<Medication>()
+            };
 
-        //    var mpMedInfo = new MpMedicalInformation
-        //    {
-        //        InsuranceCompany = "Ins. Co. Name",
-        //        PhysicianName = "bobby",
-        //        PhysicianPhone = "123-4567",
-        //        PolicyHolder = "your mom"
-        //    };
+            var mpMedInfo = new MpMedicalInformation
+            {
+                ContactId = 123,
+                InsuranceCompany = "Ins. Co. Name",
+                MedicationsAdministered = "benedryl,tylenol",
+                PhysicianName = "bobby",
+                PhysicianPhone = "123-4567",
+                PolicyHolder = "your mom"                
+            };
 
-        //    var myContact = new MpMyContact
-        //    {
-        //        Contact_ID = 999999,
-        //        Household_ID = 77777
-        //    };
+            var mpMedInfoReturn = new MpMedicalInformation
+            {
+                ContactId = 123,
+                MedicalInformationId = 12676,
+                InsuranceCompany = "Ins. Co. Name",
+                PhysicianName = "bobby",
+                PhysicianPhone = "123-4567",
+                PolicyHolder = "your mom",
+                MedicationsAdministered = "benedryl,tylenol"
+            };
 
-        //    var myHousehold = new List<MpHouseholdMember>
-        //    {
-        //        new MpHouseholdMember
-        //        {
-        //            ContactId = contactId
-        //        }
-        //    };
+            var updateToDictionary = new Dictionary<String, Object>
+                {
+                    {"Contact_ID", contactId},
+                    {"Medicalinformation_ID", 12676}
+                };
 
-        //    var otherHousehold = new List<MpHouseholdMember>
-        //    {
-        //        new MpHouseholdMember
-        //        {
-        //            ContactId = 5555555
-        //        }
-        //    };
+            var myContact = new MpMyContact
+            {
+                Contact_ID = 999999,
+                Household_ID = 77777
+            };
 
-        //    _contactService.Setup(m => m.GetMyProfile(token)).Returns(myContact);
-        //    _contactService.Setup(m => m.GetHouseholdFamilyMembers(myContact.Household_ID)).Returns(myHousehold);
-        //    _contactService.Setup(m => m.GetOtherHouseholdMembers(myContact.Contact_ID)).Returns(otherHousehold);
+            var myHousehold = new List<MpHouseholdMember>
+            {
+                new MpHouseholdMember
+                {
+                    ContactId = contactId
+                }
+            };
 
-        //    _medicalInformationRepository.Setup(m => m.SaveMedicalInformation(mpMedInfo, 123));
+            var otherHousehold = new List<MpHouseholdMember>
+            {
+                new MpHouseholdMember
+                {
+                    ContactId = 5555555
+                }
+            };
 
-        //    Assert.DoesNotThrow(() =>_fixture.SaveCamperMedicalInfo(medicalInfo, contactId, token));
-        //}
+            _contactService.Setup(m => m.GetMyProfile(token)).Returns(myContact);
+            _contactService.Setup(m => m.GetHouseholdFamilyMembers(myContact.Household_ID)).Returns(myHousehold);
+            _contactService.Setup(m => m.GetOtherHouseholdMembers(myContact.Contact_ID)).Returns(otherHousehold);
+
+            _medicalInformationRepository.Setup(m => m.SaveMedicalInfo(It.IsAny<MpMedicalInformation>(), 123)).Returns(mpMedInfoReturn);
+            _contactService.Setup(m => m.UpdateContact(contactId, updateToDictionary));
+            _medicalInformationRepository.Setup(m => m.UpdateOrCreateMedAllergy(It.IsAny<List<MpMedicalAllergy>>(), It.IsAny<List<MpMedicalAllergy>>()));
+
+            Assert.DoesNotThrow(() => _fixture.SaveCamperMedicalInfo(medicalInfo, contactId, token));
+        }
+
+        [Test]
+        public void shouldGetCamperMedicalInfo()
+        {
+            const int eventId = 1289;
+            const int contactId = 123; // this is set in the getFakeHouseholdMembers() method
+            const int loggedInContactId = 6767;
+            const string token = "LetMeIN!";
+
+            var me = getFakeContact(loggedInContactId);
+            var family = getFakeHouseholdMembers(me);
+            var mpMedInfo = new MpMedicalInformation
+            {
+                ContactId = contactId,
+                InsuranceCompany = "FAke Insurance",
+                MedicalInformationId = 12999,
+                MedicationsAdministered = "tylenol,benedryl",
+                PhysicianName = "Dr. Tobias Funke",
+                PhysicianPhone = "1-800-ido-care",
+                PolicyHolder = "Lindsey",               
+            };
+
+            _contactService.Setup(m => m.GetMyProfile(token)).Returns(me);
+            _contactService.Setup(m => m.GetHouseholdFamilyMembers(me.Household_ID)).Returns(family);
+            _contactService.Setup(m => m.GetOtherHouseholdMembers(loggedInContactId)).Returns(new List<MpHouseholdMember>());
+            _medicalInformationRepository.Setup(m => m.GetMedicalInformation(contactId)).Returns(mpMedInfo);
+            _medicalInformationRepository.Setup(m => m.GetMedicalAllergyInfo(contactId)).Returns(new List<MpMedical>());
+            _medicalInformationRepository.Setup(m => m.GetMedications(contactId)).Returns(new List<MpMedication>());
+
+            var res = _fixture.GetCampMedicalInfo(eventId, contactId, token);
+            Assert.AreEqual(123, res.ContactId);
+            Assert.AreEqual(2, res.MedicationsAdministered.Count);
+            Assert.AreEqual(new List<string> {"tylenol", "benedryl"}, res.MedicationsAdministered);
+
+            _contactService.VerifyAll();
+            _medicalInformationRepository.VerifyAll();
+        }
+
+        [Test]
+        public void shouldGetCampMedicalInfoWhenThereAreNoMedications()
+        {
+            const int eventId = 1289;
+            const int contactId = 123; // this is set in the getFakeHouseholdMembers() method
+            const int loggedInContactId = 6767;
+            const string token = "LetMeIN!";
+
+            var me = getFakeContact(loggedInContactId);
+            var family = getFakeHouseholdMembers(me);
+            var mpMedInfo = new MpMedicalInformation
+            {
+                ContactId = contactId,
+                InsuranceCompany = "Fake Insurance",
+                MedicalInformationId = 12999,
+                MedicationsAdministered = null,
+                PhysicianName = "Dr. Tobias Funke",
+                PhysicianPhone = "1-800-ido-care",
+                PolicyHolder = "Lindsey",
+            };
+
+            _contactService.Setup(m => m.GetMyProfile(token)).Returns(me);
+            _contactService.Setup(m => m.GetHouseholdFamilyMembers(me.Household_ID)).Returns(family);
+            _contactService.Setup(m => m.GetOtherHouseholdMembers(loggedInContactId)).Returns(new List<MpHouseholdMember>());
+            _medicalInformationRepository.Setup(m => m.GetMedicalInformation(contactId)).Returns(mpMedInfo);
+            _medicalInformationRepository.Setup(m => m.GetMedicalAllergyInfo(contactId)).Returns(new List<MpMedical>());
+            _medicalInformationRepository.Setup(m => m.GetMedications(contactId)).Returns(new List<MpMedication>());
+
+            var res = _fixture.GetCampMedicalInfo(eventId, contactId, token);
+            Assert.AreEqual(123, res.ContactId);
+            Assert.IsEmpty(res.MedicationsAdministered);
+
+            _contactService.VerifyAll();
+            _medicalInformationRepository.VerifyAll();
+        }
 
         [Test]
         public void shouldGetCamperInfo()

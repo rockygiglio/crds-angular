@@ -3,7 +3,7 @@
   <AutoRefresh>0</AutoRefresh>
   <DataSources>
     <DataSource Name="MPReportsDS">
-      <DataSourceReference>MPReportsDS</DataSourceReference>
+      <DataSourceReference>/Data Sources/MPReportsDS</DataSourceReference>
       <rd:SecurityType>None</rd:SecurityType>
       <rd:DataSourceID>7c231c42-4bb0-46e8-a3a7-7e4fe2ee446c</rd:DataSourceID>
     </DataSource>
@@ -323,7 +323,6 @@
                             <PaddingBottom>2pt</PaddingBottom>
                           </Style>
                         </Textbox>
-                        <rd:Selected>true</rd:Selected>
                       </CellContents>
                     </TablixCell>
                   </TablixCells>
@@ -477,7 +476,6 @@
                                                                             <rd:DefaultName>Group_Name</rd:DefaultName>
                                                                             <Style>
                                                                               <Border>
-                                                                                <Color>LightGrey</Color>
                                                                                 <Style>Solid</Style>
                                                                               </Border>
                                                                               <PaddingLeft>2pt</PaddingLeft>
@@ -514,7 +512,6 @@
                                                                             <rd:DefaultName>Opportunity_Title</rd:DefaultName>
                                                                             <Style>
                                                                               <Border>
-                                                                                <Color>LightGrey</Color>
                                                                                 <Style>Solid</Style>
                                                                               </Border>
                                                                               <PaddingLeft>2pt</PaddingLeft>
@@ -543,16 +540,17 @@
                                                                                     <Style />
                                                                                   </TextRun>
                                                                                 </TextRuns>
-                                                                                <Style />
+                                                                                <Style>
+                                                                                  <TextAlign>Center</TextAlign>
+                                                                                </Style>
                                                                               </Paragraph>
                                                                             </Paragraphs>
                                                                             <rd:DefaultName>FULLNAME</rd:DefaultName>
                                                                             <Style>
                                                                               <Border>
-                                                                                <Color>LightGrey</Color>
                                                                                 <Style>Solid</Style>
                                                                               </Border>
-                                                                              <BackgroundColor>=IIF(Fields!Position.Value="MIN","Pink",IIF(Fields!Position.Value="MAX","Yellow","Transparent"))</BackgroundColor>
+                                                                              <BackgroundColor>=IIF(Fields!FULLNAME.Value="", IIF(Fields!Position.Value="MIN","Pink",IIF(Fields!Position.Value="MAX","Yellow","Transparent")),"No Color")</BackgroundColor>
                                                                               <PaddingLeft>2pt</PaddingLeft>
                                                                               <PaddingRight>2pt</PaddingRight>
                                                                               <PaddingTop>2pt</PaddingTop>
@@ -719,7 +717,6 @@
                                                               <rd:DefaultName>Group_Name</rd:DefaultName>
                                                               <Style>
                                                                 <Border>
-                                                                  <Color>LightGrey</Color>
                                                                   <Style>Solid</Style>
                                                                 </Border>
                                                                 <PaddingLeft>2pt</PaddingLeft>
@@ -756,7 +753,6 @@
                                                               <rd:DefaultName>Opportunity_Title</rd:DefaultName>
                                                               <Style>
                                                                 <Border>
-                                                                  <Color>LightGrey</Color>
                                                                   <Style>Solid</Style>
                                                                 </Border>
                                                                 <PaddingLeft>2pt</PaddingLeft>
@@ -785,16 +781,17 @@
                                                                       <Style />
                                                                     </TextRun>
                                                                   </TextRuns>
-                                                                  <Style />
+                                                                  <Style>
+                                                                    <TextAlign>Center</TextAlign>
+                                                                  </Style>
                                                                 </Paragraph>
                                                               </Paragraphs>
                                                               <rd:DefaultName>FULLNAME</rd:DefaultName>
                                                               <Style>
                                                                 <Border>
-                                                                  <Color>LightGrey</Color>
                                                                   <Style>Solid</Style>
                                                                 </Border>
-                                                                <BackgroundColor>=IIF(Fields!Position.Value="MIN","Pink",IIF(Fields!Position.Value="MAX","Yellow","Transparent"))</BackgroundColor>
+                                                                <BackgroundColor>=IIF(Fields!FULLNAME.Value="", IIF(Fields!Position.Value="MIN","Pink",IIF(Fields!Position.Value="MAX","Yellow","Transparent")),"No Color")</BackgroundColor>
                                                                 <PaddingLeft>2pt</PaddingLeft>
                                                                 <PaddingRight>2pt</PaddingRight>
                                                                 <PaddingTop>2pt</PaddingTop>
@@ -913,7 +910,6 @@
                                                               <rd:DefaultName>Group_Name</rd:DefaultName>
                                                               <Style>
                                                                 <Border>
-                                                                  <Color>LightGrey</Color>
                                                                   <Style>Solid</Style>
                                                                 </Border>
                                                                 <PaddingLeft>2pt</PaddingLeft>
@@ -950,7 +946,6 @@
                                                               <rd:DefaultName>Opportunity_Title</rd:DefaultName>
                                                               <Style>
                                                                 <Border>
-                                                                  <Color>LightGrey</Color>
                                                                   <Style>Solid</Style>
                                                                 </Border>
                                                                 <PaddingLeft>2pt</PaddingLeft>
@@ -979,16 +974,17 @@
                                                                       <Style />
                                                                     </TextRun>
                                                                   </TextRuns>
-                                                                  <Style />
+                                                                  <Style>
+                                                                    <TextAlign>Center</TextAlign>
+                                                                  </Style>
                                                                 </Paragraph>
                                                               </Paragraphs>
                                                               <rd:DefaultName>FULLNAME</rd:DefaultName>
                                                               <Style>
                                                                 <Border>
-                                                                  <Color>LightGrey</Color>
                                                                   <Style>Solid</Style>
                                                                 </Border>
-                                                                <BackgroundColor>=IIF(Fields!Position.Value="MIN","Pink",IIF(Fields!Position.Value="MAX","Yellow","Transparent"))</BackgroundColor>
+                                                                <BackgroundColor>=IIF(Fields!FULLNAME.Value="", IIF(Fields!Position.Value="MIN","Pink",IIF(Fields!Position.Value="MAX","Yellow","Transparent")),"No Color")</BackgroundColor>
                                                                 <PaddingLeft>2pt</PaddingLeft>
                                                                 <PaddingRight>2pt</PaddingRight>
                                                                 <PaddingTop>2pt</PaddingTop>
@@ -1107,7 +1103,6 @@
                                                               <rd:DefaultName>Group_Name</rd:DefaultName>
                                                               <Style>
                                                                 <Border>
-                                                                  <Color>LightGrey</Color>
                                                                   <Style>Solid</Style>
                                                                 </Border>
                                                                 <PaddingLeft>2pt</PaddingLeft>
@@ -1144,7 +1139,6 @@
                                                               <rd:DefaultName>Opportunity_Title</rd:DefaultName>
                                                               <Style>
                                                                 <Border>
-                                                                  <Color>LightGrey</Color>
                                                                   <Style>Solid</Style>
                                                                 </Border>
                                                                 <PaddingLeft>2pt</PaddingLeft>
@@ -1173,16 +1167,17 @@
                                                                       <Style />
                                                                     </TextRun>
                                                                   </TextRuns>
-                                                                  <Style />
+                                                                  <Style>
+                                                                    <TextAlign>Center</TextAlign>
+                                                                  </Style>
                                                                 </Paragraph>
                                                               </Paragraphs>
                                                               <rd:DefaultName>FULLNAME</rd:DefaultName>
                                                               <Style>
                                                                 <Border>
-                                                                  <Color>LightGrey</Color>
                                                                   <Style>Solid</Style>
                                                                 </Border>
-                                                                <BackgroundColor>=IIF(Fields!Position.Value="MIN","Pink",IIF(Fields!Position.Value="MAX","Yellow","Transparent"))</BackgroundColor>
+                                                                <BackgroundColor>=IIF(Fields!FULLNAME.Value="", IIF(Fields!Position.Value="MIN","Pink",IIF(Fields!Position.Value="MAX","Yellow","Transparent")),"No Color")</BackgroundColor>
                                                                 <PaddingLeft>2pt</PaddingLeft>
                                                                 <PaddingRight>2pt</PaddingRight>
                                                                 <PaddingTop>2pt</PaddingTop>
@@ -1301,7 +1296,6 @@
                                                               <rd:DefaultName>Group_Name</rd:DefaultName>
                                                               <Style>
                                                                 <Border>
-                                                                  <Color>LightGrey</Color>
                                                                   <Style>Solid</Style>
                                                                 </Border>
                                                                 <PaddingLeft>2pt</PaddingLeft>
@@ -1338,7 +1332,6 @@
                                                               <rd:DefaultName>Opportunity_Title</rd:DefaultName>
                                                               <Style>
                                                                 <Border>
-                                                                  <Color>LightGrey</Color>
                                                                   <Style>Solid</Style>
                                                                 </Border>
                                                                 <PaddingLeft>2pt</PaddingLeft>
@@ -1367,16 +1360,17 @@
                                                                       <Style />
                                                                     </TextRun>
                                                                   </TextRuns>
-                                                                  <Style />
+                                                                  <Style>
+                                                                    <TextAlign>Center</TextAlign>
+                                                                  </Style>
                                                                 </Paragraph>
                                                               </Paragraphs>
                                                               <rd:DefaultName>FULLNAME</rd:DefaultName>
                                                               <Style>
                                                                 <Border>
-                                                                  <Color>LightGrey</Color>
                                                                   <Style>Solid</Style>
                                                                 </Border>
-                                                                <BackgroundColor>=IIF(Fields!Position.Value="MIN","Pink",IIF(Fields!Position.Value="MAX","Yellow","Transparent"))</BackgroundColor>
+                                                                <BackgroundColor>=IIF(Fields!FULLNAME.Value="", IIF(Fields!Position.Value="MIN","Pink",IIF(Fields!Position.Value="MAX","Yellow","Transparent")),"No Color")</BackgroundColor>
                                                                 <PaddingLeft>2pt</PaddingLeft>
                                                                 <PaddingRight>2pt</PaddingRight>
                                                                 <PaddingTop>2pt</PaddingTop>
@@ -1495,7 +1489,6 @@
                                                               <rd:DefaultName>Group_Name</rd:DefaultName>
                                                               <Style>
                                                                 <Border>
-                                                                  <Color>LightGrey</Color>
                                                                   <Style>Solid</Style>
                                                                 </Border>
                                                                 <PaddingLeft>2pt</PaddingLeft>
@@ -1532,7 +1525,6 @@
                                                               <rd:DefaultName>Opportunity_Title</rd:DefaultName>
                                                               <Style>
                                                                 <Border>
-                                                                  <Color>LightGrey</Color>
                                                                   <Style>Solid</Style>
                                                                 </Border>
                                                                 <PaddingLeft>2pt</PaddingLeft>
@@ -1561,16 +1553,17 @@
                                                                       <Style />
                                                                     </TextRun>
                                                                   </TextRuns>
-                                                                  <Style />
+                                                                  <Style>
+                                                                    <TextAlign>Center</TextAlign>
+                                                                  </Style>
                                                                 </Paragraph>
                                                               </Paragraphs>
                                                               <rd:DefaultName>FULLNAME</rd:DefaultName>
                                                               <Style>
                                                                 <Border>
-                                                                  <Color>LightGrey</Color>
                                                                   <Style>Solid</Style>
                                                                 </Border>
-                                                                <BackgroundColor>=IIF(Fields!Position.Value="MIN","Pink",IIF(Fields!Position.Value="MAX","Yellow","Transparent"))</BackgroundColor>
+                                                                <BackgroundColor>=IIF(Fields!FULLNAME.Value="", IIF(Fields!Position.Value="MIN","Pink",IIF(Fields!Position.Value="MAX","Yellow","Transparent")),"No Color")</BackgroundColor>
                                                                 <PaddingLeft>2pt</PaddingLeft>
                                                                 <PaddingRight>2pt</PaddingRight>
                                                                 <PaddingTop>2pt</PaddingTop>
@@ -1991,7 +1984,7 @@
           <Value xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true" />
         </Values>
       </DefaultValue>
-      <Prompt>Optional Title</Prompt>
+      <Prompt>OptionalTitle</Prompt>
       <Hidden>true</Hidden>
     </ReportParameter>
     <ReportParameter Name="FromDate">
@@ -2009,7 +2002,7 @@
           <Value>1</Value>
         </Values>
       </DefaultValue>
-      <Prompt>Accounting Company ID</Prompt>
+      <Prompt>AccountingCompanyID</Prompt>
       <Hidden>true</Hidden>
     </ReportParameter>
     <ReportParameter Name="Congregation">
@@ -2037,7 +2030,7 @@
           <Value>6</Value>
         </Values>
       </DefaultValue>
-      <Prompt>Num Of Columns</Prompt>
+      <Prompt>NumOfColumns</Prompt>
       <Hidden>true</Hidden>
     </ReportParameter>
     <ReportParameter Name="NumOfRows">
@@ -2047,7 +2040,7 @@
           <Value>26</Value>
         </Values>
       </DefaultValue>
-      <Prompt>Num Of Rows</Prompt>
+      <Prompt>NumOfRows</Prompt>
       <Hidden>true</Hidden>
     </ReportParameter>
     <ReportParameter Name="GroupTypeID">
@@ -2058,7 +2051,7 @@
           <Value xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true" />
         </Values>
       </DefaultValue>
-      <Prompt>Group Type ID</Prompt>
+      <Prompt>GroupTypeID</Prompt>
       <Hidden>true</Hidden>
     </ReportParameter>
     <ReportParameter Name="Groups">
@@ -2180,5 +2173,6 @@ ys3LyczKxMfFRU1DRU5ERU5ERExCUllSur27/v/9/v7+/////////v/9///+/////v7+////////////
   <Language>en-US</Language>
   <ConsumeContainerWhitespace>true</ConsumeContainerWhitespace>
   <rd:ReportUnitType>Inch</rd:ReportUnitType>
+  <rd:ReportServerUrl>http://localhost/ReportServer</rd:ReportServerUrl>
   <rd:ReportID>6835654f-3954-4c4b-bf4b-64ce086231e9</rd:ReportID>
 </Report>

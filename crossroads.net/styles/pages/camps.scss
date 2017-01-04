@@ -4,6 +4,10 @@ crossroads-camp {
     min-height: 240px;
   }
 
+  .camps-medication-checkbox .checkbox {
+    margin-left: 16px;
+  }
+
   .camp-medicine-remove {
     width: 30px;
     float: right;
@@ -47,5 +51,4 @@ crossroads-camp {
       }
     }
   }
-
 }
