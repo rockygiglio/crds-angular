@@ -43,8 +43,10 @@ describe('component: addEvent controller', () => {
     programs = { AllPrograms: jasmine.createSpyObj('programs.AllPrograms', ['query']) };
     programs.AllPrograms.query.and.returnValue([{ programId: 1, programName: 'Program1' }, { programid: 2, programName: 'Program2' }]);
     staffContact = jasmine.createSpyObj('staffContact', ['query']);
-    staffContact.query.and.callFake((obj, callback) => { callback([{ contactId: 1, displayName: 'Nukem, Duke', email: 'daduke@compuserve.net' },
-        { contactId: 2, displayName: 'JoeKer', email: 'joker@gmail.com' }])});
+    staffContact.query.and.callFake((obj, callback) => {
+      callback([{ contactId: 1, displayName: 'Nukem, Duke', email: 'daduke@compuserve.net' },
+      { contactId: 2, displayName: 'JoeKer', email: 'joker@gmail.com' }])
+    });
     validation = $injector.get('Validation');
     qApi = $injector.get('$q');
     addEvent = { eventData: { rooms: [] } };
@@ -132,6 +134,20 @@ describe('component: addEvent controller', () => {
   });
 
   describe('addEvent Controller validDateRange()', () => {
+
+    beforeEach(() => {
+      fixture.addEvent.dateTime = (dateForDate, dateForTime) => {
+        return new Date(
+          dateForDate.getFullYear(),
+          dateForDate.getMonth(),
+          dateForDate.getDate(),
+          dateForTime.getHours(),
+          dateForTime.getMinutes(),
+          dateForTime.getSeconds(),
+          dateForTime.getMilliseconds());
+      };
+    });
+
     it('Should copy start date to end date when the selected event_type does not allow multiday events', () => {
       fixture.eventData.eventType = {
         dp_RecordID: 1,
@@ -146,8 +162,9 @@ describe('component: addEvent controller', () => {
       };
       // setup form and data
       fixture.form = addEventForm;
-      fixture.eventData.startDate = new Date(+new Date() + 86400000);
-      expect(fixture.eventData.endDate).toBeLessThan(fixture.eventData.startDate);
+      fixture.eventData.startDate = new Date(86400000);
+
+      expect(fixture.eventData.startDate).toBeLessThan(fixture.eventData.endDate);
       // call function and verify the date was copied
       const result = fixture.validDateRange(fixture.form);
       expect(result).toBeFalsy();

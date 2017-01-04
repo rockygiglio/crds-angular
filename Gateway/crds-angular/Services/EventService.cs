@@ -37,6 +37,7 @@ namespace crds_angular.Services
         private readonly IRoomRepository _roomService;
         private readonly IEquipmentRepository _equipmentService;
         private readonly IEventParticipantRepository _eventParticipantService;
+        private readonly int childcareEventTypeID;
 
         private readonly List<string> _tableHeaders = new List<string>()
         {
@@ -75,6 +76,8 @@ namespace crds_angular.Services
             _roomService = roomService;
             _equipmentService = equipmentService;
             _eventParticipantService = eventParticipantService;
+
+            childcareEventTypeID = configurationWrapper.GetConfigIntValue("ChildcareEventType");
         }
 
         public EventToolDto GetEventRoomDetails(int eventId)
@@ -169,18 +172,30 @@ namespace crds_angular.Services
         {
             try
             {
+                var oldEventDetails = GetEventDetails(eventId, true, false);
+
+                foreach (var room in oldEventDetails.Rooms)
+                {
+                    if (!room.Cancelled)
+                    {
+                        if (!eventReservation.Rooms.Any(r => r.RoomId == room.RoomId))
+                        {
+                            room.Cancelled = true;
+                            foreach (var eq in room.Equipment)
+                            {
+                                eq.Cancelled = true;
+                            }
+                            UpdateEventRoom(room, eventId, token);
+                        }
+                    }
+                }
+
+                UpdateEventChildcareGroup(oldEventDetails, eventReservation, eventId, token);
                 UpdateEvent(eventReservation, eventId, token);
-                CancelOldUnusedRooms(eventReservation, eventId, token);
+
                 foreach (var room in eventReservation.Rooms)
                 {
                     UpdateEventRoom(room, eventId, token);
-                }
-                var groups = _eventService.GetEventGroupsForEventAPILogin(eventId);
-                if (groups.Count > 0)
-                {
-                    eventReservation.Group.GroupId =  groups[0].GroupId;
-                    eventReservation.Group.CongregationId = eventReservation.CongregationId;
-                    UpdateGroup(eventReservation.Group);
                 }
             }
             catch (Exception ex)
@@ -192,21 +207,32 @@ namespace crds_angular.Services
             return true;
         }
 
-        private void CancelOldUnusedRooms(EventToolDto eventReservation, int eventId, string token)
+        private void UpdateEventChildcareGroup(EventToolDto oldEventDetails, EventToolDto eventReservation, int eventId, string token)
         {
-            var oldEventDetails = GetEventDetails(eventId, true, false);
+            bool wasChildcare = oldEventDetails.EventTypeId == childcareEventTypeID;
+            bool isChildcare = eventReservation.EventTypeId == childcareEventTypeID;
 
-            foreach (var room in oldEventDetails.Rooms)
+            //if it use to be a childcare event, but isn't anymore, remove the group
+            if (wasChildcare && !isChildcare)
             {
-                if (!eventReservation.Rooms.Any(r => r.RoomId == room.RoomId))
-                {
-                    room.Cancelled = true;
-                    foreach (var eq in room.Equipment)
-                    {
-                        eq.Cancelled = true;
-                    }
-                    UpdateEventRoom(room, eventId, token);
-                }
+                _eventService.DeleteEventGroupsForEvent(eventId, token);
+                _groupService.EndDateGroup(oldEventDetails.Group.GroupId, null, null);
+            }
+            //now is a childcare event but was not before so add a group
+            else if (!wasChildcare && isChildcare)
+            {
+                eventReservation.Group.CongregationId = eventReservation.CongregationId;
+                var groupid = AddGroup(eventReservation.Group);
+                AddEventGroup(eventId, groupid, token);
+            }
+            //it was and still is a childcare event
+            else if (wasChildcare && isChildcare)
+            {
+                var group = _eventService.GetEventGroupsForEventAPILogin(eventId).FirstOrDefault();
+
+                eventReservation.Group.GroupId = group.GroupId;
+                eventReservation.Group.CongregationId = eventReservation.CongregationId;
+                UpdateGroup(eventReservation.Group);
             }
         }
 
@@ -249,29 +275,22 @@ namespace crds_angular.Services
         {
             try
             {
-                var groupId = 0; 
                 var eventId = AddEvent(eventTool);
-
-                if (eventTool.Group != null)
-                {
-                    groupId = AddGroup(eventTool.Group);
-                }
 
                 foreach (var room in eventTool.Rooms)
                 {
-                    var eventRoomId = AddRoom(eventId, room, token);
-                    if (groupId > 0)
-                    {
-                        AddEventGroup(eventId, groupId, eventRoomId, room.RoomId, token);
-                    }
-
+                    AddRoom(eventId, room, token);
                     foreach (var equipment in room.Equipment)
                     {
                         AddEquipment(equipment, eventId, room, token);
                     }
                 }
 
-
+                if (eventTool.Group != null)
+                {
+                    var groupid = AddGroup(eventTool.Group);
+                    AddEventGroup(eventId, groupid, token);
+                }
             }
             catch (Exception ex)
             {
@@ -349,14 +368,12 @@ namespace crds_angular.Services
             _groupService.UpdateGroup(mpgroup);
         }
 
-        public int AddEventGroup(int eventId, int groupId, int eventRoomId, int roomId, string token)
+        public int AddEventGroup(int eventId, int groupId, string token)
         {
             var eventGroup = new MpEventGroup
             {
                 EventId = eventId,
                 GroupId = groupId,
-                EventRoomId = eventRoomId,
-                RoomId = roomId,
                 DomainId = 1
             };
 
