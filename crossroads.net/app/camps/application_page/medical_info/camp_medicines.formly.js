@@ -69,6 +69,10 @@ function campsMedicinesFormlyConfig(formlyConfigProvider) {
       }
 
       // init
+      if ($scope.model[$scope.options.key] && $scope.model[$scope.options.key].length === 0) {
+        addNew();
+      }
+
       $scope.fields = copyFields($scope.to.fields);
 
       $scope.remove = remove;

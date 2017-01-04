@@ -44,11 +44,12 @@ class MedicalInfoForm {
     if (this.formModel.showMedications) {
       allMedications = [...this.formModel.medicines || [], ...this.deletedMedicines];
     } else {
-      allMedications = this.formModel.medicines ? _.map(this.formModel.medicines, ((m) => {
+      allMedications = this.formModel.medicines ?
+        this.formModel.medicines.filter(m => m.medicationName !== undefined).map(((m) => {
         // eslint-disable-next-line no-param-reassign
-        m.remove = true;
-        return m;
-      })) : [];
+          m.remove = true;
+          return m;
+        })) : [];
     }
     const dto = {
       contactId: this.formModel.contactId,
