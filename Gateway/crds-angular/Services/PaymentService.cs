@@ -34,7 +34,6 @@ namespace crds_angular.Services
         private readonly int _defaultPaymentStatus;
         private readonly int _declinedPaymentStatus;
         private readonly int _bankErrorRefundContactId;
-        private readonly int _paymentTypeReimbursement;
 
         public PaymentService(IInvoiceRepository invoiceRepository, 
             IPaymentRepository paymentRepository, 
@@ -58,7 +57,6 @@ namespace crds_angular.Services
             _defaultPaymentStatus = configurationWrapper.GetConfigIntValue("DonationStatusPending");
             _declinedPaymentStatus = configurationWrapper.GetConfigIntValue("DonationStatusDeclined");
             _bankErrorRefundContactId = configurationWrapper.GetConfigIntValue("ContactIdForBankErrorRefund");
-            _paymentTypeReimbursement = configurationWrapper.GetConfigIntValue("PaymentTypeReimbursement");
         }
 
         public MpPaymentDetailReturn PostPayment(MpDonationAndDistributionRecord paymentRecord)
@@ -248,8 +246,8 @@ namespace crds_angular.Services
                 PaymentStatus = (int) DonationStatus.Declined,
                 ContactId = _bankErrorRefundContactId, 
                 ProcessorFeeAmount = refund.Data[0].BalanceTransaction.Fee / Constants.StripeDecimalConversionValue,
-                Notes = "Payment created for Stripe Refund",
-                PaymentTypeId = _paymentTypeReimbursement,
+                Notes = $"Reversed from PaymentID {payment.PaymentId}",
+                PaymentTypeId = payment.PaymentTypeId,
                 TransactionCode = refund.Data[0].Id,
                 PaymentTotal = -(int.Parse(refund.Data[0].Amount) / Constants.StripeDecimalConversionValue),
                 BatchId = payment.BatchId
