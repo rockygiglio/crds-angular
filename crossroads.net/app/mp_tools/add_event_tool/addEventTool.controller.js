@@ -101,7 +101,7 @@ export default class AddEventToolController {
     });
   }
 
-  cancelEvent() {
+  cancelEventClicked() {
     const modalInstance = this.modal.open({
       controller: 'CancelEventController',
       controllerAs: 'cancelEvent',
@@ -109,6 +109,13 @@ export default class AddEventToolController {
     });
 
     modalInstance.result.then(() => {
+      this.cancelEvent();
+    }, () => {
+      return;
+    });
+  }
+
+  cancelEvent() {
       this.processing = true;
       _.forEach(this.rooms, (room) => {
         room.cancelled = true;
@@ -116,17 +123,13 @@ export default class AddEventToolController {
           equipment.equipment.cancelled = true;
         });
       });
+
       this.AddEvent.eventData.event.cancelled = true;
       this.AddEvent.eventData.rooms = this.rooms;
       const event = this.AddEvent.getEventDto(this.AddEvent.eventData);
       event.startDateTime = moment(event.startDateTime).utc().format();
       event.endDateTime = moment(event.endDateTime).utc().format();
       this.processEdit(event);
-      return;
-    }, () => {
-      // don't do the stuff
-      return;
-    });
   }
 
   canSaveMaintainOldReservation() {
