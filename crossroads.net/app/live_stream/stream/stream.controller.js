@@ -9,7 +9,6 @@ export default class StreamingController {
     this.timeout = $timeout;
     this.document = $document;
     this.modal = $modal;
-    this.inProgress = false;
     this.numberOfPeople = 2;
     this.displayCounter = true;
     this.countSubmit = false;
@@ -17,8 +16,6 @@ export default class StreamingController {
     this.beTheChurch = [];
     this.inlineGiving = [];
     this.sce = $sce;
-
-    this.inProgress = StreamspotService.isBroadcasting;
 
     this.cmsService
       .getDigitalProgram()
