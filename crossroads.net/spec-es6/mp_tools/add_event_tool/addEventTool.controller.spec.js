@@ -8,8 +8,16 @@ describe('AddEventTool', () => {
         rootScope,
         window,
         MPTools,
+        modal,
         AuthService,
         EventService,
+        sd1,
+        sd2,
+        ed1,
+        ed2,
+        time,
+        origCongregation,
+        newCongregation,
         CRDS_TOOLS_CONSTANTS = {
             SECURITY_ROLES: {
                 EventsRoomsEquipment: 'test'
@@ -24,6 +32,7 @@ describe('AddEventTool', () => {
         window = $injector.get('$window');
         MPTools = jasmine.createSpyObj('MPTools', ['getParams']);
         AuthService = jasmine.createSpyObj('AuthService', ['isAuthenticated', 'isAuthorized']);
+        modal = jasmine.createSpyObj('$modal', ['open']);
         //AddEvent = jasmine.createSpyObj('AddEvent', ['test']);
         AddEvent = {
             currentPage: 5,
@@ -34,7 +43,7 @@ describe('AddEventTool', () => {
         EventService = $injector.get('EventService');
         CRDS_TOOLS_CONSTANTS = {};
 
-        fixture = new AddEventToolController(rootScope, window, log, MPTools, AuthService, EventService, CRDS_TOOLS_CONSTANTS, AddEvent);
+        fixture = new AddEventToolController(rootScope, window, log, modal, MPTools, AuthService, EventService, CRDS_TOOLS_CONSTANTS, AddEvent);
     }));
 
     it('should go back()', () => {
@@ -52,54 +61,92 @@ describe('AddEventTool', () => {
         expect(editMode).toBe(true);
     });
 
-    it('should move page to next()', () => {
-        fixture.allData = {
-            eventForm: {
-                $setSubmitted: () => {
-                    return;
-                },
-                $valid: true,
-                maximumChildren: {
-                    $valid: true
-                },
-                minimumChildren: {
-                    $valid: true
+    describe('next()', () => {
+        beforeEach(() => {
+            fixture.allData = {
+                eventForm: {
+                    $setSubmitted: () => {
+                        return;
+                    },
+                    $valid: true,
+                    maximumChildren: {
+                        $valid: true
+                    },
+                    minimumChildren: {
+                        $valid: true
+                    }
                 }
-            }
-        };
-        fixture.event = {
-            test: 'test'
-        };
-        fixture.next();
-        expect(fixture.AddEvent.currentPage).toBe(2);
-        expect(fixture.AddEvent.eventData.event.test).toBe('test');
-    });
+            };
 
-    it('should error when trying to move page to next()', () => {
-        fixture.allData = {
-            eventForm: {
-                $setSubmitted: () => {
-                    return;
-                },
-                $valid: false,
-                maximumChildren: {
-                    $valid: true
-                },
-                minimumChildren: {
-                    $valid: true
+            fixture.rootScope.MESSAGES = {
+                generalError: 'error'
+            };
+        });
+
+        it('should move page to next() is not edit', () => {
+            fixture.AddEvent.editMode = false;
+            fixture.event = {
+                test: 'test'
+            };
+
+            spyOn(fixture, 'canSaveMaintainOldReservation');
+
+            fixture.next();
+            expect(fixture.canSaveMaintainOldReservation).not.toHaveBeenCalled();
+            expect(fixture.AddEvent.currentPage).toBe(2);
+            expect(fixture.AddEvent.eventData.event.test).toBe('test');
+        });
+
+        it('should move page to next() is edit no modal', () => {
+            fixture.AddEvent.editMode = true;
+            fixture.event = {
+                test: 'test'
+            };
+            spyOn(fixture, 'canSaveMaintainOldReservation').and.returnValue(true);
+            fixture.next();
+            expect(fixture.canSaveMaintainOldReservation).toHaveBeenCalled();
+            expect(fixture.AddEvent.currentPage).toBe(2);
+            expect(fixture.AddEvent.eventData.event.test).toBe('test');
+        });
+
+        it('should move page to next() is edit modal', () => {
+            fixture.AddEvent.editMode = true;
+            fixture.event = {
+                test: 'test'
+            };
+            spyOn(fixture, 'canSaveMaintainOldReservation').and.returnValue(false);
+            spyOn(fixture, 'continueEdit');
+            fixture.next();
+            expect(fixture.canSaveMaintainOldReservation).toHaveBeenCalled();
+            expect(fixture.continueEdit).toHaveBeenCalled();
+            expect(fixture.AddEvent.eventData.event.test).toBe('test');
+        });
+
+        it('should error when trying to move page to next()', () => {
+
+            fixture.allData = {
+                eventForm: {
+                    $setSubmitted: () => {
+                        return;
+                    },
+                    $valid: false,
+                    maximumChildren: {
+                        $valid: true
+                    },
+                    minimumChildren: {
+                        $valid: true
+                    }
                 }
+            };
+            fixture.AddEvent.editMode = true;
+            fixture.event = {
+                test: 'test'
             }
-        };
-        fixture.event = {
-            test: 'test'
-        }
-        fixture.rootScope.MESSAGES = {
-            generalError: 'error'
-        };
-        fixture.next();
-        expect(fixture.AddEvent.currentPage).toBe(5);
-        expect(fixture.AddEvent.eventData.event.test).toBe('test');
-        expect(fixture.rootScope.$emit).toHaveBeenCalled();
+            fixture.next();
+            expect(fixture.AddEvent.currentPage).toBe(5);
+            expect(fixture.AddEvent.eventData.event.test).toBe('test');
+            expect(fixture.rootScope.$emit).toHaveBeenCalled();
+        });
     });
 
     describe('Submit()', () => {
@@ -231,6 +278,65 @@ describe('AddEventTool', () => {
             expect(fixture.rootScope.$emit).toHaveBeenCalled();
         })
     })
+
+    describe('Date Related Bool Functions', () => {
+        beforeEach(() => {
+            sd1 = new Date('3/12/2017');
+            sd2 = new Date('3/20/2017');
+            ed1 = new Date('4/20/2017');
+            ed2 = new Date('4/12/2017');
+            time = new Date();
+            origCongregation = 1;
+            newCongregation = 2;
+            fixture.event = { congregation: {} };
+
+            fixture.event.startDate = sd1;
+            fixture.event.startTime = time;
+            fixture.event.endDate = ed1;
+            fixture.event.endTime = time;
+            fixture.AddEvent.origStartDate = sd1;
+            fixture.AddEvent.origStartTime = time;
+            fixture.AddEvent.origEndDate = ed1;
+            fixture.AddEvent.origEndTime = time;
+
+            fixture.AddEvent.dateTime = (dateForDate, dateForTime) => {
+                return new Date(
+                    dateForDate.getFullYear(),
+                    dateForDate.getMonth(),
+                    dateForDate.getDate(),
+                    dateForTime.getHours(),
+                    dateForTime.getMinutes(),
+                    dateForTime.getSeconds(),
+                    dateForTime.getMilliseconds());
+            };
+        });
+
+        it('should return true doesDateRangeFitInsideOtherDateRange()', () => {
+            let result = fixture.doesDateRangeFitInsideOtherDateRange(sd1, ed1, sd2, ed2);
+            expect(result).toBe(true)
+        });
+
+        it('should return false doesDateRangeFitInsideOtherDateRange()', () => {
+            let result = fixture.doesDateRangeFitInsideOtherDateRange(sd2, ed2, sd1, sd1);
+            expect(result).toBe(false)
+        });
+
+        it('should return true canSaveMaintainOldReservation()', () => {
+            fixture.event.congregation.dp_RecordID = origCongregation;
+            fixture.AddEvent.origCongregation = origCongregation;
+
+            let result = fixture.canSaveMaintainOldReservation();
+            expect(result).toBe(true);
+        });
+
+        it('should return false canSaveMaintainOldReservation() diff Congregation', () => {
+            fixture.event.congregation.dp_RecordID = newCongregation;
+            fixture.AddEvent.origCongregation = origCongregation;
+
+            let result = fixture.canSaveMaintainOldReservation();
+            expect(result).toBe(false);
+        });
+    });
 
     describe('AllowAccess()', () => {
 

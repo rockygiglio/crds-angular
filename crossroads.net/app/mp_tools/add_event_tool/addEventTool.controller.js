@@ -61,7 +61,6 @@ export default class AddEventToolController {
     this.allData.eventForm.$setSubmitted();
 
     this.AddEvent.eventData.event = this.event;
-
     // TODO: why does the form get set as valid even if
     // the min and max children are invalid?
     if (this.allData.eventForm.$valid &&

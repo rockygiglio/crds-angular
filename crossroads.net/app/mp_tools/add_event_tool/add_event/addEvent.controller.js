@@ -141,6 +141,7 @@ export default class AddEventcontroller {
       }
       end = this.addEvent.dateTime(this.eventData.endDate, this.eventData.endTime);
     } catch (err) {
+      console.log(err);
       form.endDate.$error.endDate = true;
       form.endDate.$valid = false;
       form.endDate.$invalid = true;
