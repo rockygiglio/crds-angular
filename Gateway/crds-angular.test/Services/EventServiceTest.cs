@@ -425,6 +425,17 @@ namespace crds_angular.test.Services
         }
 
         [Test]
+        public void TestUpdateEventWithCancelledTrue()
+        {
+            _eventService.Setup(mocked => mocked.UpdateEvent(It.IsAny<MpEventReservationDto>()));
+            var dto = GetEventToolTestObject();
+            dto.Cancelled = true;
+            _fixture.UpdateEvent(dto, 123, "Token");
+            _eventService.VerifyAll();
+            _eventService.Verify(mock => mock.UpdateEvent(It.IsAny<MpEventReservationDto>()), Times.Once);
+        }
+
+        [Test]
         public void TestUpdateEventReservation()
         {
             var newReservation = GetEventToolTestObjectWithRooms();
