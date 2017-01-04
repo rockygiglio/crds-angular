@@ -123,6 +123,51 @@ namespace crds_angular.test.Services
         }
 
         [Test]
+        public void shouldReturnGradeGroupsSortedByGroupName()
+        {
+            const int eventId = 123;
+            var camp = new MpCamp
+            {
+                EventId = 1,
+                EventTitle = "Fake Event",
+                EventType = 2,
+                StartDate = new DateTime(2017, 1, 1),
+                EndDate = new DateTime(2018, 1, 1),
+                OnlineProductId = 3,
+                RegistrationStartDate = new DateTime(2017, 1, 1),
+                RegistrationEndDate = new DateTime(2018, 1, 1),
+                ProgramId = 4,
+                PrimaryContactEmail = "bob@bob.com"
+            };
+
+            var eventGroup1 = new MpEventGroup
+            {
+                GroupId = 1,
+                GroupName = "7th Grade"
+            };
+            var eventGroup2 = new MpEventGroup
+            {
+                GroupId = 2,
+                GroupName = "5th Grade"
+            };
+            var eventGroup3 = new MpEventGroup
+            {
+                GroupId = 3,
+                GroupName = "6th Grade"
+            };
+            var groups = new List<MpEventGroup> {eventGroup1, eventGroup2, eventGroup3};
+            camp.CampGradesList = groups;
+
+
+            _campService.Setup(m => m.GetCampEventDetails(eventId)).Returns(camp);
+
+            var rc = _fixture.GetCampEventDetails(eventId);
+            Assert.That(rc.EligibleGradesList[0].GroupName == "5th Grade");
+            Assert.That(rc.EligibleGradesList[1].GroupName == "6th Grade");
+            Assert.That(rc.EligibleGradesList[2].GroupName == "7th Grade");
+        }
+
+        [Test]
         public void shouldCreateNewContactAndCampReservation()
         {
             const int groupId = 123;
