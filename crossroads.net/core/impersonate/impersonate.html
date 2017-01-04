@@ -4,9 +4,9 @@
         <select name="impersonate-user-input"
                 class="form-control col-sm-12"
                 id="impersonate-user-input"
-                ng-model="profile.startAttendReason.attribute"
-                ng-options="startAttendReason.name for startAttendReason in profile.startAttendReasons.attributes | orderBy: ['sortOrder', 'name'] track by startAttendReason.attributeId" >
-          <option value="" disabled="disabled" selected="selected" style="display:none"> -- Choose One -- </option>
+                ng-model="impersonateUser"
+                ng-options="user.DisplayName for user in impersonateUsers | orderBy: 'DisplayName'" >
+          <option value="" disabled="disabled" selected="selected" style="display:none"> Choose One </option>
         </select>
         <!--<div class="row">
             <div class="col-sm-12">
