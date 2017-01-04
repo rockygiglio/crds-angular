@@ -85,7 +85,7 @@ namespace crds_angular.Services
             var eligibleGradeGroups = campEvent.CampGradesList.Select(campGrade => new GroupDTO
             {
                 GroupId = campGrade.GroupId, GroupName = campGrade.GroupName
-            }).ToList();
+            }).OrderBy(x => x.GroupName).ToList();
 
             var campEventInfo = new CampDTO
             {
