@@ -19,7 +19,7 @@
 
   <div class="row mobile-push-half-top">
     <div ng-if='groupDetailParticipants.data.length > 1 && groupDetailParticipants.isListView()' class="col-sm-6 col-sm-push-6 sm-text-right">
-      <div class="col-sm-6">
+      <div class="col-sm-8">
         <ui-select ng-model="groupDetailParticipants.selectedEmailOption" on-select="groupDetailParticipants.onOptionSelected($item, $model)">
           <ui-select-match class="ui-select-match" placeholder="Email Group">
             {{$select.selected.name}}
@@ -67,8 +67,8 @@
           </ui-select-choices>
         </ui-select>
       </div>
-      <div>
-        <a type='button' class='btn btn-standard btn-block-mobile push-half-bottom' href='#' ng-click='groupDetailParticipants.setEditView()'
+      <div class="col-sm-4">
+        <a type='button' class='btn btn-standard btn-block push-half-bottom' href='#' ng-click='groupDetailParticipants.setEditView()'
           ng-if='groupDetailParticipants.isLeader'>Edit Participants</a>
       </div>
     </div>
