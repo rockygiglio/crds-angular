@@ -51,8 +51,8 @@ $(document).ready(function() {
           //Map paragraph
           exploreTweens['map_text'] = tweenFadeUp('.map');
           //Map names and flags come in
-          exploreTweens['map_names'] = TweenMax.staggerTo('.map .map-name', .5, { autoAlpha: 1, delay: .8 }, .5);
-          exploreTweens['map_flags'] = TweenMax.staggerTo('.map .map-flag', .5, { autoAlpha: 1, delay: .8 }, .5);
+          exploreTweens['map_names'] = TweenMax.staggerTo('.map .map-name', .25, { autoAlpha: 1, delay: .8 }, .5);
+          exploreTweens['map_flags'] = TweenMax.staggerTo('.map .map-flag', .25, { autoAlpha: 1, delay: .8 }, .5);
           break;
         case 3:
           //setup bubbles and begin animating them with random size and rotation speeds
@@ -341,19 +341,6 @@ $(document).ready(function() {
           </svg>
         </a>
       </div><!--/explore-nav-->
-
-      <div class="container">
-        <div class="row">
-          <div class="col-sm-12">
-            <img class="imgix-fluid img-responsive map-img" data-src="//crossroads-media.imgix.net/images/explore/map/explore_map.jpg" >
-            <img class="imgix-fluid img-responsive map-flag map-flag-mason" data-src="//crossroads-media.imgix.net/images/explore/map/explore_map_flag.png" >
-            <img class="imgix-fluid img-responsive map-flag map-flag-westside" data-src="//crossroads-media.imgix.net/images/explore/map/explore_map_flag.png" >
-            <img class="imgix-fluid img-responsive map-flag map-flag-oakley" data-src="//crossroads-media.imgix.net/images/explore/map/explore_map_flag.png" >
-            <img class="imgix-fluid img-responsive map-flag map-flag-uptown" data-src="//crossroads-media.imgix.net/images/explore/map/explore_map_flag.png" >
-            <img class="imgix-fluid img-responsive map-flag map-flag-florence " data-src="//crossroads-media.imgix.net/images/explore/map/explore_map_flag.png" >
-          </div><!--/col-sm-12-->
-        </div><!--/row-->
-      </div><!--/container-->
     <div class="map-position">
       <div class="map-content">
         <div class="container">
@@ -362,13 +349,27 @@ $(document).ready(function() {
               <h2 class="map-title rise10 hard-top flush-top ">Crossroads is one church in many locations.</h2>
               <p class="map-desc rise10">Each location is part of the same church, working as one team toward a common vision. Select the site nearest you for service times and directions.</p>
               <p class="map-more">
-                <a class="map-name" href="/mason">Mason</a>
-                <a class="map-name" href="/westside">West Side</a>
-                <a class="map-name" href="/oakley">Oakley</a>
-                <a class="map-name" href="/uptown">Uptown</a>
-                <a class="map-name" href="/florence">Florence</a>
-                <a class="map-name" href="/oxford">Oxford</a>
-                <a class="map-name" href="http://www.crossroads.net/live">Anywhere</a>
+                <section class="map-name">
+                  <span class="push-right">Cincinnati:</span>
+                  <a href="/mason">Mason</a>
+                  <a href="/westside">West Side</a>
+                  <a href="/oakley">Oakley</a>
+                  <a href="/uptown">Uptown</a>
+                  <a href="/florence">Florence</a>
+                  <a href="/oxford">Oxford</a>
+                </span>
+                <br />
+                <section class="map-name">
+                  <span class="push-right">Central KY:</span>
+                  <a href="/oxford">Andover</a>
+                  <a href="/georgetown">Georgetown</a>
+                  <a href="/richmond">Richmond</a>
+                </section>
+                <br />
+                <section class="map-name">
+                  <span class="push-right">Online:</span>
+                  <a href="http://www.crossroads.net/live">Anywhere</a>
+                </section>
               </p>
             </div><!--/col-->
           </div><!--/row-->

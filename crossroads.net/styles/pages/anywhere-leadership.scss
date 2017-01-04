@@ -1,0 +1,71 @@
+$screen-md-min: 992px;
+$cr-streaming-font-extra-cond: "acumin-pro-extra-condensed", sans-serif;
+$cr-streaming-font-sans: "acumin-pro", sans-serif;
+$cr-grey: #878785;
+$brand-primary: #428bca;
+$line-height-computed: 26px;
+
+
+.anywhere-leadership {
+  font-family: $cr-streaming-font-sans;
+
+  p {
+    color: #414141;
+  }
+
+  h1,
+  h2,
+  h3
+  h4 {
+    color: #3e3e3e;
+  }
+
+  .anywhere-leadership-heading {
+    background: #000 url("//crds-cms-uploads.imgix.net/content/images/anywhere-leadership-background.jpg") center center;
+    background-size: cover;
+    color: white;
+
+    h1 {
+      font-weight: 100;
+      color: white;
+      font-family: $cr-streaming-font-sans;
+      font-size: 238%;
+      @media (min-width: $screen-md-min) {
+        font-size: 338%;
+      }
+      line-height: 100%;
+      margin-bottom: 0.5em;
+    }
+
+    p {
+      font-weight: 300;
+      color: white;
+    }
+  }
+
+  h3 {
+    font-family: $cr-streaming-font-extra-cond;
+    text-transform: uppercase;
+    font-weight: 600;
+    line-height: 100%;
+    letter-spacing: -.032em;
+  }
+}
+
+.sidebar-menu {
+  li {
+    border-bottom: 1px solid $cr-grey;
+
+    a {
+      display: block;
+      color: $cr-grey;
+      line-height: 1.25;
+      padding: $line-height-computed/2 0;
+
+      &.active,
+      &:hover {
+        color: $brand-primary;
+      }
+    }
+  }
+}  
