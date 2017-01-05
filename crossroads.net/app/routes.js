@@ -372,7 +372,7 @@
           url: '/impersonate',
           controller: 'ImpersonateController',
           data: {
-            isProtected: false,
+            isProtected: true,
           }
         })
         .state('explore', {

@@ -5,6 +5,7 @@ using crds_angular.Controllers.API;
 using crds_angular.Exceptions;
 using crds_angular.Models.Crossroads;
 using crds_angular.Services.Interfaces;
+using MinistryPlatform.Translation.Repositories.Interfaces;
 using Moq;
 using NUnit.Framework;
 
@@ -15,13 +16,15 @@ namespace crds_angular.test.controllers
         private UserController _fixture;
 
         private Mock<IAccountService> _accountService;
+        private Mock<IMinistryPlatformRestRepository> _mpRestRepository;
 
         [SetUp]
         public void SetUp()
         {
             _accountService = new Mock<IAccountService>();
+            _mpRestRepository = new Mock<IMinistryPlatformRestRepository>();
 
-            _fixture = new UserController(_accountService.Object);
+            _fixture = new UserController(_accountService.Object, _mpRestRepository.Object);
         }
 
         [Test]
