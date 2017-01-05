@@ -16,7 +16,7 @@
   ) {
     function setupMetaData() {
       const title = ContentSiteConfigService.getTitle();
-      const titleSuffix = ` | ${title}`; 
+      const titleSuffix = ` | ${title}`;
       $rootScope.meta.siteconfig = ContentSiteConfigService.siteconfig;
       if ($rootScope.meta.title.indexOf(titleSuffix, $rootScope.meta.title.length - titleSuffix.length) === -1) {
         $rootScope.meta.title = $rootScope.meta.title + titleSuffix;
@@ -52,6 +52,11 @@
       document.domain = parts.join('.');
     }
 
+    $rootScope.impersonation = {
+      active: false,
+      user: undefined,
+      contact: undefined,
+    };
     $rootScope.MESSAGES = MESSAGES;
     setOriginForCmsPreviewPane($document);
     fastclick.attach(document.body);

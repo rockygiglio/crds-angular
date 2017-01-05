@@ -141,7 +141,7 @@ namespace crds_angular.Controllers.API
                     age = p.Age,
                     userPhone = p.MobilePhone,
                     canImpersonate = user.CanImpersonate
-            };
+                };
 
                 _loginService.ClearResetToken(cred.username);
 

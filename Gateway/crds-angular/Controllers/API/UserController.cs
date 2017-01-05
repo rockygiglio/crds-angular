@@ -16,16 +16,18 @@ namespace crds_angular.Controllers.API
 {
     public class UserController : MPAuth
     {
-        private readonly IUserRepository _userRepository;
         private readonly IAccountService _accountService;
         private readonly IMinistryPlatformRestRepository _ministryPlatformRest;
+        private readonly IUserRepository _userRepository;
+        private readonly IContactRepository _contactRepository;
         // Do not change this string without also changing the same in the corejs register_controller
         private const string DUPLICATE_USER_MESSAGE = "Duplicate User";
 
-        public UserController(IAccountService accountService, IUserRepository userRepository)
+        public UserController(IAccountService accountService, IUserRepository userRepository, IContactRepository contactRepository)
         {
-            _userRepository = userRepository;
             _accountService = accountService;
+            _userRepository = userRepository;
+            _contactRepository = contactRepository;
         }
 
         [ResponseType(typeof(User))]
@@ -62,7 +64,11 @@ namespace crds_angular.Controllers.API
                 try
                 {
                     int userid = _userRepository.GetUserIdByUsername(username);
-                    return Ok(userid);
+                    MpUser user = _userRepository.GetUserByRecordId(userid);
+                    int contactid = _contactRepository.GetContactIdByEmail(user.UserEmail);
+                    MpMyContact contact = _contactRepository.GetContactById(contactid);
+
+                    return Ok(new UserWithContact(user,contact));
                 }
                 catch (Exception e)
                 {
@@ -71,5 +77,15 @@ namespace crds_angular.Controllers.API
                 }
             });
         }
+    }
+
+    public class UserWithContact {
+        public UserWithContact(MpUser thisUser, MpMyContact thisContact)
+        {
+            user = thisUser;
+            contact = thisContact;
+        }
+        public MpUser user { get; set; }
+        public MpMyContact contact { get; set; }
     }
 }
