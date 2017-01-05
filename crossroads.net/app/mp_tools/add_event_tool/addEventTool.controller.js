@@ -87,7 +87,7 @@ export default class AddEventToolController {
   continueEdit() {
     const modalInstance = this.continueEditModal();
 
-    modalInstance.result.then(() => {
+    modalInstance.result.then((result) => {
       this.rooms = [];
       this.AddEvent.currentPage = 2;
     }, () => {

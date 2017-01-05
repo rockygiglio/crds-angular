@@ -92,12 +92,31 @@ describe('component: addEvent controller', () => {
 
   });
 
-  it('should resetRooms()', () => {
+  it('should resetRooms() if editMode is false', () => {
+    fixture.addEvent.editMode = false;
     fixture.addEvent.eventData.rooms.push({ roomId: 1 });
     fixture.addEvent.eventData.rooms.push({ roomId: 2 });
     expect(fixture.addEvent.eventData.rooms.length).toBe(2);
     fixture.resetRooms();
     expect(fixture.addEvent.eventData.rooms.length).toBe(0);
+  });
+
+  it('should resetRooms() if editMode is undefined', () => {
+    fixture.addEvent.editMode = undefined;
+    fixture.addEvent.eventData.rooms.push({ roomId: 1 });
+    fixture.addEvent.eventData.rooms.push({ roomId: 2 });
+    expect(fixture.addEvent.eventData.rooms.length).toBe(2);
+    fixture.resetRooms();
+    expect(fixture.addEvent.eventData.rooms.length).toBe(0);
+  });
+
+  it('resetRooms() should not reset rooms if editMode is true', () => {
+    fixture.addEvent.editMode = true;
+    fixture.addEvent.eventData.rooms.push({ roomId: 1 });
+    fixture.addEvent.eventData.rooms.push({ roomId: 2 });
+    expect(fixture.addEvent.eventData.rooms.length).toBe(2);
+    fixture.resetRooms();
+    expect(fixture.addEvent.eventData.rooms.length).toBe(2);
   });
 
   it('should return childCareSelected flag', () => {
