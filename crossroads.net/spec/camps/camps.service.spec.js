@@ -1,3 +1,4 @@
+import moment from 'moment';
 import campsModule from '../../app/camps/camps.module';
 
 describe('Camp Service', () => {
@@ -65,6 +66,7 @@ describe('Camp Service', () => {
   it('should make the API call to get my camp payment', () => {
     const invoiceId = 111;
     const paymentId = 222;
+
     expect(campsService.payment).toEqual({});
 
     httpBackend.expectGET(`${endpoint}/v1.0.0/invoice/${invoiceId}/payment/${paymentId}`).respond(200, []);
@@ -91,7 +93,20 @@ describe('Camp Service', () => {
       invoiceId: 123
     };
 
-    httpBackend.expectGET(`${endpoint}/camps/${campId}/product/${camperId}?cache=false`).respond(200, productInfo);
+    // Allows the expect call to ignore the query parameters on the url
+    const urlRe = new RegExp(`${endpoint}/camps/${campId}/product/${camperId}\?.*`, 'g');
+
+    /**
+     * Tells the backend to expect a call from a url that matches urlRe and pass the 'timestamp'
+     * query parameter to the respond callback.
+     */
+    httpBackend.expect('GET', urlRe, undefined, undefined, ['timestamp'])
+      .respond((method, url, data, headers, { timestamp }) => {
+        if (!timestamp) {
+          throw 'timestamp query parameter wasn\'t passed to url'
+        } else return [ 200, productInfo ];
+      });
+
     expect(campsService.getCampProductInfo(campId, camperId));
     httpBackend.flush();
     expect(campsService.productInfo.invoiceId).toEqual(123);
@@ -104,14 +119,21 @@ describe('Camp Service', () => {
       invoiceId: 123
     };
 
-    httpBackend.expectGET(`${endpoint}/camps/${campId}/product/${camperId}?cache=false`).respond(200, productInfo);
-    httpBackend.whenGET(`${endpoint}/v1.0.0/invoice/${productInfo.invoiceId}/has-payment`).respond(200, {});
+    const urlRe = new RegExp(`${endpoint}/camps/${campId}/product/${camperId}\?.*`, 'g');
+    httpBackend.expect('GET', urlRe, undefined, undefined, ['timestamp'])
+      .respond((method, url, data, headers, { timestamp }) => {
+        if (!timestamp) {
+          throw 'timestamp query parameter wasn\'t passed to url'
+        } else return [ 200, productInfo ];
+      });
+
+    httpBackend.whenGET(`${endpoint}/v1.0.0/invoice/${productInfo.invoiceId}/has-payment?method=GET&cache=false`).respond(200, {});
     expect(campsService.getCampProductInfo(campId, camperId, true));
     httpBackend.flush();
     expect(campsService.productInfo.invoiceId).toEqual(123);
   });
 
-  it('should get camp product info and have cached whether there was a deposit', () => {
+  it('should get camp product info and have cached whether there was a deposit in sessionStorage', () => {
     const campId = 123456;
     const camperId = 654321;
     const productInfo = {
@@ -120,8 +142,15 @@ describe('Camp Service', () => {
 
     campsService.sessionStorage.campDeposits = undefined;
 
-    httpBackend.expectGET(`${endpoint}/camps/${campId}/product/${camperId}?cache=false`).respond(200, productInfo);
-    httpBackend.expectGET(`${endpoint}/v1.0.0/invoice/${productInfo.invoiceId}/has-payment?cache=false&method=GET`).respond(302, { status: 302 });
+    const urlRe = new RegExp(`${endpoint}/camps/${campId}/product/${camperId}\?.*`, 'g');
+    httpBackend.expect('GET', urlRe, undefined, undefined, ['timestamp'])
+      .respond((method, url, data, headers, { timestamp }) => {
+        if (!timestamp) {
+          throw 'timestamp query parameter wasn\'t passed to url'
+        } else return [ 200, productInfo ];
+      });
+    httpBackend.expectGET(`${endpoint}/v1.0.0/invoice/${productInfo.invoiceId}/has-payment?method=GET&cache=false`).respond(302, { status: 302 });
+
     expect(campsService.getCampProductInfo(campId, camperId, true));
     httpBackend.flush();
 
@@ -129,7 +158,7 @@ describe('Camp Service', () => {
     expect(campsService.sessionStorage.campDeposits[`${campId}+${camperId}`]).toEqual(true);
   });
 
-  it('should get camp product info and not check for deposit because of the cache', () => {
+  it('should get camp product info and not check for deposit because of sessionStorage', () => {
     const campId = 123456;
     const camperId = 654321;
     const productInfo = {
@@ -140,8 +169,14 @@ describe('Camp Service', () => {
     campsService.sessionStorage.campDeposits[`${campId}+${camperId}`] = true;
     let checkedForDeposit = false;
 
-    httpBackend.expectGET(`${endpoint}/camps/${campId}/product/${camperId}?cache=false`).respond(200, productInfo);
-    httpBackend.whenGET(`${endpoint}/v1.0.0/invoice/${productInfo.invoiceId}/has-payment?cache=false&method=GET`).respond(() => {
+    const urlRe = new RegExp(`${endpoint}/camps/${campId}/product/${camperId}\?.*`, 'g');
+    httpBackend.expect('GET', urlRe, undefined, undefined, ['timestamp'])
+      .respond((method, url, data, headers, { timestamp }) => {
+        if (!timestamp) {
+          throw 'timestamp query parameter wasn\'t passed to url'
+        } else return [ 200, productInfo ];
+      });
+    httpBackend.whenGET(`${endpoint}/v1.0.0/invoice/${productInfo.invoiceId}/has-payment?method=GET&cache=false`).respond(() => {
       checkedForDeposit = true;
       return [400, ''];
     });
