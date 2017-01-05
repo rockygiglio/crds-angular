@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using MinistryPlatform.Translation.Models.DTO;
 
 namespace MinistryPlatform.Translation.Repositories.Interfaces
 {
@@ -24,9 +23,6 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
         T Get<T>(string tableName, int recordId, string columnName);
 
         List<T> Get<T>(string tableName, Dictionary<string, object> filter);
-
-        List<T> GetByType<T>(string typeName, Dictionary<string, object> filter);
-
 
         /// <summary>
         /// Get results from a stored procedure in Ministry Platform

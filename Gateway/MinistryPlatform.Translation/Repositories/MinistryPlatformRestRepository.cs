@@ -84,22 +84,6 @@ namespace MinistryPlatform.Translation.Repositories
             return content;
         }
 
-        public List<T> GetByType<T>(string typeName, Dictionary<string, object> filter)
-        {
-            var url = AddFilter($"/{typeName}", filter);
-
-            var request = new RestRequest(url, Method.GET);
-            AddAuthorization(request);
-
-            var response = _ministryPlatformRestClient.Execute(request);
-            _authToken.Value = null;
-            response.CheckForErrors($"Error getting {typeName} using filter", true);
-
-            var content = JsonConvert.DeserializeObject<List<T>>(response.Content);
-
-            return content;
-        }
-
         public List<List<T>> GetFromStoredProc<T>(string procedureName)
         {
             return GetFromStoredProc<T>(procedureName, new Dictionary<string, object>());

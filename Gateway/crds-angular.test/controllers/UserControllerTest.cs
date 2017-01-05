@@ -16,15 +16,15 @@ namespace crds_angular.test.controllers
         private UserController _fixture;
 
         private Mock<IAccountService> _accountService;
-        private Mock<IMinistryPlatformRestRepository> _mpRestRepository;
+        private Mock<IUserRepository> _userRepository;
 
         [SetUp]
         public void SetUp()
         {
             _accountService = new Mock<IAccountService>();
-            _mpRestRepository = new Mock<IMinistryPlatformRestRepository>();
+            _userRepository = new Mock<IUserRepository>();
 
-            _fixture = new UserController(_accountService.Object, _mpRestRepository.Object);
+            _fixture = new UserController(_accountService.Object, _userRepository.Object);
         }
 
         [Test]
