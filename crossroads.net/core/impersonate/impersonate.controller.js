@@ -25,11 +25,16 @@
         this.processing = false;
         this.error = false;
         this.userId = user;
+        this.configureImpersonateHeader();
       }).error(() => {
         this.processing = false;
         this.error = true;
       });
     };
+
+    this.configureImpersonateHeader = () => {
+      $http.defaults.headers.common.ImpersonateUser = this.userId;
+    }
   }
 
   module.exports = ImpersonateController;

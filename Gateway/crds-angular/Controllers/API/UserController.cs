@@ -55,31 +55,6 @@ namespace crds_angular.Controllers.API
         }
 
         [RequiresAuthorization]
-        [VersionedRoute(template: "user", minimumVersion: "1.0.0")]
-        [Route("users")]
-        [HttpGet]
-        public IHttpActionResult GetUsers()
-        {
-            return Authorized(token =>
-            {
-                try
-                {
-                    List<MpRestUser> mpRestUsers = _ministryPlatformRest.UsingAuthenticationToken(token).GetByType<MpRestUser>("users",new Dictionary<string, object>());
-                    List<MpUser> mpUsers = AutoMapper.Mapper.Map<List<MpRestUser>, List<MpUser>>(mpRestUsers);
-                    return Ok(mpUsers);
-                }
-                catch (Exception e)
-                {
-                    var apiError = new ApiErrorDto($"{e.Message}");
-                    throw new HttpResponseException(apiError.HttpResponseMessage);
-                }
-            });
-
-
-            
-        }
-
-        [RequiresAuthorization]
         [ResponseType(typeof(User))]
         [Route("user")]
         [HttpGet]
