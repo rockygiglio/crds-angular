@@ -2,11 +2,13 @@ import { invokeResolve } from './application_page/resolve_registry';
 
 import { getCampInfo, getCamperFamily, getCamperPayment } from './camps.resolves';
 
+import confirmationTemplate from './confirmation/confirmation.html';
+
 export default function CampRoutes($stateProvider) {
   $stateProvider
     .state('camps-dashboard', {
       parent: 'noSideBar',
-      url: '/mycamps',
+      url: '/mycamps?invoiceId&paymentId',
       template: '<camps-dashboard dashboard="$resolve.dashboard"></camps-dashboard>',
       data: {
         isProtected: true,
@@ -15,9 +17,14 @@ export default function CampRoutes($stateProvider) {
           description: 'What camps are you signed up for?'
         }
       },
+      params: {
+        wasPayment: undefined
+      },
       resolve: {
         loggedin: crds_utilities.checkLoggedin,
         campsService: 'CampsService',
+        $state: '$state',
+        $filter: '$filter',
         dashboard: campsService => campsService.getCampDashboard()
       }
     })
@@ -48,23 +55,54 @@ export default function CampRoutes($stateProvider) {
         getCamperFamily
       }
     })
+    // Confirmation after a successful payment
+    .state('campsignup.paymentConfirmation', {
+      url: '/payment-confirmation/:contactId?paymentId&invoiceId',
+      template: confirmationTemplate,
+      resolve: {
+        CampsService: 'CampsService',
+        $state: '$state',
+        $sessionStorage: '$sessionStorage',
+        sendConfirmation: (CampsService, $state, $sessionStorage) => CampsService.sendPaymentConfirmation(
+            $state.toParams.invoiceId,
+            $state.toParams.paymentId,
+            $state.toParams.campId,
+            $state.toParams.contactId)
+          .then(() => {
+            const { contactId, campId } = $state.toParams;
+            $sessionStorage.campDeposits[`${campId}+${contactId}`] = true;
+          }).finally(() => {
+            const toParams = Object.assign($state.toParams, { wasPayment: true });
+            $state.go('camps-dashboard', toParams, { location: 'replace' });
+          })
+      }
+    })
+    // Confirmation after a successful deposit
     .state('campsignup.confirmation', {
       url: '/confirmation/:contactId?paymentId&invoiceId',
+      template: confirmationTemplate,
       resolve: {
         CampsService: 'CampsService',
         $state: '$state',
         $timeout: '$timeout',
-        sendConfirmation: (CampsService, $state, $timeout) => {
-          return CampsService.sendConfirmation($state.toParams.invoiceId,
-            $state.toParams.paymentId,
-            $state.toParams.campId,
-            $state.toParams.contactId)
-            .then(() => {
-              // When the confirmation API calls returns, forward to the thank you page
-              $timeout(() => {
-                $state.go('campsignup.thankyou', $state.toParams, { location: 'replace' });
-              }, 0);
-            });
+        $sessionStorage: '$sessionStorage',
+        sendConfirmation: (CampsService, $state, $timeout, $sessionStorage) => {
+          CampsService.sendConfirmation($state.toParams.invoiceId,
+              $state.toParams.paymentId,
+              $state.toParams.campId,
+              $state.toParams.contactId)
+              .then(() => {
+                const { contactId, campId } = $state.toParams;
+                if ($sessionStorage.campDeposits === undefined) {
+                  $sessionStorage = Object.assign($sessionStorage, { campDeposits: {} });
+                }
+                $sessionStorage.campDeposits[`${campId}+${contactId}`] = true;
+
+                // When the confirmation API calls returns, forward to the thank you page
+                $timeout(() => {
+                  $state.go('campsignup.thankyou', $state.toParams, { location: 'replace' });
+                }, 0);
+              });
         }
       }
     })
@@ -75,6 +113,7 @@ export default function CampRoutes($stateProvider) {
         CampsService: 'CampsService',
         $state: '$state',
         getCamperPayment,
+        getCampInfo,
         getCamperFamily
       }
     })
@@ -85,13 +124,15 @@ export default function CampRoutes($stateProvider) {
       url: '/:page/:contactId',
       template: '<camps-application-page></camps-application-page>',
       params: {
-        update: false
+        update: false,
+        redirectTo: undefined
       },
       resolve: {
         $injector: '$injector',
         $state: '$state',
         $q: '$q',
         $timeout: '$timeout',
+        $log: '$log',
         $stateParams: '$stateParams',
         CampsService: 'CampsService',
         register: invokeResolve

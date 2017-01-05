@@ -1,4 +1,4 @@
-<li class="crds-carousel__item">
+<!--<li>-->
   <article class="crds-card">
     <figure>
       <linked-content target="{{ contentCard.content.target }}"
@@ -20,7 +20,7 @@
           class="crds-card__subtitle"
           ng-bind-html="contentCard.content.subtitle | truncate: 38"></h3>
 
-      <p class="crds-card__descr">{{ contentCard.content.description | htmlToPlainText }}</p>
+      <p class="crds-card__descr">{{ contentCard.content.description | htmlToPlainText | htmlReplaceEntities }}</p>
     </section>
   </article>
-</li>
+<!--</li>-->

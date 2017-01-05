@@ -1,35 +1,31 @@
-import crdsConstants from 'crds-constants';
+/* eslint-disable import/no-extraneous-dependencies, import/no-unresolved, import/extensions */
+import constants from 'crds-constants';
+/* eslint-enable */
 import filter from 'lodash/collection/filter';
+import moment from 'moment';
 
 /* ngInject */
 class CampsService {
-  constructor($resource, $rootScope, $stateParams, $log, AttributeTypeService) {
+  constructor($resource, $rootScope, $stateParams, $log, AttributeTypeService, $sessionStorage) {
     this.log = $log;
     this.scope = $rootScope;
     this.stateParams = $stateParams;
     this.resource = $resource;
     this.attributeTypeService = AttributeTypeService;
+    this.sessionStorage = $sessionStorage;
 
-    // eslint-disable-next-line prefer-template
-    this.campResource = $resource(__API_ENDPOINT__ + 'api/camps/:campId');
-    // eslint-disable-next-line prefer-template
-    this.camperResource = $resource(__API_ENDPOINT__ + 'api/camps/:campId/campers/:camperId');
-    // eslint-disable-next-line prefer-template
-    this.campDashboard = $resource(__API_ENDPOINT__ + 'api/my-camp');
-    // eslint-disable-next-line prefer-template
-    this.campFamily = $resource(__API_ENDPOINT__ + 'api/v1.0.0/camps/:campId/family');
-    // eslint-disable-next-line prefer-template
-    this.campMedicalResource = $resource(__API_ENDPOINT__ + 'api/v1.0.0/camps/:campId/medical/:contactId', { campId: '@campId', contactId: '@contactId' });
-    // eslint-disable-next-line prefer-template
-    this.campWaiversResource = $resource(__API_ENDPOINT__ + 'api/v1.0.0/camps/:campId/waivers/:contactId', { campId: '@campId', contactId: '@contactId' });
+    this.campResource = $resource(`${__API_ENDPOINT__}api/camps/:campId`);
+    this.camperResource = $resource(`${__API_ENDPOINT__}api/camps/:campId/campers/:camperId`);
+    this.campDashboard = $resource(`${__API_ENDPOINT__}api/v1.0.0/camps/my-camp`);
+    this.campFamily = $resource(`${__API_ENDPOINT__}api/v1.0.0/camps/:campId/family`);
+    this.campMedicalResource = $resource(`${__API_ENDPOINT__}api/v1.0.0/camps/:campId/medical/:contactId`, { campId: '@campId', contactId: '@contactId' });
+    this.campWaiversResource = $resource(`${__API_ENDPOINT__}api/v1.0.0/camps/:campId/waivers/:contactId`, { campId: '@campId', contactId: '@contactId' });
     this.medicalInfoResource = $resource(`${__API_ENDPOINT__}api/camps/medical/:contactId`);
-    // eslint-disable-next-line prefer-template
-    this.emergencyContactResource = $resource(__API_ENDPOINT__ + 'api/v1.0.0/camps/:campId/emergencycontact/:contactId', { campId: '@campId', contactId: '@contactId' });
-    // eslint-disable-next-line prefer-template
-    this.productSummaryResource = $resource(__API_ENDPOINT__ + 'api/camps/:campId/product/:camperId', { campId: '@campId', camperId: '@camperId' });
-    // eslint-disable-next-line prefer-template
-    this.paymentResource = $resource(__API_ENDPOINT__ + 'api/v1.0.0/invoice/:invoiceId/payment/:paymentId');
+    this.emergencyContactResource = $resource(`${__API_ENDPOINT__}api/v1.0.0/camps/:campId/emergencycontact/:contactId`, { campId: '@campId', contactId: '@contactId' });
+    this.productSummaryResource = $resource(`${__API_ENDPOINT__}api/camps/:campId/product/:camperId`, { campId: '@campId', camperId: '@camperId', timestamp: moment.now() });
+    this.paymentResource = $resource(`${__API_ENDPOINT__}api/v1.0.0/invoice/:invoiceId/payment/:paymentId`, { invoiceId: 'invoiceId', paymentId: '@paymentId' });
     this.confirmationResource = $resource(`${__API_ENDPOINT__}api/camps/:campId/confirmation/:contactId`);
+    this.paymentConfirmationResource = $resource(`${__API_ENDPOINT__}api/v1.0.0/payment/:paymentId/confirmation`);
     this.hasPaymentsResource = $resource(`${__API_ENDPOINT__}api/v1.0.0/invoice/:invoiceId/has-payment`, { method: 'GET', cache: false });
     this.interestedInResource = $resource(`${__API_ENDPOINT__}api/v1.0.0/contact/:contactId/interested-in/:eventId`);
 
@@ -129,8 +125,21 @@ class CampsService {
       this.log.error(err);
     }).$promise;
 
+    // Initializes a session storage entry for camp deposits if it didn't already exist
+    this.sessionStorage.campDeposits = this.sessionStorage.campDeposits || {};
+
+    /**
+     * Creates an entry in sessionStorage under campDeposits which states that the camp
+     * denoted by campId has recorded a deposit for the camper denoted by camperId.
+     */
+    const hasDeposit = this.sessionStorage.campDeposits[`${campId}+${camperId}`];
+
     if (checkForDeposit) {
-      prom = prom.then(res => this.invoiceHasPayment(res.invoiceId));
+      prom = prom.then(res => hasDeposit || this.invoiceHasPayment(res.invoiceId).catch((err) => {
+        if (err.status === 302) {
+          this.sessionStorage.campDeposits[`${campId}+${camperId}`] = true;
+        }
+      }));
     }
     return prom;
   }
@@ -164,14 +173,21 @@ class CampsService {
       });
   }
 
+  sendPaymentConfirmation(invoiceId, paymentId, eventId, contactId) {
+    return this.paymentConfirmationResource.save({ contactId, eventId, invoiceId, paymentId }, {}).$promise
+      .then(() => {
+        this.initializeCampData();
+        this.initializeCamperData();
+      });
+  }
+
   getShirtSizes() {
-    /* eslint-disable new-cap */
-    return this.attributeTypeService.AttributeTypes().get({ id: crdsConstants.ATTRIBUTE_TYPE_IDS.TSHIRT_SIZES }).$promise
+    // FIXME: ? should `crdsConstants` be `constants` ?
+    return this.attributeTypeService.AttributeTypes().get({ id: constants.ATTRIBUTE_TYPE_IDS.TSHIRT_SIZES }).$promise // eslint-disable-line new-cap
       .then((shirtSizes) => {
         this.shirtSizes = filter(shirtSizes.attributes, attribute => attribute.category === 'Adult');
         return shirtSizes;
       });
-    /* eslint-enable */
   }
 
   invoiceHasPayment(invoiceId) {

@@ -1,6 +1,6 @@
 import MedicalInfoController from './medical_info.controller';
 import MedicalInfoTemplate from './medical_info.html';
-import { getCampMedical, checkApplicationExpiration }  from '../../camps.resolves';
+import { getCampMedical, checkApplicationExpiration } from '../../camps.resolves';
 
 const MedicalInfo = {
   bindings: {},

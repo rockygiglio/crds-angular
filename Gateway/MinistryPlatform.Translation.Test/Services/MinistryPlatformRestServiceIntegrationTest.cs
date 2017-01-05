@@ -1,10 +1,11 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Models.Attributes;
 using MinistryPlatform.Translation.Models.Childcare;
 using MinistryPlatform.Translation.Models.Payments;
+using MinistryPlatform.Translation.Models.Rules;
 using MinistryPlatform.Translation.Repositories;
 using Newtonsoft.Json;
 using NUnit.Framework;
@@ -162,73 +163,7 @@ namespace MinistryPlatform.Translation.Test.Services
                 {"Participation_Status_ID", participantStatus}
             };
             _fixture.UsingAuthenticationToken(_authToken).UpdateRecord("Event_Participants", eventParticipantId, fields);
-        }
-
-        [Test]
-        public void TestUpdatePayment()
-        {
-            var parms = new Dictionary<string, object>
-            {
-                {"Payment_ID", 8},
-                {"Batch_ID", 399484}
-            };
-            var parmList = new List<Dictionary<string, object>> {parms};
-            var results = _fixture.UsingAuthenticationToken(_authToken).Put("Payments", parmList);
-
-            Assert.IsTrue(results > 0);
-        }
-
-        [Test]
-        public void TestSearchAllPaymentTypes()
-        {
-            Console.WriteLine("TestSearchAllPaymentTypes");
-            var results = _fixture.UsingAuthenticationToken(_authToken).Search<MyPaymentType>();
-
-            foreach (var p in results)
-            {
-                Console.WriteLine("Payment_Type\t{0}", p);
-            }
-        }
-
-        [Test]
-        public void TestSearchPaymentTypes()
-        {
-            Console.WriteLine("TestSearchPaymentTypes");
-            var results = _fixture.UsingAuthenticationToken(_authToken).Search<MyPaymentType>("Payment_Type_Id > 5");
-
-            foreach (var p in results)
-            {
-                Console.WriteLine("Payment_Type\t{0}", p);
-            }
-        }
-
-        [Test]
-        public void TestSearchPaymentTypesSelectColumns()
-        {
-            Console.WriteLine("TestSearchPaymentTypesSelectColumns");
-            var results = _fixture.UsingAuthenticationToken(_authToken).Search<MyPaymentType>("Payment_Type_Id > 5", "Payment_Type_Id,Payment_Type");
-
-            foreach (var p in results)
-            {
-                Console.WriteLine("Payment_Type\t{0}", p);
-            }
-        }
-
-        [Test]
-        public void TestSearchPledgesByContactAndCampaign()
-        {
-            Console.WriteLine("TestSearchPledgesByContactAndCampaign");
-            var results = _fixture.UsingAuthenticationToken(_authToken).Search<MpPledge>("Donor_ID_Table_Contact_ID_Table.Contact_ID=2186211 AND Pledge_Campaign_ID_Table.Pledge_Campaign_ID=10000000 AND Pledge_Status_ID_Table.Pledge_Status_ID=1",
-                "Pledges.Pledge_ID,Donor_ID_Table.Donor_ID,Pledge_Campaign_ID_Table.Pledge_Campaign_ID,Pledge_Campaign_ID_Table.Campaign_Name,Pledge_Campaign_ID_Table_Pledge_Campaign_Type_ID_Table.Pledge_Campaign_Type_ID,Pledge_Campaign_ID_Table_Pledge_Campaign_Type_ID_Table.Campaign_Type,Pledge_Campaign_ID_Table.Start_Date,Pledge_Campaign_ID_Table.End_Date,Pledge_Status_ID_Table.Pledge_Status_ID,Pledge_Status_ID_Table.Pledge_Status,Pledges.Total_Pledge");
-
-            foreach (var p in results)
-            {
-                Console.WriteLine("CampaignName:\t{0}", p.CampaignName);
-                Console.WriteLine("DonorId:\t{0}", p.DonorId);
-                Console.WriteLine("PledgeId:\t{0}", p.PledgeId);
-                Console.WriteLine("PledgeDonations:\t{0}", p.PledgeDonations);
-            }
-        }
+        }       
 
         [Test]
         public void TestGetGoTripsWithForms()
@@ -459,6 +394,72 @@ namespace MinistryPlatform.Translation.Test.Services
         }
 
         [Test]
+        public void TestUpdatePayment()
+        {
+            var parms = new Dictionary<string, object>
+            {
+                {"Payment_ID", 8},
+                {"Batch_ID", 399484}
+            };
+            var parmList = new List<Dictionary<string, object>> {parms};
+            var results = _fixture.UsingAuthenticationToken(_authToken).Put("Payments", parmList);
+
+            Assert.IsTrue(results > 0);
+        }
+
+        [Test]
+        public void TestSearchAllPaymentTypes()
+        {
+            Console.WriteLine("TestSearchAllPaymentTypes");
+            var results = _fixture.UsingAuthenticationToken(_authToken).Search<MyPaymentType>();
+
+            foreach (var p in results)
+            {
+                Console.WriteLine("Payment_Type\t{0}", p);
+            }
+        }
+
+        [Test]
+        public void TestSearchPaymentTypes()
+        {
+            Console.WriteLine("TestSearchPaymentTypes");
+            var results = _fixture.UsingAuthenticationToken(_authToken).Search<MyPaymentType>("Payment_Type_Id > 5");
+
+            foreach (var p in results)
+            {
+                Console.WriteLine("Payment_Type\t{0}", p);
+            }
+        }
+
+        [Test]
+        public void TestSearchPaymentTypesSelectColumns()
+        {
+            Console.WriteLine("TestSearchPaymentTypesSelectColumns");
+            var results = _fixture.UsingAuthenticationToken(_authToken).Search<MyPaymentType>("Payment_Type_Id > 5", "Payment_Type_Id,Payment_Type");
+
+            foreach (var p in results)
+            {
+                Console.WriteLine("Payment_Type\t{0}", p);
+            }
+        }
+
+        [Test]
+        public void TestSearchPledgesByContactAndCampaign()
+        {
+            Console.WriteLine("TestSearchPledgesByContactAndCampaign");
+            var results = _fixture.UsingAuthenticationToken(_authToken).Search<MpPledge>("Donor_ID_Table_Contact_ID_Table.Contact_ID=2186211 AND Pledge_Campaign_ID_Table.Pledge_Campaign_ID=10000000 AND Pledge_Status_ID_Table.Pledge_Status_ID=1",
+                "Pledges.Pledge_ID,Donor_ID_Table.Donor_ID,Pledge_Campaign_ID_Table.Pledge_Campaign_ID,Pledge_Campaign_ID_Table.Campaign_Name,Pledge_Campaign_ID_Table_Pledge_Campaign_Type_ID_Table.Pledge_Campaign_Type_ID,Pledge_Campaign_ID_Table_Pledge_Campaign_Type_ID_Table.Campaign_Type,Pledge_Campaign_ID_Table.Start_Date,Pledge_Campaign_ID_Table.End_Date,Pledge_Status_ID_Table.Pledge_Status_ID,Pledge_Status_ID_Table.Pledge_Status,Pledges.Total_Pledge");
+
+            foreach (var p in results)
+            {
+                Console.WriteLine("CampaignName:\t{0}", p.CampaignName);
+                Console.WriteLine("DonorId:\t{0}", p.DonorId);
+                Console.WriteLine("PledgeId:\t{0}", p.PledgeId);
+                Console.WriteLine("PledgeDonations:\t{0}", p.PledgeDonations);
+            }
+        }
+
+        [Test]
         public void GetFamilyMembersOfContactId()
         {
             Console.WriteLine("TestCallingAStoredProcedure");
@@ -489,6 +490,38 @@ namespace MinistryPlatform.Translation.Test.Services
                 "End_Date"
             };
             var participants = _fixture.UsingAuthenticationToken(_authToken).Search<MpEventParticipant>(filter, columns);
+        }
+
+        [Test]
+        public void GetGenderRules()
+        {
+            var searchString = $"Ruleset_ID = 1";
+            var genderRules = _fixture.UsingAuthenticationToken(_authToken).Search<MPGenderRule>(searchString);
+        }
+
+        [Test]
+        public void GetProductRuleset()
+        {
+            const string searchString = "Product_ID_Table.[Product_ID] = 4";
+            const string columnList = "Product_ID_Table.[Product_ID],Ruleset_ID_Table.[Ruleset_ID],cr_Product_Ruleset.[Start_Date],cr_Product_Ruleset.[End_Date]";
+            var res = _fixture.UsingAuthenticationToken(_authToken).Search<MPProductRuleSet>(searchString, columnList);
+            Assert.IsNotEmpty(res);
+        } 
+        
+        public void findCongregation()
+        {
+            var searchString = $"Congregations.[Congregation_Name]='Oakley'";
+            var result = _fixture.UsingAuthenticationToken(_authToken).Search<MpCongregation>(searchString);
+        }
+
+        [Test]
+        public void findProgramTemplateFromEvent()
+        {
+            var filter = $"Events.[Event_ID] = 4525626";
+            const string column = "Online_Registration_Product_Table_Program_ID_Table_Communication_ID_Table.[Communication_ID]";
+            var result = _fixture.UsingAuthenticationToken(_authToken).Search<int>("Events", filter, column);
+            Assert.AreEqual(2006, result);
+            
         }
 
     }

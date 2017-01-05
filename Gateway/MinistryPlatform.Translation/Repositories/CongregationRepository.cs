@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using Crossroads.Utilities.FunctionalHelpers;
 using Crossroads.Utilities.Interfaces;
 using MinistryPlatform.Translation.Extensions;
 using MinistryPlatform.Translation.Models;
@@ -9,13 +11,14 @@ namespace MinistryPlatform.Translation.Repositories
     public class CongregationRepository : BaseRepository, ICongregationRepository
     {
         private readonly IMinistryPlatformService _ministryPlatformService;
-        
+        private readonly IMinistryPlatformRestRepository _ministryPlatformRestRepository;
 
-        public CongregationRepository(IMinistryPlatformService ministryPlatformService, IAuthenticationRepository authenticationService, IConfigurationWrapper configuration)
+        public CongregationRepository(IMinistryPlatformService ministryPlatformService, IMinistryPlatformRestRepository ministryPlatformRestRepository, IAuthenticationRepository authenticationService, IConfigurationWrapper configuration)
             : base(authenticationService, configuration)
         {
             _ministryPlatformService = ministryPlatformService;
-            
+            _ministryPlatformRestRepository = ministryPlatformRestRepository;
+
         }
 
         public MpCongregation GetCongregationById(int id)
@@ -44,6 +47,15 @@ namespace MinistryPlatform.Translation.Repositories
             return c;
         }
 
-       
+        public Result<MpCongregation> GetCongregationByName(string congregationName, string token)
+        {
+            var searchString = $"Congregations.[Congregation_Name]='{congregationName}'";
+            var result = _ministryPlatformRestRepository.UsingAuthenticationToken(token).Search<MpCongregation>(searchString);
+            if (result.Any())
+            {
+                return new Ok<MpCongregation>(result.FirstOrDefault());
+            }
+            return new Err<MpCongregation>($"Unable to find congregation named {congregationName}");
+        }
     }
 }

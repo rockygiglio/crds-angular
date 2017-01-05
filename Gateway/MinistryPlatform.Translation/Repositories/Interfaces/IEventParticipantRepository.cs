@@ -15,5 +15,6 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
         MpEventParticipant GetEventParticipantEligibility(int eventId, int contactId);
         DateTime? EventParticipantSignupDate(int contactId , int eventId , string apiToken);
         Result<MpEventParticipant> GetEventParticipantByContactAndEvent(int contactId, int eventId, string token);
+        int GetEventParticipantCountByGender(int eventId, int genderId);
     }
 }

@@ -404,6 +404,7 @@
     <Compile Include="Processors\SendTextMessageJob.cs" />
     <Compile Include="Services\AddressService.cs" />
     <Compile Include="Services\BulkEmailSyncService.cs" />
+    <Compile Include="Services\CampRules.cs" />
     <Compile Include="Services\CampService.cs" />
     <Compile Include="Services\CongregationService.cs" />
     <Compile Include="Services\EquipmentService.cs" />
@@ -420,6 +421,7 @@
     <Compile Include="Services\Interfaces\GroupAttributeDTO.cs" />
     <Compile Include="Services\Interfaces\IAddressGeocodingService.cs" />
     <Compile Include="Services\Interfaces\IAddressProximityService.cs" />
+    <Compile Include="Services\Interfaces\ICampRules.cs" />
     <Compile Include="Services\Interfaces\ICampService.cs" />
     <Compile Include="Services\Interfaces\IEventParticipantService.cs" />
     <Compile Include="Services\Interfaces\IInvitationService.cs" />

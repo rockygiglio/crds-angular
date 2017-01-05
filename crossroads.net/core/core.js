@@ -39,6 +39,7 @@
   require('./register');
   require('./cms/services/cms_services_module');
   require('./linked_content');
+  require('./embed');
 
   require('./profile/picture');
 

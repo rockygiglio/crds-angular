@@ -57,7 +57,7 @@ describe('component: addEvent controller', () => {
   }));
 
   beforeEach(() => {
-    const startDate = new Date();
+    const startDate = new Date(Date.parse('Thu, 01 Jan 1970 08:00:00'));
     startDate.setMinutes(0);
     startDate.setSeconds(0);
     const endDate = new Date(startDate);

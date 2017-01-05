@@ -728,7 +728,7 @@ streaming, landing {
 
     section {
       background-color: #fff;
-      padding-bottom: 25px;
+      padding-bottom: 15px;
     }
 
     header {
@@ -817,12 +817,6 @@ streaming, landing {
         margin-left: -10px;
         padding-left: -10px;
       }
-    }
-  }
-
-  .digital-program-container {
-    @media only screen and (max-width:  $screen-sm-min){
-      // background: #151515;
     }
   }
 
@@ -997,19 +991,19 @@ streaming, landing {
     }
   }
 
-  .flex {
-    &__container {
-      display: flex;
-      flex-wrap: wrap;
-
-      &.container {
-        padding-left: 0;
-        padding-right: 0;
-      }
+  .digital-program-container {
+    .row {
+      margin-left: 0;
+      margin-right: 0;
     }
 
-    &__item {
-      flex: 1 1 100%;
+    .container {
+      padding-left: 0;
+      padding-right: 0;
+    }
+
+    .digital-program__giving,
+    .digital-program__participate {
       padding-left: 20px;
       padding-right: 20px;
 
@@ -1017,187 +1011,186 @@ streaming, landing {
         padding-left: 0;
         padding-right: 0;
       }
+    }
 
-      &.digital-program__giving {
-        background-color: #171717;
-        margin-bottom: 2em;
-        padding: 0;
+    .digital-program__giving {
+      background-color: #171717;
+      padding: 0;
 
-        @media (min-width: $screen-md) {
-          flex: 1 1 50px;
-          margin-bottom: 0;
-          order: 2;
-        }
-
-        iframe {
-          padding: 0 6px;
-        }
-
-        header {
-          padding: 0 1.25em;
-        }
-
-        h2 {
-          color: #777;
-        }
+      @media (min-width: $screen-md) {
+        @include make-md-column(4);
+        padding-right: 0;
+        padding-left: 0;
       }
 
-      &.digital-program__articles {
+      iframe {
+        padding: 0 6px;
+      }
+
+      header {
+        padding: 0 1.25em;
+      }
+
+      h2 {
+        color: #777;
+      }
+    }
+
+    .digital-program__articles {
+      margin-bottom: 2em;
+
+      @media (min-width: $screen-md) {
+        @include make-md-column(8);
+        margin-bottom: 0;
+        padding-left: 0;
+      }
+
+      h2 {
+        color: #777;
+        float: left;
+      }
+
+      .digital-program__slider {
         background-color: #171717;
         padding-left: 20px;
         padding-right: 0;
+        padding-bottom: 1px;
+      }
 
-        @media (min-width: $screen-md) {
-          margin-right: 28px;
-          flex: 2 1 0;
-          order: 1;
+      .crds-card-carousel {
+        margin-bottom: 2em;
+        margin-top: 1em;
+        overflow-x: scroll;
+        overflow-y: hidden;
+        &::-webkit-scrollbar {
+          display: none;
+        }
+        overflow: -moz-scrollbars-none;
+        -ms-overflow-style: none;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      .crds-carousel {
+        &__controls {
+          float: right;
+          margin-right: 20px;
+          margin-top: 1.5em;
         }
 
-        h2 {
-          color: #777;
-          float: left;
-        }
-
-        .crds-card-carousel {
-          height: 400px;
-          margin-bottom: 2em;
-          margin-top: 1em;
-          overflow-x: scroll;
-          overflow-y: hidden;
-          position: relative;
-          white-space: nowrap;
-          width: 100%;
-          &::-webkit-scrollbar {
-            display: none;
-          }
-          overflow: -moz-scrollbars-none;
-        }
-
-        .crds-carousel {
-          &__controls {
-            float: right;
-            margin-right: 20px;
-            margin-top: 1.5em;
-          }
-
-          &__control {
-            background: rgba(77,77,77,0.75);
-            border-radius: 4px;
-            color: #FFF;
-            display: inline-block;
-            padding: 6px 10px;
-            text-align: center;
-            vertical-align: middle;
-
-            &:hover,
-            &:focus {
-              background: lighten(rgba(77,77,77,0.75), 10);
-              border: none;
-              text-decoration: none;
-            }
-          }
-
-          &__content-wrap {
-            position: absolute;
-            white-space: nowrap;
-            width: 100%;
-          }
-
-          &__list {
-            display: block;
-            list-style: none;
-            padding: 0;
-          }
-
-          &__item {
-            display: inline-block;
-            vertical-align: top;
-            white-space: normal;
-            z-index: 1;
-          }
-        }
-
-        content-card {
+        &__control {
+          background: rgba(77,77,77,0.75);
+          border-radius: 4px;
+          color: #FFF;
           display: inline-block;
-          margin-right: 1em;
+          padding: 6px 10px;
+          text-align: center;
+          vertical-align: middle;
 
-          &:last-of-type {
-            margin-right: 0;
-          }
-
-          article {
-            margin-bottom: 0;
+          &:hover {
+            background: lighten(rgba(77,77,77,0.75), 10);
+            border: none;
+            text-decoration: none;
           }
         }
 
-        .crds-card {
-          width: 225px;
+        &__content-wrap {
+          display: flex;
+        }
+      }
 
-          figcaption {
+      content-card {
+        background-color: #FFF;
+        margin-right: 1em;
+        min-width: 225px;
+
+        &:last-of-type {
+          margin-right: 0;
+        }
+
+        article {
+          margin-bottom: 0;
+        }
+
+        section {
+          height: 100%;
+        }
+      }
+
+      .crds-card {
+        flex: 1 0 225px;
+        width: 225px;
+        height: 100%;
+
+        figcaption {
+          top: -0.6em;
+
+          @media (min-width: $screen-sm) {
+            top: -0.8em;
+          }
+
+          @media (min-width: $screen-md) {
             top: -0.6em;
+          }
+        }
+      }
+    }
 
-            @media (min-width: $screen-sm) {
-              top: -0.8em;
-            }
+    .digital-program__participate {
+      @media (min-width: $screen-md) {
+        margin-top: 1em;
+      }
 
-            @media (min-width: $screen-md) {
-              top: -0.6em;
-            }
+      h2 {
+        color: #777;
+      }
+
+      .flex {
+        &__row {
+          @media (min-width: $screen-sm) {
+            display: flex;
+            flex-wrap: wrap;
           }
         }
       }
 
-      &.digital-program__participate {
+      .media {
+        margin-top: 10px;
+        margin-bottom: 20px;
+
+        @media (min-width: $screen-sm) {
+          flex-basis: 50%;
+          padding-left: 20px;
+          padding-right: 20px;
+        }
+
         @media (min-width: $screen-md) {
-          margin-top: 1em;
+          flex-basis: 33%;
         }
 
-        h2 {
-          color: #777;
+        .media-left {
+          padding-right: 20px;
         }
 
-        .media {
-          @include make-xs-column(12);
+        .media-object {
+          max-width: 100px;
+        }
 
-          margin-top: 10px;
-          margin-bottom: 20px;
+        .media-body {
+          color: #FFF;
+          font-family: "acumin-pro", sans-serif;
+          font-size: .875em;
+          position: relative;
+          top: -8px;
+        }
 
-          @media (min-width: $screen-sm) {
-            @include make-sm-column(6);
-
-            padding-left: 20px;
-            padding-right: 20px;
-          }
-
-          @media (min-width: $screen-md) {
-            @include make-md-column(4);
-          }
-
-          .media-left {
-            padding-right: 20px;
-          }
-
-          .media-object {
-            max-width: 100px;
-          }
-
-          .media-body {
-            color: #FFF;
-            font-family: "acumin-pro", sans-serif;
-            font-size: .875em;
-            position: relative;
-            top: -8px;
-          }
-
-          .media-heading {
-            color: #FFF;
-            font-family: "acumin-pro-extra-condensed", sans-serif;
-            font-size: 1.72em;
-            font-weight: 600;
-            margin-bottom: 8px;
-            padding-top: 3px;
-            text-transform: uppercase;
-          }
+        .media-heading {
+          color: #FFF;
+          font-family: "acumin-pro-extra-condensed", sans-serif;
+          font-size: 1.72em;
+          font-weight: 600;
+          margin-bottom: 8px;
+          padding-top: 3px;
+          text-transform: uppercase;
         }
       }
     }

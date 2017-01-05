@@ -398,7 +398,9 @@ namespace crds_angular.test.controllers
                 PledgeCampaignId = 23,
                 PledgeDonorId = 42,
                 GiftMessage = "Don't look a Gift Horse in the Mouth!",
-                PaymentType = "card"
+                PaymentType = "card",
+                SourceUrl = "www.ninjas.com",
+                PredefinedAmount = 86868
             };
 
             var donor = new MpContactDonor
@@ -452,7 +454,9 @@ namespace crds_angular.test.controllers
                                                 d.DonorAcctId == null &&
                                                 d.CheckScannerBatchName == null &&
                                                 d.DonationStatus == null &&
-                                                d.CheckNumber == null), true))
+                                                d.CheckNumber == null && 
+                                                d.PredefinedAmount == createDonationDTO.PredefinedAmount &&
+                                                d.SourceUrl == createDonationDTO.SourceUrl), true))
                     .Returns(donationId);
 
 

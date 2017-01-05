@@ -5,6 +5,7 @@ class MedicalInfoController {
     this.rootScope = $rootScope;
     this.go = $state.go;
     this.stateParams = $state.params;
+    this.state = $state;
     this.viewReady = false;
     this.submitting = false;
     this.update = false;
