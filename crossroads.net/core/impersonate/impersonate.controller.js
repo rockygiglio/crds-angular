@@ -2,7 +2,8 @@
 /* eslint-disable no-param-reassign */
 (() => {
   function ImpersonateController($rootScope, $scope, $log, AuthService, $state, Session, $resource) {
-    $log.debug('Inside ImpersonateController');
+
+    console.log($rootScope);
 
     $resource(`${__API_ENDPOINT__}api/user`).query((data) => {
       $scope.impersonateUsers = data;
