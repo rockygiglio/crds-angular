@@ -150,6 +150,7 @@ namespace crds_angular.Services
                         eq.EquipmentId = equipmentReservation.EquipmentId;
                         eq.QuantityRequested = equipmentReservation.QuantityRequested;
                         eq.EquipmentReservationId = equipmentReservation.EventEquipmentId;
+                        eq.Notes = equipmentReservation.Notes;
                         equipmentDto.Add(eq);
                     }
                     r.Equipment = equipmentDto;
@@ -388,6 +389,7 @@ namespace crds_angular.Services
             equipmentReservation.EventId = eventId;
             equipmentReservation.QuantityRequested = equipment.QuantityRequested;
             equipmentReservation.RoomId = room.RoomId;
+            equipmentReservation.Notes = room.Notes;
             _equipmentService.CreateEquipmentReservation(equipmentReservation, token);
         }
 
@@ -400,7 +402,7 @@ namespace crds_angular.Services
             equipmentReservation.EventId = eventId;
             equipmentReservation.QuantityRequested = equipment.QuantityRequested;
             equipmentReservation.RoomId = room.RoomId;
-            equipmentReservation.Notes = room.Notes;
+            equipmentReservation.Notes = equipment.Notes ?? room.Notes;
             _equipmentService.UpdateEquipmentReservation(equipmentReservation, token);
         }
 

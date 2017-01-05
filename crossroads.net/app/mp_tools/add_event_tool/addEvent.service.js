@@ -142,7 +142,8 @@
     function getEquipmentDto(equipment) {
       const equipmentDto = {
         equipmentId: equipment.name.id,
-        quantityRequested: equipment.choosenQuantity
+        quantityRequested: equipment.choosenQuantity,
+        notes: equipment.notes
       };
       if (_.has(equipment, 'cancelled')) {
         equipmentDto.cancelled = equipment.cancelled;
