@@ -71,7 +71,7 @@
 
 </script>
 
-<div class="live-stream" ng-if="stream.inProgress">
+<div class="live-stream">
   <div class="dark-bg">
     <header class="container clearfix">
       <a class="navbar-brand logo pull-left" href="/">
@@ -93,7 +93,6 @@
   <div class="digital-program-container">
     <div class="container">
       <div class="row">
-        <div class="digital-program__giving" dynamic-content="$root.MESSAGES.streamingInlineGivingEmbed.content | html"></div>
         <div class="digital-program__articles">
           <section class="digital-program__slider" ng-show="stream.dontMiss.length">
             <header class="clearfix">

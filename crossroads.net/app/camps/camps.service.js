@@ -2,6 +2,7 @@
 import constants from 'crds-constants';
 /* eslint-enable */
 import filter from 'lodash/collection/filter';
+import moment from 'moment';
 
 /* ngInject */
 class CampsService {
@@ -21,7 +22,7 @@ class CampsService {
     this.campWaiversResource = $resource(`${__API_ENDPOINT__}api/v1.0.0/camps/:campId/waivers/:contactId`, { campId: '@campId', contactId: '@contactId' });
     this.medicalInfoResource = $resource(`${__API_ENDPOINT__}api/camps/medical/:contactId`);
     this.emergencyContactResource = $resource(`${__API_ENDPOINT__}api/v1.0.0/camps/:campId/emergencycontact/:contactId`, { campId: '@campId', contactId: '@contactId' });
-    this.productSummaryResource = $resource(`${__API_ENDPOINT__}api/camps/:campId/product/:camperId`, { campId: '@campId', camperId: '@camperId', cache: false });
+    this.productSummaryResource = $resource(`${__API_ENDPOINT__}api/camps/:campId/product/:camperId`, { campId: '@campId', camperId: '@camperId', timestamp: moment.now() });
     this.paymentResource = $resource(`${__API_ENDPOINT__}api/v1.0.0/invoice/:invoiceId/payment/:paymentId`, { invoiceId: 'invoiceId', paymentId: '@paymentId' });
     this.confirmationResource = $resource(`${__API_ENDPOINT__}api/camps/:campId/confirmation/:contactId`);
     this.paymentConfirmationResource = $resource(`${__API_ENDPOINT__}api/v1.0.0/payment/:paymentId/confirmation`);
@@ -124,8 +125,15 @@ class CampsService {
       this.log.error(err);
     }).$promise;
 
+    // Initializes a session storage entry for camp deposits if it didn't already exist
     this.sessionStorage.campDeposits = this.sessionStorage.campDeposits || {};
+
+    /**
+     * Creates an entry in sessionStorage under campDeposits which states that the camp
+     * denoted by campId has recorded a deposit for the camper denoted by camperId.
+     */
     const hasDeposit = this.sessionStorage.campDeposits[`${campId}+${camperId}`];
+
     if (checkForDeposit) {
       prom = prom.then(res => hasDeposit || this.invoiceHasPayment(res.invoiceId).catch((err) => {
         if (err.status === 302) {
