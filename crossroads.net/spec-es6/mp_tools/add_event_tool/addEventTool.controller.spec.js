@@ -187,8 +187,11 @@ describe('AddEventTool', () => {
       expect(fixture.AddEvent.eventData.event.cancelled).toBe(true);
       expect(fixture.AddEvent.eventData.rooms[0].cancelled).toBe(true);
       expect(fixture.AddEvent.eventData.rooms[1].cancelled).toBe(true);
+      expect(fixture.AddEvent.eventData.rooms[0].notes).toBe('***Cancelled***');
       expect(fixture.AddEvent.eventData.rooms[0].equipment[0].equipment.cancelled).toBe(true);
+      expect(fixture.AddEvent.eventData.rooms[0].equipment[1].equipment.notes).toBe('***Cancelled***');
       expect(fixture.AddEvent.eventData.rooms[1].equipment[1].equipment.cancelled).toBe(true);
+      expect(fixture.AddEvent.eventData.rooms[1].equipment[0].equipment.notes).toBe('***Cancelled***');
     });
 
     it('should error when trying to move page to next()', () => {

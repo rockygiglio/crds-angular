@@ -119,7 +119,9 @@ export default class AddEventToolController {
       this.processing = true;
       _.forEach(this.rooms, (room) => {
         room.cancelled = true;
+        room.notes = '***Cancelled***';
         _.forEach(room.equipment, (equipment) => {
+          equipment.equipment.notes = '***Cancelled***';
           equipment.equipment.cancelled = true;
         });
       });
