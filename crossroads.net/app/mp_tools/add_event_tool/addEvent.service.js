@@ -179,7 +179,8 @@
           },
           choosenQuantity: equipmentDto.quantityRequested,
           equipmentReservationId: equipmentDto.equipmentReservationId,
-          cancelled: equipmentDto.cancelled
+          cancelled: equipmentDto.cancelled,
+          notes: equipmentDto.notes
         }
       };
     }

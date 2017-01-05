@@ -400,6 +400,7 @@ namespace crds_angular.Services
             equipmentReservation.EventId = eventId;
             equipmentReservation.QuantityRequested = equipment.QuantityRequested;
             equipmentReservation.RoomId = room.RoomId;
+            equipmentReservation.Notes = room.Notes;
             _equipmentService.UpdateEquipmentReservation(equipmentReservation, token);
         }
 
