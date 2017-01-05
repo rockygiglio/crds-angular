@@ -18,14 +18,15 @@ namespace crds_angular.Controllers.API
 {
     public class UserController : MPAuth
     {
-
+        private readonly IUserRepository _userRepository;
         private readonly IAccountService _accountService;
         private readonly IMinistryPlatformRestRepository _ministryPlatformRest;
         // Do not change this string without also changing the same in the corejs register_controller
         private const string DUPLICATE_USER_MESSAGE = "Duplicate User";
 
-        public UserController(IAccountService accountService, IMinistryPlatformRestRepository ministryPlatformRest)
+        public UserController(IAccountService accountService, IMinistryPlatformRestRepository ministryPlatformRest, IUserRepository userRepository)
         {
+            _userRepository = userRepository;
             _accountService = accountService;
             _ministryPlatformRest = ministryPlatformRest;
         }
@@ -55,7 +56,7 @@ namespace crds_angular.Controllers.API
 
         [RequiresAuthorization]
         [VersionedRoute(template: "user", minimumVersion: "1.0.0")]
-        [Route("user")]
+        [Route("users")]
         [HttpGet]
         public IHttpActionResult GetUsers()
         {
@@ -78,5 +79,25 @@ namespace crds_angular.Controllers.API
             
         }
 
+        [RequiresAuthorization]
+        [ResponseType(typeof(User))]
+        [Route("user")]
+        [HttpGet]
+        public IHttpActionResult Get(string username)
+        {
+            return Authorized(token =>
+            {
+                try
+                {
+                    int userid = _userRepository.GetUserIdByUsername(username);
+                    return Ok(userid);
+                }
+                catch (Exception e)
+                {
+                    var apiError = new ApiErrorDto($"{e.Message}");
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+            });
+        }
     }
 }

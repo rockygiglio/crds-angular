@@ -1,9 +1,8 @@
 (function(){
   'use strict()';
 
-  var app = angular.module('crossroads.core');
-
-  app.controller('ImpersonateController', require('./impersonate.controller'));
+  var app = angular.module('crossroads.core')
+    .controller('ImpersonateController', require('./impersonate.controller'));
 
   require('./impersonate.html');
 

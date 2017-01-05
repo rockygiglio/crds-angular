@@ -370,9 +370,12 @@
           parent: 'noSideBar',
           templateUrl: 'impersonate/impersonate.html',
           url: '/impersonate',
-          controller: 'ImpersonateController',
+          controller: 'ImpersonateController as impersonate',
           data: {
-            isProtected: true,
+            isProtected: true
+          },
+          resolve: {
+            loggedin: crds_utilities.checkLoggedin
           }
         })
         .state('explore', {

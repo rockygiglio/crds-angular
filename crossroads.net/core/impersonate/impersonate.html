@@ -2,25 +2,28 @@
     <div class="col-sm-12">
         <h1 class="page-header">Impersonate User</h1>
 
-        <div ng-if="canImpersonate">
+        <div ng-if="canImpersonate && !impersonate.processing">
+            <div ng-if="impersonate.error" class="alert alert-danger">
+                Could not find the user you requested. Please try again.
+            </div>
             <form role="form" novalidate>
                 <div class="row">
                     <div class="form-group col-sm-12">
                         <label for="emailaddress" class="required wide-label">Email Address</label>
-                        <input name="emailaddress" type="text" class="form-control" ng-model="impersonateUser" />
+                        <input name="emailaddress" type="email" class="form-control" ng-model="impersonate.username" />
                     </div>
                 </div>
                 <div class="row">
                     <div class="form-group col-sm-12">
-                        <button class="btn btn-primary" type="submit" ng-click="impersonate()">Impersonate</button>
+                        <button class="btn btn-primary" type="submit" ng-click="impersonate.process()">Impersonate</button>
                     </div>
                 </div>
             </form>
         </div>
-        <div ng-if="!canImpersonate && username" class="alert alert-danger">
+        <div ng-if="!canImpersonate && username && !impersonate.processing" class="alert alert-danger">
             You do not have access to this resource.
         </div>
-        <div ng-if="!canImpersonate && !username">
+        <div ng-if="impersonate.processing">
             <svg viewBox="0 0 102 101" class="loading-spinner"><g fill="none" fill-rule="evenodd"><g transform="translate(1 1)" stroke-width="2"><ellipse stroke="#eee" cx="50" cy="49.421" rx="50" ry="49.421"></ellipse><path d="M50 98.842c27.614 0 50-22.127 50-49.42C100 22.125 77.614 0 50 0" stroke-opacity=".631" stroke="#3B6E8F"></path></g></g></svg>
         </div>
 
