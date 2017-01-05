@@ -62,7 +62,7 @@
     <div class="form-group" ng-class="{'has-error': evt.validation.showErrors(eventForm, 'maximumAge') && evt.childcareSelected() }">
       <label class="required">Maximum Age:</label>
       <input type="number" class="form-control" ng-model="evt.eventData.maximumAge" ng-required="evt.childcareSelected()" name="maximumAge"
-        ng-max="12" ng-min="0" ng-show="true" ng-disabled="false">
+        ng-max="12" ng-min="0">
 
       <ng-messages for="eventForm.maximumAge.$error" ng-if="evt.validation.showErrors(eventForm, 'maximumAge') && evt.childcareSelected()">
         <span ng-message="required">
@@ -81,7 +81,7 @@
     <div class="form-group" ng-class="{'has-error': evt.validation.showErrors(eventForm, 'minimumChildren') && evt.childcareSelected()}">
       <label class="required">Minimum Number of Children:</label>
       <input type="number" class="form-control" ng-model="evt.eventData.minimumChildren" ng-required="evt.childcareSelected()"
-        ng-change="evt.checkMinMax(eventForm)" name="minimumChildren" ng-min="0" ng-show="true" ng-disabled="false">
+        ng-change="evt.checkMinMax(eventForm)" name="minimumChildren" ng-min="0">
 
       <ng-messages for="eventForm.minimumChildren.$error" ng-if="evt.validation.showErrors(eventForm, 'minimumChildren') && evt.childcareSelected()">
         <span ng-message="required">
@@ -100,7 +100,7 @@
     <div class="form-group" ng-class="{'has-error': evt.validation.showErrors(eventForm, 'maximumChildren') && evt.childcareSelected()}">
       <label class="required">Maximum Number of Children:</label>
       <input type="number" class="form-control" ng-model="evt.eventData.maximumChildren" ng-required="evt.childcareSelected()"
-        ng-change="evt.checkMinMax(eventForm)" name="maximumChildren" ng-min="0" ng-show="true" ng-disabled="false">
+        ng-change="evt.checkMinMax(eventForm)" name="maximumChildren" ng-min="0">
 
       <ng-messages for="eventForm.maximumChildren.$error" ng-if="evt.validation.showErrors(eventForm, 'maximumChildren') && evt.childcareSelected()">
         <span ng-message="required">
