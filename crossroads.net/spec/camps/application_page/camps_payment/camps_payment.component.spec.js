@@ -68,6 +68,17 @@ describe('Camps Payment Component', () => {
 
       expect(sce.trustAsResourceUrl).toHaveBeenCalledWith(`${fixture.baseUrl}?type=payment&min_payment=${fixture.depositPrice}&invoice_id=${invoiceId}&total_cost=${fixture.totalPrice}&title=${fixture.campsService.campTitle}&url=${url}`);
     });
+
+    it('should redirect correctly to a the payment-confirmation page', () => {
+      fixture.campsService.productInfo.invoiceId = invoiceId;
+      state.toParams.redirectTo = undefined;
+      fixture.$onInit();
+      fixture.buildUrl();
+
+      const url = `https%3A%2F%2Fcrossroads.net%2Fcamps%2F${state.toParams.campId}%2Fpayment-confirmation%2F${state.toParams.contactId}`;
+
+      expect(sce.trustAsResourceUrl).toHaveBeenCalledWith(`${fixture.baseUrl}?type=payment&min_payment=${fixture.depositPrice}&invoice_id=${invoiceId}&total_cost=${fixture.totalPrice}&title=${fixture.campsService.campTitle}&url=${url}`);
+    });
   });
 
   describe('Update flag false', () => {
@@ -83,7 +94,7 @@ describe('Camps Payment Component', () => {
 
       campsService.productInfo = campHelpers().productInfo;
       campsService.sessionStorage.campDeposits = {};
-      
+
       fixture = _$componentController_('campsPayment', null, {});
     }));
 
