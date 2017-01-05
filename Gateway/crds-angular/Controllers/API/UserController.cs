@@ -11,8 +11,6 @@ using crds_angular.Exceptions.Models;
 using crds_angular.Security;
 using Crossroads.ApiVersioning;
 using MinistryPlatform.Translation.Repositories.Interfaces;
-using MinistryPlatform.Translation.Models;
-using MinistryPlatform.Translation.Models.DTO;
 
 namespace crds_angular.Controllers.API
 {
@@ -24,11 +22,10 @@ namespace crds_angular.Controllers.API
         // Do not change this string without also changing the same in the corejs register_controller
         private const string DUPLICATE_USER_MESSAGE = "Duplicate User";
 
-        public UserController(IAccountService accountService, IMinistryPlatformRestRepository ministryPlatformRest, IUserRepository userRepository)
+        public UserController(IAccountService accountService, IUserRepository userRepository)
         {
             _userRepository = userRepository;
             _accountService = accountService;
-            _ministryPlatformRest = ministryPlatformRest;
         }
 
         [ResponseType(typeof(User))]

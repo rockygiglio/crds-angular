@@ -116,7 +116,6 @@
     <Compile Include="Exceptions\DonationNotFoundException.cs" />
     <Compile Include="Exceptions\PaymentNotFoundException.cs" />
     <Compile Include="Extensions\RestSharpExtensions.cs" />
-    <Compile Include="Models\DTO\MpUserDto.cs" />
     <Compile Include="Models\DTO\PredefinedDonationAmountDTO.cs" />
     <Compile Include="Models\MpAttributeCategory.cs" />
     <Compile Include="Models\MpAllergy.cs" />
@@ -127,7 +126,6 @@
     <Compile Include="Models\MpMedical.cs" />
     <Compile Include="Models\MpMedicalAllergy.cs" />
     <Compile Include="Models\MpMedication.cs" />
-    <Compile Include="Models\MpRestUser.cs" />
     <Compile Include="Models\MpWaivers.cs" />
     <Compile Include="Models\MpMedicalInformation.cs" />
     <Compile Include="Models\MpRecordID.cs" />
