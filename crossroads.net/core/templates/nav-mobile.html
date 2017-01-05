@@ -1,1 +1,11 @@
 <div dynamic-content="$root.MESSAGES.mainNavMenuMobile.content | html"></div>
+<div>
+    <ul>
+        <li ng-if="$root.canImpersonate && !$root.impersonation.user">
+            <a ui-sref="impersonate">Impersonate</a>
+        </li>
+        <li ng-if="$root.canImpersonate && $root.impersonation.user" class="active" title="{{ $root.impersonation.user.UserId }}">
+            <a ui-sref="impersonate">Impersonating <strong>{{ $root.impersonation.user.UserId }}</strong></a>
+        </li>
+    </ul>
+</div>
