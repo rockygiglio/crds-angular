@@ -66,8 +66,11 @@
                 <li>
                   <a ui-sref="childcare-dashboard">Childcare</a>
                 </li>
-                <li ng-if="$root.canImpersonate">
+                <li ng-if="$root.canImpersonate && !$root.impersonation.user">
                   <a ui-sref="impersonate">Impersonate</a>
+                </li>
+                <li ng-if="$root.canImpersonate && $root.impersonation.user" class="active" title="{{ $root.impersonation.user.UserId }}">
+                  <a ui-sref="impersonate">Impersonating</a>
                 </li>
                 <li>
                   <a ui-sref="logout" class="ng-cloak">Sign Out</a>

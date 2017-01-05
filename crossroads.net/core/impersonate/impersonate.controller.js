@@ -23,13 +23,16 @@
       }).success((response) => {
         this.processing = false;
         this.error = false;
-        console.log(response);
         this.setImpersonateDetails(true, response.user, response.contact, response.user.UserRecordId);
       }).error(() => {
         this.processing = false;
         this.error = true;
         this.setImpersonateDetails(false);
       });
+    };
+
+    this.stop = () => {
+      this.setImpersonateDetails(false);
     };
 
     this.setImpersonateDetails = (active, user, contact, id) => {
