@@ -97,17 +97,6 @@ gulp.task('clean-assets', function () {
   ]);
 });
 
-
-// Process apache_site.conf file to incorporate prerender.io API Key
-gulp.task('apache-site-config', function() {
-  var apiKey = process.env.CRDS_PRERENDER_IO_KEY || 'NO_API_KEY_DEFINED';
-
-  gulp.src('./app/apache_site.conf')
-      .pipe(replace('__PRERENDER_IO_API_KEY__', apiKey))
-      .pipe(gulp.dest('./'));
-});
-
-
 // Production build
 gulp.task('build', ['clean-assets'], function() {
   gulp.start('webpack:build')
@@ -201,7 +190,7 @@ gulp.task('webpack-dev-server', ['icons-watch'], function(callback) {
 });
 
 // webpack build for production
-gulp.task('webpack:build', ['icons', 'robots', 'apache-site-config'], function(callback) {
+gulp.task('webpack:build', ['icons', 'robots'], function(callback) {
 
   webPackConfigs.forEach(function(element) {
     // modify some webpack config options

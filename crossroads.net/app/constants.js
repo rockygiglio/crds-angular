@@ -1,7 +1,7 @@
-(function() {
-  'use strict';
+/* global __CRDS_ENV__ */
+(function () {
   module.exports = {
-    //TODO Should this be moved to core?
+    // TODO: Should this be moved to core?
     // MODULE NAMES
     MODULES: {
       CAMPS: 'crossroads.camps',
@@ -133,6 +133,16 @@
         MEETING_TIME: 'time',
         MEETING_FREQUENCY: 'frequency',
         LEADER_SITE: 'site'
+      },
+      EMAIL: {
+        COMPOSE_EMAIL_NAME: 'Compose Email',
+        COMPOSE_EMAIL_DESCRIPTION_LINE1: 'Opens the email application',
+        COMPOSE_EMAIL_DESCRIPTION_LINE2: 'on your computer/phone.',
+        COMPOSE_EMAIL_ICON: 'mail5',
+        COPY_EMAIL_NAME: 'Copy Addresses',
+        COPY_EMAIL_DESCRIPTION_LINE1: 'Copies participant email',
+        COPY_EMAIL_DESCRIPTION_LINE2: 'addresses to your clipboard.',
+       COPY_EMAIL_ICON: 'file-text-o'
       }
     },
     GEOLOCATION: {
@@ -155,8 +165,8 @@
     },
     PRE_STREAM_HOURS: 15,
     COOKIES: {
-      SESSION_ID: __CRDS_ENV__+'sessionId',
-      REFRESH_TOKEN: __CRDS_ENV__+'refreshToken'
+      SESSION_ID: `${__CRDS_ENV__}sessionId`,
+      REFRESH_TOKEN: `${__CRDS_ENV__}refreshToken`
     },
     EVENTS: {
       ROOM_AVAILABLE: null,
@@ -164,4 +174,4 @@
       ROOM_BOOKED: 1
     }
   };
-})();
+}());

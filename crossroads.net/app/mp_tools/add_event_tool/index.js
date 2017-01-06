@@ -11,3 +11,4 @@ import addRoom from './add_room';
 import removeRoom from './remove_room';
 import continueReservation from './continue_reservation_edit';
 import recurringEvent from './recurring_event';
+import cancelEvent from './cancel_event';

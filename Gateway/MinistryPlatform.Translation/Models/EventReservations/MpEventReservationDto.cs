@@ -20,5 +20,6 @@ namespace MinistryPlatform.Translation.Models.EventReservations
         public string Title { get; set; }
         public int ParticipantsExpected { get; set; }
         public int EventId { get; set; }
+        public bool Cancelled { get; set; } = false;
     }
 }

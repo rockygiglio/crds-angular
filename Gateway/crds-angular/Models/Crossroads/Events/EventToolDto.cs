@@ -77,5 +77,8 @@ namespace crds_angular.Models.Crossroads.Events
 
         [JsonProperty(PropertyName = "isSeries")]
         public bool IsSeries { get; set; }
+
+        [JsonProperty(PropertyName = "cancelled")]
+        public bool Cancelled { get; set; } = false;
     }
 }

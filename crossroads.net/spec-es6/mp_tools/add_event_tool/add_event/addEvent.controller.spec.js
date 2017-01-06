@@ -11,30 +11,32 @@ describe('component: addEvent controller', () => {
   let qApi;
   let addEvent;
   let session;
+  let lookupService;
 
   beforeEach(angular.mock.module(CONSTANTS.MODULES.MPTOOLS));
 
   beforeEach(inject(($injector) => {
     log = $injector.get('$log');
     lookup = jasmine.createSpyObj('lookup', ['query']);
+    lookupService = $injector.get('LookupService');
+    spyOn(lookupService.ChildcareLocations, 'query').and.returnValue([{ dp_RecordID: 5, dp_RecordName: 'ChildCare1' }, { dp_RecordID: 6, dp_RecordName: 'childCare2' }]);
+    
+    spyOn(lookupService.EventTypes, 'query').and.returnValue([{
+      dp_RecordID: 1,
+      dp_RecordName: 'EventsYo',
+      Allow_Multiday_Event: true
+    }, {
+      dp_RecordID: 2,
+      dp_Recordname: 'childcare',
+      Allow_Multiday_Event: false
+    }]);
+
     lookup.query.and.callFake((params) => {
       switch (params.table) {
-        case 'eventtypes':
-          return [{
-            dp_RecordID: 1,
-            dp_RecordName: 'EventsYo',
-            Allow_Multiday_Event: true
-          }, {
-            dp_RecordID: 2,
-            dp_Recordname: 'childcare',
-            Allow_Multiday_Event: false
-          }];
         case 'reminderdays':
           return [{ dp_RecordID: 1, dp_RecordName: '1' }, { dp_RecordID: 2, dp_RecordName: '2' }];
         case 'crossroadslocations':
           return [{ dp_RecordID: 15, dp_RecordName: 'Anywhere' }, { dp_RecordID: 2, dp_RecordName: 'I do not attend Crossroads' }, { dp_RecordID: 5, dp_RecordName: 'Childcare1' }];
-        case 'childcarelocations':
-          return [{ dp_RecordID: 5, dp_RecordName: 'ChildCare1' }, { dp_RecordID: 6, dp_RecordName: 'childCare2' }];
         default:
           throw `${params} not expected`;
       }
@@ -45,19 +47,19 @@ describe('component: addEvent controller', () => {
     staffContact = jasmine.createSpyObj('staffContact', ['query']);
     staffContact.query.and.callFake((obj, callback) => {
       callback([{ contactId: 1, displayName: 'Nukem, Duke', email: 'daduke@compuserve.net' },
-      { contactId: 2, displayName: 'JoeKer', email: 'joker@gmail.com' }])
+      { contactId: 2, displayName: 'JoeKer', email: 'joker@gmail.com' }]);
     });
     validation = $injector.get('Validation');
     qApi = $injector.get('$q');
     addEvent = { eventData: { rooms: [] } };
     session = jasmine.createSpyObj('session', ['exists']);
-    session.exists.and.callFake(function (userId) { return '1'; });
+    session.exists.and.callFake((userId) => { return '1'; });
 
-    fixture = new AddEventController(log, addEvent, lookup, programs, staffContact, validation, session);
+    fixture = new AddEventController(log, addEvent, lookup, programs, staffContact, validation, session, lookupService);
   }));
 
   beforeEach(() => {
-    const startDate = new Date();
+    const startDate = new Date(Date.parse('Thu, 01 Jan 1970 08:00:00'));
     startDate.setMinutes(0);
     startDate.setSeconds(0);
     const endDate = new Date(startDate);
@@ -89,15 +91,33 @@ describe('component: addEvent controller', () => {
     expect(fixture.eventData).not.toBeNull();
     expect(fixture.eventData.primaryContact.contactId).toBe(1);
     expect(fixture.eventData.donationBatch).toBe(0);
-
   });
 
-  it('should resetRooms()', () => {
+  it('should resetRooms() if editMode is false', () => {
+    fixture.addEvent.editMode = false;
     fixture.addEvent.eventData.rooms.push({ roomId: 1 });
     fixture.addEvent.eventData.rooms.push({ roomId: 2 });
     expect(fixture.addEvent.eventData.rooms.length).toBe(2);
     fixture.resetRooms();
     expect(fixture.addEvent.eventData.rooms.length).toBe(0);
+  });
+
+  it('should resetRooms() if editMode is undefined', () => {
+    fixture.addEvent.editMode = undefined;
+    fixture.addEvent.eventData.rooms.push({ roomId: 1 });
+    fixture.addEvent.eventData.rooms.push({ roomId: 2 });
+    expect(fixture.addEvent.eventData.rooms.length).toBe(2);
+    fixture.resetRooms();
+    expect(fixture.addEvent.eventData.rooms.length).toBe(0);
+  });
+
+  it('resetRooms() should not reset rooms if editMode is true', () => {
+    fixture.addEvent.editMode = true;
+    fixture.addEvent.eventData.rooms.push({ roomId: 1 });
+    fixture.addEvent.eventData.rooms.push({ roomId: 2 });
+    expect(fixture.addEvent.eventData.rooms.length).toBe(2);
+    fixture.resetRooms();
+    expect(fixture.addEvent.eventData.rooms.length).toBe(2);
   });
 
   it('should return childCareSelected flag', () => {
@@ -117,7 +137,7 @@ describe('component: addEvent controller', () => {
 
       fixture.eventTypeChanged();
       expect(fixture.childcareSelectedFlag).toBeTruthy();
-      expect(lookup.query).toHaveBeenCalledWith({ table: 'childcarelocations' }, jasmine.any(Function));
+      expect(lookupService.ChildcareLocations.query).toHaveBeenCalledWith({}, jasmine.any(Function));
     });
 
     it('should set childcareSelectedFlag to false and get all locations', () => {
@@ -134,7 +154,6 @@ describe('component: addEvent controller', () => {
   });
 
   describe('addEvent Controller validDateRange()', () => {
-
     beforeEach(() => {
       fixture.addEvent.dateTime = (dateForDate, dateForTime) => {
         return new Date(

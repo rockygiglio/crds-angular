@@ -154,8 +154,13 @@ export default class SmallGroup {
   emailList() {
     let emailList = "";
 
-    this.participants.forEach(function (participant) {
-      emailList = `${emailList}${participant.email},`;
+    this.participants.forEach(function (participant, idx, array) {
+      if (idx === array.length - 1) {
+        emailList = `${emailList}${participant.email}`;
+      }
+      else {
+        emailList = `${emailList}${participant.email},`;
+      }
     }, emailList);
 
     return emailList;

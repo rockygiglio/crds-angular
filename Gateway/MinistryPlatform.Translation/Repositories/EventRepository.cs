@@ -108,7 +108,8 @@ namespace MinistryPlatform.Translation.Repositories
                 {"Event_Title", eventReservationReservation.Title},
                 {"Visibility_Level_ID", _configurationWrapper.GetConfigIntValue("EventVisibilityLevel")},
                 {"Participants_Expected", eventReservationReservation.ParticipantsExpected },
-                {"Event_ID", eventReservationReservation.EventId }
+                {"Event_ID", eventReservationReservation.EventId },
+                {"Cancelled", eventReservationReservation.Cancelled }
 
             };
 
@@ -289,7 +290,7 @@ namespace MinistryPlatform.Translation.Repositories
             var apiToken = ApiLogin();
             
             var mpevent = _ministryPlatformRestRepository.UsingAuthenticationToken(apiToken).Get<MpEvent>(eventId);
-            mpevent.PrimaryContact = _ministryPlatformRestRepository.UsingAuthenticationToken(apiToken).Get<MpContact>(mpevent.PrimaryContactId, "Email_Address, Contact_ID");
+            mpevent.PrimaryContact = _ministryPlatformRestRepository.UsingAuthenticationToken(apiToken).Get<MpContact>(mpevent.PrimaryContactId, "Email_Address, Contact_ID, Display_Name");
 
             return mpevent;
         }
@@ -670,5 +671,26 @@ namespace MinistryPlatform.Translation.Repositories
 
             return result != null;
         }        
+
+        public Result<int> GetProductEmailTemplate(int eventId)
+        {
+            var apiToken = ApiLogin();
+
+            var filter = $"Events.[Event_ID] = {eventId}";
+            const string column = "Online_Registration_Product_Table_Program_ID_Table_Communication_ID_Table.[Communication_ID]";
+            try
+            {
+                var result = _ministryPlatformRestRepository.UsingAuthenticationToken(apiToken).Search<int>("Events", filter, column);
+                if (result == 0)
+                {
+                    return new Err<int>("No Email Template Found");
+                }
+                return new Ok<int>(result);
+            }
+            catch (Exception e)
+            {
+                return new Err<int>(e);                
+            }
+        }
     }
 }

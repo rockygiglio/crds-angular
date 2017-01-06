@@ -152,6 +152,7 @@ namespace crds_angular.Services
                         eq.EquipmentId = equipmentReservation.EquipmentId;
                         eq.QuantityRequested = equipmentReservation.QuantityRequested;
                         eq.EquipmentReservationId = equipmentReservation.EventEquipmentId;
+                        eq.Notes = equipmentReservation.Notes;
                         equipmentDto.Add(eq);
                     }
                     r.Equipment = equipmentDto;
@@ -186,6 +187,7 @@ namespace crds_angular.Services
                             foreach (var eq in room.Equipment)
                             {
                                 eq.Cancelled = true;
+                                eq.Notes = "***Cancelled***" + eq.Notes;
                             }
                             UpdateEventRoom(room, eventId, token);
                         }
@@ -390,6 +392,7 @@ namespace crds_angular.Services
             equipmentReservation.EventId = eventId;
             equipmentReservation.QuantityRequested = equipment.QuantityRequested;
             equipmentReservation.RoomId = room.RoomId;
+            equipmentReservation.Notes = room.Notes;
             _equipmentService.CreateEquipmentReservation(equipmentReservation, token);
         }
 
@@ -402,6 +405,7 @@ namespace crds_angular.Services
             equipmentReservation.EventId = eventId;
             equipmentReservation.QuantityRequested = equipment.QuantityRequested;
             equipmentReservation.RoomId = room.RoomId;
+            equipmentReservation.Notes = equipment.Notes ?? room.Notes;
             _equipmentService.UpdateEquipmentReservation(equipmentReservation, token);
         }
 
@@ -470,6 +474,7 @@ namespace crds_angular.Services
             {
                 eventDto.ReminderDaysId = eventTool.ReminderDaysId;
             }
+            eventDto.Cancelled = eventTool.Cancelled;
             eventDto.SendReminder = eventTool.SendReminder;
             eventDto.StartDateTime = eventTool.StartDateTime;
             eventDto.Title = eventTool.Title;

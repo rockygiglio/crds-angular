@@ -45,6 +45,7 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
         void SetWaivers(List<MpWaiverResponse> waiverResponses);
 
         bool IsEventSeries(int eventId);
+        Result<int> GetProductEmailTemplate(int eventId);
 
     }
 }

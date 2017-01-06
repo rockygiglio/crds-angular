@@ -237,5 +237,22 @@ namespace MinistryPlatform.Translation.Test.Services
             Assert.IsFalse(result.Status);
         }
 
+        [Test]
+        public void ShouldGetParticipantsByGender()
+        {
+            const string token = "ABC";
+            const int eventId = 9876;
+            const int genderId = 3;
+            var searchString = $"Event_ID = {eventId} AND Participant_ID_Table_Contact_ID_Table_Gender_ID_Table.Gender_ID = {genderId}";
+            const string column = "Count(*)";
+
+            _ministryPlatformRest.Setup(m => m.UsingAuthenticationToken(token)).Returns(_ministryPlatformRest.Object);
+            _ministryPlatformRest.Setup(m => m.Search<int>("Event_Participants", searchString, column)).Returns(42);
+
+            var result = _fixture.GetEventParticipantCountByGender(eventId, genderId);
+
+            Assert.NotNull(result);
+            Assert.AreEqual(42 , result);
+        }
     }
 }

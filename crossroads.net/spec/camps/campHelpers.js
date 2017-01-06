@@ -102,7 +102,46 @@ function CampHelpers() {
       medicineAllergies: undefined,
       foodAllergies: undefined,
       environmentalAllergies: undefined,
-      otherAllergies: undefined
+      otherAllergies: undefined,
+      medicationsAdministered: [],
+      showMedications: false,
+      medicines: [
+        {}
+      ]
+    },
+    cleanMedicalInfoDto: {
+      contactId: undefined,
+      medicalInformationId: undefined,
+      insuranceCompany: undefined,
+      policyHolder: undefined,
+      physicianName: undefined,
+      physicianPhone: undefined,
+      medications: [{}],
+      allergies: [
+        { allergyType: 'Medicine',
+          allergyId: undefined,
+          allergyDescription: undefined,
+          medicalInformationAllergyId: undefined,
+          allergyTypeId: undefined
+        },
+        { allergyType: 'Food',
+          allergyId: undefined,
+          allergyDescription: undefined,
+          medicalInformationAllergyId: undefined,
+          allergyTypeId: undefined
+        },
+        { allergyType: 'Environmental',
+          allergyId: undefined,
+          allergyDescription: undefined,
+          medicalInformationAllergyId: undefined,
+          allergyTypeId: undefined
+        },
+        { allergyType: 'Other',
+          allergyId: undefined,
+          allergyDescription: undefined,
+          medicalInformationAllergyId: undefined,
+          allergyTypeId: undefined
+        }]
     },
     emergencyContacts: [
       {
@@ -172,7 +211,11 @@ function CampHelpers() {
         daysOutToHide: 80,
         totalWithOptionPrice: 850.0,
         endDate: '2016-12-01T00:00:00'
-      }]
+      }],
+      camperInvoice: {
+        paymentLeft: 650.0000,
+        invoiceTotal: 700.0000
+      }
     },
     payment: {
       paymentAmount: 200.0000,

@@ -30,7 +30,7 @@ export default class AddEventToolController {
         this.AddEvent.currentPage = 1;
         this.viewReady = true;
 
-        if (this.AddEvent.eventData.event.isSeries){
+        if (this.AddEvent.eventData.event.isSeries) {
           this.recurringEventModal();
         }
       },
@@ -65,14 +65,8 @@ export default class AddEventToolController {
     this.allData.eventForm.$setSubmitted();
 
     this.AddEvent.eventData.event = this.event;
-    // TODO: why does the form get set as valid even if
-    // the min and max children are invalid?
-    if (this.allData.eventForm.$valid &&
-      this.allData.eventForm.maximumChildren.$valid &&
-      this.allData.eventForm.minimumChildren.$valid
-    ) {
-
-      //if is editMode
+    if (this.allData.eventForm.$valid) {
+      // if is editMode
       if (this.AddEvent.editMode) {
         if (!this.canSaveMaintainOldReservation()) {
           this.continueEdit();
@@ -111,6 +105,40 @@ export default class AddEventToolController {
       controllerAs: 'recurringEvent',
       templateUrl: 'recurring_event/recurring_event.html'
     });
+  }
+
+  cancelEventClicked() {
+    const modalInstance = this.modal.open({
+      controller: 'CancelEventController',
+      controllerAs: 'cancelEvent',
+      templateUrl: 'cancel_event/cancel_event.html'
+    });
+
+    modalInstance.result.then(() => {
+      this.cancelEvent();
+    }, () => {
+      return;
+    });
+  }
+
+  cancelEvent() {
+    // TODO: Split this out a bit?
+    this.processing = true;
+    _.forEach(this.rooms, (room) => {
+      room.cancelled = true;
+      room.notes = (room.notes != null) ? `***Cancelled***${room.notes}` : '***Cancelled***';
+      _.forEach(room.equipment, (equipment) => {
+        equipment.equipment.notes = (equipment.equipment.notes != null) ? `***Cancelled***${equipment.equipment.notes}` : '***Cancelled***';
+        equipment.equipment.cancelled = true;
+      });
+    });
+
+    this.AddEvent.eventData.event.cancelled = true;
+    this.AddEvent.eventData.rooms = this.rooms;
+    const event = this.AddEvent.getEventDto(this.AddEvent.eventData);
+    event.startDateTime = moment(event.startDateTime).utc().format();
+    event.endDateTime = moment(event.endDateTime).utc().format();
+    this.processEdit(event);
   }
 
   canSaveMaintainOldReservation() {

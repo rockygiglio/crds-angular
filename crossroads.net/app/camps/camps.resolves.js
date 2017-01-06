@@ -1,4 +1,4 @@
-export function getCamperInfo(CampsService, $state)  {
+export function getCamperInfo(CampsService, $state) {
   const camperId = $state.toParams.contactId;
 
   if (camperId === 'new') {
@@ -19,11 +19,16 @@ export function getCampProductInfo(CampsService, $state, $q) {
   const camperId = $state.toParams.contactId;
   if ($state.toParams.page === 'camps-payment') {
     const deferred = $q.defer();
-    CampsService.getCampProductInfo(campId, camperId, true).then((result) => {
+
+    // if we are coming from the dashboard... don't check for previous payments
+    const isUpdate = $state.toParams.update;
+    // TODO:  figure out if we can determine if this has already been resolved...
+
+    CampsService.getCampProductInfo(campId, camperId, !isUpdate).then(() => {
       deferred.resolve();
     }).catch((err) => {
       if (err.status === 302) {
-        $state.go('campsignup.family', { campId }, { location: 'replace' });
+        $state.go('campsignup.application', { page: 'camps-payment', contactId: camperId, campId, update: true, redirectTo: 'payment-confirmation' });
       }
       deferred.reject();
     });
@@ -60,7 +65,7 @@ export function getShirtSizes(CampsService) {
   return CampsService.getShirtSizes();
 }
 
-export function checkApplicationExpiration(CampsService, $state, $q, $timeout) {
+export function checkApplicationExpiration(CampsService, $state, $q, $timeout, $log) {
   const deferred = $q.defer();
 
   const campId = $state.toParams.campId;
@@ -70,7 +75,7 @@ export function checkApplicationExpiration(CampsService, $state, $q, $timeout) {
     .then(() => {
       deferred.resolve();
     }, (error) => {
-      console.log('CampService application expiration check failed', error);
+      $log.error('CampService application expiration check failed', error);
       deferred.resolve();
       $timeout(() => {
         $state.go('campsignup.family', { campId });

@@ -34,6 +34,7 @@
           programId: eventData.event.program.ProgramId,
           reminderDaysId: reminderDays,
           title: eventData.event.eventTitle,
+          cancelled: eventData.event.cancelled,
           sendReminder: eventData.event.sendReminder,
           maximumAge: eventData.event.maximumAge,
           minimumChildren: eventData.event.minimumChildren,
@@ -141,7 +142,8 @@
     function getEquipmentDto(equipment) {
       const equipmentDto = {
         equipmentId: equipment.name.id,
-        quantityRequested: equipment.choosenQuantity
+        quantityRequested: equipment.choosenQuantity,
+        notes: equipment.notes
       };
       if (_.has(equipment, 'cancelled')) {
         equipmentDto.cancelled = equipment.cancelled;
@@ -178,7 +180,8 @@
           },
           choosenQuantity: equipmentDto.quantityRequested,
           equipmentReservationId: equipmentDto.equipmentReservationId,
-          cancelled: equipmentDto.cancelled
+          cancelled: equipmentDto.cancelled,
+          notes: equipmentDto.notes
         }
       };
     }

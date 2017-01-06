@@ -90,6 +90,12 @@ namespace crds_angular.Models.Crossroads.Stewardship
         /// </summary>
         [JsonProperty(PropertyName = "program_name")]
         public string ProgramName { get; set; }
+
+        [JsonProperty(PropertyName = "source_url")]
+        public string SourceUrl { get; set; }
+
+        [JsonProperty(PropertyName = "predefined_amount")]
+        public decimal? PredefinedAmount { get; set; }
     }
 
     [DataContract]

@@ -6,7 +6,7 @@
         </div>
     </div>
 
-    <hr>
+    <hr ng-if="!give.activeSession()">
       <p id="giveInfo">
         You are giving <strong>{{give.dto.amount | currency}} per {{give.dto.givingType}}</strong> to
         <strong>{{give.dto.program['Name']}}</strong><span ng-if="give.dto.mockPledge">
