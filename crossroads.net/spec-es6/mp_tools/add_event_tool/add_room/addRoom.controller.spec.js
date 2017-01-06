@@ -248,7 +248,6 @@ describe('component: addRoom controller', () => {
         fixture.setRoomData(data);
         expect(fixture.roomData).toEqual(expected);
         expect(fixture.rooms).toEqual(data);
-        expect(fixture.viewReady).toBe(true);
     });
 
     it('should setRoomData() with no data param', () => {
@@ -259,7 +258,6 @@ describe('component: addRoom controller', () => {
         fixture.setRoomData(data);
         expect(fixture.roomData).toEqual(expected);
         expect(fixture.rooms).toEqual(data);
-        expect(fixture.viewReady).toBe(true);
     });
 
     it('should setRoomData() to []', () => {
@@ -270,7 +268,6 @@ describe('component: addRoom controller', () => {
         fixture.setRoomData(data);
         expect(fixture.roomData).toEqual(expected);
         expect(fixture.rooms).toEqual(data);
-        expect(fixture.viewReady).toBe(true);
     });
 
     it('should setCongregation()', () => {
@@ -462,31 +459,6 @@ describe('component: addRoom controller', () => {
         expect(fixture.roomData.length).toBe(3);
         expect(fixture.rootScope.$emit).not.toHaveBeenCalledWith('notify', allReadyAdded);
         expect(fixture.rootScope.$emit).toHaveBeenCalledWith('notify', chooseARoom);
-    })
-
-    it('should mapEquipment()', () => {
-        let currentEquipmentList, equipmentLookup, mappedEquipment;
-
-        currentEquipmentList = [{ equipment: { name: { id: 7 } } },
-        { equipment: { name: { id: 8 } } },
-        { equipment: { name: { id: 9 } } },
-        { equipment: { name: { quantity: 90, id: 10 } } }];
-
-        equipmentLookup = [{ id: 1, quantity: 10, name: 'aisle chairs' },
-        { id: 2, quantity: 20, name: 'banquet table' },
-        { id: 3, quantity: 30, name: 'podium' },
-        { id: 4, quantity: 40, name: 'red carpet' },
-        { id: 5, quantity: 50, name: 'beer' },
-        { id: 6, quantity: 60, name: 'champaign' },
-        { id: 7, quantity: 70, name: 'teleprompter' },
-        { id: 8, quantity: 80, name: 'banquet chairs' },
-        { id: 9, quantity: 90, name: 'folding chairs' }];
-
-        mappedEquipment = fixture.mapEquipment(equipmentLookup, currentEquipmentList);
-        expect(mappedEquipment.length).toBe(3);
-        expect(mappedEquipment[0].equipment.name.quantity).toBe(70);
-        expect(mappedEquipment[1].equipment.name.quantity).toBe(80);
-        expect(mappedEquipment[2].equipment.name.quantity).toBe(90);
     })
 
     describe('removeRoom()', () => {
