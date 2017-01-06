@@ -554,8 +554,10 @@ namespace MinistryPlatform.Translation.Repositories
             return GetEventsData(token, searchString);
         }
 
-        public int CreateEventGroup(MpEventGroup eventGroup, string token)
+        public int CreateEventGroup(MpEventGroup eventGroup, string token = "")
         {
+            if (token == "")
+                token = ApiLogin();
             var groupDictionary = new Dictionary<string, object>
             {
                 {"Event_ID", eventGroup.EventId},

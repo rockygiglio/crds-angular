@@ -32,7 +32,7 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
         List<MpEventGroup> GetEventGroupsForGroup(int groupId, string token);
         //void CopyEventGroup(EventGroup eventGroup);
         void DeleteEventGroup(MpEventGroup eventGroup, string token);
-        int CreateEventGroup(MpEventGroup eventGroup, string token);
+        int CreateEventGroup(MpEventGroup eventGroup, string token = "");
         void UpdateEventGroup(MpEventGroup eventGroup, string token);
 
         List<MpEventGroup> GetEventGroupsForEventAPILogin(int eventId);
