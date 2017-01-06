@@ -532,7 +532,7 @@ namespace crds_angular.test.Services
         {
             const int invoiceId = 1234;
 
-            _paymentRepository.Setup(m => m.GetPaymentsForInvoice(invoiceId)).Returns(fakePayments(12, 100, 34525, declinedPaymentStatus));
+            _paymentRepository.Setup(m => m.GetPaymentsForInvoice(invoiceId)).Returns(fakePayments(12, -24, 34525, declinedPaymentStatus));
             _invoiceRepository.Setup(m => m.SetInvoiceStatus(invoiceId, nonePaid));
 
             _fixture.UpdateInvoiceStatusAfterDecline(invoiceId);
