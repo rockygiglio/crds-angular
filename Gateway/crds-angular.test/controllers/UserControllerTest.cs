@@ -26,7 +26,7 @@ namespace crds_angular.test.controllers
             _userRepository = new Mock<IUserRepository>();
             _contactRepository = new Mock<IContactRepository>();
 
-            _fixture = new UserController(_accountService.Object, _userRepository.Object, _contactRepository.Object, new Mock<IUserImpersonationService>().Object);
+            _fixture = new UserController(_accountService.Object, _contactRepository.Object, _userRepository.Object, new Mock<IUserImpersonationService>().Object);
         }
 
         [Test]
