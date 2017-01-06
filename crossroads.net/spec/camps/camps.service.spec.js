@@ -111,7 +111,7 @@ describe('Camp Service', () => {
     expect(campsService.productInfo.invoiceId).toEqual(123);
   });
 
-  fit('should get camp product info and check for deposit', () => {
+  it('should get camp product info and check for deposit', () => {
     const campId = 123456;
     const camperId = 654321;
     const productInfo = {
