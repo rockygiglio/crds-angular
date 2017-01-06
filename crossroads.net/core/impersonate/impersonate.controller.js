@@ -3,11 +3,6 @@
 (() => {
   function ImpersonateController(
     $rootScope,
-    $scope,
-    $log,
-    AuthService,
-    $state,
-    Session,
     $http,
     $cookies
     ) {
@@ -18,16 +13,15 @@
 
     this.startImpersonating = () => {
       this.processing = true;
-      $http({
-        method: 'GET',
-        url: `${__API_ENDPOINT__}api/user?username=${this.username}`
-      }).success((response) => {
+      $http.get(`${__API_ENDPOINT__}api/user?username=${this.username}`)
+      .success((response) => {
         this.processing = false;
         this.error = false;
         this.storeCurrentUser();
         this.storeImpersonateDetails(true, response);
         this.setCurrentUser(response);
-      }).error(() => {
+      })
+      .error(() => {
         this.processing = false;
         this.error = true;
         this.storeImpersonateDetails(false);
@@ -58,7 +52,7 @@
       $rootScope.roles = user.roles;
       $cookies.put('userId', user.userId);
       $cookies.put('username', user.username);
-      $rootScope.$emit('profilePhotoChanged');
+      $rootScope.$emit('profilePhotoChanged', user.userId);
     };
 
     this.storeImpersonateDetails = (active, loginReturn) => {
@@ -75,11 +69,6 @@
 
   ImpersonateController.$inject = [
     '$rootScope',
-    '$scope',
-    '$log',
-    'AuthService',
-    '$state',
-    'Session',
     '$http',
     '$cookies'
   ];
