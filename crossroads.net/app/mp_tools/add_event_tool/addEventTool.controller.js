@@ -29,6 +29,10 @@ export default class AddEventToolController {
         this.rooms = this.AddEvent.eventData.rooms;
         this.AddEvent.currentPage = 1;
         this.viewReady = true;
+
+        if (this.AddEvent.eventData.event.isSeries){
+          this.recurringEventModal();
+        }
       },
         (err) => {
           console.error(`failed to get event ${this.currentEventSelected} + with error ${err}`);
@@ -98,6 +102,14 @@ export default class AddEventToolController {
       this.AddEvent.currentPage = 2;
     }, () => {
       return;
+    });
+  }
+
+  recurringEventModal() {
+    const modalInstance = this.modal.open({
+      controller: 'RecurringEventController',
+      controllerAs: 'recurringEvent',
+      templateUrl: 'recurring_event/recurring_event.html'
     });
   }
 
