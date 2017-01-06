@@ -16,7 +16,7 @@ namespace crds_angular.Controllers.API
     {
         private readonly ICampService _campService;
 
-        public CampController(ICampService campService)
+        public CampController(ICampService campService, IUserImpersonationService userImpersonationService) : base(userImpersonationService)
         {
             _campService = campService;
         }

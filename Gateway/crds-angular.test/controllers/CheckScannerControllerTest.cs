@@ -48,7 +48,7 @@ namespace crds_angular.test.controllers
             _configuration.Setup(mocked => mocked.GetConfigValue("CheckScannerDonationsAsynchronousProcessingMode")).Returns("false");
             _configuration.Setup(mocked => mocked.GetConfigValue("CheckScannerDonationsQueueName")).Returns("CheckScannerBatchQueue");
 
-            _fixture = new CheckScannerController(_configuration.Object, _checkScannerService.Object, _authenticationService.Object, _communicationService.Object, _cryptoProvider.Object, _messageQueueFactory.Object, _messageFactory.Object);
+            _fixture = new CheckScannerController(_configuration.Object, _checkScannerService.Object, _authenticationService.Object, _communicationService.Object, _cryptoProvider.Object, new Mock<IUserImpersonationService>().Object, _messageQueueFactory.Object, _messageFactory.Object);
 
             _fixture.Request = new HttpRequestMessage();
             _fixture.Request.Headers.Authorization = new AuthenticationHeaderValue(AuthType, AuthToken);

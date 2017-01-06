@@ -12,7 +12,7 @@ namespace crds_angular.Controllers.API
     public class PaymentController : MPAuth
     {
         private readonly IPaymentService _paymentService;
-        public PaymentController(IPaymentService paymentService)
+        public PaymentController(IPaymentService paymentService, IUserImpersonationService userImpersonationService) : base(userImpersonationService)
         {
             _paymentService = paymentService;
         }

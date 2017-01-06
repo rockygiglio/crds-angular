@@ -14,7 +14,7 @@ namespace crds_angular.Controllers.API
         private readonly MPInterfaces.IAuthenticationRepository _authenticationService;
         private readonly ISubscriptionsService _subscriptionService;
 
-        public SubscriptionsController(ISubscriptionsService subscriptionService, MPInterfaces.IAuthenticationRepository authenticationService)
+        public SubscriptionsController(ISubscriptionsService subscriptionService, MPInterfaces.IAuthenticationRepository authenticationService, IUserImpersonationService userImpersonationService) : base(userImpersonationService)
         {
             _subscriptionService = subscriptionService;
             _authenticationService = authenticationService;

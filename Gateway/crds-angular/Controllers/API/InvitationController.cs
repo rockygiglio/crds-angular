@@ -8,6 +8,7 @@ using System.Web.Http.Description;
 using crds_angular.Exceptions.Models;
 using crds_angular.Models.Crossroads;
 using crds_angular.Security;
+using crds_angular.Services.Interfaces;
 using log4net;
 using Crossroads.ApiVersioning;
 
@@ -19,7 +20,7 @@ namespace crds_angular.Controllers.API
         private readonly Services.Interfaces.IInvitationService _invitationService;        
 
 
-        public InvitationController(Services.Interfaces.IInvitationService invitationService)
+        public InvitationController(Services.Interfaces.IInvitationService invitationService, IUserImpersonationService userImpersonationService) : base(userImpersonationService)
         {
             _invitationService = invitationService;
 

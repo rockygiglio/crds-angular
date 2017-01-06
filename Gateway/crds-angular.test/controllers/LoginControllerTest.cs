@@ -9,6 +9,7 @@ using NUnit.Framework;
 using ILoginService = crds_angular.Services.Interfaces.ILoginService;
 using IPersonService = crds_angular.Services.Interfaces.IPersonService;
 using MinistryPlatform.Translation.Repositories.Interfaces;
+using crds_angular.Services.Interfaces;
 
 namespace crds_angular.test.controllers
 {
@@ -31,7 +32,7 @@ namespace crds_angular.test.controllers
             _personServiceMock = new Mock<IPersonService>();
             _userServiceMock = new Mock<IUserRepository>();
 
-            loginController = new LoginController(_loginServiceMock.Object, _personServiceMock.Object, _userServiceMock.Object);
+            loginController = new LoginController(_loginServiceMock.Object, _personServiceMock.Object, _userServiceMock.Object, new Mock<IUserImpersonationService>().Object);
 
             authType = "auth_type";
             authToken = "auth_token";

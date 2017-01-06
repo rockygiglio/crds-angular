@@ -20,7 +20,7 @@ namespace crds_angular.Controllers.API
         private readonly IUserRepository _userService;
         private readonly ILoginService _loginService;
 
-        public LoginController(ILoginService loginService, IPersonService personService, IUserRepository userService)
+        public LoginController(ILoginService loginService, IPersonService personService, IUserRepository userService, IUserImpersonationService userImpersonationService) : base(userImpersonationService)
         {
             _loginService = loginService;
             _personService = personService;

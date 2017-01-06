@@ -12,6 +12,7 @@ using log4net;
 using MinistryPlatform.Translation.PlatformService;
 using MPInterfaces = MinistryPlatform.Translation.Repositories.Interfaces;
 using Crossroads.ApiVersioning;
+using crds_angular.Services.Interfaces;
 
 namespace crds_angular.Controllers.API
 {
@@ -22,7 +23,7 @@ namespace crds_angular.Controllers.API
         private readonly MPInterfaces.IAuthenticationRepository _authenticationService;
         private readonly MPInterfaces.IApiUserRepository _apiUserService;
 
-        public ImageController(MPInterfaces.IMinistryPlatformService mpService, MPInterfaces.IAuthenticationRepository authenticationService, MPInterfaces.IApiUserRepository apiUserService)
+        public ImageController(MPInterfaces.IMinistryPlatformService mpService, MPInterfaces.IAuthenticationRepository authenticationService, MPInterfaces.IApiUserRepository apiUserService, IUserImpersonationService userImpersonationService) : base(userImpersonationService)
         {
             _authenticationService = authenticationService;
             _apiUserService = apiUserService;

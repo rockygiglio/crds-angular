@@ -32,7 +32,7 @@ namespace crds_angular.test.controllers
             _groupToolService = new Mock<IGroupToolService>(MockBehavior.Strict);
             _configurationWrapper = new Mock<IConfigurationWrapper>();
             _configurationWrapper.Setup(mocked => mocked.GetConfigIntValue("GroupTypeSmallId")).Returns(1);
-            _fixture = new GroupToolController(_groupToolService.Object, _configurationWrapper.Object);
+            _fixture = new GroupToolController(_groupToolService.Object, _configurationWrapper.Object, new Mock<IUserImpersonationService>().Object);
             _fixture.SetupAuthorization(AuthType, AuthToken);
 
         }

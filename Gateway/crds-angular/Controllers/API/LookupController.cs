@@ -8,6 +8,7 @@ using System.Web.Http.Description;
 using System.Web.Http.Results;
 using crds_angular.Models.Json;
 using crds_angular.Security;
+using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Interfaces;
 using MinistryPlatform.Translation.Repositories;
 using Crossroads.ApiVersioning;
@@ -19,7 +20,7 @@ namespace crds_angular.Controllers.API
         private IConfigurationWrapper _configurationWrapper;
         private readonly LookupRepository _lookupRepository;
 
-        public LookupController(IConfigurationWrapper configurationWrapper, LookupRepository lookupRepository)
+        public LookupController(IConfigurationWrapper configurationWrapper, LookupRepository lookupRepository, IUserImpersonationService userImpersonationService) : base(userImpersonationService)
         {
             _configurationWrapper = configurationWrapper;
             _lookupRepository = lookupRepository;

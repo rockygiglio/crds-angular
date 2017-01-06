@@ -18,13 +18,12 @@ namespace crds_angular.Controllers.API
     public class UserController : MPAuth
     {
         private readonly IAccountService _accountService;
-        private readonly IMinistryPlatformRestRepository _ministryPlatformRest;
         private readonly IUserRepository _userRepository;
         private readonly IContactRepository _contactRepository;
         // Do not change this string without also changing the same in the corejs register_controller
         private const string DUPLICATE_USER_MESSAGE = "Duplicate User";
 
-        public UserController(IAccountService accountService, IUserRepository userRepository, IContactRepository contactRepository)
+        public UserController(IAccountService accountService, IUserRepository userRepository, IContactRepository contactRepository, IUserImpersonationService userImpersonationService) : base(userImpersonationService)
         {
             _accountService = accountService;
             _userRepository = userRepository;
