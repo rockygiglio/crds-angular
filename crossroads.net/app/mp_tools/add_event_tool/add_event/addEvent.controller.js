@@ -2,11 +2,12 @@ import CONSTANTS from 'crds-constants';
 
 export default class AddEventcontroller {
   /* @ngInject */
-  constructor($log, AddEvent, Lookup, Programs, StaffContact, Validation, Session) {
+  constructor($log, AddEvent, Lookup, Programs, StaffContact, Validation, Session, LookupService) {
     this.log = $log;
     this.addEvent = AddEvent;
     this.lookup = Lookup;
     this.programsLookup = Programs;
+    this.lookupService = LookupService;
     this.staffContact = StaffContact;
     this.validation = Validation;
     this.endDateOpened = false;
@@ -17,10 +18,10 @@ export default class AddEventcontroller {
   }
 
   $onInit() {
-    this.eventTypes = this.lookup.query({ table: 'eventtypes' }, (types) => {
+    this.eventTypes = this.lookupService.EventTypes.query({}, (types) => {
       if (this.eventData && this.eventData.eventType && this.eventData.eventType.dp_RecordID) {
         this.eventData.eventType = _.find(types, (type) => {
-          return type.dp_RecordID == this.eventData.eventType.dp_RecordID;
+          return type.dp_RecordID === this.eventData.eventType.dp_RecordID;
         });
 
         this.eventTypeChanged();
@@ -114,7 +115,7 @@ export default class AddEventcontroller {
     // constrain congregations
     if (this.eventData.eventType.dp_RecordName === 'Childcare') {
       this.childcareSelectedFlag = true;
-      this.lookup.query({ table: 'childcarelocations' }, (locations) => { this.crossroadsLocations = locations; });
+      this.lookupService.ChildcareLocations.query({}, (locations) => { this.crossroadsLocations = locations; });
     }
     else {
       this.childcareSelectedFlag = false;
