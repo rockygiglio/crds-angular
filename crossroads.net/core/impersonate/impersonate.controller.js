@@ -58,6 +58,7 @@
       $rootScope.roles = user.roles;
       $cookies.put('userId', user.userId);
       $cookies.put('username', user.username);
+      $rootScope.$emit('profilePhotoChanged');
     };
 
     this.storeImpersonateDetails = (active, loginReturn) => {

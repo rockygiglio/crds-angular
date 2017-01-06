@@ -179,6 +179,8 @@
           $rootScope.phone = user.userPhone;
           $rootScope.roles = user.roles;
           $rootScope.canImpersonate = user.canImpersonate;
+          $cookies.put('userId', user.userId);
+          $cookies.put('username', user.username);
         }).error(() => {
           vm.clearAndRedirect(event, stateName, stateToParams);
         });
