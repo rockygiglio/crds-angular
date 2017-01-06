@@ -38,7 +38,7 @@
         </form>
     </div>
 
-    <div ng-if="showRegister || showRegisterCallback" class="row">
+    <div ng-if="(showRegister || showRegisterCallback) && !processing" class="row">
       <div class="col-xs-12">
         <hr>
         <div class="text-center or-divider">
