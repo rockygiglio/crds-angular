@@ -178,7 +178,7 @@ namespace crds_angular.Services
             return new CampFamilyMember
             {
                 ContactId = member.ContactId,
-                IsEligible = _groupRepository.IsMemberOfEventGroup(member.ContactId, eventId, apiToken),
+                IsEligible = isPending || signedUpDate != null ? true : _groupRepository.IsMemberOfEventGroup(member.ContactId, eventId, apiToken),
                 SignedUpDate = signedUpDate,
                 IsPending = isPending,
                 IsExpired = isExpired,

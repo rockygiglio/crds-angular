@@ -122,6 +122,7 @@ namespace crds_angular.test.Services
             _eventParticipantRepository.VerifyAll();
         }
 
+
         [Test]
         public void shouldReturnGradeGroupsSortedByGroupName()
         {
@@ -470,7 +471,6 @@ namespace crds_angular.test.Services
             _contactService.Setup(m => m.GetMyProfile(token)).Returns(myContact);
             _contactService.Setup(m => m.GetHouseholdFamilyMembers(myContact.Household_ID)).Returns(getFakeHouseholdMembers(myContact, false, "Adult Child"));
             _apiUserRepository.Setup(m => m.GetToken()).Returns(apiToken);
-            _groupRepository.Setup(m => m.IsMemberOfEventGroup(myContact.Contact_ID, eventId, apiToken)).Returns(true);
             _eventParticipantRepository.Setup(m => m.GetEventParticipantEligibility(eventId, It.IsAny<int>())).Returns(eventParticipant);
 
             var result = _fixture.GetEligibleFamilyMembers(eventId, token);
@@ -478,6 +478,40 @@ namespace crds_angular.test.Services
             Assert.IsNotNull(result.First().SignedUpDate);
             Assert.AreEqual(signedUpOn, result.First().SignedUpDate);
             Assert.IsTrue(result.First().IsEligible);
+            _contactService.VerifyAll();
+            _groupRepository.VerifyAll();
+            _eventParticipantRepository.VerifyAll();
+        }
+
+        [Test]
+        public void shouldGetCampFamilyNotHeadPendingParticipant()
+        {
+            const string token = "asdfasdfasdfasdf";
+            const string apiToken = "apiToken";
+            const int myContactId = 2187211;
+            const int eventId = 5433;
+            const int interestedStatus = 456;
+            var myContact = getFakeContact(myContactId);
+
+            var signedUpOn = DateTime.Now;
+            var eventParticipant = new MpEventParticipant
+            {
+                ParticipantStatus = interestedStatus,
+                EndDate = DateTime.Now.AddDays(1)
+            };
+
+            _configurationWrapper.Setup(m => m.GetConfigIntValue("Participant_Status_Cancelled"));
+            _configurationWrapper.Setup(m => m.GetConfigIntValue("Participant_Status_Interested")).Returns(interestedStatus);
+            _contactService.Setup(m => m.GetMyProfile(token)).Returns(myContact);
+            _contactService.Setup(m => m.GetHouseholdFamilyMembers(myContact.Household_ID)).Returns(getFakeHouseholdMembers(myContact, false, "Adult Child"));
+            _apiUserRepository.Setup(m => m.GetToken()).Returns(apiToken);
+            _eventParticipantRepository.Setup(m => m.GetEventParticipantEligibility(eventId, It.IsAny<int>())).Returns(eventParticipant);
+
+            var result = _fixture.GetEligibleFamilyMembers(eventId, token);
+            Assert.AreEqual(result.Count, 1);
+            Assert.IsTrue(result.First().IsPending);
+            Assert.IsTrue(result.First().IsEligible);
+            _configurationWrapper.VerifyAll();
             _contactService.VerifyAll();
             _groupRepository.VerifyAll();
             _eventParticipantRepository.VerifyAll();
