@@ -29,7 +29,8 @@
     'ngTable',
     'ui.tinymce',
     'mwl.confirm',
-    'ngclipboard'
+    'ngclipboard',
+    'ngStorage'
     ])
     .constant('AUTH_EVENTS', {
       loginSuccess: 'auth-login-success',

@@ -111,7 +111,7 @@ namespace Crossroads.ChildcareGroupUpdates
                     groupdto.MaximumAge = defaultMaximumAge;
                     groupdto.MinimumParticipants = defaultMinimumParticipants;
                     groupdto.TargetSize = defaultTargetSize;
-                    groupdto.GroupName = "__childcare";
+                    groupdto.GroupName = "__childcaregroup";
                     groupdto.GroupTypeId = groupTypeId;
                     groupdto.MinistryId = defaultMinistryId;
 
