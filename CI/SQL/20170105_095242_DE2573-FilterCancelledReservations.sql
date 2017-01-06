@@ -37,7 +37,7 @@ ALTER PROCEDURE [dbo].[api_crds_GetReservedAndAvailableRoomsByLocation]
 AS
 BEGIN
 
-	WITH Reserved_Rooms (Room_ID, Approved, ExistingReservation, DisplayName, ReservationStart, ReservationEnd)
+	WITH Reserved_Rooms (Room_ID, Approved, ExistingReservation, DisplayName, ReservationStart, ReservationEnd, ReservationId)
 	AS
 	(
 		SELECT DISTINCT r.Room_ID, 
@@ -45,7 +45,8 @@ BEGIN
 						ExistingReservation = 1,
 						c.Display_Name  AS DisplayName,
 						e.Event_Start_Date as ReservationStart,
-						e.Event_End_Date as ReservationEnd 						
+						e.Event_End_Date as ReservationEnd,
+						er.Event_Room_ID as ReservationId 						
 		FROM dbo.Events e
 			inner join dbo.Event_Rooms er on e.Event_ID = er.Event_ID
 			inner join dbo.Rooms r on er.Room_ID = r.Room_ID
@@ -68,7 +69,8 @@ BEGIN
 					rr.ExistingReservation,
 					rr.DisplayName,
 					rr.ReservationStart,
-					rr.ReservationEnd
+					rr.ReservationEnd,
+					rr.ReservationId
 	INTO #TEMPROOMS
 	FROM dbo.Rooms r
 		INNER JOIN dbo.Buildings b on b.Building_ID = r.Building_ID
