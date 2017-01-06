@@ -10,6 +10,7 @@ using crds_angular.Services.Interfaces;
 using crds_angular.Exceptions.Models;
 using crds_angular.Security;
 using Crossroads.ApiVersioning;
+using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 
 namespace crds_angular.Controllers.API

@@ -23,7 +23,7 @@
       }).success((response) => {
         this.processing = false;
         this.error = false;
-        this.setImpersonateDetails(true, response.user, response.contact, response.user.UserRecordId);
+        this.setImpersonateDetails(true, response.user, response.contact);
       }).error(() => {
         this.processing = false;
         this.error = true;
@@ -35,14 +35,24 @@
       this.setImpersonateDetails(false);
     };
 
-    this.setImpersonateDetails = (active, user, contact, id) => {
+    this.setImpersonateDetails = (active, user, contact) => {
       if (active !== true) {
         active = false;
       }
       $rootScope.impersonation.active = active;
       $rootScope.impersonation.user = user;
       $rootScope.impersonation.contact = contact;
-      $http.defaults.headers.common.ImpersonateUser = id;
+      if (user !== undefined) {
+        this.setImpersonateHeader(user.UserRecordId, user.UserId, user.Guid);
+      } else {
+        this.setImpersonateHeader();
+      }
+    };
+
+    this.setImpersonateHeader = (id, username, guid) => {
+      $http.defaults.headers.common.ImpersonateRecordId = id;
+      $http.defaults.headers.common.ImpersonateUserId = username;
+      $http.defaults.headers.common.ImpersonateGuid = guid;
     };
   }
 
