@@ -270,7 +270,7 @@ namespace crds_angular.Services
         public void UpdateInvoiceStatusAfterDecline(int invoiceId)
         {
             var payments = _paymentRepository.GetPaymentsForInvoice(invoiceId);
-            payments = payments.Where(p => p.PaymentStatus != _declinedPaymentStatus).ToList();
+            //payments = payments.Where(p => p.PaymentStatus != _declinedPaymentStatus).ToList();
             var paymentTotal = payments.Sum(p => p.PaymentTotal);
 
             _invoiceRepository.SetInvoiceStatus(invoiceId, paymentTotal > 0 ? _somepaidStatus : _nonePaidStatus);
