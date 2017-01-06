@@ -115,6 +115,30 @@ namespace crds_angular.Controllers.API
         }
 
         /// <summary>
+        /// Get lookup values for event types
+        /// </summary>
+        [ResponseType(typeof(List<Dictionary<string, object>>))]
+        [VersionedRoute(template: "lookup/event-types", minimumVersion: "1.0.0")]
+        [Route("lookup/eventtypes")]
+        [HttpGet]
+        public IHttpActionResult LookupEventTypes()
+        {
+            return LookupValues("eventtypes", "");
+        }
+
+        /// <summary>
+        /// Get lookup values for event types
+        /// </summary>
+        [ResponseType(typeof(List<Dictionary<string, object>>))]
+        [VersionedRoute(template: "lookup/childcare-locations", minimumVersion: "1.0.0")]
+        [Route("lookup/childcarelocations")]
+        [HttpGet]
+        public IHttpActionResult LookupChildCareLocations()
+        {
+            return LookupValues("childcarelocations", "");
+        }
+
+        /// <summary>
         /// Get lookup values for group ended reasons
         /// </summary>
         [ResponseType(typeof(List<Dictionary<string, object>>))]
