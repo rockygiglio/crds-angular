@@ -381,7 +381,7 @@ namespace crds_angular.Services
                 DomainId = 1
             };
 
-            return _eventService.CreateEventGroup(eventGroup, token);
+            return _eventService.CreateEventGroup(eventGroup);
         }
 
         private void AddEquipment(EventRoomEquipmentDto equipment, int eventId, EventRoomDto room, string token)
@@ -840,7 +840,7 @@ namespace crds_angular.Services
                     // create the copied event group and assign the new room reservation id here
                     eventGroup.EventId = eventId;
                     eventGroup.EventRoomId = roomReservationId;
-                    _eventService.CreateEventGroup(eventGroup, token);
+                    _eventService.CreateEventGroup(eventGroup);
                     eventGroup.Created = true;
                 }
             }
@@ -849,7 +849,7 @@ namespace crds_angular.Services
             {
                 // create the copied event group and assign the new room reservation id here
                 eventGroup.EventId = eventId;
-                _eventService.CreateEventGroup(eventGroup, token);
+                _eventService.CreateEventGroup(eventGroup);
                 eventGroup.Created = true;
             }
 

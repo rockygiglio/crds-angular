@@ -16,6 +16,7 @@ namespace MinistryPlatform.Translation.Models
         public string DisplayName { get; set; }
         public DateTime? ReservationStart { get; set; }
         public DateTime? ReservationEnd { get; set; }
+        public int? ReservationEvent { get; set; }
     }
 
     public class RoomLayout
