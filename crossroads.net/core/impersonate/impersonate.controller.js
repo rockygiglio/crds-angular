@@ -8,7 +8,8 @@
     AuthService,
     $state,
     Session,
-    $http
+    $http,
+    $cookies
     ) {
     this.username = undefined;
     this.user = undefined;
@@ -41,20 +42,22 @@
 
     this.storeCurrentUser = () => {
       $rootScope.impersonation.loggedIn = {
-        userid: $rootScope.userid,
+        userId: $rootScope.userid,
         username: $rootScope.username,
-        email: $rootScope.email,
-        phone: $rootScope.phone,
+        userEmail: $rootScope.email,
+        userPhone: $rootScope.phone,
         roles: $rootScope.roles
       };
     };
 
     this.setCurrentUser = (user) => {
-      $rootScope.userid = user.userid;
+      $rootScope.userid = user.userId;
       $rootScope.username = user.username;
-      $rootScope.email = user.email;
-      $rootScope.phone = user.phone;
+      $rootScope.email = user.userEmail;
+      $rootScope.phone = user.userPhone;
       $rootScope.roles = user.roles;
+      $cookies.put('userId', user.userId);
+      $cookies.put('username', user.username);
     };
 
     this.storeImpersonateDetails = (active, loginReturn) => {
@@ -76,6 +79,7 @@
     'AuthService',
     '$state',
     'Session',
-    '$http'
+    '$http',
+    '$cookies'
   ];
 })();
