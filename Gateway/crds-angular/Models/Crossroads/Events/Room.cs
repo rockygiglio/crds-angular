@@ -37,9 +37,11 @@ namespace crds_angular.Models.Crossroads.Events
 
         [JsonProperty(PropertyName = "reservationEnd")]
         public DateTime? ReservationEnd { get; set; }
-
+        
         [JsonProperty(PropertyName = "reservationEvent")]
         public int? ReservationEvent { get; set; }
         
+        [JsonProperty(PropertyName = "reservationId")]
+        public int? ReservationId { get; set; }
     }
 }

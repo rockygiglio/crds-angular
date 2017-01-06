@@ -64,7 +64,6 @@ BEGIN
         LEFT OUTER JOIN Reserved_Rooms rr on rr.Room_ID = r.Room_ID
     WHERE r.Bookable = 1 
             and b.Location_ID = @LocationId
-    
 
     --Available bookable rooms
     SELECT *, RoomStatus = null 
