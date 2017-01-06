@@ -669,7 +669,7 @@
               <Actions>
                 <Action>
                   <Drillthrough>
-                    <ReportName>Donations Selected Create Batch</ReportName>
+                    <ReportName>/MPReports/Crossroads/CRDSPaymentsCreatedForBatch</ReportName>
                     <Parameters>
                       <Parameter Name="DomainID">
                         <Value>=Parameters!DomainID.Value</Value>
