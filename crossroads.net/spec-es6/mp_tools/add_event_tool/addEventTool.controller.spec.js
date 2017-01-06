@@ -133,6 +133,7 @@ describe('AddEventTool', () => {
           equipment: {
             cancelled: false,
             choosenQuantity: 2,
+            notes: 'abcd',
             equipmentReservationId: 42,
             name: { id: 3 }
           }
@@ -154,6 +155,7 @@ describe('AddEventTool', () => {
         equipment: [{
           equipment: {
             cancelled: false,
+            notes: null,
             choosenQuantity: 2,
             equipmentReservationId: 23,
             name: { id: 6 }
@@ -161,6 +163,7 @@ describe('AddEventTool', () => {
         }, {
           equipment: {
             cancelled: false,
+            notes: '',
             choosenQuantity: 22,
             equipmentReservationId: 34,
             name: { id: 7 }
@@ -169,7 +172,6 @@ describe('AddEventTool', () => {
         hidden: false,
         id: 1235,
         layout: { id: 1 },
-        notes: 'Dem notes',
         roomReservationId: 1235
       }];
       fixture.processEdit = jasmine.createSpy('processEdit');
@@ -187,11 +189,14 @@ describe('AddEventTool', () => {
       expect(fixture.AddEvent.eventData.event.cancelled).toBe(true);
       expect(fixture.AddEvent.eventData.rooms[0].cancelled).toBe(true);
       expect(fixture.AddEvent.eventData.rooms[1].cancelled).toBe(true);
-      expect(fixture.AddEvent.eventData.rooms[0].notes).toBe('***Cancelled***');
+      expect(fixture.AddEvent.eventData.rooms[0].notes).toBe('***Cancelled***Dem notes');
+      expect(fixture.AddEvent.eventData.rooms[1].notes).toBe('***Cancelled***', 'Because notes is undefined');
       expect(fixture.AddEvent.eventData.rooms[0].equipment[0].equipment.cancelled).toBe(true);
-      expect(fixture.AddEvent.eventData.rooms[0].equipment[1].equipment.notes).toBe('***Cancelled***');
+      expect(fixture.AddEvent.eventData.rooms[0].equipment[0].equipment.notes).toBe('***Cancelled***abcd');
+      expect(fixture.AddEvent.eventData.rooms[0].equipment[1].equipment.notes).toBe('***Cancelled***', 'Because notes is undefined');
       expect(fixture.AddEvent.eventData.rooms[1].equipment[1].equipment.cancelled).toBe(true);
-      expect(fixture.AddEvent.eventData.rooms[1].equipment[0].equipment.notes).toBe('***Cancelled***');
+      expect(fixture.AddEvent.eventData.rooms[1].equipment[0].equipment.notes).toBe('***Cancelled***', 'Because notes is null');
+      expect(fixture.AddEvent.eventData.rooms[1].equipment[0].equipment.notes).toBe('***Cancelled***', 'Because notes is empty string');
     });
 
     it('should error when trying to move page to next()', () => {

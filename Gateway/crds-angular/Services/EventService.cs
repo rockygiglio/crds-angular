@@ -185,6 +185,7 @@ namespace crds_angular.Services
                             foreach (var eq in room.Equipment)
                             {
                                 eq.Cancelled = true;
+                                eq.Notes = "***Cancelled***" + eq.Notes;
                             }
                             UpdateEventRoom(room, eventId, token);
                         }

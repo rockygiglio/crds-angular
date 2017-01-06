@@ -110,12 +110,13 @@ export default class AddEventToolController {
   }
 
   cancelEvent() {
+      // TODO: Split this out a bit?
       this.processing = true;
       _.forEach(this.rooms, (room) => {
         room.cancelled = true;
-        room.notes = '***Cancelled***';
+        room.notes = (room.notes != null) ? `***Cancelled***${room.notes}` : '***Cancelled***';
         _.forEach(room.equipment, (equipment) => {
-          equipment.equipment.notes = '***Cancelled***';
+          equipment.equipment.notes = (equipment.equipment.notes != null) ? `***Cancelled***${equipment.equipment.notes}` : '***Cancelled***';
           equipment.equipment.cancelled = true;
         });
       });
