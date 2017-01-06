@@ -42,7 +42,6 @@
           participantsExpected: eventData.event.participantsExpected,
           group: getGroupDto(eventData.event),
           rooms: _.map(eventData.rooms, (r) => { return getRoomDto(r); })
-
         };
       },
 
@@ -87,7 +86,8 @@
             participantsExpected: event.participantsExpected,
             maximumAge: event.group.maximumAge,
             minimumChildren: event.group.minimumParticipants,
-            maximumChildren: event.group.tartgetSize
+            maximumChildren: event.group.tartgetSize,
+            isSeries: event.isSeries
           },
           rooms: _.map(event.rooms, (r) => { return fromRoomDto(r); })
         };

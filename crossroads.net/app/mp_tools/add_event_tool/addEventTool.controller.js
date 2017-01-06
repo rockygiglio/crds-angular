@@ -29,6 +29,10 @@ export default class AddEventToolController {
         this.rooms = this.AddEvent.eventData.rooms;
         this.AddEvent.currentPage = 1;
         this.viewReady = true;
+
+        if (this.AddEvent.eventData.event.isSeries) {
+          this.recurringEventModal();
+        }
       },
         (err) => {
           console.error(`failed to get event ${this.currentEventSelected} + with error ${err}`);
@@ -95,6 +99,14 @@ export default class AddEventToolController {
     });
   }
 
+  recurringEventModal() {
+    const modalInstance = this.modal.open({
+      controller: 'RecurringEventController',
+      controllerAs: 'recurringEvent',
+      templateUrl: 'recurring_event/recurring_event.html'
+    });
+  }
+
   cancelEventClicked() {
     const modalInstance = this.modal.open({
       controller: 'CancelEventController',
@@ -110,23 +122,23 @@ export default class AddEventToolController {
   }
 
   cancelEvent() {
-      // TODO: Split this out a bit?
-      this.processing = true;
-      _.forEach(this.rooms, (room) => {
-        room.cancelled = true;
-        room.notes = (room.notes != null) ? `***Cancelled***${room.notes}` : '***Cancelled***';
-        _.forEach(room.equipment, (equipment) => {
-          equipment.equipment.notes = (equipment.equipment.notes != null) ? `***Cancelled***${equipment.equipment.notes}` : '***Cancelled***';
-          equipment.equipment.cancelled = true;
-        });
+    // TODO: Split this out a bit?
+    this.processing = true;
+    _.forEach(this.rooms, (room) => {
+      room.cancelled = true;
+      room.notes = (room.notes != null) ? `***Cancelled***${room.notes}` : '***Cancelled***';
+      _.forEach(room.equipment, (equipment) => {
+        equipment.equipment.notes = (equipment.equipment.notes != null) ? `***Cancelled***${equipment.equipment.notes}` : '***Cancelled***';
+        equipment.equipment.cancelled = true;
       });
+    });
 
-      this.AddEvent.eventData.event.cancelled = true;
-      this.AddEvent.eventData.rooms = this.rooms;
-      const event = this.AddEvent.getEventDto(this.AddEvent.eventData);
-      event.startDateTime = moment(event.startDateTime).utc().format();
-      event.endDateTime = moment(event.endDateTime).utc().format();
-      this.processEdit(event);
+    this.AddEvent.eventData.event.cancelled = true;
+    this.AddEvent.eventData.rooms = this.rooms;
+    const event = this.AddEvent.getEventDto(this.AddEvent.eventData);
+    event.startDateTime = moment(event.startDateTime).utc().format();
+    event.endDateTime = moment(event.endDateTime).utc().format();
+    this.processEdit(event);
   }
 
   canSaveMaintainOldReservation() {

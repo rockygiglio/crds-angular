@@ -664,6 +664,14 @@ namespace MinistryPlatform.Translation.Repositories
             _ministryPlatformRestRepository.UsingAuthenticationToken(apiToken).Put(waiverResponses.Where(w => w.EventParticipantWaiverId != 0).ToList());
         }
 
+        public bool IsEventSeries(int eventId)
+        {
+            var apiToken = ApiLogin();
+            var result = _ministryPlatformRestRepository.UsingAuthenticationToken(apiToken).Get<MpSequenceRecord>(eventId);
+
+            return result != null;
+        }        
+
         public Result<int> GetProductEmailTemplate(int eventId)
         {
             var apiToken = ApiLogin();

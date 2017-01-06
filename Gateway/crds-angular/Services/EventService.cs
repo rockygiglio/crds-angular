@@ -87,7 +87,9 @@ namespace crds_angular.Services
 
         public EventToolDto GetEventReservation(int eventId)
         {
-            return GetEventDetails(eventId, true, false);
+            var details = GetEventDetails(eventId, true, false);
+            details.IsSeries = _eventService.IsEventSeries(eventId);
+            return details;
         }
 
         private EventToolDto GetEventDetails(int eventId, bool includeEquipment, bool includeParticipants)
