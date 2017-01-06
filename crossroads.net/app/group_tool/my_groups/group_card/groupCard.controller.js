@@ -31,6 +31,10 @@ export default class GroupCardController {
     this.state.go('grouptool.detail.requests', { groupId: this.group.groupId });
   }
 
+  openEmailClient() {
+    this.window.location.href = `mailto:?bcc=${this.emailList}`;
+  }
+
   goToEdit() {
     this.state.go('grouptool.edit', { groupId: this.group.groupId });
   }
