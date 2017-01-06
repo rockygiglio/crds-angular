@@ -169,60 +169,6 @@ WHERE Batch_ID IS NULL
 	SET Deposit_ID = @DepositID
 	WHERE Batch_ID = @BatchID AND Deposit_ID IS NULL
 	
-	----Update Donation Distributions with default target event and pledges
-
-	--CREATE TABLE #D (Donation_Distribution_ID Int)
-	--INSERT INTO #D (Donation_Distribution_ID)
-	--SELECT Donation_Distribution_ID 
-	--FROM Deposits De
-	-- INNER JOIN Batches Ba ON Ba.Deposit_ID = DE.Deposit_ID 
-	-- INNER JOIN Donations D ON D.Batch_ID = Ba.Batch_ID
-	-- INNER JOIN Donation_Distributions DD ON DD.Donation_ID = D.Donation_ID
-	--WHERE De.Deposit_ID = @DepositID 
-
-	--DECLARE @DonationDistributionID INT, @ProgramID INT, @BestPledgeID INT, @DefaultEventID INT, @CurrentEventID INT, @CurrentPledgeID INT
-
-	--	DECLARE CursorD CURSOR FAST_FORWARD FOR
-	--		SELECT Donation_Distribution_ID 
-	--		FROM #D
-			
-	--	OPEN CursorD
-	--	FETCH NEXT FROM CursorD INTO @DonationDistributionID
-	--		WHILE @@FETCH_STATUS = 0
-	--		BEGIN
-	--		SELECT Top 1 @ProgramID = DD.Program_ID
-	--		,@DefaultEventID = Prog.Default_Target_Event
-	--		,@CurrentEventID = DD.Target_Event
-	--		,@BestPledgeID = PL.Pledge_ID
-	--		,@CurrentPledgeID = DD.Pledge_ID 
-	--		FROM Donation_Distributions DD
-	--		 INNER JOIN Programs Prog ON Prog.Program_ID = DD.Program_ID
-	--		 INNER JOIN Donations D ON D.Donation_ID = DD.Donation_ID 
-	--		 LEFT OUTER JOIN Pledges PL ON PL.Donor_ID = D.Donor_ID AND PL.Pledge_Campaign_ID = Prog.Pledge_Campaign_ID AND Pledge_Status_ID  = 1-- AND GETDATE() BETWEEN PL.First_Installment_Date AND ISNULL(PL._Last_Installment_Date, GETDATE())
-	--		WHERE DD.Donation_Distribution_ID  = @DonationDistributionID
-
-	--		--Update Target Event if null and default not null
-	--		IF @CurrentEventID IS NULL AND @DefaultEventID IS NOT NULL
-	--		BEGIN
-	--		UPDATE Donation_Distributions SET Target_Event = @DefaultEventID WHERE Donation_Distribution_ID = @DonationDistributionID 
-	--		END
-
-	--		--Update Pledge if null and best not null
-	--		IF @CurrentPledgeID IS NULL AND @BestPledgeID IS NOT NULL
-	--		BEGIN
-	--		UPDATE Donation_Distributions SET Pledge_ID = @BestPledgeID WHERE Donation_Distribution_ID = @DonationDistributionID 
-	--		END
-
-	--	FETCH NEXT FROM CursorD INTO @DonationDistributionID
-	--	END
-
-	--	CLOSE CursorD
-	--	DEALLOCATE CursorD
-
-		
-	--	DROP Table #D
-
-	
 	END
 
 
