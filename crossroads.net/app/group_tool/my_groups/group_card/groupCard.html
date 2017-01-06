@@ -59,7 +59,7 @@
               </div>
               <div ng-show="item.name==='Copy Addresses'" class="ui-select-choices-group condensed-grid">
                 <li>
-                  <a ngclipboard data-clipboard-text="{{groupCard.group.emailList()}}" ngclipboard-success="groupCard.onCopySuccess()"
+                  <a ngclipboard data-clipboard-text="{{groupCard.emailList}}" ngclipboard-success="groupCard.onCopySuccess()"
                     ngclipboard-error="groupCard.onCopyError()">
                     <div class="row">
                       <span class="pull-left">
