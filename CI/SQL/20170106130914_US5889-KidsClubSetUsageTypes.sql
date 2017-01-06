@@ -1,3 +1,6 @@
+USE [MinistryPlatform]
+GO
+
 DECLARE @KcRoomUsageTypeId int = 6
 
 UPDATE [dbo].[Rooms]
