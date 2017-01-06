@@ -15,7 +15,7 @@
     this.processing = false;
     this.error = false;
 
-    this.process = () => {
+    this.startImpersonating = () => {
       this.processing = true;
       $http({
         method: 'GET',
@@ -23,36 +23,47 @@
       }).success((response) => {
         this.processing = false;
         this.error = false;
-        this.setImpersonateDetails(true, response.user, response.contact);
+        this.storeCurrentUser();
+        this.storeImpersonateDetails(true, response);
+        this.setCurrentUser(response);
       }).error(() => {
         this.processing = false;
         this.error = true;
-        this.setImpersonateDetails(false);
+        this.storeImpersonateDetails(false);
       });
     };
 
-    this.stop = () => {
-      this.setImpersonateDetails(false);
+    this.stopImpersonating = () => {
+      this.username = undefined;
+      this.storeImpersonateDetails(false);
+      this.setCurrentUser($rootScope.impersonation.loggedIn);
     };
 
-    this.setImpersonateDetails = (active, user, contact) => {
+    this.storeCurrentUser = () => {
+      $rootScope.impersonation.loggedIn = {
+        userid: $rootScope.userid,
+        username: $rootScope.username,
+        email: $rootScope.email,
+        phone: $rootScope.phone,
+        roles: $rootScope.roles
+      };
+    };
+
+    this.setCurrentUser = (user) => {
+      $rootScope.userid = user.userid;
+      $rootScope.username = user.username;
+      $rootScope.email = user.email;
+      $rootScope.phone = user.phone;
+      $rootScope.roles = user.roles;
+    };
+
+    this.storeImpersonateDetails = (active, loginReturn) => {
       if (active !== true) {
         active = false;
       }
       $rootScope.impersonation.active = active;
-      $rootScope.impersonation.user = user;
-      $rootScope.impersonation.contact = contact;
-      if (user !== undefined) {
-        this.setImpersonateHeader(user.UserRecordId, user.UserId, user.Guid);
-      } else {
-        this.setImpersonateHeader();
-      }
-    };
-
-    this.setImpersonateHeader = (id, username, guid) => {
-      $http.defaults.headers.common.ImpersonateRecordId = id;
-      $http.defaults.headers.common.ImpersonateUserId = username;
-      $http.defaults.headers.common.ImpersonateGuid = guid;
+      $rootScope.impersonation.impersonated = loginReturn;
+      $http.defaults.headers.common.ImpersonateUserId = this.username;
     };
   }
 

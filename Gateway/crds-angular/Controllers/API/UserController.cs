@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Net;
-using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Description;
 using crds_angular.Exceptions;
@@ -18,16 +16,16 @@ namespace crds_angular.Controllers.API
     public class UserController : MPAuth
     {
         private readonly IAccountService _accountService;
-        private readonly IUserRepository _userRepository;
         private readonly IContactRepository _contactRepository;
+        private readonly IUserRepository _userRepository;
         // Do not change this string without also changing the same in the corejs register_controller
         private const string DUPLICATE_USER_MESSAGE = "Duplicate User";
 
-        public UserController(IAccountService accountService, IUserRepository userRepository, IContactRepository contactRepository, IUserImpersonationService userImpersonationService) : base(userImpersonationService)
+        public UserController(IAccountService accountService, IContactRepository contactRepository, IUserRepository userRepository, IUserImpersonationService userImpersonationService) : base(userImpersonationService)
         {
             _accountService = accountService;
-            _userRepository = userRepository;
             _contactRepository = contactRepository;
+            _userRepository = userRepository;
         }
 
         [ResponseType(typeof(User))]
@@ -62,13 +60,27 @@ namespace crds_angular.Controllers.API
             return Authorized(token =>
             {
                 try
-                {
+                {                    
                     int userid = _userRepository.GetUserIdByUsername(username);
                     MpUser user = _userRepository.GetUserByRecordId(userid);
+                    var userRoles = _userRepository.GetUserRoles(userid);
                     int contactid = _contactRepository.GetContactIdByEmail(user.UserEmail);
                     MpMyContact contact = _contactRepository.GetContactById(contactid);
+                    var r = new LoginReturn
+                    {
+                        userToken = token,
+                        userTokenExp = "",
+                        refreshToken = "",
+                        userId = contact.Contact_ID,
+                        username = contact.First_Name,
+                        userEmail = contact.Email_Address,
+                        roles = userRoles,
+                        age = contact.Age,
+                        userPhone = contact.Mobile_Phone,
+                        canImpersonate = user.CanImpersonate
+                    };
 
-                    return Ok(new UserWithContact(user,contact));
+                    return Ok(r);
                 }
                 catch (Exception e)
                 {
@@ -78,14 +90,5 @@ namespace crds_angular.Controllers.API
             });
         }
     }
-
-    public class UserWithContact {
-        public UserWithContact(MpUser thisUser, MpMyContact thisContact)
-        {
-            user = thisUser;
-            contact = thisContact;
-        }
-        public MpUser user { get; set; }
-        public MpMyContact contact { get; set; }
-    }
+    
 }

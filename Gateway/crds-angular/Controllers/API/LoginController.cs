@@ -145,8 +145,6 @@ namespace crds_angular.Controllers.API
 
                 _loginService.ClearResetToken(cred.username);
 
-                //ttpResponseHeadersExtensions.AddCookies();
-
                 return this.Ok(r);
             }
             catch (Exception e)

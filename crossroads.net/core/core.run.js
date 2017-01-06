@@ -54,9 +54,10 @@
 
     $rootScope.impersonation = {
       active: false,
-      user: undefined,
-      contact: undefined,
+      loggedIn: undefined,
+      impersonated: undefined
     };
+
     $rootScope.MESSAGES = MESSAGES;
     setOriginForCmsPreviewPane($document);
     fastclick.attach(document.body);

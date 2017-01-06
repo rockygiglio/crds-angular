@@ -6,38 +6,32 @@
             <div ng-if="impersonate.error" class="alert alert-danger">
                 Could not find the user you requested. Please try again.
             </div>
-            <div ng-if="!impersonate.error && impersonation.user">
+            <div ng-if="!impersonate.error && impersonation.active">
                 <div class="row">
                     <div class="form-group col-sm-12">
                         <label class="wide-label">ID</label>
-                        <div>{{ impersonation.user.UserRecordId }}</div>
+                        <div>{{ impersonation.impersonated.userId }}</div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="form-group col-sm-12">
                         <label class="wide-label">Username</label>
-                        <div>{{ impersonation.user.UserId }}</div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="form-group col-sm-12">
-                        <label class="wide-label">GUID</label>
-                        <div>{{ impersonation.user.Guid }}</div>
+                        <div>{{ impersonation.impersonated.username }}</div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="form-group col-sm-12">
                         <label class="wide-label">Email Address</label>
-                        <div>{{ impersonation.contact.Email_Address }}</div>
+                        <div>{{ impersonation.impersonated.userEmail }}</div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="form-group col-sm-12">
-                        <button class="btn btn-primary" type="submit" ng-click="impersonate.stop()">Stop Impersonating</button>
+                        <button class="btn btn-primary" type="submit" ng-click="impersonate.stopImpersonating()">Stop Impersonating</button>
                     </div>
                 </div>
             </div>
-            <div ng-if="!impersonation.user">
+            <div ng-if="!impersonation.active">
                 <form role="form" novalidate>
                     <div class="row">
                         <div class="form-group col-sm-12">
@@ -47,7 +41,7 @@
                     </div>
                     <div class="row">
                         <div class="form-group col-sm-12">
-                            <button class="btn btn-primary" type="submit" ng-click="impersonate.process()">Impersonate</button>
+                            <button class="btn btn-primary" type="submit" ng-click="impersonate.startImpersonating()">Impersonate</button>
                         </div>
                     </div>
                 </form>
