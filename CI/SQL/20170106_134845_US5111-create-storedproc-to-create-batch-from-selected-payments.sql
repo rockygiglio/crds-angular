@@ -100,11 +100,11 @@ WHERE Batch_ID IS NULL
 	DECLARE @AuditItemID INT
 	DECLARE @RecordID INT	
 
-	DECLARE ALDonations CURSOR FAST_FORWARD FOR
+	DECLARE ALPayments CURSOR FAST_FORWARD FOR
 	SELECT Payment_ID FROM #TD
 	
-	OPEN ALDonations
-	FETCH NEXT FROM ALDonations INTO @RecordID
+	OPEN ALPayments
+	FETCH NEXT FROM ALPayments INTO @RecordID
 	WHILE @@FETCH_STATUS = 0
 	BEGIN
 
@@ -122,11 +122,11 @@ WHERE Batch_ID IS NULL
 	VALUES (@AuditItemID,'Batch_ID','Batch','',@BatchName,NULL,@BatchID)
 
 
-	FETCH NEXT FROM ALDonations INTO @RecordID
+	FETCH NEXT FROM ALPayments INTO @RecordID
 	END
 
-	CLOSE ALDonations
-	DEALLOCATE ALDonations
+	CLOSE ALPayments
+	DEALLOCATE ALPayments
 
 	IF @FinalizeAndDeposit = 1
 	BEGIN
@@ -174,7 +174,7 @@ WHERE Batch_ID IS NULL
 
 DELETE FROM dp_Selected_Records WHERE SELECTION_ID IN (SELECT S.Selection_ID FROM dp_Selections S INNER JOIN dp_Users U ON U.[User_ID] = S.[User_ID] WHERE @PageID = S.Page_ID AND @UserID = U.[User_GUID] AND ((S.Selection_ID = @SelectionID AND @SelectionID > 0) OR (S.Selection_Name = 'dp_DEFAULT' AND @SelectionID < 1 AND S.Sub_Page_ID IS NULL)))
 DELETE FROM dp_Selected_Contacts WHERE SELECTION_ID IN (SELECT S.Selection_ID FROM dp_Selections S  INNER JOIN dp_Users U ON U.[User_ID] = S.[User_ID] WHERE @PageID = S.Page_ID AND @UserID = U.[User_GUID] AND ((S.Selection_ID = @SelectionID AND @SelectionID > 0) OR (S.Selection_Name = 'dp_DEFAULT' AND @SelectionID < 1 AND S.Sub_Page_ID IS NULL)))
---DELETE FROM dp_Selections WHERE @PageID = Page_ID AND [User_ID] IN (SELECT U.[User_ID] FROM dp_Users U WHERE U.User_GUID = @UserID) AND ((Selection_ID = @SelectionID AND @SelectionID > 0) OR (Selection_Name = 'dp_DEFAULT' AND @SelectionID < 1 AND Sub_Page_ID IS NULL))
+
 
 --Output
 
