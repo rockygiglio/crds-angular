@@ -48,6 +48,12 @@
         <CommandType>StoredProcedure</CommandType>
         <CommandText>dbo.report_CRDS_Payment_Selected_Create_Batch</CommandText>
       </Query>
+      <Fields>
+        <Field Name="Result">
+          <DataField>Result</DataField>
+          <rd:UserDefined>true</rd:UserDefined>
+        </Field>
+      </Fields>
     </DataSet>
   </DataSets>
   <ReportSections>
