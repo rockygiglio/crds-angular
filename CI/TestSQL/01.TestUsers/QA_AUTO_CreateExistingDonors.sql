@@ -26,12 +26,14 @@ set @donor_id = (Select donor_ID from donors where contact_id = @contactID);
 
 --Update Contact record with Donor ID
 update [dbo].Contacts set Donor_Record = @donor_ID where contact_id = @contactID;
+GO
 
 
 --
 --mpcrds+auto+2@gmail.com (existing CC donor)
 --
 --Retrieve contact ID
+DECLARE @contactID as int
 set @contactID = (select contact_id from contacts where Email_Address = 'mpcrds+auto+2@gmail.com' and Last_Name = 'Kenobi');
 
 --Create a Donor record for mpcrds+auto+2@gmail.com (used the Stripe processor ID from a newly-created CC transaction)
