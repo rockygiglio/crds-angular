@@ -3,7 +3,7 @@ import CONSTANTS from '../../../constants';
 
 export default class GroupDetailParticipantsController {
   /*@ngInject*/
-  constructor(GroupService, ImageService, $state, $log, ParticipantService, $rootScope, MessageService, GroupDetailService) {
+  constructor(GroupService, ImageService, $state, $log, ParticipantService, $rootScope, MessageService, GroupDetailService, $window) {
     this.groupService = GroupService;
     this.imageService = ImageService;
     this.state = $state;
@@ -12,6 +12,7 @@ export default class GroupDetailParticipantsController {
     this.rootScope = $rootScope;
     this.messageService = MessageService;
     this.groupDetailService = GroupDetailService;
+    this.window = $window;
 
     this.emailOptions = [];
     this.emailOptions.push(
@@ -218,6 +219,10 @@ export default class GroupDetailParticipantsController {
 
   onCopyError() {
     this.rootScope.$emit('notify', this.rootScope.MESSAGES.copiedGroupEmailAddressesToClipboardError);
+  }
+
+  openEmailClient() {
+    this.window.location.href = `mailto:?bcc=${this.emailList()}`;
   }
 
 }
