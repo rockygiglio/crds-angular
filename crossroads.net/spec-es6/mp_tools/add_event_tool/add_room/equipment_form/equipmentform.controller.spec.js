@@ -22,6 +22,7 @@ describe('AddEventTool EquipmentForm', () => {
 
   it('$onInit() should not set equipmentRequired if edit mode is false', () => {
     fixture.addEvent = { editMode: false };
+    fixture.currentEquipment = [];
     fixture.currentRoom = { cancelled: false };
     fixture.$onInit();
     expect(fixture.equipmentRequired).toBeUndefined();
