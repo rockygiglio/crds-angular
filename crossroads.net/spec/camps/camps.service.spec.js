@@ -1,4 +1,3 @@
-import moment from 'moment';
 import campsModule from '../../app/camps/camps.module';
 
 describe('Camp Service', () => {
@@ -94,7 +93,7 @@ describe('Camp Service', () => {
     };
 
     // Allows the expect call to ignore the query parameters on the url
-    const urlRe = new RegExp(`${endpoint}/camps/${campId}/product/${camperId}\?.*`, 'g');
+    const urlRe = new RegExp(`${endpoint}/camps/${campId}/product/${camperId}\\?.*`, 'g');
 
     /**
      * Tells the backend to expect a call from a url that matches urlRe and pass the 'timestamp'
@@ -103,8 +102,8 @@ describe('Camp Service', () => {
     httpBackend.expect('GET', urlRe, undefined, undefined, ['timestamp'])
       .respond((method, url, data, headers, { timestamp }) => {
         if (!timestamp) {
-          throw 'timestamp query parameter wasn\'t passed to url'
-        } else return [ 200, productInfo ];
+          throw Object({ error: 'timestamp query parameter wasn\'t passed to url' });
+        } else return [200, productInfo];
       });
 
     expect(campsService.getCampProductInfo(campId, camperId));
@@ -119,12 +118,12 @@ describe('Camp Service', () => {
       invoiceId: 123
     };
 
-    const urlRe = new RegExp(`${endpoint}/camps/${campId}/product/${camperId}\?.*`, 'g');
+    const urlRe = new RegExp(`${endpoint}/camps/${campId}/product/${camperId}\\?.*`, 'g');
     httpBackend.expect('GET', urlRe, undefined, undefined, ['timestamp'])
       .respond((method, url, data, headers, { timestamp }) => {
         if (!timestamp) {
-          throw 'timestamp query parameter wasn\'t passed to url'
-        } else return [ 200, productInfo ];
+          throw Object({ error: 'timestamp query parameter wasn\'t passed to url' });
+        } else return [200, productInfo];
       });
 
     httpBackend.whenGET(`${endpoint}/v1.0.0/invoice/${productInfo.invoiceId}/has-payment?method=GET&cache=false`).respond(200, {});
@@ -142,12 +141,12 @@ describe('Camp Service', () => {
 
     campsService.sessionStorage.campDeposits = undefined;
 
-    const urlRe = new RegExp(`${endpoint}/camps/${campId}/product/${camperId}\?.*`, 'g');
+    const urlRe = new RegExp(`${endpoint}/camps/${campId}/product/${camperId}\\?.*`, 'g');
     httpBackend.expect('GET', urlRe, undefined, undefined, ['timestamp'])
       .respond((method, url, data, headers, { timestamp }) => {
         if (!timestamp) {
-          throw 'timestamp query parameter wasn\'t passed to url'
-        } else return [ 200, productInfo ];
+          throw Object({ error: 'timestamp query parameter wasn\'t passed to url' });
+        } else return [200, productInfo];
       });
     httpBackend.expectGET(`${endpoint}/v1.0.0/invoice/${productInfo.invoiceId}/has-payment?method=GET&cache=false`).respond(302, { status: 302 });
 
@@ -169,12 +168,12 @@ describe('Camp Service', () => {
     campsService.sessionStorage.campDeposits[`${campId}+${camperId}`] = true;
     let checkedForDeposit = false;
 
-    const urlRe = new RegExp(`${endpoint}/camps/${campId}/product/${camperId}\?.*`, 'g');
+    const urlRe = new RegExp(`${endpoint}/camps/${campId}/product/${camperId}\\?.*`, 'g');
     httpBackend.expect('GET', urlRe, undefined, undefined, ['timestamp'])
       .respond((method, url, data, headers, { timestamp }) => {
         if (!timestamp) {
-          throw 'timestamp query parameter wasn\'t passed to url'
-        } else return [ 200, productInfo ];
+          throw Object({ error: 'timestamp query parameter wasn\'t passed to url' });
+        } else return [200, productInfo];
       });
     httpBackend.whenGET(`${endpoint}/v1.0.0/invoice/${productInfo.invoiceId}/has-payment?method=GET&cache=false`).respond(() => {
       checkedForDeposit = true;
