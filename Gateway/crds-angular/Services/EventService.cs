@@ -381,7 +381,7 @@ namespace crds_angular.Services
                 DomainId = 1
             };
 
-            return _eventService.CreateEventGroup(eventGroup, token);
+            return _eventService.CreateEventGroup(eventGroup);
         }
 
         private void AddEquipment(EventRoomEquipmentDto equipment, int eventId, EventRoomDto room, string token)
@@ -393,7 +393,7 @@ namespace crds_angular.Services
             equipmentReservation.QuantityRequested = equipment.QuantityRequested;
             equipmentReservation.RoomId = room.RoomId;
             equipmentReservation.Notes = room.Notes;
-            _equipmentService.CreateEquipmentReservation(equipmentReservation, token);
+            _equipmentService.CreateEquipmentReservation(equipmentReservation);
         }
 
         private void UpdateEquipment(EventRoomEquipmentDto equipment, int eventId, EventRoomDto room, string token)
@@ -406,7 +406,7 @@ namespace crds_angular.Services
             equipmentReservation.QuantityRequested = equipment.QuantityRequested;
             equipmentReservation.RoomId = room.RoomId;
             equipmentReservation.Notes = equipment.Notes ?? room.Notes;
-            _equipmentService.UpdateEquipmentReservation(equipmentReservation, token);
+            _equipmentService.UpdateEquipmentReservation(equipmentReservation);
         }
 
         private int AddRoom(int eventId, EventRoomDto room, string token)
@@ -422,7 +422,7 @@ namespace crds_angular.Services
             roomReservation.Label = room.Label;
             roomReservation.CheckinAllowed = room.CheckinAllowed;
             roomReservation.Volunteers = room.Volunteers;
-            return _roomService.CreateRoomReservation(roomReservation, token);
+            return _roomService.CreateRoomReservation(roomReservation);
         }
 
         private void UpdateRoom(int eventId, EventRoomDto room, string token)
@@ -439,7 +439,7 @@ namespace crds_angular.Services
             roomReservation.Label = room.Label;
             roomReservation.CheckinAllowed = room.CheckinAllowed;
             roomReservation.Volunteers = room.Volunteers;
-            _roomService.UpdateRoomReservation(roomReservation, token);
+            _roomService.UpdateRoomReservation(roomReservation);
         }
 
         public int AddEvent(EventToolDto eventReservation)
@@ -830,7 +830,7 @@ namespace crds_angular.Services
                 eventRoom.EventId = eventId;
 
                 // this is the new room reservation id for the copied room
-                int roomReservationId = _roomService.CreateRoomReservation(eventRoom, token);
+                int roomReservationId = _roomService.CreateRoomReservation(eventRoom);
 
                 // get the template event group which matched the template event room, and assign the reservation id to this object
                 var eventGroupsForRoom = (from r in eventGroups where r.EventRoomId == eventRoom.EventRoomId select r);
@@ -840,7 +840,7 @@ namespace crds_angular.Services
                     // create the copied event group and assign the new room reservation id here
                     eventGroup.EventId = eventId;
                     eventGroup.EventRoomId = roomReservationId;
-                    _eventService.CreateEventGroup(eventGroup, token);
+                    _eventService.CreateEventGroup(eventGroup);
                     eventGroup.Created = true;
                 }
             }
@@ -849,7 +849,7 @@ namespace crds_angular.Services
             {
                 // create the copied event group and assign the new room reservation id here
                 eventGroup.EventId = eventId;
-                _eventService.CreateEventGroup(eventGroup, token);
+                _eventService.CreateEventGroup(eventGroup);
                 eventGroup.Created = true;
             }
 

@@ -38,6 +38,7 @@ namespace crds_angular.Services
                 DisplayName = record.DisplayName,
                 ReservationStart = record.ReservationStart,
                 ReservationEnd = record.ReservationEnd,
+                ReservationEvent = record.ReservationEvent,
                 ReservationId = record.ReservationId
 
             }).OrderBy(x => x.Name).ToList();

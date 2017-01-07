@@ -41,7 +41,7 @@
             <ui-select-choices class="ui-select-dropdown dropdown-menu ui-select-choices" repeat="item in groupCard.emailOptions">
               <div ng-show="item.name==='Compose Email'" class="ui-select-choices-group condensed-grid">
                 <li>
-                  <a href="mailto:?bcc={{groupCard.group.emailList()}}" target="_top">
+                  <a href="#" target="_top" ng-click="groupCard.openEmailClient()">
                     <div class="row">
                       <span class="pull-left">
                         <svg-icon icon="{{item.icon}}">
@@ -55,12 +55,11 @@
                     <div class="row">
                       <small class="pull-left">{{item.descriptionLine2}}</small>
                     </div>
-                  </a>
                 </li>
               </div>
               <div ng-show="item.name==='Copy Addresses'" class="ui-select-choices-group condensed-grid">
                 <li>
-                  <a ngclipboard data-clipboard-text="{{groupCard.group.emailList()}}" ngclipboard-success="groupCard.onCopySuccess()"
+                  <a ngclipboard data-clipboard-text="{{groupCard.emailList}}" ngclipboard-success="groupCard.onCopySuccess()"
                     ngclipboard-error="groupCard.onCopyError()">
                     <div class="row">
                       <span class="pull-left">

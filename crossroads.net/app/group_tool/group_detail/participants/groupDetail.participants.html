@@ -27,7 +27,7 @@
           <ui-select-choices class="ui-select-dropdown dropdown-menu ui-select-choices" repeat="item in groupDetailParticipants.emailOptions">
             <div ng-show="item.name==='Compose Email'" class="ui-select-choices-group condensed-grid">
               <li>
-                <a href="mailto:?bcc={{groupDetailParticipants.emailList()}}" target="_top">
+                  <a href="#" target="_top" ng-click="groupDetailParticipants.openEmailClient()">
                   <div class="row">
                     <span class="pull-left">
                       <svg-icon icon="{{item.icon}}">
