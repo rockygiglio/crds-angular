@@ -1,6 +1,6 @@
 import CONSTANTS from 'crds-constants';
 
-export default class ContinueEditController {
+export default class RecurringEventController {
   /* @ngInject */
   constructor($modalInstance) {
     this.modalInstance = $modalInstance;
@@ -9,8 +9,4 @@ export default class ContinueEditController {
   ok() {
     this.modalInstance.close();
   }
-
-  cancel() {
-    this.modalInstance.dismiss('cancel');
-  }
-}
+};

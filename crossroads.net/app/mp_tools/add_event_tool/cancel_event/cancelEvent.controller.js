@@ -1,6 +1,6 @@
 import CONSTANTS from 'crds-constants';
 
-export default class ContinueEditController {
+export default class CancelEventController {
   /* @ngInject */
   constructor($modalInstance) {
     this.modalInstance = $modalInstance;
@@ -13,4 +13,4 @@ export default class ContinueEditController {
   cancel() {
     this.modalInstance.dismiss('cancel');
   }
-}
+};
