@@ -20,12 +20,28 @@ describe('AddEventTool EquipmentForm', () => {
     fixture = new EquipmentFormController(AddEvent, Validation);
   }));
 
-  it('$onInit() should not set equipmentRequired if edit mode is false', () => {
+  it('$onInit() should not set equipmentRequired if edit mode is false and there is no equipment', () => {
     fixture.addEvent = { editMode: false };
     fixture.currentEquipment = [];
     fixture.currentRoom = { cancelled: false };
     fixture.$onInit();
     expect(fixture.equipmentRequired).toBeUndefined();
+  });
+
+  it('$onInit() should not set equipmentRequired if edit mode is false and the only equipment has id of 0', () => {
+    fixture.addEvent = { editMode: false };
+    fixture.currentEquipment = [{ equipment: { name: { id: 0 } } }];
+    fixture.currentRoom = { cancelled: false };
+    fixture.$onInit();
+    expect(fixture.equipmentRequired).toBeUndefined();
+  });
+
+  it('$onInit() should set equipment required to true if editMode is false and current equipment has id > 0', () => {
+    fixture.addEvent = { editMode: false };
+    fixture.currentEquipment = [{ equipment: { name: { id: 23 } } }];
+    fixture.currentRoom = { cancelled: false };
+    fixture.$onInit();
+    expect(fixture.equipmentRequired).toBe(true);
   });
 
   it('$onInit() should set equipmentRequired to false if edit mode is true and there is no equipment', () => {

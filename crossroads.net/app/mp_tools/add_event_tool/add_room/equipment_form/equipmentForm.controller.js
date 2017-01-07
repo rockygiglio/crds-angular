@@ -23,7 +23,6 @@ export default class EquipmentController {
     }
     else if (this.currentEquipment.length > 0 && this.currentEquipment[0].equipment.name.id > 0) {
       this.equipmentRequired = true;
-
     }
     this.ready = true;
   }
