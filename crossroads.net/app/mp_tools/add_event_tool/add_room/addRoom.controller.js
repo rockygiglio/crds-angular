@@ -28,7 +28,6 @@ export default class AddRoomController {
         startDate: this.addEvent.dateTime(this.addEvent.eventData.event.startDate, this.addEvent.eventData.event.startTime),
         endDate: this.addEvent.dateTime(this.addEvent.eventData.event.endDate, this.addEvent.eventData.event.endTime)
       }, (data) => {
-        debugger;
         this.setRoomData(data);
         this.setEquipmentData();
       });

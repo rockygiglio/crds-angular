@@ -270,66 +270,45 @@ describe('component: addRoom controller', () => {
         expect(fixture.rooms).toEqual(data);
     });
 
-    it('should setCongregation()', () => {
-        let data, roomData, eOne, eTwo, eThree;
+    it('should setEquipmentData()', () => {
+        let data;
+        let roomData;
         data = [{ Id: 1 }, { Id: 2 }, { Id: 3 }];
         roomData = [{ equipment: { Id: 1 } }, { equipment: { Id: 2 } }, { equipment: { Id: 3 } }];
         fixture.roomData = roomData;
-        eOne = { name: 'tables' };
-        eTwo = { name: 'chairs' };
-        eThree = { name: 'flowers' };
-        spyOn(fixture, 'mapEquipment').and.callFake((dataSet, e) => {
-            switch (e.Id) {
-                case 1:
-                    return eOne;
-                case 2:
-                    return eTwo;
-                case 3:
-                    return eThree;
-                default:
-                    return;
-            }
-        })
-        room.Equipment.query.and.callFake((obj, callBack) => {
-            callBack(data);
-        });
+        let deferred = qApi.defer();
+        deferred.resolve(data);
+
+        room.Equipment.query.and.returnValue({$promise: deferred.promise});
+        
         fixture.setEquipmentData();
-        expect(room.Equipment.query).toHaveBeenCalledWith({ congregationId: congregationId }, jasmine.any(Function), jasmine.any(Function))
+        rootScope.$apply();
+        expect(room.Equipment.query).toHaveBeenCalledWith({ congregationId: congregationId });
         expect(fixture.equipmentList).toEqual(data);
-        expect(fixture.roomData[0].equipment).toEqual(eOne);
-        expect(fixture.roomData[1].equipment).toEqual(eTwo);
-        expect(fixture.roomData[2].equipment).toEqual(eThree);
+        expect(fixture.viewReady).toBe(true);
+        expect(fixture.roomData[0].equipment).toEqual({Id: 1});
+        expect(fixture.roomData[1].equipment).toEqual({Id: 2});
+        expect(fixture.roomData[2].equipment).toEqual({Id: 3});
     });
 
-    it('should setCongregation() and have nothing be set', () => {
-        let data, roomData, eOne, eTwo, eThree;
+    it('should setEquipmentData() and have nothing be set', () => {
+        let data; 
+        let roomData;
         data = [];
         roomData = [];
         fixture.roomData = roomData;
-        eOne = { name: 'tables' };
-        eTwo = { name: 'chairs' };
-        eThree = { name: 'flowers' };
-        spyOn(fixture, 'mapEquipment').and.callFake((dataSet, e) => {
-            switch (e.Id) {
-                case 1:
-                    return eOne;
-                case 2:
-                    return eTwo;
-                case 3:
-                    return eThree;
-                default:
-                    return;
-            }
-        })
-        room.Equipment.query.and.callFake((obj, callBack) => {
-            callBack(data);
-        });
+        let deferred = qApi.defer();
+        deferred.resolve(data);
+        room.Equipment.query.and.returnValue({$promise: deferred.promise});
         fixture.setEquipmentData();
-        expect(room.Equipment.query).toHaveBeenCalledWith({ congregationId: congregationId }, jasmine.any(Function), jasmine.any(Function))
+        rootScope.$apply();
+        expect(room.Equipment.query).toHaveBeenCalledWith({ congregationId: congregationId });
         expect(fixture.equipmentList).toEqual(data);
+        expect(fixture.viewReady).toBe(true);
         expect(fixture.roomData[0]).toBe(undefined);
-        expect(fixture.roomData[1]).toEqual(undefined);
-        expect(fixture.roomData[2]).toEqual(undefined);
+        expect(fixture.roomData[1]).toBe(undefined);
+        expect(fixture.roomData[2]).toBe(undefined);
+        expect(fixture.roomData.length).toBe(0);
     });
 
     it('should return true for isCancelled()', () => {
