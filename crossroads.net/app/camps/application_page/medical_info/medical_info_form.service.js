@@ -196,7 +196,7 @@ class MedicalInfoForm {
           type: 'crdsRadio',
           templateOptions: {
             label: 'Are there any Allergy/Dietary Needs?',
-            required: true,
+            required: false,
             inline: true,
             labelProp: 'label',
             valueProp: 'id',
@@ -428,4 +428,3 @@ class MedicalInfoFormFactory {
 }
 
 export default MedicalInfoFormFactory;
-
