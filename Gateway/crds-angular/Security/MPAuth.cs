@@ -92,7 +92,7 @@ namespace crds_angular.Security
                 }
                 return actionWhenNotAuthorized();
             }
-            catch (System.InvalidOperationException)
+            catch (System.InvalidOperationException e)
             {
                 return actionWhenNotAuthorized();
             }

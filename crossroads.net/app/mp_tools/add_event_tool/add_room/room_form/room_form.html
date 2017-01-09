@@ -8,7 +8,7 @@
     <div class="form-group" ng-class="{'has-error': room.validation.showErrors(roomForm,  room.currentRoom.id+'layout')}">
       <label class="required">Room Layout </label><br />
       <label class="weight-normal" ng-repeat="layout in room.layouts track by layout.id">
-        <input type="radio" name="{{room.currentRoom.id}}layout" ng-required="!room.currentRoom.layout" ng-model="room.currentRoom.layout.id" ng-value="layout.id" ng-disabled="room.existing()"/>
+        <input type="radio" name="{{room.currentRoom.id}}layout" ng-required="!room.currentRoom.layout" ng-model="room.currentRoom.layout.id" ng-value="layout.id"/>
         {{layout.layoutName}}&nbsp;
       </label>
       <ng-messages for="roomForm[room.currentRoom.id+'layout'].$error" ng-if="room.validation.showErrors(roomForm, room.currentRoom.id+'layout')">
@@ -21,8 +21,7 @@
       <label>Setup Notes</label>
       <textarea class="form-control"
                 name="notes"
-                ng-model="room.currentRoom.notes"
-                ng-disabled="room.existing()" >
+                ng-model="room.currentRoom.notes" >
       </textarea>
     </div>
 

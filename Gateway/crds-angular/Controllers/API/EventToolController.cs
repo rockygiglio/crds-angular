@@ -27,6 +27,7 @@ namespace crds_angular.Controllers.API
         [VersionedRoute(template: "event-tool/{eventId}", minimumVersion: "1.0.0")]
         [Route("eventTool/{eventId}")]
         [HttpGet]
+        [RequiresAuthorization]
         public IHttpActionResult GetEventReservation(int eventId)
         {
             return Authorized(token =>
@@ -97,6 +98,7 @@ namespace crds_angular.Controllers.API
             throw new HttpResponseException(dataError.HttpResponseMessage);
         }
 
+        [RequiresAuthorization]
         [VersionedRoute(template: "event-tool/{eventId}", minimumVersion: "1.0.0")]
         [Route("eventTool/{eventId}")]
         [HttpPut]

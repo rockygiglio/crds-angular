@@ -103,6 +103,7 @@ function CampHelpers() {
       foodAllergies: undefined,
       environmentalAllergies: undefined,
       otherAllergies: undefined,
+      medicationsAdministered: [],
       showMedications: false,
       medicines: [
         {}

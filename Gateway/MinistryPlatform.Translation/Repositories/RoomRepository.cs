@@ -52,8 +52,9 @@ namespace MinistryPlatform.Translation.Repositories
             }).ToList();
         }
 
-        public int CreateRoomReservation(MpRoomReservationDto roomReservation, string token)
+        public int CreateRoomReservation(MpRoomReservationDto roomReservation)
         {
+            string token = ApiLogin();
             var roomReservationPageId = _configurationWrapper.GetConfigIntValue("RoomReservationPageId");
 
             var reservationDictionary = new Dictionary<string, object>();
@@ -85,8 +86,9 @@ namespace MinistryPlatform.Translation.Repositories
             }
         }
 
-        public void UpdateRoomReservation(MpRoomReservationDto roomReservation, string token)
+        public void UpdateRoomReservation(MpRoomReservationDto roomReservation)
         {
+            string token = ApiLogin();
             var roomReservationPageId = _configurationWrapper.GetConfigIntValue("RoomReservationPageId");
             var reservationDictionary = new Dictionary<string, object>
             {
@@ -119,8 +121,9 @@ namespace MinistryPlatform.Translation.Repositories
             }
         }
 
-        public void DeleteRoomReservation(MpRoomReservationDto roomReservation, string token)
+        public void DeleteRoomReservation(MpRoomReservationDto roomReservation)
         {
+            string token = ApiLogin();
             // TODO: Move this to a classwide variable to support testing, dry it up, etc
             var roomReservationPageId = _configurationWrapper.GetConfigIntValue("RoomReservationPageId");
             _ministryPlatformService.DeleteRecord(roomReservationPageId, roomReservation.EventRoomId, null, token);

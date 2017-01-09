@@ -411,18 +411,6 @@
             }
           }
         })
-        .state('superbowl', {
-          parent: 'screenWidth',
-          url: '/superbowl',
-          controller: 'SuperbowlCtrl as superbowl',
-          templateUrl: 'superbowl/superbowl.html',
-          data: {
-            meta: {
-              title: 'Super Bowl of Preaching',
-              description: ''
-            }
-          }
-        })
         .state('adbox', {
           parent: 'noSideBar',
           url: '/adbox',
