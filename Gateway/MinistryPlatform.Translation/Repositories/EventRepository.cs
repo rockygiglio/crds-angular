@@ -319,7 +319,7 @@ namespace MinistryPlatform.Translation.Repositories
             return records.Select(record => new MpEvent
             {
                 EventTitle = (string) record["Event_Title"],
-                EventType = (string) record["Event_Type_ID"],
+                EventType = (string) record["Event_Type"],
                 EventStartDate = (DateTime) record["Event_Start_Date"],
                 EventEndDate = (DateTime) record["Event_End_Date"],
                 EventId = (int) record["dp_RecordID"]
