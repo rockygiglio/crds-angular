@@ -5,7 +5,8 @@ export default function addEventComponent() {
   return {
     restrict: 'E',
     bindings: {
-      eventData: '='
+      eventData: '=',
+      rooms: '='
     },
     template,
     controller,

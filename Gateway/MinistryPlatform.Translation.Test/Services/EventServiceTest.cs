@@ -193,7 +193,7 @@ namespace MinistryPlatform.Translation.Test.Services
                 {
                     {"Event_ID", 999},
                     {"Event_Title", "event-title-100"},
-                    {"Event_Type", "event-type-100"},
+                    {"Event_Type_ID", "event-type-100"},
                     {"Event_Start_Date", new DateTime(2015, 3, 28, 8, 30, 0)},
                     {"Event_End_Date", new DateTime(2015, 3, 28, 8, 30, 0)},
                     {"Contact_ID", 12345},

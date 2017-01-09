@@ -121,10 +121,12 @@
     <Compile Include="Models\MpAllergy.cs" />
     <Compile Include="Models\MpBatch.cs" />
     <Compile Include="Models\MpCamp.cs" />
+    <Compile Include="Models\MpSequenceRecord.cs" />
     <Compile Include="Models\MPGLAccountMapping.cs" />
     <Compile Include="Models\MpContactAttribute.cs" />
     <Compile Include="Models\MpMedical.cs" />
     <Compile Include="Models\MpMedicalAllergy.cs" />
+    <Compile Include="Models\MpMedication.cs" />
     <Compile Include="Models\MpWaivers.cs" />
     <Compile Include="Models\MpMedicalInformation.cs" />
     <Compile Include="Models\MpRecordID.cs" />

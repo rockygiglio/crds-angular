@@ -23,6 +23,9 @@ namespace MinistryPlatform.Translation.Models
 
         [JsonProperty(PropertyName = "PhysicianPhone")]
         public string PhysicianPhone { get; set; }
+
+        [JsonProperty(PropertyName = "Allowed_To_Administer_Medications")]
+        public string MedicationsAdministered { get; set; }
     }
     
 }

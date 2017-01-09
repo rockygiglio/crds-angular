@@ -9,5 +9,6 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
         List<MPTask> GetTasksToAutostart();
 
         void CompleteTask(string token, int taskId, bool rejected, string comments);
+        void DeleteTasksForRoomReservations(List<int> roomReserverationIDs);
     }
 }
