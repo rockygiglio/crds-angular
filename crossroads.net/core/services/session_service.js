@@ -252,7 +252,9 @@
           $rootScope.phone = null;
           $rootScope.roles = null;
           $rootScope.canImpersonate = false;
-          $rootScope.$apply();
+          if (!$rootScope.$$phase) {
+            $rootScope.$apply();
+          }
         }
       }
     };
