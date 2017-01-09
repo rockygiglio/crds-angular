@@ -356,7 +356,7 @@
     <DataSet Name="ds_Congregations">
       <Query>
         <DataSourceName>MPReportsDS</DataSourceName>
-        <CommandText>SELECT Congregation_Name, Congregation_ID, Location_ID FROM Congregations WHERE Location_ID IN (3,5,6,7,8)</CommandText>
+        <CommandText>SELECT Congregation_Name, Congregation_ID, Location_ID FROM Congregations WHERE Location_ID IN (3,5,6,7,8,19,16,17)</CommandText>
         <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
       </Query>
       <Fields>
@@ -2055,6 +2055,6 @@
   </ReportParameters>
   <ConsumeContainerWhitespace>true</ConsumeContainerWhitespace>
   <rd:ReportUnitType>Inch</rd:ReportUnitType>
-  <rd:ReportServerUrl>https://adminint.crossroads.net/ReportServer</rd:ReportServerUrl>
+  <rd:ReportServerUrl>http://adminint.crossroads.net/ReportServer</rd:ReportServerUrl>
   <rd:ReportID>37a5d7ae-6c7a-4aeb-902b-b2887e17afc8</rd:ReportID>
 </Report>
