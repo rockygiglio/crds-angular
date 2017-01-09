@@ -19,7 +19,7 @@
       </ul>
 
       <form ng-submit="$ctrl.submit()" novalidate name="$ctrl.productSummary" class="push-top">
-        <div class="well soft-quarter" popover-template="'campFinancialAidInformation.html'" popover-is-open="$ctrl.showPopover" popover-placement="bottom">
+        <div class="well soft-quarter" popover-template="'campFinancialAidInformation.html'" popover-is-open="$ctrl.showPopover" popover-placement="bottom" popover-trigger="none">
           <div class="checkbox">
             <label>
               <input type="checkbox" name="financialAssistance" ng-model="$ctrl.model.financialAssistance">
