@@ -14,8 +14,8 @@ INSERT INTO [dbo].[dp_Reports]
            (308
 		   ,'Contribution Statements'
            ,'Contribution Statements'
-           ,'/MPReports/crossroads/CRDS Statement Columns'
-           ,1
+           ,'/MPReports/Crossroads/CRDS Statement Columns'
+           ,0
            ,0
            ,1)
 GO
@@ -33,7 +33,7 @@ INSERT INTO [dbo].[dp_Reports]
            (309
 		   ,'Contribution Statements Selected'
            ,'Contribution Statements Selected'
-           ,'/MPReports/crossroads/CRDS Statement Columns'
+           ,'/MPReports/Crossroads/CRDS Statement Columns'
            ,1
            ,0
            ,1)
