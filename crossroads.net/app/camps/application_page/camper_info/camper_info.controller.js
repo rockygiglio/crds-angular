@@ -21,6 +21,8 @@ class CamperInfoController {
     this.submitting = true;
 
     if (this.infoForm.$valid) {
+      console.log(this.infoForm);
+
       this.camperInfoForm.save(this.state.toParams.campId).then((newCamperInfo) => {
         this.campsService.camperInfo = newCamperInfo;
         this.rootScope.$emit('notify', this.rootScope.MESSAGES.successfullRegistration);
