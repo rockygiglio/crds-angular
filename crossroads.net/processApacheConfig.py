@@ -14,13 +14,10 @@ from os.path import join
 TEMPLATE_FILE_DIR = "app"
 APACHE_CONFIG_TEMPLATE_FILE = "crossroads.net.conf.template.xml"
 
-DISABLE_REDIRECT = True
-
 def processCmdLineArgs(args):
-    global DISABLE_REDIRECT
     exitCode = 0
     try:
-        opts, args = getopt.getopt(args, "o:", ["redirect", "output="])
+        opts, args = getopt.getopt(args, "o:", ["output="])
     except:
         exitCode = 1
 
@@ -30,9 +27,6 @@ def processCmdLineArgs(args):
         if opt in ("-o", "--output"):
             print("output ", arg)
             output = arg
-        elif opt == "--redirect":
-            DISABLE_REDIRECT = False
-            print(DISABLE_REDIRECT)
 
     if "output" not in locals():
         output = ""
@@ -47,19 +41,14 @@ def processTemplateFile(inputFile, outputFile):
     print("Writing to {}".format(join(os.getcwd(), outputFile)))
     
     with open(join(os.getcwd(), outputFile), 'w') as outputConfigFile:
-        placeHolderVars = os.environ
-        if not DISABLE_REDIRECT:
-            placeHolderVars["CMT"] = ""
-        else:
-            placeHolderVars["CMT"] = "#"
-        outputConfigFile.write(templateStr.safe_substitute(placeHolderVars))
+        outputConfigFile.write(templateStr.safe_substitute(os.environ))
 
 def main(args):
     exitCode, output = processCmdLineArgs(args)
 
     if exitCode != 0:
         print("[ERROR]: insufficient parameters or no parameters provided")
-        print("[USAGE]: python3 processApacheConfig.py --redirect<optional> -o <outputFileName>")
+        print("[USAGE]: python3 processApacheConfig.py -o <outputFileName>")
         sys.exit(exitCode)
     else:
         processTemplateFile(APACHE_CONFIG_TEMPLATE_FILE, output)

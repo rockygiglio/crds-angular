@@ -1,20 +1,19 @@
-# $$CMT is a placeholder variable to control server redirect
-# basically, $$CMT will be replaced by a '#' or ''
-# for int/demo there are no redirect, only prod has redirect
-$CMT<VirtualHost *:80>
-$CMT    ServerName $CRDS_REDIRECT_SERVER_NAME
-$CMT    Redirect permanent / https://$CRDS_SERVER_NAME/
-$CMT</VirtualHost>
+<VirtualHost *:80>
+    # Redirect crossroads.net to xxx.crossroads.net
+    ServerName $CRDS_REDIRECT_SERVER_NAME
+    Redirect permanent / https://$CRDS_SERVER_NAME/
+</VirtualHost>
 
-$CMT<VirtualHost *:443>
-$CMT    ServerName $CRDS_REDIRECT_SERVER_NAME
-$CMT    Redirect permanent / https://$CRDS_SERVER_NAME/
+<VirtualHost *:443>
+    # Redirect crossroads.net to xxx.crossroads.net
+    ServerName $CRDS_REDIRECT_SERVER_NAME
+    Redirect permanent / https://$CRDS_SERVER_NAME/
 
-$CMT    SSLEngine on
-$CMT    SSLCertificateFile /etc/ssl/wildcard_crossroads_net.crt
-$CMT    SSLCertificateKeyFile /etc/ssl/wildcard_crossroads_net.key
-$CMT    SSLCertificateChainFile /etc/ssl/wildcard_crossroads_net.DigiCertCA.crt
-$CMT</VirtualHost>
+    SSLEngine on
+    SSLCertificateFile /etc/ssl/wildcard_crossroads_net.crt
+    SSLCertificateKeyFile /etc/ssl/wildcard_crossroads_net.key
+    SSLCertificateChainFile /etc/ssl/wildcard_crossroads_net.DigiCertCA.crt
+</VirtualHost>
 
 <VirtualHost *:80>
 	# The ServerName directive sets the request scheme, hostname and port that
