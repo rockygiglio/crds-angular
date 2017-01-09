@@ -153,7 +153,7 @@ class CamperInfoForm {
               label: 'Birth Date',
               required: true,
               type: 'text',
-              datepickerPopup: 'M/d/yyyy'
+              datepickerPopup: 'MM/dd/yyyy'
             }
           },
           {
