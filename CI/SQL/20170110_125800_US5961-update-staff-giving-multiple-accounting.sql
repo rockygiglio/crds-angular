@@ -13,7 +13,6 @@ ALTER PROCEDURE [dbo].[report_CRDS_Staff_Giving]
      @enddate DATETIME,
 	 @programid AS VARCHAR(MAX),
 	 @donationstatusid as varchar(MAX),
-	 -- Added 1 line
 	 @accountingcompanyid as varchar(MAX)
 AS 
 
@@ -90,14 +89,12 @@ insert into #StaffDonations
 		join donation_distributions dd on dd.donation_id = don.donation_id
 		left join donors d on d.donor_id = don.donor_id
 		left join contacts c on c.contact_id=d.contact_id
-		-- Added 1 lines
         left join congregations con on con.congregation_id = dd.congregation_id		
 		join #StaffDonators sd on sd.contactid = c.contact_Id and sd.hhid = c.Household_ID
 		where dd.Program_ID in (SELECT Item FROM dbo.dp_Split(@programid, ','))
 		AND don.donation_status_id in (SELECT Item FROM dbo.dp_Split(@donationstatusid, ','))
 		and don.Donation_Date between @startdate AND @enddate
 		and dd.Soft_Credit_Donor is null
-		-- Added 1 line
 		AND con.Accounting_Company_Id IN (SELECT Item FROM dbo.dp_Split(@accountingcompanyid, ','))
 	union all
 	select c.contact_id
@@ -114,14 +111,12 @@ insert into #StaffDonations
 		join donation_distributions dd on dd.donation_id = don.donation_id
 		left join donors d on d.donor_id = dd.Soft_Credit_Donor
 		left join contacts c on c.contact_id=d.contact_id
-		-- Added 1 lines
         left join congregations con on con.congregation_id = dd.congregation_id		
 		join #StaffDonators sd on sd.contactid = c.contact_Id and sd.hhid = c.Household_ID
 		where dd.Program_ID in (SELECT Item FROM dbo.dp_Split(@programid, ','))
 		AND don.donation_status_id in (SELECT Item FROM dbo.dp_Split(@donationstatusid, ','))
 		and don.Donation_Date between @startdate AND @enddate
 		and dd.Soft_Credit_Donor is not null
-		-- Added 1 line
 		AND con.Accounting_Company_Id IN (SELECT Item FROM dbo.dp_Split(@accountingcompanyid, ','))
 
 update #Staffdonations set exclude = 0 where exclude is null
@@ -205,13 +200,11 @@ insert into #OtherDonations
 	join donation_distributions dd on dd.donation_id = don.donation_id
 	left join donors d on d.Donor_ID = don.Donor_ID
 	left join contacts c on c.Contact_ID = d.Contact_ID
-	-- Added 1 lines
     left join congregations con on con.congregation_id = dd.congregation_id	
 	join #OtherDonators od on od.contactid = c.contact_Id and od.hhid = c.Household_ID
 	where dd.Program_ID in (SELECT Item FROM dbo.dp_Split(@programid, ','))
 		AND don.donation_status_id in (SELECT Item FROM dbo.dp_Split(@donationstatusid, ','))
 		and don.Donation_Date between @startdate AND @enddate
-		-- Added 1 line
 		AND con.Accounting_Company_Id IN (SELECT Item FROM dbo.dp_Split(@accountingcompanyid, ','))
 	union all
 	select c.contact_id as othercontact
@@ -223,14 +216,12 @@ insert into #OtherDonations
 	join donation_distributions dd on dd.donation_id = don.donation_id
 	left join donors d on d.donor_id = dd.Soft_Credit_Donor
 	left join contacts c on c.contact_id=d.contact_id
-	-- Added 1 lines
     left join congregations con on con.congregation_id = dd.congregation_id	
 	join #OtherDonators od on od.contactid = c.contact_Id and od.hhid = c.Household_ID
 	where dd.Program_ID in (SELECT Item FROM dbo.dp_Split(@programid, ','))
 		AND don.donation_status_id in (SELECT Item FROM dbo.dp_Split(@donationstatusid, ','))
 		and don.Donation_Date between @startdate AND @enddate
 		and dd.Soft_Credit_Donor is not null
-		-- Added 1 line
 		AND con.Accounting_Company_Id IN (SELECT Item FROM dbo.dp_Split(@accountingcompanyid, ','))
 
 create table #OtherDonationstotals
