@@ -110,7 +110,7 @@
     <DataSet Name="Congregations">
       <Query>
         <DataSourceName>DataSource1</DataSourceName>
-        <CommandText>select congregation_id, Congregation_Name from congregations 
+        <CommandText>select congregation_id, Congregation_Name,Accounting_Company_ID  from congregations 
   where (end_date is null 
 	or getdate() between start_date and end_date)</CommandText>
         <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
@@ -122,6 +122,35 @@
         </Field>
         <Field Name="Congregation_Name">
           <DataField>Congregation_Name</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Accounting_Company_ID">
+          <DataField>Accounting_Company_ID</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+      </Fields>
+      <Filters>
+        <Filter>
+          <FilterExpression>=Fields!Accounting_Company_ID.Value</FilterExpression>
+          <Operator>Equal</Operator>
+          <FilterValues>
+            <FilterValue>=Parameters!AccountingCompanyId.Value</FilterValue>
+          </FilterValues>
+        </Filter>
+      </Filters>
+    </DataSet>
+    <DataSet Name="AccountingCompany">
+      <Query>
+        <DataSourceName>DataSource1</DataSourceName>
+        <CommandText>SELECT Accounting_Company_ID, Company_Name FROM Accounting_Companies</CommandText>
+      </Query>
+      <Fields>
+        <Field Name="Accounting_Company_ID">
+          <DataField>Accounting_Company_ID</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="Company_Name">
+          <DataField>Company_Name</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
       </Fields>
@@ -820,6 +849,17 @@
       </ValidValues>
       <MultiValue>true</MultiValue>
     </ReportParameter>
+    <ReportParameter Name="AccountingCompanyId">
+      <DataType>Integer</DataType>
+      <Prompt>AccountingCompanyId</Prompt>
+      <ValidValues>
+        <DataSetReference>
+          <DataSetName>AccountingCompany</DataSetName>
+          <ValueField>Accounting_Company_ID</ValueField>
+          <LabelField>Company_Name</LabelField>
+        </DataSetReference>
+      </ValidValues>
+    </ReportParameter>
     <ReportParameter Name="congregationid">
       <DataType>String</DataType>
       <Prompt>Congregations</Prompt>
@@ -888,5 +928,6 @@
     </ReportParameter>
   </ReportParameters>
   <rd:ReportUnitType>Inch</rd:ReportUnitType>
+  <rd:ReportServerUrl>http://adminint.crossroads.net/ReportServer</rd:ReportServerUrl>
   <rd:ReportID>a8dbc641-8f81-4e85-94ac-8408904f690d</rd:ReportID>
 </Report>
