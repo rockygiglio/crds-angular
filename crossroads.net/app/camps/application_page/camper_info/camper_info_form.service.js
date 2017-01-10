@@ -62,7 +62,7 @@ class CamperInfoForm {
 
   save(campId) {
     // Find the actual single attribute shirt size from the forml selected attribute id
-    const selected = find(this.campsService.shirtSizes, (each) => { return each.attributeId === this.formModel.shirtSize });
+    const selected = find(this.campsService.shirtSizes, each => each.attributeId === this.formModel.shirtSize);
 
     // Set the shirt size single attribute on the DTO to be submitted to the API
     this.formModel.singleAttributes[crdsConstants.ATTRIBUTE_TYPE_IDS.TSHIRT_SIZES] = {
@@ -262,6 +262,7 @@ class CamperInfoForm {
               options: []
             },
             controller: /* @ngInject */ ($scope, CampsService) => {
+              // eslint-disable-next-line no-param-reassign
               $scope.to.options = CampsService.shirtSizes;
             }
           }
