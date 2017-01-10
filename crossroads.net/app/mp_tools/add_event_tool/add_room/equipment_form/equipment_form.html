@@ -1,24 +1,24 @@
-<div ng-show="equipment.equipmentLookup.length < 1"> There is no equipment to reserve at this site </div>
+<div ng-show="equipment.equipmentLookup.length < 1 && equipment.ready"> There is no equipment to reserve at this site </div>
 
-<div class="form-group" ng-show="equipment.equipmentLookup.length > 0" >
+<div class="form-group" ng-show="equipment.equipmentLookup.length > 0 && equipment.ready" >
   <ng-form name="equipmentForm">
     <div class="form-group" ng-class="{'has-error': equipment.validation.showErrors(equipmentForm, equipment.currentRoom.id + 'equipRequired')}">
       <label class="required">
         Is Equipment Required?
       </label><br>
       <label class="weight-normal">
-        <input type="radio" ng-disabled="(equipment.addEvent.editMode === true && equipment.equipmentRequired === true)" 
+        <input type="radio" ng-disabled="(equipment.addEvent.editMode === true && equipment.equipmentRequired === true)"
                             name="{{equipment.currentRoom.id}}equipRequired" 
-                            ng-required="!equipment.equipRequired && !equipment.equipmentLookup.length < 1"  
+                            ng-required="!equipment.equipRequired && !equipment.equipmentLookup.length < 1" 
                             ng-model="equipment.equipmentRequired" 
                             ng-click="eqiupment.toggleEquipmentRequired()" 
                             ng-value="true"/>
         Yes
       </label>
       <label class="weight-normal">
-        <input type="radio" ng-disabled="(equipment.addEvent.editMode === true && equipment.equipmentRequired === true)" 
+        <input type="radio" ng-disabled="(equipment.addEvent.editMode === true && equipment.equipmentRequired === true)"
                             name="{{equipment.currentRoom.id}}equipRequired" 
-                            ng-required="!equipment.equipRequired && !equipment.equipmentLookup.length < 1" 
+                            ng-required="!equipment.equipRequired && !equipment.equipmentLookup.length < 1"
                             ng-model="equipment.equipmentRequired" 
                             ng-click="equipment.toggleEquipmentRequired()" 
                             ng-value="false"/>
@@ -30,7 +30,7 @@
         </span>
       </ng-messages>
     </div>
-    <div ng-show="equipment.equipmentRequired == true">
+    <div ng-show="equipment.equipmentRequired === true">
     <table class="table table-responsive" ng-show="equipment.currentEquipment.length > 0">
       <thead>
         <th><label class="required"> Equipment Name </label> </th>
@@ -72,7 +72,7 @@
             </div>
           </td>
           <td>
-            <span ng-hide="equipment.isCancelled(equip.equipment)"> {{ equip.equipment.name.quantity }}  </span>
+            <span ng-hide="equipment.isCancelled(equip.equipment) || !equip.equipment.name.id"> {{ equipment.getQuantity(equip.equipment.name.id) }}  </span>
           </td>
           <td>
             <button class="btn btn-standard" ng-click="equipment.remove($index)" ng-hide="equipment.isCancelled(equip.equipment)">

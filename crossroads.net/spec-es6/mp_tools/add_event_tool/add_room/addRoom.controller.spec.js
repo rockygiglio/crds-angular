@@ -248,7 +248,6 @@ describe('component: addRoom controller', () => {
         fixture.setRoomData(data);
         expect(fixture.roomData).toEqual(expected);
         expect(fixture.rooms).toEqual(data);
-        expect(fixture.viewReady).toBe(true);
     });
 
     it('should setRoomData() with no data param', () => {
@@ -259,7 +258,6 @@ describe('component: addRoom controller', () => {
         fixture.setRoomData(data);
         expect(fixture.roomData).toEqual(expected);
         expect(fixture.rooms).toEqual(data);
-        expect(fixture.viewReady).toBe(true);
     });
 
     it('should setRoomData() to []', () => {
@@ -270,69 +268,47 @@ describe('component: addRoom controller', () => {
         fixture.setRoomData(data);
         expect(fixture.roomData).toEqual(expected);
         expect(fixture.rooms).toEqual(data);
-        expect(fixture.viewReady).toBe(true);
     });
 
-    it('should setCongregation()', () => {
-        let data, roomData, eOne, eTwo, eThree;
+    it('should setEquipmentData()', () => {
+        let data;
+        let roomData;
         data = [{ Id: 1 }, { Id: 2 }, { Id: 3 }];
         roomData = [{ equipment: { Id: 1 } }, { equipment: { Id: 2 } }, { equipment: { Id: 3 } }];
         fixture.roomData = roomData;
-        eOne = { name: 'tables' };
-        eTwo = { name: 'chairs' };
-        eThree = { name: 'flowers' };
-        spyOn(fixture, 'mapEquipment').and.callFake((dataSet, e) => {
-            switch (e.Id) {
-                case 1:
-                    return eOne;
-                case 2:
-                    return eTwo;
-                case 3:
-                    return eThree;
-                default:
-                    return;
-            }
-        })
-        room.Equipment.query.and.callFake((obj, callBack) => {
-            callBack(data);
-        });
+        let deferred = qApi.defer();
+        deferred.resolve(data);
+
+        room.Equipment.query.and.returnValue({$promise: deferred.promise});
+        
         fixture.setEquipmentData();
-        expect(room.Equipment.query).toHaveBeenCalledWith({ congregationId: congregationId }, jasmine.any(Function), jasmine.any(Function))
+        rootScope.$apply();
+        expect(room.Equipment.query).toHaveBeenCalledWith({ congregationId: congregationId });
         expect(fixture.equipmentList).toEqual(data);
-        expect(fixture.roomData[0].equipment).toEqual(eOne);
-        expect(fixture.roomData[1].equipment).toEqual(eTwo);
-        expect(fixture.roomData[2].equipment).toEqual(eThree);
+        expect(fixture.viewReady).toBe(true);
+        expect(fixture.roomData[0].equipment).toEqual({Id: 1});
+        expect(fixture.roomData[1].equipment).toEqual({Id: 2});
+        expect(fixture.roomData[2].equipment).toEqual({Id: 3});
     });
 
-    it('should setCongregation() and have nothing be set', () => {
-        let data, roomData, eOne, eTwo, eThree;
+    it('should setEquipmentData() and have nothing be set', () => {
+        let data; 
+        let roomData;
         data = [];
         roomData = [];
         fixture.roomData = roomData;
-        eOne = { name: 'tables' };
-        eTwo = { name: 'chairs' };
-        eThree = { name: 'flowers' };
-        spyOn(fixture, 'mapEquipment').and.callFake((dataSet, e) => {
-            switch (e.Id) {
-                case 1:
-                    return eOne;
-                case 2:
-                    return eTwo;
-                case 3:
-                    return eThree;
-                default:
-                    return;
-            }
-        })
-        room.Equipment.query.and.callFake((obj, callBack) => {
-            callBack(data);
-        });
+        let deferred = qApi.defer();
+        deferred.resolve(data);
+        room.Equipment.query.and.returnValue({$promise: deferred.promise});
         fixture.setEquipmentData();
-        expect(room.Equipment.query).toHaveBeenCalledWith({ congregationId: congregationId }, jasmine.any(Function), jasmine.any(Function))
+        rootScope.$apply();
+        expect(room.Equipment.query).toHaveBeenCalledWith({ congregationId: congregationId });
         expect(fixture.equipmentList).toEqual(data);
+        expect(fixture.viewReady).toBe(true);
         expect(fixture.roomData[0]).toBe(undefined);
-        expect(fixture.roomData[1]).toEqual(undefined);
-        expect(fixture.roomData[2]).toEqual(undefined);
+        expect(fixture.roomData[1]).toBe(undefined);
+        expect(fixture.roomData[2]).toBe(undefined);
+        expect(fixture.roomData.length).toBe(0);
     });
 
     it('should return true for isCancelled()', () => {
@@ -462,31 +438,6 @@ describe('component: addRoom controller', () => {
         expect(fixture.roomData.length).toBe(3);
         expect(fixture.rootScope.$emit).not.toHaveBeenCalledWith('notify', allReadyAdded);
         expect(fixture.rootScope.$emit).toHaveBeenCalledWith('notify', chooseARoom);
-    })
-
-    it('should mapEquipment()', () => {
-        let currentEquipmentList, equipmentLookup, mappedEquipment;
-
-        currentEquipmentList = [{ equipment: { name: { id: 7 } } },
-        { equipment: { name: { id: 8 } } },
-        { equipment: { name: { id: 9 } } },
-        { equipment: { name: { quantity: 90, id: 10 } } }];
-
-        equipmentLookup = [{ id: 1, quantity: 10, name: 'aisle chairs' },
-        { id: 2, quantity: 20, name: 'banquet table' },
-        { id: 3, quantity: 30, name: 'podium' },
-        { id: 4, quantity: 40, name: 'red carpet' },
-        { id: 5, quantity: 50, name: 'beer' },
-        { id: 6, quantity: 60, name: 'champaign' },
-        { id: 7, quantity: 70, name: 'teleprompter' },
-        { id: 8, quantity: 80, name: 'banquet chairs' },
-        { id: 9, quantity: 90, name: 'folding chairs' }];
-
-        mappedEquipment = fixture.mapEquipment(equipmentLookup, currentEquipmentList);
-        expect(mappedEquipment.length).toBe(3);
-        expect(mappedEquipment[0].equipment.name.quantity).toBe(70);
-        expect(mappedEquipment[1].equipment.name.quantity).toBe(80);
-        expect(mappedEquipment[2].equipment.name.quantity).toBe(90);
     })
 
     describe('removeRoom()', () => {

@@ -77,7 +77,6 @@
       } else {
         $scope.processing = true;
         AuthService.login($scope.credentials).then(function(user) {
-          $scope.processing = false;
           $scope.loginShow = false;
           if ($scope.modal) {
             $scope.modal.close();
@@ -105,10 +104,11 @@
 
            500);
           } else if ($scope.loginCallback) {
+            $scope.processing = false;
             $scope.loginCallback();
           }
 
-            $scope.loginFailed = false;
+          $scope.loginFailed = false;
           $rootScope.showLoginButton = false;
           $scope.navlogin.$setPristine();
         },

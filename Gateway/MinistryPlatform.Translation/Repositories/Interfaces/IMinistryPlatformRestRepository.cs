@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using MinistryPlatform.Translation.Models;
+using System.Collections.Generic;
 
 namespace MinistryPlatform.Translation.Repositories.Interfaces
 {
@@ -105,6 +106,9 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
         /// <param name="records"></param>
         /// <returns> The list of records with their new ID </returns>
         List<T> PostWithReturn<M, T>(List<M> records);
+
+        void DeleteTask(int taskID, bool? rejected = null, string comments = null);
+        MPTask FindTask(int pageID, int recordID);
 
         int Put<T>(List<T> records);
         int Put(string tableName, List<Dictionary<string, object>> records);

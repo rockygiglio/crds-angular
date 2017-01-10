@@ -16,5 +16,8 @@ namespace crds_angular.Models.Crossroads.Events
 
         [JsonProperty(PropertyName = "equipmentReservationId")]
         public int EquipmentReservationId { get; set; }
+
+        [JsonProperty(PropertyName = "notes")]
+        public string Notes { get; set; }
     }
 }

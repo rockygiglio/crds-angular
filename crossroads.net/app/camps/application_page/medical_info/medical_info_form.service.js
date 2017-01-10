@@ -27,6 +27,7 @@ class MedicalInfoForm {
       foodAllergies: this.foodAllergies(),
       environmentalAllergies: this.environmentalAllergies(),
       otherAllergies: this.otherAllergies(),
+      medicationsAdministered: this.campsService.campMedical.medicationsAdministered || [],
       showMedications: this.campsService.campMedical.showMedications || false,
       medicines: this.campsService.campMedical.medications || [{}]
     };
@@ -43,11 +44,12 @@ class MedicalInfoForm {
     if (this.formModel.showMedications) {
       allMedications = [...this.formModel.medicines || [], ...this.deletedMedicines];
     } else {
-      allMedications = this.formModel.medicines ? _.map(this.formModel.medicines, ((m) => {
+      allMedications = this.formModel.medicines ?
+        this.formModel.medicines.filter(m => m.medicationName !== undefined).map(((m) => {
         // eslint-disable-next-line no-param-reassign
-        m.remove = true;
-        return m;
-      })) : [];
+          m.remove = true;
+          return m;
+        })) : [];
     }
     const dto = {
       contactId: this.formModel.contactId,
@@ -56,6 +58,7 @@ class MedicalInfoForm {
       policyHolder: this.formModel.policyHolder || undefined,
       physicianName: this.formModel.physicianName || undefined,
       physicianPhone: this.formModel.physicianPhone || undefined,
+      medicationsAdministered: this.formModel.medicationsAdministered || [],
       medications: allMedications,
       allergies: [
         { allergyType: 'Medicine',
@@ -193,7 +196,7 @@ class MedicalInfoForm {
           type: 'crdsRadio',
           templateOptions: {
             label: 'Are there any Allergy/Dietary Needs?',
-            required: true,
+            required: false,
             inline: true,
             labelProp: 'label',
             valueProp: 'id',
@@ -245,6 +248,69 @@ class MedicalInfoForm {
           templateOptions: {
             label: 'Other Allergies',
             required: false
+          }
+        }]
+      },
+      {
+        className: '',
+        wrapper: 'campBootstrapRow',
+        fieldGroup: [{
+          className: 'col-xs-12',
+          template: '<br /> <p> These over the counter medications will be available by the camp nurse as needed.</p> <h4> <strong> Select any medications that can be administered to your child.</strong></h4>'
+        }, {
+          className: 'form-group-col-xs-12 camps-medication-checkbox',
+          key: 'medicationsAdministered',
+          type: 'multiCheckbox',
+          templateOptions: {
+            className: 'camps-medication-checkbox',
+            options: [{
+              name: 'Do not administer any of these medications',
+              value: 'none'
+            }, {
+              name: 'Benadryl',
+              value: 'benadryl'
+            }, {
+              name: 'Claritin',
+              value: 'claritin'
+            }, {
+              name: 'Ibuprofen',
+              value: 'ibuprofen'
+            }, {
+              name: 'Pepto Bismol',
+              value: 'pepto'
+            }, {
+              name: 'Tylenol',
+              value: 'tylenol'
+            }],
+            onClick: ($modelValue, fieldOptions, scope) => {
+              let newValue;
+              const options = fieldOptions.templateOptions.options;
+              const isNoneChecked = $modelValue.indexOf('none') > -1;
+
+              if (scope.$index === 0) {
+                if (isNoneChecked) {
+                  // the 'Do Not Administer button was checked
+                  newValue = ['none'];
+                }
+              } else if (isNoneChecked) {
+                // something else was checked...
+                newValue = options.map((option) => {
+                  if (option.value === 'none') {
+                    return undefined;
+                  }
+
+                  if (_.includes($modelValue, option.value)) {
+                    return option.value;
+                  }
+
+                  return undefined;
+                });
+              }
+
+              if (newValue) {
+                fieldOptions.value(newValue);
+              }
+            }
           }
         }]
       },
@@ -362,4 +428,3 @@ class MedicalInfoFormFactory {
 }
 
 export default MedicalInfoFormFactory;
-
