@@ -83,7 +83,7 @@ order by program_name</CommandText>
     <DataSet Name="Congregations">
       <Query>
         <DataSourceName>DataSource1</DataSourceName>
-        <CommandText>select congregation_id, congregation_name from congregations
+        <CommandText>select congregation_id, congregation_name, Accounting_Company_ID from congregations
 order by congregation_name</CommandText>
       </Query>
       <Fields>
@@ -95,7 +95,20 @@ order by congregation_name</CommandText>
           <DataField>congregation_name</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
+        <Field Name="Accounting_Company_ID">
+          <DataField>Accounting_Company_ID</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
       </Fields>
+      <Filters>
+        <Filter>
+          <FilterExpression>=Fields!Accounting_Company_ID.Value</FilterExpression>
+          <Operator>Equal</Operator>
+          <FilterValues>
+            <FilterValue>=Parameters!AccountingCompany.Value</FilterValue>
+          </FilterValues>
+        </Filter>
+      </Filters>
     </DataSet>
     <DataSet Name="Donation_Status">
       <Query>
@@ -110,6 +123,23 @@ order by congregation_name</CommandText>
         <Field Name="donation_status">
           <DataField>donation_status</DataField>
           <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
+    <DataSet Name="Accounting_Company">
+      <Query>
+        <DataSourceName>DataSource1</DataSourceName>
+        <CommandText>SELECT Accounting_Company_ID, Company_Name 
+FROM Accounting_Companies </CommandText>
+      </Query>
+      <Fields>
+        <Field Name="Company_Name">
+          <DataField>Company_Name</DataField>
+          <rd:UserDefined>true</rd:UserDefined>
+        </Field>
+        <Field Name="Accounting_Company_ID">
+          <DataField>Accounting_Company_ID</DataField>
+          <rd:UserDefined>true</rd:UserDefined>
         </Field>
       </Fields>
     </DataSet>
@@ -897,6 +927,17 @@ order by congregation_name</CommandText>
         </DataSetReference>
       </ValidValues>
       <MultiValue>true</MultiValue>
+    </ReportParameter>
+    <ReportParameter Name="AccountingCompany">
+      <DataType>Integer</DataType>
+      <Prompt>CompanyCompany</Prompt>
+      <ValidValues>
+        <DataSetReference>
+          <DataSetName>Accounting_Company</DataSetName>
+          <ValueField>Accounting_Company_ID</ValueField>
+          <LabelField>Company_Name</LabelField>
+        </DataSetReference>
+      </ValidValues>
     </ReportParameter>
     <ReportParameter Name="congregationid">
       <DataType>Integer</DataType>
