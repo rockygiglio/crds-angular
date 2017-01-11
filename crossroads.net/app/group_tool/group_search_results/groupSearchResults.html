@@ -101,8 +101,8 @@
           <group-detail-about data="group" for-search="true" class="clearfix" show-share-buttons="true"></group-detail-about>
           <div class="text-right push-top push-half-bottom soft-half-right">       
             <button type="button" class="btn btn-standard" ng-click="group.expanded = false">Close</button>
-            <button type="button" class="btn btn-standard-dark" ng-click="groupSearchResults.requestToJoinOrEmailGroupLeader(group, true)">Contact Group Leader</button>
-            <button type="button" class="btn btn-primary" ng-click="groupSearchResults.requestToJoinOrEmailGroupLeader(group, false)">Request to Join</button>
+            <button type="button" ng-if="group.groupTypeId !== groupSearchResults.onsiteGroupsTypeId" class="btn btn-standard-dark" ng-click="groupSearchResults.requestToJoinOrEmailGroupLeader(group, true)">Contact Group Leader</button>
+            <button type="button" ng-if="group.groupTypeId !== groupSearchResults.onsiteGroupsTypeId" class="btn btn-primary" ng-click="groupSearchResults.requestToJoinOrEmailGroupLeader(group, false)">Request to Join</button>
           </div>
         </td>
       </tr>
