@@ -145,11 +145,10 @@ namespace crds_angular.Controllers.API
         /// <param name="removalMessage">An optional message to send to the participant when they are removed.  This is sent along with a boilerplate message.</param>
         /// <returns>An empty response with 200 status code if everything worked, 403 if the caller does not have permission to remove a participant, or another non-success status code on any other failure</returns>
         [RequiresAuthorization]
-        [VersionedRoute(template: "group-tool/group-type/{groupTypeId}/group/{groupId}/participant/{groupParticipantId}", minimumVersion: "1.0.0")]
-        [Route("grouptool/grouptype/{groupTypeId:int}/group/{groupId:int}/participant/{groupParticipantId:int}")]
+        [VersionedRoute(template: "group-tool/group/{groupId}/participant/{groupParticipantId}", minimumVersion: "1.0.0")]
+        [Route("grouptool/group/{groupId:int}/participant/{groupParticipantId:int}")]
         [HttpDelete]
-        public IHttpActionResult RemoveParticipantFromMyGroup([FromUri] int groupTypeId,
-                                                              [FromUri] int groupId,
+        public IHttpActionResult RemoveParticipantFromMyGroup([FromUri] int groupId,
                                                               [FromUri] int groupParticipantId,
                                                               [FromUri(Name = "removalMessage")] string removalMessage = null)
         {
@@ -157,7 +156,7 @@ namespace crds_angular.Controllers.API
             {
                 try
                 {
-                    _groupToolService.RemoveParticipantFromMyGroup(token, groupTypeId, groupId, groupParticipantId, removalMessage);
+                    _groupToolService.RemoveParticipantFromMyGroup(token, groupId, groupParticipantId, removalMessage);
                     return Ok();
                 }
                 catch (GroupParticipantRemovalException e)

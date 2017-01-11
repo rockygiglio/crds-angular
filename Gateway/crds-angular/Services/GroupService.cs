@@ -480,9 +480,25 @@ namespace crds_angular.Services
             return groupDetail;
         }
 
-        public List<GroupDTO> GetGroupsByTypeForAuthenticatedUser(string token, int groupTypeId, int? groupId = null)
+        public List<GroupDTO> GetGroupsByTypeForAuthenticatedUser(string token)
         {
-            var groupsByType = _mpGroupService.GetMyGroupParticipationByType(token, groupTypeId, groupId);
+            var groupsByType = _mpGroupService.GetMyGroupParticipationByType(token, 8, null);
+            if (groupsByType == null)
+            {
+                return null;
+            }
+
+            var groupDetail = groupsByType.Select(Mapper.Map<MpGroup, GroupDTO>).ToList();
+
+            GetGroupAttributes(token, groupDetail);
+            GetGroupParticipants(groupDetail);
+
+            return groupDetail;
+        }
+
+        public List<GroupDTO> GetGroupByIdForAuthenticatedUser(string token, int groupId)
+        {
+            var groupsByType = _mpGroupService.GetMyGroupParticipationByType(token, null, groupId);
             if (groupsByType == null)
             {
                 return null;
