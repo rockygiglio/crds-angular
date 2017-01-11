@@ -1,8 +1,9 @@
 USE [MinistryPlatform]
 GO
 
-IF EXISTS(SELECT 1 FROM [dbo].[dp_Page_Views] WHERE View_Title LIKE 'Community Group Participants - %' AND View_Title != 'Community Group Participants - All')
-BEGIN
-	DELETE FROM [dbo].[dp_Page_Views]
-	WHERE View_Title LIKE 'Community Group Participants - %' AND View_Title != 'Community Group Participants - All'
-END
+DELETE FROM [dbo].[dp_Page_Views]
+WHERE Page_View_ID=2121 OR Page_View_ID=2127 OR Page_View_ID BETWEEN 2131 AND 2133 
+OR Page_View_ID BETWEEN 2153 AND 2157
+OR Page_View_ID BETWEEN 2146 AND 2150
+OR Page_View_ID BETWEEN 2141 AND 2145
+OR Page_View_ID BETWEEN 92158 AND 92162
