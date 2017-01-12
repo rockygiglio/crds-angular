@@ -30,7 +30,7 @@ namespace crds_angular.Controllers.API
         {
             _groupToolService = groupToolService;
             _configurationWrapper = configurationWrapper;
-            _defaultGroupTypeId = _configurationWrapper.GetConfigIntValue("GroupTypeSmallId");
+            _defaultGroupTypeId = _configurationWrapper.GetConfigIntValue("SmallGroupTypeId");
         }
 
         /// <summary>

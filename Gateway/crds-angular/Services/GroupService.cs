@@ -40,6 +40,9 @@ namespace crds_angular.Services
         private readonly IUserRepository _userRepository;
         private readonly IInvitationRepository _invitationRepository;
         private readonly IAttributeService _attributeService;
+        private readonly int _smallGroupTypeId;
+        private readonly int  _onsiteGroupTypeId;
+
 
 
         /// <summary>
@@ -47,7 +50,7 @@ namespace crds_angular.Services
         /// </summary>
         private readonly int _groupRoleDefaultId;
         private readonly int _defaultContactEmailId;
-        private readonly int _journeyGroupId;
+        private readonly int _journeyGroupTypeId;
         private readonly int _groupCategoryAttributeTypeId;
         private readonly int _groupTypeAttributeTypeId;
         private readonly int _groupAgeRangeAttributeTypeId;
@@ -91,11 +94,15 @@ namespace crds_angular.Services
 
             _groupRoleDefaultId = _configurationWrapper.GetConfigIntValue("Group_Role_Default_ID");
             _defaultContactEmailId = _configurationWrapper.GetConfigIntValue("DefaultContactEmailId");
-            _journeyGroupId = configurationWrapper.GetConfigIntValue("JourneyGroupId");
+            _journeyGroupTypeId = configurationWrapper.GetConfigIntValue("JourneyGroupTypeId");
             _groupCategoryAttributeTypeId = configurationWrapper.GetConfigIntValue("GroupCategoryAttributeTypeId");
             _groupTypeAttributeTypeId = configurationWrapper.GetConfigIntValue("GroupTypeAttributeTypeId");
             _groupAgeRangeAttributeTypeId = configurationWrapper.GetConfigIntValue("GroupAgeRangeAttributeTypeId");
             _groupRoleLeader = configurationWrapper.GetConfigIntValue("GroupRoleLeader");
+            _smallGroupTypeId = _configurationWrapper.GetConfigIntValue("SmallGroupTypeId");
+            _onsiteGroupTypeId = _configurationWrapper.GetConfigIntValue("OnsiteGroupTypeId");
+
+
         }
 
         public GroupDTO CreateGroup(GroupDTO group)
@@ -483,7 +490,7 @@ namespace crds_angular.Services
 
         public List<GroupDTO> GetGroupsByTypeForAuthenticatedUser(string token)
         {
-            int[] groupTypeIds = new int[] {1,8};
+            int[] groupTypeIds = new int[] {_smallGroupTypeId,_onsiteGroupTypeId};
             var groups = _mpGroupService.GetMyGroupParticipationByType(token, groupTypeIds, null);
             if (groups == null)
             {
@@ -560,7 +567,7 @@ namespace crds_angular.Services
         public void SendJourneyEmailInvite(EmailCommunicationDTO communication, string token)
         {
             var participant = GetParticipantRecord(token);
-            var groups = GetGroupsByTypeForParticipant(token, participant.ParticipantId, _journeyGroupId);
+            var groups = GetGroupsByTypeForParticipant(token, participant.ParticipantId, _journeyGroupTypeId);
 
             if (groups == null ||  groups.Count == 0)
             {

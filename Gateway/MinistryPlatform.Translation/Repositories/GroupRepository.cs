@@ -32,7 +32,7 @@ namespace MinistryPlatform.Translation.Repositories
         private readonly int CommunityGroupWaitListConfirmationTemplateId = Convert.ToInt32(AppSettings("CommunityGroupWaitListConfirmationTemplateId"));
         private readonly int CurrentGroupParticipantsByGroupTypePageView = Convert.ToInt32(AppSettings("CurrentGroupParticipantsByGroupTypePageView"));
         private readonly int MyCurrentGroupsPageView = Convert.ToInt32(AppSettings("MyCurrentGroupsPageView"));
-        private readonly int JourneyGroupId = Convert.ToInt32(AppSettings("JourneyGroupId"));
+        private readonly int JourneyGroupTypeId = Convert.ToInt32(AppSettings("JourneyGroupTypeId"));
         private readonly int JourneyGroupSearchPageViewId = Convert.ToInt32(AppSettings("JourneyGroupSearchPageViewId"));
         private readonly int MySmallGroupsPageView = Convert.ToInt32(AppSettings("MySmallGroupsPageView"));
         private readonly int GroupLeaderRoleId = Convert.ToInt32(AppSettings("GroupLeaderRoleId"));
@@ -505,7 +505,7 @@ namespace MinistryPlatform.Translation.Repositories
 
         private int GetSearchPageViewId(int groupTypeId)
         {
-            if (groupTypeId == JourneyGroupId)
+            if (groupTypeId == JourneyGroupTypeId)
             {
                 return JourneyGroupSearchPageViewId;
             }

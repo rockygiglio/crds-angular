@@ -95,7 +95,7 @@ namespace crds_angular.test.Services
 
             config.Setup(mocked => mocked.GetConfigIntValue("GroupRoleLeader")).Returns(GROUP_ROLE_LEADER);
             config.Setup(mocked => mocked.GetConfigIntValue("Group_Role_Default_ID")).Returns(GROUP_ROLE_DEFAULT_ID);
-            config.Setup(mocked => mocked.GetConfigIntValue("JourneyGroupId")).Returns(JOURNEY_GROUP_ID);
+            config.Setup(mocked => mocked.GetConfigIntValue("JourneyGroupTypeId")).Returns(JOURNEY_GROUP_ID);
             config.Setup(mocked => mocked.GetConfigIntValue("DomainId")).Returns(DOMAIN_ID);
 
             fixture = new GroupService(groupRepository.Object,
