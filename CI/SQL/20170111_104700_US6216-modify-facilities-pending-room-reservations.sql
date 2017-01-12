@@ -6,7 +6,6 @@ IF EXISTS(SELECT 1 FROM [dbo].[dp_Page_Views] WHERE View_Title LIKE 'Pending Roo
     DELETE FROM [dbo].[dp_Page_Views]
     WHERE View_Title LIKE 'Pending Room Reservations - %' AND View_Title != 'Pending Room Reservations - All'
   END
-END
 
 IF NOT EXISTS(SELECT 1 FROM [dbo].[dp_Page_Views] WHERE View_Title = 'Pending Room Reservations - All')
   BEGIN
@@ -21,4 +20,3 @@ IF NOT EXISTS(SELECT 1 FROM [dbo].[dp_Page_Views] WHERE View_Title = 'Pending Ro
           '')
     SET IDENTITY_INSERT [dbo].[dp_Page_Views] OFF
   END
-END
