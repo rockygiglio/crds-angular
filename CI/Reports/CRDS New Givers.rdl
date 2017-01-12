@@ -2597,6 +2597,6 @@
     </ReportParameter>
   </ReportParameters>
   <rd:ReportUnitType>Inch</rd:ReportUnitType>
-  <rd:ReportServerUrl>http://localhost/ReportServer</rd:ReportServerUrl>
+  <rd:ReportServerUrl>http://adminint.crossroads.net/ReportServer</rd:ReportServerUrl>
   <rd:ReportID>a8dbc641-8f81-4e85-94ac-8408904f690d</rd:ReportID>
 </Report>
