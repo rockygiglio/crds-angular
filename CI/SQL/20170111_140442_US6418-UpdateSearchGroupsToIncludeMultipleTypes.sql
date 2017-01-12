@@ -7,7 +7,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 
 ALTER PROCEDURE [dbo].[api_crds_SearchGroups]
-	@GroupTypeId VARCHAR(255) = '1, 8', -- Search small group type by default
+	@GroupTypeId VARCHAR(255) = '1, 8', -- Search Small and Onsite groups by default
 	@SearchString VARCHAR(MAX) = NULL,
 	@GroupId INT = 0
 AS
@@ -82,7 +82,7 @@ BEGIN
 	Meeting_Frequency_ID AS [MeetingFrequencyID]
 	INTO #AllGroups
 	FROM Groups gr 
-	WHERE gr.Group_Type_ID in (SELECT GroupTypeID FROM #GroupTypeIds) AND gr.Available_Online = 1 AND gr.End_Date IS NULL
+	WHERE gr.Group_Type_ID in (SELECT GroupTypeID FROM #GroupTypeIds) AND gr.Available_Online = 1 AND (gr.End_Date IS NULL OR gr.End_Date > GETDATE())
 
 	IF(@GroupId > 0)
 	BEGIN
@@ -219,3 +219,4 @@ BEGIN
 	END
 
 END
+
