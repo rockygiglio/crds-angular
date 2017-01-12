@@ -12,16 +12,16 @@ namespace MinistryPlatform.Translation.Models
         [JsonProperty(PropertyName = "MedicalInformation_ID")]
         public int MedicalInformationId { get; set; }
 
-        [JsonProperty(PropertyName = "InsuranceCompany")]
+        [JsonProperty(PropertyName = "Insurance_Company")]
         public string InsuranceCompany { get; set; }
 
-        [JsonProperty(PropertyName = "PolicyHolderName")]
+        [JsonProperty(PropertyName = "Policy_Holder_Name")]
         public string PolicyHolder { get; set; }
 
-        [JsonProperty(PropertyName = "PhysicianName")]
+        [JsonProperty(PropertyName = "Physician_Name")]
         public string PhysicianName { get; set; }
 
-        [JsonProperty(PropertyName = "PhysicianPhone")]
+        [JsonProperty(PropertyName = "Physician_Phone")]
         public string PhysicianPhone { get; set; }
 
         [JsonProperty(PropertyName = "Allowed_To_Administer_Medications")]
