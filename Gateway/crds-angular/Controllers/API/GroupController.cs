@@ -306,6 +306,37 @@ namespace crds_angular.Controllers.API
             });
         }
 
+
+
+        /// <summary>
+        /// Return typeID of group
+        /// </summary>
+        /// <param name="groupId">An integer identifying the group that we want to check the type of.</param>
+        /// <returns>MyGroup</returns>
+        [RequiresAuthorization]
+        [ResponseType(typeof(int))]
+        [VersionedRoute(template: "group/{groupId}/getGroupType", minimumVersion: "1.0.0")]
+        [Route("group/{groupId}/getGroupType")]
+        [HttpGet]
+        public IHttpActionResult GetGroupType(int groupId)
+        {
+            return Authorized(token =>
+            {
+                try
+                {
+                    var group = _groupService.GetGroupDetails(groupId);
+                    GroupDTO g = new GroupDTO();
+                    g.GroupTypeId = group.GroupTypeId;
+                    return Ok(g);
+                }
+                catch (Exception exception)
+                {
+                    var apiError = new ApiErrorDto("Error while retrieving group type id of GroupId: " + groupId, exception);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+            });
+        }
+
         /// <summary>
         /// This takes in a Group Type ID and retrieves all groups of that type for the current user.
         /// If one or more groups are found, then the group detail data is returned.

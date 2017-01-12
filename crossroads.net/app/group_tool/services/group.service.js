@@ -275,6 +275,18 @@ export default class GroupService {
       });
   }
 
+  getGroupType(groupId) {
+    let promise = this.resource(`${__API_ENDPOINT__}api/group/:groupId/getGroupType`).
+      get({ groupId: groupId }).$promise;
+
+    return promise.then((data) => {
+      return data.groupTypeId;
+    },
+      (err) => {
+        throw err;
+      });
+  }
+
   search(searchString, locationString, groupId) {
     let promise = this.resource(`${__API_ENDPOINT__}api/grouptool/grouptype/:groupTypeId/group/search`)
       .query({ s: searchString, loc: locationString, groupTypeId: CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS, id: groupId }).$promise;
