@@ -610,7 +610,7 @@ namespace crds_angular.Services
                 throw new ContactNotFoundException(contactId);
             }
             if (medicalInfo != null)
-            {                                
+            {
                 var mpMedicalInfo = new MpMedicalInformation
                 {
                     MedicalInformationId = medicalInfo.MedicalInformationId,
