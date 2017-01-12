@@ -75,9 +75,17 @@ namespace crds_angular.Security
                         var refreshToken = authData["refreshToken"].ToString();
                         IHttpActionResult result = null;
                         if (impersonate)
-                            result = new HttpAuthResult(_userImpersonationService.WithImpersonation(authorized, impersonateUserIds.FirstOrDefault(), () => actionWhenAuthorized(authorized)), authorized, refreshToken);
+                        {
+                            result =
+                                new HttpAuthResult(
+                                    _userImpersonationService.WithImpersonation(authorized, impersonateUserIds.FirstOrDefault(), () => actionWhenAuthorized(authorized)),
+                                    authorized,
+                                    refreshToken);
+                        }
                         else
+                        {
                             result = new HttpAuthResult(actionWhenAuthorized(authorized), authorized, refreshToken);
+                        }
                         return result;
                     }
                 }
@@ -86,9 +94,13 @@ namespace crds_angular.Security
                 if (authorized != null && (authorized != "null" || authorized != ""))
                 {
                     if (impersonate)
+                    {
                         return _userImpersonationService.WithImpersonation(authorized, impersonateUserIds.FirstOrDefault(), () => actionWhenAuthorized(authorized));
+                    }
                     else
+                    {
                         return actionWhenAuthorized(authorized);
+                    }
                 }
                 return actionWhenNotAuthorized();
             }
