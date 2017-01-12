@@ -21,12 +21,14 @@ def processCmdLineArgs(args):
     except:
         exitCode = 1
 
+    print(opts)
+
     for opt, arg in opts:
         if opt in ("-o", "--output"):
             print("output ", arg)
             output = arg
 
-    if "output" not in locals(): 
+    if "output" not in locals():
         output = ""
         exitCode = 1
 

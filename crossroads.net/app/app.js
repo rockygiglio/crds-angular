@@ -37,7 +37,6 @@ require('ui-select/dist/select.css');
   require('./events');
   require('./signup');
   require('./styleguide');
-  require('./superbowl');
   require('./thedaily');
   require('./explore');
   require('./gotrips');

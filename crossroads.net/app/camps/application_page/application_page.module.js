@@ -13,6 +13,8 @@ import EmergencyContactForm from './emergency_contact_info/emergency_contact_for
 // Medical Info
 import MedicalInfoComponent from './medical_info/medical_info.component';
 import MedicalInfoForm from './medical_info/medical_info_form.service';
+import campMedicineFormlyConfig from './medical_info/camp_medicines.formly';
+import './medical_info/camp_medicines.html';
 
 // Camp Waivers
 import CampWaiversComponent from './camp_waivers/camp_waivers.component';
@@ -43,6 +45,7 @@ export default angular.module(constants.MODULES.CAMPS_APPLICATION_PAGE, [
   .service('MedicalInfoForm', MedicalInfoForm)
   .service('EmergencyContactForm', EmergencyContactForm)
   .service('CamperInfoForm', CamperInfoForm)
+  .config(campMedicineFormlyConfig)
   .run(() => {
     registerResolve('camp-waivers', CampWaiversComponent.resolve);
     registerResolve('camper-info', CamperInfoComponent.resolve);

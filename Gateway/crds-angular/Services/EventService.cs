@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using AutoMapper;
 using crds_angular.Models.Crossroads.Events;
 using crds_angular.Models.Crossroads.Groups;
 using Crossroads.Utilities.FunctionalHelpers;
@@ -36,6 +37,7 @@ namespace crds_angular.Services
         private readonly IRoomRepository _roomService;
         private readonly IEquipmentRepository _equipmentService;
         private readonly IEventParticipantRepository _eventParticipantService;
+        private readonly int childcareEventTypeID;
 
         private readonly List<string> _tableHeaders = new List<string>()
         {
@@ -74,6 +76,8 @@ namespace crds_angular.Services
             _roomService = roomService;
             _equipmentService = equipmentService;
             _eventParticipantService = eventParticipantService;
+
+            childcareEventTypeID = configurationWrapper.GetConfigIntValue("ChildcareEventType");
         }
 
         public EventToolDto GetEventRoomDetails(int eventId)
@@ -83,23 +87,29 @@ namespace crds_angular.Services
 
         public EventToolDto GetEventReservation(int eventId)
         {
-            return GetEventDetails(eventId, true, false);
+            var details = GetEventDetails(eventId, true, false);
+            details.IsSeries = _eventService.IsEventSeries(eventId);
+            return details;
         }
 
         private EventToolDto GetEventDetails(int eventId, bool includeEquipment, bool includeParticipants)
         {
             try
             {
-                var dto = new EventToolDto();
-
                 var e = GetEvent(eventId);
-                dto.Title = e.EventTitle;
-                dto.CongregationId = e.CongregationId;
-                dto.EndDateTime = e.EventEndDate;
-                dto.StartDateTime = e.EventStartDate;
-                dto.ReminderDaysId = e.ReminderDaysPriorId;
+                var dto = Mapper.Map<EventToolDto>(e);
 
                 dto.Rooms = PopulateRoomReservations(eventId, includeEquipment, includeParticipants);
+
+                var groups = _eventService.GetEventGroupsForEventAPILogin(eventId);
+
+                if (groups.Count > 0)
+                {
+                    var group = _groupService.getGroupDetails(groups[0].GroupId);
+                    dto.Group = Mapper.Map<GroupDTO>(group);
+                }
+
+
 
                 return dto;
             }
@@ -142,6 +152,7 @@ namespace crds_angular.Services
                         eq.EquipmentId = equipmentReservation.EquipmentId;
                         eq.QuantityRequested = equipmentReservation.QuantityRequested;
                         eq.EquipmentReservationId = equipmentReservation.EventEquipmentId;
+                        eq.Notes = equipmentReservation.Notes;
                         equipmentDto.Add(eq);
                     }
                     r.Equipment = equipmentDto;
@@ -164,6 +175,28 @@ namespace crds_angular.Services
         {
             try
             {
+                var oldEventDetails = GetEventDetails(eventId, true, false);
+
+                foreach (var room in oldEventDetails.Rooms)
+                {
+                    if (!room.Cancelled)
+                    {
+                        if (!eventReservation.Rooms.Any(r => r.RoomId == room.RoomId))
+                        {
+                            room.Cancelled = true;
+                            foreach (var eq in room.Equipment)
+                            {
+                                eq.Cancelled = true;
+                                eq.Notes = "***Cancelled***" + eq.Notes;
+                            }
+                            UpdateEventRoom(room, eventId, token);
+                        }
+                    }
+                }
+
+                UpdateEventChildcareGroup(oldEventDetails, eventReservation, eventId, token);
+                UpdateEvent(eventReservation, eventId, token);
+
                 foreach (var room in eventReservation.Rooms)
                 {
                     UpdateEventRoom(room, eventId, token);
@@ -176,6 +209,35 @@ namespace crds_angular.Services
                 throw new Exception(msg, ex);
             }
             return true;
+        }
+
+        private void UpdateEventChildcareGroup(EventToolDto oldEventDetails, EventToolDto eventReservation, int eventId, string token)
+        {
+            bool wasChildcare = oldEventDetails.EventTypeId == childcareEventTypeID;
+            bool isChildcare = eventReservation.EventTypeId == childcareEventTypeID;
+
+            //if it use to be a childcare event, but isn't anymore, remove the group
+            if (wasChildcare && !isChildcare)
+            {
+                _eventService.DeleteEventGroupsForEvent(eventId, token);
+                _groupService.EndDateGroup(oldEventDetails.Group.GroupId, null, null);
+            }
+            //now is a childcare event but was not before so add a group
+            else if (!wasChildcare && isChildcare)
+            {
+                eventReservation.Group.CongregationId = eventReservation.CongregationId;
+                var groupid = AddGroup(eventReservation.Group);
+                AddEventGroup(eventId, groupid, token);
+            }
+            //it was and still is a childcare event
+            else if (wasChildcare && isChildcare)
+            {
+                var group = _eventService.GetEventGroupsForEventAPILogin(eventId).FirstOrDefault();
+
+                eventReservation.Group.GroupId = group.GroupId;
+                eventReservation.Group.CongregationId = eventReservation.CongregationId;
+                UpdateGroup(eventReservation.Group);
+            }
         }
 
         public EventRoomDto UpdateEventRoom(EventRoomDto eventRoom, int eventId, string token)
@@ -222,7 +284,6 @@ namespace crds_angular.Services
                 foreach (var room in eventTool.Rooms)
                 {
                     AddRoom(eventId, room, token);
-
                     foreach (var equipment in room.Equipment)
                     {
                         AddEquipment(equipment, eventId, room, token);
@@ -277,6 +338,40 @@ namespace crds_angular.Services
            return  _groupService.CreateGroup(mpgroup);
         }
 
+        private void UpdateGroup(GroupDTO group)
+        {
+            //translate the dto to the mp object
+            var mpgroup = new MpGroup
+            {
+                GroupId = @group.GroupId,
+                Name = @group.GroupName,
+                GroupType = @group.GroupTypeId,
+                Full = @group.GroupFullInd,
+                WaitList = @group.WaitListInd,
+                WaitListGroupId = @group.WaitListGroupId,
+                PrimaryContactName = @group.PrimaryContactName,
+                PrimaryContactEmail = @group.PrimaryContactEmail,
+                ChildCareAvailable = @group.ChildCareAvailable,
+                MinimumAge = @group.MaximumAge,
+                GroupDescription = @group.GroupDescription,
+                MinistryId = @group.MinistryId,
+                MeetingTime = @group.MeetingTime,
+                MeetingDayId = @group.MeetingDayId,
+                CongregationId = @group.CongregationId,
+                StartDate = @group.StartDate,
+                EndDate = @group.EndDate,
+                AvailableOnline = @group.AvailableOnline,
+                RemainingCapacity = @group.RemainingCapacity,
+                ContactId = @group.ContactId,
+                GroupRoleId = @group.GroupRoleId,
+                MaximumAge = @group.MaximumAge,
+                MinimumParticipants = @group.MinimumParticipants,
+                TargetSize = @group.TargetSize
+            };
+
+            _groupService.UpdateGroup(mpgroup);
+        }
+
         public int AddEventGroup(int eventId, int groupId, string token)
         {
             var eventGroup = new MpEventGroup
@@ -286,7 +381,7 @@ namespace crds_angular.Services
                 DomainId = 1
             };
 
-            return _eventService.CreateEventGroup(eventGroup, token);
+            return _eventService.CreateEventGroup(eventGroup);
         }
 
         private void AddEquipment(EventRoomEquipmentDto equipment, int eventId, EventRoomDto room, string token)
@@ -297,7 +392,8 @@ namespace crds_angular.Services
             equipmentReservation.EventId = eventId;
             equipmentReservation.QuantityRequested = equipment.QuantityRequested;
             equipmentReservation.RoomId = room.RoomId;
-            _equipmentService.CreateEquipmentReservation(equipmentReservation, token);
+            equipmentReservation.Notes = room.Notes;
+            _equipmentService.CreateEquipmentReservation(equipmentReservation);
         }
 
         private void UpdateEquipment(EventRoomEquipmentDto equipment, int eventId, EventRoomDto room, string token)
@@ -309,10 +405,11 @@ namespace crds_angular.Services
             equipmentReservation.EventId = eventId;
             equipmentReservation.QuantityRequested = equipment.QuantityRequested;
             equipmentReservation.RoomId = room.RoomId;
-            _equipmentService.UpdateEquipmentReservation(equipmentReservation, token);
+            equipmentReservation.Notes = equipment.Notes ?? room.Notes;
+            _equipmentService.UpdateEquipmentReservation(equipmentReservation);
         }
 
-        private void AddRoom(int eventId, EventRoomDto room, string token)
+        private int AddRoom(int eventId, EventRoomDto room, string token)
         {
             var roomReservation = new MpRoomReservationDto();
             roomReservation.Cancelled = false;
@@ -325,7 +422,7 @@ namespace crds_angular.Services
             roomReservation.Label = room.Label;
             roomReservation.CheckinAllowed = room.CheckinAllowed;
             roomReservation.Volunteers = room.Volunteers;
-            _roomService.CreateRoomReservation(roomReservation, token);
+            return _roomService.CreateRoomReservation(roomReservation);
         }
 
         private void UpdateRoom(int eventId, EventRoomDto room, string token)
@@ -342,10 +439,24 @@ namespace crds_angular.Services
             roomReservation.Label = room.Label;
             roomReservation.CheckinAllowed = room.CheckinAllowed;
             roomReservation.Volunteers = room.Volunteers;
-            _roomService.UpdateRoomReservation(roomReservation, token);
+            _roomService.UpdateRoomReservation(roomReservation);
         }
 
-        private int AddEvent(EventToolDto eventTool)
+        public int AddEvent(EventToolDto eventReservation)
+        {
+            var eventDto = PopulateReservationDto(eventReservation);
+            var eventId = _eventService.CreateEvent(eventDto);
+            return eventId;
+        }
+
+        public void UpdateEvent(EventToolDto eventReservation, int eventId, string token)
+        {
+            var eventDto = PopulateReservationDto(eventReservation);
+            eventDto.EventId = eventId;
+            _eventService.UpdateEvent(eventDto);
+        }
+
+        private MpEventReservationDto PopulateReservationDto(EventToolDto eventTool)
         {
             var eventDto = new MpEventReservationDto();
             eventDto.CongregationId = eventTool.CongregationId;
@@ -363,11 +474,12 @@ namespace crds_angular.Services
             {
                 eventDto.ReminderDaysId = eventTool.ReminderDaysId;
             }
+            eventDto.Cancelled = eventTool.Cancelled;
             eventDto.SendReminder = eventTool.SendReminder;
             eventDto.StartDateTime = eventTool.StartDateTime;
             eventDto.Title = eventTool.Title;
-            var eventId = _eventService.CreateEvent(eventDto);
-            return eventId;
+            return eventDto;
+
         }
 
         public MpEvent GetEvent(int eventId)
@@ -718,7 +830,7 @@ namespace crds_angular.Services
                 eventRoom.EventId = eventId;
 
                 // this is the new room reservation id for the copied room
-                int roomReservationId = _roomService.CreateRoomReservation(eventRoom, token);
+                int roomReservationId = _roomService.CreateRoomReservation(eventRoom);
 
                 // get the template event group which matched the template event room, and assign the reservation id to this object
                 var eventGroupsForRoom = (from r in eventGroups where r.EventRoomId == eventRoom.EventRoomId select r);
@@ -728,7 +840,7 @@ namespace crds_angular.Services
                     // create the copied event group and assign the new room reservation id here
                     eventGroup.EventId = eventId;
                     eventGroup.EventRoomId = roomReservationId;
-                    _eventService.CreateEventGroup(eventGroup, token);
+                    _eventService.CreateEventGroup(eventGroup);
                     eventGroup.Created = true;
                 }
             }
@@ -737,7 +849,7 @@ namespace crds_angular.Services
             {
                 // create the copied event group and assign the new room reservation id here
                 eventGroup.EventId = eventId;
-                _eventService.CreateEventGroup(eventGroup, token);
+                _eventService.CreateEventGroup(eventGroup);
                 eventGroup.Created = true;
             }
 

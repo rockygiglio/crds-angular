@@ -1015,14 +1015,10 @@ streaming, landing {
 
     .digital-program__giving {
       background-color: #171717;
-      margin-bottom: 2em;
       padding: 0;
 
       @media (min-width: $screen-md) {
         @include make-md-column(4);
-        @include make-md-column-push(8);
-
-        margin-bottom: 0;
         padding-right: 0;
         padding-left: 0;
       }
@@ -1041,10 +1037,11 @@ streaming, landing {
     }
 
     .digital-program__articles {
+      margin-bottom: 2em;
+
       @media (min-width: $screen-md) {
         @include make-md-column(8);
-        @include make-md-column-pull(4);
-
+        margin-bottom: 0;
         padding-left: 0;
       }
 

@@ -134,6 +134,7 @@
     <Compile Include="Services\GroupToolRepositoryTest.cs" />
     <Compile Include="Services\InvitationRepositoryTest.cs" />
     <Compile Include="Services\LookupServiceTest.cs" />
+    <Compile Include="Services\MedicalInformationRepositoryTest.cs" />
     <Compile Include="Services\MinistryPlatformRestServiceIntegrationTest.cs" />
     <Compile Include="Services\MinistryPlatformRestServiceTest.cs" />
     <Compile Include="Services\ObjectAttributeServiceTest.cs" />

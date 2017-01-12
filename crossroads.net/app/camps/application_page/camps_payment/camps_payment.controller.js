@@ -1,9 +1,10 @@
 /* @ngInject */
 export default class CampPaymentController {
-  constructor(CampsService, $state, $sce) {
+  constructor(CampsService, $state, $sce, $sessionStorage) {
     this.campsService = CampsService;
     this.state = $state;
     this.sce = $sce;
+    this.sessionStorage = $sessionStorage;
     this.iframeSelector = '.camp-payment-widget';
     this.viewReady = false;
     this.update = false;
@@ -14,7 +15,7 @@ export default class CampPaymentController {
   }
 
   $onInit() {
-    this.update = this.state.toParams.update;
+    this.update = this.state.toParams.update || this.sessionStorage.campDeposits[`${this.state.toParams.campId}+${this.state.toParams.contactId}`];
 
     if (this.update && this.state.toParams.redirectTo) {
       this.redirectTo = this.state.toParams.redirectTo;
@@ -83,6 +84,8 @@ export default class CampPaymentController {
       url = encodeURIComponent(`${returnUrl}/${this.redirectTo}`);
     } else if (this.redirectTo) {
       url = encodeURIComponent(`${this.returnUrl}/${campId}/${this.redirectTo}/${contactId}`);
+    } else if (this.update) {
+      url = encodeURIComponent(`${this.returnUrl}/${campId}/payment-confirmation/${contactId}`);
     } else {
       url = encodeURIComponent(`${this.returnUrl}/${campId}/confirmation/${contactId}`);
     }

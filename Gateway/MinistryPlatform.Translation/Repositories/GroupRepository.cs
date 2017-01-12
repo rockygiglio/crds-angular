@@ -230,6 +230,7 @@ namespace MinistryPlatform.Translation.Repositories
                     return (null);
                 }
                 var g = new MpGroup();
+                g.GroupId = groupId;
 
                 object con = null;
                 groupDetails.TryGetValue("Congregation_ID", out con);
@@ -579,7 +580,7 @@ namespace MinistryPlatform.Translation.Repositories
                 EventStartDate = tmpEvent.ToDate("Event_Start_Date"),
                 EventEndDate = tmpEvent.ToDate("Event_End_Date"),
                 EventTitle = tmpEvent.ToString("Event_Title"),
-                EventType = tmpEvent.ToString("Event_Type")
+                EventType = tmpEvent.ToString("Event_Type_ID")
             }).ToList();
         }
 
@@ -939,7 +940,7 @@ namespace MinistryPlatform.Translation.Repositories
                 {"Online_RSVP_Minimum_Age", group.MinimumAge },
                 {"Maximum_Age", group.MaximumAge },
                 {"Minimum_Participants", group.MinimumParticipants },
-                {"Kids_Welcome", group.KidsWelcome },
+                {"Kids_Welcome", group.KidsWelcome ?? true},
                 {"Meeting_Frequency_ID", group.MeetingFrequencyID }
 
             };
