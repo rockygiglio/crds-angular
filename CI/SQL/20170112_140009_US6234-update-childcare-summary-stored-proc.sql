@@ -41,55 +41,88 @@ AS
 			Checkin int
 		)
 
-		INSERT INTO @ChildcareSummary
-			SELECT  g.Group_Name Group_Name,  
-				e.Event_Start_Date  EventDate, 
-				e.Event_Start_Date  StartTime, 
-				e.Event_End_Date EndTime, 
-				p.Participant_ID ParticipantID,
-				'''' as Age,
-				1 AS ''RSVP'',
-				IIF(ep.Event_Participant_ID IS NOT NULL, 1, 0) AS ''Checkin''
-			FROM dbo.Events e
-			JOIN Event_Groups eg ON e.Event_ID = eg.Event_ID
-			JOIN Group_Participants childgp ON childgp.Group_ID = eg.Group_ID 
-			JOIN Group_Participants parentgp ON parentgp.Group_Participant_ID = childgp.Enrolled_By
-			JOIN Groups g ON g.Group_ID = parentgp.Group_ID
-			JOIN Participants p ON p.Participant_ID = childgp.Participant_ID
-			JOIN Contacts c on c.Contact_ID = p.Contact_ID		
-			LEFT JOIN Event_Participants ep on ep.Event_ID = e.Event_ID AND ep.Participant_ID = p.Participant_ID
-			LEFT JOIN cr_Echeck_Registrations er ON er.Child_ID = c.Contact_ID AND CONVERT(date, er.Checkin_Date) = CONVERT(date, e.Event_Start_Date) AND CONVERT(time, e.Event_Start_Date) = CONVERT(time, er.Service_Time)
-			WHERE e.Event_Type_ID = 243
-				AND e.Event_Start_Date BETWEEN @StartDate AND @EndDate
-				AND e.Congregation_ID = @CongregationId
-				AND childgp.End_Date is null
+		IF (@AfterCutoff = 1)
+		BEGIN
+			INSERT INTO @ChildcareSummary
+				SELECT  g.Group_Name Group_Name,  
+					e.Event_Start_Date  EventDate, 
+					e.Event_Start_Date  StartTime, 
+					e.Event_End_Date EndTime, 
+					p.Participant_ID ParticipantID,
+					'''' as Age,
+					1 AS ''RSVP'',
+					IIF(ep.Event_Participant_ID IS NOT NULL, 1, 0) AS ''Checkin''
+				FROM dbo.Events e
+				JOIN Event_Groups eg ON e.Event_ID = eg.Event_ID
+				JOIN Group_Participants childgp ON childgp.Group_ID = eg.Group_ID 
+				JOIN Group_Participants parentgp ON parentgp.Group_Participant_ID = childgp.Enrolled_By
+				JOIN Groups g ON g.Group_ID = parentgp.Group_ID
+				JOIN Participants p ON p.Participant_ID = childgp.Participant_ID
+				JOIN Contacts c on c.Contact_ID = p.Contact_ID		
+				LEFT JOIN Event_Participants ep on ep.Event_ID = e.Event_ID AND ep.Participant_ID = p.Participant_ID AND ep.Participation_Status_ID in (3, 4) 
+				LEFT JOIN cr_Echeck_Registrations er ON er.Child_ID = c.Contact_ID AND CONVERT(date, er.Checkin_Date) = CONVERT(date, e.Event_Start_Date) AND CONVERT(time, e.Event_Start_Date) = CONVERT(time, er.Service_Time)
+				WHERE e.Event_Type_ID = 243
+					AND e.Event_Start_Date BETWEEN @StartDate AND @EndDate
+					AND e.Congregation_ID = @CongregationId
+					AND childgp.End_Date is null
+					AND childgp.[Start_Date] > DATEADD(day, -6, CONVERT(DATE, e.Event_Start_Date, 101))
+		END
 
-		INSERT INTO @ChildcareSummary
-			SELECT '''' AS Group_Name, 
-				e.Event_Start_Date AS EventDate, 
-				e.Event_Start_Date AS StartTime, 
-				e.Event_End_Date AS EndTime, 
-				p.Participant_ID ParticipantID,
-				'''' AS Age, 
-				0 AS ''RSVP'', 
-				1 AS ''Checkin'' 
-			FROM dbo.Event_Participants ep
-			JOIN Participants p on p.Participant_ID = ep.Participant_ID
-			JOIN Contacts c ON c.Contact_ID = p.Contact_ID
-			JOIN Events e ON e.Event_ID = ep.Event_ID		
-			WHERE e.Event_Type_ID = 243 
-				AND e.Event_Start_Date BETWEEN @StartDate AND @EndDate
-				AND e.Congregation_ID = @CongregationId
-				AND e.Congregation_ID = @CongregationId
-				AND c.Contact_ID NOT IN (SELECT Contact_ID FROM Group_Participants gp
-					JOIN Event_Groups eg ON gp.Group_ID = eg.Group_ID
-					JOIN Groups g ON g.Group_ID = gp.Group_ID
-					JOIN Participants p ON gp.Participant_ID = p.Participant_ID
-					WHERE g.Group_Type_ID = 27
-					AND gp.End_Date IS NULL
-					AND eg.Event_ID = e.Event_ID)
+		IF(@BeforeCutoff = 1) 
+		BEGIN		
+			INSERT INTO @ChildcareSummary
+				SELECT  g.Group_Name Group_Name,  
+					e.Event_Start_Date  EventDate, 
+					e.Event_Start_Date  StartTime, 
+					e.Event_End_Date EndTime, 
+					p.Participant_ID ParticipantID,
+					'''' as Age,
+					1 AS ''RSVP'',
+					IIF(ep.Event_Participant_ID IS NOT NULL, 1, 0) AS ''Checkin''
+				FROM dbo.Events e
+				JOIN Event_Groups eg ON e.Event_ID = eg.Event_ID
+				JOIN Group_Participants childgp ON childgp.Group_ID = eg.Group_ID 
+				JOIN Group_Participants parentgp ON parentgp.Group_Participant_ID = childgp.Enrolled_By
+				JOIN Groups g ON g.Group_ID = parentgp.Group_ID
+				JOIN Participants p ON p.Participant_ID = childgp.Participant_ID
+				JOIN Contacts c on c.Contact_ID = p.Contact_ID		
+				LEFT JOIN Event_Participants ep on ep.Event_ID = e.Event_ID AND ep.Participant_ID = p.Participant_ID AND ep.Participation_Status_ID in (3, 4) 
+				LEFT JOIN cr_Echeck_Registrations er ON er.Child_ID = c.Contact_ID AND CONVERT(date, er.Checkin_Date) = CONVERT(date, e.Event_Start_Date) AND CONVERT(time, e.Event_Start_Date) = CONVERT(time, er.Service_Time)
+				WHERE e.Event_Type_ID = 243
+					AND e.Event_Start_Date BETWEEN @StartDate AND @EndDate
+					AND e.Congregation_ID = @CongregationId
+					AND childgp.End_Date is null
+					AND childgp.[Start_Date] <= DATEADD(day, -6, CONVERT(DATE, e.Event_Start_Date, 101))
 
+		END
 
+		IF @AfterCutoff = 1
+		BEGIN
+			INSERT INTO @ChildcareSummary
+				SELECT '''' AS Group_Name, 
+					e.Event_Start_Date AS EventDate, 
+					e.Event_Start_Date AS StartTime, 
+					e.Event_End_Date AS EndTime, 
+					p.Participant_ID ParticipantID,
+					'''' AS Age, 
+					0 AS ''RSVP'', 
+					1 AS ''Checkin'' 
+				FROM dbo.Event_Participants ep
+				JOIN Participants p on p.Participant_ID = ep.Participant_ID AND ep.Participation_Status_ID in (3, 4) 
+				JOIN Contacts c ON c.Contact_ID = p.Contact_ID
+				JOIN Events e ON e.Event_ID = ep.Event_ID		
+				WHERE e.Event_Type_ID = 243 
+					AND e.Event_Start_Date BETWEEN @StartDate AND @EndDate
+					AND e.Congregation_ID = @CongregationId
+					AND e.Congregation_ID = @CongregationId
+					AND c.Contact_ID NOT IN (SELECT Contact_ID FROM Group_Participants gp
+						JOIN Event_Groups eg ON gp.Group_ID = eg.Group_ID
+						JOIN Groups g ON g.Group_ID = gp.Group_ID
+						JOIN Participants p ON gp.Participant_ID = p.Participant_ID
+						WHERE g.Group_Type_ID = 27
+						AND gp.End_Date IS NULL
+						AND eg.Event_ID = e.Event_ID)
+		END
 
 		DECLARE @participantid int
 		DECLARE cur CURSOR FOR SELECT ParticipantID FROM @ChildcareSummary
