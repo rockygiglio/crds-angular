@@ -135,11 +135,11 @@ namespace crds_angular.Services
             return requests;
         }
 
-        public void RemoveParticipantFromMyGroup(string token, int groupTypeId, int groupId, int groupParticipantId, string message = null)
+        public void RemoveParticipantFromMyGroup(string token, int groupId, int groupParticipantId, string message = null)
         {
             try
             {
-                var myGroup = GetMyGroupInfo(token, groupTypeId, groupId);
+                var myGroup = GetMyGroupInfo(token, groupId);
 
                 _groupService.endDateGroupParticipant(groupId, groupParticipantId);
 
@@ -270,9 +270,9 @@ namespace crds_angular.Services
             };
         }
 
-        public MyGroup GetMyGroupInfo(string token, int groupTypeId, int groupId)
+        public MyGroup GetMyGroupInfo(string token, int groupId)
         {
-            var groups = _groupService.GetGroupsByTypeForAuthenticatedUser(token, groupTypeId, groupId);
+            var groups = _groupService.GetGroupByIdForAuthenticatedUser(token, groupId);
             var group = groups == null || !groups.Any() ? null : groups.FirstOrDefault();
 
             if (group == null)
@@ -300,7 +300,7 @@ namespace crds_angular.Services
         {
             try
             {
-                var myGroup = GetMyGroupInfo(token, groupTypeId, groupId);
+                var myGroup = GetMyGroupInfo(token, groupId);
 
                 if (approve)
                 {
@@ -494,7 +494,7 @@ namespace crds_angular.Services
         public void SendAllGroupParticipantsEmail(string token, int groupId, int groupTypeId, string subject, string body)
         {
             var leaderRecord = _participantRepository.GetParticipantRecord(token);
-            var groups = _groupService.GetGroupsByTypeForAuthenticatedUser(token, groupTypeId, groupId);
+            var groups = _groupService.GetGroupByIdForAuthenticatedUser(token, groupId);
 
             if (groups == null || !groups.Any())
             {
@@ -624,7 +624,7 @@ namespace crds_angular.Services
         }
 
 
-        public List<GroupDTO> SearchGroups(int groupTypeId, string keywords = null, string location = null, int? groupId = null)
+        public List<GroupDTO> SearchGroups(int[] groupTypeIds, string keywords = null, string location = null, int? groupId = null)
         {
             // Split single search term into multiple words, broken on whitespace
             // TODO Should remove stopwords from search - possibly use a configurable list of words (http://www.link-assistant.com/seo-stop-words.html)
@@ -635,7 +635,7 @@ namespace crds_angular.Services
                     .Replace("&", "%26") // Replace & with the hex representation, to avoid looking like a stored proc parameter
                     .Split((char[]) null, StringSplitOptions.RemoveEmptyEntries);
 
-            var results = _groupToolRepository.SearchGroups(groupTypeId, search, groupId);
+            var results = _groupToolRepository.SearchGroups(groupTypeIds, search, groupId);
             if (results == null || !results.Any())
             {
                 return null;

@@ -10,7 +10,7 @@ namespace crds_angular.Services.Interfaces
         List<Invitation> GetInvitations(int sourceId, int invitationType, string token);
         List<Inquiry> GetInquiries(int groupId, string token);
 
-        void RemoveParticipantFromMyGroup(string token, int groupTypeId, int groupId, int groupParticipantId, string message = null);
+        void RemoveParticipantFromMyGroup(string token, int groupId, int groupParticipantId, string message = null);
         void ApproveDenyInquiryFromMyGroup(string token, int groupTypeId, int groupId, bool approve, Inquiry inquiry, string message = null);
         void AcceptDenyGroupInvitation(string token, int groupId, string invitationGuid, bool approve);
 
@@ -27,11 +27,11 @@ namespace crds_angular.Services.Interfaces
         MyGroup VerifyCurrentUserIsGroupLeader(string token, int groupId);
 	    void SendAllGroupParticipantsEmail(string token, int groupId, int groupTypeId, string subject, string message);
         void SendAllGroupLeadersEmail(string token, int groupId, GroupMessageDTO message);
-        List<GroupDTO> SearchGroups(int groupTypeId, string keywords = null, string location = null, int? groupId = null);
+        List<GroupDTO> SearchGroups(int[] groupTypeIds, string keywords = null, string location = null, int? groupId = null);
         void SubmitInquiry(string token, int groupId);
         void EndGroup(int groupId, int reasonEndedId);
         void SendSingleGroupParticipantEmail(GroupParticipantDTO participant, int templateId, Dictionary<string, object> mergeData);
-        MyGroup GetMyGroupInfo(string token, int groupTypeId, int groupId);
+        MyGroup GetMyGroupInfo(string token, int groupId);
         void SendSmallGroupPendingInquiryReminderEmails();
         List<AttributeCategoryDTO> GetGroupCategories();
     }

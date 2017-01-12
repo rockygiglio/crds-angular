@@ -476,8 +476,8 @@ namespace MinistryPlatform.Translation.Test.Services
         {
             const int pageId = 563;
             const string token = "jenny8675309";
-            const int groupTypeId = 19;
-            string searchString = ",,,,\"" + groupTypeId + "\"";
+            int[] groupTypeId =  {19};
+            string searchString = ",,,,\"" + string.Join("\" or \"", groupTypeId) + "\"";
 
             _configWrapper.Setup(m => m.GetConfigIntValue(It.IsAny<string>())).Returns(pageId);
 
@@ -555,8 +555,8 @@ namespace MinistryPlatform.Translation.Test.Services
             const int groupId = 987;
             const int pageId = 563;
             const string token = "jenny8675309";
-            const int groupTypeId = 19;
-            string searchString = string.Format(",,,\"{0}\",\"{1}\"", groupId, groupTypeId);
+            int[] groupTypeId = {19};
+            string searchString = string.Format(",,,\"{0}\",\"{1}\"", groupId, string.Join("\" or \"", groupTypeId));
 
             _configWrapper.Setup(m => m.GetConfigIntValue(It.IsAny<string>())).Returns(pageId);
 

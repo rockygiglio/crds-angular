@@ -31,7 +31,7 @@ namespace crds_angular.test.controllers
         {
             _groupToolService = new Mock<IGroupToolService>(MockBehavior.Strict);
             _configurationWrapper = new Mock<IConfigurationWrapper>();
-            _configurationWrapper.Setup(mocked => mocked.GetConfigIntValue("GroupTypeSmallId")).Returns(1);
+            _configurationWrapper.Setup(mocked => mocked.GetConfigIntValue("SmallGroupTypeId")).Returns(1);
             _fixture = new GroupToolController(_groupToolService.Object, _configurationWrapper.Object);
             _fixture.SetupAuthorization(AuthType, AuthToken);
 
@@ -40,8 +40,8 @@ namespace crds_angular.test.controllers
         [Test]
         public void TestRemoveParticipantFromMyGroup()
         {
-            _groupToolService.Setup(mocked => mocked.RemoveParticipantFromMyGroup(_auth, 1, 2, 3, "test"));
-            var result = _fixture.RemoveParticipantFromMyGroup(1, 2, 3, "test");
+            _groupToolService.Setup(mocked => mocked.RemoveParticipantFromMyGroup(_auth, 2, 3, "test"));
+            var result = _fixture.RemoveParticipantFromMyGroup(2, 3, "test");
             _groupToolService.VerifyAll();
 
             Assert.IsNotNull(result);
@@ -52,10 +52,10 @@ namespace crds_angular.test.controllers
         public void TestRemoveParticipantFromMyGroupWithGroupParticipantRemovalException()
         {
             var ex = new GroupParticipantRemovalException("message");
-            _groupToolService.Setup(mocked => mocked.RemoveParticipantFromMyGroup(_auth, 1, 2, 3, "test")).Throws(ex);
+            _groupToolService.Setup(mocked => mocked.RemoveParticipantFromMyGroup(_auth, 2, 3, "test")).Throws(ex);
             try
             {
-                _fixture.RemoveParticipantFromMyGroup(1, 2, 3, "test");
+                _fixture.RemoveParticipantFromMyGroup(2, 3, "test");
                 Assert.Fail("Expected exception was not thrown");
             }
             catch (HttpResponseException e)
@@ -70,10 +70,10 @@ namespace crds_angular.test.controllers
         public void TestRemoveParticipantFromMyGroupWithOtherException()
         {
             var ex = new Exception();
-            _groupToolService.Setup(mocked => mocked.RemoveParticipantFromMyGroup(_auth, 1, 2, 3, "test")).Throws(ex);
+            _groupToolService.Setup(mocked => mocked.RemoveParticipantFromMyGroup(_auth, 2, 3, "test")).Throws(ex);
             try
             {
-                _fixture.RemoveParticipantFromMyGroup(1, 2, 3, "test");
+                _fixture.RemoveParticipantFromMyGroup(2, 3, "test");
                 Assert.Fail("Expected exception was not thrown");
             }
             catch (HttpResponseException e)
@@ -168,7 +168,7 @@ namespace crds_angular.test.controllers
         [Test]
         public void TestSearchGroupsNoGroupsFound()
         {
-            const int groupTypeId = 123;
+            int[] groupTypeId = new int[] {123};
             const string keywords = "kw1,kw2";
             const string location = "123 main st";
 
@@ -185,7 +185,7 @@ namespace crds_angular.test.controllers
         [ExpectedException(typeof(HttpResponseException))]
         public void TestSearchGroupsWithException()
         {
-            const int groupTypeId = 123;
+            int[] groupTypeId = new int[] { 123 };
             const string keywords = "kw1,kw2";
             const string location = "123 main st";
             var exception = new Exception("whoa nelly");
@@ -197,7 +197,7 @@ namespace crds_angular.test.controllers
         [Test]
         public void TestSearchGroups()
         {
-            const int groupTypeId = 123;
+            int[] groupTypeId = new int[] { 123 };
             const string keywords = "kw1,kw2";
             const string location = "123 main st";
             var searchResults = new List<GroupDTO>
@@ -218,7 +218,7 @@ namespace crds_angular.test.controllers
         [Test]
         public void TestSearchGroupsWithGroupId()
         {
-            const int groupTypeId = 123;
+            int[] groupTypeId = new int[] { 123 };
             const int groupId = 42;
             var searchResults = new List<GroupDTO>
             {

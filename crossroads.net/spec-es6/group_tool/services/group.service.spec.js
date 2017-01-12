@@ -122,7 +122,7 @@ describe('Group Tool Group Service', () => {
         return new SmallGroup(group);
       });
 
-      httpBackend.expectGET(`${endpoint}/group/mine/${CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS}`).
+      httpBackend.expectGET(`${endpoint}/group/mine`).
         respond(200, groups);
 
       var promise = fixture.getMyGroups();
@@ -255,7 +255,7 @@ describe('Group Tool Group Service', () => {
 
       let errObj = { status: 500, statusText: 'nonononononono' };
 
-      httpBackend.expectGET(`${endpoint}/group/mine/${CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS}/${groupId}`).
+      httpBackend.expectGET(`${endpoint}/group/mine/${groupId}`).
         respond(500, errObj);
 
       var promise = fixture.getGroupParticipants(groupId);
@@ -280,7 +280,7 @@ describe('Group Tool Group Service', () => {
 
       let responseData = [];
 
-      httpBackend.expectGET(`${endpoint}/group/mine/${CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS}/${groupId}`).
+      httpBackend.expectGET(`${endpoint}/group/mine/${groupId}`).
         respond(200, responseData);
 
       var promise = fixture.getGroupParticipants(groupId);
@@ -364,7 +364,7 @@ describe('Group Tool Group Service', () => {
         return new Participant(p);
       });
 
-      httpBackend.expectGET(`${endpoint}/group/mine/${CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS}/${groupId}`).
+      httpBackend.expectGET(`${endpoint}/group/mine/${groupId}`).
         respond(200, mockGroup);
 
       var promise = fixture.getGroupParticipants(groupId);
@@ -471,7 +471,7 @@ describe('Group Tool Group Service', () => {
     it('should search by keywords and location', () => {
       let keyword = 'keywords';
       let loc = 'oakley';
-      httpBackend.expectGET(`${endpoint}/grouptool/grouptype/${CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS}/group/search?loc=${loc}&s=${keyword}`).
+      httpBackend.expectGET(`${endpoint}/grouptool/group/search?loc=${loc}&s=${keyword}&groupTypeIds=${CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS}&groupTypeIds=${CONSTANTS.GROUP.GROUP_TYPE_ID.ON_SITE}`).
         respond(200, groups);
       let promise = fixture.search(keyword, loc, null);
       httpBackend.flush();
@@ -488,7 +488,7 @@ describe('Group Tool Group Service', () => {
 
     it('should search by groupid', () => {
       let groupId = 123;
-      httpBackend.expectGET(`${endpoint}/grouptool/grouptype/${CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS}/group/search?id=${groupId}`).
+      httpBackend.expectGET(`${endpoint}/grouptool/group/search?id=${groupId}&groupTypeIds=${CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS}&groupTypeIds=${CONSTANTS.GROUP.GROUP_TYPE_ID.ON_SITE}`).
         respond(200, groups);
       let promise = fixture.search(null, null, groupId);
       httpBackend.flush();
@@ -506,7 +506,7 @@ describe('Group Tool Group Service', () => {
     it('should throw 404 error if no groups found', () => {
       let keyword = 'keywords';
       let loc = 'oakley';
-      httpBackend.expectGET(`${endpoint}/grouptool/grouptype/${CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS}/group/search?loc=${loc}&s=${keyword}`).
+      httpBackend.expectGET(`${endpoint}/grouptool/group/search?loc=${loc}&s=${keyword}&groupTypeIds=${CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS}&groupTypeIds=${CONSTANTS.GROUP.GROUP_TYPE_ID.ON_SITE}`).
         respond(200, []);
       let promise = fixture.search(keyword, loc, null);
       httpBackend.flush();
@@ -523,7 +523,7 @@ describe('Group Tool Group Service', () => {
     it('should rethrow error if backend call fails', () => {
       let keyword = 'keywords';
       let loc = 'oakley';
-      httpBackend.expectGET(`${endpoint}/grouptool/grouptype/${CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS}/group/search?loc=${loc}&s=${keyword}`).
+      httpBackend.expectGET(`${endpoint}/grouptool/group/search?loc=${loc}&s=${keyword}&groupTypeIds=${CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS}&groupTypeIds=${CONSTANTS.GROUP.GROUP_TYPE_ID.ON_SITE}`).
         respond(500);
       let promise = fixture.search(keyword, loc, null);
       httpBackend.flush();
