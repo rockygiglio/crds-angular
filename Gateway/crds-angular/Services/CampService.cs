@@ -610,7 +610,7 @@ namespace crds_angular.Services
                 throw new ContactNotFoundException(contactId);
             }
             if (medicalInfo != null)
-            {
+            {                                
                 var mpMedicalInfo = new MpMedicalInformation
                 {
                     MedicalInformationId = medicalInfo.MedicalInformationId,
@@ -619,8 +619,8 @@ namespace crds_angular.Services
                     PhysicianName = medicalInfo.PhysicianName ?? "N/A",
                     PhysicianPhone = medicalInfo.PhysicianPhone ?? "N/A",
                     PolicyHolder = medicalInfo.PolicyHolder ?? "N/A",
-                    MedicationsAdministered = medicalInfo.MedicationsAdministered != null ? string.Join(",", medicalInfo.MedicationsAdministered) : null
-                };
+                    MedicationsAdministered = medicalInfo.MedicationsAdministered?.Where(med => med != null).Aggregate((c, n) => c + "," + n)
+            };
 
                 var medicalInformation =  _medicalInformationRepository.SaveMedicalInfo(mpMedicalInfo, contactId);
                 var updateToDictionary = new Dictionary<String, Object>
