@@ -122,7 +122,7 @@ describe('Group Tool Group Service', () => {
         return new SmallGroup(group);
       });
 
-      httpBackend.expectGET(`${endpoint}/group/mine/${CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS}`).
+      httpBackend.expectGET(`${endpoint}/group/mine`).
         respond(200, groups);
 
       var promise = fixture.getMyGroups();
@@ -255,7 +255,7 @@ describe('Group Tool Group Service', () => {
 
       let errObj = { status: 500, statusText: 'nonononononono' };
 
-      httpBackend.expectGET(`${endpoint}/group/mine/${CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS}/${groupId}`).
+      httpBackend.expectGET(`${endpoint}/group/mine/${groupId}`).
         respond(500, errObj);
 
       var promise = fixture.getGroupParticipants(groupId);
@@ -280,7 +280,7 @@ describe('Group Tool Group Service', () => {
 
       let responseData = [];
 
-      httpBackend.expectGET(`${endpoint}/group/mine/${CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS}/${groupId}`).
+      httpBackend.expectGET(`${endpoint}/group/mine/${groupId}`).
         respond(200, responseData);
 
       var promise = fixture.getGroupParticipants(groupId);
@@ -364,7 +364,7 @@ describe('Group Tool Group Service', () => {
         return new Participant(p);
       });
 
-      httpBackend.expectGET(`${endpoint}/group/mine/${CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS}/${groupId}`).
+      httpBackend.expectGET(`${endpoint}/group/mine/${groupId}`).
         respond(200, mockGroup);
 
       var promise = fixture.getGroupParticipants(groupId);

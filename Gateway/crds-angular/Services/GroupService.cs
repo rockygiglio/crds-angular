@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Antlr.Runtime.Misc;
 using AutoMapper;
 using crds_angular.Models.Crossroads;
 using crds_angular.Models.Crossroads.Attribute;
@@ -482,29 +483,28 @@ namespace crds_angular.Services
 
         public List<GroupDTO> GetGroupsByTypeForAuthenticatedUser(string token)
         {
-            var groupsByType = _mpGroupService.GetMyGroupParticipationByType(token, 8, null);
-            if (groupsByType == null)
+            int[] groupTypeIds = new int[] {1,8};
+            var groups = _mpGroupService.GetMyGroupParticipationByType(token, groupTypeIds, null);
+            if (groups == null)
             {
                 return null;
             }
-
-            var groupDetail = groupsByType.Select(Mapper.Map<MpGroup, GroupDTO>).ToList();
-
-            GetGroupAttributes(token, groupDetail);
-            GetGroupParticipants(groupDetail);
-
-            return groupDetail;
+            return GetAttributesAndParticipants(token, groups);
         }
 
         public List<GroupDTO> GetGroupByIdForAuthenticatedUser(string token, int groupId)
         {
-            var groupsByType = _mpGroupService.GetMyGroupParticipationByType(token, null, groupId);
-            if (groupsByType == null)
+            var groups = _mpGroupService.GetMyGroupParticipationByType(token, null, groupId);
+            if (groups == null)
             {
                 return null;
             }
+            return GetAttributesAndParticipants(token,groups);
+        }
 
-            var groupDetail = groupsByType.Select(Mapper.Map<MpGroup, GroupDTO>).ToList();
+        private List<GroupDTO> GetAttributesAndParticipants(string token, List<MpGroup> groups)
+        {
+            var groupDetail = groups.Select(Mapper.Map<MpGroup, GroupDTO>).ToList();
 
             GetGroupAttributes(token, groupDetail);
             GetGroupParticipants(groupDetail);
