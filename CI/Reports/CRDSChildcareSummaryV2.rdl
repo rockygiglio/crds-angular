@@ -39,6 +39,14 @@
           <QueryParameter Name="CongregationId">
             <Value>=Parameters!congregationid.Value</Value>
           </QueryParameter>
+          <QueryParameter Name="AfterCutoff">
+            <Value>=Parameters!aftercutoff.Value</Value>
+            <rd:UserDefined>true</rd:UserDefined>
+          </QueryParameter>
+          <QueryParameter Name="BeforeCutoff">
+            <Value>=Parameters!beforecutoff.Value</Value>
+            <rd:UserDefined>true</rd:UserDefined>
+          </QueryParameter>
         </QueryParameters>
         <CommandType>StoredProcedure</CommandType>
         <CommandText>report_CRDS_Childcare_Summary</CommandText>
