@@ -168,7 +168,7 @@ namespace crds_angular.test.controllers
         [Test]
         public void TestSearchGroupsNoGroupsFound()
         {
-            const int groupTypeId = 123;
+            int[] groupTypeId = new int[] {123};
             const string keywords = "kw1,kw2";
             const string location = "123 main st";
 
@@ -185,7 +185,7 @@ namespace crds_angular.test.controllers
         [ExpectedException(typeof(HttpResponseException))]
         public void TestSearchGroupsWithException()
         {
-            const int groupTypeId = 123;
+            int[] groupTypeId = new int[] { 123 };
             const string keywords = "kw1,kw2";
             const string location = "123 main st";
             var exception = new Exception("whoa nelly");
@@ -197,7 +197,7 @@ namespace crds_angular.test.controllers
         [Test]
         public void TestSearchGroups()
         {
-            const int groupTypeId = 123;
+            int[] groupTypeId = new int[] { 123 };
             const string keywords = "kw1,kw2";
             const string location = "123 main st";
             var searchResults = new List<GroupDTO>
@@ -218,7 +218,7 @@ namespace crds_angular.test.controllers
         [Test]
         public void TestSearchGroupsWithGroupId()
         {
-            const int groupTypeId = 123;
+            int[] groupTypeId = new int[] { 123 };
             const int groupId = 42;
             var searchResults = new List<GroupDTO>
             {

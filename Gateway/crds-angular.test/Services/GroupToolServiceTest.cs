@@ -1236,7 +1236,8 @@ namespace crds_angular.test.Services
         [Test]
         public void TestSearchGroupsNoKeywordsNothingFound()
         {
-            const int groupTypeId = 1;
+            int[] groupTypeId = new int[] {1};
+          
             var keywords = new[] {"kw1", "kw2"};
             _groupToolRepository.Setup(mocked => mocked.SearchGroups(groupTypeId, null, null)).Returns(new List<MpGroupSearchResultDto>());
             var results = _fixture.SearchGroups(groupTypeId);
@@ -1247,7 +1248,43 @@ namespace crds_angular.test.Services
         [Test]
         public void TestSearchGroups()
         {
-            const int groupTypeId = 1;
+            int[] groupTypeId = new int[] {1};
+            const string keywordString = "kw1 kw2 it's wine&dine";
+            var keywords = keywordString
+                    .Replace("'", "''") // Replace single quote with two, since the MP Rest API doesn't do it
+                    .Replace("&", "%26") // Replace & with the hex representation, to avoid looking like a stored proc parameter
+                    .Split((char[])null, StringSplitOptions.RemoveEmptyEntries);
+
+            var searchResults = new List<MpGroupSearchResultDto>
+            {
+                new MpGroupSearchResultDto
+                {
+                    GroupId = 123,
+                    Name = "group 1",
+                    GroupType = 1231
+                },
+                new MpGroupSearchResultDto
+                {
+                    GroupId = 456,
+                    Name = "group 2",
+                    GroupType = 4564
+                }
+            };
+            _groupToolRepository.Setup(mocked => mocked.SearchGroups(groupTypeId, keywords, null)).Returns(searchResults);
+            var results = _fixture.SearchGroups(groupTypeId, keywordString);
+            _groupToolRepository.VerifyAll();
+            Assert.IsNotNull(results);
+            Assert.AreEqual(searchResults.Count, results.Count);
+            foreach (var expected in searchResults)
+            {
+                Assert.IsNotNull(results.Find(g => g.GroupId == expected.GroupId && g.GroupName.Equals(expected.Name) && g.GroupTypeId == expected.GroupType));
+            }
+        }
+
+        [Test]
+        public void TestSearchGroupsMultipleTypes()
+        {
+            int[] groupTypeId = new int[] { 1, 2 };
             const string keywordString = "kw1 kw2 it's wine&dine";
             var keywords = keywordString
                     .Replace("'", "''") // Replace single quote with two, since the MP Rest API doesn't do it
@@ -1283,7 +1320,7 @@ namespace crds_angular.test.Services
         [Test]
         public void TestSearchGroupsWithLocation()
         {
-            const int groupTypeId = 1;
+            int[] groupTypeId = new int[] {1};
             var searchResults = new List<MpGroupSearchResultDto>
             {
                 new MpGroupSearchResultDto

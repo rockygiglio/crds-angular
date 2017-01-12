@@ -115,9 +115,8 @@
       MAX_APPRENTICE: 5,
       GROUP_TYPE_ID: {
         UNDIVIDED: 26,
-        SMALL_GROUPS: 8,
-        ONSITE_GROUPS: 8,
-        MY_SERVE: 9
+        MY_SERVE: 9,
+        ON_SITE: 8
       },
       ROLES: {
         MEMBER: 16,
