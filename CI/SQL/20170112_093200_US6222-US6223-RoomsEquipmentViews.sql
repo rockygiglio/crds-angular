@@ -10,7 +10,6 @@ BEGIN
 Equipment.[Equipment_Name], 
 Room_ID_Table.[Room_ID], 
 Room_ID_Table_Building_ID_Table.[Building_ID], 
-Room_ID_Table_Building_ID_Table.[Building_Name] AS [Building Name], 
 Room_ID_Table_Building_ID_Table_Location_ID_Table.[Location_ID],
 Room_ID_Table_Building_ID_Table_Location_ID_Table.[Location_Name] AS [Location Name],
 Equipment.[Quantity_On_Hand]'
