@@ -12,7 +12,6 @@ using System.Web.Http.Controllers;
 using System.Web.Http;
 using System.Web.Http.Results;
 using crds_angular.Exceptions;
-using crds_angular.Models.Crossroads.Stewardship;
 using crds_angular.Services.Interfaces;
 
 
@@ -103,7 +102,7 @@ namespace crds_angular.test.Security
         }
 
         [Test]
-        public void testImpersonateAuthorizedNotAuthorized()
+        public void testAuthorizedWhenImpersonateUserIsNotAuthorized()
         {
             fixture.Request = new HttpRequestMessage();
             fixture.Request.Headers.Authorization = null;
@@ -121,7 +120,7 @@ namespace crds_angular.test.Security
 
 
         [Test]
-        public void testImpersonateAuthorizedWhenAuthorized()
+        public void testAuthorizedWhenImpersonateUserIsAuthorized()
         {
             string auth = authType + " " + authToken;
             fixture.Request.Headers.Add("ImpersonateUserId", "impersonator@allowed.com");
