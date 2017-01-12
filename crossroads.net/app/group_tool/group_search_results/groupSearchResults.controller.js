@@ -22,7 +22,7 @@ export default class GroupSearchResultsController {
     this.searchedWithLocation = false;
 
     this.tableParams = new NgTableParams({}, {});
-    this.onsiteGroupsTypeId = CONSTANTS.GROUP.GROUP_TYPE_ID.ON_SITE;
+    this.onsiteGroupsTypeId = CONSTANTS.GROUP.GROUP_TYPE_ID.ONSITE_GROUPS;
   }
 
   $onInit() {

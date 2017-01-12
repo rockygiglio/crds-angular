@@ -117,7 +117,7 @@
         UNDIVIDED: 26,
         SMALL_GROUPS: 1,
         MY_SERVE: 9,
-        ON_SITE: 8
+        ONSITE_GROUPS: 8
       },
       ROLES: {
         MEMBER: 16,

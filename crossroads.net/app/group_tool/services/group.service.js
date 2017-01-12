@@ -277,7 +277,7 @@ export default class GroupService {
 
   search(searchString, locationString, groupId) {
     let promise = this.resource(`${__API_ENDPOINT__}api/grouptool/group/search`)
-      .query({ s: searchString, loc: locationString, groupTypeIds: [CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS, CONSTANTS.GROUP.GROUP_TYPE_ID.ON_SITE], id: groupId }).$promise;
+      .query({ s: searchString, loc: locationString, groupTypeIds: [CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS, CONSTANTS.GROUP.GROUP_TYPE_ID.ONSITE_GROUPS], id: groupId }).$promise;
 
     return promise.then((data) => {
       let groups = data.map((group) => {
