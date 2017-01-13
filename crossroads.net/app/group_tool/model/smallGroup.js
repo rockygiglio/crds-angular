@@ -174,17 +174,8 @@ export default class SmallGroup {
     return meetingDayStr;
   }
 
-  getGroupType() {
-    if (this.groupTypeId === 1)
-      return "Small Group";
-    else if (this.groupTypeId === 8)
-      return "Onsite Group";
-    else
-      return "Unknown Group Type";
-  }
-
   isOnsiteGroup() {
-    if (this.groupTypeId === 8)
+    if (this.groupTypeId === CONSTANTS.GROUP.GROUP_TYPE_ID.ONSITE_GROUPS)
       return true;
     else
       return false;

@@ -1089,7 +1089,7 @@ namespace crds_angular.test.Services
             _attributeRepository.Setup(x => x.GetAttributes(It.IsAny<int>())).Returns(new List<MpAttribute>());
             _objectAttributeService.Setup(mocked => mocked.GetObjectAttributes(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<MpObjectAttributeConfiguration>(),It.IsAny<List<MpAttribute>>())).Returns(attributes);
 
-            var groups = fixture.GetGroupsForAuthenticatedUser(token);
+            var groups = fixture.GetGroupsForAuthenticatedUser(token, It.IsAny<int[]>());
             groupRepository.VerifyAll();
             Assert.AreEqual(4, groups[0].Participants.Count, "Incorrect number of participants");
 
