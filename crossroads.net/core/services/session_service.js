@@ -178,15 +178,23 @@
           $rootScope.email = user.userEmail;
           $rootScope.phone = user.userPhone;
           $rootScope.roles = user.roles;
+          if (stateName === 'login') {
+            $state.go('profile.personal');
+          } else {
+            vm.enableReactiveSso(event, stateName, stateData, stateToParams);
+          }
         }).error(() => {
           vm.clearAndRedirect(event, stateName, stateToParams);
+          vm.enableReactiveSso(event, stateName, stateData, stateToParams);
         });
         return promise;
       } else if (stateData !== undefined && stateData.isProtected) {
         vm.clearAndRedirect(event, stateName, stateToParams);
+        vm.enableReactiveSso(event, stateName, stateData, stateToParams);
       } else {
         $rootScope.userid = null;
         $rootScope.username = null;
+        vm.enableReactiveSso(event, stateName, stateData, stateToParams);
       }
       const deferred = $q.defer();
       deferred.reject('User is not logged in.');
@@ -207,7 +215,7 @@
     * Clears out the setInterval created by enableReactiveSso
     */
     vm.disableReactiveSso = () => {
-      $interval.cancel($rootScope.reactiveSsoInterval);
+      $interval.cancel(vm.reactiveSsoInterval);
     };
 
     /**
@@ -234,6 +242,10 @@
     * and a protected page, the user is redirected to the log in page.
     */
     vm.performReactiveSso = (event, stateName, stateData, stateToParams) => {
+      if ($rootScope.resolving || $rootScope.processing) {
+        console.log('currently resolving or processing');
+        return;
+      }
       if (vm.isActive() && vm.wasLoggedIn === false) {
         vm.verifyAuthentication(event, stateName, stateData, stateToParams);
         vm.wasLoggedIn = true;
@@ -248,7 +260,9 @@
           $rootScope.email = null;
           $rootScope.phone = null;
           $rootScope.roles = null;
-          $rootScope.$apply();
+          if (!$rootScope.$$phase) {
+            $rootScope.$apply();
+          }
         }
       }
     };
