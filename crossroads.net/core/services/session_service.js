@@ -180,6 +180,7 @@
           $rootScope.roles = user.roles;
           if (stateName === 'login') {
             $state.go('profile.personal');
+            vm.enableReactiveSso(event, stateName, stateData, stateToParams);
           } else {
             vm.enableReactiveSso(event, stateName, stateData, stateToParams);
           }
