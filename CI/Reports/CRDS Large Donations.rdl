@@ -167,7 +167,7 @@
     <DataSet Name="Programs">
       <Query>
         <DataSourceName>DataSource1</DataSourceName>
-        <CommandText>select p.Program_name, p.Program_id
+        <CommandText>select p.Program_name, p.Program_id, p.Congregation_ID
 			  from MinistryPlatform.dbo.Programs p
 			  inner join MinistryPlatform.dbo.Congregations c on p.Congregation_ID = c.Congregation_ID
 			  join dbo.Ministries m on m.ministry_id = p.ministry_id
@@ -184,7 +184,20 @@
           <DataField>Program_id</DataField>
           <rd:TypeName>System.Int32</rd:TypeName>
         </Field>
+        <Field Name="Congregation_ID">
+          <DataField>Congregation_ID</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
       </Fields>
+      <Filters>
+        <Filter>
+          <FilterExpression>=Fields!Congregation_ID.Value</FilterExpression>
+          <Operator>In</Operator>
+          <FilterValues>
+            <FilterValue>=Parameters!congregationid.Value</FilterValue>
+          </FilterValues>
+        </Filter>
+      </Filters>
     </DataSet>
     <DataSet Name="Congregations">
       <Query>
@@ -2153,7 +2166,7 @@ FROM Accounting_Companies </CommandText>
       <UsedInQuery>True</UsedInQuery>
     </ReportParameter>
     <ReportParameter Name="congregationid">
-      <DataType>String</DataType>
+      <DataType>Integer</DataType>
       <Prompt>Congregations</Prompt>
       <ValidValues>
         <DataSetReference>
