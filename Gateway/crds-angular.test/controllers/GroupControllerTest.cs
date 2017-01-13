@@ -230,7 +230,7 @@ namespace crds_angular.test.controllers
         public void TestGetMyGroupsByType()
         {
             var groups = new List<GroupDTO>();
-            _groupServiceMock.Setup(mocked => mocked.GetGroupsByTypeForAuthenticatedUser(It.IsAny<string>())).Returns(groups);
+            _groupServiceMock.Setup(mocked => mocked.GetGroupsForAuthenticatedUser(It.IsAny<string>(), It.IsAny<int[]>())).Returns(groups);
             var result = _fixture.GetMyGroups();
             Assert.IsNotNull(result);
             Assert.IsInstanceOf(typeof(OkNegotiatedContentResult<List<GroupDTO>>), result);

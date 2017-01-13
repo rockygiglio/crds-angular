@@ -104,7 +104,7 @@
 		</div>
 	</div>
 	<div class='push-top text-center sm-text-right clearfix' ng-if='groupDetailAbout.showFooter'>
-		<button type='button' ng-if='groupDetailAbout.isLeader' ng-click='groupDetailAbout.goToEdit()' class='sm-pull-right push-half-bottom btn btn-primary btn-block-mobile'>Edit</button>
+		<button type='button' ng-if='groupDetailAbout.isLeader  && groupDetailAbout.data.groupTypeId !== groupDetailAbout.onsiteGroupTypeId' ng-click='groupDetailAbout.goToEdit()' class='sm-pull-right push-half-bottom btn btn-primary btn-block-mobile'>Edit</button>
 		<button type='button' ng-if='groupDetailAbout.isLeader' ng-click="groupDetailAbout.goToEnd()" class='push-half-bottom btn btn-standard btn-block-mobile'>End Group</button>
 		<share-group group='groupDetailAbout.data' classes='push-half-bottom btn btn-standard btn-block-mobile'></share-group>
 		<a ui-sref="grouptool.mygroups" class="sm-pull-left">

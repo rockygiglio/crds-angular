@@ -225,48 +225,58 @@ describe('Group Tool SmallGroup', () => {
 
   describe('hasAddress()', () => {
     it('should return true if address components are set', () => {
-      let group = new SmallGroup({address: {
-        addressLine1: 'line1',
-        city: 'the city',
-        state: 'the state',
-        zip: 'the zip'
-      }});
+      let group = new SmallGroup({
+        address: {
+          addressLine1: 'line1',
+          city: 'the city',
+          state: 'the state',
+          zip: 'the zip'
+        }
+      });
       expect(group.hasAddress()).toBeTruthy();
     });
 
     it('should return false if addressLine1 is missing', () => {
-      let group = new SmallGroup({address: {
-        city: 'the city',
-        state: 'the state',
-        zip: 'the zip'
-      }});
+      let group = new SmallGroup({
+        address: {
+          city: 'the city',
+          state: 'the state',
+          zip: 'the zip'
+        }
+      });
       expect(group.hasAddress()).toBeFalsy();
     });
 
     it('should return false if city is missing', () => {
-      let group = new SmallGroup({address: {
-        addressLine1: 'line1',
-        state: 'the state',
-        zip: 'the zip'
-      }});
+      let group = new SmallGroup({
+        address: {
+          addressLine1: 'line1',
+          state: 'the state',
+          zip: 'the zip'
+        }
+      });
       expect(group.hasAddress()).toBeFalsy();
     });
 
     it('should return false if state is missing', () => {
-      let group = new SmallGroup({address: {
-        addressLine1: 'line1',
-        city: 'the city',
-        zip: 'the zip'
-      }});
+      let group = new SmallGroup({
+        address: {
+          addressLine1: 'line1',
+          city: 'the city',
+          zip: 'the zip'
+        }
+      });
       expect(group.hasAddress()).toBeFalsy();
     });
 
     it('should return false if zip is missing', () => {
-      let group = new SmallGroup({address: {
-        addressLine1: 'line1',
-        city: 'the city',
-        state: 'the state'
-      }});
+      let group = new SmallGroup({
+        address: {
+          addressLine1: 'line1',
+          city: 'the city',
+          state: 'the state'
+        }
+      });
       expect(group.hasAddress()).toBeFalsy();
     });
 
@@ -317,6 +327,18 @@ describe('Group Tool SmallGroup', () => {
     it('should return a group location string for display', () => {
       smallGroup.meetingDay = null;
       expect(smallGroup.getGroupCardWhenField()).toEqual('Flexible Meeting Time');
+    });
+  });
+
+  describe('isOnsiteGroup()', () => {
+    it('is a small group', () => {
+      smallGroup.groupTypeId = 1;
+      expect(smallGroup.isOnsiteGroup()).toBeFalsy();
+    });
+
+    it('is an onsite group', () => {
+      smallGroup.groupTypeId = 8;
+      expect(smallGroup.isOnsiteGroup()).toBeTruthy();
     });
   });
 });

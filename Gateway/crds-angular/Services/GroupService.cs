@@ -501,15 +501,20 @@ namespace crds_angular.Services
             return groups;
         }
 
-        public List<GroupDTO> GetGroupsByTypeForAuthenticatedUser(string token)
+        public List<GroupDTO> GetGroupsForAuthenticatedUser(string token, int[] groupTypeIds)
         {
-            int[] groupTypeIds = new int[] {_smallGroupTypeId,_onsiteGroupTypeId};
             var groups = _mpGroupService.GetMyGroupParticipationByType(token, groupTypeIds, null);
             if (groups == null)
             {
                 return null;
             }
             return GetAttributesAndParticipants(token, groups);
+        }
+
+        public int[] GetDefaultGroupTypeIds()
+        {
+            return new int[] { _smallGroupTypeId, _onsiteGroupTypeId };
+
         }
 
         public List<GroupDTO> GetGroupByIdForAuthenticatedUser(string token, int groupId)

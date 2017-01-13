@@ -353,7 +353,8 @@ namespace crds_angular.Controllers.API
             {
                 try
                 {
-                    var groups = _groupService.GetGroupsByTypeForAuthenticatedUser(token);
+                    var groupTypeIds = _groupService.GetDefaultGroupTypeIds();
+                    var groups = _groupService.GetGroupsForAuthenticatedUser(token, groupTypeIds);
                     return Ok(groups);
                 }
                 catch (Exception ex)
@@ -366,7 +367,7 @@ namespace crds_angular.Controllers.API
         }
 
         /// <summary>
-        /// This takes in a Group Type ID  and GroupId and retrieves the group
+        /// This takes in a GroupId and retrieves the group
         /// of that type associated with that ID
         /// If no group is found, then an empty list will be returned.
         /// </summary>
