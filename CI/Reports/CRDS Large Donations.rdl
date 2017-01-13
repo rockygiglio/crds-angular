@@ -2154,7 +2154,7 @@ FROM Accounting_Companies </CommandText>
     </ReportParameter>
     <ReportParameter Name="accountingcompanyid">
       <DataType>Integer</DataType>
-      <Prompt> Accounting Company</Prompt>
+      <Prompt>Accounting Company</Prompt>
       <ValidValues>
         <DataSetReference>
           <DataSetName>Accounting_Company</DataSetName>
