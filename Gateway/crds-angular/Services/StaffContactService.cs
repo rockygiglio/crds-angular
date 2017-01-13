@@ -24,7 +24,7 @@ namespace crds_angular.Services
                 ContactId = mpContact.ToInt("Contact_ID"),
                 DisplayName = mpContact.ToString("Display_Name"),
                 Email = mpContact.ToString("Email_Address")
-            }).ToList();
+            }).OrderBy(x => x.DisplayName).ToList();
         }
     }
 }
