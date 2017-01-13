@@ -37,6 +37,7 @@ DECLARE @contactID as int
 set @contactID = (select contact_id from contacts where Email_Address = 'mpcrds+auto+2@gmail.com' and Last_Name = 'Kenobi');
 
 --Create a Donor record for mpcrds+auto+2@gmail.com (used the Stripe processor ID from a newly-created CC transaction)
+DECLARE @processorID as varchar(255);
 if (select @@servername) like '%demo%'
   set @processorID = 'cus_9sx3C3pje6vvFk';
 else

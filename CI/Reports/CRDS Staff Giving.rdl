@@ -25,6 +25,10 @@
           <QueryParameter Name="donationstatusid">
             <Value>=join(Parameters!donationstatusid.Value,",")</Value>
           </QueryParameter>
+          <QueryParameter Name="accountingcompanyid">
+            <Value>=join(Parameters!accountingcompanyid.Value,",")</Value>
+            <rd:UserDefined>true</rd:UserDefined>
+          </QueryParameter>
         </QueryParameters>
         <CommandType>StoredProcedure</CommandType>
         <CommandText>report_CRDS_Staff_Giving</CommandText>
@@ -83,6 +87,23 @@ order by program_name</CommandText>
         <Field Name="donation_status">
           <DataField>donation_status</DataField>
           <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
+    <DataSet Name="Accounting_Company">
+      <Query>
+        <DataSourceName>DataSource1</DataSourceName>
+        <CommandText>SELECT Accounting_Company_ID, Company_Name 
+FROM Accounting_Companies </CommandText>
+      </Query>
+      <Fields>
+        <Field Name="Company_Name">
+          <DataField>Company_Name</DataField>
+          <rd:UserDefined>true</rd:UserDefined>
+        </Field>
+        <Field Name="Accounting_Company_ID">
+          <DataField>Accounting_Company_ID</DataField>
+          <rd:UserDefined>true</rd:UserDefined>
         </Field>
       </Fields>
     </DataSet>
@@ -587,6 +608,18 @@ order by program_name</CommandText>
     <ReportParameter Name="endDate">
       <DataType>DateTime</DataType>
       <Prompt>End Date</Prompt>
+    </ReportParameter>
+    <ReportParameter Name="accountingcompanyid">
+      <DataType>Integer</DataType>
+      <Prompt> Accounting Company</Prompt>
+      <ValidValues>
+        <DataSetReference>
+          <DataSetName>Accounting_Company</DataSetName>
+          <ValueField>Accounting_Company_ID</ValueField>
+          <LabelField>Company_Name</LabelField>
+        </DataSetReference>
+      </ValidValues>
+      <MultiValue>true</MultiValue>
     </ReportParameter>
     <ReportParameter Name="programid">
       <DataType>String</DataType>

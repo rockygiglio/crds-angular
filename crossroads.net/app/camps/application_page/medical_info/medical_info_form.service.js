@@ -196,7 +196,7 @@ class MedicalInfoForm {
           type: 'crdsRadio',
           templateOptions: {
             label: 'Are there any Allergy/Dietary Needs?',
-            required: true,
+            required: false,
             inline: true,
             labelProp: 'label',
             valueProp: 'id',
@@ -265,22 +265,22 @@ class MedicalInfoForm {
             className: 'camps-medication-checkbox',
             options: [{
               name: 'Do not administer any of these medications',
-              value: 'none'
+              value: 'None'
             }, {
               name: 'Benadryl',
-              value: 'benadryl'
+              value: 'Benadryl'
             }, {
               name: 'Claritin',
-              value: 'claritin'
+              value: 'Claritin'
             }, {
               name: 'Ibuprofen',
-              value: 'ibuprofen'
+              value: 'Ibuprofen'
             }, {
-              name: 'Pepto Bismol',
-              value: 'pepto'
+              name: 'Pepto',
+              value: 'Pepto Bismol'
             }, {
               name: 'Tylenol',
-              value: 'tylenol'
+              value: 'Tylenol'
             }],
             onClick: ($modelValue, fieldOptions, scope) => {
               let newValue;
@@ -428,4 +428,3 @@ class MedicalInfoFormFactory {
 }
 
 export default MedicalInfoFormFactory;
-
