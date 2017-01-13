@@ -1,3 +1,4 @@
+import CONSTANTS from 'crds-constants';
 
 export default class GroupDetailAboutController {
   /*@ngInject*/
@@ -19,6 +20,7 @@ export default class GroupDetailAboutController {
 
     this.forInvitation = (this.forInvitation === undefined || this.forInvitation === null) ? false : this.forInvitation;
     this.forSearch = (this.forSearch === undefined || this.forSearch === null) ? false : this.forSearch;
+    this.onsiteGroupTypeId = CONSTANTS.GROUP.GROUP_TYPE_ID.ONSITE_GROUPS;
   }
 
   $onInit() {

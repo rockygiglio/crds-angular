@@ -37,6 +37,8 @@ export default class GroupDetailParticipantsController {
     this.isLeader = false;
     this.data = [];
 
+    this.onSiteGroupTypeId = CONSTANTS.GROUP.GROUP_TYPE_ID.ONSITE_GROUPS;
+
     this.setListView();
   }
 
