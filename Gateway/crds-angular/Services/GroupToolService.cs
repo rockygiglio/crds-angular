@@ -670,7 +670,7 @@ namespace crds_angular.Services
 
                 // order again in case proximties changed because of driving directions
                 groups = groups.OrderBy(r => r.Proximity ?? decimal.MaxValue).ToList();
-
+                groups = _groupService.RemoveOnsiteParticipants(groups);
             }
             catch (InvalidAddressException e)
             {
@@ -683,6 +683,8 @@ namespace crds_angular.Services
 
             return groups;
         }
+
+
 
         public void SubmitInquiry(string token, int groupId)
         {

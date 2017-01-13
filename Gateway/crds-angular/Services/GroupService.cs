@@ -488,6 +488,19 @@ namespace crds_angular.Services
             return groupDetail;
         }
 
+        public List<GroupDTO> RemoveOnsiteParticipants(List<GroupDTO> groups)
+        {
+            foreach (var group in groups)
+            {
+                if (group.GroupTypeId == _onsiteGroupTypeId)
+                {
+                    group.Participants = new List<GroupParticipantDTO>();
+                }
+            }
+
+            return groups;
+        }
+
         public List<GroupDTO> GetGroupsByTypeForAuthenticatedUser(string token)
         {
             int[] groupTypeIds = new int[] {_smallGroupTypeId,_onsiteGroupTypeId};

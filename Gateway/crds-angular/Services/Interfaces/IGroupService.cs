@@ -53,5 +53,7 @@ namespace crds_angular.Services.Interfaces
         void UpdateGroupParticipantRole(GroupParticipantDTO participant);
 
         void SendParticipantsEmail(string token, List<GroupParticipantDTO> participants, string subject, string body);
+
+        List<GroupDTO> RemoveOnsiteParticipants(List<GroupDTO> groups);
     }
 }

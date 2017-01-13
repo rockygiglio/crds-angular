@@ -49,15 +49,9 @@ export default class GroupDetailParticipantsController {
       this.error = true;
       this.ready = true;
     });
-
+    debugger;
     this.groupService.getIsLeader(this.groupId).then((isLeader) => {
       this.isLeader = isLeader;
-      let hasAccessToParticipants = this.groupDetailService.canAccessParticipants(isLeader, groupTypeID);
-
-      if (!hasAccessToParticipants){
-        //kick them off of this page
-        this.state.go('grouptool.detail', {groupId: this.state.params.groupId});
-      }
     });
   }
 

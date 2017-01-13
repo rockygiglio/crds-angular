@@ -11,7 +11,7 @@ export default class GroupDetailService {
 
     canAccessParticipants(isLeader, groupTypeID) {
         let onsiteGroup = groupTypeID == CONSTANTS.GROUP.GROUP_TYPE_ID.ONSITE_GROUPS;
-        return ((onsiteGroup && isleader) || (!onsiteGroup));
+        return ((onsiteGroup && isLeader) || (!onsiteGroup));
     }
 
 }
