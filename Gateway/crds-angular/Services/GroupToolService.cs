@@ -135,11 +135,11 @@ namespace crds_angular.Services
             return requests;
         }
 
-        public void RemoveParticipantFromMyGroup(string token, int groupTypeId, int groupId, int groupParticipantId, string message = null)
+        public void RemoveParticipantFromMyGroup(string token, int groupId, int groupParticipantId, string message = null)
         {
             try
             {
-                var myGroup = GetMyGroupInfo(token, groupTypeId, groupId);
+                var myGroup = GetMyGroupInfo(token, groupId);
 
                 _groupService.endDateGroupParticipant(groupId, groupParticipantId);
 
@@ -270,9 +270,9 @@ namespace crds_angular.Services
             };
         }
 
-        public MyGroup GetMyGroupInfo(string token, int groupTypeId, int groupId)
+        public MyGroup GetMyGroupInfo(string token, int groupId)
         {
-            var groups = _groupService.GetGroupsByTypeForAuthenticatedUser(token, groupTypeId, groupId);
+            var groups = _groupService.GetGroupByIdForAuthenticatedUser(token, groupId);
             var group = groups == null || !groups.Any() ? null : groups.FirstOrDefault();
 
             if (group == null)
@@ -300,7 +300,7 @@ namespace crds_angular.Services
         {
             try
             {
-                var myGroup = GetMyGroupInfo(token, groupTypeId, groupId);
+                var myGroup = GetMyGroupInfo(token, groupId);
 
                 if (approve)
                 {
@@ -494,7 +494,7 @@ namespace crds_angular.Services
         public void SendAllGroupParticipantsEmail(string token, int groupId, int groupTypeId, string subject, string body)
         {
             var leaderRecord = _participantRepository.GetParticipantRecord(token);
-            var groups = _groupService.GetGroupsByTypeForAuthenticatedUser(token, groupTypeId, groupId);
+            var groups = _groupService.GetGroupByIdForAuthenticatedUser(token, groupId);
 
             if (groups == null || !groups.Any())
             {

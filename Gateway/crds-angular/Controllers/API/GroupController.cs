@@ -314,20 +314,49 @@ namespace crds_angular.Controllers.API
         /// <returns>A list of all small groups for the given user (group type of 1)</returns>
         [RequiresAuthorization]
         [ResponseType(typeof(List<GroupDTO>))]
-        [VersionedRoute(template: "group/mine/{groupTypeId}/{groupId?}", minimumVersion: "1.0.0")]
-        [Route("group/mine/{groupTypeId}/{groupId:int?}")]
-        public IHttpActionResult GetMyGroupsByType([FromUri]int groupTypeId, [FromUri]int? groupId = null)
+        [VersionedRoute(template: "group/mine", minimumVersion: "1.0.0")]
+        [Route("group/mine")]
+        public IHttpActionResult GetMyGroups()
         {
             return Authorized(token =>
             {
                 try
                 {
-                    var groups = _groupService.GetGroupsByTypeForAuthenticatedUser(token, groupTypeId, groupId);
+                    var groupTypeIds = _groupService.GetDefaultGroupTypeIds();
+                    var groups = _groupService.GetGroupsForAuthenticatedUser(token, groupTypeIds);
                     return Ok(groups);
                 }
                 catch (Exception ex)
                 {
-                    var apiError = new ApiErrorDto("Error getting Groups of type " + groupTypeId + " for logged in user.", ex);
+                    var apiError = new ApiErrorDto("Error getting Groups for logged in user.", ex);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+
+            });
+        }
+
+        /// <summary>
+        /// This takes in a GroupId and retrieves the group
+        /// of that type associated with that ID
+        /// If no group is found, then an empty list will be returned.
+        /// </summary>
+        /// <returns>A list containing 0 or 1 group</returns>
+        [RequiresAuthorization]
+        [ResponseType(typeof(List<GroupDTO>))]
+        [VersionedRoute(template: "group/mine/{groupId}", minimumVersion: "1.0.0")]
+        [Route("group/mine/{groupId:int}")]
+        public IHttpActionResult GetMyGroupById([FromUri]int groupId)
+        {
+            return Authorized(token =>
+            {
+                try
+                {
+                    var groups = _groupService.GetGroupByIdForAuthenticatedUser(token, groupId);
+                    return Ok(groups);
+                }
+                catch (Exception ex)
+                {
+                    var apiError = new ApiErrorDto("Error getting group id=" + groupId + " for logged in user.", ex);
                     throw new HttpResponseException(apiError.HttpResponseMessage);
                 }
 

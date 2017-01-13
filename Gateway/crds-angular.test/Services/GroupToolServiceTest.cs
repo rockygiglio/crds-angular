@@ -119,8 +119,8 @@ namespace crds_angular.test.Services
         [ExpectedException(typeof(GroupNotFoundForParticipantException))]
         public void TestGetMyGroupInfoGroupNotFound()
         {
-            _groupService.Setup(mocked => mocked.GetGroupsByTypeForAuthenticatedUser("abc", 1, 2)).Returns(new List<GroupDTO>());
-            _fixture.GetMyGroupInfo("abc", 1, 2);
+            _groupService.Setup(mocked => mocked.GetGroupByIdForAuthenticatedUser("abc", 2)).Returns(new List<GroupDTO>());
+            _fixture.GetMyGroupInfo("abc", 2);
         }
 
         [Test]
@@ -148,8 +148,8 @@ namespace crds_angular.test.Services
                     }
                 }
             };
-            _groupService.Setup(mocked => mocked.GetGroupsByTypeForAuthenticatedUser("abc", 1, 2)).Returns(groups);
-            _fixture.GetMyGroupInfo("abc", 1, 2);
+            _groupService.Setup(mocked => mocked.GetGroupByIdForAuthenticatedUser("abc", 2)).Returns(groups);
+            _fixture.GetMyGroupInfo("abc", 2);
         }
 
         [Test]
@@ -198,8 +198,8 @@ namespace crds_angular.test.Services
                     }
                 }
             };
-            _groupService.Setup(mocked => mocked.GetGroupsByTypeForAuthenticatedUser("abc", 1, 2)).Returns(groups);
-            var result = _fixture.GetMyGroupInfo("abc",1, 2);
+            _groupService.Setup(mocked => mocked.GetGroupByIdForAuthenticatedUser("abc", 2)).Returns(groups);
+            var result = _fixture.GetMyGroupInfo("abc", 2);
             _participantRepository.VerifyAll();
             _groupService.VerifyAll();
 
@@ -239,7 +239,7 @@ namespace crds_angular.test.Services
 
                 }
             };
-            _groupService.Setup(mocked => mocked.GetGroupsByTypeForAuthenticatedUser("abc", 1, 2)).Returns(groups);
+            _groupService.Setup(mocked => mocked.GetGroupByIdForAuthenticatedUser("abc", 2)).Returns(groups);
 
             var inquiry = new Inquiry
             {
@@ -320,7 +320,7 @@ namespace crds_angular.test.Services
 
                 }
             };
-            _groupService.Setup(mocked => mocked.GetGroupsByTypeForAuthenticatedUser("abc", 1, 2)).Returns(groups);
+            _groupService.Setup(mocked => mocked.GetGroupByIdForAuthenticatedUser("abc", 2)).Returns(groups);
 
             var inquiry = new Inquiry
             {
@@ -599,8 +599,8 @@ namespace crds_angular.test.Services
         [ExpectedException(typeof(GroupNotFoundForParticipantException))]
         public void TestRemoveParticipantFromMyGroupGroupNotFound()
         {
-            _groupService.Setup(mocked => mocked.GetGroupsByTypeForAuthenticatedUser("abc", 1, 2)).Returns(new List<GroupDTO>());
-            _fixture.RemoveParticipantFromMyGroup("abc", 1, 2, 3, "message");
+            _groupService.Setup(mocked => mocked.GetGroupByIdForAuthenticatedUser("abc", 2)).Returns(new List<GroupDTO>());
+            _fixture.RemoveParticipantFromMyGroup("abc", 2, 3, "message");
         }
 
         [Test]
@@ -628,8 +628,8 @@ namespace crds_angular.test.Services
                     }
                 }
             };
-            _groupService.Setup(mocked => mocked.GetGroupsByTypeForAuthenticatedUser("abc", 1, 2)).Returns(groups);
-            _fixture.RemoveParticipantFromMyGroup("abc", 1, 2, 3, "message");
+            _groupService.Setup(mocked => mocked.GetGroupByIdForAuthenticatedUser("abc", 2)).Returns(groups);
+            _fixture.RemoveParticipantFromMyGroup("abc", 2, 3, "message");
         }
 
         [Test]
@@ -663,14 +663,14 @@ namespace crds_angular.test.Services
                     }
                 }
             };
-            _groupService.Setup(mocked => mocked.GetGroupsByTypeForAuthenticatedUser("abc", 1, groupId)).Returns(groups);
+            _groupService.Setup(mocked => mocked.GetGroupByIdForAuthenticatedUser("abc", groupId)).Returns(groups);
 
             var ex = new Exception("can't end date participant");
             _groupService.Setup(mocked => mocked.endDateGroupParticipant(groupId, removeParticipantId)).Throws(ex);
 
             try
             {
-                _fixture.RemoveParticipantFromMyGroup("abc", 1, groupId, removeParticipantId, "message");
+                _fixture.RemoveParticipantFromMyGroup("abc", groupId, removeParticipantId, "message");
                 Assert.Fail("expected exception was not thrown");
             }
             catch (GroupParticipantRemovalException e)
@@ -717,12 +717,12 @@ namespace crds_angular.test.Services
                     }
                 }
             };
-            _groupService.Setup(mocked => mocked.GetGroupsByTypeForAuthenticatedUser("abc", 1, groupId)).Returns(groups);
+            _groupService.Setup(mocked => mocked.GetGroupByIdForAuthenticatedUser("abc", groupId)).Returns(groups);
             _groupService.Setup(mocked => mocked.endDateGroupParticipant(groupId, removeParticipantId));
 
             var ex = new Exception("can't get template");
             _communicationRepository.Setup(mocked => mocked.GetTemplate(RemoveParticipantFromGroupEmailTemplateId)).Throws(ex);
-            _fixture.RemoveParticipantFromMyGroup("abc", 1, groupId, removeParticipantId, "message");
+            _fixture.RemoveParticipantFromMyGroup("abc", groupId, removeParticipantId, "message");
             _communicationRepository.VerifyAll();
             _groupToolRepository.VerifyAll();
             _groupService.VerifyAll();
@@ -1114,7 +1114,7 @@ namespace crds_angular.test.Services
 
             _communicationRepository.Setup(m => m.SendMessage(It.IsAny<MpCommunication>(), false)).Returns(1);
             _participantRepository.Setup(m => m.GetParticipantRecord(token)).Returns(groupParticipantDTO);
-            _groupService.Setup(m => m.GetGroupsByTypeForAuthenticatedUser(token, 123, 1)).Returns(groups);
+            _groupService.Setup(m => m.GetGroupByIdForAuthenticatedUser(token, 1)).Returns(groups);
 
             _fixture.SendAllGroupParticipantsEmail(token, 1, 123, "aaa", "bbb");
             _communicationRepository.VerifyAll();
@@ -1179,7 +1179,7 @@ namespace crds_angular.test.Services
 
             _communicationRepository.Setup(m => m.SendMessage(It.Is<MpCommunication>(email => email.ToContacts.Count() == expectedToContactsCount), false)).Returns(1);
             _participantRepository.Setup(m => m.GetParticipantRecord(token)).Returns(groupParticipantDTO);
-            _groupService.Setup(m => m.GetGroupsByTypeForAuthenticatedUser(token, 123, 1)).Returns(groups);
+            _groupService.Setup(m => m.GetGroupByIdForAuthenticatedUser(token, 1)).Returns(groups);
 
             _fixture.SendAllGroupParticipantsEmail(token, 1, 123, "aaa", "bbb");
             _communicationRepository.VerifyAll();

@@ -31,7 +31,7 @@ namespace crds_angular.test.controllers
         {
             _groupToolService = new Mock<IGroupToolService>(MockBehavior.Strict);
             _configurationWrapper = new Mock<IConfigurationWrapper>();
-            _configurationWrapper.Setup(mocked => mocked.GetConfigIntValue("GroupTypeSmallId")).Returns(1);
+            _configurationWrapper.Setup(mocked => mocked.GetConfigIntValue("SmallGroupTypeId")).Returns(1);
             _fixture = new GroupToolController(_groupToolService.Object, _configurationWrapper.Object);
             _fixture.SetupAuthorization(AuthType, AuthToken);
 
@@ -40,8 +40,8 @@ namespace crds_angular.test.controllers
         [Test]
         public void TestRemoveParticipantFromMyGroup()
         {
-            _groupToolService.Setup(mocked => mocked.RemoveParticipantFromMyGroup(_auth, 1, 2, 3, "test"));
-            var result = _fixture.RemoveParticipantFromMyGroup(1, 2, 3, "test");
+            _groupToolService.Setup(mocked => mocked.RemoveParticipantFromMyGroup(_auth, 2, 3, "test"));
+            var result = _fixture.RemoveParticipantFromMyGroup(2, 3, "test");
             _groupToolService.VerifyAll();
 
             Assert.IsNotNull(result);
@@ -52,10 +52,10 @@ namespace crds_angular.test.controllers
         public void TestRemoveParticipantFromMyGroupWithGroupParticipantRemovalException()
         {
             var ex = new GroupParticipantRemovalException("message");
-            _groupToolService.Setup(mocked => mocked.RemoveParticipantFromMyGroup(_auth, 1, 2, 3, "test")).Throws(ex);
+            _groupToolService.Setup(mocked => mocked.RemoveParticipantFromMyGroup(_auth, 2, 3, "test")).Throws(ex);
             try
             {
-                _fixture.RemoveParticipantFromMyGroup(1, 2, 3, "test");
+                _fixture.RemoveParticipantFromMyGroup(2, 3, "test");
                 Assert.Fail("Expected exception was not thrown");
             }
             catch (HttpResponseException e)
@@ -70,10 +70,10 @@ namespace crds_angular.test.controllers
         public void TestRemoveParticipantFromMyGroupWithOtherException()
         {
             var ex = new Exception();
-            _groupToolService.Setup(mocked => mocked.RemoveParticipantFromMyGroup(_auth, 1, 2, 3, "test")).Throws(ex);
+            _groupToolService.Setup(mocked => mocked.RemoveParticipantFromMyGroup(_auth, 2, 3, "test")).Throws(ex);
             try
             {
-                _fixture.RemoveParticipantFromMyGroup(1, 2, 3, "test");
+                _fixture.RemoveParticipantFromMyGroup(2, 3, "test");
                 Assert.Fail("Expected exception was not thrown");
             }
             catch (HttpResponseException e)
