@@ -83,6 +83,7 @@ BEGIN
 	INTO #AllGroups
 	FROM Groups gr 
 	WHERE gr.Group_Type_ID in (SELECT GroupTypeID FROM #GroupTypeIds) AND gr.Available_Online = 1 AND (gr.End_Date IS NULL OR gr.End_Date > GETDATE())
+	AND gr.Group_Is_Full = 0;
 
 	IF(@GroupId > 0)
 	BEGIN
