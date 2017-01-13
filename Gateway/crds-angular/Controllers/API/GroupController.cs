@@ -322,7 +322,7 @@ namespace crds_angular.Controllers.API
             {
                 try
                 {
-                    var groups = _groupService.GetGroupsByTypeForAuthenticatedUser(token);
+                    var groups = _groupService.GetGroupsForAuthenticatedUser(token);
                     return Ok(groups);
                 }
                 catch (Exception ex)

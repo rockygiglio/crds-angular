@@ -488,7 +488,7 @@ namespace crds_angular.Services
             return groupDetail;
         }
 
-        public List<GroupDTO> GetGroupsByTypeForAuthenticatedUser(string token)
+        public List<GroupDTO> GetGroupsForAuthenticatedUser(string token)
         {
             int[] groupTypeIds = new int[] {_smallGroupTypeId,_onsiteGroupTypeId};
             var groups = _mpGroupService.GetMyGroupParticipationByType(token, groupTypeIds, null);
