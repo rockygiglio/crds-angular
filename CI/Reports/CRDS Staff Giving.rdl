@@ -25,10 +25,10 @@
           <QueryParameter Name="donationstatusid">
             <Value>=join(Parameters!donationstatusid.Value,",")</Value>
           </QueryParameter>
-         <QueryParameter Name="accountingcompanyid">
+          <QueryParameter Name="accountingcompanyid">
             <Value>=join(Parameters!accountingcompanyid.Value,",")</Value>
             <rd:UserDefined>true</rd:UserDefined>
-          </QueryParameter>		  
+          </QueryParameter>
         </QueryParameters>
         <CommandType>StoredProcedure</CommandType>
         <CommandText>report_CRDS_Staff_Giving</CommandText>
@@ -106,7 +106,7 @@ FROM Accounting_Companies </CommandText>
           <rd:UserDefined>true</rd:UserDefined>
         </Field>
       </Fields>
-    </DataSet>	
+    </DataSet>
   </DataSets>
   <ReportSections>
     <ReportSection>
@@ -609,6 +609,18 @@ FROM Accounting_Companies </CommandText>
       <DataType>DateTime</DataType>
       <Prompt>End Date</Prompt>
     </ReportParameter>
+    <ReportParameter Name="accountingcompanyid">
+      <DataType>Integer</DataType>
+      <Prompt> Accounting Company</Prompt>
+      <ValidValues>
+        <DataSetReference>
+          <DataSetName>Accounting_Company</DataSetName>
+          <ValueField>Accounting_Company_ID</ValueField>
+          <LabelField>Company_Name</LabelField>
+        </DataSetReference>
+      </ValidValues>
+      <MultiValue>true</MultiValue>
+    </ReportParameter>
     <ReportParameter Name="programid">
       <DataType>String</DataType>
       <Prompt>Program</Prompt>
@@ -674,18 +686,6 @@ FROM Accounting_Companies </CommandText>
       <Prompt>UserID</Prompt>
       <Hidden>true</Hidden>
     </ReportParameter>
-    <ReportParameter Name="accountingcompanyid">
-      <DataType>String</DataType>
-      <Prompt> Accounting Company</Prompt>
-      <ValidValues>
-        <DataSetReference>
-          <DataSetName>Accounting_Company</DataSetName>
-          <ValueField>Accounting_Company_ID</ValueField>
-          <LabelField>Company_Name</LabelField>
-        </DataSetReference>
-      </ValidValues>
-      <MultiValue>true</MultiValue>
-    </ReportParameter>	
   </ReportParameters>
   <rd:ReportUnitType>Inch</rd:ReportUnitType>
   <rd:ReportServerUrl>http://adminint.crossroads.net/ReportServer</rd:ReportServerUrl>
