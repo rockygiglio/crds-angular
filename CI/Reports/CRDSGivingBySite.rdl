@@ -64,7 +64,7 @@
     <DataSet Name="Programs">
       <Query>
         <DataSourceName>DataSource1</DataSourceName>
-        <CommandText>select program_id, program_name from programs
+        <CommandText>select program_id, program_name, congregation_id from programs
 where program_type_id in (1,3) 
 order by program_name</CommandText>
         <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
@@ -78,7 +78,20 @@ order by program_name</CommandText>
           <DataField>program_name</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
+        <Field Name="congregation_id">
+          <DataField>congregation_id</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
       </Fields>
+      <Filters>
+        <Filter>
+          <FilterExpression>=Fields!congregation_id.Value</FilterExpression>
+          <Operator>In</Operator>
+          <FilterValues>
+            <FilterValue>=Parameters!congregationid.Value</FilterValue>
+          </FilterValues>
+        </Filter>
+      </Filters>
     </DataSet>
     <DataSet Name="Congregations">
       <Query>
@@ -103,9 +116,9 @@ order by congregation_name</CommandText>
       <Filters>
         <Filter>
           <FilterExpression>=Fields!Accounting_Company_ID.Value</FilterExpression>
-          <Operator>Equal</Operator>
+          <Operator>In</Operator>
           <FilterValues>
-            <FilterValue>=Parameters!AccountingCompany.Value</FilterValue>
+            <FilterValue>=Parameters!accountingcompany.Value</FilterValue>
           </FilterValues>
         </Filter>
       </Filters>
@@ -916,21 +929,9 @@ FROM Accounting_Companies </CommandText>
       <DataType>DateTime</DataType>
       <Prompt>End Date</Prompt>
     </ReportParameter>
-    <ReportParameter Name="programid">
+    <ReportParameter Name="accountingcompany">
       <DataType>Integer</DataType>
-      <Prompt>Program</Prompt>
-      <ValidValues>
-        <DataSetReference>
-          <DataSetName>Programs</DataSetName>
-          <ValueField>program_id</ValueField>
-          <LabelField>program_name</LabelField>
-        </DataSetReference>
-      </ValidValues>
-      <MultiValue>true</MultiValue>
-    </ReportParameter>
-    <ReportParameter Name="AccountingCompany">
-      <DataType>Integer</DataType>
-      <Prompt>CompanyCompany</Prompt>
+      <Prompt>Accounting Company</Prompt>
       <ValidValues>
         <DataSetReference>
           <DataSetName>Accounting_Company</DataSetName>
@@ -938,6 +939,8 @@ FROM Accounting_Companies </CommandText>
           <LabelField>Company_Name</LabelField>
         </DataSetReference>
       </ValidValues>
+      <MultiValue>true</MultiValue>
+      <UsedInQuery>True</UsedInQuery>
     </ReportParameter>
     <ReportParameter Name="congregationid">
       <DataType>Integer</DataType>
@@ -947,6 +950,18 @@ FROM Accounting_Companies </CommandText>
           <DataSetName>Congregations</DataSetName>
           <ValueField>congregation_id</ValueField>
           <LabelField>congregation_name</LabelField>
+        </DataSetReference>
+      </ValidValues>
+      <MultiValue>true</MultiValue>
+    </ReportParameter>
+    <ReportParameter Name="programid">
+      <DataType>Integer</DataType>
+      <Prompt>Program</Prompt>
+      <ValidValues>
+        <DataSetReference>
+          <DataSetName>Programs</DataSetName>
+          <ValueField>program_id</ValueField>
+          <LabelField>program_name</LabelField>
         </DataSetReference>
       </ValidValues>
       <MultiValue>true</MultiValue>
