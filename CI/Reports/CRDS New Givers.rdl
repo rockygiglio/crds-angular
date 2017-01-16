@@ -28,6 +28,10 @@
           <QueryParameter Name="donationstatusid">
             <Value>=join(Parameters!donationstatusid.Value,",")</Value>
           </QueryParameter>
+          <QueryParameter Name="accountingcompanyid">
+            <Value>=join(Parameters!accountingcompanyid.Value,",")</Value>
+            <rd:UserDefined>true</rd:UserDefined>
+          </QueryParameter>
         </QueryParameters>
         <CommandType>StoredProcedure</CommandType>
         <CommandText>report_CRDS_New_Givers</CommandText>
@@ -172,12 +176,12 @@
     <DataSet Name="Programs">
       <Query>
         <DataSourceName>DataSource1</DataSourceName>
-        <CommandText>select p.Program_name, p.Program_id
-			  from MinistryPlatform.dbo.Programs p
-			  inner join MinistryPlatform.dbo.Congregations c on p.Congregation_ID = c.Congregation_ID
-			  join dbo.Ministries m on m.ministry_id = p.ministry_id
-			  where p.program_type_id = 1
-			  order by p.Program_Name</CommandText>
+        <CommandText>select p.Program_name, p.Program_id, p.Congregation_ID
+from MinistryPlatform.dbo.Programs p
+	inner join MinistryPlatform.dbo.Congregations c on p.Congregation_ID = c.Congregation_ID
+--join dbo.Ministries m on m.ministry_id = p.ministry_id
+where p.program_type_id = 1
+order by p.Program_Name</CommandText>
         <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
       </Query>
       <Fields>
@@ -189,7 +193,20 @@
           <DataField>Program_id</DataField>
           <rd:TypeName>System.Int32</rd:TypeName>
         </Field>
+        <Field Name="Congregation_ID">
+          <DataField>Congregation_ID</DataField>
+          <rd:UserDefined>true</rd:UserDefined>
+        </Field>
       </Fields>
+      <Filters>
+        <Filter>
+          <FilterExpression>=Fields!Congregation_ID.Value</FilterExpression>
+          <Operator>In</Operator>
+          <FilterValues>
+            <FilterValue>=Parameters!congregationid.Value</FilterValue>
+          </FilterValues>
+        </Filter>
+      </Filters>
     </DataSet>
     <DataSet Name="Congregations">
       <Query>
@@ -215,9 +232,9 @@
       <Filters>
         <Filter>
           <FilterExpression>=Fields!Accounting_Company_ID.Value</FilterExpression>
-          <Operator>Equal</Operator>
+          <Operator>In</Operator>
           <FilterValues>
-            <FilterValue>=Parameters!AccountingCompany.Value</FilterValue>
+            <FilterValue>=Parameters!accountingcompanyid.Value</FilterValue>
           </FilterValues>
         </Filter>
       </Filters>
@@ -225,16 +242,17 @@
     <DataSet Name="AccountingCompanies">
       <Query>
         <DataSourceName>DataSource1</DataSourceName>
-        <CommandText>SELECT  Accounting_Company_ID, Company_Name FROM Accounting_Companies</CommandText>
+        <CommandText>SELECT  Accounting_Company_ID, Company_Name 
+FROM Accounting_Companies</CommandText>
       </Query>
       <Fields>
         <Field Name="Accounting_Company_ID">
           <DataField>Accounting_Company_ID</DataField>
-          <rd:TypeName>System.Int32</rd:TypeName>
+          <rd:UserDefined>true</rd:UserDefined>
         </Field>
         <Field Name="Company_Name">
           <DataField>Company_Name</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
+          <rd:UserDefined>true</rd:UserDefined>
         </Field>
       </Fields>
     </DataSet>
@@ -2506,21 +2524,9 @@
       <DataType>DateTime</DataType>
       <Prompt>End Date</Prompt>
     </ReportParameter>
-    <ReportParameter Name="programid">
-      <DataType>String</DataType>
-      <Prompt>Program</Prompt>
-      <ValidValues>
-        <DataSetReference>
-          <DataSetName>Programs</DataSetName>
-          <ValueField>Program_id</ValueField>
-          <LabelField>Program_name</LabelField>
-        </DataSetReference>
-      </ValidValues>
-      <MultiValue>true</MultiValue>
-    </ReportParameter>
-    <ReportParameter Name="AccountingCompany">
+    <ReportParameter Name="accountingcompanyid">
       <DataType>Integer</DataType>
-      <Prompt>AccountingCompany</Prompt>
+      <Prompt>Accounting Company</Prompt>
       <ValidValues>
         <DataSetReference>
           <DataSetName>AccountingCompanies</DataSetName>
@@ -2528,15 +2534,28 @@
           <LabelField>Company_Name</LabelField>
         </DataSetReference>
       </ValidValues>
+      <MultiValue>true</MultiValue>
     </ReportParameter>
     <ReportParameter Name="congregationid">
-      <DataType>String</DataType>
+      <DataType>Integer</DataType>
       <Prompt>Congregations</Prompt>
       <ValidValues>
         <DataSetReference>
           <DataSetName>Congregations</DataSetName>
           <ValueField>congregation_id</ValueField>
           <LabelField>Congregation_Name</LabelField>
+        </DataSetReference>
+      </ValidValues>
+      <MultiValue>true</MultiValue>
+    </ReportParameter>
+    <ReportParameter Name="programid">
+      <DataType>Integer</DataType>
+      <Prompt>Program</Prompt>
+      <ValidValues>
+        <DataSetReference>
+          <DataSetName>Programs</DataSetName>
+          <ValueField>Program_id</ValueField>
+          <LabelField>Program_name</LabelField>
         </DataSetReference>
       </ValidValues>
       <MultiValue>true</MultiValue>
