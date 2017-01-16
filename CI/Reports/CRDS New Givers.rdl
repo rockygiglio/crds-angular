@@ -28,6 +28,10 @@
           <QueryParameter Name="donationstatusid">
             <Value>=join(Parameters!donationstatusid.Value,",")</Value>
           </QueryParameter>
+          <QueryParameter Name="accountingcompanyid">
+            <Value>=join(Parameters!accountingcompanyid.Value,",")</Value>
+            <rd:UserDefined>true</rd:UserDefined>
+          </QueryParameter>
         </QueryParameters>
         <CommandType>StoredProcedure</CommandType>
         <CommandText>report_CRDS_New_Givers</CommandText>
@@ -230,7 +234,7 @@ order by p.Program_Name</CommandText>
           <FilterExpression>=Fields!Accounting_Company_ID.Value</FilterExpression>
           <Operator>In</Operator>
           <FilterValues>
-            <FilterValue>=Parameters!accountingcompany.Value</FilterValue>
+            <FilterValue>=Parameters!accountingcompanyid.Value</FilterValue>
           </FilterValues>
         </Filter>
       </Filters>
@@ -238,16 +242,17 @@ order by p.Program_Name</CommandText>
     <DataSet Name="AccountingCompanies">
       <Query>
         <DataSourceName>DataSource1</DataSourceName>
-        <CommandText>SELECT  Accounting_Company_ID, Company_Name FROM Accounting_Companies</CommandText>
+        <CommandText>SELECT  Accounting_Company_ID, Company_Name 
+FROM Accounting_Companies</CommandText>
       </Query>
       <Fields>
         <Field Name="Accounting_Company_ID">
           <DataField>Accounting_Company_ID</DataField>
-          <rd:TypeName>System.Int32</rd:TypeName>
+          <rd:UserDefined>true</rd:UserDefined>
         </Field>
         <Field Name="Company_Name">
           <DataField>Company_Name</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
+          <rd:UserDefined>true</rd:UserDefined>
         </Field>
       </Fields>
     </DataSet>
@@ -2519,7 +2524,7 @@ order by p.Program_Name</CommandText>
       <DataType>DateTime</DataType>
       <Prompt>End Date</Prompt>
     </ReportParameter>
-    <ReportParameter Name="accountingcompany">
+    <ReportParameter Name="accountingcompanyid">
       <DataType>Integer</DataType>
       <Prompt>Accounting Company</Prompt>
       <ValidValues>
