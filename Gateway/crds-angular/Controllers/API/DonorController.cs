@@ -32,7 +32,7 @@ namespace crds_angular.Controllers.API
                                 IDonationService donationService, 
                                 MPInterfaces.IDonorRepository mpDonorService, 
                                 MPInterfaces.IAuthenticationRepository authenticationService,
-                                IUserImpersonationService impersonationService)
+                                IUserImpersonationService impersonationService) : base(impersonationService)
         {
             _donorService = donorService;
             _stripePaymentService = stripePaymentService;

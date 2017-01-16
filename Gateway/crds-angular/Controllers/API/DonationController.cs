@@ -43,7 +43,7 @@ namespace crds_angular.Controllers.API
                                   MPInterfaces.IPledgeRepository mpPledgeService,
                                   IUserImpersonationService impersonationService,
                                   IPaymentService paymentService,
-                                  MPInterfaces.IInvoiceRepository invoiceRepository)
+                                  MPInterfaces.IInvoiceRepository invoiceRepository) : base(impersonationService)
         {
             _mpDonorService = mpDonorService;
             _stripeService = stripeService;

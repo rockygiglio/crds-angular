@@ -34,6 +34,7 @@
           $rootScope.username = res.data.username;
           $rootScope.roles = res.data.roles;
           $rootScope.userid = res.data.userId;
+          $rootScope.canImpersonate = res.data.canImpersonate;
           return res.data.username;
         });
     };
@@ -44,6 +45,7 @@
       $rootScope.username = null;
       $rootScope.userid = null;
       $rootScope.roles = null;
+      $rootScope.canImpersonate = false;
       Session.clear();
       $rootScope.$broadcast(AUTH_EVENTS.logoutSuccess);
     };

@@ -7,6 +7,7 @@ using crds_angular.Exceptions.Models;
 using crds_angular.Models.Crossroads.Events;
 using crds_angular.Models.Json;
 using crds_angular.Security;
+using crds_angular.Services.Interfaces;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 using IEventService = crds_angular.Services.Interfaces.IEventService;
 using Crossroads.ApiVersioning;
@@ -19,7 +20,7 @@ namespace crds_angular.Controllers.API
         private readonly IApiUserRepository _apiUserService;
         private readonly IEventService _eventService;
 
-        public EventController(IMinistryPlatformService ministryPlatformService, IApiUserRepository apiUserService, IEventService eventService)
+        public EventController(IMinistryPlatformService ministryPlatformService, IApiUserRepository apiUserService, IEventService eventService, IUserImpersonationService userImpersonationService) : base(userImpersonationService)
         {
             this._ministryPlatformService = ministryPlatformService;
             _eventService = eventService;

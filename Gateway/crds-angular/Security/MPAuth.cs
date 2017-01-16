@@ -13,6 +13,7 @@ using log4net.Config;
 using System.Reflection;
 using System.Threading;
 using crds_angular.Models.Crossroads;
+using crds_angular.Services.Interfaces;
 using crds_angular.Util;
 using Microsoft.Ajax.Utilities;
 using Microsoft.Owin;
@@ -23,6 +24,13 @@ namespace crds_angular.Security
     public class MPAuth : ApiController
     {
         protected readonly log4net.ILog logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+
+        private IUserImpersonationService _userImpersonationService;
+
+        public MPAuth(IUserImpersonationService userImpersonationService)
+        {
+            _userImpersonationService = userImpersonationService;
+        }
 
         /// <summary>
         /// Ensure that a user is authenticated before executing the given lambda expression.  The expression will
@@ -49,7 +57,15 @@ namespace crds_angular.Security
             try
             {
                 IEnumerable<string> refreshTokens;
+                IEnumerable<string> impersonateUserIds;
+                bool impersonate = false;
                 var authorized = "";
+
+                if (Request.Headers.TryGetValues("ImpersonateUserId", out impersonateUserIds) && impersonateUserIds.Any())
+                {
+                    impersonate = true;
+                }
+
                 if (Request.Headers.TryGetValues("RefreshToken", out refreshTokens) && refreshTokens.Any())
                 {
                     var authData = AuthenticationRepository.RefreshToken(refreshTokens.FirstOrDefault());
@@ -57,7 +73,19 @@ namespace crds_angular.Security
                     {
                         authorized = authData["token"].ToString();
                         var refreshToken = authData["refreshToken"].ToString();
-                        var result = new HttpAuthResult(actionWhenAuthorized(authorized), authorized, refreshToken);
+                        IHttpActionResult result = null;
+                        if (impersonate)
+                        {
+                            result =
+                                new HttpAuthResult(
+                                    _userImpersonationService.WithImpersonation(authorized, impersonateUserIds.FirstOrDefault(), () => actionWhenAuthorized(authorized)),
+                                    authorized,
+                                    refreshToken);
+                        }
+                        else
+                        {
+                            result = new HttpAuthResult(actionWhenAuthorized(authorized), authorized, refreshToken);
+                        }
                         return result;
                     }
                 }
@@ -65,7 +93,14 @@ namespace crds_angular.Security
                 authorized = Request.Headers.GetValues("Authorization").FirstOrDefault();   
                 if (authorized != null && (authorized != "null" || authorized != ""))
                 {
-                    return actionWhenAuthorized(authorized);
+                    if (impersonate)
+                    {
+                        return _userImpersonationService.WithImpersonation(authorized, impersonateUserIds.FirstOrDefault(), () => actionWhenAuthorized(authorized));
+                    }
+                    else
+                    {
+                        return actionWhenAuthorized(authorized);
+                    }
                 }
                 return actionWhenNotAuthorized();
             }

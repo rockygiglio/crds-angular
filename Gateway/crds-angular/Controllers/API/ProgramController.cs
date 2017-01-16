@@ -14,7 +14,7 @@ namespace crds_angular.Controllers.API
     {
         private readonly IProgramService _programService;
 
-        public ProgramController(IProgramService programService)
+        public ProgramController(IProgramService programService, IUserImpersonationService userImpersonationService) : base(userImpersonationService)
         {
             _programService = programService;
         }

@@ -23,7 +23,7 @@ namespace crds_angular.test.controllers
         public void SetUp()
         {
             _programServiceMock = new Mock<IProgramService>();
-            _fixture = new ProgramController(_programServiceMock.Object)
+            _fixture = new ProgramController(_programServiceMock.Object, new Mock<IUserImpersonationService>().Object)
             {
                 Request = new HttpRequestMessage(),
                 RequestContext = new HttpRequestContext()
