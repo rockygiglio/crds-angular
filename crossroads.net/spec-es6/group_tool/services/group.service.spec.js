@@ -567,7 +567,7 @@ describe('Group Tool Group Service', () => {
     });
 
     it('they are not a leader', () => {
-      httpBackend.expectGET(`${endpoint}/grouptool/123212312/${CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS}/isleader`).
+      httpBackend.expectGET(`${endpoint}/grouptool/123212312/isleader`).
         respond(200, {});
 
 
