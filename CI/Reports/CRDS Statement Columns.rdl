@@ -2927,6 +2927,11 @@
     </ReportParameter>
     <ReportParameter Name="CampaignIDs">
       <DataType>String</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>="-1"</Value>
+        </Values>
+      </DefaultValue>
       <Prompt>Campaign(s)</Prompt>
       <ValidValues>
         <DataSetReference>
