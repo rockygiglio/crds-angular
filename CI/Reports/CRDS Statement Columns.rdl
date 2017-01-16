@@ -2444,7 +2444,7 @@
                             </FilterValues>
                           </Filter>
                           <Filter>
-                            <FilterExpression>=IIF(Parameters!Print.Value=0,0,IIF(CountDistinct(Fields!Donation_ID.Value)&lt;=Parameters!RowsPerPage.Value,1,IIF(MAX(Fields!Page_No.Value)&gt;3,4,MAX(Fields!Page_No.Value))))</FilterExpression>
+                            <FilterExpression>=IIF(Parameters!Print.Value=0,0,IIF(CountDistinct(Fields!Donation_Distribution_ID.Value)&lt;=Parameters!RowsPerPage.Value,1,IIF(MAX(Fields!Page_No.Value)&gt;3,4,MAX(Fields!Page_No.Value))))</FilterExpression>
                             <Operator>Equal</Operator>
                             <FilterValues>
                               <FilterValue DataType="Integer">=Parameters!Print.Value</FilterValue>
