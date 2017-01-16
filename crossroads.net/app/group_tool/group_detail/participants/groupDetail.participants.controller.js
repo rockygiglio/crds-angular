@@ -53,6 +53,10 @@ export default class GroupDetailParticipantsController {
     this.groupService.getIsLeader(this.groupId).then((isLeader) => {
       this.isLeader = isLeader;
     });
+
+    this.groupService.getGroupType(this.groupId).then((groupTypeId) => {
+      this.isOnSiteGroup = (groupTypeId === CONSTANTS.GROUP.GROUP_TYPE_ID.ONSITE_GROUPS);
+    });
   }
 
   loadGroupParticipants() {
