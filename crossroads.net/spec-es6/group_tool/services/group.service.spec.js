@@ -538,9 +538,23 @@ describe('Group Tool Group Service', () => {
     });
   });
 
+  describe('getGroupType(groupId) function', () => {
+    it('should return an object with just groupTypeId', () => {
+      httpBackend.expectGET(`${endpoint}/group/31337/groupType`)
+        .respond(200, {groupTypeId: 42});
+
+      var promise = fixture.getGroupType(31337);
+      httpBackend.flush();
+
+      promise.then(function (data) {
+        expect(data).toEqual(42);
+      })
+    });
+  });
+
   describe('getIsLeader(groupId) function', () => {
     it('they are a leader', () => {
-      httpBackend.expectGET(`${endpoint}/grouptool/123212312/${CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS}/isleader`).
+      httpBackend.expectGET(`${endpoint}/grouptool/123212312/isleader`).
         respond(200, { Group: 'hi' });
 
 

@@ -199,6 +199,16 @@ namespace crds_angular.Controllers.API
             });
         }
 
+        [ResponseType(typeof(object))]
+        [VersionedRoute(template: "group/{groupId}/groupType", minimumVersion: "1.0.0")]
+        [Route("group/{groupId}/groupType")]
+        public IHttpActionResult GetGroupTypeId(int groupId)
+        {
+            var group = _groupService.GetGroupDetails(groupId);
+            return Ok(new { groupTypeId = group.GroupTypeId });
+        }
+
+
         /// <summary>
         /// Return the group dto for the invitation guid (Private Invitation)
         /// </summary>

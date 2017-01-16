@@ -263,8 +263,8 @@ export default class GroupService {
   }
 
   getIsLeader(groupId) {
-    let promise = this.resource(`${__API_ENDPOINT__}api/grouptool/:groupId/:groupTypeId/isleader`).
-      get({ groupId: groupId, groupTypeId: CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS }).$promise;
+    let promise = this.resource(`${__API_ENDPOINT__}api/grouptool/:groupId/isleader`).
+      get({ groupId: groupId }).$promise;
 
     return promise.then((data) => {
       return !(data.Group === null || data.Group === undefined)
@@ -272,6 +272,17 @@ export default class GroupService {
       (err) => {
         throw err;
       });
+  }
+
+  getGroupType(groupId) { 
+    const promise = this.resource(`${__API_ENDPOINT__}api/group/:groupId/groupType`)
+      .get({ groupId }).$promise;
+
+    return promise.then((data) => {
+      return data.groupTypeId;
+    }, (err) => {
+      throw err;
+    });
   }
 
   search(searchString, locationString, groupId) {
