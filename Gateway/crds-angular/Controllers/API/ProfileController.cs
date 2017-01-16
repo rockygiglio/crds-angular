@@ -33,7 +33,7 @@ namespace crds_angular.Controllers.API
         private readonly IContactRelationshipRepository _contactRelationshipService;
         private readonly List<int> _allowedAdminGetProfileRoles;
 
-        public ProfileController(IPersonService personService, IServeService serveService, IUserImpersonationService impersonationService, IDonorService donorService, IAuthenticationRepository authenticationService, IUserRepository userService, IContactRelationshipRepository contactRelationshipService, IConfigurationWrapper config)
+        public ProfileController(IPersonService personService, IServeService serveService, IUserImpersonationService impersonationService, IDonorService donorService, IAuthenticationRepository authenticationService, IUserRepository userService, IContactRelationshipRepository contactRelationshipService, IConfigurationWrapper config, IUserImpersonationService userImpersonationService) : base(userImpersonationService)
         {
             _personService = personService;
             _serveService = serveService;
