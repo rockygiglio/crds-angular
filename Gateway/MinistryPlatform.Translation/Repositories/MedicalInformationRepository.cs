@@ -28,7 +28,7 @@ namespace MinistryPlatform.Translation.Repositories
         public List<MpMedication> GetMedications(int contactId)
         {
             var apiToken = _apiUserRepository.GetToken();
-            var columns = "MedicalInformationMedication_ID, cr_Medical_Information_Medications.MedicalInformation_ID, Medication_Name, Medication_Type_ID, DosageTime, DosageAmount";
+            var columns = "MedicalInformationMedication_ID, cr_Medical_Information_Medications.MedicalInformation_ID, Medication_Name, Medication_Type_ID, Dosage_Time, Dosage_Amount";
             return _ministryPlatformRest.UsingAuthenticationToken(apiToken).Search<MpMedication>($"MedicalInformation_ID_Table_Contact_ID_Table.Contact_ID={contactId}", columns).ToList();
         }
 

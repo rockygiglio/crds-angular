@@ -19,10 +19,10 @@ namespace MinistryPlatform.Translation.Models
         [JsonProperty(PropertyName = "Medication_Type_ID")]
         public int MedicationTypeId { get; set; }
 
-        [JsonProperty(PropertyName = "DosageTime")]
+        [JsonProperty(PropertyName = "Dosage_Time")]
         public string DosageTimes { get; set; }
 
-        [JsonProperty(PropertyName = "DosageAmount")]
+        [JsonProperty(PropertyName = "Dosage_Amount")]
         public string DosageAmount { get; set; }
 
         public bool Deleted { get; set; }
