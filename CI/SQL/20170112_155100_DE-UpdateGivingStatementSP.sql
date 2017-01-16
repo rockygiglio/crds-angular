@@ -507,8 +507,8 @@ SELECT Donation_ID
 	, Postal_Code
 	, Foreign_Country
 	, Statement_ID
-	, Row_No = DENSE_RANK() OVER (Partition By Statement_ID ORDER BY Donation_Date,Donation_ID)
-	, Donor_Row_No = DENSE_Rank() OVER (Partition By Donor_ID ORDER BY Donation_Date,Donation_Distribution_ID)
+	, Row_No = DENSE_RANK() OVER (Partition By Statement_ID ORDER BY Donation_Date,Donation_Distribution_ID)
+	, Donor_Row_No = DENSE_Rank() OVER (Partition By Donor_ID ORDER BY Donation_Date,Donation_ID)
 	, Page_No = Ceiling(Dense_Rank() OVER (Partition By Statement_ID ORDER BY Donation_Date,Donation_Distribution_ID)/@RowsPerPage)
 	, Envelope_No
 	, Statement_Header
@@ -541,6 +541,5 @@ DROP TABLE #PLAmt
 
 
 END
+
 GO
-
-
