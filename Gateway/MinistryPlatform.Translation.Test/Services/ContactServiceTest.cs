@@ -441,5 +441,27 @@ namespace MinistryPlatform.Translation.Test.Services
 
             Assert.AreEqual(contact, result);
         }
+
+        [Test]
+        public void TestGetContactByUserRecordIdNoContact()
+        {
+            string tableName = "Contacts";
+            const int userRecordId = 1234567;
+            Dictionary<string, object> expectedFilter = new Dictionary<string, object>()
+            {
+                {"User_Account", userRecordId}
+            };
+
+            List<MpMyContact> mockResults = new List<MpMyContact>();
+
+            _ministryPlatformRest.Setup(m => m.UsingAuthenticationToken(It.IsAny<string>())).Returns(_ministryPlatformRest.Object);
+
+            _ministryPlatformRest.Setup(m => m.Get<MpMyContact>(tableName, expectedFilter))
+                .Returns(mockResults);
+
+            var result = _fixture.GetContactByUserRecordId(userRecordId);
+
+            Assert.IsNull(result);
+        }
     }
 }
