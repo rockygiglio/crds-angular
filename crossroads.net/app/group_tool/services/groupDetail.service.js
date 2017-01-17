@@ -1,9 +1,8 @@
 import CONSTANTS from '../../constants';
 export default class GroupDetailService {
     /*@ngInject*/
-    constructor($log, GroupService) {
+    constructor($log) {
         this.log = $log;
-        this.groupService = GroupService;
     }
 
     //From groupDetail.participants.controller.js loadGroupParticipants()
