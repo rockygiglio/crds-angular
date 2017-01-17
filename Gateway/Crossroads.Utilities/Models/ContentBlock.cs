@@ -44,7 +44,9 @@ namespace Crossroads.Utilities.Models
         [EnumMember(Value = "group tool")]
         GroupTool,
         [EnumMember(Value = "echeck")]
-        Echeck
+        Echeck,
+        [EnumMember(Value = "giving")]
+        Giving
     }
 
     public class ContentBlocks
