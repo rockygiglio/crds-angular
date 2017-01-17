@@ -186,7 +186,7 @@ export default function GroupToolRouter($httpProvider, $stateProvider) {
       params: {
         view: {
           value: null,
-          squash: true,
+          squash: true
         }
       }
     })
