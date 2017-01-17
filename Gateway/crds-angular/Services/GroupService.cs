@@ -488,6 +488,22 @@ namespace crds_angular.Services
             return groupDetail;
         }
 
+        public List<GroupDTO> RemoveOnsiteParticipantsIfNotLeader(List<GroupDTO> groups, string token)
+        {
+            var participant = _participantService.GetParticipantRecord(token);
+            foreach (var group in groups)
+            {
+                if (group.GroupTypeId == _onsiteGroupTypeId)
+                {
+                    var groupLeader = group.Participants.Find(p => p.ParticipantId == participant.ParticipantId && p.GroupRoleId == _groupRoleLeader);
+                    if (groupLeader == null)
+                        group.Participants = new List<GroupParticipantDTO>();
+                }
+            }
+
+            return groups;
+        }
+
         public List<GroupDTO> GetGroupsForAuthenticatedUser(string token, int[] groupTypeIds)
         {
             var groups = _mpGroupService.GetMyGroupParticipationByType(token, groupTypeIds, null);
@@ -496,12 +512,6 @@ namespace crds_angular.Services
                 return null;
             }
             return GetAttributesAndParticipants(token, groups);
-        }
-
-        public int[] GetDefaultGroupTypeIds()
-        {
-            return new int[] { _smallGroupTypeId, _onsiteGroupTypeId };
-
         }
 
         public List<GroupDTO> GetGroupByIdForAuthenticatedUser(string token, int groupId)

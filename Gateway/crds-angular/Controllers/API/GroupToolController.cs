@@ -22,6 +22,7 @@ namespace crds_angular.Controllers.API
     {
         private readonly ILog _logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         private readonly Services.Interfaces.IGroupToolService _groupToolService;
+
         private readonly int _defaultGroupTypeId;
         private readonly IConfigurationWrapper _configurationWrapper;
 

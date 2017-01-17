@@ -65,6 +65,7 @@ namespace crds_angular.test.Services
         private const int JOURNEY_GROUP_ID = 19;
         private const int GROUP_ROLE_LEADER = 22;
         private const int DOMAIN_ID = 66;
+        private const int ONSITE_GROUP_ID = 8;
 
         [SetUp]
         public void SetUp()
@@ -94,6 +95,7 @@ namespace crds_angular.test.Services
             config = new Mock<IConfigurationWrapper>();
 
             config.Setup(mocked => mocked.GetConfigIntValue("GroupRoleLeader")).Returns(GROUP_ROLE_LEADER);
+            config.Setup(mocked => mocked.GetConfigIntValue("OnsiteGroupTypeId")).Returns(ONSITE_GROUP_ID);
             config.Setup(mocked => mocked.GetConfigIntValue("Group_Role_Default_ID")).Returns(GROUP_ROLE_DEFAULT_ID);
             config.Setup(mocked => mocked.GetConfigIntValue("JourneyGroupTypeId")).Returns(JOURNEY_GROUP_ID);
             config.Setup(mocked => mocked.GetConfigIntValue("DomainId")).Returns(DOMAIN_ID);
@@ -186,6 +188,101 @@ namespace crds_angular.test.Services
             }
             participantService.VerifyAll();
             groupRepository.VerifyAll();
+        }
+
+        [Test]
+        public void RemoveOnsiteParticipantsIfNotLeader()
+        {
+            string token = "123ABC";
+            Participant loggedInParticipant = new Participant()
+            {
+                ParticipantId = 1
+            };
+            var groups = new List<GroupDTO>()
+            {
+                new GroupDTO()
+                {
+                    GroupId = 1,
+                    Participants = new List<GroupParticipantDTO>()
+                    {
+                        new GroupParticipantDTO()
+                        {
+                            ParticipantId = loggedInParticipant.ParticipantId,
+                            GroupRoleId = GROUP_ROLE_LEADER
+                        },
+                        new GroupParticipantDTO()
+                        {
+                            ParticipantId = 2,
+                            GroupRoleId = 1
+                        },
+                        new GroupParticipantDTO()
+                        {
+                            ParticipantId = 2,
+                            GroupRoleId = 1
+                        }
+                    },
+                    GroupTypeId = ONSITE_GROUP_ID
+                },
+                new GroupDTO()
+                {
+                    GroupId = 2,
+                    Participants = new List<GroupParticipantDTO>()
+                    {
+                        new GroupParticipantDTO()
+                        {
+                            ParticipantId = loggedInParticipant.ParticipantId,
+                            GroupRoleId = 1
+                        },
+                        new GroupParticipantDTO()
+                        {
+                            ParticipantId = 2,
+                            GroupRoleId = GROUP_ROLE_LEADER
+                        },
+                        new GroupParticipantDTO()
+                        {
+                            ParticipantId = 2,
+                            GroupRoleId = 1
+                        }
+                    },
+                    GroupTypeId = JOURNEY_GROUP_ID
+                },
+                new GroupDTO()
+                {
+                    GroupId = 3,
+                    Participants = new List<GroupParticipantDTO>()
+                    {
+                        new GroupParticipantDTO()
+                        {
+                            ParticipantId = loggedInParticipant.ParticipantId,
+                            GroupRoleId = 1
+                        },
+                        new GroupParticipantDTO()
+                        {
+                            ParticipantId = 2,
+                            GroupRoleId = GROUP_ROLE_LEADER
+                        },
+                        new GroupParticipantDTO()
+                        {
+                            ParticipantId = 2,
+                            GroupRoleId = 1
+                        }
+                    },
+                    GroupTypeId = ONSITE_GROUP_ID
+                }
+            };
+
+            participantService.Setup(mocked => mocked.GetParticipantRecord(It.IsAny<string>())).Returns(loggedInParticipant);
+
+            var results = fixture.RemoveOnsiteParticipantsIfNotLeader(groups, token);
+
+            //Is leader of onsite group, no participants should be removed
+            Assert.AreEqual(results.Find(g => g.GroupId == 1).Participants.Count(), 3);
+            //Is not leader of journey group, no participants should be removed
+            Assert.AreEqual(results.Find(g => g.GroupId == 2).Participants.Count(), 3);
+            //Is not leader of onsite group, all participants should be removed
+            Assert.AreEqual(results.Find(g => g.GroupId == 3).Participants.Count(), 0);
+
+            participantService.VerifyAll();
         }
 
         [Test]
