@@ -38,7 +38,7 @@ namespace crds_angular.test.controllers
             _messageFactory = new Mock<IMessageFactory>();
             _messageQueueFactory = new Mock<IMessageQueueFactory>();
             _messageQueue = new Mock<IMessageQueue>();
-            _fixture = new TextCommunicationController(_textCommunicationService.Object, configuration.Object, _messageQueueFactory.Object, _messageFactory.Object, _messageQueue.Object);
+            _fixture = new TextCommunicationController(_textCommunicationService.Object, configuration.Object, new Mock<IUserImpersonationService>().Object, _messageQueueFactory.Object, _messageFactory.Object, _messageQueue.Object);
         }
 
         [Test]

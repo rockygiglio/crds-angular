@@ -1,17 +1,14 @@
 USE [MinistryPlatform]
 GO
 
+/****** Object:  StoredProcedure [dbo].[report_CRDS_Donor_Statement_N_Columns]    Script Date: 1/16/2017 1:25:33 PM ******/
 SET ANSI_NULLS ON
 GO
 
 SET QUOTED_IDENTIFIER ON
 GO
 
-IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[report_CRDS_Donor_Statement_N_Columns]') AND TYPE IN (N'P', N'PC'))
-BEGIN
-EXEC dbo.sp_executesql @statement = N'CREATE PROCEDURE [dbo].[report_CRDS_Donor_Statement_N_Columns] AS' 
-END
-GO
+
 
 
 
@@ -507,9 +504,9 @@ SELECT Donation_ID
 	, Postal_Code
 	, Foreign_Country
 	, Statement_ID
-	, Row_No = DENSE_RANK() OVER (Partition By Statement_ID ORDER BY Donation_Date,Donation_Distribution_ID)
-	, Donor_Row_No = DENSE_Rank() OVER (Partition By Donor_ID ORDER BY Donation_Date,Donation_ID)
-	, Page_No = Ceiling(Dense_Rank() OVER (Partition By Statement_ID ORDER BY Donation_Date,Donation_Distribution_ID)/@RowsPerPage)
+	, Row_No = DENSE_RANK() OVER (Partition By Statement_ID ORDER BY Section_Sort, Donation_Date,Donation_Distribution_ID)
+	, Donor_Row_No = DENSE_Rank() OVER (Partition By Donor_ID ORDER BY Section_Sort,Donation_Date,Donation_ID)
+	, Page_No = Ceiling(Dense_Rank() OVER (Partition By Statement_ID ORDER BY Section_Sort,Donation_Date,Donation_Distribution_ID)/@RowsPerPage)
 	, Envelope_No
 	, Statement_Header
 	, Header_Sort
@@ -531,6 +528,7 @@ SELECT Donation_ID
 	, Section_Sort
 FROM #Gifts
 
+
 DROP TABLE #Campaigns
 DROP TABLE #D
 IF OBJECT_ID('tempdb..#DD') IS NOT NULL DROP TABLE #DD
@@ -542,4 +540,7 @@ DROP TABLE #PLAmt
 
 END
 
+
 GO
+
+

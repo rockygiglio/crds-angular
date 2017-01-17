@@ -8,6 +8,7 @@ using AutoMapper;
 using crds_angular.Exceptions.Models;
 using crds_angular.Models.Crossroads.Opportunity;
 using crds_angular.Security;
+using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Extensions;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Models.DTO;
@@ -20,7 +21,7 @@ namespace crds_angular.Controllers.API
     {
         private readonly IOpportunityRepository _opportunityService;
 
-        public OpportunityController(IOpportunityRepository opportunityService)
+        public OpportunityController(IOpportunityRepository opportunityService, IUserImpersonationService userImpersonationService) : base(userImpersonationService)
         {
             _opportunityService = opportunityService;
         }

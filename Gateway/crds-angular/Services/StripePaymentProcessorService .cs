@@ -347,10 +347,15 @@ namespace crds_angular.Services
                     var singlecharge = GetCharge(charge.Id);
                     charge.Metadata = singlecharge.Metadata;
                 }
-                else //its a refund
+                else if (charge.Type == "payment_refund") //its a bank account refund
                 {
                     var singlerefund = GetRefund(charge.Id);
                     charge.Metadata = singlerefund.Charge.Metadata;
+                }
+                else // if charge.Type == "refund", it's a credit card charge refund
+                {
+                    var singlerefund = GetChargeRefund(charge.Id);
+                    charge.Metadata = singlerefund.Data[0].Charge.Metadata;
                 }
             }
 

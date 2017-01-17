@@ -14,7 +14,7 @@ namespace crds_angular.Controllers.API
     {      
         private readonly IAccountService _accountService;
 
-        public AccountController(IAccountService accountService)
+        public AccountController(IAccountService accountService, IUserImpersonationService userImpersonationService) : base(userImpersonationService)
         {
             _accountService = accountService;
         }

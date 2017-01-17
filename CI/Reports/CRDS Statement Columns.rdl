@@ -2444,7 +2444,7 @@
                             </FilterValues>
                           </Filter>
                           <Filter>
-                            <FilterExpression>=IIF(Parameters!Print.Value=0,0,IIF(CountDistinct(Fields!Donation_ID.Value)&lt;=Parameters!RowsPerPage.Value,1,IIF(MAX(Fields!Page_No.Value)&gt;3,4,MAX(Fields!Page_No.Value))))</FilterExpression>
+                            <FilterExpression>=IIF(Parameters!Print.Value=0,0,IIF(CountDistinct(Fields!Donation_Distribution_ID.Value)&lt;=Parameters!RowsPerPage.Value,1,IIF(MAX(Fields!Page_No.Value)&gt;3,4,MAX(Fields!Page_No.Value))))</FilterExpression>
                             <Operator>Equal</Operator>
                             <FilterValues>
                               <FilterValue DataType="Integer">=Parameters!Print.Value</FilterValue>
@@ -2627,7 +2627,7 @@
       <DataType>Integer</DataType>
       <DefaultValue>
         <Values>
-          <Value>21</Value>
+          <Value>18</Value>
         </Values>
       </DefaultValue>
       <Prompt>RowsPerPage</Prompt>
@@ -2929,7 +2929,7 @@
       <DataType>String</DataType>
       <DefaultValue>
         <Values>
-          <Value>="1103"</Value>
+          <Value>="-1"</Value>
         </Values>
       </DefaultValue>
       <Prompt>Campaign(s)</Prompt>
@@ -2962,6 +2962,6 @@
     </ReportParameter>
   </ReportParameters>
   <rd:ReportUnitType>Inch</rd:ReportUnitType>
-  <rd:ReportServerUrl>http://mp-int-web/ReportServer</rd:ReportServerUrl>
+  <rd:ReportServerUrl>http://adminint.crossroads.net/ReportServer</rd:ReportServerUrl>
   <rd:ReportID>ac2ff723-85d4-47ef-8b30-4696e69d4216</rd:ReportID>
 </Report>

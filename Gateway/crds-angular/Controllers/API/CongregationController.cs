@@ -15,7 +15,7 @@ namespace crds_angular.Controllers.API
     {
         private readonly ICongregationService _congregationService;
 
-        public CongregationController(ICongregationService congregationService)
+        public CongregationController(ICongregationService congregationService, IUserImpersonationService userImpersonationService) : base(userImpersonationService)
         {
             _congregationService = congregationService;
         }

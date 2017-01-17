@@ -157,6 +157,12 @@ header.show .container {
     border-radius: 50%;
   }
 }
+.embed-responsive.impersonate-profile-image {
+  padding-bottom: 0;
+  display: inline-box;
+  width: 25px;
+  height: 25px;
+}
 .btn-nav {
   min-height: 40px;
 }
