@@ -1,6 +1,5 @@
 // eslint-disable-next-line import/no-extraneous-dependencies, import/no-unresolved, import/extensions
 import crdsConstants from 'crds-constants';
-import moment from 'moment';
 import find from 'lodash/collection/find';
 
 class CamperInfoFormFactory {
