@@ -26,7 +26,7 @@ namespace crds_angular.test.controllers
         {
             Factories.EventParticipantDTO();
             _eventParticipantService = new Mock<IEventParticipantService>();
-            _fixture = new EventParticipantController(_eventParticipantService.Object);
+            _fixture = new EventParticipantController(_eventParticipantService.Object, new Mock<IUserImpersonationService>().Object);
             authType = "auth_type";
             authToken = "auth_token";
             _fixture.Request = new HttpRequestMessage();

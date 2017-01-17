@@ -42,7 +42,7 @@ namespace crds_angular.test.controllers
             _groupSearchServiceMock = new Mock<IGroupSearchService>();
             _groupToolServiceMock = new Mock<IGroupToolService>();
 
-            _fixture = new GroupController(_groupServiceMock.Object, _authenticationServiceMock.Object, _participantServiceMock.Object, _addressServiceMock.Object, _groupSearchServiceMock.Object, _groupToolServiceMock.Object);
+            _fixture = new GroupController(_groupServiceMock.Object, _authenticationServiceMock.Object, _participantServiceMock.Object, _addressServiceMock.Object, _groupSearchServiceMock.Object, _groupToolServiceMock.Object, new Mock<IUserImpersonationService>().Object);
 
             _authType = "auth_type";
             _authToken = "auth_token";

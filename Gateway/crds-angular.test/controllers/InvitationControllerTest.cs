@@ -25,7 +25,7 @@ namespace crds_angular.test.controllers
         {
             _invitationService = new Mock<IInvitationService>(MockBehavior.Strict);
 
-            _fixture = new InvitationController(_invitationService.Object);
+            _fixture = new InvitationController(_invitationService.Object, new Mock<IUserImpersonationService>().Object);
             _fixture.SetupAuthorization(AuthType, AuthToken);
         }
 

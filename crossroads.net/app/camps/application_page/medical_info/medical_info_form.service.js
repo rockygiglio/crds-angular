@@ -285,17 +285,17 @@ class MedicalInfoForm {
             onClick: ($modelValue, fieldOptions, scope) => {
               let newValue;
               const options = fieldOptions.templateOptions.options;
-              const isNoneChecked = $modelValue.indexOf('none') > -1;
+              const isNoneChecked = $modelValue.indexOf('None') > -1;
 
               if (scope.$index === 0) {
                 if (isNoneChecked) {
                   // the 'Do Not Administer button was checked
-                  newValue = ['none'];
+                  newValue = ['None'];
                 }
               } else if (isNoneChecked) {
                 // something else was checked...
                 newValue = options.map((option) => {
-                  if (option.value === 'none') {
+                  if (option.value === 'None') {
                     return undefined;
                   }
 

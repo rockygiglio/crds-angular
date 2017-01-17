@@ -46,7 +46,8 @@ namespace crds_angular.test.controllers
                                                  _skillsService.Object,
                                                  _goVolunteerService.Object,
                                                  _attributeService.Object,
-                                                 _configurationWrapper.Object)
+                                                 _configurationWrapper.Object, 
+                                                 new Mock<IUserImpersonationService>().Object)
 
             {
                 Request = new HttpRequestMessage(),

@@ -30,7 +30,8 @@ namespace crds_angular.Controllers.API
                                      IGoSkillsService skillsService,
                                      IGoVolunteerService goVolunteerService,
                                      IAttributeService attributeService,
-                                     IConfigurationWrapper configurationWrapper)
+                                     IConfigurationWrapper configurationWrapper, 
+                                     IUserImpersonationService userImpersonationService) : base(userImpersonationService)
 
         {
             _organizationService = organizationService;
