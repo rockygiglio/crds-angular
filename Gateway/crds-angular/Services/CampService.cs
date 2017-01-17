@@ -619,8 +619,10 @@ namespace crds_angular.Services
                     PhysicianName = medicalInfo.PhysicianName ?? "N/A",
                     PhysicianPhone = medicalInfo.PhysicianPhone ?? "N/A",
                     PolicyHolder = medicalInfo.PolicyHolder ?? "N/A",
-                    MedicationsAdministered = medicalInfo.MedicationsAdministered?.Where(med => med != null).Aggregate((c, n) => c + "," + n)
-            };
+                };
+
+                var meds = medicalInfo.MedicationsAdministered?.Where(med => med != null).ToList();
+                mpMedicalInfo.MedicationsAdministered = meds.Any() ? meds?.Aggregate((c, n) => c + "," + n) : string.Empty;
 
                 var medicalInformation =  _medicalInformationRepository.SaveMedicalInfo(mpMedicalInfo, contactId);
                 var updateToDictionary = new Dictionary<String, Object>
