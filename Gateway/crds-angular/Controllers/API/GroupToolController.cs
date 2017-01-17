@@ -348,10 +348,10 @@ namespace crds_angular.Controllers.API
         /// <returns>MyGroup</returns>
         [RequiresAuthorization]
         [ResponseType(typeof(MyGroup))]
-        [VersionedRoute(template: "group-tool/{groupId}/{groupTypeId}/is-leader", minimumVersion: "1.0.0")]
-        [Route("grouptool/{groupId}/{groupTypeId}/isleader")]
+        [VersionedRoute(template: "group-tool/{groupId}/is-leader", minimumVersion: "1.0.0")]
+        [Route("grouptool/{groupId}/isleader")]
         [HttpGet]
-        public IHttpActionResult GetIfIsGroupLeader(int groupId, int groupTypeId)
+        public IHttpActionResult GetIfIsGroupLeader(int groupId)
         {
             return Authorized(token =>
             {

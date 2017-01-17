@@ -18,9 +18,9 @@
     class="text-center"></div>
 
   <div class="row mobile-push-half-top">
-    <div ng-if='groupDetailParticipants.data.length > 1 && groupDetailParticipants.isListView() && groupDetailParticipants.data.groupTypeId !== groupDetailParticipants.onsiteGroupTypeId'
+    <div ng-if='groupDetailParticipants.data.length > 1 && groupDetailParticipants.isListView()'
        class="col-sm-9 col-sm-push-3 col-md-7 col-md-push-5 sm-text-right group-email-select">
-      <div class="col-sm-8 push-half-bottom">
+      <div class="col-sm-8 push-half-bottom" ng-if="!groupDetailParticipants.isOnSiteGroup">
         <ui-select ng-model="groupDetailParticipants.selectedEmailOption" on-select="groupDetailParticipants.onOptionSelected($item, $model)">
           <ui-select-match class="ui-select-match" placeholder="Email Group">
             {{$select.selected.name}}

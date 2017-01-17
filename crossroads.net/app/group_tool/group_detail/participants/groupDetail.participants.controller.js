@@ -37,8 +37,6 @@ export default class GroupDetailParticipantsController {
     this.isLeader = false;
     this.data = [];
 
-    this.onSiteGroupTypeId = CONSTANTS.GROUP.GROUP_TYPE_ID.ONSITE_GROUPS;
-
     this.setListView();
   }
 
@@ -54,6 +52,10 @@ export default class GroupDetailParticipantsController {
     debugger;
     this.groupService.getIsLeader(this.groupId).then((isLeader) => {
       this.isLeader = isLeader;
+    });
+
+    this.groupService.getGroupType(this.groupId).then((groupTypeId) => {
+      this.isOnSiteGroup = (groupTypeId === CONSTANTS.GROUP.GROUP_TYPE_ID.ONSITE_GROUPS);
     });
   }
 
