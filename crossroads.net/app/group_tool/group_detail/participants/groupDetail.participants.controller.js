@@ -49,7 +49,6 @@ export default class GroupDetailParticipantsController {
       this.error = true;
       this.ready = true;
     });
-    debugger;
     this.groupService.getIsLeader(this.groupId).then((isLeader) => {
       this.isLeader = isLeader;
     });
