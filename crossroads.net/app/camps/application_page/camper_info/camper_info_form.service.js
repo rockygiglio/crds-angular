@@ -1,4 +1,6 @@
+// eslint-disable-next-line import/no-extraneous-dependencies, import/no-unresolved, import/extensions
 import crdsConstants from 'crds-constants';
+import moment from 'moment';
 import find from 'lodash/collection/find';
 
 class CamperInfoFormFactory {
@@ -150,7 +152,7 @@ class CamperInfoForm {
             key: 'birthDate',
             type: 'crdsDatepicker',
             templateOptions: {
-              label: 'Birth Date',
+              label: 'Birth Date (mm/dd/yyyy)',
               required: true,
               type: 'text',
               datepickerPopup: 'MM/dd/yyyy'
