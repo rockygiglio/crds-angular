@@ -1,7 +1,9 @@
 ﻿using System;
+using MinistryPlatform.Translation.Models.Attributes;
 
 namespace MinistryPlatform.Translation.Models
 {
+    [MpRestApiTable(Name = "Contacts")]
     public class MpMyContact
     {
         public int? Address_ID { get; set; }
