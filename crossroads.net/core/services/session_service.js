@@ -247,7 +247,6 @@
     */
     vm.performReactiveSso = (event, stateName, stateData, stateToParams) => {
       if ($rootScope.resolving || $rootScope.processing) {
-        console.log('currently resolving or processing');
         return;
       }
       if (vm.isActive() && vm.wasLoggedIn === false) {
