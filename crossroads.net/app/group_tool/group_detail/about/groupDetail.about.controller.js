@@ -28,7 +28,6 @@ export default class GroupDetailAboutController {
     this.showFooter = this.state.params.groupId !== undefined && this.state.params.groupId !== null;
     if (this.showFooter) {
       this.groupService.getGroup(this.groupId).then((data) => {
-        debugger;
         this.data = data;
         this.setGroupImageUrl();
         if (this.showShareButtons == null) {
