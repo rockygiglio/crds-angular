@@ -43,6 +43,8 @@ namespace crds_angular.Services
         private readonly int _groupRequestToJoinEmailTemplate;
         private readonly int _groupRequestPendingReminderEmailTemplateId;
         private readonly int _attributeTypeGroupCategory;
+        private readonly int _smallGroupTypeId;
+        private readonly int _onsiteGroupTypeId;
 
         private const string GroupToolRemoveParticipantEmailTemplateTextTitle = "groupToolRemoveParticipantEmailTemplateText";
         private const string GroupToolRemoveParticipantSubjectTemplateText = "groupToolRemoveParticipantSubjectTemplateText";
@@ -95,6 +97,9 @@ namespace crds_angular.Services
             _groupRequestToJoinEmailTemplate = configurationWrapper.GetConfigIntValue("GroupRequestToJoinEmailTemplate");
             _baseUrl = configurationWrapper.GetConfigValue("BaseURL");
             _addressMatrixSearchDepth = configurationWrapper.GetConfigIntValue("AddressMatrixSearchDepth");
+            
+            _smallGroupTypeId = configurationWrapper.GetConfigIntValue("SmallGroupTypeId");
+            _onsiteGroupTypeId = configurationWrapper.GetConfigIntValue("OnsiteGroupTypeId");
         }
 
         public List<Invitation> GetInvitations(int sourceId, int invitationTypeId, string token)
@@ -670,7 +675,6 @@ namespace crds_angular.Services
 
                 // order again in case proximties changed because of driving directions
                 groups = groups.OrderBy(r => r.Proximity ?? decimal.MaxValue).ToList();
-                groups = _groupService.RemoveOnsiteParticipants(groups);
             }
             catch (InvalidAddressException e)
             {
@@ -684,7 +688,15 @@ namespace crds_angular.Services
             return groups;
         }
 
+        public List<GroupDTO> GetGroupToolGroups(string token)
+        {
+            var groups = _groupService.GetGroupsForAuthenticatedUser(token, new int[] { _smallGroupTypeId, _onsiteGroupTypeId });
+            var participantRecord = _participantRepository.GetParticipantRecord(token);
 
+
+
+            return _groupService.RemoveOnsiteParticipantsIfNotLeader(groups, token);
+        }
 
         public void SubmitInquiry(string token, int groupId)
         {

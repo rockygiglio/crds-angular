@@ -43,8 +43,6 @@ namespace crds_angular.Services.Interfaces
 
         List<GroupDTO> GetGroupsForAuthenticatedUser(string token, int[] groupTypeIds);
 
-        int[] GetDefaultGroupTypeIds();
-
         List<GroupDTO> GetGroupByIdForAuthenticatedUser(string token, int groupId);
 
         GroupDTO UpdateGroup(GroupDTO @group);
@@ -55,6 +53,6 @@ namespace crds_angular.Services.Interfaces
 
         void SendParticipantsEmail(string token, List<GroupParticipantDTO> participants, string subject, string body);
 
-        List<GroupDTO> RemoveOnsiteParticipants(List<GroupDTO> groups);
+        List<GroupDTO> RemoveOnsiteParticipantsIfNotLeader(List<GroupDTO> groups, string token);
     }
 }

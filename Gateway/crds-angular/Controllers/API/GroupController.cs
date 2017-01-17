@@ -353,8 +353,7 @@ namespace crds_angular.Controllers.API
             {
                 try
                 {
-                    var groupTypeIds = _groupService.GetDefaultGroupTypeIds();
-                    var groups = _groupService.GetGroupsForAuthenticatedUser(token, groupTypeIds);
+                    var groups = _groupToolService.GetGroupToolGroups(token);
                     return Ok(groups);
                 }
                 catch (Exception ex)
