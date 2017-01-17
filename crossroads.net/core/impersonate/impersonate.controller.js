@@ -13,7 +13,7 @@
 
     this.startImpersonating = () => {
       this.processing = true;
-      $http.get(`${__API_ENDPOINT__}api/user?username=${this.username}`)
+      $http.get(`${__API_ENDPOINT__}api/user?username=${encodeURI(this.username).replace(/\+/g, '%2B')}`)
       .success((response) => {
         this.processing = false;
         this.error = false;

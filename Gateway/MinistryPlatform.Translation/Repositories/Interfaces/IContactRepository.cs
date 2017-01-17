@@ -24,5 +24,6 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
         List<Dictionary<string, object>> StaffContacts();
         MpContact CreateSimpleContact(string firstName, string lastName, string email, string dob, string mobile);
         List<MpRecordID> CreateContact(MpContact minorContact);
+        MpMyContact GetContactByUserRecordId(int userRecordId);
     }
 }

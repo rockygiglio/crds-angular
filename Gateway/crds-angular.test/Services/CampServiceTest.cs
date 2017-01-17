@@ -803,7 +803,74 @@ namespace crds_angular.test.Services
             Assert.DoesNotThrow(() => _fixture.SaveCamperMedicalInfo(medicalInfo, contactId, token));
         }
 
+        [Test]
+        public void ShouldSaveMedicalInfoWithAllNullValuesInMedsAdministered()
+        {
+            const string token = "theToken";
+            const int contactId = 123;
+            var medicalInfo = new MedicalInfoDTO
+            {
+                InsuranceCompany = "Ins. Co. Name",
+                PhysicianName = "bobby",
+                PhysicianPhone = "123-4567",
+                PolicyHolder = "your mom",
+                MedicationsAdministered = new List<string> { null, null, null, null },
+                Allergies = new List<Allergy>(),
+                Medications = new List<Medication>()
+            };
 
+            var updateToDictionary = new Dictionary<String, Object>
+            {
+                {"Contact_ID", contactId},
+                {"Medicalinformation_ID", 12676}
+            };
+
+            var myContact = new MpMyContact
+            {
+                Contact_ID = 999999,
+                Household_ID = 77777
+            };
+
+            var myHousehold = new List<MpHouseholdMember>
+            {
+                new MpHouseholdMember
+                {
+                    ContactId = contactId
+                }
+            };
+
+            var otherHousehold = new List<MpHouseholdMember>
+            {
+                new MpHouseholdMember
+                {
+                    ContactId = 5555555
+                }
+            };
+
+            _contactService.Setup(m => m.GetMyProfile(token)).Returns(myContact);
+            _contactService.Setup(m => m.GetHouseholdFamilyMembers(myContact.Household_ID)).Returns(myHousehold);
+            _contactService.Setup(m => m.GetOtherHouseholdMembers(myContact.Contact_ID)).Returns(otherHousehold);
+
+            _medicalInformationRepository.Setup(m => m.SaveMedicalInfo(It.IsAny<MpMedicalInformation>(), It.IsAny<int>())).Returns((MpMedicalInformation min, int cid) =>
+            {
+                Assert.AreEqual("", min.MedicationsAdministered);
+                return new MpMedicalInformation
+                {
+                    ContactId = 123,
+                    MedicalInformationId = 12676,
+                    InsuranceCompany = min.InsuranceCompany,
+                    PhysicianName = min.PhysicianName,
+                    PhysicianPhone = min.PhysicianPhone,
+                    PolicyHolder = min.PolicyHolder,
+                    MedicationsAdministered = min.MedicationsAdministered
+                };
+            });
+
+            _contactService.Setup(m => m.UpdateContact(contactId, updateToDictionary));
+            _medicalInformationRepository.Setup(m => m.UpdateOrCreateMedAllergy(It.IsAny<List<MpMedicalAllergy>>(), It.IsAny<List<MpMedicalAllergy>>()));
+
+            Assert.DoesNotThrow(() => _fixture.SaveCamperMedicalInfo(medicalInfo, contactId, token));
+        }
 
         [Test]
         public void shouldGetCamperMedicalInfo()
