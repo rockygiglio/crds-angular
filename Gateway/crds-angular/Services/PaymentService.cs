@@ -261,8 +261,7 @@ namespace crds_angular.Services
                 InvoiceDetailId = invoicedetail.InvoiceDetailId,
                 Payment = paymentReverse
             };
-            var detailt = _paymentRepository.CreatePaymentAndDetail(detail).Value.PaymentId;
-            return detailt;
+            return _paymentRepository.CreatePaymentAndDetail(detail).Value.PaymentId;
         }
 
         public void UpdateInvoiceStatusAfterDecline(int invoiceId)
