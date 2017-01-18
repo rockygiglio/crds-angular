@@ -40,13 +40,15 @@
     };
 
     authService.logout = function() {
-      $rootScope.email = null;
-      $rootScope.userPhone = null;
-      $rootScope.username = null;
-      $rootScope.userid = null;
-      $rootScope.roles = null;
-      $rootScope.canImpersonate = false;
       Session.clear();
+      Session.resetCredentials();
+      if ($rootScope.impersonation.active) {
+        $rootScope.impersonation = {
+          active: false,
+          loggedIn: undefined,
+          impersonated: undefined
+        };
+      }
       $rootScope.$broadcast(AUTH_EVENTS.logoutSuccess);
     };
 

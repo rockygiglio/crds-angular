@@ -128,6 +128,7 @@
       $cookies.remove('age');
       $http.defaults.headers.common.Authorization = undefined;
       $http.defaults.headers.common.RefreshToken = undefined;
+      $http.defaults.headers.common.ImpersonateUserId = undefined;
       return true;
     };
 
@@ -202,8 +203,8 @@
         vm.clearAndRedirect(event, stateName, stateToParams);
         vm.enableReactiveSso(event, stateName, stateData, stateToParams);
       } else {
-        $rootScope.userid = null;
-        $rootScope.username = null;
+        vm.clear();
+        vm.resetCredentials();
         vm.enableReactiveSso(event, stateName, stateData, stateToParams);
       }
       const deferred = $q.defer();
