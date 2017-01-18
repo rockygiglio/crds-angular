@@ -94,4 +94,13 @@ describe('Impersonate Controller', () => {
     expect(mockResponse.canImpersonate).toBe(false);
     expect(rootScope.canImpersonate).toBe(true);
   });
+
+  it('should not send impersonate headers after stopping impersonate', () => {
+    httpBackend.expectGET(`${window.__env__['CRDS_API_ENDPOINT']}api/user?username=${fixture.username}`).respond(200, mockResponse);
+    fixture.startImpersonating();
+    httpBackend.flush();
+
+    fixture.stopImpersonating();
+    expect(http.defaults.headers.common.ImpersonateUserId).toBeUndefined();
+  });
 });

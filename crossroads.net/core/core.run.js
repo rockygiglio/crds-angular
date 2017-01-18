@@ -82,7 +82,6 @@
         return;
       }
       Session.verifyAuthentication(event, toState.name, toState.data, toParams);
-      Session.enableReactiveSso(event, toState.name, toState.data, toParams);
     });
 
     $rootScope.$on('$stateChangeSuccess', (event, toState) => {
