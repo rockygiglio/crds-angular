@@ -1,4 +1,6 @@
 
+/* eslint-disable no-param-reassign */
+
 (() => {
   function openStayLoggedInModal($injector, $state, $modal) {
     // Only open if on a protected page? and the modal is not already shown.
@@ -184,7 +186,9 @@
           $cookies.put('userId', user.userId);
           $cookies.put('username', user.username);
           if (stateName === 'login') {
-            $state.go('profile.personal');
+            $state.go('content', {
+              link: '/'
+            });
             vm.enableReactiveSso(event, stateName, stateData, stateToParams);
           } else {
             vm.enableReactiveSso(event, stateName, stateData, stateToParams);
@@ -257,15 +261,12 @@
       } else if (!vm.isActive() && vm.wasLoggedIn === true) {
         vm.wasLoggedIn = false;
         if (stateData !== undefined && stateData.isProtected) {
-          vm.clearAndRedirect(event, stateName, stateToParams);
+          vm.clear();
+          vm.resetCredentials();
+          openStayLoggedInModal($injector, $state, $modal);
         } else {
           vm.clear();
-          $rootScope.userid = null;
-          $rootScope.username = null;
-          $rootScope.email = null;
-          $rootScope.phone = null;
-          $rootScope.roles = null;
-          $rootScope.canImpersonate = false;
+          vm.resetCredentials();
           if (!$rootScope.$$phase) {
             $rootScope.$apply();
           }
@@ -275,17 +276,21 @@
 
     vm.clearAndRedirect = (event, toState, toParams) => {                     
       vm.clear();
+      vm.resetCredentials();
+      vm.addRedirectRoute(toState, toParams);
+      if (event) {
+        event.preventDefault();
+      }
+      $state.go('login');
+    };
+
+    vm.resetCredentials = () => {
       $rootScope.userid = null;
       $rootScope.username = null;
       $rootScope.email = null;
       $rootScope.phone = null;
       $rootScope.roles = null;
       $rootScope.canImpersonate = false;
-      vm.addRedirectRoute(toState, toParams);
-      if (event) {
-        event.preventDefault();
-      }
-      $state.go('login');
     };
 
     vm.beOptimistic = false;

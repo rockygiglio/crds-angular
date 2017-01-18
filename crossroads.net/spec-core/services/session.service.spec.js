@@ -6,13 +6,14 @@ describe('Session Service', function() {
   var Session;
   var Injector;
   var rootScope;
+  var modal;
   var state;
   var cookieNames = require('crds-constants').COOKIES;
   var family = [0, 1, 2, 3, 4];
 
   beforeEach(angular.mock.module('crossroads.core'));
 
-  beforeEach(inject(function($injector, _$cookies_, _$rootScope_, _Session_) {
+  beforeEach(inject(function($injector, _$cookies_, _$rootScope_, _Session_, _$modal_) {
     $cookies = _$cookies_;
     state = $injector.get('$state');
     spyOn(state, 'go');
@@ -20,6 +21,7 @@ describe('Session Service', function() {
     Session = _Session_;
     Injector = $injector;
     rootScope = _$rootScope_;
+    modal = _$modal_;
   }));
 
   afterEach(function() {
@@ -51,9 +53,60 @@ describe('Session Service', function() {
 
   describe('function enableReactiveSso', function() {
 
+    var mockResponse = {
+      age: 0,
+      canImpersonate: true,
+      refreshToken: null,
+      roles: [],
+      userEmail: 'test@tester.com',
+      userId: 1234567,
+      userPhone: null,
+      userToken: 'Aadfwedrwererre',
+      userTokenExp: null,
+      username: 'Test'
+    };
+
     it('should create a setInterval to monitor cookie changes', function() {
       Session.enableReactiveSso();
       expect(Session.reactiveSsoInterval).toBeDefined();
+    });
+
+    it('should set credentials when login is detected', function() {
+      $cookies.put(cookieNames.SESSION_ID, mockResponse.userToken);
+      Backend.expectGET(window.__env__['CRDS_API_ENDPOINT'] + 'api/authenticated').respond(200, mockResponse);
+      Session.performReactiveSso();
+      Backend.flush();
+      expect(rootScope.userid).toBe(mockResponse.userId);
+      expect(rootScope.username).toBe(mockResponse.username);
+      expect(rootScope.email).toBe(mockResponse.userEmail);
+      expect(rootScope.phone).toBe(mockResponse.userPhone);
+    });
+
+    it('should clear credentials when logout is detected', function() {
+      Session.wasLoggedIn = true;
+      $cookies.remove(cookieNames.SESSION_ID);
+      Session.performReactiveSso();
+      expect(rootScope.userid).toBe(null);
+      expect(rootScope.username).toBe(null);
+      expect(rootScope.email).toBe(null);
+      expect(rootScope.phone).toBe(null);
+    });
+
+    it('should open login model when logout is detected on protected route', function() {
+      Session.wasLoggedIn = true;
+      spyOn(modal, 'open').and.callThrough();
+      state.current.data = {
+        isProtected: true
+      };
+      $cookies.remove(cookieNames.SESSION_ID);
+      Session.performReactiveSso(undefined, state.current.name, state.current.data, state.current.params);
+      expect(modal.open).toHaveBeenCalledWith({
+        templateUrl: 'stayLoggedInModal/stayLoggedInModal.html',
+        controller: 'StayLoggedInController as StayLoggedIn',
+        backdrop: 'static',
+        keyboard: false,
+        show: false,
+      });
     });
 
   });
@@ -106,7 +159,7 @@ describe('Session Service', function() {
         Backend.expectGET(window.__env__['CRDS_API_ENDPOINT'] + 'api/authenticated').respond(200, mockResponse);
         Session.verifyAuthentication(undefined, state.current.name, state.current.data, state.current.params);
         Backend.flush();
-        expect(state.go).toHaveBeenCalledWith('profile.personal');
+        expect(state.go).toHaveBeenCalledWith('content', { link: '/' });
       });
     });
 
