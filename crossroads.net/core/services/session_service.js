@@ -181,15 +181,24 @@
           $rootScope.canImpersonate = user.canImpersonate;
           $cookies.put('userId', user.userId);
           $cookies.put('username', user.username);
+          if (stateName === 'login') {
+            $state.go('profile.personal');
+            vm.enableReactiveSso(event, stateName, stateData, stateToParams);
+          } else {
+            vm.enableReactiveSso(event, stateName, stateData, stateToParams);
+          }
         }).error(() => {
           vm.clearAndRedirect(event, stateName, stateToParams);
+          vm.enableReactiveSso(event, stateName, stateData, stateToParams);
         });
         return promise;
       } else if (stateData !== undefined && stateData.isProtected) {
         vm.clearAndRedirect(event, stateName, stateToParams);
+        vm.enableReactiveSso(event, stateName, stateData, stateToParams);
       } else {
         $rootScope.userid = null;
         $rootScope.username = null;
+        vm.enableReactiveSso(event, stateName, stateData, stateToParams);
       }
       const deferred = $q.defer();
       deferred.reject('User is not logged in.');
@@ -210,7 +219,7 @@
     * Clears out the setInterval created by enableReactiveSso
     */
     vm.disableReactiveSso = () => {
-      $interval.cancel($rootScope.reactiveSsoInterval);
+      $interval.cancel(vm.reactiveSsoInterval);
     };
 
     /**
@@ -237,6 +246,9 @@
     * and a protected page, the user is redirected to the log in page.
     */
     vm.performReactiveSso = (event, stateName, stateData, stateToParams) => {
+      if ($rootScope.resolving || $rootScope.processing) {
+        return;
+      }
       if (vm.isActive() && vm.wasLoggedIn === false) {
         vm.verifyAuthentication(event, stateName, stateData, stateToParams);
         vm.wasLoggedIn = true;
