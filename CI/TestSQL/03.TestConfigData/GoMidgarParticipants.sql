@@ -20,7 +20,7 @@ set @startYear = @thisyear+'0101';
 --Add Cloud Strife to the GO Midgar child GROUP
 --do we really need to do this?
 DECLARE @subGroupID as int
-SET @subGroupID = select GROUP_ID from groups where group_name = @tripName + '(Trip Participants)';
+SET @subGroupID = (select GROUP_ID from groups where group_name = @tripName + '(Trip Participants)');
 
 INSERT INTO [dbo].Group_Participants 
 (Group_ID   ,Participant_ID,Group_Role_ID,Domain_ID,[Start_Date] ,End_Date,Employee_Role,Hours_Per_Week,Notes,__ExternalPersonGroupRoleID,__ExternalGroupRoleID,__CanManageEvents,__CanMANageMembers,__EmailOptOut,__ISAnonymous,__ServiceTimeID,_First_Attendance,_Second_Attendance,_Third_Attendance,_Last_Attendance) VALUES
@@ -45,13 +45,13 @@ INSERT INTO [dbo].Donations
 
 --Insert the Donation_Distribution.
 DECLARE @donationID as int
-SET @donationID = select donation_id from donations where donor_id = (select donor_record from contacts where email_address = 'mpcrds+CloudStrife@gmail.com');
+SET @donationID = (select donation_id from donations where donor_id = (select donor_record from contacts where email_address = 'mpcrds+CloudStrife@gmail.com'));
 
 DECLARE @programID as int
-SET @programID = select program_id from programs where program_name = @tripName;
+SET @programID = (select program_id from programs where program_name = @tripName);
 
 DECLARE @pledgeID as int
-SET @pledgeID = select pledge_id from pledges where donor_id = (select donor_record from contacts where Email_Address = 'mpcrds+CloudStrife@gmail.com');
+SET @pledgeID = (select pledge_id from pledges where donor_id = (select donor_record from contacts where Email_Address = 'mpcrds+CloudStrife@gmail.com'));
 
 INSERT INTO [dbo].donation_distributions 
 (Donation_ID ,Amount  ,Program_ID ,Pledge_ID ,Target_Event,Soft_Credit_Donor,Notes,Domain_ID,__ExternalContributionID,__ExternalCommitmentID,Congregation_ID) VALUES
