@@ -178,7 +178,9 @@
           $rootScope.email = user.userEmail;
           $rootScope.phone = user.userPhone;
           $rootScope.roles = user.roles;
-          $rootScope.canImpersonate = user.canImpersonate;
+          if ($rootScope.impersonation.active === false) {
+            $rootScope.canImpersonate = user.canImpersonate;
+          }
           $cookies.put('userId', user.userId);
           $cookies.put('username', user.username);
         }).error(() => {
