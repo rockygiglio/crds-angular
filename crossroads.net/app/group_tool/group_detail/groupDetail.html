@@ -10,7 +10,7 @@
   <li role='tab' class='dropdown hidden-md hidden-lg hidden-sm dropdown-toggle' dropdown is-open='status.isopen'>
     <a dropdown-toggle ng-disabled='disabled'>More <span class='caret'></span></a>
     <ul class='dropdown-menu' role='menu'>
-      <li ng-repeat='tab in groupDetail.tabs | filter:tab.title === "About"'><a href='' ng-click='groupDetail.goToTab(tab)'>{{tab.title}}</a>
+      <li ng-repeat='tab in groupDetail.tabs | filter:tab.title === "About"' ng-if='!tab.hide'><a href='' ng-click='groupDetail.goToTab(tab)'>{{tab.title}}</a>
       </li>
     </ul>
   </li>
