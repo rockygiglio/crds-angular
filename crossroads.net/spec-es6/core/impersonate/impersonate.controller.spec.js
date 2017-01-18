@@ -7,31 +7,37 @@ describe('Impersonate Controller', () => {
   let httpBackend;
   let cookies;
   let fixture;
+  let Session;
 
   const mockUser = {
     userId: 1,
     username: 'Sam',
-    userEmail: 'sam@schmoe.com'
+    userEmail: 'sam@schmoe.com',
+    canImpersonate: true
   }
 
   const mockResponse = {
     userId: 2,
     username: 'Joe',
-    userEmail: 'joe@schmoe.com'
+    userEmail: 'joe@schmoe.com',
+    canImpersonate: false
   };
 
   beforeEach(angular.mock.module('crossroads.core'));
-  beforeEach(inject(function ($injector, _$cookies_, _$rootScope_) {
+  beforeEach(inject(function ($injector, _$cookies_, _$rootScope_, _Session_) {
     rootScope = _$rootScope_;
     rootScope.canImpersonate = true;
     http = $injector.get('$http');
     httpBackend = $injector.get('$httpBackend');
     cookies = _$cookies_;
+    Session = _Session_;
+
     fixture = new ImpersonateController(rootScope, http, cookies);
-    fixture.username = mockResponse.username;
-    rootScope.userid = mockUser.userId;
-    rootScope.username = mockUser.username;
-    rootScope.email = mockUser.userEmail;
+    
+    cookies.put(constants.COOKIES.SESSION_ID, 'testsession');
+    httpBackend.expectGET(`${window.__env__['CRDS_API_ENDPOINT']}api/authenticated`).respond(200, mockUser);
+    Session.verifyAuthentication(undefined, undefined, undefined, undefined);
+    httpBackend.flush();
   }));
 
   afterEach(() => {
@@ -74,6 +80,19 @@ describe('Impersonate Controller', () => {
     expect(rootScope.userid).toBe(mockUser.userId);
     expect(rootScope.username).toBe(mockUser.username);
     expect(rootScope.email).toBe(mockUser.userEmail);
+  });
+
+  it('should NOT overwrite canImpersonate flag when impersonating', () => {
+    httpBackend.expectGET(`${window.__env__['CRDS_API_ENDPOINT']}api/user?username=${fixture.username}`).respond(200, mockResponse);
+    fixture.startImpersonating();
+    httpBackend.flush();
+
+    httpBackend.expectGET(`${window.__env__['CRDS_API_ENDPOINT']}api/authenticated`).respond(200, mockResponse);
+    Session.verifyAuthentication(undefined, undefined, undefined, undefined);
+    httpBackend.flush();
+
+    expect(mockResponse.canImpersonate).toBe(false);
+    expect(rootScope.canImpersonate).toBe(true);
   });
 
   it('should not send impersonate headers after stopping impersonate', () => {
