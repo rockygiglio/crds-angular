@@ -19,6 +19,7 @@ GO
 -- Update:      1/18/2017 - Charlie Retzler - Reimplemented temporary fix to allow for IM IN campaign on statements 
 --                          without duplicating each contribution amount. Until root problem is solved do NOT pass 
 --                          in @CampaignIDs or the statements may count each donation more than once
+-- Update:      1/18/2017 - Charlie Retzler - Setting On_Pledge so it shows in report
 -- =============================================
 
 ALTER PROCEDURE [dbo].[report_CRDS_Donor_Statement_N_Columns]
@@ -548,7 +549,9 @@ FROM #Gifts g
 
 -- Get Campaign Name again since we didn't use the original logic in #PL and #PLAmt
 UPDATE g
-	SET g.Campaign_Name = PC.Campaign_Name
+	SET 
+		g.Campaign_Name = PC.Campaign_Name
+		, g.On_Pledge = 'Yes'
 FROM #Gifts g
 	INNER JOIN Pledges P ON P.Pledge_ID = g.Pledge_ID
 	INNER JOIN Pledge_Campaigns PC ON P.Pledge_Campaign_ID = PC.Pledge_Campaign_ID	
