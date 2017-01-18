@@ -20,9 +20,18 @@ DECLARE @tripStart as varchar(19)
 set @tripStart = @thisyear+'1225';
 
 --Group for (t) GO Midgar
+--http://crossroads.knowledgeowl.com/help/create-edit-go-trip-groups 
 INSERT INTO [dbo].groups 
-(Group_Name,Group_Type_ID,Ministry_ID,Congregation_ID,Primary_Contact,[Description],[Start_Date]                     ,End_Date                       ,Target_Size,Parent_Group,Priority_ID,Enable_Waiting_List,Small_Group_Information,Offsite_Meeting_Address,Group_Is_Full,Available_Online,Life_Stage_ID,Group_Focus_ID,Meeting_Time,Meeting_Day_ID,Descended_From,Reason_Ended,Domain_ID,Check_in_Information,[Secure_Check-in],Suppress_Nametag,Suppress_Care_Note,On_Classroom_Manager,Promotion_Information,Promote_to_Group,Age_in_Months_to_Promote,Promote_Weekly,__ExternalGroupID,__ExternalParentGroupID,__IsPublic,__ISBlogEnabled,__ISWebEnabled,Group_Notes,Sign_Up_To_Serve,Deadline_Passed_Message_ID) VALUES
-(@tripName ,6            ,20         ,5              ,2562378        ,null         ,CAST(@startYear as smalldatetime),CAST(@endYear as smalldatetime),null       ,null        ,null       ,null               ,null                   ,null                   ,0            ,null            ,null         ,null          ,null        ,null          ,null          ,null        ,1        ,null                ,0                ,null            ,0                 ,null                ,null                 ,null            ,null                    ,null          ,null             ,null                   ,null      ,null           ,null          ,null       ,null            ,null                      );
+(Group_Name,Group_Type_ID,Ministry_ID,Congregation_ID,Primary_Contact,[Description],[Start_Date]                     ,End_Date,Target_Size,Parent_Group,Priority_ID,Enable_Waiting_List,Small_Group_Information,Offsite_Meeting_Address,Group_Is_Full,Available_Online,Life_Stage_ID,Group_Focus_ID,Meeting_Time,Meeting_Day_ID,Descended_From,Reason_Ended,Domain_ID,Check_in_Information,[Secure_Check-in],Suppress_Nametag,Suppress_Care_Note,On_Classroom_Manager,Promotion_Information,Promote_to_Group,Age_in_Months_to_Promote,Promote_Weekly,__ExternalGroupID,__ExternalParentGroupID,__IsPublic,__ISBlogEnabled,__ISWebEnabled,Group_Notes,Sign_Up_To_Serve,Deadline_Passed_Message_ID) VALUES
+(@tripName ,6            ,20         ,5              ,2562378        ,null         ,CAST(@startYear as smalldatetime),null    ,null       ,null        ,null       ,null               ,null                   ,null                   ,0            ,1               ,null         ,null          ,null        ,null          ,null          ,null        ,1        ,null                ,0                ,null            ,0                 ,null                ,null                 ,null            ,null                    ,null          ,null             ,null                   ,null      ,null           ,null          ,null       ,null            ,null                      );
+
+--Group for (t) GO Midgar Participants, Go Midgar Group as parent
+declare @parentGroup as int
+set @parentGroup = select Group_ID from Groups where Group_Name = @tripName;
+
+INSERT INTO [dbo].groups 
+(Group_Name                         ,Group_Type_ID,Ministry_ID,Congregation_ID,Primary_Contact,[Description],[Start_Date]                     ,End_Date,Target_Size,Parent_Group,Priority_ID,Enable_Waiting_List,Small_Group_Information,Offsite_Meeting_Address,Group_Is_Full,Available_Online,Life_Stage_ID,Group_Focus_ID,Meeting_Time,Meeting_Day_ID,Descended_From,Reason_Ended,Domain_ID,Check_in_Information,[Secure_Check-in],Suppress_Nametag,Suppress_Care_Note,On_Classroom_Manager,Promotion_Information,Promote_to_Group,Age_in_Months_to_Promote,Promote_Weekly,__ExternalGroupID,__ExternalParentGroupID,__IsPublic,__ISBlogEnabled,__ISWebEnabled,Group_Notes,Sign_Up_To_Serve,Deadline_Passed_Message_ID) VALUES
+(@tripName + ' (Trip Participants)' ,6            ,20         ,5              ,2562378        ,null         ,CAST(@startYear as smalldatetime),null    ,null       ,@parentGroup,null       ,null               ,null                   ,null                   ,0            ,1               ,null         ,null          ,null        ,null          ,null          ,null        ,1        ,null                ,0                ,null            ,0                 ,null                ,null                 ,null            ,null                    ,null          ,null             ,null                   ,null      ,null           ,null          ,null       ,null            ,null                      );
 
 --Pledge Campaign for (t) GO Midgar
 SET IDENTITY_INSERT [dbo].[Pledge_Campaigns] ON;
@@ -32,9 +41,14 @@ DECLARE @pledge_id as int
 set @pledge_id = IDENT_CURRENT('Pledge_Campaigns');
 
 --Insert large ID so we always know the id for this trip. South Africa is the nickname as the data on the form is driven by nickname.
+--http://crossroads.knowledgeowl.com/help/create-edit-go-trip-pledge-campaign
+--do we need a fundraising goal?
+DECLARE @formID as int
+SET @formID = select form_id from Forms where form_title = 'GO Trip Application';
+
 INSERT INTO [dbo].Pledge_Campaigns 
-(Pledge_Campaign_ID,Campaign_Name,Nickname        ,Pledge_Campaign_Type_ID,[Description]                  ,Campaign_Goal,[Start_Date]                     ,End_Date                         ,Domain_ID,Event_ID,Program_ID,Destination_id,Registration_Details,Registration_Start               ,Registration_End                ,Maximum_Registrants,Youngest_Age_Allowed,Registration_Deposit,Fundraising_Goal,Registration_Form                                                           ,Online_Pledge_Details,Allow_Online_Pledge,Online_Thank_You_Message,Pledge_Beyond_End_Date,Show_On_My_Pledges,__ExternalTripID,__ExternalFundID) VALUES
-(10000000          ,@tripName    ,'South Africa'  ,2                      ,'Church Mobilization - Midgar' ,5000.00      ,CAST(@startYear as smalldatetime),CAST(@tripStart as smalldatetime),1        ,null    ,null      ,2             ,null                ,CAST(@startYear as smalldatetime),CAST(@endYear as smalldatetime) ,null               ,17                  ,300.0000            ,0.0000          ,(select form_id from Forms where form_title = 'GO Trip Application'),null                 ,1                  ,null                    ,0                     ,0                 ,40              ,99              );
+(Pledge_Campaign_ID,Campaign_Name,Nickname        ,Pledge_Campaign_Type_ID,[Description]                  ,Campaign_Goal,[Start_Date]                     ,End_Date                         ,Domain_ID,Event_ID,Program_ID,Destination_id,Registration_Details,Registration_Start               ,Registration_End                 ,Maximum_Registrants,Youngest_Age_Allowed,Registration_Deposit,Fundraising_Goal,Registration_Form ,Online_Pledge_Details,Allow_Online_Pledge,Online_Thank_You_Message,Pledge_Beyond_End_Date,Show_On_My_Pledges,__ExternalTripID,__ExternalFundID) VALUES
+(10000000          ,@tripName    ,'South Africa'  ,2                      ,'Church Mobilization - Midgar' ,5000.00      ,CAST(@startYear as smalldatetime),CAST(@tripStart as smalldatetime),1        ,null    ,null      ,2             ,null                ,CAST(@startYear as smalldatetime),CAST(@tripStart as smalldatetime),null               ,17                  ,300.0000            ,0.0000          ,@formID           ,null                 ,0                  ,null                    ,0                     ,0                 ,40              ,99              );
 
 SET IDENTITY_INSERT [dbo].[Pledge_Campaigns] OFF;
 
@@ -60,8 +74,11 @@ update [dbo].Pledge_Campaigns set program_id = (select program_id from programs 
 update [dbo].programs set pledge_campaign_id = (select pledge_campaign_id from pledge_campaigns where campaign_name = @tripName) where program_name = @tripName;
 update [dbo].Pledge_Campaigns set Event_ID = (select Event_ID from Events where Event_Title = @tripName) where campaign_name = @tripName;
 
---link the group to the event. We should probably have more than one group 
+--link the group to the event.
+DECLARE @subGroupID as int
+SET @subGroupID = select GROUP_ID from groups where group_name = @tripName + '(Trip Participants)';
+
 INSERT INTO [dbo].EVENT_GROUPS
-(EVENT_ID                                                   ,GROUP_ID                                                   ,Room_ID, Domain_ID) VALUES
-((select event_id from events where event_title = @tripName), (select GROUP_ID from groups where group_name = @tripName),null   , 1        );
+(EVENT_ID                                                   , GROUP_ID   ,Room_ID, Domain_ID) VALUES
+((select event_id from events where event_title = @tripName), @subGroupID,null   , 1        );
 GO
