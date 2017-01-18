@@ -23,6 +23,7 @@ namespace crds_angular.Controllers.API
     {
         private readonly ILog _logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         private readonly Services.Interfaces.IGroupToolService _groupToolService;
+
         private readonly int _defaultGroupTypeId;
         private readonly IConfigurationWrapper _configurationWrapper;
 
@@ -32,7 +33,7 @@ namespace crds_angular.Controllers.API
         {
             _groupToolService = groupToolService;
             _configurationWrapper = configurationWrapper;
-            _defaultGroupTypeId = _configurationWrapper.GetConfigIntValue("GroupTypeSmallId");
+            _defaultGroupTypeId = _configurationWrapper.GetConfigIntValue("SmallGroupTypeId");
         }
 
         /// <summary>
@@ -147,11 +148,10 @@ namespace crds_angular.Controllers.API
         /// <param name="removalMessage">An optional message to send to the participant when they are removed.  This is sent along with a boilerplate message.</param>
         /// <returns>An empty response with 200 status code if everything worked, 403 if the caller does not have permission to remove a participant, or another non-success status code on any other failure</returns>
         [RequiresAuthorization]
-        [VersionedRoute(template: "group-tool/group-type/{groupTypeId}/group/{groupId}/participant/{groupParticipantId}", minimumVersion: "1.0.0")]
-        [Route("grouptool/grouptype/{groupTypeId:int}/group/{groupId:int}/participant/{groupParticipantId:int}")]
+        [VersionedRoute(template: "group-tool/group/{groupId}/participant/{groupParticipantId}", minimumVersion: "1.0.0")]
+        [Route("grouptool/group/{groupId:int}/participant/{groupParticipantId:int}")]
         [HttpDelete]
-        public IHttpActionResult RemoveParticipantFromMyGroup([FromUri] int groupTypeId,
-                                                              [FromUri] int groupId,
+        public IHttpActionResult RemoveParticipantFromMyGroup([FromUri] int groupId,
                                                               [FromUri] int groupParticipantId,
                                                               [FromUri(Name = "removalMessage")] string removalMessage = null)
         {
@@ -159,7 +159,7 @@ namespace crds_angular.Controllers.API
             {
                 try
                 {
-                    _groupToolService.RemoveParticipantFromMyGroup(token, groupTypeId, groupId, groupParticipantId, removalMessage);
+                    _groupToolService.RemoveParticipantFromMyGroup(token, groupId, groupParticipantId, removalMessage);
                     return Ok();
                 }
                 catch (GroupParticipantRemovalException e)
@@ -182,18 +182,18 @@ namespace crds_angular.Controllers.API
         /// <param name="keywords">The optional keywords to search for</param>
         /// <param name="location">The optional location/address to search for - if specified, the search results will include approximate distances from this address</param>
         /// <returns>A list of groups matching the terms</returns>
-        [VersionedRoute(template: "groupTool/groupType/{groupTypeId}/group/search", minimumVersion: "1.0.0")]
-        [Route("grouptool/grouptype/{groupTypeId:int}/group/search/")]
+        [VersionedRoute(template: "groupTool/group/search", minimumVersion: "1.0.0")]
+        [Route("grouptool/group/search/")]
         [ResponseType(typeof(List<GroupDTO>))]
         [HttpGet]
-        public IHttpActionResult SearchGroups([FromUri] int groupTypeId,
+        public IHttpActionResult SearchGroups([FromUri] int[] groupTypeIds,
                                               [FromUri(Name = "s")] string keywords = null,
                                               [FromUri(Name = "loc")] string location = null,
                                               [FromUri(Name = "id")] int? groupId = null)
         {
             try
             {
-                var result = _groupToolService.SearchGroups(groupTypeId, keywords, location, groupId);
+                var result = _groupToolService.SearchGroups(groupTypeIds, keywords, location, groupId);
                 if (result == null || !result.Any())
                 {
                     return RestHttpActionResult<List<GroupDTO>>.WithStatus(HttpStatusCode.NotFound, new List<GroupDTO>());
@@ -350,10 +350,10 @@ namespace crds_angular.Controllers.API
         /// <returns>MyGroup</returns>
         [RequiresAuthorization]
         [ResponseType(typeof(MyGroup))]
-        [VersionedRoute(template: "group-tool/{groupId}/{groupTypeId}/is-leader", minimumVersion: "1.0.0")]
-        [Route("grouptool/{groupId}/{groupTypeId}/isleader")]
+        [VersionedRoute(template: "group-tool/{groupId}/is-leader", minimumVersion: "1.0.0")]
+        [Route("grouptool/{groupId}/isleader")]
         [HttpGet]
-        public IHttpActionResult GetIfIsGroupLeader(int groupId, int groupTypeId)
+        public IHttpActionResult GetIfIsGroupLeader(int groupId)
         {
             return Authorized(token =>
             {

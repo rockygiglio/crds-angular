@@ -21,6 +21,7 @@ export default class GroupCardController {
         descriptionLine2: CONSTANTS.GROUP.EMAIL.COPY_EMAIL_DESCRIPTION_LINE2,
         icon: CONSTANTS.GROUP.EMAIL.COPY_EMAIL_ICON
       });
+    this.onsiteGroupId = CONSTANTS.GROUP.GROUP_TYPE_ID.ONSITE_GROUPS;
   }
 
   $onInit() {

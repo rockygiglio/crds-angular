@@ -103,7 +103,7 @@ namespace MinistryPlatform.Translation.Test.Services
         [Test]
         public void TestSearchGroupsNoKeywords()
         {
-            const int groupTypeId = 567;
+            int[] groupTypeId = new int[] { 567 };
             const string token = "abc123";
             _apiUserRepository.Setup(mocked => mocked.GetToken()).Returns(token);
             var searchResults = new List<List<MpGroupSearchResultDto>>
@@ -117,7 +117,7 @@ namespace MinistryPlatform.Translation.Test.Services
             _ministryPlatformRestRepository.Setup(
                 mocked =>
                     mocked.GetFromStoredProc<MpGroupSearchResultDto>(GroupToolRepository.SearchGroupsProcName,
-                                                                     It.Is<Dictionary<string, object>>(parms => parms.Count == 1 && parms["@GroupTypeId"].Equals(groupTypeId)))).Returns(searchResults);
+                                                                     It.Is<Dictionary<string, object>>(parms => parms.Count == 1 && parms["@GroupTypeId"].Equals(String.Join(",", groupTypeId))))).Returns(searchResults);
 
             var results = _fixture.SearchGroups(groupTypeId);
             _apiUserRepository.VerifyAll();
@@ -129,7 +129,7 @@ namespace MinistryPlatform.Translation.Test.Services
         public void TestSearchGroups()
         {
             var keywords = new[] {"keyword1", "keyword2"};
-            const int groupTypeId = 567;
+            int[] groupTypeId = new int[] { 567 };
             const string token = "abc123";
             _apiUserRepository.Setup(mocked => mocked.GetToken()).Returns(token);
             var searchResults = new List<List<MpGroupSearchResultDto>>
@@ -145,7 +145,36 @@ namespace MinistryPlatform.Translation.Test.Services
                     mocked.GetFromStoredProc<MpGroupSearchResultDto>(GroupToolRepository.SearchGroupsProcName,
                                                                      It.Is<Dictionary<string, object>>(
                                                                          parms =>
-                                                                             parms.Count == 2 && parms["@GroupTypeId"].Equals(groupTypeId) &&
+                                                                             parms.Count == 2 && parms["@GroupTypeId"].Equals(String.Join(",", groupTypeId)) &&
+                                                                             parms["@SearchString"].Equals(string.Join(",", keywords))))).Returns(searchResults);
+
+            var results = _fixture.SearchGroups(groupTypeId, keywords);
+            _apiUserRepository.VerifyAll();
+            _ministryPlatformRestRepository.VerifyAll();
+            Assert.AreSame(searchResults[0], results);
+        }
+
+        [Test]
+        public void TestSearchGroupsMultipleTypes()
+        {
+            var keywords = new[] { "keyword1", "keyword2" };
+            int[] groupTypeId = new int[] { 567, 123 };
+            const string token = "abc123";
+            _apiUserRepository.Setup(mocked => mocked.GetToken()).Returns(token);
+            var searchResults = new List<List<MpGroupSearchResultDto>>
+            {
+                new List<MpGroupSearchResultDto>
+                {
+                    new MpGroupSearchResultDto()
+                }
+            };
+            _ministryPlatformRestRepository.Setup(mocked => mocked.UsingAuthenticationToken(token)).Returns(_ministryPlatformRestRepository.Object);
+            _ministryPlatformRestRepository.Setup(
+                mocked =>
+                    mocked.GetFromStoredProc<MpGroupSearchResultDto>(GroupToolRepository.SearchGroupsProcName,
+                                                                     It.Is<Dictionary<string, object>>(
+                                                                         parms =>
+                                                                             parms.Count == 2 && parms["@GroupTypeId"].Equals(String.Join(",", groupTypeId)) &&
                                                                              parms["@SearchString"].Equals(string.Join(",", keywords))))).Returns(searchResults);
 
             var results = _fixture.SearchGroups(groupTypeId, keywords);

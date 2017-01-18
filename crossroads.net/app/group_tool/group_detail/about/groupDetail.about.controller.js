@@ -1,3 +1,4 @@
+import CONSTANTS from 'crds-constants';
 
 export default class GroupDetailAboutController {
   /*@ngInject*/
