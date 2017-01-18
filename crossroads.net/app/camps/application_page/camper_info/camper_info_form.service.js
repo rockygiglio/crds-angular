@@ -1,3 +1,4 @@
+// eslint-disable-next-line import/no-extraneous-dependencies, import/no-unresolved, import/extensions
 import crdsConstants from 'crds-constants';
 import find from 'lodash/collection/find';
 
@@ -62,7 +63,7 @@ class CamperInfoForm {
 
   save(campId) {
     // Find the actual single attribute shirt size from the forml selected attribute id
-    const selected = find(this.campsService.shirtSizes, (each) => { return each.attributeId === this.formModel.shirtSize });
+    const selected = find(this.campsService.shirtSizes, each => each.attributeId === this.formModel.shirtSize);
 
     // Set the shirt size single attribute on the DTO to be submitted to the API
     this.formModel.singleAttributes[crdsConstants.ATTRIBUTE_TYPE_IDS.TSHIRT_SIZES] = {
@@ -150,7 +151,7 @@ class CamperInfoForm {
             key: 'birthDate',
             type: 'crdsDatepicker',
             templateOptions: {
-              label: 'Birth Date',
+              label: 'Birth Date (mm/dd/yyyy)',
               required: true,
               type: 'text',
               datepickerPopup: 'MM/dd/yyyy'
@@ -262,6 +263,7 @@ class CamperInfoForm {
               options: []
             },
             controller: /* @ngInject */ ($scope, CampsService) => {
+              // eslint-disable-next-line no-param-reassign
               $scope.to.options = CampsService.shirtSizes;
             }
           }

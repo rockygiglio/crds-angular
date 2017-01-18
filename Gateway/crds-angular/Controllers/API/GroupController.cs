@@ -32,7 +32,8 @@ namespace crds_angular.Controllers.API
                                IParticipantRepository participantService,
                                IAddressService addressService,
                                IGroupSearchService groupSearchService,
-                               IGroupToolService groupToolService)
+                               IGroupToolService groupToolService, 
+                               IUserImpersonationService userImpersonationService) : base(userImpersonationService)
         {
             _groupService = groupService;
             _authenticationService = authenticationService;

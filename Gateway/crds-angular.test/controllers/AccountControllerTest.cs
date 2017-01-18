@@ -40,7 +40,7 @@ namespace crds_angular.test.controllers
             _accountService = new Mock<IAccountService>();
             _accountService.Setup(m => m.ChangePassword(It.IsAny<string>(), It.IsAny<string>())).Returns(true);
             
-            accountController = new AccountController(_accountService.Object);   
+            accountController = new AccountController(_accountService.Object, new Mock<IUserImpersonationService>().Object);   
         }
 
         [Test]

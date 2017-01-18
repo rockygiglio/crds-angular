@@ -7,7 +7,8 @@
             ng-click="datepicker.open($event)"
             uib-datepicker-popup="{{to.datepickerOptions.format}}"
             is-open="datepicker.opened"
-            datepicker-options="to.datepickerOptions" />
+            datepicker-options="to.datepickerOptions"
+            placeholder="{{to.datepickerOptions.format.toLowerCase()}}" />
     <span class="input-group-btn">
         <button type="button" class="btn btn-default" ng-click="datepicker.open($event)" ng-disabled="to.disabled"><i class="glyphicon glyphicon-calendar"></i></button>
     </span>

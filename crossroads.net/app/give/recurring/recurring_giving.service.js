@@ -200,7 +200,7 @@
 
           failure();
         });
-      } else if (recurringGiveForm.donationDetailsForm.$dirty) {
+      } else if (recurringGiveForm.donationDetailsForm && recurringGiveForm.donationDetailsForm.$dirty) {
         // Credit card or bank account info was not touched so do not update token from strip
         DonationService.updateRecurringGift(false, impersonateDonorId).then(function() {
           success();

@@ -19,7 +19,7 @@ namespace crds_angular.test.controllers
         public void SetUp()
         {
             _groupService = new Mock<IGroupService>(MockBehavior.Strict);
-            _fixture = new ParticipantController(_groupService.Object);
+            _fixture = new ParticipantController(_groupService.Object, new Mock<IUserImpersonationService>().Object);
 
             _fixture.SetupAuthorization(AuthType, AuthToken);
         }

@@ -21,6 +21,7 @@
   require('./app.core.module');
   require('./login');
   require('./logout');
+  require('./impersonate');
 
   // Common Components
   require('./components/btnLoading.directive');

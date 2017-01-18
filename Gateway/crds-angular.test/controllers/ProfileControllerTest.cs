@@ -53,7 +53,7 @@ namespace crds_angular.test.controllers
 
             _config.Setup(mocked => mocked.GetConfigValue("AdminGetProfileRoles")).Returns("123,456");
 
-            _fixture = new ProfileController(_personServiceMock.Object, _serveServiceMock.Object, _impersonationService.Object, _donorService.Object, _authenticationService.Object, _userService.Object, _contactRelationshipService.Object, _config.Object);
+            _fixture = new ProfileController(_personServiceMock.Object, _serveServiceMock.Object, _impersonationService.Object, _donorService.Object, _authenticationService.Object, _userService.Object, _contactRelationshipService.Object, _config.Object, new Mock<IUserImpersonationService>().Object);
             _authenticationServiceMock = new Mock<IAuthenticationRepository>();
 
             _authType = "auth_type";

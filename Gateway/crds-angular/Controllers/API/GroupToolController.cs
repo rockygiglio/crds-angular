@@ -12,6 +12,7 @@ using crds_angular.Models.Crossroads.Attribute;
 using crds_angular.Models.Crossroads.Groups;
 using crds_angular.Models.Json;
 using crds_angular.Security;
+using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Interfaces;
 using log4net;
 using Crossroads.ApiVersioning;
@@ -27,7 +28,8 @@ namespace crds_angular.Controllers.API
         private readonly IConfigurationWrapper _configurationWrapper;
 
         public GroupToolController(Services.Interfaces.IGroupToolService groupToolService,
-                                   IConfigurationWrapper configurationWrapper)
+                                   IConfigurationWrapper configurationWrapper, 
+                                   IUserImpersonationService userImpersonationService) : base(userImpersonationService)
         {
             _groupToolService = groupToolService;
             _configurationWrapper = configurationWrapper;

@@ -42,7 +42,7 @@ namespace crds_angular.test.controllers
             _messageQueryFactoryMock = new Mock<IMessageQueueFactory>();
             _configurationMock = new Mock<IConfigurationWrapper>();
 
-            _fixture = new ServeController(_serveServiceMock.Object, _configurationMock.Object, _messageFactoryMock.Object, _messageQueryFactoryMock.Object);
+            _fixture = new ServeController(_serveServiceMock.Object, _configurationMock.Object, _messageFactoryMock.Object, _messageQueryFactoryMock.Object, new Mock<IUserImpersonationService>().Object);
 
             _authType = "auth_type";
             _authToken = "auth_token";

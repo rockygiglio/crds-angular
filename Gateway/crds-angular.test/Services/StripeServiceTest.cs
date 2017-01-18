@@ -61,10 +61,12 @@ namespace crds_angular.test.Services
                     new StripeCharge
                     {
                         Id = "123",
+                        Type = "payment_refund"
                     },
                     new StripeCharge
                     {
                         Id = "last_one_in_first_page",
+                        Type = "payment"
                     }
                 }
             });
@@ -76,10 +78,12 @@ namespace crds_angular.test.Services
                     new StripeCharge
                     {
                         Id = "789",
+                        Type = "payment"
                     },
                     new StripeCharge
                     {
                         Id = "90210",
+                        Type = "payment"
                     }
                 }
             });
