@@ -61,7 +61,7 @@
       }
       $rootScope.impersonation.active = active;
       $rootScope.impersonation.impersonated = loginReturn;
-      $http.defaults.headers.common.ImpersonateUserId = this.username;
+      $http.defaults.headers.common.ImpersonateUserId = loginReturn ? this.username : undefined;
     };
   }
 
