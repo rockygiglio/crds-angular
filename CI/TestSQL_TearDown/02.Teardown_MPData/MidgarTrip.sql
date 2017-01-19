@@ -63,7 +63,7 @@ delete from Group_Participants where group_id in (select group_id from groups wh
 
 delete from Program_groups where program_id in (Select program_id from programs where program_name = @tripName);
 
-update Groups set parent_group = NULL where group_id in (select group_id from groups where group_name = @tripName);
+update Groups set parent_group = NULL where group_id in (select group_id from groups where group_name like @tripName + '%');
 
 delete from Groups where group_id in (select group_id from groups where group_name like @tripName + '%');
 
