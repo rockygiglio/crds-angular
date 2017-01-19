@@ -1,8 +1,9 @@
 USE [MinistryPlatform]
 GO
 
+--Retrieve name of trip in case create occurred in a year prior to teardown
 DECLARE @tripName AS VARCHAR(18)
-set @tripName = '(t) GO Midgar '+CONVERT(VARCHAR(4), datepart(year, getdate()));
+set @tripName = (select event_title from events where event_title like '(t) GO Midgar%');
 
 DECLARE @pledgeCampaignId as int
 set @pledgeCampaignId = (select top 1 pledge_campaign_id from Pledge_Campaigns where Campaign_name = @tripName);
@@ -58,11 +59,13 @@ delete from cr_Campaign_Private_Invitation where pledge_campaign_id = @pledgeCam
 
 delete from pledges where pledge_campaign_id = @pledgeCampaignId;
 
-delete from Group_Participants where group_id in (select group_id from groups where group_name = @tripName);
+delete from Group_Participants where group_id in (select group_id from groups where group_name like @tripName + '%');
 
 delete from Program_groups where program_id in (Select program_id from programs where program_name = @tripName);
 
-delete from Groups where group_id in (select group_id from groups where group_name = @tripName);
+update Groups set parent_group = NULL where group_id in (select group_id from groups where group_name = @tripName);
+
+delete from Groups where group_id in (select group_id from groups where group_name like @tripName + '%');
 
 delete from GL_Account_Mapping where program_id in (select program_id from programs where program_name = @tripName);
 
