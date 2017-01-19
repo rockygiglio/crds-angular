@@ -20,7 +20,7 @@ set @startYear = @thisyear+'0101';
 --Add Cloud Strife to the GO Midgar child GROUP
 --do we really need to do this?
 DECLARE @subGroupID as int
-SET @subGroupID = (select GROUP_ID from groups where group_name = @tripName + '(Trip Participants)');
+SET @subGroupID = (select GROUP_ID from groups where group_name = @tripName + ' (Trip Participants)');
 
 INSERT INTO [dbo].Group_Participants 
 (Group_ID   ,Participant_ID,Group_Role_ID,Domain_ID,[Start_Date] ,End_Date,Employee_Role,Hours_Per_Week,Notes,__ExternalPersonGroupRoleID,__ExternalGroupRoleID,__CanManageEvents,__CanMANageMembers,__EmailOptOut,__ISAnonymous,__ServiceTimeID,_First_Attendance,_Second_Attendance,_Third_Attendance,_Last_Attendance) VALUES
