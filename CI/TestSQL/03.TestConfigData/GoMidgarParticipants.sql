@@ -20,7 +20,7 @@ set @startYear = @thisyear+'0101';
 --Add Cloud Strife to the GO Midgar child GROUP
 --do we really need to do this?
 DECLARE @subGroupID as int
-SET @subGroupID = (select GROUP_ID from groups where group_name = @tripName + '(Trip Participants)');
+SET @subGroupID = (select GROUP_ID from groups where group_name = @tripName + ' (Trip Participants)');
 
 INSERT INTO [dbo].Group_Participants 
 (Group_ID   ,Participant_ID,Group_Role_ID,Domain_ID,[Start_Date] ,End_Date,Employee_Role,Hours_Per_Week,Notes,__ExternalPersonGroupRoleID,__ExternalGroupRoleID,__CanManageEvents,__CanMANageMembers,__EmailOptOut,__ISAnonymous,__ServiceTimeID,_First_Attendance,_Second_Attendance,_Third_Attendance,_Last_Attendance) VALUES
@@ -29,7 +29,7 @@ INSERT INTO [dbo].Group_Participants
 --Add Cloud Strife to Event_Participant list
 INSERT INTO [dbo].Event_Participants 
 (Event_ID                                                             ,Participant_ID,Participation_Status_ID,Time_In   ,Time_Confirmed ,Time_Out,Notes,Domain_ID,Group_Participant_ID,[Check-in_Station],_Setup_Date               ,Group_ID,Room_ID,Call_Parents,Group_Role_ID,Response_ID,__ExternalCalendarServingtimePersonID,Opportunity_ID) VALUES
-((select event_id from events where Event_Title like '(t) GO Midgar%'),@cloudPartId  ,4                      ,@startYear,@startYear}    ,null    ,null ,1        ,null                ,null              ,{ts '2015-09-09 19:03:37'},null    ,null   ,null        ,null         ,null       ,null                                 ,null          );
+((select event_id from events where Event_Title like '(t) GO Midgar%'),@cloudPartId  ,4                      ,@startYear,@startYear    ,null    ,null ,1        ,null                ,null              ,{ts '2015-09-09 19:03:37'},null    ,null   ,null        ,null         ,null       ,null                                 ,null          );
 
 --Add a Pledge for Cloud Strife. Pledge campaign ID is hard coded since it will not change.
 --http://crossroads.knowledgeowl.com/help/createedit-go-trip-pledge
