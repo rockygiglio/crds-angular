@@ -18,12 +18,14 @@ END
 GO
 
 ALTER PROCEDURE dbo.report_CRDS_Duplicate_Phone_Numbers
+	@Congregation_ID int = NULL
 AS
 BEGIN
 	SET NOCOUNT ON;
 
     CREATE TABLE #household_phones (
 		Household_ID int
+		, Congregation_ID int
 		, Household_Name nvarchar(75)
 		, Contact_ID int
 		, Display_Name nvarchar(75)
@@ -34,6 +36,7 @@ BEGIN
 
 	INSERT INTO #household_phones
 		SELECT DISTINCT h.Household_ID
+			, h.Congregation_ID
 			, h.Household_Name
 			, ch.Contact_ID
 			, c.Display_Name
@@ -68,7 +71,9 @@ BEGIN
 			main.Contact_ID <> dup.Contact_ID
 			AND main.Mobile_Phone IS NOT NULL
 			AND main.Mobile_Phone = dup.Mobile_Phone
-		);
+		)
+	WHERE ISNULL(@Congregation_ID, 0) = 0
+		OR @Congregation_ID = main.Congregation_ID;
 
 	DROP TABLE #household_phones;
 END
