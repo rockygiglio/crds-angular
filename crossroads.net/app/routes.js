@@ -366,6 +366,18 @@
             }
           }
         })
+        .state('impersonate', {
+          parent: 'noSideBar',
+          templateUrl: 'impersonate/impersonate.html',
+          url: '/impersonate',
+          controller: 'ImpersonateController as impersonate',
+          data: {
+            isProtected: true
+          },
+          resolve: {
+            loggedin: crds_utilities.checkLoggedin
+          }
+        })
         .state('explore', {
           parent: 'noHeaderOrFooter',
           url: '/explore',
