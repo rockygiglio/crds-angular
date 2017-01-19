@@ -106,7 +106,7 @@
     "api-check": "~7.5.5",
     "blueimp-load-image": "^1.14.0",
     "bootstrap": "^3.3.7",
-    "crds-styles": "crdschurch/crds-styles#development",
+    "crds-styles": "0.0.11",
     "es6-shim": "^0.35.1",
     "fastclick": "^1.0.6",
     "iframe-resizer": "^3.5.5",
