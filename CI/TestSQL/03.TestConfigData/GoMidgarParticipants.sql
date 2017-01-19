@@ -29,7 +29,7 @@ INSERT INTO [dbo].Group_Participants
 --Add Cloud Strife to Event_Participant list
 INSERT INTO [dbo].Event_Participants 
 (Event_ID                                                             ,Participant_ID,Participation_Status_ID,Time_In   ,Time_Confirmed ,Time_Out,Notes,Domain_ID,Group_Participant_ID,[Check-in_Station],_Setup_Date               ,Group_ID,Room_ID,Call_Parents,Group_Role_ID,Response_ID,__ExternalCalendarServingtimePersonID,Opportunity_ID) VALUES
-((select event_id from events where Event_Title like '(t) GO Midgar%'),@cloudPartId  ,4                      ,@startYear,@startYear}    ,null    ,null ,1        ,null                ,null              ,{ts '2015-09-09 19:03:37'},null    ,null   ,null        ,null         ,null       ,null                                 ,null          );
+((select event_id from events where Event_Title like '(t) GO Midgar%'),@cloudPartId  ,4                      ,@startYear,@startYear    ,null    ,null ,1        ,null                ,null              ,{ts '2015-09-09 19:03:37'},null    ,null   ,null        ,null         ,null       ,null                                 ,null          );
 
 --Add a Pledge for Cloud Strife. Pledge campaign ID is hard coded since it will not change.
 --http://crossroads.knowledgeowl.com/help/createedit-go-trip-pledge
