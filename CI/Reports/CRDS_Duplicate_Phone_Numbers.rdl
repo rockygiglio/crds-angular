@@ -66,6 +66,30 @@
         </Field>
       </Fields>
     </DataSet>
+    <DataSet Name="Congregations">
+      <Query>
+        <DataSourceName>DataSource1</DataSourceName>
+        <CommandText>
+select null as Congregation_ID, 'All Congregations' as Congregation_Name
+
+UNION
+
+
+select congregation_id, Congregation_Name from congregations where (end_date is null or getdate() between start_date and end_date)
+
+</CommandText>
+      </Query>
+      <Fields>
+        <Field Name="congregation_id">
+          <DataField>Congregation_ID</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="Congregation_Name">
+          <DataField>Congregation_Name</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
   </DataSets>
   <ReportSections>
     <ReportSection>
@@ -979,7 +1003,7 @@
               </TablixMembers>
             </TablixRowHierarchy>
             <DataSetName>DuplicatePhonesSP</DataSetName>
-            <Top>0.41389in</Top>
+            <Top>1.01806in</Top>
             <Height>0.5in</Height>
             <Width>12in</Width>
             <Style>
@@ -987,6 +1011,18 @@
                 <Style>None</Style>
               </Border>
             </Style>
+            <cl:ComponentMetadata>
+              <cl:ComponentId>77e46fb3-7e02-4a10-bc67-730ef9ce6bda</cl:ComponentId>
+              <cl:SourcePath>/Report Parts/Duplicate Phone Numbers</cl:SourcePath>
+              <cl:SyncDate>2017-01-19T14:24:37.5778816-05:00</cl:SyncDate>
+              <cl:UserProperties>
+                <cl:UserProperty Description="" Name="Description">
+                  <cl:Values>
+                    <cl:Value>List of households and contacts with duplicate phone numbers in the system</cl:Value>
+                  </cl:Values>
+                </cl:UserProperty>
+              </cl:UserProperties>
+            </cl:ComponentMetadata>
           </Tablix>
           <Textbox Name="ReportTitle">
             <CanGrow>true</CanGrow>
@@ -1020,6 +1056,65 @@
               <PaddingBottom>2pt</PaddingBottom>
             </Style>
           </Textbox>
+          <Textbox Name="Textbox1">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>Congregation:</Value>
+                    <Style />
+                  </TextRun>
+                </TextRuns>
+                <Style />
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>Textbox1</rd:DefaultName>
+            <Top>0.58208in</Top>
+            <Height>0.25in</Height>
+            <Width>1in</Width>
+            <ZIndex>2</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+          <Textbox Name="Textbox2">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>=Parameters!Congregation_ID.Label</Value>
+                    <Style />
+                  </TextRun>
+                </TextRuns>
+                <Style />
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>Textbox2</rd:DefaultName>
+            <Top>0.58208in</Top>
+            <Left>1.02778in</Left>
+            <Height>0.25in</Height>
+            <Width>1.25in</Width>
+            <ZIndex>3</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
         </ReportItems>
         <Height>8.025in</Height>
         <Style>
@@ -1028,7 +1123,7 @@
           </Border>
         </Style>
       </Body>
-      <Width>12in</Width>
+      <Width>13.44667in</Width>
       <Page>
         <PageFooter>
           <Height>0.45in</Height>
@@ -1091,6 +1186,11 @@
       </DefaultValue>
       <Prompt>PageID</Prompt>
       <Hidden>true</Hidden>
+      <cl:ComponentMetadata>
+        <cl:ComponentId>e6c55045-9d61-474c-b94c-e7acd0acd589</cl:ComponentId>
+        <cl:SourcePath>/Report Parts/PageID</cl:SourcePath>
+        <cl:SyncDate>2017-01-19T13:13:57.9342684-05:00</cl:SyncDate>
+      </cl:ComponentMetadata>
     </ReportParameter>
     <ReportParameter Name="SelectionID">
       <DataType>Integer</DataType>
@@ -1101,6 +1201,11 @@
       </DefaultValue>
       <Prompt>SelectionID</Prompt>
       <Hidden>true</Hidden>
+      <cl:ComponentMetadata>
+        <cl:ComponentId>b8bd7f6d-adb1-4c89-8146-335ed4ab7801</cl:ComponentId>
+        <cl:SourcePath>/Report Parts/SelectionID</cl:SourcePath>
+        <cl:SyncDate>2017-01-19T13:13:59.6374451-05:00</cl:SyncDate>
+      </cl:ComponentMetadata>
     </ReportParameter>
     <ReportParameter Name="DomainID">
       <DataType>String</DataType>
@@ -1112,6 +1217,11 @@
       </DefaultValue>
       <Prompt>DomainID</Prompt>
       <Hidden>true</Hidden>
+      <cl:ComponentMetadata>
+        <cl:ComponentId>405d16c9-a954-4f93-aeb7-72d121e526cd</cl:ComponentId>
+        <cl:SourcePath>/Report Parts/DomainID</cl:SourcePath>
+        <cl:SyncDate>2017-01-19T13:14:01.1999738-05:00</cl:SyncDate>
+      </cl:ComponentMetadata>
     </ReportParameter>
     <ReportParameter Name="UserID">
       <DataType>String</DataType>
@@ -1123,6 +1233,28 @@
       </DefaultValue>
       <Prompt>UserID</Prompt>
       <Hidden>true</Hidden>
+      <cl:ComponentMetadata>
+        <cl:ComponentId>d1ccdf2c-a2fc-4df0-90d1-26049ae13a9c</cl:ComponentId>
+        <cl:SourcePath>/Report Parts/UserID</cl:SourcePath>
+        <cl:SyncDate>2017-01-19T13:14:04.8417209-05:00</cl:SyncDate>
+      </cl:ComponentMetadata>
+    </ReportParameter>
+    <ReportParameter Name="Congregation_ID">
+      <DataType>Integer</DataType>
+      <Nullable>true</Nullable>
+      <DefaultValue>
+        <Values>
+          <Value>0</Value>
+        </Values>
+      </DefaultValue>
+      <Prompt>Congregation</Prompt>
+      <ValidValues>
+        <DataSetReference>
+          <DataSetName>Congregations</DataSetName>
+          <ValueField>congregation_id</ValueField>
+          <LabelField>Congregation_Name</LabelField>
+        </DataSetReference>
+      </ValidValues>
     </ReportParameter>
   </ReportParameters>
   <ConsumeContainerWhitespace>true</ConsumeContainerWhitespace>
