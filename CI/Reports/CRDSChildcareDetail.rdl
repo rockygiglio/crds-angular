@@ -85,10 +85,10 @@
           <rd:UserDefined>true</rd:UserDefined>
         </Field>
         <Field Name="RSVPOnline">
-          <Value>=IIF(Fields!GroupParticipantStartDate.Value &gt; DATEADD(DateInterval.Day, -6, Fields!EventDate.Value), "Yes", "No")</Value>
+          <Value>=IIF(Fields!GroupParticipantStartDate.Value &lt;= DATEADD(DateInterval.Day, -6, Fields!EventDate.Value), "Yes", "No")</Value>
         </Field>
         <Field Name="RSVPOverride">
-          <Value>=IIF(Fields!GroupParticipantStartDate.Value &lt;= DATEADD(DateInterval.Day, -6, Fields!EventDate.Value), "Yes", "No")</Value>
+          <Value>=IIF(Fields!GroupParticipantStartDate.Value &gt; DATEADD(DateInterval.Day, -6, Fields!EventDate.Value), "Yes", "No")</Value>
         </Field>
         <Field Name="GroupParticipantStartDate">
           <DataField>GroupParticipantStartDate</DataField>
@@ -444,7 +444,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Age or Grade Group</Value>
+                                  <Value>Age/Grade Group</Value>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>11pt</FontSize>
@@ -983,7 +983,6 @@
                             <PaddingBottom>2pt</PaddingBottom>
                           </Style>
                         </Textbox>
-                        <rd:Selected>true</rd:Selected>
                       </CellContents>
                     </TablixCell>
                   </TablixCells>
