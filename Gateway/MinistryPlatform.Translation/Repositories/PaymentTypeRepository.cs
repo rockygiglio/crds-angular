@@ -1,4 +1,6 @@
-﻿using MinistryPlatform.Translation.Models.Payments;
+﻿using Crossroads.Web.Common;
+using Crossroads.Web.Common.MinistryPlatform;
+using MinistryPlatform.Translation.Models.Payments;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 
 namespace MinistryPlatform.Translation.Repositories

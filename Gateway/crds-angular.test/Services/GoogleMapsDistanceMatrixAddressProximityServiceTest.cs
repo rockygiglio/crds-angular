@@ -12,6 +12,8 @@ using GoogleMapsAPI.NET.API.Common.Components;
 using GoogleMapsAPI.NET.API.DistanceMatrix.Components;
 using GoogleMapsAPI.NET.API.DistanceMatrix.Responses;
 using GoogleMapsAPI.NET.Requests;
+using Crossroads.Web.Common;
+using Crossroads.Web.Common.Configuration;
 using Moq;
 using NUnit.Framework;
 

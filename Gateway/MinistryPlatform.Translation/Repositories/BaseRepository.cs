@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Configuration;
 using Crossroads.Utilities.Interfaces;
+using Crossroads.Web.Common;
+using Crossroads.Web.Common.Configuration;
+using Crossroads.Web.Common.Security;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 
 namespace MinistryPlatform.Translation.Repositories
@@ -36,7 +39,7 @@ namespace MinistryPlatform.Translation.Repositories
             var apiUser = _configurationWrapper.GetEnvironmentVarAsString("API_USER");
             var apiPasword = _configurationWrapper.GetEnvironmentVarAsString("API_PASSWORD");
             var authData = _authenticationService.Authenticate(apiUser, apiPasword);
-            var token = authData["token"].ToString();
+            var token = authData.AccessToken;
 
             return (token);
         }

@@ -8,6 +8,7 @@ using Crossroads.Utilities.Services;
 using MinistryPlatform.Translation.Repositories;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 using Crossroads.ApiVersioning;
+using Crossroads.Web.Common.Security;
 
 namespace crds_angular.Controllers.API
 {
@@ -16,7 +17,7 @@ namespace crds_angular.Controllers.API
 
         private readonly IContactRepository _contactSerivce;
 
-        public RoleController(IContactRepository contactSerivce, IUserImpersonationService userImpersonationService) : base(userImpersonationService)
+        public RoleController(IContactRepository contactSerivce, IUserImpersonationService userImpersonationService, IAuthenticationRepository authenticationRepository) : base(userImpersonationService, authenticationRepository)
         {
             _contactSerivce = contactSerivce;
         }

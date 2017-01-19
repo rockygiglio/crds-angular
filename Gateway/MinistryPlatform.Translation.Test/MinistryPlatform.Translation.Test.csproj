@@ -56,6 +56,10 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Crossroads.Web.Common, Version=1.0.7.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Crossroads.Web.Common.1.0.7\lib\net45\Crossroads.Web.Common.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="FactoryGirl.NET, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\FactoryGirl.NET.1.0.0.0\lib\net40-Client\FactoryGirl.NET.dll</HintPath>
       <Private>True</Private>
@@ -100,13 +104,14 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\NUnit.2.6.4\lib\nunit.framework.dll</HintPath>
     </Reference>
-    <Reference Include="RestSharp, Version=105.1.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\RestSharp.105.1.0\lib\net45\RestSharp.dll</HintPath>
+    <Reference Include="RestSharp, Version=105.2.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\RestSharp.105.2.3\lib\net45\RestSharp.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Net" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Xml.Linq" />
@@ -137,7 +142,6 @@
     <Compile Include="Services\LookupServiceTest.cs" />
     <Compile Include="Services\MedicalInformationRepositoryTest.cs" />
     <Compile Include="Services\MinistryPlatformRestServiceIntegrationTest.cs" />
-    <Compile Include="Services\MinistryPlatformRestServiceTest.cs" />
     <Compile Include="Services\ObjectAttributeServiceTest.cs" />
     <Compile Include="Services\ContactRelationshipServiceTest.cs" />
     <Compile Include="Services\EventParticipantServiceTest.cs" />
@@ -193,6 +197,7 @@
       <IsTransformFile>True</IsTransformFile>
     </None>
     <None Include="app.config" />
+    <None Include="Crossroads.Web.Common-Unity.config" />
     <None Include="packages.config" />
     <None Include="Properties\SlowCheetah\SlowCheetah.Transforms.targets" />
   </ItemGroup>

@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using crds_angular.Models.Crossroads.GoVolunteer;
 using crds_angular.Services;
 using crds_angular.Services.Interfaces;
+using Crossroads.Web.Common;
+using Crossroads.Web.Common.MinistryPlatform;
 using MinistryPlatform.Translation.Models;
 using Moq;
 using NUnit.Framework;
@@ -19,7 +21,7 @@ namespace crds_angular.test.Services
     {
         private OrganizationService _fixture;
         private Mock<MPInterfaces.IOrganizationRepository> _organizationService;
-        private Mock<MPInterfaces.IApiUserRepository> _apiUserService;
+        private Mock<IApiUserRepository> _apiUserService;
 
         private const string apiUserToken = "somerandomstring";
         private const int CONTACTID = 123456789;
@@ -31,7 +33,7 @@ namespace crds_angular.test.Services
         public void SetUp()
         {
             _organizationService = new Mock<MPInterfaces.IOrganizationRepository>();
-            _apiUserService = new Mock<MPInterfaces.IApiUserRepository>();
+            _apiUserService = new Mock<IApiUserRepository>();
             _fixture = new OrganizationService(_organizationService.Object, _apiUserService.Object);
 
             _apiUserService.Setup(m => m.GetToken()).Returns(apiUserToken);

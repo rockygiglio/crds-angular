@@ -13,6 +13,8 @@ using MinistryPlatform.Translation.Repositories.Interfaces;
 using System.Text.RegularExpressions;
 using crds_angular.Models.Crossroads.Attribute;
 using Crossroads.Utilities.Extensions;
+using Crossroads.Web.Common;
+using Crossroads.Web.Common.Configuration;
 
 namespace crds_angular.Services
 {

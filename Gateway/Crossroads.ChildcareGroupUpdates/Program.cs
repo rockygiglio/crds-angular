@@ -10,6 +10,8 @@ using Crossroads.Utilities.Services;
 using log4net;
 using Microsoft.Practices.Unity;
 using Microsoft.Practices.Unity.Configuration;
+using Crossroads.Web.Common;
+using Crossroads.Web.Common.MinistryPlatform;
 using MinistryPlatform.Translation.Repositories;
 
 [assembly: log4net.Config.XmlConfigurator(Watch = true)]

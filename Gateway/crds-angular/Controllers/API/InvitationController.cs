@@ -11,6 +11,7 @@ using crds_angular.Security;
 using crds_angular.Services.Interfaces;
 using log4net;
 using Crossroads.ApiVersioning;
+using Crossroads.Web.Common.Security;
 
 namespace crds_angular.Controllers.API
 {
@@ -20,7 +21,7 @@ namespace crds_angular.Controllers.API
         private readonly Services.Interfaces.IInvitationService _invitationService;        
 
 
-        public InvitationController(Services.Interfaces.IInvitationService invitationService, IUserImpersonationService userImpersonationService) : base(userImpersonationService)
+        public InvitationController(Services.Interfaces.IInvitationService invitationService, IUserImpersonationService userImpersonationService, IAuthenticationRepository authenticationRepository) : base(userImpersonationService, authenticationRepository)
         {
             _invitationService = invitationService;
 

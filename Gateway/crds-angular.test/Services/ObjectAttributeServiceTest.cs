@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using crds_angular.Models.Crossroads.Attribute;
 using crds_angular.Models.Crossroads.Profile;
 using crds_angular.Services;
+using Crossroads.Web.Common;
+using Crossroads.Web.Common.MinistryPlatform;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Repositories;
 using GateWayInterfaces = crds_angular.Services.Interfaces;
@@ -18,7 +20,7 @@ namespace crds_angular.test.Services
     {
 
         private ObjectAttributeService _fixture;
-        private Mock<MPInterfaces.IApiUserRepository> _apiUserService;
+        private Mock<IApiUserRepository> _apiUserService;
         private Mock<MPInterfaces.IObjectAttributeRepository> _contactAttributeService;
         private Mock<GateWayInterfaces.IAttributeService> _attributeService;
         private Mock<MPInterfaces.IAttributeRepository> _mpAttributeService;
@@ -36,7 +38,7 @@ namespace crds_angular.test.Services
             _mpAttributeService = new Mock<MPInterfaces.IAttributeRepository>(MockBehavior.Strict);
             _contactAttributeService = new Mock<MPInterfaces.IObjectAttributeRepository>();
             _attributeService = new Mock<GateWayInterfaces.IAttributeService>();
-            _apiUserService = new Mock<MPInterfaces.IApiUserRepository>();
+            _apiUserService = new Mock<IApiUserRepository>();
             _mpAttributeService = new Mock<MPInterfaces.IAttributeRepository>();
 
             _fixture = new ObjectAttributeService(_contactAttributeService.Object, _attributeService.Object, _apiUserService.Object, _mpAttributeService.Object);

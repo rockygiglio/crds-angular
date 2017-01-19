@@ -1,23 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http.Headers;
-using System.Web;
 using System.Web.Http;
-using System.Net.Http;
-using System.Web.Http.Description;
-using System.Web.SessionState;
-using System.Diagnostics;
 using log4net;
-using log4net.Config;
 using System.Reflection;
-using System.Threading;
-using crds_angular.Models.Crossroads;
 using crds_angular.Services.Interfaces;
 using crds_angular.Util;
-using Microsoft.Ajax.Utilities;
-using Microsoft.Owin;
-using MinistryPlatform.Translation.Repositories;
+using Crossroads.Web.Common.Security;
 
 namespace crds_angular.Security
 {
@@ -25,11 +14,13 @@ namespace crds_angular.Security
     {
         protected readonly log4net.ILog logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private IUserImpersonationService _userImpersonationService;
+        private readonly IUserImpersonationService _userImpersonationService;
+        protected readonly IAuthenticationRepository AuthenticationRepository;
 
-        public MPAuth(IUserImpersonationService userImpersonationService)
+        public MPAuth(IUserImpersonationService userImpersonationService, IAuthenticationRepository authenticationRepository)
         {
             _userImpersonationService = userImpersonationService;
+            AuthenticationRepository = authenticationRepository;
         }
 
         /// <summary>
@@ -71,8 +62,8 @@ namespace crds_angular.Security
                     var authData = AuthenticationRepository.RefreshToken(refreshTokens.FirstOrDefault());
                     if (authData != null)
                     {
-                        authorized = authData["token"].ToString();
-                        var refreshToken = authData["refreshToken"].ToString();
+                        authorized = authData.AccessToken;
+                        var refreshToken = authData.RefreshToken;
                         IHttpActionResult result = null;
                         if (impersonate)
                         {
