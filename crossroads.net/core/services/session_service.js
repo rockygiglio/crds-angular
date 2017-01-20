@@ -197,7 +197,7 @@
             vm.enableReactiveSso(event, stateName, stateData, stateToParams);
           }
           const impersonationCookie = $cookies.get('impersonateUserId');
-          if (impersonationCookie) {
+          if (impersonationCookie && user.canImpersonate) {
             Impersonate.start(impersonationCookie)
             .success((response) => {
               Impersonate.storeCurrentUser();
@@ -207,6 +207,8 @@
             .error(() => {
               Impersonate.stop();
             });
+          } else if (impersonationCookie) {
+            $cookies.remove('impersonateUserId');
           }
         }).error(() => {
           vm.clearAndRedirect(event, stateName, stateToParams);
