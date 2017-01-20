@@ -5,7 +5,7 @@ GO
 --Note Donations need to be added  in order by Donation_Date
 --Add a donation from last year for Tifa
 DECLARE @tifaDonorId as int
-set @tifaDonorId = (select donor_record from Contacts where Email_Address = 'mpcrds+TifaLockhart@gmail.com');
+set @tifaDonorId = (select donor_record from Contacts where Email_Address = 'mpcrds+tifalockhart@gmail.com');
 
 DECLARE @lastYear as VARCHAR(4)
 set @lastYear = CONVERT(VARCHAR(4), YEAR(DATEADD(YEAR, -1, GETDATE())));
@@ -22,7 +22,7 @@ GO
 
 --Add a soft credit donation from last year for tifa lockhart
 DECLARE @tifaDonorId as int
-set @tifaDonorId = (select donor_record from Contacts where Email_Address = 'mpcrds+TifaLockhart@gmail.com');
+set @tifaDonorId = (select donor_record from Contacts where Email_Address = 'mpcrds+tifalockhart@gmail.com');
 
 DECLARE @fidelityDonor as int
 set @fidelityDonor = (select donor_record from Contacts where company_name like 'Fidelity%');
@@ -43,7 +43,7 @@ GO
 
 --Add a Donation to Cloud's trip pledge by Tifa - not anonymous.
 DECLARE @tifaDonorId as int
-set @tifaDonorId = (select donor_record from Contacts where Email_Address = 'mpcrds+TifaLockhart@gmail.com');
+set @tifaDonorId = (select donor_record from Contacts where Email_Address = 'mpcrds+tifalockhart@gmail.com');
 
 DECLARE @cloudDonorId as int
 set @cloudDonorId = (select donor_record from contacts where Email_Address = 'mpcrds+cloudstrife@gmail.com');
@@ -64,7 +64,7 @@ GO
 
 --Add a Donation to Cloud's trip pledge by Tifa - Anonymous.
 DECLARE @tifaDonorId as int
-set @tifaDonorId = (select donor_record from Contacts where Email_Address = 'mpcrds+TifaLockhart@gmail.com');
+set @tifaDonorId = (select donor_record from Contacts where Email_Address = 'mpcrds+tifalockhart@gmail.com');
 
 DECLARE @cloudDonorId as int
 set @cloudDonorId = (select donor_record from contacts where Email_Address = 'mpcrds+cloudstrife@gmail.com');
@@ -85,7 +85,7 @@ GO
 
 --Add a Donation by Tifa, with credit card
 DECLARE @tifaDonorId as int
-set @tifaDonorId = (select donor_record from Contacts where Email_Address = 'mpcrds+TifaLockhart@gmail.com');
+set @tifaDonorId = (select donor_record from Contacts where Email_Address = 'mpcrds+tifalockhart@gmail.com');
 
 DECLARE @thisYear as VARCHAR(4)
 set @thisYear = CONVERT(VARCHAR(4), YEAR(GETDATE()));
@@ -103,7 +103,7 @@ GO
 
 --Add a Donation by Tifa, with bank ACH but no stripe information. This mirrors bank transactions migrated from legacy.
 DECLARE @tifaDonorId as int
-set @tifaDonorId = (select donor_record from Contacts where Email_Address = 'mpcrds+TifaLockhart@gmail.com');
+set @tifaDonorId = (select donor_record from Contacts where Email_Address = 'mpcrds+tifalockhart@gmail.com');
 
 DECLARE @thisYear as VARCHAR(4)
 set @thisYear = CONVERT(VARCHAR(4), YEAR(GETDATE()));
@@ -120,7 +120,7 @@ GO
 
 --Add a soft credit donation from this year for tifa lockhart
 DECLARE @tifaDonorId as int
-set @tifaDonorId = (select donor_record from Contacts where Email_Address = 'mpcrds+TifaLockhart@gmail.com');
+set @tifaDonorId = (select donor_record from Contacts where Email_Address = 'mpcrds+tifalockhart@gmail.com');
 
 DECLARE @fidelityDonor as int
 set @fidelityDonor = (select donor_record from Contacts where company_name like 'Fidelity%');
@@ -140,7 +140,7 @@ GO
 
 --Add a Donation by Tifa, with credit card that we will do a partial refund on
 DECLARE @tifaDonorId as int
-set @tifaDonorId = (select donor_record from Contacts where Email_Address = 'mpcrds+TifaLockhart@gmail.com');
+set @tifaDonorId = (select donor_record from Contacts where Email_Address = 'mpcrds+tifalockhart@gmail.com');
 
 DECLARE @thisYear as VARCHAR(4)
 set @thisYear = CONVERT(VARCHAR(4), YEAR(GETDATE()));
@@ -158,7 +158,7 @@ GO
 
 --Add a Donation refund by Tifa, with credit card
 DECLARE @tifaDonorId as int
-set @tifaDonorId = (select donor_record from Contacts where Email_Address = 'mpcrds+TifaLockhart@gmail.com');
+set @tifaDonorId = (select donor_record from Contacts where Email_Address = 'mpcrds+tifalockhart@gmail.com');
 
 DECLARE @thisYear as VARCHAR(4)
 set @thisYear = CONVERT(VARCHAR(4), YEAR(GETDATE()));
@@ -175,7 +175,7 @@ GO
 
 --Add a declined donation for Tifa Lockhart
 DECLARE @tifaDonorId as int
-set @tifaDonorId = (select donor_record from Contacts where Email_Address = 'mpcrds+TifaLockhart@gmail.com');
+set @tifaDonorId = (select donor_record from Contacts where Email_Address = 'mpcrds+tifalockhart@gmail.com');
 
 DECLARE @thisYear as VARCHAR(4)
 set @thisYear = CONVERT(VARCHAR(4), YEAR(GETDATE()));
@@ -192,7 +192,7 @@ GO
 
 --Add a pending donation for Tifa Lockhart
 DECLARE @tifaDonorId as int
-set @tifaDonorId = (select donor_record from Contacts where Email_Address = 'mpcrds+TifaLockhart@gmail.com');
+set @tifaDonorId = (select donor_record from Contacts where Email_Address = 'mpcrds+tifalockhart@gmail.com');
 
 DECLARE @thisYear as VARCHAR(4)
 set @thisYear = CONVERT(VARCHAR(4), YEAR(GETDATE()));
@@ -209,7 +209,7 @@ GO
 
 --Add a noncash asset donation with 2 distributions
 DECLARE @tifaDonorId as int
-set @tifaDonorId = (select donor_record from Contacts where Email_Address = 'mpcrds+TifaLockhart@gmail.com');
+set @tifaDonorId = (select donor_record from Contacts where Email_Address = 'mpcrds+tifalockhart@gmail.com');
 
 DECLARE @thisYear as VARCHAR(4)
 set @thisYear = CONVERT(VARCHAR(4), YEAR(GETDATE()));
@@ -233,7 +233,7 @@ GO
 
 --Add a Check Donation that has a check number and a stripe transaction ID
 DECLARE @tifaDonorId as int
-set @tifaDonorId = (select donor_record from Contacts where Email_Address = 'mpcrds+TifaLockhart@gmail.com');
+set @tifaDonorId = (select donor_record from Contacts where Email_Address = 'mpcrds+tifalockhart@gmail.com');
 
 DECLARE @thisYear as VARCHAR(4)
 set @thisYear = CONVERT(VARCHAR(4), YEAR(GETDATE()));
@@ -250,7 +250,7 @@ GO
 
 --Add a Check Donation that has a check number but no stripe transaction ID. This mirrors migrated check data.
 DECLARE @tifaDonorId as int
-set @tifaDonorId = (select donor_record from Contacts where Email_Address = 'mpcrds+TifaLockhart@gmail.com');
+set @tifaDonorId = (select donor_record from Contacts where Email_Address = 'mpcrds+tifalockhart@gmail.com');
 
 DECLARE @thisYear as VARCHAR(4)
 set @thisYear = CONVERT(VARCHAR(4), YEAR(GETDATE()));
@@ -267,7 +267,7 @@ GO
 
 --Add a Check Donation has stripe data but no check number for some reason.
 DECLARE @tifaDonorId as int
-set @tifaDonorId = (select donor_record from Contacts where Email_Address = 'mpcrds+TifaLockhart@gmail.com');
+set @tifaDonorId = (select donor_record from Contacts where Email_Address = 'mpcrds+tifalockhart@gmail.com');
 
 DECLARE @thisYear as VARCHAR(4)
 set @thisYear = CONVERT(VARCHAR(4), YEAR(GETDATE()));
@@ -284,7 +284,7 @@ GO
 
 --Add a Check with no check number or stripe data (DBT check case)
 DECLARE @tifaDonorId as int
-set @tifaDonorId = (select donor_record from Contacts where Email_Address = 'mpcrds+TifaLockhart@gmail.com');
+set @tifaDonorId = (select donor_record from Contacts where Email_Address = 'mpcrds+tifalockhart@gmail.com');
 
 DECLARE @thisYear as VARCHAR(4)
 set @thisYear = CONVERT(VARCHAR(4), YEAR(GETDATE()));
@@ -301,7 +301,7 @@ GO
 
 --Add a Credit card donation on today's date that has a donation_status of SUCCESSFUL but is not in a deposit. 
 DECLARE @tifaDonorId as int
-set @tifaDonorId = (select donor_record from Contacts where Email_Address = 'mpcrds+TifaLockhart@gmail.com');
+set @tifaDonorId = (select donor_record from Contacts where Email_Address = 'mpcrds+tifalockhart@gmail.com');
 
 DECLARE @thisYear as VARCHAR(4)
 set @thisYear = CONVERT(VARCHAR(4), YEAR(GETDATE()));
