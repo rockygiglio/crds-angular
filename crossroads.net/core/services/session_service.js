@@ -36,11 +36,13 @@
     $http,
     $state,
     $interval,
+    $timeout,
     $cookies,
     $modal,
     $injector,
     $rootScope,
-    $q
+    $q,
+    Impersonate
   ) {
     const vm = this;
 
@@ -122,6 +124,7 @@
     vm.clear = () => {
       $cookies.remove(cookieNames.SESSION_ID);
       $cookies.remove(cookieNames.REFRESH_TOKEN);
+      $cookies.remove(cookieNames.IMPERSONATION_ID);
       $cookies.remove('userId');
       $cookies.remove('username');
       $cookies.remove('family');
@@ -194,6 +197,7 @@
           } else {
             vm.enableReactiveSso(event, stateName, stateData, stateToParams);
           }
+          vm.restoreImpersonation();
         }).error(() => {
           vm.clearAndRedirect(event, stateName, stateToParams);
           vm.enableReactiveSso(event, stateName, stateData, stateToParams);
@@ -210,6 +214,18 @@
       const deferred = $q.defer();
       deferred.reject('User is not logged in.');
       return deferred.promise;
+    };
+
+    vm.restoreImpersonation = () => {
+      const impersonationCookie = $cookies.get(cookieNames.IMPERSONATION_ID);
+      if (impersonationCookie && !$rootScope.impersonation.active) {
+        Impersonate.start(impersonationCookie)
+        .success((response) => {
+          Impersonate.storeCurrentUser();
+          Impersonate.storeDetails(true, response, impersonationCookie);
+          Impersonate.setCurrentUser(response);
+        });
+      }
     };
 
     // flag to determine if the current user was already
@@ -303,11 +319,13 @@
     '$http',
     '$state',
     '$interval',
+    '$timeout',
     '$cookies',
     '$modal',
     '$injector',
     '$rootScope',
-    '$q'
+    '$q',
+    'Impersonate'
   ];
 
   angular.module('crossroads.core').service('Session', SessionService);
