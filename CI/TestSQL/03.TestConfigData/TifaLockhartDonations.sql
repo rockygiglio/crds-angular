@@ -46,7 +46,7 @@ DECLARE @tifaDonorId as int
 set @tifaDonorId = (select donor_record from Contacts where Email_Address = 'mpcrds+TifaLockhart@gmail.com');
 
 DECLARE @cloudDonorId as int
-set @cloudDonorId = (select donor_record from contacts where Email_Address = 'mpcrds+CloudStrife@gmail.com');
+set @cloudDonorId = (select donor_record from contacts where Email_Address = 'mpcrds+cloudstrife@gmail.com');
 
 DECLARE @thisYear as VARCHAR(4)
 set @thisYear = CONVERT(VARCHAR(4), YEAR(GETDATE()));
@@ -67,7 +67,7 @@ DECLARE @tifaDonorId as int
 set @tifaDonorId = (select donor_record from Contacts where Email_Address = 'mpcrds+TifaLockhart@gmail.com');
 
 DECLARE @cloudDonorId as int
-set @cloudDonorId = (select donor_record from contacts where Email_Address = 'mpcrds+CloudStrife@gmail.com');
+set @cloudDonorId = (select donor_record from contacts where Email_Address = 'mpcrds+cloudstrife@gmail.com');
 
 DECLARE @thisYear as VARCHAR(4)
 set @thisYear = CONVERT(VARCHAR(4), YEAR(GETDATE()));
