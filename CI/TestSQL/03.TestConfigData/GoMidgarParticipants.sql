@@ -3,10 +3,10 @@ USE [MinistryPlatform]
 GO
 
 DECLARE @cloudPartId as int
-set @cloudPartId = (select participant_record from Contacts where Email_address = 'mpcrds+CloudStrife@gmail.com');
+set @cloudPartId = (select participant_record from Contacts where Email_address = 'mpcrds+cloudstrife@gmail.com');
 
 DECLARE @cloudDonorId as int
-set @cloudDonorId = (select donor_record from Contacts where Email_Address = 'mpcrds+CloudStrife@gmail.com');
+set @cloudDonorId = (select donor_record from Contacts where Email_Address = 'mpcrds+cloudstrife@gmail.com');
 
 DECLARE @thisyear as VARCHAR(4)
 set @thisyear = CONVERT(VARCHAR(4), datepart(year, getdate()));
@@ -45,13 +45,13 @@ INSERT INTO [dbo].Donations
 
 --Insert the Donation_Distribution.
 DECLARE @donationID as int
-SET @donationID = (select donation_id from donations where donor_id = (select donor_record from contacts where email_address = 'mpcrds+CloudStrife@gmail.com'));
+SET @donationID = (select donation_id from donations where donor_id = (select donor_record from contacts where email_address = 'mpcrds+cloudstrife@gmail.com'));
 
 DECLARE @programID as int
 SET @programID = (select program_id from programs where program_name = @tripName);
 
 DECLARE @pledgeID as int
-SET @pledgeID = (select pledge_id from pledges where donor_id = (select donor_record from contacts where Email_Address = 'mpcrds+CloudStrife@gmail.com'));
+SET @pledgeID = (select pledge_id from pledges where donor_id = (select donor_record from contacts where Email_Address = 'mpcrds+cloudstrife@gmail.com'));
 
 INSERT INTO [dbo].donation_distributions 
 (Donation_ID ,Amount  ,Program_ID ,Pledge_ID ,Target_Event,Soft_Credit_Donor,Notes,Domain_ID,__ExternalContributionID,__ExternalCommitmentID,Congregation_ID) VALUES

@@ -81,7 +81,7 @@ set @contactID = 100000000;
 
 INSERT INTO [dbo].Contacts 
 (Contact_ID,Company,Company_Name,Display_Name   ,Prefix_ID,First_Name,Middle_Name,Last_Name   ,Suffix_ID,Nickname ,Date_of_Birth   ,Gender_ID,Marital_Status_ID,Contact_Status_ID,Household_ID,Household_Position_ID,Participant_Record,Donor_Record,Email_Address                  ,Email_Unlisted,Bulk_Email_Opt_Out,Bulk_SMS_Opt_Out,Mobile_Phone  ,Mobile_Carrier,Mobile_Phone_Unlisted,Company_Phone ,Pager_Phone,Fax_Phone,User_Account,Web_Page,Remove_From_Directory,Industry_ID,Occupation_ID,Employer_Name,[SSN/EIN],Anniversary_Date,HS_Graduation_Year,Current_School,Contact_GUID ,ID_Card,Domain_ID,__ShelbyID,__ExternalHouseholdID,__ExternalPersonID,__ExternalUserID,__ExternalBusinessID,Maiden_Name,__LastLegacyLogin,__LegacyUserName,__LegacyUserID,__LegacyEmailAddress) VALUES
-(@contactID,0      ,null        ,'Strife, Cloud',1        ,'Cloud'   ,'S'        ,'Strife'    ,null     ,'Cloud'  ,{d '1975-01-01'},1        ,2                ,1                ,@houseHoldID,1                    ,@participantID    ,null        ,'mpcrds+CloudStrife@gmail.com' ,null          ,0                 ,0               ,'513-654-8745',null          ,null                 ,'555-365-4125',null       ,null     ,@userAccount,null    ,null                 ,null       ,null         ,null         ,null     ,null            ,null              ,null          ,NEWID()      ,null   ,1        ,null      ,null                 ,null              ,null            ,null                ,null       ,null             ,null            ,null          ,null                );
+(@contactID,0      ,null        ,'Strife, Cloud',1        ,'Cloud'   ,'S'        ,'Strife'    ,null     ,'Cloud'  ,{d '1975-01-01'},1        ,2                ,1                ,@houseHoldID,1                    ,@participantID    ,null        ,'mpcrds+cloudstrife@gmail.com' ,null          ,0                 ,0               ,'513-654-8745',null          ,null                 ,'555-365-4125',null       ,null     ,@userAccount,null    ,null                 ,null       ,null         ,null         ,null     ,null            ,null              ,null          ,NEWID()      ,null   ,1        ,null      ,null                 ,null              ,null            ,null                ,null       ,null             ,null            ,null          ,null                );
 
 SET IDENTITY_INSERT [dbo].[Contacts] OFF;
 
@@ -308,7 +308,7 @@ DECLARE @respID as int
 set @respID = IDENT_CURRENT('Responses')+1;
 
 DECLARE @partID as int
-set @partID = (select Participant_Record from Contacts where email_address = 'mpcrds+CloudStrife@gmail.com');
+set @partID = (select Participant_Record from Contacts where email_address = 'mpcrds+cloudstrife@gmail.com');
 
 INSERT INTO [dbo].Responses 
 (Response_ID,Response_Date             ,Opportunity_ID,Participant_ID,Comments                        ,Website_Submission,First_Name,Last_Name,Email,Phone,Follow_up_Information,Response_Result_ID,Closed,Domain_ID,Event_ID,__ExternalCESTPID) VALUES
@@ -335,7 +335,7 @@ GO
 
 --Family Relationships
 DECLARE @cloudContact as int
-set @cloudContact = (select Contact_ID from Contacts where email_address = 'mpcrds+CloudStrife@gmail.com');
+set @cloudContact = (select Contact_ID from Contacts where email_address = 'mpcrds+cloudstrife@gmail.com');
 
 DECLARE @tifaContact as int
 set @tifaContact = (select Contact_ID from Contacts where email_address = 'mpcrds+tifalockhart@gmail.com');
