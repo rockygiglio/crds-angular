@@ -1,7 +1,7 @@
 import constants from 'crds-constants';
 import ImpersonateController from '../../../core/impersonate/impersonate.controller';
 
-fdescribe('Impersonate Controller', () => {
+describe('Impersonate Controller', () => {
   let rootScope;
   let http;
   let httpBackend;

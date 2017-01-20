@@ -218,7 +218,7 @@
 
     vm.restoreImpersonation = () => {
       const impersonationCookie = $cookies.get('impersonateUserId');
-      if (impersonationCookie) {
+      if (impersonationCookie && !$rootScope.impersonation.active) {
         Impersonate.start(impersonationCookie)
         .success((response) => {
           Impersonate.storeCurrentUser();
@@ -228,8 +228,6 @@
         .error(() => {
           Impersonate.stop();
         });
-      } else if (impersonationCookie) {
-        $cookies.remove('impersonateUserId');
       }
     };
 

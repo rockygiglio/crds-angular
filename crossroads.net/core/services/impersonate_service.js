@@ -61,7 +61,7 @@
 
     this.setHeaders = (username) => {
       $http.defaults.headers.common.ImpersonateUserId = username;
-    }
+    };
   }
 
   ImpersonateService.$inject = [
