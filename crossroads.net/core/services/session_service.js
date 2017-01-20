@@ -40,7 +40,8 @@
     $modal,
     $injector,
     $rootScope,
-    $q
+    $q,
+    Impersonate
   ) {
     const vm = this;
 
@@ -126,6 +127,7 @@
       $cookies.remove('username');
       $cookies.remove('family');
       $cookies.remove('age');
+      $cookies.remove('impersonateUserId');
       $http.defaults.headers.common.Authorization = undefined;
       $http.defaults.headers.common.RefreshToken = undefined;
       $http.defaults.headers.common.ImpersonateUserId = undefined;
@@ -193,6 +195,18 @@
             vm.enableReactiveSso(event, stateName, stateData, stateToParams);
           } else {
             vm.enableReactiveSso(event, stateName, stateData, stateToParams);
+          }
+          const impersonationCookie = $cookies.get('impersonateUserId');
+          if (impersonationCookie) {
+            Impersonate.start(impersonationCookie)
+            .success((response) => {
+              Impersonate.storeCurrentUser();
+              Impersonate.storeDetails(true, response, impersonationCookie);
+              Impersonate.setCurrentUser(response);
+            })
+            .error(() => {
+              Impersonate.stop();
+            });
           }
         }).error(() => {
           vm.clearAndRedirect(event, stateName, stateToParams);
@@ -307,7 +321,8 @@
     '$modal',
     '$injector',
     '$rootScope',
-    '$q'
+    '$q',
+    'Impersonate'
   ];
 
   angular.module('crossroads.core').service('Session', SessionService);

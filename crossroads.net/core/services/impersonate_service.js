@@ -51,10 +51,11 @@
       }
       $rootScope.impersonation.active = active;
       $rootScope.impersonation.impersonated = loginReturn;
-      if (active === true) {
-        $http.defaults.headers.common.ImpersonateUserId = username;
+      $http.defaults.headers.common.ImpersonateUserId = username;
+      if (active === false) {
+        $cookies.remove('impersonateUserId');
       } else {
-        $http.defaults.headers.common.ImpersonateUserId = username;
+        $cookies.put('impersonateUserId', username);
       }
     };
   }
