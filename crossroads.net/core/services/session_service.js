@@ -224,9 +224,6 @@
           Impersonate.storeCurrentUser();
           Impersonate.storeDetails(true, response, impersonationCookie);
           Impersonate.setCurrentUser(response);
-        })
-        .error(() => {
-          Impersonate.stop();
         });
       }
     };
