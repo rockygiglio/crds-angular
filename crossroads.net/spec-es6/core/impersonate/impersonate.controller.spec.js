@@ -107,7 +107,7 @@ describe('Impersonate Controller', () => {
   });
 
   it('should re-impersonate on page refresh', () => {
-    cookies.put('impersonateUserId', 'test');
+    cookies.put(constants.COOKIES.IMPERSONATION_ID, 'test');
     cookies.put('userId', 'test');
     const user = cookies.get('impersonateUserId');
     spyOn(Impersonate, 'start');

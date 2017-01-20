@@ -50,7 +50,7 @@ var preventRouteTypeUrlEncoding = function(urlMatcherFactory, routeType, urlPatt
 var checkLoggedin = function ($q, $timeout, $http, $location, $rootScope, $cookies, Session, Impersonate) {
   var deferred = $q.defer();
   $http.defaults.headers.common.Authorization = $cookies.get(cookieNames.SESSION_ID);
-  const impersonationCookie = $cookies.get('impersonateUserId');
+  const impersonationCookie = $cookies.get(cookieNames.IMPERSONATION_ID);
   if (impersonationCookie) {
     Impersonate.setHeaders(impersonationCookie);
   }
@@ -64,8 +64,10 @@ var checkLoggedin = function ($q, $timeout, $http, $location, $rootScope, $cooki
     // Authenticated
     if (user.userId !== undefined) {
       $timeout(deferred.resolve, 0);
-      $rootScope.userid = user.userId;
-      $rootScope.username = user.username;
+      if (!impersonationCookie) {
+        $rootScope.userid = user.userId;
+        $rootScope.username = user.username;
+      }
     } else {
       Session.clear();
       $rootScope.message = 'You need to sign in.';

@@ -1,6 +1,8 @@
 
 /* eslint-disable no-param-reassign */
 (() => {
+  const cookieNames = require('crds-constants').COOKIES;
+
   function ImpersonateService(
     $http,
     $cookies,
@@ -53,9 +55,9 @@
       $rootScope.impersonation.impersonated = loginReturn;
       this.setHeaders(username);
       if (active === false) {
-        $cookies.remove('impersonateUserId');
+        $cookies.remove(cookieNames.IMPERSONATION_ID);
       } else {
-        $cookies.put('impersonateUserId', username);
+        $cookies.put(cookieNames.IMPERSONATION_ID, username);
       }
     };
 

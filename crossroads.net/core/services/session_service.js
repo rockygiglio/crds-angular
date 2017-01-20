@@ -124,11 +124,11 @@
     vm.clear = () => {
       $cookies.remove(cookieNames.SESSION_ID);
       $cookies.remove(cookieNames.REFRESH_TOKEN);
+      $cookies.remove(cookieNames.IMPERSONATION_ID);
       $cookies.remove('userId');
       $cookies.remove('username');
       $cookies.remove('family');
       $cookies.remove('age');
-      $cookies.remove('impersonateUserId');
       $http.defaults.headers.common.Authorization = undefined;
       $http.defaults.headers.common.RefreshToken = undefined;
       $http.defaults.headers.common.ImpersonateUserId = undefined;
@@ -217,7 +217,7 @@
     };
 
     vm.restoreImpersonation = () => {
-      const impersonationCookie = $cookies.get('impersonateUserId');
+      const impersonationCookie = $cookies.get(cookieNames.IMPERSONATION_ID);
       if (impersonationCookie && !$rootScope.impersonation.active) {
         Impersonate.start(impersonationCookie)
         .success((response) => {
