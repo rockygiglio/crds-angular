@@ -59,7 +59,7 @@ var checkLoggedin = function ($q, $timeout, $http, $location, $rootScope, $cooki
   }).success(function (user) {
     // Authenticated
     if (user.userId !== undefined) {
-      $timeout(deferred.resolve, 0);
+      Session.restoreImpersonation(deferred);
       $rootScope.userid = user.userId;
       $rootScope.username = user.username;
     } else {

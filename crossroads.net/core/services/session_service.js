@@ -36,6 +36,7 @@
     $http,
     $state,
     $interval,
+    $timeout,
     $cookies,
     $modal,
     $injector,
@@ -196,20 +197,7 @@
           } else {
             vm.enableReactiveSso(event, stateName, stateData, stateToParams);
           }
-          const impersonationCookie = $cookies.get('impersonateUserId');
-          if (impersonationCookie && user.canImpersonate) {
-            Impersonate.start(impersonationCookie)
-            .success((response) => {
-              Impersonate.storeCurrentUser();
-              Impersonate.storeDetails(true, response, impersonationCookie);
-              Impersonate.setCurrentUser(response);
-            })
-            .error(() => {
-              Impersonate.stop();
-            });
-          } else if (impersonationCookie) {
-            $cookies.remove('impersonateUserId');
-          }
+          vm.restoreImpersonation();
         }).error(() => {
           vm.clearAndRedirect(event, stateName, stateToParams);
           vm.enableReactiveSso(event, stateName, stateData, stateToParams);
@@ -226,6 +214,35 @@
       const deferred = $q.defer();
       deferred.reject('User is not logged in.');
       return deferred.promise;
+    };
+
+    vm.restoreImpersonation = (defferer) => {
+      const impersonationCookie = $cookies.get('impersonateUserId');
+      if (impersonationCookie) {
+        Impersonate.start(impersonationCookie)
+        .success((response) => {
+          Impersonate.storeCurrentUser();
+          Impersonate.storeDetails(true, response, impersonationCookie);
+          Impersonate.setCurrentUser(response);
+          vm.completeResolve(defferer);
+        })
+        .error(() => {
+          Impersonate.stop();
+          vm.completeResolve(defferer);
+        });
+      } else if (impersonationCookie) {
+        $cookies.remove('impersonateUserId');
+        vm.completeResolve(defferer);
+      }
+      else {
+        vm.completeResolve(defferer);
+      }
+    };
+
+    vm.completeResolve = (defferer) => {
+      if (defferer !== undefined) {
+        $timeout(defferer.resolve, 0);
+      }
     };
 
     // flag to determine if the current user was already
@@ -319,6 +336,7 @@
     '$http',
     '$state',
     '$interval',
+    '$timeout',
     '$cookies',
     '$modal',
     '$injector',
