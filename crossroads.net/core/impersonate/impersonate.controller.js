@@ -4,64 +4,34 @@
   function ImpersonateController(
     $rootScope,
     $http,
-    $cookies
+    $cookies,
+    Impersonate
     ) {
     this.username = undefined;
     this.user = undefined;
     this.processing = false;
     this.error = false;
 
-    this.startImpersonating = () => {
+    this.start = () => {
       this.processing = true;
-      $http.get(`${__API_ENDPOINT__}api/user?username=${encodeURI(this.username).replace(/\+/g, '%2B')}`)
+      Impersonate.start(this.username)
       .success((response) => {
         this.processing = false;
         this.error = false;
-        this.storeCurrentUser();
-        this.storeImpersonateDetails(true, response);
-        this.setCurrentUser(response);
+        Impersonate.storeCurrentUser();
+        Impersonate.storeDetails(true, response, this.username);
+        Impersonate.setCurrentUser(response);
       })
       .error(() => {
         this.processing = false;
         this.error = true;
-        this.storeImpersonateDetails(false);
+        Impersonate.stop();
       });
     };
 
-    this.stopImpersonating = () => {
+    this.stop = () => {
       this.username = undefined;
-      this.storeImpersonateDetails(false);
-      this.setCurrentUser($rootScope.impersonation.loggedIn);
-    };
-
-    this.storeCurrentUser = () => {
-      $rootScope.impersonation.loggedIn = {
-        userId: $rootScope.userid,
-        username: $rootScope.username,
-        userEmail: $rootScope.email,
-        userPhone: $rootScope.phone,
-        roles: $rootScope.roles
-      };
-    };
-
-    this.setCurrentUser = (user) => {
-      $rootScope.userid = user.userId;
-      $rootScope.username = user.username;
-      $rootScope.email = user.userEmail;
-      $rootScope.phone = user.userPhone;
-      $rootScope.roles = user.roles;
-      $cookies.put('userId', user.userId);
-      $cookies.put('username', user.username);
-      $rootScope.$emit('profilePhotoChanged', user.userId);
-    };
-
-    this.storeImpersonateDetails = (active, loginReturn) => {
-      if (active !== true) {
-        active = false;
-      }
-      $rootScope.impersonation.active = active;
-      $rootScope.impersonation.impersonated = loginReturn;
-      $http.defaults.headers.common.ImpersonateUserId = loginReturn ? this.username : undefined;
+      Impersonate.stop();
     };
   }
 
@@ -70,6 +40,7 @@
   ImpersonateController.$inject = [
     '$rootScope',
     '$http',
-    '$cookies'
+    '$cookies',
+    'Impersonate'
   ];
 })();
