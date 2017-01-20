@@ -47,7 +47,7 @@ var preventRouteTypeUrlEncoding = function(urlMatcherFactory, routeType, urlPatt
 //================================================
 // Check if the user is connected
 //================================================
-var checkLoggedin = function ($q, $timeout, $http, $location, $rootScope, $cookies, Session) {
+var checkLoggedin = function ($q, $timeout, $http, $location, $rootScope, $cookies, Session, Impersonate) {
   var deferred = $q.defer();
   $http.defaults.headers.common.Authorization = $cookies.get(cookieNames.SESSION_ID);
   $http({
@@ -59,7 +59,12 @@ var checkLoggedin = function ($q, $timeout, $http, $location, $rootScope, $cooki
   }).success(function (user) {
     // Authenticated
     if (user.userId !== undefined) {
-      Session.restoreImpersonation(deferred);
+      const impersonationCookie = $cookies.get('impersonateUserId');
+      if (impersonationCookie) {
+        Impersonate.setHeaders(impersonationCookie);
+        Session.restoreImpersonation();
+      }
+      $timeout(deferred.resolve, 0);
       $rootScope.userid = user.userId;
       $rootScope.username = user.username;
     } else {

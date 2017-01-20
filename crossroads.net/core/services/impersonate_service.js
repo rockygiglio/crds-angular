@@ -51,13 +51,17 @@
       }
       $rootScope.impersonation.active = active;
       $rootScope.impersonation.impersonated = loginReturn;
-      $http.defaults.headers.common.ImpersonateUserId = username;
+      this.setHeaders(username);
       if (active === false) {
         $cookies.remove('impersonateUserId');
       } else {
         $cookies.put('impersonateUserId', username);
       }
     };
+
+    this.setHeaders = (username) => {
+      $http.defaults.headers.common.ImpersonateUserId = username;
+    }
   }
 
   ImpersonateService.$inject = [

@@ -216,7 +216,7 @@
       return deferred.promise;
     };
 
-    vm.restoreImpersonation = (defferer) => {
+    vm.restoreImpersonation = () => {
       const impersonationCookie = $cookies.get('impersonateUserId');
       if (impersonationCookie) {
         Impersonate.start(impersonationCookie)
@@ -224,24 +224,12 @@
           Impersonate.storeCurrentUser();
           Impersonate.storeDetails(true, response, impersonationCookie);
           Impersonate.setCurrentUser(response);
-          vm.completeResolve(defferer);
         })
         .error(() => {
           Impersonate.stop();
-          vm.completeResolve(defferer);
         });
       } else if (impersonationCookie) {
         $cookies.remove('impersonateUserId');
-        vm.completeResolve(defferer);
-      }
-      else {
-        vm.completeResolve(defferer);
-      }
-    };
-
-    vm.completeResolve = (defferer) => {
-      if (defferer !== undefined) {
-        $timeout(defferer.resolve, 0);
       }
     };
 
