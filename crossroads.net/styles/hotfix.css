@@ -1,1 +1,1122 @@
 /* Stylesheet to house temporary style fixes between releases */
+
+/* Spark Microsite */
+
+/* Groups Microsite */
+
+.row.no-gutter {
+    margin-left: 0;
+    margin-right: 0; }
+
+.row.no-gutter [class*='col-']:not(:first-child),
+.row.no-gutter [class*='col-']:not(:last-child) {
+    padding-right: 0;
+    padding-left: 0; }
+
+#groups-landing {
+    margin: 0 -15px;}
+#groups-landing .group-landing-push-bottom {
+    margin-bottom: 6%; }
+@media (max-width: 768px) {
+    #groups-landing .group-landing-push-bottom {
+        margin-bottom: 8%; } }
+#groups-landing .group-landing-push-half-bottom {
+    margin-bottom: 3%; }
+@media (max-width: 768px) {
+    #groups-landing .group-landing-push-half-bottom {
+        margin-bottom: 4%; } }
+@media (max-width: 768px) {
+    #groups-landing .group-landing-mobile-push-half-bottom {
+        margin-bottom: 4%; } }
+#groups-landing .group-landing-center {
+    margin-left: auto;
+    margin-right: auto; }
+#groups-landing .group-landing-button {
+    background-color: transparent;
+    border-radius: 5px;
+    border-color: #939598;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1.1px;
+    text-transform: uppercase; }
+#groups-landing .group-landing-section {
+    padding: 4%; }
+#groups-landing .group-landing-block, #groups-landing .group-landing-block > .aspect-content {
+    margin: 4% auto; }
+@media (max-width: 768px) {
+    #groups-landing .group-landing-block, #groups-landing .group-landing-block > .aspect-content {
+        margin: 6% auto; } }
+#groups-landing .group-landing-header {
+    display: inline-block;
+    margin-bottom: 2%;
+    color: #231F20;
+    font-size: 2.2vw;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 3px; }
+@media (max-width: 768px) {
+    #groups-landing .group-landing-header {
+        margin-bottom: 4%;
+        font-size: 4.2vw; } }
+#groups-landing .group-landing-header::after {
+    display: block;
+    width: 100%;
+    content: '';
+    background: #231F20;
+    height: 2px; }
+#groups-landing .group-landing-content {
+    width: 93%;
+    margin-left: auto;
+    margin-right: auto;
+    color: #939598;
+    font-size: 2.9vw;
+    line-height: 1.5; }
+@media (max-width: 768px) {
+    #groups-landing .group-landing-content {
+        font-size: 6vw; } }
+#groups-landing .group-landing-subcontent {
+    width: 93%;
+    margin-left: auto;
+    margin-right: auto;
+    color: #939598;
+    font-size: 2vw;
+    text-align: left;
+    line-height: 1.3; }
+@media (max-width: 768px) {
+    #groups-landing .group-landing-subcontent {
+        font-size: 5vw; } }
+#groups-landing .group-landing-faq-term {
+    color: #939598;
+    font-size: 2.9vw;
+    line-height: 1.2;
+    text-align: left;
+    margin-bottom: 5px; }
+@media (max-width: 768px) {
+    #groups-landing .group-landing-faq-term {
+        font-size: 6vw; } }
+#groups-landing .group-landing-faq-definition {
+    color: #939598;
+    font-size: 2vw;
+    line-height: 1.3;
+    text-align: left; }
+@media (max-width: 768px) {
+    #groups-landing .group-landing-faq-definition {
+        font-size: 5vw; } }
+#groups-landing #groups-landing-get-in {
+    position: relative;
+    position: relative;
+    width: 100%;
+    background: url(//crds-cms-uploads.imgix.net/content/images/groups-landing/headerbg.jpg) top no-repeat;
+    background-size: cover; }
+#groups-landing #groups-landing-get-in:before {
+    display: block;
+    content: " ";
+    width: 100%;
+    padding-top: 53.47594%; }
+#groups-landing #groups-landing-get-in > .aspect-content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0; }
+#groups-landing #groups-landing-get-in .aspect-content {
+    padding-top: 20%; }
+#groups-landing #groups-landing-get-in img {
+    display: block;
+    width: 70%; }
+#groups-landing #groups-landing-get-in button {
+    background-color: white; }
+#groups-landing #groups-landing-relationships {
+    background-color: white; }
+#groups-landing #groups-landing-leader {
+    background-color: #DBE0E5; }
+#groups-landing #groups-landing-leader img {
+    width: 100%; }
+#groups-landing #groups-landing-onsite {
+    background-color: #F1F2F2; }
+#groups-landing #groups-landing-resources {
+    position: relative;
+    background-color: white; }
+#groups-landing #groups-landing-resources p {
+    position: absolute;
+    top: 12%;
+    left: 0;
+    right: 52%;
+    bottom: 50%;
+    font-size: 1.5vw;
+    text-align: left;
+    text-transform: uppercase; }
+@media (max-width: 768px) {
+    #groups-landing #groups-landing-resources p {
+        font-size: 3vw; } }
+#groups-landing #groups-landing-resources img {
+    width: 100%; }
+#groups-landing #groups-landing-faqs {
+    background-color: #F1F2F2; }
+#groups-landing #groups-landing-help {
+    background-color: white; }
+
+#groups-landing-20160826 {
+    margin: 0 -15px; }
+#groups-landing-20160826 .group-landing-push-bottom {
+    margin-bottom: 6%; }
+@media (min-width: 1200px) {
+    #groups-landing-20160826 .group-landing-push-bottom {
+        margin-bottom: 4.8%; } }
+@media (max-width: 768px) {
+    #groups-landing-20160826 .group-landing-push-bottom {
+        margin-bottom: 8%; } }
+#groups-landing-20160826 .group-landing-push-half-bottom {
+    margin-bottom: 3%; }
+@media (min-width: 1200px) {
+    #groups-landing-20160826 .group-landing-push-half-bottom {
+        margin-bottom: 2.4%; } }
+@media (max-width: 768px) {
+    #groups-landing-20160826 .group-landing-push-half-bottom {
+        margin-bottom: 4%; } }
+@media (max-width: 768px) {
+    #groups-landing-20160826 .group-landing-mobile-push-half-bottom {
+        margin-bottom: 4%; } }
+#groups-landing-20160826 .group-landing-center {
+    margin-left: auto;
+    margin-right: auto; }
+#groups-landing-20160826 .group-landing-button {
+    background-color: transparent;
+    border-radius: 5px;
+    border-color: #939598;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1.1px;
+    text-transform: uppercase;
+    padding: 10px 20px; }
+#groups-landing-20160826 .group-landing-section {
+    padding: 4%; }
+@media (min-width: 1200px) {
+    #groups-landing-20160826 .group-landing-section {
+        padding: 2.4%; } }
+#groups-landing-20160826 .group-landing-block, #groups-landing-20160826 .group-landing-block > .aspect-content {
+    margin: 4% auto; }
+@media (min-width: 1200px) {
+    #groups-landing-20160826 .group-landing-block, #groups-landing-20160826 .group-landing-block > .aspect-content {
+        margin: 3.6% auto; } }
+@media (max-width: 768px) {
+    #groups-landing-20160826 .group-landing-block, #groups-landing-20160826 .group-landing-block > .aspect-content {
+        margin: 6% auto; } }
+#groups-landing-20160826 .group-landing-header {
+    display: inline-block;
+    margin-top: 0;
+    margin-bottom: 2%;
+    color: #231F20;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 3px; }
+@media (max-width: 768px) {
+    #groups-landing-20160826 .group-landing-header {
+        margin-bottom: 4%; } }
+#groups-landing-20160826 .group-landing-header::after {
+    display: block;
+    width: 100%;
+    content: '';
+    background: #231F20;
+    height: 2px; }
+#groups-landing-20160826 .group-landing-content {
+    width: 93%;
+    margin-top: 0;
+    margin-left: auto;
+    margin-right: auto;
+    color: #939598;
+    line-height: 1.5;
+    font-weight: 300; }
+#groups-landing-20160826 .group-landing-subcontent {
+    width: 93%;
+    margin-left: auto;
+    margin-right: auto;
+    color: #939598;
+    font-size: 140%;
+    text-align: left;
+    line-height: 1.3; }
+@media (max-width: 768px) {
+    #groups-landing-20160826 .group-landing-subcontent {
+        font-size: 115%; } }
+#groups-landing-20160826 .group-landing-faq-term {
+    color: #939598;
+    line-height: 1.2;
+    text-align: left;
+    margin-bottom: 5px;
+    font-weight: 300; }
+#groups-landing-20160826 .group-landing-faq-definition {
+    color: #939598;
+    font-size: 140%;
+    line-height: 1.3;
+    text-align: left; }
+@media (max-width: 768px) {
+    #groups-landing-20160826 .group-landing-faq-definition {
+        font-size: 115%; } }
+#groups-landing-20160826 #groups-landing-get-in {
+    position: relative;
+    position: relative;
+    width: 100%;
+    background: url(//crds-cms-uploads.imgix.net/content/images/groups-landing/headerbg.jpg) top no-repeat;
+    background-size: cover; }
+#groups-landing-20160826 #groups-landing-get-in:before {
+    display: block;
+    content: " ";
+    width: 100%;
+    padding-top: 53.47594%; }
+#groups-landing-20160826 #groups-landing-get-in > .aspect-content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0; }
+#groups-landing-20160826 #groups-landing-get-in .aspect-content {
+    padding-top: 20%; }
+#groups-landing-20160826 #groups-landing-get-in img {
+    display: block;
+    width: 70%; }
+#groups-landing-20160826 #groups-landing-get-in button {
+    background-color: white; }
+#groups-landing-20160826 #groups-landing-relationships {
+    background-color: white; }
+#groups-landing-20160826 #groups-landing-leader {
+    background-color: #DBE0E5; }
+#groups-landing-20160826 #groups-landing-leader img {
+    width: 100%; }
+#groups-landing-20160826 #groups-landing-onsite {
+    background-color: #F1F2F2; }
+#groups-landing-20160826 #groups-landing-resources {
+    position: relative;
+    background-color: white; }
+#groups-landing-20160826 #groups-landing-resources .group-landing-book {
+    position: relative; }
+#groups-landing-20160826 #groups-landing-resources p {
+    position: absolute;
+    top: 20%;
+    left: 0;
+    right: 77%;
+    bottom: 50%;
+    font-size: 1.5vw;
+    text-align: left;
+    text-transform: uppercase; }
+@media (max-width: 768px) {
+    #groups-landing-20160826 #groups-landing-resources p {
+        font-size: 3vw;
+        right: 52%; } }
+@media (min-width: 1200px) {
+    #groups-landing-20160826 #groups-landing-resources p {
+        font-size: 0.9vw; } }
+#groups-landing-20160826 #groups-landing-resources img {
+    width: 100%; }
+#groups-landing-20160826 #groups-landing-faqs {
+    background-color: #F1F2F2; }
+#groups-landing-20160826 #groups-landing-help {
+    background-color: white; }
+
+
+/* Communications Projects Pages */
+
+.cp-lead-question {
+  font-size: 18px;
+  background: #e7e7e7;
+  text-align: center;
+  color: #898989;
+}
+
+.cp.thumbnail {
+  padding: 0;
+  transition: .35s transform ease-in-out; }
+  .cp.thumbnail:hover {
+    transform: scale(1.05); }
+
+.cp h4 {
+  font-size: 16px;
+  margin: 0 0 6px 0; }
+.cp .caption {
+  padding: 12px; }
+.cp p {
+  margin-bottom: 0; }
+
+.cp-instructions {
+  margin: 0 0 16px;
+  padding: 0;
+  counter-reset: item; }
+
+.cp-instructions > li {
+  margin: 10px 0;
+  padding: 0 0 0 16px;
+  text-indent: -16px;
+  list-style-type: none;
+  counter-increment: item; }
+
+.cp-instructions > li:before {
+  display: inline-block;
+  width: 16px;
+  padding-right: 0.5em;
+  font-weight: bold;
+  text-align: right;
+  content: counter(item) "."; }
+
+
+.crds-legacy-styles .coms-projects-thumbnails .thumbnail,
+.coms-projects-thumbnails .thumbnail {
+  border: 0px;
+  padding: 0;
+}
+
+.crds-legacy-styles .coms-projects-thumbnails .thumbnail .caption,
+.coms-projects-thumbnails .thumbnail .caption {
+  padding: 0;
+}
+
+/* Anywhere Leadership Pages */
+
+.crds-legacy-styles .anywhere-leadership,
+.anywhere-leadership {
+  font-family: "acumin-pro", sans-serif;
+}
+
+.crds-legacy-styles .anywhere-leadership p,
+.anywhere-leadership p {
+  color: #414141;
+}
+
+.crds-legacy-styles .anywhere-leadership h1,
+.anywhere-leadership h1,
+.crds-legacy-styles .anywhere-leadership h2,
+.anywhere-leadership h2,
+.crds-legacy-styles .anywhere-leadership h3,
+.anywhere-leadership h3
+h4 {
+  color: #3e3e3e;
+}
+
+.crds-legacy-styles .anywhere-leadership .anywhere-leadership-heading,
+.anywhere-leadership .anywhere-leadership-heading {
+  background: #000 url("//crds-cms-uploads.imgix.net/content/images/anywhere-leadership-background.jpg") center center;
+  background-size: cover;
+  color: white;
+}
+
+.crds-legacy-styles .anywhere-leadership .anywhere-leadership-heading h1,
+.anywhere-leadership .anywhere-leadership-heading h1 {
+  font-weight: 100;
+  color: white;
+  font-family: "acumin-pro", sans-serif;
+  font-size: 238%;
+  line-height: 100%;
+  margin-bottom: 0.5em;
+}
+@media (min-width: 992px) {
+  .crds-legacy-styles .anywhere-leadership .anywhere-leadership-heading h1,
+  .anywhere-leadership .anywhere-leadership-heading h1 {
+    font-size: 338%;
+  }
+}
+.crds-legacy-styles .anywhere-leadership .anywhere-leadership-heading p,
+.anywhere-leadership .anywhere-leadership-heading p {
+  font-weight: 300;
+  color: white;
+}
+.crds-legacy-styles .anywhere-leadership h3,
+.anywhere-leadership h3 {
+  font-family: "acumin-pro-extra-condensed", sans-serif;
+  text-transform: uppercase;
+  font-weight: 600;
+  line-height: 100%;
+  letter-spacing: -.032em;
+}
+
+.crds-legacy-styles .sidebar-menu li,
+.sidebar-menu li {
+  border-bottom: 1px solid #878785;
+}
+
+.crds-legacy-styles .sidebar-menu li a,
+.sidebar-menu li a {
+  display: block;
+  color: #878785;
+  line-height: 1.25;
+  padding: 13px 0;
+}
+
+.crds-legacy-styles .sidebar-menu li a.active,
+.sidebar-menu li a.active,
+.crds-legacy-styles .sidebar-menu li a:hover,
+.sidebar-menu li a:hover {
+  color: #428bca;
+}
+
+
+/* Christmas at Home */
+
+.crds-legacy-styles .christmas-at-home,
+.christmas-at-home {
+  font-family: "acumin-pro", sans-serif;
+}
+.crds-legacy-styles .christmas-at-home p,
+.christmas-at-home p {
+  color: #414141;
+}
+.crds-legacy-styles .christmas-at-home h1,
+.crds-legacy-styles .christmas-at-home h2,
+.crds-legacy-styles .christmas-at-home h3
+h4,
+.christmas-at-home h1,
+.christmas-at-home h2,
+.christmas-at-home h3
+h4 {
+  color: #3e3e3e;
+}
+.crds-legacy-styles .christmas-at-home .christmas-at-home-heading,
+.christmas-at-home .christmas-at-home-heading {
+  background: #000 url("//crds-cms-uploads.imgix.net/content/images/cahbg.jpg") center center;
+  background-size: cover;
+  color: white;
+  padding: 10rem 0;
+}
+@media (min-width: 992px) {
+  .crds-legacy-styles .christmas-at-home .christmas-at-home-heading,
+  .christmas-at-home .christmas-at-home-heading {
+    padding: 15rem 0;
+  }
+}
+.crds-legacy-styles .christmas-at-home .christmas-at-home-heading h1,
+.christmas-at-home .christmas-at-home-heading h1 {
+  font-weight: 100;
+  color: white;
+  font-family: "acumin-pro", sans-serif;
+  font-size: 238%;
+  line-height: 100%;
+}
+@media (min-width: 992px) {
+  .crds-legacy-styles .christmas-at-home .christmas-at-home-heading h1,
+  .christmas-at-home .christmas-at-home-heading h1 {
+    font-size: 338%;
+  }
+}
+.crds-legacy-styles .christmas-at-home .christmas-at-home-heading .small-heading,
+.christmas-at-home .christmas-at-home-heading .small-heading {
+  letter-spacing: 2px;
+  font-weight: 600;
+  opacity: .9;
+  color: #efc9c0;
+  font-family: "acumin-pro", sans-serif;
+}
+.crds-legacy-styles .christmas-at-home h2,
+.christmas-at-home h2 {
+  font-weight: 100;
+}
+.crds-legacy-styles .christmas-at-home .christmas-sidebar,
+.christmas-at-home .christmas-sidebar {
+  position: relative;
+}
+.crds-legacy-styles .christmas-at-home .christmas-sidebar:before,
+.christmas-at-home .christmas-sidebar:before {
+  content: "";
+  display: block;
+  border-left: 1px solid #C1C1C1;
+  left: -26px;
+  top: 0;
+  bottom: 0;
+  height: 100%;
+  position: absolute;
+}
+@media (min-width: 992px) {
+  .crds-legacy-styles .christmas-at-home .christmas-sidebar:before,
+  .christmas-at-home .christmas-sidebar:before {
+    left: -52px;
+  }
+}
+.crds-legacy-styles .christmas-at-home .well,
+.christmas-at-home .well {
+  border: none;
+  border-radius: 0px;
+  box-shadow: none;
+  background: #f6f6f6;
+}
+.crds-legacy-styles .christmas-at-home .well h3,
+.christmas-at-home .well h3 {
+  font-family: "acumin-pro-extra-condensed", sans-serif;
+  text-transform: uppercase;
+  font-weight: 600;
+  line-height: 100%;
+  letter-spacing: -.032em;
+}
+.crds-legacy-styles .christmas-at-home .well hr,
+.christmas-at-home .well hr {
+  margin: 13px 0;
+  border-color: #d5d5d5;
+}
+.crds-legacy-styles .christmas-at-home .well table,
+.christmas-at-home .well table {
+  width: 100%;
+}
+.crds-legacy-styles .christmas-at-home .ways-to-watch,
+.christmas-at-home .ways-to-watch {
+  background: #F6F6F6;
+  padding: 2em 0;
+  text-align: center;
+  margin-bottom: -53px;
+}
+.crds-legacy-styles .christmas-at-home .ways-to-watch h2,
+.christmas-at-home .ways-to-watch h2 {
+  font-size: 200%;
+  color: #959595;
+  margin-bottom: 1em;
+  font-weight: 300;
+}
+.crds-legacy-styles .christmas-at-home .ways-to-watch figure,
+.christmas-at-home .ways-to-watch figure {
+  text-align: center;
+  margin-bottom: 1em;
+}
+.crds-legacy-styles .christmas-at-home .ways-to-watch figure img,
+.christmas-at-home .ways-to-watch figure img {
+  margin: 0 auto;
+  max-width: 60%;
+}
+@media only screen and (min-width: 768px) {
+  .crds-legacy-styles .christmas-at-home .ways-to-watch figure,
+  .christmas-at-home .ways-to-watch figure {
+    position: relative;
+    min-height: 1px;
+    padding-left: 15px;
+    padding-right: 15px;
+    display: table-cell;
+    vertical-align: bottom;
+    text-align: left;
+    margin-bottom: 1em;
+  }
+}
+@media only screen and (min-width: 768px) and (min-width: 768px) {
+  .crds-legacy-styles .christmas-at-home .ways-to-watch figure,
+  .christmas-at-home .ways-to-watch figure {
+    float: left;
+    width: 16.66667%;
+  }
+}
+@media only screen and (min-width: 768px) and (min-width: 768px) {
+  .crds-legacy-styles .christmas-at-home .ways-to-watch figure:first-child,
+  .christmas-at-home .ways-to-watch figure:first-child {
+    margin-left: 8.33333%;
+  }
+}
+@media only screen and (min-width: 768px) {
+  .crds-legacy-styles .christmas-at-home .ways-to-watch figure img,
+  .christmas-at-home .ways-to-watch figure img {
+    margin: 0;
+    max-width: 100%;
+  }
+}
+.crds-legacy-styles .christmas-at-home .ways-to-watch figure figcaption,
+.christmas-at-home .ways-to-watch figure figcaption {
+  font-size: 70%;
+  font-weight: 600;
+  margin-top: 0.3em;
+  word-wrap: break-word;
+}
+.crds-legacy-styles .christmas-at-home .ways-to-watch figure figcaption span,
+.christmas-at-home .ways-to-watch figure figcaption span {
+  font-weight: normal;
+}
+
+
+/* Group Leadership Resources Pages */
+
+.crds-legacy-styles .group-leadership p,
+.group-leadership p {
+  font-size: .9em;
+  font-weight: 400;
+}
+.crds-legacy-styles .group-leadership-calendar p,
+.group-leadership-calendar p {
+  font-size: .9em;
+  font-weight: 400;
+}
+.crds-legacy-styles .group-leadership-podcast p,
+.group-leadership-podcast p {
+  font-size: .9em;
+  font-weight: 400;
+}
+.crds-legacy-styles .group-leadership h1,
+.group-leadership h1{
+  color: #fff;
+  font-weight:300;
+  margin-bottom:100px;
+  margin-top:60px;
+  transform: translateY(50%);
+    -webkit-transform: translateY(50%);
+    -ms-transform: translateY(50%);
+}
+.crds-legacy-styles .group-leadership-calendar h1,
+.group-leadership-calendar h1 {
+  color: #fff;
+  font-weight:300;
+  margin-bottom:100px;
+  margin-top:60px;
+  transform: translateY(50%);
+    -webkit-transform: translateY(50%);
+    -ms-transform: translateY(50%);
+}
+.crds-legacy-styles .group-leadership-podcast h1,
+.group-leadership-podcast h1 {
+  color: #fff;
+  font-weight:300;
+  margin-bottom:35px;
+  margin-top:60px;
+  transform: translateY(50%);
+    -webkit-transform: translateY(50%);
+    -ms-transform: translateY(50%);
+}
+.crds-legacy-styles .group-leadership h2,
+.group-leadership h2 {
+  font-size: 1.8em;
+  line-height: 1.4em;
+  font-weight: 300;
+}
+.crds-legacy-styles .group-leadership h3,
+.group-leadership h3 {
+  font-size: 1.5em;
+}
+.crds-legacy-styles .group-leadership .group-leadership-heading,
+.group-leadership .group-leadership-heading {
+  background: #000 url("//crds-cms-uploads.imgix.net/Uploads/group-leader-resources/crossroads-leader-resources-header.jpg") top no-repeat;
+  background-size: cover;
+  color: white;
+  position: relative;
+  height: 500px;
+}
+.crds-legacy-styles .group-leadership .group-calendar-heading,
+.group-leadership .group-calendar-heading {
+  background: #000 url("//crds-cms-uploads.imgix.net/Uploads/group-leader-resources/crossroads-leader-resources-calendar.jpg") top no-repeat;
+  background-size: cover;
+  color: white;
+  position: relative;
+  height: 500px;
+}
+.crds-legacy-styles .group-leadership-calendar .group-leadership-heading,
+.group-leadership-calendar .group-leadership-heading {
+  background: #000 url("//crds-cms-uploads.imgix.net/Uploads/group-leader-resources/crossroads-leader-resources-header.jpg") top no-repeat;
+  background-size: cover;
+  color: white;
+  position: relative;
+  height: 350px;
+}
+.crds-legacy-styles .group-leadership-podcast .group-leadership-heading,
+.group-leadership-podcast .group-leadership-heading {
+  background: #000 url("//crds-cms-uploads.imgix.net/content/images/group-leader-resouces/crossroads-leader-resources-header3.jpg") top no-repeat;
+  background-size: cover;
+  color: white;
+  position: relative;
+  height: 350px;
+}
+.crds-legacy-styles .group-leadership {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.crds-legacy-styles .group-classes {
+  padding-left: 40px !important;
+  border-left: 1px solid #cacaca;
+}
+.crds-legacy-styles .group-sidebar {
+  padding-right: 40px !important;
+}
+.crds-legacy-styles .podcast-list tr {
+  font-size: .8em;
+}
+@media (max-width: 768px) {
+  .crds-legacy-styles .group-classes {
+    padding-left: 15px !important;
+    border-left: none;
+  }
+  .crds-legacy-styles .group-sidebar {
+    padding-right: 15px !important;
+  }
+}
+
+/* Central KY */
+
+.crds-legacy-styles .centralky,
+.centralky {
+  overflow: hidden;
+  margin-bottom: -40px;
+}
+.crds-legacy-styles .centralky h1, .crds-legacy-styles .centralky h2, .crds-legacy-styles .centralky h3,
+.centralky h1,
+.centralky h2,
+.centralky h3 {
+  font-weight: 200;
+}
+@media (max-width: 768px) {
+  .crds-legacy-styles .centralky .img-full-width.centralky-photo-block,
+  .centralky .img-full-width.centralky-photo-block {
+    width: auto;
+    height: 200px;
+  }
+}
+.crds-legacy-styles .centralky .resilient-callout,
+.centralky .resilient-callout {
+  max-width: 700px;
+}
+.crds-legacy-styles .centralky .resilient-callout .btn-text,
+.centralky .resilient-callout .btn-text {
+  color: #747474;
+}
+.crds-legacy-styles .centralky .lex-anywhere-section,
+.centralky .lex-anywhere-section {
+  color: #fff;
+}
+.crds-legacy-styles .centralky .lex-anywhere-section h1, .crds-legacy-styles .centralky .lex-anywhere-section h2, .crds-legacy-styles .centralky .lex-anywhere-section h3, .crds-legacy-styles .centralky .lex-anywhere-section p,
+.centralky .lex-anywhere-section h1,
+.centralky .lex-anywhere-section h2,
+.centralky .lex-anywhere-section h3,
+.centralky .lex-anywhere-section p {
+  color: #fff;
+}
+.crds-legacy-styles .centralky .lex-anywhere-section h1,
+.centralky .lex-anywhere-section h1 {
+  font-family: "acumin-pro-extra-condensed", sans-serif;
+  font-weight: 600;
+  font-size: 450%;
+}
+@media (max-width: 768px) {
+  .crds-legacy-styles .centralky .lex-anywhere-section h1,
+  .centralky .lex-anywhere-section h1 {
+    font-size: 300%;
+  }
+}
+
+.crds-legacy-styles .btn-standard.btn-anywhere,
+.btn-standard.btn-anywhere {
+  color: #0095d8;
+  background: #fff;
+  transition: all .25s ease-in-out;
+  font-family: "acumin-pro", sans-serif;
+  font-weight: 600;
+}
+.crds-legacy-styles .btn-standard.btn-anywhere:hover,
+.btn-standard.btn-anywhere:hover {
+  color: #0083bf;
+  background: #eeeeee;
+}
+
+.crds-card.crds-location-card figcaption,
+.crds-legacy-styles .crds-card.crds-location-card figcaption {
+  font-family: "acumin-pro-extra-condensed", sans-serif;
+  font-size: 180%;
+}
+.crds-card.crds-location-card figcaption a,
+.crds-legacy-styles .crds-card.crds-location-card figcaption a {
+  color: #3a3a3a;
+}
+
+.resilient-ball-img {
+  margin-left: -30px;
+  max-width: 690px;
+}
+@media (min-width: 1600px) {
+  .resilient-ball-img {
+    float: right;
+  }
+}
+
+.top-callout-bar {
+  color: white;
+  background: #005a85;
+}
+.top-callout-bar a {
+  text-decoration: underline;
+}
+
+.resilient-callout {
+  max-width: 1000px;
+}
+
+.resilient-icons {
+  width: 250px;
+  max-width: 100%;
+  height: auto;
+  margin-left: auto;
+  margin-right: auto;
+}
+@media (min-width: 1200px) {
+  .resilient-icons {
+    width: 340px;
+    margin-top: 26px;
+  }
+}
+@media (min-width: 768px) {
+  .resilient-icons {
+    float: left;
+  }
+}
+
+.text-red {
+  color: #ed1c24;
+}
+
+@media (min-width: 1200px) {
+  .resilient-callout {
+    margin-top: 78px;
+  }
+}
+
+.christmas-eve-callout,
+.christmas-at-home-callout {
+  color: white;
+  padding: 78px 0;
+}
+.christmas-eve-callout h3, .christmas-eve-callout p,
+.christmas-at-home-callout h3,
+.christmas-at-home-callout p {
+  color: #fff !important;
+}
+.christmas-eve-callout a,
+.christmas-at-home-callout a {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.christmas-eve-callout {
+  background: url("//crds-cms-uploads.imgix.net/content/images/christmasevebg.jpg") center center;
+  background-size: cover;
+}
+
+.christmas-at-home-callout {
+  background: url("//crds-cms-uploads.imgix.net/content/images/cahbg.jpg") center center;
+  background-size: cover;
+}
+
+#home .home-locations {
+  position: relative;
+  background: white;
+  margin-top: 0;
+  padding: 0;
+}
+@media (min-width: 768px) {
+  #home .home-locations {
+    margin-top: 78px;
+  }
+}
+#home .home-locations h2, #home .home-locations p, #home .home-locations a {
+  color: white;
+}
+#home .home-locations a {
+  text-decoration: underline;
+}
+#home .home-locations a:hover {
+  text-decoration: none;
+}
+#home .home-locations .locations-text {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translateX(-50%) translateY(-50%);
+  z-index: 1;
+  width: 90%;
+}
+@media (min-width: 768px) {
+  #home .home-locations .locations-text {
+    width: auto;
+  }
+}
+
+.homepage .home-series:after,
+.crds-legacy-styles .homepage .home-series:after {
+  background: white !important;
+}
+
+.join-a-group-home {
+  position: relative;
+}
+.join-a-group-home img {
+  z-index: 1;
+  position: relative;
+}
+.join-a-group-home .arrow-down {
+  width: 0;
+  height: 0;
+  border-left: 40px solid transparent;
+  border-right: 40px solid transparent;
+  border-top: 30px solid #FFF;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  margin-left: -40px;
+  z-index: 3;
+}
+
+@media (max-width: 768px) {
+  .home-relationships .h3 {
+    font-size: 18px;
+  }
+}
+.locations .locations-header {
+  background: url("//crds-cms-uploads.imgix.net/content/images/locationsbg.jpg") center center no-repeat;
+  background-size: cover;
+  padding: 104px 0;
+}
+.locations .locations-header h1, .locations .locations-header h4 {
+  color: white;
+  font-weight: 200;
+}
+.locations .locations-body h3 {
+  color: #555;
+}
+.locations .locations-anywhere-section {
+  background: #0095d8;
+  color: white;
+}
+@media (min-width: 1200px) {
+  .locations .locations-anywhere-section .anywhere-content {
+    padding-top: 26px;
+  }
+}
+.locations .locations-anywhere-section h2 {
+  color: white;
+  font-family: "acumin-pro-extra-condensed", sans-serif;
+  font-weight: 600;
+  line-height: .75;
+}
+.locations .locations-anywhere-section i {
+  font-family: lexia,serif;
+  font-style: italic;
+  letter-spacing: -.015em;
+  color: #a7e4ff;
+}
+
+/* Central KY Events Fix */
+
+.explore .map,
+.crds-legacy-styles .explore .map {
+  background-color: #000 !important;
+  background: #000 url(//crds-cms-uploads.imgix.net/content/images/mapmobilefade.jpg) center center no-repeat;
+  background-size: cover;
+}
+@media (min-width: 768px) {
+  .explore .map,
+  .crds-legacy-styles .explore .map {
+    background-image: url(//crds-cms-uploads.imgix.net/content/images/explorefadeout3.jpg);
+    background-position: right center;
+  }
+}
+@media (min-width: 1400px) {
+  .explore .map,
+  .crds-legacy-styles .explore .map {
+    background-size: contain;
+  }
+}
+.explore .map .map-title,
+.crds-legacy-styles .explore .map .map-title {
+  color: white;
+}
+.explore .map .map-title:after,
+.crds-legacy-styles .explore .map .map-title:after {
+  content: "Each location is part of the same church, working as one team toward a common vision.";
+  display: block;
+  font-size: 1.3rem;
+  margin-top: 20px;
+  color: white;
+  line-height: 1.25;
+  letter-spacing: 0;
+}
+.explore .map .map-img,
+.explore .map .map-more,
+.explore .map .map-desc,
+.explore .map .map-flag,
+.crds-legacy-styles .explore .map .map-img,
+.crds-legacy-styles .explore .map .map-more,
+.crds-legacy-styles .explore .map .map-desc,
+.crds-legacy-styles .explore .map .map-flag {
+  display: none !important;
+}
+.explore .map .map-position,
+.crds-legacy-styles .explore .map .map-position {
+  top: 36% !important;
+  bottom: auto !important;
+}
+.explore .map .map-position .map-content,
+.crds-legacy-styles .explore .map .map-position .map-content {
+  background: transparent !important;
+}
+@media (min-width: 768px) {
+  .explore .map .map-position,
+  .crds-legacy-styles .explore .map .map-position {
+    top: 20% !important;
+  }
+}
+
+/* Superbowl 2017 */
+.crds-legacy-styles .superbowl-description {
+  background-color: #000;
+}
+.crds-legacy-styles .superbowl-description p {
+  font-size: 1.2em;
+  color: #fff;
+  text-align: center;
+}
+.crds-legacy-styles .sb-compete {
+  background: url("//crds-cms-uploads.imgix.net/content/images/crossroads-sb-compete-bg.jpg") center center no-repeat;
+  background-size: cover;
+}
+.crds-legacy-styles .superbowl-locations h3 {
+  font-family: "acumin-pro-extra-condensed", sans-serif;
+  font-weight: 600;
+  font-size: 300%;
+  text-transform: uppercase;
+}
+
+/* I Am Journey */
+.crds-legacy-styles .iam-landing-bg {
+  background: url("//crds-cms-uploads.imgix.net/content/images/IAM-journey-overview.jpg") no-repeat;
+  background-size: contain;
+  background-color: #e7e7e7;
+}
+.crds-legacy-styles .iam-journey h2{
+  font-family: "acumin-pro-extra-condensed", sans-serif;
+  font-weight: 600;
+  font-size: 300%;
+  text-transform: uppercase;
+}
+.crds-legacy-styles .iam-journey h4{
+  font-family: "acumin-pro-extra-condensed", sans-serif;
+  font-weight: 600;
+  font-size: 170%;
+  text-transform: uppercase;
+}
+
+/* Modal fix for Small Groups Signup */
+
+.modal-body {
+  overflow-y: auto;
+  max-height: 60vh;
+}
+
+@media (min-width: 768px) {
+  .modal-body {
+    max-height: 70vh;
+  }
+}
+
+/* Crossroads Camps Page */
+
+.crds-legacy-styles .camps h2{
+  font-weight: 300;
+}
+.crds-legacy-styles .camps h4{
+  font-family: "acumin-pro-extra-condensed", sans-serif;
+  font-weight: 600;
+  font-size: 220%;
+  text-transform: uppercase;
+}
+.crds-legacy-styles .camps-date {
+  font-family: "acumin-pro-extra-condensed", sans-serif;
+  font-weight: 300;
+  font-size: 220%;
+  text-transform: uppercase;
+  margin-top: -26px;
+}

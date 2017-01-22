@@ -3,77 +3,12 @@
 ***************************************************************************************/
 
 .homepage {
-  background: #000 url('https://crds-cms-uploads.imgix.net/content/images/cupbg.jpg') no-repeat;
-  background-position: -920px top;
-
-  @media only screen and (min-width:  $screen-sm-min){
-    background-position: center top;
-  }
-
   .main {
     margin-bottom: 0;
   }
 
   footer {
     margin-top: 0;
-  }
-
-  .brandbar-container {
-    visibility: hidden;
-    opacity: 0;
-  }
-
-  .icon-logo {
-    color: #fff;
-    transition: all .6s;
-
-    &:hover {
-      color: rgba(255, 255, 255, 0.6);
-    }
-  }
-
-  ul.cr-nav > li > a {
-    color: #fff;
-  }
-
-  ul.navbar--login .btn-standard {
-    @extend .btn-standard-darker;
-  }
-
-  .nav__side--toggle .icon-bar {
-    background-color: #fff;
-  }
-
-  .mobile-search {
-    .icon {
-      color: #fff;
-    }
-  }
-
-  h1,
-  h4,
-  .subheading,
-   {
-    background: transparent;
-    color: #fff;
-    border: none;
-  }
-
-  .home-intro {
-    color: #fff;
-    margin-top: $line-height-computed*2;
-    margin-bottom: $line-height-computed*2;
-
-    @media only screen and (min-width: $screen-xs){
-      margin-top: $line-height-computed*5;
-      margin-bottom: $line-height-computed*6;
-    }
-
-    .home-intro-text {
-      @media only screen and (max-width:  $screen-sm-min){
-        max-width: 350px;
-      }
-    }
   }
 
   .home-countdown {
