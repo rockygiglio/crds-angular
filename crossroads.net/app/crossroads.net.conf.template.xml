@@ -233,6 +233,7 @@
 	  RequestHeader set Cache-Control "max-age=600"
 	  RequestHeader unset Cookie
 	  RequestHeader unset User-Agent
+	  RequestHeader unset ImpersonateUserId
 	  Header unset ETag
 	  Header set Cache-Control "max-age=600"
 	  FileETag None

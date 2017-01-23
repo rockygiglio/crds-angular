@@ -36,7 +36,7 @@ namespace MinistryPlatform.Translation.Repositories
         private readonly int CommunityGroupWaitListConfirmationTemplateId = Convert.ToInt32(AppSettings("CommunityGroupWaitListConfirmationTemplateId"));
         private readonly int CurrentGroupParticipantsByGroupTypePageView = Convert.ToInt32(AppSettings("CurrentGroupParticipantsByGroupTypePageView"));
         private readonly int MyCurrentGroupsPageView = Convert.ToInt32(AppSettings("MyCurrentGroupsPageView"));
-        private readonly int JourneyGroupId = Convert.ToInt32(AppSettings("JourneyGroupId"));
+        private readonly int JourneyGroupTypeId = Convert.ToInt32(AppSettings("JourneyGroupTypeId"));
         private readonly int JourneyGroupSearchPageViewId = Convert.ToInt32(AppSettings("JourneyGroupSearchPageViewId"));
         private readonly int MySmallGroupsPageView = Convert.ToInt32(AppSettings("MySmallGroupsPageView"));
         private readonly int GroupLeaderRoleId = Convert.ToInt32(AppSettings("GroupLeaderRoleId"));
@@ -509,7 +509,7 @@ namespace MinistryPlatform.Translation.Repositories
 
         private int GetSearchPageViewId(int groupTypeId)
         {
-            if (groupTypeId == JourneyGroupId)
+            if (groupTypeId == JourneyGroupTypeId)
             {
                 return JourneyGroupSearchPageViewId;
             }
@@ -822,13 +822,13 @@ namespace MinistryPlatform.Translation.Repositories
             return groupDetails.Select(MapRecordToMpGroup).ToList();
         }
 
-        public List<MpGroup> GetMyGroupParticipationByType(string token, int? groupTypeId = null, int? groupId = null)
+        public List<MpGroup> GetMyGroupParticipationByType(string token, int[] groupTypeId = null, int? groupId = null)
         {
             var groupDetails = ministryPlatformService.GetRecordsDict(MyCurrentGroupParticipationPageId,
                                                                       token,
                                                                       string.Format(",,,{0},{1}",
                                                                                     groupId == null ? string.Empty : string.Format("\"{0}\"", groupId),
-                                                                                    groupTypeId == null ? string.Empty : string.Format("\"{0}\"", groupTypeId)));
+                                                                                    groupTypeId == null ? string.Empty : string.Format("\"{0}\"", string.Join("\" or \"", groupTypeId))));
             if (groupDetails == null || groupDetails.Count == 0)
             {
                 return new List<MpGroup>();
@@ -891,6 +891,7 @@ namespace MinistryPlatform.Translation.Repositories
                 PrimaryContactName = record.ContainsKey("Primary_Contact_Name") ? record.ToString("Primary_Contact_Name") : record.ToString("Primary_Contact_Text"),
                 PrimaryContactEmail = record.ContainsKey("Primary_Contact_Email") ? record.ToString("Primary_Contact_Email") : string.Empty,
                 GroupType = record.ToInt("Group_Type_ID"),
+                GroupTypeName = record.ToString("Group_Type_Name"),
                 StartDate = record.ToDate("Start_Date"),
                 EndDate = record.ToNullableDate("End_Date"),
                 MeetingDayId = record.ToInt("Meeting_Day_ID"),

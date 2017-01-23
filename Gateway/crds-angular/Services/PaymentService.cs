@@ -240,7 +240,7 @@ namespace crds_angular.Services
                 _logger.Error($"No Payment with payment processor ID {refund.Data[0].Charge.Id} in MP for Refund {refund.Data[0].Id}");
                 return (null);
             }
-
+            _paymentRepository.UpdatePaymentStatus(payment.PaymentId, (int) DonationStatus.Declined); // update the original payment to declined 
             var paymentReverse = new MpPayment
             {
                 InvoiceNumber = payment.InvoiceNumber,
@@ -263,8 +263,7 @@ namespace crds_angular.Services
                 InvoiceDetailId = invoicedetail.InvoiceDetailId,
                 Payment = paymentReverse
             };
-            
-            return (_paymentRepository.CreatePaymentAndDetail(detail).Value.PaymentId);
+            return _paymentRepository.CreatePaymentAndDetail(detail).Value.PaymentId;
         }
 
         public void UpdateInvoiceStatusAfterDecline(int invoiceId)

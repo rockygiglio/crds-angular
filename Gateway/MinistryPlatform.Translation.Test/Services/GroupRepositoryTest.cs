@@ -480,8 +480,8 @@ namespace MinistryPlatform.Translation.Test.Services
         {
             const int pageId = 563;
             const string token = "jenny8675309";
-            const int groupTypeId = 19;
-            string searchString = ",,,,\"" + groupTypeId + "\"";
+            int[] groupTypeId =  {19};
+            string searchString = ",,,,\"" + string.Join("\" or \"", groupTypeId) + "\"";
 
             _configWrapper.Setup(m => m.GetConfigIntValue(It.IsAny<string>())).Returns(pageId);
 
@@ -559,8 +559,8 @@ namespace MinistryPlatform.Translation.Test.Services
             const int groupId = 987;
             const int pageId = 563;
             const string token = "jenny8675309";
-            const int groupTypeId = 19;
-            string searchString = string.Format(",,,\"{0}\",\"{1}\"", groupId, groupTypeId);
+            int[] groupTypeId = {19};
+            string searchString = string.Format(",,,\"{0}\",\"{1}\"", groupId, string.Join("\" or \"", groupTypeId));
 
             _configWrapper.Setup(m => m.GetConfigIntValue(It.IsAny<string>())).Returns(pageId);
 
@@ -604,6 +604,7 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Congregation_ID", 4},
                     {"Group_Name", "Full Throttle"},
                     {"Group_Role_ID", 16},
+                    {"Group_Type_Name", "Small Group" },
                     {"Description", "Not The First"},
                     {"Ministry_ID", 4},
                     {"Primary_Contact", 3213},
@@ -633,6 +634,7 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Congregation_ID", 5},
                     {"Group_Name", "Angels Unite"},
                     {"Group_Role_ID", 15},
+                    {"Group_Type_Name", "Small Group" },
                     {"Description", "Girls Rule"},
                     {"Ministry_ID", 6},
                     {"Primary_Contact", 43212},
@@ -976,6 +978,7 @@ namespace MinistryPlatform.Translation.Test.Services
                 {"Group_ID", 1 },
                 {"Group_Name", "New Testing Group"},
                 {"Group_Type_ID", 19 },
+                {"Group_Type_Name", "Small Group"},
                 {"Ministry_ID", 8 },
                 {"Congregation_ID", 1 },
                 {"Primary_Contact", 74657},

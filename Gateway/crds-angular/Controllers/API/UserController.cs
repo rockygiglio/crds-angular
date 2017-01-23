@@ -65,8 +65,8 @@ namespace crds_angular.Controllers.API
                     int userid = _userRepository.GetUserIdByUsername(username);
                     MpUser user = _userRepository.GetUserByRecordId(userid);
                     var userRoles = _userRepository.GetUserRoles(userid);
-                    int contactid = _contactRepository.GetContactIdByEmail(user.UserEmail);
-                    MpMyContact contact = _contactRepository.GetContactById(contactid);
+                    MpMyContact contact = _contactRepository.GetContactByUserRecordId(user.UserRecordId);
+
                     var r = new LoginReturn
                     {
                         userToken = token,

@@ -1,10 +1,10 @@
 <div dynamic-content="$root.MESSAGES.mainNavMenuMobile.content | html"></div>
 <div>
     <ul>
-        <li ng-if="$root.canImpersonate && !$root.impersonation.user">
+        <li ng-if="$root.canImpersonate && !$root.impersonation.active">
             <a ui-sref="impersonate">Impersonate</a>
         </li>
-        <li ng-if="$root.canImpersonate && $root.impersonation.user" class="active" title="{{ $root.impersonation.user.UserId }}">
+        <li ng-if="$root.canImpersonate && $root.impersonation.active" class="active">
             <a ui-sref="impersonate">Impersonating</a>
         </li>
     </ul>

@@ -1,4 +1,6 @@
 
+/* eslint-disable no-param-reassign */
+
 (() => {
   function openStayLoggedInModal($injector, $state, $modal) {
     // Only open if on a protected page? and the modal is not already shown.
@@ -34,11 +36,13 @@
     $http,
     $state,
     $interval,
+    $timeout,
     $cookies,
     $modal,
     $injector,
     $rootScope,
-    $q
+    $q,
+    Impersonate
   ) {
     const vm = this;
 
@@ -120,12 +124,14 @@
     vm.clear = () => {
       $cookies.remove(cookieNames.SESSION_ID);
       $cookies.remove(cookieNames.REFRESH_TOKEN);
+      $cookies.remove(cookieNames.IMPERSONATION_ID);
       $cookies.remove('userId');
       $cookies.remove('username');
       $cookies.remove('family');
       $cookies.remove('age');
       $http.defaults.headers.common.Authorization = undefined;
       $http.defaults.headers.common.RefreshToken = undefined;
+      $http.defaults.headers.common.ImpersonateUserId = undefined;
       return true;
     };
 
@@ -178,22 +184,48 @@
           $rootScope.email = user.userEmail;
           $rootScope.phone = user.userPhone;
           $rootScope.roles = user.roles;
-          $rootScope.canImpersonate = user.canImpersonate;
+          if ($rootScope.impersonation.active !== true) {
+            $rootScope.canImpersonate = user.canImpersonate;
+          }
           $cookies.put('userId', user.userId);
           $cookies.put('username', user.username);
+          if (stateName === 'login') {
+            $state.go('content', {
+              link: '/'
+            });
+            vm.enableReactiveSso(event, stateName, stateData, stateToParams);
+          } else {
+            vm.enableReactiveSso(event, stateName, stateData, stateToParams);
+          }
+          vm.restoreImpersonation();
         }).error(() => {
           vm.clearAndRedirect(event, stateName, stateToParams);
+          vm.enableReactiveSso(event, stateName, stateData, stateToParams);
         });
         return promise;
       } else if (stateData !== undefined && stateData.isProtected) {
         vm.clearAndRedirect(event, stateName, stateToParams);
+        vm.enableReactiveSso(event, stateName, stateData, stateToParams);
       } else {
-        $rootScope.userid = null;
-        $rootScope.username = null;
+        vm.clear();
+        vm.resetCredentials();
+        vm.enableReactiveSso(event, stateName, stateData, stateToParams);
       }
       const deferred = $q.defer();
       deferred.reject('User is not logged in.');
       return deferred.promise;
+    };
+
+    vm.restoreImpersonation = () => {
+      const impersonationCookie = $cookies.get(cookieNames.IMPERSONATION_ID);
+      if (impersonationCookie && !$rootScope.impersonation.active) {
+        Impersonate.start(impersonationCookie)
+        .success((response) => {
+          Impersonate.storeCurrentUser();
+          Impersonate.storeDetails(true, response, impersonationCookie);
+          Impersonate.setCurrentUser(response);
+        });
+      }
     };
 
     // flag to determine if the current user was already
@@ -210,7 +242,7 @@
     * Clears out the setInterval created by enableReactiveSso
     */
     vm.disableReactiveSso = () => {
-      $interval.cancel($rootScope.reactiveSsoInterval);
+      $interval.cancel(vm.reactiveSsoInterval);
     };
 
     /**
@@ -237,21 +269,21 @@
     * and a protected page, the user is redirected to the log in page.
     */
     vm.performReactiveSso = (event, stateName, stateData, stateToParams) => {
+      if ($rootScope.resolving || $rootScope.processing) {
+        return;
+      }
       if (vm.isActive() && vm.wasLoggedIn === false) {
         vm.verifyAuthentication(event, stateName, stateData, stateToParams);
         vm.wasLoggedIn = true;
       } else if (!vm.isActive() && vm.wasLoggedIn === true) {
         vm.wasLoggedIn = false;
         if (stateData !== undefined && stateData.isProtected) {
-          vm.clearAndRedirect(event, stateName, stateToParams);
+          vm.clear();
+          vm.resetCredentials();
+          openStayLoggedInModal($injector, $state, $modal);
         } else {
           vm.clear();
-          $rootScope.userid = null;
-          $rootScope.username = null;
-          $rootScope.email = null;
-          $rootScope.phone = null;
-          $rootScope.roles = null;
-          $rootScope.canImpersonate = false;
+          vm.resetCredentials();
           if (!$rootScope.$$phase) {
             $rootScope.$apply();
           }
@@ -261,17 +293,21 @@
 
     vm.clearAndRedirect = (event, toState, toParams) => {                     
       vm.clear();
+      vm.resetCredentials();
+      vm.addRedirectRoute(toState, toParams);
+      if (event) {
+        event.preventDefault();
+      }
+      $state.go('login');
+    };
+
+    vm.resetCredentials = () => {
       $rootScope.userid = null;
       $rootScope.username = null;
       $rootScope.email = null;
       $rootScope.phone = null;
       $rootScope.roles = null;
       $rootScope.canImpersonate = false;
-      vm.addRedirectRoute(toState, toParams);
-      if (event) {
-        event.preventDefault();
-      }
-      $state.go('login');
     };
 
     vm.beOptimistic = false;
@@ -283,11 +319,13 @@
     '$http',
     '$state',
     '$interval',
+    '$timeout',
     '$cookies',
     '$modal',
     '$injector',
     '$rootScope',
-    '$q'
+    '$q',
+    'Impersonate'
   ];
 
   angular.module('crossroads.core').service('Session', SessionService);

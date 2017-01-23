@@ -2627,7 +2627,7 @@
       <DataType>Integer</DataType>
       <DefaultValue>
         <Values>
-          <Value>18</Value>
+          <Value>15</Value>
         </Values>
       </DefaultValue>
       <Prompt>RowsPerPage</Prompt>
@@ -2658,10 +2658,9 @@
       <DataType>String</DataType>
       <Nullable>true</Nullable>
       <DefaultValue>
-        <DataSetReference>
-          <DataSetName>data_Lookup_Stmt_Values</DataSetName>
-          <ValueField>Company_Info</ValueField>
-        </DataSetReference>
+        <Values>
+          <Value xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true" />
+        </Values>
       </DefaultValue>
       <AllowBlank>true</AllowBlank>
       <Prompt>Church Contact Info</Prompt>
@@ -2727,7 +2726,7 @@
       <DataType>Boolean</DataType>
       <DefaultValue>
         <Values>
-          <Value>true</Value>
+          <Value>false</Value>
         </Values>
       </DefaultValue>
       <Prompt>Show Logo</Prompt>

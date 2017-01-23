@@ -80,13 +80,13 @@ namespace MinistryPlatform.Translation.Repositories
             return mpInvitations;
         }
 
-        public List<MpGroupSearchResultDto> SearchGroups(int groupTypeId, string[] keywords = null, int? groupId = null)
+        public List<MpGroupSearchResultDto> SearchGroups(int[] groupTypeIds, string[] keywords = null, int? groupId = null)
         {
             var token = _apiUserRepository.GetToken();
 
             var parms = new Dictionary<string, object>
             {
-                {"@GroupTypeId", groupTypeId}
+                {"@GroupTypeId", String.Join(",", groupTypeIds)}
             };
             if (keywords != null && keywords.Any())
             {

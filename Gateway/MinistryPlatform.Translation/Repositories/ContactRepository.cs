@@ -318,6 +318,26 @@ namespace MinistryPlatform.Translation.Repositories
             return contactIdList;
         }
 
+        public MpMyContact GetContactByUserRecordId(int userRecordId)
+        {
+            var token = ApiLogin();
+            Dictionary<string, object> filter = new Dictionary<string, object>()
+            {
+                {"User_Account", userRecordId}
+            };
+            var records = _ministryPlatformRest.UsingAuthenticationToken(token).Get<MpMyContact>("Contacts",filter);
+            if (records.Count > 1)
+            {
+                throw new ApplicationException("GetContactByUserRecordId returned multiple records");
+            }
+            if (records.Count == 0)
+            {
+                return null;
+            }
+            return records.FirstOrDefault();
+
+        }
+
         private static MpMyContact ParseProfileRecord(Dictionary<string, object> recordsDict)
         {
             var contact = new MpMyContact
