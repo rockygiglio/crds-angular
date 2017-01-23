@@ -54,12 +54,12 @@ BEGIN
 		, main.Display_Name
 		, main.Home_Phone
 		, main.Mobile_Phone
-		, dup.Household_ID AS Duplicate_Household_ID
-		, dup.Household_Name AS Duplicate_Household_Name
-		, dup.Contact_ID AS Duplicate_Contact_ID
-		, dup.Display_Name AS Duplicate_Display_Name
-		, dup.Home_Phone AS Duplicate_Home_Phone
-		, dup.Mobile_Phone AS Duplicate_Mobile_Phone
+		, dup.Household_ID AS dup_Household_ID
+		, dup.Household_Name AS dup_Household_Name
+		, dup.Contact_ID AS dup_Contact_ID
+		, dup.Display_Name AS dup_Display_Name
+		, dup.Home_Phone AS dup_Home_Phone
+		, dup.Mobile_Phone AS dup_Mobile_Phone
 	FROM #household_phones main
 		inner join #household_phones dup ON
 		(
