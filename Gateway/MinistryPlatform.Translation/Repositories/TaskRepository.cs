@@ -69,7 +69,7 @@ namespace MinistryPlatform.Translation.Repositories
             {
                 var task = _ministryPlatformRestRepository.UsingAuthenticationToken(apiToken).FindTask(_roomReservationPageID, roomReserverationID);
                 if (task != null)
-                    _ministryPlatformRestRepository.UsingAuthenticationToken(apiToken).DeleteTask(task.TaskId, true, "Room Edited, Cancelled By User");
+                    _ministryPlatformRestRepository.UsingAuthenticationToken(apiToken).DeleteTask(task.Task_ID, true, "Room Edited, Cancelled By User");
             }
         }
     }
