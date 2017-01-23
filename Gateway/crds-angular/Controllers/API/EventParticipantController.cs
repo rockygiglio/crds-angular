@@ -14,7 +14,7 @@ namespace crds_angular.Controllers.API
     {
         private readonly IEventParticipantService _eventParticipantService;
 
-        public EventParticipantController(IEventParticipantService eventParticipantService)
+        public EventParticipantController(IEventParticipantService eventParticipantService, IUserImpersonationService userImpersonationService) : base(userImpersonationService)
         {
             _eventParticipantService = eventParticipantService;
         }

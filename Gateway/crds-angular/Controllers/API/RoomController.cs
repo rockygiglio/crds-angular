@@ -11,7 +11,7 @@ namespace crds_angular.Controllers.API
     {
         private readonly IRoomService _roomService;
 
-        public RoomController(IRoomService roomService)
+        public RoomController(IRoomService roomService, IUserImpersonationService userImpersonationService) : base(userImpersonationService)
         {
             _roomService = roomService;
         }

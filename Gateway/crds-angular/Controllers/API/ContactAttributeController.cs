@@ -11,7 +11,7 @@ namespace crds_angular.Controllers.API
     {
         private readonly IObjectAttributeService _objectAttributeService;
 
-        public ContactAttributeController(IPersonService personService, IObjectAttributeService objectAttributeService)
+        public ContactAttributeController(IPersonService personService, IObjectAttributeService objectAttributeService, IUserImpersonationService userImpersonationService) : base(userImpersonationService)
         {
             _objectAttributeService = objectAttributeService;
         }

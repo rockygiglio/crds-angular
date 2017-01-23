@@ -107,12 +107,12 @@ export default class SmallGroup {
   }
 
   hasAddress() {
-    return this.address !== undefined && 
-            this.address !== null &&
-            _.get(this.address, 'addressLine1', null) !== null &&
-            _.get(this.address, 'city', null) !== null &&
-            _.get(this.address, 'state', null) !== null &&
-            _.get(this.address, 'zip', null) !== null;
+    return this.address !== undefined &&
+      this.address !== null &&
+      _.get(this.address, 'addressLine1', null) !== null &&
+      _.get(this.address, 'city', null) !== null &&
+      _.get(this.address, 'state', null) !== null &&
+      _.get(this.address, 'zip', null) !== null;
   }
 
   meetingLocation() {
@@ -173,4 +173,12 @@ export default class SmallGroup {
     }
     return meetingDayStr;
   }
+
+  isOnsiteGroup() {
+    if (this.groupTypeId === CONSTANTS.GROUP.GROUP_TYPE_ID.ONSITE_GROUPS)
+      return true;
+    else
+      return false;
+  }
+
 }

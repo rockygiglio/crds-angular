@@ -240,11 +240,11 @@ export default function GroupToolRouter($httpProvider, $stateProvider) {
     })
     .state('grouptool.resources', {
       parent: 'noSideBar',
-      url: '/groups/resources',
+      url: '/groups/content',
       template: '<group-resources></group-resources>',
       data: {
         meta: {
-          title: 'Groups Resources',
+          title: 'Groups Content',
           description: ''
         }
       }

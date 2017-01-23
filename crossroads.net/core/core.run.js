@@ -1,4 +1,5 @@
 ﻿
+/* eslint-disable no-param-reassign */
 (() => {
   function AppRun(Session,
     $rootScope,
@@ -12,14 +13,15 @@
     $document,
     ContentSiteConfigService,
     SiteConfig,
-    ContentPageService
+    ContentPageService,
+    Impersonate
   ) {
     function setupMetaData() {
       const title = ContentSiteConfigService.getTitle();
-      const titleSuffix = ` | ${title}`; 
+      const titleSuffix = ` | ${title}`;
       $rootScope.meta.siteconfig = ContentSiteConfigService.siteconfig;
       if ($rootScope.meta.title.indexOf(titleSuffix, $rootScope.meta.title.length - titleSuffix.length) === -1) {
-        $rootScope.meta.title = $rootScope.meta.title + titleSuffix;
+        $rootScope.meta.title += titleSuffix;
       }
       $rootScope.meta.url = $location.absUrl();
       if (!$rootScope.meta.statusCode) {
@@ -52,6 +54,7 @@
       document.domain = parts.join('.');
     }
 
+    Impersonate.clear();
     $rootScope.MESSAGES = MESSAGES;
     setOriginForCmsPreviewPane($document);
     fastclick.attach(document.body);
@@ -76,7 +79,6 @@
         return;
       }
       Session.verifyAuthentication(event, toState.name, toState.data, toParams);
-      Session.enableReactiveSso(event, toState.name, toState.data, toParams);
     });
 
     $rootScope.$on('$stateChangeSuccess', (event, toState) => {
@@ -100,7 +102,8 @@
     '$document',
     'ContentSiteConfigService',
     'SiteConfig',
-    'ContentPageService'
+    'ContentPageService',
+    'Impersonate'
   ];
 
   angular.module('crossroads.core').run(AppRun);

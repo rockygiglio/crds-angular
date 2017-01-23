@@ -12,7 +12,9 @@
     </div>
   </div>
   <div class="group-card-body panel-body flex-grow">
-    <label class="flush-bottom">Category</label>
+    <div class="tight-line-height" style="font-weight:bold;">{{ groupCard.group.groupTypeName }}</div>
+
+    <label class="flush-bottom push-half-top">Category</label>
     <div class="tight-line-height">{{ groupCard.group.categoriesToString() }}</div>
 
     <label class="flush-bottom push-half-top">Meeting Time</label>
@@ -33,7 +35,7 @@
           </button>
         </div>
 
-        <div class="col-md-6 col-sm-12 push-half-top group-email-select" ng-if="groupCard.group.isLeader()">
+        <div class="col-md-6 col-sm-12 push-half-top group-email-select" ng-if="groupCard.group.isLeader() && !groupCard.group.isOnsiteGroup()">
           <ui-select ng-model="groupCard.selectedEmailOption" on-select="groupCard.onOptionSelected($item, $model)">
             <ui-select-match class="ui-select-match" placeholder="Email Group">
               {{$select.selected.name}}
@@ -84,7 +86,7 @@
       </div>
       <div class="row">
         <div class="col-md-6 col-sm-12">
-          <button ng-if="groupCard.group.isLeader()" class="btn btn-standard btn-block push-half-top" ui-sref="grouptool.detail.requests({ groupId: groupCard.group.groupId , view: 'Invite' })">
+          <button ng-if="groupCard.group.isLeader() && !groupCard.group.isOnsiteGroup()" class="btn btn-standard btn-block push-half-top" ui-sref="grouptool.detail.requests({ groupId: groupCard.group.groupId , view: 'Invite' })">
             <svg viewBox="0 0 32 32" class="icon icon-user6">
               <use xlink:href="#user6"></use>
             </svg>
@@ -93,7 +95,7 @@
         </div>
 
         <div class="col-md-6 col-sm-12">
-          <button ng-if="groupCard.group.isLeader()" class="btn btn-standard btn-block push-half-top" ng-click="groupCard.goToInvite()">
+          <button ng-if="groupCard.group.isLeader() && !groupCard.group.isOnsiteGroup()" class="btn btn-standard btn-block push-half-top" ng-click="groupCard.goToInvite()">
             <svg viewBox="0 0 32 32" class="icon icon-inbox">
               <use xlink:href="#inbox"></use>
             </svg>

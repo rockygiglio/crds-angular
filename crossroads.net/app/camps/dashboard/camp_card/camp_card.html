@@ -24,7 +24,7 @@
       <div class="row">
         <div class="col-md-6 col-sm-12">
           <div>
-            <button type='button' class="btn btn-primary btn-block push-half-top" ng-click="campCard.makePayment()" ng-disabled="campCard.isPaidInFull">
+            <button type='button' class="btn btn-primary btn-block push-half-top" ng-class="{ 'disabled': campCard.isPaidInFull }" ng-click="campCard.makePayment()" ng-disabled="campCard.isPaidInFull">
               <svg viewBox="0 0 32 32" class="icon icon-dollar">
                 <use xlink:href="#dollar"></use>
               </svg>

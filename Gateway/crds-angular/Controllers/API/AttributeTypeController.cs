@@ -12,7 +12,7 @@ namespace crds_angular.Controllers.API
     {
         private readonly IAttributeService _attributeService;
 
-        public AttributeTypeController(IAttributeService attributeService)
+        public AttributeTypeController(IAttributeService attributeService, IUserImpersonationService userImpersonationService) : base(userImpersonationService)
         {
             _attributeService = attributeService;
         }

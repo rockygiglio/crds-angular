@@ -14,7 +14,7 @@ namespace crds_angular.Controllers.API
     {
         private readonly IDonorStatementService _donorStatementService;
 
-        public DonorStatementController(IDonorStatementService donorStatementService)
+        public DonorStatementController(IDonorStatementService donorStatementService, IUserImpersonationService userImpersonationService) : base(userImpersonationService)
         {
             _donorStatementService = donorStatementService;
         }

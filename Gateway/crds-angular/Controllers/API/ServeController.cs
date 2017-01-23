@@ -24,7 +24,7 @@ namespace crds_angular.Controllers.API
         private readonly IMessageFactory _messageFactory;
         private readonly MessageQueue _eventQueue;
 
-        public ServeController(IServeService serveService, IConfigurationWrapper configuration, IMessageFactory messageFactory, IMessageQueueFactory messageQueueFactory)
+        public ServeController(IServeService serveService, IConfigurationWrapper configuration, IMessageFactory messageFactory, IMessageQueueFactory messageQueueFactory, IUserImpersonationService userImpersonationService) : base(userImpersonationService)
         {
             _serveService = serveService;
             _messageFactory = messageFactory;

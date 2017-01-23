@@ -70,8 +70,7 @@ export default class GroupService {
   }
 
   getMyGroups() {
-    let promised = this.resource(`${__API_ENDPOINT__}api/group/mine/:groupTypeId`).
-      query({ groupTypeId: CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS }).$promise;
+    let promised = this.resource(`${__API_ENDPOINT__}api/group/mine`).query().$promise;
 
     return promised.then((data) => {
       let groups = data.map((group) => {
@@ -86,8 +85,8 @@ export default class GroupService {
   }
 
   getGroup(groupId) {
-    let promise = this.resource(`${__API_ENDPOINT__}api/group/mine/:groupTypeId/:groupId`).
-      query({ groupTypeId: CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS, groupId: groupId }).$promise;
+    let promise = this.resource(`${__API_ENDPOINT__}api/group/mine/:groupId`).
+      query({ groupId: groupId }).$promise;
 
     return promise.then((data) => {
       let groups = data.map((group) => {
@@ -107,8 +106,8 @@ export default class GroupService {
   }
 
   getGroupParticipants(groupId) {
-    let promise = this.resource(`${__API_ENDPOINT__}api/group/mine/:groupTypeId/:groupId`).
-      query({ groupTypeId: CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS, groupId: groupId }).$promise;
+    let promise = this.resource(`${__API_ENDPOINT__}api/group/mine/:groupId`).
+      query({ groupId: groupId }).$promise;
 
     return promise.then((data) => {
       if (!data || data.length === 0 || !data[0].Participants || data[0].Participants.length === 0) {
@@ -264,8 +263,8 @@ export default class GroupService {
   }
 
   getIsLeader(groupId) {
-    let promise = this.resource(`${__API_ENDPOINT__}api/grouptool/:groupId/:groupTypeId/isleader`).
-      get({ groupId: groupId, groupTypeId: CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS }).$promise;
+    let promise = this.resource(`${__API_ENDPOINT__}api/grouptool/:groupId/isleader`).
+      get({ groupId: groupId }).$promise;
 
     return promise.then((data) => {
       return !(data.Group === null || data.Group === undefined)
@@ -275,9 +274,20 @@ export default class GroupService {
       });
   }
 
+  getGroupType(groupId) { 
+    const promise = this.resource(`${__API_ENDPOINT__}api/group/:groupId/groupType`)
+      .get({ groupId }).$promise;
+
+    return promise.then((data) => {
+      return data.groupTypeId;
+    }, (err) => {
+      throw err;
+    });
+  }
+
   search(searchString, locationString, groupId) {
-    let promise = this.resource(`${__API_ENDPOINT__}api/grouptool/grouptype/:groupTypeId/group/search`)
-      .query({ s: searchString, loc: locationString, groupTypeId: CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS, id: groupId }).$promise;
+    let promise = this.resource(`${__API_ENDPOINT__}api/grouptool/group/search`)
+      .query({ s: searchString, loc: locationString, groupTypeIds: [CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS, CONSTANTS.GROUP.GROUP_TYPE_ID.ONSITE_GROUPS], id: groupId }).$promise;
 
     return promise.then((data) => {
       let groups = data.map((group) => {

@@ -116,7 +116,8 @@
       GROUP_TYPE_ID: {
         UNDIVIDED: 26,
         SMALL_GROUPS: 1,
-        MY_SERVE: 9
+        MY_SERVE: 9,
+        ONSITE_GROUPS: 8
       },
       ROLES: {
         MEMBER: 16,
@@ -142,7 +143,7 @@
         COPY_EMAIL_NAME: 'Copy Addresses',
         COPY_EMAIL_DESCRIPTION_LINE1: 'Copies participant email',
         COPY_EMAIL_DESCRIPTION_LINE2: 'addresses to your clipboard.',
-       COPY_EMAIL_ICON: 'file-text-o'
+        COPY_EMAIL_ICON: 'file-text-o'
       }
     },
     GEOLOCATION: {
@@ -166,7 +167,8 @@
     PRE_STREAM_HOURS: 15,
     COOKIES: {
       SESSION_ID: `${__CRDS_ENV__}sessionId`,
-      REFRESH_TOKEN: `${__CRDS_ENV__}refreshToken`
+      REFRESH_TOKEN: `${__CRDS_ENV__}refreshToken`,
+      IMPERSONATION_ID: `${__CRDS_ENV__}impersonateUserId`
     },
     EVENTS: {
       ROOM_AVAILABLE: null,

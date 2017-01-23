@@ -48,7 +48,6 @@ export default class AddRoomController {
 
   setRoomData(data) {
     this.rooms = data;
-    this.viewReady = true;
     this.roomData = _.filter(this.roomData, (r) => {
       if (r.name === undefined) {
         const tempRoom = _.find(data, (roo) => {
@@ -65,15 +64,12 @@ export default class AddRoomController {
   }
 
   setEquipmentData() {
-    this.room.Equipment.query({ congregationId: this.addEvent.eventData.event.congregation.dp_RecordID },
-      (data) => {
-        this.equipmentList = data;
-        _.forEach(this.roomData, (roomD) => {
-          roomD.equipment = this.mapEquipment(data, roomD.equipment);
-        });
-      }, (error) => {
-        this.log.error(`Error getting available equipment: ${error}`);
-      });
+    this.room.Equipment.query({ congregationId: this.addEvent.eventData.event.congregation.dp_RecordID }).$promise.then((data) => {
+      this.equipmentList = data;
+      this.viewReady = true;
+    }, (error) => {
+      this.log.error(`Error getting available equipment: ${error}`);
+    });
   }
 
   isCancelled(currentRoom) {
@@ -103,7 +99,7 @@ export default class AddRoomController {
 
       if (alreadyAdded) {
         if (alreadyAdded.cancelled) {
-          this.roomData[_.findIndex(this.roomData, (r)=>{return r.id === alreadyAdded.id})].cancelled = false;
+          this.roomData[_.findIndex(this.roomData, (r) => { return r.id === alreadyAdded.id ;})].cancelled = false;
         } else {
           this.rootScope.$emit('notify', this.rootScope.MESSAGES.allReadyAdded);
         }
@@ -118,25 +114,6 @@ export default class AddRoomController {
     this.rootScope.$emit('notify', this.rootScope.MESSAGES.chooseARoom);
   }
 
-  mapEquipment(equipmentLookup, currentEquipmentList) {
-    let values = _.map(currentEquipmentList, (current) => {
-      if (current.equipment.name.quantity === undefined) {
-        const found = _.find(equipmentLookup, (e) => {
-          return e.id === current.equipment.name.id;
-        });
-
-        if (found) {
-          current.equipment.name.quantity = found.quantity;
-        }
-
-        return current;
-      }
-    });
-
-    return _.filter(values, (v) => {
-      return v !== undefined;
-    });
-  }
 
   removeRoom(currentRoom) {
     this.log.debug(`remove room: ${currentRoom}`);

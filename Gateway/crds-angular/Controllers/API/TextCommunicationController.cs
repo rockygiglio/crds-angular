@@ -27,8 +27,8 @@ namespace crds_angular.Controllers.API
         private readonly string _eventQueueName;
         private readonly int _streamReminderTemplateId;
 
-        public TextCommunicationController(ITextCommunicationService textCommunicationService, IConfigurationWrapper configurationWrapper,
-            IMessageQueueFactory messageQueueFactory = null, IMessageFactory messageFactory = null, IMessageQueue messageQueue = null)
+        public TextCommunicationController(ITextCommunicationService textCommunicationService, IConfigurationWrapper configurationWrapper, IUserImpersonationService userImpersonationService,
+            IMessageQueueFactory messageQueueFactory = null, IMessageFactory messageFactory = null, IMessageQueue messageQueue = null) : base(userImpersonationService)
         {
             _textCommunicationService = textCommunicationService;
             _eventQueueName = configurationWrapper.GetConfigValue("ScheduledJobsQueueName");
