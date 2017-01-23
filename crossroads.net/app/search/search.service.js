@@ -8,6 +8,7 @@
       execute: {
         method : 'POST',
         transformRequest: function(data, headers){
+          console.log(headers);
           var str = [];
           for(var p in data) {
             if(data[p]){
@@ -16,7 +17,12 @@
           }
           return str.join('&');
         },
-        headers : {'Content-Type': 'application/x-www-form-urlencoded' }
+        headers : {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'ImpersonateUserId': undefined,
+          'Authorization': undefined,
+          'RefreshToken': undefined
+        }
       }
     });
   }
