@@ -76,23 +76,13 @@
           <DataField>ChildName</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="Checkin">
-          <DataField>Checkin</DataField>
+        <Field Name="RSVP_Status">
+          <DataField>RSVP Status</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="GradeGroup">
-          <DataField>GradeGroup</DataField>
-          <rd:UserDefined>true</rd:UserDefined>
-        </Field>
-        <Field Name="RSVPOnline">
-          <Value>=IIF(Fields!GroupParticipantStartDate.Value &gt; DATEADD(DateInterval.Day, -6, Fields!EventDate.Value), "Yes", "No")</Value>
-        </Field>
-        <Field Name="RSVPOverride">
-          <Value>=IIF(Fields!GroupParticipantStartDate.Value &lt;= DATEADD(DateInterval.Day, -6, Fields!EventDate.Value), "Yes", "No")</Value>
-        </Field>
-        <Field Name="GroupParticipantStartDate">
-          <DataField>GroupParticipantStartDate</DataField>
-          <rd:UserDefined>true</rd:UserDefined>
+        <Field Name="Checked_In">
+          <DataField>Checked In</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
         </Field>
       </Fields>
     </DataSet>
@@ -129,13 +119,7 @@
                   <Width>1in</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>1.77083in</Width>
-                </TablixColumn>
-                <TablixColumn>
                   <Width>1.05208in</Width>
-                </TablixColumn>
-                <TablixColumn>
-                  <Width>1.30208in</Width>
                 </TablixColumn>
                 <TablixColumn>
                   <Width>1in</Width>
@@ -437,42 +421,6 @@
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="Textbox13">
-                          <CanGrow>true</CanGrow>
-                          <KeepTogether>true</KeepTogether>
-                          <Paragraphs>
-                            <Paragraph>
-                              <TextRuns>
-                                <TextRun>
-                                  <Value>Age or Grade Group</Value>
-                                  <Style>
-                                    <FontFamily>Tahoma</FontFamily>
-                                    <FontSize>11pt</FontSize>
-                                    <FontWeight>Bold</FontWeight>
-                                    <Color>White</Color>
-                                  </Style>
-                                </TextRun>
-                              </TextRuns>
-                              <Style />
-                            </Paragraph>
-                          </Paragraphs>
-                          <rd:DefaultName>Textbox13</rd:DefaultName>
-                          <Style>
-                            <Border>
-                              <Color>#7292cc</Color>
-                              <Style>Solid</Style>
-                            </Border>
-                            <BackgroundColor>#4c68a2</BackgroundColor>
-                            <PaddingLeft>2pt</PaddingLeft>
-                            <PaddingRight>2pt</PaddingRight>
-                            <PaddingTop>2pt</PaddingTop>
-                            <PaddingBottom>2pt</PaddingBottom>
-                          </Style>
-                        </Textbox>
-                      </CellContents>
-                    </TablixCell>
-                    <TablixCell>
-                      <CellContents>
                         <Textbox Name="Textbox9">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
@@ -480,7 +428,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>RSVP Online</Value>
+                                  <Value>RSVP Status</Value>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>11pt</FontSize>
@@ -493,42 +441,6 @@
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>Textbox9</rd:DefaultName>
-                          <Style>
-                            <Border>
-                              <Color>#7292cc</Color>
-                              <Style>Solid</Style>
-                            </Border>
-                            <BackgroundColor>#4c68a2</BackgroundColor>
-                            <PaddingLeft>2pt</PaddingLeft>
-                            <PaddingRight>2pt</PaddingRight>
-                            <PaddingTop>2pt</PaddingTop>
-                            <PaddingBottom>2pt</PaddingBottom>
-                          </Style>
-                        </Textbox>
-                      </CellContents>
-                    </TablixCell>
-                    <TablixCell>
-                      <CellContents>
-                        <Textbox Name="Textbox15">
-                          <CanGrow>true</CanGrow>
-                          <KeepTogether>true</KeepTogether>
-                          <Paragraphs>
-                            <Paragraph>
-                              <TextRuns>
-                                <TextRun>
-                                  <Value>RSVP  Override</Value>
-                                  <Style>
-                                    <FontFamily>Tahoma</FontFamily>
-                                    <FontSize>11pt</FontSize>
-                                    <FontWeight>Bold</FontWeight>
-                                    <Color>White</Color>
-                                  </Style>
-                                </TextRun>
-                              </TextRuns>
-                              <Style />
-                            </Paragraph>
-                          </Paragraphs>
-                          <rd:DefaultName>Textbox15</rd:DefaultName>
                           <Style>
                             <Border>
                               <Color>#7292cc</Color>
@@ -855,39 +767,6 @@
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="Textbox14">
-                          <CanGrow>true</CanGrow>
-                          <KeepTogether>true</KeepTogether>
-                          <Paragraphs>
-                            <Paragraph>
-                              <TextRuns>
-                                <TextRun>
-                                  <Value>=Fields!GradeGroup.Value</Value>
-                                  <Style>
-                                    <FontFamily>Tahoma</FontFamily>
-                                    <Color>#4d4d4d</Color>
-                                  </Style>
-                                </TextRun>
-                              </TextRuns>
-                              <Style />
-                            </Paragraph>
-                          </Paragraphs>
-                          <rd:DefaultName>Textbox14</rd:DefaultName>
-                          <Style>
-                            <Border>
-                              <Color>#e5e5e5</Color>
-                              <Style>Solid</Style>
-                            </Border>
-                            <PaddingLeft>2pt</PaddingLeft>
-                            <PaddingRight>2pt</PaddingRight>
-                            <PaddingTop>2pt</PaddingTop>
-                            <PaddingBottom>2pt</PaddingBottom>
-                          </Style>
-                        </Textbox>
-                      </CellContents>
-                    </TablixCell>
-                    <TablixCell>
-                      <CellContents>
                         <Textbox Name="RSVP_Status">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
@@ -895,7 +774,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!RSVPOnline.Value</Value>
+                                  <Value>=Fields!RSVP_Status.Value</Value>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <Color>#4d4d4d</Color>
@@ -921,39 +800,6 @@
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="Textbox16">
-                          <CanGrow>true</CanGrow>
-                          <KeepTogether>true</KeepTogether>
-                          <Paragraphs>
-                            <Paragraph>
-                              <TextRuns>
-                                <TextRun>
-                                  <Value>=Fields!RSVPOverride.Value</Value>
-                                  <Style>
-                                    <FontFamily>Tahoma</FontFamily>
-                                    <Color>#4d4d4d</Color>
-                                  </Style>
-                                </TextRun>
-                              </TextRuns>
-                              <Style />
-                            </Paragraph>
-                          </Paragraphs>
-                          <rd:DefaultName>Textbox16</rd:DefaultName>
-                          <Style>
-                            <Border>
-                              <Color>#e5e5e5</Color>
-                              <Style>Solid</Style>
-                            </Border>
-                            <PaddingLeft>2pt</PaddingLeft>
-                            <PaddingRight>2pt</PaddingRight>
-                            <PaddingTop>2pt</PaddingTop>
-                            <PaddingBottom>2pt</PaddingBottom>
-                          </Style>
-                        </Textbox>
-                      </CellContents>
-                    </TablixCell>
-                    <TablixCell>
-                      <CellContents>
                         <Textbox Name="Checked_In">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
@@ -961,7 +807,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!Checkin.Value</Value>
+                                  <Value>=Fields!Checked_In.Value</Value>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <Color>#4d4d4d</Color>
@@ -983,7 +829,6 @@
                             <PaddingBottom>2pt</PaddingBottom>
                           </Style>
                         </Textbox>
-                        <rd:Selected>true</rd:Selected>
                       </CellContents>
                     </TablixCell>
                   </TablixCells>
@@ -992,8 +837,6 @@
             </TablixBody>
             <TablixColumnHierarchy>
               <TablixMembers>
-                <TablixMember />
-                <TablixMember />
                 <TablixMember />
                 <TablixMember />
                 <TablixMember />
@@ -1019,7 +862,7 @@
             <DataSetName>DataSet1</DataSetName>
             <Top>1.17083in</Top>
             <Height>0.5in</Height>
-            <Width>14.85562in</Width>
+            <Width>11.78271in</Width>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -1201,7 +1044,7 @@
           </Border>
         </Style>
       </Body>
-      <Width>14.85563in</Width>
+      <Width>11.78271in</Width>
       <Page>
         <PageFooter>
           <Height>0.45in</Height>
@@ -1321,6 +1164,6 @@
   </ReportParameters>
   <ConsumeContainerWhitespace>true</ConsumeContainerWhitespace>
   <rd:ReportUnitType>Inch</rd:ReportUnitType>
-  <rd:ReportServerUrl>https://adminint.crossroads.net/ReportServer</rd:ReportServerUrl>
+  <rd:ReportServerUrl>http://localhost/ReportServer</rd:ReportServerUrl>
   <rd:ReportID>ab1bca6e-fde2-4ac0-b72f-1779fa63e59e</rd:ReportID>
 </Report>
