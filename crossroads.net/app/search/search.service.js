@@ -7,8 +7,7 @@
     return $resource(__AWS_SEARCH_ENDPOINT__+'search',{},{
       execute: {
         method : 'POST',
-        transformRequest: function(data, headers){
-          console.log(headers);
+        transformRequest: function(data, headers) {
           var str = [];
           for(var p in data) {
             if(data[p]){
@@ -19,9 +18,7 @@
         },
         headers : {
           'Content-Type': 'application/x-www-form-urlencoded',
-          'ImpersonateUserId': undefined,
-          'Authorization': undefined,
-          'RefreshToken': undefined
+          'ImpersonateUserId': undefined
         }
       }
     });
