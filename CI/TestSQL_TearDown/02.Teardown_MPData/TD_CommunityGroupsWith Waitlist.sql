@@ -17,6 +17,4 @@ DELETE from [dbo].cr_childcare_request_dates where childcare_request_id in (sele
 
 DELETE FROM [dbo].cr_childcare_requests WHERE GROUP_ID in (select group_id from groups where group_name in ('(t) Fathers Oakley CG','(t) Fathers Oakley CG - Waitlist'));
 
-DELETE FROM Groups WHERE  Group_Name = '(t) Fathers Oakley CG';
-
-DELETE FROM Groups WHERE  Group_Name = '(t) Fathers Oakley CG - Waitlist';
+DELETE FROM Groups WHERE  Group_Name like '(t) Fathers Oakley CG%';
