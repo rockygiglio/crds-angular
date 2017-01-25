@@ -1,6 +1,6 @@
 {
   "name": "crossroads.net",
-  "version": "0.0.1",
+  "version": "1.0.45",
   "description": "Crossroads Church Web Presence",
   "main": "app.js",
   "scripts": {
