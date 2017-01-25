@@ -5,6 +5,7 @@ export default class EquipmentController {
   constructor(AddEvent, Validation) {
     this.addEvent = AddEvent;
     this.validation = Validation;
+    this.ready = false; 
   }
 
   $onInit() {
@@ -20,6 +21,10 @@ export default class EquipmentController {
         this.equipmentRequired = false;
       }
     }
+    else if (this.currentEquipment.length > 0 && this.currentEquipment[0].equipment.name.id > 0) {
+      this.equipmentRequired = true;
+    }
+    this.ready = true;
   }
 
   addEquipment() {
@@ -62,6 +67,13 @@ export default class EquipmentController {
       if (this.existing(this.currentEquipment[idx].equipment)) {
         this.currentEquipment[idx].equipment.cancelled = false;
       }
+    }
+  }
+
+  getQuantity(id) {
+    if (id !== 0) {
+      const selectedEquipment = _.where(this.equipmentLookup, { id });
+      return selectedEquipment[0].quantity;
     }
   }
 

@@ -11,6 +11,8 @@ using System.Net.Http.Headers;
 using System.Web.Http.Controllers;
 using System.Web.Http;
 using System.Web.Http.Results;
+using crds_angular.Exceptions;
+using crds_angular.Services.Interfaces;
 
 
 namespace crds_angular.test.Security
@@ -21,6 +23,7 @@ namespace crds_angular.test.Security
 
         private Mock<Func<string, IHttpActionResult>> actionWhenAuthorized;
         private Mock<Func<IHttpActionResult>> actionWhenNotAuthorized;
+        private Mock<IUserImpersonationService> _userImpersonationMock;
         private OkResult okResult;
 
         private string authType;
@@ -29,7 +32,8 @@ namespace crds_angular.test.Security
         [SetUp]
         public void SetUp()
         {
-            fixture = new MPAuthTester();
+            _userImpersonationMock = new Mock<IUserImpersonationService>();
+            fixture = new MPAuthTester(_userImpersonationMock.Object);
 
             actionWhenAuthorized = new Mock<Func<string, IHttpActionResult>>(MockBehavior.Strict);
             actionWhenNotAuthorized = new Mock<Func<IHttpActionResult>>(MockBehavior.Strict);
@@ -97,8 +101,52 @@ namespace crds_angular.test.Security
             Assert.AreSame(okResult, result);
         }
 
+        [Test]
+        public void testAuthorizedWhenImpersonateUserIsNotAuthorized()
+        {
+            fixture.Request = new HttpRequestMessage();
+            fixture.Request.Headers.Authorization = null;
+            fixture.Request.Headers.Add("ImpersonateUserId", "impersonator@allowed.com");
+            
+            _userImpersonationMock.Setup(mocked => mocked.WithImpersonation(authType + " " + authToken, "impersonator@notallowed.com", It.IsAny<Func<string, IHttpActionResult>>))
+                .Throws<ImpersonationNotAllowedException>();
+
+            var result = fixture.AuthTest(actionWhenAuthorized.Object);
+            actionWhenAuthorized.VerifyAll();
+
+            Assert.NotNull(result);
+            Assert.IsInstanceOf(typeof(UnauthorizedResult), result);
+        }
+
+
+        [Test]
+        public void testAuthorizedWhenImpersonateUserIsAuthorized()
+        {
+            string auth = authType + " " + authToken;
+            fixture.Request.Headers.Add("ImpersonateUserId", "impersonator@allowed.com");
+            actionWhenAuthorized.Setup(mocked => mocked(auth)).Returns(okResult);
+
+            _userImpersonationMock.Setup(m => m.WithImpersonation(auth, "impersonator@allowed.com", It.IsAny<Func<IHttpActionResult>>())).Returns((string lambdaToken, string userId, Func<IHttpActionResult> predicate) =>
+            {
+                return predicate.Invoke();
+            });
+
+            var result = fixture.AuthTest(actionWhenAuthorized.Object);
+            _userImpersonationMock.VerifyAll();
+            actionWhenAuthorized.VerifyAll();
+
+            Assert.NotNull(result);
+            Assert.IsInstanceOf(typeof(OkResult), result);
+            Assert.AreSame(okResult, result);
+        }
+
         private class MPAuthTester : MPAuth
         {
+            public MPAuthTester(IUserImpersonationService userImpersonationService) : base(userImpersonationService)
+            {
+                
+            }
+
             public IHttpActionResult AuthTest(Func<string, IHttpActionResult> doIt)
             {
                 return(base.Authorized(doIt));

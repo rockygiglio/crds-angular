@@ -42,7 +42,7 @@ namespace crds_angular.test.controllers
             _groupSearchServiceMock = new Mock<IGroupSearchService>();
             _groupToolServiceMock = new Mock<IGroupToolService>();
 
-            _fixture = new GroupController(_groupServiceMock.Object, _authenticationServiceMock.Object, _participantServiceMock.Object, _addressServiceMock.Object, _groupSearchServiceMock.Object, _groupToolServiceMock.Object);
+            _fixture = new GroupController(_groupServiceMock.Object, _authenticationServiceMock.Object, _participantServiceMock.Object, _addressServiceMock.Object, _groupSearchServiceMock.Object, _groupToolServiceMock.Object, new Mock<IUserImpersonationService>().Object);
 
             _authType = "auth_type";
             _authToken = "auth_token";
@@ -230,8 +230,8 @@ namespace crds_angular.test.controllers
         public void TestGetMyGroupsByType()
         {
             var groups = new List<GroupDTO>();
-            _groupServiceMock.Setup(mocked => mocked.GetGroupsByTypeForAuthenticatedUser(It.IsAny<string>(), 1, 321)).Returns(groups);
-            var result = _fixture.GetMyGroupsByType(1, 321);
+            _groupToolServiceMock.Setup(mocked => mocked.GetGroupToolGroups(It.IsAny<string>())).Returns(groups);
+            var result = _fixture.GetMyGroups();
             Assert.IsNotNull(result);
             Assert.IsInstanceOf(typeof(OkNegotiatedContentResult<List<GroupDTO>>), result);
             _groupServiceMock.VerifyAll();

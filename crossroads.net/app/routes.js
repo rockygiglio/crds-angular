@@ -366,6 +366,15 @@
             }
           }
         })
+        .state('impersonate', {
+          parent: 'noSideBar',
+          templateUrl: 'impersonate/impersonate.html',
+          url: '/impersonate',
+          controller: 'ImpersonateController as impersonate',
+          data: {
+            isProtected: true
+          }
+        })
         .state('explore', {
           parent: 'noHeaderOrFooter',
           url: '/explore',
@@ -395,6 +404,18 @@
           data: {
             meta: {
               title: 'Ng2TestCMSData',
+              description: ''
+            }
+          }
+        })
+        .state('superbowl', {
+          parent: 'screenWidth',
+          url: '/superbowl',
+          controller: 'SuperbowlCtrl as superbowl',
+          templateUrl: 'superbowl/superbowl.html',
+          data: {
+            meta: {
+              title: 'Super Bowl of Preaching',
               description: ''
             }
           }

@@ -21,6 +21,7 @@
   require('./app.core.module');
   require('./login');
   require('./logout');
+  require('./impersonate');
 
   // Common Components
   require('./components/btnLoading.directive');
@@ -50,6 +51,7 @@
   require('./core.config');
   require('./core.controller');
   require('./core.run');
+  require('./services/impersonate_service');
   require('./services/session_service');
   require('./services/auth_service');
   require('./services/user_service');

@@ -4,6 +4,7 @@ using System.Net;
 using System.Web.Http;
 using crds_angular.Models.Json;
 using crds_angular.Security;
+using crds_angular.Services.Interfaces;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 using Newtonsoft.Json;
 using Crossroads.ApiVersioning;
@@ -14,7 +15,7 @@ namespace crds_angular.Controllers.API
     {
         private readonly ISelectionRepository _selectionService;
 
-        public MinistryPlatformToolsController(ISelectionRepository selectionService)
+        public MinistryPlatformToolsController(ISelectionRepository selectionService, IUserImpersonationService userImpersonationService) : base(userImpersonationService)
         {
             _selectionService = selectionService;
         }

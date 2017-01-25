@@ -34,8 +34,9 @@ namespace crds_angular.Controllers.API
                                       IAuthenticationRepository authenticationService,
                                       ICommunicationRepository communicationService,
                                       ICryptoProvider cryptoProvider,
+                                      IUserImpersonationService userImpersonationService,
                                       IMessageQueueFactory messageQueueFactory = null,
-                                      IMessageFactory messageFactory = null)
+                                      IMessageFactory messageFactory = null) : base(userImpersonationService)
         {
             _checkScannerService = checkScannerService;
             _authenticationService = authenticationService;

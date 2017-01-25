@@ -28,14 +28,14 @@ namespace MinistryPlatform.Translation.Repositories
         public List<MpMedication> GetMedications(int contactId)
         {
             var apiToken = _apiUserRepository.GetToken();
-            var columns = "MedicalInformationMedication_ID, cr_Medical_Information_Medications.MedicalInformation_ID, Medication_Name, Medication_Type_ID, DosageTime, DosageAmount";
+            var columns = "MedicalInformationMedication_ID, cr_Medical_Information_Medications.MedicalInformation_ID, Medication_Name, Medication_Type_ID, Dosage_Time, Dosage_Amount";
             return _ministryPlatformRest.UsingAuthenticationToken(apiToken).Search<MpMedication>($"MedicalInformation_ID_Table_Contact_ID_Table.Contact_ID={contactId}", columns).ToList();
         }
 
         public MpMedicalInformation GetMedicalInformation(int contactId)
         {
             var apiToken = _apiUserRepository.GetToken();
-            var medInfo = _ministryPlatformRest.UsingAuthenticationToken(apiToken).Search<MpMedicalInformation>($"Contact_ID_Table.Contact_ID={contactId}", "cr_Medical_Information.[MedicalInformation_ID], cr_Medical_Information.[InsuranceCompany],Contact_ID_Table.[Contact_ID],cr_Medical_Information.[PolicyHolderName],cr_Medical_Information.[PhysicianName] AS[PhysicianName],cr_Medical_Information.[PhysicianPhone],cr_Medical_Information.[Allowed_To_Administer_Medications]");
+            var medInfo = _ministryPlatformRest.UsingAuthenticationToken(apiToken).Search<MpMedicalInformation>($"Contact_ID_Table.Contact_ID={contactId}", "cr_Medical_Information.[MedicalInformation_ID], cr_Medical_Information.[Insurance_Company],Contact_ID_Table.[Contact_ID],cr_Medical_Information.[Policy_Holder_Name],cr_Medical_Information.[Physician_Name] AS[Physician_Name],cr_Medical_Information.[Physician_Phone],cr_Medical_Information.[Allowed_To_Administer_Medications]");
             return medInfo.FirstOrDefault();
         }
 

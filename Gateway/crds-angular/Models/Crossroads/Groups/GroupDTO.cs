@@ -22,6 +22,9 @@ namespace crds_angular.Models.Crossroads.Groups
         [JsonProperty(PropertyName = "groupTypeId")]
         public int GroupTypeId { get; set; }
 
+        [JsonProperty(PropertyName = "groupTypeName")]
+        public string GroupTypeName { get; set; }
+
         [JsonProperty(PropertyName = "ministryId")]
         public int MinistryId { get; set; }
 
