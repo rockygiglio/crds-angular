@@ -13,14 +13,18 @@
       <Query>
         <DataSourceName>MinistryPlatform</DataSourceName>
         <QueryParameters>
-          <QueryParameter Name="UserId">
-            <Value>=Parameters!SelectedUserId.Value</Value>
+          <QueryParameter Name="SelectionID">
+            <Value>=Parameters!SelectionID.Value</Value>
           </QueryParameter>
         </QueryParameters>
         <CommandType>StoredProcedure</CommandType>
         <CommandText>report_CRDS_PagesAccessByUser</CommandText>
       </Query>
       <Fields>
+        <Field Name="User_ID">
+          <DataField>User_ID</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
         <Field Name="Page_ID">
           <DataField>Page_ID</DataField>
           <rd:TypeName>System.Int32</rd:TypeName>
@@ -150,15 +154,6 @@
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
       </Fields>
-      <Filters>
-        <Filter>
-          <FilterExpression>=Fields!User_ID.Value</FilterExpression>
-          <Operator>Equal</Operator>
-          <FilterValues>
-            <FilterValue>=Parameters!SelectedUserId.Value</FilterValue>
-          </FilterValues>
-        </Filter>
-      </Filters>
     </DataSet>
   </DataSets>
   <ReportSections>
@@ -336,16 +331,16 @@
               <TablixMembers>
                 <TablixMember>
                   <TablixHeader>
-                    <Size>1.64583in</Size>
+                    <Size>3.54167in</Size>
                     <CellContents>
-                      <Textbox Name="Textbox64">
+                      <Textbox Name="Textbox7">
                         <CanGrow>true</CanGrow>
                         <KeepTogether>true</KeepTogether>
                         <Paragraphs>
                           <Paragraph>
                             <TextRuns>
                               <TextRun>
-                                <Value>Page Page</Value>
+                                <Value>User</Value>
                                 <Style>
                                   <FontFamily>Tahoma</FontFamily>
                                   <FontSize>11pt</FontSize>
@@ -357,7 +352,7 @@
                             <Style />
                           </Paragraph>
                         </Paragraphs>
-                        <rd:DefaultName>Textbox64</rd:DefaultName>
+                        <rd:DefaultName>Textbox7</rd:DefaultName>
                         <Style>
                           <Border>
                             <Color>#4e648a</Color>
@@ -373,34 +368,103 @@
                     </CellContents>
                   </TablixHeader>
                   <TablixMembers>
-                    <TablixMember />
+                    <TablixMember>
+                      <TablixHeader>
+                        <Size>1.64583in</Size>
+                        <CellContents>
+                          <Textbox Name="Textbox64">
+                            <CanGrow>true</CanGrow>
+                            <KeepTogether>true</KeepTogether>
+                            <Paragraphs>
+                              <Paragraph>
+                                <TextRuns>
+                                  <TextRun>
+                                    <Value>Page Page</Value>
+                                    <Style>
+                                      <FontFamily>Tahoma</FontFamily>
+                                      <FontSize>11pt</FontSize>
+                                      <FontWeight>Bold</FontWeight>
+                                      <Color>White</Color>
+                                    </Style>
+                                  </TextRun>
+                                </TextRuns>
+                                <Style />
+                              </Paragraph>
+                            </Paragraphs>
+                            <rd:DefaultName>Textbox64</rd:DefaultName>
+                            <Style>
+                              <Border>
+                                <Color>#4e648a</Color>
+                                <Style>Solid</Style>
+                              </Border>
+                              <BackgroundColor>#384c70</BackgroundColor>
+                              <PaddingLeft>2pt</PaddingLeft>
+                              <PaddingRight>2pt</PaddingRight>
+                              <PaddingTop>2pt</PaddingTop>
+                              <PaddingBottom>2pt</PaddingBottom>
+                            </Style>
+                          </Textbox>
+                        </CellContents>
+                      </TablixHeader>
+                      <TablixMembers>
+                        <TablixMember />
+                      </TablixMembers>
+                    </TablixMember>
                   </TablixMembers>
                   <KeepWithGroup>After</KeepWithGroup>
                 </TablixMember>
                 <TablixMember>
-                  <Group Name="Page_ID">
+                  <Group Name="User_ID">
                     <GroupExpressions>
-                      <GroupExpression>=Fields!Page_ID.Value</GroupExpression>
+                      <GroupExpression>=Fields!User_ID.Value</GroupExpression>
                     </GroupExpressions>
+                    <PageBreak>
+                      <BreakLocation>Between</BreakLocation>
+                    </PageBreak>
                   </Group>
                   <SortExpressions>
                     <SortExpression>
-                      <Value>=Fields!Name.Value</Value>
+                      <Value>=Fields!User_ID.Value</Value>
                     </SortExpression>
                   </SortExpressions>
                   <TablixHeader>
-                    <Size>1.64583in</Size>
+                    <Size>3.54167in</Size>
                     <CellContents>
-                      <Textbox Name="Page_ID">
+                      <Textbox Name="User_ID">
                         <CanGrow>true</CanGrow>
                         <KeepTogether>true</KeepTogether>
                         <Paragraphs>
                           <Paragraph>
                             <TextRuns>
                               <TextRun>
-                                <Value>=Fields!Name.Value</Value>
+                                <Value xml:space="preserve"> </Value>
                                 <Style>
                                   <FontFamily>Tahoma</FontFamily>
+                                  <FontWeight>Bold</FontWeight>
+                                  <Color>White</Color>
+                                </Style>
+                              </TextRun>
+                              <TextRun>
+                                <Label>UserName</Label>
+                                <Value>=Lookup(Fields!User_ID.Value, Fields!User_ID.Value, Fields!User_Name.Value, "Users")</Value>
+                                <Style>
+                                  <FontFamily>Tahoma</FontFamily>
+                                  <FontSize>11pt</FontSize>
+                                  <FontWeight>Bold</FontWeight>
+                                  <Color>White</Color>
+                                </Style>
+                              </TextRun>
+                            </TextRuns>
+                            <Style />
+                          </Paragraph>
+                          <Paragraph>
+                            <TextRuns>
+                              <TextRun>
+                                <Label>DisplayName</Label>
+                                <Value>=Lookup(Fields!User_ID.Value, Fields!User_ID.Value, Fields!Display_Name.Value, "Users")</Value>
+                                <Style>
+                                  <FontFamily>Tahoma</FontFamily>
+                                  <FontSize>11pt</FontSize>
                                   <FontWeight>Bold</FontWeight>
                                   <Color>White</Color>
                                 </Style>
@@ -409,7 +473,7 @@
                             <Style />
                           </Paragraph>
                         </Paragraphs>
-                        <rd:DefaultName>Page_ID</rd:DefaultName>
+                        <rd:DefaultName>User_ID</rd:DefaultName>
                         <Style>
                           <Border>
                             <Color>#aab292</Color>
@@ -426,83 +490,91 @@
                   </TablixHeader>
                   <TablixMembers>
                     <TablixMember>
-                      <Group Name="Details">
-                        <Filters>
-                          <Filter>
-                            <FilterExpression>=Fields!Sub_Page_ID.Value</FilterExpression>
-                            <Operator>NotEqual</Operator>
-                            <FilterValues>
-                              <FilterValue DataType="Integer">0</FilterValue>
-                            </FilterValues>
-                          </Filter>
-                        </Filters>
+                      <Group Name="Page_ID">
+                        <GroupExpressions>
+                          <GroupExpression>=Fields!Page_ID.Value</GroupExpression>
+                        </GroupExpressions>
                       </Group>
                       <SortExpressions>
                         <SortExpression>
                           <Value>=Fields!Name.Value</Value>
                         </SortExpression>
                       </SortExpressions>
-                      <Visibility>
-                        <Hidden>true</Hidden>
-                        <ToggleItem>Page_ID</ToggleItem>
-                      </Visibility>
+                      <TablixHeader>
+                        <Size>1.64583in</Size>
+                        <CellContents>
+                          <Textbox Name="Page_ID">
+                            <CanGrow>true</CanGrow>
+                            <KeepTogether>true</KeepTogether>
+                            <Paragraphs>
+                              <Paragraph>
+                                <TextRuns>
+                                  <TextRun>
+                                    <Value>=Fields!Name.Value</Value>
+                                    <Style>
+                                      <FontFamily>Tahoma</FontFamily>
+                                      <FontWeight>Bold</FontWeight>
+                                      <Color>White</Color>
+                                    </Style>
+                                  </TextRun>
+                                </TextRuns>
+                                <Style />
+                              </Paragraph>
+                            </Paragraphs>
+                            <rd:DefaultName>Page_ID</rd:DefaultName>
+                            <Style>
+                              <Border>
+                                <Color>#aab292</Color>
+                                <Style>Solid</Style>
+                              </Border>
+                              <BackgroundColor>#949a7e</BackgroundColor>
+                              <PaddingLeft>2pt</PaddingLeft>
+                              <PaddingRight>2pt</PaddingRight>
+                              <PaddingTop>2pt</PaddingTop>
+                              <PaddingBottom>2pt</PaddingBottom>
+                            </Style>
+                          </Textbox>
+                        </CellContents>
+                      </TablixHeader>
+                      <TablixMembers>
+                        <TablixMember>
+                          <Group Name="Details">
+                            <Filters>
+                              <Filter>
+                                <FilterExpression>=Fields!Sub_Page_ID.Value</FilterExpression>
+                                <Operator>NotEqual</Operator>
+                                <FilterValues>
+                                  <FilterValue DataType="Integer">0</FilterValue>
+                                </FilterValues>
+                              </Filter>
+                            </Filters>
+                          </Group>
+                          <SortExpressions>
+                            <SortExpression>
+                              <Value>=Fields!Name.Value</Value>
+                            </SortExpression>
+                          </SortExpressions>
+                          <Visibility>
+                            <Hidden>true</Hidden>
+                            <ToggleItem>Page_ID</ToggleItem>
+                          </Visibility>
+                        </TablixMember>
+                      </TablixMembers>
                     </TablixMember>
                   </TablixMembers>
                 </TablixMember>
               </TablixMembers>
             </TablixRowHierarchy>
             <DataSetName>Pages</DataSetName>
-            <Top>0.625in</Top>
+            <Top>0.125in</Top>
             <Height>0.5in</Height>
-            <Width>7.45833in</Width>
+            <Width>11in</Width>
             <Style>
               <Border>
                 <Style>None</Style>
               </Border>
             </Style>
           </Tablix>
-          <Textbox Name="Textbox67">
-            <CanGrow>true</CanGrow>
-            <KeepTogether>true</KeepTogether>
-            <Paragraphs>
-              <Paragraph>
-                <TextRuns>
-                  <TextRun>
-                    <Value>User: </Value>
-                    <Style />
-                  </TextRun>
-                  <TextRun>
-                    <Value>=First(Fields!Display_Name.Value, "Users")</Value>
-                    <Style />
-                  </TextRun>
-                  <TextRun>
-                    <Value xml:space="preserve"> </Value>
-                    <Style />
-                  </TextRun>
-                  <TextRun>
-                    <Value>=First(Fields!User_Name.Value, "Users")</Value>
-                    <Style />
-                  </TextRun>
-                </TextRuns>
-                <Style />
-              </Paragraph>
-            </Paragraphs>
-            <rd:DefaultName>Textbox67</rd:DefaultName>
-            <Top>0.22792in</Top>
-            <Left>0.25in</Left>
-            <Height>0.25in</Height>
-            <Width>7.20833in</Width>
-            <ZIndex>1</ZIndex>
-            <Style>
-              <Border>
-                <Style>None</Style>
-              </Border>
-              <PaddingLeft>2pt</PaddingLeft>
-              <PaddingRight>2pt</PaddingRight>
-              <PaddingTop>2pt</PaddingTop>
-              <PaddingBottom>2pt</PaddingBottom>
-            </Style>
-          </Textbox>
         </ReportItems>
         <Height>8.025in</Height>
         <Style>
@@ -573,7 +645,6 @@
         </Values>
       </DefaultValue>
       <Prompt>SelectionID</Prompt>
-      <Hidden>true</Hidden>
     </ReportParameter>
     <ReportParameter Name="DomainID">
       <DataType>String</DataType>
@@ -596,10 +667,6 @@
       </DefaultValue>
       <Prompt>UserID</Prompt>
       <Hidden>true</Hidden>
-    </ReportParameter>
-    <ReportParameter Name="SelectedUserId">
-      <DataType>Integer</DataType>
-      <Prompt>Select A User</Prompt>
     </ReportParameter>
   </ReportParameters>
   <ConsumeContainerWhitespace>true</ConsumeContainerWhitespace>
