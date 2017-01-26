@@ -42,36 +42,62 @@ BEGIN
 	FROM dbo.dp_User_Roles UR 
 	JOIN dbo.dp_Roles R ON UR.Role_ID = R.Role_ID
 	JOIN @UserList UL ON UL.UserID = UR.User_ID)
-
-	--select * from @UserRoles
-	--return
-
 	
-	DECLARE @SecurityList TABLE (User_ID int, Page_ID int, Sub_Page_ID int, Name varchar(256), Security_Role varchar(1024))
+	DECLARE @SecurityList TABLE (User_ID int, Page_ID int, Sub_Page_ID int, SecuredObjectType varchar(20), Name varchar(256), Security_Role varchar(1024))
 
-	INSERT INTO @SecurityList (User_ID, Page_ID, Sub_Page_ID, Name, Security_Role)
-	(SELECT DISTINCT UU.UserID, P.Page_ID, '', P.Display_Name, 
+	-- Get Pages
+	INSERT INTO @SecurityList (User_ID, Page_ID, Sub_Page_ID, SecuredObjectType, Name, Security_Role)
+	(SELECT DISTINCT UU.UserID, P.Page_ID, '', 'Page', P.Display_Name, 
        STUFF((SELECT ','+ UU.Role_Name FROM[dbo].[dp_Role_Pages] RP
-                                    JOIN [dp_Pages] PGS on RP.Page_ID = PGS.Page_ID
                                     JOIN @UserRoles UU ON UU.Role_ID = RP.Role_ID
-									WHERE  PGS.Page_ID = P.Page_ID FOR XML Path('')),1,1,'') AS Security_Roles
+									WHERE  RP.Page_ID = P.Page_ID FOR XML Path('')),1,1,'') AS Security_Roles
        
        FROM [dbo].[dp_Role_Pages] RP
        JOIN [dp_Pages] P on RP.Page_ID = P.Page_ID
        JOIN @UserRoles UU ON UU.Role_ID = RP.Role_ID)
 
-	INSERT INTO @SecurityList (User_ID, Page_ID, Sub_Page_ID, Name, Security_Role)
-	(SELECT  UU.UserID, SP.Page_ID, SP.Sub_Page_ID, SP.Display_Name, 
+	-- Get Sub Pages
+	INSERT INTO @SecurityList (User_ID, Page_ID, Sub_Page_ID, SecuredObjectType, Name, Security_Role)
+	(SELECT  UU.UserID, SP.Page_ID, SP.Sub_Page_ID, 'SubPage', SP.Display_Name, 
        STUFF((SELECT ','+ UU.Role_Name FROM[dbo].[dp_Role_Sub_Pages] RP
-                                    JOIN [dp_Sub_Pages] SPGS on RP.Sub_Page_ID = SPGS.Sub_Page_ID
                                     JOIN @UserRoles UU ON UU.Role_ID = RP.Role_ID
-									WHERE SPGS.Sub_Page_ID = SP.Sub_Page_ID FOR XML Path('')),1,1,'') AS Security_Roles
+									WHERE RP.Sub_Page_ID = SP.Sub_Page_ID FOR XML Path('')),1,1,'') AS Security_Roles
        
        FROM [dbo].[dp_Role_Sub_Pages] RP
        JOIN [dp_Sub_Pages] SP on RP.Sub_Page_ID = SP.Sub_Page_ID
        JOIN @UserRoles UU ON UU.Role_ID = RP.Role_ID)
 
-	SELECT * FROM @SecurityList order by user_id,page_id
+	--Get Reports
+	INSERT INTO @SecurityList (User_ID, Page_ID, Sub_Page_ID, SecuredObjectType, Name, Security_Role)
+	(SELECT DISTINCT UU.UserID, '', '', 'Reports', R.Report_Name, 
+		STUFF((SELECT ','+ UU.Role_Name FROM [dbo].[dp_Role_Reports] RR
+									JOIN @UserRoles UU ON UU.Role_ID = RR.Role_ID
+									WHERE RR.Report_ID = R.Report_ID FOR XML PATH('')),1,1,'') AS Security_Roles
+		FROM dbo.dp_Role_Reports RP
+		JOIN dbo.dp_Reports R ON RP.Report_ID = R.Report_ID
+		JOIN @UserRoles UU ON RP.Role_ID = UU.Role_ID)
+
+	--Get Tools
+	INSERT INTO @SecurityList (User_ID, Page_ID, Sub_Page_ID, SecuredObjectType, Name, Security_Role)
+	(SELECT DISTINCT UU.UserID, '', '', 'Tools', T.Tool_Name, 
+		STUFF((SELECT ','+ UU.Role_Name FROM [dbo].[dp_Role_Tools] RT
+									JOIN @UserRoles UU ON UU.Role_ID = RT.Role_ID
+									WHERE RT.Tool_ID = T.Tool_ID FOR XML PATH('')),1,1,'') AS Security_Roles
+		FROM dbo.dp_Role_Tools RT
+		JOIN dbo.dp_Tools T ON RT.Tool_ID = T.Tool_ID
+		JOIN @UserRoles UU ON RT.Role_ID = UU.Role_ID)
+
+	--Get API Procedures
+	INSERT INTO @SecurityList (User_ID, Page_ID, Sub_Page_ID, SecuredObjectType, Name, Security_Role)
+	(SELECT DISTINCT UU.UserID, '', '', 'API Procedures', A.Procedure_Name, 
+		STUFF((SELECT ','+ UU.Role_Name FROM [dbo].[dp_Role_API_Procedures] RA
+									JOIN @UserRoles UU ON UU.Role_ID = RA.Role_ID
+									WHERE RA.API_Procedure_ID = A.API_Procedure_ID FOR XML PATH('')),1,1,'') AS Security_Roles
+		FROM dbo.dp_Role_API_Procedures RA
+		JOIN dbo.dp_API_Procedures A ON RA.API_Procedure_ID = A.API_Procedure_ID
+		JOIN @UserRoles UU ON RA.Role_ID = UU.Role_ID)
+
+	SELECT * FROM @SecurityList --order by user_id,page_id
 	END
 
 GO
