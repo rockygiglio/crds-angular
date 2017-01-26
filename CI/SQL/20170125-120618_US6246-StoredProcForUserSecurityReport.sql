@@ -47,7 +47,7 @@ BEGIN
 
 	-- Get Pages
 	INSERT INTO @SecurityList (User_ID, Page_ID, Sub_Page_ID, SecuredObjectType, Name, Security_Role)
-	(SELECT DISTINCT UU.UserID, P.Page_ID, '', 'Page', P.Display_Name, 
+	(SELECT DISTINCT UU.UserID, P.Page_ID, '', 'Pages', P.Display_Name, 
        STUFF((SELECT ','+ UU.Role_Name FROM[dbo].[dp_Role_Pages] RP
                                     JOIN @UserRoles UU ON UU.Role_ID = RP.Role_ID
 									WHERE  RP.Page_ID = P.Page_ID FOR XML Path('')),1,1,'') AS Security_Roles
@@ -58,7 +58,7 @@ BEGIN
 
 	-- Get Sub Pages
 	INSERT INTO @SecurityList (User_ID, Page_ID, Sub_Page_ID, SecuredObjectType, Name, Security_Role)
-	(SELECT  UU.UserID, SP.Page_ID, SP.Sub_Page_ID, 'SubPage', SP.Display_Name, 
+	(SELECT  UU.UserID, SP.Page_ID, SP.Sub_Page_ID, 'Pages', SP.Display_Name, 
        STUFF((SELECT ','+ UU.Role_Name FROM[dbo].[dp_Role_Sub_Pages] RP
                                     JOIN @UserRoles UU ON UU.Role_ID = RP.Role_ID
 									WHERE RP.Sub_Page_ID = SP.Sub_Page_ID FOR XML Path('')),1,1,'') AS Security_Roles
@@ -69,7 +69,7 @@ BEGIN
 
 	--Get Reports
 	INSERT INTO @SecurityList (User_ID, Page_ID, Sub_Page_ID, SecuredObjectType, Name, Security_Role)
-	(SELECT DISTINCT UU.UserID, '', '', 'Reports', R.Report_Name, 
+	(SELECT DISTINCT UU.UserID, R.Report_ID, '', 'Reports', R.Report_Name, 
 		STUFF((SELECT ','+ UU.Role_Name FROM [dbo].[dp_Role_Reports] RR
 									JOIN @UserRoles UU ON UU.Role_ID = RR.Role_ID
 									WHERE RR.Report_ID = R.Report_ID FOR XML PATH('')),1,1,'') AS Security_Roles
@@ -79,7 +79,7 @@ BEGIN
 
 	--Get Tools
 	INSERT INTO @SecurityList (User_ID, Page_ID, Sub_Page_ID, SecuredObjectType, Name, Security_Role)
-	(SELECT DISTINCT UU.UserID, '', '', 'Tools', T.Tool_Name, 
+	(SELECT DISTINCT UU.UserID, T.Tool_ID, '', 'Tools', T.Tool_Name, 
 		STUFF((SELECT ','+ UU.Role_Name FROM [dbo].[dp_Role_Tools] RT
 									JOIN @UserRoles UU ON UU.Role_ID = RT.Role_ID
 									WHERE RT.Tool_ID = T.Tool_ID FOR XML PATH('')),1,1,'') AS Security_Roles
@@ -89,7 +89,7 @@ BEGIN
 
 	--Get API Procedures
 	INSERT INTO @SecurityList (User_ID, Page_ID, Sub_Page_ID, SecuredObjectType, Name, Security_Role)
-	(SELECT DISTINCT UU.UserID, '', '', 'API Procedures', A.Procedure_Name, 
+	(SELECT DISTINCT UU.UserID, A.API_Procedure_ID, '', 'API Procedures', A.Procedure_Name, 
 		STUFF((SELECT ','+ UU.Role_Name FROM [dbo].[dp_Role_API_Procedures] RA
 									JOIN @UserRoles UU ON UU.Role_ID = RA.Role_ID
 									WHERE RA.API_Procedure_ID = A.API_Procedure_ID FOR XML PATH('')),1,1,'') AS Security_Roles
