@@ -37,6 +37,10 @@
           <DataField>Name</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
+        <Field Name="SecuredObjectType">
+          <DataField>SecuredObjectType</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
         <Field Name="Security_Role">
           <DataField>Security_Role</DataField>
           <rd:TypeName>System.String</rd:TypeName>
@@ -260,7 +264,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!Name.Value</Value>
+                                  <Value>=IIf(Fields!SecuredObjectType.Value = "Pages",  Fields!Name.Value, "")</Value>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <Color>#4d4d4d</Color>
@@ -370,16 +374,16 @@
                   <TablixMembers>
                     <TablixMember>
                       <TablixHeader>
-                        <Size>1.64583in</Size>
+                        <Size>1in</Size>
                         <CellContents>
-                          <Textbox Name="Textbox64">
+                          <Textbox Name="Textbox1">
                             <CanGrow>true</CanGrow>
                             <KeepTogether>true</KeepTogether>
                             <Paragraphs>
                               <Paragraph>
                                 <TextRuns>
                                   <TextRun>
-                                    <Value>Page Page</Value>
+                                    <Value>Secured Object Type</Value>
                                     <Style>
                                       <FontFamily>Tahoma</FontFamily>
                                       <FontSize>11pt</FontSize>
@@ -391,7 +395,7 @@
                                 <Style />
                               </Paragraph>
                             </Paragraphs>
-                            <rd:DefaultName>Textbox64</rd:DefaultName>
+                            <rd:DefaultName>Textbox1</rd:DefaultName>
                             <Style>
                               <Border>
                                 <Color>#4e648a</Color>
@@ -407,7 +411,48 @@
                         </CellContents>
                       </TablixHeader>
                       <TablixMembers>
-                        <TablixMember />
+                        <TablixMember>
+                          <TablixHeader>
+                            <Size>1.64583in</Size>
+                            <CellContents>
+                              <Textbox Name="Textbox64">
+                                <CanGrow>true</CanGrow>
+                                <KeepTogether>true</KeepTogether>
+                                <Paragraphs>
+                                  <Paragraph>
+                                    <TextRuns>
+                                      <TextRun>
+                                        <Value>Name</Value>
+                                        <Style>
+                                          <FontFamily>Tahoma</FontFamily>
+                                          <FontSize>11pt</FontSize>
+                                          <FontWeight>Bold</FontWeight>
+                                          <Color>White</Color>
+                                        </Style>
+                                      </TextRun>
+                                    </TextRuns>
+                                    <Style />
+                                  </Paragraph>
+                                </Paragraphs>
+                                <rd:DefaultName>Textbox64</rd:DefaultName>
+                                <Style>
+                                  <Border>
+                                    <Color>#4e648a</Color>
+                                    <Style>Solid</Style>
+                                  </Border>
+                                  <BackgroundColor>#384c70</BackgroundColor>
+                                  <PaddingLeft>2pt</PaddingLeft>
+                                  <PaddingRight>2pt</PaddingRight>
+                                  <PaddingTop>2pt</PaddingTop>
+                                  <PaddingBottom>2pt</PaddingBottom>
+                                </Style>
+                              </Textbox>
+                            </CellContents>
+                          </TablixHeader>
+                          <TablixMembers>
+                            <TablixMember />
+                          </TablixMembers>
+                        </TablixMember>
                       </TablixMembers>
                     </TablixMember>
                   </TablixMembers>
@@ -490,27 +535,27 @@
                   </TablixHeader>
                   <TablixMembers>
                     <TablixMember>
-                      <Group Name="Page_ID">
+                      <Group Name="SecuredObjectType">
                         <GroupExpressions>
-                          <GroupExpression>=Fields!Page_ID.Value</GroupExpression>
+                          <GroupExpression>=Fields!SecuredObjectType.Value</GroupExpression>
                         </GroupExpressions>
                       </Group>
                       <SortExpressions>
                         <SortExpression>
-                          <Value>=Fields!Name.Value</Value>
+                          <Value>=Fields!SecuredObjectType.Value</Value>
                         </SortExpression>
                       </SortExpressions>
                       <TablixHeader>
-                        <Size>1.64583in</Size>
+                        <Size>1in</Size>
                         <CellContents>
-                          <Textbox Name="Page_ID">
+                          <Textbox Name="SecuredObjectType">
                             <CanGrow>true</CanGrow>
                             <KeepTogether>true</KeepTogether>
                             <Paragraphs>
                               <Paragraph>
                                 <TextRuns>
                                   <TextRun>
-                                    <Value>=Fields!Name.Value</Value>
+                                    <Value>=Fields!SecuredObjectType.Value</Value>
                                     <Style>
                                       <FontFamily>Tahoma</FontFamily>
                                       <FontWeight>Bold</FontWeight>
@@ -521,7 +566,7 @@
                                 <Style />
                               </Paragraph>
                             </Paragraphs>
-                            <rd:DefaultName>Page_ID</rd:DefaultName>
+                            <rd:DefaultName>SecuredObjectType</rd:DefaultName>
                             <Style>
                               <Border>
                                 <Color>#aab292</Color>
@@ -538,26 +583,76 @@
                       </TablixHeader>
                       <TablixMembers>
                         <TablixMember>
-                          <Group Name="Details">
-                            <Filters>
-                              <Filter>
-                                <FilterExpression>=Fields!Sub_Page_ID.Value</FilterExpression>
-                                <Operator>NotEqual</Operator>
-                                <FilterValues>
-                                  <FilterValue DataType="Integer">0</FilterValue>
-                                </FilterValues>
-                              </Filter>
-                            </Filters>
+                          <Group Name="Page_ID">
+                            <GroupExpressions>
+                              <GroupExpression>=Fields!Page_ID.Value</GroupExpression>
+                            </GroupExpressions>
                           </Group>
                           <SortExpressions>
                             <SortExpression>
                               <Value>=Fields!Name.Value</Value>
                             </SortExpression>
                           </SortExpressions>
-                          <Visibility>
-                            <Hidden>true</Hidden>
-                            <ToggleItem>Page_ID</ToggleItem>
-                          </Visibility>
+                          <TablixHeader>
+                            <Size>1.64583in</Size>
+                            <CellContents>
+                              <Textbox Name="Page_ID">
+                                <CanGrow>true</CanGrow>
+                                <KeepTogether>true</KeepTogether>
+                                <Paragraphs>
+                                  <Paragraph>
+                                    <TextRuns>
+                                      <TextRun>
+                                        <Value>=Fields!Name.Value</Value>
+                                        <Style>
+                                          <FontFamily>Tahoma</FontFamily>
+                                          <FontWeight>Bold</FontWeight>
+                                          <Color>White</Color>
+                                        </Style>
+                                      </TextRun>
+                                    </TextRuns>
+                                    <Style />
+                                  </Paragraph>
+                                </Paragraphs>
+                                <rd:DefaultName>Page_ID</rd:DefaultName>
+                                <Style>
+                                  <Border>
+                                    <Color>#aab292</Color>
+                                    <Style>Solid</Style>
+                                  </Border>
+                                  <BackgroundColor>#949a7e</BackgroundColor>
+                                  <PaddingLeft>2pt</PaddingLeft>
+                                  <PaddingRight>2pt</PaddingRight>
+                                  <PaddingTop>2pt</PaddingTop>
+                                  <PaddingBottom>2pt</PaddingBottom>
+                                </Style>
+                              </Textbox>
+                            </CellContents>
+                          </TablixHeader>
+                          <TablixMembers>
+                            <TablixMember>
+                              <Group Name="Details">
+                                <Filters>
+                                  <Filter>
+                                    <FilterExpression>=Fields!Sub_Page_ID.Value</FilterExpression>
+                                    <Operator>NotEqual</Operator>
+                                    <FilterValues>
+                                      <FilterValue DataType="Integer">0</FilterValue>
+                                    </FilterValues>
+                                  </Filter>
+                                </Filters>
+                              </Group>
+                              <SortExpressions>
+                                <SortExpression>
+                                  <Value>=Fields!Name.Value</Value>
+                                </SortExpression>
+                              </SortExpressions>
+                              <Visibility>
+                                <Hidden>true</Hidden>
+                                <ToggleItem>Page_ID</ToggleItem>
+                              </Visibility>
+                            </TablixMember>
+                          </TablixMembers>
                         </TablixMember>
                       </TablixMembers>
                     </TablixMember>
@@ -568,7 +663,7 @@
             <DataSetName>Pages</DataSetName>
             <Top>0.125in</Top>
             <Height>0.5in</Height>
-            <Width>11in</Width>
+            <Width>12in</Width>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -583,7 +678,7 @@
           </Border>
         </Style>
       </Body>
-      <Width>11in</Width>
+      <Width>12in</Width>
       <Page>
         <PageFooter>
           <Height>0.45in</Height>
@@ -641,7 +736,7 @@
       <DataType>Integer</DataType>
       <DefaultValue>
         <Values>
-          <Value>0</Value>
+          <Value>143956</Value>
         </Values>
       </DefaultValue>
       <Prompt>SelectionID</Prompt>
