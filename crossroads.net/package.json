@@ -1,13 +1,14 @@
 {
   "name": "crossroads.net",
-  "version": "1.0.45-alpha.1",
+  "version": "1.0.45-alpha.2",
   "description": "Crossroads Church Web Presence",
   "main": "app.js",
   "scripts": {
     "test": "./node_modules/karma/bin/karma start crossroadsTerminal.conf.js",
     "start": "./node_modules/gulp/bin/gulp.js browser-sync-dev",
     "core-test": "./node_modules/karma/bin/karma start core.tests.conf.js",
-    "core-ci-test": "./node_modules/karma/bin/karma start core.tests.ci.conf.js"
+    "core-ci-test": "./node_modules/karma/bin/karma start core.tests.ci.conf.js",
+    "postinstall" : "node -e \"var s='../../node_modules', d='node_modules', fs=require('fs'); fs.exists(d,function(e){e||fs.symlinkSync(s,d,'dir')});\""
   },
   "repository": {
     "type": "git",
