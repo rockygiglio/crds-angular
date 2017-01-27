@@ -734,12 +734,8 @@
   <ReportParameters>
     <ReportParameter Name="SelectionID">
       <DataType>Integer</DataType>
-      <DefaultValue>
-        <Values>
-          <Value>143956</Value>
-        </Values>
-      </DefaultValue>
       <Prompt>SelectionID</Prompt>
+      <Hidden>true</Hidden>
     </ReportParameter>
     <ReportParameter Name="DomainID">
       <DataType>String</DataType>
@@ -761,6 +757,11 @@
         </Values>
       </DefaultValue>
       <Prompt>UserID</Prompt>
+      <Hidden>true</Hidden>
+    </ReportParameter>
+    <ReportParameter Name="PageID">
+      <DataType>String</DataType>
+      <Prompt>PageID</Prompt>
       <Hidden>true</Hidden>
     </ReportParameter>
   </ReportParameters>
