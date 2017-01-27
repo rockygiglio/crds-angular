@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Configuration;
+using System.Linq;
 using System.Reflection;
 using crds_angular.App_Start;
 using crds_angular.Services;
@@ -23,9 +24,14 @@ namespace EventReminder
         static void Main(string[] args)
         {
             AutoMapperConfig.RegisterMappings();
-            var section = (UnityConfigurationSection)ConfigurationManager.GetSection("unity");
+
             var container = new UnityContainer();
-            section.Configure(container);
+            var unitySections = new[] { "crossroadsCommonUnity", "unity" };
+
+            foreach (var section in unitySections.Select(sectionName => (UnityConfigurationSection)ConfigurationManager.GetSection(sectionName)))
+            {
+                container.LoadConfiguration(section);
+            }
 
             TlsHelper.AllowTls12();
 
