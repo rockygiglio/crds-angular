@@ -538,6 +538,20 @@ describe('Group Tool Group Service', () => {
     });
   });
 
+  it('should removeParticipantFromMyGroup return 200', () => {
+    let groupId = 123;
+    let participant = { groupParticipantId: 4321, message: 'YourFired'};
+
+    httpBackend.expectDELETE(`${endpoint}/grouptool/group/${groupId}/participant/${participant.groupParticipantId}?removalMessage=${participant.message}`)
+      .respond(200, {});
+    let promise = fixture.removeGroupParticipant(groupId, participant);
+    httpBackend.flush();
+
+    promise.then((data) => {
+      console.log(data);
+    })
+  });
+
   describe('getGroupType(groupId) function', () => {
     it('should return an object with just groupTypeId', () => {
       httpBackend.expectGET(`${endpoint}/group/31337/groupType`)
