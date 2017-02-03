@@ -284,14 +284,14 @@ SELECT 	c.first_name,
      AND r.form_response_id = fr.form_response_id
 	 order by r.Form_Response_Answer_ID desc) AS emergencycontactsecondaryphone,
 
-  ISNULL((SELECT top 1  response
+ (SELECT top 1  response
    FROM [ministryplatform].[dbo].[form_response_answers] r
    join (select fra.Form_Response_Answer_ID as max_id 
 				from dbo.Form_Response_Answers fra )m
 				on m.max_id = r.Form_Response_Answer_ID
    WHERE r.form_field_id = @emergencycontactemailaddress
      AND r.form_response_id = fr.form_response_id
-	 order by r.Form_Response_Answer_ID desc),'MISSING') AS emergencycontactemailaddress,
+	 order by r.Form_Response_Answer_ID desc) AS emergencycontactemailaddress,
 
   (SELECT TOP 1 response
 	FROM [ministryplatform].[dbo].[form_response_answers] r
