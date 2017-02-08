@@ -140,6 +140,7 @@ namespace crds_angular.App_Start
                 .ForMember(dest => dest.IncludeOnPrintedStatement, opts => opts.MapFrom(src => src.IncludeOnPrintedStatement))
                 .ForMember(dest => dest.AccountingCompanyName, opts => opts.MapFrom(src => src.AccountingCompanyName))
                 .ForMember(dest => dest.AccountingCompanyIncludeOnPrintedStatement, opts => opts.MapFrom(src => src.AccountingCompanyIncludeOnPrintedStatement))
+                .ForMember(dest => dest.Notes, opts => opts.MapFrom(src => src.donationNotes))
                 .AfterMap((src, dest) =>
                 {
                     dest.Source = new DonationSourceDTO

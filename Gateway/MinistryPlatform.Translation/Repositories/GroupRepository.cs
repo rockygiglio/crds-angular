@@ -891,7 +891,7 @@ namespace MinistryPlatform.Translation.Repositories
                 PrimaryContactName = record.ContainsKey("Primary_Contact_Name") ? record.ToString("Primary_Contact_Name") : record.ToString("Primary_Contact_Text"),
                 PrimaryContactEmail = record.ContainsKey("Primary_Contact_Email") ? record.ToString("Primary_Contact_Email") : string.Empty,
                 GroupType = record.ToInt("Group_Type_ID"),
-                GroupTypeName = record.ToString("Group_Type_Name"),
+                GroupTypeName = record.ContainsKey("Group_Type_Name") ? record.ToString("Group_Type_Name") : string.Empty, 
                 StartDate = record.ToDate("Start_Date"),
                 EndDate = record.ToNullableDate("End_Date"),
                 MeetingDayId = record.ToInt("Meeting_Day_ID"),
