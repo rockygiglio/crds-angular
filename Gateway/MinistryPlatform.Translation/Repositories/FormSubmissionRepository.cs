@@ -197,7 +197,7 @@ namespace MinistryPlatform.Translation.Repositories
             var record = new Dictionary<string, object>
             {
                 {"Form_ID", formResponse.FormId},
-                {"Response_Date", DateTime.Today},
+                {"Response_Date", DateTime.Now},
                 {"Contact_ID", formResponse.ContactId},
                 {"Opportunity_ID",  formResponse.OpportunityId },
                 {"Opportunity_Response", formResponse.OpportunityResponseId},
