@@ -13,6 +13,7 @@ using crds_angular.Exceptions.Models;
 using crds_angular.Models.Crossroads.Stewardship;
 using crds_angular.Models.Crossroads.Trip;
 using crds_angular.Services.Interfaces;
+using Crossroads.Web.Common.Security;
 using Moq;
 using NUnit.Core;
 using NUnit.Framework;
@@ -30,7 +31,7 @@ namespace crds_angular.test.controllers
         public TripControllerTest()
         {
             _tripService = new Mock<ITripService>();
-            _fixture = new TripController(_tripService.Object, new Mock<IUserImpersonationService>().Object);
+            _fixture = new TripController(_tripService.Object, new Mock<IUserImpersonationService>().Object, new Mock<IAuthenticationRepository>().Object);
             authType = "auth_type";
             authToken = "auth_token";
             _fixture.Request = new HttpRequestMessage();

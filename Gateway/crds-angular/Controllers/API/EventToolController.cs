@@ -9,6 +9,9 @@ using crds_angular.Services.Interfaces;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 using IEventService = crds_angular.Services.Interfaces.IEventService;
 using Crossroads.ApiVersioning;
+using Crossroads.Web.Common;
+using Crossroads.Web.Common.MinistryPlatform;
+using Crossroads.Web.Common.Security;
 
 namespace crds_angular.Controllers.API
 {
@@ -17,7 +20,7 @@ namespace crds_angular.Controllers.API
         private readonly IApiUserRepository _apiUserService;
         private readonly IEventService _eventService;
 
-        public EventToolController(IApiUserRepository apiUserService, IEventService eventService, IUserImpersonationService userImpersonationService) : base(userImpersonationService)
+        public EventToolController(IApiUserRepository apiUserService, IEventService eventService, IUserImpersonationService userImpersonationService, IAuthenticationRepository authenticationRepository) : base(userImpersonationService, authenticationRepository)
         {
             _eventService = eventService;
             _apiUserService = apiUserService;

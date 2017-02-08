@@ -3,6 +3,9 @@ using crds_angular.Services;
 using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Interfaces;
 using log4net;
+using Crossroads.Web.Common;
+using Crossroads.Web.Common.Configuration;
+using Crossroads.Web.Common.Security;
 using MPInterfaces = MinistryPlatform.Translation.Repositories.Interfaces;
 using Moq;
 using NUnit.Framework;
@@ -16,7 +19,7 @@ namespace crds_angular.test.Services
 
         private Mock<ILog> _logger;
 
-        private Mock<MPInterfaces.IAuthenticationRepository> _authenticationService;
+        private Mock<IAuthenticationRepository> _authenticationService;
         private Mock<IConfigurationWrapper> _configurationWrapper;
         private Mock<MPInterfaces.IContactRepository> _contactService;
         private Mock<IEmailCommunication> _emailCommunication;
@@ -27,7 +30,7 @@ namespace crds_angular.test.Services
         public void SetUp()
         {
             _logger = new Mock<ILog>();
-            _authenticationService = new Mock<MPInterfaces.IAuthenticationRepository>();
+            _authenticationService = new Mock<IAuthenticationRepository>();
             _configurationWrapper = new Mock<IConfigurationWrapper>();
             _contactService = new Mock<MPInterfaces.IContactRepository>();
             _emailCommunication = new Mock<IEmailCommunication>();

@@ -9,6 +9,8 @@ using MinistryPlatform.Translation.Test.Helpers;
 using Moq;
 using NUnit.Framework;
 using FactoryGirl.NET;
+using Crossroads.Web.Common;
+using Crossroads.Web.Common.MinistryPlatform;
 
 namespace MinistryPlatform.Translation.Test.Services
 {

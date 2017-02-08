@@ -13,6 +13,9 @@ using MinistryPlatform.Translation.PlatformService;
 using MPInterfaces = MinistryPlatform.Translation.Repositories.Interfaces;
 using Crossroads.ApiVersioning;
 using crds_angular.Services.Interfaces;
+using Crossroads.Web.Common;
+using Crossroads.Web.Common.MinistryPlatform;
+using Crossroads.Web.Common.Security;
 
 namespace crds_angular.Controllers.API
 {
@@ -20,10 +23,10 @@ namespace crds_angular.Controllers.API
     {
         private readonly ILog _logger = LogManager.GetLogger(typeof (ImageController));
         private readonly MPInterfaces.IMinistryPlatformService _mpService;
-        private readonly MPInterfaces.IAuthenticationRepository _authenticationService;
-        private readonly MPInterfaces.IApiUserRepository _apiUserService;
+        private readonly IAuthenticationRepository _authenticationService;
+        private readonly IApiUserRepository _apiUserService;
 
-        public ImageController(MPInterfaces.IMinistryPlatformService mpService, MPInterfaces.IAuthenticationRepository authenticationService, MPInterfaces.IApiUserRepository apiUserService, IUserImpersonationService userImpersonationService) : base(userImpersonationService)
+        public ImageController(MPInterfaces.IMinistryPlatformService mpService, IAuthenticationRepository authenticationService, IApiUserRepository apiUserService, IUserImpersonationService userImpersonationService) : base(userImpersonationService, authenticationService)
         {
             _authenticationService = authenticationService;
             _apiUserService = apiUserService;

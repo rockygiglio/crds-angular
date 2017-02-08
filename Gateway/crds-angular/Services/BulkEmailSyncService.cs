@@ -16,6 +16,9 @@ using Newtonsoft.Json.Linq;
 using RestSharp;
 using MPInterfaces = MinistryPlatform.Translation.Repositories.Interfaces;
 using AutoMapper;
+using Crossroads.Web.Common;
+using Crossroads.Web.Common.Configuration;
+using Crossroads.Web.Common.MinistryPlatform;
 using MinistryPlatform.Translation.Models;
 using RestSharp.Authenticators;
 
@@ -26,7 +29,7 @@ namespace crds_angular.Services
         private readonly ILog _logger = LogManager.GetLogger(typeof(GroupService));
 
         private readonly MPInterfaces.IBulkEmailRepository _bulkEmailRepository;
-        private readonly MPInterfaces.IApiUserRepository _apiUserService;
+        private readonly IApiUserRepository _apiUserService;
         private readonly IConfigurationWrapper _configWrapper;
         private string _token;
         private System.Timers.Timer _refreshTokenTimer;
@@ -35,7 +38,7 @@ namespace crds_angular.Services
 
         public BulkEmailSyncService(
             MPInterfaces.IBulkEmailRepository bulkEmailRepository,
-            MPInterfaces.IApiUserRepository apiUserService,
+            IApiUserRepository apiUserService,
             IConfigurationWrapper configWrapper)
         {
             _bulkEmailRepository = bulkEmailRepository;

@@ -16,6 +16,8 @@ using Microsoft.Ajax.Utilities;
 using MinistryPlatform.Translation.Models;
 using MPInterfaces = MinistryPlatform.Translation.Repositories.Interfaces;
 using Crossroads.ApiVersioning;
+using Crossroads.Web.Common;
+using Crossroads.Web.Common.Security;
 
 namespace crds_angular.Controllers.API
 {
@@ -25,7 +27,7 @@ namespace crds_angular.Controllers.API
 
         private readonly MPInterfaces.IDonorRepository _mpDonorService;
         private readonly IPaymentProcessorService _stripeService;
-        private readonly MPInterfaces.IAuthenticationRepository _authenticationService;
+        private readonly IAuthenticationRepository _authenticationService;
         private readonly IDonorService _gatewayDonorService;
         private readonly IDonationService _gatewayDonationService;
         private readonly IUserImpersonationService _impersonationService;
@@ -36,14 +38,14 @@ namespace crds_angular.Controllers.API
 
         public DonationController(MPInterfaces.IDonorRepository mpDonorService,
                                   IPaymentProcessorService stripeService,
-                                  MPInterfaces.IAuthenticationRepository authenticationService,
+                                  IAuthenticationRepository authenticationService,
                                   IDonorService gatewayDonorService,
                                   IDonationService gatewayDonationService,
                                   MPInterfaces.IDonationRepository mpDonationService,
                                   MPInterfaces.IPledgeRepository mpPledgeService,
                                   IUserImpersonationService impersonationService,
                                   IPaymentService paymentService,
-                                  MPInterfaces.IInvoiceRepository invoiceRepository) : base(impersonationService)
+                                  MPInterfaces.IInvoiceRepository invoiceRepository) : base(impersonationService, authenticationService)
         {
             _mpDonorService = mpDonorService;
             _stripeService = stripeService;

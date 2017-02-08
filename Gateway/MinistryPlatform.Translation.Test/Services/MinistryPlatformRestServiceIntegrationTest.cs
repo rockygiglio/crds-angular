@@ -1,12 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Crossroads.Web.Common;
+using Crossroads.Web.Common.Configuration;
+using Crossroads.Web.Common.MinistryPlatform;
+using Crossroads.Web.Common.Security;
 using MinistryPlatform.Translation.Models;
-using MinistryPlatform.Translation.Models.Attributes;
 using MinistryPlatform.Translation.Models.Childcare;
 using MinistryPlatform.Translation.Models.Payments;
 using MinistryPlatform.Translation.Models.Rules;
-using MinistryPlatform.Translation.Repositories;
 using Newtonsoft.Json;
 using NUnit.Framework;
 using RestSharp;
@@ -23,8 +25,11 @@ namespace MinistryPlatform.Translation.Test.Services
         [TestFixtureSetUp]
         public void SetupAll()
         {
-            var auth = AuthenticationRepository.authenticate(Environment.GetEnvironmentVariable("API_USER"), Environment.GetEnvironmentVariable("API_PASSWORD"));
-            _authToken = auth["token"].ToString();
+            var config = new ConfigurationWrapper();
+            var authenticationRepository = new AuthenticationRepository(new RestClient(config.GetEnvironmentVarAsString("MP_OAUTH_BASE_URL")),
+                                                                        new RestClient(config.GetEnvironmentVarAsString("MP_REST_API_ENDPOINT")));
+            var apiUserRepository = new ApiUserRepository(config, authenticationRepository);
+            _authToken = apiUserRepository.GetToken();
         }
 
         [SetUp]
@@ -56,10 +61,10 @@ namespace MinistryPlatform.Translation.Test.Services
             Console.WriteLine("TestCallingAStoredProcedure");
             var parms = new Dictionary<string, object>()
             {
-                {"@ContactId", 100030266},
-                {"@EventGroupID", 172309}
+                {"@ContactId", 7658083},
+                {"@EventGroupID", 175596}
             };
-            var results = _fixture.UsingAuthenticationToken(_authToken).GetFromStoredProc<MPRspvd>("api_crds_childrsvpd", parms);
+            var results = _fixture.UsingAuthenticationToken(_authToken).GetFromStoredProc<MPRspvd>("api_crds_ChildRsvpd", parms);
             foreach (var p in results)
             {
                 Console.WriteLine("Result\t{0}", p.FirstOrDefault().Rsvpd);
@@ -72,7 +77,7 @@ namespace MinistryPlatform.Translation.Test.Services
             Console.WriteLine("TestCallingAStoredProcedure");
             var parms = new Dictionary<string, object>()
             {                
-                {"@DaysOut", 4}
+                {"@DaysOut", 7}
             };
             var results = _fixture.UsingAuthenticationToken(_authToken).GetFromStoredProc<MpContact>("api_crds_ChildcareReminderEmails", parms);
             foreach (var p in results)
@@ -99,7 +104,7 @@ namespace MinistryPlatform.Translation.Test.Services
         public void TestEndDateGroup()
         {
             Console.WriteLine("TestEndDateGroup");
-            var groupId = 172501;
+            var groupId = 177074;
             var reasonEnded = 1;
             var fields = new Dictionary<string, object>
             {
@@ -126,7 +131,7 @@ namespace MinistryPlatform.Translation.Test.Services
         [Test]
         public void TestGetEvents()
         {
-            const int eventId = 4525285;
+            const int eventId = 4532768;
             Console.WriteLine("Getting Event");
             var results = _fixture.UsingAuthenticationToken(_authToken).Search<MpCamp>($"Event_ID={eventId}");
 
@@ -168,7 +173,7 @@ namespace MinistryPlatform.Translation.Test.Services
         [Test]
         public void TestGetGoTripsWithForms()
         {
-            var pledgeCampaignId = 10000000;
+            var pledgeCampaignId = 2502;
             var columnList = new List<string>
             {
                 "Pledge_Campaigns.Pledge_Campaign_ID",
@@ -207,8 +212,8 @@ namespace MinistryPlatform.Translation.Test.Services
         public void ShouldGetDataFromTableByName()
         {
             var contact = _fixture.UsingAuthenticationToken(_authToken).Get<MpContact>("Pledges", 656098, "Donor_ID_Table_Contact_ID_Table.Nickname, Donor_ID_Table_Contact_ID_Table.Last_Name");
-            Assert.AreEqual("Andy", contact.Nickname);
-            Assert.AreEqual("Canterbury", contact.LastName);
+            Assert.AreEqual("Connie", contact.Nickname);
+            Assert.AreEqual("McNerney", contact.LastName);
         }
 
         [Test]
@@ -305,19 +310,6 @@ namespace MinistryPlatform.Translation.Test.Services
         }
 
         [Test]
-        public void TestPaymentsForInvoiceProcedure()
-        {
-            Console.WriteLine(" TestPaymentsForInvoiceProcedure");
-            var invoiceId = 1;
-            var fields = new Dictionary<string, object>
-            {
-                {"@InvoiceId", invoiceId }
-            };
-            var results = _fixture.UsingAuthenticationToken(_authToken).GetFromStoredProc<MpPayment>("api_crds_PaymentsForInvoice", fields);
-            Console.WriteLine("Result\t" + results.ToString());
-        }
-
-        [Test]
         public void TestGetWithFilter()
         {
             Console.WriteLine(" TestGetWithFilter");
@@ -338,7 +330,7 @@ namespace MinistryPlatform.Translation.Test.Services
             var tableName = "Event_Participants";
             var searchString = $"Event_ID_Table.Event_ID={eventId} AND Participant_ID_Table_Contact_ID_Table.Contact_ID={contactId}";
             var column = "Event_Participant_ID";
-            var results = _fixture.UsingAuthenticationToken(_authToken).Search<int>(tableName, searchString, column);
+            var results = _fixture.UsingAuthenticationToken(_authToken).Search<int>(tableName, searchString, column, null, false);
         }
 
         [Test]
@@ -349,20 +341,20 @@ namespace MinistryPlatform.Translation.Test.Services
             var tableName = "Event_Participants";
             var searchString = $"Event_ID_Table.Event_ID={eventId} AND Participant_ID_Table_Contact_ID_Table.Contact_ID={contactId}";
             var column = "Event_ID_Table.Event_Title";
-            var results = _fixture.UsingAuthenticationToken(_authToken).Search<string>(tableName, searchString, column);
+            var results = _fixture.UsingAuthenticationToken(_authToken).Search<string>(tableName, searchString, column, null, false);
         }
 
         [Test]
         public void TestRegistrantMessage()
         {
             var searchString = $"Events.[Event_ID]={452345685}";
-            _fixture.UsingAuthenticationToken(_authToken).Search<int>("Events", searchString, "Registrant_Message");
+            _fixture.UsingAuthenticationToken(_authToken).Search<int>("Events", searchString, "Registrant_Message", null, false);
         }
 
         [Test]
         public void TestProcessingFeeProgramId()
         {
-            var res = _fixture.UsingAuthenticationToken(_authToken).Search<int>("GL_Account_Mapping", "GL_Account_Mapping.Program_ID=395 AND GL_Account_Mapping.Congregation_ID=5", "Processor_Fee_Mapping_ID_Table.Program_ID");
+            var res = _fixture.UsingAuthenticationToken(_authToken).Search<int>("GL_Account_Mapping", "GL_Account_Mapping.Program_ID=127 AND GL_Account_Mapping.Congregation_ID=5", "Processor_Fee_Mapping_ID_Table.Program_ID", null, false);
             Assert.AreEqual(127, res);
         }
 
@@ -371,7 +363,7 @@ namespace MinistryPlatform.Translation.Test.Services
         {
             var paymentDetail = new MpPaymentDetail()
             {
-                InvoiceDetailId = 18,
+                InvoiceDetailId = 154,
                 PaymentAmount = 2.0M,
                 Payment = new MpPayment()
                 {
@@ -381,7 +373,8 @@ namespace MinistryPlatform.Translation.Test.Services
                     TransactionCode = "23423598",
                     PaymentDate = DateTime.Now,
                     PaymentTotal = 2.0M,
-                    PaymentTypeId = 4
+                    PaymentTypeId = 4,
+                    PaymentStatus = 2 // Deposited
                 }
             };
             var paymentList = new List<MpPaymentDetail>
@@ -502,7 +495,7 @@ namespace MinistryPlatform.Translation.Test.Services
         [Test]
         public void GetProductRuleset()
         {
-            const string searchString = "Product_ID_Table.[Product_ID] = 4";
+            const string searchString = "Product_ID_Table.[Product_ID] = 8";
             const string columnList = "Product_ID_Table.[Product_ID],Ruleset_ID_Table.[Ruleset_ID],cr_Product_Ruleset.[Start_Date],cr_Product_Ruleset.[End_Date]";
             var res = _fixture.UsingAuthenticationToken(_authToken).Search<MPProductRuleSet>(searchString, columnList);
             Assert.IsNotEmpty(res);
@@ -517,9 +510,9 @@ namespace MinistryPlatform.Translation.Test.Services
         [Test]
         public void findProgramTemplateFromEvent()
         {
-            var filter = $"Events.[Event_ID] = 4525626";
+            var filter = $"Events.[Event_ID] = 4532768";
             const string column = "Online_Registration_Product_Table_Program_ID_Table_Communication_ID_Table.[Communication_ID]";
-            var result = _fixture.UsingAuthenticationToken(_authToken).Search<int>("Events", filter, column);
+            var result = _fixture.UsingAuthenticationToken(_authToken).Search<int>("Events", filter, column, null, false);
             Assert.AreEqual(2006, result);
             
         }

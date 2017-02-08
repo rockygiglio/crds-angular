@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using Crossroads.Utilities.FunctionalHelpers;
 using Crossroads.Utilities.Interfaces;
+using Crossroads.Web.Common;
+using Crossroads.Web.Common.Configuration;
+using Crossroads.Web.Common.MinistryPlatform;
+using Crossroads.Web.Common.Security;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Repositories;
 using MinistryPlatform.Translation.Repositories.Interfaces;
@@ -49,12 +53,12 @@ namespace MinistryPlatform.Translation.Test.Services
             _authService.Setup(m => m.Authenticate(It.IsAny<string>(), It.IsAny<string>())).Returns(AuthenticateResponse());
         }
 
-        private Dictionary<string, object> AuthenticateResponse()
+        private AuthToken AuthenticateResponse()
         {
-            return new Dictionary<string, object>
+            return new AuthToken
             {
-                {"token", ApiToken},
-                {"exp", "123"}
+                AccessToken = ApiToken,
+                ExpiresIn = 123
             };
         }
 
@@ -72,7 +76,7 @@ namespace MinistryPlatform.Translation.Test.Services
                     mocked.UpdateSubRecord(groupInquiriesSubPage,
                                            It.Is<Dictionary<string, object>>(
                                                d => d["Group_Inquiry_ID"].Equals(inquiryId) && d["Placed"].Equals(approved) && d["Group_ID"].Equals(groupId)),
-                                           AuthenticateResponse()["token"].ToString())).Verifiable();
+                                           AuthenticateResponse().AccessToken)).Verifiable();
             _fixture.UpdateGroupInquiry(groupId, inquiryId, approved);
             _configWrapper.VerifyAll();
             _ministryPlatformService.VerifyAll();
@@ -762,7 +766,7 @@ namespace MinistryPlatform.Translation.Test.Services
                     mocked.UpdateSubRecord(_groupsParticipantsPageId,
                                            It.Is<Dictionary<string, object>>(
                                                d => d["Participant_ID"].Equals(participants[0].ParticipantId) && d["Group_Participant_ID"].Equals(participants[0].GroupParticipantId) && d["Group_Role_ID"].Equals(participants[0].GroupRoleId) && d["Start_Date"].Equals(participants[0].StartDate)),
-                                           AuthenticateResponse()["token"].ToString())).Verifiable();
+                                           AuthenticateResponse().AccessToken)).Verifiable();
 
             
             var resp = _fixture.UpdateGroupParticipant(participants);

@@ -6,13 +6,14 @@ using crds_angular.Exceptions.Models;
 using crds_angular.Security;
 using crds_angular.Services.Interfaces;
 using Crossroads.ApiVersioning;
+using Crossroads.Web.Common.Security;
 
 namespace crds_angular.Controllers.API
 {
     public class PaymentController : MPAuth
     {
         private readonly IPaymentService _paymentService;
-        public PaymentController(IPaymentService paymentService, IUserImpersonationService userImpersonationService) : base(userImpersonationService)
+        public PaymentController(IPaymentService paymentService, IUserImpersonationService userImpersonationService, IAuthenticationRepository authenticationRepository) : base(userImpersonationService, authenticationRepository)
         {
             _paymentService = paymentService;
         }
