@@ -651,7 +651,9 @@
   <ItemGroup>
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
-    <None Include="Crossroads.Web.Common-Unity.config" />
+    <None Include="Crossroads.Web.Common-Unity.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="MinistryPlatform.Debug.config">
       <DependentUpon>MinistryPlatform.config</DependentUpon>
       <IsTransformFile>True</IsTransformFile>
