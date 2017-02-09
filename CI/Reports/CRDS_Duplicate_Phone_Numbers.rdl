@@ -12,6 +12,12 @@
     <DataSet Name="DuplicatePhonesSP">
       <Query>
         <DataSourceName>DataSource1</DataSourceName>
+        <QueryParameters>
+          <QueryParameter Name="Congregation_ID">
+            <Value>=Parameters!Congregation_ID.Value</Value>
+            <rd:UserDefined>true</rd:UserDefined>
+          </QueryParameter>
+        </QueryParameters>
         <CommandType>StoredProcedure</CommandType>
         <CommandText>report_CRDS_Duplicate_Phone_Numbers</CommandText>
       </Query>
@@ -74,10 +80,10 @@ select null as Congregation_ID, 'All Congregations' as Congregation_Name
 
 UNION
 
-
-select congregation_id, Congregation_Name from congregations where (end_date is null or getdate() between start_date and end_date)
-
-</CommandText>
+select congregation_id, Congregation_Name
+from congregations
+where (end_date is null or getdate() between start_date and end_date)
+order by Congregation_Name ASC</CommandText>
       </Query>
       <Fields>
         <Field Name="congregation_id">
@@ -364,7 +370,7 @@ select congregation_id, Congregation_Name from congregations where (end_date is 
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>dup Household ID</Value>
+                                  <Value>Duplicate Household ID</Value>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>11pt</FontSize>
@@ -400,7 +406,7 @@ select congregation_id, Congregation_Name from congregations where (end_date is 
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>dup Household Name</Value>
+                                  <Value>Duplicate Household Name</Value>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>11pt</FontSize>
@@ -436,7 +442,7 @@ select congregation_id, Congregation_Name from congregations where (end_date is 
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>dup Contact ID</Value>
+                                  <Value>Duplicate Contact ID</Value>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>11pt</FontSize>
@@ -472,7 +478,7 @@ select congregation_id, Congregation_Name from congregations where (end_date is 
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>dup Display Name</Value>
+                                  <Value>Duplicate Display Name</Value>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>11pt</FontSize>
@@ -508,7 +514,7 @@ select congregation_id, Congregation_Name from congregations where (end_date is 
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>dup Home Phone</Value>
+                                  <Value>Duplicate Home Phone</Value>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>11pt</FontSize>
@@ -544,7 +550,7 @@ select congregation_id, Congregation_Name from congregations where (end_date is 
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>dup Mobile Phone</Value>
+                                  <Value>Duplicate Mobile Phone</Value>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>11pt</FontSize>
@@ -1016,7 +1022,7 @@ select congregation_id, Congregation_Name from congregations where (end_date is 
               <cl:SourcePath>/Report Parts/Duplicate Phone Numbers</cl:SourcePath>
               <cl:SyncDate>2017-01-19T14:24:37.5778816-05:00</cl:SyncDate>
               <cl:UserProperties>
-                <cl:UserProperty Description="" Name="Description">
+                <cl:UserProperty Name="Description" Description="">
                   <cl:Values>
                     <cl:Value>List of households and contacts with duplicate phone numbers in the system</cl:Value>
                   </cl:Values>
