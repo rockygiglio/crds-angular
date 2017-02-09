@@ -1,5 +1,10 @@
 <div>
   <h1 class="page-header">Search Results</h1>
+  <div class="row">
+    <div class="col-md-12">
+      <div dynamic-content="$root.MESSAGES.groupToolSearchPageTopContent.content | html"></div>
+    </div>
+  </div>
   <div class="group-search-tools row">
     <div class="col-sm-5 push-half-bottom">
       <form role="form" name="groupSearchForm" ng-submit="groupSearchResults.submit()">
