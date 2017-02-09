@@ -93,10 +93,11 @@ namespace MinistryPlatform.Translation.Test.Services
         [Test]
         public void SubmitFormResponse()
         {
+            var responseDate = It.IsAny<DateTime>();
             var expectedResponseDict = new Dictionary<string, object>
             {
                 {"Form_ID", _mockForm.FormId},
-                {"Response_Date", DateTime.Now},
+                {"Response_Date", responseDate},
                 {"Contact_ID", _mockForm.ContactId},
                 {"Opportunity_ID", _mockForm.OpportunityId},
                 {"Opportunity_Response", _mockForm.OpportunityResponseId}, 
