@@ -270,9 +270,9 @@
       <DependentUpon>MinistryPlatform.config</DependentUpon>
       <IsTransformFile>True</IsTransformFile>
     </Content>
-    <None Include="Crossroads.Web.Common-Unity.config">
+    <Content Include="Crossroads.Web.Common-Unity.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    </Content>
     <None Include="job_scheduling_data_2_0.xsd">
       <SubType>Designer</SubType>
     </None>
