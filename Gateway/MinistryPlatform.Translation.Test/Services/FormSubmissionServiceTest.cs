@@ -132,7 +132,7 @@ namespace MinistryPlatform.Translation.Test.Services
             };
 
             
-            _ministryPlatformService.Setup(m => m.CreateRecord(formResponsePageId, expectedResponseDict, It.IsAny<string>(), true)).Returns(responseId);
+            _ministryPlatformService.Setup(m => m.CreateRecord(formResponsePageId, It.IsAny<Dictionary<string, object>>(), It.IsAny<string>(), true)).Returns(responseId);
             _ministryPlatformService.Setup(m => m.CreateRecord(formAnswerPageId, expectedAnswerDict1, It.IsAny<string>(), true));
             _ministryPlatformService.Setup(m => m.CreateRecord(formAnswerPageId, expectedAnswerDict2, It.IsAny<string>(), true));
             _ministryPlatformService.Setup(m => m.CreateRecord(formAnswerPageId, expectedAnswerDict3, It.IsAny<string>(), true));
