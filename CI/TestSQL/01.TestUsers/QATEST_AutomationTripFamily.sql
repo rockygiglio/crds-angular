@@ -90,10 +90,10 @@ DBCC CHECKIDENT (Contacts, reseed, @currentContactId);
 
 DECLARE @processorID as varchar(255);
 
-IF (SELECT URL from DP_Bookmarks where name like '%demo%') is not null
-	SET @processorID = 'cus_8gGoksUHAuJgQi';
+IF ((SELECT @@SERVERNAME) like '%demo%')
+	SET @processorID = 'cus_A5SVYfrwMNfi4w';
 ELSE
-	SET @processorID = 'cus_8gGm4dhM3ul1Cp';
+	SET @processorID = 'cus_A5Sil6Ppz0rbW6';
 
 -- Fred Flintstone Donor RECORD
 INSERT INTO [dbo].Donors 
@@ -187,10 +187,10 @@ DBCC CHECKIDENT (Contacts, reseed, @currentContactId);
 
 DECLARE @processorID as varchar(255);
 
-IF (SELECT URL from DP_Bookmarks where name like '%demo%') is not null
-	SET @processorID = 'cus_85UsQReBytr2dn';
+IF ((SELECT @@SERVERNAME) like '%demo%')
+	SET @processorID = 'cus_A5SjBRrHWHDuMC';
 ELSE
-	SET @processorID = 'cus_8gGvY5NF7fPjI8';
+	SET @processorID = 'cus_A5SNLFyZ8tADNJ';
 
 
 --Wilma Flintstone Donor RECORD
