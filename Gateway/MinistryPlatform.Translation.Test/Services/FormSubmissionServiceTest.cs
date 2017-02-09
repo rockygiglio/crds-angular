@@ -88,7 +88,7 @@ namespace MinistryPlatform.Translation.Test.Services
             var expectedResponseDict = new Dictionary<string, object>
             {
                 {"Form_ID", _mockForm.FormId},
-                {"Response_Date", DateTime.Today},
+                {"Response_Date", DateTime.Now},
                 {"Contact_ID", _mockForm.ContactId},
                 {"Opportunity_ID", _mockForm.OpportunityId},
                 {"Opportunity_Response", _mockForm.OpportunityResponseId}, 
