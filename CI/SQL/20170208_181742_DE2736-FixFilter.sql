@@ -1,6 +1,6 @@
 USE [MinistryPlatform]
 GO
-/****** Object:  StoredProcedure [dbo].[api_crds_GetReservedAndAvailableRoomsByLocation]    Script Date: 2/8/2017 12:35:33 PM ******/
+/****** Object:  StoredProcedure [dbo].[api_crds_GetReservedAndAvailableRoomsByLocation]    Script Date: 2/9/2017 1:24:52 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -37,9 +37,9 @@ BEGIN
             inner join dbo.Event_Rooms er on e.Event_ID = er.Event_ID
             inner join dbo.Rooms r on er.Room_ID = r.Room_ID
             inner join dbo.contacts c on e.primary_contact = c.contact_id
-        WHERE ( (@StartDate BETWEEN e.Event_Start_Date  AND  e.Event_End_Date) 
-			OR (@EndDate BETWEEN e.Event_Start_Date and e.Event_End_Date) )
-            And er.Cancelled = 0
+        WHERE ( (@StartDate BETWEEN DATEADD(minute, 1, e.Event_Start_Date)  AND  DATEADD(minute, -1, e.Event_End_Date) ) 
+			OR (@EndDate BETWEEN DATEADD(minute, 1, e.Event_Start_Date) AND DATEADD(minute, -1, e.Event_End_Date)) )
+            AND er.Cancelled = 0
             AND e.Congregation_ID = (SELECT TOP 1 CONGREGATION_ID from CONGREGATIONS WHERE LOCATION_ID = @LocationId) AND (er._Approved is null OR er._Approved = 1)
     )
     SELECT DISTINCT r.Room_ID AS RoomId, 
