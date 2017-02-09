@@ -6,6 +6,7 @@ using System.Web.Http.Results;
 using crds_angular.Controllers.API;
 using crds_angular.Models.Crossroads;
 using crds_angular.Services.Interfaces;
+using Crossroads.Web.Common.Security;
 using Moq;
 using NUnit.Framework;
 
@@ -25,7 +26,7 @@ namespace crds_angular.test.controllers
         {
             _invitationService = new Mock<IInvitationService>(MockBehavior.Strict);
 
-            _fixture = new InvitationController(_invitationService.Object, new Mock<IUserImpersonationService>().Object);
+            _fixture = new InvitationController(_invitationService.Object, new Mock<IUserImpersonationService>().Object, new Mock<IAuthenticationRepository>().Object);
             _fixture.SetupAuthorization(AuthType, AuthToken);
         }
 

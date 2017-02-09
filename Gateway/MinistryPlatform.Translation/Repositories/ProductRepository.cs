@@ -1,6 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Crossroads.Utilities.Interfaces;
+using Crossroads.Web.Common;
+using Crossroads.Web.Common.Configuration;
+using Crossroads.Web.Common.MinistryPlatform;
 using MinistryPlatform.Translation.Models.Product;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 
@@ -58,7 +61,7 @@ namespace MinistryPlatform.Translation.Repositories
         private int GetProductIdForEvent(int eventId)
         {
             var apiToken = _apiUserRepository.GetToken();
-            return _ministryPlatformRest.UsingAuthenticationToken(apiToken).Search<int>("Events", $"Event_ID = {eventId}", "Online_Registration_Product");
+            return _ministryPlatformRest.UsingAuthenticationToken(apiToken).Search<int>("Events", $"Event_ID = {eventId}", "Online_Registration_Product", null, false);
         }
     }
 }

@@ -8,6 +8,7 @@ using crds_angular.Services.Interfaces;
 using crds_angular.Exceptions.Models;
 using crds_angular.Security;
 using Crossroads.ApiVersioning;
+using Crossroads.Web.Common.Security;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 
@@ -21,7 +22,7 @@ namespace crds_angular.Controllers.API
         // Do not change this string without also changing the same in the corejs register_controller
         private const string DUPLICATE_USER_MESSAGE = "Duplicate User";
 
-        public UserController(IAccountService accountService, IContactRepository contactRepository, IUserRepository userRepository, IUserImpersonationService userImpersonationService) : base(userImpersonationService)
+        public UserController(IAccountService accountService, IContactRepository contactRepository, IUserRepository userRepository, IUserImpersonationService userImpersonationService, IAuthenticationRepository authenticationRepository) : base(userImpersonationService, authenticationRepository)
         {
             _accountService = accountService;
             _contactRepository = contactRepository;

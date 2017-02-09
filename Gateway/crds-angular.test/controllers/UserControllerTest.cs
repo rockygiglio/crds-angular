@@ -8,6 +8,7 @@ using crds_angular.Controllers.API;
 using crds_angular.Exceptions;
 using crds_angular.Models.Crossroads;
 using crds_angular.Services.Interfaces;
+using Crossroads.Web.Common.Security;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Models.DTO;
 using MinistryPlatform.Translation.Repositories.Interfaces;
@@ -35,7 +36,7 @@ namespace crds_angular.test.controllers
             _userRepository = new Mock<IUserRepository>();
             _contactRepository = new Mock<IContactRepository>();
 
-            _fixture = new UserController(_accountService.Object, _contactRepository.Object, _userRepository.Object, new Mock<IUserImpersonationService>().Object);
+            _fixture = new UserController(_accountService.Object, _contactRepository.Object, _userRepository.Object, new Mock<IUserImpersonationService>().Object, new Mock<IAuthenticationRepository>().Object);
 
             _authType = "auth_type";
             _authToken = "auth_token";

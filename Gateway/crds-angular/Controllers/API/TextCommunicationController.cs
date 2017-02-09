@@ -14,6 +14,9 @@ using Crossroads.Utilities.Messaging;
 using log4net;
 using Crossroads.Utilities.Interfaces;
 using Crossroads.ApiVersioning;
+using Crossroads.Web.Common;
+using Crossroads.Web.Common.Configuration;
+using Crossroads.Web.Common.Security;
 
 namespace crds_angular.Controllers.API
 {
@@ -27,8 +30,8 @@ namespace crds_angular.Controllers.API
         private readonly string _eventQueueName;
         private readonly int _streamReminderTemplateId;
 
-        public TextCommunicationController(ITextCommunicationService textCommunicationService, IConfigurationWrapper configurationWrapper, IUserImpersonationService userImpersonationService,
-            IMessageQueueFactory messageQueueFactory = null, IMessageFactory messageFactory = null, IMessageQueue messageQueue = null) : base(userImpersonationService)
+        public TextCommunicationController(ITextCommunicationService textCommunicationService, IConfigurationWrapper configurationWrapper, IUserImpersonationService userImpersonationService, IAuthenticationRepository authenticationRepository,
+            IMessageQueueFactory messageQueueFactory = null, IMessageFactory messageFactory = null, IMessageQueue messageQueue = null) : base(userImpersonationService, authenticationRepository)
         {
             _textCommunicationService = textCommunicationService;
             _eventQueueName = configurationWrapper.GetConfigValue("ScheduledJobsQueueName");

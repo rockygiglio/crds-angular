@@ -5,6 +5,9 @@ using crds_angular.Models.Crossroads.Attribute;
 using crds_angular.Models.Crossroads.Profile;
 using crds_angular.Services;
 using crds_angular.Services.Interfaces;
+using Crossroads.Web.Common;
+using Crossroads.Web.Common.MinistryPlatform;
+using Crossroads.Web.Common.Security;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Repositories;
 using MPInterfaces = MinistryPlatform.Translation.Repositories.Interfaces;
@@ -17,8 +20,8 @@ namespace crds_angular.test.Services
     {
         private Mock<IObjectAttributeService> _objectAttributeService;
         private Mock<MPInterfaces.IContactRepository> _contactService;
-        private Mock<MPInterfaces.IAuthenticationRepository> _authenticationService;
-        private Mock<MPInterfaces.IApiUserRepository> _apiUserService;
+        private Mock<IAuthenticationRepository> _authenticationService;
+        private Mock<IApiUserRepository> _apiUserService;
         private Mock<MPInterfaces.IParticipantRepository> _participantService;
         private Mock<MPInterfaces.IUserRepository> _userService;
 
@@ -35,11 +38,11 @@ namespace crds_angular.test.Services
             var allAttributesDto = new ObjectAllAttributesDTO();
             _objectAttributeService.Setup(mocked => mocked.GetObjectAttributes(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<MpObjectAttributeConfiguration>())).Returns(allAttributesDto);
             _contactService = new Mock<MPInterfaces.IContactRepository>();
-            _authenticationService = new Mock<MPInterfaces.IAuthenticationRepository>();
+            _authenticationService = new Mock<IAuthenticationRepository>();
             _participantService = new Mock<MPInterfaces.IParticipantRepository>();
             _userService = new Mock<MPInterfaces.IUserRepository>();
 
-            _apiUserService = new Mock<MPInterfaces.IApiUserRepository>();
+            _apiUserService = new Mock<IApiUserRepository>();
             _apiUserService.Setup(m => m.GetToken()).Returns("something");
 
             _authenticationService.Setup(mocked => mocked.GetContactId(It.IsAny<string>())).Returns(123456);

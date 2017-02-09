@@ -14,6 +14,8 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using crds_angular.Models.Crossroads.Subscription;
 using crds_angular.Models.MailChimp;
+using Crossroads.Web.Common;
+using Crossroads.Web.Common.Configuration;
 
 namespace crds_angular.Util
 {

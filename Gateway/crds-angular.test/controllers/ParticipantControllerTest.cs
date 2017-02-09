@@ -1,6 +1,7 @@
 ﻿using System.Web.Http.Results;
 using crds_angular.Controllers.API;
 using crds_angular.Services.Interfaces;
+using Crossroads.Web.Common.Security;
 using Moq;
 using NUnit.Framework;
 
@@ -19,7 +20,7 @@ namespace crds_angular.test.controllers
         public void SetUp()
         {
             _groupService = new Mock<IGroupService>(MockBehavior.Strict);
-            _fixture = new ParticipantController(_groupService.Object, new Mock<IUserImpersonationService>().Object);
+            _fixture = new ParticipantController(_groupService.Object, new Mock<IUserImpersonationService>().Object, new Mock<IAuthenticationRepository>().Object);
 
             _fixture.SetupAuthorization(AuthType, AuthToken);
         }

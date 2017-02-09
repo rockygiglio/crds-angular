@@ -14,6 +14,8 @@ using MinistryPlatform.Translation.Repositories.Interfaces;
 using crds_angular.Services.Interfaces;
 using Event = crds_angular.Models.Crossroads.Events.Event;
 using Crossroads.ApiVersioning;
+using Crossroads.Web.Common;
+using Crossroads.Web.Common.Security;
 
 namespace crds_angular.Controllers.API
 {
@@ -33,7 +35,7 @@ namespace crds_angular.Controllers.API
                                IAddressService addressService,
                                IGroupSearchService groupSearchService,
                                IGroupToolService groupToolService, 
-                               IUserImpersonationService userImpersonationService) : base(userImpersonationService)
+                               IUserImpersonationService userImpersonationService) : base(userImpersonationService, authenticationService)
         {
             _groupService = groupService;
             _authenticationService = authenticationService;

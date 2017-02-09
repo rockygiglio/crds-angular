@@ -4,6 +4,10 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using Crossroads.Utilities.Interfaces;
+using Crossroads.Web.Common;
+using Crossroads.Web.Common.Configuration;
+using Crossroads.Web.Common.MinistryPlatform;
+using Crossroads.Web.Common.Security;
 using MinistryPlatform.Translation.Extensions;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Repositories.Interfaces;
@@ -204,7 +208,17 @@ namespace MinistryPlatform.Translation.Repositories
                 {"Pledge_Campaign_ID", formResponse.PledgeCampaignId}
             };
 
-            var responseId = GetFormResponseIdForFormContact(formResponse.FormId, formResponse.ContactId);
+            // This code is shared by Trips, Camps, and Volunteer Application.  For trips,
+            // we want to maintain separate form responses per trip.  We can distinguish
+            // trips from other callers because PledgeCampaignId is required for trips.
+            //
+            // TODO: Currently, Camps is sharing form responses if the contact has
+            // registered for multiple camps; this will likely need to change in the
+            // future.
+            int responseId = (formResponse.PledgeCampaignId != null)
+                ? responseId = GetFormResponseIdForFormContactAndPledgeCampaign(formResponse.FormId, formResponse.ContactId, formResponse.PledgeCampaignId.Value)
+                : responseId = GetFormResponseIdForFormContact(formResponse.FormId, formResponse.ContactId);
+
             if (responseId == 0)
             {
                 responseId = _ministryPlatformService.CreateRecord(_formResponsePageId, record, token, true);
@@ -222,6 +236,17 @@ namespace MinistryPlatform.Translation.Repositories
         {
             var apiToken = ApiLogin();
             var searchString = $"Contact_ID='{contactId}' AND Form_ID='{formId}'";
+            const string selectColumns = "Form_Response_ID";
+
+            var formResponse = _ministryPlatformRestRepository.UsingAuthenticationToken(apiToken).Search<MpFormResponse>(searchString, selectColumns, null, true).FirstOrDefault();
+
+            return formResponse?.FormResponseId ?? 0;
+        }
+
+        private int GetFormResponseIdForFormContactAndPledgeCampaign(int formId, int contactId, int pledgeCampaignId)
+        {
+            var apiToken = ApiLogin();
+            var searchString = $"Contact_ID='{contactId}' AND Form_ID='{formId}' AND Pledge_Campaign_ID='{pledgeCampaignId}'";
             const string selectColumns = "Form_Response_ID";
 
             var formResponse = _ministryPlatformRestRepository.UsingAuthenticationToken(apiToken).Search<MpFormResponse>(searchString, selectColumns, null, true).FirstOrDefault();

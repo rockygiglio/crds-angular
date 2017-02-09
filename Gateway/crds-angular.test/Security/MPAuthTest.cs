@@ -13,6 +13,7 @@ using System.Web.Http;
 using System.Web.Http.Results;
 using crds_angular.Exceptions;
 using crds_angular.Services.Interfaces;
+using Crossroads.Web.Common.Security;
 
 
 namespace crds_angular.test.Security
@@ -24,6 +25,7 @@ namespace crds_angular.test.Security
         private Mock<Func<string, IHttpActionResult>> actionWhenAuthorized;
         private Mock<Func<IHttpActionResult>> actionWhenNotAuthorized;
         private Mock<IUserImpersonationService> _userImpersonationMock;
+        private Mock<IAuthenticationRepository> _authenticationRepositoryMock;
         private OkResult okResult;
 
         private string authType;
@@ -33,7 +35,9 @@ namespace crds_angular.test.Security
         public void SetUp()
         {
             _userImpersonationMock = new Mock<IUserImpersonationService>();
-            fixture = new MPAuthTester(_userImpersonationMock.Object);
+            _authenticationRepositoryMock = new Mock<IAuthenticationRepository>();
+
+            fixture = new MPAuthTester(_userImpersonationMock.Object, _authenticationRepositoryMock.Object);
 
             actionWhenAuthorized = new Mock<Func<string, IHttpActionResult>>(MockBehavior.Strict);
             actionWhenNotAuthorized = new Mock<Func<IHttpActionResult>>(MockBehavior.Strict);
@@ -142,7 +146,7 @@ namespace crds_angular.test.Security
 
         private class MPAuthTester : MPAuth
         {
-            public MPAuthTester(IUserImpersonationService userImpersonationService) : base(userImpersonationService)
+            public MPAuthTester(IUserImpersonationService userImpersonationService, IAuthenticationRepository authenticationRepository) : base(userImpersonationService, authenticationRepository)
             {
                 
             }

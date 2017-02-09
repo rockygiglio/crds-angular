@@ -5,6 +5,10 @@ using System.Linq;
 using System.Text;
 using Crossroads.Utilities.FunctionalHelpers;
 using Crossroads.Utilities.Interfaces;
+using Crossroads.Web.Common;
+using Crossroads.Web.Common.Configuration;
+using Crossroads.Web.Common.MinistryPlatform;
+using Crossroads.Web.Common.Security;
 using MinistryPlatform.Translation.Extensions;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Models.EventReservations;
@@ -658,7 +662,7 @@ namespace MinistryPlatform.Translation.Repositories
             foreach (var waiver in waiverResponses)
             {
                 var searchString = $"Event_Participant_ID={waiver.EventParticipantId} AND Waiver_ID={waiver.WaiverId}";
-                waiver.EventParticipantWaiverId = _ministryPlatformRestRepository.UsingAuthenticationToken(apiToken).Search<int>("cr_Event_Participant_Waivers", searchString, "Event_Participant_Waiver_ID");
+                waiver.EventParticipantWaiverId = _ministryPlatformRestRepository.UsingAuthenticationToken(apiToken).Search<int>("cr_Event_Participant_Waivers", searchString, "Event_Participant_Waiver_ID", null, false);
             }
             
             _ministryPlatformRestRepository.UsingAuthenticationToken(apiToken).Post(waiverResponses.Where(w => w.EventParticipantWaiverId == 0).ToList());
@@ -682,7 +686,7 @@ namespace MinistryPlatform.Translation.Repositories
             const string column = "Online_Registration_Product_Table_Program_ID_Table_Communication_ID_Table.[Communication_ID]";
             try
             {
-                var result = _ministryPlatformRestRepository.UsingAuthenticationToken(apiToken).Search<int>("Events", filter, column);
+                var result = _ministryPlatformRestRepository.UsingAuthenticationToken(apiToken).Search<int>("Events", filter, column, null, false);
                 if (result == 0)
                 {
                     return new Err<int>("No Email Template Found");

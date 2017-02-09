@@ -5,6 +5,7 @@ using crds_angular.Models.Crossroads.Attribute;
 using crds_angular.Security;
 using crds_angular.Services.Interfaces;
 using Crossroads.ApiVersioning;
+using Crossroads.Web.Common.Security;
 
 namespace crds_angular.Controllers.API
 {
@@ -12,7 +13,7 @@ namespace crds_angular.Controllers.API
     {
         private readonly IAttributeService _attributeService;
 
-        public AttributeTypeController(IAttributeService attributeService, IUserImpersonationService userImpersonationService) : base(userImpersonationService)
+        public AttributeTypeController(IAttributeService attributeService, IUserImpersonationService userImpersonationService, IAuthenticationRepository authenticationRepository) : base(userImpersonationService, authenticationRepository)
         {
             _attributeService = attributeService;
         }

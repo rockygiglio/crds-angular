@@ -10,7 +10,7 @@ BEGIN
 	INSERT INTO [dbo].[dp_Reports] (
 		 [Report_ID]
 		,[Report_Name]
-		,[Description]:
+		,[Description]
 		,[Report_Path]
 		,[Pass_Selected_Records]
 		,[Pass_LinkTo_Records]

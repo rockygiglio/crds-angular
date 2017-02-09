@@ -16,6 +16,9 @@ using Crossroads.Utilities.Messaging.Interfaces;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 using Crossroads.ApiVersioning;
+using Crossroads.Web.Common;
+using Crossroads.Web.Common.Configuration;
+using Crossroads.Web.Common.Security;
 
 namespace crds_angular.Controllers.API
 {
@@ -36,7 +39,7 @@ namespace crds_angular.Controllers.API
                                       ICryptoProvider cryptoProvider,
                                       IUserImpersonationService userImpersonationService,
                                       IMessageQueueFactory messageQueueFactory = null,
-                                      IMessageFactory messageFactory = null) : base(userImpersonationService)
+                                      IMessageFactory messageFactory = null) : base(userImpersonationService, authenticationService)
         {
             _checkScannerService = checkScannerService;
             _authenticationService = authenticationService;

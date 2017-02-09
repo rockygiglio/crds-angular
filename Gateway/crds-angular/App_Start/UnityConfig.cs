@@ -1,7 +1,7 @@
-using System.Data;
 using Microsoft.Practices.Unity;
 using Microsoft.Practices.Unity.Configuration;
 using System.Configuration;
+using System.Linq;
 using System.Web.Http;
 using Unity.WebApi;
 
@@ -12,10 +12,14 @@ namespace crds_angular
     {
         public static void RegisterComponents()
         {
-            var section = (UnityConfigurationSection)ConfigurationManager.GetSection("unity");
-            IUnityContainer container = new UnityContainer();
-            section.Configure(container);
-            
+            var container = new UnityContainer();
+            var unitySections = new[] { "crossroadsCommonUnity", "unity" };
+
+            foreach (var section in unitySections.Select(sectionName => (UnityConfigurationSection) ConfigurationManager.GetSection(sectionName)))
+            {
+                container.LoadConfiguration(section);
+            }
+
             GlobalConfiguration.Configuration.DependencyResolver = new UnityDependencyResolver(container);
         }
     }
