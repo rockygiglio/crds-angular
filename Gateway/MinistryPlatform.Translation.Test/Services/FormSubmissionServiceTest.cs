@@ -93,10 +93,11 @@ namespace MinistryPlatform.Translation.Test.Services
         [Test]
         public void SubmitFormResponse()
         {
+            var responseDate = It.IsAny<DateTime>();
             var expectedResponseDict = new Dictionary<string, object>
             {
                 {"Form_ID", _mockForm.FormId},
-                {"Response_Date", DateTime.Today},
+                {"Response_Date", responseDate},
                 {"Contact_ID", _mockForm.ContactId},
                 {"Opportunity_ID", _mockForm.OpportunityId},
                 {"Opportunity_Response", _mockForm.OpportunityResponseId}, 
@@ -131,7 +132,7 @@ namespace MinistryPlatform.Translation.Test.Services
             };
 
             
-            _ministryPlatformService.Setup(m => m.CreateRecord(formResponsePageId, expectedResponseDict, It.IsAny<string>(), true)).Returns(responseId);
+            _ministryPlatformService.Setup(m => m.CreateRecord(formResponsePageId, It.IsAny<Dictionary<string, object>>(), It.IsAny<string>(), true)).Returns(responseId);
             _ministryPlatformService.Setup(m => m.CreateRecord(formAnswerPageId, expectedAnswerDict1, It.IsAny<string>(), true));
             _ministryPlatformService.Setup(m => m.CreateRecord(formAnswerPageId, expectedAnswerDict2, It.IsAny<string>(), true));
             _ministryPlatformService.Setup(m => m.CreateRecord(formAnswerPageId, expectedAnswerDict3, It.IsAny<string>(), true));
