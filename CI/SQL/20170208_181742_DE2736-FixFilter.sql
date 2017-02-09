@@ -38,7 +38,7 @@ BEGIN
             inner join dbo.Rooms r on er.Room_ID = r.Room_ID
             inner join dbo.contacts c on e.primary_contact = c.contact_id
         WHERE ( (@StartDate BETWEEN DATEADD(minute, 1, e.Event_Start_Date)  AND  DATEADD(minute, -1, e.Event_End_Date) ) 
-			OR (@EndDate BETWEEN DATEADD(minute, 1, e.Event_Start_Date) AND DATEADD(minute, -1, e.Event_End_Date)) )
+			OR (@EndDate BETWEEN DATEADD(minute, -1, e.Event_Start_Date) AND DATEADD(minute, -1, e.Event_End_Date)) )
             AND er.Cancelled = 0
             AND e.Congregation_ID = (SELECT TOP 1 CONGREGATION_ID from CONGREGATIONS WHERE LOCATION_ID = @LocationId) AND (er._Approved is null OR er._Approved = 1)
     )
