@@ -176,11 +176,8 @@
     <DataSet Name="Programs">
       <Query>
         <DataSourceName>DataSource1</DataSourceName>
-        <CommandText>select p.Program_name, p.Program_id, p.Congregation_ID
-from MinistryPlatform.dbo.Programs p
-	inner join MinistryPlatform.dbo.Congregations c on p.Congregation_ID = c.Congregation_ID
---join dbo.Ministries m on m.ministry_id = p.ministry_id
-where p.program_type_id = 1
+        <CommandText>select p.Program_name, p.Program_id
+from dbo.Programs p where p.program_type_id = 1
 order by p.Program_Name</CommandText>
         <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
       </Query>
@@ -193,20 +190,7 @@ order by p.Program_Name</CommandText>
           <DataField>Program_id</DataField>
           <rd:TypeName>System.Int32</rd:TypeName>
         </Field>
-        <Field Name="Congregation_ID">
-          <DataField>Congregation_ID</DataField>
-          <rd:UserDefined>true</rd:UserDefined>
-        </Field>
       </Fields>
-      <Filters>
-        <Filter>
-          <FilterExpression>=Fields!Congregation_ID.Value</FilterExpression>
-          <Operator>In</Operator>
-          <FilterValues>
-            <FilterValue>=Parameters!congregationid.Value</FilterValue>
-          </FilterValues>
-        </Filter>
-      </Filters>
     </DataSet>
     <DataSet Name="Congregations">
       <Query>
@@ -2550,7 +2534,7 @@ FROM Accounting_Companies</CommandText>
     </ReportParameter>
     <ReportParameter Name="programid">
       <DataType>Integer</DataType>
-      <Prompt>Program</Prompt>
+      <Prompt>Programs</Prompt>
       <ValidValues>
         <DataSetReference>
           <DataSetName>Programs</DataSetName>
