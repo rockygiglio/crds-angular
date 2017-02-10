@@ -59,7 +59,7 @@ INSERT INTO [dbo].Donations
 --Insert the Donation_Distribution. This has a lot of sub-selects to get the right data. Sorry :(
 INSERT INTO [dbo].donation_distributions 
 (Donation_ID                                                                                        ,Amount  ,Program_ID                                                                 ,Pledge_ID                                                                                        ,Target_Event,Soft_Credit_Donor,Notes,Domain_ID,__ExternalContributionID,__ExternalCommitmentID,Congregation_ID) VALUES
-((select top 1 Donation_ID from donations where donor_id = @wilmaDonorId order by Donation_date desc),150.0000,(select program_id from programs where program_name like '(t+auto) GO Bedrock%') ,(select pledge_id from pledges where donor_id = @fredDonorId and Pledge_Campaign_ID = 10000010) ,null        ,null             ,null ,1        ,null                    ,null                  ,5              );
+((select top 1 Donation_ID from donations where donor_id = @wilmaDonorId order by Donation_date desc),150.0000,(select program_id from programs where program_name like '(t+auto) GO Bedrock%') ,(select pledge_id from pledges where donor_id = @fredDonorId and Pledge_Campaign_ID = 10000030) ,null        ,null             ,null ,1        ,null                    ,null                  ,5              );
 GO
 
 --Add a Donation to Fred's trip pledge by Wilma - Anonymous.
@@ -80,7 +80,7 @@ INSERT INTO [dbo].Donations
 --Insert the Donation_Distribution. 
 INSERT INTO [dbo].donation_distributions 
 (Donation_ID                                                                                        ,Amount  ,Program_ID                                                                 ,Pledge_ID                                                                                        ,Target_Event,Soft_Credit_Donor,Notes,Domain_ID,__ExternalContributionID,__ExternalCommitmentID,Congregation_ID) VALUES
-((select top 1 Donation_ID from donations where donor_id = @wilmaDonorId order by Donation_date desc),100.0000,(select program_id from programs where program_name like '(t+auto) GO Bedrock%') ,(select pledge_id from pledges where donor_id = @fredDonorId and Pledge_Campaign_ID = 10000010) ,null        ,null             ,null ,1        ,null                    ,null                  ,5              );
+((select top 1 Donation_ID from donations where donor_id = @wilmaDonorId order by Donation_date desc),100.0000,(select program_id from programs where program_name like '(t+auto) GO Bedrock%') ,(select pledge_id from pledges where donor_id = @fredDonorId and Pledge_Campaign_ID = 10000030) ,null        ,null             ,null ,1        ,null                    ,null                  ,5              );
 GO
 
 --Add a Donation by Wilma, with credit card
