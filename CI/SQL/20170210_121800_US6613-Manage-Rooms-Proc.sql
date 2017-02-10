@@ -27,7 +27,7 @@ ALTER PROCEDURE [dbo].[api_crds_Get_Checkin_Room_Data]
 AS
 BEGIN
 
-DECLARE @LocationId INT = 7
+DECLARE @LocationId INT
 
 DECLARE @AgeAttributeTypeId INT = 102
 DECLARE @BirthMonthAttributeTypeId INT = 103
@@ -35,6 +35,8 @@ DECLARE @GradesAttributeTypeId INT = 104
 DECLARE @NurseryMonthsAttributeTypeId INT = 105
 
 DECLARE @RoomUsageKidsClubTypeId INT = 6
+
+SELECT @LocationId = Location_ID FROM Congregations WHERE Congregation_ID = (SELECT Congregation_ID FROM Events WHERE Event_ID = @EventID)
 
 -- 1. Get the event and subevent
 DECLARE @Events TABLE
@@ -127,7 +129,7 @@ DECLARE @EventGroups TABLE
 )
 
 -- get event groups where the group is tied to an event and has a room reservation,
--- probably grab the attributes here as well
+-- probably grab the attributes here as well.
 INSERT INTO @EventGroups (Event_ID, Group_ID, Event_Group_ID, Event_Room_ID, Room_ID, Checked_In, Signed_In)
 	SELECT 
 		eg.Event_ID, 
@@ -138,7 +140,7 @@ INSERT INTO @EventGroups (Event_ID, Group_ID, Event_Group_ID, Event_Room_ID, Roo
 		Checked_In = [dbo].crds_getEventParticipantStatusCount(@EventID, @Room_ID, 4),
 		Signed_In = [dbo].crds_getEventParticipantStatusCount(@EventID, @Room_ID, 3)
 	FROM Event_Groups eg INNER JOIN Event_Rooms er on eg.Event_Room_ID = er.Event_Room_ID
-	WHERE eg.Event_ID IN (SELECT Event_ID FROM @Events)-- AND Event_Room_ID IN (SELECT Event_Room_ID FROM @TempEventRooms)
+	WHERE eg.Event_ID IN (SELECT Event_ID FROM @Events)
 
 DECLARE @GroupAttributes TABLE
 (
