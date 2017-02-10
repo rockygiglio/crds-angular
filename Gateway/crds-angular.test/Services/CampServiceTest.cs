@@ -242,7 +242,6 @@ namespace crds_angular.test.Services
             _eventParticipantRepository.Setup(m => m.GetEventParticipantEligibility(eventId, participant.ParticipantId)).Returns(eventParticipant);
             _congregationRepository.Setup(m => m.GetCongregationById(It.IsAny<int>())).Returns(congregation);
             _congregationRepository.Setup(m => m.GetCongregationByName(It.IsAny<string>(), It.IsAny<string>())).Returns(new Ok<MpCongregation>(congregation));
-
             _eventRepository.Setup(m => m.RegisterInterestedParticipantWithEndDate(
                 participant.ParticipantId,
                 eventId, 
@@ -379,6 +378,144 @@ namespace crds_angular.test.Services
             _configurationWrapper.VerifyAll();
             _formSubmissionRepository.VerifyAll();
             
+        }
+
+        [Test]
+        public void shouldUpdateDisplayNameWithNickname()
+        {
+            // Arrange
+            const int groupId = 123;
+            const string token = "1234";
+            const int eventParticipantId = 6;
+            const int eventId = 4;
+            const int formId = 8;
+            const int contactId = 231;
+            const string firstName = "Jonathan";
+            const string lastName = "Horner";
+            const string nickName = "Jon";
+
+            var campReservation = FactoryGirl.NET.FactoryGirl.Build<CampReservationDTO>((res) =>
+            {
+                res.ContactId = contactId;
+                res.CurrentGrade = groupId;
+                res.FirstName = firstName;
+                res.LastName = lastName;
+                // res.PreferredName = nickName;
+            });
+            var group = FactoryGirl.NET.FactoryGirl.Build<MpGroupParticipant>((res) => res.GroupId = groupId);
+
+            var household = new MpMyContact
+            {
+                Household_ID = 2345
+            };
+
+            var participant = new MpParticipant
+            {
+                ParticipantId = 2
+            };
+
+            var eventParticipant = new MpEventParticipant
+            {
+                EventParticipantId = eventParticipantId
+            };
+
+            var congregation = new MpCongregation
+            {
+                Name = "mASON"
+            };
+
+            _contactService.Setup(m => m.GetMyProfile(token)).Returns(household);
+            _congregationRepository.Setup(m => m.GetCongregationById(campReservation.CrossroadsSite)).Returns(congregation);
+            _contactService.Setup(m => m.UpdateContact(contactId, It.IsAny<Dictionary<string, object>>()));
+            _participantRepository.Setup(m => m.GetParticipant(contactId)).Returns(participant);
+
+            _objectAttributeService.Setup(m =>
+                                              m.SaveObjectAttributes(contactId,
+                                                                     It.IsAny<Dictionary<int, ObjectAttributeTypeDTO>>(),
+                                                                     It.IsAny<Dictionary<int, ObjectSingleAttributeDTO>>(),
+                                                                     It.IsAny<MpObjectAttributeConfiguration>()));
+            _apiUserRepository.Setup(m => m.GetToken()).Returns(token);
+            _groupRepository.Setup(g => g.GetGradeGroupForContact(contactId, token)).Returns(new Result<MpGroupParticipant>(true, group));
+            _campRules.Setup(m => m.VerifyCampRules(eventId, campReservation.Gender)).Returns(true);
+            _configurationWrapper.Setup(m => m.GetConfigIntValue("SummerCampFormID")).Returns(formId);
+            _configurationWrapper.Setup(m => m.GetConfigIntValue("SummerCampForm.SchoolAttendingNextYear")).Returns(12);
+            _configurationWrapper.Setup(m => m.GetConfigIntValue("SummerCampForm.PreferredRoommate")).Returns(14);
+            _eventParticipantRepository.Setup(m => m.GetEventParticipantEligibility(eventId, It.IsAny<int>())).Returns(eventParticipant);
+
+            // Act
+            var reservationResponse = _fixture.SaveCampReservation(campReservation, eventId, token);
+
+            // Assert
+            Assert.AreEqual(reservationResponse.FirstName, firstName);
+            Assert.AreEqual(reservationResponse.LastName, lastName);
+            Assert.AreEqual(reservationResponse.PreferredName, "Jeff");
+        }
+
+        [Test]
+        public void shouldUpdateDisplayNameWithFirstname()
+        {
+            // Arrange
+            const int groupId = 123;
+            const string token = "1234";
+            const int eventParticipantId = 6;
+            const int eventId = 4;
+            const int formId = 8;
+            const int contactId = 231;
+            const string firstName = "Jonathan";
+            const string lastName = "Horner";
+            const string nickName = "Jon";
+
+            var campReservation = FactoryGirl.NET.FactoryGirl.Build<CampReservationDTO>((res) =>
+            {
+                res.ContactId = contactId;
+                res.CurrentGrade = groupId;
+                res.FirstName = firstName;
+                res.LastName = lastName;
+                // res.PreferredName = nickName;
+            });
+            var group = FactoryGirl.NET.FactoryGirl.Build<MpGroupParticipant>((res) => res.GroupId = groupId);
+
+            var household = new MpMyContact
+            {
+                Household_ID = 2345
+            };
+
+            var participant = new MpParticipant
+            {
+                ParticipantId = 2
+            };
+
+            var eventParticipant = new MpEventParticipant
+            {
+                EventParticipantId = eventParticipantId
+            };
+
+            var congregation = new MpCongregation
+            {
+                Name = "mASON"
+            };
+
+            // Act
+            _contactService.Setup(m => m.GetMyProfile(token)).Returns(household);
+            _congregationRepository.Setup(m => m.GetCongregationById(campReservation.CrossroadsSite)).Returns(congregation);
+            _contactService.Setup(m => m.UpdateContact(contactId, It.IsAny<Dictionary<string, object>>()));
+            _participantRepository.Setup(m => m.GetParticipant(contactId)).Returns(participant);
+
+            _objectAttributeService.Setup(m =>
+                                              m.SaveObjectAttributes(contactId,
+                                                                     It.IsAny<Dictionary<int, ObjectAttributeTypeDTO>>(),
+                                                                     It.IsAny<Dictionary<int, ObjectSingleAttributeDTO>>(),
+                                                                     It.IsAny<MpObjectAttributeConfiguration>()));
+            _apiUserRepository.Setup(m => m.GetToken()).Returns(token);
+            _groupRepository.Setup(g => g.GetGradeGroupForContact(contactId, token)).Returns(new Result<MpGroupParticipant>(true, group));
+            _campRules.Setup(m => m.VerifyCampRules(eventId, campReservation.Gender)).Returns(true);
+            _configurationWrapper.Setup(m => m.GetConfigIntValue("SummerCampFormID")).Returns(formId);
+            _configurationWrapper.Setup(m => m.GetConfigIntValue("SummerCampForm.SchoolAttendingNextYear")).Returns(12);
+            _configurationWrapper.Setup(m => m.GetConfigIntValue("SummerCampForm.PreferredRoommate")).Returns(14);
+            _eventParticipantRepository.Setup(m => m.GetEventParticipantEligibility(eventId, It.IsAny<int>())).Returns(eventParticipant);
+
+            // Assert
+            Assert.AreEqual(false, true);
         }
 
         [Test]
