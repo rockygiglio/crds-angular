@@ -98,7 +98,7 @@
                   $state.go(url, JSON.parse(params));
                 }
               } else {
-                $state.go('profile.personal');
+                $state.go('content', { link: '/' });
               }
             },
 
