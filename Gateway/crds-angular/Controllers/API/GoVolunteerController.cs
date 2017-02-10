@@ -11,6 +11,9 @@ using crds_angular.Security;
 using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Interfaces;
 using Crossroads.ApiVersioning;
+using Crossroads.Web.Common;
+using Crossroads.Web.Common.Configuration;
+using Crossroads.Web.Common.Security;
 
 namespace crds_angular.Controllers.API
 {
@@ -31,7 +34,7 @@ namespace crds_angular.Controllers.API
                                      IGoVolunteerService goVolunteerService,
                                      IAttributeService attributeService,
                                      IConfigurationWrapper configurationWrapper, 
-                                     IUserImpersonationService userImpersonationService) : base(userImpersonationService)
+                                     IUserImpersonationService userImpersonationService, IAuthenticationRepository authenticationRepository) : base(userImpersonationService, authenticationRepository)
 
         {
             _organizationService = organizationService;

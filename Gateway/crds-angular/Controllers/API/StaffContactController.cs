@@ -7,6 +7,7 @@ using crds_angular.Security;
 using crds_angular.Services.Interfaces;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 using Crossroads.ApiVersioning;
+using Crossroads.Web.Common.Security;
 
 namespace crds_angular.Controllers.API
 {
@@ -14,7 +15,7 @@ namespace crds_angular.Controllers.API
     {
         private readonly crds_angular.Services.Interfaces.IStaffContactService _contactService;
 
-        public StaffContactController(crds_angular.Services.Interfaces.IStaffContactService contactService, IUserImpersonationService userImpersonationService) : base(userImpersonationService)
+        public StaffContactController(crds_angular.Services.Interfaces.IStaffContactService contactService, IUserImpersonationService userImpersonationService, IAuthenticationRepository authenticationRepository) : base(userImpersonationService, authenticationRepository)
         {
             _contactService = contactService;
         }

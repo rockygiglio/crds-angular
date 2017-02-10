@@ -11,6 +11,10 @@ using crds_angular.Models.Crossroads.Groups;
 using crds_angular.Services.Interfaces;
 using crds_angular.test.Models.Crossroads.Events;
 using Crossroads.Utilities.Interfaces;
+using Crossroads.Web.Common;
+using Crossroads.Web.Common.Configuration;
+using Crossroads.Web.Common.MinistryPlatform;
+using Crossroads.Web.Common.Security;
 using MinistryPlatform.Translation.Exceptions;
 using MinistryPlatform.Translation.Models;
 using Moq;
@@ -27,7 +31,7 @@ namespace crds_angular.test.Services
     public class GroupServiceTest
     {
         private GroupService fixture;
-        private Mock<MPServices.IAuthenticationRepository> authenticationService;
+        private Mock<IAuthenticationRepository> authenticationService;
         private Mock<MPServices.IGroupRepository> groupRepository;
         private Mock<MPServices.IEventRepository> eventService;
         private Mock<MPServices.IContactRelationshipRepository> contactRelationshipService;
@@ -38,7 +42,7 @@ namespace crds_angular.test.Services
         private Mock<MPServices.IContactRepository> _contactService;
         private Mock<IConfigurationWrapper> config;
         private Mock<IObjectAttributeService> _objectAttributeService;
-        private Mock<MPServices.IApiUserRepository> _apiUserService;
+        private Mock<IApiUserRepository> _apiUserService;
         private Mock<MPServices.IAttributeRepository> _attributeRepository;
         private Mock<IEmailCommunication> _emailCommunicationService;
         private Mock<MPServices.IUserRepository> _userRespository;
@@ -73,7 +77,7 @@ namespace crds_angular.test.Services
             Mapper.Initialize(cfg => cfg.AddProfile<EventProfile>());
             AutoMapperConfig.RegisterMappings();
 
-            authenticationService = new Mock<MPServices.IAuthenticationRepository>();
+            authenticationService = new Mock<IAuthenticationRepository>();
             groupRepository = new Mock<IGroupRepository>();
             eventService = new Mock<MPServices.IEventRepository>(MockBehavior.Strict);
             contactRelationshipService = new Mock<MPServices.IContactRelationshipRepository>();
@@ -87,7 +91,7 @@ namespace crds_angular.test.Services
             _invitationRepository = new Mock<MPServices.IInvitationRepository>();
 
             _objectAttributeService = new Mock<IObjectAttributeService>();
-            _apiUserService = new Mock<MPServices.IApiUserRepository>();
+            _apiUserService = new Mock<IApiUserRepository>();
             _attributeRepository = new Mock<MPServices.IAttributeRepository>();
             _attributeService = new Mock<IAttributeService>();
 

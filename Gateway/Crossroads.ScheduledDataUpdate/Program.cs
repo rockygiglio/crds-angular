@@ -22,7 +22,7 @@ namespace Crossroads.ScheduledDataUpdate
 
             TlsHelper.AllowTls12();
 
-            var unitySections = new [] { "unity", "scheduledDataUnity" };
+            var unitySections = new [] { "crossroadsCommonUnity", "unity", "scheduledDataUnity" };
 
             var container = new UnityContainer();
             foreach (var sectionName in unitySections)

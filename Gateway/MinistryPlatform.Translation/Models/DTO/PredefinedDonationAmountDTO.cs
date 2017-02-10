@@ -1,5 +1,6 @@
 ﻿using System.Runtime.Serialization;
-using MinistryPlatform.Translation.Models.Attributes;
+using Crossroads.Web.Common;
+using Crossroads.Web.Common.MinistryPlatform;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 

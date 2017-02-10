@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using Crossroads.Utilities.FunctionalHelpers;
+using Crossroads.Web.Common;
+using Crossroads.Web.Common.MinistryPlatform;
 using MinistryPlatform.Translation.Models.Payments;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 
@@ -100,7 +102,7 @@ namespace MinistryPlatform.Translation.Repositories
             var apiToken = _apiUserRepository.GetToken();
             var searchString = $"Payment_ID_Table.[Payment_ID]={paymentId}";
             var column = "Invoice_Detail_ID_Table_Invoice_ID_Table.[Invoice_ID]";
-            return _ministryPlatformRest.UsingAuthenticationToken(apiToken).Search<int>("Payment_Detail", searchString, column);
+            return _ministryPlatformRest.UsingAuthenticationToken(apiToken).Search<int>("Payment_Detail", searchString, column, null, false);
         }
     }
 }

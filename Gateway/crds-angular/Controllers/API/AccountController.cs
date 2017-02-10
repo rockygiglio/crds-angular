@@ -7,6 +7,7 @@ using crds_angular.Models.Json;
 using crds_angular.Security;
 using crds_angular.Services.Interfaces;
 using Crossroads.ApiVersioning;
+using Crossroads.Web.Common.Security;
 
 namespace crds_angular.Controllers.API
 {
@@ -14,7 +15,7 @@ namespace crds_angular.Controllers.API
     {      
         private readonly IAccountService _accountService;
 
-        public AccountController(IAccountService accountService, IUserImpersonationService userImpersonationService) : base(userImpersonationService)
+        public AccountController(IAccountService accountService, IUserImpersonationService userImpersonationService, IAuthenticationRepository authenticationRepository) : base(userImpersonationService, authenticationRepository)
         {
             _accountService = accountService;
         }

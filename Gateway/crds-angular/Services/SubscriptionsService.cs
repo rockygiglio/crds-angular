@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using crds_angular.Services.Interfaces;
 using MPInterfaces = MinistryPlatform.Translation.Repositories.Interfaces;
 using crds_angular.Models.Crossroads.Subscription;
+using Crossroads.Web.Common;
+using Crossroads.Web.Common.MinistryPlatform;
 
 namespace crds_angular.Services
 {
@@ -10,8 +12,8 @@ namespace crds_angular.Services
     {
         private readonly MPInterfaces.IMinistryPlatformService _ministryPlatformService;
         private readonly Util.Interfaces.IEmailListHandler _emailListHandler;
-        private readonly MPInterfaces.IApiUserRepository _apiUserService;
-        public SubscriptionsService(MPInterfaces.IMinistryPlatformService ministryPlatformService, Util.Interfaces.IEmailListHandler emailListHandler, MPInterfaces.IApiUserRepository apiUserService)
+        private readonly IApiUserRepository _apiUserService;
+        public SubscriptionsService(MPInterfaces.IMinistryPlatformService ministryPlatformService, Util.Interfaces.IEmailListHandler emailListHandler, IApiUserRepository apiUserService)
         {
             _ministryPlatformService = ministryPlatformService;
             _emailListHandler = emailListHandler;

@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using Crossroads.Web.Common;
+using Crossroads.Web.Common.MinistryPlatform;
 using MinistryPlatform.Translation.Models.Rules;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 using MinistryPlatform.Translation.Repositories.Interfaces.Rules;
@@ -34,7 +36,7 @@ namespace MinistryPlatform.Translation.Test.Services
 
             var mockRuleSet = new MPRuleSet {Name = "MockRuleset"};
 
-            _mpRestRepository.Setup(m => m.Get<MPRuleSet>(ruleSetId, null)).Returns(mockRuleSet);
+            _mpRestRepository.Setup(m => m.Get<MPRuleSet>(ruleSetId, (string)null)).Returns(mockRuleSet);
 
             var result = _fixture.GetRulesetFromMP(ruleSetId);
 

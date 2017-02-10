@@ -10,6 +10,9 @@ using crds_angular.Models.Crossroads.Serve;
 using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Interfaces;
 using Crossroads.Utilities.Messaging.Interfaces;
+using Crossroads.Web.Common;
+using Crossroads.Web.Common.Configuration;
+using Crossroads.Web.Common.Security;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 using Moq;
 using NUnit.Framework;
@@ -42,7 +45,7 @@ namespace crds_angular.test.controllers
             _messageQueryFactoryMock = new Mock<IMessageQueueFactory>();
             _configurationMock = new Mock<IConfigurationWrapper>();
 
-            _fixture = new ServeController(_serveServiceMock.Object, _configurationMock.Object, _messageFactoryMock.Object, _messageQueryFactoryMock.Object, new Mock<IUserImpersonationService>().Object);
+            _fixture = new ServeController(_serveServiceMock.Object, _configurationMock.Object, _messageFactoryMock.Object, _messageQueryFactoryMock.Object, new Mock<IUserImpersonationService>().Object, new Mock<IAuthenticationRepository>().Object);
 
             _authType = "auth_type";
             _authToken = "auth_token";
