@@ -11,7 +11,7 @@ set @fredDonorId = (select donor_record from Contacts where Email_Address = 'mpc
 DECLARE @thisyear as VARCHAR(4)
 set @thisyear = CONVERT(VARCHAR(4), datepart(year, getdate()));
 
-DECLARE @tripName AS VARCHAR(18)
+DECLARE @tripName AS VARCHAR(24)
 set @tripName = '(t+auto) GO Bedrock '+@thisyear;
 
 DECLARE @startYear as VARCHAR(19)

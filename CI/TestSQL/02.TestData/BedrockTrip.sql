@@ -7,7 +7,7 @@ GO
 DECLARE @thisyear as VARCHAR(4)
 set @thisyear = CONVERT(VARCHAR(4), datepart(year, getdate()));
 
-DECLARE @tripName AS VARCHAR(18)
+DECLARE @tripName AS VARCHAR(24)
 set @tripName = '(t+auto) GO Bedrock '+@thisyear;
 
 DECLARE @startYear as VARCHAR(19)
@@ -66,7 +66,7 @@ INSERT INTO [dbo].events
 GO
 
 --Updates
-DECLARE @tripName AS VARCHAR(18)
+DECLARE @tripName AS VARCHAR(24)
 set @tripName = '(t+auto) GO Bedrock '+CONVERT(VARCHAR(4), datepart(year, getdate()));
 
 update [dbo].Pledge_Campaigns set program_id = (select program_id from programs where program_name = @tripName) where campaign_name = @tripName;
