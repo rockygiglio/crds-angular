@@ -2,7 +2,7 @@ USE [MinistryPlatform]
 GO
 
 --Retrieve name of trip in case create occurred in a year prior to teardown
-DECLARE @tripName AS VARCHAR(18)
+DECLARE @tripName AS VARCHAR(24)
 set @tripName = (select event_title from events where event_title like '(t+auto) GO Bedrock%');
 
 DECLARE @pledgeCampaignId as int
