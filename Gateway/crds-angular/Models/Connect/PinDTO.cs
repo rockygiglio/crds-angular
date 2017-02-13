@@ -17,16 +17,21 @@ namespace crds_angular.Models.Connect
         [JsonProperty("emailAddress")]
         public string EmailAddress { get; set; }
 
-        [JsonProperty("address")]
-        public AddressDto Address { get; set; }
-
-        [JsonProperty("gathering")]
-        public GroupDto Gathering { get; set; }
-
         [JsonProperty("contactId")]
         public int Contact_ID { get; set; }
 
         [JsonProperty("participantId")]
         public int Participant_ID { get; set; }
+
+        [JsonProperty("address")]
+        public AddressDto Address { get; set; }
+
+        [JsonProperty("hostStatus")]
+        public int Host_Status { get; set; }
+
+        [JsonProperty("gathering")]
+        public GroupDto Gathering { get; set; }
+
+        
   }
 }
