@@ -32,6 +32,13 @@
     var vm = this;
     vm.path = ImageService.ProfileImageBaseURL + vm.contactId;
     vm.defaultImage = ImageService.DefaultProfileImage;
+
+    // called during unit tests to ensure tested properties and functions are available
+    vm.setupTesting = function(){
+      vm.navigateToHome = navigateToHome;
+      vm.login = $scope.login;
+    };
+
     $scope.loginShow = false;
     $scope.newuser = User;
     $scope.credentials = {};
@@ -67,6 +74,11 @@
       return;
     };
 
+    function navigateToHome()
+    {
+      $state.go('content', { link: '/' });
+    }    
+
     $scope.login = function() {
       if (($scope.credentials === undefined) ||
           ($scope.credentials.username === undefined ||
@@ -77,6 +89,7 @@
       } else {
         $scope.processing = true;
         AuthService.login($scope.credentials).then(function(user) {
+
           $scope.loginShow = false;
           if ($scope.modal) {
             $scope.modal.close();
@@ -98,7 +111,7 @@
                   $state.go(url, JSON.parse(params));
                 }
               } else {
-                $state.go('content', { link: '/' });
+                navigateToHome();
               }
             },
 
