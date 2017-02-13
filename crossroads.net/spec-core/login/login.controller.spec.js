@@ -44,21 +44,15 @@ describe('Login Controller', function () {
       Session: Session
     });
 
-    LoginController.setupTesting();
-
   }));
 
-  it('controller should be defined', function () {
-    expect(LoginController).toBeDefined();
-  });
-
-  it('function navigateToHome routes to homepage', function () {
+  it('should route to homepage when navigateToHome is called', function() {
     spyOn($state, 'go');
     LoginController.navigateToHome();
     expect($state.go).toHaveBeenCalledWith('content', { link: '/' });
   });
 
-  it('did route to homepage after signing in and no redirect parameters were passed', function () {
+  it('should route to homepage after signing in and has no redirect parameters', function() {
 
     $scope.navlogin = {
       $setPristine: function () {
@@ -78,7 +72,7 @@ describe('Login Controller', function () {
 
     spyOn(Session, 'hasRedirectionInfo').and.returnValue(false);
 
-    LoginController.login();
+    $scope.login();
     $timeout.flush();
 
     expect($rootScope.$emit).toHaveBeenCalledTimes(0);
