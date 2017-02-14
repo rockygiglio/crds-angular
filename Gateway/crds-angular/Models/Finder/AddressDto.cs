@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 using Newtonsoft.Json;
 
-namespace crds_angular.Models.Connect
+namespace crds_angular.Models.Finder
 {
     public class AddressDto
     {

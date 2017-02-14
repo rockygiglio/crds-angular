@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MinistryPlatform.Translation.Models.Connect
+namespace MinistryPlatform.Translation.Models.Finder
 {
-    class ConnectGroupDto
+    public class ConnectGroupDto
     {
     }
 }

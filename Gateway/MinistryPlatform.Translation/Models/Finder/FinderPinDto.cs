@@ -7,10 +7,10 @@ using Crossroads.Web.Common.MinistryPlatform;
 using Newtonsoft.Json.Serialization;
 using Newtonsoft.Json;
 
-namespace MinistryPlatform.Translation.Models.Connect
+namespace MinistryPlatform.Translation.Models.Finder
 {
     [MpRestApiTable(Name = "Contacts")]
-    public class ConnectPinDto
+    public class FinderPinDto
     {
         public int Contact_ID { get; set; }
         public int Participant_ID { get; set; }
@@ -20,7 +20,7 @@ namespace MinistryPlatform.Translation.Models.Connect
         [JsonProperty("Email_Address")]
         public string EmailAddress { get; set; }
 
-        public ConnectAddressDto Address { get; set; }
+        public FinderAddressDto Address { get; set; }
 
     }
 }

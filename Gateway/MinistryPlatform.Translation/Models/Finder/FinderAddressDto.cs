@@ -7,10 +7,10 @@ using Crossroads.Web.Common.MinistryPlatform;
 using Newtonsoft.Json.Serialization;
 using Newtonsoft.Json;
 
-namespace MinistryPlatform.Translation.Models.Connect
+namespace MinistryPlatform.Translation.Models.Finder
 {
     [MpRestApiTable(Name = "Contacts")]
-    public class ConnectAddressDto
+    public class FinderAddressDto
     {
         public int? Address_ID { get; set; }
         public string Address_Line_1 { get; set; }

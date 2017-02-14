@@ -121,9 +121,9 @@
   <ItemGroup>
     <Compile Include="Exceptions\DonationNotFoundException.cs" />
     <Compile Include="Exceptions\PaymentNotFoundException.cs" />
-    <Compile Include="Models\Connect\ConnectAddressDto.cs" />
-    <Compile Include="Models\Connect\ConnectGroupDto.cs" />
-    <Compile Include="Models\Connect\ConnectPinDto.cs" />
+    <Compile Include="Models\Finder\FinderAddressDto.cs" />
+    <Compile Include="Models\Finder\FinderGroupDto.cs" />
+    <Compile Include="Models\Finder\FinderPinDto.cs" />
     <Compile Include="Models\DTO\PredefinedDonationAmountDTO.cs" />
     <Compile Include="Models\MpAttributeCategory.cs" />
     <Compile Include="Models\MpAllergy.cs" />
@@ -158,11 +158,11 @@
     <Compile Include="Models\Rules\MPRuleSet.cs" />
     <Compile Include="Models\Rules\MPRuleSetResult.cs" />
     <Compile Include="Repositories\CampRepository.cs" />
-    <Compile Include="Repositories\ConnectRepository.cs" />
+    <Compile Include="Repositories\FinderRepository.cs" />
     <Compile Include="Repositories\Interfaces\ICampRepository.cs" />
     <Compile Include="Models\MpRsvpMembers.cs" />
     <Compile Include="Models\MpSU2SOpportunity.cs" />
-    <Compile Include="Repositories\Interfaces\IConnectRepository.cs" />
+    <Compile Include="Repositories\Interfaces\IFinderRepository.cs" />
     <Compile Include="Repositories\Interfaces\IInvoiceRepository.cs" />
     <Compile Include="Repositories\Interfaces\IMedicalInformationRepository.cs" />
     <Compile Include="Repositories\Interfaces\IPaymentRepository.cs" />
