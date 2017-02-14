@@ -97,7 +97,7 @@ SET Contact_ID = @fContactId WHERE USER_ID = @fatherUserAccount;
 UPDATE [dbo].dp_users
 SET Contact_ID = @mContactId WHERE USER_ID = @motherUserAccount;
 
---Just get rid of this so we can delete Cloud's old contact record
+--Just get rid of this so we can delete Rich's old contact record
 DELETE FROM Contact_Households WHERE Contact_ID = @fatherContactId;
 DELETE FROM Contact_Households WHERE Contact_ID = @motherContactId;
 
@@ -117,7 +117,7 @@ DELETE FROM [dbo].dp_communication_messages WHERE Communication_ID = @motherComm
 DELETE FROM [dbo].dp_Communications WHERE Communication_ID = @motherCommunicationId;
 DELETE FROM [dbo].Activity_Log WHERE Contact_iD = @motherContactId;
 
---Delete the old contact record for cloud
+--Delete the old contact record for Rich
 DELETE FROM [dbo].Contacts where Contact_ID = @fatherContactId;
 DELETE FROM [dbo].Contacts where Contact_ID = @motherContactId;
 -----------------------------------------------------------------------------------------------------------------------------
