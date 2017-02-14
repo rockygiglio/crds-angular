@@ -15,7 +15,7 @@ class MedicalInfoController {
     this.model = this.medicalInfoForm.getModel();
     this.fields = this.medicalInfoForm.getFields();
     this.viewReady = true;
-    this.update = this.stateParams.update;
+    this.update = this.stateParams.update !== null && this.stateParams.update !== undefined ? this.stateParams.update : true;
   }
 
   cancel() {
