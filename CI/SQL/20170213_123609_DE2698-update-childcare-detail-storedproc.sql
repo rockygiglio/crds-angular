@@ -1,3 +1,19 @@
+USE [MinistryPlatform]
+GO
+
+/****** Object:  StoredProcedure [dbo].[report_CRDS_Childcare_Detail]    Script Date: 2/14/2017 4:14:39 PM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[report_CRDS_Childcare_Detail]') AND type in (N'P', N'PC'))
+BEGIN
+EXEC dbo.sp_executesql @statement = N'CREATE PROCEDURE [dbo].[report_CRDS_Childcare_Detail] AS' 
+END
+GO
+
 
 ALTER PROCEDURE [dbo].[report_CRDS_Childcare_Detail]
 
@@ -92,3 +108,6 @@ AS
 
 	SELECT * FROM @ChildcareDetail
 END
+GO
+
+
