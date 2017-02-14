@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 using System.Web.ClientServices.Providers;
 using AutoMapper;
 using crds_angular.Models;
-using crds_angular.Models.Connect;
+using crds_angular.Models.Finder;
 using crds_angular.Models.Crossroads;
 using crds_angular.Models.Crossroads.Attribute;
 using crds_angular.Models.Crossroads.Events;
@@ -17,7 +17,7 @@ using crds_angular.Models.Crossroads.Stewardship;
 using crds_angular.Models.MailChimp;
 using MinistryPlatform.Translation.Extensions;
 using MinistryPlatform.Translation.Models;
-using MinistryPlatform.Translation.Models.Connect;
+using MinistryPlatform.Translation.Models.Finder;
 using MinistryPlatform.Translation.Models.DTO;
 using MinistryPlatform.Translation.Models.Opportunities;
 using MinistryPlatform.Translation.Repositories;
@@ -359,10 +359,10 @@ namespace crds_angular.App_Start
 
             Mapper.CreateMap<RsvpMember, MpRsvpMember>();
             Mapper.CreateMap<MpRsvpMember, RsvpMember>();
-            Mapper.CreateMap<PinDto, ConnectPinDto>();
-            Mapper.CreateMap<ConnectPinDto, PinDto>();
-            Mapper.CreateMap<AddressDto, ConnectAddressDto>();
-            Mapper.CreateMap<ConnectAddressDto, AddressDto>();
+            Mapper.CreateMap<PinDto, FinderPinDto>();
+            Mapper.CreateMap<FinderPinDto, PinDto>();
+            Mapper.CreateMap<AddressDto, FinderAddressDto>();
+            Mapper.CreateMap<FinderAddressDto, AddressDto>();
 
             Mapper.CreateMap<MpSU2SOpportunity, ServeOpportunity>();
             Mapper.CreateMap<ServeOpportunity, MpSU2SOpportunity>();
