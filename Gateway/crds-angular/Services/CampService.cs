@@ -116,7 +116,7 @@ namespace crds_angular.Services
             var campEvent = _eventRepository.GetEvent(eventId);
             var eventProduct = _productRepository.GetProductForEvent(eventId);
             var eventProductOptionPrices = _productRepository.GetProductOptionPricesForProduct(eventProduct.ProductId).OrderByDescending(m => m.DaysOutToHide).ToList();
-            var invoiceDetails = _invoiceRepository.GetInvoiceDetailsForProductAndCamperAndContact(eventProduct.ProductId, camperContactId, me.Contact_ID);
+            var invoiceDetails = _invoiceRepository.GetInvoiceDetailsForProductAndCamper(eventProduct.ProductId, camperContactId);
             var answer = _formSubmissionRepository.GetFormResponseAnswer(formId, camperContactId, formFieldId);
             var financialAssistance = (!string.IsNullOrEmpty(answer) && Convert.ToBoolean(answer));
             PaymentDetailDTO paymentDetail;
@@ -454,7 +454,7 @@ namespace crds_angular.Services
                         if (campers.Any(c => c.ContactId == member.ContactId))
                         {
                             var product = _productRepository.GetProductForEvent(camp.EventId);
-                            var invoiceDetails = _invoiceRepository.GetInvoiceDetailsForProductAndCamperAndContact(product.ProductId, member.ContactId, loggedInContact.Contact_ID);
+                            var invoiceDetails = _invoiceRepository.GetInvoiceDetailsForProductAndCamper(product.ProductId, member.ContactId);
                             PaymentDetailDTO paymentDetail;
                             paymentDetail = invoiceDetails.Value == null ? null : _paymentService.GetPaymentDetails(0, invoiceDetails.Value.InvoiceId, token);
 
