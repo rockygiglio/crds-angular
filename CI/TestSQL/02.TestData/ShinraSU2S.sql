@@ -7,7 +7,7 @@ INSERT INTO Groups
 
 -- getting the ID for the group
 declare @GroupID as int
-set @GroupID = (select group_id from Groups where Group_Name = '(t+auto) Serve Shinra Electric Power Company'));
+set @GroupID = (select group_id from Groups where Group_Name = '(t+auto) Serve Shinra Electric Power Company');
 
 --(t+auto) Guard Shinra Mako reactor 1
 --Setup
