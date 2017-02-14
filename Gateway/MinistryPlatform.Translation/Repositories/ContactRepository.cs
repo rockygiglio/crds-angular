@@ -206,20 +206,41 @@ namespace MinistryPlatform.Translation.Repositories
             }).ToList();
             return family;
         }
-
-        public List<MpHouseholdMember> GetOtherHouseholdMembers(int contactId)
+        
+        /// <summary>
+        /// Get the Other/Former members of a particular household
+        /// </summary>
+        /// <param name="householdId">the householdId of the household where you want the other members</param>
+        /// <returns> a list of MpHouseholdMember </returns>
+        public List<MpHouseholdMember> GetOtherHouseholdMembers(int householdId)
         {
             var token = ApiLogin();
-            var householdMembers = new List<MpHouseholdMember>();
-            var otherHouseholds = _ministryPlatformService.GetSubpageViewRecords("OtherHouseholds", contactId, token);
-            foreach (var house in otherHouseholds)
+            var filter = $"Contact_Households.Household_ID = {householdId}";
+            var columns = new List<string>
             {
-                var houseId = (int) house["Household_ID"];
-                householdMembers.AddRange(GetHouseholdFamilyMembers(houseId));
-            }
+                "Contact_Households.Contact_ID",
+                "Contact_Households.Household_ID",
+                "Contact_Households.Household_Position_ID",
+                "Household_Position_ID_Table.Household_Position",
+                "Contact_ID_Table.First_Name",
+                "Contact_ID_Table.Nickname",
+                "Contact_ID_Table.Last_Name",
+                "Contact_ID_Table.Date_of_Birth",
+                "Contact_ID_Table.__Age"
+            };
+            var result = _ministryPlatformRest.UsingAuthenticationToken(token).Search<MpContactHousehold>(filter, columns);
+            var householdMembers = result.Select((hm) => new MpHouseholdMember
+            {
+                Age = hm.Age ?? 0,
+                ContactId = hm.ContactId,
+                DateOfBirth = hm.DateOfBirth ?? new DateTime(),
+                FirstName = hm.FirstName,
+                LastName = hm.LastName,
+                HouseholdPosition = hm.HouseholdPosition,
+                Nickname = hm.Nickname,
+            }).ToList();
             return householdMembers;
-        }
-
+        }      
 
         public MpMyContact GetMyProfile(string token)
         {
