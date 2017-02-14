@@ -2,7 +2,7 @@ import applicationModule from '../../../../app/camps/application_page/applicatio
 import campsModule from '../../../../app/camps/camps.module';
 
 
-fdescribe('Camps Medical Info Component', () => {
+describe('Camps Medical Info Component', () => {
   let $componentController;
   let medicalInfoController;
   // let log;
