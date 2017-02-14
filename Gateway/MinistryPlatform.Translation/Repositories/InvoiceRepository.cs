@@ -47,7 +47,11 @@ namespace MinistryPlatform.Translation.Repositories
         public MpInvoice GetInvoice(int invoiceId)
         {
             var apiToken = _apiUserRepository.GetToken();
-            return _ministryPlatformRest.UsingAuthenticationToken(apiToken).Get<MpInvoice>(invoiceId);
+            var invoiceCancelled = 2;
+            var filter = $"Invoice_ID={invoiceId} AND Invoice_Status_ID!={invoiceCancelled}";
+
+            var resultLst = _ministryPlatformRest.UsingAuthenticationToken(apiToken).Search<MpInvoice>(filter);
+            return resultLst.Any() ? resultLst.First() : null;
         }
 
         public MpInvoiceDetail GetInvoiceDetailForInvoice(int invoiceId)
