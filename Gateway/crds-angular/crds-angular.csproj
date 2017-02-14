@@ -302,6 +302,7 @@
     <Compile Include="Controllers\API\CampController.cs" />
     <Compile Include="Controllers\API\ChildcareController.cs" />
     <Compile Include="Controllers\API\CongregationController.cs" />
+    <Compile Include="Controllers\API\FinderController.cs" />
     <Compile Include="Controllers\API\EventParticipantController.cs" />
     <Compile Include="Controllers\API\EventToolController.cs" />
     <Compile Include="Controllers\API\FormBuilderController.cs" />
@@ -327,6 +328,9 @@
     <Compile Include="Exceptions\NotHeadOfHouseholdException.cs" />
     <Compile Include="Exceptions\PaymentTypeNotFoundException.cs" />
     <Compile Include="Exceptions\TripFullException.cs" />
+    <Compile Include="Models\Finder\AddressDto.cs" />
+    <Compile Include="Models\Finder\GroupDto.cs" />
+    <Compile Include="Models\Finder\PinDto.cs" />
     <Compile Include="Models\Crossroads\Events\EventParticipantDTO.cs" />
     <Compile Include="Models\Crossroads\GroupCategoryDTO.cs" />
     <Compile Include="Models\Crossroads\AddressDTO.cs" />
@@ -409,6 +413,7 @@
     <Compile Include="Services\CampRules.cs" />
     <Compile Include="Services\CampService.cs" />
     <Compile Include="Services\CongregationService.cs" />
+    <Compile Include="Services\FinderService.cs" />
     <Compile Include="Services\EquipmentService.cs" />
     <Compile Include="Services\EventParticipantService.cs" />
     <Compile Include="Services\GeocodeCalculationAddressProximityService.cs" />
@@ -425,6 +430,7 @@
     <Compile Include="Services\Interfaces\IAddressProximityService.cs" />
     <Compile Include="Services\Interfaces\ICampRules.cs" />
     <Compile Include="Services\Interfaces\ICampService.cs" />
+    <Compile Include="Services\Interfaces\IFinderService.cs" />
     <Compile Include="Services\Interfaces\IEventParticipantService.cs" />
     <Compile Include="Services\Interfaces\IInvitationService.cs" />
     <Compile Include="Services\Interfaces\IPaymentService.cs" />
