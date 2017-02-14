@@ -2,7 +2,7 @@ import applicationModule from '../../../../app/camps/application_page/applicatio
 import campsModule from '../../../../app/camps/camps.module';
 
 
-describe('Camps Medical Info Component', () => {
+fdescribe('Camps Medical Info Component', () => {
   let $componentController;
   let medicalInfoController;
   // let log;
@@ -33,70 +33,88 @@ describe('Camps Medical Info Component', () => {
 
     spyOn(medicalInfoForm, 'getModel').and.callThrough();
     spyOn(medicalInfoForm, 'getFields').and.callThrough();
-
-    const bindings = {};
-    medicalInfoController = $componentController('campMedicalInfo', null, bindings);
-    medicalInfoController.$onInit();
   }));
 
-  it('should set the view as ready', () => {
-    expect(medicalInfoController.viewReady).toBeTruthy();
-  });
-
-  it('should get the model', () => {
-    expect(medicalInfoForm.getModel).toHaveBeenCalled();
-    expect(medicalInfoController.model).toBeDefined();
-  });
-
-  it('should get the fields', () => {
-    expect(medicalInfoForm.getFields).toHaveBeenCalled();
-    expect(medicalInfoController.fields).toBeDefined();
-    expect(medicalInfoController.fields.length).toBeGreaterThan(0);
-  });
-
-  it('should successfully save the form', () => {
-    medicalInfoController.medicalInfo = { $valid: true };
-
-    spyOn(medicalInfoForm, 'save').and.callFake(() => {
-      const deferred = q.defer();
-      deferred.resolve('success!');
-      return deferred.promise;
+  describe('Update flag set to undefined', () => {
+    beforeEach(() => {
+      stateParams.update = undefined;
+      const bindings = {};
+      medicalInfoController = $componentController('campMedicalInfo', null, bindings);
+      medicalInfoController.$onInit();
     });
 
-    medicalInfoController.submit();
-    rootScope.$apply();
-    expect(medicalInfoForm.save).toHaveBeenCalledWith(contactId);
+    it('should set the update flag to true if it is initialized to undefined', () => {
+      expect(medicalInfoController.update).toBeTruthy();
+    });
   });
 
-  it('should reject saving the form', () => {
-    medicalInfoController.medicalInfo = { $valid: true };
-
-    spyOn(medicalInfoForm, 'save').and.callFake(() => {
-      const deferred = q.defer();
-      deferred.reject('error!');
-      return deferred.promise;
+  describe('Update flag set to true', () => {
+    beforeEach(() => {
+      stateParams.update = true;
+      const bindings = {};
+      medicalInfoController = $componentController('campMedicalInfo', null, bindings);
+      medicalInfoController.$onInit();
     });
 
-    medicalInfoController.submit();
-    rootScope.$apply();
-    expect(medicalInfoForm.save).toHaveBeenCalledWith(contactId);
-  });
-
-  it('should disable the submit button while saving', () => {
-    expect(medicalInfoController.submitting).toBe(false);
-
-    medicalInfoController.medicalInfo = { $valid: true };
-
-    spyOn(medicalInfoForm, 'save').and.callFake(() => {
-      const deferred = q.defer();
-      deferred.resolve('success!');
-      return deferred.promise;
+    it('should set the view as ready', () => {
+      expect(medicalInfoController.viewReady).toBeTruthy();
     });
 
-    medicalInfoController.submit();
-    expect(medicalInfoController.submitting).toBe(true);
+    it('should get the model', () => {
+      expect(medicalInfoForm.getModel).toHaveBeenCalled();
+      expect(medicalInfoController.model).toBeDefined();
+    });
 
-    rootScope.$apply();
-    expect(medicalInfoController.submitting).toBe(false);
+    it('should get the fields', () => {
+      expect(medicalInfoForm.getFields).toHaveBeenCalled();
+      expect(medicalInfoController.fields).toBeDefined();
+      expect(medicalInfoController.fields.length).toBeGreaterThan(0);
+    });
+
+    it('should successfully save the form', () => {
+      medicalInfoController.medicalInfo = { $valid: true };
+
+      spyOn(medicalInfoForm, 'save').and.callFake(() => {
+        const deferred = q.defer();
+        deferred.resolve('success!');
+        return deferred.promise;
+      });
+
+      medicalInfoController.submit();
+      rootScope.$apply();
+      expect(medicalInfoForm.save).toHaveBeenCalledWith(contactId);
+    });
+
+    it('should reject saving the form', () => {
+      medicalInfoController.medicalInfo = { $valid: true };
+
+      spyOn(medicalInfoForm, 'save').and.callFake(() => {
+        const deferred = q.defer();
+        deferred.reject('error!');
+        return deferred.promise;
+      });
+
+      medicalInfoController.submit();
+      rootScope.$apply();
+      expect(medicalInfoForm.save).toHaveBeenCalledWith(contactId);
+    });
+
+    it('should disable the submit button while saving', () => {
+      expect(medicalInfoController.submitting).toBe(false);
+
+      medicalInfoController.medicalInfo = { $valid: true };
+
+      spyOn(medicalInfoForm, 'save').and.callFake(() => {
+        const deferred = q.defer();
+        deferred.resolve('success!');
+        return deferred.promise;
+      });
+
+      medicalInfoController.submit();
+      expect(medicalInfoController.submitting).toBe(true);
+
+      rootScope.$apply();
+      expect(medicalInfoController.submitting).toBe(false);
+    });
   });
 });
