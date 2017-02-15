@@ -7,5 +7,7 @@ namespace crds_angular.Services.Interfaces
     public interface IFinderService
     {
         PinDto GetPinDetails(int participantId);
+        string GetIpForRemoteUser();
+        AddressDTO GetAddressForIp();
     }
 }

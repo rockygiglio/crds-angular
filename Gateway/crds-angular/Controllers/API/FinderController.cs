@@ -38,5 +38,23 @@ namespace crds_angular.Controllers.API
                 throw new HttpResponseException(apiError.HttpResponseMessage);
             }
         }
+
+        [ResponseType(typeof(AddressDto))]
+        [VersionedRoute(template: "finder/pinbyip", minimumVersion: "1.0.0")]
+        [Route("finder/pinbyip")]
+        [HttpGet]
+        public IHttpActionResult GetPinByIpAddress()
+        {
+            try
+            {
+                var address = _finderService.GetAddressForIp();
+                return Ok(address);
+            }
+            catch (Exception ex)
+            {
+                var apiError = new ApiErrorDto("Get Pin By Ip Failed", ex);
+                throw new HttpResponseException(apiError.HttpResponseMessage);
+            }
+        }
     }
 }
