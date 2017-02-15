@@ -110,7 +110,6 @@ module.exports = function(config) {
         colors: true
       }
     },
-    browserNoActivityTimeout: 1000000,
 
     // enable / disable colors in the output (reporters and logs)
     colors: true,
