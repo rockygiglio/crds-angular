@@ -121,8 +121,6 @@
   <ItemGroup>
     <Compile Include="Exceptions\DonationNotFoundException.cs" />
     <Compile Include="Exceptions\PaymentNotFoundException.cs" />
-    <Compile Include="Models\Finder\FinderAddressDto.cs" />
-    <Compile Include="Models\Finder\FinderGroupDto.cs" />
     <Compile Include="Models\Finder\FinderPinDto.cs" />
     <Compile Include="Models\DTO\PredefinedDonationAmountDTO.cs" />
     <Compile Include="Models\MpAttributeCategory.cs" />

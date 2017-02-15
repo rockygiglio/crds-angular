@@ -328,8 +328,6 @@
     <Compile Include="Exceptions\NotHeadOfHouseholdException.cs" />
     <Compile Include="Exceptions\PaymentTypeNotFoundException.cs" />
     <Compile Include="Exceptions\TripFullException.cs" />
-    <Compile Include="Models\Finder\AddressDto.cs" />
-    <Compile Include="Models\Finder\GroupDto.cs" />
     <Compile Include="Models\Finder\PinDto.cs" />
     <Compile Include="Models\Crossroads\Events\EventParticipantDTO.cs" />
     <Compile Include="Models\Crossroads\GroupCategoryDTO.cs" />

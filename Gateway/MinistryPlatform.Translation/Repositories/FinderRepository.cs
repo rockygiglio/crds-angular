@@ -37,7 +37,7 @@ namespace MinistryPlatform.Translation.Repositories
             var pinDetails = _ministryPlatformRest.UsingAuthenticationToken(token).Search<FinderPinDto>(filter, pinSearch)?.First();
 
             const string addressSearch = "Household_ID_Table_Address_ID_Table.*";
-            if (pinDetails != null) pinDetails.Address = _ministryPlatformRest.UsingAuthenticationToken(token).Search<FinderAddressDto>(filter, addressSearch)?.First();
+            if (pinDetails != null) pinDetails.Address = _ministryPlatformRest.UsingAuthenticationToken(token).Search<MpAddress>(filter, addressSearch)?.First();
 
 
             return pinDetails;

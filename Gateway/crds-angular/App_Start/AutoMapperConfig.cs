@@ -361,8 +361,6 @@ namespace crds_angular.App_Start
             Mapper.CreateMap<MpRsvpMember, RsvpMember>();
             Mapper.CreateMap<PinDto, FinderPinDto>();
             Mapper.CreateMap<FinderPinDto, PinDto>();
-            Mapper.CreateMap<AddressDto, FinderAddressDto>();
-            Mapper.CreateMap<FinderAddressDto, AddressDto>();
 
             Mapper.CreateMap<MpSU2SOpportunity, ServeOpportunity>();
             Mapper.CreateMap<ServeOpportunity, MpSU2SOpportunity>();
