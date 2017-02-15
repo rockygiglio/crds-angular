@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Crossroads.Utilities.FunctionalHelpers;
-using Crossroads.Web.Common;
+using Crossroads.Web.Common.Configuration;
 using Crossroads.Web.Common.MinistryPlatform;
 using MinistryPlatform.Translation.Models.Payments;
 using MinistryPlatform.Translation.Repositories.Interfaces;
@@ -14,12 +14,14 @@ namespace MinistryPlatform.Translation.Repositories
         private readonly IMinistryPlatformRestRepository _ministryPlatformRest;
         private readonly IApiUserRepository _apiUserRepository;
         private readonly IProductRepository _productRepository;
+        private readonly IConfigurationWrapper _configurationWrapper;
 
-        public InvoiceRepository(IMinistryPlatformRestRepository ministryPlatformRest, IApiUserRepository apiUserRepository, IProductRepository productRepository)
+        public InvoiceRepository(IMinistryPlatformRestRepository ministryPlatformRest, IApiUserRepository apiUserRepository, IProductRepository productRepository, IConfigurationWrapper configurationWrapper)
         {
             _ministryPlatformRest = ministryPlatformRest;
             _apiUserRepository = apiUserRepository;
             _productRepository = productRepository;
+            _configurationWrapper = configurationWrapper;
         }
         public bool InvoiceExists(int invoiceId)
         {
@@ -87,10 +89,11 @@ namespace MinistryPlatform.Translation.Repositories
             return _ministryPlatformRest.UsingAuthenticationToken(apiToken).Post(new List<MpNestedInvoiceDetail>(new List<MpNestedInvoiceDetail> { invoice })) == 200;
         }
 
-        public Result<MpInvoiceDetail> GetInvoiceDetailsForProductAndCamperAndContact(int productId, int camperId, int contactId)
+        public Result<MpInvoiceDetail> GetInvoiceDetailsForProductAndCamper(int productId, int camperId)
         {
             var apiToken = _apiUserRepository.GetToken();
-            var invoiceDetails = _ministryPlatformRest.UsingAuthenticationToken(apiToken).Search<MpInvoiceDetail>($"Invoice_ID_Table_Purchaser_Contact_ID_Table.[Contact_ID]={contactId} AND Recipient_Contact_ID_Table.[Contact_ID]={camperId} AND Product_ID_Table.[Product_ID]={productId}", "Invoice_ID_Table.[Invoice_ID]");
+            var invoiceCancelled = _configurationWrapper.GetConfigIntValue("InvoiceCancelled");
+            var invoiceDetails = _ministryPlatformRest.UsingAuthenticationToken(apiToken).Search<MpInvoiceDetail>($"Recipient_Contact_ID_Table.[Contact_ID]={camperId} AND Product_ID_Table.[Product_ID]={productId} AND Invoice_Status_ID!={invoiceCancelled}", "Invoice_ID_Table.[Invoice_ID]");
             if (invoiceDetails.Any())
             {
                 if (invoiceDetails.First() != null)
