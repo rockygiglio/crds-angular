@@ -3,7 +3,7 @@ GO
 
 --Retrieve name of trip in case create occurred in a year prior to teardown
 DECLARE @tripName AS VARCHAR(18)
-set @tripName = (select event_title from events where event_title like '(t) GO Midgar%');
+set @tripName = (select top 1 program_name from programs where program_name like '(t) GO Midgar%');
 
 DECLARE @pledgeCampaignId as int
 set @pledgeCampaignId = (select top 1 pledge_campaign_id from Pledge_Campaigns where Campaign_name = @tripName);
@@ -76,6 +76,8 @@ delete from event_groups where event_id in (select event_id from events where pr
 delete from event_equipment where event_id in (select event_id from events where program_id in (select program_id from programs where program_name = @tripName));
 
 delete from events where program_id in (select program_id from programs where program_name = @tripName);
+
+delete from Opportunities where Program_ID in (select Program_ID from Programs where Program_Name = @tripName);
 
 delete from programs where program_name = @tripName;
 
