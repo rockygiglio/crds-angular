@@ -519,7 +519,7 @@ namespace MinistryPlatform.Translation.Test.Services
         [Test]
         public void findOtherHouseholdMembers()
         {
-            var filter = $"Contact_Households.Household_ID = 1709940";
+            var filter = $"Contact_Households.Household_ID=1709940";
             var columns = new List<string>
             {
                 "Contact_Households.Contact_ID",
@@ -530,9 +530,12 @@ namespace MinistryPlatform.Translation.Test.Services
                 "Contact_ID_Table.Nickname",
                 "Contact_ID_Table.Last_Name",
                 "Contact_ID_Table.Date_of_Birth",
-                "Contact_ID_Table.__Age"
+                "Contact_ID_Table.__Age",
+                "Contact_Households.End_Date"
             };
             var result = _fixture.UsingAuthenticationToken(_authToken).Search<MpContactHousehold>(filter, columns);
+            Assert.AreEqual(1, result.Count);
+            Assert.IsNotNull(result.First().EndDate);
         }
 
     }

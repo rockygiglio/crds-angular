@@ -33,5 +33,8 @@ namespace MinistryPlatform.Translation.Models
 
         [JsonProperty(PropertyName = "__Age")]
         public int? Age { get; set; }
+
+        [JsonProperty(PropertyName = "End_Date")]
+        public DateTime? EndDate { get; set; }
     }
 }

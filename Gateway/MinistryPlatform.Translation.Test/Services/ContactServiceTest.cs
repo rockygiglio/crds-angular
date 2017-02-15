@@ -481,7 +481,7 @@ namespace MinistryPlatform.Translation.Test.Services
             _ministryPlatformRest.Setup(m => m.Search<MpContactHousehold>(It.IsAny<string>(), It.IsAny<List<string>>(), null, false)).Returns(householdContacts);
 
             var householdMembers = _fixture.GetOtherHouseholdMembers(householdId);
-            Assert.AreEqual(2, householdMembers.Count);
+            Assert.AreEqual(1, householdMembers.Count);
             Assert.AreEqual("Minor Child", householdMembers.First().HouseholdPosition);            
         }
 
@@ -491,7 +491,7 @@ namespace MinistryPlatform.Translation.Test.Services
             return new List<MpContactHousehold>
             {
                 new MpContactHousehold() {ContactId = 123445, HouseholdId = householdId, HouseholdPositionId = 2, Age = 10, DateOfBirth = null, FirstName = "Ellie", LastName = "Canterbury", HouseholdPosition = "Minor Child"},
-                new MpContactHousehold() {ContactId = 54321, HouseholdId = householdId, HouseholdPositionId = 1, Age = 59, DateOfBirth = null, FirstName = "Ella", LastName = "Robey", HouseholdPosition = "Adult"}
+                new MpContactHousehold() {ContactId = 54321, HouseholdId = householdId, HouseholdPositionId = 1, Age = 59, DateOfBirth = null, FirstName = "Ella", LastName = "Robey", HouseholdPosition = "Adult", EndDate = DateTime.Now.AddDays(-3)}
             };
         }
         

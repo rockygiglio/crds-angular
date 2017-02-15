@@ -17,7 +17,7 @@ namespace MinistryPlatform.Translation.Repositories
     public class ContactRepository : BaseRepository, IContactRepository
     {
         private readonly int _addressesPageId;
-        private readonly IConfigurationWrapper _configurationWrapper;
+        //private readonly IConfigurationWrapper _configurationWrapper;
         private readonly int _congregationDefaultId;
         private readonly int _contactsPageId;
         private readonly int _householdDefaultSourceId;
@@ -35,7 +35,7 @@ namespace MinistryPlatform.Translation.Repositories
             : base(authenticationService, configuration)
         {
             _ministryPlatformService = ministryPlatformService;
-            _configurationWrapper = configuration;
+            //_configurationWrapper = configuration;
             _ministryPlatformRest = ministryPlatformRest;
             _apiUserRepository = apiUserRepository;
 
@@ -215,7 +215,7 @@ namespace MinistryPlatform.Translation.Repositories
         public List<MpHouseholdMember> GetOtherHouseholdMembers(int householdId)
         {
             var token = ApiLogin();
-            var filter = $"Contact_Households.Household_ID = {householdId}";
+            var filter = $"Contact_Households.Household_ID = {householdId} ";
             var columns = new List<string>
             {
                 "Contact_Households.Contact_ID",
@@ -226,10 +226,11 @@ namespace MinistryPlatform.Translation.Repositories
                 "Contact_ID_Table.Nickname",
                 "Contact_ID_Table.Last_Name",
                 "Contact_ID_Table.Date_of_Birth",
-                "Contact_ID_Table.__Age"
+                "Contact_ID_Table.__Age",
+                "Contact_Households.End_Date"
             };
             var result = _ministryPlatformRest.UsingAuthenticationToken(token).Search<MpContactHousehold>(filter, columns);
-            var householdMembers = result.Select((hm) => new MpHouseholdMember
+            var householdMembers = result.Where((hm) => hm.EndDate == null || hm.EndDate > DateTime.Now).Select((hm) => new MpHouseholdMember
             {
                 Age = hm.Age ?? 0,
                 ContactId = hm.ContactId,
