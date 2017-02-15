@@ -34,6 +34,9 @@ namespace crds_angular.Models.Finder
         [JsonProperty("gathering")]
         public GroupDTO Gathering { get; set; }
 
+        [JsonProperty("householdId")]
+        public int Household_ID { get; set; }
+
         
   }
 }
