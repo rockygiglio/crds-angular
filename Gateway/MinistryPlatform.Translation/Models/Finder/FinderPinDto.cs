@@ -20,7 +20,7 @@ namespace MinistryPlatform.Translation.Models.Finder
         [JsonProperty("Email_Address")]
         public string EmailAddress { get; set; }
 
-        public FinderAddressDto Address { get; set; }
+        public MpAddress Address { get; set; }
 
     }
 }
