@@ -41,7 +41,6 @@ AS
 		ChildName varchar(255),
 		Age nvarchar(200),
 		Date_Of_Birth datetime,
-		--GradeGroup nvarchar(200),
 		GroupParticipantStartDate datetime,
 		Checkin nvarchar(6), 
 		GradeGroup nvarchar(255)		
@@ -50,15 +49,15 @@ AS
 
 	INSERT INTO @ChildcareDetail SELECT  
 			g.Group_Name,     
-			e.Event_Start_Date  EventDate, 
-			e.Event_Start_Date  StartTime, 
-			e.Event_End_Date EndTime, 
+			e.Event_Start_Date as EventDate, 
+			e.Event_Start_Date as StartTime, 
+			e.Event_End_Date as EndTime, 
 			p.Participant_ID,
 			parentscontact.Display_Name as 'GroupMemberName',
 			childcontact.Display_name as 'ChildName',
-			childcontact.__Age Age, 
+			childcontact.__Age as Age, 
 			childcontact.Date_of_Birth,
-			childgp.Start_Date GroupParticipantStartDate,
+			childgp.Start_Date as GroupParticipantStartDate,
 			IIF(ep.Event_Participant_ID IS NOT NULL, 'Yes', 'No') AS 'Checkin',
 			NULL
 	FROM dbo.Events e
@@ -74,9 +73,7 @@ AS
 	WHERE (e.Event_Type_ID = 243
 		AND e.Event_Start_Date BETWEEN @StartDate AND @EndDate
 		AND e.Congregation_ID = @CongregationId		
-		AND childgp.End_Date is null
-		AND parentscontact.Last_Name = 'Silbernagel'
-		)
+		AND childgp.End_Date is null)
 
 	ORDER BY e.Event_Start_Date, g.Group_name, childcontact.__Age
 
@@ -88,7 +85,6 @@ AS
 	FETCH NEXT FROM cur INTO @participantid, @eventstart, @parentgroup
 	WHILE @@FETCH_STATUS = 0 BEGIN
 		-- get age group for participant and update current row
-		PRINT 'Looking for' + CONVERT(varchar, @eventstart, 121)
 		DECLARE @groupname nvarchar(200) = null;
 		SELECT TOP 1 @groupname = g.Group_Name FROM Groups g
 		JOIN Group_Participants gp on g.Group_ID = gp.Group_ID AND gp.Participant_ID = @participantid
