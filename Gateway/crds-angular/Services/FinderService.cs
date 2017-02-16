@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using AutoMapper;
 using crds_angular.Models.Crossroads;
 using crds_angular.Models.Finder;
@@ -6,6 +7,7 @@ using crds_angular.Services.Interfaces;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 using log4net;
 using MinistryPlatform.Translation.Models.Finder;
+using MinistryPlatform.Translation.Models;
 
 namespace crds_angular.Services
 {
@@ -37,8 +39,9 @@ namespace crds_angular.Services
 
         public void UpdateHouseholdAddress(PinDto pin)
         {
-            var householdDictionary = getDictionary(pin.Household_ID);
-            var addressDictionary = getDictionary(pin.Address);
+            var householdDictionary = new Dictionary<string, object> { { "Household_ID", pin.Household_ID } };
+            var address = Mapper.Map<MpAddress>(pin.Address);
+            var addressDictionary = getDictionary(address);
             addressDictionary.Add("State/Region", addressDictionary["State"]);
             _contactRepository.UpdateHouseholdAddress(pin.Contact_ID, householdDictionary, addressDictionary);
         }
