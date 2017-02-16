@@ -322,7 +322,7 @@ namespace MinistryPlatform.Translation.Repositories
               {
                 {"@FirstName", minorContact.FirstName},
                 {"@LastName", minorContact.LastName},
-                {"@MiddleName", minorContact.MiddleName },
+                {"@MiddleName", minorContact.MiddleName ?? ""},
                 {"@PreferredName", minorContact.PreferredName },
                 {"@NickName", minorContact.Nickname },
                 {"@Birthdate", minorContact.BirthDate },
