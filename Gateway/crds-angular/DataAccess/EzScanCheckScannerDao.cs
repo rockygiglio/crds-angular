@@ -173,7 +173,7 @@ namespace crds_angular.DataAccess
 
                 var itemIdParam = dbCommand.CreateParameter();
                 itemIdParam.ParameterName = "ItemID";
-                itemIdParam.DbType = DbType.Int16;
+                itemIdParam.DbType = DbType.Int32;
                 itemIdParam.Value = checkId;
                 dbCommand.Parameters.Add(itemIdParam);
 
