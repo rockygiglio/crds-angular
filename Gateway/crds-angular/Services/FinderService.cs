@@ -44,7 +44,8 @@ namespace crds_angular.Services
         {
             //first get pin details
             var pinDetails = Mapper.Map<PinDto>(_finderRepository.GetPinDetails(participantId));
-            //then get group details
+
+            //TODO get group details
             return pinDetails;
         }
 

@@ -30,14 +30,14 @@ namespace MinistryPlatform.Translation.Repositories
 
         public FinderPinDto GetPinDetails(int participantId)
         {
-            const string pinSearch = "Email_Address, Nickname as FirstName, Last_Name as LastName, Participant_Record_Table.*";
+            const string pinSearch = "Email_Address, Nickname as FirstName, Last_Name as LastName, Participant_Record_Table.*, Household_ID";
             string filter = $"Participant_Record = {participantId}";
             string token = _apiUserRepository.GetToken();
 
             var pinDetails = _ministryPlatformRest.UsingAuthenticationToken(token).Search<FinderPinDto>(filter, pinSearch)?.First();
 
             const string addressSearch = "Household_ID_Table_Address_ID_Table.*";
-            if (pinDetails != null) pinDetails.Address = _ministryPlatformRest.UsingAuthenticationToken(token).Search<FinderAddressDto>(filter, addressSearch)?.First();
+            if (pinDetails != null) pinDetails.Address = _ministryPlatformRest.UsingAuthenticationToken(token).Search<MpAddress>(filter, addressSearch)?.First();
 
 
             return pinDetails;

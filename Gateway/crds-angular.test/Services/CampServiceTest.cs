@@ -663,7 +663,7 @@ namespace crds_angular.test.Services
             _eventRepository.Setup(m => m.GetEvent(camps.First().EventId)).Returns(camps.First());
 
             _productRepository.Setup(m => m.GetProductForEvent(camps.First().EventId)).Returns(product);
-            _invoiceRepository.Setup(m => m.GetInvoiceDetailsForProductAndCamperAndContact(product.ProductId, family[0].ContactId, myContactId))
+            _invoiceRepository.Setup(m => m.GetInvoiceDetailsForProductAndCamper(product.ProductId, family[0].ContactId))
                 .Returns(mpInvoiceResult);
             _paymentService.Setup(m => m.GetPaymentDetails(0, mpInvoiceResult.Value.InvoiceId, token)).Returns(paymentDetail);
 
@@ -1140,7 +1140,7 @@ namespace crds_angular.test.Services
             _productRepository.Setup(m => m.GetProductForEvent(eventId)).Returns(product);
             _productRepository.Setup(m => m.GetProductOptionPricesForProduct(product.ProductId)).Returns(mpoptionlist);
             _formSubmissionRepository.Setup(m => m.GetFormResponseAnswer(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>())).Returns("true");
-            _invoiceRepository.Setup(m => m.GetInvoiceDetailsForProductAndCamperAndContact(product.ProductId, contactid, me.Contact_ID))
+            _invoiceRepository.Setup(m => m.GetInvoiceDetailsForProductAndCamper(product.ProductId, contactid))
                 .Returns(mpInvoiceResult);
             _paymentService.Setup(m => m.GetPaymentDetails(0, mpInvoiceResult.Value.InvoiceId, token)).Returns(paymentDetail);
 

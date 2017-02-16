@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using crds_angular.Models.Crossroads;
+using crds_angular.Models.Crossroads.Groups;
 using Newtonsoft.Json;
 
 namespace crds_angular.Models.Finder
@@ -24,13 +26,16 @@ namespace crds_angular.Models.Finder
         public int Participant_ID { get; set; }
 
         [JsonProperty("address")]
-        public AddressDto Address { get; set; }
+        public AddressDTO Address { get; set; }
 
         [JsonProperty("hostStatus")]
         public int Host_Status { get; set; }
 
         [JsonProperty("gathering")]
-        public GroupDto Gathering { get; set; }
+        public GroupDTO Gathering { get; set; }
+
+        [JsonProperty("householdId")]
+        public int Household_ID { get; set; }
 
         
   }
