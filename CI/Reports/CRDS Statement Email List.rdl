@@ -383,7 +383,7 @@
             <DataSetName>DataSet1</DataSetName>
             <Top>0.87375in</Top>
             <Height>0.5in</Height>
-            <Width>6in</Width>
+            <Width>6.00001in</Width>
             <ZIndex>1</ZIndex>
             <Style>
               <Border>
@@ -399,7 +399,7 @@
           </Border>
         </Style>
       </Body>
-      <Width>6in</Width>
+      <Width>6.00001in</Width>
       <Page>
         <PageFooter>
           <Height>0.45in</Height>
@@ -460,7 +460,7 @@
           <Value>0</Value>
         </Values>
       </DefaultValue>
-      <Prompt>Domain ID</Prompt>
+      <Prompt>DomainID</Prompt>
       <Hidden>true</Hidden>
     </ReportParameter>
     <ReportParameter Name="FromDate">
@@ -470,6 +470,11 @@
     <ReportParameter Name="ToDate">
       <DataType>DateTime</DataType>
       <Prompt>To Date</Prompt>
+    </ReportParameter>
+    <ReportParameter Name="PageID">
+      <DataType>Integer</DataType>
+      <Prompt>PageID</Prompt>
+      <Hidden>true</Hidden>
     </ReportParameter>
   </ReportParameters>
   <rd:ReportUnitType>Inch</rd:ReportUnitType>
