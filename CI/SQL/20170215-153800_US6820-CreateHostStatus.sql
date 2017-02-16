@@ -25,11 +25,13 @@ BEGIN
   SET IDENTITY_INSERT [dbo].[Host_Statuses] OFF;
 
   -- get rid of old column
-  IF COL_LENGTH('Participants','Approved_Host') IS NOT NULL
-  BEGIN
-    ALTER TABLE [dbo].[Participants] DROP CONSTRAINT [DF__Participa__Appro__393C81E6];
-    ALTER TABLE [dbo].[Participants] DROP COLUMN [Approved_Host];
-  END
+  --IF COL_LENGTH('Participants','Approved_Host') IS NOT NULL
+  --BEGIN
+  --  ALTER TABLE [dbo].[Participants] DROP CONSTRAINT [DF__Participa__Appro__393C81E6];
+  --  ALTER TABLE [dbo].[Participants] DROP COLUMN [Approved_Host];
+  --END
+  -- Approved_Host is not being removed because it already had other uses. Once we figure
+  -- out what should really be done, we'll do it.
 
   -- add new column, with 'Not Applied' as the default
   IF COL_LENGTH('Participants','Host_Status_ID') IS NULL
