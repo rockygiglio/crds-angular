@@ -273,6 +273,26 @@ namespace MinistryPlatform.Translation.Repositories
                 try
                 {
                     _ministryPlatformService.UpdateRecord(_configurationWrapper.GetConfigIntValue("Contacts"), profileDictionary, token);
+                    UpdateHouseholdAddress(contactId, householdDictionary, addressDictionary);
+                    return 1;
+                }
+                catch (Exception e)
+                {
+                    return 0;
+                }
+            });
+        }
+
+        public void UpdateHouseholdAddress(int contactId,
+                                  Dictionary<string, object> householdDictionary,
+                                  Dictionary<string, object> addressDictionary,
+                                  bool updateGeoCoordinates = false)
+        {
+            WithApiLogin<int>(token =>
+            {
+                try
+                {
+                    //TODO !!!!!!!!!!!!!!!!!!! need to add in geocoordinates like in AddressService.FindOrCreateAddress
                     if (addressDictionary["Address_ID"] != null)
                     {
                         //address exists, update it

@@ -15,14 +15,15 @@ namespace crds_angular.test.Services
     {
         private FinderService _fixture;
         private Mock<IFinderRepository> _mpFinderRepository;
+        private Mock<IContactRepository> _mpContactRepository;
 
         [SetUp]
         public void SetUp()
         {
             _mpFinderRepository = new Mock<IFinderRepository>();
+            _mpContactRepository = new Mock<IContactRepository>();
 
-
-            _fixture = new FinderService(_mpFinderRepository.Object);
+            _fixture = new FinderService(_mpFinderRepository.Object, _mpContactRepository.Object);
             //force AutoMapper to register
             AutoMapperConfig.RegisterMappings();
         }

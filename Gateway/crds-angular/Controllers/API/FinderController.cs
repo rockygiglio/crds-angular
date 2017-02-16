@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Reflection;
 using System.Web.Http;
 using System.Web.Http.Description;
@@ -10,18 +9,22 @@ using crds_angular.Services.Interfaces;
 using Crossroads.ApiVersioning;
 using Crossroads.Web.Common.Security;
 using log4net;
-using MinistryPlatform.Translation.Models.Finder;
 
 namespace crds_angular.Controllers.API
 {
     public class FinderController : MPAuth
     {
+        private readonly IAddressService _addressService;
         private readonly IFinderService _finderService;
         private readonly ILog _logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        public FinderController(IFinderService finderService, IUserImpersonationService userImpersonationService, IAuthenticationRepository authenticationRepository)
+        public FinderController(IAddressService addressService, 
+                                IFinderService finderService,
+                                IUserImpersonationService userImpersonationService,
+                                IAuthenticationRepository authenticationRepository)
             : base(userImpersonationService, authenticationRepository)
         {
+            _addressService = addressService;
             _finderService = finderService;
         }
 
@@ -51,21 +54,27 @@ namespace crds_angular.Controllers.API
         [VersionedRoute(template: "finder/pin", minimumVersion: "1.0.0")]
         [Route("finder/pin")]
         [HttpPost]
-        public IHttpActionResult PostPinDetails([FromBody] PinDto pin)
+        public IHttpActionResult PostPin([FromBody] PinDto pin)
         {
             return Authorized(token =>
             {
                 try
                 {
-                   // _finderService.SavePinDetails(pin);                    
-                    _logger.DebugFormat("Successfully created pin for participant {0} ", pin.Contact_ID);
+
+                    if (pin.Address != null && string.IsNullOrEmpty(pin.Address.AddressLine1) == false)
+                    {
+                        _finderService.UpdateHouseholdAddress(pin);
+                    }
+
+                    _finderService.EnablePin(pin.Participant_ID);
+                    _logger.DebugFormat("Successfully created pin for contact {0} ", pin.Contact_ID);
                     return (Ok());
                 }
-                // TODO: additional exception handling needed?
                 catch (Exception e)
                 {
                     _logger.Error("Could not create pin", e);
-                    return BadRequest();
+                    var apiError = new ApiErrorDto("Save Pin Failed", e);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
                 }
             });
         }

@@ -5,7 +5,7 @@ namespace crds_angular.Services.Interfaces
     public interface IFinderService
     {
         PinDto GetPinDetails(int participantId);
-        PinDto SavePin(string token, PinDto pin);
-
+        void EnablePin(int participantId);
+        void UpdateHouseholdAddress(PinDto pin);
     }
 }
