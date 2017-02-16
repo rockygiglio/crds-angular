@@ -17,7 +17,6 @@ namespace MinistryPlatform.Translation.Repositories
     public class ContactRepository : BaseRepository, IContactRepository
     {
         private readonly int _addressesPageId;
-        //private readonly IConfigurationWrapper _configurationWrapper;
         private readonly int _congregationDefaultId;
         private readonly int _contactsPageId;
         private readonly int _householdDefaultSourceId;
@@ -35,7 +34,6 @@ namespace MinistryPlatform.Translation.Repositories
             : base(authenticationService, configuration)
         {
             _ministryPlatformService = ministryPlatformService;
-            //_configurationWrapper = configuration;
             _ministryPlatformRest = ministryPlatformRest;
             _apiUserRepository = apiUserRepository;
 
