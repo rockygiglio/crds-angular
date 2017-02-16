@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Web.Http;
 using System.Web.Http.Description;
 using crds_angular.Exceptions.Models;
@@ -35,7 +34,7 @@ namespace crds_angular.Controllers.API
             }
             catch (Exception ex)
             {
-                var apiError = new ApiErrorDto("Get Leaders Groups Failed", ex);
+                var apiError = new ApiErrorDto("Get Pin Details Failed", ex);
                 throw new HttpResponseException(apiError.HttpResponseMessage);
             }
         }
@@ -54,7 +53,7 @@ namespace crds_angular.Controllers.API
             }
             catch (Exception ex)
             {
-                var apiError = new ApiErrorDto("Get Leaders Groups Failed", ex);
+                var apiError = new ApiErrorDto("Get Pin Details by Contact Failed", ex);
                 throw new HttpResponseException(apiError.HttpResponseMessage);
             }
         }
