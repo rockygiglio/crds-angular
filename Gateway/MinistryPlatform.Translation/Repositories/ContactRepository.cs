@@ -285,14 +285,12 @@ namespace MinistryPlatform.Translation.Repositories
 
         public void UpdateHouseholdAddress(int contactId,
                                   Dictionary<string, object> householdDictionary,
-                                  Dictionary<string, object> addressDictionary,
-                                  bool updateGeoCoordinates = false)
+                                  Dictionary<string, object> addressDictionary)
         {
             WithApiLogin<int>(token =>
             {
                 try
                 {
-                    //TODO !!!!!!!!!!!!!!!!!!! need to add in geocoordinates like in AddressService.FindOrCreateAddress
                     if (addressDictionary["Address_ID"] != null)
                     {
                         //address exists, update it

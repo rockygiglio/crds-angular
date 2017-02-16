@@ -16,11 +16,13 @@ namespace crds_angular.Services
         private readonly IContactRepository _contactRepository;
         private readonly ILog _logger = LogManager.GetLogger(typeof(AddressService));
         private readonly IFinderRepository _finderRepository;
+        private readonly IAddressService _addressService;
 
-        public FinderService(IFinderRepository finderRepository, IContactRepository contactRepository)
+        public FinderService(IFinderRepository finderRepository, IContactRepository contactRepository, IAddressService addressService)
         {
             _finderRepository = finderRepository;
             _contactRepository = contactRepository;
+            _addressService = addressService;
         }
 
         public PinDto GetPinDetails(int participantId)
@@ -39,6 +41,8 @@ namespace crds_angular.Services
 
         public void UpdateHouseholdAddress(PinDto pin)
         {
+            _addressService.SetGeoCoordinates(pin.Address);
+          
             var householdDictionary = new Dictionary<string, object> { { "Household_ID", pin.Household_ID } };
             var address = Mapper.Map<MpAddress>(pin.Address);
             var addressDictionary = getDictionary(address);

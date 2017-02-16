@@ -43,7 +43,7 @@ namespace crds_angular.Services
             address.AddressID = found ? UpdateAddress(mpAddress) : CreateAddress(mpAddress);
         }
 
-        private void SetGeoCoordinates(AddressDTO address)
+        public void SetGeoCoordinates(AddressDTO address)
         {
             try
             {
