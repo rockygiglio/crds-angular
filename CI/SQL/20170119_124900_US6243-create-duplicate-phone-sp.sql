@@ -68,7 +68,8 @@ BEGIN
 		)
 		OR
 		(
-			main.Contact_ID <> dup.Contact_ID
+			main.Household_ID <> dup.Household_ID
+			AND main.Contact_ID <> dup.Contact_ID
 			AND main.Mobile_Phone IS NOT NULL
 			AND main.Mobile_Phone = dup.Mobile_Phone
 		)
