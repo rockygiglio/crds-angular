@@ -19,11 +19,7 @@ namespace crds_angular.Services
     {
         private readonly ILog _logger = LogManager.GetLogger(typeof(AddressService));
         private readonly IFinderRepository _finderRepository;
-
-        private class RemoteIp
-        {
-            public string Ip { get; set; }
-        }
+        private readonly IParticipantRepository _participantRepository;
 
         private class RemoteAddress
         {
@@ -35,9 +31,10 @@ namespace crds_angular.Services
             public double longitude { get; set; }
         }
 
-        public FinderService(IFinderRepository finderRepository)
+        public FinderService(IFinderRepository finderRepository, IParticipantRepository participantRepository)
         {
             _finderRepository = finderRepository;
+            _participantRepository = participantRepository;
         }
 
         public PinDto GetPinDetails(int participantId)
@@ -48,28 +45,12 @@ namespace crds_angular.Services
             //TODO get group details
             return pinDetails;
         }
-
-        public string GetIpForRemoteUser()
-        {
-            var ip ="";
-
-            {
-                var request = WebRequest.Create("https://api.ipify.org?format=json");
-                using (var response = request.GetResponse())
-                using (var stream = new StreamReader(response.GetResponseStream()))
-                {
-                    var responseString = stream.ReadToEnd();
-                    var s = JsonConvert.DeserializeObject<RemoteIp>(responseString);
-                    ip = s.Ip;
-                }
-            }
-            return ip;
-        }
+        
 
         public AddressDTO GetAddressForIp()
         {
             var address = new AddressDTO();
-            var ip = GetIpForRemoteUser();
+            var ip = _finderRepository.GetIpForRemoteUser();
             var request = WebRequest.Create("http://freegeoip.net/json/" + ip);
             using (var response = request.GetResponse())
             using (var stream = new StreamReader(response.GetResponseStream()))
@@ -84,6 +65,11 @@ namespace crds_angular.Services
             }
             return address;
         }
-        
+
+        public int GetParticipantIdFromContact(int contactId)
+        {
+            var participant = _participantRepository.GetParticipant(contactId);
+            return participant.ParticipantId;
+        }
     }
 }

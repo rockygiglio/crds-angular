@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
+using System.IO;
+using System.Net;
 using Crossroads.Utilities.Interfaces;
 using Crossroads.Web.Common;
 using Crossroads.Web.Common.Configuration;
@@ -11,6 +13,7 @@ using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 using MinistryPlatform.Translation.Helpers;
 using MinistryPlatform.Translation.Models.Finder;
+using Newtonsoft.Json;
 
 namespace MinistryPlatform.Translation.Repositories
 {
@@ -20,6 +23,11 @@ namespace MinistryPlatform.Translation.Repositories
         private readonly IMinistryPlatformRestRepository _ministryPlatformRest;
         private readonly IApiUserRepository _apiUserRepository;
         private readonly ILog _logger = LogManager.GetLogger(typeof(CampRepository));
+
+        private class RemoteIp
+        {
+            public string Ip { get; set; }
+        }
 
         public FinderRepository(IConfigurationWrapper configurationWrapper, IMinistryPlatformRestRepository ministryPlatformRest, IApiUserRepository apiUserRepository)
         {
@@ -43,6 +51,21 @@ namespace MinistryPlatform.Translation.Repositories
             return pinDetails;
         }
 
+        public string GetIpForRemoteUser()
+        {
+            var ip = "";
 
+            {
+                var request = WebRequest.Create("https://api.ipify.org?format=json");
+                using (var response = request.GetResponse())
+                using (var stream = new StreamReader(response.GetResponseStream()))
+                {
+                    var responseString = stream.ReadToEnd();
+                    var s = JsonConvert.DeserializeObject<RemoteIp>(responseString);
+                    ip = s.Ip;
+                }
+            }
+            return ip;
+        }
     }
 }
