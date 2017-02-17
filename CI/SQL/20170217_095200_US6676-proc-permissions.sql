@@ -24,13 +24,13 @@ END
 
 IF NOT EXISTS(SELECT * FROM [dbo].[dp_API_Procedures] WHERE [procedure_name] = 'api_crds_Update_Single_Room_Checkin_Data')
 BEGIN
-	DECLARE @IDs TABLE (ID INT)
+	DECLARE @SecondIDs TABLE (ID INT)
 
 	INSERT INTO [dbo].[dp_API_Procedures] ([procedure_name]) 
-	OUTPUT INSERTED.API_Procedure_ID INTO @IDs
+	OUTPUT INSERTED.API_Procedure_ID INTO @SecondIDs
 	VALUES('api_crds_Update_Single_Room_Checkin_Data')
 
-	IF NOT EXISTS(select * from [dbo].[dp_Role_API_Procedures] WHERE API_Procedure_ID = (SELECT TOP(1) * FROM @IDs) AND Role_ID = 62)
+	IF NOT EXISTS(select * from [dbo].[dp_Role_API_Procedures] WHERE API_Procedure_ID = (SELECT TOP(1) * FROM @SecondIDs) AND Role_ID = 62)
 	BEGIN
 		INSERT INTO [dbo].[dp_Role_API_Procedures]
 		([Role_ID],
@@ -38,7 +38,7 @@ BEGIN
 		[Domain_ID])
 		VALUES
 		(62,
-		(SELECT TOP(1) * FROM @IDs),
+		(SELECT TOP(1) * FROM @SecondIDs),
 		1)
 	END
 END
