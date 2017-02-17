@@ -23,31 +23,6 @@ AS
 BEGIN
 	SET NOCOUNT ON;
 
-    USE [MinistryPlatform]
-GO
-
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
--- =============================================
--- Author:		Jon Horner
--- Create date: 2017-01-19
--- Description:	Finds all of the duplicate Home and Mobile phone numbers
--- =============================================
-
-IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[report_CRDS_Duplicate_Phone_Numbers]') AND type in (N'P', N'PC'))
-BEGIN
-EXEC dbo.sp_executesql @statement = N'CREATE PROCEDURE [dbo].[report_CRDS_Duplicate_Phone_Numbers] AS' 
-END
-GO
-
-ALTER PROCEDURE dbo.report_CRDS_Duplicate_Phone_Numbers
-	@Congregation_ID int = NULL
-AS
-BEGIN
-	SET NOCOUNT ON;
-
     CREATE TABLE #phones (
 		ID int identity
 		, Household_ID int
