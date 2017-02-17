@@ -5,6 +5,7 @@
 
   angular.module(MODULE, ['crossroads.core', 'crossroads.common'])
     .config(require('./goVolunteer.routes'))
+    .config(require('./goVolunteer.formly'))
     .factory('GoVolunteerService', require('./goVolunteer.service'))
     .factory('Organizations', require('./organizations.service'))
     .factory('GoVolunteerDataService', require('./goVolunteerData.service'))

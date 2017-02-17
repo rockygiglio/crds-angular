@@ -1,5 +1,9 @@
-<div>
+<div ng-if="profile.viewReady">
+  <preloader full-screen='false' ng-show='!profile.viewReady'> </preloader>
+
   <h3>Anywhere profile</h3>
 
   <go-volunteer-project-card></go-volunteer-project-card>
+
+  <formly-form model="profile.model" fields="profile.fields" form="profile.profileForm" options="profile.options" ng-cloak></formly-form>
 </div>
