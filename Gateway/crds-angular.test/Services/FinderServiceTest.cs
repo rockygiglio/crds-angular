@@ -35,7 +35,6 @@ namespace crds_angular.test.Services
 
             _fixture = new FinderService(_mpFinderRepository.Object, _mpContactRepository.Object, _addressService.Object, _mpParticipantRepository.Object);
 
-            _fixture = new FinderService(_mpFinderRepository.Object, _mpParticipantRepository.Object, _mpAddressService.Object);
             //force AutoMapper to register
             AutoMapperConfig.RegisterMappings();
         }
