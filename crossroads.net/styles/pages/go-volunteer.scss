@@ -195,3 +195,17 @@ $gc-red-darker: #44080a;
     position: relative;
   }
 }
+
+.go-volunteer-waiver-wrapper {
+  height: 250px;
+  overflow-y: scroll;
+  background-color: $white;
+}
+
+.dark-bg {
+  .go-volunteer-waiver-wrapper {
+    p {
+      color: $black;
+    }
+  }
+}
