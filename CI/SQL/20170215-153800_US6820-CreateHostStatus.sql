@@ -12,7 +12,9 @@ BEGIN
     [Host_Status_ID] [int] IDENTITY(1,1) NOT NULL,
     [Display_Name] [nvarchar](32),
     [Domain_ID] [int] NOT NULL,
-    [Sorting] [int] NOT NULL
+    [Sorting] [int] NOT NULL,
+    CONSTRAINT PK_Host_Statuses_Host_Status_ID PRIMARY KEY (Host_Status_ID),
+    CONSTRAINT FK_Domain_ID FOREIGN KEY (Domain_ID) References dbo.Host_Statuses
   );
 
   -- add the lookup values
@@ -36,6 +38,9 @@ BEGIN
   -- add new column, with 'Not Applied' as the default
   IF COL_LENGTH('Participants','Host_Status_ID') IS NULL
   BEGIN
-    ALTER TABLE [dbo].[Participants] ADD [Host_Status_ID] [int] DEFAULT 0;
+    ALTER TABLE [dbo].[Participants]
+      ADD [Host_Status_ID] [int] DEFAULT 0;
+    ALTER TABLE [dbo].[Participants]
+      ADD CONSTRAINT FK_Host_Status FOREIGN KEY (Host_Status_ID) References dbo.Host_Statuses;
   END
 END
