@@ -40,17 +40,19 @@ DECLARE @RoomUsageKidsClubTypeId INT = 6
 
 --SELECT @LocationId = Location_ID FROM Congregations WHERE Congregation_ID = (SELECT Congregation_ID FROM Events WHERE Event_ID = @EventID)
 
----- 1. Get the event and subevent
---DECLARE @Events TABLE
---(
---	Event_ID int
---)
+-- 1. Get the event and subevent
+DECLARE @Events TABLE
+(
+	Event_ID int
+)
 
---INSERT INTO @Events (Event_ID)
---	SELECT DISTINCT Event_ID
---	FROM [dbo].[Events]
---	WHERE Event_ID = @EventID OR Parent_Event_ID = @EventID
---	AND Cancelled = 0
+-- we may need to look at event maps - the current problem is that the parent event id is being
+-- passed in and set down here, so we really just need to get the correct event id for that particular event room
+INSERT INTO @Events (Event_ID)
+	SELECT DISTINCT Event_ID
+	FROM [dbo].[Events]
+	WHERE Event_ID = @EventID OR Parent_Event_ID = @EventID
+	AND Cancelled = 0
 
 DECLARE @TempEventRooms TABLE
 (
@@ -65,13 +67,13 @@ DECLARE @TempEventRooms TABLE
 	Volunteers INT
 )
 
--- this is the room - need to trim this down so we remove the cursor and simplify the proc
+-- we need to look at both events, and get the event room for the ac or non-ac event room, 
+-- so we're correctly setting the event_id on the event room...otherwise, AC event rooms
+-- loaded into the Manage Room screen will only have the parent id on it and break
 INSERT INTO @TempEventRooms (Event_ID, Room_ID, Room_Name)
-	SELECT @EventId, Room_ID, Room_Name
-	FROM Rooms WHERE Room_ID = @RoomID
-	--FROM Buildings b INNER JOIN Rooms r ON b.Building_ID = r.Building_ID
-	--WHERE r.Room_Usage_Type_ID = @RoomUsageKidsClubTypeId
-	--AND b.Location_ID = @LocationId
+	SELECT Event_ID, er.Room_ID, Room_Name
+	FROM Event_Rooms er INNER JOIN Rooms r ON er.Room_ID = r.Room_ID  WHERE er.Room_ID = @RoomID AND er.Event_ID IN
+	(SELECT * FROM @Events)
 
 DECLARE @Event_Room_Event_ID INT
 DECLARE @Event_Room_ID INT
@@ -104,7 +106,6 @@ BEGIN
 	FROM Event_Rooms WHERE Room_ID = @Room_ID AND Event_ID = @EventID
 
 	UPDATE @TempEventRooms SET
-		Event_ID = ISNULL(@Event_Room_Event_ID, @EventID),
 		Event_Room_ID = @Event_Room_ID,
 		Allow_Checkin = @AllowCheckin,
 		Capacity = ISNULL(@Capacity, 0),
@@ -143,7 +144,7 @@ INSERT INTO @EventGroups (Event_ID, Group_ID, Event_Group_ID, Event_Room_ID, Roo
 		Checked_In = [dbo].crds_getEventParticipantStatusCount(@EventID, @Room_ID, 4),
 		Signed_In = [dbo].crds_getEventParticipantStatusCount(@EventID, @Room_ID, 3)
 	FROM Event_Groups eg INNER JOIN Event_Rooms er on eg.Event_Room_ID = er.Event_Room_ID
-	WHERE eg.Event_ID IN (@EventID)
+	WHERE eg.Event_ID IN (er.Event_ID) -- set the event id to the er event id
 
 DECLARE @GroupAttributes TABLE
 (
@@ -167,6 +168,8 @@ SELECT * FROM @GroupAttributes
 
 SELECT a.Attribute_ID, a.Attribute_Name, a.Description, a.Attribute_Type_ID, at.Description as Attribute_Type_Name FROM Attributes a INNER JOIN Attribute_Types at ON a.Attribute_Type_ID = at.Attribute_Type_ID 
 WHERE at.Attribute_Type_ID IN (@AgeAttributeTypeId, @BirthMonthAttributeTypeId, @GradesAttributeTypeId, @NurseryMonthsAttributeTypeId)
+
+SELECT * FROM @Events
 
 END
 

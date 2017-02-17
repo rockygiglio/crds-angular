@@ -1,6 +1,6 @@
 -- =============================================
 -- Author:      John Cleaver
--- Create date: 2017-2-13
+-- Create date: 2017-2-17
 -- Description:	Update event groups on an event
 -- =============================================
 
@@ -37,10 +37,6 @@ DECLARE @EventRoomId INT
 
 DECLARE @AdventureClubEventTypeID INT = 20
 
--- hardcoded until I'm sure this actually works right
-SET @EventID = 4534870
-SET @RoomID = 1972
-
 -- These fields are for the event room, and will eventually come down as params
 DECLARE @EventRoomAdventureClub BIT = 0
 
@@ -74,7 +70,7 @@ IF (SELECT Event_Type_ID FROM @Events WHERE Event_ID = @EventID) <> @AdventureCl
 ELSE
 	BEGIN
 		-- If the event is an AC event - delete parent event room
-		-- This will have to be tweaked if we go to using subevents for everything, not just
+		-- This will have to be updated if we go to using subevents for everything, not just
 		-- Adventure Club events
 		SET @InactiveEventRoomId = (SELECT Event_Room_ID FROM Event_Rooms WHERE Event_ID = (SELECT TOP(1)
 			Event_ID FROM @Events WHERE Event_Type_ID <> @AdventureClubEventTypeID) AND Room_ID = @RoomID)
@@ -95,9 +91,7 @@ BEGIN
 	VALUES 
 		(@EventId, @RoomId, 1, 0, @Allow_Checkin, @Capacity, @Volunteers)
 
-	-- double check that this is working as expected
 	SELECT @EventRoomId = Event_Room_ID FROM Event_Rooms WHERE Event_Room_ID = SCOPE_IDENTITY()
-	PRINT 'Inserted event room ID: ' + @EventRoomId
 END
 ELSE
 	BEGIN
@@ -123,10 +117,8 @@ INSERT INTO @ExtantGroupIds
 SELECT Group_ID
 FROM Event_Groups WHERE Event_ID = @EventId AND Room_ID = @RoomId
 
-
-
 -----------------------------------
----- 6. Create Nursery Event Groups
+---- Get Nursery Group IDs
 -----------------------------------
 DECLARE @NurseryGroups TABLE
 (
@@ -148,10 +140,8 @@ INSERT INTO @AllGroupIds SELECT Group_ID FROM Attributes a INNER JOIN Group_Attr
 WHERE a.Attribute_ID IN (SELECT Id FROM @NurseryGroups ng WHERE Selected=1) AND ga.Group_ID NOT IN (SELECT * FROM @ExtantGroupIds)
 
 -------------------------------
----- 7. Create Age Event Groups
+---- Get Age Group IDs
 -------------------------------
---select g1.group_id
---from group_attributes g1, group_attributes g2 where g1.group_id = g2.group_id and g1.attribute_id=9002 and g2.attribute_id=9015
 
 DECLARE @AgeGroups TABLE
 (
@@ -172,49 +162,87 @@ SELECT DISTINCT
 FROM 
 	@GroupsXml.nodes('Groups/YearGroupXml/Attribute') x(v)
 
----- Get the nursery group ids for selected groups that are not already on the event
---INSERT INTO @AllGroupIds SELECT Group_ID FROM Attributes a INNER JOIN Group_Attributes ga ON a.Attribute_ID = ga.Attribute_ID
---WHERE a.Attribute_ID IN (SELECT Id FROM @NurseryGroups ng WHERE Selected=1) AND ga.Group_ID NOT IN (SELECT * FROM @ExtantGroupIds)
-
-
 -- Add the new event groups for all group types here
 DECLARE @YearId INT
 DECLARE @MonthId INT
-DECLARE @Selected IGT
+DECLARE @Selected BIT
 
-DECLARE id_cursor CURSOR FOR SELECT YearId, MonthId FROM @AgeGroups WHERE @Selected=1
+DECLARE id_cursor CURSOR FOR SELECT YearId, MonthId, Selected FROM @AgeGroups
 
 OPEN id_cursor
-FETCH NEXT FROM id_cursor INTO @YearId, @MonthId
+FETCH NEXT FROM id_cursor INTO @YearId, @MonthId, @Selected
 
 WHILE @@FETCH_STATUS = 0
 BEGIN
+	IF (@Selected = 1)
+	BEGIN
+		INSERT INTO @AllGroupIds
+		SELECT g1.Group_ID
+		FROM Group_Attributes g1, Group_Attributes g2 WHERE g1.Group_ID = g2.Group_ID and g1.Attribute_ID=@YearId and g2.Attribute_ID=@MonthId
+	END
 
-	INSERT INTO @AllGroupIds
-	SELECT g1.Group_ID
-	FROM Group_Attributes g1, Group_Attributes g2 WHERE g1.Group_ID = g2.Group_ID and g1.Attribute_ID=@YearId and g2.Attribute_ID=@MonthId
-
-	FETCH NEXT FROM id_cursor INTO @YearId, @MonthId
+	FETCH NEXT FROM id_cursor INTO @YearId, @MonthId, @Selected
 END
 
 CLOSE id_cursor
 DEALLOCATE id_cursor
 
--- need to add in a cursor to populate the data
---select g1.group_id
---from group_attributes g1, group_attributes g2 where g1.group_id = g2.group_id and g1.attribute_id=9002 and g2.attribute_id=9015
-
-
 ----------------------------
----- 7.5 Create Grade Groups
+---- Get Grade Group Ids
 ----------------------------
 
+DECLARE @GradeGroups TABLE
+(
+	GradeYearId INT,
+	GradeYearTypeId INT,
+	GradeSelected BIT
+)
 
+INSERT INTO @GradeGroups (GradeYearId, GradeYearTypeId, GradeSelected)
+SELECT DISTINCT
+	'GradeYearId' = x.v.value('Id[1]', 'int'),
+	'GradeYearTypeId' = x.v.value('TypeId[1]', 'int'),
+	'GradeSelected' = x.v.value('Selected[1]', 'bit')
+FROM 
+	@GroupsXml.nodes('Groups/GradeGroupXml/Attribute') x(v)
 
+-- Add the new event groups for all group types here
+DECLARE @GradeYearId INT
+DECLARE @GradeSelected BIT
 
+DECLARE @LogTable TABLE
+(
+	YearGradeId INT,
+	GradeSelected BIT
+)
 
+DECLARE grade_cursor CURSOR FOR SELECT GradeYearId, GradeSelected FROM @GradeGroups
 
+OPEN grade_cursor
+FETCH NEXT FROM grade_cursor INTO @GradeYearId, @GradeSelected
 
+INSERT INTO @LogTable
+SELECT @GradeYearId, @GradeSelected
+
+WHILE @@FETCH_STATUS = 0
+BEGIN
+
+	IF (@GradeSelected = 1)
+	BEGIN
+		INSERT INTO @AllGroupIds
+		SELECT Group_ID
+		FROM Group_Attributes WHERE Attribute_ID=@GradeYearId
+	END
+
+	FETCH NEXT FROM grade_cursor INTO @GradeYearId, @GradeSelected
+END
+
+CLOSE grade_cursor
+DEALLOCATE grade_cursor
+
+-----------------------------
+---- Create All Event Groups Here
+-----------------------------
 
 -- Add the new event groups for all group types here
 DECLARE @Group_ID INT
@@ -235,13 +263,11 @@ END
 CLOSE group_cursor
 DEALLOCATE group_cursor
 
+-----------------------------------
+---- Set adventure club status here
+-----------------------------------
 
-
-
-
-
-
--- 8. Correctly set adventure club status - if there are existing event rooms on the AC event, uncancel the AC event,
+-- Correctly set adventure club status - if there are existing event rooms on the AC event, uncancel the AC event,
 -- otherwise cancel it
 IF EXISTS (SELECT * FROM Event_Rooms WHERE @EventId = (SELECT Event_ID FROM @Events WHERE Event_Type_ID = @AdventureClubEventTypeID))
 BEGIN
@@ -252,13 +278,8 @@ BEGIN
 	UPDATE [Events] SET Cancelled = 1 WHERE Event_ID = (SELECT Event_ID FROM @Events WHERE Event_Type_ID = @AdventureClubEventTypeID)
 END
 
--- testing to make sure the right groups are getting set
-SELECT * FROM @NurseryGroups
-
---SELECT @EventRoomId
-SELECT * FROM @AllGroupIds
-
-SELECT * FROM @AgeGroups
+-- return the event room data from the proc
+SELECT TOP(1) * FROM Event_Rooms WHERE Event_Room_ID = @EventRoomId
 
 END
 GO
