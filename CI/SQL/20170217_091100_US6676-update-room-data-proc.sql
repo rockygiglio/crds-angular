@@ -48,43 +48,38 @@ DECLARE @Events TABLE
 	Parent_Event_ID int
 )
 
+DECLARE @xIds TABLE
+(
+	InactiveIds INT
+)
+
+-- this is not working right now, because we need to get the event id...
 INSERT INTO @Events (Event_ID, Event_Type_ID, Parent_Event_ID)
 	SELECT DISTINCT Event_ID, Event_Type_ID, Parent_Event_ID
 	FROM [dbo].[Events]
 	WHERE Event_ID = @EventID OR Parent_Event_ID = @EventID
 
+-- get parent events
+INSERT INTO @Events(Event_ID, Event_Type_ID, Parent_Event_ID)
+	SELECT DISTINCT Event_Id, Event_Type_ID, Parent_Event_ID
+	FROM [dbo].[Events]
+	WHERE Event_ID IN (SELECT Parent_Event_ID FROM @Events)
+
 -- delete data on the inactive event
-DECLARE @InactiveEventRoomId INT
-IF (SELECT Event_Type_ID FROM @Events WHERE Event_ID = @EventID) <> @AdventureClubEventTypeID
-	BEGIN
-		-- If the event is not an AC event - delete AC event room
-		SET @InactiveEventRoomId = (SELECT Event_Room_ID FROM Event_Rooms WHERE Event_ID = (SELECT TOP(1)
-			Event_ID FROM @Events WHERE Event_Type_ID = @AdventureClubEventTypeID) AND Room_ID = @RoomID)
+DECLARE @InactiveEventRoomId INT = 0
 
-		-- delete from event groups
-		DELETE FROM Event_Groups WHERE Event_Room_ID = @EventRoomId
+-- delete the event room off the other event
+SELECT @InactiveEventRoomId = Event_Room_ID FROM Event_Rooms er WHERE er.Event_ID = (SELECT TOP(1) Event_ID FROM @Events WHERE Event_ID <> @EventId) AND Room_ID = @RoomID
 
-		-- delete the event room
-		DELETE FROM Event_Rooms WHERE Event_Room_ID = @EventRoomId
-	END
-ELSE
-	BEGIN
-		-- If the event is an AC event - delete parent event room
-		-- This will have to be updated if we go to using subevents for everything, not just
-		-- Adventure Club events
-		SET @InactiveEventRoomId = (SELECT Event_Room_ID FROM Event_Rooms WHERE Event_ID = (SELECT TOP(1)
-			Event_ID FROM @Events WHERE Event_Type_ID <> @AdventureClubEventTypeID) AND Room_ID = @RoomID)
+DELETE FROM Event_Groups WHERE Event_Room_ID = @InactiveEventRoomId
 
-		-- delete from event groups
-		DELETE FROM Event_Groups WHERE Event_Room_ID = @EventRoomId
+DELETE FROM Event_Rooms WHERE Event_Room_ID = @InactiveEventRoomId
 
-		-- delete the event room
-		DELETE FROM Event_Rooms WHERE Event_Room_ID = @EventRoomId
-	END
-
+INSERT INTO @xIds
+SELECT @InactiveEventRoomId
 
 -- Create the Event Room, if needed, or just get the event room ID
-IF NOT EXISTS (SELECT * FROM Event_Rooms WHERE Event_ID=@EventId AND Room_ID=@RoomID)
+IF NOT EXISTS (SELECT * FROM Event_Rooms WHERE Event_ID IN (SELECT Event_ID FROM @Events) AND Room_ID=@RoomID)
 BEGIN
 	INSERT INTO Event_Rooms
 		([Event_ID], [Room_ID], [Domain_ID], [Hidden], [Allow_Checkin], [Capacity], [Volunteers])
@@ -95,7 +90,7 @@ BEGIN
 END
 ELSE
 	BEGIN
-		SELECT @EventRoomId = Event_Room_ID FROM Event_Rooms WHERE Event_ID = @EventId AND Room_ID = @RoomId
+		SELECT @EventRoomId = Event_Room_ID FROM Event_Rooms WHERE Event_ID IN (SELECT Event_ID FROM @Events) AND Room_ID = @RoomId
 	END
 
 -- delete all groups on the event room before re-adding
@@ -280,6 +275,8 @@ END
 
 -- return the event room data from the proc
 SELECT TOP(1) * FROM Event_Rooms WHERE Event_Room_ID = @EventRoomId
+SELECT * FROM @Events
+SELECT * FROM @xIds
 
 END
 GO
