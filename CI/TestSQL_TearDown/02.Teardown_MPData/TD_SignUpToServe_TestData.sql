@@ -10,7 +10,7 @@ DELETE FROM Responses where event_id in (select event_id from events where event
 DELETE FROM Responses where event_id in (SELECT event_id from events where event_title like '(t) KC Nursery Oakley%');
 
 --This SHOULD handle the case where someone adds an opportunity to the event type
-DELETE FROM Opportunities WHERE Event_Type_ID IN (select Event_Type_ID from event_types where Event_Type like '(t) KC Oakley%');
+DELETE FROM Opportunities WHERE Event_Type_ID IN (select Event_Type_ID from event_types where Event_Type like '(t) KC Nursery Oakley%');
 
 DELETE FROM Opportunities WHERE Event_Type_ID IN (select Event_Type_ID from event_types where Event_Type like '(t) Superbowl Oakley%');
 
@@ -59,6 +59,8 @@ DELETE FROM Events WHERE Event_Type_ID IN (SELECT Event_Type_ID FROM Event_Types
 DELETE FROM Group_Participants WHERE Group_ID IN (SELECT Group_ID FROM Groups WHERE Group_Name = '(t) KidsClub Oakley Group');
 
 DELETE FROM Group_Participants WHERE Group_ID IN (SELECT Group_ID FROM Groups WHERE Group_Name = '(t) Superbowl Oakley Group');
+
+DELETE FROM Event_Participants WHERE Group_ID IN ( SELECT Group_ID FROM Groups WHERE Group_Name = '(t) Superbowl Oakley Group');
 
 DELETE from [dbo].cr_childcare_request_dates where childcare_request_id in (select childcare_request_id from cr_childcare_requests where group_id in (select group_id from groups where group_name in ('t) KidsClub Oakley Group','(t) Superbowl Oakley Group')));
 
