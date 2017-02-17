@@ -2,6 +2,7 @@
 using System.Linq;
 using crds_angular.App_Start;
 using crds_angular.Services;
+using crds_angular.Services.Interfaces;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Models.Finder;
 using Moq;
@@ -16,15 +17,16 @@ namespace crds_angular.test.Services
         private FinderService _fixture;
         private Mock<IFinderRepository> _mpFinderRepository;
         private Mock<IParticipantRepository> _mpParticipantRepository;
+        private Mock<IAddressService> _mpAddressService;
 
         [SetUp]
         public void SetUp()
         {
             _mpFinderRepository = new Mock<IFinderRepository>();
             _mpParticipantRepository = new Mock<IParticipantRepository>();
+            _mpAddressService = new Mock<IAddressService>();
 
-
-            _fixture = new FinderService(_mpFinderRepository.Object, _mpParticipantRepository.Object);
+            _fixture = new FinderService(_mpFinderRepository.Object, _mpParticipantRepository.Object, _mpAddressService.Object);
             //force AutoMapper to register
             AutoMapperConfig.RegisterMappings();
         }
