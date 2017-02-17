@@ -29,6 +29,7 @@ namespace crds_angular.test.controllers
         private Mock<IConfigurationWrapper> _configuration;
         private Mock<ICheckScannerService> _checkScannerService;
         private Mock<IAuthenticationRepository> _authenticationService;
+        private Mock<IContactRepository> _contactRepository;
         private Mock<ICommunicationRepository> _communicationService;
         private Mock<IMessageQueueFactory> _messageQueueFactory;
         private Mock<IMessageFactory> _messageFactory;
@@ -41,6 +42,7 @@ namespace crds_angular.test.controllers
         public void SetUp()
         {
             _configuration = new Mock<IConfigurationWrapper>();
+            _contactRepository = new Mock<IContactRepository>();
             _checkScannerService = new Mock<ICheckScannerService>(MockBehavior.Strict);
             _authenticationService = new Mock<IAuthenticationRepository>();
             _communicationService = new Mock<ICommunicationRepository>();
@@ -51,7 +53,7 @@ namespace crds_angular.test.controllers
             _configuration.Setup(mocked => mocked.GetConfigValue("CheckScannerDonationsAsynchronousProcessingMode")).Returns("false");
             _configuration.Setup(mocked => mocked.GetConfigValue("CheckScannerDonationsQueueName")).Returns("CheckScannerBatchQueue");
 
-            _fixture = new CheckScannerController(_configuration.Object, _checkScannerService.Object, _authenticationService.Object, _communicationService.Object, _cryptoProvider.Object, new Mock<IUserImpersonationService>().Object, _messageQueueFactory.Object, _messageFactory.Object);
+            _fixture = new CheckScannerController(_configuration.Object, _checkScannerService.Object, _authenticationService.Object, _contactRepository.Object, _communicationService.Object, _cryptoProvider.Object, new Mock<IUserImpersonationService>().Object, _messageQueueFactory.Object, _messageFactory.Object);
 
             _fixture.Request = new HttpRequestMessage();
             _fixture.Request.Headers.Authorization = new AuthenticationHeaderValue(AuthType, AuthToken);
@@ -227,7 +229,7 @@ namespace crds_angular.test.controllers
         [Test]
         public void TestGetDonorForCheckUnauthenticated()
         {
-            _authenticationService.Setup(mocked => mocked.GetContactId(It.IsAny<string>())).Throws<Exception>();
+            _contactRepository.Setup(mocked => mocked.GetContactId(It.IsAny<string>())).Throws<Exception>();
             var result = _fixture.GetDonorForCheck(new CheckAccount
             {
                 AccountNumber = "123",
@@ -247,7 +249,7 @@ namespace crds_angular.test.controllers
         [Test]
         public void TestCreateDonorUnauthenticated()
         {
-            _authenticationService.Setup(mocked => mocked.GetContactId(It.IsAny<string>())).Throws<Exception>();
+            _contactRepository.Setup(mocked => mocked.GetContactId(It.IsAny<string>())).Throws<Exception>();
             var result = _fixture.CreateDonor(new CheckScannerCheck());
 
             _authenticationService.VerifyAll();
@@ -263,7 +265,7 @@ namespace crds_angular.test.controllers
         [Test]
         public void TestCreateDonorStripeFails()
         {
-            _authenticationService.Setup(mocked => mocked.GetContactId(It.IsAny<string>())).Returns(1);
+            _contactRepository.Setup(mocked => mocked.GetContactId(It.IsAny<string>())).Returns(1);
 
             _checkScannerService.Setup(mocked => mocked.CreateDonor(It.IsAny<CheckScannerCheck>()))
                 .Throws(new PaymentProcessorException(HttpStatusCode.BadGateway, "aux message", "type", "message", "code", "decline code", "param"));
