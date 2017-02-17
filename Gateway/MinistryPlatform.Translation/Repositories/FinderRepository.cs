@@ -1,33 +1,45 @@
-﻿using System.Linq;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.IO;
 using System.Net;
 using Crossroads.Web.Common.Configuration;
 using Crossroads.Web.Common.MinistryPlatform;
+using Crossroads.Web.Common.Security;
 using log4net;
+using MinistryPlatform.Translation.Extensions;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Repositories.Interfaces;
+using MinistryPlatform.Translation.Helpers;
 using MinistryPlatform.Translation.Models.Finder;
 using Newtonsoft.Json;
 
 namespace MinistryPlatform.Translation.Repositories
 {
-    public class FinderRepository : IFinderRepository
+    public class FinderRepository : BaseRepository, IFinderRepository
     {
         private readonly IConfigurationWrapper _configurationWrapper;
         private readonly IMinistryPlatformRestRepository _ministryPlatformRest;
+        private readonly IMinistryPlatformService _ministryPlatformService;
         private readonly IApiUserRepository _apiUserRepository;
         private readonly ILog _logger = LogManager.GetLogger(typeof(CampRepository));
+
+        public FinderRepository(IConfigurationWrapper configuration,
+                                IMinistryPlatformRestRepository ministryPlatformRest,
+                                IMinistryPlatformService ministryPlatformService,
+                                IApiUserRepository apiUserRepository,
+                                IAuthenticationRepository authenticationService)
+            : base(authenticationService, configuration)
+        {
+            _configurationWrapper = configuration;
+            _ministryPlatformRest = ministryPlatformRest;
+            _ministryPlatformService = ministryPlatformService;
+            _apiUserRepository = apiUserRepository;
+        }
 
         private class RemoteIp
         {
             public string Ip { get; set; }
-        }
-
-        public FinderRepository(IConfigurationWrapper configurationWrapper, IMinistryPlatformRestRepository ministryPlatformRest, IApiUserRepository apiUserRepository)
-        {
-            _configurationWrapper = configurationWrapper;
-            _ministryPlatformRest = ministryPlatformRest;
-            _apiUserRepository = apiUserRepository;
         }
 
         public FinderPinDto GetPinDetails(int participantId)
@@ -43,6 +55,16 @@ namespace MinistryPlatform.Translation.Repositories
 
 
             return pinDetails;
+        }
+
+        public void EnablePin(int participantId)
+        {
+            var dict = new Dictionary<string, object> { { "Participant_ID", participantId }, { "Show_On_Map", true } };
+
+            var update = new List<Dictionary<string, object>> { dict };
+
+            var apiToken = _apiUserRepository.GetToken();
+            _ministryPlatformRest.UsingAuthenticationToken(apiToken).Put("Participants", update);
         }
 
         public string GetIpForRemoteUser()
