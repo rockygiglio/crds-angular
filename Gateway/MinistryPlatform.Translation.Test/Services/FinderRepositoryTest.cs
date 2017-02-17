@@ -96,5 +96,19 @@ namespace MinistryPlatform.Translation.Test.Services
             Assert.AreEqual(value.Address.Address_ID, response.Address.Address_ID);
 
         }
+
+        [Test]
+        public void ShouldEnablePin()
+        {
+            _apiUserRepo.Setup(m => m.GetToken()).Returns("abc");
+            _ministryPlatformRestRepository.Setup(
+                mocked =>
+                        mocked.Put("Participants", It.IsAny<List<Dictionary<string, object>>>())
+            );
+
+            _fixture.EnablePin(123);
+            _ministryPlatformRestRepository.VerifyAll();
+
+        }
     }
 }
