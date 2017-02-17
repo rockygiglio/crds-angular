@@ -53,5 +53,6 @@ BEGIN
       ADD [Host_Status_ID] [int] DEFAULT 0;
     ALTER TABLE [dbo].[Participants]
       ADD CONSTRAINT FK_Host_Status FOREIGN KEY (Host_Status_ID) References dbo.cr_Host_Statuses;
+    update [dbo].[Participants] SET Host_Status_ID=0;
   END
 END
