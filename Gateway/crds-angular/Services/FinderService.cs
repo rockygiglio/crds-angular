@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using System.Collections.Generic;
+using System.IO;
 using AutoMapper;
 using crds_angular.Models.Finder;
 using crds_angular.Models.Crossroads;
@@ -39,14 +40,6 @@ namespace crds_angular.Services
             _participantRepository = participantRepository;
         }
 
-        public FinderService(IFinderRepository finderRepository, IParticipantRepository participantRepository, IAddressService addressService)
-        {
-            _finderRepository = finderRepository;
-            _contactRepository = contactRepository;
-            _addressService = addressService;
-            _participantRepository = participantRepository;
-            _addressService = addressService;
-        }
 
         public PinDto GetPinDetails(int participantId)
         {
