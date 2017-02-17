@@ -330,7 +330,7 @@ namespace MinistryPlatform.Translation.Repositories
                 {"@SchoolAttending", minorContact.SchoolAttending },
                 {"@HouseholdId", minorContact.HouseholdId },
                 {"@HouseholdPosition", minorContact.HouseholdPositionId },
-                {"@MobilePhone", minorContact.MobilePhone }
+                {"@MobilePhone", minorContact.MobilePhone ?? ""}
              };
 
             var result = _ministryPlatformRest.UsingAuthenticationToken(apiToken).GetFromStoredProc<MpRecordID>(storedProc, fields);
