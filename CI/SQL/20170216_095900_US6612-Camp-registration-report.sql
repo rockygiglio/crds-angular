@@ -42,15 +42,15 @@ BEGIN
 	DECLARE @addlEmerContactRelationship INT = 1516;
 	DECLARE @financialAssistance INT = 1511;
 
-	CREATE TABLE #campFormFieldResponses
+	DECLARE @campFormFieldResponses TABLE
 	(
 		ID int identity
 		, Event_Participant_ID int
 		, Field_ID int
 		, Label nvarchar(128)
 		, Response nvarchar(max)
-	)
-	INSERT INTO #campFormFieldResponses
+	);
+	INSERT INTO @campFormFieldResponses
 		SELECT Event_Participant_ID 
 			, fra.Form_Field_ID
 			--, REPLACE(Field_Label, ' ', '_')
@@ -84,7 +84,7 @@ BEGIN
 			, MIN(CASE Field_ID WHEN @addlEmerContactEmail THEN Response END)			Addl_Emergency_Contact_Email
 			, MIN(CASE Field_ID WHEN @addlEmerContactRelationship THEN Response END)	Addl_Emergency_Contact_Relationship
 			, MIN(CASE Field_ID WHEN @financialAssistance THEN Response END)			Financial_Assistance_Requested
-		FROM #campFormFieldResponses cffr
+		FROM @campFormFieldResponses cffr
 		GROUP BY Event_Participant_ID
 	)
 	SELECT ep.Event_Participant_ID
@@ -172,7 +172,5 @@ BEGIN
 		, camper.Mobile_Phone
 		, a.Attribute_Name
 		, i.Invoice_Total
-
-	DROP TABLE #campFormFieldResponses;
 END
 GO
