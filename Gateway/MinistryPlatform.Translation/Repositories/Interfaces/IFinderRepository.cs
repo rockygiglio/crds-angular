@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Models.Finder;
 
 namespace MinistryPlatform.Translation.Repositories.Interfaces
@@ -7,5 +8,6 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
     {
         FinderPinDto GetPinDetails(int participantId);
         void EnablePin(int participantId);
+        string GetIpForRemoteUser();
     }
 }

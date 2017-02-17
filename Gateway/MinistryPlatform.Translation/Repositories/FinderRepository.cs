@@ -1,13 +1,18 @@
-﻿using System;
-using System.Linq;
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.IO;
+using System.Net;
 using Crossroads.Web.Common.Configuration;
 using Crossroads.Web.Common.MinistryPlatform;
 using Crossroads.Web.Common.Security;
 using log4net;
+using MinistryPlatform.Translation.Extensions;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Repositories.Interfaces;
+using MinistryPlatform.Translation.Helpers;
 using MinistryPlatform.Translation.Models.Finder;
+using Newtonsoft.Json;
 
 namespace MinistryPlatform.Translation.Repositories
 {
@@ -19,7 +24,7 @@ namespace MinistryPlatform.Translation.Repositories
         private readonly IApiUserRepository _apiUserRepository;
         private readonly ILog _logger = LogManager.GetLogger(typeof(CampRepository));
 
-        public FinderRepository(IConfigurationWrapper configuration, 
+        public FinderRepository(IConfigurationWrapper configuration,
                                 IMinistryPlatformRestRepository ministryPlatformRest,
                                 IMinistryPlatformService ministryPlatformService,
                                 IApiUserRepository apiUserRepository,
@@ -30,6 +35,11 @@ namespace MinistryPlatform.Translation.Repositories
             _ministryPlatformRest = ministryPlatformRest;
             _ministryPlatformService = ministryPlatformService;
             _apiUserRepository = apiUserRepository;
+        }
+
+        private class RemoteIp
+        {
+            public string Ip { get; set; }
         }
 
         public FinderPinDto GetPinDetails(int participantId)
@@ -57,5 +67,19 @@ namespace MinistryPlatform.Translation.Repositories
             _ministryPlatformRest.UsingAuthenticationToken(apiToken).Put("Participants", update);
         }
 
+        public string GetIpForRemoteUser()
+        {
+            string ip;
+
+            var request = WebRequest.Create("https://api.ipify.org?format=json");
+            using (var response = request.GetResponse())
+            using (var stream = new StreamReader(response.GetResponseStream()))
+            {
+                var responseString = stream.ReadToEnd();
+                var s = JsonConvert.DeserializeObject<RemoteIp>(responseString);
+                ip = s.Ip;
+            }
+            return ip;
+        }
     }
 }
