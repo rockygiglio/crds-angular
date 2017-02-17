@@ -23,6 +23,8 @@ AS
 BEGIN
 	SET NOCOUNT ON;
 
+    DECLARE @Minor_Child int = 2
+
     CREATE TABLE #phones (
 		ID int identity
 		, Household_ID int
@@ -45,8 +47,15 @@ BEGIN
 			, replace(replace(replace(replace(c.Mobile_Phone, '-', ''), ')', ''), '(', ''), ' ', '')
 		FROM dbo.Households h
 			JOIN Contacts c ON (c.Household_ID = h.Household_ID)
+		WHERE EXISTS
+		(
+			SELECT TOP 1 *
+			FROM Contacts c2
+			WHERE c2.Household_ID = h.Household_ID
+				AND c2.Household_Position_ID = @Minor_Child
+		);
 
-	SELECT main.Household_ID
+	SELECT TOP 1000 main.Household_ID
 		, main.Household_Name
 		, main.Contact_ID
 		, main.Display_Name
