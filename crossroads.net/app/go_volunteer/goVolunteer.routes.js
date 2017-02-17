@@ -110,6 +110,22 @@
           Skills: Skills
         }
       })
+      .state('go-volunteer.anywherepage', {
+        parent: 'goCincinnati',
+        url: '/go-volunteer/anywhere/:city/profile',
+        template: '<go-volunteer-anywhere-profile></go-volunteer-anywhere-profile>',
+        params: {
+          page: 'anywhere-profile'
+        },
+        data: {
+          meta: {
+            title: 'Some Title',
+            description: ''
+          }
+        },
+        resolve: {
+        }
+      })
       .state('go-volunteer.cms', {
         parent: 'goCincinnati',
         url: '/go-volunteer/:city/:cmsPage',
