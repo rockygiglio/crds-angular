@@ -116,7 +116,7 @@ CREATE PROCEDURE [dbo].[report_CRDS_Statement_Email_List]
         ON Donors.Contact_ID = Contacts.Contact_ID
       INNER JOIN Households
         ON Contacts.Household_ID = Households.Household_ID
-      INNER JOIN Congregations
+      LEFT OUTER JOIN Congregations
         ON Households.Congregation_ID = Congregations.Congregation_ID
       INNER JOIN #Donor_Email_List
         ON Contacts.Household_ID = #Donor_Email_List.Household_ID
