@@ -45,7 +45,7 @@ namespace crds_angular.test.Services
             _apiUserService = new Mock<IApiUserRepository>();
             _apiUserService.Setup(m => m.GetToken()).Returns("something");
 
-            _authenticationService.Setup(mocked => mocked.GetContactId(It.IsAny<string>())).Returns(123456);
+            _contactService.Setup(mocked => mocked.GetContactId(It.IsAny<string>())).Returns(123456);
             _myContact = new MpMyContact
             {
                 Contact_ID = 123456,

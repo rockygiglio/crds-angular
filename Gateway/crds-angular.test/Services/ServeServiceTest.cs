@@ -124,7 +124,7 @@ namespace crds_angular.test.Services
             _configurationWrapper.Setup(m => m.GetConfigIntValue("RSVPYesId")).Returns(1);
 
 
-            _authenticationService.Setup(mocked => mocked.GetContactId(It.IsAny<string>())).Returns(123456);
+            _contactService.Setup(mocked => mocked.GetContactId(It.IsAny<string>())).Returns(123456);
             var myContact = new MpMyContact
             {
                 Contact_ID = 123456,
@@ -164,7 +164,7 @@ namespace crds_angular.test.Services
             _fixture = new ServeService(_contactService.Object, _contactRelationshipService.Object,
                 _opportunityService.Object, _eventService.Object,
                 _participantService.Object, _groupParticipantService.Object, _groupService.Object,
-                _communicationService.Object, _authenticationService.Object, _configurationWrapper.Object, _apiUserService.Object, _responseService.Object);
+                _communicationService.Object, _configurationWrapper.Object, _apiUserService.Object, _responseService.Object);
 
             //force AutoMapper to register
             AutoMapperConfig.RegisterMappings();

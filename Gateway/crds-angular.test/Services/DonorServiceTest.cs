@@ -88,11 +88,11 @@ namespace crds_angular.test.Services
         public void ShouldGetDonorForAuthenticatedUser()
         {
             var donor = new MpContactDonor();
-            _authenticationService.Setup(mocked => mocked.GetContactId("authToken")).Returns(123);
+            _mpContactService.Setup(mocked => mocked.GetContactId("authToken")).Returns(123);
             _mpDonorService.Setup(mocked => mocked.GetContactDonor(123)).Returns(donor);
             var response = _fixture.GetContactDonorForAuthenticatedUser("authToken");
 
-            _authenticationService.VerifyAll();
+            _mpContactService.VerifyAll();
             _mpDonorService.VerifyAll();
 
             Assert.AreSame(donor, response);
