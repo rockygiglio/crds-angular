@@ -1,23 +1,40 @@
 ﻿using System.IO;
 using System.Net;
+using System.Web;
+using System.Collections.Generic;
 using AutoMapper;
 using crds_angular.Models.Finder;
 using crds_angular.Models.Crossroads;
+using crds_angular.Models.Finder;
 using crds_angular.Services.Interfaces;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 using log4net;
+using MinistryPlatform.Translation.Models.Finder;
+using MinistryPlatform.Translation.Models;
 using Newtonsoft.Json;
 
 namespace crds_angular.Services
 {
-    public class FinderService : IFinderService
+
+    public class RemoteAddress
     {
+        public string Ip { get; set; }
+        public string region_code { get; set; }
+        public string city { get; set; }
+        public string zip_code { get; set; }
+        public double latitude { get; set; }
+        public double longitude { get; set; }
+    }
+
+    public class FinderService : MinistryPlatformBaseService, IFinderService
+    {
+        private readonly IContactRepository _contactRepository;
         private readonly ILog _logger = LogManager.GetLogger(typeof(AddressService));
         private readonly IFinderRepository _finderRepository;
         private readonly IParticipantRepository _participantRepository;
         private readonly IAddressService _addressService;
 
-        private class RemoteAddress
+        public FinderService(IFinderRepository finderRepository, IContactRepository contactRepository, IAddressService addressService, IParticipantRepository participantRepository)
         {
             public string Ip { get; set; }
             public string region_code { get; set; }
@@ -30,6 +47,8 @@ namespace crds_angular.Services
         public FinderService(IFinderRepository finderRepository, IParticipantRepository participantRepository, IAddressService addressService)
         {
             _finderRepository = finderRepository;
+            _contactRepository = contactRepository;
+            _addressService = addressService;
             _participantRepository = participantRepository;
             _addressService = addressService;
         }
@@ -48,7 +67,24 @@ namespace crds_angular.Services
             //TODO get group details
             return pinDetails;
         }
-        
+
+        public void EnablePin(int participantId)
+        {
+            _finderRepository.EnablePin(participantId);
+        }
+
+        public void UpdateHouseholdAddress(PinDto pin)
+        {
+            _addressService.SetGeoCoordinates(pin.Address);
+
+            var householdDictionary = new Dictionary<string, object> { { "Household_ID", pin.Household_ID } };
+            var address = Mapper.Map<MpAddress>(pin.Address);
+            var addressDictionary = getDictionary(address);
+            addressDictionary.Add("State/Region", addressDictionary["State"]);
+            _contactRepository.UpdateHouseholdAddress(pin.Contact_ID, householdDictionary, addressDictionary);
+        }
+
+
 
         public AddressDTO GetAddressForIp()
         {
