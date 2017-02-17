@@ -30,14 +30,13 @@ namespace crds_angular.Services
         private readonly IParticipantRepository _participantRepository;
         private readonly IAddressService _addressService;
 
+
         public FinderService(IFinderRepository finderRepository, IContactRepository contactRepository, IAddressService addressService, IParticipantRepository participantRepository)
         {
-            public string Ip { get; set; }
-            public string region_code { get; set; }
-            public string city { get; set; }
-            public string zip_code { get; set; }
-            public double latitude { get; set; }
-            public double longitude { get; set; }
+            _finderRepository = finderRepository;
+            _contactRepository = contactRepository;
+            _addressService = addressService;
+            _participantRepository = participantRepository;
         }
 
         public FinderService(IFinderRepository finderRepository, IParticipantRepository participantRepository, IAddressService addressService)
