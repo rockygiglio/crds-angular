@@ -68,7 +68,7 @@ namespace crds_angular.test.Services
             _configurationWrapper.Setup(mocked => mocked.GetConfigIntValue("RecurringGiftUpdateEmailTemplateId")).Returns(RecurringGiftUpdateEmailTemplateId);
             _configurationWrapper.Setup(mocked => mocked.GetConfigIntValue("RecurringGiftCancelEmailTemplateId")).Returns(RecurringGiftCancelEmailTemplateId);
 
-            _fixture = new DonorService(_mpDonorService.Object, _mpContactService.Object, _paymentService.Object, _configurationWrapper.Object, _authenticationService.Object, _pledgeService.Object);
+            _fixture = new DonorService(_mpDonorService.Object, _mpContactService.Object, _paymentService.Object, _configurationWrapper.Object, _pledgeService.Object);
 
         }
 
