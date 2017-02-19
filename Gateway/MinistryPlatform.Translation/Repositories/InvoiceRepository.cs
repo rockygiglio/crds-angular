@@ -32,11 +32,11 @@ namespace MinistryPlatform.Translation.Repositories
         }
 
         public bool InvoiceExistsForEventParticipant(int eventParticipantId)
-        {
-            var filter = new Dictionary<string, object> { { "Event_Participant_ID", eventParticipantId }, { "Invoice_Status_ID", _invoiceCancelled } };
-
+        {           
+            var filter = new Dictionary<string, object> { { "Event_Participant_ID", eventParticipantId }};
             var apiToken = _apiUserRepository.GetToken();
-            return  _ministryPlatformRest.UsingAuthenticationToken(apiToken).Get<MpInvoiceDetail>("Invoice_Detail", filter).FirstOrDefault() != null;
+            var invoices =_ministryPlatformRest.UsingAuthenticationToken(apiToken).Get<MpInvoiceDetail>("Invoice_Detail", filter);
+            return invoices.Where(i => i.InvoiceStatusId != _invoiceCancelled).ToList().Any();
         }
 
         public void SetInvoiceStatus(int invoiceId, int statusId)
