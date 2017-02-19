@@ -50,6 +50,8 @@ namespace crds_angular.Services
                 var coords = _addressGeocodingService.GetGeoCoordinates(address);
                 address.Longitude = coords.Longitude;
                 address.Latitude = coords.Latitude;
+                var mpAddress = AutoMapper.Mapper.Map<MpAddress>(address);
+                UpdateAddress(mpAddress);
             }
             catch (InvalidAddressException e)
             {
