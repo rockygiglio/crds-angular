@@ -8,6 +8,5 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
     {
         FinderPinDto GetPinDetails(int participantId);
         void EnablePin(int participantId);
-        string GetIpForRemoteUser();
     }
 }

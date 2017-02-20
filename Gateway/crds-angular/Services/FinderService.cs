@@ -74,10 +74,9 @@ namespace crds_angular.Services
 
 
 
-        public AddressDTO GetAddressForIp()
+        public AddressDTO GetAddressForIp(string ip)
         {
             var address = new AddressDTO();
-            var ip = _finderRepository.GetIpForRemoteUser();
             var request = WebRequest.Create("http://freegeoip.net/json/" + ip);
             using (var response = request.GetResponse())
             using (var stream = new StreamReader(response.GetResponseStream()))
