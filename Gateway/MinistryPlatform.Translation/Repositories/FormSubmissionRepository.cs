@@ -219,7 +219,9 @@ namespace MinistryPlatform.Translation.Repositories
 
             var formResponseId = _configurationWrapper.GetConfigIntValue("FormResponsePageId");
 
-            // This code is shared by Trips, Camps, and Volunteer Application.  For trips,
+            // This code is shared by Trips, Camps, and Volunteer Application.  
+            //
+            // For trips:
             // we want to maintain separate form responses per trip.  We can distinguish
             // trips from other callers because PledgeCampaignId is required for trips.
             //
