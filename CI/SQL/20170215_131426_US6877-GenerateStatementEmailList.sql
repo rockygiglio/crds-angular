@@ -109,7 +109,7 @@ CREATE PROCEDURE [dbo].[report_CRDS_Statement_Email_List]
       Congregations.Congregation_Name
     FROM Donors
       LEFT OUTER JOIN Donations
-        ON Donors.Donor_ID = Donations.Donor_ID
+        ON Donors.Donor_ID = Donations.Donor_ID AND CONVERT(DATE, Donations.Donation_Date) BETWEEN @FromDate AND @ToDate
       INNER JOIN Statement_Methods
         ON Donors.Statement_Method_ID = Statement_Methods.Statement_Method_ID
       INNER JOIN Contacts
