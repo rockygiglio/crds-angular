@@ -23,7 +23,7 @@ namespace crds_angular.Controllers.API
     {
         private readonly ILog _logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         private readonly IGroupService _groupService;
-        private readonly IAuthenticationRepository _authenticationService;
+        private readonly IContactRepository _contactRepository;
         private readonly IParticipantRepository _participantService;
         private readonly IAddressService _addressService;
         private readonly IGroupSearchService _groupSearchService;
@@ -31,6 +31,7 @@ namespace crds_angular.Controllers.API
 
         public GroupController(IGroupService groupService,
                                IAuthenticationRepository authenticationService,
+                               IContactRepository contactRepository,
                                IParticipantRepository participantService,
                                IAddressService addressService,
                                IGroupSearchService groupSearchService,
@@ -38,7 +39,7 @@ namespace crds_angular.Controllers.API
                                IUserImpersonationService userImpersonationService) : base(userImpersonationService, authenticationService)
         {
             _groupService = groupService;
-            _authenticationService = authenticationService;
+            _contactRepository = contactRepository;
             _participantService = participantService;
             _addressService = addressService;
             _groupSearchService = groupSearchService;
@@ -187,7 +188,7 @@ namespace crds_angular.Controllers.API
                 try
                 {
                     var participant = _participantService.GetParticipantRecord(token);
-                    var contactId = _authenticationService.GetContactId(token);
+                    var contactId = _contactRepository.GetContactId(token);
 
                     var detail = _groupService.getGroupDetails(groupId, contactId, participant, token);
 

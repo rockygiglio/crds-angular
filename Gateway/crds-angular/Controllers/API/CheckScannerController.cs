@@ -25,7 +25,7 @@ namespace crds_angular.Controllers.API
     public class CheckScannerController : MPAuth
     {
         private readonly bool _asynchronous;
-        private readonly IAuthenticationRepository _authenticationService;
+        private readonly IContactRepository _contactRepository;
         private readonly ICheckScannerService _checkScannerService;
         private readonly ICommunicationRepository _communicationService;
         private readonly MessageQueue _donationsQueue;
@@ -35,6 +35,7 @@ namespace crds_angular.Controllers.API
         public CheckScannerController(IConfigurationWrapper configuration,
                                       ICheckScannerService checkScannerService,
                                       IAuthenticationRepository authenticationService,
+                                      IContactRepository contactRepository,
                                       ICommunicationRepository communicationService,
                                       ICryptoProvider cryptoProvider,
                                       IUserImpersonationService userImpersonationService,
@@ -42,7 +43,7 @@ namespace crds_angular.Controllers.API
                                       IMessageFactory messageFactory = null) : base(userImpersonationService, authenticationService)
         {
             _checkScannerService = checkScannerService;
-            _authenticationService = authenticationService;
+            _contactRepository = contactRepository;
             _communicationService = communicationService;
             _cryptoProvider = cryptoProvider;
 
@@ -94,7 +95,7 @@ namespace crds_angular.Controllers.API
                     return (Ok(_checkScannerService.CreateDonationsForBatch(batch)));
                 }
 
-                batch.MinistryPlatformContactId = _authenticationService.GetContactId(token);
+                batch.MinistryPlatformContactId = _contactRepository.GetContactId(token);
                 batch.MinistryPlatformUserId = _communicationService.GetUserIdFromContactId(token, batch.MinistryPlatformContactId.Value);
 
                 var message = _messageFactory.CreateMessage(batch);
@@ -137,7 +138,7 @@ namespace crds_angular.Controllers.API
         {
             try
             {
-                _authenticationService.GetContactId(token);
+                _contactRepository.GetContactId(token);
                 return (null);
             }
             catch (Exception e)
