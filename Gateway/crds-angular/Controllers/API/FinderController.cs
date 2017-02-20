@@ -73,7 +73,7 @@ namespace crds_angular.Controllers.API
         }
 
         [ResponseType(typeof(AddressDTO))]
-        [VersionedRoute(template: "finder/pinbyip", minimumVersion: "1.0.0")]
+        [VersionedRoute(template: "finder/pinbyip/{ipAddress}", minimumVersion: "1.0.0")]
         [System.Web.Http.Route("finder/pinbyip/{ipAddress}")]
         [System.Web.Http.HttpGet]
         public IHttpActionResult GetPinByIpAddress([FromUri]string ipAddress)
