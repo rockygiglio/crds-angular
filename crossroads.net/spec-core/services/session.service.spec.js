@@ -10,10 +10,11 @@ describe('Session Service', function() {
   var state;
   var cookieNames = require('crds-constants').COOKIES;
   var family = [0, 1, 2, 3, 4];
+  var timeout;
 
   beforeEach(angular.mock.module('crossroads.core'));
 
-  beforeEach(inject(function($injector, _$cookies_, _$rootScope_, _Session_, _$modal_) {
+  beforeEach(inject(function($injector, _$cookies_, _$rootScope_, _Session_, _$modal_, _$timeout_) {
     $cookies = _$cookies_;
     state = $injector.get('$state');
     spyOn(state, 'go');
@@ -22,6 +23,7 @@ describe('Session Service', function() {
     Injector = $injector;
     rootScope = _$rootScope_;
     modal = _$modal_;
+    timeout = _$timeout_;
   }));
 
   afterEach(function() {
@@ -189,5 +191,49 @@ describe('Session Service', function() {
     });
   });
 
+  describe('function redirectIfNeeded', function() {
+
+    it('should redirect to url', function() {
+        var existsMock = spyOn(Session,'exists');
+        existsMock.and.callFake(function(args){
+          switch(args)
+          {
+            case 'redirectUrl':
+              return 'content';
+            case 'params':
+              return null;
+            default:
+              return null;
+          }
+        });
+        Session.redirectIfNeeded(state);
+        timeout.flush();
+        expect(state.go).toHaveBeenCalledWith('content', null);
+    });
+
+    it('should redirect to url with params', function() {
+        var existsMock = spyOn(Session,'exists');
+        existsMock.and.callFake(function(args){
+          switch(args)
+          {
+            case 'redirectUrl':
+              return 'content';
+            case 'params':
+              return JSON.stringify({'link':'/'});
+            default:
+              return null;
+          }
+        });
+        Session.redirectIfNeeded(state);
+        timeout.flush();
+        expect(state.go).toHaveBeenCalledWith('content', { link: '/' });    
+    });
+
+    it('should not redirect', function() {
+        Session.redirectIfNeeded(state);
+        expect(state.go).toHaveBeenCalledTimes(0);
+    });
+
+  })
 
 });
