@@ -265,7 +265,8 @@ namespace crds_angular.Services
             {
                 ContactId = contactId,
                 FormId = formId,
-                FormAnswers = answers
+                FormAnswers = answers,
+                EventId = eventId
             };
 
             _formSubmissionRepository.SubmitFormResponse(formResponse);
@@ -406,7 +407,8 @@ namespace crds_angular.Services
                 {
                     ContactId = contactId,
                     FormId = formId,
-                    FormAnswers = answers
+                    FormAnswers = answers,
+                    EventId = eventId
                 };
 
                 _formSubmissionRepository.SubmitFormResponse(formResponse);
@@ -535,7 +537,8 @@ namespace crds_angular.Services
             {
                 ContactId = campProductDto.ContactId,
                 FormId = formId,
-                FormAnswers = answers
+                FormAnswers = answers,
+                EventId = campProductDto.EventId
             };
 
             _formSubmissionRepository.SubmitFormResponse(formResponse);
