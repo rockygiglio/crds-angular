@@ -2,6 +2,10 @@
 using System.Collections.Generic;
 using System.Data;
 using Crossroads.Utilities.Interfaces;
+using Crossroads.Web.Common;
+using Crossroads.Web.Common.Configuration;
+using Crossroads.Web.Common.MinistryPlatform;
+using Crossroads.Web.Common.Security;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Repositories;
 using MinistryPlatform.Translation.Repositories.Interfaces;
@@ -36,7 +40,11 @@ namespace MinistryPlatform.Translation.Test.Services
 
             _configWrapper.Setup(m => m.GetEnvironmentVarAsString("API_USER")).Returns("uid");
             _configWrapper.Setup(m => m.GetEnvironmentVarAsString("API_PASSWORD")).Returns("pwd");
-            _authService.Setup(m => m.Authenticate(It.IsAny<string>(), It.IsAny<string>())).Returns(new Dictionary<string, object> { { "token", "ABC" }, { "exp", "123" } });
+            _authService.Setup(m => m.Authenticate(It.IsAny<string>(), It.IsAny<string>())).Returns(new AuthToken
+            {
+                AccessToken = "ABC",
+                ExpiresIn = 123
+            });
 
             _fixture = new FormSubmissionRepository(_ministryPlatformService.Object, _dbConnection.Object, _authService.Object, _configWrapper.Object, _ministryPlatformRest.Object);
 
@@ -85,10 +93,11 @@ namespace MinistryPlatform.Translation.Test.Services
         [Test]
         public void SubmitFormResponse()
         {
+            var responseDate = It.IsAny<DateTime>();
             var expectedResponseDict = new Dictionary<string, object>
             {
                 {"Form_ID", _mockForm.FormId},
-                {"Response_Date", DateTime.Today},
+                {"Response_Date", responseDate},
                 {"Contact_ID", _mockForm.ContactId},
                 {"Opportunity_ID", _mockForm.OpportunityId},
                 {"Opportunity_Response", _mockForm.OpportunityResponseId}, 
@@ -123,7 +132,7 @@ namespace MinistryPlatform.Translation.Test.Services
             };
 
             
-            _ministryPlatformService.Setup(m => m.CreateRecord(formResponsePageId, expectedResponseDict, It.IsAny<string>(), true)).Returns(responseId);
+            _ministryPlatformService.Setup(m => m.CreateRecord(formResponsePageId, It.IsAny<Dictionary<string, object>>(), It.IsAny<string>(), true)).Returns(responseId);
             _ministryPlatformService.Setup(m => m.CreateRecord(formAnswerPageId, expectedAnswerDict1, It.IsAny<string>(), true));
             _ministryPlatformService.Setup(m => m.CreateRecord(formAnswerPageId, expectedAnswerDict2, It.IsAny<string>(), true));
             _ministryPlatformService.Setup(m => m.CreateRecord(formAnswerPageId, expectedAnswerDict3, It.IsAny<string>(), true));

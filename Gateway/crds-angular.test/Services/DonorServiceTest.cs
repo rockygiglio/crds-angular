@@ -8,6 +8,9 @@ using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Extensions;
 using Crossroads.Utilities.Interfaces;
 using Crossroads.Utilities.Services;
+using Crossroads.Web.Common;
+using Crossroads.Web.Common.Configuration;
+using Crossroads.Web.Common.Security;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Models.DTO;
 using MinistryPlatform.Translation.Repositories.Interfaces;
@@ -65,7 +68,7 @@ namespace crds_angular.test.Services
             _configurationWrapper.Setup(mocked => mocked.GetConfigIntValue("RecurringGiftUpdateEmailTemplateId")).Returns(RecurringGiftUpdateEmailTemplateId);
             _configurationWrapper.Setup(mocked => mocked.GetConfigIntValue("RecurringGiftCancelEmailTemplateId")).Returns(RecurringGiftCancelEmailTemplateId);
 
-            _fixture = new DonorService(_mpDonorService.Object, _mpContactService.Object, _paymentService.Object, _configurationWrapper.Object, _authenticationService.Object, _pledgeService.Object);
+            _fixture = new DonorService(_mpDonorService.Object, _mpContactService.Object, _paymentService.Object, _configurationWrapper.Object, _pledgeService.Object);
 
         }
 
@@ -85,11 +88,11 @@ namespace crds_angular.test.Services
         public void ShouldGetDonorForAuthenticatedUser()
         {
             var donor = new MpContactDonor();
-            _authenticationService.Setup(mocked => mocked.GetContactId("authToken")).Returns(123);
+            _mpContactService.Setup(mocked => mocked.GetContactId("authToken")).Returns(123);
             _mpDonorService.Setup(mocked => mocked.GetContactDonor(123)).Returns(donor);
             var response = _fixture.GetContactDonorForAuthenticatedUser("authToken");
 
-            _authenticationService.VerifyAll();
+            _mpContactService.VerifyAll();
             _mpDonorService.VerifyAll();
 
             Assert.AreSame(donor, response);

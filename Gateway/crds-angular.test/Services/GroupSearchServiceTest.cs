@@ -7,6 +7,8 @@ using crds_angular.Models.Crossroads.Groups;
 using crds_angular.Services;
 using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Interfaces;
+using Crossroads.Web.Common;
+using Crossroads.Web.Common.Configuration;
 using MinistryPlatform.Translation.Models;
 using Moq;
 using NUnit.Framework;

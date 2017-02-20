@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using Crossroads.Utilities.Interfaces;
+using Crossroads.Web.Common;
+using Crossroads.Web.Common.Configuration;
+using Crossroads.Web.Common.Security;
 using MinistryPlatform.Translation.Models.Lookups;
 using MinistryPlatform.Translation.Repositories;
 using MinistryPlatform.Translation.Repositories.Interfaces;
@@ -63,13 +66,11 @@ namespace MinistryPlatform.Translation.Test.Services
         public void ShouldReturnSites()
         {
             string _tokenValue = "ABC";
-            var authenticateResults =
-                new Dictionary<string, object>()
-                {
-                                {"token", _tokenValue},
-                                {"exp", "123"}
-                };
-            _authenticationService.Setup(m => m.Authenticate(It.IsAny<string>(), It.IsAny<string>())).Returns(authenticateResults);
+            _authenticationService.Setup(m => m.Authenticate(It.IsAny<string>(), It.IsAny<string>())).Returns(new AuthToken
+            {
+                AccessToken = _tokenValue,
+                ExpiresIn = 123
+            });
             _fixture = new LookupRepository(_authenticationService.Object, _configurationWrapper.Object, _ministryPlatformService.Object);
             var sites = CrossroadsSites();
             _ministryPlatformService.Setup(m => m.GetLookupRecords(It.IsAny<int>(), It.IsAny<String>())).Returns(sites);

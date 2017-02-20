@@ -10,6 +10,9 @@ using Crossroads.Utilities;
 using Crossroads.Utilities.Extensions;
 using Crossroads.Utilities.Services;
 using log4net;
+using Crossroads.Web.Common;
+using Crossroads.Web.Common.Configuration;
+using Crossroads.Web.Common.Security;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Models.DTO;
 using IDonorRepository = MinistryPlatform.Translation.Repositories.Interfaces.IDonorRepository;
@@ -23,7 +26,6 @@ namespace crds_angular.Services
         private readonly IDonorRepository _mpDonorService;
         private readonly IContactRepository _mpContactService;
         private readonly Interfaces.IPaymentProcessorService _paymentService;
-        private readonly IAuthenticationRepository _authenticationService;
         private readonly IPledgeRepository _pledgeService;
         public const string DefaultInstitutionName = "Bank";
         public const string DonorRoutingNumberDefault = "0";
@@ -45,12 +47,11 @@ namespace crds_angular.Services
 
         public DonorService(IDonorRepository mpDonorService, IContactRepository mpContactService,
             Interfaces.IPaymentProcessorService paymentService, IConfigurationWrapper configurationWrapper,
-            IAuthenticationRepository authenticationService, IPledgeRepository pledgeService)
+            IPledgeRepository pledgeService)
         {
             _mpDonorService = mpDonorService;
             _mpContactService = mpContactService;
             _paymentService = paymentService;
-            _authenticationService = authenticationService;
             _pledgeService = pledgeService;
 
             _guestGiverDisplayName = configurationWrapper.GetConfigValue("GuestGiverContactDisplayName");
@@ -75,7 +76,7 @@ namespace crds_angular.Services
 
         public MpContactDonor GetContactDonorForAuthenticatedUser(string authToken)
         {
-            var contactId = _authenticationService.GetContactId(authToken);
+            var contactId = _mpContactService.GetContactId(authToken);
             return (_mpDonorService.GetContactDonor(contactId));
         }
 

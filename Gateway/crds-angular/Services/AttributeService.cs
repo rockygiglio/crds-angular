@@ -6,6 +6,8 @@ using AutoMapper;
 using crds_angular.Models.Crossroads;
 using crds_angular.Models.Crossroads.Attribute;
 using crds_angular.Services.Interfaces;
+using Crossroads.Web.Common;
+using Crossroads.Web.Common.MinistryPlatform;
 using MinistryPlatform.Translation.Models;
 using MPInterfaces = MinistryPlatform.Translation.Repositories.Interfaces;
 
@@ -14,12 +16,12 @@ namespace crds_angular.Services
     public class AttributeService : IAttributeService
     {
         private readonly MPInterfaces.IAttributeRepository _attributeRepository;
-        private readonly MPInterfaces.IMinistryPlatformRestRepository _ministryPlatformRestRepository;
-        private readonly MPInterfaces.IApiUserRepository _apiUserRepository;
+        private readonly IMinistryPlatformRestRepository _ministryPlatformRestRepository;
+        private readonly IApiUserRepository _apiUserRepository;
 
         public AttributeService(MPInterfaces.IAttributeRepository attributeRepository,
-                                MPInterfaces.IMinistryPlatformRestRepository restRepository, 
-                                MPInterfaces.IApiUserRepository apiUserRepository)
+                                IMinistryPlatformRestRepository restRepository, 
+                                IApiUserRepository apiUserRepository)
         {
             _attributeRepository = attributeRepository;
             _ministryPlatformRestRepository = restRepository;

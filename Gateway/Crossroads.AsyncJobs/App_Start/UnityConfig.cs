@@ -2,6 +2,7 @@ using System.Collections.Specialized;
 using Microsoft.Practices.Unity;
 using Microsoft.Practices.Unity.Configuration;
 using System.Configuration;
+using System.Linq;
 using System.Web.Http;
 using Crossroads.AsyncJobs.App_Start;
 using Quartz;
@@ -27,10 +28,13 @@ namespace Crossroads.AsyncJobs
                     return;
                 }
 
-                var section = (UnityConfigurationSection)ConfigurationManager.GetSection("unity");
                 var container = new UnityContainer();
-                
-                section.Configure(container);
+                var unitySections = new[] { "crossroadsCommonUnity", "unity" };
+
+                foreach (var section in unitySections.Select(sectionName => (UnityConfigurationSection)ConfigurationManager.GetSection(sectionName)))
+                {
+                    container.LoadConfiguration(section);
+                }
 
                 QuartzConfig.Register(container);
                 

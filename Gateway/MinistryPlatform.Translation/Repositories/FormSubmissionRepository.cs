@@ -4,6 +4,10 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using Crossroads.Utilities.Interfaces;
+using Crossroads.Web.Common;
+using Crossroads.Web.Common.Configuration;
+using Crossroads.Web.Common.MinistryPlatform;
+using Crossroads.Web.Common.Security;
 using MinistryPlatform.Translation.Extensions;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Repositories.Interfaces;
@@ -197,7 +201,7 @@ namespace MinistryPlatform.Translation.Repositories
             var record = new Dictionary<string, object>
             {
                 {"Form_ID", formResponse.FormId},
-                {"Response_Date", DateTime.Today},
+                {"Response_Date", DateTime.Now},
                 {"Contact_ID", formResponse.ContactId},
                 {"Opportunity_ID",  formResponse.OpportunityId },
                 {"Opportunity_Response", formResponse.OpportunityResponseId},

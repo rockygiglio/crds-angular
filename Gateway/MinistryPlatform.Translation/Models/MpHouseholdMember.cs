@@ -1,7 +1,8 @@
 ﻿using System;
+using Crossroads.Web.Common.MinistryPlatform;
 
 namespace MinistryPlatform.Translation.Models
-{
+{  
     public class MpHouseholdMember
     {
         public int ContactId { get; set; }

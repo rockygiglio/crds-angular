@@ -5,6 +5,10 @@ using crds_angular.App_Start;
 using Crossroads.Utilities;
 using Crossroads.Utilities.Enums;
 using Crossroads.Utilities.Interfaces;
+using Crossroads.Web.Common;
+using Crossroads.Web.Common.Configuration;
+using Crossroads.Web.Common.MinistryPlatform;
+using Crossroads.Web.Common.Security;
 using MinistryPlatform.Translation.PlatformService;
 using MinistryPlatform.Translation.Repositories;
 using MinistryPlatform.Translation.Repositories.Interfaces;
@@ -58,7 +62,11 @@ namespace MinistryPlatform.Translation.Test.Services
 
             _config.Setup(m => m.GetEnvironmentVarAsString("API_USER")).Returns("uid");
             _config.Setup(m => m.GetEnvironmentVarAsString("API_PASSWORD")).Returns("pwd");
-            _authService.Setup(m => m.Authenticate(It.IsAny<string>(), It.IsAny<string>())).Returns(new Dictionary<string, object> {{"token", "ABC"}, {"exp", "123"}});
+            _authService.Setup(m => m.Authenticate(It.IsAny<string>(), It.IsAny<string>())).Returns(new AuthToken
+            {
+                AccessToken = "ABC",
+                ExpiresIn = 123
+            });
             _fixture = new DonationRepository(_ministryPlatformService.Object,
                                               _donorService.Object,
                                               _communicationService.Object,
@@ -438,9 +446,9 @@ namespace MinistryPlatform.Translation.Test.Services
             _ministryPlatformService.Setup(mock => mock.GetPageViewRecords(paymentViewId, It.IsAny<string>(), depositId.ToString(), "", 0)).Returns(MockGPPaymentExport());
 
             _ministryPlatformRest.Setup(m => m.UsingAuthenticationToken(It.IsAny<string>())).Returns(_ministryPlatformRest.Object);
-            _ministryPlatformRest.Setup(m => m.Search<int>("GL_Account_Mapping", $"GL_Account_Mapping.Program_ID={It.IsAny<int>()} AND GL_Account_Mapping.Congregation_ID={It.IsAny<int>()}", "Processor_Fee_Mapping_ID_Table.Program_ID"))
+            _ministryPlatformRest.Setup(m => m.Search<int>("GL_Account_Mapping", $"GL_Account_Mapping.Program_ID={It.IsAny<int>()} AND GL_Account_Mapping.Congregation_ID={It.IsAny<int>()}", "Processor_Fee_Mapping_ID_Table.Program_ID", null, false))
                 .Returns(0);
-            _ministryPlatformRest.Setup(mock => mock.Get<MPGLAccountMapping>(It.IsAny<int>(), null)).Returns(MockGLAccountMapping());
+            _ministryPlatformRest.Setup(mock => mock.Get<MPGLAccountMapping>(It.IsAny<int>(), (string)null)).Returns(MockGLAccountMapping());
             _config.Setup(mocked => mocked.GetConfigIntValue("ProcessingMappingId")).Returns(127);
             
             var result = _fixture.GetGpExport(depositId, token);
@@ -505,7 +513,7 @@ namespace MinistryPlatform.Translation.Test.Services
             var mockMapping = MockGLAccountMapping();
 
             _ministryPlatformRest.Setup(m => m.UsingAuthenticationToken(It.IsAny<string>())).Returns(_ministryPlatformRest.Object);
-            _ministryPlatformRest.Setup(mock => mock.Get<MPGLAccountMapping>(It.IsAny<int>(),null)).Returns(mockMapping);
+            _ministryPlatformRest.Setup(mock => mock.Get<MPGLAccountMapping>(It.IsAny<int>(), (string)null)).Returns(mockMapping);
 
             var result = _fixture.GetProcessingFeeGLMapping(feeMapping, token);
 
@@ -521,7 +529,7 @@ namespace MinistryPlatform.Translation.Test.Services
             const string token = "mockToken";
             
             _ministryPlatformRest.Setup(m => m.UsingAuthenticationToken(It.IsAny<string>())).Returns(_ministryPlatformRest.Object);
-            _ministryPlatformRest.Setup(mock => mock.Get<MPGLAccountMapping>(It.IsAny<int>(), null)).Returns( (MPGLAccountMapping) null);
+            _ministryPlatformRest.Setup(mock => mock.Get<MPGLAccountMapping>(It.IsAny<int>(), (string)null)).Returns( (MPGLAccountMapping) null);
 
             var result = _fixture.GetProcessingFeeGLMapping(feeMapping, token);
 
@@ -562,7 +570,7 @@ namespace MinistryPlatform.Translation.Test.Services
             _ministryPlatformService.Setup(mock => mock.GetPageViewRecords(viewId, It.IsAny<string>(), depositId.ToString(), "", 0)).Returns(returnedData);
             
             _ministryPlatformRest.Setup(m => m.UsingAuthenticationToken(It.IsAny<string>())).Returns(_ministryPlatformRest.Object);
-            _ministryPlatformRest.Setup(m => m.Search<int>("GL_Account_Mapping", $"GL_Account_Mapping.Program_ID={programId} AND GL_Account_Mapping.Congregation_ID={congregationId}", "Processor_Fee_Mapping_ID_Table.Program_ID"))
+            _ministryPlatformRest.Setup(m => m.Search<int>("GL_Account_Mapping", $"GL_Account_Mapping.Program_ID={programId} AND GL_Account_Mapping.Congregation_ID={congregationId}", "Processor_Fee_Mapping_ID_Table.Program_ID", null, false))
                 .Returns(0);
             _config.Setup(mocked => mocked.GetConfigIntValue("ProcessingMappingId")).Returns(127);          
 
@@ -619,7 +627,7 @@ namespace MinistryPlatform.Translation.Test.Services
             const int processingMappingId = 56787;
 
             _ministryPlatformRest.Setup(m => m.UsingAuthenticationToken(token)).Returns(_ministryPlatformRest.Object);
-            _ministryPlatformRest.Setup(m => m.Search<int>("GL_Account_Mapping", $"GL_Account_Mapping.Program_ID={programId} AND GL_Account_Mapping.Congregation_ID={congregationId}", "Processor_Fee_Mapping_ID"))
+            _ministryPlatformRest.Setup(m => m.Search<int>("GL_Account_Mapping", $"GL_Account_Mapping.Program_ID={programId} AND GL_Account_Mapping.Congregation_ID={congregationId}", "Processor_Fee_Mapping_ID", null, false))
                 .Returns(processingMappingId);
 
             var result = _fixture.GetProcessingFeeMappingID(programId, congregationId, token);
@@ -637,7 +645,7 @@ namespace MinistryPlatform.Translation.Test.Services
             const int defaultProcessingFeeMappingId = 127;
 
             _ministryPlatformRest.Setup(m => m.UsingAuthenticationToken(token)).Returns(_ministryPlatformRest.Object);
-            _ministryPlatformRest.Setup(m => m.Search<int>("GL_Account_Mapping", $"GL_Account_Mapping.Program_ID={programId} AND GL_Account_Mapping.Congregation_ID={congregationId}", "Processor_Fee_Mapping_ID"))
+            _ministryPlatformRest.Setup(m => m.Search<int>("GL_Account_Mapping", $"GL_Account_Mapping.Program_ID={programId} AND GL_Account_Mapping.Congregation_ID={congregationId}", "Processor_Fee_Mapping_ID", null, false))
                 .Throws<Exception>();
             _config.Setup(mocked => mocked.GetConfigIntValue("ProcessingMappingId")).Returns(defaultProcessingFeeMappingId);
 
@@ -656,7 +664,7 @@ namespace MinistryPlatform.Translation.Test.Services
             const int defaultProcessingFeeProgramId = 127;
 
             _ministryPlatformRest.Setup(m => m.UsingAuthenticationToken(token)).Returns(_ministryPlatformRest.Object);
-            _ministryPlatformRest.Setup(m => m.Search<int>("GL_Account_Mapping", $"GL_Account_Mapping.Program_ID={programId} AND GL_Account_Mapping.Congregation_ID={congregationId}", "Processor_Fee_Mapping_ID"))
+            _ministryPlatformRest.Setup(m => m.Search<int>("GL_Account_Mapping", $"GL_Account_Mapping.Program_ID={programId} AND GL_Account_Mapping.Congregation_ID={congregationId}", "Processor_Fee_Mapping_ID", null, false))
                 .Returns(processingProgramId);
             _config.Setup(mocked => mocked.GetConfigIntValue("ProcessingMappingId")).Returns(defaultProcessingFeeProgramId);
 

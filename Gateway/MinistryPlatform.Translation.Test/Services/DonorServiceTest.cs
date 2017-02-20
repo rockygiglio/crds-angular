@@ -7,6 +7,10 @@ using System.Security.Cryptography;
 using System.Text;
 using Crossroads.Utilities;
 using Crossroads.Utilities.Interfaces;
+using Crossroads.Web.Common;
+using Crossroads.Web.Common.Configuration;
+using Crossroads.Web.Common.MinistryPlatform;
+using Crossroads.Web.Common.Security;
 using MinistryPlatform.Translation.Enum;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Repositories;
@@ -57,7 +61,11 @@ namespace MinistryPlatform.Translation.Test.Services
             _configuration.Setup(m => m.GetEnvironmentVarAsString("API_USER")).Returns("uid");
             _configuration.Setup(m => m.GetEnvironmentVarAsString("API_PASSWORD")).Returns("pwd");
 
-            _authService.Setup(m => m.Authenticate(It.IsAny<string>(), It.IsAny<string>())).Returns(new Dictionary<string, object> { { "token", "ABC" }, { "exp", "123" } });
+            _authService.Setup(m => m.Authenticate(It.IsAny<string>(), It.IsAny<string>())).Returns(new AuthToken
+            {
+                AccessToken = "ABC",
+                ExpiresIn = 123
+            });
 
             _fixture = new DonorRepository(_ministryPlatformService.Object, _ministryPlatformRestRepository.Object, _programService.Object, _communicationService.Object, _authService.Object, _contactService.Object, _configuration.Object, _crypto.Object);
         }

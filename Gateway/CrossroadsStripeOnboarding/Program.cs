@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Linq;
 using CommandLine;
 using CommandLine.Text;
 using Crossroads.Utilities.Services;
@@ -20,9 +21,13 @@ namespace CrossroadsStripeOnboarding
 
         public static void Main(string[] args)
         {
-            var section = (UnityConfigurationSection)ConfigurationManager.GetSection("unity");
             var container = new UnityContainer();
-            section.Configure(container);
+            var unitySections = new[] { "crossroadsCommonUnity", "unity" };
+
+            foreach (var section in unitySections.Select(sectionName => (UnityConfigurationSection)ConfigurationManager.GetSection(sectionName)))
+            {
+                container.LoadConfiguration(section);
+            }
 
             TlsHelper.AllowTls12();
 

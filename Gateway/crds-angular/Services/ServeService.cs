@@ -14,6 +14,10 @@ using Crossroads.Utilities.Extensions;
 using Crossroads.Utilities.Interfaces;
 using Crossroads.Utilities.Services;
 using log4net;
+using Crossroads.Web.Common;
+using Crossroads.Web.Common.Configuration;
+using Crossroads.Web.Common.MinistryPlatform;
+using Crossroads.Web.Common.Security;
 using MinistryPlatform.Translation.Extensions;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Repositories.Interfaces;
@@ -40,7 +44,6 @@ namespace crds_angular.Services
         private readonly IOpportunityRepository _opportunityService;
         private readonly IParticipantRepository _participantService;
         private readonly ICommunicationRepository _communicationService;
-        private readonly IAuthenticationRepository _authenticationService;
         private readonly IConfigurationWrapper _configurationWrapper;
         private readonly IApiUserRepository _apiUserService;
         private readonly IResponseRepository _responseService;
@@ -66,7 +69,6 @@ namespace crds_angular.Services
                             IGroupParticipantRepository groupParticipantService,
                             IGroupRepository groupService,
                             ICommunicationRepository communicationService,
-                            IAuthenticationRepository authenticationService,
                             IConfigurationWrapper configurationWrapper,
                             IApiUserRepository apiUserService,
                             IResponseRepository responseService)
@@ -79,7 +81,6 @@ namespace crds_angular.Services
             _groupParticipantService = groupParticipantService;
             _groupService = groupService;
             _communicationService = communicationService;
-            _authenticationService = authenticationService;
             _configurationWrapper = configurationWrapper;
             _apiUserService = apiUserService;
             _responseService = responseService;
@@ -91,7 +92,7 @@ namespace crds_angular.Services
         public List<FamilyMember> GetImmediateFamilyParticipants(string token)
         {
             var relationships = new List<FamilyMember>();
-            var contactId = _authenticationService.GetContactId(token);
+            var contactId = _contactService.GetContactId(token);
             var me = _participantService.GetParticipant(contactId);
             var myParticipant = new FamilyMember
             {
@@ -158,7 +159,7 @@ namespace crds_angular.Services
 
         public List<GroupDTO> GetLeaderGroups(string token)
         {
-            var contactId = _authenticationService.GetContactId(token);
+            var contactId = _contactService.GetContactId(token);
             var participant = _participantService.GetParticipant(contactId);
 
             var groups = Mapper.Map<List<GroupDTO>>(_groupParticipantService.GetAllGroupNamesLeadByParticipant(participant.ParticipantId, _serveGroupType));
@@ -168,7 +169,7 @@ namespace crds_angular.Services
 
         public List<GroupParticipantDTO> GetLeaderGroupsParticipants(string token, int? groupId)
         {
-            var contactId = _authenticationService.GetContactId(token);
+            var contactId = _contactService.GetContactId(token);
             var participant = _participantService.GetParticipant(contactId);
 
             var participants = Mapper.Map<List<GroupParticipantDTO>>(_groupParticipantService.GetAllParticipantsForLeaderGroups(participant.ParticipantId, _serveGroupType, groupId));
@@ -178,7 +179,7 @@ namespace crds_angular.Services
 
         public bool GetIsLeader(string token, int? groupId)
         {
-            var contactId = _authenticationService.GetContactId(token);
+            var contactId = _contactService.GetContactId(token);
             var participant = _participantService.GetParticipant(contactId);
 
 
