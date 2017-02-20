@@ -9,7 +9,7 @@ namespace crds_angular.Services.Interfaces
         PinDto GetPinDetails(int participantId);
         void EnablePin(int participantId);
         void UpdateHouseholdAddress(PinDto pin);
-        AddressDTO GetAddressForIp();
+        AddressDTO GetAddressForIp(string ip);
         int GetParticipantIdFromContact(int contactId);
     }
 }

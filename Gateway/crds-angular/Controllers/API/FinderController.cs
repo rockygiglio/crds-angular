@@ -73,14 +73,14 @@ namespace crds_angular.Controllers.API
         }
 
         [ResponseType(typeof(AddressDTO))]
-        [VersionedRoute(template: "finder/pinbyip", minimumVersion: "1.0.0")]
-        [System.Web.Http.Route("finder/pinbyip")]
+        [VersionedRoute(template: "finder/pinbyip/{ipAddress}", minimumVersion: "1.0.0")]
+        [System.Web.Http.Route("finder/pinbyip/{ipAddress}")]
         [System.Web.Http.HttpGet]
-        public IHttpActionResult GetPinByIpAddress()
+        public IHttpActionResult GetPinByIpAddress([FromUri]string ipAddress)
         {
             try
             {
-                var address = _finderService.GetAddressForIp();
+                var address = _finderService.GetAddressForIp(ipAddress.Replace('-','.'));
                 return Ok(address);
             }
             catch (Exception ex)
