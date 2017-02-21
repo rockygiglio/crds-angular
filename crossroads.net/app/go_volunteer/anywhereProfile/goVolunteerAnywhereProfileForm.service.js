@@ -47,7 +47,7 @@ export default class GoVolunteerAnywhereProfileForm {
         wrapper: 'campBootstrapRow',
         fieldGroup: [
           {
-            className: 'form-group col-xs-6',
+            className: 'form-group col-sm-6',
             key: 'mobilePhone',
             type: 'crdsInput',
             optionsTypes: ['phoneNumber'],
@@ -57,7 +57,7 @@ export default class GoVolunteerAnywhereProfileForm {
             }
           },
           {
-            className: 'form-group col-xs-6',
+            className: 'form-group col-sm-6',
             key: 'birthDate',
             type: 'crdsDatepicker',
             templateOptions: {

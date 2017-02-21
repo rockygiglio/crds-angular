@@ -5,7 +5,7 @@ export default function goVolunteerProjectCardComponent() {
   let component = {
     templateUrl: 'projectCard/goVolunteerProjectCard.html',
     controller,
-    controllerAs: 'project',
+    controllerAs: 'card',
     bindToController: true
   };
 
