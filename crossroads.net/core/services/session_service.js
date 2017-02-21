@@ -140,7 +140,7 @@
     // TODO: Get this working to DRY up login_controller and register_controller
     vm.redirectIfNeeded = ($injectedState) => {
       $timeout(() => {
-        // timeout ensures processing occurs on next 'loop'
+        // timeout ensures processing occurs on next cycle
         if (vm.hasRedirectionInfo()) {
           const url = vm.exists('redirectUrl');
           const params = vm.exists('params');
