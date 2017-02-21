@@ -59,7 +59,7 @@ namespace crds_angular.Controllers.API
             {
                 var participantId = _finderService.GetParticipantIdFromContact(contactId);
                 var pin = _finderService.GetPinDetails(participantId);
-                if (pin.Address.Latitude == null || pin.Address.Longitude == null)
+                if (pin.Address.Latitude == null || pin.Address.Longitude == null || (pin.Address.Latitude==0 && pin.Address.Longitude==0))
                 {
                    return Content(HttpStatusCode.ExpectationFailed, "Invalid Latitude/Longitude");
                 }
