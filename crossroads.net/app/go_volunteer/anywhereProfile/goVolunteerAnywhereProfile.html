@@ -1,5 +1,5 @@
-<div ng-if="profile.viewReady">
-  <preloader full-screen='false' ng-show='!profile.viewReady'> </preloader>
+<div ng-if="$ctrl.viewReady">
+  <preloader full-screen='false' ng-show='!$ctrl.viewReady'> </preloader>
 
   <go-volunteer-project-card></go-volunteer-project-card>
 
@@ -10,7 +10,7 @@
   </p>
 
   <div class="push-bottom soft-half-bottom">
-    <formly-form model="profile.model" fields="profile.fields" form="profile.profileForm" options="profile.options" ng-cloak></formly-form>
+    <formly-form model="$ctrl.model" fields="$ctrl.fields" form="$ctrl.$ctrlForm" options="$ctrl.options" ng-cloak></formly-form>
   </div>
 
   <div class="go-volunteer-waiver-wrapper soft push-top">
@@ -18,6 +18,6 @@
   </div>
 
   <div class="text-center push-top">
-    <button type="button" class="btn btn-primary" ng-disabled="profile.profileForm.$invalid">Accept Waiver and Register</button>
+    <button type="button" class="btn btn-primary" ng-disabled="$ctrl.$ctrlForm.$invalid">Accept Waiver and Register</button>
   </div>
 </div>

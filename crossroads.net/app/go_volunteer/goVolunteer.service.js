@@ -1,5 +1,3 @@
-(function() {
-  'use strict';
 
   module.exports = GoVolunteerService;
 
@@ -209,5 +207,3 @@
 
     return dto;
   }
-
-})();

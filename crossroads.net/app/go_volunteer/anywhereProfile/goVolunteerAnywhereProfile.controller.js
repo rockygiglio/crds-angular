@@ -1,5 +1,5 @@
 export default class GoVolunteerAnywhereProfileController {
-  /*@ngInject*/
+  /* @ngInject */
   constructor(GoVolunteerAnywhereProfileForm) {
     this.viewReady = false;
     this.goVolunteerAnywhereProfileForm = GoVolunteerAnywhereProfileForm;
