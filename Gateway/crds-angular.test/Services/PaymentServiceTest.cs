@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using crds_angular.Exceptions;
 using crds_angular.Models.Crossroads.Payment;
@@ -7,8 +6,6 @@ using crds_angular.Services;
 using crds_angular.Services.Interfaces;
 using crds_angular.test.Helpers;
 using Crossroads.Utilities.FunctionalHelpers;
-using Crossroads.Utilities.Interfaces;
-using Crossroads.Web.Common;
 using Crossroads.Web.Common.Configuration;
 using MinistryPlatform.Translation.Exceptions;
 using MinistryPlatform.Translation.Models;
@@ -37,6 +34,7 @@ namespace crds_angular.test.Services
         private readonly int nonePaid = 12;
         private readonly int defaultPaymentStatus = 15;
         private readonly int declinedPaymentStatus = 20;
+        private readonly int defaultCongregation = 5;
 
         public PaymentServiceTest()
         {
@@ -200,12 +198,16 @@ namespace crds_angular.test.Services
         public void shouldFailToMakePayment()
         {
             var paymentDto = fakePaymentDto();
-            var invoiceDetail = falkeInvoiceDetail(paymentDto.InvoiceId);
+            var invoiceDetail = fakeInvoiceDetail(paymentDto.InvoiceId);
 
             _invoiceRepository.Setup(m => m.InvoiceExists(paymentDto.InvoiceId)).Returns(true);
             _contactRepository.Setup(m => m.GetContactById(paymentDto.ContactId)).Returns(new MpMyContact()
             {
                 Contact_ID = paymentDto.ContactId
+            });
+            _contactRepository.Setup(m => m.GetContactById(invoiceDetail.RecipientContactId)).Returns(new MpMyContact()
+            {
+                Congregation_ID = 1
             });
             _paymentTypeRepository.Setup(m => m.PaymentTypeExists(5)).Returns(true);
             _invoiceRepository.Setup(m => m.GetInvoiceDetailForInvoice(paymentDto.InvoiceId)).Returns(invoiceDetail);            
@@ -230,12 +232,16 @@ namespace crds_angular.test.Services
         public void shouldMakePaymentOfSomePaid()
         {
             var paymentDto = fakePaymentDto();
-            var invoiceDetail = falkeInvoiceDetail(paymentDto.InvoiceId);
+            var invoiceDetail = fakeInvoiceDetail(paymentDto.InvoiceId);
 
             _invoiceRepository.Setup(m => m.InvoiceExists(paymentDto.InvoiceId)).Returns(true);
             _contactRepository.Setup(m => m.GetContactById(paymentDto.ContactId)).Returns(new MpMyContact()
             {
                 Contact_ID = paymentDto.ContactId
+            });
+            _contactRepository.Setup(m => m.GetContactById(invoiceDetail.RecipientContactId)).Returns(new MpMyContact()
+            {
+                Congregation_ID = 1
             });
             _paymentTypeRepository.Setup(m => m.PaymentTypeExists(5)).Returns(true);
             _invoiceRepository.Setup(m => m.GetInvoiceDetailForInvoice(paymentDto.InvoiceId)).Returns(invoiceDetail);
@@ -287,12 +293,16 @@ namespace crds_angular.test.Services
         public void shouldMakePaymentOfFullPaid()
         {
             var paymentDto = fakePaymentDto();
-            var invoiceDetail = falkeInvoiceDetail(paymentDto.InvoiceId);
+            var invoiceDetail = fakeInvoiceDetail(paymentDto.InvoiceId);
 
             _invoiceRepository.Setup(m => m.InvoiceExists(paymentDto.InvoiceId)).Returns(true);
             _contactRepository.Setup(m => m.GetContactById(paymentDto.ContactId)).Returns(new MpMyContact()
             {
                 Contact_ID = paymentDto.ContactId
+            });
+            _contactRepository.Setup(m => m.GetContactById(invoiceDetail.RecipientContactId)).Returns(new MpMyContact()
+            {
+                Congregation_ID = 1
             });
             _paymentTypeRepository.Setup(m => m.PaymentTypeExists(5)).Returns(true);
             _invoiceRepository.Setup(m => m.GetInvoiceDetailForInvoice(paymentDto.InvoiceId)).Returns(invoiceDetail);
@@ -574,12 +584,13 @@ namespace crds_angular.test.Services
             };
         }
 
-        private static MpInvoiceDetail falkeInvoiceDetail(int invoiceId)
+        private static MpInvoiceDetail fakeInvoiceDetail(int invoiceId)
         {
             return new MpInvoiceDetail()
             {
                 InvoiceDetailId = 1346,
-                InvoiceId = invoiceId
+                InvoiceId = invoiceId,
+                RecipientContactId = 9428
             };
         }
 
