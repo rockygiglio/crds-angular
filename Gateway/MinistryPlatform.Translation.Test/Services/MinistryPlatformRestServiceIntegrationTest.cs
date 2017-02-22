@@ -7,6 +7,7 @@ using Crossroads.Web.Common.MinistryPlatform;
 using Crossroads.Web.Common.Security;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Models.Childcare;
+using MinistryPlatform.Translation.Models.GoCincinnati;
 using MinistryPlatform.Translation.Models.Payments;
 using MinistryPlatform.Translation.Models.Rules;
 using Newtonsoft.Json;
@@ -545,6 +546,26 @@ namespace MinistryPlatform.Translation.Test.Services
             var result =  _fixture.UsingAuthenticationToken(_authToken)
                 .Get<MpInvoiceDetail>("Invoice_Detail", filter);
             Assert.IsFalse(result.Where(i => i.InvoiceStatusId != 7).ToList().Any());
+        }
+
+        [Test]
+        public void GetProject()
+        {
+            const string filter = "Project_ID=564 AND Initiative_ID_Table.[Volunteer_Signup_Start_Date]<=GetDate() AND Initiative_ID_Table.[Volunteer_Signup_End_Date]>=GetDate()";
+            var columns = new List<string>
+            {
+                "Project_ID",
+                "Project_Name",
+                "Project_Status_ID",
+                "Location_ID",
+                "Project_Type_ID",
+                "Organization_ID",
+                "cr_Projects.Initiative_ID",
+                "Address_ID"
+            };
+            var result = _fixture.UsingAuthenticationToken(_authToken).Search<MpProject>(filter, columns, null, true);
+            Assert.NotNull(result);
+            Assert.AreEqual(1, result.Count);
         }
 
     }
