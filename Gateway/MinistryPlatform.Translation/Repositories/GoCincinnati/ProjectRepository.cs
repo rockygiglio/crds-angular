@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Crossroads.Utilities.FunctionalHelpers;
 using Crossroads.Web.Common.MinistryPlatform;
 using MinistryPlatform.Translation.Models.GoCincinnati;
@@ -29,6 +31,20 @@ namespace MinistryPlatform.Translation.Repositories.GoCincinnati
                 "cr_Projects.Initiative_ID",
                 "Address_ID"
             };
+            try
+            {
+                var result = _ministryPlatformRest.UsingAuthenticationToken(token).Search<MpProject>(filter, columns, null, true);
+                if (result.Count > 0)
+                {   
+                    // There should never be more than one value.
+                    return new Ok<MpProject>(result.First());
+                }
+                return new Err<MpProject>($"Unable to find a valid project with Id = {projectId}");
+            }
+            catch (Exception e)
+            {
+                return new Err<MpProject>(e);
+            }
         }
     }
 }

@@ -4,10 +4,13 @@ using System.Linq;
 using crds_angular.Models.Crossroads.GoVolunteer;
 using crds_angular.Services;
 using crds_angular.Services.Interfaces;
+using Crossroads.Utilities.FunctionalHelpers;
 using Crossroads.Utilities.Interfaces;
 using Crossroads.Utilities.Services;
 using Crossroads.Web.Common;
 using Crossroads.Web.Common.Configuration;
+using Crossroads.Web.Common.MinistryPlatform;
+using MinistryPlatform.Translation.Models.GoCincinnati;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 using MinistryPlatform.Translation.Repositories.Interfaces.GoCincinnati;
 using Moq;
@@ -33,7 +36,8 @@ namespace crds_angular.test.Services
         private readonly Mock<IGoSkillsService> _skillsService;
         private readonly Mock<ICommunicationRepository> _commnuicationService;
         private readonly Mock<IUserRepository> _userService;
-
+        private readonly Mock<IApiUserRepository> _apiUserRepository;
+        private readonly Mock<IProjectRepository> _projectRepository;
 
         public GoVolunteerServiceTest()
         {
@@ -48,6 +52,8 @@ namespace crds_angular.test.Services
             _registrationService = new Mock<IRegistrationRepository>();
             _skillsService = new Mock<IGoSkillsService>();
             _userService = new Mock<IUserRepository>();
+            _apiUserRepository = new Mock<IApiUserRepository>();
+            _projectRepository = new Mock<IProjectRepository>();
             _fixture = new GoVolunteerService(_participantService.Object, 
                 _registrationService.Object, 
                 _contactService.Object, 
@@ -58,7 +64,9 @@ namespace crds_angular.test.Services
                 _attributeService.Object, 
                 _skillsService.Object,
                 _commnuicationService.Object,
-                _userService.Object);
+                _userService.Object,
+                _apiUserRepository.Object,
+                _projectRepository.Object);
         }
 
         [Test]
@@ -413,6 +421,54 @@ namespace crds_angular.test.Services
             Assert.AreEqual(dict["Nickname"], mergeData["Nickname"]);
             Assert.AreEqual(dict["Lastname"], mergeData["Lastname"]);
 
+        }
+
+        [Test]
+        public void ShouldGetProjectDetails()
+        {
+            const int projectId = 564;
+            const string apiToken = "clevelandsux";
+
+            var mpProject = new MpProject
+            {
+                AddressId = 1,
+                InitiativeId = 2,
+                LocationId = 3,
+                OrganizationId = 4,
+                ProjectId = projectId,
+                ProjectStatusId = 5,
+                ProjectTypeId = 6,
+                ProjectName = "Make Cleveland Great (Again?)"
+            };
+            var returnVal = new Ok<MpProject>(mpProject);
+
+            _apiUserRepository.Setup(m => m.GetToken()).Returns(apiToken);
+            _projectRepository.Setup(m => m.GetProject(projectId, apiToken)).Returns(returnVal);
+
+            var project = _fixture.GetProject(projectId);
+            Assert.AreEqual(mpProject.AddressId, project.AddressId);
+            Assert.AreEqual(mpProject.ProjectId, project.ProjectId);
+            _apiUserRepository.VerifyAll();
+            _projectRepository.VerifyAll();
+        }
+
+        [Test]
+        public void ShouldThrowExceptionIfProjectNotFound()
+        {
+            const int projectId = 564;
+            const string apiToken = "clevelandsux";
+            
+            var returnVal = new Err<MpProject>("Project not found!");
+
+            _apiUserRepository.Setup(m => m.GetToken()).Returns(apiToken);
+            _projectRepository.Setup(m => m.GetProject(projectId, apiToken)).Returns(returnVal);
+
+            Assert.Throws<ApplicationException>(() =>
+            {
+                _fixture.GetProject(projectId);
+                _apiUserRepository.VerifyAll();
+                _projectRepository.VerifyAll();
+            });
         }
 
         private string Skills(Registration registration)
