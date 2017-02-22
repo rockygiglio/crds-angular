@@ -23,7 +23,6 @@ export default class ServeTeamLeaderController {
       this.teamMembers = data;
     });
     _.each(this.team.serveOpportunities, (opp) => {
-      debugger;
       opp.capacity = this.serveTeamService.getCapacity(opp, this.team.eventId);
     });
 
