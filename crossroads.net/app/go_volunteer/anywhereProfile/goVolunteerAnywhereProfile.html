@@ -1,0 +1,23 @@
+<div ng-if="profile.viewReady">
+  <preloader full-screen='false' ng-show='!profile.viewReady'> </preloader>
+
+  <go-volunteer-project-card></go-volunteer-project-card>
+
+  <h3>Tell us about yourself, so we can keep you in the loop</h3>
+  <p>
+    By providing your mobile number, you are agreeing to receive text message updates from Crossroads.
+    Your request to join will be sent to the project leader listed above.
+  </p>
+
+  <div class="push-bottom soft-half-bottom">
+    <formly-form model="profile.model" fields="profile.fields" form="profile.profileForm" options="profile.options" ng-cloak></formly-form>
+  </div>
+
+  <div class="go-volunteer-waiver-wrapper soft push-top">
+    <div dynamic-content="$root.MESSAGES.goVolunteerWaiverTerms.content | html"></div>
+  </div>
+
+  <div class="text-center push-top">
+    <button type="button" class="btn btn-primary" ng-disabled="profile.profileForm.$invalid">Accept Waiver and Register</button>
+  </div>
+</div>

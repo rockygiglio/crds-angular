@@ -83,6 +83,12 @@ namespace MinistryPlatform.Translation.Repositories
             return CreateContact(contact);
         }
 
+        //Get ID of currently logged in user
+        public int GetContactId(string token)
+        {
+            return _ministryPlatformService.GetContactInfo(token).ContactId;
+        }
+
         public MpMyContact GetContactById(int contactId)
         {
             var searchString = string.Format(",\"{0}\"", contactId);

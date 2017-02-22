@@ -23,12 +23,10 @@ namespace crds_angular.Controllers.API
     {
         private readonly ILog _logger = LogManager.GetLogger(typeof (ImageController));
         private readonly MPInterfaces.IMinistryPlatformService _mpService;
-        private readonly IAuthenticationRepository _authenticationService;
         private readonly IApiUserRepository _apiUserService;
 
         public ImageController(MPInterfaces.IMinistryPlatformService mpService, IAuthenticationRepository authenticationService, IApiUserRepository apiUserService, IUserImpersonationService userImpersonationService) : base(userImpersonationService, authenticationService)
         {
-            _authenticationService = authenticationService;
             _apiUserService = apiUserService;
             _mpService = mpService;
         }
@@ -116,7 +114,7 @@ namespace crds_angular.Controllers.API
             {
                 const String fileName = "profile.png";
 
-                var contactId = _authenticationService.GetContactId(token);
+                var contactId = _mpService.GetContactInfo(token).ContactId;
                 var files = _mpService.GetFileDescriptions("MyContact", contactId, token);
                 var file = files.FirstOrDefault(f => f.IsDefaultImage);
                 var base64String = Request.Content.ReadAsStringAsync().Result;

@@ -65,8 +65,6 @@ namespace crds_angular.test.controllers
             _fixture.Request.Headers.Authorization = new AuthenticationHeaderValue(_authType, _authToken);
             _fixture.RequestContext = new HttpRequestContext();
 
-            _authenticationServiceMock.Setup(mocked => mocked.GetContactId(_authType + " " + _authToken)).Returns(myContactId);
-
         }
 
         [Test]

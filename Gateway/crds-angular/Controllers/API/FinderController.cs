@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Net;
 using System.Reflection;
 using System.Web.Http;
 using System.Web.Http.Description;
+using System.Web.Mvc;
 using crds_angular.Exceptions.Models;
 using crds_angular.Models.Crossroads;
 using crds_angular.Models.Finder;
@@ -31,8 +33,8 @@ namespace crds_angular.Controllers.API
 
         [ResponseType(typeof(PinDto))]
         [VersionedRoute(template: "finder/pin/{participantId}", minimumVersion: "1.0.0")]
-        [Route("finder/pin/{participantId}")]
-        [HttpGet]
+        [System.Web.Http.Route("finder/pin/{participantId}")]
+        [System.Web.Http.HttpGet]
         public IHttpActionResult GetPinDetails([FromUri]int participantId)
         {
             try
@@ -49,15 +51,19 @@ namespace crds_angular.Controllers.API
 
         [ResponseType(typeof(PinDto))]
         [VersionedRoute(template: "finder/pin/contact/{contactId}", minimumVersion: "1.0.0")]
-        [Route("finder/pin/contact/{contactId}")]
-        [HttpGet]
+        [System.Web.Http.Route("finder/pin/contact/{contactId}")]
+        [System.Web.Http.HttpGet]
         public IHttpActionResult GetPinDetailsByContact([FromUri]int contactId)
         {
             try
             {
                 var participantId = _finderService.GetParticipantIdFromContact(contactId);
-                var list = _finderService.GetPinDetails(participantId);
-                return Ok(list);
+                var pin = _finderService.GetPinDetails(participantId);
+                if (pin.Address.Latitude == null || pin.Address.Longitude == null || (pin.Address.Latitude==0 && pin.Address.Longitude==0))
+                {
+                   return Content(HttpStatusCode.ExpectationFailed, "Invalid Latitude/Longitude");
+                }
+                return Ok(pin);
             }
             catch (Exception ex)
             {
@@ -67,14 +73,14 @@ namespace crds_angular.Controllers.API
         }
 
         [ResponseType(typeof(AddressDTO))]
-        [VersionedRoute(template: "finder/pinbyip", minimumVersion: "1.0.0")]
-        [Route("finder/pinbyip")]
-        [HttpGet]
-        public IHttpActionResult GetPinByIpAddress()
+        [VersionedRoute(template: "finder/pinbyip/{ipAddress}", minimumVersion: "1.0.0")]
+        [System.Web.Http.Route("finder/pinbyip/{ipAddress}")]
+        [System.Web.Http.HttpGet]
+        public IHttpActionResult GetPinByIpAddress([FromUri]string ipAddress)
         {
             try
             {
-                var address = _finderService.GetAddressForIp();
+                var address = _finderService.GetAddressForIp(ipAddress.Replace('-','.'));
                 return Ok(address);
             }
             catch (Exception ex)
@@ -90,8 +96,8 @@ namespace crds_angular.Controllers.API
         [RequiresAuthorization]
         [ResponseType(typeof(PinDto))]
         [VersionedRoute(template: "finder/pin", minimumVersion: "1.0.0")]
-        [Route("finder/pin")]
-        [HttpPost]
+        [System.Web.Http.Route("finder/pin")]
+        [System.Web.Http.HttpPost]
         public IHttpActionResult PostPin([FromBody] PinDto pin)
         {
             return Authorized(token =>

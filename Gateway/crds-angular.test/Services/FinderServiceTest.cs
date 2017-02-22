@@ -22,6 +22,7 @@ namespace crds_angular.test.Services
         private Mock<IContactRepository> _mpContactRepository;
         private Mock<IAddressService>_addressService;
         private Mock<IParticipantRepository> _mpParticipantRepository;
+        private Mock<IAddressService> _mpAddressService;
 
         [SetUp]
         public void SetUp()
@@ -30,6 +31,7 @@ namespace crds_angular.test.Services
             _mpContactRepository = new Mock<IContactRepository>();
             _addressService = new Mock<IAddressService>();
             _mpParticipantRepository = new Mock<IParticipantRepository>();
+            _mpAddressService = new Mock<IAddressService>();
 
             _fixture = new FinderService(_mpFinderRepository.Object, _mpContactRepository.Object, _addressService.Object, _mpParticipantRepository.Object);
 
