@@ -4,6 +4,8 @@ using NUnit.Framework;
 using crds_angular.Services.Interfaces;
 using crds_angular.Services;
 using crds_angular.Models.Crossroads.Subscription;
+using Crossroads.Web.Common;
+using Crossroads.Web.Common.MinistryPlatform;
 
 namespace crds_angular.test.Services
 {
@@ -13,14 +15,14 @@ namespace crds_angular.test.Services
 
         private Mock<MPInterfaces.IMinistryPlatformService> _ministryPlatformService;
         private Mock<Util.Interfaces.IEmailListHandler> _emailListHandler;
-        private Mock<MPInterfaces.IApiUserRepository> _apiUserService;
+        private Mock<IApiUserRepository> _apiUserService;
 
         [SetUp]
         public void SetUp()
         {
             _ministryPlatformService = new Mock<MPInterfaces.IMinistryPlatformService>();
             _emailListHandler = new Mock<Util.Interfaces.IEmailListHandler>();
-            _apiUserService = new Mock<MPInterfaces.IApiUserRepository>();
+            _apiUserService = new Mock<IApiUserRepository>();
 
             _subscriptionService = new SubscriptionsService(_ministryPlatformService.Object, _emailListHandler.Object, _apiUserService.Object);
 

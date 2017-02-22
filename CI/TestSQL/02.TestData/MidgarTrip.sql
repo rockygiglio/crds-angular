@@ -54,10 +54,14 @@ SET IDENTITY_INSERT [dbo].[Pledge_Campaigns] OFF;
 --This command resets the identity value so that if someone adds pledge_campaigns through the UI it won't use a big ID. 
 DBCC CHECKIDENT (Pledge_Campaigns, reseed, @pledge_id);
 
+-- This is the Communication_ID for the email related to giving to a trip.
+DECLARE @comm_ID as int
+SET @comm_ID = 121611
+
 --Program for (t) GO Midgar
 INSERT INTO [dbo].programs 
 (Program_Name,Congregation_ID,Ministry_ID,[Start_Date]                     ,End_Date                       ,Program_Type_ID,Leadership_Team,Primary_Contact,Priority_ID,On_Connection_Card,Stewardship_Information,Tax_Deductible_Donations,Statement_Title,Statement_Header_ID,Allow_Online_Giving,Online_Sort_Order,Pledge_Campaign_ID,Account_Number,Default_Target_Event,On_Donation_Batch_Tool,Domain_ID,Available_Online,__ExternalFundID,Communication_ID) VALUES
-(@tripname   ,5              ,20         ,CAST(@startYear as smalldatetime),CAST(@endYear as smalldatetime),3              ,null           ,2562378        ,null       ,null              ,null                   ,1                       ,@tripName      ,2                  ,1                  ,null             ,null              ,null          ,null                ,0                     ,1        ,null            ,null            ,null            );
+(@tripname   ,5              ,20         ,CAST(@startYear as smalldatetime),CAST(@endYear as smalldatetime),3              ,null           ,2562378        ,null       ,null              ,null                   ,1                       ,@tripName      ,2                  ,1                  ,null             ,null              ,null          ,null                ,0                     ,1        ,null            ,null            ,@comm_ID        );
 
 --Actual Event for (t) GO Midgar
 INSERT INTO [dbo].events 

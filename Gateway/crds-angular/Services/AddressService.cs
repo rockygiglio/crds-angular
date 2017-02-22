@@ -43,13 +43,15 @@ namespace crds_angular.Services
             address.AddressID = found ? UpdateAddress(mpAddress) : CreateAddress(mpAddress);
         }
 
-        private void SetGeoCoordinates(AddressDTO address)
+        public void SetGeoCoordinates(AddressDTO address)
         {
             try
             {
                 var coords = _addressGeocodingService.GetGeoCoordinates(address);
                 address.Longitude = coords.Longitude;
                 address.Latitude = coords.Latitude;
+                var mpAddress = AutoMapper.Mapper.Map<MpAddress>(address);
+                UpdateAddress(mpAddress);
             }
             catch (InvalidAddressException e)
             {

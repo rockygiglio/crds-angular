@@ -7,8 +7,9 @@ using crds_angular.Models.Crossroads.Groups;
 using crds_angular.Models.Crossroads.Payment;
 using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.FunctionalHelpers;
-using Crossroads.Utilities.Interfaces;
 using log4net;
+using Crossroads.Web.Common.Configuration;
+using Crossroads.Web.Common.MinistryPlatform;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Models.Product;
 using MinistryPlatform.Translation.Repositories.Interfaces;
@@ -113,7 +114,7 @@ namespace crds_angular.Services
             var campEvent = _eventRepository.GetEvent(eventId);
             var eventProduct = _productRepository.GetProductForEvent(eventId);
             var eventProductOptionPrices = _productRepository.GetProductOptionPricesForProduct(eventProduct.ProductId).OrderByDescending(m => m.DaysOutToHide).ToList();
-            var invoiceDetails = _invoiceRepository.GetInvoiceDetailsForProductAndCamperAndContact(eventProduct.ProductId, camperContactId, me.Contact_ID);
+            var invoiceDetails = _invoiceRepository.GetInvoiceDetailsForProductAndCamper(eventProduct.ProductId, camperContactId);
             var answer = _formSubmissionRepository.GetFormResponseAnswer(formId, camperContactId, formFieldId);
             var financialAssistance = (!string.IsNullOrEmpty(answer) && Convert.ToBoolean(answer));
             PaymentDetailDTO paymentDetail;
@@ -146,7 +147,7 @@ namespace crds_angular.Services
                 return me.Select(member => NewCampFamilyMember(member, eventId, apiToken)).ToList();
             }
 
-            var otherFamily = _contactRepository.GetOtherHouseholdMembers(myContact.Contact_ID);
+            var otherFamily = _contactRepository.GetOtherHouseholdMembers(myContact.Household_ID);
             family.AddRange(otherFamily);
             family = family.Where((member) => member.HouseholdPosition == "Minor Child").ToList();
             return family.Select(member => NewCampFamilyMember(member, eventId, apiToken)).ToList();
@@ -195,7 +196,7 @@ namespace crds_angular.Services
         {
             var loggedInContact = _contactRepository.GetMyProfile(token);
             var family = _contactRepository.GetHouseholdFamilyMembers(loggedInContact.Household_ID);
-            family.AddRange(_contactRepository.GetOtherHouseholdMembers(loggedInContact.Contact_ID));
+            family.AddRange(_contactRepository.GetOtherHouseholdMembers(loggedInContact.Household_ID));
 
             if (family.Where(f => f.ContactId == contactId).ToList().Count <= 0)
             {
@@ -438,7 +439,7 @@ namespace crds_angular.Services
 
             var loggedInContact = _contactRepository.GetMyProfile(token);
             var family = _contactRepository.GetHouseholdFamilyMembers(loggedInContact.Household_ID);
-            family.AddRange(_contactRepository.GetOtherHouseholdMembers(loggedInContact.Contact_ID));
+            family.AddRange(_contactRepository.GetOtherHouseholdMembers(loggedInContact.Household_ID));
 
             var camps = _eventRepository.GetEvents(campType, apiToken);
             foreach (var camp in camps.Where(c => c.EventEndDate >= DateTime.Today))
@@ -451,7 +452,7 @@ namespace crds_angular.Services
                         if (campers.Any(c => c.ContactId == member.ContactId))
                         {
                             var product = _productRepository.GetProductForEvent(camp.EventId);
-                            var invoiceDetails = _invoiceRepository.GetInvoiceDetailsForProductAndCamperAndContact(product.ProductId, member.ContactId, loggedInContact.Contact_ID);
+                            var invoiceDetails = _invoiceRepository.GetInvoiceDetailsForProductAndCamper(product.ProductId, member.ContactId);
                             PaymentDetailDTO paymentDetail;
                             paymentDetail = invoiceDetails.Value == null ? null : _paymentService.GetPaymentDetails(0, invoiceDetails.Value.InvoiceId, token);
 
@@ -508,7 +509,7 @@ namespace crds_angular.Services
         {
             var loggedInContact = _contactRepository.GetMyProfile(token);
             var family = _contactRepository.GetHouseholdFamilyMembers(loggedInContact.Household_ID);
-            family.AddRange(_contactRepository.GetOtherHouseholdMembers(loggedInContact.Contact_ID));
+            family.AddRange(_contactRepository.GetOtherHouseholdMembers(loggedInContact.Household_ID));
 
             if (family.Where(f => f.ContactId == campProductDto.ContactId).ToList().Count <= 0)
             {
@@ -603,7 +604,7 @@ namespace crds_angular.Services
         {
             var loggedInContact = _contactRepository.GetMyProfile(token);
             var family = _contactRepository.GetHouseholdFamilyMembers(loggedInContact.Household_ID);
-            family.AddRange(_contactRepository.GetOtherHouseholdMembers(loggedInContact.Contact_ID));
+            family.AddRange(_contactRepository.GetOtherHouseholdMembers(loggedInContact.Household_ID));
 
             if (family.Where(f => f.ContactId == contactId).ToList().Count <= 0)
             {
@@ -674,7 +675,7 @@ namespace crds_angular.Services
         {
             var loggedInContact = _contactRepository.GetMyProfile(token);
             var family = _contactRepository.GetHouseholdFamilyMembers(loggedInContact.Household_ID);
-            family.AddRange(_contactRepository.GetOtherHouseholdMembers(loggedInContact.Contact_ID));
+            family.AddRange(_contactRepository.GetOtherHouseholdMembers(loggedInContact.Household_ID));
 
             if (family.Where(f => f.ContactId == contactId).ToList().Count <= 0)
             {
@@ -766,7 +767,7 @@ namespace crds_angular.Services
         {
             var loggedInContact = _contactRepository.GetMyProfile(token);
             var family = _contactRepository.GetHouseholdFamilyMembers(loggedInContact.Household_ID);
-            family.AddRange(_contactRepository.GetOtherHouseholdMembers(loggedInContact.Contact_ID));
+            family.AddRange(_contactRepository.GetOtherHouseholdMembers(loggedInContact.Household_ID));
 
             if (family.Where(f => f.ContactId == contactId).ToList().Count <= 0)
             {

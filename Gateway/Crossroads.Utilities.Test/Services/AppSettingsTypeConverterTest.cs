@@ -4,6 +4,8 @@ using Moq;
 using NUnit.Framework;
 using System.ComponentModel;
 using System.Globalization;
+using Crossroads.Web.Common;
+using Crossroads.Web.Common.Configuration;
 
 namespace Crossroads.Utilities.Test.Services
 {

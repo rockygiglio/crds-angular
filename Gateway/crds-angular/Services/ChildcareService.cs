@@ -15,6 +15,9 @@ using Crossroads.Utilities.Interfaces;
 using Crossroads.Utilities.Services;
 using log4net;
 using Microsoft.Ajax.Utilities;
+using Crossroads.Web.Common;
+using Crossroads.Web.Common.Configuration;
+using Crossroads.Web.Common.MinistryPlatform;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Models.Childcare;
 using MinistryPlatform.Translation.Repositories.Interfaces;
@@ -375,7 +378,7 @@ namespace crds_angular.Services
 
             // Add members of other household(s)
             // Doesn't this really belong in the getHouseholds method?
-            householdData.AllMembers.AddRange(_contactService.GetOtherHouseholdMembers(person.ContactId));
+            householdData.AllMembers.AddRange(_contactService.GetOtherHouseholdMembers(person.HouseholdId));
 
             var dashboardData = _childcareRepository.GetChildcareDashboard(person.ContactId);
             foreach (var childcareDashboard in dashboardData)

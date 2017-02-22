@@ -14,6 +14,7 @@ using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Models.DTO;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 using Crossroads.ApiVersioning;
+using Crossroads.Web.Common.Security;
 
 namespace crds_angular.Controllers.API
 {
@@ -21,7 +22,7 @@ namespace crds_angular.Controllers.API
     {
         private readonly IOpportunityRepository _opportunityService;
 
-        public OpportunityController(IOpportunityRepository opportunityService, IUserImpersonationService userImpersonationService) : base(userImpersonationService)
+        public OpportunityController(IOpportunityRepository opportunityService, IUserImpersonationService userImpersonationService, IAuthenticationRepository authenticationRepository) : base(userImpersonationService, authenticationRepository)
         {
             _opportunityService = opportunityService;
         }

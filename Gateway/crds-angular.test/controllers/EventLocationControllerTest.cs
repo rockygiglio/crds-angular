@@ -6,6 +6,9 @@ using crds_angular.Controllers.API;
 using crds_angular.Models.Crossroads;
 using crds_angular.Models.Crossroads.Events;
 using crds_angular.Services.Interfaces;
+using Crossroads.Web.Common;
+using Crossroads.Web.Common.MinistryPlatform;
+using Crossroads.Web.Common.Security;
 using MinistryPlatform.Translation.Repositories;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 using Moq;
@@ -35,7 +38,7 @@ namespace crds_angular.test.controllers
 
             _eventService = new Mock<IEventService>();
 
-            controller = new EventController(_ministryPlatfromServiceMock.Object, _apiUserService.Object, _eventService.Object, new Mock<IUserImpersonationService>().Object);
+            controller = new EventController(_ministryPlatfromServiceMock.Object, _apiUserService.Object, _eventService.Object, new Mock<IUserImpersonationService>().Object, new Mock<IAuthenticationRepository>().Object);
         }
 
 

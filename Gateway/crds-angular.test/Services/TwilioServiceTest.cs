@@ -1,13 +1,14 @@
 ﻿using System;
 using crds_angular.Services;
-using Crossroads.Utilities.Interfaces;
 using log4net;
+using Crossroads.Web.Common.Configuration;
 using Moq;
 using NUnit.Framework;
 
 namespace crds_angular.test.Services
 {
     [TestFixture]
+    [Category("IntegrationTests")]
     public class TwilioServiceTest
     {
         private TwilioService _fixture;

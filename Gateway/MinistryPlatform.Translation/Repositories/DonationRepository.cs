@@ -5,6 +5,10 @@ using AutoMapper;
 using Crossroads.Utilities;
 using Crossroads.Utilities.Enums;
 using Crossroads.Utilities.Interfaces;
+using Crossroads.Web.Common;
+using Crossroads.Web.Common.Configuration;
+using Crossroads.Web.Common.MinistryPlatform;
+using Crossroads.Web.Common.Security;
 using MinistryPlatform.Translation.Enum;
 using MinistryPlatform.Translation.Exceptions;
 using MinistryPlatform.Translation.Extensions;
@@ -604,7 +608,7 @@ namespace MinistryPlatform.Translation.Repositories
             {
                 var pId = _ministryPlatformRest.UsingAuthenticationToken(token).Search<int>("GL_Account_Mapping",
                                                                                             $"GL_Account_Mapping.Program_ID={programId} AND GL_Account_Mapping.Congregation_ID={congregationId}",
-                                                                                            "Processor_Fee_Mapping_ID");
+                                                                                            "Processor_Fee_Mapping_ID", null, false);
                 if (pId == 0)
                 {
                     pId = _configurationWrapper.GetConfigIntValue("ProcessingMappingId");

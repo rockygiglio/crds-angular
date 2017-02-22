@@ -12,6 +12,9 @@ using crds_angular.Models.Crossroads.Lookups;
 using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Interfaces;
 using FsCheck;
+using Crossroads.Web.Common;
+using Crossroads.Web.Common.Configuration;
+using Crossroads.Web.Common.Security;
 using Moq;
 using NUnit.Framework;
 
@@ -47,7 +50,8 @@ namespace crds_angular.test.controllers
                                                  _goVolunteerService.Object,
                                                  _attributeService.Object,
                                                  _configurationWrapper.Object, 
-                                                 new Mock<IUserImpersonationService>().Object)
+                                                 new Mock<IUserImpersonationService>().Object,
+                                                 new Mock<IAuthenticationRepository>().Object)
 
             {
                 Request = new HttpRequestMessage(),

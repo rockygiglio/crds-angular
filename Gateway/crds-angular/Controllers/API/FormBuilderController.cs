@@ -10,6 +10,7 @@ using crds_angular.Services.Interfaces;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 using log4net;
 using Crossroads.ApiVersioning;
+using Crossroads.Web.Common.Security;
 
 namespace crds_angular.Controllers.API
 {
@@ -20,7 +21,7 @@ namespace crds_angular.Controllers.API
         private readonly Services.Interfaces.IFormBuilderService _formBuilderService;
 
         public FormBuilderController(Services.Interfaces.IFormBuilderService formBuilderService,
-                                     IMinistryPlatformService ministryPlatformService, IUserImpersonationService userImpersonationService) : base(userImpersonationService)
+                                     IMinistryPlatformService ministryPlatformService, IUserImpersonationService userImpersonationService, IAuthenticationRepository authenticationRepository) : base(userImpersonationService, authenticationRepository)
         {
             _formBuilderService = formBuilderService;
             _ministryPlatformService = ministryPlatformService;

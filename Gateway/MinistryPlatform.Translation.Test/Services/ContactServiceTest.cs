@@ -1,6 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Crossroads.Utilities.Interfaces;
+using Crossroads.Web.Common;
+using Crossroads.Web.Common.Configuration;
+using Crossroads.Web.Common.MinistryPlatform;
+using Crossroads.Web.Common.Security;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Repositories;
 using MinistryPlatform.Translation.Repositories.Interfaces;
@@ -39,7 +44,11 @@ namespace MinistryPlatform.Translation.Test.Services
             _configuration.Setup(m => m.GetEnvironmentVarAsString("API_PASSWORD")).Returns("pwd");
             _ministryPlatformRest.Setup(m => m.UsingAuthenticationToken("ABC")).Returns(_ministryPlatformRest.Object);
 
-            _authService.Setup(m => m.Authenticate(It.IsAny<string>(), It.IsAny<string>())).Returns(new Dictionary<string, object> {{"token", "ABC"}, {"exp", "123"}});
+            _authService.Setup(m => m.Authenticate(It.IsAny<string>(), It.IsAny<string>())).Returns(new AuthToken
+            {
+                AccessToken = "ABC",
+                ExpiresIn = 123
+            });
             _fixture = new ContactRepository(_ministryPlatformService.Object, _authService.Object, _configuration.Object, _ministryPlatformRest.Object, _apiUserService.Object);
         }
 
@@ -463,5 +472,29 @@ namespace MinistryPlatform.Translation.Test.Services
 
             Assert.IsNull(result);
         }
+
+        [Test]
+        public void ShouldGetOtherHouseholdMembers()
+        {
+            const int householdId = 999;
+            var householdContacts = GetContactHouseholds(householdId);
+            _ministryPlatformRest.Setup(m => m.Search<MpContactHousehold>(It.IsAny<string>(), It.IsAny<List<string>>(), null, false)).Returns(householdContacts);
+
+            var householdMembers = _fixture.GetOtherHouseholdMembers(householdId);
+            Assert.AreEqual(1, householdMembers.Count);
+            Assert.AreEqual("Minor Child", householdMembers.First().HouseholdPosition);            
+        }
+
+
+        public static List<MpContactHousehold> GetContactHouseholds(int householdId)
+        {
+            return new List<MpContactHousehold>
+            {
+                new MpContactHousehold() {ContactId = 123445, HouseholdId = householdId, HouseholdPositionId = 2, Age = 10, DateOfBirth = null, FirstName = "Ellie", LastName = "Canterbury", HouseholdPosition = "Minor Child"},
+                new MpContactHousehold() {ContactId = 54321, HouseholdId = householdId, HouseholdPositionId = 1, Age = 59, DateOfBirth = null, FirstName = "Ella", LastName = "Robey", HouseholdPosition = "Adult", EndDate = DateTime.Now.AddDays(-3)}
+            };
+        }
+        
+        
     }
 }
