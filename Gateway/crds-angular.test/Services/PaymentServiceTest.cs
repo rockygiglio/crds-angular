@@ -552,6 +552,68 @@ namespace crds_angular.test.Services
             _invoiceRepository.VerifyAll();
         }
 
+        [Test]
+        public void ShouldUseDefaultCongregationOnPayment()
+        {
+            var paymentDto = fakePaymentDto();
+            var invoiceDetail = fakeInvoiceDetail(paymentDto.InvoiceId);
+
+            _configWrapper.Setup(m => m.GetConfigIntValue("Congregation_Default_ID")).Returns(defaultCongregation);
+            _invoiceRepository.Setup(m => m.InvoiceExists(paymentDto.InvoiceId)).Returns(true);
+            _contactRepository.Setup(m => m.GetContactById(paymentDto.ContactId)).Returns(new MpMyContact()
+            {
+                Contact_ID = paymentDto.ContactId
+            });
+            _contactRepository.Setup(m => m.GetContactById(invoiceDetail.RecipientContactId)).Returns(new MpMyContact()
+            {
+                Congregation_ID = null
+            });
+            _paymentTypeRepository.Setup(m => m.PaymentTypeExists(5)).Returns(true);
+            _invoiceRepository.Setup(m => m.GetInvoiceDetailForInvoice(paymentDto.InvoiceId)).Returns(invoiceDetail);
+
+            var retVal = new MpPaymentDetailReturn()
+            {
+                InvoiceDetailId = invoiceDetail.InvoiceDetailId,
+                PaymentAmount = paymentDto.DonationAmt,
+                PaymentDetailId = 398457,
+                PaymentId = 2897234
+            };
+
+            _paymentRepository.Setup(m => m.CreatePaymentAndDetail(It.IsAny<MpPaymentDetail>())).Returns(new Result<MpPaymentDetailReturn>(true, retVal));
+
+            var invoice = new MpInvoice()
+            {
+                InvoiceId = paymentDto.InvoiceId,
+                InvoiceTotal = 500
+            };
+
+            var paymentsSoFar = new List<MpPayment>
+            {
+                new MpPayment()
+                {
+                    PaymentTotal = 20,
+                    PaymentStatus = 3
+                },
+                 new MpPayment()
+                {
+                    PaymentTotal = 200,
+                    PaymentStatus = 3
+                }
+            };
+
+            _invoiceRepository.Setup(m => m.GetInvoice(invoiceDetail.InvoiceId)).Returns(invoice);
+            _paymentRepository.Setup(m => m.GetPaymentsForInvoice(paymentDto.InvoiceId)).Returns(paymentsSoFar);
+            _invoiceRepository.Setup(m => m.SetInvoiceStatus(paymentDto.InvoiceId, somePaid));
+
+            var val = _fixture.PostPayment(paymentDto);
+            Assert.AreEqual(retVal, val);
+            _invoiceRepository.VerifyAll();
+            _contactRepository.VerifyAll();
+            _paymentTypeRepository.VerifyAll();
+            _paymentRepository.VerifyAll();
+            _configWrapper.VerifyAll();
+        }
+
         private static List<MpPayment> fakePayments(int payerId, decimal paymentTotal, int paymentIdOfOne = 34525, int paymentStatus = 0)
         {
             return new List<MpPayment>
