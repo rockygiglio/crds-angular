@@ -1,1 +1,37 @@
-<div dynamic-content="organizations.content | html"> </div>
+<preloader full-screen='false' ng-show='!$ctrl.viewReady'> </preloader>
+
+<h2 class="ng-scope push-bottom">What church or organization are you participating with?</h2>
+<div class="row ng-scope">
+  <div class="form-group col-xs-12">
+    <div>
+      <div class="media card-item media-card-link">
+        <div class="media-left col-xs-3 col-sm-3 col-md-2 soft-half"><img class="media-object img-responsive imgix-fluid" data-src="https://crds-cms-uploads.imgix.net/content/images/gc-crossroads.jpg" alt="Demo" src="https://crds-cms-uploads.imgix.net/content/images/gc-crossroads.jpg?dpr=2&amp;ixjsv=2.2.3&amp;q=50&amp;w=80" title=""></div>
+        <div class="media-body col-xs-9 col-sm-9 col-md-9 soft-half-ends soft-half-right soft-left mobile-hard-left">
+          <h3 class="media-heading push-half-bottom">Crossroads Community Church</h3>
+          <select class="form-control push-half-bottom">
+            <option>Select Location</option>
+          </select>
+          <p class="help-block">Don't see your area?  Discover other opportunities in your city.</p>
+        </div>
+      </div>
+    </div>
+    <div ui-sref="go-volunteer.page({page: 'profile', city: 'cincinnati', organization: 'archdiocese'})" href="/go-volunteer/cincinnati/archdiocese/profile">
+      <div class="media card-item media-card-link">
+        <div class="media-left col-xs-3 col-sm-3 col-md-2 soft-half"><img class="media-object img-responsive imgix-fluid" src="https://crds-cms-uploads.imgix.net/content/images/gc-archdiocese.jpg?dpr=2&amp;ixjsv=2.2.3&amp;q=50&amp;w=80" alt="Demo" title=""></div>
+        <div class="media-body soft-half-ends soft-half-right soft-left">
+          <h3 class="media-heading flush-bottom">Archdiocese</h3>
+          <p class="flush-bottom">of Cincinnati</p>
+        </div>
+      </div>
+    </div>
+    <div ui-sref="content({link:'/go-volunteer/cincinnati/go-cincinnati-helpful-info-other'})" href="%2Fgo-volunteer%2Fcincinnati%2Fgo-cincinnati-helpful-info-other">
+      <div class="media card-item media-card-link">
+        <div class="media-left col-xs-3 col-sm-3 col-md-2 soft-half"><img class="media-object img-responsive imgix-fluid" src="https://crds-cms-uploads.imgix.net/content/images/gc-other.jpg?dpr=2&amp;ixjsv=2.2.3&amp;q=50&amp;w=80" alt="Demo" title=""></div>
+        <div class="media-body soft-half-ends soft-half-right soft-left">
+          <h3 class="media-heading flush-bottom">Other</h3>
+          <p class="flush-bottom">Affiliation or Organization</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
