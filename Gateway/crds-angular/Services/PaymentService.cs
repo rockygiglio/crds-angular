@@ -262,7 +262,8 @@ namespace crds_angular.Services
             {
                 PaymentAmount = -(int.Parse(refund.Data[0].Amount)/Constants.StripeDecimalConversionValue),
                 InvoiceDetailId = invoicedetail.InvoiceDetailId,
-                Payment = paymentReverse
+                Payment = paymentReverse,
+                CongregationId = _contactRepository.GetContactById(invoicedetail.RecipientContactId).Congregation_ID ?? _configWrapper.GetConfigIntValue("Congregation_Default_ID")
             };
             return _paymentRepository.CreatePaymentAndDetail(detail).Value.PaymentId;
         }
