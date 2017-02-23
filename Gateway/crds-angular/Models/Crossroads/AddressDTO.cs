@@ -41,7 +41,7 @@ namespace crds_angular.Models.Crossroads
 
         public bool HasGeoCoordinates()
         {
-            return Longitude.HasValue && Latitude.HasValue && Longitude != 0 && Latitude != 0;
+            return Longitude.HasValue && Latitude.HasValue;
         }
 
         public override string ToString()
