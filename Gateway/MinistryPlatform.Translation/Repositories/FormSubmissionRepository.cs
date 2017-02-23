@@ -171,12 +171,12 @@ namespace MinistryPlatform.Translation.Repositories
             return responseId;
         }
 
-        public string GetFormResponseAnswer(int formId, int contactId, int formFieldId)
+        public string GetFormResponseAnswer(int formId, int contactId, int formFieldId, int? eventId)
         {
             var apiToken = ApiLogin();
             const string selectColumns = "Response";
 
-            var formResponseId = GetFormResponseIdForFormContact(formId, contactId);
+            var formResponseId = GetFormResponseIdForFormContact(formId, contactId, eventId);
             var formResponseAnswerId = GetFormResponseAnswerIdForFormFeildFormResponse(formResponseId,formFieldId);
             var responseAnswer =_ministryPlatformRestRepository.UsingAuthenticationToken(apiToken).Get<MpFormAnswer>(formResponseAnswerId, selectColumns);
 
@@ -194,11 +194,16 @@ namespace MinistryPlatform.Translation.Repositories
             return DateTime.Parse(signedUp.First()["Response_Date"].ToString());
         }
 
-        public MpFormResponse GetFormResponse(int formId, int contactId)
+        public MpFormResponse GetFormResponse(int formId, int contactId, int? eventId = null)
         {
             var apiToken = ApiLogin();
             var searchString = $"Form_ID={formId} AND Contact_ID={contactId}";
+            if (eventId != null)
+            {
+                searchString = $"{searchString} AND Event_ID={eventId}";
+            }
             var response = _ministryPlatformRestRepository.UsingAuthenticationToken(apiToken).Search<MpFormResponse>(searchString).FirstOrDefault();
+            if (response == null) throw new ApplicationException($"Form response with formId={formId}, contactId={contactId}, eventId={eventId} not found!");
             searchString = $"Form_Response_ID={response.FormResponseId}";
             response.FormAnswers = _ministryPlatformRestRepository.UsingAuthenticationToken(apiToken).Search<MpFormAnswer>(searchString);
             return response;
@@ -249,10 +254,11 @@ namespace MinistryPlatform.Translation.Repositories
             return responseId;
         }
 
-        private int GetFormResponseIdForFormContact(int formId, int contactId)
+        private int GetFormResponseIdForFormContact(int formId, int contactId, int? eventId)
         {
             var apiToken = ApiLogin();
             var searchString = $"Contact_ID='{contactId}' AND Form_ID='{formId}'";
+            if (eventId != null) searchString = $"{searchString} AND Event_ID={eventId}";
             const string selectColumns = "Form_Response_ID";
 
             var formResponse = _ministryPlatformRestRepository.UsingAuthenticationToken(apiToken).Search<MpFormResponse>(searchString, selectColumns, null, true).FirstOrDefault();

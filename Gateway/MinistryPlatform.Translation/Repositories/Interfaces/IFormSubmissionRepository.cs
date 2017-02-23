@@ -14,7 +14,7 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
 
         DateTime? GetTripFormResponseByContactId(int p, int pledgeId);
 
-        string GetFormResponseAnswer(int formId, int contactId, int formFieldId);
-        MpFormResponse GetFormResponse(int formId, int contactId);
+        string GetFormResponseAnswer(int formId, int contactId, int formFieldId, int? eventId = null);
+        MpFormResponse GetFormResponse(int formId, int contactId, int? eventId = null);
     }
 }
