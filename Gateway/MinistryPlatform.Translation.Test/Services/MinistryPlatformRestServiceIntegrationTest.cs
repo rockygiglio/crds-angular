@@ -537,23 +537,6 @@ namespace MinistryPlatform.Translation.Test.Services
             Assert.AreEqual(1, result.Count);
             Assert.IsNotNull(result.First().EndDate);
         }
-
-        [Test]
-        public void getAnswersByContactIdEventIdFormId()
-        {
-            var searchString = $"Form_Response_ID_Table_Contact_ID_Table.[Contact_ID] = 7672203 AND Form_Response_ID_Table_Form_ID_Table.[Form_ID] = 28 AND Form_Response_ID_Table_Event_ID_Table.[Event_ID] = 4532780";
-            var columns = new List<string>
-            {
-                "Form_Response_Answer_ID",
-                "Form_Field_ID",
-                "Form_Response_Answers.Form_Response_ID",
-                "Response",
-                "Form_Response_Answers.Opportunity_Response",
-                "Event_Participant_ID"
-            };
-
-            _fixture.UsingAuthenticationToken(_authToken).Search<MpFormAnswer>(searchString, columns);
-        }
         
         [Test]
         public void GetAllUncancelledInvoicesForEventParticipant()
