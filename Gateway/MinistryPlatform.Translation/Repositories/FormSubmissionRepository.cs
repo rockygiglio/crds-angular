@@ -171,7 +171,7 @@ namespace MinistryPlatform.Translation.Repositories
             return responseId;
         }
 
-        public string GetFormResponseAnswer(int formId, int contactId, int formFieldId, int? eventId)
+        public string GetFormResponseAnswer(int formId, int contactId, int formFieldId, int? eventId = null)
         {
             var apiToken = ApiLogin();
             const string selectColumns = "Response";
