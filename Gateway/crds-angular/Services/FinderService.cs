@@ -1,18 +1,12 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Web;
+﻿using System.Net;
 using System.Collections.Generic;
+using System.IO;
 using AutoMapper;
-using crds_angular.Exceptions;
 using crds_angular.Models.Finder;
 using crds_angular.Models.Crossroads;
-using crds_angular.Models.Finder;
 using crds_angular.Services.Interfaces;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 using log4net;
-using MinistryPlatform.Translation.Models.Finder;
 using MinistryPlatform.Translation.Models;
 using Newtonsoft.Json;
 
@@ -37,6 +31,7 @@ namespace crds_angular.Services
         private readonly IParticipantRepository _participantRepository;
         private readonly IAddressService _addressService;
 
+
         public FinderService(IFinderRepository finderRepository, IContactRepository contactRepository, IAddressService addressService, IParticipantRepository participantRepository)
         {
             _finderRepository = finderRepository;
@@ -45,10 +40,17 @@ namespace crds_angular.Services
             _participantRepository = participantRepository;
         }
 
+
         public PinDto GetPinDetails(int participantId)
         {
             //first get pin details
             var pinDetails = Mapper.Map<PinDto>(_finderRepository.GetPinDetails(participantId));
+
+            //make sure we have a lat/long
+            if (pinDetails.Address.Latitude == null || pinDetails.Address.Longitude == null)
+            {
+                _addressService.SetGeoCoordinates(pinDetails.Address);
+            }
 
             //TODO get group details
             return pinDetails;
@@ -61,7 +63,10 @@ namespace crds_angular.Services
 
         public void UpdateHouseholdAddress(PinDto pin)
         {
-            _addressService.SetGeoCoordinates(pin.Address);
+            if (pin.isFormDirty || (!pin.isFormDirty && !pin.Address.HasGeoCoordinates()))
+            {
+                _addressService.SetGeoCoordinates(pin.Address);
+            }          
 
             var householdDictionary = new Dictionary<string, object> { { "Household_ID", pin.Household_ID } };
             var address = Mapper.Map<MpAddress>(pin.Address);
@@ -72,10 +77,9 @@ namespace crds_angular.Services
 
 
 
-        public AddressDTO GetAddressForIp()
+        public AddressDTO GetAddressForIp(string ip)
         {
             var address = new AddressDTO();
-            var ip = _finderRepository.GetIpForRemoteUser();
             var request = WebRequest.Create("http://freegeoip.net/json/" + ip);
             using (var response = request.GetResponse())
             using (var stream = new StreamReader(response.GetResponseStream()))

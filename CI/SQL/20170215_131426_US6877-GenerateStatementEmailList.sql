@@ -66,11 +66,9 @@ CREATE PROCEDURE [dbo].[report_CRDS_Statement_Email_List]
             ON Donors.Contact_ID = Contacts.Contact_ID
           INNER JOIN Households
             ON Contacts.Household_ID = Households.Household_ID
-          INNER JOIN Congregations
+          LEFT OUTER JOIN Congregations
             ON Households.Congregation_ID = Congregations.Congregation_ID
         WHERE
-          Statement_Methods.Statement_Method_ID != 4                 -- Exclude 'no statement needed' method
-          AND
           Donations.Payment_Type_ID IN (SELECT Payment_Type_ID       -- regular/soft credit/non-cash donations
                                         FROM Payment_Types
                                         WHERE
@@ -111,14 +109,14 @@ CREATE PROCEDURE [dbo].[report_CRDS_Statement_Email_List]
       Congregations.Congregation_Name
     FROM Donors
       LEFT OUTER JOIN Donations
-        ON Donors.Donor_ID = Donations.Donor_ID
+        ON Donors.Donor_ID = Donations.Donor_ID AND CONVERT(DATE, Donations.Donation_Date) BETWEEN @FromDate AND @ToDate
       INNER JOIN Statement_Methods
         ON Donors.Statement_Method_ID = Statement_Methods.Statement_Method_ID
       INNER JOIN Contacts
         ON Donors.Contact_ID = Contacts.Contact_ID
       INNER JOIN Households
         ON Contacts.Household_ID = Households.Household_ID
-      INNER JOIN Congregations
+      LEFT OUTER JOIN Congregations
         ON Households.Congregation_ID = Congregations.Congregation_ID
       INNER JOIN #Donor_Email_List
         ON Contacts.Household_ID = #Donor_Email_List.Household_ID
@@ -175,7 +173,6 @@ CREATE PROCEDURE [dbo].[report_CRDS_Statement_Email_List]
      **/
     SELECT DISTINCT Email_Address, Display_Name, Statement_Method, Congregation_Name
     FROM #Statement_Email_List
-    WHERE Email_Address IS NOT NULL
     ORDER BY Display_Name
 
     DROP TABLE #Donor_Email_List

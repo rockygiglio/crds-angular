@@ -554,7 +554,17 @@ namespace MinistryPlatform.Translation.Test.Services
 
             _fixture.UsingAuthenticationToken(_authToken).Search<MpFormAnswer>(searchString, columns);
         }
-    }    
+        
+        [Test]
+        public void GetAllUncancelledInvoicesForEventParticipant()
+        {
+            var filter = new Dictionary<string, object> { { "Event_Participant_ID", 7720246 } };
+            var result =  _fixture.UsingAuthenticationToken(_authToken)
+                .Get<MpInvoiceDetail>("Invoice_Detail", filter);
+            Assert.IsFalse(result.Where(i => i.InvoiceStatusId != 7).ToList().Any());
+        }
+
+    }
 
     [MpRestApiTable(Name = "Payment_Types")]
     public class MyPaymentType
