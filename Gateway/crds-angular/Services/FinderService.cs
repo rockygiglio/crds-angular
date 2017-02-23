@@ -63,10 +63,7 @@ namespace crds_angular.Services
 
         public void UpdateHouseholdAddress(PinDto pin)
         {
-            if (pin.isFormDirty || (!pin.isFormDirty && !pin.Address.HasGeoCoordinates()))
-            {
-                _addressService.SetGeoCoordinates(pin.Address);
-            }          
+            _addressService.SetGeoCoordinates(pin.Address);
 
             var householdDictionary = new Dictionary<string, object> { { "Household_ID", pin.Household_ID } };
             var address = Mapper.Map<MpAddress>(pin.Address);
