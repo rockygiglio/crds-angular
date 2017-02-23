@@ -537,7 +537,7 @@ namespace MinistryPlatform.Translation.Test.Services
             Assert.AreEqual(1, result.Count);
             Assert.IsNotNull(result.First().EndDate);
         }
-
+        
         [Test]
         public void GetAllUncancelledInvoicesForEventParticipant()
         {
