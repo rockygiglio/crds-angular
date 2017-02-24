@@ -1,5 +1,5 @@
 import constants from '../constants';
-import { CmsInfo, Meta } from './goVolunteer.resolves';
+import { CmsInfo, Meta, GetProject } from './goVolunteer.resolves';
 
 const cookieNames = constants.COOKIES;
 
@@ -25,6 +25,7 @@ export default function GoVolunteerRoutes($stateProvider, $urlMatcherFactoryProv
         }
       },
       resolve: {
+        // TODO: resolve intiative to varify it is currently active
         GoVolunteerService: 'GoVolunteerService',
       }
     })
@@ -58,7 +59,25 @@ export default function GoVolunteerRoutes($stateProvider, $urlMatcherFactoryProv
         }
       },
       resolve: {
-
+        $state: '$state',
+        $q: '$q',
+        GoVolunteerDataService: 'GoVolunteerDataService',
+        GoVolunteerService: 'GoVolunteerService',
+        GetProject
+      }
+    })
+    .state('go-local.signinpage', {
+      parent: 'goCincinnati',
+      url: '/go-local/:initiative/crossroads/signin',
+      template: '<go-volunteer-signin> </go-volunteer-signin>',
+      data: {
+        meta: {
+          title: 'Some Title',
+          description: ''
+        }
+      },
+      resolve: {
+        $state: '$state'
       }
     })
     .state('go-volunteer', {

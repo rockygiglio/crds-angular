@@ -1,7 +1,7 @@
 <div ng-if="$ctrl.viewReady">
   <preloader full-screen='false' ng-show='!$ctrl.viewReady'> </preloader>
 
-  <go-volunteer-project-card></go-volunteer-project-card>
+  <go-volunteer-project-card project="$ctrl.project"></go-volunteer-project-card>
 
   <h3>Tell us about yourself, so we can keep you in the loop</h3>
   <p>

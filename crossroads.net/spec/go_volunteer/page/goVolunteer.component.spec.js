@@ -1,7 +1,7 @@
 import goVolunteerModule from '../../../app/go_volunteer/goVolunteer.module';
 import helpers from '../goVolunteer.helpers';
 
-fdescribe('Go Volunteer Page Component', () => {
+describe('Go Volunteer Page Component', () => {
   let $compile;
   let $rootScope;
   let element;

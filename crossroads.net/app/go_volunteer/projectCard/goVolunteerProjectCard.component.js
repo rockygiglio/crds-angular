@@ -2,11 +2,14 @@ import controller from './goVolunteerProjectCard.controller';
 import './goVolunteerProjectCard.html';
 
 export default function goVolunteerProjectCardComponent() {
-  let component = {
+  const component = {
     templateUrl: 'projectCard/goVolunteerProjectCard.html',
     controller,
     controllerAs: 'card',
-    bindToController: true
+    bindToController: true,
+    bindings: {
+      project: '<'
+    }
   };
 
   return component;

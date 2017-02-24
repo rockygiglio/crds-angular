@@ -12,7 +12,7 @@ export default angular.module(constants.MODULES.GO_VOLUNTEER, ['crossroads.core'
   .config(formly)
   .factory('GoVolunteerService', goVolunteerService)
   .factory('Organizations', goVolunteerOrganizations)
-  .factory('GoVolunteerDataService', goVolunteerDataService)
+  .service('GoVolunteerDataService', goVolunteerDataService)
   .factory('SkillsService', skillsService)
   .factory('GroupConnectors', groupConnectors)
   .name
