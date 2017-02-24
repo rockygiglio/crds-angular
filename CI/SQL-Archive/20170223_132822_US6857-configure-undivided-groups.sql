@@ -10,23 +10,20 @@ declare @PRIMARY_CONTACT as int = 7592977;    --Kristie Dierig
 
 
 -- *********** TODO  CHANGE FOR PROD *********************
--- declare @UNDIVIDED_PARENT_GROUP_START_DATE as datetime = '2017-03-03T17:00:00'; -- length of registration
-declare @UNDIVIDED_PARENT_GROUP_START_DATE as datetime = '2017-02-23T17:00:00'; -- length of registration
+-- declare @UNDIVIDED_PARENT_GROUP_START_DATE as datetime = '2017-03-03'; -- length of registration
+declare @UNDIVIDED_PARENT_GROUP_START_DATE as datetime = '2017-02-23'; -- length of registration
 -- *********** TODO  CHANGE FOR PROD *********************
 
 
 
-declare @UNDIVIDED_PARENT_GROUP_END_DATE as datetime = '2016-03-13T17:00:00';
-declare @UNDIVIDED_SUB_GROUP_START_DATE as Date = '2017-03-03T17:00:00'; -- start date same as registration start date
+declare @UNDIVIDED_PARENT_GROUP_END_DATE as datetime = '2017-08-01';
 
+-- *********** TODO  CHANGE FOR PROD *********************
+--declare @UNDIVIDED_SUB_GROUP_START_DATE as Date = '2017-03-03'; -- start date same as registration start date
+declare @UNDIVIDED_SUB_GROUP_START_DATE as Date = '2017-02-23'; -- start date same as registration start date
+-- *********** TODO  CHANGE FOR PROD *********************
 
-
--- *********** TODO  *********************
-declare @UNDIVIDED_SUB_GROUP_END_DATE as Date = '2017-06-05'; --end date, when undivided sessions end
--- *********************************
-
-
-
+declare @UNDIVIDED_SUB_GROUP_END_DATE as Date = '2017-08-01'; --end date, when undivided sessions end
 
 
 -- These are currently the only sites we are worried about. 
@@ -36,7 +33,7 @@ insert into @sites (siteId, siteName, groupDescription)
 		values (7, 'Florence', '6:30 - 8:30pm, Every Thursday from April 20 to May 25')
 		     , (6, 'Mason', '6:30 - 8:30pm, Every Wednesday from April 19 to May 24')
 			 , (1, 'Oakley', '6:30 - 8:30pm,  Every Monday from April 17 to May 22')
-			 , (8, 'Oxford', '6:30 - 8:30pm,  Every Thursday from April 20 to May 25')
+			 , (16, 'Oxford', '6:30 - 8:30pm,  Every Thursday from April 20 to May 25')
 			 , (11, 'Uptown', '6:30 - 8:30pm,  Every Tuesday from April 18 to May 23');
 
 declare @i int;
