@@ -270,6 +270,23 @@ namespace crds_angular.Controllers.API
             throw new HttpResponseException(dataError.HttpResponseMessage);
         }
 
+        [VersionedRoute(template: "go-volunteer/cities", minimumVersion: "1.0.0")]
+        [ResponseType(typeof (List<ProjectCity>))]
+        [HttpGet]
+        public IHttpActionResult GetParticipatingCities(int initiativeId)
+        {
+            try
+            {
+                var cities = _goVolunteerService.GetParticipatingCities(initiativeId);
+                return Ok(cities);
+            }
+            catch (Exception e)
+            {
+                var apiError = new ApiErrorDto("Unable to get cities", e);
+                throw new HttpResponseException(apiError.HttpResponseMessage);
+            }
+        }
+
         private IHttpActionResult SaveRegistration(string token, Registration goVolunteerRegistration)
         {
             try

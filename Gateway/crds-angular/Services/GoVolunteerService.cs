@@ -168,6 +168,13 @@ namespace crds_angular.Services
             }
         }
 
+        public List<ProjectCity> GetParticipatingCities(int initiativeId)
+        {
+            var cities = new List<ProjectCity> {new ProjectCity {ProjectId = 0, City = "Cincinnati or Central Kentucky Crossroads Sites", State = string.Empty}};
+            // TODO: cities.AddRange();
+            return cities;
+        }
+
         public Dictionary<string, object> SetupMergeData(Registration registration)
         {
             var styles = Styles();
