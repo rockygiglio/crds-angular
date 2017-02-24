@@ -819,7 +819,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>T Shirt Size</Value>
+                                  <Value>T-Shirt Size</Value>
                                   <Style />
                                 </TextRun>
                               </TextRuns>
@@ -1005,7 +1005,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Add'l Emergency Contact First Name</Value>
+                                  <Value>Additional Emergency Contact First Name</Value>
                                   <Style />
                                 </TextRun>
                               </TextRuns>
@@ -1036,7 +1036,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Add'l Emergency Contact Last Name</Value>
+                                  <Value>Additional  Emergency Contact Last Name</Value>
                                   <Style />
                                 </TextRun>
                               </TextRuns>
@@ -1067,7 +1067,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Add'l Emergency Contact Mobile Number</Value>
+                                  <Value>Additional  Emergency Contact Mobile Number</Value>
                                   <Style />
                                 </TextRun>
                               </TextRuns>
@@ -1098,7 +1098,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Add'l Emergency Contact Email</Value>
+                                  <Value>Additional Emergency Contact Email</Value>
                                   <Style />
                                 </TextRun>
                               </TextRuns>
@@ -1129,7 +1129,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Add'l Emergency Contact Relationship</Value>
+                                  <Value>Additional  Emergency Contact Relationship</Value>
                                   <Style />
                                 </TextRun>
                               </TextRuns>
@@ -1285,7 +1285,9 @@
                               <TextRuns>
                                 <TextRun>
                                   <Value>Total Cost</Value>
-                                  <Style />
+                                  <Style>
+                                    <Format>'$'#,0.00;('$'#,0.00)</Format>
+                                  </Style>
                                 </TextRun>
                               </TextRuns>
                               <Style />
@@ -1316,7 +1318,9 @@
                               <TextRuns>
                                 <TextRun>
                                   <Value>Amount Paid</Value>
-                                  <Style />
+                                  <Style>
+                                    <Format>'$'#,0.00;('$'#,0.00)</Format>
+                                  </Style>
                                 </TextRun>
                               </TextRuns>
                               <Style />
@@ -1347,7 +1351,9 @@
                               <TextRuns>
                                 <TextRun>
                                   <Value>Remaining Balance</Value>
-                                  <Style />
+                                  <Style>
+                                    <Format>'$'#,0.00;('$'#,0.00)</Format>
+                                  </Style>
                                 </TextRun>
                               </TextRuns>
                               <Style />
@@ -1592,8 +1598,10 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!Camper_Birth_Date.Value</Value>
-                                  <Style />
+                                  <Value>=Format(Cdate(Fields!Camper_Birth_Date.Value), "MM/dd/yyyy")</Value>
+                                  <Style>
+                                    <Format>M/d/yyyy</Format>
+                                  </Style>
                                 </TextRun>
                               </TextRuns>
                               <Style />
@@ -2253,7 +2261,9 @@
                               <TextRuns>
                                 <TextRun>
                                   <Value>=Fields!Total_Cost.Value</Value>
-                                  <Style />
+                                  <Style>
+                                    <Format>'$'#,0.00;('$'#,0.00)</Format>
+                                  </Style>
                                 </TextRun>
                               </TextRuns>
                               <Style />
@@ -2283,7 +2293,9 @@
                               <TextRuns>
                                 <TextRun>
                                   <Value>=Fields!Amount_Paid.Value</Value>
-                                  <Style />
+                                  <Style>
+                                    <Format>'$'#,0.00;('$'#,0.00)</Format>
+                                  </Style>
                                 </TextRun>
                               </TextRuns>
                               <Style />
@@ -2313,7 +2325,9 @@
                               <TextRuns>
                                 <TextRun>
                                   <Value>=Fields!Remaining_Balance.Value</Value>
-                                  <Style />
+                                  <Style>
+                                    <Format>'$'#,0.00;('$'#,0.00)</Format>
+                                  </Style>
                                 </TextRun>
                               </TextRuns>
                               <Style />
