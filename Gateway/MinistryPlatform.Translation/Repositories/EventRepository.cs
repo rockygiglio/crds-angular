@@ -384,7 +384,7 @@ namespace MinistryPlatform.Translation.Repositories
                 EventTitle = (string) record["Event_Title"],
                 EventStartDate = (DateTime) record["Event_Start_Date"],
                 EventEndDate = (DateTime) record["Event_End_Date"],
-                EventType = record.ToString("Event_Type_ID"),
+                EventType = record.ToString("Event_Type"),
                 PrimaryContact = new MpContact()
                 {
                     ContactId = record.ToInt("Primary_Contact_ID"),
@@ -401,7 +401,7 @@ namespace MinistryPlatform.Translation.Repositories
                 EventTitle = (string) record["Event_Title"],
                 EventStartDate = (DateTime) record["Event_Start_Date"],
                 EventEndDate = (DateTime) record["Event_End_Date"],
-                EventType = record.ToString("Event_Type_ID"),
+                EventType = record.ToString("Event_Type"),
                 PrimaryContact = new MpContact()
                 {
                     ContactId = record.ToInt("Primary_Contact_ID"),
