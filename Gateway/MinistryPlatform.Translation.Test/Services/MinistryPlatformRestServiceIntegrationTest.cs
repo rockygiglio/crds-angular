@@ -561,12 +561,15 @@ namespace MinistryPlatform.Translation.Test.Services
                 "Project_Type_ID",
                 "Organization_ID",
                 "cr_Projects.Initiative_ID",
-                "Address_ID"
+                "Address_ID_Table.Address_ID",
+                "Address_ID_Table.[City]",
+                "Address_ID_Table.[State/Region] AS [State]",
+
             };
             var result = _fixture.UsingAuthenticationToken(_authToken).Search<MpProject>(filter, columns, null, true);
             Assert.NotNull(result);
             Assert.AreEqual(1, result.Count);
-        }
+        }       
 
     }
 

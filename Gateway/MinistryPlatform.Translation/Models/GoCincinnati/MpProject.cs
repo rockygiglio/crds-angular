@@ -21,6 +21,9 @@ namespace MinistryPlatform.Translation.Models.GoCincinnati
         [JsonProperty(PropertyName = "Project_Type_ID")]
         public int ProjectTypeId { get; set; }
 
+        [JsonProperty(PropertyName = "Description")]
+        public string ProjectType { get; set; }
+
         [JsonProperty(PropertyName = "Organization_ID")]
         public int OrganizationId { get; set; }
 
@@ -28,6 +31,13 @@ namespace MinistryPlatform.Translation.Models.GoCincinnati
         public int InitiativeId { get; set; }
 
         [JsonProperty(PropertyName = "Address_ID")]
-        public int AddressId { get; set; }        
+        public int AddressId { get; set; }    
+        
+        [JsonProperty(PropertyName = "State")]
+        public string State { get; set; }
+
+        [JsonProperty(PropertyName = "City")]
+        public string City { get; set; }
+
     }
 }

@@ -176,21 +176,28 @@ namespace crds_angular.Services
         {
             var apiToken = _apiUserRepository.GetToken();
             var project = _projectRepository.GetProject(projectId, apiToken);
-            if (project.Status)
+            if (!project.Status) throw new ApplicationException(project.ErrorMessage);
+            var groupConnector = _projectRepository.GetGroupConnector(projectId, apiToken);
+            var jsonProject = new Project
             {
-                return new Project
-                {
-                    AddressId = project.Value.AddressId,
-                    InitiativeId = project.Value.InitiativeId,
-                    LocationId = project.Value.LocationId,
-                    OrganizationId = project.Value.OrganizationId,
-                    ProjectId = project.Value.ProjectId,
-                    ProjectName = project.Value.ProjectName,
-                    ProjectStatusId = project.Value.ProjectStatusId,
-                    ProjectTypeId = project.Value.ProjectTypeId
-                };
-            }
-            throw new ApplicationException(project.ErrorMessage);
+                AddressId = project.Value.AddressId,
+                InitiativeId = project.Value.InitiativeId,
+                LocationId = project.Value.LocationId,
+                OrganizationId = project.Value.OrganizationId,
+                ProjectId = project.Value.ProjectId,
+                ProjectName = project.Value.ProjectName,
+                ProjectStatusId = project.Value.ProjectStatusId,
+                ProjectTypeId = project.Value.ProjectTypeId,
+                ProjectType = project.Value.ProjectType,
+                Location = $"{project.Value.City}, {project.Value.State}"                    
+            };
+
+            if (!groupConnector.Status) return jsonProject;
+            var name = $"{groupConnector.Value.PrimaryContactNickname ?? groupConnector.Value.PrimaryContactFirstName} {groupConnector.Value.PrimaryContactLastName}";
+            jsonProject.ContactId = groupConnector.Value.PrimaryContactId;
+            jsonProject.ContactEmail = groupConnector.Value.PrimaryContactEmail;
+            jsonProject.ContactDisplayName = name;
+            return jsonProject;
         }
 
         public Dictionary<string, object> SetupMergeData(Registration registration)

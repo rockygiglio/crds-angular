@@ -438,16 +438,76 @@ namespace crds_angular.test.Services
                 ProjectId = projectId,
                 ProjectStatusId = 5,
                 ProjectTypeId = 6,
-                ProjectName = "Make Cleveland Great (Again?)"
+                ProjectName = "Make Cleveland Great (Again?)",
+                City = "Cleveland",
+                State = "OH"
             };
+
+            var mpGroupConnector = new MpGroupConnector
+            {
+                PrimaryContactId = 234,
+                PrimaryContactEmail = "me@mail.com",
+                PrimaryContactFirstName = "Drew",
+                PrimaryContactLastName = "Carey",
+            };
+
             var returnVal = new Ok<MpProject>(mpProject);
+            var groupConnectorReturn = new Ok<MpGroupConnector>(mpGroupConnector);
 
             _apiUserRepository.Setup(m => m.GetToken()).Returns(apiToken);
             _projectRepository.Setup(m => m.GetProject(projectId, apiToken)).Returns(returnVal);
+            _projectRepository.Setup(m => m.GetGroupConnector(projectId, apiToken)).Returns(groupConnectorReturn);
 
             var project = _fixture.GetProject(projectId);
             Assert.AreEqual(mpProject.AddressId, project.AddressId);
             Assert.AreEqual(mpProject.ProjectId, project.ProjectId);
+            Assert.AreEqual("Cleveland, OH", project.Location);
+            Assert.AreEqual("Drew Carey", project.ContactDisplayName);
+            _apiUserRepository.VerifyAll();
+            _projectRepository.VerifyAll();
+        }
+
+        [Test]
+        public void ShouldGetProjectDetailsAndUseNickname()
+        {
+            const int projectId = 564;
+            const string apiToken = "clevelandsux";
+
+            var mpProject = new MpProject
+            {
+                AddressId = 1,
+                InitiativeId = 2,
+                LocationId = 3,
+                OrganizationId = 4,
+                ProjectId = projectId,
+                ProjectStatusId = 5,
+                ProjectTypeId = 6,
+                ProjectName = "Make Cleveland Great (Again?)",
+                City = "Cleveland",
+                State = "OH"
+            };
+
+            var mpGroupConnector = new MpGroupConnector
+            {
+                PrimaryContactId = 234,
+                PrimaryContactEmail = "me@mail.com",
+                PrimaryContactFirstName = "Drew",
+                PrimaryContactLastName = "Carey",
+                PrimaryContactNickname = "D"
+            };
+
+            var returnVal = new Ok<MpProject>(mpProject);
+            var groupConnectorReturn = new Ok<MpGroupConnector>(mpGroupConnector);
+
+            _apiUserRepository.Setup(m => m.GetToken()).Returns(apiToken);
+            _projectRepository.Setup(m => m.GetProject(projectId, apiToken)).Returns(returnVal);
+            _projectRepository.Setup(m => m.GetGroupConnector(projectId, apiToken)).Returns(groupConnectorReturn);
+
+            var project = _fixture.GetProject(projectId);
+            Assert.AreEqual(mpProject.AddressId, project.AddressId);
+            Assert.AreEqual(mpProject.ProjectId, project.ProjectId);
+            Assert.AreEqual("Cleveland, OH", project.Location);
+            Assert.AreEqual("D Carey", project.ContactDisplayName);
             _apiUserRepository.VerifyAll();
             _projectRepository.VerifyAll();
         }

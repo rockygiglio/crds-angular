@@ -28,7 +28,7 @@ namespace MinistryPlatform.Translation.Test.Services
             const int id = 564;
             const string token = "letmein";
 
-            var filterString = $"Project_ID = {id} AND Initiative_ID_Table.[Volunteer_Signup_Start_Date]<=GetDate() AND Initiative_ID_Table.[Volunteer_Signup_End_Date]>=GetDate()";
+            var filterString = $"Project_ID={id} AND Initiative_ID_Table.[Volunteer_Signup_Start_Date]<=GetDate() AND Initiative_ID_Table.[Volunteer_Signup_End_Date]>=GetDate()";
 
             _ministryPlatformRest.Setup(m => m.UsingAuthenticationToken(token)).Returns(_ministryPlatformRest.Object);
             _ministryPlatformRest.Setup(m => m.Search<MpProject>(filterString, It.IsAny<List<string>>(), null as string, true))
@@ -45,7 +45,7 @@ namespace MinistryPlatform.Translation.Test.Services
             const int id = 564;
             const string token = "letmein";
 
-            var filterString = $"Project_ID = {id} AND Initiative_ID_Table.[Volunteer_Signup_Start_Date]<=GetDate() AND Initiative_ID_Table.[Volunteer_Signup_End_Date]>=GetDate()";
+            var filterString = $"Project_ID={id} AND Initiative_ID_Table.[Volunteer_Signup_Start_Date]<=GetDate() AND Initiative_ID_Table.[Volunteer_Signup_End_Date]>=GetDate()";
             var returnVal = ValidProjectList(id);
 
             _ministryPlatformRest.Setup(m => m.UsingAuthenticationToken(token)).Returns(_ministryPlatformRest.Object);
@@ -65,7 +65,7 @@ namespace MinistryPlatform.Translation.Test.Services
             const int id = 564;
             const string token = "letmein";
 
-            var filterString = $"Project_ID = {id} AND Initiative_ID_Table.[Volunteer_Signup_Start_Date]<=GetDate() AND Initiative_ID_Table.[Volunteer_Signup_End_Date]>=GetDate()";
+            var filterString = $"Project_ID={id} AND Initiative_ID_Table.[Volunteer_Signup_Start_Date]<=GetDate() AND Initiative_ID_Table.[Volunteer_Signup_End_Date]>=GetDate()";
             var returnVal = ValidProjectList(id);
             returnVal.Add(new MpProject
             {
@@ -87,6 +87,31 @@ namespace MinistryPlatform.Translation.Test.Services
             Assert.IsTrue(ret.Status);
             Assert.AreEqual(returnVal.First(), ret.Value);
             _ministryPlatformRest.VerifyAll();
+        }
+
+        [Test]
+        public void ShouldGetListOfGroupConnectors()
+        {
+            const string token = "letmein";
+            const int projectId = 3333;
+
+            var filter = $"Project_ID_Table.Project_ID={projectId}";
+            var columns = new List<string>
+            {
+                "cr_Group_Connectors.[Group_Connector_ID]",
+                "Primary_Registration_Table_Participant_ID_Table_Contact_ID_Table.[Contact_ID]",
+                "Primary_Registration_Table_Participant_ID_Table_Contact_ID_Table.[First_Name]",
+                "Primary_Registration_Table_Participant_ID_Table_Contact_ID_Table.[Last_Name]",
+                "Primary_Registration_Table_Participant_ID_Table_Contact_ID_Table.[Nickname]",
+                "Primary_Registration_Table_Participant_ID_Table_Contact_ID_Table.[Email_Address]"
+            };
+
+            _ministryPlatformRest.Setup(m => m.UsingAuthenticationToken(token)).Returns(_ministryPlatformRest.Object);
+            _ministryPlatformRest.Setup(m => m.Search<MpGroupConnector>(filter, columns, null as string, false)).Returns(new List<MpGroupConnector> {new MpGroupConnector {PrimaryContactId = 345}});
+
+            var result = _fixture.GetGroupConnector(projectId, token);
+            Assert.IsTrue(result.Status);
+            Assert.AreEqual(345, result.Value.PrimaryContactId);
         }
 
         protected static List<MpProject> ValidProjectList(int id)
