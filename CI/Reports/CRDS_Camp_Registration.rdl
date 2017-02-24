@@ -12,7 +12,7 @@
     <DataSet Name="CampEvents">
       <Query>
         <DataSourceName>DataSource1</DataSourceName>
-        <CommandText>SELECT Event_ID, Event_Title FROM dbo.Events WHERE Event_Type_ID = 8</CommandText>
+        <CommandText>SELECT Event_ID, Event_Title, Event_Start_Date, Event_End_Date FROM dbo.Events WHERE Event_Type_ID = 8</CommandText>
       </Query>
       <Fields>
         <Field Name="Event_ID">
@@ -22,6 +22,14 @@
         <Field Name="Event_Title">
           <DataField>Event_Title</DataField>
           <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Event_Start_Date">
+          <DataField>Event_Start_Date</DataField>
+          <rd:TypeName>System.DateTime</rd:TypeName>
+        </Field>
+        <Field Name="Event_End_Date">
+          <DataField>Event_End_Date</DataField>
+          <rd:TypeName>System.DateTime</rd:TypeName>
         </Field>
       </Fields>
     </DataSet>
@@ -228,7 +236,7 @@
             </Paragraphs>
             <rd:DefaultName>Textbox4</rd:DefaultName>
             <Top>0.47986in</Top>
-            <Left>0.94792in</Left>
+            <Left>0.93751in</Left>
             <Height>0.25in</Height>
             <Width>0.55208in</Width>
             <ZIndex>1</ZIndex>
@@ -2411,6 +2419,82 @@
               </Border>
             </Style>
           </Tablix>
+          <Textbox Name="Textbox5">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>Date:</Value>
+                    <Style />
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Right</TextAlign>
+                </Style>
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>Textbox4</rd:DefaultName>
+            <Top>0.78542in</Top>
+            <Left>0.93751in</Left>
+            <Height>0.25in</Height>
+            <Width>0.55208in</Width>
+            <ZIndex>4</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+          <Textbox Name="congregationid2">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>=Lookup(Parameters!CampEvents.Value, Fields!Event_ID.Value, Fields!Event_Start_Date.Value, "CampEvents")</Value>
+                    <Style>
+                      <Format>MM/dd/yyyy</Format>
+                    </Style>
+                  </TextRun>
+                  <TextRun>
+                    <Value> to </Value>
+                    <Style>
+                      <Format>MM/dd/yyyy</Format>
+                    </Style>
+                  </TextRun>
+                  <TextRun>
+                    <Value>=Lookup(Parameters!CampEvents.Value, Fields!Event_ID.Value, Fields!Event_End_Date.Value, "CampEvents")</Value>
+                    <Style>
+                      <Format>MM/dd/yyyy</Format>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style />
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>congregationid</rd:DefaultName>
+            <Top>0.78542in</Top>
+            <Left>1.59722in</Left>
+            <Height>0.25in</Height>
+            <Width>1.6875in</Width>
+            <ZIndex>5</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
         </ReportItems>
         <Height>7in</Height>
         <Style>
@@ -2518,7 +2602,7 @@
       <Hidden>true</Hidden>
     </ReportParameter>
     <ReportParameter Name="CampEvents">
-      <DataType>String</DataType>
+      <DataType>Integer</DataType>
       <Prompt>CampEvents</Prompt>
       <ValidValues>
         <DataSetReference>
