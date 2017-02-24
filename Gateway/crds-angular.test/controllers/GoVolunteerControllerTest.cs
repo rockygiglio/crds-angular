@@ -10,9 +10,7 @@ using crds_angular.Models.Crossroads.Attribute;
 using crds_angular.Models.Crossroads.GoVolunteer;
 using crds_angular.Models.Crossroads.Lookups;
 using crds_angular.Services.Interfaces;
-using Crossroads.Utilities.Interfaces;
 using FsCheck;
-using Crossroads.Web.Common;
 using Crossroads.Web.Common.Configuration;
 using Crossroads.Web.Common.Security;
 using Moq;
@@ -72,6 +70,58 @@ namespace crds_angular.test.controllers
             Assert.IsNotNull(r.Content);
             Assert.AreEqual(r.Content.Count, listSize);
             Assert.AreSame(skills, r.Content);
+        }
+
+        [Test]
+        public void ShouldGetRequestedProject()
+        {
+            const int projectId = 564;
+
+            var project = new Project
+            {
+                AddressId = 1,
+                InitiativeId = 2,
+                LocationId = 3,
+                OrganizationId = 4,
+                ProjectId = projectId,
+                ProjectName = "Make Cleveland Great (Again?)",
+                ProjectStatusId = 5,
+                ProjectTypeId = 6
+            };
+
+            _goVolunteerService.Setup(m => m.GetProject(564)).Returns(project);
+            var response = _fixture.GetProject(projectId);
+            Assert.IsNotNull(response);
+            Assert.IsInstanceOf<OkNegotiatedContentResult<Project>>(response);
+            var r = (OkNegotiatedContentResult<Project>)response;
+            Assert.IsNotNull(r.Content);
+            Assert.AreEqual(r.Content.ProjectId, project.ProjectId);
+            Assert.AreSame(project, r.Content);
+        }
+
+        [Test]
+        public void ShouldThrowExceptionIfProjectNotFound()
+        {
+            const int projectId = 564;
+
+            var project = new Project
+            {
+                AddressId = 1,
+                InitiativeId = 2,
+                LocationId = 3,
+                OrganizationId = 4,
+                ProjectId = projectId,
+                ProjectName = "Make Cleveland Great (Again?)",
+                ProjectStatusId = 5,
+                ProjectTypeId = 6
+            };
+
+            _goVolunteerService.Setup(m => m.GetProject(564)).Throws<ApplicationException>();
+            Assert.Throws<HttpResponseException>(() => {
+                _fixture.GetProject(projectId);
+                _goVolunteerService.VerifyAll();
+            });
+             
         }
 
         [Test]

@@ -1,5 +1,3 @@
-(function() {
-  'use strict';
 
   module.exports = GoVolunteerService;
 
@@ -25,6 +23,7 @@
         mobilePhone: null
       },
       preferredLaunchSite: null,
+      project: {},
       projectPrefOne: null,
       projectPrefTwo: null,
       projectPrefThree: null,
@@ -209,5 +208,3 @@
 
     return dto;
   }
-
-})();

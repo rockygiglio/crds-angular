@@ -2,14 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Linq;
-using System.Web.Optimization;
 using crds_angular.Models.Crossroads.GoVolunteer;
 using crds_angular.Services.Interfaces;
-using Crossroads.Utilities.Interfaces;
 using Crossroads.Utilities.Services;
 using log4net;
-using Crossroads.Web.Common;
 using Crossroads.Web.Common.Configuration;
+using Crossroads.Web.Common.MinistryPlatform;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Repositories.Interfaces.GoCincinnati;
 using IGroupConnectorRepository = MinistryPlatform.Translation.Repositories.Interfaces.GoCincinnati.IGroupConnectorRepository;
@@ -33,6 +31,8 @@ namespace crds_angular.Services
         private readonly IRegistrationRepository _registrationService;
         private readonly IGoSkillsService _skillsService;
         private readonly MPInterfaces.IUserRepository _userService;
+        private readonly IApiUserRepository _apiUserRepository;
+        private readonly IProjectRepository _projectRepository;
 
         public GoVolunteerService(MPInterfaces.IParticipantRepository participantService,
                                   IRegistrationRepository registrationService,
@@ -44,7 +44,9 @@ namespace crds_angular.Services
                                   IAttributeService attributeService,
                                   IGoSkillsService skillsService,
                                   MPInterfaces.ICommunicationRepository comunicationService,
-                                  MPInterfaces.IUserRepository userService)
+                                  MPInterfaces.IUserRepository userService,
+                                  IApiUserRepository apiUserRepository,
+                                  IProjectRepository projectRepository)
         {
             _participantService = participantService;
             _registrationService = registrationService;
@@ -58,6 +60,8 @@ namespace crds_angular.Services
             _skillsService = skillsService;
             _communicationService = comunicationService;
             _userService = userService;
+            _apiUserRepository = apiUserRepository;
+            _projectRepository = projectRepository;
         }
 
         public List<ChildrenOptions> ChildrenOptions()
@@ -173,6 +177,34 @@ namespace crds_angular.Services
             var cities = new List<ProjectCity> {new ProjectCity {ProjectId = 0, City = "Cincinnati or Central Kentucky Crossroads Sites", State = string.Empty}};
             // TODO: cities.AddRange();
             return cities;
+        }
+        
+        public Project GetProject(int projectId)
+        {
+            var apiToken = _apiUserRepository.GetToken();
+            var project = _projectRepository.GetProject(projectId, apiToken);
+            if (!project.Status) throw new ApplicationException(project.ErrorMessage);
+            var groupConnector = _projectRepository.GetGroupConnector(projectId, apiToken);
+            var jsonProject = new Project
+            {
+                AddressId = project.Value.AddressId,
+                InitiativeId = project.Value.InitiativeId,
+                LocationId = project.Value.LocationId,
+                OrganizationId = project.Value.OrganizationId,
+                ProjectId = project.Value.ProjectId,
+                ProjectName = project.Value.ProjectName,
+                ProjectStatusId = project.Value.ProjectStatusId,
+                ProjectTypeId = project.Value.ProjectTypeId,
+                ProjectType = project.Value.ProjectType,
+                Location = $"{project.Value.City}, {project.Value.State}"                    
+            };
+
+            if (!groupConnector.Status) return jsonProject;
+            var name = $"{groupConnector.Value.PrimaryContactNickname ?? groupConnector.Value.PrimaryContactFirstName} {groupConnector.Value.PrimaryContactLastName}";
+            jsonProject.ContactId = groupConnector.Value.PrimaryContactId;
+            jsonProject.ContactEmail = groupConnector.Value.PrimaryContactEmail;
+            jsonProject.ContactDisplayName = name;
+            return jsonProject;
         }
 
         public Dictionary<string, object> SetupMergeData(Registration registration)

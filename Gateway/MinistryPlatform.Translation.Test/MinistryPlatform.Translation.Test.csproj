@@ -164,6 +164,7 @@
     <Compile Include="Services\PledgeRepositoryTest.cs" />
     <Compile Include="Services\ProductRulesetsRepositoryTest.cs" />
     <Compile Include="Services\ProgramServiceTest.cs" />
+    <Compile Include="Services\ProjectRepositoryTest.cs" />
     <Compile Include="Services\RegistrationRuleTest.cs" />
     <Compile Include="Services\ResponseServiceTest.cs" />
     <Compile Include="Services\RoomRepositoryTest.cs" />
