@@ -14,13 +14,13 @@ namespace crds_angular.Models.Crossroads.Serve
         public bool Display { get; set; }
 
         [JsonProperty(PropertyName = "maximum")]
-        public int Maximum { get; set; }
+        public int? Maximum { get; set; }
 
         [JsonProperty(PropertyName = "message")]
         public string Message { get; set; }
 
         [JsonProperty(PropertyName = "minimum")]
-        public int Minimum { get; set; }
+        public int? Minimum { get; set; }
 
         [JsonProperty(PropertyName = "taken")]
         public int Taken { get; set; }

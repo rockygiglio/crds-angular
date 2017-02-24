@@ -50,16 +50,19 @@ namespace crds_angular.Controllers.API
         }
 
         [ResponseType(typeof(PinDto))]
-        [VersionedRoute(template: "finder/pin/contact/{contactId}", minimumVersion: "1.0.0")]
-        [System.Web.Http.Route("finder/pin/contact/{contactId}")]
+        [VersionedRoute(template: "finder/pin/contact/{contactId}/{throwOnEmptyCoordinates?}", minimumVersion: "1.0.0")]
+        [System.Web.Http.Route("finder/pin/contact/{contactId}/{throwOnEmptyCoordinates?}")]
         [System.Web.Http.HttpGet]
-        public IHttpActionResult GetPinDetailsByContact([FromUri]int contactId)
+        public IHttpActionResult GetPinDetailsByContact([FromUri]int contactId, [FromUri]bool throwOnEmptyCoordinates = true)
         {
             try
             {
                 var participantId = _finderService.GetParticipantIdFromContact(contactId);
                 var pin = _finderService.GetPinDetails(participantId);
-                if (pin.Address.Latitude == null || pin.Address.Longitude == null || (pin.Address.Latitude==0 && pin.Address.Longitude==0))
+                bool pinHasInvalidGeoCoords = ( (pin.Address.Latitude == null || pin.Address.Longitude == null)
+                                               || (pin.Address.Latitude == 0 && pin.Address.Longitude == 0));
+
+                if (pinHasInvalidGeoCoords && throwOnEmptyCoordinates)
                 {
                    return Content(HttpStatusCode.ExpectationFailed, "Invalid Latitude/Longitude");
                 }

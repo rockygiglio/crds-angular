@@ -287,6 +287,60 @@ namespace MinistryPlatform.Translation.Test.Services
             Assert.AreEqual(recordId, result);
         }
 
+        [Test]
+        public void ShouldGetFormResponseWhenPassedEventId()
+        {
+            const int formId = 333;
+            const int contactId = 889899;
+            const int eventId = 9098;
+            const int responseId = 8876;
+
+            var searchString = $"Form_ID={formId} AND Contact_ID={contactId} AND Event_ID={eventId}";
+            var answersSearch = $"Form_Response_ID={responseId}";
+
+            _ministryPlatformRestRepository.Setup(m => m.UsingAuthenticationToken(apiToken)).Returns(_ministryPlatformRestRepository.Object);
+            _ministryPlatformRestRepository.Setup(m => m.Search<MpFormResponse>(searchString, null as string, null as string, false)).Returns(new List<MpFormResponse> {new MpFormResponse {FormResponseId = responseId } });
+            _ministryPlatformRestRepository.Setup(m => m.Search<MpFormAnswer>(answersSearch, null as string, null as string, false)).Returns(new List<MpFormAnswer>());
+
+            _fixture.GetFormResponse(formId, contactId, eventId);
+            _ministryPlatformRestRepository.VerifyAll();
+        }
+
+        [Test]
+        public void ShouldGetFormResponseWhenNotPassedEventId()
+        {
+            const int formId = 333;
+            const int contactId = 889899;
+            const int responseId = 8876;
+
+            var searchString = $"Form_ID={formId} AND Contact_ID={contactId}";
+            var answersSearch = $"Form_Response_ID={responseId}";
+
+            _ministryPlatformRestRepository.Setup(m => m.UsingAuthenticationToken(apiToken)).Returns(_ministryPlatformRestRepository.Object);
+            _ministryPlatformRestRepository.Setup(m => m.Search<MpFormResponse>(searchString, null as string, null as string, false)).Returns(new List<MpFormResponse> { new MpFormResponse { FormResponseId = responseId } });
+            _ministryPlatformRestRepository.Setup(m => m.Search<MpFormAnswer>(answersSearch, null as string, null as string, false)).Returns(new List<MpFormAnswer>());
+
+            _fixture.GetFormResponse(formId, contactId, null);
+            _ministryPlatformRestRepository.VerifyAll();
+        }
+
+        [Test]
+        public void ShouldThrowAnExceptionWhenGetFormResponseIsNull()
+        {
+            const int formId = 333;
+            const int contactId = 889899;
+            const int responseId = 8876;
+
+            var searchString = $"Form_ID={formId} AND Contact_ID={contactId}";
+            var answersSearch = $"Form_Response_ID={responseId}";
+
+            _ministryPlatformRestRepository.Setup(m => m.UsingAuthenticationToken(apiToken)).Returns(_ministryPlatformRestRepository.Object);
+            _ministryPlatformRestRepository.Setup(m => m.Search<MpFormResponse>(searchString, null as string, null as string, false)).Returns(new List<MpFormResponse> { (MpFormResponse) null });           
+
+            Assert.Throws<ApplicationException>(() => _fixture.GetFormResponse(formId, contactId, null));
+            _ministryPlatformRestRepository.VerifyAll();
+        }
+
     }
 
 }
