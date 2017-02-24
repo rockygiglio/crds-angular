@@ -120,7 +120,7 @@ namespace crds_angular.Controllers.API
 
                     _finderService.EnablePin(pin.Participant_ID);
                     _logger.DebugFormat("Successfully created pin for contact {0} ", pin.Contact_ID);
-                    return (Ok());
+                    return (Ok(pin));
                 }
                 catch (Exception e)
                 {
