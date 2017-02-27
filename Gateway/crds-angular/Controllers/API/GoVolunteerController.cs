@@ -304,10 +304,10 @@ namespace crds_angular.Controllers.API
         }
 
         [VersionedRoute(template: "go-volunteer/organizations/{initiativeId}", minimumVersion: "1.0.0")]
-        [Route("go-volunteer/organizations/{initiativeId}")]
+        [Route("go-volunteer/organizations")]
         [ResponseType(typeof(List<Organization>))]
         [HttpGet]
-        public IHttpActionResult GetOrganizations(int initiativeId)
+        public IHttpActionResult GetOrganizations()
         {
             try
             {

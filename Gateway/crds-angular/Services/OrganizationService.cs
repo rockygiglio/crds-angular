@@ -40,7 +40,7 @@ namespace crds_angular.Services
             {
                 var org = new Organization();
                 return org.FromMpOrganization(o);
-            }).Where(l => l.EndDate != null && l.EndDate >= DateTime.Today).ToList();
+            }).Where(l => l.EndDate == null || l.EndDate >= DateTime.Today).ToList();
         }
 
         public List<OrgLocation> GetLocationsForOrganization(int orgId)
