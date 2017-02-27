@@ -1,45 +1,63 @@
 export default class OrganizationsController {
   /* @ngInject */
-  constructor() {
+  constructor($state, GoVolunteerService) {
     this.viewReady = false;
     this.selectedCity = null;
-
-    this.organizations = [
-      {
-        name: 'Crossroads Community Church',
-        imageUrl: 'https://crds-cms-uploads.imgix.net/content/images/gc-crossroads.jpg',
-        cities: [
-          {
-            name: 'Cincinnati or Central Kentucky Crossroads Sites'
-          },
-          {
-            name: 'Aurora, IL'
-          },
-          {
-            name: 'Columbus, OH'
-          },
-          {
-            name: 'Houston, TX'
-          },
-          {
-            name: 'Seattle, WA'
-          }
-        ]
-      },
-      {
-        name: 'Archdiocese',
-        subtitle: 'of Cincinnati',
-        imageUrl: 'https://crds-cms-uploads.imgix.net/content/images/gc-archdiocese.jpg?dpr=2&amp;ixjsv=2.2.3&amp;q=50&amp;w=80'
-      },
-      {
-        name: 'Other',
-        subtitle: 'Affiliate or Organization',
-        imageUrl: 'https://crds-cms-uploads.imgix.net/content/images/gc-other.jpg?dpr=2&amp;ixjsv=2.2.3&amp;q=50&amp;w=80'
-      }
-    ];
+    this.cities = GoVolunteerService.cities;
+    this.organizations = GoVolunteerService.organizations;
+    this.state = $state;
+    this.cincinnati = [{
+      name: 'Cincinnati or Central Kentucky Crossroads Sites',
+      projectId: -1
+    }];
   }
 
   $onInit() {
+    this.organizations = this.buildOrganizations();
     this.viewReady = true;
   }
+
+  buildOrganizations() {
+    return this.organizations.map((org) => {
+      if (org.name === 'Archdiocese of Cincinnati') {
+        return {
+          name: 'Archdiocese',
+          subtitle: 'of Cincinnati',
+          imageUrl: org.imageURL
+        };
+      } else if (org.name === 'Other') {
+        return {
+          name: 'Other',
+          subtitle: 'Affiliate or Organization',
+          imageUrl: org.imageURL
+        };
+      } else if (org.name === 'Crossroads') {
+        return {
+          name: 'Crossroads Community Church',
+          imageUrl: org.imageURL,
+          cities: [...this.cincinnati, ...this.buildCities()]
+        };
+      }
+      return {
+        name: org.name,
+        imageUrl: org.imageURL
+      };
+    });
+  }
+
+  buildCities() {
+    return this.cities.map((city) => {
+      const name = { name: `${city.city}, ${city.state}` };
+      return Object.assign(name, city);
+    });
+  }
+
+  selectCity({ projectId, city }) {
+    if (projectId === -1) {
+      this.state.go('go-local.cincinnatipage', { initiativeId: this.state.toParams.initiativeId, organization: 'crossroads', page: 'profile' });
+    } else {
+      this.state.go('go-local.anywherepage', { initiativeId: this.state.toParams.initiativeId, city, projectId });
+    }
+  }
 }
+

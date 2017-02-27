@@ -1,5 +1,5 @@
 import constants from '../constants';
-import { CmsInfo, Meta, GetProject } from './goVolunteer.resolves';
+import { CmsInfo, Meta, GetProject, GetCities } from './goVolunteer.resolves';
 
 const cookieNames = constants.COOKIES;
 
@@ -17,7 +17,7 @@ export default function GoVolunteerRoutes($stateProvider, $urlMatcherFactoryProv
     })
     .state('go-local.organizations', {
       parent: 'goCincinnati',
-      url: '/go-local/:initiative',
+      url: '/go-local/:initiativeId',
       template: '<go-volunteer-organizations></go-volunteer-organizations>',
       data: {
         meta: {
@@ -26,12 +26,16 @@ export default function GoVolunteerRoutes($stateProvider, $urlMatcherFactoryProv
       },
       resolve: {
         // TODO: resolve intiative to varify it is currently active
+        $state: '$state',
+        $q: '$q',
+        GoVolunteerDataService: 'GoVolunteerDataService',
         GoVolunteerService: 'GoVolunteerService',
+        GetCities
       }
     })
     .state('go-local.cincinnatipage', {
       parent: 'goCincinnati',
-      url: '/go-local/:initiative/:organization/cincinnati/:page',
+      url: '/go-local/:initiativeId/:organization/cincinnati/:page',
       template: '<go-volunteer-page></go-volunteer-page>',
       params: {
         page: 'org-profile'
@@ -47,7 +51,7 @@ export default function GoVolunteerRoutes($stateProvider, $urlMatcherFactoryProv
     })
     .state('go-local.anywherepage', {
       parent: 'goCincinnati',
-      url: '/go-local/:initiative/crossroads/:city/:projectId',
+      url: '/go-local/:initiativeId/crossroads/:city/:projectId',
       template: '<go-volunteer-anywhere-profile></go-volunteer-anywhere-profile>',
       params: {
         page: 'anywhere-profile'
