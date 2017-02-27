@@ -33,7 +33,7 @@ BEGIN
     , Household_Position_ID int
     , First_Name nvarchar(50)
     , Last_Name nvarchar(50)
-		, Nickname nvarchar(50)
+    , Nickname nvarchar(50)
     , Date_Of_Birth date
     , Group_ID int
   );
@@ -45,7 +45,7 @@ BEGIN
     , Household_Position_ID int
     , First_Name nvarchar(50)
     , Last_Name nvarchar(50)
-		, Nickname nvarchar(50)
+    , Nickname nvarchar(50)
     , Date_Of_Birth date
     , Group_ID int
   );
@@ -77,7 +77,7 @@ BEGIN
           , Child.Household_Position_ID
           , Child.First_Name
           , Child.Last_Name
-					, Child.Nickname
+          , Child.Nickname
           , Child.Date_of_Birth
           , GP.Group_ID
         FROM
@@ -107,7 +107,7 @@ BEGIN
             , OtherHousehold.Household_Position_ID
             , Child.First_Name
             , Child.Last_Name
-						, Child.Nickname
+            , Child.Nickname
             , Child.Date_of_Birth
             , GP.Group_ID
           FROM
