@@ -71,5 +71,33 @@ namespace MinistryPlatform.Translation.Repositories.GoCincinnati
 
             return new Ok<MpGroupConnector>(result.First());
         }
+
+        public List<MpProject> GetProjectsByInitiative(int initiativeId, string token)
+        {
+            var filter = $"cr_Projects.Initiative_ID={initiativeId} AND Initiative_ID_Table.[Volunteer_Signup_Start_Date]<=GetDate() AND Initiative_ID_Table.[Volunteer_Signup_End_Date]>=GetDate()";
+            var columns = new List<string>
+            {
+                "Project_ID",
+                "Project_Name",
+                "Project_Type_ID_Table.[Description]",
+                "Project_Status_ID",
+                "Location_ID",
+                "Project_Type_ID_Table.Project_Type_ID",
+                "Organization_ID",
+                "cr_Projects.Initiative_ID",
+                "Address_ID_Table.Address_ID",
+                "Address_ID_Table.[City]",
+                "Address_ID_Table.[State/Region] AS [State]"
+            };
+            try
+            {
+                var result = _ministryPlatformRest.UsingAuthenticationToken(token).Search<MpProject>(filter, columns, null, true);
+                return result ?? new List<MpProject>();
+            }
+            catch (Exception e)
+            {
+                throw new ApplicationException($"GetProjectsByInitiative failed. InitiativeId: {initiativeId}", e);
+            }
+        }
     }
 }

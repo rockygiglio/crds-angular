@@ -9,6 +9,7 @@ using Crossroads.Utilities.Interfaces;
 using Crossroads.Utilities.Services;
 using Crossroads.Web.Common.Configuration;
 using Crossroads.Web.Common.MinistryPlatform;
+using FsCheck.Experimental;
 using MinistryPlatform.Translation.Models.GoCincinnati;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 using MinistryPlatform.Translation.Repositories.Interfaces.GoCincinnati;
@@ -426,14 +427,38 @@ namespace crds_angular.test.Services
         public void ShouldGetListOfParticipatingCities()
         {
             const int initiativeId = 12;
-            var expected = new List<ProjectCity> {new ProjectCity {ProjectId = 0, City = "Cincinnati or Central Kentucky Crossroads Sites", State = string.Empty}};
+
+            var mockCities = MockCityList();
+            _projectRepository.Setup(m => m.GetProjectsByInitiative(initiativeId, It.IsAny<string>())).Returns(mockCities);
+
             var result = _fixture.GetParticipatingCities(initiativeId);
 
             Assert.IsNotNull(result);
             Assert.IsTrue(result.Any());
-            Assert.AreEqual(expected.Count, result.Count);
+            Assert.AreEqual(mockCities.Count, result.Count);
+            _projectRepository.VerifyAll();
         }
 
+        private List<MpProject> MockCityList()
+        {
+            return new List<MpProject>
+            {
+                new MpProject
+                {
+                    ProjectId = 1,
+                    City = "Cleveland",
+                    State = "OH"
+                },
+                new MpProject
+                {
+                    ProjectId = 2,
+                    City = "Phoenix",
+                    State = "AZ"
+                }
+            };
+        }
+
+        [Test]
         public void ShouldGetProjectDetails()
         {
             const int projectId = 564;
