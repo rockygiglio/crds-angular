@@ -174,8 +174,9 @@ namespace crds_angular.Services
 
         public List<ProjectCity> GetParticipatingCities(int initiativeId)
         {
-            var cities = new List<ProjectCity> {new ProjectCity {ProjectId = 0, City = "Cincinnati or Central Kentucky Crossroads Sites", State = string.Empty}};
-            // TODO: cities.AddRange();
+            var apiToken = _apiUserRepository.GetToken();
+            var projects = _projectRepository.GetProjectsByInitiative(initiativeId, apiToken);
+            var cities = projects.Select(p => new ProjectCity {ProjectId = p.ProjectId ,City = p.City, State = p.State}).ToList();
             return cities;
         }
         

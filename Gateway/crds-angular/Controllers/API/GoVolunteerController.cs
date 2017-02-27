@@ -286,6 +286,7 @@ namespace crds_angular.Controllers.API
         }
 
         [VersionedRoute(template: "go-volunteer/cities", minimumVersion: "1.0.0")]
+        [Route("go-volunteer/cities")]
         [ResponseType(typeof (List<ProjectCity>))]
         [HttpGet]
         public IHttpActionResult GetParticipatingCities(int initiativeId)
