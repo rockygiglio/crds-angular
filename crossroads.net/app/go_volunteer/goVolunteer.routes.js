@@ -1,5 +1,5 @@
 import constants from '../constants';
-import { CmsInfo, Meta, GetProject, GetCities } from './goVolunteer.resolves';
+import { CmsInfo, Meta, GetProject, GetCities, GetOrganizations} from './goVolunteer.resolves';
 
 const cookieNames = constants.COOKIES;
 
@@ -30,7 +30,8 @@ export default function GoVolunteerRoutes($stateProvider, $urlMatcherFactoryProv
         $q: '$q',
         GoVolunteerDataService: 'GoVolunteerDataService',
         GoVolunteerService: 'GoVolunteerService',
-        GetCities
+        GetCities,
+        GetOrganizations
       }
     })
     .state('go-local.cincinnatipage', {
