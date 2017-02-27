@@ -101,6 +101,13 @@ DBCC CHECKIDENT (Pledge_Campaigns, reseed, @curr_pledgeCampaign_id);
 
 --Set the pledge campaign for the program
 UPDATE [dbo].Programs SET Pledge_Campaign_ID = 10000012 where program_name = '(t) Test Pledge Program+Auto1';
+
+--Pledge for (t) Test Pledge Program+Auto1
+SET @donorId = (SELECT Donor_ID FROM Donors WHERE Contact_ID = (SELECT Contact_ID FROM Contacts WHERE Email_Address = 'mpcrds+auto+1@gmail.com' AND Last_Name = 'Karpyshyn'));
+
+INSERT INTO Pledges
+(Donor_ID, Pledge_Campaign_ID, Pledge_Status_ID, Total_Pledge, Installments_Planned, Installments_Per_Year, First_Installment_Date      , Notes, Domain_ID, Beneficiary, Trip_Leader, Currency, __ExternalPersonID1, __ExternalPersonID2, __ExternalCommitmentID, __ExternalApplicationID, Trip_General_Fund) VALUES
+(@donorId, @pledgeCampaignId , 1               , 5000.00     , 10                  , 5000.00              ,  DATEADD(DAY, -3, GETDATE()), null , 1        , null       , null       , null    , null               , null               , null                  , null                   , null );               
 ---------------------------------------------------------------------------------------------------------------------------
 --Program for (t) Test Pledge Program+Auto2
 
@@ -125,3 +132,10 @@ DBCC CHECKIDENT (Pledge_Campaigns, reseed, @curr_pledgeCampaign_id);
 
 --Update Program to point at pledge campaign
 UPDATE [dbo].Programs SET Pledge_Campaign_ID = 10000013 where program_name = '(t) Test Pledge Campaign+Auto2';
+
+--Pledge for (t) Test Pledge Program+Auto2
+SET @donorId = (SELECT Donor_ID FROM Donors WHERE Contact_ID = (SELECT Contact_ID FROM Contacts WHERE Email_Address = 'mpcrds+auto+2@gmail.com' AND Last_Name = 'Kenobi'));
+
+INSERT INTO Pledges
+(Donor_ID, Pledge_Campaign_ID, Pledge_Status_ID, Total_Pledge, Installments_Planned, Installments_Per_Year, First_Installment_Date      , Notes, Domain_ID, Beneficiary, Trip_Leader, Currency, __ExternalPersonID1, __ExternalPersonID2, __ExternalCommitmentID, __ExternalApplicationID, Trip_General_Fund) VALUES
+(@donorId, @pledgeCampaignId , 1               , 5000.00     , 10                  , 5000.00              ,  DATEADD(DAY, -3, GETDATE()), null , 1        , null       , null       , null    , null               , null               , null                  , null                   , null );               
