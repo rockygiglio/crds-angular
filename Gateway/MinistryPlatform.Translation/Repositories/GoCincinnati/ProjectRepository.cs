@@ -74,7 +74,7 @@ namespace MinistryPlatform.Translation.Repositories.GoCincinnati
 
         public List<MpProject> GetProjectsByInitiative(int initiativeId, string token)
         {
-            var filter = $"Initiative_ID={initiativeId} AND Initiative_ID_Table.[Volunteer_Signup_Start_Date]<=GetDate() AND Initiative_ID_Table.[Volunteer_Signup_End_Date]>=GetDate()";
+            var filter = $"cr_Projects.Initiative_ID={initiativeId} AND Initiative_ID_Table.[Volunteer_Signup_Start_Date]<=GetDate() AND Initiative_ID_Table.[Volunteer_Signup_End_Date]>=GetDate()";
             var columns = new List<string>
             {
                 "Project_ID",

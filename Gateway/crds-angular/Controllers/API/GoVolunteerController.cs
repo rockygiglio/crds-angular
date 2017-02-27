@@ -285,8 +285,8 @@ namespace crds_angular.Controllers.API
             throw new HttpResponseException(dataError.HttpResponseMessage);
         }
 
-        [VersionedRoute(template: "go-volunteer/cities", minimumVersion: "1.0.0")]
-        [Route("go-volunteer/cities")]
+        [VersionedRoute(template: "go-volunteer/cities/{initiativeId}", minimumVersion: "1.0.0")]
+        [Route("go-volunteer/cities/{initiativeId}")]
         [ResponseType(typeof (List<ProjectCity>))]
         [HttpGet]
         public IHttpActionResult GetParticipatingCities(int initiativeId)
