@@ -303,6 +303,24 @@ namespace crds_angular.Controllers.API
             }
         }
 
+        [VersionedRoute(template: "go-volunteer/organizations/{initiativeId}", minimumVersion: "1.0.0")]
+        [Route("go-volunteer/organizations/{initiativeId}")]
+        [ResponseType(typeof(List<Organization>))]
+        [HttpGet]
+        public IHttpActionResult GetOrganizations(int initiativeId)
+        {
+            try
+            {
+                var orgs = _organizationService.GetOrganizations();
+                return Ok(orgs);
+            }
+            catch (Exception e)
+            {
+                var apiError = new ApiErrorDto("Unable to get organizations", e);
+                throw new HttpResponseException(apiError.HttpResponseMessage);
+            }
+        }
+
         private IHttpActionResult SaveRegistration(string token, Registration goVolunteerRegistration)
         {
             try

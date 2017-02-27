@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using MPInterfaces = MinistryPlatform.Translation.Repositories.Interfaces;
 using crds_angular.Models.Crossroads.GoVolunteer;
@@ -39,7 +40,7 @@ namespace crds_angular.Services
             {
                 var org = new Organization();
                 return org.FromMpOrganization(o);
-            }).ToList();
+            }).Where(l => l.EndDate != null && l.EndDate >= DateTime.Today).ToList();
         }
 
         public List<OrgLocation> GetLocationsForOrganization(int orgId)
