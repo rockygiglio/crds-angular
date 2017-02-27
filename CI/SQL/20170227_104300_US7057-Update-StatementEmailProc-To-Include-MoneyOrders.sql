@@ -10,8 +10,8 @@ GO
 
 ALTER PROCEDURE [dbo].[report_CRDS_Statement_Email_List]
     @DomainID varchar(40)
-    ,@FromDate Date = '1-1-2016'
-    ,@ToDate Date = '12-31-2016'
+    ,@FromDate Date 
+    ,@ToDate Date 
 
   AS
   BEGIN
