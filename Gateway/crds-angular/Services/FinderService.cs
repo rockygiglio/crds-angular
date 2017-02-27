@@ -100,5 +100,11 @@ namespace crds_angular.Services
             var participant = _participantRepository.GetParticipant(contactId);
             return participant.ParticipantId;
         }
+
+        public List<PinDto> GetPinsByAddress(string userSearchAddress)
+        {
+            var list = new List<PinDto>{};
+            return list; 
+        }
     }
 }

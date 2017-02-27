@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Reflection;
 using System.Web.Http;
@@ -129,6 +130,24 @@ namespace crds_angular.Controllers.API
                     throw new HttpResponseException(apiError.HttpResponseMessage);
                 }
             });
+        }
+
+        [ResponseType(typeof(List<PinDto>))]
+        [VersionedRoute(template: "finder/findpinsbyaddress/{userSearchAddress}", minimumVersion: "1.0.0")]
+        [System.Web.Http.Route("finder/findpinsbyaddress/{userSearchAddress}")]
+        [System.Web.Http.HttpGet]
+        public IHttpActionResult GetFindPinsByAddress(string userSearchAddress)
+        {
+            try
+            {
+                var address = _finderService.GetPinsByAddress(userSearchAddress);
+                return Ok(address);
+            }
+            catch (Exception ex)
+            {
+                var apiError = new ApiErrorDto("Get Pin By Address Failed", ex);
+                throw new HttpResponseException(apiError.HttpResponseMessage);
+            }
         }
 
     }

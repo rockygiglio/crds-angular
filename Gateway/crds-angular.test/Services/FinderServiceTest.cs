@@ -71,6 +71,13 @@ namespace crds_angular.test.Services
         }
 
         [Test]
+        public void ShouldReturnAListOfPinsWhenSearching()
+        {
+            List<PinDto> pins = _fixture.GetPinsByAddress("abc");
+            Assert.IsInstanceOf<List<PinDto>>(pins);
+        }
+
+        [Test]
         public void ShouldUpdateHouseholdAddress()
         {
             var pin = new PinDto
