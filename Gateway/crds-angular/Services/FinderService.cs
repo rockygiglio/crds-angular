@@ -9,6 +9,7 @@ using MinistryPlatform.Translation.Repositories.Interfaces;
 using log4net;
 using MinistryPlatform.Translation.Models;
 using Newtonsoft.Json;
+using System.Device.Location; 
 
 namespace crds_angular.Services
 {
@@ -25,6 +26,7 @@ namespace crds_angular.Services
 
     public class FinderService : MinistryPlatformBaseService, IFinderService
     {
+        private readonly IAddressGeocodingService _addressGeocodingService;
         private readonly IContactRepository _contactRepository;
         private readonly ILog _logger = LogManager.GetLogger(typeof(AddressService));
         private readonly IFinderRepository _finderRepository;
@@ -32,8 +34,13 @@ namespace crds_angular.Services
         private readonly IAddressService _addressService;
 
 
-        public FinderService(IFinderRepository finderRepository, IContactRepository contactRepository, IAddressService addressService, IParticipantRepository participantRepository)
+        public FinderService(IAddressGeocodingService addressGeocodingService, 
+                             IFinderRepository finderRepository, 
+                             IContactRepository contactRepository, 
+                             IAddressService addressService, 
+                             IParticipantRepository participantRepository)
         {
+            _addressGeocodingService = addressGeocodingService;
             _finderRepository = finderRepository;
             _contactRepository = contactRepository;
             _addressService = addressService;
@@ -103,7 +110,12 @@ namespace crds_angular.Services
 
         public List<PinDto> GetPinsByAddress(string userSearchAddress)
         {
+            GeoCoordinate originCoords = _addressGeocodingService.GetGeoCoordinates(userSearchAddress);
+
+            _finderRepository.GetPinsAroundCenter(originCoords);
+
             var list = new List<PinDto>{};
+
             return list; 
         }
     }

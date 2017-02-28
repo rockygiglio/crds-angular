@@ -18,6 +18,7 @@ namespace crds_angular.test.Services
     public class FinderServiceTest
     {
         private FinderService _fixture;
+        private Mock<IAddressGeocodingService> _addressGeocodingService;
         private Mock<IFinderRepository> _mpFinderRepository;
         private Mock<IContactRepository> _mpContactRepository;
         private Mock<IAddressService>_addressService;
@@ -27,13 +28,14 @@ namespace crds_angular.test.Services
         [SetUp]
         public void SetUp()
         {
+            _addressGeocodingService = new Mock<IAddressGeocodingService>();
             _mpFinderRepository = new Mock<IFinderRepository>();
             _mpContactRepository = new Mock<IContactRepository>();
             _addressService = new Mock<IAddressService>();
             _mpParticipantRepository = new Mock<IParticipantRepository>();
             _mpAddressService = new Mock<IAddressService>();
 
-            _fixture = new FinderService(_mpFinderRepository.Object, _mpContactRepository.Object, _addressService.Object, _mpParticipantRepository.Object);
+            _fixture = new FinderService(_addressGeocodingService.Object, _mpFinderRepository.Object, _mpContactRepository.Object, _addressService.Object, _mpParticipantRepository.Object);
 
             //force AutoMapper to register
             AutoMapperConfig.RegisterMappings();

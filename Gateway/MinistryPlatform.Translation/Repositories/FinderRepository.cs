@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Crossroads.Web.Common.Configuration;
@@ -7,6 +8,7 @@ using log4net;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 using MinistryPlatform.Translation.Models.Finder;
+using System.Device.Location;
 
 namespace MinistryPlatform.Translation.Repositories
 {
@@ -59,6 +61,31 @@ namespace MinistryPlatform.Translation.Repositories
 
             var apiToken = _apiUserRepository.GetToken();
             _ministryPlatformRest.UsingAuthenticationToken(apiToken).Put("Participants", update);
+        }
+
+        public void GetPinsAroundCenter(GeoCoordinate originCoords)
+        {
+            var apiToken = _apiUserRepository.GetToken();
+
+            var parms = new Dictionary<string, object>()
+            {
+                {"@Latitude", originCoords.Latitude },
+                {"@Longitude", originCoords.Longitude },
+                {"@RadiusInKilometers", 3}
+            };
+
+            string spName = "api_crds_get_Pins_Within_Range"; 
+
+            try
+            {
+                var storedProcReturn = _ministryPlatformRest.UsingAuthenticationToken(apiToken).GetFromStoredProc<SpPinDto>(spName, parms);
+                System.Diagnostics.Debug.Write("test");
+            }
+            catch (Exception ex)
+            {
+                var exception = ex;
+                System.Diagnostics.Debug.Write("test");
+            }
         }
     }
 }
