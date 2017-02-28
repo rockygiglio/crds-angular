@@ -1,5 +1,5 @@
 import constants from '../constants';
-import { CmsInfo, Meta, GetProject, GetCities, GetOrganizations} from './goVolunteer.resolves';
+import { CmsInfo, Meta, GetProject, GetCities, GetOrganizations } from './goVolunteer.resolves';
 
 const cookieNames = constants.COOKIES;
 
