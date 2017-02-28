@@ -50,7 +50,7 @@ namespace MinistryPlatform.Translation.Repositories
 
         public MpUser GetByAuthenticationToken(string authToken)
         {
-            var contactId = _authenticationService.GetContactId(authToken);
+            var contactId = _ministryPlatformService.GetContactInfo(authToken).ContactId;
 
             var searchString = string.Format(",\"{0}\"", contactId);
             return (GetUser(searchString));

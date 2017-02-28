@@ -23,32 +23,39 @@ AS
 BEGIN
 	SET NOCOUNT ON;
 
-    CREATE TABLE #household_phones (
-		Household_ID int
+    DECLARE @Minor_Child int = 2
+
+    CREATE TABLE #phones (
+		ID int identity
+		, Household_ID int
 		, Congregation_ID int
 		, Household_Name nvarchar(75)
 		, Contact_ID int
-		, Display_Name nvarchar(75)
-		, Home_Phone nvarchar(25)
-		, Mobile_Phone nvarchar(25)
-		, PRIMARY KEY (Household_ID, Contact_ID)
+		, Display_Name nvarchar(75) NULL
+		, Home_Phone nvarchar(25) NULL
+		, Mobile_Phone nvarchar(25) NULL
+		, PRIMARY KEY (ID)
 	);
 
-	INSERT INTO #household_phones
+	INSERT INTO #phones
 		SELECT DISTINCT h.Household_ID
 			, h.Congregation_ID
 			, h.Household_Name
-			, ch.Contact_ID
+			, c.Contact_ID
 			, c.Display_Name
-			, replace(h.Home_Phone, '-', '')
-			, replace(c.Mobile_Phone, '-', '')
+			, replace(replace(replace(replace(h.Home_Phone, '-', ''), ')', ''), '(', ''), ' ', '')
+			, replace(replace(replace(replace(c.Mobile_Phone, '-', ''), ')', ''), '(', ''), ' ', '')
 		FROM dbo.Households h
-			, dbo.Contact_Households ch
-			, dbo.Contacts c
-		WHERE h.Household_ID = ch.Household_ID
-			AND ch.Contact_ID = c.Contact_ID;
+			JOIN Contacts c ON (c.Household_ID = h.Household_ID)
+		WHERE EXISTS
+		(
+			SELECT TOP 1 *
+			FROM Contacts c2
+			WHERE c2.Household_ID = h.Household_ID
+				AND c2.Household_Position_ID = @Minor_Child
+		);
 
-	SELECT main.Household_ID
+	SELECT TOP 500 main.Household_ID
 		, main.Household_Name
 		, main.Contact_ID
 		, main.Display_Name
@@ -60,21 +67,22 @@ BEGIN
 		, dup.Display_Name AS dup_Display_Name
 		, dup.Home_Phone AS dup_Home_Phone
 		, dup.Mobile_Phone AS dup_Mobile_Phone
-	FROM #household_phones main
-		inner join #household_phones dup ON
+	FROM #phones main
+		inner join #phones dup ON
 		(
 			main.Household_ID <> dup.Household_ID
 			AND main.Home_Phone = dup.Home_Phone
 		)
 		OR
 		(
-			main.Contact_ID <> dup.Contact_ID
+			main.Household_ID <> dup.Household_ID
+			AND main.Contact_ID <> dup.Contact_ID
 			AND main.Mobile_Phone IS NOT NULL
 			AND main.Mobile_Phone = dup.Mobile_Phone
 		)
 	WHERE ISNULL(@Congregation_ID, 0) = 0
 		OR @Congregation_ID = main.Congregation_ID;
 
-	DROP TABLE #household_phones;
+	DROP TABLE #phones;
 END
 GO

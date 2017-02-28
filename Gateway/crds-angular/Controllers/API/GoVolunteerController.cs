@@ -9,9 +9,7 @@ using crds_angular.Models.Crossroads.GoVolunteer;
 using crds_angular.Models.Crossroads.Lookups;
 using crds_angular.Security;
 using crds_angular.Services.Interfaces;
-using Crossroads.Utilities.Interfaces;
 using Crossroads.ApiVersioning;
-using Crossroads.Web.Common;
 using Crossroads.Web.Common.Configuration;
 using Crossroads.Web.Common.Security;
 
@@ -60,6 +58,23 @@ namespace crds_angular.Controllers.API
             catch (Exception e)
             {
                 var apiError = new ApiErrorDto("Get Go Volunteer Children Options failed: ", e);
+                throw new HttpResponseException(apiError.HttpResponseMessage);
+            }
+        }
+
+        [ResponseType(typeof(Project))]
+        [VersionedRoute(template: "go-volunteer/project/{projectId}", minimumVersion: "1.0.0")]
+        [Route("go-volunteer/project/{projectId}")]
+        [HttpGet]
+        public IHttpActionResult GetProject(int projectId)
+        {
+            try
+            {
+                return Ok(_goVolunteerService.GetProject(projectId));
+            }
+            catch (Exception e)
+            {
+                var apiError = new ApiErrorDto("Get Project failed: ", e);
                 throw new HttpResponseException(apiError.HttpResponseMessage);
             }
         }

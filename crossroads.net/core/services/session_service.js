@@ -139,16 +139,19 @@
 
     // TODO: Get this working to DRY up login_controller and register_controller
     vm.redirectIfNeeded = ($injectedState) => {
-      if (vm.hasRedirectionInfo()) {
-        const url = vm.exists('redirectUrl');
-        const params = vm.exists('params');
-        vm.removeRedirectRoute();
-        if (params === undefined) {
-          $injectedState.go(url);
-        } else {
-          $injectedState.go(url, JSON.parse(params));
+      $timeout(() => {
+        // timeout ensures processing occurs on next cycle
+        if (vm.hasRedirectionInfo()) {
+          const url = vm.exists('redirectUrl');
+          const params = vm.exists('params');
+          vm.removeRedirectRoute();
+          if (params === undefined) {
+            $injectedState.go(url);
+          } else {
+            $injectedState.go(url, JSON.parse(params));
+          }
         }
-      }
+      });
     };
 
     vm.addRedirectRoute = (redirectUrl, params) => {

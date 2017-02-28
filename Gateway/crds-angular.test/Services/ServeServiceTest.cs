@@ -124,7 +124,7 @@ namespace crds_angular.test.Services
             _configurationWrapper.Setup(m => m.GetConfigIntValue("RSVPYesId")).Returns(1);
 
 
-            _authenticationService.Setup(mocked => mocked.GetContactId(It.IsAny<string>())).Returns(123456);
+            _contactService.Setup(mocked => mocked.GetContactId(It.IsAny<string>())).Returns(123456);
             var myContact = new MpMyContact
             {
                 Contact_ID = 123456,
@@ -164,7 +164,7 @@ namespace crds_angular.test.Services
             _fixture = new ServeService(_contactService.Object, _contactRelationshipService.Object,
                 _opportunityService.Object, _eventService.Object,
                 _participantService.Object, _groupParticipantService.Object, _groupService.Object,
-                _communicationService.Object, _authenticationService.Object, _configurationWrapper.Object, _apiUserService.Object, _responseService.Object);
+                _communicationService.Object, _configurationWrapper.Object, _apiUserService.Object, _responseService.Object);
 
             //force AutoMapper to register
             AutoMapperConfig.RegisterMappings();
@@ -481,7 +481,7 @@ namespace crds_angular.test.Services
                     Available = 10,
                     BadgeType = "label-info",
                     Display = true,
-                    Maximum = 10,
+                    Maximum = null,
                     Message = "10 Needed",
                     Minimum = 10,
                     Taken = 0
@@ -492,13 +492,9 @@ namespace crds_angular.test.Services
                 null, 20, new List<MinistryPlatform.Translation.Models.MpResponse>(),
                 new Capacity
                 {
-                    Available = 20,
-                    BadgeType = "label-info",
-                    Display = true,
+                    Display = false,
                     Maximum = 20,
-                    Message = "20 Needed",
-                    Minimum = 20,
-                    Taken = 0
+                    Minimum = null
                 }
             },
             new object[]
@@ -506,7 +502,7 @@ namespace crds_angular.test.Services
                 10, 20, MockFifteenResponses(),
                 new Capacity
                 {
-                    Display = true,
+                    Display = false,
                     Maximum = 20,
                     Minimum = 10,
                 }
@@ -516,13 +512,23 @@ namespace crds_angular.test.Services
                 10, 20, MockTwentyResponses(),
                 new Capacity
                 {
-                    Available = -10,
+                    Available = 0,
                     BadgeType = "label-default",
                     Display = true,
                     Maximum = 20,
                     Message = "Full",
                     Minimum = 10,
                     Taken = 20
+                }
+            }, 
+            new object[]
+            {
+                null, null, MockFifteenResponses(),
+                new Capacity()
+                {
+                    Display = false,
+                    Maximum = null,
+                    Minimum = null
                 }
             }
         };

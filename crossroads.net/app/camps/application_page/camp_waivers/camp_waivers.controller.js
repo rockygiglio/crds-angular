@@ -82,7 +82,8 @@ export default class CampWaiversController {
 
         this.state.go('campsignup.application', {
           page: 'medical-info',
-          contactId: this.$stateParams.contactId
+          contactId: this.$stateParams.contactId,
+          update: false
         });
       }, () => {
         this.rootScope.$emit('notify', this.rootScope.MESSAGES.generalError);

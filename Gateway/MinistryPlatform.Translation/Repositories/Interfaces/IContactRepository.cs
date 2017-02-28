@@ -7,6 +7,7 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
     public interface IContactRepository
     {
         string GetContactEmail(int contactId);
+        int GetContactId(string token);
         MpMyContact GetContactById(int contactId);
         MpMyContact GetContactByIdCard(string idCard);
         int GetContactIdByParticipantId(int participantId);
@@ -19,6 +20,7 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
         IList<int> GetContactIdByRoleId(int roleId, string token);
         void UpdateContact(int contactId, Dictionary<string, object> profileDictionary, Dictionary<string, object> householdDictionary, Dictionary<string, object> addressDictionary);
         void UpdateContact(int contactId, Dictionary<string, object> profileDictionary);
+        void UpdateHouseholdAddress(int contactId, Dictionary<string, object> householdDictionary, Dictionary<string, object> addressDictionary);
         int GetContactIdByEmail(string email);
         MpMyContact GetContactByParticipantId(int participantId);
         List<Dictionary<string, object>> StaffContacts();

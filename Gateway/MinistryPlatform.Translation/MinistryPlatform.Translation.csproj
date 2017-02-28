@@ -13,6 +13,8 @@
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -65,7 +67,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Crossroads.Web.Common, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Crossroads.Web.Common.1.0.8\lib\net45\Crossroads.Web.Common.dll</HintPath>
+      <HintPath>..\packages\Crossroads.Web.Common.1.0.11\lib\net45\Crossroads.Web.Common.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="log4net, Version=2.0.7.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
@@ -121,11 +123,14 @@
   <ItemGroup>
     <Compile Include="Exceptions\DonationNotFoundException.cs" />
     <Compile Include="Exceptions\PaymentNotFoundException.cs" />
+    <Compile Include="Models\Finder\FinderPinDto.cs" />
     <Compile Include="Models\DTO\PredefinedDonationAmountDTO.cs" />
+    <Compile Include="Models\GoCincinnati\MpProject.cs" />
     <Compile Include="Models\MpAttributeCategory.cs" />
     <Compile Include="Models\MpAllergy.cs" />
     <Compile Include="Models\MpBatch.cs" />
     <Compile Include="Models\MpCamp.cs" />
+    <Compile Include="Models\MpContactHousehold.cs" />
     <Compile Include="Models\MpSequenceRecord.cs" />
     <Compile Include="Models\MPGLAccountMapping.cs" />
     <Compile Include="Models\MpContactAttribute.cs" />
@@ -155,9 +160,13 @@
     <Compile Include="Models\Rules\MPRuleSet.cs" />
     <Compile Include="Models\Rules\MPRuleSetResult.cs" />
     <Compile Include="Repositories\CampRepository.cs" />
+    <Compile Include="Repositories\FinderRepository.cs" />
+    <Compile Include="Repositories\GoCincinnati\ProjectRepository.cs" />
+    <Compile Include="Repositories\Interfaces\GoCincinnati\IProjectRepository.cs" />
     <Compile Include="Repositories\Interfaces\ICampRepository.cs" />
     <Compile Include="Models\MpRsvpMembers.cs" />
     <Compile Include="Models\MpSU2SOpportunity.cs" />
+    <Compile Include="Repositories\Interfaces\IFinderRepository.cs" />
     <Compile Include="Repositories\Interfaces\IInvoiceRepository.cs" />
     <Compile Include="Repositories\Interfaces\IMedicalInformationRepository.cs" />
     <Compile Include="Repositories\Interfaces\IPaymentRepository.cs" />
@@ -383,7 +392,6 @@
       <DependentUpon>app.config</DependentUpon>
       <IsTransformFile>True</IsTransformFile>
     </None>
-    <None Include="Crossroads.Web.Common-Unity.config" />
     <None Include="packages.config" />
     <None Include="Properties\SlowCheetah\SlowCheetah.Transforms.targets" />
     <None Include="Service References\PlatformService\MinistryPlatform.Translation.PlatformService.AuditMaster.datasource">
@@ -489,8 +497,10 @@
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
+    <Error Condition="!Exists('..\packages\Crossroads.Web.Common.1.0.11\build\Crossroads.Web.Common.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Crossroads.Web.Common.1.0.11\build\Crossroads.Web.Common.targets'))" />
   </Target>
   <Import Project="$(SlowCheetahTargets)" Condition="Exists('$(SlowCheetahTargets)')" Label="SlowCheetah" />
+  <Import Project="..\packages\Crossroads.Web.Common.1.0.11\build\Crossroads.Web.Common.targets" Condition="Exists('..\packages\Crossroads.Web.Common.1.0.11\build\Crossroads.Web.Common.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
