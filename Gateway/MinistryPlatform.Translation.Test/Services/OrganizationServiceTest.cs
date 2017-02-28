@@ -88,8 +88,7 @@ namespace MinistryPlatform.Translation.Test.Services
                 {"End_Date", It.IsAny<DateTime>()},
                 {"Start_Date", It.IsAny<DateTime>()},
                 {"Name", name},
-                {"Open_Signup", true},
-                {"Image_URL", "www.com.net"}
+                {"Open_Signup", true}
             };
         }
 
@@ -101,8 +100,7 @@ namespace MinistryPlatform.Translation.Test.Services
                 {"Primary_Contact", It.IsAny<int>()},
                 {"Start_Date", It.IsAny<DateTime>()},
                 {"Name", name},
-                {"Open_Signup", true},
-                {"Image_URL", "www.com.net"}
+                {"Open_Signup", true}
             };
         }
 

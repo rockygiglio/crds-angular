@@ -172,14 +172,6 @@ namespace crds_angular.Services
             }
         }
 
-        public List<ProjectCity> GetParticipatingCities(int initiativeId)
-        {
-            var apiToken = _apiUserRepository.GetToken();
-            var projects = _projectRepository.GetProjectsByInitiative(initiativeId, apiToken);
-            var cities = projects.Select(p => new ProjectCity {ProjectId = p.ProjectId ,City = p.City, State = p.State}).ToList();
-            return cities;
-        }
-        
         public Project GetProject(int projectId)
         {
             var apiToken = _apiUserRepository.GetToken();

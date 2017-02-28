@@ -91,6 +91,7 @@ var checkLoggedin = function ($q, $timeout, $http, $location, $rootScope, $cooki
 var optimisticallyCheckLoggedin = function ($q, $timeout, $http, $location, $rootScope, $cookies, Session) {
   if (Session.beOptimistic) {
     var deferred = $q.defer();
+    
     var sessionId = $cookies.get(cookieNames.SESSION_ID);
     if (_.isEmpty(sessionId) ) {
       Session.clear();
@@ -103,6 +104,7 @@ var optimisticallyCheckLoggedin = function ($q, $timeout, $http, $location, $roo
   }
 
   checkLoggedin($q, $timeout, $http, $location, $rootScope, $cookies, Session);
+  
 };
 
 /**

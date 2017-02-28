@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Crossroads.Utilities.Interfaces;
+using Crossroads.Web.Common;
 using Crossroads.Web.Common.Configuration;
 using Crossroads.Web.Common.Security;
 using MinistryPlatform.Translation.Extensions;
@@ -54,12 +56,11 @@ namespace MinistryPlatform.Translation.Repositories
             return records.Select(record => new MPOrganization
             {
                 ContactId = record.ToInt("Primary_Contact"),
-                EndDate = record.ToNullableDate("End_Date"),
+                EndDate = record.ToDate("End_Date"),
                 StartDate = record.ToDate("Start_Date"),
                 Name = record.ToString("Name"),
                 OpenSignup = record.ToBool("Open_Signup"),
-                OrganizationId = record.ToInt("dp_RecordID"),
-                ImageUrl = record.ToString("Image_URL")
+                OrganizationId = record.ToInt("dp_RecordID")
             }).ToList();
         }
     }

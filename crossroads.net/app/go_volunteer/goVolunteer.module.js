@@ -10,8 +10,8 @@ import groupConnectors from './groupConnectors.service';
 export default angular.module(constants.MODULES.GO_VOLUNTEER, ['crossroads.core', 'crossroads.common'])
   .config(routes)
   .config(formly)
-  .service('GoVolunteerService', goVolunteerService)
-  .service('Organizations', goVolunteerOrganizations)
+  .factory('GoVolunteerService', goVolunteerService)
+  .factory('Organizations', goVolunteerOrganizations)
   .service('GoVolunteerDataService', goVolunteerDataService)
   .factory('SkillsService', skillsService)
   .factory('GroupConnectors', groupConnectors)
@@ -23,4 +23,5 @@ require('./city');
 require('./organizations');
 require('./page');
 
+require('./anywhereProfile');
 require('./projectCard');
