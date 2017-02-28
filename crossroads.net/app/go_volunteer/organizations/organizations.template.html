@@ -2,7 +2,7 @@
 
 <h2 class="ng-scope push-bottom">What church or organization are you participating with?</h2>
 <div class="form-group">
-  <div ng-repeat="organization in $ctrl.organizations">
+  <div ng-repeat="organization in $ctrl.organizations" ng-click="$ctrl.selectOrg(organization)">
     <div class="media card-item media-card-link">
       <div class="media-left col-xs-3 col-sm-3 col-md-2 soft-half">
         <img class="media-object img-responsive imgix-fluid" 

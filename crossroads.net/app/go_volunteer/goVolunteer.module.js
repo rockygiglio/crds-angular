@@ -23,5 +23,4 @@ require('./city');
 require('./organizations');
 require('./page');
 
-require('./anywhereProfile');
 require('./projectCard');

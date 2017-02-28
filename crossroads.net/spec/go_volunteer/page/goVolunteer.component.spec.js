@@ -58,8 +58,8 @@ describe('Go Volunteer Page Component', () => {
   describe('Crossroads Org', () => {
     it('should go to the next crossroads page', () => {
       isolatedScope.handlePageChange('spouse');
-      expect($state.go).toHaveBeenCalledWith('go-volunteer.crossroadspage',
-                                             { page: 'spouse' });
+      expect($state.go).toHaveBeenCalledWith('go-local.cincinnatipage',
+                                             { page: 'spouse' }, { inherit: true });
     });
   });
 
@@ -71,8 +71,8 @@ describe('Go Volunteer Page Component', () => {
 
     it('should change to the next page for non-crossroads orgs', () => {
       isolatedScope.handlePageChange('spouse');
-      expect($state.go).toHaveBeenCalledWith('go-volunteer.page',
-                                             { city: 'cincinnati', organization: 'whateva', page: 'spouse' });
+      expect($state.go).toHaveBeenCalledWith('go-local.page',
+                                             { city: 'cincinnati', organization: 'whateva', page: 'spouse' }, { inherit: true });
     });
   });
 });
