@@ -78,7 +78,7 @@ namespace crds_angular.Services
             }).ToList();
         }
 
-        public Registration CreateRegistration(Registration registration, string token)
+        public CincinnatiRegistration CreateRegistration(CincinnatiRegistration registration, string token)
         {
             try
             {
@@ -120,6 +120,14 @@ namespace crds_angular.Services
             }
         }
 
+        public AnywhereRegistration CreateAnywhereRegistration(AnywhereRegistration registration, int projectId, string token)
+        {
+            GroupConnector groupConnector = _groupConnectorService.GetGroupConnectorByProjectId(projectId, token);
+
+            var participantId = RegistrationContact(registration, token);
+
+        }
+
         public List<ProjectType> GetProjectTypes()
         {
             var pTypes = _projectTypeService.GetProjectTypes();
@@ -130,7 +138,7 @@ namespace crds_angular.Services
             }).ToList();
         }
 
-        public bool SendMail(Registration registration)
+        public bool SendMail(CincinnatiRegistration registration)
         {
             try
             {
@@ -200,7 +208,7 @@ namespace crds_angular.Services
             return jsonProject;
         }
 
-        public Dictionary<string, object> SetupMergeData(Registration registration)
+        public Dictionary<string, object> SetupMergeData(CincinnatiRegistration registration)
         {
             var styles = Styles();
             
@@ -258,7 +266,7 @@ namespace crds_angular.Services
             return dict;
         }
 
-        private List<HtmlElement> PrepWorkDetails(Registration registration)
+        private List<HtmlElement> PrepWorkDetails(CincinnatiRegistration registration)
         {
             var prepWork = new List<HtmlElement>();
             if (registration.PrepWork.Count == 0)
@@ -297,7 +305,7 @@ namespace crds_angular.Services
             };
         }
 
-        private List<HtmlElement> SpouseDetails(Registration registration)
+        private List<HtmlElement> SpouseDetails(CincinnatiRegistration registration)
         {
             var spouse = new List<HtmlElement>()
             {
@@ -319,7 +327,7 @@ namespace crds_angular.Services
             return spouse;
         }
 
-        private List<HtmlElement> ChildrenDetails(Registration registration)
+        private List<HtmlElement> ChildrenDetails(CincinnatiRegistration registration)
         {
             return registration.ChildAgeGroup.Select(c =>
             {
@@ -339,7 +347,7 @@ namespace crds_angular.Services
             }).ToList();
         }
 
-        private List<HtmlElement> GroupConnectorDetails(Registration registration)
+        private List<HtmlElement> GroupConnectorDetails(CincinnatiRegistration registration)
         {
             var ret = new List<HtmlElement>();
             if (!registration.CreateGroupConnector)
@@ -370,7 +378,7 @@ namespace crds_angular.Services
             };
         } 
 
-        private void Attributes(Registration registration, int registrationId)
+        private void Attributes(CincinnatiRegistration registration, int registrationId)
         {
             ChildAgeGroups(registration, registrationId);
             PrepWork(registration, registrationId);
@@ -378,7 +386,7 @@ namespace crds_angular.Services
             ProjectPreferences(registration, registrationId);
         }
 
-        private void ProjectPreferences(Registration registration, int registrationId)
+        private void ProjectPreferences(CincinnatiRegistration registration, int registrationId)
         {
             foreach (var projectPreference in registration.ProjectPreferences.Where(pref => pref.Id != 0))
             {
@@ -386,7 +394,7 @@ namespace crds_angular.Services
             }
         }
 
-        private void Equipment(Registration registration, int registrationId)
+        private void Equipment(CincinnatiRegistration registration, int registrationId)
         {
             foreach (var equipment in registration.Equipment.Where(e => e != null))
             {
@@ -395,7 +403,7 @@ namespace crds_angular.Services
             }
         }
 
-        private void PrepWork(Registration registration, int registrationId)
+        private void PrepWork(CincinnatiRegistration registration, int registrationId)
         {
             foreach (var prepWork in registration.PrepWork)
             {
@@ -403,7 +411,7 @@ namespace crds_angular.Services
             }
         }
 
-        private void ChildAgeGroups(Registration registration, int registrationId)
+        private void ChildAgeGroups(CincinnatiRegistration registration, int registrationId)
         {
             foreach (var ageGroup in registration.ChildAgeGroup)
             {
@@ -411,7 +419,7 @@ namespace crds_angular.Services
             }
         }
 
-        private MpContact SpouseInformation(Registration registration)
+        private MpContact SpouseInformation(CincinnatiRegistration registration)
         {
             
 
@@ -454,7 +462,7 @@ namespace crds_angular.Services
             _contactRelationshipService.AddRelationship(relationship, registration.Self.ContactId);
         }
 
-        private static bool AddSpouse(Registration registration)
+        private static bool AddSpouse(CincinnatiRegistration registration)
         {
             if (!registration.SpouseParticipation)
             {
@@ -463,7 +471,7 @@ namespace crds_angular.Services
             return registration.Spouse.ContactId == 0;
         }
 
-        private void GroupConnector(Registration registration, int registrationId)
+        private void GroupConnector(CincinnatiRegistration registration, int registrationId)
         {
             if (registration.CreateGroupConnector)
             {
@@ -475,7 +483,7 @@ namespace crds_angular.Services
             }
         }
 
-        private int CreateRegistration(Registration registration, int participantId)
+        private int CreateRegistration(CincinnatiRegistration registration, int participantId)
         {
             var registrationDto = new MinistryPlatform.Translation.Models.GoCincinnati.MpRegistration();
             registrationDto.ParticipantId = participantId;
@@ -505,7 +513,7 @@ namespace crds_angular.Services
             return registrationId;
         }
 
-        private int PreferredLaunchSite(Registration registration)
+        private int PreferredLaunchSite(CincinnatiRegistration registration)
         {
             int preferredLaunchSiteId;
             if (registration.PreferredLaunchSite.Id == 0)
