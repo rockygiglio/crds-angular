@@ -1,3 +1,5 @@
+import moment from 'moment';
+
 export default class GoVolunteerAnywhereProfileController {
   /* @ngInject */
   constructor(GoVolunteerAnywhereProfileForm, GoVolunteerService) {
@@ -15,7 +17,7 @@ export default class GoVolunteerAnywhereProfileController {
 
   submit() {
     // TODO: implement
-    
+
     if (this.anywhereForm.$valid) {
       this.goVolunteerAnywhereProfileForm.save();
     }

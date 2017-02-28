@@ -83,6 +83,29 @@ export default class GoVolunteerAnywhereProfileForm {
               required: true,
               type: 'text',
               datepickerPopup: 'MM/dd/yyyy'
+            },
+            validation: {
+              messages: {
+                tooYoung: () => 'Must be 18 years old or older to sign up'
+              }
+            },
+            asyncValidators: {
+              tooYoung: {
+                expression: (modelValue) => {
+                  return new Promise((resolve, reject) => {
+                    const bday = moment(modelValue, 'MM-DD-YYYY');
+                    const cutoff18 = moment().subtract(18, 'years');
+
+                    if (bday.isAfter(cutoff18)) {
+                      console.error('You must be 18 to sign up!');
+                      console.log(modelValue);
+                      reject();
+                    }
+
+                    resolve();
+                  });
+                }
+              }
             }
           },
         ]
