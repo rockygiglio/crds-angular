@@ -8,7 +8,6 @@ const KarmaMochaReporterPlugin = require('karma-mocha-reporter');
 const KarmaPhantomjsLauncherPlugin = require('karma-phantomjs-launcher');
 const KarmaEnvPreprocessorPlugin = require('karma-env-preprocessor');
 const KarmaSourcemapLoaderPlugin = require('karma-sourcemap-loader');
-const KarmaES6Shim = require('karma-es6-shim');
 /* eslint-enable */
 
 
@@ -154,8 +153,7 @@ module.exports = function crdsTermConf(config) {
       KarmaMochaReporterPlugin,
       KarmaPhantomjsLauncherPlugin,
       KarmaEnvPreprocessorPlugin,
-      KarmaSourcemapLoaderPlugin,
-      KarmaES6Shim
+      KarmaSourcemapLoaderPlugin
     ]
   });
 };
