@@ -87,7 +87,7 @@ export function projectPreferenceDto(preference, priority) {
 
 export function projectPreferences(pref1, pref2, pref3) {
   const projectPrefs = [];
-  if (pref1 != null) {
+  if (pref1 !== null) {
     projectPrefs.push(projectPreferenceDto(pref1, 1));
   }
 
