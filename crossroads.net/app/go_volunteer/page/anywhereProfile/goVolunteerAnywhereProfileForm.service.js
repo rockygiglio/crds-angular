@@ -1,7 +1,25 @@
 export default class GoVolunteerAnywhereProfileForm {
   /* @ngInject */
-  constructor() {
-    this.model = {};
+  constructor(GoVolunteerService) {
+    this.goVolunteerService = GoVolunteerService;
+    const person = this.goVolunteerService.person;
+
+    this.model = {
+      firstName: person.nickName || person.firstName || undefined,
+      lastName: person.lastName || undefined,
+      email: person.emailAddress || undefined,
+      mobilePhone: person.mobilePhone || undefined,
+      birthDate: person.dateOfBirth || undefined,
+      bringSpouse: undefined,
+      numberKids: undefined,
+      serveOutsideChurch: undefined,
+      serveOptions: undefined,
+      serveOtherName: undefined
+    };
+  }
+
+  save() {
+    // TODO: implement
   }
 
   getModel() {
@@ -187,9 +205,7 @@ export default class GoVolunteerAnywhereProfileForm {
         className: '',
         key: 'serveOtherName',
         type: 'crdsInput',
-        hideExpression: () => {
-          return !this.model.serveOptions || this.model.serveOptions.indexOf(7) === -1;
-        },
+        hideExpression: () => !this.model.serveOptions || this.model.serveOptions.indexOf(7) === -1,
         templateOptions: {
           label: '',
           required: false,

@@ -9,15 +9,17 @@
     Your request to join will be sent to the project leader listed above.
   </p>
 
-  <div class="push-bottom soft-half-bottom">
-    <formly-form model="$ctrl.model" fields="$ctrl.fields" form="$ctrl.$ctrlForm" options="$ctrl.options" ng-cloak></formly-form>
-  </div>
+  <form ng-submit="$ctrl.submit()" novalidate name="$ctrl.anywhereForm">
+    <div class="push-bottom soft-half-bottom">
+      <formly-form model="$ctrl.model" fields="$ctrl.fields" form="$ctrl.anywhereForm" options="$ctrl.options" ng-cloak></formly-form>
+    </div>
 
-  <div class="go-volunteer-waiver-wrapper soft push-top border-sides border-ends">
-    <div dynamic-content="$root.MESSAGES.goVolunteerWaiverTerms.content | html"></div>
-  </div>
+    <div class="go-volunteer-waiver-wrapper soft push-top border-sides border-ends">
+      <div dynamic-content="$root.MESSAGES.goVolunteerWaiverTerms.content | html"></div>
+    </div>
 
-  <div class="text-center push-top">
-    <button type="button" class="btn btn-primary" ng-disabled="$ctrl.$ctrlForm.$invalid">Accept Waiver and Register</button>
-  </div>
+    <div class="text-center push-top">
+      <button type="submit" class="btn btn-primary" ng-disabled="$ctrl.anywhereForm.$invalid">Accept Waiver and Register</button>
+    </div>
+  </form>
 </div>

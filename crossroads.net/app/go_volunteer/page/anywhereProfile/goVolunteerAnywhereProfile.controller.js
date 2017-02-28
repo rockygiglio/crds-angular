@@ -12,4 +12,12 @@ export default class GoVolunteerAnywhereProfileController {
     this.model = this.goVolunteerAnywhereProfileForm.getModel();
     this.fields = this.goVolunteerAnywhereProfileForm.getFields();
   }
+
+  submit() {
+    // TODO: implement
+    
+    if (this.anywhereForm.$valid) {
+      this.goVolunteerAnywhereProfileForm.save();
+    }
+  }
 }
