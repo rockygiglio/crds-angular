@@ -69,3 +69,16 @@ export function GetProject($state, GoVolunteerDataService, GoVolunteerService, $
   });
   return deferred.promise;
 }
+
+export function GetProject($state, GoVolunteerDataService, GoVolunteerService, $q) {
+  const gService = GoVolunteerService;
+  const projectId = $state.toParams.projectId;
+  const deferred = $q.defer();
+  GoVolunteerDataService.getProject(projectId).then((data) => {
+    gService.project = data;
+    deferred.resolve();
+  }, () => {
+    deferred.reject();
+  });
+  return deferred.promise;
+}
