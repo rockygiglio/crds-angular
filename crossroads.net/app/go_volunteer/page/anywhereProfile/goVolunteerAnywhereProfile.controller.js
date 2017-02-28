@@ -2,10 +2,11 @@ import moment from 'moment';
 
 export default class GoVolunteerAnywhereProfileController {
   /* @ngInject */
-  constructor(GoVolunteerAnywhereProfileForm, GoVolunteerService) {
+  constructor(GoVolunteerAnywhereProfileForm, GoVolunteerService, $state) {
     this.viewReady = false;
     this.goVolunteerAnywhereProfileForm = GoVolunteerAnywhereProfileForm;
     this.goVolunteerService = GoVolunteerService;
+    this.stateParams = $state.toParams;
     this.project = GoVolunteerService.project;
   }
 
@@ -19,6 +20,7 @@ export default class GoVolunteerAnywhereProfileController {
     // TODO: implement
 
     if (this.anywhereForm.$valid) {
+      console.log(this.stateParams);
       this.goVolunteerAnywhereProfileForm.save();
     }
   }
