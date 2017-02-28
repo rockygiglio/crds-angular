@@ -53,22 +53,21 @@
         var fromReload = angular.fromJson($window.sessionStorage.getItem(vm.reload)) || false;
         if (fromReload) {
           $window.sessionStorage.setItem(vm.reload, angular.toJson(false));
-          $state.go('go-volunteer.city.organizations', {city: $window.sessionStorage.getItem('go-volunteer.city')});
+          $state.go('go-local.organizations', { initiativeId: $state.toParams.initiativeId });
         }
       }
 
       function handlePageChange(nextState) {
         if (!$stateParams.organization) {
-          $state.go('go-volunteer.crossroadspage', {
+          $state.go('go-local.cincinnatipage', {
             page: nextState
-          });
-
+          }, { inherit: true });
         } else {
-          $state.go('go-volunteer.page', {
+          $state.go('go-local.page', {
             city: $stateParams.city,
             organization: $stateParams.organization,
             page: nextState
-          });
+          }, { inherit: true });
         }
       }
 
@@ -83,6 +82,10 @@
           $window.sessionStorage.setItem(vm.reload, angular.toJson(true));
           return '';
         }
+      }
+
+      function showAnywhereProfile() {
+        return $stateParams.projectId !== undefined;
       }
 
       function showProfile() {

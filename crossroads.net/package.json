@@ -4,6 +4,7 @@
   "description": "Crossroads Church Web Presence",
   "main": "app.js",
   "scripts": {
+    "es6-test": "./node_modules/karma/bin/karma start es6.tests.conf.js",
     "test": "./node_modules/karma/bin/karma start crossroadsTerminal.conf.js",
     "start": "./node_modules/gulp/bin/gulp.js browser-sync-dev",
     "core-test": "./node_modules/karma/bin/karma start core.tests.conf.js",
@@ -55,7 +56,7 @@
     "jasmine": "^2.3.1",
     "jasmine-given": "^2.6.2",
     "json-loader": "^0.5.4",
-    "karma": "^0.13.0",
+    "karma": "0.13.0",
     "karma-chrome-launcher": "^0.2.0",
     "karma-env-preprocessor": "^0.1.1",
     "karma-es6-shim": "^1.0.0",
