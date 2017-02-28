@@ -70,15 +70,19 @@ export function GetProject($state, GoVolunteerDataService, GoVolunteerService, $
   return deferred.promise;
 }
 
-export function GetProject($state, GoVolunteerDataService, GoVolunteerService, $q) {
-  const gService = GoVolunteerService;
-  const projectId = $state.toParams.projectId;
+export function GetProfile(Profile, $cookies, $q, GoVolunteerService) {
   const deferred = $q.defer();
-  GoVolunteerDataService.getProject(projectId).then((data) => {
-    gService.project = data;
+  const cid = $cookies.get('userId');
+
+  if (GoVolunteerService.person.nickName === '') {
+    const promise = Profile.Person.get({ contactId: cid }).$promise;
+    promise.then((person) => {
+      GoVolunteerService.person = person;
+      deferred.resolve(person);
+    }).catch(deferred.reject);
+  } else {
     deferred.resolve();
-  }, () => {
-    deferred.reject();
-  });
+  }
+
   return deferred.promise;
 }
