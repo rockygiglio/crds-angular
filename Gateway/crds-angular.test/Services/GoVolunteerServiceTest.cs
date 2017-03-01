@@ -7,9 +7,9 @@ using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.FunctionalHelpers;
 using Crossroads.Utilities.Interfaces;
 using Crossroads.Utilities.Services;
-using Crossroads.Web.Common;
 using Crossroads.Web.Common.Configuration;
 using Crossroads.Web.Common.MinistryPlatform;
+using FsCheck.Experimental;
 using MinistryPlatform.Translation.Models.GoCincinnati;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 using MinistryPlatform.Translation.Repositories.Interfaces.GoCincinnati;
@@ -27,11 +27,11 @@ namespace crds_angular.test.Services
 
         private readonly Mock<IAttributeService> _attributeService;
         private readonly Mock<IConfigurationWrapper> _configurationWrapper;
-        private readonly Mock<MinistryPlatform.Translation.Repositories.Interfaces.IContactRelationshipRepository> _contactRelationshipService;
-        private readonly Mock<MinistryPlatform.Translation.Repositories.Interfaces.IContactRepository> _contactService;
+        private readonly Mock<IContactRelationshipRepository> _contactRelationshipService;
+        private readonly Mock<IContactRepository> _contactService;
         private readonly Mock<IGroupConnectorRepository> _groupConnectorService;
-        private readonly Mock<MinistryPlatform.Translation.Repositories.Interfaces.IParticipantRepository> _participantService;
-        private readonly Mock<MinistryPlatform.Translation.Repositories.Interfaces.IProjectTypeRepository> _projectTypeService;
+        private readonly Mock<IParticipantRepository> _participantService;
+        private readonly Mock<IProjectTypeRepository> _projectTypeService;
         private readonly Mock<IRegistrationRepository> _registrationService;
         private readonly Mock<IGoSkillsService> _skillsService;
         private readonly Mock<ICommunicationRepository> _commnuicationService;
@@ -421,6 +421,41 @@ namespace crds_angular.test.Services
             Assert.AreEqual(dict["Nickname"], mergeData["Nickname"]);
             Assert.AreEqual(dict["Lastname"], mergeData["Lastname"]);
 
+        }
+
+        [Test]
+        public void ShouldGetListOfParticipatingCities()
+        {
+            const int initiativeId = 12;
+
+            var mockCities = MockCityList();
+            _projectRepository.Setup(m => m.GetProjectsByInitiative(initiativeId, It.IsAny<string>())).Returns(mockCities);
+
+            var result = _fixture.GetParticipatingCities(initiativeId);
+
+            Assert.IsNotNull(result);
+            Assert.IsTrue(result.Any());
+            Assert.AreEqual(mockCities.Count, result.Count);
+            _projectRepository.VerifyAll();
+        }
+
+        private List<MpProject> MockCityList()
+        {
+            return new List<MpProject>
+            {
+                new MpProject
+                {
+                    ProjectId = 1,
+                    City = "Cleveland",
+                    State = "OH"
+                },
+                new MpProject
+                {
+                    ProjectId = 2,
+                    City = "Phoenix",
+                    State = "AZ"
+                }
+            };
         }
 
         [Test]
