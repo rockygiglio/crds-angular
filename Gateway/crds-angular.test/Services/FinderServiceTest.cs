@@ -12,6 +12,7 @@ using Moq;
 using NUnit.Framework;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 using AutoMapper;
+using Crossroads.Web.Common.Configuration;
 
 namespace crds_angular.test.Services
 {
@@ -24,7 +25,8 @@ namespace crds_angular.test.Services
         private Mock<IContactRepository> _mpContactRepository;
         private Mock<IAddressService>_addressService;
         private Mock<IParticipantRepository> _mpParticipantRepository;
-        private Mock<IAddressService> _mpAddressService;
+        private Mock<IConfigurationWrapper> _mpConfigurationWrapper;
+        private Mock<IGroupToolService> _mpGroupToolService;
 
         [SetUp]
         public void SetUp()
@@ -34,9 +36,10 @@ namespace crds_angular.test.Services
             _mpContactRepository = new Mock<IContactRepository>();
             _addressService = new Mock<IAddressService>();
             _mpParticipantRepository = new Mock<IParticipantRepository>();
-            _mpAddressService = new Mock<IAddressService>();
+            _mpGroupToolService = new Mock<IGroupToolService>();
+            _mpConfigurationWrapper = new Mock<IConfigurationWrapper>();
 
-            _fixture = new FinderService(_addressGeocodingService.Object, _mpFinderRepository.Object, _mpContactRepository.Object, _addressService.Object, _mpParticipantRepository.Object);
+            _fixture = new FinderService(_addressGeocodingService.Object, _mpFinderRepository.Object, _mpContactRepository.Object, _addressService.Object, _mpParticipantRepository.Object, _mpGroupToolService.Object, _mpConfigurationWrapper.Object);
 
             //force AutoMapper to register
             AutoMapperConfig.RegisterMappings();
