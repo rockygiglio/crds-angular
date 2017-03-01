@@ -14,9 +14,9 @@ namespace crds_angular.Models.Finder
         public GeoCoordinates CenterLocation { get; set; }
 
         [JsonProperty("pinSearchResults")]
-        public PinDto[] PinSearchResults { get; set; }
+        public List<PinDto> PinSearchResults { get; set; }
 
-        public PinSearchResultsDto(GeoCoordinates centerLocation, PinDto[] pins)
+        public PinSearchResultsDto(GeoCoordinates centerLocation, List<PinDto> pins)
         {
             this.CenterLocation = centerLocation;
             this.PinSearchResults = pins; 
