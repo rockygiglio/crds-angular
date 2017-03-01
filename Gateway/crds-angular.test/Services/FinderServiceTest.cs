@@ -71,6 +71,28 @@ namespace crds_angular.test.Services
         }
 
         [Test]
+        public void ShouldRandomizeThePosition()
+        {
+            const double originalLatitude = 59.6378639;
+            const double originalLongitude = -151.5068732;
+
+            var address = new AddressDTO
+            {
+                AddressID = 222,
+                AddressLine1 = "1393 Bay Avenue",
+                City = "Homer",
+                State = "AK",
+                PostalCode = "99603",
+                Latitude = originalLatitude,
+                Longitude = originalLongitude
+            };
+
+            var result = _fixture.RandomizeLatLong(address);
+            Assert.AreNotEqual(result.Longitude, originalLongitude);
+            Assert.AreNotEqual(result.Latitude, originalLatitude);
+        }
+
+        [Test]
         public void ShouldUpdateHouseholdAddress()
         {
             var pin = new PinDto
