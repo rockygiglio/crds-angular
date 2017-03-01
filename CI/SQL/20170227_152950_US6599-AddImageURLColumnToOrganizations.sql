@@ -11,6 +11,7 @@ BEGIN
 	SET Default_Field_List = 'Name,Open_Signup,Start_Date,End_Date,Primary_Contact_Table.Display_Name as [Primary_Contact],Image_URL'
 	WHERE Page_ID = @OrgPage
 END
+GO
 
 DECLARE @CRorg int = 2
 DECLARE @ArchOrg int = 1
