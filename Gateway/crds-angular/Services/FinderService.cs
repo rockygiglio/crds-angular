@@ -110,7 +110,11 @@ namespace crds_angular.Services
 
         public List<PinDto> GetPinsInRadius(GeoCoordinate originCoords)
         {
-            _finderRepository.GetPinsInRadius(originCoords);
+            _finderRepository.GetPinsInRadius(originCoords); //get participants on map within radius 
+            //get buildings on map within radius
+            //get groups on map within radius 
+
+            //combine the three, return as single list of pins 
 
             //mock
             var list = new List<PinDto>{};
