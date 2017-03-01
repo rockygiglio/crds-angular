@@ -13,6 +13,7 @@ namespace crds_angular.Services.Interfaces
         List<ChildrenOptions> ChildrenOptions();
         bool SendMail(CincinnatiRegistration registration);
 
+        List<ProjectCity> GetParticipatingCities(int initiativeId);
         Project GetProject(int projectId);
     }
 }

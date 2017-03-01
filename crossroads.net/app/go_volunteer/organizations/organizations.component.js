@@ -1,26 +1,11 @@
-(function() {
-  'use strict';
+import controller from './organizations.controller';
+import template from './organizations.template.html';
 
-  module.exports = Organizations;
+export default function organizationsComponent() {
+  let component = {
+    template,
+    controller
+  };
 
-  Organizations.$inject = ['$stateParams', 'GoVolunteerService'];
-
-  function Organizations($stateParams, GoVolunteerService) {
-    return {
-      restrict: 'E',
-      scope: {},
-      bindToController: true,
-      controller: OrganizationsController,
-      controllerAs: 'organizations',
-      templateUrl: 'organizations/organizations.template.html'
-    };
-
-    function OrganizationsController() {
-      var vm = this;
-
-      vm.cmsInfo = GoVolunteerService.cmsInfo.pages[0];
-      vm.content = vm.cmsInfo.content;
-    }
-  }
-
-})();
+  return component;
+}

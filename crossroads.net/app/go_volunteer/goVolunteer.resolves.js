@@ -57,6 +57,21 @@ export function Meta($state, $stateParams) {
   state.next.data.meta.title = `GO ${city}`;
 }
 
+export function GetCities($log, $state, GoVolunteerDataService, GoVolunteerService, $q) {
+  const gService = GoVolunteerService;
+  const initiativeId = $state.toParams.initiativeId;
+  const deferred = $q.defer();
+  GoVolunteerDataService.getInitiativeCities(initiativeId).then((data) => {
+    gService.cities = data;
+    deferred.resolve();
+  }, (err) => {
+    // we still want to go to the page even if theres an error
+    $log.error(err);
+    deferred.resolve();
+  });
+  return deferred.promise;
+}
+
 export function GetProject($state, GoVolunteerDataService, GoVolunteerService, $q) {
   const gService = GoVolunteerService;
   const projectId = $state.toParams.projectId;
@@ -72,17 +87,32 @@ export function GetProject($state, GoVolunteerDataService, GoVolunteerService, $
 
 export function GetProfile(Profile, $cookies, $q, GoVolunteerService) {
   const deferred = $q.defer();
+  const gService = GoVolunteerService;
   const cid = $cookies.get('userId');
 
   if (GoVolunteerService.person.nickName === '') {
     const promise = Profile.Person.get({ contactId: cid }).$promise;
     promise.then((person) => {
-      GoVolunteerService.person = person;
+      gService.person = person;
       deferred.resolve(person);
     }).catch(deferred.reject);
   } else {
     deferred.resolve();
   }
+
+  return deferred.promise;
+}
+
+export function GetOrganizations(Organizations, GoVolunteerService, $q, $log) {
+  const gService = GoVolunteerService;
+  const deferred = $q.defer();
+  Organizations.getCurrentOrgs().then((data) => {
+    gService.organizations = data;
+    deferred.resolve();
+  }, (err) => {
+    $log.error('Unable to get organizations', err);
+    deferred.reject();
+  });
 
   return deferred.promise;
 }
