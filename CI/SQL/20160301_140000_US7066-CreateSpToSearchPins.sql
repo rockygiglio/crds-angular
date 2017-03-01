@@ -8,9 +8,10 @@ GO
 
 
 IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[api_crds_get_Pins_Within_Range]') AND type in (N'P', N'PC'))
-BEGIN
 
-	CREATE PROCEDURE [dbo].[api_crds_get_Pins_Within_Range] @Latitude nvarchar(15), @Longitude nvarchar(15), @RadiusInKilometers int
+BEGIN
+    
+	EXEC('CREATE PROCEDURE [dbo].[api_crds_get_Pins_Within_Range] @Latitude nvarchar(15), @Longitude nvarchar(15), @RadiusInKilometers int
 	AS
 
 	DECLARE @CenterLatFloat float(24);
@@ -28,12 +29,10 @@ BEGIN
 	LEFT JOIN [Addresses] AS A on H.[Address_ID] = A.[Address_ID]
 	WHERE
 	ACOS( SIN( RADIANS( CAST(A.[Latitude] AS float) ) ) * SIN( RADIANS( @CenterLatFloat ) ) + COS( RADIANS( CAST(A.[Latitude] AS float) ) )
-	* COS( RADIANS( @CenterLatFloat  )) * COS( RADIANS( CAST(A.[Longitude] AS float) ) - RADIANS( @CenterLngFloat )) ) * 6380 < @RadiusInKilometers
+	* COS( RADIANS( @CenterLatFloat  )) * COS( RADIANS( CAST(A.[Longitude] AS float) ) - RADIANS( @CenterLngFloat )) ) * 6380 < @RadiusInKilometers')
 
 END
 
-USE MinistryPlatform
-GO
 
 IF NOT EXISTS(SELECT * FROM [dbo].[dp_API_Procedures] WHERE [procedure_name] = 'api_crds_get_Pins_Within_Range')
 BEGIN
