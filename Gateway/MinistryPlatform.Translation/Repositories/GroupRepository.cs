@@ -520,52 +520,18 @@ namespace MinistryPlatform.Translation.Repositories
 
         private List<MpGroupParticipant> LoadGroupParticipants(int groupId, string token, bool activeGroups = true)
         {
-            var groupParticipants = new List<MpGroupParticipant>();
-            logger.Debug("Getting participants for group " + groupId);
-            List<Dictionary<string, object>> participants;
+            const string columns = "Group_Participant_ID, Group_Participants.Group_ID, Group_Participants.Participant_ID, Group_Participants.Group_Role_ID, Group_ID_Table.Group_Name, Participant_ID_Table.Contact_ID, Participant_ID_Table_Contact_ID_Table.Nickname, Participant_ID_Table_Contact_ID_Table.Display_Name, Participant_ID_Table_Contact_ID_Table.Last_Name, Group_Role_ID_Table.Role_Title, Participant_ID_Table_Contact_ID_Table.Email_Address, Group_ID_Table_Congregation_ID_Table.Congregation_Name as Congregation, Group_Participants.Start_Date AS StartDate, Participant_ID_Table.Approved_Small_Group_Leader AS IsApprovedSmallGroupLeader";
+            string filter = $"Group_Participants.Group_ID = {groupId} AND (Group_Participants.End_Date IS NULL OR Group_Participants.End_Date >= GETDATE())";
 
             if (activeGroups)
-            {
-                participants = ministryPlatformService.GetSubpageViewRecords(GroupsParticipantsSubPageId, groupId, token);
-            }
-            else
-            {
-                participants = ministryPlatformService.GetSubpageViewRecords(CurrentGroupsParticipantsSubPage, groupId, token);
-            }
-            
-            if (participants != null && participants.Count > 0)
-            {
-                foreach (Dictionary<string, object> p in participants)
-                {
-                    object pid = null;
-                    p.TryGetValue("Participant_ID", out pid);
-                    if (pid != null)
-                    {
-                        var parti = new MpGroupParticipant
-                        {
-                            ContactId = p.ToInt("Contact_ID"),
-                            ParticipantId = p.ToInt("Participant_ID"),
-                            IsApprovedSmallGroupLeader = p.ToBool("Approved_Small_Group_Leader"),
-                            GroupParticipantId = p.ToInt("dp_RecordID"),
-                            GroupRoleId = p.ToInt("Group_Role_ID"),
-                            GroupRoleTitle = p.ToString("Role_Title"),
-                            LastName = p.ToString("Last_Name"),
-                            NickName = p.ToString("Nickname"),
-                            Email = p.ToString("Email")
-                        };
+                filter += " AND Group_ID_TABLE.Start_Date <= GETDATE() AND (Group_ID_Table.End_Date IS NULL OR Group_ID_TABLE.End_Date >= GETDATE())";
 
-                        if (p.ContainsKey("Start_Date"))
-                        {
-                            parti.StartDate = p.ToNullableDate("Start_Date");
-                        }                        
-                        groupParticipants.Add(parti);
-                    }
-                }
-            }
-            else
-            {
+            logger.Debug("Getting participants for group " + groupId);
+            var groupParticipants = _ministryPlatformRestRepository.UsingAuthenticationToken(token).Search<MpGroupParticipant>(filter, columns);
+            
+            if(!groupParticipants.Any())
                 logger.Debug("No participants found for group id " + groupId);
-            }
+
             return groupParticipants;
         }
 
