@@ -118,27 +118,30 @@ namespace crds_angular.Services
 
         public List<PinDto> GetPinsInRadius(GeoCoordinate originCoords, string address)
         {
-            _finderRepository.GetPinsInRadius(originCoords); //get participants on map within radius 
-            //get buildings on map within radius
-            //get groups on map within radius 
-            var groupPins = GetGroupPinsinRadius(originCoords,address);
-
             var pins = new List<PinDto>();
 
-            List<SpPinDto> participantPinsFromSp = _finderRepository.GetPinsInRadius(originCoords);
+            List<PinDto> groupPins = GetGroupPinsinRadius(originCoords,address);       
+            List<PinDto> participantAndBuildingPins = GetParticipantAndBuildingPinsInRadius(originCoords);
 
-            List<PinDto> participantPins = new List<PinDto>();
+            pins.AddRange(participantAndBuildingPins);
+            pins.AddRange(groupPins);
+
+            return pins; 
+
+        }
+
+        private List<PinDto> GetParticipantAndBuildingPinsInRadius(GeoCoordinate originCoords)
+        {
+            List<SpPinDto> participantPinsFromSp = _finderRepository.GetPinsInRadius(originCoords);
+            List<PinDto> participantAndBuildingPins = new List<PinDto>();
 
             foreach (SpPinDto piFromSP in participantPinsFromSp)
             {
                 PinDto pin = Mapper.Map<PinDto>(piFromSP);
-                participantPins.Add(pin); 
+                participantAndBuildingPins.Add(pin);
             }
 
-            pins.AddRange(participantPins);
-
-            return pins; 
-
+            return participantAndBuildingPins;
         }
 
         private List<PinDto> GetGroupPinsinRadius(GeoCoordinate originCoords, string address)
@@ -153,8 +156,7 @@ namespace crds_angular.Services
             foreach (var group in groups)
             {
                 pins.Add(Mapper.Map<PinDto>(group));
-            }//
-            // set pin type
+            }
             
             return pins;
         }
