@@ -8,7 +8,7 @@ describe('Embed Controller', () => {
 
   beforeEach(angular.mock.module(constants.MODULES.GROUP_TOOL));
 
-  describe('just href no map'), () => {
+  describe('just href no map', () => {
     beforeEach(inject(function ($injector) {
       element = angular.element('<crds-embed></crds-embed>');
       sce = $injector.get('$sce');
@@ -23,8 +23,8 @@ describe('Embed Controller', () => {
       expect(url).toBe('https://embed.crossroads.net/?type=something&stuff=123');
     });
   });
-  
-  describe('just map no href'), () => {
+
+  describe('just map no href', () => {
     beforeEach(inject(function ($injector) {
       element = angular.element('<crds-embed></crds-embed>');
       sce = $injector.get('$sce');

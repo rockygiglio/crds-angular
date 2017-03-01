@@ -21,6 +21,7 @@ export default class EmbedController {
     this.element = $element;
     this.sce = $sce;
     this.attrs = $attrs;
+  debugger;
 
     switch (__CRDS_ENV__) { // eslint-disable-line no-undef
       case 'int':
@@ -39,11 +40,12 @@ export default class EmbedController {
 
   buildUrl() {
     let path;
-    if (this.attrs.map == "true"){
-      path = '/add-me-to-the-map?type=donation'
+    if (this.attrs.map === 'true') {
+      path = '/add-me-to-the-map?type=donation';
     } else {
-      path = this.attrs.href || '/?type=donation';  
+      path = this.attrs.href || '/?type=donation';
     }
+    console.log(`${this.baseUrl}${path}`);
     return this.sce.trustAsResourceUrl(`${this.baseUrl}${path}`);
   }
 
