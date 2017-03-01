@@ -17,6 +17,16 @@ namespace crds_angular.Models.Crossroads.GoVolunteer
         [JsonProperty(PropertyName = "registrationId")]
         public int RegistrationId { get; set; }
 
+        [JsonProperty(PropertyName = "groupConnectorId")]
+        public int GroupConnectorId { get; set; }
+
+        [JsonProperty(PropertyName = "preferredLaunchSite")]
+        public PreferredLaunchSite PreferredLaunchSite { get; set; }
+
+        [JsonProperty(PropertyName = "spouseParticipation")]
+        [Required]
+        public bool SpouseParticipation { get; set; }
+
         [JsonProperty(PropertyName = "self")]
         public Registrant Self { get; set; }
     }

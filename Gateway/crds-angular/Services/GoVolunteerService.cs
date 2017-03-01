@@ -123,12 +123,22 @@ namespace crds_angular.Services
 
         public AnywhereRegistration CreateAnywhereRegistration(AnywhereRegistration registration, int projectId, string token)
         {
-            MpGroupConnector groupConnector = _groupConnectorService.GetGroupConnectorByProjectId(projectId, token);
+            try
+            {
+                MpGroupConnector mpGroupConnector = _groupConnectorService.GetGroupConnectorByProjectId(projectId, token);
+                registration.GroupConnectorId = mpGroupConnector.Id;
 
-            var participantId = RegistrationContact(registration, token);
+                var participantId = RegistrationContact(registration, token);
+                var registrationId = CreateAnywhereRegistrationDto(registration, participantId);
 
-
-            return new AnywhereRegistration();
+                return registration;
+            }
+            catch (Exception e)
+            {
+                const string msg = "Go Volunteer Service: CreateAnywhereRegistration";
+                _logger.Error(msg, e);
+                throw new Exception(msg, e);
+            }
         }
 
         public List<ProjectType> GetProjectTypes()
@@ -509,6 +519,20 @@ namespace crds_angular.Services
             return Registration(registrationDto);
         }
 
+        private int CreateAnywhereRegistrationDto(AnywhereRegistration registration, int participantId)
+        {
+            var registrationDto = new MpRegistration();
+
+            registrationDto.ParticipantId = participantId;
+            var preferredLaunchSiteId = PreferredLaunchSite(registration);
+            registrationDto.PreferredLaunchSiteId = preferredLaunchSiteId;
+            registrationDto.InitiativeId = registration.InitiativeId;
+            registrationDto.SpouseParticipation = registration.SpouseParticipation;
+            registrationDto.OrganizationId = registration.OrganizationId;
+
+            return Registration(registrationDto);
+        }
+
         private int Registration(MinistryPlatform.Translation.Models.GoCincinnati.MpRegistration registrationDto)
         {
             int registrationId;
@@ -524,13 +548,13 @@ namespace crds_angular.Services
             return registrationId;
         }
 
-        private int PreferredLaunchSite(CincinnatiRegistration registration)
+        private int PreferredLaunchSite(Registration registration)
         {
             int preferredLaunchSiteId;
             if (registration.PreferredLaunchSite.Id == 0)
             {
                 // use group connector
-                var groupConnector = _groupConnectorService.GetGroupConnectorById(registration.GroupConnector.GroupConnectorId);
+                var groupConnector = _groupConnectorService.GetGroupConnectorById(registration.GroupConnectorId);
                 preferredLaunchSiteId = groupConnector.PreferredLaunchSiteId;
             }
             else

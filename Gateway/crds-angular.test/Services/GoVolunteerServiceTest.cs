@@ -566,7 +566,7 @@ namespace crds_angular.test.Services
             });
         }
 
-        private string Skills(Registration registration)
+        private string Skills(CincinnatiRegistration registration)
         {
             if (registration.Skills != null && registration.Skills.Where(sk => sk.Checked).ToList().Count > 0)
             {

@@ -28,9 +28,6 @@ namespace crds_angular.Models.Crossroads.GoVolunteer
         [JsonProperty(PropertyName = "otherOrganizationName")]
         public string OtherOrganizationName { get; set; }
 
-        [JsonProperty(PropertyName = "preferredLaunchSite")]
-        public PreferredLaunchSite PreferredLaunchSite { get; set; }
-
         [JsonProperty(PropertyName = "prepWork")]
         public List<PrepWork> PrepWork { get; set; }
 
@@ -48,10 +45,6 @@ namespace crds_angular.Models.Crossroads.GoVolunteer
 
         [JsonProperty(PropertyName = "spouse")]
         public Registrant Spouse { get; set; }
-
-        [JsonProperty(PropertyName = "spouseParticipation")]
-        [Required]
-        public bool SpouseParticipation { get; set; }
 
         [JsonProperty(PropertyName = "waiverSigned")]
         [Required]
