@@ -132,7 +132,7 @@ namespace crds_angular.Controllers.API
             });
         }
 
-        [ResponseType(typeof(List<PinDto>))]
+        [ResponseType(typeof(PinSearchResultsDto))]
         [VersionedRoute(template: "finder/findpinsbyaddress/{userSearchAddress}", minimumVersion: "1.0.0")]
         [System.Web.Http.Route("finder/findpinsbyaddress/{userSearchAddress}")]
         [System.Web.Http.HttpGet]
@@ -140,8 +140,12 @@ namespace crds_angular.Controllers.API
         {
             try
             {
-                var address = _finderService.GetPinsByAddress(userSearchAddress);
-                return Ok(address);
+                //var address = _finderService.GetPinsByAddress(userSearchAddress);
+                PinDto mockPin = new PinDto();
+                GeoCoordinates mockCenter = new GeoCoordinates(39.2844738, -84.319614);
+                PinSearchResultsDto mockResults = new PinSearchResultsDto(mockCenter, new PinDto[] { mockPin });
+
+                return Ok(mockResults);
             }
             catch (Exception ex)
             {

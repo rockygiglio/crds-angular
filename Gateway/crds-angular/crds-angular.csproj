@@ -331,6 +331,8 @@
     <Compile Include="Exceptions\PaymentTypeNotFoundException.cs" />
     <Compile Include="Exceptions\TripFullException.cs" />
     <Compile Include="Models\Crossroads\GoVolunteer\Project.cs" />
+    <Compile Include="Models\Finder\GeoCoordinates.cs" />
+    <Compile Include="Models\Finder\PinSearchResultsDto.cs" />
     <Compile Include="Models\Finder\PinDto.cs" />
     <Compile Include="Models\Crossroads\Events\EventParticipantDTO.cs" />
     <Compile Include="Models\Crossroads\GroupCategoryDTO.cs" />
