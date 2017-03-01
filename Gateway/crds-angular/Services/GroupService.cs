@@ -513,6 +513,8 @@ namespace crds_angular.Services
 
             GetGroupAttributes(token, groupDetail);
 
+            GetGroupParticipants(groupDetail);
+
             return groupDetail;
         }
 
