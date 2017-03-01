@@ -274,7 +274,7 @@ namespace crds_angular.Controllers.API
         [Route("govolunteer/registration")]
         [ResponseType(typeof(Registration))]
         [HttpPost]
-        public IHttpActionResult Post([FromBody] Registration goVolunteerRegistration)
+        public IHttpActionResult Post([FromBody] CincinnatiRegistration goVolunteerRegistration)
         {
             if (ModelState.IsValid)
             {
@@ -290,13 +290,28 @@ namespace crds_angular.Controllers.API
         [HttpPost]
         public IHttpActionResult Post([FromBody] AnywhereRegistration goVolunteerRegistration, int projectId)
         {
-            if (ModelState.IsValid)
+            try
             {
-                return Authorized(token => _goVolunteerService.CreateAnywhereRegistration(goVolunteerRegistration, projectId, token));
+                if (ModelState.IsValid)
+                {
+                    return Authorized(token => Ok(_goVolunteerService.CreateAnywhereRegistration(goVolunteerRegistration, projectId, token)));
+                }
+                var errors = ModelState.Values.SelectMany(val => val.Errors).Aggregate("", (current, err) => current + err.ErrorMessage);
+                var dataError = new ApiErrorDto("Registration Data Invalid", new InvalidOperationException("Invalid Registration Data" + errors));
+                throw new HttpResponseException(dataError.HttpResponseMessage);
             }
-            var errors = ModelState.Values.SelectMany(val => val.Errors).Aggregate("", (current, err) => current + err.ErrorMessage);
-            var dataError = new ApiErrorDto("Registration Data Invalid", new InvalidOperationException("Invalid Registration Data" + errors));
-            throw new HttpResponseException(dataError.HttpResponseMessage);
+            catch (Exception e)
+            {
+                if (e.GetType() == typeof(HttpResponseException))
+                {
+                    throw e;
+                }
+
+                var msg = "GoVolunteerRegistrationController: POST " + goVolunteerRegistration;
+                logger.Error(msg, e);
+                var apiError = new ApiErrorDto(msg, e);
+                throw new HttpResponseException(apiError.HttpResponseMessage);
+            }
         }
 
         [VersionedRoute(template: "go-volunteer/cities/{initiativeId}", minimumVersion: "1.0.0")]
@@ -335,7 +350,7 @@ namespace crds_angular.Controllers.API
             }
         }
 
-        private IHttpActionResult SaveRegistration(string token, Registration goVolunteerRegistration)
+        private IHttpActionResult SaveRegistration(string token, CincinnatiRegistration goVolunteerRegistration)
         {
             try
             {

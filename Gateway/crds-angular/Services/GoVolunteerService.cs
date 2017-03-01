@@ -9,6 +9,7 @@ using log4net;
 using Crossroads.Web.Common.Configuration;
 using Crossroads.Web.Common.MinistryPlatform;
 using MinistryPlatform.Translation.Models;
+using MinistryPlatform.Translation.Models.GoCincinnati;
 using MinistryPlatform.Translation.Repositories.Interfaces.GoCincinnati;
 using IGroupConnectorRepository = MinistryPlatform.Translation.Repositories.Interfaces.GoCincinnati.IGroupConnectorRepository;
 using MPInterfaces = MinistryPlatform.Translation.Repositories.Interfaces;
@@ -122,10 +123,12 @@ namespace crds_angular.Services
 
         public AnywhereRegistration CreateAnywhereRegistration(AnywhereRegistration registration, int projectId, string token)
         {
-            GroupConnector groupConnector = _groupConnectorService.GetGroupConnectorByProjectId(projectId, token);
+            MpGroupConnector groupConnector = _groupConnectorService.GetGroupConnectorByProjectId(projectId, token);
 
             var participantId = RegistrationContact(registration, token);
 
+
+            return new AnywhereRegistration();
         }
 
         public List<ProjectType> GetProjectTypes()
