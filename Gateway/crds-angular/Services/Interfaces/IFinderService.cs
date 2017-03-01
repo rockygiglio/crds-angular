@@ -12,6 +12,6 @@ namespace crds_angular.Services.Interfaces
         void UpdateHouseholdAddress(PinDto pin);
         AddressDTO GetAddressForIp(string ip);
         int GetParticipantIdFromContact(int contactId);
-        List<PinDto> GetPinsByAddress(string userSearchAddress);
+        List<PinDto> GetPinsInRadius(GeoCoordinate originCoords);
     }
 }

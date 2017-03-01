@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Device.Location;
 using System.Linq;
 using crds_angular.App_Start;
 using crds_angular.Models.Crossroads;
@@ -75,7 +76,12 @@ namespace crds_angular.test.Services
         [Test]
         public void ShouldReturnAListOfPinsWhenSearching()
         {
-            List<PinDto> pins = _fixture.GetPinsByAddress("abc");
+            GeoCoordinate originCoords = new GeoCoordinate()
+            {
+                Latitude = 39.2844738,
+                Longitude = -84.319614
+            };
+            List<PinDto> pins = _fixture.GetPinsInRadius(originCoords);
             Assert.IsInstanceOf<List<PinDto>>(pins);
         }
 

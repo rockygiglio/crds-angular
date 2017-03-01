@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Device.Location;
 using System.Net;
 using System.Reflection;
 using System.Web.Http;
@@ -20,9 +21,11 @@ namespace crds_angular.Controllers.API
     {
         private readonly IAddressService _addressService;
         private readonly IFinderService _finderService;
+        private readonly IAddressGeocodingService _addressGeocodingService;
         private readonly ILog _logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         public FinderController(IAddressService addressService,
+                                IAddressGeocodingService addressGeocodingService, 
                                 IFinderService finderService,
                                 IUserImpersonationService userImpersonationService,
                                 IAuthenticationRepository authenticationRepository)
@@ -30,6 +33,7 @@ namespace crds_angular.Controllers.API
         {
             _addressService = addressService;
             _finderService = finderService;
+            _addressGeocodingService = addressGeocodingService; 
         }
 
         [ResponseType(typeof(PinDto))]
@@ -140,12 +144,18 @@ namespace crds_angular.Controllers.API
         {
             try
             {
-                //var address = _finderService.GetPinsByAddress(userSearchAddress);
+
+                GeoCoordinate originCoords = _addressGeocodingService.GetGeoCoordinates(userSearchAddress);
+                List<PinDto> pinsInRadius = _finderService.GetPinsInRadius(originCoords);
+
+
+                //mock code
                 PinDto mockPin = new PinDto();
                 GeoCoordinates mockCenter = new GeoCoordinates(39.2844738, -84.319614);
                 PinSearchResultsDto mockResults = new PinSearchResultsDto(mockCenter, new PinDto[] { mockPin });
 
                 return Ok(mockResults);
+                //mock code
             }
             catch (Exception ex)
             {

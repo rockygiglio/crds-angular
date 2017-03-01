@@ -108,15 +108,14 @@ namespace crds_angular.Services
             return participant.ParticipantId;
         }
 
-        public List<PinDto> GetPinsByAddress(string userSearchAddress)
+        public List<PinDto> GetPinsInRadius(GeoCoordinate originCoords)
         {
-            GeoCoordinate originCoords = _addressGeocodingService.GetGeoCoordinates(userSearchAddress);
+            _finderRepository.GetPinsInRadius(originCoords);
 
-            _finderRepository.GetPinsAroundCenter(originCoords);
-
+            //mock
             var list = new List<PinDto>{};
-
             return list; 
+            //mock
         }
     }
 }

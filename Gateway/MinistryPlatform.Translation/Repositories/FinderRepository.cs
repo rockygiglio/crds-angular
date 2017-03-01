@@ -63,7 +63,7 @@ namespace MinistryPlatform.Translation.Repositories
             _ministryPlatformRest.UsingAuthenticationToken(apiToken).Put("Participants", update);
         }
 
-        public void GetPinsAroundCenter(GeoCoordinate originCoords)
+        public void GetPinsInRadius(GeoCoordinate originCoords)
         {
             var apiToken = _apiUserRepository.GetToken();
 
