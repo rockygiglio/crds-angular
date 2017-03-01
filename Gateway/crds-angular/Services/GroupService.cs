@@ -499,10 +499,10 @@ namespace crds_angular.Services
         /// <param name="groupTypeId"></param>
         /// <param name="groupId"></param>
         /// <returns></returns>
-        public List<GroupDTO> GetGroupsByTypeOrId(string token, int? participantId = null, int[] groupTypeId = null, int? groupId = null)
+        public List<GroupDTO> GetGroupsByTypeOrId(string token, int? participantId = null, int[] groupTypeIds = null, int? groupId = null)
         {
             if (participantId == null) participantId = _participantService.GetParticipantRecord(token).ParticipantId;
-            var groupsByType = _mpGroupRepository.GetGroupsForParticipantByTypeOrID(participantId.Value, token, groupTypeId, groupId);
+            var groupsByType = _mpGroupRepository.GetGroupsForParticipantByTypeOrID(participantId.Value, token, groupTypeIds, groupId);
             
             if (groupsByType == null)
             {

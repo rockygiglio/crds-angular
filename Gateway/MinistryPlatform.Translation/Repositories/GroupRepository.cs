@@ -822,7 +822,7 @@ namespace MinistryPlatform.Translation.Repositories
             return groupDetails.Select(MapRecordToMpGroup).ToList();
         }
 
-        public List<MpGroup> GetGroupsForParticipantByTypeOrID(int participantId,string token = null, int[] groupTypeId = null, int? groupId = null)
+        public List<MpGroup> GetGroupsForParticipantByTypeOrID(int participantId,string token = null, int[] groupTypeIds = null, int? groupId = null)
         {
             if (token == null) token = ApiLogin();
             const string columns =
@@ -830,9 +830,9 @@ namespace MinistryPlatform.Translation.Repositories
 
             string filter = $"Group_Participants.[Participant_ID] = {participantId} AND (GROUP_ID_TABLE.End_Date IS NULL OR GROUP_ID_TABLE.End_Date >= GetDate()) AND (Group_Participants.End_Date is NULL OR Group_Participants.End_Date >= GetDate())";
 
-            if (groupTypeId != null)
+            if (groupTypeIds != null)
             {
-                filter += $" AND Group_ID_Table.Group_Type_ID IN ({string.Join(",", groupTypeId)})";
+                filter += $" AND Group_ID_Table.Group_Type_ID IN ({string.Join(",", groupTypeIds)})";
             }
 
             if (groupId != null)
