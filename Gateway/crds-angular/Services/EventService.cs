@@ -184,7 +184,7 @@ namespace crds_angular.Services
                 {
                     if (!room.Cancelled)
                     {
-                        if (!eventReservation.Rooms.Any(r => r.RoomId == room.RoomId))
+                        if (!eventReservation.Rooms.Any(r => r.RoomId == room.RoomId) || oldEventDetails.StartDateTime != eventReservation.StartDateTime)
                         {
                             room.Cancelled = true;
                             foreach (var eq in room.Equipment)
