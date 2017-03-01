@@ -9,7 +9,8 @@ using MinistryPlatform.Translation.Repositories.Interfaces;
 using log4net;
 using MinistryPlatform.Translation.Models;
 using Newtonsoft.Json;
-using System.Device.Location; 
+using System.Device.Location;
+using MinistryPlatform.Translation.Models.Finder;
 
 namespace crds_angular.Services
 {
@@ -110,16 +111,23 @@ namespace crds_angular.Services
 
         public List<PinDto> GetPinsInRadius(GeoCoordinate originCoords)
         {
-            _finderRepository.GetPinsInRadius(originCoords); //get participants on map within radius 
-            //get buildings on map within radius
-            //get groups on map within radius 
 
-            //combine the three, return as single list of pins 
+            var pins = new List<PinDto> { };
 
-            //mock
-            var list = new List<PinDto>{};
-            return list; 
-            //mock
+            List<SpPinDto> participantPinsFromSp = _finderRepository.GetPinsInRadius(originCoords);
+
+            List<PinDto> participantPins = new List<PinDto>();
+
+            foreach (SpPinDto piFromSP in participantPinsFromSp)
+            {
+                PinDto pin = Mapper.Map<PinDto>(piFromSP);
+                participantPins.Add(pin); 
+            }
+
+            pins.AddRange(participantPins);
+
+            return pins; 
+
         }
     }
 }

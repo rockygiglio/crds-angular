@@ -63,7 +63,7 @@ namespace MinistryPlatform.Translation.Repositories
             _ministryPlatformRest.UsingAuthenticationToken(apiToken).Put("Participants", update);
         }
 
-        public void GetPinsInRadius(GeoCoordinate originCoords)
+        public List<SpPinDto> GetPinsInRadius(GeoCoordinate originCoords)
         {
             var apiToken = _apiUserRepository.GetToken();
 
@@ -78,13 +78,16 @@ namespace MinistryPlatform.Translation.Repositories
 
             try
             {
-                var storedProcReturn = _ministryPlatformRest.UsingAuthenticationToken(apiToken).GetFromStoredProc<SpPinDto>(spName, parms);
-                System.Diagnostics.Debug.Write("test");
+                List<List<SpPinDto>> storedProcReturn = _ministryPlatformRest.UsingAuthenticationToken(apiToken)
+                                                                             .GetFromStoredProc<SpPinDto>(spName, parms);
+                List<SpPinDto> pinsFromSp = storedProcReturn.FirstOrDefault();
+
+                return pinsFromSp; 
             }
             catch (Exception ex)
             {
                 var exception = ex;
-                System.Diagnostics.Debug.Write("test");
+                return new List<SpPinDto>();
             }
         }
     }

@@ -146,16 +146,13 @@ namespace crds_angular.Controllers.API
             {
 
                 GeoCoordinate originCoords = _addressGeocodingService.GetGeoCoordinates(userSearchAddress);
+                GeoCoordinates originGeoCoordinates = new GeoCoordinates(originCoords.Latitude, originCoords.Longitude);
+
                 List<PinDto> pinsInRadius = _finderService.GetPinsInRadius(originCoords);
 
+                PinSearchResultsDto result = new PinSearchResultsDto(originGeoCoordinates, pinsInRadius);
 
-                //mock code
-                PinDto mockPin = new PinDto();
-                GeoCoordinates mockCenter = new GeoCoordinates(39.2844738, -84.319614);
-                PinSearchResultsDto mockResults = new PinSearchResultsDto(mockCenter, new PinDto[] { mockPin });
-
-                return Ok(mockResults);
-                //mock code
+                return Ok(result);
             }
             catch (Exception ex)
             {

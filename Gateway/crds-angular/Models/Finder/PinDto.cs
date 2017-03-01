@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.PeerToPeer.Collaboration;
 using System.Web;
 using crds_angular.Models.Crossroads;
 using crds_angular.Models.Crossroads.Groups;
@@ -8,6 +9,13 @@ using Newtonsoft.Json;
 
 namespace crds_angular.Models.Finder
 {
+    public enum PinType
+    {
+        PERSON = 1,
+        GATHERING = 2,
+        SITE = 3 
+    };
+
     public class PinDto
     {
         [JsonProperty("firstName")]
@@ -39,5 +47,8 @@ namespace crds_angular.Models.Finder
 
         [JsonProperty("isFormDirty")]
         public bool isFormDirty { get; set; }
+
+        [JsonProperty("pinType")]
+        public PinType PinType { get; set;  }
     }
 }
