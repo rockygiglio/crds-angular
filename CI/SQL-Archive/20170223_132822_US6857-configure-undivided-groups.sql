@@ -34,7 +34,8 @@ insert into @sites (siteId, siteName, groupDescription)
 		     , (6, 'Mason', '6:30 - 8:30pm, Every Wednesday from April 19 to May 24')
 			 , (1, 'Oakley', '6:30 - 8:30pm,  Every Monday from April 17 to May 22')
 			 , (16, 'Oxford', '6:30 - 8:30pm,  Every Thursday from April 20 to May 25')
-			 , (11, 'Uptown', '6:30 - 8:30pm,  Every Tuesday from April 18 to May 23');
+			 , (11, 'Uptown', '6:30 - 8:30pm,  Every Tuesday from April 18 to May 23')
+			 , (15, 'Anywhere', '(Flexible days and times from April 17-May 26');
 
 declare @i int;
 declare @cnt int;
