@@ -9,6 +9,8 @@ using MinistryPlatform.Translation.Repositories.Interfaces;
 using log4net;
 using MinistryPlatform.Translation.Models;
 using Newtonsoft.Json;
+using Crossroads.Web.Common.Configuration;
+using Crossroads.Web.Common.MinistryPlatform;
 
 namespace crds_angular.Services
 {
@@ -30,22 +32,44 @@ namespace crds_angular.Services
         private readonly IFinderRepository _finderRepository;
         private readonly IParticipantRepository _participantRepository;
         private readonly IAddressService _addressService;
+        private readonly IGroupService _groupService;
+        private readonly IApiUserRepository _apiUserRepository;
+        private readonly int _approvedHost;
+        private readonly int _anywhereGroupType;
 
 
-        public FinderService(IFinderRepository finderRepository, IContactRepository contactRepository, IAddressService addressService, IParticipantRepository participantRepository)
+        public FinderService(IFinderRepository finderRepository,
+                            IContactRepository contactRepository, 
+                            IAddressService addressService, 
+                            IParticipantRepository participantRepository, 
+                            IGroupService groupService,
+                            IApiUserRepository apiUserRepository,
+                            IConfigurationWrapper configurationWrapper
+                            )
         {
             _finderRepository = finderRepository;
             _contactRepository = contactRepository;
             _addressService = addressService;
             _participantRepository = participantRepository;
+            _groupService = groupService;
+            _apiUserRepository = apiUserRepository;
+            _approvedHost = configurationWrapper.GetConfigIntValue("ApprovedHostStatus");
+            _anywhereGroupType = configurationWrapper.GetConfigIntValue("AnywhereGroupTypeId");
         }
 
 
         public PinDto GetPinDetails(int participantId)
         {
+            var token = _apiUserRepository.GetToken();
             //first get pin details
             var pinDetails = Mapper.Map<PinDto>(_finderRepository.GetPinDetails(participantId));
 
+            //get group details
+            if (pinDetails.Host_Status_ID == _approvedHost)
+            {
+                _groupService.GetGroupsByTypeForParticipant(token, participantId, _anywhereGroupType);
+            }
+            
             //make sure we have a lat/long
             if (pinDetails.Address.Latitude == null || pinDetails.Address.Longitude == null)
             {

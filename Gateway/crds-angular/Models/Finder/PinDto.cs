@@ -29,7 +29,7 @@ namespace crds_angular.Models.Finder
         public AddressDTO Address { get; set; }
 
         [JsonProperty("hostStatus")]
-        public int Host_Status { get; set; }
+        public int Host_Status_ID { get; set; }
 
         [JsonProperty("gathering")]
         public GroupDTO Gathering { get; set; }
