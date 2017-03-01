@@ -12,6 +12,7 @@ using Moq;
 using NUnit.Framework;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 using AutoMapper;
+using crds_angular.Models.Crossroads.Groups;
 using Crossroads.Web.Common.Configuration;
 
 namespace crds_angular.test.Services
@@ -79,12 +80,16 @@ namespace crds_angular.test.Services
         [Test]
         public void ShouldReturnAListOfPinsWhenSearching()
         {
+            _mpConfigurationWrapper.Setup(mocked => mocked.GetConfigIntValue("AnywhereGatheringGroupTypeId")).Returns(30);
+            _mpGroupToolService.Setup(m => m.SearchGroups(It.IsAny<int[]>(), null, It.IsAny<string>(), null)).Returns(new List<GroupDTO>());
+           
+            string address = "123 Main Street, Walton, KY";
             GeoCoordinate originCoords = new GeoCoordinate()
             {
                 Latitude = 39.2844738,
                 Longitude = -84.319614
             };
-            List<PinDto> pins = _fixture.GetPinsInRadius(originCoords);
+            List<PinDto> pins = _fixture.GetPinsInRadius(originCoords, address);
             Assert.IsInstanceOf<List<PinDto>>(pins);
         }
 
