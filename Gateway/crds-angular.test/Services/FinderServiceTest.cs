@@ -120,7 +120,7 @@ namespace crds_angular.test.Services
             var householdDictionary = new Dictionary<string, object> { { "Household_ID", pin.Household_ID} };
 
             _addressService.Setup(m => m.SetGeoCoordinates(pin.Address));
-            _mpContactRepository.Setup(m => m.UpdateHouseholdAddress(pin.Household_ID, householdDictionary, addressDictionary));
+            _mpContactRepository.Setup(m => m.UpdateHouseholdAddress((int)pin.Household_ID, householdDictionary, addressDictionary));
             _fixture.UpdateHouseholdAddress(pin);
             _mpFinderRepository.VerifyAll();
         }

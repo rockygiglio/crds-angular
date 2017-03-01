@@ -18,19 +18,19 @@ namespace MinistryPlatform.Translation.Models.Finder
         public string Email_Address { get; set; }
 
         [JsonProperty("contact_Id")]
-        public int Contact_ID { get; set; }
+        public int? Contact_ID { get; set; }
 
         [JsonProperty("participant_Id")]
-        public int Participant_ID { get; set; }
+        public int? Participant_ID { get; set; }
 
         [JsonProperty("hostStatusId")]
-        public int Host_Status_ID { get; set; }
+        public int? Host_Status_ID { get; set; }
 
         [JsonProperty("gathering")]
         public string Gathering { get; set; }
 
         [JsonProperty("household_Id")]
-        public int Household_ID { get; set; }
+        public int? Household_ID { get; set; }
 
         [JsonProperty("site_Name")]
         public string Site_Name{ get; set; }
@@ -55,5 +55,8 @@ namespace MinistryPlatform.Translation.Models.Finder
 
         [JsonProperty("Longitude")]
         public double? Longitude { get; set; }
+
+        [JsonProperty("pin_Type")]
+        public int Pin_Type { get; set; }
     }
 }

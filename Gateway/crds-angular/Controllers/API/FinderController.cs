@@ -120,10 +120,10 @@ namespace crds_angular.Controllers.API
 
                     if (pin.Participant_ID == 0 || String.IsNullOrEmpty(pin.Participant_ID.ToString()))
                     {
-                        pin.Participant_ID =_finderService.GetParticipantIdFromContact(pin.Contact_ID);
+                        pin.Participant_ID =_finderService.GetParticipantIdFromContact((int)pin.Contact_ID);
                     }
 
-                    _finderService.EnablePin(pin.Participant_ID);
+                    _finderService.EnablePin((int)pin.Participant_ID);
                     _logger.DebugFormat("Successfully created pin for contact {0} ", pin.Contact_ID);
                     return (Ok(pin));
                 }

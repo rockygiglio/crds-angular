@@ -62,7 +62,7 @@ namespace crds_angular.App_Start
                                                     src.Postal_Code,
                                                     src.Longitude,
                                                     src.Latitude)))
-                .ForMember(dest => dest.PinType, opts => opts.MapFrom(src => PinType.PERSON));
+                .ForMember(dest => dest.PinType, opts => opts.MapFrom(src => src.Pin_Type)); 
 
             Mapper.CreateMap<MpGroup, OpportunityGroup>()
                 .ForMember(dest => dest.GroupId, opts => opts.MapFrom(src => src.GroupId))
