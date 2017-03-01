@@ -148,7 +148,7 @@ namespace crds_angular.Controllers.API
                 GeoCoordinate originCoords = _addressGeocodingService.GetGeoCoordinates(userSearchAddress);
                 GeoCoordinates originGeoCoordinates = new GeoCoordinates(originCoords.Latitude, originCoords.Longitude);
 
-                List<PinDto> pinsInRadius = _finderService.GetPinsInRadius(originCoords);
+                List<PinDto> pinsInRadius = _finderService.GetPinsInRadius(originCoords, userSearchAddress);
 
                 PinSearchResultsDto result = new PinSearchResultsDto(originGeoCoordinates, pinsInRadius);
 

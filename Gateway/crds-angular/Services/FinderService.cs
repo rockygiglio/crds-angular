@@ -11,6 +11,8 @@ using MinistryPlatform.Translation.Models;
 using Newtonsoft.Json;
 using System.Device.Location;
 using MinistryPlatform.Translation.Models.Finder;
+using System.Device.Location;
+using Crossroads.Web.Common.Configuration;
 
 namespace crds_angular.Services
 {
@@ -33,19 +35,24 @@ namespace crds_angular.Services
         private readonly IFinderRepository _finderRepository;
         private readonly IParticipantRepository _participantRepository;
         private readonly IAddressService _addressService;
-
+        private readonly IGroupToolService _groupToolService;
+        private readonly IConfigurationWrapper _configurationWrapper;
 
         public FinderService(IAddressGeocodingService addressGeocodingService, 
                              IFinderRepository finderRepository, 
                              IContactRepository contactRepository, 
                              IAddressService addressService, 
-                             IParticipantRepository participantRepository)
+                             IParticipantRepository participantRepository,
+                             IGroupToolService groupToolService,
+                             IConfigurationWrapper configurationWrapper)
         {
             _addressGeocodingService = addressGeocodingService;
             _finderRepository = finderRepository;
             _contactRepository = contactRepository;
             _addressService = addressService;
             _participantRepository = participantRepository;
+            _groupToolService = groupToolService;
+            _configurationWrapper = configurationWrapper;
         }
 
 
@@ -109,10 +116,14 @@ namespace crds_angular.Services
             return participant.ParticipantId;
         }
 
-        public List<PinDto> GetPinsInRadius(GeoCoordinate originCoords)
+        public List<PinDto> GetPinsInRadius(GeoCoordinate originCoords, string address)
         {
+            _finderRepository.GetPinsInRadius(originCoords); //get participants on map within radius 
+            //get buildings on map within radius
+            //get groups on map within radius 
+            var groupPins = GetGroupPinsinRadius(originCoords,address);
 
-            var pins = new List<PinDto> { };
+            var pins = new List<PinDto>();
 
             List<SpPinDto> participantPinsFromSp = _finderRepository.GetPinsInRadius(originCoords);
 
@@ -128,6 +139,24 @@ namespace crds_angular.Services
 
             return pins; 
 
+        }
+
+        private List<PinDto> GetGroupPinsinRadius(GeoCoordinate originCoords, string address)
+        {
+            // ignoring originCoords at this time
+            var pins = new List<PinDto>();
+
+            // get group for anywhere gathering
+            var anywhereGroupTypeId = _configurationWrapper.GetConfigIntValue("AnywhereGatheringGroupTypeId");
+            var groups = _groupToolService.SearchGroups(new int[]  { anywhereGroupTypeId},null,address,null);
+
+            foreach (var group in groups)
+            {
+                pins.Add(Mapper.Map<PinDto>(group));
+            }//
+            // set pin type
+            
+            return pins;
         }
     }
 }
