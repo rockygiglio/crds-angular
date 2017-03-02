@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using MinistryPlatform.Translation.Models.Attributes;
+using Crossroads.Web.Common;
+using Crossroads.Web.Common.MinistryPlatform;
 using Newtonsoft.Json;
 
 
@@ -16,6 +17,8 @@ namespace MinistryPlatform.Translation.Models
         public string GroupRole { get; set; }
         [JsonProperty("Group_Type_ID")]
         public int GroupType { get; set; }
+        [JsonProperty("Group_Type_Name")]
+        public string GroupTypeName { get; set; }
         public int TargetSize { get; set; }
         public IList<MpGroupParticipant> Participants { get; set; }
         public Boolean Full { get; set; }

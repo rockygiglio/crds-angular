@@ -17,7 +17,7 @@
           min-date={{formField.oneHundredFiftyYearsAgo}}
           init-date=formField.initDate
           ng-required="true"
-          datepicker-validator        
+          datepicker-validator
       >
       <span class="input-group-btn">
         <button type="button" class="btn btn-default" ng-click="formField.openBirthdatePicker($event)">
@@ -25,7 +25,7 @@
         </button>
       </span>
     </span>
-    <ng-messages for="formField.parentForm.birthdate.$error" ng-if="formField.validate('birthdate')">          
+    <ng-messages for="formField.parentForm.birthdate.$error" ng-if="formField.validate('birthdate')">
       <span ng-message="date">
         <span dynamic-content="$root.MESSAGES.invalidData.content | html"></span>
       </span>
@@ -37,7 +37,7 @@
       </span>
       <span ng-message="required">
         <span dynamic-content="$root.MESSAGES.fieldCanNotBeBlank.content | html"></span>
-      </span>               
-    </ng-messages> 
+      </span>
+    </ng-messages>
   </div>
 </div>

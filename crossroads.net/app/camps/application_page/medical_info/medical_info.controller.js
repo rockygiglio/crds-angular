@@ -5,6 +5,7 @@ class MedicalInfoController {
     this.rootScope = $rootScope;
     this.go = $state.go;
     this.stateParams = $state.params;
+    this.state = $state;
     this.viewReady = false;
     this.submitting = false;
     this.update = false;
@@ -14,7 +15,7 @@ class MedicalInfoController {
     this.model = this.medicalInfoForm.getModel();
     this.fields = this.medicalInfoForm.getFields();
     this.viewReady = true;
-    this.update = this.stateParams.update;
+    this.update = this.stateParams.update !== null && this.stateParams.update !== undefined ? this.stateParams.update : true;
   }
 
   cancel() {

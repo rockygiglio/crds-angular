@@ -1,6 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using Crossroads.Utilities.Interfaces;
+using Crossroads.Web.Common;
+using Crossroads.Web.Common.Configuration;
+using Crossroads.Web.Common.MinistryPlatform;
+using Crossroads.Web.Common.Security;
 using MinistryPlatform.Translation.Repositories;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 using Moq;
@@ -16,6 +20,8 @@ namespace MinistryPlatform.Translation.Test
         private Mock<IMinistryPlatformService> _ministryPlatformService;
         private Mock<IAuthenticationRepository> _authService;
         private Mock<IConfigurationWrapper> _configWrapper;
+        private Mock<IMinistryPlatformRestRepository> _ministryPlatformRestRepository;
+        private readonly int _roomReservationPageID;
 
         [SetUp]
         public void SetUp()
@@ -23,15 +29,21 @@ namespace MinistryPlatform.Translation.Test
             _ministryPlatformService = new Mock<IMinistryPlatformService>(MockBehavior.Strict);
             _authService = new Mock<IAuthenticationRepository>(MockBehavior.Strict);
             _configWrapper = new Mock<IConfigurationWrapper>(MockBehavior.Strict);
+            _ministryPlatformRestRepository = new Mock<IMinistryPlatformRestRepository>(MockBehavior.Strict);
 
             _configWrapper.Setup(mocked => mocked.GetConfigIntValue("TasksNeedingAutoStarted")).Returns(2212);
             _configWrapper.Setup(mocked => mocked.GetConfigIntValue("TasksPageId")).Returns(400);
+            _configWrapper.Setup(mocked => mocked.GetConfigIntValue("RoomReservationPageId")).Returns(384);
             _configWrapper.Setup(mocked => mocked.GetEnvironmentVarAsString("API_USER")).Returns("api_user");
             _configWrapper.Setup(mocked => mocked.GetEnvironmentVarAsString("API_PASSWORD")).Returns("password");
 
-            _authService.Setup(m => m.Authenticate(It.IsAny<string>(), It.IsAny<string>())).Returns(new Dictionary<string, object> { { "token", "ABC" }, { "exp", "123" } });
+            _authService.Setup(m => m.Authenticate(It.IsAny<string>(), It.IsAny<string>())).Returns(new AuthToken
+            {
+                AccessToken = "ABC",
+                ExpiresIn = 123
+            });
 
-            _fixture = new TaskRepository(_authService.Object, _configWrapper.Object, _ministryPlatformService.Object);
+            _fixture = new TaskRepository(_authService.Object, _configWrapper.Object, _ministryPlatformService.Object, _ministryPlatformRestRepository.Object);
         }
 
         [Test]

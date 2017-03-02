@@ -27,7 +27,8 @@
         </div>
       </td>
       <td class="text-right">
-        <div ng-class="{ 'dollar-amount-decline' : donation.status == 'Declined', 'dollar-amount' : donation.status != 'Declined'}">{{distribution.amount / 100 | currency:'$'}}</div>
+        <div ng-if="donation.source.type != 'NonCashAsset'" ng-class="{ 'dollar-amount-decline' : donation.status == 'Declined', 'dollar-amount' : donation.status != 'Declined'}">{{distribution.amount / 100 | currency:'$'}}</div>
+        <div ng-if="donation.source.type == 'NonCashAsset'">&nbsp;</div>
         <div class="text-muted"><small>{{donation.date | date:'M/d/yy'}}</small></div>
       </td>
     </tr>

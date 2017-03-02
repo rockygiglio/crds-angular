@@ -7,6 +7,10 @@ using System.Text;
 using Crossroads.Utilities;
 using Crossroads.Utilities.Interfaces;
 using log4net;
+using Crossroads.Web.Common;
+using Crossroads.Web.Common.Configuration;
+using Crossroads.Web.Common.MinistryPlatform;
+using Crossroads.Web.Common.Security;
 using MinistryPlatform.Translation.Enum;
 using MinistryPlatform.Translation.Extensions;
 using MinistryPlatform.Translation.Models;
@@ -311,6 +315,8 @@ namespace MinistryPlatform.Translation.Repositories
                 {"Recurring_Gift_ID", donationAndDistribution.RecurringGiftId},
                 {"Is_Recurring_Gift", donationAndDistribution.RecurringGift},
                 {"Donor_Account_ID", donationAndDistribution.DonorAcctId},
+                {"Source_Url", donationAndDistribution.SourceUrl},
+                {"Predefined_Amount", donationAndDistribution.PredefinedAmount},
             };
             if (!string.IsNullOrWhiteSpace(donationAndDistribution.CheckScannerBatchName))
             {
@@ -796,7 +802,7 @@ namespace MinistryPlatform.Translation.Repositories
                 donationDate = record["Donation_Date"] as DateTime? ?? DateTime.Now,
                 batchId = null,
                 donationId = record["Donation_ID"] as int? ?? 0,
-                donationNotes = null,
+                donationNotes = record["Notes"] as string,
                 donationStatus = record["Donation_Status_ID"] as int? ?? 0,
                 donationStatusDate = record["Donation_Status_Date"] as DateTime? ?? DateTime.Now,
                 donorId = record["Donor_ID"] as int? ?? 0,
@@ -840,7 +846,17 @@ namespace MinistryPlatform.Translation.Repositories
             return string.Join(" or ", ids.Select(id => string.Format("\"{0}\"", id)));
         }
 
-        public int CreateRecurringGiftRecord(string authorizedUserToken, int donorId, int donorAccountId, string planInterval, decimal planAmount, DateTime startDate, string program, string subscriptionId, int congregationId)
+        public int CreateRecurringGiftRecord(string authorizedUserToken, 
+                                             int donorId, 
+                                             int donorAccountId, 
+                                             string planInterval, 
+                                             decimal planAmount, 
+                                             DateTime startDate, 
+                                             string program, 
+                                             string subscriptionId, 
+                                             int congregationId, 
+                                             string sourceUrl = null, 
+                                             decimal? predefinedAmount = null)
         {
             // Make sure we're talking in UTC consistently
             startDate = startDate.ToUniversalTime().Date;
@@ -870,7 +886,9 @@ namespace MinistryPlatform.Translation.Repositories
                 {"Start_Date", startDate},
                 {"Program_ID", program},
                 {"Congregation_ID", congregationId},
-                {"Subscription_ID", subscriptionId}
+                {"Subscription_ID", subscriptionId},
+                {"Source_Url", sourceUrl},
+                {"Predefined_Amount", predefinedAmount}
             };
 
             int recurringGiftId;

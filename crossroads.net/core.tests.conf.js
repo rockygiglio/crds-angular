@@ -21,6 +21,7 @@ module.exports = function(config) {
       './node_modules/phantomjs-polyfill/bind-polyfill.js',
       './node_modules/angular/angular.js',
       'node_modules/angular-mocks/angular-mocks.js',
+      'node_modules/jquery/dist/jquery.js',
       'spec-core/spec_index.js'
     ],
 
@@ -39,6 +40,10 @@ module.exports = function(config) {
     // possible values: 'dots', 'progress'
     // available reporters: https://npmjs.org/browse/keyword/karma-reporter
     reporters: ['mocha'],
+
+    mochaReporter: {
+      ignoreSkipped: true
+    },
 
     // web server port
     port: 9876,

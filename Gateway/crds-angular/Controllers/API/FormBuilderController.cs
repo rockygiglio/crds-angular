@@ -6,9 +6,11 @@ using System.Web.Http;
 using System.Web.Http.Description;
 using crds_angular.Models.Crossroads.Groups;
 using crds_angular.Security;
+using crds_angular.Services.Interfaces;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 using log4net;
 using Crossroads.ApiVersioning;
+using Crossroads.Web.Common.Security;
 
 namespace crds_angular.Controllers.API
 {
@@ -19,7 +21,7 @@ namespace crds_angular.Controllers.API
         private readonly Services.Interfaces.IFormBuilderService _formBuilderService;
 
         public FormBuilderController(Services.Interfaces.IFormBuilderService formBuilderService,
-                                     IMinistryPlatformService ministryPlatformService)
+                                     IMinistryPlatformService ministryPlatformService, IUserImpersonationService userImpersonationService, IAuthenticationRepository authenticationRepository) : base(userImpersonationService, authenticationRepository)
         {
             _formBuilderService = formBuilderService;
             _ministryPlatformService = ministryPlatformService;

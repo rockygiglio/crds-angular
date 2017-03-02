@@ -5,6 +5,10 @@ using System.Reflection;
 using Crossroads.Utilities.FunctionalHelpers;
 using Crossroads.Utilities.Interfaces;
 using log4net;
+using Crossroads.Web.Common;
+using Crossroads.Web.Common.Configuration;
+using Crossroads.Web.Common.MinistryPlatform;
+using Crossroads.Web.Common.Security;
 using MinistryPlatform.Translation.Extensions;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Repositories;
@@ -32,7 +36,7 @@ namespace MinistryPlatform.Translation.Repositories
         private readonly int CommunityGroupWaitListConfirmationTemplateId = Convert.ToInt32(AppSettings("CommunityGroupWaitListConfirmationTemplateId"));
         private readonly int CurrentGroupParticipantsByGroupTypePageView = Convert.ToInt32(AppSettings("CurrentGroupParticipantsByGroupTypePageView"));
         private readonly int MyCurrentGroupsPageView = Convert.ToInt32(AppSettings("MyCurrentGroupsPageView"));
-        private readonly int JourneyGroupId = Convert.ToInt32(AppSettings("JourneyGroupId"));
+        private readonly int JourneyGroupTypeId = Convert.ToInt32(AppSettings("JourneyGroupTypeId"));
         private readonly int JourneyGroupSearchPageViewId = Convert.ToInt32(AppSettings("JourneyGroupSearchPageViewId"));
         private readonly int MySmallGroupsPageView = Convert.ToInt32(AppSettings("MySmallGroupsPageView"));
         private readonly int GroupLeaderRoleId = Convert.ToInt32(AppSettings("GroupLeaderRoleId"));
@@ -230,6 +234,7 @@ namespace MinistryPlatform.Translation.Repositories
                     return (null);
                 }
                 var g = new MpGroup();
+                g.GroupId = groupId;
 
                 object con = null;
                 groupDetails.TryGetValue("Congregation_ID", out con);
@@ -504,7 +509,7 @@ namespace MinistryPlatform.Translation.Repositories
 
         private int GetSearchPageViewId(int groupTypeId)
         {
-            if (groupTypeId == JourneyGroupId)
+            if (groupTypeId == JourneyGroupTypeId)
             {
                 return JourneyGroupSearchPageViewId;
             }
@@ -579,7 +584,7 @@ namespace MinistryPlatform.Translation.Repositories
                 EventStartDate = tmpEvent.ToDate("Event_Start_Date"),
                 EventEndDate = tmpEvent.ToDate("Event_End_Date"),
                 EventTitle = tmpEvent.ToString("Event_Title"),
-                EventType = tmpEvent.ToString("Event_Type")
+                EventType = tmpEvent.ToString("Event_Type_ID")
             }).ToList();
         }
 
@@ -817,13 +822,13 @@ namespace MinistryPlatform.Translation.Repositories
             return groupDetails.Select(MapRecordToMpGroup).ToList();
         }
 
-        public List<MpGroup> GetMyGroupParticipationByType(string token, int? groupTypeId = null, int? groupId = null)
+        public List<MpGroup> GetMyGroupParticipationByType(string token, int[] groupTypeId = null, int? groupId = null)
         {
             var groupDetails = ministryPlatformService.GetRecordsDict(MyCurrentGroupParticipationPageId,
                                                                       token,
                                                                       string.Format(",,,{0},{1}",
                                                                                     groupId == null ? string.Empty : string.Format("\"{0}\"", groupId),
-                                                                                    groupTypeId == null ? string.Empty : string.Format("\"{0}\"", groupTypeId)));
+                                                                                    groupTypeId == null ? string.Empty : string.Format("\"{0}\"", string.Join("\" or \"", groupTypeId))));
             if (groupDetails == null || groupDetails.Count == 0)
             {
                 return new List<MpGroup>();
@@ -886,6 +891,7 @@ namespace MinistryPlatform.Translation.Repositories
                 PrimaryContactName = record.ContainsKey("Primary_Contact_Name") ? record.ToString("Primary_Contact_Name") : record.ToString("Primary_Contact_Text"),
                 PrimaryContactEmail = record.ContainsKey("Primary_Contact_Email") ? record.ToString("Primary_Contact_Email") : string.Empty,
                 GroupType = record.ToInt("Group_Type_ID"),
+                GroupTypeName = record.ContainsKey("Group_Type_Name") ? record.ToString("Group_Type_Name") : string.Empty, 
                 StartDate = record.ToDate("Start_Date"),
                 EndDate = record.ToNullableDate("End_Date"),
                 MeetingDayId = record.ToInt("Meeting_Day_ID"),
@@ -939,7 +945,7 @@ namespace MinistryPlatform.Translation.Repositories
                 {"Online_RSVP_Minimum_Age", group.MinimumAge },
                 {"Maximum_Age", group.MaximumAge },
                 {"Minimum_Participants", group.MinimumParticipants },
-                {"Kids_Welcome", group.KidsWelcome },
+                {"Kids_Welcome", group.KidsWelcome ?? true},
                 {"Meeting_Frequency_ID", group.MeetingFrequencyID }
 
             };

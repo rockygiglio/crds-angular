@@ -7,6 +7,10 @@ using crds_angular.Models.MP;
 using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Interfaces;
 using log4net;
+using Crossroads.Web.Common;
+using Crossroads.Web.Common.Configuration;
+using Crossroads.Web.Common.MinistryPlatform;
+using Crossroads.Web.Common.Security;
 using MinistryPlatform.Translation.Repositories;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 using ILookupRepository = MinistryPlatform.Translation.Repositories.Interfaces.ILookupRepository;
@@ -52,7 +56,7 @@ namespace crds_angular.Services
         //TODO: Put this logic in the Translation Layer?
         public bool SaveCommunicationPrefs(string token, AccountInfo accountInfo)
         {
-            var contactId = _authenticationService.GetContactId(token);
+            var contactId = _ministryPlatformService.GetContactInfo(token).ContactId;
             var contact = _ministryPlatformService.GetRecordDict(_configurationWrapper.GetConfigIntValue("MyContact"), contactId, token);
             try
             {                
@@ -81,7 +85,7 @@ namespace crds_angular.Services
 
         public AccountInfo getAccountInfo(string token)
         {
-            var contactId = _authenticationService.GetContactId(token);
+            var contactId = _ministryPlatformService.GetContactInfo(token).ContactId;
             var contact = _communicationService.GetPreferences(token, contactId);
             var accountInfo = new AccountInfo
             {

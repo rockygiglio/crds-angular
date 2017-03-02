@@ -6,9 +6,9 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
 {
     public interface IEquipmentRepository
     {
-        int CreateEquipmentReservation(MpEquipmentReservationDto equipmentReservation, string token);
+        int CreateEquipmentReservation(MpEquipmentReservationDto equipmentReservation);
         List<Equipment> GetEquipmentByLocationId(int locationId);
         List<MpEquipmentReservationDto> GetEquipmentReservations(int eventId, int roomId);
-        void UpdateEquipmentReservation(MpEquipmentReservationDto equipmentReservation, string token);
+        void UpdateEquipmentReservation(MpEquipmentReservationDto equipmentReservation);
     }
 }

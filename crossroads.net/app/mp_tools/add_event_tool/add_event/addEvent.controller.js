@@ -1,12 +1,13 @@
 import CONSTANTS from 'crds-constants';
 
 export default class AddEventcontroller {
-    /* @ngInject */
-  constructor($log, AddEvent, Lookup, Programs, StaffContact, Validation, Session) {
+  /* @ngInject */
+  constructor($log, AddEvent, Lookup, Programs, StaffContact, Validation, Session, LookupService) {
     this.log = $log;
     this.addEvent = AddEvent;
     this.lookup = Lookup;
     this.programsLookup = Programs;
+    this.lookupService = LookupService;
     this.staffContact = StaffContact;
     this.validation = Validation;
     this.endDateOpened = false;
@@ -17,19 +18,20 @@ export default class AddEventcontroller {
   }
 
   $onInit() {
-    this.eventTypes = this.lookup.query({ table: 'eventtypes' });
+    this.eventTypes = this.lookupService.EventTypes.query({}, (types) => {
+      if (this.eventData && this.eventData.eventType && this.eventData.eventType.dp_RecordID) {
+        this.eventData.eventType = _.find(types, (type) => {
+          return type.dp_RecordID === this.eventData.eventType.dp_RecordID;
+        });
+
+        this.eventTypeChanged();
+      }
+    });
     this.reminderDays = this.lookup.query({ table: 'reminderdays' });
     this.programs = this.programsLookup.AllPrograms.query();
     // Get the congregations
     this.lookup.query({ table: 'crossroadslocations' }, (locations) => {
       this.crossroadsLocations = locations;
-
-            // does the current location need to be updated with the name?
-            // if (AddEvent.editMode) {
-            //   vm.eventData.event.congregation = _.find(locations, function(l) {
-            //     return l.dp_RecordID === vm.eventData.event.congregation.dp_RecordID;
-            //   });
-            // }
     });
     if (_.isEmpty(this.eventData)) {
       const startDate = new Date();
@@ -61,25 +63,6 @@ export default class AddEventcontroller {
     });
   }
 
-  dateTime(dateForDate, dateForTime) {
-    if (dateForDate === undefined) {
-      return null;
-    }
-
-    if (dateForTime === undefined) {
-      return null;
-    }
-
-    return new Date(
-            dateForDate.getFullYear(),
-            dateForDate.getMonth(),
-            dateForDate.getDate(),
-            dateForTime.getHours(),
-            dateForTime.getMinutes(),
-            dateForTime.getSeconds(),
-            dateForTime.getMilliseconds());
-  }
-
   endDateOpen($event) {
     $event.preventDefault();
     $event.stopPropagation();
@@ -87,7 +70,10 @@ export default class AddEventcontroller {
   }
 
   resetRooms() {
-    this.addEvent.eventData.rooms.length = 0;
+    if (!this.addEvent.editMode) {
+      this.addEvent.eventData.rooms = [];
+      this.rooms = [];
+    }
   }
 
   startDateOpen($event) {
@@ -105,7 +91,7 @@ export default class AddEventcontroller {
       return false;
     }
 
-        // set the proper error state
+    // set the proper error state
     if (this.eventData.minimumChildren > this.eventData.maximumChildren) {
       form.maximumChildren.$error.minmax = true;
       form.maximumChildren.$valid = false;
@@ -125,11 +111,11 @@ export default class AddEventcontroller {
   }
 
   eventTypeChanged() {
-        // if childcare is selected then show additional fields
-        // constrain congregations
+    // if childcare is selected then show additional fields
+    // constrain congregations
     if (this.eventData.eventType.dp_RecordName === 'Childcare') {
       this.childcareSelectedFlag = true;
-      this.lookup.query({ table: 'childcarelocations' }, (locations) => { this.crossroadsLocations = locations; });
+      this.lookupService.ChildcareLocations.query({}, (locations) => { this.crossroadsLocations = locations; });
     }
     else {
       this.childcareSelectedFlag = false;
@@ -141,17 +127,17 @@ export default class AddEventcontroller {
     if (form === undefined) {
       return false;
     }
-
     // verify that dates are valid;
     let start;
     let end;
     try {
-      start = this.dateTime(this.eventData.startDate, this.eventData.startTime);
-      if (this.eventData.eventType && !this.eventData.eventType.Allow_Multiday_Event) {
+      start = this.addEvent.dateTime(this.eventData.startDate, this.eventData.startTime);
+      if (this.eventData.eventType && this.eventData.eventType.Allow_Multiday_Event !== undefined && !this.eventData.eventType.Allow_Multiday_Event) {
         this.eventData.endDate = this.eventData.startDate;
       }
-      end = this.dateTime(this.eventData.endDate, this.eventData.endTime);
+      end = this.addEvent.dateTime(this.eventData.endDate, this.eventData.endTime);
     } catch (err) {
+      console.log(err);
       form.endDate.$error.endDate = true;
       form.endDate.$valid = false;
       form.endDate.$invalid = true;
@@ -168,7 +154,7 @@ export default class AddEventcontroller {
       return false;
     }
 
-        // set the endDate Invalid...
+    // set the endDate Invalid...
     form.endDate.$error.endDate = true;
     form.endDate.$valid = false;
     form.endDate.$invalid = true;

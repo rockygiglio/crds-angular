@@ -1,21 +1,26 @@
-(function() {
-  'use strict';
+import constants from '../constants';
+import routes from './goVolunteer.routes';
+import formly from './goVolunteer.formly';
+import goVolunteerService from './goVolunteer.service';
+import goVolunteerOrganizations from './organizations.service';
+import goVolunteerDataService from './goVolunteerData.service';
+import skillsService from './skills.service';
+import groupConnectors from './groupConnectors.service';
 
-  var MODULE = require('crds-constants').MODULES.GO_VOLUNTEER;
+export default angular.module(constants.MODULES.GO_VOLUNTEER, ['crossroads.core', 'crossroads.common'])
+  .config(routes)
+  .config(formly)
+  .service('GoVolunteerService', goVolunteerService)
+  .service('Organizations', goVolunteerOrganizations)
+  .service('GoVolunteerDataService', goVolunteerDataService)
+  .factory('SkillsService', skillsService)
+  .factory('GroupConnectors', groupConnectors)
+  .name
+  ;
 
-  angular.module(MODULE, ['crossroads.core', 'crossroads.common'])
-    .config(require('./goVolunteer.routes'))
-    .factory('GoVolunteerService', require('./goVolunteer.service'))
-    .factory('Organizations', require('./organizations.service'))
-    .factory('GoVolunteerDataService', require('./goVolunteerData.service'))
-    .factory('SkillsService', require('./skills.service'))
-    .factory('GroupConnectors', require('./groupConnectors.service'))
-    .factory('GoVolunteerDataService', require('./goVolunteerData.service'))
-    ;
+require('./cms');
+require('./city');
+require('./organizations');
+require('./page');
 
-  require('./cms');
-  require('./city');
-  require('./organizations');
-  require('./page');
-
-})();
+require('./projectCard');

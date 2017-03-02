@@ -5,9 +5,13 @@ using System.Web.Http.Description;
 using crds_angular.Exceptions.Models;
 using crds_angular.Models.Crossroads.Events;
 using crds_angular.Security;
+using crds_angular.Services.Interfaces;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 using IEventService = crds_angular.Services.Interfaces.IEventService;
 using Crossroads.ApiVersioning;
+using Crossroads.Web.Common;
+using Crossroads.Web.Common.MinistryPlatform;
+using Crossroads.Web.Common.Security;
 
 namespace crds_angular.Controllers.API
 {
@@ -16,7 +20,7 @@ namespace crds_angular.Controllers.API
         private readonly IApiUserRepository _apiUserService;
         private readonly IEventService _eventService;
 
-        public EventToolController(IApiUserRepository apiUserService, IEventService eventService)
+        public EventToolController(IApiUserRepository apiUserService, IEventService eventService, IUserImpersonationService userImpersonationService, IAuthenticationRepository authenticationRepository) : base(userImpersonationService, authenticationRepository)
         {
             _eventService = eventService;
             _apiUserService = apiUserService;
@@ -26,6 +30,7 @@ namespace crds_angular.Controllers.API
         [VersionedRoute(template: "event-tool/{eventId}", minimumVersion: "1.0.0")]
         [Route("eventTool/{eventId}")]
         [HttpGet]
+        [RequiresAuthorization]
         public IHttpActionResult GetEventReservation(int eventId)
         {
             return Authorized(token =>
@@ -96,6 +101,7 @@ namespace crds_angular.Controllers.API
             throw new HttpResponseException(dataError.HttpResponseMessage);
         }
 
+        [RequiresAuthorization]
         [VersionedRoute(template: "event-tool/{eventId}", minimumVersion: "1.0.0")]
         [Route("eventTool/{eventId}")]
         [HttpPut]

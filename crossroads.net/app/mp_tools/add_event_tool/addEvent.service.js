@@ -34,6 +34,7 @@
           programId: eventData.event.program.ProgramId,
           reminderDaysId: reminderDays,
           title: eventData.event.eventTitle,
+          cancelled: eventData.event.cancelled,
           sendReminder: eventData.event.sendReminder,
           maximumAge: eventData.event.maximumAge,
           minimumChildren: eventData.event.minimumChildren,
@@ -41,11 +42,19 @@
           participantsExpected: eventData.event.participantsExpected,
           group: getGroupDto(eventData.event),
           rooms: _.map(eventData.rooms, (r) => { return getRoomDto(r); })
-
         };
       },
 
       fromEventDto(event) {
+        if (!event.group) {
+          event.group = {};
+        }
+
+        this.origCongregation = event.congregationId;
+        this.origStartDate = new Date(event.startDateTime.split('T')[0].replace(/-/g, '/'));
+        this.origEndDate = new Date(event.endDateTime.split('T')[0].replace(/-/g, '/'));
+        this.origStartTime = new Date(event.startDateTime + "-0500");
+        this.origEndTime = new Date(event.endDateTime + "-0500");
         return {
           event: {
             congregation: {
@@ -58,24 +67,27 @@
               dp_RecordID: event.eventTypeId
             },
             description: event.description,
-            donationBatchTool: event.donationBatchTool,
-            endDate: new Date(event.endDateTime),
-            startDate: new Date(event.startDateTime),
+            donationBatch: event.donationBatchTool,
+            endDate: this.origEndDate,
+            startDate: this.origStartDate,
             meetingInstructions: event.meetingInstructions,
             minutesSetup: event.minutesSetup,
             minutesCleanup: event.minutesTeardown,
             program: {
               ProgramId: event.programId
             },
-            reminderDays: event.reminderDaysId,
+            reminderDays: {
+              dp_RecordID: event.reminderDaysId
+            },
             sendReminder: event.sendReminder,
-            startTime: new Date(event.startDateTime),
-            endTime: new Date(event.endDateTime),
+            startTime: this.origStartTime,
+            endTime: this.origEndTime,
             eventTitle: event.title,
             participantsExpected: event.participantsExpected,
-            maximumAge: event.maximumAge,
-            minimumChildren: event.minimumChildren,
-            maximumChildren: event.maximumChildren
+            maximumAge: event.group.maximumAge,
+            minimumChildren: event.group.minimumParticipants,
+            maximumChildren: event.group.tartgetSize,
+            isSeries: event.isSeries
           },
           rooms: _.map(event.rooms, (r) => { return fromRoomDto(r); })
         };
@@ -130,7 +142,8 @@
     function getEquipmentDto(equipment) {
       const equipmentDto = {
         equipmentId: equipment.name.id,
-        quantityRequested: equipment.choosenQuantity
+        quantityRequested: equipment.choosenQuantity,
+        notes: equipment.notes
       };
       if (_.has(equipment, 'cancelled')) {
         equipmentDto.cancelled = equipment.cancelled;
@@ -167,22 +180,30 @@
           },
           choosenQuantity: equipmentDto.quantityRequested,
           equipmentReservationId: equipmentDto.equipmentReservationId,
-          cancelled: equipmentDto.cancelled
+          cancelled: equipmentDto.cancelled,
+          notes: equipmentDto.notes
         }
       };
     }
 
     function dateTime(dateForDate, dateForTime) {
+      if (dateForDate === undefined) {
+        return null;
+      }
+
+      if (dateForTime === undefined) {
+        return null;
+      }
       return new Date(
-          dateForDate.getFullYear(),
-          dateForDate.getMonth(),
-          dateForDate.getDate(),
-          dateForTime.getHours(),
-          dateForTime.getMinutes(),
-          dateForTime.getSeconds(),
-          dateForTime.getMilliseconds());
+        dateForDate.getFullYear(),
+        dateForDate.getMonth(),
+        dateForDate.getDate(),
+        dateForTime.getHours(),
+        dateForTime.getMinutes(),
+        dateForTime.getSeconds(),
+        dateForTime.getMilliseconds());
     }
 
     return obj;
   }
-}());
+} ());

@@ -11,6 +11,8 @@ using crds_angular.Services;
 using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Interfaces;
 using Crossroads.Utilities.Models;
+using Crossroads.Web.Common;
+using Crossroads.Web.Common.Configuration;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Models.DTO;
 using Moq;
@@ -119,8 +121,8 @@ namespace crds_angular.test.Services
         [ExpectedException(typeof(GroupNotFoundForParticipantException))]
         public void TestGetMyGroupInfoGroupNotFound()
         {
-            _groupService.Setup(mocked => mocked.GetGroupsByTypeForAuthenticatedUser("abc", 1, 2)).Returns(new List<GroupDTO>());
-            _fixture.GetMyGroupInfo("abc", 1, 2);
+            _groupService.Setup(mocked => mocked.GetGroupByIdForAuthenticatedUser("abc", 2)).Returns(new List<GroupDTO>());
+            _fixture.GetMyGroupInfo("abc", 2);
         }
 
         [Test]
@@ -148,8 +150,8 @@ namespace crds_angular.test.Services
                     }
                 }
             };
-            _groupService.Setup(mocked => mocked.GetGroupsByTypeForAuthenticatedUser("abc", 1, 2)).Returns(groups);
-            _fixture.GetMyGroupInfo("abc", 1, 2);
+            _groupService.Setup(mocked => mocked.GetGroupByIdForAuthenticatedUser("abc", 2)).Returns(groups);
+            _fixture.GetMyGroupInfo("abc", 2);
         }
 
         [Test]
@@ -198,8 +200,8 @@ namespace crds_angular.test.Services
                     }
                 }
             };
-            _groupService.Setup(mocked => mocked.GetGroupsByTypeForAuthenticatedUser("abc", 1, 2)).Returns(groups);
-            var result = _fixture.GetMyGroupInfo("abc",1, 2);
+            _groupService.Setup(mocked => mocked.GetGroupByIdForAuthenticatedUser("abc", 2)).Returns(groups);
+            var result = _fixture.GetMyGroupInfo("abc", 2);
             _participantRepository.VerifyAll();
             _groupService.VerifyAll();
 
@@ -239,7 +241,7 @@ namespace crds_angular.test.Services
 
                 }
             };
-            _groupService.Setup(mocked => mocked.GetGroupsByTypeForAuthenticatedUser("abc", 1, 2)).Returns(groups);
+            _groupService.Setup(mocked => mocked.GetGroupByIdForAuthenticatedUser("abc", 2)).Returns(groups);
 
             var inquiry = new Inquiry
             {
@@ -320,7 +322,7 @@ namespace crds_angular.test.Services
 
                 }
             };
-            _groupService.Setup(mocked => mocked.GetGroupsByTypeForAuthenticatedUser("abc", 1, 2)).Returns(groups);
+            _groupService.Setup(mocked => mocked.GetGroupByIdForAuthenticatedUser("abc", 2)).Returns(groups);
 
             var inquiry = new Inquiry
             {
@@ -599,8 +601,8 @@ namespace crds_angular.test.Services
         [ExpectedException(typeof(GroupNotFoundForParticipantException))]
         public void TestRemoveParticipantFromMyGroupGroupNotFound()
         {
-            _groupService.Setup(mocked => mocked.GetGroupsByTypeForAuthenticatedUser("abc", 1, 2)).Returns(new List<GroupDTO>());
-            _fixture.RemoveParticipantFromMyGroup("abc", 1, 2, 3, "message");
+            _groupService.Setup(mocked => mocked.GetGroupByIdForAuthenticatedUser("abc", 2)).Returns(new List<GroupDTO>());
+            _fixture.RemoveParticipantFromMyGroup("abc", 2, 3, "message");
         }
 
         [Test]
@@ -628,8 +630,8 @@ namespace crds_angular.test.Services
                     }
                 }
             };
-            _groupService.Setup(mocked => mocked.GetGroupsByTypeForAuthenticatedUser("abc", 1, 2)).Returns(groups);
-            _fixture.RemoveParticipantFromMyGroup("abc", 1, 2, 3, "message");
+            _groupService.Setup(mocked => mocked.GetGroupByIdForAuthenticatedUser("abc", 2)).Returns(groups);
+            _fixture.RemoveParticipantFromMyGroup("abc", 2, 3, "message");
         }
 
         [Test]
@@ -663,14 +665,14 @@ namespace crds_angular.test.Services
                     }
                 }
             };
-            _groupService.Setup(mocked => mocked.GetGroupsByTypeForAuthenticatedUser("abc", 1, groupId)).Returns(groups);
+            _groupService.Setup(mocked => mocked.GetGroupByIdForAuthenticatedUser("abc", groupId)).Returns(groups);
 
             var ex = new Exception("can't end date participant");
             _groupService.Setup(mocked => mocked.endDateGroupParticipant(groupId, removeParticipantId)).Throws(ex);
 
             try
             {
-                _fixture.RemoveParticipantFromMyGroup("abc", 1, groupId, removeParticipantId, "message");
+                _fixture.RemoveParticipantFromMyGroup("abc", groupId, removeParticipantId, "message");
                 Assert.Fail("expected exception was not thrown");
             }
             catch (GroupParticipantRemovalException e)
@@ -717,12 +719,12 @@ namespace crds_angular.test.Services
                     }
                 }
             };
-            _groupService.Setup(mocked => mocked.GetGroupsByTypeForAuthenticatedUser("abc", 1, groupId)).Returns(groups);
+            _groupService.Setup(mocked => mocked.GetGroupByIdForAuthenticatedUser("abc", groupId)).Returns(groups);
             _groupService.Setup(mocked => mocked.endDateGroupParticipant(groupId, removeParticipantId));
 
             var ex = new Exception("can't get template");
             _communicationRepository.Setup(mocked => mocked.GetTemplate(RemoveParticipantFromGroupEmailTemplateId)).Throws(ex);
-            _fixture.RemoveParticipantFromMyGroup("abc", 1, groupId, removeParticipantId, "message");
+            _fixture.RemoveParticipantFromMyGroup("abc", groupId, removeParticipantId, "message");
             _communicationRepository.VerifyAll();
             _groupToolRepository.VerifyAll();
             _groupService.VerifyAll();
@@ -1114,7 +1116,7 @@ namespace crds_angular.test.Services
 
             _communicationRepository.Setup(m => m.SendMessage(It.IsAny<MpCommunication>(), false)).Returns(1);
             _participantRepository.Setup(m => m.GetParticipantRecord(token)).Returns(groupParticipantDTO);
-            _groupService.Setup(m => m.GetGroupsByTypeForAuthenticatedUser(token, 123, 1)).Returns(groups);
+            _groupService.Setup(m => m.GetGroupByIdForAuthenticatedUser(token, 1)).Returns(groups);
 
             _fixture.SendAllGroupParticipantsEmail(token, 1, 123, "aaa", "bbb");
             _communicationRepository.VerifyAll();
@@ -1179,7 +1181,7 @@ namespace crds_angular.test.Services
 
             _communicationRepository.Setup(m => m.SendMessage(It.Is<MpCommunication>(email => email.ToContacts.Count() == expectedToContactsCount), false)).Returns(1);
             _participantRepository.Setup(m => m.GetParticipantRecord(token)).Returns(groupParticipantDTO);
-            _groupService.Setup(m => m.GetGroupsByTypeForAuthenticatedUser(token, 123, 1)).Returns(groups);
+            _groupService.Setup(m => m.GetGroupByIdForAuthenticatedUser(token, 1)).Returns(groups);
 
             _fixture.SendAllGroupParticipantsEmail(token, 1, 123, "aaa", "bbb");
             _communicationRepository.VerifyAll();
@@ -1236,7 +1238,8 @@ namespace crds_angular.test.Services
         [Test]
         public void TestSearchGroupsNoKeywordsNothingFound()
         {
-            const int groupTypeId = 1;
+            int[] groupTypeId = new int[] {1};
+          
             var keywords = new[] {"kw1", "kw2"};
             _groupToolRepository.Setup(mocked => mocked.SearchGroups(groupTypeId, null, null)).Returns(new List<MpGroupSearchResultDto>());
             var results = _fixture.SearchGroups(groupTypeId);
@@ -1247,7 +1250,43 @@ namespace crds_angular.test.Services
         [Test]
         public void TestSearchGroups()
         {
-            const int groupTypeId = 1;
+            int[] groupTypeId = new int[] {1};
+            const string keywordString = "kw1 kw2 it's wine&dine";
+            var keywords = keywordString
+                    .Replace("'", "''") // Replace single quote with two, since the MP Rest API doesn't do it
+                    .Replace("&", "%26") // Replace & with the hex representation, to avoid looking like a stored proc parameter
+                    .Split((char[])null, StringSplitOptions.RemoveEmptyEntries);
+
+            var searchResults = new List<MpGroupSearchResultDto>
+            {
+                new MpGroupSearchResultDto
+                {
+                    GroupId = 123,
+                    Name = "group 1",
+                    GroupType = 1231
+                },
+                new MpGroupSearchResultDto
+                {
+                    GroupId = 456,
+                    Name = "group 2",
+                    GroupType = 4564
+                }
+            };
+            _groupToolRepository.Setup(mocked => mocked.SearchGroups(groupTypeId, keywords, null)).Returns(searchResults);
+            var results = _fixture.SearchGroups(groupTypeId, keywordString);
+            _groupToolRepository.VerifyAll();
+            Assert.IsNotNull(results);
+            Assert.AreEqual(searchResults.Count, results.Count);
+            foreach (var expected in searchResults)
+            {
+                Assert.IsNotNull(results.Find(g => g.GroupId == expected.GroupId && g.GroupName.Equals(expected.Name) && g.GroupTypeId == expected.GroupType));
+            }
+        }
+
+        [Test]
+        public void TestSearchGroupsMultipleTypes()
+        {
+            int[] groupTypeId = new int[] { 1, 2 };
             const string keywordString = "kw1 kw2 it's wine&dine";
             var keywords = keywordString
                     .Replace("'", "''") // Replace single quote with two, since the MP Rest API doesn't do it
@@ -1283,7 +1322,7 @@ namespace crds_angular.test.Services
         [Test]
         public void TestSearchGroupsWithLocation()
         {
-            const int groupTypeId = 1;
+            int[] groupTypeId = new int[] {1};
             var searchResults = new List<MpGroupSearchResultDto>
             {
                 new MpGroupSearchResultDto

@@ -47,6 +47,10 @@ namespace crds_angular.Models.Crossroads.Stewardship
         [JsonProperty(PropertyName = "source", NullValueHandling = NullValueHandling.Ignore)]
         public DonationSourceDTO Source { get; set; }
 
+        [JsonProperty("notes")]
+        public string Notes { get; set; }
+
+
         #region Distributions Property
         [JsonIgnore]
         private readonly List<DonationDistributionDTO> _distributions = new List<DonationDistributionDTO>();

@@ -8,6 +8,7 @@ using crds_angular.Models.Crossroads.Events;
 using crds_angular.Security;
 using crds_angular.Services.Interfaces;
 using Crossroads.ApiVersioning;
+using Crossroads.Web.Common.Security;
 
 namespace crds_angular.Controllers.API
 {
@@ -15,7 +16,7 @@ namespace crds_angular.Controllers.API
     {
         private readonly ICongregationService _congregationService;
 
-        public CongregationController(ICongregationService congregationService)
+        public CongregationController(ICongregationService congregationService, IUserImpersonationService userImpersonationService, IAuthenticationRepository authenticationRepository) : base(userImpersonationService, authenticationRepository)
         {
             _congregationService = congregationService;
         }

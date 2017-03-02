@@ -10,6 +10,7 @@ using crds_angular.Models.Crossroads.Trip;
 using crds_angular.Security;
 using crds_angular.Services.Interfaces;
 using Crossroads.ApiVersioning;
+using Crossroads.Web.Common.Security;
 
 namespace crds_angular.Controllers.API
 {
@@ -17,7 +18,7 @@ namespace crds_angular.Controllers.API
     {
         private readonly ITripService _tripService;
 
-        public TripController(ITripService tripService)
+        public TripController(ITripService tripService, IUserImpersonationService userImpersonationService, IAuthenticationRepository authenticationRepository) : base(userImpersonationService, authenticationRepository)
         {
             _tripService = tripService;
         }

@@ -21,6 +21,7 @@ module.exports = function(config) {
       './node_modules/phantomjs-polyfill/bind-polyfill.js',
       './node_modules/angular/angular.js',
       'node_modules/angular-mocks/angular-mocks.js',
+      'node_modules/jquery/dist/jquery.js',
       'spec-core/spec_index.js'
     ],
 

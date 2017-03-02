@@ -1,9 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using AutoMapper;
 using crds_angular.App_Start;
+using crds_angular.Models.Crossroads.Events;
+using crds_angular.Models.Crossroads.Groups;
 using crds_angular.Services;
 using Crossroads.Utilities.Interfaces;
+using Crossroads.Web.Common;
+using Crossroads.Web.Common.Configuration;
+using Crossroads.Web.Common.MinistryPlatform;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 using MpEvent = MinistryPlatform.Translation.Models.MpEvent;
@@ -13,11 +19,13 @@ using Moq;
 using MvcContrib.TestHelper.Ui;
 using NUnit.Framework;
 using MinistryPlatform.Translation.Models.EventReservations;
+using NUnit.Framework.Constraints;
+using Rhino.Mocks;
 
 namespace crds_angular.test.Services
 {
     [TestFixture]
-    public class EventServiceTest 
+    public class EventServiceTest
     {
         private Mock<IContactRelationshipRepository> _contactRelationshipService;
         private Mock<IContactRepository> _contactService;
@@ -32,6 +40,7 @@ namespace crds_angular.test.Services
         private Mock<IRoomRepository> _roomService;
         private Mock<IEquipmentRepository> _equipmentService;
         private Mock<IEventParticipantRepository> _eventParticipantService;
+        private readonly int childcareEventTypeID;
 
         private EventService _fixture;
 
@@ -39,7 +48,7 @@ namespace crds_angular.test.Services
         public void SetUp()
         {
             AutoMapperConfig.RegisterMappings();
-          
+
             _contactRelationshipService = new Mock<IContactRelationshipRepository>(MockBehavior.Strict);
             _configurationWrapper = new Mock<IConfigurationWrapper>(MockBehavior.Strict);
             _apiUserService = new Mock<IApiUserRepository>(MockBehavior.Strict);
@@ -53,20 +62,22 @@ namespace crds_angular.test.Services
             _participantService = new Mock<IParticipantRepository>(MockBehavior.Strict);
             _eventService = new Mock<IEventRepository>();
             _roomService = new Mock<IRoomRepository>();
-            _equipmentService= new Mock<IEquipmentRepository>();
+            _equipmentService = new Mock<IEquipmentRepository>();
             _eventParticipantService = new Mock<IEventParticipantRepository>(MockBehavior.Strict);
 
 
             _configurationWrapper = new Mock<IConfigurationWrapper>();
             _configurationWrapper.Setup(mocked => mocked.GetConfigIntValue("EventsReadyForPrimaryContactReminder")).Returns(2205);
             _configurationWrapper.Setup(mocked => mocked.GetConfigIntValue("EventPrimaryContactReminderTemplateId")).Returns(14909);
-     
+            _configurationWrapper.Setup(mocked => mocked.GetConfigIntValue("ChildcareEventType")).Returns(98765);
+            _configurationWrapper.Setup(mocked => mocked.GetConfigIntValue("ChildcareGroupType")).Returns(272727);
+
             _fixture = new EventService(_eventService.Object,
                                         _groupService.Object,
                                         _communicationService.Object,
-                                        _contactService.Object, 
-                                        _contentBlockService.Object, 
-                                        _configurationWrapper.Object,  
+                                        _contactService.Object,
+                                        _contentBlockService.Object,
+                                        _configurationWrapper.Object,
                                         _apiUserService.Object,
                                         _contactRelationshipService.Object,
                                         _groupParticipantService.Object,
@@ -75,7 +86,7 @@ namespace crds_angular.test.Services
                                         _equipmentService.Object,
                                         _eventParticipantService.Object);
         }
-        
+
         [Test]
         public void ShouldSendPrimaryContactReminderEmails()
         {
@@ -87,7 +98,7 @@ namespace crds_angular.test.Services
                 Email_Address = "default@email.com"
             };
 
-            var testEvent = new MpEvent ()
+            var testEvent = new MpEvent()
             {
                 EventId = 32,
                 EventStartDate = new DateTime(),
@@ -101,12 +112,12 @@ namespace crds_angular.test.Services
 
             var testEventList = new List<MpEvent>()
             {
-               testEvent
+                testEvent
             };
-       
+
             _apiUserService.Setup(m => m.GetToken()).Returns(apiToken);
             _eventService.Setup(m => m.EventsByPageViewId(apiToken, 2205, search)).Returns(testEventList);
-            var eventList = testEventList.Select(evt => new crds_angular.Models.Crossroads.Events.Event() 
+            var eventList = testEventList.Select(evt => new crds_angular.Models.Crossroads.Events.Event()
             {
                 name = evt.EventTitle,
                 EventId = evt.EventId,
@@ -117,7 +128,7 @@ namespace crds_angular.test.Services
                 PrimaryContactEmailAddress = evt.PrimaryContact.EmailAddress,
                 PrimaryContactId = evt.PrimaryContact.ContactId
             });
-            
+
             eventList.ForEach(evt =>
             {
                 var mergeData = new Dictionary<string, object>
@@ -125,10 +136,10 @@ namespace crds_angular.test.Services
                     {"Event_ID", evt.EventId},
                     {"Event_Title", evt.name},
                     {"Event_Start_Date", evt.StartDate.ToShortDateString()},
-                    {"Event_Start_Time", evt.StartDate.ToShortTimeString()}               
+                    {"Event_Start_Time", evt.StartDate.ToShortTimeString()}
                 };
 
-                var contact = new MpContact() { ContactId = defaultContact.Contact_ID, EmailAddress = defaultContact.Email_Address };
+                var contact = new MpContact() {ContactId = defaultContact.Contact_ID, EmailAddress = defaultContact.Email_Address};
                 var fakeCommunication = new MpCommunication()
                 {
                     AuthorUserId = defaultContact.Contact_ID,
@@ -139,7 +150,7 @@ namespace crds_angular.test.Services
                     MergeData = mergeData,
                     ReplyToContact = contact,
                     TemplateId = 14909,
-                    ToContacts = new List<MpContact>() { contact }
+                    ToContacts = new List<MpContact>() {contact}
                 };
 
                 var testContact = new MpMyContact()
@@ -148,7 +159,7 @@ namespace crds_angular.test.Services
                     Email_Address = "ghj@cr.net"
 
                 };
-              
+
                 _contactService.Setup(m => m.GetContactById(9876)).Returns(testContact);
                 _communicationService.Setup(m => m.GetTemplateAsCommunication(14909,
                                                                               testContact.Contact_ID,
@@ -164,7 +175,7 @@ namespace crds_angular.test.Services
             });
             _fixture.EventsReadyForPrimaryContactReminder(apiToken);
             _eventService.Verify();
-            
+
         }
 
         [Test]
@@ -223,10 +234,21 @@ namespace crds_angular.test.Services
                     new MpEventParticipant()
                 }
             };
+
+            var g = new List<MpEventGroup>
+            {
+                new MpEventGroup()
+                {
+                    GroupId = 1
+                }
+            };
             _eventParticipantService.Setup(mocked => mocked.GetEventParticipants(123, 11)).Returns(p[0]);
             _eventParticipantService.Setup(mocked => mocked.GetEventParticipants(123, 22)).Returns(p[1]);
+            _eventService.Setup(mocked => mocked.GetEventGroupsForEventAPILogin(123)).Returns(g);
+            _groupService.Setup(mocked => mocked.getGroupDetails(g[0].GroupId)).Returns(new MpGroup());
 
-            var response = _fixture.GetEventRoomDetails(123);
+
+        var response = _fixture.GetEventRoomDetails(123);
             _eventService.VerifyAll();
             _roomService.VerifyAll();
             _equipmentService.VerifyAll();
@@ -302,7 +324,8 @@ namespace crds_angular.test.Services
 
             var q = new List<List<MpEquipmentReservationDto>>()
             {
-                 new List<MpEquipmentReservationDto>{
+                new List<MpEquipmentReservationDto>
+                {
                     new MpEquipmentReservationDto
                     {
                         Cancelled = false,
@@ -337,8 +360,18 @@ namespace crds_angular.test.Services
                     }
                 }
             };
+
+            var g = new List<MpEventGroup>
+            {
+                new MpEventGroup()
+                {
+                    GroupId = 1
+                }
+            };
             _equipmentService.Setup(mocked => mocked.GetEquipmentReservations(123, r[0].RoomId)).Returns(q[0]);
             _equipmentService.Setup(mocked => mocked.GetEquipmentReservations(123, r[1].RoomId)).Returns(q[1]);
+            _eventService.Setup(mocked => mocked.GetEventGroupsForEventAPILogin(123)).Returns(g);
+            _groupService.Setup(mocked => mocked.getGroupDetails(g[0].GroupId)).Returns(new MpGroup());
 
             var response = _fixture.GetEventReservation(123);
             _eventService.VerifyAll();
@@ -377,6 +410,609 @@ namespace crds_angular.test.Services
             }
         }
 
+        [Test]
+        public void TestAddEvent()
+        {
+            _eventService.Setup(mocked => mocked.CreateEvent(It.IsAny<MpEventReservationDto>())).Returns(123);
+            var id = _fixture.AddEvent(GetEventToolTestObject());
+            _eventService.VerifyAll();
+            Assert.AreEqual(123, id, "Returned incorrect id");
+        }
+
+        [Test]
+        public void TestUpdateEvent()
+        {
+            _eventService.Setup(mocked => mocked.UpdateEvent(It.IsAny<MpEventReservationDto>()));
+            _fixture.UpdateEvent(GetEventToolTestObject(), 123, "Token");
+            _eventService.VerifyAll();
+            _eventService.Verify(x=>x.UpdateEvent(It.IsAny<MpEventReservationDto>()), Times.Once);
+        }
+
+        [Test]
+        public void TestUpdateEventWithCancelledTrue()
+        {
+            _eventService.Setup(mocked => mocked.UpdateEvent(It.IsAny<MpEventReservationDto>()));
+            var dto = GetEventToolTestObject();
+            dto.Cancelled = true;
+            _fixture.UpdateEvent(dto, 123, "Token");
+            _eventService.VerifyAll();
+            _eventService.Verify(mock => mock.UpdateEvent(It.IsAny<MpEventReservationDto>()), Times.Once);
+        }
+
+        [Test]
+        public void TestUpdateEventReservation()
+        {
+            var newReservation = GetEventToolTestObjectWithRooms();
+            var oldEventData = Mapper.Map<MpEvent>(newReservation);
+
+            var roomReservationReturn = new List<MpRoomReservationDto>()
+            {
+                new MpRoomReservationDto()
+                {
+                    Name = "Room1",
+                    Cancelled = false,
+                    RoomId = 1,
+                    EventId = 1,
+                    EventRoomId = 1,
+                    RoomLayoutId = 1,
+                },
+                new MpRoomReservationDto()
+                {
+                    Name = "Room2",
+                    Cancelled = false,
+                    RoomId = 2,
+                    EventId = 1,
+                    EventRoomId = 2,
+                    RoomLayoutId = 1
+                }
+            };
+
+            var equipmentForRoom1 = new List<MpEquipmentReservationDto>()
+            {
+                new MpEquipmentReservationDto()
+                {
+                    Cancelled = false,
+                    RoomId = 1, 
+                    EventId = 1,
+                    QuantityRequested = 10,
+                    EquipmentId = 1,
+                    EventEquipmentId = 1,
+                    EventRoomId = 1
+                }, 
+                new MpEquipmentReservationDto()
+                {
+                    Cancelled = false,
+                    RoomId = 1,
+                    EventId = 1,
+                    QuantityRequested = 42,
+                    EquipmentId = 2,
+                    EventEquipmentId = 2,
+                    EventRoomId = 2
+                }
+            };
+
+            _eventService.Setup(mock => mock.GetEvent(1)).Returns(oldEventData);
+            _roomService.Setup(mockyMock => mockyMock.GetRoomReservations(1)).Returns(roomReservationReturn);
+            _equipmentService.Setup(mock => mock.GetEquipmentReservations(1, 1)).Returns(equipmentForRoom1);
+            _equipmentService.Setup(mock => mock.GetEquipmentReservations(1, 2)).Returns(new List<MpEquipmentReservationDto>());
+            _eventService.Setup(mock => mock.GetEventGroupsForEventAPILogin(1)).Returns(new List<MpEventGroup>());
+            _eventService.Setup(mock => mock.UpdateEvent(It.IsAny<MpEventReservationDto>()));
+            _roomService.Setup(mock => mock.UpdateRoomReservation(It.IsAny<MpRoomReservationDto>()));
+            _equipmentService.Setup(mock => mock.UpdateEquipmentReservation(It.IsAny<MpEquipmentReservationDto>()));
+
+            var result = _fixture.UpdateEventReservation(newReservation, 1, "ABC");
+            Assert.IsTrue(result);
+            _equipmentService.Verify(m => m.UpdateEquipmentReservation(It.IsAny<MpEquipmentReservationDto>()), Times.Exactly(2));
+            _roomService.Verify(m => m.UpdateRoomReservation(It.IsAny<MpRoomReservationDto>()), Times.Exactly(2));
+            _eventService.Verify(m => m.UpdateEvent(It.IsAny<MpEventReservationDto>()), Times.Once);
+        }
+
+        [Test]
+        public void TestUpdateEventReservationDateButNotRooms()
+        {
+            var newReservation = GetEventToolTestObjectWithRooms();
+            var oldEventData = Mapper.Map<MpEvent>(newReservation);
+
+            oldEventData.EventStartDate = oldEventData.EventStartDate.AddDays(-1);
+
+            var roomReservationReturn = new List<MpRoomReservationDto>()
+            {
+                new MpRoomReservationDto()
+                {
+                    Name = "Room1",
+                    Cancelled = false,
+                    RoomId = 1,
+                    EventId = 1,
+                    EventRoomId = 1,
+                    RoomLayoutId = 1,
+                },
+                new MpRoomReservationDto()
+                {
+                    Name = "Room2",
+                    Cancelled = false,
+                    RoomId = 2,
+                    EventId = 1,
+                    EventRoomId = 2,
+                    RoomLayoutId = 1
+                }
+            };
+
+            var equipmentForRoom1 = new List<MpEquipmentReservationDto>()
+            {
+                new MpEquipmentReservationDto()
+                {
+                    Cancelled = false,
+                    RoomId = 1,
+                    EventId = 1,
+                    QuantityRequested = 10,
+                    EquipmentId = 1,
+                    EventEquipmentId = 1,
+                    EventRoomId = 1
+                },
+                new MpEquipmentReservationDto()
+                {
+                    Cancelled = false,
+                    RoomId = 1,
+                    EventId = 1,
+                    QuantityRequested = 42,
+                    EquipmentId = 2,
+                    EventEquipmentId = 2,
+                    EventRoomId = 2
+                }
+            };
+
+            _eventService.Setup(mock => mock.GetEvent(1)).Returns(oldEventData);
+            _roomService.Setup(mockyMock => mockyMock.GetRoomReservations(1)).Returns(roomReservationReturn);
+            _equipmentService.Setup(mock => mock.GetEquipmentReservations(1, 1)).Returns(equipmentForRoom1);
+            _equipmentService.Setup(mock => mock.GetEquipmentReservations(1, 2)).Returns(new List<MpEquipmentReservationDto>());
+            _eventService.Setup(mock => mock.GetEventGroupsForEventAPILogin(1)).Returns(new List<MpEventGroup>());
+            _eventService.Setup(mock => mock.UpdateEvent(It.IsAny<MpEventReservationDto>()));
+            _roomService.Setup(mock => mock.UpdateRoomReservation(It.IsAny<MpRoomReservationDto>()));
+            _equipmentService.Setup(mock => mock.UpdateEquipmentReservation(It.IsAny<MpEquipmentReservationDto>()));
+
+            var result = _fixture.UpdateEventReservation(newReservation, 1, "ABC");
+            Assert.IsTrue(result);
+            _equipmentService.Verify(m => m.UpdateEquipmentReservation(It.IsAny<MpEquipmentReservationDto>()), Times.Exactly(4));
+            _roomService.Verify(m => m.UpdateRoomReservation(It.IsAny<MpRoomReservationDto>()), Times.Exactly(4));
+            _eventService.Verify(m => m.UpdateEvent(It.IsAny<MpEventReservationDto>()), Times.Once);
+        }
+
+        [Test]
+        public void UpdateEventReservationShouldCancelRooms()
+        {
+            var newReservation = GetEventToolTestObjectWithRooms();
+            var oldEventData = Mapper.Map<MpEvent>(newReservation);
+
+            var roomReservationReturn = new List<MpRoomReservationDto>()
+            {
+                new MpRoomReservationDto()
+                {
+                    Name = "Room3",
+                    Cancelled = false,
+                    RoomId = 3,
+                    EventId = 1,
+                    EventRoomId = 3,
+                    RoomLayoutId = 1,
+                },
+                new MpRoomReservationDto()
+                {
+                    Name = "Room4",
+                    Cancelled = false,
+                    RoomId = 4,
+                    EventId = 1,
+                    EventRoomId = 4,
+                    RoomLayoutId = 1
+                }
+            };
+
+            var equipmentForRoom1 = new List<MpEquipmentReservationDto>()
+            {
+                new MpEquipmentReservationDto()
+                {
+                    Cancelled = false,
+                    RoomId = 1,
+                    EventId = 1,
+                    QuantityRequested = 10,
+                    EquipmentId = 1,
+                    EventEquipmentId = 1,
+                    EventRoomId = 1
+                },
+                new MpEquipmentReservationDto()
+                {
+                    Cancelled = false,
+                    RoomId = 1,
+                    EventId = 1,
+                    QuantityRequested = 42,
+                    EquipmentId = 2,
+                    EventEquipmentId = 2,
+                    EventRoomId = 2
+                }
+            };
+
+            _eventService.Setup(mock => mock.GetEvent(1)).Returns(oldEventData);
+            _roomService.Setup(mockyMock => mockyMock.GetRoomReservations(1)).Returns(roomReservationReturn);
+            _equipmentService.Setup(mock => mock.GetEquipmentReservations(1, 3)).Returns(equipmentForRoom1);
+            _equipmentService.Setup(mock => mock.GetEquipmentReservations(1, 4)).Returns(new List<MpEquipmentReservationDto>());
+            _eventService.Setup(mock => mock.GetEventGroupsForEventAPILogin(1)).Returns(new List<MpEventGroup>());
+            _eventService.Setup(mock => mock.UpdateEvent(It.IsAny<MpEventReservationDto>()));
+            _roomService.Setup(mock => mock.UpdateRoomReservation(It.IsAny<MpRoomReservationDto>()));
+            _equipmentService.Setup(mock => mock.UpdateEquipmentReservation(It.IsAny<MpEquipmentReservationDto>()));
+
+            var result = _fixture.UpdateEventReservation(newReservation, 1, "ABC");
+            Assert.IsTrue(result);
+            _equipmentService.Verify(m => m.UpdateEquipmentReservation(It.IsAny<MpEquipmentReservationDto>()), Times.Exactly(4));
+            _roomService.Verify(m => m.UpdateRoomReservation(It.IsAny<MpRoomReservationDto>()), Times.Exactly(4));
+            _eventService.Verify(m => m.UpdateEvent(It.IsAny<MpEventReservationDto>()), Times.Once);
+        }
+
+        [Test]
+        public void UpdateEventReservationToChildCareEvent()
+        {
+            var newReservation = GetEventToolTestObjectWithRooms();           
+            var oldEventData = Mapper.Map<MpEvent>(newReservation);
+            newReservation.EventTypeId = 98765;
+            newReservation.Group = new GroupDTO()
+            {
+                CongregationId = 1
+            };
+
+            var roomReservationReturn = new List<MpRoomReservationDto>()
+            {
+                new MpRoomReservationDto()
+                {
+                    Name = "Room1",
+                    Cancelled = false,
+                    RoomId = 1,
+                    EventId = 1,
+                    EventRoomId = 1,
+                    RoomLayoutId = 1,
+                },
+                new MpRoomReservationDto()
+                {
+                    Name = "Room2",
+                    Cancelled = false,
+                    RoomId = 2,
+                    EventId = 1,
+                    EventRoomId = 2,
+                    RoomLayoutId = 1
+                }
+            };
+
+            var equipmentForRoom1 = new List<MpEquipmentReservationDto>()
+            {
+                new MpEquipmentReservationDto()
+                {
+                    Cancelled = false,
+                    RoomId = 1,
+                    EventId = 1,
+                    QuantityRequested = 10,
+                    EquipmentId = 1,
+                    EventEquipmentId = 1,
+                    EventRoomId = 1
+                },
+                new MpEquipmentReservationDto()
+                {
+                    Cancelled = false,
+                    RoomId = 1,
+                    EventId = 1,
+                    QuantityRequested = 42,
+                    EquipmentId = 2,
+                    EventEquipmentId = 2,
+                    EventRoomId = 2
+                }
+            };
+
+            _eventService.Setup(mock => mock.GetEvent(1)).Returns(oldEventData);
+            _roomService.Setup(mockyMock => mockyMock.GetRoomReservations(1)).Returns(roomReservationReturn);
+            _equipmentService.Setup(mock => mock.GetEquipmentReservations(1, 1)).Returns(equipmentForRoom1);
+            _equipmentService.Setup(mock => mock.GetEquipmentReservations(1, 2)).Returns(new List<MpEquipmentReservationDto>());
+            _eventService.Setup(mock => mock.GetEventGroupsForEventAPILogin(1)).Returns(new List<MpEventGroup>());
+            _eventService.Setup(mock => mock.UpdateEvent(It.IsAny<MpEventReservationDto>()));
+            _roomService.Setup(mock => mock.UpdateRoomReservation(It.IsAny<MpRoomReservationDto>()));
+            _equipmentService.Setup(mock => mock.UpdateEquipmentReservation(It.IsAny<MpEquipmentReservationDto>()));
+            _groupService.Setup(mock => mock.CreateGroup(It.IsAny<MpGroup>())).Returns(42);
+            _eventService.Setup(mock => mock.CreateEventGroup(It.IsAny<MpEventGroup>(), It.IsAny<string>())).Returns(2);
+
+            var result = _fixture.UpdateEventReservation(newReservation, 1, "ABC");
+            Assert.IsTrue(result);
+            _equipmentService.Verify(m => m.UpdateEquipmentReservation(It.IsAny<MpEquipmentReservationDto>()), Times.Exactly(2));
+            _roomService.Verify(m => m.UpdateRoomReservation(It.IsAny<MpRoomReservationDto>()), Times.Exactly(2));
+            _eventService.Verify(m => m.UpdateEvent(It.IsAny<MpEventReservationDto>()), Times.Once);
+            _groupService.Verify(m => m.CreateGroup(It.IsAny<MpGroup>()), Times.Once());
+            _eventService.Verify(m => m.CreateEventGroup(It.IsAny<MpEventGroup>(), It.IsAny<string>()), Times.Once);
+        }
+
+        [Test]
+        public void UpdateEventReservationFromChildCareToNot()
+        {
+            var newReservation = GetEventToolTestObjectWithRooms();
+            var oldEventData = Mapper.Map<MpEvent>(newReservation);
+            oldEventData.EventType = "98765";
+            newReservation.Group = new GroupDTO()
+            {
+                CongregationId = 1
+            };
+
+            var roomReservationReturn = new List<MpRoomReservationDto>()
+            {
+                new MpRoomReservationDto()
+                {
+                    Name = "Room1",
+                    Cancelled = false,
+                    RoomId = 1,
+                    EventId = 1,
+                    EventRoomId = 1,
+                    RoomLayoutId = 1,
+                },
+                new MpRoomReservationDto()
+                {
+                    Name = "Room2",
+                    Cancelled = false,
+                    RoomId = 2,
+                    EventId = 1,
+                    EventRoomId = 2,
+                    RoomLayoutId = 1
+                }
+            };
+
+            var equipmentForRoom1 = new List<MpEquipmentReservationDto>()
+            {
+                new MpEquipmentReservationDto()
+                {
+                    Cancelled = false,
+                    RoomId = 1,
+                    EventId = 1,
+                    QuantityRequested = 10,
+                    EquipmentId = 1,
+                    EventEquipmentId = 1,
+                    EventRoomId = 1
+                },
+                new MpEquipmentReservationDto()
+                {
+                    Cancelled = false,
+                    RoomId = 1,
+                    EventId = 1,
+                    QuantityRequested = 42,
+                    EquipmentId = 2,
+                    EventEquipmentId = 2,
+                    EventRoomId = 2
+                }
+            };
+
+            var mpEventGroupData = new List<MpEventGroup>()
+            {
+                new MpEventGroup()
+                {
+                    EventId = 1,
+                    Closed = false,
+                    RoomId = 1,
+                    EventRoomId = 2,
+                    DomainId = 1,
+                    GroupId = 42,
+                    GroupName = "_childCare",
+                    GroupTypeId = 23,
+                    Created = true,
+                    EventGroupId = 1
+                }
+            };
+
+            var mpGroup = new MpGroup()
+            {
+                Name = "ChildCareGroup",
+                GroupId = 42,
+                ChildCareAvailable = true,
+                CongregationId = 1,
+                KidsWelcome = true,
+                TargetSize = 42
+            };
+
+            _eventService.Setup(mock => mock.GetEvent(1)).Returns(oldEventData);
+            _roomService.Setup(mockyMock => mockyMock.GetRoomReservations(1)).Returns(roomReservationReturn);
+            _equipmentService.Setup(mock => mock.GetEquipmentReservations(1, 1)).Returns(equipmentForRoom1);
+            _equipmentService.Setup(mock => mock.GetEquipmentReservations(1, 2)).Returns(new List<MpEquipmentReservationDto>());
+            _eventService.Setup(mock => mock.GetEventGroupsForEventAPILogin(1)).Returns(mpEventGroupData);
+            _eventService.Setup(mock => mock.UpdateEvent(It.IsAny<MpEventReservationDto>()));
+            _roomService.Setup(mock => mock.UpdateRoomReservation(It.IsAny<MpRoomReservationDto>()));
+            _equipmentService.Setup(mock => mock.UpdateEquipmentReservation(It.IsAny<MpEquipmentReservationDto>()));
+            _eventService.Setup(mock => mock.DeleteEventGroupsForEvent(1, "ABC"));
+            _groupService.Setup(mock => mock.EndDateGroup(42, null, null));
+            _groupService.Setup(mock => mock.getGroupDetails(42)).Returns(mpGroup);
+
+            var result = _fixture.UpdateEventReservation(newReservation, 1, "ABC");
+            Assert.IsTrue(result);
+            _equipmentService.Verify(m => m.UpdateEquipmentReservation(It.IsAny<MpEquipmentReservationDto>()), Times.Exactly(2));
+            _roomService.Verify(m => m.UpdateRoomReservation(It.IsAny<MpRoomReservationDto>()), Times.Exactly(2));
+            _eventService.Verify(m => m.UpdateEvent(It.IsAny<MpEventReservationDto>()), Times.Once);
+            _eventService.Verify(m => m.DeleteEventGroupsForEvent(1, "ABC"), Times.Once);
+            _groupService.Verify(m => m.EndDateGroup(42, null, null), Times.Once);
+        }
+
+        [Test]
+        public void UpdateEventReservationStaysChildCare()
+        {
+            var newReservation = GetEventToolTestObjectWithRooms();
+            newReservation.EventTypeId = 98765;
+            var oldEventData = Mapper.Map<MpEvent>(newReservation);
+            newReservation.Group = new GroupDTO()
+            {
+                CongregationId = 1
+            };
+
+            var roomReservationReturn = new List<MpRoomReservationDto>()
+            {
+                new MpRoomReservationDto()
+                {
+                    Name = "Room1",
+                    Cancelled = false,
+                    RoomId = 1,
+                    EventId = 1,
+                    EventRoomId = 1,
+                    RoomLayoutId = 1,
+                },
+                new MpRoomReservationDto()
+                {
+                    Name = "Room2",
+                    Cancelled = false,
+                    RoomId = 2,
+                    EventId = 1,
+                    EventRoomId = 2,
+                    RoomLayoutId = 1
+                }
+            };
+
+            var equipmentForRoom1 = new List<MpEquipmentReservationDto>()
+            {
+                new MpEquipmentReservationDto()
+                {
+                    Cancelled = false,
+                    RoomId = 1,
+                    EventId = 1,
+                    QuantityRequested = 10,
+                    EquipmentId = 1,
+                    EventEquipmentId = 1,
+                    EventRoomId = 1
+                },
+                new MpEquipmentReservationDto()
+                {
+                    Cancelled = false,
+                    RoomId = 1,
+                    EventId = 1,
+                    QuantityRequested = 42,
+                    EquipmentId = 2,
+                    EventEquipmentId = 2,
+                    EventRoomId = 2
+                }
+            };
+
+            var mpEventGroupData = new List<MpEventGroup>()
+            {
+                new MpEventGroup()
+                {
+                    EventId = 1,
+                    Closed = false,
+                    RoomId = 1,
+                    EventRoomId = 2,
+                    DomainId = 1,
+                    GroupId = 42,
+                    GroupName = "_childCare",
+                    GroupTypeId = 272727,
+                    Created = true,
+                    EventGroupId = 1
+                }
+            };
+
+            var mpGroup = new MpGroup()
+            {
+                Name = "ChildCareGroup",
+                GroupId = 42,
+                ChildCareAvailable = true,
+                CongregationId = 1,
+                KidsWelcome = true,
+                TargetSize = 42
+            };
+
+            _eventService.Setup(mock => mock.GetEvent(1)).Returns(oldEventData);
+            _roomService.Setup(mockyMock => mockyMock.GetRoomReservations(1)).Returns(roomReservationReturn);
+            _equipmentService.Setup(mock => mock.GetEquipmentReservations(1, 1)).Returns(equipmentForRoom1);
+            _equipmentService.Setup(mock => mock.GetEquipmentReservations(1, 2)).Returns(new List<MpEquipmentReservationDto>());
+            _eventService.Setup(mock => mock.GetEventGroupsForEventAPILogin(1)).Returns(mpEventGroupData);
+            _eventService.Setup(mock => mock.UpdateEvent(It.IsAny<MpEventReservationDto>()));
+            _roomService.Setup(mock => mock.UpdateRoomReservation(It.IsAny<MpRoomReservationDto>()));
+            _equipmentService.Setup(mock => mock.UpdateEquipmentReservation(It.IsAny<MpEquipmentReservationDto>()));
+            _groupService.Setup(mock => mock.getGroupDetails(42)).Returns(mpGroup);
+            _groupService.Setup(mock => mock.UpdateGroup(It.IsAny<MpGroup>())).Returns(42);
+
+            var result = _fixture.UpdateEventReservation(newReservation, 1, "ABC");
+            Assert.IsTrue(result);
+            _equipmentService.Verify(m => m.UpdateEquipmentReservation(It.IsAny<MpEquipmentReservationDto>()), Times.Exactly(2));
+            _roomService.Verify(m => m.UpdateRoomReservation(It.IsAny<MpRoomReservationDto>()), Times.Exactly(2));
+            _eventService.Verify(m => m.UpdateEvent(It.IsAny<MpEventReservationDto>()), Times.Once);
+            _groupService.Verify(m => m.getGroupDetails(42), Times.Once);
+            _groupService.Verify(m => m.UpdateGroup(It.IsAny<MpGroup>()), Times.Once);
+            _eventService.Verify(m => m.GetEventGroupsForEventAPILogin(1), Times.Exactly(2));
+
+        }
+
+        private EventToolDto GetEventToolTestObject()
+        {
+            return new EventToolDto()
+            {
+                CongregationId = 1,
+                ContactId = 1234,
+                Description = "This is a description",
+                DonationBatchTool = false,
+                StartDateTime = new DateTime(2016, 12, 16, 10, 0, 0),
+                EndDateTime = new DateTime(2016, 12, 16, 11, 0, 0),
+                EventTypeId = 78,
+                MeetingInstructions = "These are instructions",
+                MinutesSetup = 0,
+                MinutesTeardown = 0,
+                ProgramId = 102,
+                ReminderDaysId = 2,
+                SendReminder = false,
+                Title = "Test Event",
+                ParticipantsExpected = 8
+            };
+        }
+
+        private EventToolDto GetEventToolTestObjectWithRooms()
+        {
+            return new EventToolDto()
+            {
+                CongregationId = 1,
+                ContactId = 1234,
+                Description = "This is a description",
+                DonationBatchTool = false,
+                StartDateTime = new DateTime(2016, 12, 16, 10, 0, 0),
+                EndDateTime = new DateTime(2016, 12, 16, 11, 0, 0),
+                EventTypeId = 78,
+                MeetingInstructions = "These are instructions",
+                MinutesSetup = 0,
+                MinutesTeardown = 0,
+                ProgramId = 102,
+                ReminderDaysId = 2,
+                SendReminder = false,
+                Title = "Test Event",
+                ParticipantsExpected = 8,
+                Rooms = new List<EventRoomDto>()
+                {
+                    new EventRoomDto()
+                    {
+                        Name = "Room1",
+                        LayoutId = 1,
+                        RoomId = 1, 
+                        Cancelled = false,
+                        RoomReservationId = 1,
+                        Equipment = new List<EventRoomEquipmentDto>()
+                        {
+                            new EventRoomEquipmentDto()
+                            {
+                                Cancelled = false,
+                                EquipmentId = 1, 
+                                EquipmentReservationId = 1,
+                                QuantityRequested = 10
+                            }, 
+                            new EventRoomEquipmentDto()
+                            {
+                                Cancelled = false,
+                                EquipmentId = 2,
+                                EquipmentReservationId = 2,
+                                QuantityRequested = 42
+                            }
+                        }
+                    },
+                    new EventRoomDto()
+                    {
+                        Name = "Room2",
+                        LayoutId = 1,
+                        RoomId = 2,
+                        Cancelled = false,
+                        RoomReservationId = 2
+                    }
+                }
+            };
+        }
     }
+
 }
       

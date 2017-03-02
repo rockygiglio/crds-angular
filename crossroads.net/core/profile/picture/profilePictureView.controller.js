@@ -1,24 +1,30 @@
-(function() {
-  'use strict';
 
-  module.exports = ProfilePictureViewController;
-
-  ProfilePictureViewController.$inject = ['$rootScope', '$scope', '$timeout', 'ImageService', '$cookies'];
-
+(() => {
   function ProfilePictureViewController($rootScope, $scope, $timeout, ImageService, $cookies) {
-    var vm = this;
-    if (!vm.contactId) {
+    const vm = this;
+    if (!$rootScope.userid && !vm.contactId) {
       vm.contactId = $cookies.get('userId');
+    } else {
+      vm.contactId = $rootScope.userid;
     }
 
     vm.path = ImageService.ProfileImageBaseURL + vm.contactId;
     vm.defaultImage = ImageService.DefaultProfileImage;
 
-    $rootScope.$on('profilePhotoChanged', function(event, data) {
-      $timeout(function() {
-        vm.path = ImageService.ProfileImageBaseURL + vm.contactId + '?' + new Date().getTime();
-      }, 500);
-    });
+    if (!vm.autoUpdate || vm.autoUpdate !== '1') {
+      $rootScope.$on('profilePhotoChanged', (event, contactId) => {
+        if (contactId !== undefined) {
+          vm.contactId = contactId;
+        }
+        $timeout(() => {
+          vm.path = ImageService.ProfileImageBaseURL + vm.contactId + '?' + new Date().getTime();
+          $rootScope.$apply();
+        }, 500);
+      });
+    }
   }
 
+  module.exports = ProfilePictureViewController;
+
+  ProfilePictureViewController.$inject = ['$rootScope', '$scope', '$timeout', 'ImageService', '$cookies'];
 })();

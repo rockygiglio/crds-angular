@@ -1,15 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using crds_angular.Models.Crossroads.GoVolunteer;
 using crds_angular.Services;
-using crds_angular.Services.Interfaces;
+using Crossroads.Web.Common.MinistryPlatform;
 using MinistryPlatform.Translation.Models;
 using Moq;
 using NUnit.Framework;
-using Rhino.Mocks;
 using MPInterfaces = MinistryPlatform.Translation.Repositories.Interfaces;
 
 namespace crds_angular.test.Services
@@ -19,7 +15,7 @@ namespace crds_angular.test.Services
     {
         private OrganizationService _fixture;
         private Mock<MPInterfaces.IOrganizationRepository> _organizationService;
-        private Mock<MPInterfaces.IApiUserRepository> _apiUserService;
+        private Mock<IApiUserRepository> _apiUserService;
 
         private const string apiUserToken = "somerandomstring";
         private const int CONTACTID = 123456789;
@@ -31,7 +27,7 @@ namespace crds_angular.test.Services
         public void SetUp()
         {
             _organizationService = new Mock<MPInterfaces.IOrganizationRepository>();
-            _apiUserService = new Mock<MPInterfaces.IApiUserRepository>();
+            _apiUserService = new Mock<IApiUserRepository>();
             _fixture = new OrganizationService(_organizationService.Object, _apiUserService.Object);
 
             _apiUserService.Setup(m => m.GetToken()).Returns(apiUserToken);
@@ -73,6 +69,16 @@ namespace crds_angular.test.Services
         }
 
         [Test]
+        public void ShouldGetOnlyActiveOrganizations()
+        {
+            var mporgs = Organizations();
+            mporgs[0].EndDate = DateTime.Today.AddDays(-5);
+            _organizationService.Setup(m => m.GetOrganizations(apiUserToken)).Returns(mporgs);
+            var orgs = _fixture.GetOrganizations();
+            Assert.AreEqual(mporgs.Count-1, orgs.Count);
+        }
+
+        [Test]
         public void ShouldGetEmptyListOfOrganizations()
         {
             var mporgs = new List<MPOrganization>();
@@ -99,7 +105,7 @@ namespace crds_angular.test.Services
                 return new MPOrganization()
                 {
                     ContactId = CONTACTID,
-                    EndDate = new DateTime(),
+                    EndDate = null,
                     StartDate = STARTDATE,
                     Name = name,
                     OpenSignup = false,
@@ -110,7 +116,7 @@ namespace crds_angular.test.Services
             return new MPOrganization()
             {
                 ContactId = CONTACTID,
-                EndDate = new DateTime(),
+                EndDate = null,
                 StartDate = STARTDATE,
                 Name = name,
                 OpenSignup = false

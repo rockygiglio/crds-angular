@@ -10,6 +10,7 @@ using Crossroads.Utilities.Services;
 using log4net;
 using Microsoft.Practices.Unity;
 using Microsoft.Practices.Unity.Configuration;
+using Crossroads.Web.Common.MinistryPlatform;
 using MinistryPlatform.Translation.Repositories;
 
 [assembly: log4net.Config.XmlConfigurator(Watch = true)]
@@ -22,9 +23,13 @@ namespace Crossroads.ChildcareGroupUpdates
 
         private static void Main()
         {
-            var section = (UnityConfigurationSection) ConfigurationManager.GetSection("unity");
             var container = new UnityContainer();
-            section.Configure(container);
+            var unitySections = new[] { "crossroadsCommonUnity", "unity" };
+
+            foreach (var section in unitySections.Select(sectionName => (UnityConfigurationSection)ConfigurationManager.GetSection(sectionName)))
+            {
+                container.LoadConfiguration(section);
+            }
 
             TlsHelper.AllowTls12();
 
@@ -111,7 +116,7 @@ namespace Crossroads.ChildcareGroupUpdates
                     groupdto.MaximumAge = defaultMaximumAge;
                     groupdto.MinimumParticipants = defaultMinimumParticipants;
                     groupdto.TargetSize = defaultTargetSize;
-                    groupdto.GroupName = "__childcare";
+                    groupdto.GroupName = "__childcaregroup";
                     groupdto.GroupTypeId = groupTypeId;
                     groupdto.MinistryId = defaultMinistryId;
 

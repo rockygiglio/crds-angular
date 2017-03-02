@@ -37,7 +37,9 @@ namespace crds_angular.Services
                 RoomStatus = record.RoomStatus,
                 DisplayName = record.DisplayName,
                 ReservationStart = record.ReservationStart,
-                ReservationEnd = record.ReservationEnd
+                ReservationEnd = record.ReservationEnd,
+                ReservationEvent = record.ReservationEvent,
+                ReservationId = record.ReservationId
 
             }).OrderBy(x => x.Name).ToList();
         }

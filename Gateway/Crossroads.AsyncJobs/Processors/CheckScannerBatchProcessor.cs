@@ -8,6 +8,8 @@ using System.Collections.Generic;
 using System.Linq;
 using crds_angular.Models.Crossroads;
 using Crossroads.Utilities.Interfaces;
+using Crossroads.Web.Common;
+using Crossroads.Web.Common.Configuration;
 using Newtonsoft.Json;
 
 namespace Crossroads.AsyncJobs.Processors

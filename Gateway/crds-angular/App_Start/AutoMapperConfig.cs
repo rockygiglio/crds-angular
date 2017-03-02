@@ -5,6 +5,7 @@ using System.Text.RegularExpressions;
 using System.Web.ClientServices.Providers;
 using AutoMapper;
 using crds_angular.Models;
+using crds_angular.Models.Finder;
 using crds_angular.Models.Crossroads;
 using crds_angular.Models.Crossroads.Attribute;
 using crds_angular.Models.Crossroads.Events;
@@ -16,6 +17,7 @@ using crds_angular.Models.Crossroads.Stewardship;
 using crds_angular.Models.MailChimp;
 using MinistryPlatform.Translation.Extensions;
 using MinistryPlatform.Translation.Models;
+using MinistryPlatform.Translation.Models.Finder;
 using MinistryPlatform.Translation.Models.DTO;
 using MinistryPlatform.Translation.Models.Opportunities;
 using MinistryPlatform.Translation.Repositories;
@@ -140,6 +142,7 @@ namespace crds_angular.App_Start
                 .ForMember(dest => dest.IncludeOnPrintedStatement, opts => opts.MapFrom(src => src.IncludeOnPrintedStatement))
                 .ForMember(dest => dest.AccountingCompanyName, opts => opts.MapFrom(src => src.AccountingCompanyName))
                 .ForMember(dest => dest.AccountingCompanyIncludeOnPrintedStatement, opts => opts.MapFrom(src => src.AccountingCompanyIncludeOnPrintedStatement))
+                .ForMember(dest => dest.Notes, opts => opts.MapFrom(src => src.donationNotes))
                 .AfterMap((src, dest) =>
                 {
                     dest.Source = new DonationSourceDTO
@@ -203,6 +206,40 @@ namespace crds_angular.App_Start
                 .ForMember(dest => dest.PassportLastname, opts => opts.MapFrom(src => src.Passport_Lastname))
                 .ForMember(dest => dest.PassportMiddlename, opts => opts.MapFrom(src => src.Passport_Middlename))
                 .ForMember(dest => dest.PassportCountry, opts => opts.MapFrom(src => src.Passport_Country));
+
+            Mapper.CreateMap<MpEvent, EventToolDto>()
+                .ForMember(dest => dest.CongregationId, opts => opts.MapFrom(src => src.CongregationId))
+                .ForMember(dest => dest.EndDateTime, opts => opts.MapFrom(src => src.EventEndDate))
+                .ForMember(dest => dest.EventTypeId, opts => opts.MapFrom(src => src.EventType))
+                .ForMember(dest => dest.ProgramId, opts => opts.MapFrom(src => src.ProgramId))
+                .ForMember(dest => dest.ReminderDaysId, opts => opts.MapFrom(src => src.ReminderDaysPriorId))
+                .ForMember(dest => dest.StartDateTime, opts => opts.MapFrom(src => src.EventStartDate))
+                .ForMember(dest => dest.Title, opts => opts.MapFrom(src => src.EventTitle))
+                .ForMember(dest => dest.SendReminder, opts => opts.MapFrom(src => src.SendReminder))
+                .ForMember(dest => dest.DonationBatchTool, opts => opts.MapFrom(src => src.DonationBatchTool))
+                .ForMember(dest => dest.ContactId, opts => opts.MapFrom(src => src.PrimaryContactId))
+                .ForMember(dest => dest.Description, opts => opts.MapFrom(src => src.Description))
+                .ForMember(dest => dest.MinutesSetup, opts => opts.MapFrom(src => src.MinutesSetup))
+                .ForMember(dest => dest.MinutesTeardown, opts => opts.MapFrom(src => src.MinutesTeardown))
+                .ForMember(dest => dest.MeetingInstructions, opts => opts.MapFrom(src => src.MeetingInstructions))
+                .ForMember(dest => dest.ParticipantsExpected, opts => opts.MapFrom(src => src.ParticipantsExpected));
+
+            Mapper.CreateMap<EventToolDto, MpEvent>()
+                .ForMember(dest => dest.CongregationId, opts => opts.MapFrom(src => src.CongregationId))
+                .ForMember(dest => dest.EventEndDate, opts => opts.MapFrom(src => src.EndDateTime))
+                .ForMember(dest => dest.EventType, opts => opts.MapFrom(src => src.EventTypeId))
+                .ForMember(dest => dest.ProgramId, opts => opts.MapFrom(src => src.ProgramId))
+                .ForMember(dest => dest.ReminderDaysPriorId, opts => opts.MapFrom(src => src.ReminderDaysId))
+                .ForMember(dest => dest.EventStartDate, opts => opts.MapFrom(src => src.StartDateTime))
+                .ForMember(dest => dest.EventTitle, opts => opts.MapFrom(src => src.Title))
+                .ForMember(dest => dest.SendReminder, opts => opts.MapFrom(src => src.SendReminder))
+                .ForMember(dest => dest.DonationBatchTool, opts => opts.MapFrom(src => src.DonationBatchTool))
+                .ForMember(dest => dest.PrimaryContactId, opts => opts.MapFrom(src => src.ContactId))
+                .ForMember(dest => dest.ParticipantsExpected, opts => opts.MapFrom(src => src.ParticipantsExpected))
+                .ForMember(dest => dest.Description, opts => opts.MapFrom(src => src.Description))
+                .ForMember(dest => dest.MinutesSetup, opts => opts.MapFrom(src => src.MinutesSetup))
+                .ForMember(dest => dest.MinutesTeardown, opts => opts.MapFrom(src => src.MinutesTeardown))
+                .ForMember(dest => dest.MeetingInstructions, opts => opts.MapFrom(src => src.MeetingInstructions));
 
             Mapper.CreateMap<MpRecurringGift, RecurringGiftDto>()
                 .ForMember(dest => dest.EmailAddress, opts => opts.MapFrom(src => src.RecurringGiftId))
@@ -322,6 +359,9 @@ namespace crds_angular.App_Start
 
             Mapper.CreateMap<RsvpMember, MpRsvpMember>();
             Mapper.CreateMap<MpRsvpMember, RsvpMember>();
+            Mapper.CreateMap<PinDto, FinderPinDto>();
+            Mapper.CreateMap<FinderPinDto, PinDto>();
+
             Mapper.CreateMap<MpSU2SOpportunity, ServeOpportunity>();
             Mapper.CreateMap<ServeOpportunity, MpSU2SOpportunity>();
             Mapper.CreateMap<MpAttributeCategory, AttributeCategoryDTO>()

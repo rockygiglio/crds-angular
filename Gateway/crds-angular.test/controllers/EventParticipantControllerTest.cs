@@ -10,6 +10,7 @@ using crds_angular.Models.Crossroads.Events;
 using crds_angular.Models.Json;
 using crds_angular.Services.Interfaces;
 using crds_angular.test.Helpers;
+using Crossroads.Web.Common.Security;
 using Moq;
 using NUnit.Framework;
 
@@ -26,7 +27,7 @@ namespace crds_angular.test.controllers
         {
             Factories.EventParticipantDTO();
             _eventParticipantService = new Mock<IEventParticipantService>();
-            _fixture = new EventParticipantController(_eventParticipantService.Object);
+            _fixture = new EventParticipantController(_eventParticipantService.Object, new Mock<IUserImpersonationService>().Object, new Mock<IAuthenticationRepository>().Object);
             authType = "auth_type";
             authToken = "auth_token";
             _fixture.Request = new HttpRequestMessage();

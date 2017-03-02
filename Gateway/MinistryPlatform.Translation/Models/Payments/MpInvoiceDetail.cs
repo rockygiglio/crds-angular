@@ -1,4 +1,5 @@
-﻿using MinistryPlatform.Translation.Models.Attributes;
+﻿using Crossroads.Web.Common;
+using Crossroads.Web.Common.MinistryPlatform;
 using Newtonsoft.Json;
 
 namespace MinistryPlatform.Translation.Models.Payments
@@ -8,6 +9,9 @@ namespace MinistryPlatform.Translation.Models.Payments
     {
         [JsonProperty(PropertyName = "Invoice_Detail_ID")]
         public int InvoiceDetailId { get; set; }
+
+        [JsonProperty(PropertyName = "Invoice_Status_ID")]
+        public int InvoiceStatusId { get; set; }
 
         [JsonProperty(PropertyName = "Invoice_ID")]
         public int InvoiceId { get; set; }

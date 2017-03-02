@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using Crossroads.Utilities.FunctionalHelpers;
 using Crossroads.Utilities.Interfaces;
+using Crossroads.Web.Common;
+using Crossroads.Web.Common.Configuration;
+using Crossroads.Web.Common.MinistryPlatform;
+using Crossroads.Web.Common.Security;
 using MinistryPlatform.Translation.Extensions;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Repositories.Interfaces;
@@ -145,7 +149,7 @@ namespace MinistryPlatform.Translation.Repositories
             const string tableName = "Event_Participants";
             var searchString = $"Event_ID_Table.Event_ID={eventId} AND Participant_ID_Table_Contact_ID_Table.Contact_ID={contactId}";
             const string column = "Event_Participant_ID";
-            var eventParticipant = _ministryPlatformRestRepository.UsingAuthenticationToken(ApiLogin()).Search<int>(tableName, searchString, column);
+            var eventParticipant = _ministryPlatformRestRepository.UsingAuthenticationToken(ApiLogin()).Search<int>(tableName, searchString, column, null, false);
             return eventParticipant;
         }
 
@@ -201,6 +205,16 @@ namespace MinistryPlatform.Translation.Repositories
             {
                 return new Err<MpEventParticipant>(e);
             }
+        }
+
+        public int GetEventParticipantCountByGender(int eventId, int genderId)
+        {
+            var apiToken = ApiLogin();
+            const string tableName = "Event_Participants";
+            var searchString = $"Event_ID = {eventId} AND Participant_ID_Table_Contact_ID_Table_Gender_ID_Table.Gender_ID = {genderId}";
+            const string columnName = "Count(*)";
+
+            return _ministryPlatformRestRepository.UsingAuthenticationToken(apiToken).Search<int>(tableName, searchString, columnName, null, false);
         }
     }
 }

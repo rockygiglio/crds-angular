@@ -4,13 +4,14 @@ using crds_angular.Security;
 using crds_angular.Services.Interfaces;
 using System.Web.Http.Description;
 using Crossroads.ApiVersioning;
+using Crossroads.Web.Common.Security;
 
 namespace crds_angular.Controllers.API
 {
     public class ParticipantController : MPAuth
     {
         private readonly IGroupService _groupService;
-        public ParticipantController(IGroupService groupService)
+        public ParticipantController(IGroupService groupService, IUserImpersonationService userImpersonationService, IAuthenticationRepository authenticationRepository) : base(userImpersonationService, authenticationRepository)
         {
             _groupService = groupService;
         }

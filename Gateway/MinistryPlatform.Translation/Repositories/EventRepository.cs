@@ -5,6 +5,10 @@ using System.Linq;
 using System.Text;
 using Crossroads.Utilities.FunctionalHelpers;
 using Crossroads.Utilities.Interfaces;
+using Crossroads.Web.Common;
+using Crossroads.Web.Common.Configuration;
+using Crossroads.Web.Common.MinistryPlatform;
+using Crossroads.Web.Common.Security;
 using MinistryPlatform.Translation.Extensions;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Models.EventReservations;
@@ -80,6 +84,46 @@ namespace MinistryPlatform.Translation.Repositories
             catch (Exception e)
             {
                 var msg = string.Format("Error creating Event Reservation, eventReservationReservation: {0}", eventReservationReservation);
+                _logger.Error(msg, e);
+                throw (new ApplicationException(msg, e));
+            }
+        }
+
+        public void UpdateEvent(MpEventReservationDto eventReservationReservation)
+        {
+            var token = ApiLogin();
+            var eventPageId = _configurationWrapper.GetConfigIntValue("Events");
+
+            var eventDictionary = new Dictionary<string, object>
+            {
+                {"Congregation_ID", eventReservationReservation.CongregationId},
+                {"Primary_Contact", eventReservationReservation.ContactId},
+                {"Description", eventReservationReservation.Description},
+                {"On_Donation_Batch_Tool", eventReservationReservation.DonationBatchTool},
+                {"Event_End_Date", eventReservationReservation.EndDateTime},
+                {"Event_Type_ID", eventReservationReservation.EventTypeId},
+                {"Meeting_Instructions", eventReservationReservation.MeetingInstructions},
+                {"Minutes_for_Setup", eventReservationReservation.MinutesSetup},
+                {"Minutes_for_Cleanup", eventReservationReservation.MinutesTeardown},
+                {"Program_ID", eventReservationReservation.ProgramId},
+                {"Reminder_Days_Prior_ID", eventReservationReservation.ReminderDaysId},
+                {"Send_Reminder", eventReservationReservation.SendReminder},
+                {"Event_Start_Date", eventReservationReservation.StartDateTime},
+                {"Event_Title", eventReservationReservation.Title},
+                {"Visibility_Level_ID", _configurationWrapper.GetConfigIntValue("EventVisibilityLevel")},
+                {"Participants_Expected", eventReservationReservation.ParticipantsExpected },
+                {"Event_ID", eventReservationReservation.EventId },
+                {"Cancelled", eventReservationReservation.Cancelled }
+
+            };
+
+            try
+            {
+                _ministryPlatformService.UpdateRecord(eventPageId, eventDictionary, token);
+            }
+            catch (Exception e)
+            {
+                var msg = string.Format("Error updating Event Reservation, eventReservationReservation: {0}", eventReservationReservation);
                 _logger.Error(msg, e);
                 throw (new ApplicationException(msg, e));
             }
@@ -250,7 +294,7 @@ namespace MinistryPlatform.Translation.Repositories
             var apiToken = ApiLogin();
             
             var mpevent = _ministryPlatformRestRepository.UsingAuthenticationToken(apiToken).Get<MpEvent>(eventId);
-            mpevent.PrimaryContact = _ministryPlatformRestRepository.UsingAuthenticationToken(apiToken).Get<MpContact>(mpevent.PrimaryContactId, "Email_Address, Contact_ID");
+            mpevent.PrimaryContact = _ministryPlatformRestRepository.UsingAuthenticationToken(apiToken).Get<MpContact>(mpevent.PrimaryContactId, "Email_Address, Contact_ID, Display_Name");
 
             return mpevent;
         }
@@ -396,6 +440,11 @@ namespace MinistryPlatform.Translation.Repositories
             return _groupService.GetGroupsForEvent(eventId);
         }
 
+        public List<MpEventGroup> GetEventGroupsForEventAPILogin(int eventId)
+        {
+            return GetEventGroupsForEvent(eventId, ApiLogin());
+        }
+
         public List<MpEventGroup> GetEventGroupsForEvent(int eventId, string token)
         {
             var searchString =  string.Format("\"{0}\",", eventId);
@@ -509,8 +558,10 @@ namespace MinistryPlatform.Translation.Repositories
             return GetEventsData(token, searchString);
         }
 
-        public int CreateEventGroup(MpEventGroup eventGroup, string token)
+        public int CreateEventGroup(MpEventGroup eventGroup, string token = "")
         {
+            if (token == "")
+                token = ApiLogin();
             var groupDictionary = new Dictionary<string, object>
             {
                 {"Event_ID", eventGroup.EventId},
@@ -611,12 +662,41 @@ namespace MinistryPlatform.Translation.Repositories
             foreach (var waiver in waiverResponses)
             {
                 var searchString = $"Event_Participant_ID={waiver.EventParticipantId} AND Waiver_ID={waiver.WaiverId}";
-                waiver.EventParticipantWaiverId = _ministryPlatformRestRepository.UsingAuthenticationToken(apiToken).Search<int>("cr_Event_Participant_Waivers", searchString, "Event_Participant_Waiver_ID");
+                waiver.EventParticipantWaiverId = _ministryPlatformRestRepository.UsingAuthenticationToken(apiToken).Search<int>("cr_Event_Participant_Waivers", searchString, "Event_Participant_Waiver_ID", null, false);
             }
             
             _ministryPlatformRestRepository.UsingAuthenticationToken(apiToken).Post(waiverResponses.Where(w => w.EventParticipantWaiverId == 0).ToList());
 
             _ministryPlatformRestRepository.UsingAuthenticationToken(apiToken).Put(waiverResponses.Where(w => w.EventParticipantWaiverId != 0).ToList());
+        }
+
+        public bool IsEventSeries(int eventId)
+        {
+            var apiToken = ApiLogin();
+            var result = _ministryPlatformRestRepository.UsingAuthenticationToken(apiToken).Get<MpSequenceRecord>(eventId);
+
+            return result != null;
         }        
+
+        public Result<int> GetProductEmailTemplate(int eventId)
+        {
+            var apiToken = ApiLogin();
+
+            var filter = $"Events.[Event_ID] = {eventId}";
+            const string column = "Online_Registration_Product_Table_Program_ID_Table_Communication_ID_Table.[Communication_ID]";
+            try
+            {
+                var result = _ministryPlatformRestRepository.UsingAuthenticationToken(apiToken).Search<int>("Events", filter, column, null, false);
+                if (result == 0)
+                {
+                    return new Err<int>("No Email Template Found");
+                }
+                return new Ok<int>(result);
+            }
+            catch (Exception e)
+            {
+                return new Err<int>(e);                
+            }
+        }
     }
 }

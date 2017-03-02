@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using Crossroads.Utilities.Interfaces;
+using Crossroads.Web.Common;
+using Crossroads.Web.Common.Configuration;
+using Crossroads.Web.Common.Security;
 using MinistryPlatform.Translation.Extensions;
 using MinistryPlatform.Translation.Models.Lookups;
 using MinistryPlatform.Translation.Repositories.Interfaces;
@@ -26,7 +29,7 @@ namespace MinistryPlatform.Translation.Repositories
         public List<Dictionary<string, object>> EventTypes(string token)
         {
             token = ApiLogonIfNotAuthenticated(token);
-            return _ministryPlatformServiceImpl.GetRecordsDict(AppSettings("EventTypesLookup"), token);
+            return Enumerable.OrderBy(_ministryPlatformServiceImpl.GetRecordsDict(AppSettings("EventTypesLookup"), token), x => x["dp_RecordName"].ToString()).ToList();
         }
 
         public List<Dictionary<string, object>> Genders(string token = "")

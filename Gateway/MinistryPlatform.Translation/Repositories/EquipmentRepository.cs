@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using Crossroads.Utilities.Interfaces;
 using log4net;
+using Crossroads.Web.Common;
+using Crossroads.Web.Common.Configuration;
+using Crossroads.Web.Common.Security;
 using MinistryPlatform.Translation.Extensions;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Models.EventReservations;
@@ -39,8 +42,9 @@ namespace MinistryPlatform.Translation.Repositories
             }).ToList();
         }
 
-        public int CreateEquipmentReservation(MpEquipmentReservationDto equipmentReservation, string token)
+        public int CreateEquipmentReservation(MpEquipmentReservationDto equipmentReservation)
         {
+            string token = ApiLogin();
             var equipmentReservationPageId = _configurationWrapper.GetConfigIntValue("EquipmentReservationPageId");
             var equipmentDictionary = new Dictionary<string, object>
             {
@@ -64,8 +68,9 @@ namespace MinistryPlatform.Translation.Repositories
             }
         }
 
-        public void UpdateEquipmentReservation(MpEquipmentReservationDto equipmentReservation, string token)
+        public void UpdateEquipmentReservation(MpEquipmentReservationDto equipmentReservation)
         {
+            string token = ApiLogin();
             var equipmentReservationPageId = _configurationWrapper.GetConfigIntValue("EquipmentReservationPageId");
             var equipmentDictionary = new Dictionary<string, object>
             {

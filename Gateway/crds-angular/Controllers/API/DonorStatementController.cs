@@ -7,6 +7,7 @@ using crds_angular.Security;
 using crds_angular.Services.Interfaces;
 using MPInterfaces = MinistryPlatform.Translation.Repositories.Interfaces;
 using Crossroads.ApiVersioning;
+using Crossroads.Web.Common.Security;
 
 namespace crds_angular.Controllers.API
 {
@@ -14,7 +15,7 @@ namespace crds_angular.Controllers.API
     {
         private readonly IDonorStatementService _donorStatementService;
 
-        public DonorStatementController(IDonorStatementService donorStatementService)
+        public DonorStatementController(IDonorStatementService donorStatementService, IUserImpersonationService userImpersonationService, IAuthenticationRepository authenticationRepository) : base(userImpersonationService, authenticationRepository)
         {
             _donorStatementService = donorStatementService;
         }

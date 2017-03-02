@@ -12,6 +12,8 @@ using Crossroads.Utilities;
 using Crossroads.Utilities.Interfaces;
 using Crossroads.Utilities.Models;
 using Crossroads.Utilities.Services;
+using Crossroads.Web.Common;
+using Crossroads.Web.Common.Configuration;
 using MinistryPlatform.Translation.Models;
 using Newtonsoft.Json;
 
@@ -61,10 +63,12 @@ namespace crds_angular.test.Services
                     new StripeCharge
                     {
                         Id = "123",
+                        Type = "payment_refund"
                     },
                     new StripeCharge
                     {
                         Id = "last_one_in_first_page",
+                        Type = "payment"
                     }
                 }
             });
@@ -76,10 +80,12 @@ namespace crds_angular.test.Services
                     new StripeCharge
                     {
                         Id = "789",
+                        Type = "payment"
                     },
                     new StripeCharge
                     {
                         Id = "90210",
+                        Type = "payment"
                     }
                 }
             });

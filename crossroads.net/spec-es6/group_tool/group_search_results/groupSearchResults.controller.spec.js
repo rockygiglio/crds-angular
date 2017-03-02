@@ -59,15 +59,15 @@ describe('GroupSearchResultsController', () => {
       expect(fixture.search.query).toEqual(state.params.query);
       expect(fixture.search.location).toEqual(state.params.location);
       expect(fixture.doSearch).toHaveBeenCalledWith(state.params.query, state.params.location, state.params.groupId);
-      expect(fixture.initialFilters['age']).toEqual('30s');
-      expect(fixture.initialFilters['category']).toBeUndefined();
-      expect(fixture.initialFilters['type']).toBeUndefined();
-      expect(fixture.initialFilters['kids']).toBeUndefined();
-      expect(fixture.initialFilters['grouplocation']).toBeUndefined();
-      expect(fixture.initialFilters['day']).toBeUndefined();
-      expect(fixture.initialFilters['time']).toBeUndefined();
-      expect(fixture.initialFilters['frequency']).toBeUndefined();
-      expect(fixture.initialFilters['site']).toBeUndefined();
+      expect(fixture.currentFilters['age']).toEqual('30s');
+      expect(fixture.currentFilters['category']).toBeUndefined();
+      expect(fixture.currentFilters['type']).toBeUndefined();
+      expect(fixture.currentFilters['kids']).toBeUndefined();
+      expect(fixture.currentFilters['grouplocation']).toBeUndefined();
+      expect(fixture.currentFilters['day']).toBeUndefined();
+      expect(fixture.currentFilters['time']).toBeUndefined();
+      expect(fixture.currentFilters['frequency']).toBeUndefined();
+      expect(fixture.currentFilters['site']).toBeUndefined();
     });
   });
 
@@ -208,7 +208,8 @@ describe('GroupSearchResultsController', () => {
       rootScope.$apply();
 
       expect(groupService.search).toHaveBeenCalledWith('123', '', null);
-      expect(locationService.search).toHaveBeenCalledWith({ query: '123' });
+      //the age:30s here comes from above in the for each.
+      expect(locationService.search).toHaveBeenCalledWith({ query: '123', age: '30s' });
       expect(fixture.showLocationInput).toBeFalsy();
       expect(fixture.searchedWithLocation).toBeFalsy();
       expect(fixture.ready).toBeTruthy();

@@ -27,7 +27,7 @@ describe('Camper Info Component', () => {
     // Set up the camper info form instance that will be returned by the CamperInfoForm.createForm() factory function
     camperInfoForm = _CamperInfoForm_.createForm();
     spyOn(_CamperInfoForm_, 'createForm').and.callFake(() => camperInfoForm);
-
+    spyOn(state, 'go').and.returnValue(true);
     spyOn(camperInfoForm, 'getFields').and.callThrough();
     spyOn(camperInfoForm, 'getModel').and.callThrough();
     spyOn(rootScope, '$emit').and.callThrough();
@@ -70,6 +70,22 @@ describe('Camper Info Component', () => {
     camperInfo.submit();
     rootScope.$apply(); // must be called to resolve the promise
     expect(camperInfoForm.save).toHaveBeenCalledWith(eventId);
+  });
+
+  it('should redirect if 412 is recieved from server when saving', () => {
+    camperInfo.infoForm = { $valid: true };
+
+    spyOn(camperInfoForm, 'save').and.callFake(() => {
+      const deferred = q.defer();
+      deferred.reject({
+        status: 412
+      });
+      return deferred.promise;
+    });
+    camperInfo.submit();
+    rootScope.$apply(); // must be called to resolve the promise
+    expect(camperInfoForm.save).toHaveBeenCalledWith(eventId);
+    expect(state.go).toHaveBeenCalledWith('campsignup.application', { page: 'camps-full' });
   });
 
   it('should set the button as disabled when submitting the form', () => {

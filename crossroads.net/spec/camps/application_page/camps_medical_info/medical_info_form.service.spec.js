@@ -9,7 +9,6 @@ describe('Camps Medical Info Form', () => {
   // eslint-disable-next-line no-underscore-dangle
   const endpoint = `${window.__env__.CRDS_API_ENDPOINT}api`;
   const contactId = 456;
-  const campId = 4321;
 
   beforeEach(angular.mock.module(applicationModule));
   beforeEach(angular.mock.module(campsModule));

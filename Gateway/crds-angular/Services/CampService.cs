@@ -4,10 +4,12 @@ using System.Linq;
 using crds_angular.Exceptions;
 using crds_angular.Models.Crossroads.Camp;
 using crds_angular.Models.Crossroads.Groups;
+using crds_angular.Models.Crossroads.Payment;
 using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.FunctionalHelpers;
-using Crossroads.Utilities.Interfaces;
 using log4net;
+using Crossroads.Web.Common.Configuration;
+using Crossroads.Web.Common.MinistryPlatform;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Models.Product;
 using MinistryPlatform.Translation.Repositories.Interfaces;
@@ -32,6 +34,8 @@ namespace crds_angular.Services
         private readonly ICommunicationRepository _communicationRepository;
         private readonly IPaymentRepository _paymentRepository;
         private readonly IObjectAttributeService _objectAttributeService;
+        private readonly ICampRules _campRules;
+        private readonly IPaymentService _paymentService;
 
         private readonly ILog _logger = LogManager.GetLogger(typeof (CampService));
 
@@ -51,8 +55,9 @@ namespace crds_angular.Services
             IInvoiceRepository invoiceRepository,
             ICommunicationRepository communicationRepository,
             IPaymentRepository paymentRepository,
-            IObjectAttributeService objectAttributeService
-)
+            IObjectAttributeService objectAttributeService,
+            ICampRules campRules,
+            IPaymentService paymentService)
         {
             _campService = campService;
             _formSubmissionRepository = formSubmissionRepository;
@@ -70,6 +75,8 @@ namespace crds_angular.Services
             _paymentRepository = paymentRepository;
             _communicationRepository = communicationRepository;
             _objectAttributeService = objectAttributeService;
+            _campRules = campRules;
+            _paymentService = paymentService;
         }
 
         public CampDTO GetCampEventDetails(int eventId)
@@ -79,7 +86,7 @@ namespace crds_angular.Services
             var eligibleGradeGroups = campEvent.CampGradesList.Select(campGrade => new GroupDTO
             {
                 GroupId = campGrade.GroupId, GroupName = campGrade.GroupName
-            }).ToList();
+            }).OrderBy(x => x.GroupName).ToList();
 
             var campEventInfo = new CampDTO
             {
@@ -107,10 +114,10 @@ namespace crds_angular.Services
             var campEvent = _eventRepository.GetEvent(eventId);
             var eventProduct = _productRepository.GetProductForEvent(eventId);
             var eventProductOptionPrices = _productRepository.GetProductOptionPricesForProduct(eventProduct.ProductId).OrderByDescending(m => m.DaysOutToHide).ToList();
-            var invoiceDetails = _invoiceRepository.GetInvoiceDetailsForProductAndCamperAndContact(eventProduct.ProductId, camperContactId, me.Contact_ID);
-            var answer = _formSubmissionRepository.GetFormResponseAnswer(formId, camperContactId, formFieldId);
+            var invoiceDetails = _invoiceRepository.GetInvoiceDetailsForProductAndCamper(eventProduct.ProductId, camperContactId);
+            var answer = _formSubmissionRepository.GetFormResponseAnswer(formId, camperContactId, formFieldId, eventId);
             var financialAssistance = (!string.IsNullOrEmpty(answer) && Convert.ToBoolean(answer));
-
+            var paymentDetail = invoiceDetails.Status ? _paymentService.GetPaymentDetails(0, invoiceDetails.Value.InvoiceId, token) : null;
             var campProductInfo = new ProductDTO
             {
                 InvoiceId = invoiceDetails.Status ? invoiceDetails.Value.InvoiceId : 0,
@@ -120,13 +127,12 @@ namespace crds_angular.Services
                 DepositPrice = eventProduct.DepositPrice,
                 Options = ConvertProductOptionPricetoDto(eventProductOptionPrices,eventProduct.BasePrice,campEvent.EventStartDate),
                 BasePriceEndDate = campEvent.EventStartDate,
-                FinancialAssistance = financialAssistance
+                FinancialAssistance = financialAssistance,
+                PaymentDetail = paymentDetail
             };
 
             return campProductInfo;
         }
-
-
 
         public List<CampFamilyMember> GetEligibleFamilyMembers(int eventId, string token)
         {
@@ -140,7 +146,7 @@ namespace crds_angular.Services
                 return me.Select(member => NewCampFamilyMember(member, eventId, apiToken)).ToList();
             }
 
-            var otherFamily = _contactRepository.GetOtherHouseholdMembers(myContact.Contact_ID);
+            var otherFamily = _contactRepository.GetOtherHouseholdMembers(myContact.Household_ID);
             family.AddRange(otherFamily);
             family = family.Where((member) => member.HouseholdPosition == "Minor Child").ToList();
             return family.Select(member => NewCampFamilyMember(member, eventId, apiToken)).ToList();
@@ -172,7 +178,7 @@ namespace crds_angular.Services
             return new CampFamilyMember
             {
                 ContactId = member.ContactId,
-                IsEligible = _groupRepository.IsMemberOfEventGroup(member.ContactId, eventId, apiToken),
+                IsEligible = isPending || signedUpDate != null ? true : _groupRepository.IsMemberOfEventGroup(member.ContactId, eventId, apiToken),
                 SignedUpDate = signedUpDate,
                 IsPending = isPending,
                 IsExpired = isExpired,
@@ -189,7 +195,7 @@ namespace crds_angular.Services
         {
             var loggedInContact = _contactRepository.GetMyProfile(token);
             var family = _contactRepository.GetHouseholdFamilyMembers(loggedInContact.Household_ID);
-            family.AddRange(_contactRepository.GetOtherHouseholdMembers(loggedInContact.Contact_ID));
+            family.AddRange(_contactRepository.GetOtherHouseholdMembers(loggedInContact.Household_ID));
 
             if (family.Where(f => f.ContactId == contactId).ToList().Count <= 0)
             {
@@ -258,7 +264,8 @@ namespace crds_angular.Services
             {
                 ContactId = contactId,
                 FormId = formId,
-                FormAnswers = answers
+                FormAnswers = answers,
+                EventId = eventId
             };
 
             _formSubmissionRepository.SubmitFormResponse(formResponse);
@@ -266,7 +273,7 @@ namespace crds_angular.Services
 
         public CampReservationDTO SaveCampReservation(CampReservationDTO campReservation, int eventId, string token)
         {
-            var nickName = campReservation.PreferredName ?? campReservation.FirstName;
+            var nickName = string.IsNullOrWhiteSpace(campReservation.PreferredName) ? campReservation.FirstName : campReservation.PreferredName;
             var contactId = Convert.ToInt32(campReservation.ContactId);
 
             var minorContact = new MpContact
@@ -331,71 +338,82 @@ namespace crds_angular.Services
             else if (!group.Status)
             {
                 _groupRepository.addParticipantToGroup(participant.ParticipantId,
-                                                       campReservation.CurrentGrade,
-                                                       _configurationWrapper.GetConfigIntValue("Group_Role_Default_ID"),
-                                                       false,
-                                                       DateTime.Now);
+                                                        campReservation.CurrentGrade,
+                                                        _configurationWrapper.GetConfigIntValue("Group_Role_Default_ID"),
+                                                        false,
+                                                        DateTime.Now);
             }
 
-
-            //Create eventParticipant 
-            int eventParticipantId;
-            var eventParticipant = _eventParticipantRepository.GetEventParticipantEligibility(eventId, contactId);
-
-            // This is a new event participant, determine their pending timeout and create their entry in the database
-            if (eventParticipant == null)
+            // Check if this person is already an event participant
+            var eventParticipant = _eventParticipantRepository.GetEventParticipantEligibility(eventId, contactId);            
+            var currentlyActive = (eventParticipant != null && (eventParticipant.EndDate == null || eventParticipant.EndDate >= DateTime.Now));
+            var rulesPass = true;
+            if (!currentlyActive)
             {
-                var endDate = DetermineEndDate(eventId);
-                eventParticipantId = _eventRepository.RegisterInterestedParticipantWithEndDate(participant.ParticipantId, eventId, endDate);
+                rulesPass = _campRules.VerifyCampRules(eventId, campReservation.Gender);
             }
-            else
-            {
-                eventParticipantId = eventParticipant.EventParticipantId;
 
-                // If the participant had previously started an application which expired, update its End Date now
-                if (eventParticipant.EndDate != null && eventParticipant.EndDate < DateTime.Now)
+            // ALL OF THE BELOW CODE SHOULD ONLY HAPPEN IF THE RULES PASS            
+            if (rulesPass)
+            {
+                //Create eventParticipant 
+                int eventParticipantId;
+
+                // This is a new event participant, determine their pending timeout and create their entry in the database
+                if (eventParticipant == null)
                 {
                     var endDate = DetermineEndDate(eventId);
-                    _eventRepository.UpdateParticipantEndDate(eventParticipantId, endDate);
+                    eventParticipantId = _eventRepository.RegisterInterestedParticipantWithEndDate(participant.ParticipantId, eventId, endDate);
                 }
+                else
+                {
+                    eventParticipantId = eventParticipant.EventParticipantId;
+
+                    // If the participant had previously started an application which expired, update its End Date now
+                    if (eventParticipant.EndDate != null && eventParticipant.EndDate < DateTime.Now)
+                    {
+                        var endDate = DetermineEndDate(eventId);
+                        _eventRepository.UpdateParticipantEndDate(eventParticipantId, endDate);
+                    }
+                }
+                var crossroadsSite = _congregationRepository.GetCongregationById(campReservation.CrossroadsSite);
+
+                //form response
+                var answers = new List<MpFormAnswer>
+                {
+                    new MpFormAnswer
+                    {
+                        Response = campReservation.SchoolAttendingNext,
+                        FieldId = _configurationWrapper.GetConfigIntValue("SummerCampForm.SchoolAttendingNextYear"),
+                        EventParticipantId = eventParticipantId
+                    },
+                    new MpFormAnswer
+                    {
+                        Response = campReservation.RoomMate,
+                        FieldId = _configurationWrapper.GetConfigIntValue("SummerCampForm.PreferredRoommate"),
+                        EventParticipantId = eventParticipantId
+                    },
+                    new MpFormAnswer
+                    {
+                        Response = crossroadsSite.Name,
+                        FieldId = _configurationWrapper.GetConfigIntValue("SummerCampForm.CamperCongregation"),
+                        EventParticipantId = eventParticipantId
+                    }
+                };
+
+                var formId = _configurationWrapper.GetConfigIntValue("SummerCampFormID");
+                var formResponse = new MpFormResponse
+                {
+                    ContactId = contactId,
+                    FormId = formId,
+                    FormAnswers = answers,
+                    EventId = eventId
+                };
+
+                _formSubmissionRepository.SubmitFormResponse(formResponse);
+                return campReservation;
             }
-
-            var crossroadsSite = _congregationRepository.GetCongregationById(campReservation.CrossroadsSite);
-
-            //form response
-            var answers = new List<MpFormAnswer>
-            {
-                new MpFormAnswer
-                {
-                    Response = campReservation.SchoolAttendingNext,
-                    FieldId = _configurationWrapper.GetConfigIntValue("SummerCampForm.SchoolAttendingNextYear"),
-                    EventParticipantId = eventParticipantId
-                },
-                new MpFormAnswer
-                {
-                    Response = campReservation.RoomMate,
-                    FieldId = _configurationWrapper.GetConfigIntValue("SummerCampForm.PreferredRoommate"),
-                    EventParticipantId = eventParticipantId
-                },
-                new MpFormAnswer
-                {
-                    Response = crossroadsSite.Name,
-                    FieldId = _configurationWrapper.GetConfigIntValue("SummerCampForm.CamperCongregation"),
-                    EventParticipantId = eventParticipantId
-                }
-            };
-
-            var formId = _configurationWrapper.GetConfigIntValue("SummerCampFormID");
-            var formResponse = new MpFormResponse
-            {
-                ContactId = contactId,
-                FormId = formId,
-                FormAnswers = answers
-            };
-
-            _formSubmissionRepository.SubmitFormResponse(formResponse);
-
-            return campReservation;
+            throw new ApplicationException("Rules do not pass!");
         }
 
         private DateTime DetermineEndDate(int eventId)
@@ -422,7 +440,7 @@ namespace crds_angular.Services
 
             var loggedInContact = _contactRepository.GetMyProfile(token);
             var family = _contactRepository.GetHouseholdFamilyMembers(loggedInContact.Household_ID);
-            family.AddRange(_contactRepository.GetOtherHouseholdMembers(loggedInContact.Contact_ID));
+            family.AddRange(_contactRepository.GetOtherHouseholdMembers(loggedInContact.Household_ID));
 
             var camps = _eventRepository.GetEvents(campType, apiToken);
             foreach (var camp in camps.Where(c => c.EventEndDate >= DateTime.Today))
@@ -434,6 +452,11 @@ namespace crds_angular.Services
                     {
                         if (campers.Any(c => c.ContactId == member.ContactId))
                         {
+                            var product = _productRepository.GetProductForEvent(camp.EventId);
+                            var invoiceDetails = _invoiceRepository.GetInvoiceDetailsForProductAndCamper(product.ProductId, member.ContactId);
+                            PaymentDetailDTO paymentDetail;
+                            paymentDetail = invoiceDetails.Value == null ? null : _paymentService.GetPaymentDetails(0, invoiceDetails.Value.InvoiceId, token);
+
                             dashboardData.Add(new MyCampDTO
                             {
                                 CamperContactId = member.ContactId,
@@ -443,7 +466,8 @@ namespace crds_angular.Services
                                 CampStartDate = camp.EventStartDate,
                                 CampEndDate = camp.EventEndDate,
                                 EventId = camp.EventId,
-                                CampPrimaryContactEmail = _eventRepository.GetEvent(camp.EventId).PrimaryContact.EmailAddress
+                                CampPrimaryContactEmail = _eventRepository.GetEvent(camp.EventId).PrimaryContact.EmailAddress,
+                                CamperInvoice = paymentDetail
                             });
                         }
                     }
@@ -486,7 +510,7 @@ namespace crds_angular.Services
         {
             var loggedInContact = _contactRepository.GetMyProfile(token);
             var family = _contactRepository.GetHouseholdFamilyMembers(loggedInContact.Household_ID);
-            family.AddRange(_contactRepository.GetOtherHouseholdMembers(loggedInContact.Contact_ID));
+            family.AddRange(_contactRepository.GetOtherHouseholdMembers(loggedInContact.Household_ID));
 
             if (family.Where(f => f.ContactId == campProductDto.ContactId).ToList().Count <= 0)
             {
@@ -512,7 +536,8 @@ namespace crds_angular.Services
             {
                 ContactId = campProductDto.ContactId,
                 FormId = formId,
-                FormAnswers = answers
+                FormAnswers = answers,
+                EventId = campProductDto.EventId
             };
 
             _formSubmissionRepository.SubmitFormResponse(formResponse);
@@ -525,8 +550,12 @@ namespace crds_angular.Services
             var campEvent = _eventRepository.GetEvent(campProductDto.EventId);
             var product = _productRepository.GetProductForEvent(campProductDto.EventId);
             var optionPrices = _productRepository.GetProductOptionPricesForProduct(product.ProductId);
-            //find current option price (if any)
-            var productOptionPriceId = optionPrices.Count > 0 ? ConvertProductOptionPricetoDto(optionPrices, product.BasePrice, campEvent.EventStartDate).Where(i => i.EndDate > DateTime.Now).OrderByDescending(i => i.EndDate).FirstOrDefault()?.ProductOptionPriceId : (int?)null;
+            var productOptionPriceId = optionPrices.Count > 0 ? 
+                ConvertProductOptionPricetoDto(optionPrices, product.BasePrice, campEvent.EventStartDate)
+                    .Where(i => i.EndDate > DateTime.Now)
+                    .OrderBy(i => i.EndDate).FirstOrDefault()?
+                    .ProductOptionPriceId 
+                : (int?)null;
 
             _invoiceRepository.CreateInvoiceAndDetail(product.ProductId, productOptionPriceId, loggedInContact.Contact_ID, campProductDto.ContactId, eventParticipantId);
         }
@@ -577,7 +606,7 @@ namespace crds_angular.Services
         {
             var loggedInContact = _contactRepository.GetMyProfile(token);
             var family = _contactRepository.GetHouseholdFamilyMembers(loggedInContact.Household_ID);
-            family.AddRange(_contactRepository.GetOtherHouseholdMembers(loggedInContact.Contact_ID));
+            family.AddRange(_contactRepository.GetOtherHouseholdMembers(loggedInContact.Household_ID));
 
             if (family.Where(f => f.ContactId == contactId).ToList().Count <= 0)
             {
@@ -592,8 +621,12 @@ namespace crds_angular.Services
                     InsuranceCompany = medicalInfo.InsuranceCompany ?? "N/A",
                     PhysicianName = medicalInfo.PhysicianName ?? "N/A",
                     PhysicianPhone = medicalInfo.PhysicianPhone ?? "N/A",
-                    PolicyHolder = medicalInfo.PolicyHolder ?? "N/A"
+                    PolicyHolder = medicalInfo.PolicyHolder ?? "N/A",
                 };
+
+                var meds = medicalInfo.MedicationsAdministered?.Where(med => med != null).ToList();
+                mpMedicalInfo.MedicationsAdministered = meds.Any() ? meds?.Aggregate((c, n) => c + "," + n) : string.Empty;
+
                 var medicalInformation =  _medicalInformationRepository.SaveMedicalInfo(mpMedicalInfo, contactId);
                 var updateToDictionary = new Dictionary<String, Object>
                 {
@@ -634,6 +667,7 @@ namespace crds_angular.Services
                     }
                 }
                 _medicalInformationRepository.UpdateOrCreateMedAllergy(updateToAllergyList, createToAllergyList);
+                _medicalInformationRepository.UpdateOrCreateMedications(medicalInfo.Medications.Select(m => new MpMedication {MedicalInformationMedicationId = m.MedicalInformationMedicationId, MedicalInformationId = medicalInformation.MedicalInformationId, MedicationName = m.MedicationName, MedicationTypeId = m.MedicationTypeId, DosageAmount = m.Dosage, DosageTimes = m.TimesOfDay, Deleted = m.Deleted}).ToList());
             }
         }
 
@@ -643,7 +677,7 @@ namespace crds_angular.Services
         {
             var loggedInContact = _contactRepository.GetMyProfile(token);
             var family = _contactRepository.GetHouseholdFamilyMembers(loggedInContact.Household_ID);
-            family.AddRange(_contactRepository.GetOtherHouseholdMembers(loggedInContact.Contact_ID));
+            family.AddRange(_contactRepository.GetOtherHouseholdMembers(loggedInContact.Household_ID));
 
             if (family.Where(f => f.ContactId == contactId).ToList().Count <= 0)
             {
@@ -656,6 +690,7 @@ namespace crds_angular.Services
             }
 
             var allergies = _medicalInformationRepository.GetMedicalAllergyInfo(contactId);
+            var medications = _medicalInformationRepository.GetMedications(contactId);
 
             var camperMedInfo = new MedicalInfoDTO
             {
@@ -664,7 +699,8 @@ namespace crds_angular.Services
                 InsuranceCompany = camperMed.InsuranceCompany=="N/A"? null :camperMed.InsuranceCompany,
                 PolicyHolder = camperMed.PolicyHolder == "N/A"? null : camperMed.PolicyHolder,
                 PhysicianName = camperMed.PhysicianName == "N/A" ? null : camperMed.PhysicianName,
-                PhysicianPhone = camperMed.PhysicianPhone == "N/A" ? null : camperMed.PhysicianPhone
+                PhysicianPhone = camperMed.PhysicianPhone == "N/A" ? null : camperMed.PhysicianPhone,
+                MedicationsAdministered = camperMed.MedicationsAdministered?.Split(',').ToList() ?? new List<string>()
             };
             camperMedInfo.Allergies = new List<Allergy>();
             foreach (var medInfo in allergies )
@@ -683,13 +719,28 @@ namespace crds_angular.Services
                 }
             }
             if (camperMedInfo.Allergies.Count > 0) { camperMedInfo.ShowAllergies = true; }
+
+            camperMedInfo.Medications = new List<Medication>();
+            foreach (var medication in medications)
+            {
+                camperMedInfo.Medications.Add(new Medication
+                {
+                    MedicalInformationMedicationId = medication.MedicalInformationMedicationId,
+                    MedicationName = medication.MedicationName,
+                    MedicationTypeId = medication.MedicationTypeId,
+                    Dosage = medication.DosageAmount,
+                    TimesOfDay = medication.DosageTimes
+                });
+            }
+            if (camperMedInfo.Medications.Count > 0) { camperMedInfo.ShowMedications = true; }
+
             return camperMedInfo;
         }
 
         public List<CampEmergencyContactDTO> GetCamperEmergencyContactInfo(int eventId, int contactId, string token)
         {
             var formId = _configurationWrapper.GetConfigIntValue("SummerCampFormID");
-            var response = _formSubmissionRepository.GetFormResponse(formId, contactId);
+            var response = _formSubmissionRepository.GetFormResponse(formId, contactId, eventId);
             var emergencyContacts = new List<CampEmergencyContactDTO>();
             emergencyContacts.Add(new CampEmergencyContactDTO
             {
@@ -718,7 +769,7 @@ namespace crds_angular.Services
         {
             var loggedInContact = _contactRepository.GetMyProfile(token);
             var family = _contactRepository.GetHouseholdFamilyMembers(loggedInContact.Household_ID);
-            family.AddRange(_contactRepository.GetOtherHouseholdMembers(loggedInContact.Contact_ID));
+            family.AddRange(_contactRepository.GetOtherHouseholdMembers(loggedInContact.Household_ID));
 
             if (family.Where(f => f.ContactId == contactId).ToList().Count <= 0)
             {
@@ -733,18 +784,16 @@ namespace crds_angular.Services
 
             var campFormId = _configurationWrapper.GetConfigIntValue("SummerCampFormID");
             var nextYearSchoolFormFieldId = _configurationWrapper.GetConfigIntValue("SummerCampForm.SchoolAttendingNextYear");
-            var nextYearSchool = _formSubmissionRepository.GetFormResponseAnswer(campFormId, camperContact.Contact_ID, nextYearSchoolFormFieldId);
+            var nextYearSchool = _formSubmissionRepository.GetFormResponseAnswer(campFormId, camperContact.Contact_ID, nextYearSchoolFormFieldId, eventId);
 
             var preferredRoommateFieldId = _configurationWrapper.GetConfigIntValue("SummerCampForm.PreferredRoommate");
-            var preferredRoommate = _formSubmissionRepository.GetFormResponseAnswer(campFormId, camperContact.Contact_ID, preferredRoommateFieldId);
-
+            var preferredRoommate = _formSubmissionRepository.GetFormResponseAnswer(campFormId, camperContact.Contact_ID, preferredRoommateFieldId, eventId);
             var crossroadsSiteFieldId = _configurationWrapper.GetConfigIntValue("SummerCampForm.CamperCongregation");
-            var crossroadsSite = _formSubmissionRepository.GetFormResponseAnswer(campFormId, camperContact.Contact_ID, crossroadsSiteFieldId);
+            var crossroadsSite = _formSubmissionRepository.GetFormResponseAnswer(campFormId, camperContact.Contact_ID, crossroadsSiteFieldId, eventId);
 
             var congregation = (string.IsNullOrEmpty(crossroadsSite))
                 ? new Err<MpCongregation>("Congregation not set")
                 : _congregationRepository.GetCongregationByName(crossroadsSite, apiToken);
-
             var configuration = MpObjectAttributeConfigurationFactory.Contact();
             var attributesTypes = _objectAttributeService.GetObjectAttributes(apiToken, contactId, configuration);
 
@@ -766,7 +815,7 @@ namespace crds_angular.Services
                 AttributeTypes = attributesTypes.MultiSelect,
                 SingleAttributes = attributesTypes.SingleSelect
             };
-        }
+        }        
 
         private int GetAllergyType(String type)
         {

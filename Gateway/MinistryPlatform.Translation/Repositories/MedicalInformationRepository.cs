@@ -1,7 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using log4net.Repository.Hierarchy;
+using Crossroads.Web.Common;
+using Crossroads.Web.Common.MinistryPlatform;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 
@@ -27,10 +27,17 @@ namespace MinistryPlatform.Translation.Repositories
                 .Search<MpMedical>($"Medical_Information_ID_Table_Contact_ID_Table.Contact_ID={contactId}",columns ).ToList();           
         }
 
+        public List<MpMedication> GetMedications(int contactId)
+        {
+            var apiToken = _apiUserRepository.GetToken();
+            var columns = "MedicalInformationMedication_ID, cr_Medical_Information_Medications.MedicalInformation_ID, Medication_Name, Medication_Type_ID, Dosage_Time, Dosage_Amount";
+            return _ministryPlatformRest.UsingAuthenticationToken(apiToken).Search<MpMedication>($"MedicalInformation_ID_Table_Contact_ID_Table.Contact_ID={contactId}", columns).ToList();
+        }
+
         public MpMedicalInformation GetMedicalInformation(int contactId)
         {
             var apiToken = _apiUserRepository.GetToken();
-            var medInfo = _ministryPlatformRest.UsingAuthenticationToken(apiToken).Search<MpMedicalInformation>($"Contact_ID_Table.Contact_ID={contactId}", "cr_Medical_Information.[MedicalInformation_ID], cr_Medical_Information.[InsuranceCompany],Contact_ID_Table.[Contact_ID],cr_Medical_Information.[PolicyHolderName],cr_Medical_Information.[PhysicianName] AS[PhysicianName],cr_Medical_Information.[PhysicianPhone]");
+            var medInfo = _ministryPlatformRest.UsingAuthenticationToken(apiToken).Search<MpMedicalInformation>($"Contact_ID_Table.Contact_ID={contactId}", "cr_Medical_Information.[MedicalInformation_ID], cr_Medical_Information.[Insurance_Company],Contact_ID_Table.[Contact_ID],cr_Medical_Information.[Policy_Holder_Name],cr_Medical_Information.[Physician_Name] AS[Physician_Name],cr_Medical_Information.[Physician_Phone],cr_Medical_Information.[Allowed_To_Administer_Medications]");
             return medInfo.FirstOrDefault();
         }
 
@@ -63,6 +70,26 @@ namespace MinistryPlatform.Translation.Repositories
             }
             if (createToAllergyList.Count > 0) {
                 _ministryPlatformRest.UsingAuthenticationToken(apiToken).Post(createToAllergyList);
+            }
+        }
+
+        public void UpdateOrCreateMedications(List<MpMedication> medications)
+        {
+            var apiToken = _apiUserRepository.GetToken();
+            var updateMedications = medications.Where(m => m.MedicalInformationMedicationId > 0 && !m.Deleted).ToList();
+            if (updateMedications.Count > 0)
+            {
+                _ministryPlatformRest.UsingAuthenticationToken(apiToken).Put(updateMedications);
+            }
+            var createMedications = medications.Where(m => m.MedicalInformationMedicationId == 0 && !m.Deleted).ToList();
+            if (createMedications.Count > 0)
+            {
+                _ministryPlatformRest.UsingAuthenticationToken(apiToken).Post(createMedications);
+            }
+            var deletedMedications = medications.Where(m => m.Deleted).ToList();
+            if (deletedMedications.Count > 0)
+            {
+                _ministryPlatformRest.UsingAuthenticationToken(apiToken).Delete<MpMedication>(deletedMedications.Select(d => d.MedicalInformationMedicationId));
             }
         }
     }

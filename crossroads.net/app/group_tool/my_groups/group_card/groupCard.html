@@ -12,7 +12,9 @@
     </div>
   </div>
   <div class="group-card-body panel-body flex-grow">
-    <label class="flush-bottom">Category</label>
+    <div class="tight-line-height" style="font-weight:bold;">{{ groupCard.group.groupTypeName }}</div>
+
+    <label class="flush-bottom push-half-top">Category</label>
     <div class="tight-line-height">{{ groupCard.group.categoriesToString() }}</div>
 
     <label class="flush-bottom push-half-top">Meeting Time</label>
@@ -33,17 +35,58 @@
           </button>
         </div>
 
-        <div class="col-md-6 col-sm-12">
-          <a ng-if="groupCard.group.isLeader()" class="btn btn-standard btn-block push-half-top" href="mailto:?bcc={{groupCard.group.emailList()}}" target="_top">
-            <svg viewBox="0 0 32 32" class="icon icon-mail5">
-              <use xlink:href="#mail5"></use>
-            </svg>
-            Email Group
-          </a>
-        </div>
+        <div class="col-md-6 col-sm-12 push-half-top group-email-select" ng-if="groupCard.group.isLeader() && !groupCard.group.isOnsiteGroup()">
+          <ui-select ng-model="groupCard.selectedEmailOption" on-select="groupCard.onOptionSelected($item, $model)">
+            <ui-select-match class="ui-select-match" placeholder="Email Group">
+              {{$select.selected.name}}
+            </ui-select-match>
+            <ui-select-choices class="ui-select-dropdown dropdown-menu ui-select-choices" repeat="item in groupCard.emailOptions">
+              <div ng-show="item.name==='Compose Email'" class="ui-select-choices-group condensed-grid">
+                <li>
+                  <a href="#" target="_top" ng-click="groupCard.openEmailClient()">
+                    <div class="row">
+                      <span class="pull-left">
+                        <svg-icon icon="{{item.icon}}">
+                        </svg-icon>
+                        {{item.name}}
+                      </span>
+                    </div>
+                    <div class="row">
+                      <small class="pull-left">{{item.descriptionLine1}}</small>
+                    </div>
+                    <div class="row">
+                      <small class="pull-left">{{item.descriptionLine2}}</small>
+                    </div>
+                </li>
+              </div>
+              <div ng-show="item.name==='Copy Addresses'" class="ui-select-choices-group condensed-grid">
+                <li>
+                  <a ngclipboard data-clipboard-text="{{groupCard.emailList}}" ngclipboard-success="groupCard.onCopySuccess()"
+                    ngclipboard-error="groupCard.onCopyError()">
+                    <div class="row">
+                      <span class="pull-left">
+                        <svg-icon icon="{{item.icon}}">
+                        </svg-icon>
+                        {{item.name}}
+                      </span>
+                    </div>
+                    <div class="row">
+                      <small class="pull-left">{{item.descriptionLine1}}</small>
+                    </div>
+                    <div class="row">
+                      <small class="pull-left">{{item.descriptionLine2}}</small>
+                    </div>
+                  </a>
+                </li>
+              </div>
+            </ui-select-choices>
 
+          </ui-select>
+        </div>
+      </div>
+      <div class="row">
         <div class="col-md-6 col-sm-12">
-          <button ng-if="groupCard.group.isLeader()" class="btn btn-standard btn-block push-half-top" ui-sref="grouptool.detail.requests({ groupId: groupCard.group.groupId , view: 'Invite' })">
+          <button ng-if="groupCard.group.isLeader() && !groupCard.group.isOnsiteGroup()" class="btn btn-standard btn-block push-half-top" ui-sref="grouptool.detail.requests({ groupId: groupCard.group.groupId , view: 'Invite' })">
             <svg viewBox="0 0 32 32" class="icon icon-user6">
               <use xlink:href="#user6"></use>
             </svg>
@@ -52,7 +95,7 @@
         </div>
 
         <div class="col-md-6 col-sm-12">
-          <button ng-if="groupCard.group.isLeader()" class="btn btn-standard btn-block push-half-top" ng-click="groupCard.goToInvite()">
+          <button ng-if="groupCard.group.isLeader() && !groupCard.group.isOnsiteGroup()" class="btn btn-standard btn-block push-half-top" ng-click="groupCard.goToInvite()">
             <svg viewBox="0 0 32 32" class="icon icon-inbox">
               <use xlink:href="#inbox"></use>
             </svg>

@@ -44,7 +44,7 @@ export default class ServeTeamService {
 
     getCapacity(opp, eventId) {
           return this.resource(`${__API_ENDPOINT__}api/serve/opp-capacity`).get({
-            id: opp.Opportunity_ID,
+            id: (opp.Opportunity_ID != null) ? opp.Opportunity_ID : opp.opportunityId,
             eventId: eventId,
             min: opp.minimum,
             max: opp.maximum

@@ -12,6 +12,7 @@ class ProductSummaryController {
     this.submitting = false;
     this.financialAssistanceDeposit = 50;
     this.isBasePriceCurrent = false;
+    this.showPopover = false;
   }
 
   $onInit() {
@@ -69,6 +70,10 @@ class ProductSummaryController {
       this.submitting = false;
       this.rootScope.$emit('notify', this.rootScope.MESSAGES.generalError);
     }
+  }
+
+  togglePopover() {
+    this.showPopover = !this.showPopover;
   }
 }
 

@@ -9,6 +9,8 @@ using crds_angular.Services;
 using Crossroads.Utilities.Interfaces;
 using Crossroads.Utilities.Messaging.Interfaces;
 using Crossroads.ApiVersioning;
+using Crossroads.Web.Common;
+using Crossroads.Web.Common.Configuration;
 
 namespace crds_angular.Controllers.API
 {

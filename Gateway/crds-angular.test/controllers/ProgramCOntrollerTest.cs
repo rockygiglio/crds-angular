@@ -8,6 +8,7 @@ using crds_angular.Controllers.API;
 using crds_angular.Models.Crossroads;
 using Moq;
 using crds_angular.Services.Interfaces;
+using Crossroads.Web.Common.Security;
 
 namespace crds_angular.test.controllers
 {
@@ -23,7 +24,7 @@ namespace crds_angular.test.controllers
         public void SetUp()
         {
             _programServiceMock = new Mock<IProgramService>();
-            _fixture = new ProgramController(_programServiceMock.Object)
+            _fixture = new ProgramController(_programServiceMock.Object, new Mock<IUserImpersonationService>().Object, new Mock<IAuthenticationRepository>().Object)
             {
                 Request = new HttpRequestMessage(),
                 RequestContext = new HttpRequestContext()

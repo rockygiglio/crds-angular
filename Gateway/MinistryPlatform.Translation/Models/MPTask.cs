@@ -1,10 +1,16 @@
 ﻿using System;
+using Crossroads.Web.Common;
+using Crossroads.Web.Common.MinistryPlatform;
+using Newtonsoft.Json;
 
 namespace MinistryPlatform.Translation.Models
 {
+    [MpRestApiTable(Name = "Tasks")]
     public class MPTask
     {
+        [JsonProperty("TaskId")]
         public int Task_ID { get; set; }
+
         public string Title { get; set; }
         public int Author_User_ID { get; set; }
         public int Assigned_User_ID { get; set; }

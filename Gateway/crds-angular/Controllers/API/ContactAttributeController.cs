@@ -4,6 +4,7 @@ using crds_angular.Security;
 using crds_angular.Services.Interfaces;
 using MinistryPlatform.Translation.Models;
 using Crossroads.ApiVersioning;
+using Crossroads.Web.Common.Security;
 
 namespace crds_angular.Controllers.API
 {
@@ -11,7 +12,7 @@ namespace crds_angular.Controllers.API
     {
         private readonly IObjectAttributeService _objectAttributeService;
 
-        public ContactAttributeController(IPersonService personService, IObjectAttributeService objectAttributeService)
+        public ContactAttributeController(IPersonService personService, IObjectAttributeService objectAttributeService, IUserImpersonationService userImpersonationService, IAuthenticationRepository authenticationRepository) : base(userImpersonationService, authenticationRepository)
         {
             _objectAttributeService = objectAttributeService;
         }

@@ -1,8 +1,8 @@
 <preloader full-screen ng-if="!addRoom.viewReady"> </preloader>
-<div class="form-group" ng-if="addRoom.viewReady">
+<div class="form-group create-event-wrapper" ng-if="addRoom.viewReady">
   <span ng-show="addRoom.showNoRoomsMessage()"> There are no rooms for this site </span>
   <span ng-hide="addRoom.showNoRoomsMessage()">
-    <div class="row create-event-wrapper">
+    <div class="row">
       <div class="col-md-3 pull-left">
         <label>Add Rooms</label>
       </div>
@@ -23,7 +23,7 @@
         <ui-select-match placeholder="Select {{addRoom.chosenSite}} Rooms" >
           {{ $select.selected.name}}
         </ui-select-match>
-        <ui-select-choices class="ui-select-dropdown dropdown-menu" ui-disable-choice="room.roomStatus !== addRoom.available" repeat="room in ( addRoom.rooms | filter: {name: $select.search}) track by room.id+room.displayName+room.reservationStart+room.reservationEnd">
+        <ui-select-choices class="ui-select-dropdown dropdown-menu" ui-disable-choice="room.roomStatus !== addRoom.available" repeat="room in ( addRoom.rooms | filter: {name: $select.search}) track by room.id+room.displayName+room.reservationId+room.reservationStart+room.reservationEnd+room.reservationEvent">
           <div class="ui-select-choices-group container-fluid condensed-grid">
             <li>
             <div class="row">

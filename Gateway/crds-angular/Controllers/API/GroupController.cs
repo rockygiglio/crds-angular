@@ -14,6 +14,8 @@ using MinistryPlatform.Translation.Repositories.Interfaces;
 using crds_angular.Services.Interfaces;
 using Event = crds_angular.Models.Crossroads.Events.Event;
 using Crossroads.ApiVersioning;
+using Crossroads.Web.Common;
+using Crossroads.Web.Common.Security;
 
 namespace crds_angular.Controllers.API
 {
@@ -21,7 +23,7 @@ namespace crds_angular.Controllers.API
     {
         private readonly ILog _logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         private readonly IGroupService _groupService;
-        private readonly IAuthenticationRepository _authenticationService;
+        private readonly IContactRepository _contactRepository;
         private readonly IParticipantRepository _participantService;
         private readonly IAddressService _addressService;
         private readonly IGroupSearchService _groupSearchService;
@@ -29,13 +31,15 @@ namespace crds_angular.Controllers.API
 
         public GroupController(IGroupService groupService,
                                IAuthenticationRepository authenticationService,
+                               IContactRepository contactRepository,
                                IParticipantRepository participantService,
                                IAddressService addressService,
                                IGroupSearchService groupSearchService,
-                               IGroupToolService groupToolService)
+                               IGroupToolService groupToolService, 
+                               IUserImpersonationService userImpersonationService) : base(userImpersonationService, authenticationService)
         {
             _groupService = groupService;
-            _authenticationService = authenticationService;
+            _contactRepository = contactRepository;
             _participantService = participantService;
             _addressService = addressService;
             _groupSearchService = groupSearchService;
@@ -184,7 +188,7 @@ namespace crds_angular.Controllers.API
                 try
                 {
                     var participant = _participantService.GetParticipantRecord(token);
-                    var contactId = _authenticationService.GetContactId(token);
+                    var contactId = _contactRepository.GetContactId(token);
 
                     var detail = _groupService.getGroupDetails(groupId, contactId, participant, token);
 
@@ -198,6 +202,16 @@ namespace crds_angular.Controllers.API
 
             });
         }
+
+        [ResponseType(typeof(object))]
+        [VersionedRoute(template: "group/{groupId}/groupType", minimumVersion: "1.0.0")]
+        [Route("group/{groupId}/groupType")]
+        public IHttpActionResult GetGroupTypeId(int groupId)
+        {
+            var group = _groupService.GetGroupDetails(groupId);
+            return Ok(new { groupTypeId = group.GroupTypeId });
+        }
+
 
         /// <summary>
         /// Return the group dto for the invitation guid (Private Invitation)
@@ -314,20 +328,48 @@ namespace crds_angular.Controllers.API
         /// <returns>A list of all small groups for the given user (group type of 1)</returns>
         [RequiresAuthorization]
         [ResponseType(typeof(List<GroupDTO>))]
-        [VersionedRoute(template: "group/mine/{groupTypeId}/{groupId?}", minimumVersion: "1.0.0")]
-        [Route("group/mine/{groupTypeId}/{groupId:int?}")]
-        public IHttpActionResult GetMyGroupsByType([FromUri]int groupTypeId, [FromUri]int? groupId = null)
+        [VersionedRoute(template: "group/mine", minimumVersion: "1.0.0")]
+        [Route("group/mine")]
+        public IHttpActionResult GetMyGroups()
         {
             return Authorized(token =>
             {
                 try
                 {
-                    var groups = _groupService.GetGroupsByTypeForAuthenticatedUser(token, groupTypeId, groupId);
+                    var groups = _groupToolService.GetGroupToolGroups(token);
                     return Ok(groups);
                 }
                 catch (Exception ex)
                 {
-                    var apiError = new ApiErrorDto("Error getting Groups of type " + groupTypeId + " for logged in user.", ex);
+                    var apiError = new ApiErrorDto("Error getting Groups for logged in user.", ex);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+
+            });
+        }
+
+        /// <summary>
+        /// This takes in a GroupId and retrieves the group
+        /// of that type associated with that ID
+        /// If no group is found, then an empty list will be returned.
+        /// </summary>
+        /// <returns>A list containing 0 or 1 group</returns>
+        [RequiresAuthorization]
+        [ResponseType(typeof(List<GroupDTO>))]
+        [VersionedRoute(template: "group/mine/{groupId}", minimumVersion: "1.0.0")]
+        [Route("group/mine/{groupId:int}")]
+        public IHttpActionResult GetMyGroupById([FromUri]int groupId)
+        {
+            return Authorized(token =>
+            {
+                try
+                {
+                    var groups = _groupService.GetGroupByIdForAuthenticatedUser(token, groupId);
+                    return Ok(groups);
+                }
+                catch (Exception ex)
+                {
+                    var apiError = new ApiErrorDto("Error getting group id=" + groupId + " for logged in user.", ex);
                     throw new HttpResponseException(apiError.HttpResponseMessage);
                 }
 

@@ -5,6 +5,9 @@ using System.Web;
 using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Interfaces;
 using log4net;
+using Crossroads.Web.Common;
+using Crossroads.Web.Common.Configuration;
+using Crossroads.Web.Common.MinistryPlatform;
 using MPInterfaces = MinistryPlatform.Translation.Repositories.Interfaces;
 
 namespace crds_angular.Services
@@ -14,13 +17,13 @@ namespace crds_angular.Services
         private readonly ILog _logger = LogManager.GetLogger(typeof (TaskService));
 
         private readonly MPInterfaces.ITaskRepository _taskRepository;
-        private readonly MPInterfaces.IApiUserRepository _apiUserService;
+        private readonly IApiUserRepository _apiUserService;
         private readonly IConfigurationWrapper _configWrapper;
         private readonly IUserImpersonationService _impersonationService;
         private readonly MPInterfaces.IUserRepository _userService;
 
         public TaskService(MPInterfaces.ITaskRepository taskRepository,
-                           MPInterfaces.IApiUserRepository apiUserService,
+                           IApiUserRepository apiUserService,
                            IConfigurationWrapper configWrapper,
                            IUserImpersonationService impersonationService,
                            MPInterfaces.IUserRepository userService)
@@ -72,5 +75,9 @@ namespace crds_angular.Services
                 _logger.ErrorFormat("Could not process tasks for autocomplete, Detail: {0}", outerException);
             }
         }
+
+        //public bool DeleteTaskbyRecordId(int recordID)
+        //{
+        //}
     }
 }

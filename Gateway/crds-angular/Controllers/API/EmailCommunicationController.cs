@@ -7,6 +7,9 @@ using MPInterfaces = MinistryPlatform.Translation.Repositories.Interfaces;
 using crds_angular.Exceptions.Models;
 using Crossroads.Utilities.Interfaces;
 using Crossroads.ApiVersioning;
+using Crossroads.Web.Common;
+using Crossroads.Web.Common.Configuration;
+using Crossroads.Web.Common.Security;
 
 namespace crds_angular.Controllers.API
 {
@@ -15,7 +18,7 @@ namespace crds_angular.Controllers.API
         private readonly IEmailCommunication _emailCommunication;
         private readonly IConfigurationWrapper _configurationWrapper;
 
-        public EmailCommunicationController(IEmailCommunication emailCommunication, IConfigurationWrapper configurationWrapper)
+        public EmailCommunicationController(IEmailCommunication emailCommunication, IConfigurationWrapper configurationWrapper, IUserImpersonationService userImpersonationService, IAuthenticationRepository authenticationRepository) : base(userImpersonationService, authenticationRepository)
         {
             _emailCommunication = emailCommunication;
             _configurationWrapper = configurationWrapper;

@@ -5,13 +5,13 @@
     </button>
   </h2>
   <ng-form name="roomForm">
-    <div class="form-group" ng-class="{'has-error': room.validation.showErrors(roomForm, 'layout')}">
+    <div class="form-group" ng-class="{'has-error': room.validation.showErrors(roomForm,  room.currentRoom.id+'layout')}">
       <label class="required">Room Layout </label><br />
       <label class="weight-normal" ng-repeat="layout in room.layouts track by layout.id">
-        <input type="radio" name="{{room.currentRoom.name}}layout" ng-required="!room.currentRoom.layout" ng-model="room.currentRoom.layout.id" ng-value="layout.id" />
+        <input type="radio" name="{{room.currentRoom.id}}layout" ng-required="!room.currentRoom.layout" ng-model="room.currentRoom.layout.id" ng-value="layout.id"/>
         {{layout.layoutName}}&nbsp;
       </label>
-      <ng-messages for="roomForm.layout.$error" ng-if="room.validation.showErrors(roomForm, 'layout')">
+      <ng-messages for="roomForm[room.currentRoom.id+'layout'].$error" ng-if="room.validation.showErrors(roomForm, room.currentRoom.id+'layout')">
         <span ng-message="required">
           <span dynamic-content="$root.MESSAGES.fieldCanNotBeBlank.content | html"></span>
         </span>
@@ -21,21 +21,20 @@
       <label>Setup Notes</label>
       <textarea class="form-control"
                 name="notes"
-                ng-model="room.currentRoom.notes"
-                ng-disabled="room.existing()" >
+                ng-model="room.currentRoom.notes" >
       </textarea>
     </div>
 
-    <div class="form-group" ng-class="{'has-error': room.validation.showErrors(roomForm, 'hidden')}">
+    <div class="form-group" ng-class="{'has-error': room.validation.showErrors(roomForm, room.currentRoom.id + 'hidden')}">
       <label class="required">
         Hide from Atrium Monitors?
       </label><br>
       <label class="weight-normal">
-        <input type="radio" name="{{room.currentRoom.name}}hidden" ng-required="!room.currentRoom.hidden" ng-model="room.currentRoom.hidden" ng-value="true" />
+        <input type="radio" name="{{room.currentRoom.id}}hidden" ng-required="!room.currentRoom.hidden" ng-model="room.currentRoom.hidden" ng-value="true" />
         Yes
       </label>
       <label class="weight-normal">
-        <input type="radio" name="{{room.currentRoom.name}}hidden" ng-required="!room.currentRoom.hidden" ng-model="room.currentRoom.hidden" ng-value="false" />
+        <input type="radio" name="{{room.currentRoom.id}}hidden" ng-required="!room.currentRoom.hidden" ng-model="room.currentRoom.hidden" ng-value="false" />
         No
       </label>
       <span popover="Only 1 primary room per event will show on atrium monitors."
@@ -44,7 +43,7 @@
           <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#question-circle"></use>
         </svg>
       </span>
-      <ng-messages for="roomForm.hidden.$error" ng-if="room.validation.showErrors(roomForm, 'hidden')">
+      <ng-messages for="roomForm[room.currentRoom.id + 'hidden'].$error" ng-if="room.validation.showErrors(roomForm, room.currentRoom.id + 'hidden')">
         <span ng-message="required">
           <span dynamic-content="$root.MESSAGES.fieldCanNotBeBlank.content | html"></span>
         </span>
