@@ -692,7 +692,7 @@ namespace crds_angular.Services
 
         public List<GroupDTO> GetGroupToolGroups(string token)
         {
-            var groups = _groupService.GetGroupsForAuthenticatedUser(token, new int[] { _smallGroupTypeId, _onsiteGroupTypeId });
+            var groups = _groupService.GetGroupsByTypeOrId(token,null, new int[] { _smallGroupTypeId, _onsiteGroupTypeId }, null);
 
             return _groupService.RemoveOnsiteParticipantsIfNotLeader(groups, token);
         }
