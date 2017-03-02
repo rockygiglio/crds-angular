@@ -11,7 +11,7 @@ namespace crds_angular.Services.Interfaces
         List<ProjectType> GetProjectTypes();
         List<ChildrenOptions> ChildrenOptions();
         bool SendMail(Registration registration);
-
+        List<ProjectCity> GetParticipatingCities(int initiativeId);
         Project GetProject(int projectId);
     }
 }

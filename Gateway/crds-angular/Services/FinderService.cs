@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using System.Collections.Generic;
 using System.IO;
 using AutoMapper;
@@ -75,7 +76,8 @@ namespace crds_angular.Services
             {
                 _addressService.SetGeoCoordinates(pinDetails.Address);
             }
-
+            // randomize the location
+            pinDetails.Address = RandomizeLatLong(pinDetails.Address);
             //TODO get group details
             return pinDetails;
         }
@@ -123,6 +125,25 @@ namespace crds_angular.Services
         {
             var participant = _participantRepository.GetParticipant(contactId);
             return participant.ParticipantId;
+        }
+
+        public AddressDTO RandomizeLatLong(AddressDTO address)
+        {
+            if (!address.HasGeoCoordinates()) return address;
+            var random = new Random(DateTime.Now.Millisecond);
+            var distance = random.Next(40, 350); // up to a quarter mile
+            var angle = random.Next(0, 359);
+            const int earthRadius = 6371000; // in meters
+
+            var distanceNorth = Math.Sin(angle) * angle;
+            var distanceEast = Math.Cos(angle) * distance;
+
+            double newLat = (double)(address.Latitude + (distanceNorth / earthRadius) * 180 / Math.PI);
+            double newLong = (double)(address.Longitude + (distanceEast / (earthRadius * Math.Cos(newLat * 180 / Math.PI))) * 180 / Math.PI);
+            address.Latitude = newLat;
+            address.Longitude = newLong;
+
+            return address;
         }
     }
 }
