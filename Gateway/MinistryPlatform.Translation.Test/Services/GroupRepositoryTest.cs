@@ -51,7 +51,6 @@ namespace MinistryPlatform.Translation.Test.Services
             _configWrapper.Setup(m => m.GetEnvironmentVarAsString("API_USER")).Returns("uid");
             _configWrapper.Setup(m => m.GetEnvironmentVarAsString("API_PASSWORD")).Returns("pwd");
             _authService.Setup(m => m.Authenticate(It.IsAny<string>(), It.IsAny<string>())).Returns(AuthenticateResponse());
-            _ministryPlatformRestService.Setup(m => m.UsingAuthenticationToken(It.IsAny<string>())).Returns(_ministryPlatformRestService.Object);
         }
 
         private AuthToken AuthenticateResponse()
@@ -192,6 +191,8 @@ namespace MinistryPlatform.Translation.Test.Services
         [Test]
         public void TestGetGroupDetails()
         {
+            _ministryPlatformRestService.Setup(m => m.UsingAuthenticationToken(It.IsAny<string>())).Returns(_ministryPlatformRestService.Object);
+
             var getGroupPageResponse = new Dictionary<string, object>
             {
                 {"Group_ID", 456},
