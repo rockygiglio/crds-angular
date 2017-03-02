@@ -528,11 +528,12 @@ namespace crds_angular.Services
             registrationDto.PreferredLaunchSiteId = preferredLaunchSiteId;
             registrationDto.InitiativeId = registration.InitiativeId;
             registrationDto.SpouseParticipation = registration.SpouseParticipation;
-            registrationDto.OrganizationId = registration.OrganizationId;
+            registrationDto.OrganizationId = registration.OrganizationId == 0 ? _configurationWrapper.GetConfigIntValue("CrossroadsOrganizationId") : registration.OrganizationId;
 
-            // FIXME: is this needed?
             var registrationId = Registration(registrationDto);
             registrationDto.RegistrationId = registrationId;
+
+            _groupConnectorService.CreateGroupConnectorRegistration(registration.GroupConnectorId, registrationId);
 
             return registrationId;
         }
@@ -555,7 +556,7 @@ namespace crds_angular.Services
         private int PreferredLaunchSite(Registration registration)
         {
             int preferredLaunchSiteId;
-            if (registration.PreferredLaunchSite.Id == 0)
+            if (registration.PreferredLaunchSite == null || registration.PreferredLaunchSite.Id == 0)
             {
                 // use group connector
                 var groupConnector = _groupConnectorService.GetGroupConnectorById(registration.GroupConnectorId);

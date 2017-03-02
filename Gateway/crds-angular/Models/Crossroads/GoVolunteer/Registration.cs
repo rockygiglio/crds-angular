@@ -10,10 +10,6 @@ namespace crds_angular.Models.Crossroads.GoVolunteer
         [Required]
         public int InitiativeId { get; set; }
 
-        [JsonProperty(PropertyName = "organizationId")]
-        [Required]
-        public int OrganizationId { get; set; }
-
         [JsonProperty(PropertyName = "registrationId")]
         public int RegistrationId { get; set; }
 

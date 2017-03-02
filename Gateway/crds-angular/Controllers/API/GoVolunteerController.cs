@@ -290,7 +290,7 @@ namespace crds_angular.Controllers.API
         [Route("go-volunteer/registration/{projectId}")]
         [ResponseType(typeof(AnywhereRegistration))]
         [HttpPost]
-        public IHttpActionResult Post(int projectId, [FromBody] AnywhereRegistration goVolunteerRegistration)
+        public IHttpActionResult Post([FromBody] AnywhereRegistration goVolunteerRegistration, int projectId)
         {
             try
             {
