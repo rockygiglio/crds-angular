@@ -298,7 +298,6 @@
   <ItemGroup>
     <Compile Include="App_Start\AutoMapperConfig.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
-    <Compile Include="App_Start\ClientApiKeysConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\SwaggerConfig.cs" />
@@ -335,8 +334,8 @@
     <Compile Include="Exceptions\NotHeadOfHouseholdException.cs" />
     <Compile Include="Exceptions\PaymentTypeNotFoundException.cs" />
     <Compile Include="Exceptions\TripFullException.cs" />
-    <Compile Include="Models\Crossroads\GoVolunteer\ProjectCity.cs" />
     <Compile Include="Models\Crossroads\GoVolunteer\Project.cs" />
+    <Compile Include="Models\Crossroads\GoVolunteer\ProjectCity.cs" />
     <Compile Include="Models\Finder\PinDto.cs" />
     <Compile Include="Models\Crossroads\Events\EventParticipantDTO.cs" />
     <Compile Include="Models\Crossroads\GroupCategoryDTO.cs" />
