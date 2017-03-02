@@ -163,13 +163,8 @@ namespace MinistryPlatform.Translation.Test.Services
                     GroupType = 8,
                     GroupRoleId = 16,
                     GroupTypeName = "Onsite Group",
-                }
-            };
-
-            var addresses = new List<MpAddress>()
-            {
-                new MpAddress()
-                {
+                    Address = new MpAddress()
+                    {
                     Address_ID = 2,
                     Address_Line_1 = "123 Street",
                     Address_Line_2 = null,
@@ -180,11 +175,11 @@ namespace MinistryPlatform.Translation.Test.Services
                     Longitude = null,
                     Postal_Code = "12345",
                     State = "OH"
+                    }
                 }
             };
 
             _ministryPlatformRestService.Setup(mocked => mocked.Search<MpGroupParticipant, MpGroup>(It.IsAny<string>(), It.IsAny<string>(), (string) null, false)).Returns(groups);
-            _ministryPlatformRestService.Setup(mocked => mocked.SearchTable<MpAddress>("Addresses", It.IsAny<string>(), (string) null, (string) null, false)).Returns(addresses);
             _ministryPlatformRestService.Setup(mocked => mocked.UsingAuthenticationToken(token)).Returns(_ministryPlatformRestService.Object);
 
             var result = _fixture.GetGroupsForParticipantByTypeOrID(participantId, token, groupTypeIds);
@@ -192,7 +187,6 @@ namespace MinistryPlatform.Translation.Test.Services
             Assert.AreEqual(result.Count, 2);
 
             _ministryPlatformService.VerifyAll();
-            _ministryPlatformRestService.Verify(mocked => mocked.SearchTable<MpAddress>("Addresses", It.IsAny<string>(), (string)null, (string)null, false), Times.Exactly(1));
         }
 
 

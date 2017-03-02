@@ -1,14 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using Crossroads.Web.Common;
 using Crossroads.Web.Common.MinistryPlatform;
+using MinistryPlatform.Translation.Extensions;
+using MinistryPlatform.Translation.Models.DTO;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 
-namespace MinistryPlatform.Translation.Models
+namespace MinistryPlatform.Translation.Models 
 {
     [MpRestApiTable(Name = "Groups")]
-    public class MpGroup
+    public class MpGroup : MpBaseDto
     {
         [JsonProperty("Group_ID")]
         public int GroupId { get; set; }
@@ -113,6 +117,18 @@ namespace MinistryPlatform.Translation.Models
         {
             Participants = new List<MpGroupParticipant>();
             ChildCareAvailable = false;
+        }
+
+        protected override void ProcessUnmappedData(IDictionary<string, JToken> unmappedData, StreamingContext context)
+        {
+            if(Address == null) Address = new MpAddress();
+            Address.Address_ID = unmappedData.GetUnmappedDataField<int>("Address_ID");
+            Address.Address_Line_1 = unmappedData.GetUnmappedDataField<string>("Address_Line_1");
+            Address.Address_Line_2 = unmappedData.GetUnmappedDataField<string>("Address_Line_2");
+            Address.City = unmappedData.GetUnmappedDataField<string>("City");
+            Address.State = unmappedData.GetUnmappedDataField<string>("State");
+            Address.Postal_Code = unmappedData.GetUnmappedDataField<string>("Zip_Code");
+            Address.Foreign_Country = unmappedData.GetUnmappedDataField<string>("Foreign_Country");
         }
     }
 }
