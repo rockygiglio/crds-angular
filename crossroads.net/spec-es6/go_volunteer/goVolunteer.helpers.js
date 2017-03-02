@@ -33,6 +33,11 @@ export default {
       projectId: 980,
       city: 'Phoenix',
       state: 'AZ'
+    },
+    {
+      projectId: 88,
+      city: 'Atlanta',
+      state: 'GA'
     }
   ],
   organizations: [
