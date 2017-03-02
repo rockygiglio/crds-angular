@@ -335,6 +335,7 @@
     <Compile Include="Exceptions\NotHeadOfHouseholdException.cs" />
     <Compile Include="Exceptions\PaymentTypeNotFoundException.cs" />
     <Compile Include="Exceptions\TripFullException.cs" />
+    <Compile Include="Models\Crossroads\GoVolunteer\ProjectCity.cs" />
     <Compile Include="Models\Crossroads\GoVolunteer\Project.cs" />
     <Compile Include="Models\Finder\PinDto.cs" />
     <Compile Include="Models\Crossroads\Events\EventParticipantDTO.cs" />

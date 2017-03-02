@@ -11,5 +11,6 @@ namespace crds_angular.Services.Interfaces
         void UpdateHouseholdAddress(PinDto pin);
         AddressDTO GetAddressForIp(string ip);
         int GetParticipantIdFromContact(int contactId);
+        AddressDTO RandomizeLatLong(AddressDTO address);
     }
 }
