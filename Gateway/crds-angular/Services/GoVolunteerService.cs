@@ -129,7 +129,7 @@ namespace crds_angular.Services
                 registration.GroupConnectorId = mpGroupConnector.Id;
 
                 var participantId = RegistrationContact(registration, token);
-                var registrationId = CreateAnywhereRegistrationDto(registration, participantId);
+                CreateAnywhereRegistrationDto(registration, participantId);
 
                 return registration;
             }
