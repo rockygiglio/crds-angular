@@ -14,6 +14,8 @@ namespace MinistryPlatform.Translation.Repositories
 {
     public class FinderRepository : BaseRepository, IFinderRepository
     {
+        private const int searchRadius = 6380; 
+
         private readonly IConfigurationWrapper _configurationWrapper;
         private readonly IMinistryPlatformRestRepository _ministryPlatformRest;
         private readonly IMinistryPlatformService _ministryPlatformService;
@@ -71,7 +73,7 @@ namespace MinistryPlatform.Translation.Repositories
             {
                 {"@Latitude", originCoords.Latitude },
                 {"@Longitude", originCoords.Longitude },
-                {"@RadiusInKilometers", 3}
+                {"@RadiusInKilometers", searchRadius }
             };
 
             string spName = "api_crds_get_Pins_Within_Range"; 
