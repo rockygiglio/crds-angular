@@ -32,6 +32,7 @@ namespace crds_angular.Services
         private readonly IAddressProximityService _addressMatrixService;
         private readonly IEmailCommunication _emailCommunicationService;
         private readonly IAttributeService _attributeService;
+        private readonly IAddressService _addressService;
 
         private readonly int _defaultGroupContactEmailId;
         private readonly int _defaultAuthorUserId;
@@ -70,7 +71,9 @@ namespace crds_angular.Services
             IContactRepository contactRepository,
             IAddressProximityService addressMatrixService,
             IEmailCommunication emailCommunicationService,
-            IAttributeService attributeService)
+            IAttributeService attributeService,
+            IAddressService addressService
+            )
         {
             _groupToolRepository = groupToolRepository;
             _groupRepository = groupRepository;
@@ -84,6 +87,7 @@ namespace crds_angular.Services
             _addressMatrixService = addressMatrixService;
             _emailCommunicationService = emailCommunicationService;
             _attributeService = attributeService;
+            _addressService = addressService;
 
             _defaultGroupContactEmailId = configurationWrapper.GetConfigIntValue("DefaultGroupContactEmailId");
             _defaultAuthorUserId = configurationWrapper.GetConfigIntValue("DefaultAuthorUser");
@@ -657,6 +661,15 @@ namespace crds_angular.Services
 
             try
             {
+                // geocode if not already geocoded in DB
+                groups.ForEach(group =>
+                {
+                  if (group.Address.Longitude == null || group.Address.Latitude == null)
+                  {
+                    _addressService.FindOrCreateAddress(group.Address, true);
+                  }
+                });                
+
                 // first call is for all results
                 var proximities = _addressProximityService.GetProximity(location, groups.Select(g => g.Address).ToList());
                 for (var i = 0; i < groups.Count; i++)

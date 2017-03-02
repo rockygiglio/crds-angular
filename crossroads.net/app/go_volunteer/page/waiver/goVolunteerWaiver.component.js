@@ -3,9 +3,9 @@
 
   module.exports = GoVolunteerWaiver;
 
-  GoVolunteerWaiver.$inject = ['$rootScope', 'GoVolunteerService', 'GoVolunteerDataService', '$log'];
+  GoVolunteerWaiver.$inject = ['$rootScope', 'GoVolunteerService', 'GoVolunteerDataService', '$log', '$state'];
 
-  function GoVolunteerWaiver($rootScope, GoVolunteerService, GoVolunteerDataService, $log) {
+  function GoVolunteerWaiver($rootScope, GoVolunteerService, GoVolunteerDataService, $log, $state) {
     return {
       restrict: 'E',
       scope: {
@@ -26,10 +26,10 @@
       activate();
 
       function activate() {
-        if (GoVolunteerService.cmsInfo && GoVolunteerService.cmsInfo.pages.length > 0) {
-          vm.waiver = GoVolunteerService.cmsInfo.pages[0].content;
+        if ($state.toParams.organization === 'archdiocese') {
+          vm.waiver = $rootScope.MESSAGES.goLocalArchdioceseWaiver.content;
         } else {
-          vm.waiver = $rootScope.MESSAGES.goVolunteerWaiverTerms.content;
+          vm.waiver = $rootScope.MESSAGES.goLocalWaiver.content;
         }
       }
 

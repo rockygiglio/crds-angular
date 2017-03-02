@@ -285,61 +285,44 @@ namespace crds_angular.Services
         }
 
         public Capacity OpportunityCapacity(int opportunityId, int eventId, int? minNeeded, int? maxNeeded)
-        {               
-            var opportunity = _opportunityService.GetOpportunityResponses(opportunityId, eventId);
-            var min = minNeeded;
-            var max = maxNeeded;
-            var signedUp = opportunity.Count(o => o.Response_Result_ID == _rsvpYes);
+        {
+            var capacity = new Capacity { Display = false, Maximum = maxNeeded, Minimum = minNeeded };
 
-            var capacity = new Capacity {Display = true};
-
-            if (max == null && min == null)
+            if (capacity.Maximum == null && capacity.Minimum == null)
             {
-                capacity.Display = false;
                 return capacity;
             }
-
+            
+            var opportunity = _opportunityService.GetOpportunityResponses(opportunityId, eventId);
+            var signedUp = opportunity.Count(o => o.Response_Result_ID == _rsvpYes);
             int calc;
-            if (max == null)
-            {
-                capacity.Minimum = min.GetValueOrDefault();
 
-                //is this valid?? max is null so put min value in max?
-                capacity.Maximum = capacity.Minimum;
-
-                calc = capacity.Minimum - signedUp;
-            }
-            else if (min == null)
+            if (signedUp < capacity.Minimum)
             {
-                capacity.Maximum = max.GetValueOrDefault();
-                //is this valid??
-                capacity.Minimum = capacity.Maximum;
-                calc = capacity.Maximum - signedUp;
-            }
-            else
-            {
-                capacity.Maximum = max.GetValueOrDefault();
-                capacity.Minimum = min.GetValueOrDefault();
-                calc = capacity.Minimum - signedUp;
-            }
-
-            if (signedUp < capacity.Maximum && signedUp < capacity.Minimum)
-            {
-                capacity.Message = string.Format("{0} Needed", calc);
+                calc = capacity.Minimum.Value - signedUp;
+                capacity.Display = true;
+                capacity.Message = $"{calc} Needed";
                 capacity.BadgeType = BadgeType.LabelInfo.ToString();
                 capacity.Available = calc;
                 capacity.Taken = signedUp;
+                return capacity;
             }
-            else if (signedUp >= capacity.Maximum)
+
+            if (signedUp >= capacity.Maximum)
             {
+                calc = capacity.Maximum.Value - signedUp;
+                capacity.Display = true;
                 capacity.Message = "Full";
                 capacity.BadgeType = BadgeType.LabelDefault.ToString();
                 capacity.Available = calc;
                 capacity.Taken = signedUp;
+                return capacity;
             }
-
+            
             return capacity;
         }
+
+     
 
         public List<int> GetUpdatedOpportunities(string token, SaveRsvpDto dto, Func<MpParticipant, MpEvent, bool> saveFunc = null)
         {

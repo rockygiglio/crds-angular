@@ -85,6 +85,7 @@
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Device" />
     <Reference Include="System.Net" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Net.Http.Extensions">
@@ -127,6 +128,7 @@
     <Compile Include="Models\DTO\MpBaseDto.cs" />
     <Compile Include="Models\Finder\FinderPinDto.cs" />
     <Compile Include="Models\DTO\PredefinedDonationAmountDTO.cs" />
+    <Compile Include="Models\GoCincinnati\MpProject.cs" />
     <Compile Include="Models\MpAttributeCategory.cs" />
     <Compile Include="Models\MpAllergy.cs" />
     <Compile Include="Models\MpBatch.cs" />
@@ -162,6 +164,8 @@
     <Compile Include="Models\Rules\MPRuleSetResult.cs" />
     <Compile Include="Repositories\CampRepository.cs" />
     <Compile Include="Repositories\FinderRepository.cs" />
+    <Compile Include="Repositories\GoCincinnati\ProjectRepository.cs" />
+    <Compile Include="Repositories\Interfaces\GoCincinnati\IProjectRepository.cs" />
     <Compile Include="Repositories\Interfaces\ICampRepository.cs" />
     <Compile Include="Models\MpRsvpMembers.cs" />
     <Compile Include="Models\MpSU2SOpportunity.cs" />

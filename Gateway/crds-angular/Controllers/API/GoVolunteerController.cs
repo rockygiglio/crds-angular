@@ -9,9 +9,7 @@ using crds_angular.Models.Crossroads.GoVolunteer;
 using crds_angular.Models.Crossroads.Lookups;
 using crds_angular.Security;
 using crds_angular.Services.Interfaces;
-using Crossroads.Utilities.Interfaces;
 using Crossroads.ApiVersioning;
-using Crossroads.Web.Common;
 using Crossroads.Web.Common.Configuration;
 using Crossroads.Web.Common.Security;
 
@@ -60,6 +58,23 @@ namespace crds_angular.Controllers.API
             catch (Exception e)
             {
                 var apiError = new ApiErrorDto("Get Go Volunteer Children Options failed: ", e);
+                throw new HttpResponseException(apiError.HttpResponseMessage);
+            }
+        }
+
+        [ResponseType(typeof(Project))]
+        [VersionedRoute(template: "go-volunteer/project/{projectId}", minimumVersion: "1.0.0")]
+        [Route("go-volunteer/project/{projectId}")]
+        [HttpGet]
+        public IHttpActionResult GetProject(int projectId)
+        {
+            try
+            {
+                return Ok(_goVolunteerService.GetProject(projectId));
+            }
+            catch (Exception e)
+            {
+                var apiError = new ApiErrorDto("Get Project failed: ", e);
                 throw new HttpResponseException(apiError.HttpResponseMessage);
             }
         }
@@ -268,6 +283,42 @@ namespace crds_angular.Controllers.API
             var errors = ModelState.Values.SelectMany(val => val.Errors).Aggregate("", (current, err) => current + err.ErrorMessage);
             var dataError = new ApiErrorDto("Registration Data Invalid", new InvalidOperationException("Invalid Registration Data" + errors));
             throw new HttpResponseException(dataError.HttpResponseMessage);
+        }
+
+        [VersionedRoute(template: "go-volunteer/cities/{initiativeId}", minimumVersion: "1.0.0")]
+        [Route("go-volunteer/cities/{initiativeId}")]
+        [ResponseType(typeof (List<ProjectCity>))]
+        [HttpGet]
+        public IHttpActionResult GetParticipatingCities(int initiativeId)
+        {
+            try
+            {
+                var cities = _goVolunteerService.GetParticipatingCities(initiativeId);
+                return Ok(cities);
+            }
+            catch (Exception e)
+            {
+                var apiError = new ApiErrorDto("Unable to get cities", e);
+                throw new HttpResponseException(apiError.HttpResponseMessage);
+            }
+        }
+
+        [VersionedRoute(template: "go-volunteer/organizations", minimumVersion: "1.0.0")]
+        [Route("go-volunteer/organizations")]
+        [ResponseType(typeof(List<Organization>))]
+        [HttpGet]
+        public IHttpActionResult GetOrganizations()
+        {
+            try
+            {
+                var orgs = _organizationService.GetOrganizations();
+                return Ok(orgs);
+            }
+            catch (Exception e)
+            {
+                var apiError = new ApiErrorDto("Unable to get organizations", e);
+                throw new HttpResponseException(apiError.HttpResponseMessage);
+            }
         }
 
         private IHttpActionResult SaveRegistration(string token, Registration goVolunteerRegistration)

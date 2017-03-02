@@ -19,9 +19,21 @@
 
     function GoVolunteerLaunchSiteController() {
       var vm = this;
-      vm.locations = GoVolunteerService.launchSites;
+      vm.locations = sortLaunchSites(GoVolunteerService.launchSites);
       vm.submit = submit;
       vm.isCrossroadsSite = isCrossroadsSite;
+
+      function sortLaunchSites(locations) {
+        return locations.sort((a,b) => {
+          const siteA = a.location.toUpperCase();
+          const siteB = b.location.toUpperCase();
+
+          if (siteA < siteB) return -1;
+          if (siteA > siteB) return 1;
+          return 0;
+        });
+        
+      }
 
       function submit(location) {
         GoVolunteerService.preferredLaunchSite = location;
@@ -29,7 +41,7 @@
       }
 
       function isCrossroadsSite() {
-        return ($state.current.name === 'go-volunteer.crossroadspage');
+        return ($state.current.name === 'go-local.cincinnatipage');
       }
     }
   }
