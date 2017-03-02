@@ -12,6 +12,7 @@ using MinistryPlatform.Translation.Models;
 using Newtonsoft.Json;
 using Crossroads.Web.Common.Configuration;
 using Crossroads.Web.Common.MinistryPlatform;
+using System.Linq;
 
 namespace crds_angular.Services
 {
@@ -68,7 +69,7 @@ namespace crds_angular.Services
             //get group details
             if (pinDetails.Host_Status_ID == _approvedHost)
             {
-                _groupService.GetGroupsByTypeForParticipant(token, participantId, _anywhereGroupType);
+                pinDetails.Gathering = _groupService.GetGroupsByTypeOrId(token, participantId, new int[] {_anywhereGroupType}).FirstOrDefault();
             }
             
             //make sure we have a lat/long
