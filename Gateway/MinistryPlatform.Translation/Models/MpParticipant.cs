@@ -1,7 +1,9 @@
 ﻿using System;
+using Crossroads.Web.Common.MinistryPlatform;
 
 namespace MinistryPlatform.Translation.Models
 {
+    [MpRestApiTable(Name = "Participants")]
     public class MpParticipant
     {
         public int ContactId { get; set; }
