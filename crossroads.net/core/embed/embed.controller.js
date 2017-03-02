@@ -38,7 +38,12 @@ export default class EmbedController {
   }
 
   buildUrl() {
-    const path = this.attrs.href || '/?type=donation';
+    let path;
+    if (this.attrs.map === 'true') {
+      path = '/add-me-to-the-map?type=donation';
+    } else {
+      path = this.attrs.href || '/?type=donation';
+    }
     return this.sce.trustAsResourceUrl(`${this.baseUrl}${path}`);
   }
 

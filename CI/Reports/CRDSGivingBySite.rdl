@@ -83,15 +83,6 @@ order by program_name</CommandText>
           <rd:TypeName>System.Int32</rd:TypeName>
         </Field>
       </Fields>
-      <Filters>
-        <Filter>
-          <FilterExpression>=Fields!congregation_id.Value</FilterExpression>
-          <Operator>In</Operator>
-          <FilterValues>
-            <FilterValue>=Parameters!congregationid.Value</FilterValue>
-          </FilterValues>
-        </Filter>
-      </Filters>
     </DataSet>
     <DataSet Name="Congregations">
       <Query>
@@ -497,7 +488,7 @@ FROM Accounting_Companies </CommandText>
                   <TablixHeader>
                     <Size>0.25in</Size>
                     <CellContents>
-                      <Textbox Name="program_name2">
+                      <Textbox Name="program_name">
                         <CanGrow>true</CanGrow>
                         <KeepTogether>true</KeepTogether>
                         <Paragraphs>
@@ -515,7 +506,7 @@ FROM Accounting_Companies </CommandText>
                             <Style />
                           </Paragraph>
                         </Paragraphs>
-                        <rd:DefaultName>program_name2</rd:DefaultName>
+                        <rd:DefaultName>program_name</rd:DefaultName>
                         <Style>
                           <Border>
                             <Color>#c6daf8</Color>
@@ -1022,6 +1013,6 @@ FROM Accounting_Companies </CommandText>
     </ReportParameter>
   </ReportParameters>
   <rd:ReportUnitType>Inch</rd:ReportUnitType>
-  <rd:ReportServerUrl>http://adminint.crossroads.net/ReportServer</rd:ReportServerUrl>
+  <rd:ReportServerUrl>http://localhost/ReportServer</rd:ReportServerUrl>
   <rd:ReportID>27860b0b-77f4-496f-b8d7-bac02ea1b6e2</rd:ReportID>
 </Report>
