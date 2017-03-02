@@ -590,9 +590,8 @@ namespace crds_angular.test.Services
                 }
             };
 
-            _attributeRepository.Setup(mocked => mocked.GetAttributes(10)).Returns(allAttributes);
-            _attributeRepository.Setup(mocked => mocked.GetAttributes(20)).Returns(allAttributes);
-            _attributeRepository.Setup(mocked => mocked.GetAttributes(30)).Returns(allAttributes);
+            _attributeRepository.Setup(mocked => mocked.GetAttributes((int?) null)).Returns(allAttributes);
+
 
             _objectAttributeService.Setup(mocked => mocked.GetObjectAttributes(token, groups[0].GroupId, It.IsAny<MpObjectAttributeConfiguration>(), It.IsAny<List<MpAttribute>>()))
                 .Returns(objectAllAttribute);
@@ -672,9 +671,7 @@ namespace crds_angular.test.Services
                 }
             };
 
-            _attributeRepository.Setup(mocked => mocked.GetAttributes(10)).Returns(allAttributes);
-            _attributeRepository.Setup(mocked => mocked.GetAttributes(20)).Returns(allAttributes);
-            _attributeRepository.Setup(mocked => mocked.GetAttributes(30)).Returns(allAttributes);
+            _attributeRepository.Setup(mocked => mocked.GetAttributes((int?)null)).Returns(allAttributes);
 
             _objectAttributeService.Setup(mocked => mocked.GetObjectAttributes(token, It.IsAny<int>(), It.IsAny<MpObjectAttributeConfiguration>(), It.IsAny<List<MpAttribute>>()))
                 .Returns(objectAllAttribute);
