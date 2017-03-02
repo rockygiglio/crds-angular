@@ -51,6 +51,7 @@ namespace MinistryPlatform.Translation.Test.Services
             _configWrapper.Setup(m => m.GetEnvironmentVarAsString("API_USER")).Returns("uid");
             _configWrapper.Setup(m => m.GetEnvironmentVarAsString("API_PASSWORD")).Returns("pwd");
             _authService.Setup(m => m.Authenticate(It.IsAny<string>(), It.IsAny<string>())).Returns(AuthenticateResponse());
+            _ministryPlatformRestService.Setup(m => m.UsingAuthenticationToken(It.IsAny<string>())).Returns(_ministryPlatformRestService.Object);
         }
 
         private AuthToken AuthenticateResponse()
@@ -205,27 +206,26 @@ namespace MinistryPlatform.Translation.Test.Services
             _ministryPlatformService.Setup(mocked => mocked.GetRecordDict(_groupsPageId, 456, It.IsAny<string>(), false))
                 .Returns(getGroupPageResponse);
 
-            var groupParticipantsPageResponse = new List<Dictionary<string, object>>();
+            var groupParticipantsPageResponse = new List<MpGroupParticipant>();
             for (int i = 42; i <= 46; i++)
             {
-                groupParticipantsPageResponse.Add(new Dictionary<string, object>()
+                groupParticipantsPageResponse.Add(new MpGroupParticipant()
                 {
-                    {"dp_RecordID", 23434234 },
-                    {"Participant_ID", i},
-                    {"Contact_ID", i + 10},
-                    {"Group_Role_ID", 42},
-                    {"Role_Title", "Boss"},
-                    {"Approved_Small_Group_Leader", true },
-                    {"Last_Name", "Anderson"},
-                    {"Nickname", "Neo"},
-                    {"Email", "Neo@fun.com"},
-                    {"Start_Date", new DateTime(2014, 3, 4) }
-
+                    GroupParticipantId = 23434234,
+                    ParticipantId =  i,
+                    ContactId = i + 10,
+                    GroupRoleId = 42,
+                    GroupRoleTitle = "Boss",
+                    IsApprovedSmallGroupLeader = true,
+                    LastName = "Anderson",
+                    NickName = "Neo",
+                    Email = "Neo@fun.com",
+                    StartDate =  new DateTime(2014, 3, 4)
                 });
             }
-            _ministryPlatformService.Setup(
-                mocked => mocked.GetSubpageViewRecords(_groupsParticipantsSubPage, 456, It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>()))
-                .Returns(groupParticipantsPageResponse);
+
+            _ministryPlatformRestService.Setup(mocked => mocked.Search<MpGroupParticipant>(It.IsAny<string>(), It.IsAny<string>(), (string) null, false))
+                                                   .Returns(groupParticipantsPageResponse);
 
             var groupsSubGroupsPageResponse = new List<Dictionary<string, object>>();
             groupsSubGroupsPageResponse.Add(new Dictionary<string, object>()
@@ -494,6 +494,16 @@ namespace MinistryPlatform.Translation.Test.Services
             Assert.AreEqual(2, myGroups.Count);
             Assert.AreEqual("Full Throttle", myGroups[0].Name);
             Assert.AreEqual("Angels Unite", myGroups[1].Name);
+        }
+
+        [Test]
+        public void GetMyGroupsByTypeRest()
+        {
+            int[] groupTypeIds = {1, 8};
+            const int participantId = 1234;
+            const string token = "JennyFromTheBlock";
+
+            
         }
 
         [Test]
