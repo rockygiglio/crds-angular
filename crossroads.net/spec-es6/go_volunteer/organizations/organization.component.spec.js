@@ -1,7 +1,7 @@
 import goVolunteerModule from '../../../app/go_volunteer/goVolunteer.module';
 import helpers from '../goVolunteer.helpers';
 
-fdescribe('Go Volunteer Organizations Page', () => {
+describe('Go Volunteer Organizations Page', () => {
   let componentController;
   let organizationController;
   let goVolunteerService;
