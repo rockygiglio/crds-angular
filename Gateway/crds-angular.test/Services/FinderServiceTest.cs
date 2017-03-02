@@ -82,7 +82,7 @@ namespace crds_angular.test.Services
         {
             _mpConfigurationWrapper.Setup(mocked => mocked.GetConfigIntValue("AnywhereGatheringGroupTypeId")).Returns(30);
             _mpGroupToolService.Setup(m => m.SearchGroups(It.IsAny<int[]>(), null, It.IsAny<string>(), null)).Returns(new List<GroupDTO>());
-           
+
             string address = "123 Main Street, Walton, KY";
             GeoCoordinate originCoords = new GeoCoordinate()
             {
@@ -91,6 +91,27 @@ namespace crds_angular.test.Services
             };
             List<PinDto> pins = _fixture.GetPinsInRadius(originCoords, address);
             Assert.IsInstanceOf<List<PinDto>>(pins);
+        }
+
+        public void ShouldRandomizeThePosition()
+        {
+            const double originalLatitude = 59.6378639;
+            const double originalLongitude = -151.5068732;
+
+            var address = new AddressDTO
+            {
+                AddressID = 222,
+                AddressLine1 = "1393 Bay Avenue",
+                City = "Homer",
+                State = "AK",
+                PostalCode = "99603",
+                Latitude = originalLatitude,
+                Longitude = originalLongitude
+            };
+
+            var result = _fixture.RandomizeLatLong(address);
+            Assert.AreNotEqual(result.Longitude, originalLongitude);
+            Assert.AreNotEqual(result.Latitude, originalLatitude);
         }
 
         [Test]

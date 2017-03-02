@@ -4,6 +4,7 @@
   "description": "Crossroads Church Web Presence",
   "main": "app.js",
   "scripts": {
+    "es6-test": "./node_modules/karma/bin/karma start es6.tests.conf.js",
     "test": "./node_modules/karma/bin/karma start crossroadsTerminal.conf.js",
     "start": "./node_modules/gulp/bin/gulp.js browser-sync-dev",
     "core-test": "./node_modules/karma/bin/karma start core.tests.conf.js",
