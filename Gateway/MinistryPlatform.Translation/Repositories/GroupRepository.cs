@@ -524,13 +524,17 @@ namespace MinistryPlatform.Translation.Repositories
             string filter = $"Group_Participants.Group_ID = {groupId} AND (Group_Participants.End_Date IS NULL OR Group_Participants.End_Date >= GETDATE())";
 
             if (activeGroups)
+            {
                 filter += " AND Group_ID_TABLE.Start_Date <= GETDATE() AND (Group_ID_Table.End_Date IS NULL OR Group_ID_TABLE.End_Date >= GETDATE())";
+            }
 
             logger.Debug("Getting participants for group " + groupId);
             var groupParticipants = _ministryPlatformRestRepository.UsingAuthenticationToken(token).Search<MpGroupParticipant>(filter, columns);
-            
-            if(!groupParticipants.Any())
+
+            if (!groupParticipants.Any())
+            {
                 logger.Debug("No participants found for group id " + groupId);
+            }
 
             return groupParticipants;
         }

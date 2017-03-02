@@ -553,16 +553,6 @@ namespace MinistryPlatform.Translation.Test.Services
         }
 
         [Test]
-        public void GetMyGroupsByTypeRest()
-        {
-            int[] groupTypeIds = {1, 8};
-            const int participantId = 1234;
-            const string token = "JennyFromTheBlock";
-
-            
-        }
-
-        [Test]
         public void GetGradeGroupForContact()
         {
             const int contactId = 987654;
