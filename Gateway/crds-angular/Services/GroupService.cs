@@ -503,7 +503,7 @@ namespace crds_angular.Services
         {
             if (participantId == null) participantId = _participantService.GetParticipantRecord(token).ParticipantId;
             var groupsByType = _mpGroupRepository.GetGroupsForParticipantByTypeOrID(participantId.Value, token, groupTypeIds, groupId);
-            
+
             if (groupsByType == null)
             {
                 return null;
@@ -511,7 +511,14 @@ namespace crds_angular.Services
 
             var groupDetail = groupsByType.Select(Mapper.Map<MpGroup, GroupDTO>).ToList();
 
-            GetGroupAttributes(token, groupDetail);
+            var configuration = MpObjectAttributeConfigurationFactory.Group();
+            var mpAttributes = _attributeRepository.GetAttributes(null);
+            foreach (var group in groupDetail)
+            {
+                var attributesTypes = _objectAttributeService.GetObjectAttributes(token, group.GroupId, configuration, mpAttributes);
+                group.AttributeTypes = attributesTypes.MultiSelect;
+                group.SingleAttributes = attributesTypes.SingleSelect;
+            }
 
             GetGroupParticipants(groupDetail);
 

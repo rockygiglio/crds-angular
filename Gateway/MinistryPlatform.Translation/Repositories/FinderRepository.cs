@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Crossroads.Web.Common.Configuration;
@@ -7,11 +8,14 @@ using log4net;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 using MinistryPlatform.Translation.Models.Finder;
+using System.Device.Location;
 
 namespace MinistryPlatform.Translation.Repositories
 {
     public class FinderRepository : BaseRepository, IFinderRepository
     {
+        private const int searchRadius = 6380; 
+
         private readonly IConfigurationWrapper _configurationWrapper;
         private readonly IMinistryPlatformRestRepository _ministryPlatformRest;
         private readonly IMinistryPlatformService _ministryPlatformService;
@@ -61,6 +65,34 @@ namespace MinistryPlatform.Translation.Repositories
 
             var apiToken = _apiUserRepository.GetToken();
             _ministryPlatformRest.UsingAuthenticationToken(apiToken).Put("Participants", update);
+        }
+
+        public List<SpPinDto> GetPinsInRadius(GeoCoordinate originCoords)
+        {
+            var apiToken = _apiUserRepository.GetToken();
+
+            var parms = new Dictionary<string, object>()
+            {
+                {"@Latitude", originCoords.Latitude },
+                {"@Longitude", originCoords.Longitude },
+                {"@RadiusInKilometers", searchRadius }
+            };
+
+            string spName = "api_crds_get_Pins_Within_Range"; 
+
+            try
+            {
+                List<List<SpPinDto>> storedProcReturn = _ministryPlatformRest.UsingAuthenticationToken(apiToken)
+                                                                             .GetFromStoredProc<SpPinDto>(spName, parms);
+                List<SpPinDto> pinsFromSp = storedProcReturn.FirstOrDefault();
+
+                return pinsFromSp; 
+            }
+            catch (Exception ex)
+            {
+                var exception = ex;
+                return new List<SpPinDto>();
+            }
         }
     }
 }

@@ -524,13 +524,17 @@ namespace MinistryPlatform.Translation.Repositories
             string filter = $"Group_Participants.Group_ID = {groupId} AND (Group_Participants.End_Date IS NULL OR Group_Participants.End_Date >= GETDATE())";
 
             if (activeGroups)
+            {
                 filter += " AND Group_ID_TABLE.Start_Date <= GETDATE() AND (Group_ID_Table.End_Date IS NULL OR Group_ID_TABLE.End_Date >= GETDATE())";
+            }
 
             logger.Debug("Getting participants for group " + groupId);
             var groupParticipants = _ministryPlatformRestRepository.UsingAuthenticationToken(token).Search<MpGroupParticipant>(filter, columns);
-            
-            if(!groupParticipants.Any())
+
+            if (!groupParticipants.Any())
+            {
                 logger.Debug("No participants found for group id " + groupId);
+            }
 
             return groupParticipants;
         }
@@ -792,7 +796,7 @@ namespace MinistryPlatform.Translation.Repositories
         {
             if (token == null) token = ApiLogin();
             const string columns =
-                "Group_Participants.[Group_Participant_ID], Group_Participants.[Participant_ID], Group_ID_Table.[Group_Name], Group_ID_Table.[Group_ID], Group_ID_Table.[Group_Type_ID], Group_ID_Table_Group_Type_ID_Table.[Group_Type], Group_Role_ID, Group_ID_Table.[Congregation_ID], Group_ID_Table.[Ministry_ID], Group_ID_Table.Primary_Contact, Group_ID_Table_Primary_Contact_Table.[Display_Name] AS [Primary_Contact_Name], Group_ID_Table_Primary_Contact_Table.[Email_Address] AS [Primary_Contact_Email], Group_ID_Table.[Description], Group_ID_Table.[Start_Date], Group_ID_Table.[End_Date], Group_ID_Table.[Meeting_Day_ID], Group_ID_Table_Meeting_Day_ID_Table.[Meeting_Day], Group_ID_Table_Meeting_Frequency_ID_Table.[Meeting_Frequency], Group_ID_Table.[Meeting_Time], Group_ID_Table.[Available_Online], Group_ID_Table.[Offsite_Meeting_Address], Group_ID_Table.[Maximum_Age], Group_ID_Table.[Kids_Welcome], Group_ID_Table.[Remaining_Capacity]";
+                "Group_Participants.[Group_Participant_ID], Group_Participants.[Participant_ID], Group_ID_Table.[Group_Name], Group_ID_Table.[Group_ID], Group_ID_Table.[Group_Type_ID], Group_ID_Table_Group_Type_ID_Table.[Group_Type], Group_Role_ID, Group_ID_Table.[Congregation_ID], Group_ID_Table.[Ministry_ID], Group_ID_Table.Primary_Contact, Group_ID_Table_Primary_Contact_Table.[Display_Name] AS [Primary_Contact_Name], Group_ID_Table_Primary_Contact_Table.[Email_Address] AS [Primary_Contact_Email], Group_ID_Table.[Description] AS Group_Description, Group_ID_Table.[Start_Date], Group_ID_Table.[End_Date], Group_ID_Table.[Meeting_Day_ID], Group_ID_Table_Meeting_Day_ID_Table.[Meeting_Day], Group_ID_Table_Meeting_Frequency_ID_Table.[Meeting_Frequency], Group_ID_Table.[Meeting_Time], Group_ID_Table.[Available_Online], Group_ID_Table_Offsite_Meeting_Address_Table.[Address_ID], Group_ID_Table_Offsite_Meeting_Address_Table.[Address_Line_1], Group_ID_Table_Offsite_Meeting_Address_Table.[Address_Line_2], Group_ID_Table_Offsite_Meeting_Address_Table.[City], Group_ID_Table_Offsite_Meeting_Address_Table.[State/Region] AS [State], Group_ID_Table_Offsite_Meeting_Address_Table.[Postal_Code] AS [Zip_Code], Group_ID_Table_Offsite_Meeting_Address_Table.[Foreign_Country], Group_ID_Table.[Maximum_Age], Group_ID_Table.[Kids_Welcome], Group_ID_Table.[Remaining_Capacity]";
 
             string filter = $"Group_Participants.[Participant_ID] = {participantId} AND (GROUP_ID_TABLE.End_Date IS NULL OR GROUP_ID_TABLE.End_Date >= GetDate()) AND (Group_Participants.End_Date is NULL OR Group_Participants.End_Date >= GetDate())";
 
@@ -808,19 +812,10 @@ namespace MinistryPlatform.Translation.Repositories
 
             var groupDetails = _ministryPlatformRestRepository.UsingAuthenticationToken(token).Search<MpGroupParticipant, MpGroup>(filter, columns);
 
-            //Get addresses for groups that have them. TODO Get all of them at once and map?
-            foreach (var group in groupDetails.Where(g => g.OffsiteMeetingAddressId.HasValue))
-            {
-                group.Address =
-                    _ministryPlatformRestRepository.UsingAuthenticationToken(token)
-                        .SearchTable<MpAddress>("Addresses", $"Address_ID = {group.OffsiteMeetingAddressId}")
-                        .FirstOrDefault();
-            }
-
             return groupDetails;
         }
 
-        [Obsolete("This call has been replaced by GetMyGroupsByType() which uses the rest API. If you're calling this update.")]
+        [Obsolete("This call has been replaced by GetMyGroupsByType() which uses the rest API.")]
         public List<MpGroup> GetMyGroupParticipationByType(string token, int[] groupTypeId = null, int? groupId = null)
         {
 

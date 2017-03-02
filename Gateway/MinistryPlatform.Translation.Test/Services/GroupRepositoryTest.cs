@@ -134,6 +134,61 @@ namespace MinistryPlatform.Translation.Test.Services
             Assert.AreEqual(987, groupParticipantId);
         }
 
+        [Test]
+        public void TestGetGroupsForParticipantByTypeOrID()
+        {
+            const int participantId = 42;
+            const string token = "ABC";
+            int[] groupTypeIds = {1, 8};
+
+            List<MpGroup> groups = new List<MpGroup>()
+            {
+                new MpGroup()
+                {
+                    AvailableOnline = true,
+                    Name = "Group With address",
+                    GroupId = 2,
+                    GroupRoleId = 22,
+                    GroupDescription = "GroupyMcGroupFace",
+                    GroupType = 1,
+                    GroupTypeName = "Small Group",
+                    OffsiteMeetingAddressId = 33
+                }, 
+                new MpGroup()
+                {
+                    AvailableOnline = false,
+                    Name = "Group without an address",
+                    GroupId = 3,
+                    GroupDescription = "No address boo",
+                    GroupType = 8,
+                    GroupRoleId = 16,
+                    GroupTypeName = "Onsite Group",
+                    Address = new MpAddress()
+                    {
+                    Address_ID = 2,
+                    Address_Line_1 = "123 Street",
+                    Address_Line_2 = null,
+                    City = "City!",
+                    County = "Butler",
+                    Foreign_Country = "Merica",
+                    Latitude = null,
+                    Longitude = null,
+                    Postal_Code = "12345",
+                    State = "OH"
+                    }
+                }
+            };
+
+            _ministryPlatformRestService.Setup(mocked => mocked.Search<MpGroupParticipant, MpGroup>(It.IsAny<string>(), It.IsAny<string>(), (string) null, false)).Returns(groups);
+            _ministryPlatformRestService.Setup(mocked => mocked.UsingAuthenticationToken(token)).Returns(_ministryPlatformRestService.Object);
+
+            var result = _fixture.GetGroupsForParticipantByTypeOrID(participantId, token, groupTypeIds);
+
+            Assert.AreEqual(result.Count, 2);
+
+            _ministryPlatformService.VerifyAll();
+        }
+
 
         [Test]
         public void TestGetAllEventsForGroupNoGroupFound()
@@ -495,16 +550,6 @@ namespace MinistryPlatform.Translation.Test.Services
             Assert.AreEqual(2, myGroups.Count);
             Assert.AreEqual("Full Throttle", myGroups[0].Name);
             Assert.AreEqual("Angels Unite", myGroups[1].Name);
-        }
-
-        [Test]
-        public void GetMyGroupsByTypeRest()
-        {
-            int[] groupTypeIds = {1, 8};
-            const int participantId = 1234;
-            const string token = "JennyFromTheBlock";
-
-            
         }
 
         [Test]

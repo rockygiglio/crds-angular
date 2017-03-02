@@ -41,7 +41,9 @@ namespace MinistryPlatform.Translation.Repositories
             string filter = $"{table}_ID = {objectId} AND ({table}_Attributes.End_Date Is Null OR {table}_Attributes.End_Date >= GetDate())";
 
             if (attributeTypeIdFilter != null)
-                filter += $"AND Attribute_ID_Table.Attribute_Type_ID = {attributeTypeIdFilter}";
+            {
+                filter += $" AND Attribute_ID_Table.Attribute_Type_ID = {attributeTypeIdFilter}";
+            }
 
             var objectAttributes = _ministryPlatformRest.UsingAuthenticationToken(token).SearchTable<MpObjectAttribute>($"{table}_Attributes", filter, columns);
             return objectAttributes;

@@ -85,6 +85,7 @@
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Device" />
     <Reference Include="System.Net" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Net.Http.Extensions">
@@ -123,8 +124,11 @@
   <ItemGroup>
     <Compile Include="Exceptions\DonationNotFoundException.cs" />
     <Compile Include="Exceptions\PaymentNotFoundException.cs" />
+    <Compile Include="Extensions\JsonUnmappedDataExtensions.cs" />
+    <Compile Include="Models\DTO\MpBaseDto.cs" />
     <Compile Include="Models\Finder\FinderPinDto.cs" />
     <Compile Include="Models\DTO\PredefinedDonationAmountDTO.cs" />
+    <Compile Include="Models\Finder\SpPinDto.cs" />
     <Compile Include="Models\GoCincinnati\MpProject.cs" />
     <Compile Include="Models\MpAttributeCategory.cs" />
     <Compile Include="Models\MpAllergy.cs" />
