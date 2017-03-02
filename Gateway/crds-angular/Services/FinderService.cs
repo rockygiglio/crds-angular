@@ -156,8 +156,6 @@ namespace crds_angular.Services
 
             foreach (var group in groups)
             {
-                // TODO: add pin Type to group??
-                // groups[i].PinType = 2;
                 pins.Add(Mapper.Map<PinDto>(group));
             }
 
