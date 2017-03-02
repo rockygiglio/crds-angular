@@ -38,7 +38,7 @@ describe('Go Volunteer Organizations Page', () => {
     it('should include cities for crossroads', () => {
       const crossroads = organizationController.organizations.find(org => org.name === 'Crossroads Community Church');
       expect(crossroads.cities).toBeDefined();
-      expect(crossroads.cities.length).toBe(1);
+      expect(crossroads.cities.length).toBe(0);
     });
   });
 
@@ -47,13 +47,6 @@ describe('Go Volunteer Organizations Page', () => {
       goVolunteerService.cities = [];
       organizationController = componentController('goVolunteerOrganizations', null, bindings);
       organizationController.$onInit();
-    });
-
-    it('should still display Cincinnati and Central KY', () => {
-      const crossroads = organizationController.organizations.filter(org => org.name === 'Crossroads Community Church');
-      expect(crossroads.length).toBe(1);
-      expect(crossroads[0].cities.length).toBe(1);
-      expect(crossroads[0].cities[0].name).toBe('Cincinnati or Central Kentucky Crossroads Sites');
     });
   });
 
@@ -67,15 +60,15 @@ describe('Go Volunteer Organizations Page', () => {
     it('should include all the cities for the crossroads org', () => {
       const crossroads = organizationController.organizations.filter(org => org.name === 'Crossroads Community Church');
       expect(crossroads.length).toBe(1);
-      expect(crossroads[0].cities.length).toBe(1 + helpers.cities.length);
+      expect(crossroads[0].cities.length).toBe(helpers.cities.length);
     });
 
     it('should include a name attribute for cities for the crossroads org', () => {
       const crossroads = organizationController.organizations.filter(org => org.name === 'Crossroads Community Church');
       expect(crossroads.length).toBe(1);
-      expect(crossroads[0].cities.length).toBe(1 + helpers.cities.length);
-      expect(crossroads[0].cities[1].name).toBeDefined();
-      expect(crossroads[0].cities[1].name).toBe('Cleveland, OH');
+      expect(crossroads[0].cities.length).toBe(helpers.cities.length);
+      expect(crossroads[0].cities[0].name).toBeDefined();
+      expect(crossroads[0].cities[0].name).toBe('Cleveland, OH');
     });
   });
 
@@ -90,17 +83,17 @@ describe('Go Volunteer Organizations Page', () => {
     });
 
     it('should navigate to the anywhere page when a city has been selected', () => {
-      const selectedCity = helpers.cities[0];
+      const selectedCity = helpers.cities[0].projectId;
       organizationController.selectCity(selectedCity);
       expect(state.go).toHaveBeenCalledWith('go-local.anywherepage', {
         initiativeId,
-        city: selectedCity.city,
-        projectId: selectedCity.projectId
+        city: helpers.cities[0].city,
+        projectId: helpers.cities[0].projectId
       });
     });
 
     it('should navigate to the cincinnatipage when cincinnati/cky has been selected', () => {
-      const selectedCity = organizationController.cincinnati[0];
+      const selectedCity = -1;
       organizationController.selectCity(selectedCity);
       expect(state.go).toHaveBeenCalledWith('go-local.cincinnatipage', {
         initiativeId,

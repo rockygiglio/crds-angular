@@ -42,7 +42,7 @@ export default class OrganizationsController {
           name: 'Crossroads Community Church',
           imageUrl: org.imageURL,
           order: 1,
-          cities: [...this.cincinnati, ...this.buildCities()]
+          cities: this.buildCities()
         };
       }
       return {
@@ -59,11 +59,13 @@ export default class OrganizationsController {
     });
   }
 
-  selectCity({ projectId, city }) {
+  selectCity(id) {
+    const projectId = Number(id);
     if (projectId === -1) {
       this.state.go('go-local.cincinnatipage', { initiativeId: this.state.toParams.initiativeId, organization: 'crossroads', page: 'profile' });
     } else {
-      this.state.go('go-local.anywherepage', { initiativeId: this.state.toParams.initiativeId, city, projectId });
+      const city = this.cities.find(c => c.projectId === projectId);
+      this.state.go('go-local.anywherepage', { initiativeId: this.state.toParams.initiativeId, city: city.city, projectId });
     }
   }
 
