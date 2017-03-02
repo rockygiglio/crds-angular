@@ -1,0 +1,10 @@
+<div ng-if="$ctrl.viewReady">
+  <preloader full-screen='false' ng-show='!$ctrl.viewReady'> </preloader>
+
+  <go-volunteer-project-card project="$ctrl.project"></go-volunteer-project-card>
+
+  <h1>Way to go!</h1>
+  <p>You have successfully registered to volunteer for GO Local.</p>
+  <p>Your project leader will be contacting you with more information.</p>
+  <p>Contact your leader at <a href="mailto:{{$ctrl.project.email}}">{{$ctrl.project.email}}</a> with any immediate questions.</p>
+</div>
