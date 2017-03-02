@@ -820,7 +820,7 @@ namespace MinistryPlatform.Translation.Repositories
             return groupDetails;
         }
 
-        [Obsolete("This call has been replaced by GetMyGroupsByType() which uses the rest API. If you're calling this update.")]
+        [Obsolete("This call has been replaced by GetMyGroupsByType() which uses the rest API.")]
         public List<MpGroup> GetMyGroupParticipationByType(string token, int[] groupTypeId = null, int? groupId = null)
         {
 
