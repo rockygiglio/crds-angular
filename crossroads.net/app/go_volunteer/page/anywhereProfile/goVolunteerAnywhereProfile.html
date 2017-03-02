@@ -19,7 +19,7 @@
     </div>
 
     <div class="text-center push-top">
-      <button type="submit" class="btn btn-primary" ng-disabled="$ctrl.anywhereForm.$invalid">Accept Waiver and Register</button>
+      <button type="submit" class="btn btn-primary" ng-disabled="$ctrl.anywhereForm.$invalid || $ctrl.submitting">Accept Waiver and Register</button>
     </div>
   </form>
 </div>

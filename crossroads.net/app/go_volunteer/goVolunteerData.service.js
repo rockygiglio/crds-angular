@@ -10,7 +10,7 @@ class GoVolunteerDataService {
     this.Create = $resource(`${__API_ENDPOINT__}api/govolunteer/registration`);
     // Creates an Anywhere registration
     this.CreateAnywhere = $resource(`${__API_ENDPOINT__}api/v1.0.0/go-volunteer/registration/:projectId`);
-    this.Project = $resource(`${__API_ENDPOINT__}/api/v1.0.0/go-volunteer/project/:projectId`);
+    this.Project = $resource(`${__API_ENDPOINT__}api/v1.0.0/go-volunteer/project/:projectId`);
     this.ProjectCities = $resource(`${__API_ENDPOINT__}api/v1.0.0/go-volunteer/cities/:initiativeId`);
   }
 
