@@ -1,8 +1,11 @@
+import moment from 'moment';
+
 export default class GoVolunteerAnywhereProfileForm {
   /* @ngInject */
-  constructor(GoVolunteerService, GoVolunteerDataService) {
+  constructor(GoVolunteerService, GoVolunteerDataService, $log) {
     this.goVolunteerService = GoVolunteerService;
     this.goVolunteerDataService = GoVolunteerDataService;
+    this.log = $log;
     const person = this.goVolunteerService.person;
 
     this.model = {
@@ -19,9 +22,32 @@ export default class GoVolunteerAnywhereProfileForm {
     };
   }
 
-  save() {
-    // TODO: implement
-    // this.goVolunteerDataService.CreateAnywhere(projectId, registrationData);
+  save(initiativeId, projectId) {
+    const {
+      firstName,
+      lastName,
+      email: emailAddress,
+      birthDate: dob,
+      mobilePhone: mobile,
+      bringSpouse: spouseParticipation
+    } = this.model;
+    const { contactId } = this.goVolunteerService.person;
+
+    const registrationData = {
+      initiativeId,
+      spouseParticipation,
+      self: {
+        contactId,
+        dob,
+        emailAddress,
+        firstName,
+        lastName,
+        mobile
+      }
+    };
+
+    // eslint-disable-next-line new-cap
+    return this.goVolunteerDataService.createAnywhereRegistration(projectId, registrationData);
   }
 
   getModel() {
@@ -93,20 +119,17 @@ export default class GoVolunteerAnywhereProfileForm {
             },
             asyncValidators: {
               tooYoung: {
-                expression: (modelValue) => {
-                  return new Promise((resolve, reject) => {
-                    const bday = moment(modelValue, 'MM-DD-YYYY');
-                    const cutoff18 = moment().subtract(18, 'years');
+                expression: modelValue => new Promise((resolve, reject) => {
+                  const bday = moment(modelValue, 'MM-DD-YYYY');
+                  const cutoff18 = moment().subtract(18, 'years');
 
-                    if (bday.isAfter(cutoff18)) {
-                      console.error('You must be 18 to sign up!');
-                      console.log(modelValue);
-                      reject();
-                    }
+                  if (bday.isAfter(cutoff18)) {
+                    this.log.error('You must be 18 to sign up!');
+                    reject();
+                  }
 
-                    resolve();
-                  });
-                }
+                  resolve();
+                })
               }
             }
           },
