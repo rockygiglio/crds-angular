@@ -124,6 +124,29 @@ export default function GoVolunteerRoutes($stateProvider, $urlMatcherFactoryProv
         GetProfile
       }
     })
+    .state('go-local.anywhereconfirm', {
+      parent: 'goCincinnati',
+      url: '/go-local/:initiativeId/crossroads/:city/:projectId/confirm',
+      template: '<go-volunteer-anywhere-profile-confirm></go-volunteer-anywhere-profile-confirm>',
+      params: {
+        page: 'anywhere-profile-confirm'
+      },
+      data: {
+        meta: {
+          title: 'GO Local',
+          description: ''
+        },
+        isProtected: true
+      },
+      resolve: {
+        $state: '$state',
+        $q: '$q',
+        loggedin: crds_utilities.optimisticallyCheckLoggedin,
+        GoVolunteerDataService: 'GoVolunteerDataService',
+        GoVolunteerService: 'GoVolunteerService',
+        GetProject
+      }
+    })
     .state('go-local.signinpage', {
       parent: 'goCincinnati',
       url: '/go-local/:initiative/crossroads/signin',

@@ -27,8 +27,8 @@ BEGIN
 	CREATE TABLE #Keywords (Keyword NVARCHAR(MAX));
 	INSERT INTO #Keywords SELECT UPPER(Item) FROM dp_Split(@SearchString, ',');
 
-	SELECT 
-	Group_ID AS [GroupId], 
+	SELECT
+	Group_ID AS [GroupId],
 	Group_Name AS [Name],
 	Group_Type_ID AS [GroupType],
 	Description AS [GroupDescription],
@@ -36,34 +36,34 @@ BEGIN
 	Kids_Welcome AS [KidsWelcome],
 	Primary_Contact AS [ContactId],
 	'[ ' + STUFF((SELECT ' { NickName: "' + Nickname + '", LastName: "' + Last_Name + '", GroupRoleId: ' + CONVERT(VARCHAR(10), gp.Group_Role_ID) + ' },'
-			FROM Groups g INNER JOIN Group_Participants gp ON g.Group_ID = gp.Group_ID 
+			FROM Groups g INNER JOIN Group_Participants gp ON g.Group_ID = gp.Group_ID
 			INNER JOIN Participants p ON gp.Participant_ID = p.Participant_ID
 			INNER JOIN Contacts c ON p.Contact_ID = c.Contact_ID
-			WHERE gp.Group_Role_ID=22 AND g.Group_ID = gr.Group_ID   
+			WHERE gp.Group_Role_ID=22 AND g.Group_ID = gr.Group_ID
 			FOR XML PATH('')), 1, 1, '') + ' ]' AS [GroupParticipants],
-	'[' + 
+	'[' +
 	STUFF((SELECT ' { "AttributeId": ' + CONVERT(VARCHAR, A.Attribute_ID) + ', "AttributeTypeId": ' + CONVERT(VARCHAR, A.Attribute_Type_ID) + ', "AttributeTypeName": "' + AT.Attribute_Type + '", "Name": "' + A.Attribute_Name + '", "Category": "' + COALESCE(AC.Attribute_Category, '') + '", "Description": "' + COALESCE(A.Description, '') + '"}, '
 			FROM Group_Attributes GA, Attribute_Types AT, Attributes A LEFT OUTER JOIN Attribute_Categories AC ON A.Attribute_Category_ID = AC.Attribute_Category_ID
 			WHERE GA.Attribute_ID = A.Attribute_ID
 			AND A.Attribute_Type_ID = AT.Attribute_Type_ID
 			AND AT.Prevent_Multiple_Selection = 0
 			AND GA.Group_ID = gr.Group_ID
-			AND GETDATE() BETWEEN GA.Start_Date 
-			AND ISNULL(GA.End_Date,GETDATE())   
+			AND GETDATE() BETWEEN GA.Start_Date
+			AND ISNULL(GA.End_Date,GETDATE())
 			FOR XML PATH('')), 1, 1, '') +
 	']' AS [MultiSelectAttributes],
-	'[' + 
+	'[' +
 	STUFF((SELECT ' { "AttributeId": ' + CONVERT(VARCHAR, A.Attribute_ID) + ', "AttributeTypeId": ' + CONVERT(VARCHAR, A.Attribute_Type_ID) + ', "AttributeTypeName": "' + AT.Attribute_Type + '", "Name": "' + A.Attribute_Name + '", "Category": "' + COALESCE(AC.Attribute_Category, '') + '", "Description": "' + COALESCE(A.Description, '') + '" }, '
 			FROM Group_Attributes GA, Attribute_Types AT, Attributes A LEFT OUTER JOIN Attribute_Categories AC ON A.Attribute_Category_ID = AC.Attribute_Category_ID
 			WHERE GA.Attribute_ID = A.Attribute_ID
 			AND A.Attribute_Type_ID = AT.Attribute_Type_ID
 			AND AT.Prevent_Multiple_Selection = 1
 			AND GA.Group_ID = gr.Group_ID
-			AND GETDATE() BETWEEN GA.Start_Date 
-			AND ISNULL(GA.End_Date,GETDATE())   
+			AND GETDATE() BETWEEN GA.Start_Date
+			AND ISNULL(GA.End_Date,GETDATE())
 			FOR XML PATH('')), 1, 1, '') +
 	']' AS [SingleSelectAttributes],
-	(SELECT TOP(1) Congregation_Name FROM Groups g INNER JOIN Congregations c ON g.Congregation_ID = c.Congregation_ID 
+	(SELECT TOP(1) Congregation_Name FROM Groups g INNER JOIN Congregations c ON g.Congregation_ID = c.Congregation_ID
 								WHERE g.Group_ID = gr.Group_ID) AS [Congregation],
 	(SELECT TOP(1) Address_Line_1 FROM Groups g INNER JOIN Addresses a ON g.Offsite_Meeting_Address = a.Address_ID
 								WHERE g.Group_ID = gr.Group_ID) AS [Address_Line_1],
@@ -80,7 +80,7 @@ BEGIN
 								WHERE g.Group_ID = gr.Group_ID) AS [MeetingFrequency],
 	Meeting_Frequency_ID AS [MeetingFrequencyID]
 	INTO #AllGroups
-	FROM Groups gr 
+	FROM Groups gr
 	WHERE gr.Group_Type_ID = @GroupTypeId AND gr.End_Date IS NULL
 
 	-- if we have an empty search string, return all groups

@@ -38,6 +38,7 @@
       vm.showUniqueSkills = showUniqueSkills;
       vm.showEquipment = showEquipment;
       vm.showAdditionalInfo = showAdditionalInfo;
+      vm.showAnywhereProfile = showAnywhereProfile;
       vm.showAvailablePrep = showAvailablePrep;
       vm.showAvailablePrepSpouse = showAvailablePrepSpouse;
       vm.showWaiver = showWaiver;

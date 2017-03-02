@@ -70,6 +70,7 @@ namespace crds_angular.test.Services
             _configurationWrapper.Setup(mocked => mocked.GetConfigIntValue("EventsReadyForPrimaryContactReminder")).Returns(2205);
             _configurationWrapper.Setup(mocked => mocked.GetConfigIntValue("EventPrimaryContactReminderTemplateId")).Returns(14909);
             _configurationWrapper.Setup(mocked => mocked.GetConfigIntValue("ChildcareEventType")).Returns(98765);
+            _configurationWrapper.Setup(mocked => mocked.GetConfigIntValue("ChildcareGroupType")).Returns(272727);
 
             _fixture = new EventService(_eventService.Object,
                                         _groupService.Object,
@@ -894,7 +895,7 @@ namespace crds_angular.test.Services
                     DomainId = 1,
                     GroupId = 42,
                     GroupName = "_childCare",
-                    GroupTypeId = 23,
+                    GroupTypeId = 272727,
                     Created = true,
                     EventGroupId = 1
                 }
