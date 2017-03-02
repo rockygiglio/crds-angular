@@ -6,23 +6,10 @@ declare @UNDIVIDED_GROUP_TYPE as int = 26;    --Undivided
 declare @UNDIVIDED_GROUP_MINISTRY as int = 8; --Spiritual Growth
 declare @PRIMARY_CONTACT as int = 7592977;    --Kristie Dierig
 
-
-
-
--- *********** TODO  CHANGE FOR PROD *********************
--- declare @UNDIVIDED_PARENT_GROUP_START_DATE as datetime = '2017-03-03'; -- length of registration
-declare @UNDIVIDED_PARENT_GROUP_START_DATE as datetime = '2017-02-23'; -- length of registration
--- *********** TODO  CHANGE FOR PROD *********************
-
-
-
+declare @UNDIVIDED_PARENT_GROUP_START_DATE as datetime = '2017-03-03'; -- length of registration
 declare @UNDIVIDED_PARENT_GROUP_END_DATE as datetime = '2017-08-01';
 
--- *********** TODO  CHANGE FOR PROD *********************
---declare @UNDIVIDED_SUB_GROUP_START_DATE as Date = '2017-03-03'; -- start date same as registration start date
-declare @UNDIVIDED_SUB_GROUP_START_DATE as Date = '2017-02-23'; -- start date same as registration start date
--- *********** TODO  CHANGE FOR PROD *********************
-
+declare @UNDIVIDED_SUB_GROUP_START_DATE as Date = '2017-03-03'; -- start date same as registration start date
 declare @UNDIVIDED_SUB_GROUP_END_DATE as Date = '2017-08-01'; --end date, when undivided sessions end
 
 
