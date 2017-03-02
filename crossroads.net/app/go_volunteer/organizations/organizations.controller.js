@@ -56,6 +56,13 @@ export default class OrganizationsController {
     return this.cities.map((city) => {
       const name = { name: `${city.city}, ${city.state}` };
       return Object.assign(name, city);
+    }).sort((a, b) => {
+      const cityA = a.city.toUpperCase();
+      const cityB = b.city.toUpperCase();
+
+      if (cityA < cityB) return -1;
+      if (cityA > cityB) return 1;
+      return 0;
     });
   }
 

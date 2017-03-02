@@ -1,7 +1,7 @@
 import goVolunteerModule from '../../../app/go_volunteer/goVolunteer.module';
 import helpers from '../goVolunteer.helpers';
 
-describe('Go Volunteer Organizations Page', () => {
+fdescribe('Go Volunteer Organizations Page', () => {
   let componentController;
   let organizationController;
   let goVolunteerService;
@@ -68,7 +68,15 @@ describe('Go Volunteer Organizations Page', () => {
       expect(crossroads.length).toBe(1);
       expect(crossroads[0].cities.length).toBe(helpers.cities.length);
       expect(crossroads[0].cities[0].name).toBeDefined();
-      expect(crossroads[0].cities[0].name).toBe('Cleveland, OH');
+      expect(crossroads[0].cities[0].name).toBe('Atlanta, GA');
+    });
+
+    it('should show the cities in alphabetical order', () => {
+      const crossroads = organizationController.organizations.filter(org => org.name === 'Crossroads Community Church');
+      expect(crossroads[0].cities.length).toBe(helpers.cities.length);
+      expect(crossroads[0].cities[0].city).toBe('Atlanta');
+      expect(crossroads[0].cities[1].city).toBe('Cleveland');
+      expect(crossroads[0].cities[2].city).toBe('Phoenix');
     });
   });
 
