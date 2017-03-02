@@ -6,6 +6,7 @@ using System.Web.Optimization;
 using System.Web.Routing;
 using Crossroads.Utilities.Services;
 using Crossroads.ApiVersioning;
+using Crossroads.ClientApiKeys;
 
 namespace crds_angular
 {
@@ -21,7 +22,7 @@ namespace crds_angular
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             AutoMapperConfig.RegisterMappings();
-            ClientApiKeysConfig.Register(GlobalConfiguration.Configuration);
+            DomainLockedClientApiKeyConfig.Register(GlobalConfiguration.Configuration);
             TlsHelper.AllowTls12();
             log4net.Config.XmlConfigurator.Configure(new FileInfo(Server.MapPath("~/Web.config")));
         }
