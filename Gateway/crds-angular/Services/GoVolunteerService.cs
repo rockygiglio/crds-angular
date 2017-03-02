@@ -530,7 +530,11 @@ namespace crds_angular.Services
             registrationDto.SpouseParticipation = registration.SpouseParticipation;
             registrationDto.OrganizationId = registration.OrganizationId;
 
-            return Registration(registrationDto);
+            // FIXME: is this needed?
+            var registrationId = Registration(registrationDto);
+            registrationDto.RegistrationId = registrationId;
+
+            return registrationId;
         }
 
         private int Registration(MinistryPlatform.Translation.Models.GoCincinnati.MpRegistration registrationDto)

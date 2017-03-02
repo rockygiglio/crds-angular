@@ -286,9 +286,11 @@ namespace crds_angular.Controllers.API
             throw new HttpResponseException(dataError.HttpResponseMessage);
         }
 
-        [VersionedRoute(template: "go-volunteer/registration/:projectId", minimumVersion: "1.0.0")]
+        [VersionedRoute(template: "go-volunteer/registration/{projectId}", minimumVersion: "1.0.0")]
+        [Route("go-volunteer/registration/{projectId}")]
+        [ResponseType(typeof(AnywhereRegistration))]
         [HttpPost]
-        public IHttpActionResult Post([FromBody] AnywhereRegistration goVolunteerRegistration, int projectId)
+        public IHttpActionResult Post(int projectId, [FromBody] AnywhereRegistration goVolunteerRegistration)
         {
             try
             {
