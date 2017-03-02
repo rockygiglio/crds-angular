@@ -12,7 +12,6 @@ using MinistryPlatform.Translation.Models;
 using Newtonsoft.Json;
 using System.Device.Location;
 using MinistryPlatform.Translation.Models.Finder;
-using System.Device.Location;
 using Crossroads.Web.Common.Configuration;
 
 namespace crds_angular.Services
