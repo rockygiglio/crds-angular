@@ -8,6 +8,7 @@ using Crossroads.Web.Common;
 using Crossroads.Web.Common.Configuration;
 using Crossroads.Web.Common.Security;
 using MinistryPlatform.Translation.Extensions;
+using MinistryPlatform.Translation.PlatformService;
 using MinistryPlatform.Translation.Repositories;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 using Moq;
@@ -110,7 +111,7 @@ namespace MinistryPlatform.Translation.Test.Services
                 }
             };
 
-            _authenticationService.Setup(mocked => mocked.GetContactId("logged in")).Returns(123);
+            _ministryPlatformService.Setup(mocked => mocked.GetContactInfo("logged in")).Returns(new PlatformService.UserInfo() { ContactId = 123 });
             _ministryPlatformService.Setup(mocked => mocked.GetPageViewRecords(102030, "ABC", ",\"123\"", string.Empty, 0)).Returns(mpResult);
 
             var user = _fixture.GetByAuthenticationToken("logged in");

@@ -16,12 +16,15 @@ namespace MinistryPlatform.Translation.Repositories
         private readonly IProductRepository _productRepository;
         private readonly IConfigurationWrapper _configurationWrapper;
 
+        private readonly int _invoiceCancelled;
+
         public InvoiceRepository(IMinistryPlatformRestRepository ministryPlatformRest, IApiUserRepository apiUserRepository, IProductRepository productRepository, IConfigurationWrapper configurationWrapper)
         {
             _ministryPlatformRest = ministryPlatformRest;
             _apiUserRepository = apiUserRepository;
             _productRepository = productRepository;
             _configurationWrapper = configurationWrapper;
+            _invoiceCancelled = _configurationWrapper.GetConfigIntValue("InvoiceCancelled");
         }
         public bool InvoiceExists(int invoiceId)
         {
@@ -29,11 +32,11 @@ namespace MinistryPlatform.Translation.Repositories
         }
 
         public bool InvoiceExistsForEventParticipant(int eventParticipantId)
-        {
-            var filter = new Dictionary<string, object> { { "Event_Participant_ID", eventParticipantId } };
-
+        {           
+            var filter = new Dictionary<string, object> { { "Event_Participant_ID", eventParticipantId }};
             var apiToken = _apiUserRepository.GetToken();
-            return  _ministryPlatformRest.UsingAuthenticationToken(apiToken).Get<MpInvoiceDetail>("Invoice_Detail", filter).FirstOrDefault() != null;
+            var invoices =_ministryPlatformRest.UsingAuthenticationToken(apiToken).Get<MpInvoiceDetail>("Invoice_Detail", filter);
+            return invoices.Where(i => i.InvoiceStatusId != _invoiceCancelled).ToList().Any();
         }
 
         public void SetInvoiceStatus(int invoiceId, int statusId)
@@ -49,7 +52,11 @@ namespace MinistryPlatform.Translation.Repositories
         public MpInvoice GetInvoice(int invoiceId)
         {
             var apiToken = _apiUserRepository.GetToken();
-            return _ministryPlatformRest.UsingAuthenticationToken(apiToken).Get<MpInvoice>(invoiceId);
+            var filter = $"Invoice_ID={invoiceId} AND Invoice_Status_ID!={_invoiceCancelled}";
+
+            var resultLst = _ministryPlatformRest.UsingAuthenticationToken(apiToken).Search<MpInvoice>(filter);
+            var blah = resultLst.Any();
+            return blah ? resultLst.First() : null;
         }
 
         public MpInvoiceDetail GetInvoiceDetailForInvoice(int invoiceId)
@@ -88,8 +95,7 @@ namespace MinistryPlatform.Translation.Repositories
         public Result<MpInvoiceDetail> GetInvoiceDetailsForProductAndCamper(int productId, int camperId)
         {
             var apiToken = _apiUserRepository.GetToken();
-            var invoiceCancelled = _configurationWrapper.GetConfigIntValue("InvoiceCancelled");
-            var invoiceDetails = _ministryPlatformRest.UsingAuthenticationToken(apiToken).Search<MpInvoiceDetail>($"Recipient_Contact_ID_Table.[Contact_ID]={camperId} AND Product_ID_Table.[Product_ID]={productId} AND Invoice_Status_ID!={invoiceCancelled}", "Invoice_ID_Table.[Invoice_ID]");
+            var invoiceDetails = _ministryPlatformRest.UsingAuthenticationToken(apiToken).Search<MpInvoiceDetail>($"Recipient_Contact_ID_Table.[Contact_ID]={camperId} AND Product_ID_Table.[Product_ID]={productId} AND Invoice_Status_ID!={_invoiceCancelled}", "Invoice_ID_Table.[Invoice_ID]");
             if (invoiceDetails.Any())
             {
                 if (invoiceDetails.First() != null)

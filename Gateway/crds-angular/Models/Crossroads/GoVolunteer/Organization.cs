@@ -10,7 +10,7 @@ namespace crds_angular.Models.Crossroads.GoVolunteer
         public int ContactId { get; set; }
 
         [JsonProperty(PropertyName = "endDate")]
-        public DateTime EndDate { get; set; }
+        public DateTime? EndDate { get; set; }
 
         [JsonProperty(PropertyName = "name")]
         public string Name { get; set; }
@@ -24,6 +24,9 @@ namespace crds_angular.Models.Crossroads.GoVolunteer
         [JsonProperty(PropertyName = "startDate")]
         public DateTime StartDate { get; set; }
 
+        [JsonProperty(PropertyName = "imageURL")]
+        public string ImageUrl { get; set; }
+
         public Organization FromMpOrganization(MPOrganization mpOrg)
         {
             return new Organization()
@@ -33,7 +36,8 @@ namespace crds_angular.Models.Crossroads.GoVolunteer
                 EndDate = mpOrg.EndDate,
                 StartDate = mpOrg.StartDate,
                 Name = mpOrg.Name,
-                OpenSignup = mpOrg.OpenSignup
+                OpenSignup = mpOrg.OpenSignup,
+                ImageUrl = mpOrg.ImageUrl
             };
         }
 
@@ -46,7 +50,8 @@ namespace crds_angular.Models.Crossroads.GoVolunteer
                 EndDate = org.EndDate,
                 StartDate = org.StartDate,
                 Name = org.Name,
-                OpenSignup = org.OpenSignup
+                OpenSignup = org.OpenSignup,
+                ImageUrl = org.ImageUrl
             };
         }
     }

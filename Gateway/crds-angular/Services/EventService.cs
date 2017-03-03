@@ -41,6 +41,7 @@ namespace crds_angular.Services
         private readonly IEquipmentRepository _equipmentService;
         private readonly IEventParticipantRepository _eventParticipantService;
         private readonly int childcareEventTypeID;
+        private readonly int childcareGroupTypeID;
 
         private readonly List<string> _tableHeaders = new List<string>()
         {
@@ -81,6 +82,7 @@ namespace crds_angular.Services
             _eventParticipantService = eventParticipantService;
 
             childcareEventTypeID = configurationWrapper.GetConfigIntValue("ChildcareEventType");
+            childcareGroupTypeID = configurationWrapper.GetConfigIntValue("ChildcareGroupType");
         }
 
         public EventToolDto GetEventRoomDetails(int eventId)
@@ -184,7 +186,7 @@ namespace crds_angular.Services
                 {
                     if (!room.Cancelled)
                     {
-                        if (!eventReservation.Rooms.Any(r => r.RoomId == room.RoomId))
+                        if (!eventReservation.Rooms.Any(r => r.RoomId == room.RoomId) || oldEventDetails.StartDateTime != eventReservation.StartDateTime)
                         {
                             room.Cancelled = true;
                             foreach (var eq in room.Equipment)
@@ -235,7 +237,7 @@ namespace crds_angular.Services
             //it was and still is a childcare event
             else if (wasChildcare && isChildcare)
             {
-                var group = _eventService.GetEventGroupsForEventAPILogin(eventId).FirstOrDefault();
+                var group = _eventService.GetEventGroupsForEventAPILogin(eventId).FirstOrDefault(i => i.GroupTypeId == childcareGroupTypeID);
 
                 eventReservation.Group.GroupId = group.GroupId;
                 eventReservation.Group.CongregationId = eventReservation.CongregationId;

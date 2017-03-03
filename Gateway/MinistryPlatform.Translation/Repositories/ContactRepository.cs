@@ -17,7 +17,6 @@ namespace MinistryPlatform.Translation.Repositories
     public class ContactRepository : BaseRepository, IContactRepository
     {
         private readonly int _addressesPageId;
-        private readonly IConfigurationWrapper _configurationWrapper;
         private readonly int _congregationDefaultId;
         private readonly int _contactsPageId;
         private readonly int _householdDefaultSourceId;
@@ -35,7 +34,6 @@ namespace MinistryPlatform.Translation.Repositories
             : base(authenticationService, configuration)
         {
             _ministryPlatformService = ministryPlatformService;
-            _configurationWrapper = configuration;
             _ministryPlatformRest = ministryPlatformRest;
             _apiUserRepository = apiUserRepository;
 
@@ -83,6 +81,12 @@ namespace MinistryPlatform.Translation.Repositories
             };
 
             return CreateContact(contact);
+        }
+
+        //Get ID of currently logged in user
+        public int GetContactId(string token)
+        {
+            return _ministryPlatformService.GetContactInfo(token).ContactId;
         }
 
         public MpMyContact GetContactById(int contactId)
@@ -206,20 +210,42 @@ namespace MinistryPlatform.Translation.Repositories
             }).ToList();
             return family;
         }
-
-        public List<MpHouseholdMember> GetOtherHouseholdMembers(int contactId)
+        
+        /// <summary>
+        /// Get the Other/Former members of a particular household
+        /// </summary>
+        /// <param name="householdId">the householdId of the household where you want the other members</param>
+        /// <returns> a list of MpHouseholdMember </returns>
+        public List<MpHouseholdMember> GetOtherHouseholdMembers(int householdId)
         {
             var token = ApiLogin();
-            var householdMembers = new List<MpHouseholdMember>();
-            var otherHouseholds = _ministryPlatformService.GetSubpageViewRecords("OtherHouseholds", contactId, token);
-            foreach (var house in otherHouseholds)
+            var filter = $"Contact_Households.Household_ID = {householdId} ";
+            var columns = new List<string>
             {
-                var houseId = (int) house["Household_ID"];
-                householdMembers.AddRange(GetHouseholdFamilyMembers(houseId));
-            }
+                "Contact_Households.Contact_ID",
+                "Contact_Households.Household_ID",
+                "Contact_Households.Household_Position_ID",
+                "Household_Position_ID_Table.Household_Position",
+                "Contact_ID_Table.First_Name",
+                "Contact_ID_Table.Nickname",
+                "Contact_ID_Table.Last_Name",
+                "Contact_ID_Table.Date_of_Birth",
+                "Contact_ID_Table.__Age",
+                "Contact_Households.End_Date"
+            };
+            var result = _ministryPlatformRest.UsingAuthenticationToken(token).Search<MpContactHousehold>(filter, columns);
+            var householdMembers = result.Where((hm) => hm.EndDate == null || hm.EndDate > DateTime.Now).Select((hm) => new MpHouseholdMember
+            {
+                Age = hm.Age ?? 0,
+                ContactId = hm.ContactId,
+                DateOfBirth = hm.DateOfBirth ?? new DateTime(),
+                FirstName = hm.FirstName,
+                LastName = hm.LastName,
+                HouseholdPosition = hm.HouseholdPosition,
+                Nickname = hm.Nickname,
+            }).ToList();
             return householdMembers;
-        }
-
+        }      
 
         public MpMyContact GetMyProfile(string token)
         {
@@ -273,6 +299,24 @@ namespace MinistryPlatform.Translation.Repositories
                 try
                 {
                     _ministryPlatformService.UpdateRecord(_configurationWrapper.GetConfigIntValue("Contacts"), profileDictionary, token);
+                    UpdateHouseholdAddress(contactId, householdDictionary, addressDictionary);
+                    return 1;
+                }
+                catch (Exception e)
+                {
+                    return 0;
+                }
+            });
+        }
+
+        public void UpdateHouseholdAddress(int contactId,
+                                  Dictionary<string, object> householdDictionary,
+                                  Dictionary<string, object> addressDictionary)
+        {
+            WithApiLogin<int>(token =>
+            {
+                try
+                {
                     if (addressDictionary["Address_ID"] != null)
                     {
                         //address exists, update it
@@ -302,7 +346,7 @@ namespace MinistryPlatform.Translation.Repositories
               {
                 {"@FirstName", minorContact.FirstName},
                 {"@LastName", minorContact.LastName},
-                {"@MiddleName", minorContact.MiddleName },
+                {"@MiddleName", minorContact.MiddleName ?? ""},
                 {"@PreferredName", minorContact.PreferredName },
                 {"@NickName", minorContact.Nickname },
                 {"@Birthdate", minorContact.BirthDate },
@@ -310,7 +354,7 @@ namespace MinistryPlatform.Translation.Repositories
                 {"@SchoolAttending", minorContact.SchoolAttending },
                 {"@HouseholdId", minorContact.HouseholdId },
                 {"@HouseholdPosition", minorContact.HouseholdPositionId },
-                {"@MobilePhone", minorContact.MobilePhone }
+                {"@MobilePhone", minorContact.MobilePhone ?? ""}
              };
 
             var result = _ministryPlatformRest.UsingAuthenticationToken(apiToken).GetFromStoredProc<MpRecordID>(storedProc, fields);

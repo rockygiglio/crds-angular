@@ -101,12 +101,13 @@ namespace crds_angular.Services
                 PaymentStatus = _defaultPaymentStatus,
                 ProcessorFeeAmount = fee
             };
+            var invoiceDetail = _invoiceRepository.GetInvoiceDetailForInvoice(paymentRecord.InvoiceId);
             var paymentDetail = new MpPaymentDetail
             {
                 Payment = payment,
                 PaymentAmount = paymentRecord.DonationAmt,
-                InvoiceDetailId = _invoiceRepository.GetInvoiceDetailForInvoice(paymentRecord.InvoiceId).InvoiceDetailId
-                
+                InvoiceDetailId = invoiceDetail.InvoiceDetailId,
+                CongregationId = _contactRepository.GetContactById(invoiceDetail.RecipientContactId).Congregation_ID ?? _configWrapper.GetConfigIntValue("Congregation_Default_ID")
             };
 
             var result = _paymentRepository.CreatePaymentAndDetail(paymentDetail);
@@ -261,7 +262,8 @@ namespace crds_angular.Services
             {
                 PaymentAmount = -(int.Parse(refund.Data[0].Amount)/Constants.StripeDecimalConversionValue),
                 InvoiceDetailId = invoicedetail.InvoiceDetailId,
-                Payment = paymentReverse
+                Payment = paymentReverse,
+                CongregationId = _contactRepository.GetContactById(invoicedetail.RecipientContactId).Congregation_ID ?? _configWrapper.GetConfigIntValue("Congregation_Default_ID")
             };
             return _paymentRepository.CreatePaymentAndDetail(detail).Value.PaymentId;
         }

@@ -7,6 +7,7 @@ using Crossroads.Web.Common.MinistryPlatform;
 using Crossroads.Web.Common.Security;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Models.Childcare;
+using MinistryPlatform.Translation.Models.GoCincinnati;
 using MinistryPlatform.Translation.Models.Payments;
 using MinistryPlatform.Translation.Models.Rules;
 using Newtonsoft.Json;
@@ -513,10 +514,71 @@ namespace MinistryPlatform.Translation.Test.Services
             var filter = $"Events.[Event_ID] = 4532768";
             const string column = "Online_Registration_Product_Table_Program_ID_Table_Communication_ID_Table.[Communication_ID]";
             var result = _fixture.UsingAuthenticationToken(_authToken).Search<int>("Events", filter, column, null, false);
-            Assert.AreEqual(2006, result);
-            
+            Assert.AreEqual(2006, result);            
         }
 
+        [Test]
+        public void findOtherHouseholdMembers()
+        {
+            var filter = $"Contact_Households.Household_ID=1709940";
+            var columns = new List<string>
+            {
+                "Contact_Households.Contact_ID",
+                "Contact_Households.Household_ID",
+                "Contact_Households.Household_Position_ID",
+                "Household_Position_ID_Table.Household_Position",
+                "Contact_ID_Table.First_Name",
+                "Contact_ID_Table.Nickname",
+                "Contact_ID_Table.Last_Name",
+                "Contact_ID_Table.Date_of_Birth",
+                "Contact_ID_Table.__Age",
+                "Contact_Households.End_Date"
+            };
+            var result = _fixture.UsingAuthenticationToken(_authToken).Search<MpContactHousehold>(filter, columns);
+            Assert.AreEqual(1, result.Count);
+            Assert.IsNotNull(result.First().EndDate);
+        }
+        
+        [Test]
+        public void GetAllUncancelledInvoicesForEventParticipant()
+        {
+            var filter = new Dictionary<string, object> { { "Event_Participant_ID", 7720246 } };
+            var result =  _fixture.UsingAuthenticationToken(_authToken)
+                .Get<MpInvoiceDetail>("Invoice_Detail", filter);
+            Assert.IsFalse(result.Where(i => i.InvoiceStatusId != 7).ToList().Any());
+        }
+
+        [Test]
+        public void GetProject()
+        {
+            const string filter = "Project_ID=564 AND Initiative_ID_Table.[Volunteer_Signup_Start_Date]<=GetDate() AND Initiative_ID_Table.[Volunteer_Signup_End_Date]>=GetDate()";
+            var columns = new List<string>
+            {
+                "Project_ID",
+                "Project_Name",
+                "Project_Status_ID",
+                "Location_ID",
+                "Project_Type_ID",
+                "Organization_ID",
+                "cr_Projects.Initiative_ID",
+                "Address_ID_Table.Address_ID",
+                "Address_ID_Table.[City]",
+                "Address_ID_Table.[State/Region] AS [State]",
+
+            };
+            var result = _fixture.UsingAuthenticationToken(_authToken).Search<MpProject>(filter, columns, null, true);
+            Assert.NotNull(result);
+            Assert.AreEqual(1, result.Count);
+        }
+
+        [Test]
+        public void GetGroupConnectorWithProjectId()
+        {
+            const int projectId = 564;
+            var groupConnectors = _fixture.UsingAuthenticationToken(_authToken).Search<MpGroupConnector>($"Project_ID = {projectId}");
+
+            Assert.NotNull(groupConnectors);
+        }
     }
 
     [MpRestApiTable(Name = "Payment_Types")]
