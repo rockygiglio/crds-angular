@@ -70,6 +70,9 @@ namespace crds_angular.test.Services
         private const int GROUP_ROLE_LEADER = 22;
         private const int DOMAIN_ID = 66;
         private const int ONSITE_GROUP_ID = 8;
+        private const int GroupCategoryAttributeTypeId = 10;
+        private const int GroupTypeAttributeTypeId = 20;
+        private const int GroupAgeRangeAttributeTypeId = 30;
 
         [SetUp]
         public void SetUp()
@@ -103,6 +106,9 @@ namespace crds_angular.test.Services
             config.Setup(mocked => mocked.GetConfigIntValue("Group_Role_Default_ID")).Returns(GROUP_ROLE_DEFAULT_ID);
             config.Setup(mocked => mocked.GetConfigIntValue("JourneyGroupTypeId")).Returns(JOURNEY_GROUP_ID);
             config.Setup(mocked => mocked.GetConfigIntValue("DomainId")).Returns(DOMAIN_ID);
+            config.Setup(mocked => mocked.GetConfigIntValue("GroupCategoryAttributeTypeId")).Returns(GroupCategoryAttributeTypeId);
+            config.Setup(mocked => mocked.GetConfigIntValue("GroupTypeAttributeTypeId")).Returns(GroupTypeAttributeTypeId);
+            config.Setup(mocked => mocked.GetConfigIntValue("GroupAgeRangeAttributeTypeId")).Returns(GroupAgeRangeAttributeTypeId);
 
             fixture = new GroupService(groupRepository.Object,
                                        config.Object,
@@ -523,6 +529,165 @@ namespace crds_angular.test.Services
 
             groupRepository.VerifyAll();
             Assert.IsNotNull(grps);
+        }
+
+        [Test]
+        public void GetGroupsByTypeOrIdNoParticipant()
+        {
+            const string token = "123";
+            const int participantId = 42;
+            int[] groupTypeIds = {1, 8};
+
+            var groups = new List<MpGroup>()
+            {
+                new MpGroup
+                {
+                    GroupId = 321,
+                    CongregationId = 5,
+                    Name = "Test Journey Group 2016",
+                    GroupRoleId = 16,
+                    GroupDescription = "The group will test some new code",
+                    MinistryId = 8,
+                    ContactId = 4321,
+                    GroupType = 1,
+                    StartDate = Convert.ToDateTime("2016-02-12"),
+                    EndDate = Convert.ToDateTime("2018-02-12"),
+                    MeetingDayId = 3,
+                    MeetingTime = "10:00",
+                    AvailableOnline = false,
+                    Address = new MpAddress()
+                    {
+                        Address_Line_1 = "123 Sesame St",
+                        Address_Line_2 = "",
+                        City = "South Side",
+                        State = "OH",
+                        Postal_Code = "12312"
+                    }
+                }
+            };
+
+            var participants = new List<MpGroupParticipant>()
+            {
+                new MpGroupParticipant()
+                {
+                    GroupParticipantId = 3,
+                    GroupName = "Test Journey Group 2016",
+                    GroupId = 321,
+                    GroupRoleId = 22
+                }
+            };
+            var objectAllAttribute = new ObjectAllAttributesDTO();
+            objectAllAttribute.MultiSelect = new Dictionary<int, ObjectAttributeTypeDTO>();
+            objectAllAttribute.SingleSelect = new Dictionary<int, ObjectSingleAttributeDTO>();
+
+            var allAttributes = new List<MpAttribute>()
+            {
+                new MpAttribute
+                {
+                    AttributeId = 1,
+                    AttributeTypeId = 10,
+
+                }
+            };
+
+            _attributeRepository.Setup(mocked => mocked.GetAttributes((int?) null)).Returns(allAttributes);
+
+
+            _objectAttributeService.Setup(mocked => mocked.GetObjectAttributes(token, groups[0].GroupId, It.IsAny<MpObjectAttributeConfiguration>(), It.IsAny<List<MpAttribute>>()))
+                .Returns(objectAllAttribute);
+
+            participantService.Setup(mocked => mocked.GetParticipantRecord(token)).Returns(new Participant {ParticipantId = participantId});
+
+            groupRepository.Setup(mocked => mocked.GetGroupsForParticipantByTypeOrID(42, token, groupTypeIds, (int?)null)).Returns(groups);
+
+            groupRepository.Setup(mocked => mocked.GetGroupParticipants(groups[0].GroupId, true)).Returns(participants);
+
+            var result = fixture.GetGroupsByTypeOrId(token, null, groupTypeIds);
+
+            participantService.VerifyAll();
+            groupRepository.Verify();
+
+            Assert.AreEqual(result.Count, 1);
+            Assert.AreEqual(result[0].Participants.Count, 1);
+            Assert.AreEqual(result[0].GroupId, 321);
+        }
+
+        [Test]
+        public void GetGroupsByTypeOrIdWithParticipant()
+        {
+            const string token = "123";
+            const int participantId = 42;
+            int[] groupTypeIds = { 1, 8 };
+
+            var groups = new List<MpGroup>()
+            {
+                new MpGroup
+                {
+                    GroupId = 321,
+                    CongregationId = 5,
+                    Name = "Test Journey Group 2016",
+                    GroupRoleId = 16,
+                    GroupDescription = "The group will test some new code",
+                    MinistryId = 8,
+                    ContactId = 4321,
+                    GroupType = 1,
+                    StartDate = Convert.ToDateTime("2016-02-12"),
+                    EndDate = Convert.ToDateTime("2018-02-12"),
+                    MeetingDayId = 3,
+                    MeetingTime = "10:00",
+                    AvailableOnline = false,
+                    Address = new MpAddress()
+                    {
+                        Address_Line_1 = "123 Sesame St",
+                        Address_Line_2 = "",
+                        City = "South Side",
+                        State = "OH",
+                        Postal_Code = "12312"
+                    }
+                }
+            };
+
+            var participants = new List<MpGroupParticipant>()
+            {
+                new MpGroupParticipant()
+                {
+                    GroupParticipantId = 3,
+                    GroupName = "Test Journey Group 2016",
+                    GroupId = 321,
+                    GroupRoleId = 22
+                }
+            };
+            var objectAllAttribute = new ObjectAllAttributesDTO();
+            objectAllAttribute.MultiSelect = new Dictionary<int, ObjectAttributeTypeDTO>();
+            objectAllAttribute.SingleSelect = new Dictionary<int, ObjectSingleAttributeDTO>();
+
+            var allAttributes = new List<MpAttribute>()
+            {
+                new MpAttribute
+                {
+                    AttributeId = 1,
+                    AttributeTypeId = 10,
+
+                }
+            };
+
+            _attributeRepository.Setup(mocked => mocked.GetAttributes((int?)null)).Returns(allAttributes);
+
+            _objectAttributeService.Setup(mocked => mocked.GetObjectAttributes(token, It.IsAny<int>(), It.IsAny<MpObjectAttributeConfiguration>(), It.IsAny<List<MpAttribute>>()))
+                .Returns(objectAllAttribute);
+
+            groupRepository.Setup(mocked => mocked.GetGroupsForParticipantByTypeOrID(42, token, groupTypeIds, (int?)null)).Returns(groups);
+
+            groupRepository.Setup(mocked => mocked.GetGroupParticipants(groups[0].GroupId, true)).Returns(participants);
+
+            var result = fixture.GetGroupsByTypeOrId(token, participantId, groupTypeIds);
+
+            participantService.VerifyAll();
+            groupRepository.Verify();
+
+            Assert.AreEqual(result.Count, 1);
+            Assert.AreEqual(result[0].Participants.Count, 1);
+            Assert.AreEqual(result[0].GroupId, 321);
         }
 
         [Test]
