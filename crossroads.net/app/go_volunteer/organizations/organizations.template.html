@@ -19,9 +19,13 @@
         <div ng-if="organization.cities">
           <select class="form-control push-half-bottom" 
                   ng-model='$ctrl.selectedCity' 
-                  ng-options="city as city.name for city in organization.cities"
                   ng-change="$ctrl.selectCity($ctrl.selectedCity)" >
             <option value="">Select Location</option>
+            <option ng-value="-1"> Cincinnati or Central Kentucky Crossroads Sites </option>
+            <option value="" disabled> &mdash;&mdash;&mdash; </option>
+            <option ng-value="city.projectId" ng-repeat="city in organization.cities">
+              {{ city.name }} 
+            </option>
           </select>
           <p class="help-block">Don't see your area?  Discover other opportunities in your city.</p>
         </div>
