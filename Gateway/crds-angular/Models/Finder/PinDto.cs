@@ -18,10 +18,10 @@ namespace crds_angular.Models.Finder
 
     public class PinDto
     {
-        [JsonProperty("firstname")]
+        [JsonProperty("firstName")]
         public string FirstName { get; set; }
 
-        [JsonProperty("lastname")]
+        [JsonProperty("lastName")]
         public string LastName { get; set; }
 
         [JsonProperty("emailAddress")]
