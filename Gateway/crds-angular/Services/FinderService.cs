@@ -145,6 +145,23 @@ namespace crds_angular.Services
             return participantAndBuildingPins;
         }
 
+
+        public GeoCoordinate GetGeoCoordsFromAddressOrLatLang(string address, string lat, string lng)
+        {
+            double latitude = Convert.ToDouble(lat.Replace("$", "."));
+            double longitude = Convert.ToDouble(lng.Replace("$", "."));
+
+            bool geoCoordsPassedIn = latitude != 0 && longitude != 0;
+
+            GeoCoordinate originCoordsFromGoogle = geoCoordsPassedIn ? null : _addressGeocodingService.GetGeoCoordinates(address);
+
+            GeoCoordinate originCoordsFromClient = new GeoCoordinate(latitude, longitude);
+
+            GeoCoordinate originCoordinates = geoCoordsPassedIn ? originCoordsFromClient : originCoordsFromGoogle;
+
+            return originCoordinates; 
+        }
+
         private List<PinDto> GetGroupPinsinRadius(GeoCoordinate originCoords, string address)
         {
             // ignoring originCoords at this time

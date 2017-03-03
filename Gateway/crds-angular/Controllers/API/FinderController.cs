@@ -144,28 +144,10 @@ namespace crds_angular.Controllers.API
         {
             try
             {
-                double latitude = Convert.ToDouble(lat.Replace("$", ".")); 
-                double longitude = Convert.ToDouble(lng.Replace("$", ".")); 
+                GeoCoordinate originCoords = _finderService.GetGeoCoordsFromAddressOrLatLang(userSearchAddress, lat, lng);           
+                List<PinDto> pinsInRadius = _finderService.GetPinsInRadius(originCoords, userSearchAddress);
 
-                bool geoCoordsPassedIn = latitude != 0 && longitude != 0;
-
-                GeoCoordinate originCoordsFromGoogle = _addressGeocodingService.GetGeoCoordinates(userSearchAddress);
-
-                GeoCoordinate originCoordsFromClient = new GeoCoordinate()
-                {
-                    Latitude = latitude,
-                    Longitude = longitude
-                };
-
-                GeoCoordinate originCoordinates = geoCoordsPassedIn ? originCoordsFromClient : originCoordsFromGoogle; 
-
-                GeoCoordinates originGeoCoordinates = geoCoordsPassedIn ? 
-                    new GeoCoordinates(latitude, longitude) 
-                    : new GeoCoordinates(originCoordsFromGoogle.Latitude, originCoordsFromGoogle.Longitude);
-
-                List<PinDto> pinsInRadius = _finderService.GetPinsInRadius(originCoordinates, userSearchAddress);
-
-                PinSearchResultsDto result = new PinSearchResultsDto(originGeoCoordinates, pinsInRadius);
+                PinSearchResultsDto result = new PinSearchResultsDto(new GeoCoordinates(originCoords.Latitude, originCoords.Longitude), pinsInRadius);
 
                 return Ok(result);
             }
