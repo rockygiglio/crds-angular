@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Linq;
+using System.ServiceModel;
+using crds_angular.Exceptions;
 using crds_angular.Models.Crossroads.GoVolunteer;
 using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Services;
@@ -132,6 +134,11 @@ namespace crds_angular.Services
                 CreateAnywhereRegistrationDto(registration, participantId);
 
                 return registration;
+            }
+            catch (DuplicateUserException e)
+            {
+                _logger.Error(e.Message, e);
+                throw e;
             }
             catch (Exception e)
             {
@@ -606,7 +613,15 @@ namespace crds_angular.Services
             user.UserId = registration.Self.EmailAddress;
             user.UserEmail = registration.Self.EmailAddress;
             user.DisplayName = registration.Self.LastName + ", " + registration.Self.FirstName;
-            _userService.UpdateUser(user);
+
+            try
+            {
+                _userService.UpdateUser(user);
+            }
+            catch (FaultException e)
+            {
+                throw new DuplicateUserException(user.UserId);
+            }
 
             //get participant
             var participant = _participantService.GetParticipantRecord(token);
