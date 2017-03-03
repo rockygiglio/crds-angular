@@ -78,7 +78,7 @@ namespace crds_angular.test.controllers
             Assert.IsNotNull(response);
             Assert.IsInstanceOf<OkNegotiatedContentResult<List<GoSkills>>>(response);
             var r = (OkNegotiatedContentResult<List<GoSkills>>) response;
-            //Assert.IsNotNull(r.Content);
+            Assert.IsNotNull(r.Content);
             Assert.AreEqual(r.Content.Count, listSize);
             Assert.AreSame(skills, r.Content);
         }
