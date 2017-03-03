@@ -1,5 +1,5 @@
 import constants from '../constants';
-import { CmsInfo, Meta, GetProject, GetCities, GetOrganizations } from './goVolunteer.resolves';
+import { CmsInfo, Meta, GetProject, GetProfile, GetCities, GetOrganizations } from './goVolunteer.resolves';
 
 const cookieNames = constants.COOKIES;
 
@@ -119,7 +119,9 @@ export default function GoVolunteerRoutes($stateProvider, $urlMatcherFactoryProv
         loggedin: crds_utilities.optimisticallyCheckLoggedin,
         GoVolunteerDataService: 'GoVolunteerDataService',
         GoVolunteerService: 'GoVolunteerService',
-        GetProject
+        Profile: 'Profile',
+        GetProject,
+        GetProfile
       }
     })
     .state('go-local.anywhereconfirm', {
@@ -395,8 +397,8 @@ function GetSpouse(Profile, $cookies, $q, GoVolunteerService, $stateParams) {
 function Locations($cookies, $q, GoVolunteerService, $stateParams, Organizations) {
   var deferred = $q.defer();
 
-  if ($stateParams.page === 'launch-site' && 
-      _.isEmpty(GoVolunteerService.launchSites) && 
+  if ($stateParams.page === 'launch-site' &&
+      _.isEmpty(GoVolunteerService.launchSites) &&
       GoVolunteerService.organization.organizationId) {
     Organizations.LocationsForOrg.query({orgId: GoVolunteerService.organization.organizationId}, function(data) {
       GoVolunteerService.launchSites = data;
@@ -570,4 +572,3 @@ function useCachedOrg(org, cachedOrg) {
 
   return false;
 }
-
