@@ -147,6 +147,26 @@ export default function GoVolunteerRoutes($stateProvider, $urlMatcherFactoryProv
         GetProject
       }
     })
+    .state('go-local.anywhereleader', {
+      parent: 'goCincinnati',
+      url: '/go-local/:initiativeId/crossroads/:city/:projectId/leader',
+      template: '<anywhere-leader></anywhere-leader>',
+      data: {
+        meta: {
+          title: 'GO Local',
+          description: ''
+        },
+        isProtected: true
+      },
+      resolve: {
+        $state: '$state',
+        $q: '$q',
+        loggedin: crds_utilities.optimisticallyCheckLoggedin,
+        GoVolunteerDataService: 'GoVolunteerDataService',
+        GoVolunteerService: 'GoVolunteerService',
+        GetProject
+      }
+    })
     .state('go-local.signinpage', {
       parent: 'goCincinnati',
       url: '/go-local/:initiative/crossroads/signin',
