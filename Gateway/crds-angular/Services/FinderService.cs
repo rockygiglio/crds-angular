@@ -152,7 +152,7 @@ namespace crds_angular.Services
 
             // get group for anywhere gathering
             var anywhereGroupTypeId = _configurationWrapper.GetConfigIntValue("AnywhereGatheringGroupTypeId");
-            var groups = _groupToolService.SearchGroups(new int[] {anywhereGroupTypeId}, null, address, null);
+            var groups = _groupToolService.SearchGroups(new int[] {anywhereGroupTypeId}, null, address, null, originCoords);
 
             foreach (var group in groups)
             {

@@ -137,18 +137,33 @@ namespace crds_angular.Controllers.API
         }
 
         [ResponseType(typeof(PinSearchResultsDto))]
-        [VersionedRoute(template: "finder/findpinsbyaddress/{userSearchAddress}", minimumVersion: "1.0.0")]
-        [System.Web.Http.Route("finder/findpinsbyaddress/{userSearchAddress}")]
+        [VersionedRoute(template: "finder/findpinsbyaddress/{userSearchAddress}/{lat?}/{lng?}", minimumVersion: "1.0.0")]
+        [System.Web.Http.Route("finder/findpinsbyaddress/{userSearchAddress}/{geoCoordinates?}/{lat?}/{lng?}")]
         [System.Web.Http.HttpGet]
-        public IHttpActionResult GetFindPinsByAddress(string userSearchAddress)
+        public IHttpActionResult GetFindPinsByAddress([FromUri]string userSearchAddress, [FromUri]string lat = "0", [FromUri]string lng = "0")
         {
             try
             {
+                double latitude = Convert.ToDouble(lat.Replace("$", ".")); 
+                double longitude = Convert.ToDouble(lng.Replace("$", ".")); 
 
-                GeoCoordinate originCoords = _addressGeocodingService.GetGeoCoordinates(userSearchAddress);
-                GeoCoordinates originGeoCoordinates = new GeoCoordinates(originCoords.Latitude, originCoords.Longitude);
+                bool geoCoordsPassedIn = latitude != 0 && longitude != 0;
 
-                List<PinDto> pinsInRadius = _finderService.GetPinsInRadius(originCoords, userSearchAddress);
+                GeoCoordinate originCoordsFromGoogle = _addressGeocodingService.GetGeoCoordinates(userSearchAddress);
+
+                GeoCoordinate originCoordsFromClient = new GeoCoordinate()
+                {
+                    Latitude = latitude,
+                    Longitude = longitude
+                };
+
+                GeoCoordinate originCoordinates = geoCoordsPassedIn ? originCoordsFromClient : originCoordsFromGoogle; 
+
+                GeoCoordinates originGeoCoordinates = geoCoordsPassedIn ? 
+                    new GeoCoordinates(latitude, longitude) 
+                    : new GeoCoordinates(originCoordsFromGoogle.Latitude, originCoordsFromGoogle.Longitude);
+
+                List<PinDto> pinsInRadius = _finderService.GetPinsInRadius(originCoordinates, userSearchAddress);
 
                 PinSearchResultsDto result = new PinSearchResultsDto(originGeoCoordinates, pinsInRadius);
 
