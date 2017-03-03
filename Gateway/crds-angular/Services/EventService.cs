@@ -224,7 +224,7 @@ namespace crds_angular.Services
             //if it use to be a childcare event, but isn't anymore, remove the group
             if (wasChildcare && !isChildcare)
             {
-                _eventService.DeleteEventGroupsForEvent(eventId, token);
+                _eventService.DeleteEventGroupsForEvent(eventId, token, childcareGroupTypeID);
                 _groupService.EndDateGroup(oldEventDetails.Group.GroupId, null, null);
             }
             //now is a childcare event but was not before so add a group
