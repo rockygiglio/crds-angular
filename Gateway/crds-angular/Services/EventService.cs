@@ -108,9 +108,9 @@ namespace crds_angular.Services
 
                 var groups = _eventService.GetEventGroupsForEventAPILogin(eventId);
 
-                if (groups.Count > 0)
+                if (groups.Any(childcareGroups => childcareGroups.GroupTypeId == childcareGroupTypeID))
                 {
-                    var group = _groupService.getGroupDetails(groups[0].GroupId);
+                    var group = _groupService.getGroupDetails(groups.First(childcareGroup => childcareGroup.GroupTypeId == childcareGroupTypeID).GroupId);
                     dto.Group = Mapper.Map<GroupDTO>(group);
                 }
 
