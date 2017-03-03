@@ -13,6 +13,7 @@ using Newtonsoft.Json;
 using Crossroads.Web.Common.MinistryPlatform;
 using System.Linq;
 using System.Device.Location;
+using crds_angular.Models.Crossroads.Groups;
 using MinistryPlatform.Translation.Models.Finder;
 using Crossroads.Web.Common.Configuration;
 
@@ -43,6 +44,7 @@ namespace crds_angular.Services
         private readonly IApiUserRepository _apiUserRepository;
         private readonly int _approvedHost;
         private readonly int _anywhereGroupType;
+        private readonly int _leaderRoleID;
 
 
         public FinderService(
@@ -66,6 +68,7 @@ namespace crds_angular.Services
             _apiUserRepository = apiUserRepository;
             _approvedHost = configurationWrapper.GetConfigIntValue("ApprovedHostStatus");
             _anywhereGroupType = configurationWrapper.GetConfigIntValue("AnywhereGroupTypeId");
+            _leaderRoleID = configurationWrapper.GetConfigIntValue("GroupRoleLeader");
             _groupToolService = groupToolService;
             _configurationWrapper = configurationWrapper;
         }
@@ -80,7 +83,17 @@ namespace crds_angular.Services
             //get group details
             if (pinDetails.Host_Status_ID == _approvedHost)
             {
-                pinDetails.Gathering = _groupService.GetGroupsByTypeOrId(token, participantId, new int[] {_anywhereGroupType}).FirstOrDefault();
+                var groups = _groupService.GetGroupsByTypeOrId(token, participantId, new int[] {_anywhereGroupType});
+                foreach (GroupDTO group in groups)
+                {
+                    var leader = group.Participants.Where(p => p.GroupRoleId == _leaderRoleID && p.ParticipantId == participantId).FirstOrDefault();
+
+                    if (leader != null)
+                    {
+                        pinDetails.Gathering = group;
+                        break;
+                    }
+                }
             }
             
             //make sure we have a lat/long
@@ -112,8 +125,6 @@ namespace crds_angular.Services
             addressDictionary.Add("State/Region", addressDictionary["State"]);
             _contactRepository.UpdateHouseholdAddress((int) pin.Contact_ID, householdDictionary, addressDictionary);
         }
-
-
 
         public AddressDTO GetAddressForIp(string ip)
         {

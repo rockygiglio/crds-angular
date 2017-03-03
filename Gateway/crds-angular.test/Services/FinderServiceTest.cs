@@ -46,6 +46,10 @@ namespace crds_angular.test.Services
             _apiUserRepository = new Mock<IApiUserRepository>();
             _groupService = new Mock<IGroupService>();
 
+            _mpConfigurationWrapper.Setup(mocked => mocked.GetConfigIntValue("GroupRoleLeader")).Returns(22);
+            _mpConfigurationWrapper.Setup(mocked => mocked.GetConfigIntValue("ApprovedHostStatus")).Returns(3);
+            _mpConfigurationWrapper.Setup(mocked => mocked.GetConfigIntValue("AnywhereGroupTypeId")).Returns(30);
+
             _fixture = new FinderService(_addressGeocodingService.Object, _mpFinderRepository.Object, _mpContactRepository.Object, _addressService.Object, _mpParticipantRepository.Object, _groupService.Object, _mpGroupToolService.Object, _apiUserRepository.Object, _mpConfigurationWrapper.Object);
 
             //force AutoMapper to register
@@ -55,6 +59,7 @@ namespace crds_angular.test.Services
         [Test]
         public void ShouldGetPinDetails()
         {
+            _apiUserRepository.Setup(ar => ar.GetToken()).Returns("abc123");
             _mpFinderRepository.Setup(m => m.GetPinDetails(123))
                 .Returns(new FinderPinDto
                          {
@@ -64,8 +69,40 @@ namespace crds_angular.test.Services
                              Participant_ID = 123,
                              EmailAddress = "joeker@gmail.com",
                              Contact_ID = 22,
-                             Household_ID = 13
+                             Household_ID = 13,
+                             Host_Status_ID = 3
                          });
+
+            _groupService.Setup(gs => gs.GetGroupsByTypeOrId("abc123", 123, new int[] {30}, (int?) null))
+                .Returns(new List<GroupDTO>
+                {
+                    new GroupDTO
+                    {
+                        GroupId = 4444444,
+                        Participants = new List<GroupParticipantDTO>
+                        {
+                            new GroupParticipantDTO
+                            {
+                                GroupRoleId = 22,
+                                ParticipantId = 222
+
+                            }
+                        }
+                    },
+                    new GroupDTO
+                    {
+                        GroupId = 8675309,
+                        Participants = new List<GroupParticipantDTO>
+                        {
+                            new GroupParticipantDTO
+                            {
+                                GroupRoleId = 22,
+                                ParticipantId = 123
+
+                            }
+                        }
+                    }
+                });
 
             var result = _fixture.GetPinDetails(123);
 
@@ -73,6 +110,7 @@ namespace crds_angular.test.Services
 
             Assert.AreEqual(result.LastName, "Ker");
             Assert.AreEqual(result.Address.AddressID, 12);
+            Assert.AreEqual(result.Gathering.GroupId, 8675309);
         }
 
         [Test]
