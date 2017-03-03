@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Device.Location;
+using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Web.Http;
 using System.Web.Http.Description;
 using System.Web.Mvc;
+using System.Web.Services.Description;
 using crds_angular.Exceptions.Models;
 using crds_angular.Models.Crossroads;
 using crds_angular.Models.Finder;
@@ -149,7 +151,12 @@ namespace crds_angular.Controllers.API
                 GeoCoordinates originGeoCoordinates = new GeoCoordinates(originCoords.Latitude, originCoords.Longitude);
 
                 List<PinDto> pinsInRadius = _finderService.GetPinsInRadius(originCoords, userSearchAddress);
-
+     
+                foreach (var pin in pinsInRadius)
+                {
+                    pin.Address = _finderService.RandomizeLatLong(pin.Address);
+                }
+                
                 PinSearchResultsDto result = new PinSearchResultsDto(originGeoCoordinates, pinsInRadius);
 
                 return Ok(result);
