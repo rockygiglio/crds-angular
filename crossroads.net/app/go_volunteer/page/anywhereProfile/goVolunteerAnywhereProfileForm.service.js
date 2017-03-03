@@ -1,7 +1,53 @@
+import moment from 'moment';
+
 export default class GoVolunteerAnywhereProfileForm {
   /* @ngInject */
-  constructor() {
-    this.model = {};
+  constructor(GoVolunteerService, GoVolunteerDataService, $log) {
+    this.goVolunteerService = GoVolunteerService;
+    this.goVolunteerDataService = GoVolunteerDataService;
+    this.log = $log;
+    const person = this.goVolunteerService.person;
+
+    this.model = {
+      firstName: person.nickName || person.firstName || undefined,
+      lastName: person.lastName || undefined,
+      email: person.emailAddress || undefined,
+      mobilePhone: person.mobilePhone || undefined,
+      birthDate: person.dateOfBirth || undefined,
+      bringSpouse: undefined,
+      numberKids: undefined,
+      serveOutsideChurch: undefined,
+      serveOptions: undefined,
+      serveOtherName: undefined
+    };
+  }
+
+  save(initiativeId, projectId) {
+    const {
+      firstName,
+      lastName,
+      email: emailAddress,
+      birthDate: dob,
+      mobilePhone: mobile,
+      bringSpouse: spouseParticipation
+    } = this.model;
+    const { contactId } = this.goVolunteerService.person;
+
+    const registrationData = {
+      initiativeId,
+      spouseParticipation,
+      self: {
+        contactId,
+        dob,
+        emailAddress,
+        firstName,
+        lastName,
+        mobile
+      }
+    };
+
+    // eslint-disable-next-line new-cap
+    return this.goVolunteerDataService.createAnywhereRegistration(projectId, registrationData);
   }
 
   getModel() {
@@ -65,6 +111,26 @@ export default class GoVolunteerAnywhereProfileForm {
               required: true,
               type: 'text',
               datepickerPopup: 'MM/dd/yyyy'
+            },
+            validation: {
+              messages: {
+                tooYoung: () => 'Must be 18 years old or older to sign up'
+              }
+            },
+            asyncValidators: {
+              tooYoung: {
+                expression: modelValue => new Promise((resolve, reject) => {
+                  const bday = moment(modelValue, 'MM-DD-YYYY');
+                  const cutoff18 = moment().subtract(18, 'years');
+
+                  if (bday.isAfter(cutoff18)) {
+                    this.log.error('You must be 18 to sign up!');
+                    reject();
+                  }
+
+                  resolve();
+                })
+              }
             }
           },
         ]
@@ -169,7 +235,7 @@ export default class GoVolunteerAnywhereProfileForm {
               value: 4
             },
             {
-              label: 'Trafficking Justice and Aftercar',
+              label: 'Trafficking Justice and Aftercare',
               value: 5
             },
             {
@@ -187,9 +253,7 @@ export default class GoVolunteerAnywhereProfileForm {
         className: '',
         key: 'serveOtherName',
         type: 'crdsInput',
-        hideExpression: () => {
-          return !this.model.serveOptions || this.model.serveOptions.indexOf(7) === -1;
-        },
+        hideExpression: () => !this.model.serveOptions || this.model.serveOptions.indexOf(7) === -1,
         templateOptions: {
           label: '',
           required: false,
