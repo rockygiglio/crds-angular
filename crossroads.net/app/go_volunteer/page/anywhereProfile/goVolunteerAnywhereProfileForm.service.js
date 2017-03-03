@@ -94,16 +94,6 @@ export default class GoVolunteerAnywhereProfileForm {
         fieldGroup: [
           {
             className: 'form-group col-sm-6',
-            key: 'mobilePhone',
-            type: 'crdsInput',
-            optionsTypes: ['phoneNumber'],
-            templateOptions: {
-              label: 'Mobile Phone',
-              required: true
-            }
-          },
-          {
-            className: 'form-group col-sm-6',
             key: 'birthDate',
             type: 'crdsDatepicker',
             templateOptions: {
@@ -131,6 +121,16 @@ export default class GoVolunteerAnywhereProfileForm {
                   resolve();
                 })
               }
+            }
+          },
+          {
+            className: 'form-group col-sm-6',
+            key: 'mobilePhone',
+            type: 'crdsInput',
+            optionsTypes: ['phoneNumber'],
+            templateOptions: {
+              label: 'Mobile Phone',
+              required: true
             }
           },
         ]

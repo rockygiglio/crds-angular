@@ -199,11 +199,11 @@ namespace crds_angular.Services
         {
             if (!address.HasGeoCoordinates()) return address;
             var random = new Random(DateTime.Now.Millisecond);
-            var distance = random.Next(40, 350); // up to a quarter mile
+            var distance = random.Next(75, 300); // up to a quarter mile
             var angle = random.Next(0, 359);
             const int earthRadius = 6371000; // in meters
 
-            var distanceNorth = Math.Sin(angle)*angle;
+            var distanceNorth = Math.Sin(angle)*distance;
             var distanceEast = Math.Cos(angle)*distance;
 
             double newLat = (double) (address.Latitude + (distanceNorth/earthRadius)*180/Math.PI);
