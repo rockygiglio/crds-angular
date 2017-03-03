@@ -235,7 +235,7 @@ export default class GoVolunteerAnywhereProfileForm {
               value: 4
             },
             {
-              label: 'Trafficking Justice and Aftercar',
+              label: 'Trafficking Justice and Aftercare',
               value: 5
             },
             {
