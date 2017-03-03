@@ -27,7 +27,12 @@ export default class GoVolunteerAnywhereProfileController {
         .then(() => {
           this.state.go('go-local.anywhereconfirm', this.stateParams, { inherit: true });
         }).catch((err) => {
-          this.rootScope.$emit('notify', this.rootScope.MESSAGES.generalError);
+          if (err.status === 409) {
+            this.rootScope.$emit('notify', this.rootScope.MESSAGES.embedRegisterEmailInUse);
+          } else {
+            this.rootScope.$emit('notify', this.rootScope.MESSAGES.generalError);
+          }
+
           this.log.error(err);
         }).finally(() => {
           this.submitting = false;
