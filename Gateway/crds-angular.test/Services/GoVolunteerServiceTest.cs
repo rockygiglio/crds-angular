@@ -689,13 +689,6 @@ namespace crds_angular.test.Services
 
             _groupConnectorService.Setup(m => m.GetGroupConnectorByProjectId(projectId, token))
                 .Returns(new MpGroupConnector { Id = groupConnectorId });
-            _contactService.Setup(m => m.UpdateContact(registration.Self.ContactId, It.IsAny<Dictionary<string, object>>()))
-                .Callback((int cid, Dictionary<string, object> dict) =>
-                {
-                    Assert.AreEqual(registration.Self.ContactId, cid);
-                    Assert.AreEqual(registration.Self.GetDictionary(), dict);
-                    Assert.AreEqual(registration.Self.FirstName, dict["Nickname"]);
-                });
             _userService.Setup(m => m.GetByAuthenticationToken(token))
                 .Returns(user);
             _userService.Setup(m => m.UpdateUser(It.IsAny<MpUser>()))

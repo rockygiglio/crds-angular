@@ -604,10 +604,6 @@ namespace crds_angular.Services
 
         private int ExistingParticipant(Registration registration, string token)
         {
-            // update name/email/dob/mobile
-            var dict = registration.Self.GetDictionary();
-            _contactService.UpdateContact(registration.Self.ContactId, dict);
-
             // update the user record?
             MpUser user = _userService.GetByAuthenticationToken(token);
             user.UserId = registration.Self.EmailAddress;
@@ -622,6 +618,10 @@ namespace crds_angular.Services
             {
                 throw new DuplicateUserException(user.UserId);
             }
+
+            // update name/email/dob/mobile
+            var dict = registration.Self.GetDictionary();
+            _contactService.UpdateContact(registration.Self.ContactId, dict);
 
             //get participant
             var participant = _participantService.GetParticipantRecord(token);
