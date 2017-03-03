@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using crds_angular.Exceptions;
 using crds_angular.Models.Crossroads.GoVolunteer;
 using crds_angular.Services;
 using crds_angular.Services.Interfaces;
@@ -671,6 +672,40 @@ namespace crds_angular.test.Services
             _contactService.VerifyAll();
             _userService.VerifyAll();
             _participantService.VerifyAll();
+        }
+
+        [Test]
+        public void ShouldThrowDuplicateUserException()
+        {
+            const int projectId = 564;
+            const string token = "asdf";
+            const int groupConnectorId = 1324;
+            const int participantId = 9876543;
+            const int preferredLaunchSiteId = 654;
+            const int registrationId = 321654;
+            var user = new MpUser() { };
+            var registration = BuildRegistration();
+            var registrationDto = BuildRegistrationDto(participantId, preferredLaunchSiteId, registration);
+
+            _groupConnectorService.Setup(m => m.GetGroupConnectorByProjectId(projectId, token))
+                .Returns(new MpGroupConnector { Id = groupConnectorId });
+            _userService.Setup(m => m.GetByAuthenticationToken(token))
+                .Returns(user);
+            _userService.Setup(m => m.UpdateUser(It.IsAny<MpUser>()))
+                .Throws(new DuplicateUserException(registration.Self.EmailAddress));
+            _configurationWrapper.Setup(m => m.GetConfigIntValue("CrossroadsOrganizationId"))
+                .Returns(CrossroadsOrganizationId);
+
+            Assert.Throws<DuplicateUserException>(() =>
+                                                  {
+                                                      _fixture.CreateAnywhereRegistration(registration, projectId, token);
+                                                  });
+
+            _groupConnectorService.VerifyAll();
+            _contactService.VerifyAll();
+            _userService.VerifyAll();
+            _participantService.VerifyAll();
+            _registrationService.VerifyAll();
         }
 
         private AnywhereRegistration BuildRegistration()
