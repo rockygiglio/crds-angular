@@ -661,15 +661,6 @@ namespace crds_angular.Services
 
             try
             {
-                // geocode if not already geocoded in DB
-                groups.ForEach(group =>
-                {
-                  if (group.Address.Longitude == null || group.Address.Latitude == null)
-                  {
-                    _addressService.FindOrCreateAddress(group.Address, true);
-                  }
-                });                
-
                 // first call is for all results
                 var proximities = _addressProximityService.GetProximity(location, groups.Select(g => g.Address).ToList());
                 for (var i = 0; i < groups.Count; i++)
