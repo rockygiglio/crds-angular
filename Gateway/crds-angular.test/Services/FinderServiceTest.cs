@@ -14,6 +14,7 @@ using MinistryPlatform.Translation.Repositories.Interfaces;
 using AutoMapper;
 using crds_angular.Models.Crossroads.Groups;
 using Crossroads.Web.Common.Configuration;
+using Crossroads.Web.Common.MinistryPlatform;
 
 namespace crds_angular.test.Services
 {
@@ -28,6 +29,9 @@ namespace crds_angular.test.Services
         private Mock<IParticipantRepository> _mpParticipantRepository;
         private Mock<IConfigurationWrapper> _mpConfigurationWrapper;
         private Mock<IGroupToolService> _mpGroupToolService;
+        private Mock<IGroupService> _groupService;
+        private Mock<IApiUserRepository> _apiUserRepository;
+
 
         [SetUp]
         public void SetUp()
@@ -39,8 +43,10 @@ namespace crds_angular.test.Services
             _mpParticipantRepository = new Mock<IParticipantRepository>();
             _mpGroupToolService = new Mock<IGroupToolService>();
             _mpConfigurationWrapper = new Mock<IConfigurationWrapper>();
+            _apiUserRepository = new Mock<IApiUserRepository>();
+            _groupService = new Mock<IGroupService>();
 
-            _fixture = new FinderService(_addressGeocodingService.Object, _mpFinderRepository.Object, _mpContactRepository.Object, _addressService.Object, _mpParticipantRepository.Object, _mpGroupToolService.Object, _mpConfigurationWrapper.Object);
+            _fixture = new FinderService(_addressGeocodingService.Object, _mpFinderRepository.Object, _mpContactRepository.Object, _addressService.Object, _mpParticipantRepository.Object, _groupService.Object, _mpGroupToolService.Object, _apiUserRepository.Object, _mpConfigurationWrapper.Object);
 
             //force AutoMapper to register
             AutoMapperConfig.RegisterMappings();
@@ -139,7 +145,7 @@ namespace crds_angular.test.Services
                 FirstName = "",
                 LastName = "",
                 Gathering = null,
-                Host_Status = 0
+                Host_Status_ID = 0
             };
 
             var address = Mapper.Map<MpAddress>(pin.Address);            
