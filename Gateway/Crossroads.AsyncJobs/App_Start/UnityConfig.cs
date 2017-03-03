@@ -29,7 +29,7 @@ namespace Crossroads.AsyncJobs
                 }
 
                 var container = new UnityContainer();
-                var unitySections = new[] { "crossroadsCommonUnity", "unity" };
+                var unitySections = new[] { "crossroadsCommonUnity", "unity", "asyncJobsUnity" };
 
                 foreach (var section in unitySections.Select(sectionName => (UnityConfigurationSection)ConfigurationManager.GetSection(sectionName)))
                 {

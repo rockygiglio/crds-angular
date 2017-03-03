@@ -85,6 +85,24 @@ export function GetProject($state, GoVolunteerDataService, GoVolunteerService, $
   return deferred.promise;
 }
 
+export function GetProfile(Profile, $cookies, $q, GoVolunteerService) {
+  const deferred = $q.defer();
+  const gService = GoVolunteerService;
+  const cid = $cookies.get('userId');
+
+  if (GoVolunteerService.person.nickName === '') {
+    const promise = Profile.Person.get({ contactId: cid }).$promise;
+    promise.then((person) => {
+      gService.person = person;
+      deferred.resolve(person);
+    }).catch(deferred.reject);
+  } else {
+    deferred.resolve();
+  }
+
+  return deferred.promise;
+}
+
 export function GetOrganizations(Organizations, GoVolunteerService, $q, $log) {
   const gService = GoVolunteerService;
   const deferred = $q.defer();
@@ -95,5 +113,6 @@ export function GetOrganizations(Organizations, GoVolunteerService, $q, $log) {
     $log.error('Unable to get organizations', err);
     deferred.reject();
   });
+
   return deferred.promise;
 }

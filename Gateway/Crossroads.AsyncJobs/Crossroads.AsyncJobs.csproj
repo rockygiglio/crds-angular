@@ -236,9 +236,6 @@
     <Content Include="packages.config">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="Unity.config">
-      <SubType>Designer</SubType>
-    </Content>
     <Content Include="..\crds-angular\MinistryPlatform.config">
       <Link>MinistryPlatform.config</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -273,6 +270,13 @@
       <Link>MinistryPlatform.Release.config</Link>
       <DependentUpon>MinistryPlatform.config</DependentUpon>
       <IsTransformFile>True</IsTransformFile>
+    </Content>
+    <Content Include="AsyncJobs-Unity.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\crds-angular\Unity.config">
+      <Link>Unity.config</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="job_scheduling_data_2_0.xsd">
       <SubType>Designer</SubType>

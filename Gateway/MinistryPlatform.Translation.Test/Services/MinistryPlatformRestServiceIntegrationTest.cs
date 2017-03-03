@@ -569,8 +569,16 @@ namespace MinistryPlatform.Translation.Test.Services
             var result = _fixture.UsingAuthenticationToken(_authToken).Search<MpProject>(filter, columns, null, true);
             Assert.NotNull(result);
             Assert.AreEqual(1, result.Count);
-        }       
+        }
 
+        [Test]
+        public void GetGroupConnectorWithProjectId()
+        {
+            const int projectId = 564;
+            var groupConnectors = _fixture.UsingAuthenticationToken(_authToken).Search<MpGroupConnector>($"Project_ID = {projectId}");
+
+            Assert.NotNull(groupConnectors);
+        }
     }
 
     [MpRestApiTable(Name = "Payment_Types")]

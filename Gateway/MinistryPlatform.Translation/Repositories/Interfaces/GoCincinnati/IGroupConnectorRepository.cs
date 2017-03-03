@@ -10,5 +10,6 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces.GoCincinnati
         MpGroupConnector GetGroupConnectorById(int groupConnectorId);
         List<MpGroupConnector> GetGroupConnectorsForOpenOrganizations(int initiativeId);
         List<MpGroupConnector> GetGroupConnectorsForOrganization(int organizationId, int initiativeId);
+        MpGroupConnector GetGroupConnectorByProjectId(int projectId, string token);
     }
 }
