@@ -44,6 +44,8 @@
       vm.showWaiver = showWaiver;
       vm.showThankYou = showThankYou;
 
+      vm.showAnywhereProfile = () => $stateParams.page === 'anywhere-profile';
+
       $window.onbeforeunload = onBeforeUnload;
 
       activate();

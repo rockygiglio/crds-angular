@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.Results;
 using crds_angular.Controllers.API;
+using crds_angular.Exceptions;
 using crds_angular.Models.Crossroads.Attribute;
 using crds_angular.Models.Crossroads.GoVolunteer;
 using crds_angular.Models.Crossroads.Lookups;
@@ -28,6 +31,8 @@ namespace crds_angular.test.controllers
         private Mock<IGroupConnectorService> _groupConnectorService;
         private Mock<IOrganizationService> _organizationService;
         private Mock<IGoSkillsService> _skillsService;
+        private string authToken;
+        private string authType;
 
 
         [SetUp]
@@ -40,6 +45,9 @@ namespace crds_angular.test.controllers
             _groupConnectorService = new Mock<IGroupConnectorService>();
             _configurationWrapper = new Mock<IConfigurationWrapper>();
             _attributeService = new Mock<IAttributeService>();
+
+            authType = "authType";
+            authToken = "authToken";
 
             _fixture = new GoVolunteerController(_organizationService.Object,
                                                  _groupConnectorService.Object,
@@ -55,14 +63,17 @@ namespace crds_angular.test.controllers
                 Request = new HttpRequestMessage(),
                 RequestContext = new HttpRequestContext()
             };
+
+            _fixture.Request.Headers.Authorization = new AuthenticationHeaderValue(authType, authToken);
         }
 
         [Test]
         public void ShouldGetSkillsList()
         {
+            string token = $"{authType} {authToken}";
             const int listSize = 20;
             var skills = TestHelpers.ListOfGoSkills(listSize);
-            _skillsService.Setup(m => m.RetrieveGoSkills(string.Empty)).Returns(skills);
+            _skillsService.Setup(m => m.RetrieveGoSkills(token)).Returns(skills);
             var response = _fixture.GetGoSkills();
             Assert.IsNotNull(response);
             Assert.IsInstanceOf<OkNegotiatedContentResult<List<GoSkills>>>(response);
@@ -208,6 +219,45 @@ namespace crds_angular.test.controllers
                 Assert.Throws<HttpResponseException>(() => { _fixture.GetPrepTimes(); });
                 _attributeService.VerifyAll();
             }).QuickCheckThrowOnFailure();
+        }
+
+        [Test]
+        public void ShouldThrowHttpResponseExceptionConflictDueToDuplicateUser()
+        {
+            const int projectId = 123;
+            string token = $"{authType} {authToken}";
+            var registration = BuildAnywhereRegistration();
+
+            _goVolunteerService.Setup(m => m.CreateAnywhereRegistration(registration, projectId, token))
+                .Throws(new DuplicateUserException(registration.Self.EmailAddress));
+
+            try
+            {
+                _fixture.Post(registration, projectId);
+            }
+            catch (HttpResponseException e)
+            {
+                Assert.AreEqual(e.Response.StatusCode, HttpStatusCode.Conflict);
+            }
+            catch (Exception e)
+            {
+                Assert.Fail();
+            }
+
+            _goVolunteerService.VerifyAll();
+        }
+
+        private AnywhereRegistration BuildAnywhereRegistration()
+        {
+            return new AnywhereRegistration()
+            {
+                InitiativeId = 12,
+                SpouseParticipation = false,
+                Self = new Registrant()
+                {
+                    EmailAddress = "abomb@thebomb.com"
+                }
+            };
         }
 
         private List<OtherOrganization> otherOrganizations()

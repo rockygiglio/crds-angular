@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Crossroads.Utilities.Interfaces;
 using Crossroads.Web.Common;
 using Crossroads.Web.Common.Configuration;
+using Crossroads.Web.Common.MinistryPlatform;
 using Crossroads.Web.Common.Security;
 using MinistryPlatform.Translation.Repositories.GoCincinnati;
 using MinistryPlatform.Translation.Repositories.Interfaces;
@@ -16,6 +17,7 @@ namespace MinistryPlatform.Translation.Test.Services
     class GroupConnectorServiceTest
     {
         private Mock<IMinistryPlatformService> _ministryPlatformService;
+        private Mock<IMinistryPlatformRestRepository> _ministryPlatformRestRepository;
         private Mock<IAuthenticationRepository> _authService;
         private GroupConnectorRepository _fixture;
         private Mock<IConfigurationWrapper> _configuration;
@@ -24,6 +26,7 @@ namespace MinistryPlatform.Translation.Test.Services
         public void SetUp()
         {
             _ministryPlatformService = new Mock<IMinistryPlatformService>();
+            _ministryPlatformRestRepository = new Mock<IMinistryPlatformRestRepository>();
             _authService = new Mock<IAuthenticationRepository>();
             _configuration = new Mock<IConfigurationWrapper>();
 
@@ -36,7 +39,7 @@ namespace MinistryPlatform.Translation.Test.Services
                 AccessToken = "ABC",
                 ExpiresIn = 123
             });
-            _fixture = new GroupConnectorRepository(_ministryPlatformService.Object, _authService.Object, _configuration.Object);
+            _fixture = new GroupConnectorRepository(_ministryPlatformService.Object, _ministryPlatformRestRepository.Object, _authService.Object, _configuration.Object);
             
         }
 

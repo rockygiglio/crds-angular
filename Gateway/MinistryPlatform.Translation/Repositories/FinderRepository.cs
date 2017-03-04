@@ -55,6 +55,8 @@ namespace MinistryPlatform.Translation.Repositories
             return pinDetails;
         }
 
+        
+
         public void EnablePin(int participantId)
         {
             var dict = new Dictionary<string, object> { { "Participant_ID", participantId }, { "Show_On_Map", true } };

@@ -1,6 +1,5 @@
 'use strict()';
 (function() {
-
   var app = angular.module('crossroads.core');
   var cookieNames = require('crds-constants').COOKIES;
   app.config(AppConfig);
@@ -33,14 +32,21 @@
       requireBase:false
     });
 
+    let commonHeaders = $httpProvider.defaults.headers.common;
+
     $httpProvider.defaults.useXDomain = true;
-    $httpProvider.defaults.headers.common.Authorization = crds_utilities.getCookie(cookieNames.SESSION_ID);
-    $httpProvider.defaults.headers.common.RefreshToken = crds_utilities.getCookie(cookieNames.REFRESH_TOKEN);
+    commonHeaders.Authorization = crds_utilities.getCookie(cookieNames.SESSION_ID);
+    commonHeaders.RefreshToken = crds_utilities.getCookie(cookieNames.REFRESH_TOKEN);
+
+    // Set Client API Key, if one is defined
+    if (__CROSSROADS_API_TOKEN__.length > 0) {
+      commonHeaders['Crds-Api-Key'] = __CROSSROADS_API_TOKEN__;
+    }
 
     // This is a dummy header that will always be returned
     // in any 'Allow-Header' from any CORS request
-    //This needs to be here because of IE.
-    $httpProvider.defaults.headers.common['X-Use-The-Force'] = true;
+    // This needs to be here because of IE.
+    commonHeaders['X-Use-The-Force'] = true;
 
     configureDefaultCookieScope($cookiesProvider);
     configureDatePickersDefaults(datepickerConfig, datepickerPopupConfig);

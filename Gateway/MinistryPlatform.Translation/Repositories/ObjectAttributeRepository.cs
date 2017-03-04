@@ -9,6 +9,7 @@ using Crossroads.Utilities.Interfaces;
 using log4net;
 using Crossroads.Web.Common;
 using Crossroads.Web.Common.Configuration;
+using Crossroads.Web.Common.MinistryPlatform;
 using Crossroads.Web.Common.Security;
 using MinistryPlatform.Translation.Extensions;
 using MinistryPlatform.Translation.Models;
@@ -19,37 +20,32 @@ namespace MinistryPlatform.Translation.Repositories
     public class ObjectAttributeRepository : BaseRepository, IObjectAttributeRepository
     {
         private readonly IMinistryPlatformService _ministryPlatformService;
+        private readonly IMinistryPlatformRestRepository _ministryPlatformRest;
 
         private readonly ILog _logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         public ObjectAttributeRepository(IAuthenticationRepository authenticationService,
             IConfigurationWrapper configurationWrapper,
-            IMinistryPlatformService ministryPlatformService)
+            IMinistryPlatformService ministryPlatformService,
+            IMinistryPlatformRestRepository ministryPlatformRest)
             : base(authenticationService, configurationWrapper)
         {
             _ministryPlatformService = ministryPlatformService;
+            _ministryPlatformRest = ministryPlatformRest;
         }
 
         public List<MpObjectAttribute> GetCurrentObjectAttributes(string token, int objectId, MpObjectAttributeConfiguration configuration, int? attributeTypeIdFilter = null)
         {
-            var subPageViewId = configuration.SelectedSubPage;
-            var searchString = attributeTypeIdFilter.HasValue ? string.Format(",,,,\"{0}\"", attributeTypeIdFilter.Value) : "";
-            var records = _ministryPlatformService.GetSubpageViewRecords(subPageViewId, objectId, token, searchString);
+            var table = configuration.TableName;
+            string columns = $"{table}_Attribute_ID AS ObjectAttributeId, {table}_Attributes.Attribute_ID, {table}_Attributes.Start_Date, {table}_Attributes.End_Date, Attribute_ID_Table.Attribute_Type_ID, Notes, Attribute_ID_Table_Attribute_Category_ID_Table.Attribute_Category, Attribute_ID_Table_Attribute_Type_ID_Table.Attribute_Type, Attribute_ID_Table.Description";
+            string filter = $"{table}_ID = {objectId} AND ({table}_Attributes.End_Date Is Null OR {table}_Attributes.End_Date >= GetDate())";
 
-            var keyColumn = string.Format("{0}_Attribute_ID", configuration.TableName);
-
-            var objectAttributes = records.Select(record => new MpObjectAttribute
+            if (attributeTypeIdFilter != null)
             {
-                ObjectAttributeId = record.ToInt(keyColumn),
+                filter += $" AND Attribute_ID_Table.Attribute_Type_ID = {attributeTypeIdFilter}";
+            }
 
-                AttributeId = record.ToInt("Attribute_ID"),
-                StartDate = record.ToDate("Start_Date"),
-                EndDate = record.ToNullableDate("End_Date"),
-                Notes = record.ToString("Notes"),
-                AttributeTypeId = record.ToInt("Attribute_Type_ID"),
-                AttributeTypeName = record.ToString("Attribute_Type")
-            }).ToList();
-
+            var objectAttributes = _ministryPlatformRest.UsingAuthenticationToken(token).SearchTable<MpObjectAttribute>($"{table}_Attributes", filter, columns);
             return objectAttributes;
         }
 
