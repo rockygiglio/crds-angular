@@ -28,6 +28,7 @@ namespace crds_angular.test.Services
         private Mock<IParticipantRepository> _mpParticipantRepository;
         private Mock<IConfigurationWrapper> _mpConfigurationWrapper;
         private Mock<IGroupToolService> _mpGroupToolService;
+        private Mock<IAddressProximityService> _addressProximityService; 
 
         [SetUp]
         public void SetUp()
@@ -39,6 +40,7 @@ namespace crds_angular.test.Services
             _mpParticipantRepository = new Mock<IParticipantRepository>();
             _mpGroupToolService = new Mock<IGroupToolService>();
             _mpConfigurationWrapper = new Mock<IConfigurationWrapper>();
+            _addressProximityService = new Mock<IAddressProximityService>();
 
             _fixture = new FinderService(_addressGeocodingService.Object, _mpFinderRepository.Object, _mpContactRepository.Object, _addressService.Object, _mpParticipantRepository.Object, _mpGroupToolService.Object, _mpConfigurationWrapper.Object);
 
@@ -90,8 +92,10 @@ namespace crds_angular.test.Services
 
             _mpConfigurationWrapper.Setup(mocked => mocked.GetConfigIntValue("AnywhereGatheringGroupTypeId")).Returns(30);
             _mpGroupToolService.Setup(m => m.SearchGroups(It.IsAny<int[]>(), null, It.IsAny<string>(), null, null)).Returns(new List<GroupDTO>());
-            _addressGeocodingService.Setup(mocked => mocked.GetGeoCoordinates(address)).Returns(originCoords);
             _mpFinderRepository.Setup(mocked => mocked.GetPinsInRadius(originCoords)).Returns(new List<SpPinDto>());
+            _addressGeocodingService.Setup(mocked => mocked.GetGeoCoordinates(address)).Returns(originCoords);
+            _addressProximityService.Setup(mocked => mocked.GetProximity(address, new List<AddressDTO>(), originCoords)).Returns(new List<decimal?>());
+            _addressProximityService.Setup(mocked => mocked.GetProximity(address, new List<string>(), originCoords)).Returns(new List<decimal?>());
 
             List<PinDto> pins = _fixture.GetPinsInRadius(originCoords, address);
 
