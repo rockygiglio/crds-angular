@@ -192,7 +192,7 @@ namespace crds_angular.Services
 
             GeoCoordinate originCoordinates = geoCoordsPassedIn ? originCoordsFromClient : originCoordsFromGoogle;
 
-            return originCoordinates; 
+            return originCoordinates;
         }
 
         private List<PinDto> GetGroupPinsinRadius(GeoCoordinate originCoords, string address)
@@ -201,7 +201,7 @@ namespace crds_angular.Services
             var pins = new List<PinDto>();
 
             // get group for anywhere gathering
-            var anywhereGroupTypeId = 30; //_configurationWrapper.GetConfigIntValue("AnywhereGatheringGroupTypeId");
+            var anywhereGroupTypeId = _configurationWrapper.GetConfigIntValue("AnywhereGroupTypeId");
             var groups = _groupToolService.SearchGroups(new int[] {anywhereGroupTypeId}, null, address, null, originCoords);
 
             foreach (var group in groups)
