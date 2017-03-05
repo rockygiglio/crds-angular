@@ -184,7 +184,7 @@ namespace crds_angular.Services
             var pins = new List<PinDto>();
 
             // get group for anywhere gathering
-            var anywhereGroupTypeId = _configurationWrapper.GetConfigIntValue("AnywhereGatheringGroupTypeId");
+            var anywhereGroupTypeId = _configurationWrapper.GetConfigIntValue("AnywhereGroupTypeId");
             var groups = _groupToolService.SearchGroups(new int[] {anywhereGroupTypeId}, null, address, null);
 
             foreach (var group in groups)
