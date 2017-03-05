@@ -125,10 +125,9 @@ namespace crds_angular.test.Services
         [Test]
         public void ShouldGetGeoCoordinatesFromLatLang()
         {
+            const string address = "123 Main Street, Walton, KY";
 
-            string address = "123 Main Street, Walton, KY";
-
-            GeoCoordinate mockCoords = new GeoCoordinate()
+            var mockCoords = new GeoCoordinate()
             {
                 Latitude = 39.2844738,
                 Longitude = -84.319614
@@ -143,10 +142,9 @@ namespace crds_angular.test.Services
         [Test]
         public void ShouldGetGeoCoordinatesFromAddress()
         {
+            const string address = "123 Main Street, Walton, KY";
 
-            string address = "123 Main Street, Walton, KY";
-
-            GeoCoordinate mockCoords = new GeoCoordinate()
+            var mockCoords = new GeoCoordinate()
             {
                 Latitude = 39.2844738,
                 Longitude = -84.319614
@@ -161,9 +159,8 @@ namespace crds_angular.test.Services
         [Test]
         public void ShouldReturnAListOfPinsWhenSearching()
         {
-
-            string address = "123 Main Street, Walton, KY";
-            GeoCoordinate originCoords = new GeoCoordinate()
+            const string address = "123 Main Street, Walton, KY";
+            var originCoords = new GeoCoordinate()
             {
                 Latitude = 39.2844738,
                 Longitude = -84.319614
