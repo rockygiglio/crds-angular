@@ -123,6 +123,42 @@ namespace crds_angular.test.Services
         }
 
         [Test]
+        public void ShouldGetGeoCoordinatesFromLatLang()
+        {
+
+            string address = "123 Main Street, Walton, KY";
+
+            GeoCoordinate mockCoords = new GeoCoordinate()
+            {
+                Latitude = 39.2844738,
+                Longitude = -84.319614
+            };
+
+            _addressGeocodingService.Setup(mocked => mocked.GetGeoCoordinates(address)).Returns(mockCoords);
+
+            GeoCoordinate geoCoords = _fixture.GetGeoCoordsFromAddressOrLatLang(address, "39.2844738", "-84.319614");
+            Assert.AreEqual(mockCoords, geoCoords);
+        }
+
+        [Test]
+        public void ShouldGetGeoCoordinatesFromAddress()
+        {
+
+            string address = "123 Main Street, Walton, KY";
+
+            GeoCoordinate mockCoords = new GeoCoordinate()
+            {
+                Latitude = 39.2844738,
+                Longitude = -84.319614
+            };
+
+            _addressGeocodingService.Setup(mocked => mocked.GetGeoCoordinates(address)).Returns(mockCoords);
+
+            GeoCoordinate geoCoords = _fixture.GetGeoCoordsFromAddressOrLatLang(address, "0", "0");
+            Assert.AreEqual(mockCoords, geoCoords);
+        }
+
+        [Test]
         public void ShouldReturnAListOfPinsWhenSearching()
         {
 
