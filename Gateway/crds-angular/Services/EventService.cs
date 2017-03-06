@@ -108,9 +108,9 @@ namespace crds_angular.Services
 
                 var groups = _eventService.GetEventGroupsForEventAPILogin(eventId);
 
-                if (groups.Count > 0)
+                if (groups.Any(childcareGroups => childcareGroups.GroupTypeId == childcareGroupTypeID))
                 {
-                    var group = _groupService.getGroupDetails(groups[0].GroupId);
+                    var group = _groupService.getGroupDetails(groups.First(childcareGroup => childcareGroup.GroupTypeId == childcareGroupTypeID).GroupId);
                     dto.Group = Mapper.Map<GroupDTO>(group);
                 }
 
@@ -224,7 +224,7 @@ namespace crds_angular.Services
             //if it use to be a childcare event, but isn't anymore, remove the group
             if (wasChildcare && !isChildcare)
             {
-                _eventService.DeleteEventGroupsForEvent(eventId, token);
+                _eventService.DeleteEventGroupsForEvent(eventId, token, childcareGroupTypeID);
                 _groupService.EndDateGroup(oldEventDetails.Group.GroupId, null, null);
             }
             //now is a childcare event but was not before so add a group

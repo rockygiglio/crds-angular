@@ -661,15 +661,6 @@ namespace crds_angular.Services
 
             try
             {
-                // geocode if not already geocoded in DB
-                groups.ForEach(group =>
-                {
-                  if (group.Address.Longitude == null || group.Address.Latitude == null)
-                  {
-                    _addressService.FindOrCreateAddress(group.Address, true);
-                  }
-                });                
-
                 // first call is for all results
                 var proximities = _addressProximityService.GetProximity(location, groups.Select(g => g.Address).ToList());
                 for (var i = 0; i < groups.Count; i++)
@@ -705,7 +696,7 @@ namespace crds_angular.Services
 
         public List<GroupDTO> GetGroupToolGroups(string token)
         {
-            var groups = _groupService.GetGroupsForAuthenticatedUser(token, new int[] { _smallGroupTypeId, _onsiteGroupTypeId });
+            var groups = _groupService.GetGroupsByTypeOrId(token,null, new int[] { _smallGroupTypeId, _onsiteGroupTypeId }, null);
 
             return _groupService.RemoveOnsiteParticipantsIfNotLeader(groups, token);
         }

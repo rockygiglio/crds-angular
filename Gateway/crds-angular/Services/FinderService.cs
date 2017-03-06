@@ -10,7 +10,10 @@ using MinistryPlatform.Translation.Repositories.Interfaces;
 using log4net;
 using MinistryPlatform.Translation.Models;
 using Newtonsoft.Json;
+using Crossroads.Web.Common.MinistryPlatform;
+using System.Linq;
 using System.Device.Location;
+using crds_angular.Models.Crossroads.Groups;
 using MinistryPlatform.Translation.Models.Finder;
 using Crossroads.Web.Common.Configuration;
 
@@ -37,20 +40,35 @@ namespace crds_angular.Services
         private readonly IAddressService _addressService;
         private readonly IGroupToolService _groupToolService;
         private readonly IConfigurationWrapper _configurationWrapper;
+        private readonly IGroupService _groupService;
+        private readonly IApiUserRepository _apiUserRepository;
+        private readonly int _approvedHost;
+        private readonly int _anywhereGroupType;
+        private readonly int _leaderRoleID;
 
-        public FinderService(IAddressGeocodingService addressGeocodingService,
-                             IFinderRepository finderRepository,
-                             IContactRepository contactRepository,
-                             IAddressService addressService,
-                             IParticipantRepository participantRepository,
-                             IGroupToolService groupToolService,
-                             IConfigurationWrapper configurationWrapper)
+
+        public FinderService(
+                            IAddressGeocodingService addressGeocodingService, 
+                            IFinderRepository finderRepository,
+                            IContactRepository contactRepository, 
+                            IAddressService addressService, 
+                            IParticipantRepository participantRepository, 
+                            IGroupService groupService,
+                            IGroupToolService groupToolService,
+                            IApiUserRepository apiUserRepository,
+                            IConfigurationWrapper configurationWrapper
+                            )
         {
             _addressGeocodingService = addressGeocodingService;
             _finderRepository = finderRepository;
             _contactRepository = contactRepository;
             _addressService = addressService;
             _participantRepository = participantRepository;
+            _groupService = groupService;
+            _apiUserRepository = apiUserRepository;
+            _approvedHost = configurationWrapper.GetConfigIntValue("ApprovedHostStatus");
+            _anywhereGroupType = configurationWrapper.GetConfigIntValue("AnywhereGroupTypeId");
+            _leaderRoleID = configurationWrapper.GetConfigIntValue("GroupRoleLeader");
             _groupToolService = groupToolService;
             _configurationWrapper = configurationWrapper;
         }
@@ -58,9 +76,26 @@ namespace crds_angular.Services
 
         public PinDto GetPinDetails(int participantId)
         {
+            var token = _apiUserRepository.GetToken();
             //first get pin details
             var pinDetails = Mapper.Map<PinDto>(_finderRepository.GetPinDetails(participantId));
 
+            //get group details
+            if (pinDetails.Host_Status_ID == _approvedHost)
+            {
+                var groups = _groupService.GetGroupsByTypeOrId(token, participantId, new int[] {_anywhereGroupType});
+                foreach (GroupDTO group in groups)
+                {
+                    var leader = group.Participants.Where(p => p.GroupRoleId == _leaderRoleID && p.ParticipantId == participantId).FirstOrDefault();
+
+                    if (leader != null)
+                    {
+                        pinDetails.Gathering = group;
+                        break;
+                    }
+                }
+            }
+            
             //make sure we have a lat/long
             if (pinDetails.Address.Latitude == null || pinDetails.Address.Longitude == null)
             {
@@ -90,8 +125,6 @@ namespace crds_angular.Services
             addressDictionary.Add("State/Region", addressDictionary["State"]);
             _contactRepository.UpdateHouseholdAddress((int) pin.Contact_ID, householdDictionary, addressDictionary);
         }
-
-
 
         public AddressDTO GetAddressForIp(string ip)
         {
@@ -151,7 +184,7 @@ namespace crds_angular.Services
             var pins = new List<PinDto>();
 
             // get group for anywhere gathering
-            var anywhereGroupTypeId = _configurationWrapper.GetConfigIntValue("AnywhereGatheringGroupTypeId");
+            var anywhereGroupTypeId = _configurationWrapper.GetConfigIntValue("AnywhereGroupTypeId");
             var groups = _groupToolService.SearchGroups(new int[] {anywhereGroupTypeId}, null, address, null);
 
             foreach (var group in groups)
@@ -166,11 +199,11 @@ namespace crds_angular.Services
         {
             if (!address.HasGeoCoordinates()) return address;
             var random = new Random(DateTime.Now.Millisecond);
-            var distance = random.Next(40, 350); // up to a quarter mile
+            var distance = random.Next(75, 300); // up to a quarter mile
             var angle = random.Next(0, 359);
             const int earthRadius = 6371000; // in meters
 
-            var distanceNorth = Math.Sin(angle)*angle;
+            var distanceNorth = Math.Sin(angle)*distance;
             var distanceEast = Math.Cos(angle)*distance;
 
             double newLat = (double) (address.Latitude + (distanceNorth/earthRadius)*180/Math.PI);
