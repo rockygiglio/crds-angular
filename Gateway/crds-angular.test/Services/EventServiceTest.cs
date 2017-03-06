@@ -70,6 +70,7 @@ namespace crds_angular.test.Services
             _configurationWrapper.Setup(mocked => mocked.GetConfigIntValue("EventsReadyForPrimaryContactReminder")).Returns(2205);
             _configurationWrapper.Setup(mocked => mocked.GetConfigIntValue("EventPrimaryContactReminderTemplateId")).Returns(14909);
             _configurationWrapper.Setup(mocked => mocked.GetConfigIntValue("ChildcareEventType")).Returns(98765);
+            _configurationWrapper.Setup(mocked => mocked.GetConfigIntValue("ChildcareGroupType")).Returns(272727);
 
             _fixture = new EventService(_eventService.Object,
                                         _groupService.Object,
@@ -507,6 +508,76 @@ namespace crds_angular.test.Services
         }
 
         [Test]
+        public void TestUpdateEventReservationDateButNotRooms()
+        {
+            var newReservation = GetEventToolTestObjectWithRooms();
+            var oldEventData = Mapper.Map<MpEvent>(newReservation);
+
+            oldEventData.EventStartDate = oldEventData.EventStartDate.AddDays(-1);
+
+            var roomReservationReturn = new List<MpRoomReservationDto>()
+            {
+                new MpRoomReservationDto()
+                {
+                    Name = "Room1",
+                    Cancelled = false,
+                    RoomId = 1,
+                    EventId = 1,
+                    EventRoomId = 1,
+                    RoomLayoutId = 1,
+                },
+                new MpRoomReservationDto()
+                {
+                    Name = "Room2",
+                    Cancelled = false,
+                    RoomId = 2,
+                    EventId = 1,
+                    EventRoomId = 2,
+                    RoomLayoutId = 1
+                }
+            };
+
+            var equipmentForRoom1 = new List<MpEquipmentReservationDto>()
+            {
+                new MpEquipmentReservationDto()
+                {
+                    Cancelled = false,
+                    RoomId = 1,
+                    EventId = 1,
+                    QuantityRequested = 10,
+                    EquipmentId = 1,
+                    EventEquipmentId = 1,
+                    EventRoomId = 1
+                },
+                new MpEquipmentReservationDto()
+                {
+                    Cancelled = false,
+                    RoomId = 1,
+                    EventId = 1,
+                    QuantityRequested = 42,
+                    EquipmentId = 2,
+                    EventEquipmentId = 2,
+                    EventRoomId = 2
+                }
+            };
+
+            _eventService.Setup(mock => mock.GetEvent(1)).Returns(oldEventData);
+            _roomService.Setup(mockyMock => mockyMock.GetRoomReservations(1)).Returns(roomReservationReturn);
+            _equipmentService.Setup(mock => mock.GetEquipmentReservations(1, 1)).Returns(equipmentForRoom1);
+            _equipmentService.Setup(mock => mock.GetEquipmentReservations(1, 2)).Returns(new List<MpEquipmentReservationDto>());
+            _eventService.Setup(mock => mock.GetEventGroupsForEventAPILogin(1)).Returns(new List<MpEventGroup>());
+            _eventService.Setup(mock => mock.UpdateEvent(It.IsAny<MpEventReservationDto>()));
+            _roomService.Setup(mock => mock.UpdateRoomReservation(It.IsAny<MpRoomReservationDto>()));
+            _equipmentService.Setup(mock => mock.UpdateEquipmentReservation(It.IsAny<MpEquipmentReservationDto>()));
+
+            var result = _fixture.UpdateEventReservation(newReservation, 1, "ABC");
+            Assert.IsTrue(result);
+            _equipmentService.Verify(m => m.UpdateEquipmentReservation(It.IsAny<MpEquipmentReservationDto>()), Times.Exactly(4));
+            _roomService.Verify(m => m.UpdateRoomReservation(It.IsAny<MpRoomReservationDto>()), Times.Exactly(4));
+            _eventService.Verify(m => m.UpdateEvent(It.IsAny<MpEventReservationDto>()), Times.Once);
+        }
+
+        [Test]
         public void UpdateEventReservationShouldCancelRooms()
         {
             var newReservation = GetEventToolTestObjectWithRooms();
@@ -719,7 +790,7 @@ namespace crds_angular.test.Services
                     DomainId = 1,
                     GroupId = 42,
                     GroupName = "_childCare",
-                    GroupTypeId = 23,
+                    GroupTypeId = 272727,
                     Created = true,
                     EventGroupId = 1
                 }
@@ -732,7 +803,8 @@ namespace crds_angular.test.Services
                 ChildCareAvailable = true,
                 CongregationId = 1,
                 KidsWelcome = true,
-                TargetSize = 42
+                TargetSize = 42,
+                GroupType = 272727
             };
 
             _eventService.Setup(mock => mock.GetEvent(1)).Returns(oldEventData);
@@ -743,7 +815,7 @@ namespace crds_angular.test.Services
             _eventService.Setup(mock => mock.UpdateEvent(It.IsAny<MpEventReservationDto>()));
             _roomService.Setup(mock => mock.UpdateRoomReservation(It.IsAny<MpRoomReservationDto>()));
             _equipmentService.Setup(mock => mock.UpdateEquipmentReservation(It.IsAny<MpEquipmentReservationDto>()));
-            _eventService.Setup(mock => mock.DeleteEventGroupsForEvent(1, "ABC"));
+            _eventService.Setup(mock => mock.DeleteEventGroupsForEvent(1, "ABC", 272727));
             _groupService.Setup(mock => mock.EndDateGroup(42, null, null));
             _groupService.Setup(mock => mock.getGroupDetails(42)).Returns(mpGroup);
 
@@ -752,7 +824,7 @@ namespace crds_angular.test.Services
             _equipmentService.Verify(m => m.UpdateEquipmentReservation(It.IsAny<MpEquipmentReservationDto>()), Times.Exactly(2));
             _roomService.Verify(m => m.UpdateRoomReservation(It.IsAny<MpRoomReservationDto>()), Times.Exactly(2));
             _eventService.Verify(m => m.UpdateEvent(It.IsAny<MpEventReservationDto>()), Times.Once);
-            _eventService.Verify(m => m.DeleteEventGroupsForEvent(1, "ABC"), Times.Once);
+            _eventService.Verify(m => m.DeleteEventGroupsForEvent(1, "ABC", 272727), Times.Once);
             _groupService.Verify(m => m.EndDateGroup(42, null, null), Times.Once);
         }
 
@@ -824,7 +896,7 @@ namespace crds_angular.test.Services
                     DomainId = 1,
                     GroupId = 42,
                     GroupName = "_childCare",
-                    GroupTypeId = 23,
+                    GroupTypeId = 272727,
                     Created = true,
                     EventGroupId = 1
                 }

@@ -45,16 +45,20 @@ By default webpack inserts `http://content.crossroads.net` everywhere it finds `
 By default webpack defaults to use the API Version of Stripe as configured in the account. This can be overridden by creating an environment variable named CRDS_STRIPE_API_VERSION and setting to a particular verion. (i.e. 2015-04-07) 
 
 For windows users:
-
-``` set CRDS_API_ENDPOINT = https://path-to-api-host/ ```
-``` set CRDS_CMS_ENDPOINT = https://path-to-content-host/ ```
-``` set CRDS_STRIPE_PUBKEY = <obtain from Stripe site>```
+```
+set CRDS_API_ENDPOINT = https://path-to-api-host/
+set CRDS_CMS_ENDPOINT = https://path-to-content-host/
+set CRDS_STRIPE_PUBKEY = <obtain from Stripe site>
+set CROSSROADS_API_TOKEN = <obtain from Ministry Platform Client API Keys>
+```
 
 Mac and Linux:
-
-``` export CRDS_API_ENDPOINT = https://path-to-api-host/ ```
-``` export CRDS_CMS_ENDPOINT = https://path-to-content-host/ ```
-``` export CRDS_STRIPE_PUBKEY = <obtain from Stripe site>```
+```
+export CRDS_API_ENDPOINT = https://path-to-api-host/
+export CRDS_CMS_ENDPOINT = https://path-to-content-host/
+export CRDS_STRIPE_PUBKEY = <obtain from Stripe site>
+export CROSSROADS_API_TOKEN = <obtain from Ministry Platform Client API Keys>
+```
 
 **Keep in mind that this way of setting environment variables will not be persistent, windows users will have to add this variable in system settings and linux/mac users will have to set it in their .bashrc/.zshrc files for persistence.**
 

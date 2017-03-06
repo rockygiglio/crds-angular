@@ -1000,9 +1000,9 @@ namespace crds_angular.test.Services
             _configurationWrapper.Setup(m => m.GetConfigIntValue("SummerCampForm.PreferredRoommate")).Returns(preferredRoomateField);
             _configurationWrapper.Setup(m => m.GetConfigIntValue("SummerCampForm.CamperCongregation")).Returns(congregationField);
 
-            _formSubmissionRepository.Setup(m => m.GetFormResponseAnswer(summerCampFormId, contactId, schoolAttendingField)).Returns("Fairview");
-            _formSubmissionRepository.Setup(m => m.GetFormResponseAnswer(summerCampFormId, contactId, preferredRoomateField)).Returns("");
-            _formSubmissionRepository.Setup(m => m.GetFormResponseAnswer(summerCampFormId, contactId, congregationField)).Returns("Oakley");
+            _formSubmissionRepository.Setup(m => m.GetFormResponseAnswer(summerCampFormId, contactId, schoolAttendingField, eventId)).Returns("Fairview");
+            _formSubmissionRepository.Setup(m => m.GetFormResponseAnswer(summerCampFormId, contactId, preferredRoomateField, eventId)).Returns("");
+            _formSubmissionRepository.Setup(m => m.GetFormResponseAnswer(summerCampFormId, contactId, congregationField, eventId)).Returns("Oakley");
 
             // get congregation Id by name
             _congregationRepository.Setup(m => m.GetCongregationByName("Oakley", apiToken)).Returns(new Ok<MpCongregation>(congregation));
@@ -1139,7 +1139,7 @@ namespace crds_angular.test.Services
             _eventRepository.Setup(m => m.GetEvent(eventId)).Returns(mpevent);
             _productRepository.Setup(m => m.GetProductForEvent(eventId)).Returns(product);
             _productRepository.Setup(m => m.GetProductOptionPricesForProduct(product.ProductId)).Returns(mpoptionlist);
-            _formSubmissionRepository.Setup(m => m.GetFormResponseAnswer(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>())).Returns("true");
+            _formSubmissionRepository.Setup(m => m.GetFormResponseAnswer(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>())).Returns("true");
             _invoiceRepository.Setup(m => m.GetInvoiceDetailsForProductAndCamper(product.ProductId, contactid))
                 .Returns(mpInvoiceResult);
             _paymentService.Setup(m => m.GetPaymentDetails(0, mpInvoiceResult.Value.InvoiceId, token)).Returns(paymentDetail);

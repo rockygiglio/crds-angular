@@ -28,17 +28,12 @@ ALTER PROCEDURE [dbo].[api_crds_Get_Checkin_Single_Room_Data]
 AS
 BEGIN
 
---DECLARE @EventID INT = 4534870
---DECLARE @RoomID INT = 1972
-
 DECLARE @AgeAttributeTypeId INT = 102
 DECLARE @BirthMonthAttributeTypeId INT = 103
 DECLARE @GradesAttributeTypeId INT = 104
 DECLARE @NurseryMonthsAttributeTypeId INT = 105
 
 DECLARE @RoomUsageKidsClubTypeId INT = 6
-
---SELECT @LocationId = Location_ID FROM Congregations WHERE Congregation_ID = (SELECT Congregation_ID FROM Events WHERE Event_ID = @EventID)
 
 -- 1. Get the event and subevent
 DECLARE @Events TABLE
@@ -103,7 +98,8 @@ BEGIN
 		@AllowCheckin = Allow_Checkin,
 		@Capacity = Capacity,
 		@Volunteers = Volunteers
-	FROM Event_Rooms WHERE Room_ID = @Room_ID AND Event_ID = @EventID
+	--FROM Event_Rooms WHERE Room_ID = @Room_ID AND Event_ID = @EventID
+	FROM Event_Rooms WHERE Room_ID = @Room_ID AND Event_ID IN (SELECT * FROM @Events)
 
 	UPDATE @TempEventRooms SET
 		Event_Room_ID = @Event_Room_ID,
@@ -133,18 +129,19 @@ DECLARE @EventGroups TABLE
 )
 
 -- get event groups where the group is tied to an event and has a room reservation,
--- probably grab the attributes here as well
+-- probably grab the attributes here as well - looks like we need to modify this logic a little, so we're
+-- not loading groups that are not supposed to be loaded
 INSERT INTO @EventGroups (Event_ID, Group_ID, Event_Group_ID, Event_Room_ID, Room_ID, Checked_In, Signed_In)
-	SELECT 
+	SELECT DISTINCT
 		eg.Event_ID, 
 		Group_ID, 
 		Event_Group_ID, 
-		er.Event_Room_ID,
-		er.Room_ID,
+		eg.Event_Room_ID,
+		eg.Room_ID,
 		Checked_In = [dbo].crds_getEventParticipantStatusCount(@EventID, @Room_ID, 4),
 		Signed_In = [dbo].crds_getEventParticipantStatusCount(@EventID, @Room_ID, 3)
-	FROM Event_Groups eg INNER JOIN Event_Rooms er on eg.Event_Room_ID = er.Event_Room_ID
-	WHERE eg.Event_ID IN (er.Event_ID) -- set the event id to the er event id
+	FROM Event_Groups eg 
+	WHERE eg.Event_ID IN (SELECT * FROM @Events) AND eg.Event_Room_ID = @Event_Room_ID AND eg.Room_ID = @RoomID
 
 DECLARE @GroupAttributes TABLE
 (

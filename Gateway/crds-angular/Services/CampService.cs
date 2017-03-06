@@ -115,10 +115,9 @@ namespace crds_angular.Services
             var eventProduct = _productRepository.GetProductForEvent(eventId);
             var eventProductOptionPrices = _productRepository.GetProductOptionPricesForProduct(eventProduct.ProductId).OrderByDescending(m => m.DaysOutToHide).ToList();
             var invoiceDetails = _invoiceRepository.GetInvoiceDetailsForProductAndCamper(eventProduct.ProductId, camperContactId);
-            var answer = _formSubmissionRepository.GetFormResponseAnswer(formId, camperContactId, formFieldId);
+            var answer = _formSubmissionRepository.GetFormResponseAnswer(formId, camperContactId, formFieldId, eventId);
             var financialAssistance = (!string.IsNullOrEmpty(answer) && Convert.ToBoolean(answer));
-            PaymentDetailDTO paymentDetail;
-            paymentDetail = invoiceDetails.Status ? _paymentService.GetPaymentDetails(0, invoiceDetails.Value.InvoiceId, token) : null;
+            var paymentDetail = invoiceDetails.Status ? _paymentService.GetPaymentDetails(0, invoiceDetails.Value.InvoiceId, token) : null;
             var campProductInfo = new ProductDTO
             {
                 InvoiceId = invoiceDetails.Status ? invoiceDetails.Value.InvoiceId : 0,
@@ -265,7 +264,8 @@ namespace crds_angular.Services
             {
                 ContactId = contactId,
                 FormId = formId,
-                FormAnswers = answers
+                FormAnswers = answers,
+                EventId = eventId
             };
 
             _formSubmissionRepository.SubmitFormResponse(formResponse);
@@ -406,7 +406,8 @@ namespace crds_angular.Services
                 {
                     ContactId = contactId,
                     FormId = formId,
-                    FormAnswers = answers
+                    FormAnswers = answers,
+                    EventId = eventId
                 };
 
                 _formSubmissionRepository.SubmitFormResponse(formResponse);
@@ -535,7 +536,8 @@ namespace crds_angular.Services
             {
                 ContactId = campProductDto.ContactId,
                 FormId = formId,
-                FormAnswers = answers
+                FormAnswers = answers,
+                EventId = campProductDto.EventId
             };
 
             _formSubmissionRepository.SubmitFormResponse(formResponse);
@@ -738,7 +740,7 @@ namespace crds_angular.Services
         public List<CampEmergencyContactDTO> GetCamperEmergencyContactInfo(int eventId, int contactId, string token)
         {
             var formId = _configurationWrapper.GetConfigIntValue("SummerCampFormID");
-            var response = _formSubmissionRepository.GetFormResponse(formId, contactId);
+            var response = _formSubmissionRepository.GetFormResponse(formId, contactId, eventId);
             var emergencyContacts = new List<CampEmergencyContactDTO>();
             emergencyContacts.Add(new CampEmergencyContactDTO
             {
@@ -782,12 +784,12 @@ namespace crds_angular.Services
 
             var campFormId = _configurationWrapper.GetConfigIntValue("SummerCampFormID");
             var nextYearSchoolFormFieldId = _configurationWrapper.GetConfigIntValue("SummerCampForm.SchoolAttendingNextYear");
-            var nextYearSchool = _formSubmissionRepository.GetFormResponseAnswer(campFormId, camperContact.Contact_ID, nextYearSchoolFormFieldId);
+            var nextYearSchool = _formSubmissionRepository.GetFormResponseAnswer(campFormId, camperContact.Contact_ID, nextYearSchoolFormFieldId, eventId);
 
             var preferredRoommateFieldId = _configurationWrapper.GetConfigIntValue("SummerCampForm.PreferredRoommate");
-            var preferredRoommate = _formSubmissionRepository.GetFormResponseAnswer(campFormId, camperContact.Contact_ID, preferredRoommateFieldId);
+            var preferredRoommate = _formSubmissionRepository.GetFormResponseAnswer(campFormId, camperContact.Contact_ID, preferredRoommateFieldId, eventId);
             var crossroadsSiteFieldId = _configurationWrapper.GetConfigIntValue("SummerCampForm.CamperCongregation");
-            var crossroadsSite = _formSubmissionRepository.GetFormResponseAnswer(campFormId, camperContact.Contact_ID, crossroadsSiteFieldId);
+            var crossroadsSite = _formSubmissionRepository.GetFormResponseAnswer(campFormId, camperContact.Contact_ID, crossroadsSiteFieldId, eventId);
 
             var congregation = (string.IsNullOrEmpty(crossroadsSite))
                 ? new Err<MpCongregation>("Congregation not set")

@@ -48,11 +48,6 @@ DECLARE @Events TABLE
 	Parent_Event_ID int
 )
 
-DECLARE @xIds TABLE
-(
-	InactiveIds INT
-)
-
 -- this is not working right now, because we need to get the event id...
 INSERT INTO @Events (Event_ID, Event_Type_ID, Parent_Event_ID)
 	SELECT DISTINCT Event_ID, Event_Type_ID, Parent_Event_ID
@@ -65,18 +60,15 @@ INSERT INTO @Events(Event_ID, Event_Type_ID, Parent_Event_ID)
 	FROM [dbo].[Events]
 	WHERE Event_ID IN (SELECT Parent_Event_ID FROM @Events)
 
--- delete data on the inactive event
 DECLARE @InactiveEventRoomId INT = 0
 
--- delete the event room off the other event
-SELECT @InactiveEventRoomId = Event_Room_ID FROM Event_Rooms er WHERE er.Event_ID = (SELECT TOP(1) Event_ID FROM @Events WHERE Event_ID <> @EventId) AND Room_ID = @RoomID
+-- delete the event room off the other event (AC or non-AC)
+SELECT @InactiveEventRoomId = Event_Room_ID FROM Event_Rooms er 
+WHERE er.Event_ID = (SELECT TOP(1) Event_ID FROM @Events WHERE Event_ID <> @EventId) AND Room_ID = @RoomID
 
 DELETE FROM Event_Groups WHERE Event_Room_ID = @InactiveEventRoomId
 
 DELETE FROM Event_Rooms WHERE Event_Room_ID = @InactiveEventRoomId
-
-INSERT INTO @xIds
-SELECT @InactiveEventRoomId
 
 -- Create the Event Room, if needed, or just get the event room ID
 IF NOT EXISTS (SELECT * FROM Event_Rooms WHERE Event_ID IN (SELECT Event_ID FROM @Events) AND Room_ID=@RoomID)
@@ -262,21 +254,16 @@ DEALLOCATE group_cursor
 ---- Set adventure club status here
 -----------------------------------
 
--- Correctly set adventure club status - if there are existing event rooms on the AC event, uncancel the AC event,
--- otherwise cancel it
+-- Correctly set adventure club status - if there are existing event rooms on the AC event, uncancel the AC event -
+-- Do not do the reverse, as it will cancel AC rooms due to an MP trigger
 IF EXISTS (SELECT * FROM Event_Rooms WHERE @EventId = (SELECT Event_ID FROM @Events WHERE Event_Type_ID = @AdventureClubEventTypeID))
 BEGIN
 	UPDATE [Events] SET Cancelled = 0 WHERE Event_ID = (SELECT Event_ID FROM @Events WHERE Event_Type_ID = @AdventureClubEventTypeID)
-END
-ELSE
-BEGIN
-	UPDATE [Events] SET Cancelled = 1 WHERE Event_ID = (SELECT Event_ID FROM @Events WHERE Event_Type_ID = @AdventureClubEventTypeID)
 END
 
 -- return the event room data from the proc
 SELECT TOP(1) * FROM Event_Rooms WHERE Event_Room_ID = @EventRoomId
 SELECT * FROM @Events
-SELECT * FROM @xIds
 
 END
 GO

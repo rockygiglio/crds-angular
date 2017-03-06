@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Device.Location;
 using System.Linq;
 using crds_angular.App_Start;
 using crds_angular.Models.Crossroads;
@@ -11,6 +12,9 @@ using Moq;
 using NUnit.Framework;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 using AutoMapper;
+using crds_angular.Models.Crossroads.Groups;
+using Crossroads.Web.Common.Configuration;
+using Crossroads.Web.Common.MinistryPlatform;
 
 namespace crds_angular.test.Services
 {
@@ -18,22 +22,35 @@ namespace crds_angular.test.Services
     public class FinderServiceTest
     {
         private FinderService _fixture;
+        private Mock<IAddressGeocodingService> _addressGeocodingService;
         private Mock<IFinderRepository> _mpFinderRepository;
         private Mock<IContactRepository> _mpContactRepository;
         private Mock<IAddressService>_addressService;
         private Mock<IParticipantRepository> _mpParticipantRepository;
-        private Mock<IAddressService> _mpAddressService;
+        private Mock<IConfigurationWrapper> _mpConfigurationWrapper;
+        private Mock<IGroupToolService> _mpGroupToolService;
+        private Mock<IGroupService> _groupService;
+        private Mock<IApiUserRepository> _apiUserRepository;
+
 
         [SetUp]
         public void SetUp()
         {
+            _addressGeocodingService = new Mock<IAddressGeocodingService>();
             _mpFinderRepository = new Mock<IFinderRepository>();
             _mpContactRepository = new Mock<IContactRepository>();
             _addressService = new Mock<IAddressService>();
             _mpParticipantRepository = new Mock<IParticipantRepository>();
-            _mpAddressService = new Mock<IAddressService>();
+            _mpGroupToolService = new Mock<IGroupToolService>();
+            _mpConfigurationWrapper = new Mock<IConfigurationWrapper>();
+            _apiUserRepository = new Mock<IApiUserRepository>();
+            _groupService = new Mock<IGroupService>();
 
-            _fixture = new FinderService(_mpFinderRepository.Object, _mpContactRepository.Object, _addressService.Object, _mpParticipantRepository.Object);
+            _mpConfigurationWrapper.Setup(mocked => mocked.GetConfigIntValue("GroupRoleLeader")).Returns(22);
+            _mpConfigurationWrapper.Setup(mocked => mocked.GetConfigIntValue("ApprovedHostStatus")).Returns(3);
+            _mpConfigurationWrapper.Setup(mocked => mocked.GetConfigIntValue("AnywhereGroupTypeId")).Returns(30);
+
+            _fixture = new FinderService(_addressGeocodingService.Object, _mpFinderRepository.Object, _mpContactRepository.Object, _addressService.Object, _mpParticipantRepository.Object, _groupService.Object, _mpGroupToolService.Object, _apiUserRepository.Object, _mpConfigurationWrapper.Object);
 
             //force AutoMapper to register
             AutoMapperConfig.RegisterMappings();
@@ -42,6 +59,7 @@ namespace crds_angular.test.Services
         [Test]
         public void ShouldGetPinDetails()
         {
+            _apiUserRepository.Setup(ar => ar.GetToken()).Returns("abc123");
             _mpFinderRepository.Setup(m => m.GetPinDetails(123))
                 .Returns(new FinderPinDto
                          {
@@ -51,8 +69,40 @@ namespace crds_angular.test.Services
                              Participant_ID = 123,
                              EmailAddress = "joeker@gmail.com",
                              Contact_ID = 22,
-                             Household_ID = 13
+                             Household_ID = 13,
+                             Host_Status_ID = 3
                          });
+
+            _groupService.Setup(gs => gs.GetGroupsByTypeOrId("abc123", 123, new int[] {30}, (int?) null))
+                .Returns(new List<GroupDTO>
+                {
+                    new GroupDTO
+                    {
+                        GroupId = 4444444,
+                        Participants = new List<GroupParticipantDTO>
+                        {
+                            new GroupParticipantDTO
+                            {
+                                GroupRoleId = 22,
+                                ParticipantId = 222
+
+                            }
+                        }
+                    },
+                    new GroupDTO
+                    {
+                        GroupId = 8675309,
+                        Participants = new List<GroupParticipantDTO>
+                        {
+                            new GroupParticipantDTO
+                            {
+                                GroupRoleId = 22,
+                                ParticipantId = 123
+
+                            }
+                        }
+                    }
+                });
 
             var result = _fixture.GetPinDetails(123);
 
@@ -60,6 +110,7 @@ namespace crds_angular.test.Services
 
             Assert.AreEqual(result.LastName, "Ker");
             Assert.AreEqual(result.Address.AddressID, 12);
+            Assert.AreEqual(result.Gathering.GroupId, 8675309);
         }
 
         [Test]
@@ -68,6 +119,48 @@ namespace crds_angular.test.Services
             _mpFinderRepository.Setup(m => m.EnablePin(123));
             _fixture.EnablePin(123);
             _mpFinderRepository.VerifyAll();
+        }
+
+        [Test]
+        public void ShouldReturnAListOfPinsWhenSearching()
+        {
+
+            string address = "123 Main Street, Walton, KY";
+            GeoCoordinate originCoords = new GeoCoordinate()
+            {
+                Latitude = 39.2844738,
+                Longitude = -84.319614
+            };
+
+            _mpConfigurationWrapper.Setup(mocked => mocked.GetConfigIntValue("AnywhereGroupTypeId")).Returns(30);
+            _mpGroupToolService.Setup(m => m.SearchGroups(It.IsAny<int[]>(), null, It.IsAny<string>(), null)).Returns(new List<GroupDTO>());
+            _addressGeocodingService.Setup(mocked => mocked.GetGeoCoordinates(address)).Returns(originCoords);
+            _mpFinderRepository.Setup(mocked => mocked.GetPinsInRadius(originCoords)).Returns(new List<SpPinDto>());
+
+            List<PinDto> pins = _fixture.GetPinsInRadius(originCoords, address);
+
+            Assert.IsInstanceOf<List<PinDto>>(pins);
+        }
+
+        public void ShouldRandomizeThePosition()
+        {
+            const double originalLatitude = 59.6378639;
+            const double originalLongitude = -151.5068732;
+
+            var address = new AddressDTO
+            {
+                AddressID = 222,
+                AddressLine1 = "1393 Bay Avenue",
+                City = "Homer",
+                State = "AK",
+                PostalCode = "99603",
+                Latitude = originalLatitude,
+                Longitude = originalLongitude
+            };
+
+            var result = _fixture.RandomizeLatLong(address);
+            Assert.AreNotEqual(result.Longitude, originalLongitude);
+            Assert.AreNotEqual(result.Latitude, originalLatitude);
         }
 
         [Test]
@@ -90,7 +183,7 @@ namespace crds_angular.test.Services
                 FirstName = "",
                 LastName = "",
                 Gathering = null,
-                Host_Status = 0
+                Host_Status_ID = 0
             };
 
             var address = Mapper.Map<MpAddress>(pin.Address);            
@@ -105,7 +198,7 @@ namespace crds_angular.test.Services
             var householdDictionary = new Dictionary<string, object> { { "Household_ID", pin.Household_ID} };
 
             _addressService.Setup(m => m.SetGeoCoordinates(pin.Address));
-            _mpContactRepository.Setup(m => m.UpdateHouseholdAddress(pin.Household_ID, householdDictionary, addressDictionary));
+            _mpContactRepository.Setup(m => m.UpdateHouseholdAddress((int)pin.Household_ID, householdDictionary, addressDictionary));
             _fixture.UpdateHouseholdAddress(pin);
             _mpFinderRepository.VerifyAll();
         }
