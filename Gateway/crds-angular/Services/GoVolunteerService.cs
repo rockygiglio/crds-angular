@@ -127,7 +127,8 @@ namespace crds_angular.Services
         {
             try
             {
-                MpGroupConnector mpGroupConnector = _groupConnectorService.GetGroupConnectorByProjectId(projectId, token);
+                var apiToken = _apiUserRepository.GetToken();
+                MpGroupConnector mpGroupConnector = _groupConnectorService.GetGroupConnectorByProjectId(projectId, apiToken);
                 registration.GroupConnectorId = mpGroupConnector.Id;
 
                 var participantId = RegistrationContact(registration, token);

@@ -575,6 +575,7 @@ namespace crds_angular.test.Services
         {
             const int projectId = 564;
             const string token = "asdf";
+            const string apiToken = "hjlk";
             const int groupConnectorId = 1324;
             const int participantId = 9876543;
             const int preferredLaunchSiteId = 654;
@@ -583,7 +584,9 @@ namespace crds_angular.test.Services
             var registration = BuildRegistration();
             var registrationDto = BuildRegistrationDto(participantId, preferredLaunchSiteId, registration);
 
-            _groupConnectorService.Setup(m => m.GetGroupConnectorByProjectId(projectId, token))
+            _apiUserRepository.Setup(m => m.GetToken())
+                .Returns(apiToken);
+            _groupConnectorService.Setup(m => m.GetGroupConnectorByProjectId(projectId, apiToken))
                 .Returns(new MpGroupConnector {Id = groupConnectorId});
             _groupConnectorService.Setup(m => m.GetGroupConnectorById(groupConnectorId))
                 .Returns(new MpGroupConnector() {PreferredLaunchSiteId = preferredLaunchSiteId});
@@ -621,6 +624,7 @@ namespace crds_angular.test.Services
 
             _fixture.CreateAnywhereRegistration(registration, projectId, token);
 
+            _apiUserRepository.VerifyAll();
             _groupConnectorService.VerifyAll();
             _contactService.VerifyAll();
             _userService.VerifyAll();
@@ -633,6 +637,7 @@ namespace crds_angular.test.Services
         {
             const int projectId = 564;
             const string token = "asdf";
+            const string apiToken = "hjlk";
             const int groupConnectorId = 1324;
             const int participantId = 9876543;
             const int preferredLaunchSiteId = 654;
@@ -641,7 +646,9 @@ namespace crds_angular.test.Services
             var registration = BuildRegistration();
             var registrationDto = BuildRegistrationDto(participantId, preferredLaunchSiteId, registration);
 
-            _groupConnectorService.Setup(m => m.GetGroupConnectorByProjectId(projectId, token))
+            _apiUserRepository.Setup(m => m.GetToken())
+                .Returns(apiToken);
+            _groupConnectorService.Setup(m => m.GetGroupConnectorByProjectId(projectId, apiToken))
                 .Returns(new MpGroupConnector { Id = groupConnectorId });
             _groupConnectorService.Setup(m => m.GetGroupConnectorById(groupConnectorId))
                 .Returns((MpGroupConnector) null);
@@ -668,6 +675,7 @@ namespace crds_angular.test.Services
                                      {
                                          _fixture.CreateAnywhereRegistration(registration, projectId, token);
                                      });
+            _apiUserRepository.VerifyAll();
             _groupConnectorService.VerifyAll();
             _contactService.VerifyAll();
             _userService.VerifyAll();
@@ -679,6 +687,7 @@ namespace crds_angular.test.Services
         {
             const int projectId = 564;
             const string token = "asdf";
+            const string apiToken = "hjlk";
             const int groupConnectorId = 1324;
             const int participantId = 9876543;
             const int preferredLaunchSiteId = 654;
@@ -687,7 +696,9 @@ namespace crds_angular.test.Services
             var registration = BuildRegistration();
             var registrationDto = BuildRegistrationDto(participantId, preferredLaunchSiteId, registration);
 
-            _groupConnectorService.Setup(m => m.GetGroupConnectorByProjectId(projectId, token))
+            _apiUserRepository.Setup(m => m.GetToken())
+                .Returns(apiToken);
+            _groupConnectorService.Setup(m => m.GetGroupConnectorByProjectId(projectId, apiToken))
                 .Returns(new MpGroupConnector { Id = groupConnectorId });
             _userService.Setup(m => m.GetByAuthenticationToken(token))
                 .Returns(user);
@@ -701,6 +712,7 @@ namespace crds_angular.test.Services
                                                       _fixture.CreateAnywhereRegistration(registration, projectId, token);
                                                   });
 
+            _apiUserRepository.VerifyAll();
             _groupConnectorService.VerifyAll();
             _contactService.VerifyAll();
             _userService.VerifyAll();
