@@ -1373,8 +1373,8 @@ namespace crds_angular.test.Services
             var distanceMatrixResults = new List<decimal?> { 2, 5 };
             _groupToolRepository.Setup(mocked => mocked.SearchGroups(groupTypeId, It.IsAny<string[]>(), null)).Returns(searchResults);
             _addressService.Setup(mocked => mocked.FindOrCreateAddress(It.IsAny<AddressDTO>(), true));
-            _addressProximityService.Setup(mocked => mocked.GetProximity(location, It.IsAny<List<AddressDTO>>())).Returns(geoResults);
-            _addressMatrixService.Setup(mocked => mocked.GetProximity(location, It.IsAny<List<AddressDTO>>())).Returns(distanceMatrixResults);
+            _addressProximityService.Setup(mocked => mocked.GetProximity(location, It.IsAny<List<AddressDTO>>(), null)).Returns(geoResults);
+            _addressMatrixService.Setup(mocked => mocked.GetProximity(location, It.IsAny<List<AddressDTO>>(), null)).Returns(distanceMatrixResults);
 
             var results = _fixture.SearchGroups(groupTypeId, null, location);
             _addressProximityService.VerifyAll();

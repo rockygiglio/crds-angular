@@ -31,7 +31,7 @@ namespace crds_angular.test.Services
         private Mock<IGroupToolService> _mpGroupToolService;
         private Mock<IGroupService> _groupService;
         private Mock<IApiUserRepository> _apiUserRepository;
-
+        private Mock<IAddressProximityService> _addressProximityService;
 
         [SetUp]
         public void SetUp()
@@ -43,6 +43,7 @@ namespace crds_angular.test.Services
             _mpParticipantRepository = new Mock<IParticipantRepository>();
             _mpGroupToolService = new Mock<IGroupToolService>();
             _mpConfigurationWrapper = new Mock<IConfigurationWrapper>();
+            _addressProximityService = new Mock<IAddressProximityService>();
             _apiUserRepository = new Mock<IApiUserRepository>();
             _groupService = new Mock<IGroupService>();
 
@@ -122,20 +123,55 @@ namespace crds_angular.test.Services
         }
 
         [Test]
+        public void ShouldGetGeoCoordinatesFromLatLang()
+        {
+            const string address = "123 Main Street, Walton, KY";
+
+            var mockCoords = new GeoCoordinate()
+            {
+                Latitude = 39.2844738,
+                Longitude = -84.319614
+            };
+
+            _addressGeocodingService.Setup(mocked => mocked.GetGeoCoordinates(address)).Returns(mockCoords);
+
+            GeoCoordinate geoCoords = _fixture.GetGeoCoordsFromAddressOrLatLang(address, "39.2844738", "-84.319614");
+            Assert.AreEqual(mockCoords, geoCoords);
+        }
+
+        [Test]
+        public void ShouldGetGeoCoordinatesFromAddress()
+        {
+            const string address = "123 Main Street, Walton, KY";
+
+            var mockCoords = new GeoCoordinate()
+            {
+                Latitude = 39.2844738,
+                Longitude = -84.319614
+            };
+
+            _addressGeocodingService.Setup(mocked => mocked.GetGeoCoordinates(address)).Returns(mockCoords);
+
+            GeoCoordinate geoCoords = _fixture.GetGeoCoordsFromAddressOrLatLang(address, "0", "0");
+            Assert.AreEqual(mockCoords, geoCoords);
+        }
+
+        [Test]
         public void ShouldReturnAListOfPinsWhenSearching()
         {
-
-            string address = "123 Main Street, Walton, KY";
-            GeoCoordinate originCoords = new GeoCoordinate()
+            const string address = "123 Main Street, Walton, KY";
+            var originCoords = new GeoCoordinate()
             {
                 Latitude = 39.2844738,
                 Longitude = -84.319614
             };
 
             _mpConfigurationWrapper.Setup(mocked => mocked.GetConfigIntValue("AnywhereGroupTypeId")).Returns(30);
-            _mpGroupToolService.Setup(m => m.SearchGroups(It.IsAny<int[]>(), null, It.IsAny<string>(), null)).Returns(new List<GroupDTO>());
-            _addressGeocodingService.Setup(mocked => mocked.GetGeoCoordinates(address)).Returns(originCoords);
+            _mpGroupToolService.Setup(m => m.SearchGroups(It.IsAny<int[]>(), null, It.IsAny<string>(), null, originCoords)).Returns(new List<GroupDTO>());
             _mpFinderRepository.Setup(mocked => mocked.GetPinsInRadius(originCoords)).Returns(new List<SpPinDto>());
+            _addressGeocodingService.Setup(mocked => mocked.GetGeoCoordinates(address)).Returns(originCoords);
+            _addressProximityService.Setup(mocked => mocked.GetProximity(address, new List<AddressDTO>(), originCoords)).Returns(new List<decimal?>());
+            _addressProximityService.Setup(mocked => mocked.GetProximity(address, new List<string>(), originCoords)).Returns(new List<decimal?>());
 
             List<PinDto> pins = _fixture.GetPinsInRadius(originCoords, address);
 

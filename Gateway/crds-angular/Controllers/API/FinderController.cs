@@ -139,25 +139,22 @@ namespace crds_angular.Controllers.API
         }
 
         [ResponseType(typeof(PinSearchResultsDto))]
-        [VersionedRoute(template: "finder/findpinsbyaddress/{userSearchAddress}", minimumVersion: "1.0.0")]
-        [System.Web.Http.Route("finder/findpinsbyaddress/{userSearchAddress}")]
+        [VersionedRoute(template: "finder/findpinsbyaddress/{userSearchAddress}/{lat?}/{lng?}", minimumVersion: "1.0.0")]
+        [System.Web.Http.Route("finder/findpinsbyaddress/{userSearchAddress}/{lat?}/{lng?}")]
         [System.Web.Http.HttpGet]
-        public IHttpActionResult GetFindPinsByAddress(string userSearchAddress)
+        public IHttpActionResult GetFindPinsByAddress([FromUri]string userSearchAddress, [FromUri]string lat = "0", [FromUri]string lng = "0")
         {
             try
             {
-
-                GeoCoordinate originCoords = _addressGeocodingService.GetGeoCoordinates(userSearchAddress);
-                GeoCoordinates originGeoCoordinates = new GeoCoordinates(originCoords.Latitude, originCoords.Longitude);
-
+                GeoCoordinate originCoords = _finderService.GetGeoCoordsFromAddressOrLatLang(userSearchAddress, lat, lng);
                 List<PinDto> pinsInRadius = _finderService.GetPinsInRadius(originCoords, userSearchAddress);
-     
+
                 foreach (var pin in pinsInRadius)
                 {
                     pin.Address = _finderService.RandomizeLatLong(pin.Address);
                 }
-                
-                PinSearchResultsDto result = new PinSearchResultsDto(originGeoCoordinates, pinsInRadius);
+
+                PinSearchResultsDto result = new PinSearchResultsDto(new GeoCoordinates(originCoords.Latitude, originCoords.Longitude), pinsInRadius);
 
                 return Ok(result);
             }
