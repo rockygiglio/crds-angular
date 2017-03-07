@@ -15,8 +15,8 @@ namespace Crossroads.Utilities.Models
         public string Content { get; set; }
         [JsonProperty("type"), JsonConverter(typeof(StringEnumConverter))]
         public ContentBlockType Type { get; set; }
-        [JsonProperty("category"), JsonConverter(typeof(StringEnumConverter))]
-        public ContentBlockCategory Category { get; set; }
+        [JsonProperty("category")]
+        public string Category { get; set; }
     }
 
     public enum ContentBlockType
@@ -29,24 +29,6 @@ namespace Crossroads.Utilities.Models
         Warning,
         [EnumMember(Value = "error")]
         Error
-    }
-
-    public enum ContentBlockCategory
-    {
-        [EnumMember(Value = "common")]
-        Common,
-        [EnumMember(Value = "main")]
-        Main,
-        [EnumMember(Value = "corkboard")]
-        Corkboard,
-        [EnumMember(Value = "trip application")]
-        TripApplication,
-        [EnumMember(Value = "group tool")]
-        GroupTool,
-        [EnumMember(Value = "echeck")]
-        Echeck,
-        [EnumMember(Value = "giving")]
-        Giving
     }
 
     public class ContentBlocks
