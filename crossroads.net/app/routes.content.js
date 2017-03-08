@@ -36,6 +36,7 @@
                                           $q,
                                           FormBuilderResolverService,
                                           $location,
+                                          $httpParamSerializer,
                                           $window) {
                 var promise;
                 var redirectFlag = false;
@@ -63,21 +64,12 @@
                     return originalPromise;
                   }
 
-                  var notFoundPromise = Page.get({url: '/page-not-found/'}).$promise;
-
-                  notFoundPromise.then(function(promise) {
-                    if (promise.pages.length > 0) {
-                      ContentPageService.page = promise.pages[0];
-                    } else {
-                      ContentPageService.page = {
-                        content: '404 Content not found',
-                        pageType: '',
-                        title: 'Page not found'
-                      };
-                    }
-                  });
-
-                  return notFoundPromise;
+                  // page not found....
+                  // remove the previous link from the history?
+                  const query_params = Object.assign({}, $location.search(), { resolve: true });
+                  const query_params_string = $httpParamSerializer(query_params); 
+                  $window.location.href = `${link}?${query_params_string}`;
+                  return;
                 });
 
                 childPromise = childPromise.then(function(result) {
