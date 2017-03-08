@@ -1,3 +1,5 @@
+<ng-include src="'templates/header.html'"></ng-include>
+
 <div class="container main animated fadeIn">
   <preloader ng-if="app.resolving" full-screen='true'> </preloader>
   <div class="row" ng-if="!app.resolving">
@@ -10,3 +12,5 @@
       </div>
   </div>
 </div><!--/container-->
+
+<ng-include src="'templates/footer.html'"></ng-include>
