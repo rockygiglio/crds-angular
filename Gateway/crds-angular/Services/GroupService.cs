@@ -105,7 +105,7 @@ namespace crds_angular.Services
             _groupRoleLeader = configurationWrapper.GetConfigIntValue("GroupRoleLeader");
             _smallGroupTypeId = _configurationWrapper.GetConfigIntValue("SmallGroupTypeId");
             _onsiteGroupTypeId = _configurationWrapper.GetConfigIntValue("OnsiteGroupTypeId");
-            _childcareEventTypeId = _configurationWrapper.GetConfigIntValue("ChildcareEventTypeId");
+            _childcareEventTypeId = _configurationWrapper.GetConfigIntValue("ChildcareEventType");
 
 
         }
