@@ -45,7 +45,7 @@ namespace crds_angular.Services
         private readonly IAttributeService _attributeService;
         private readonly int _smallGroupTypeId;
         private readonly int  _onsiteGroupTypeId;
-        private readonly string _childcareEventTypeId;
+        private readonly int _childcareEventTypeId;
 
 
 
@@ -105,7 +105,7 @@ namespace crds_angular.Services
             _groupRoleLeader = configurationWrapper.GetConfigIntValue("GroupRoleLeader");
             _smallGroupTypeId = _configurationWrapper.GetConfigIntValue("SmallGroupTypeId");
             _onsiteGroupTypeId = _configurationWrapper.GetConfigIntValue("OnsiteGroupTypeId");
-            _childcareEventTypeId = Convert.ToString(_configurationWrapper.GetConfigIntValue("ChildcareEventTypeId"));
+            _childcareEventTypeId = _configurationWrapper.GetConfigIntValue("ChildcareEventTypeId");
 
 
         }
@@ -239,7 +239,7 @@ namespace crds_angular.Services
                     _logger.Debug("Scheduled events for this group: " + events);
                     if (events != null && events.Count > 0)
                     {
-                        foreach (var e in events.Where(x => x.EventType != _childcareEventTypeId))
+                        foreach (var e in events.Where(x => x.EventType != (Convert.ToString(_childcareEventTypeId))))
                         {
                             _eventService.RegisterParticipantForEvent(participantId, e.EventId, groupId, groupParticipantId);
                             _logger.Debug("Added participant " + participant + " to group event " + e.EventId);
