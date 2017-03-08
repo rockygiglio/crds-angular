@@ -32,8 +32,7 @@ namespace crds_angular.Controllers.API
         private readonly IMessageFactory _messageFactory;
         private readonly ICryptoProvider _cryptoProvider;
 
-        private readonly int CENTRAL_FINANCE_CLERK_CONTACT_ID;
-        private readonly int CENTRAL_FINANCE_CLERK_USER_ID;
+        private static readonly string FINANCE_EMAIL = "finance@crossroads.net";
 
         public CheckScannerController(IConfigurationWrapper configuration,
                                       ICheckScannerService checkScannerService,
@@ -45,9 +44,6 @@ namespace crds_angular.Controllers.API
                                       IMessageQueueFactory messageQueueFactory = null,
                                       IMessageFactory messageFactory = null) : base(userImpersonationService, authenticationService)
         {
-            CENTRAL_FINANCE_CLERK_CONTACT_ID = 7656635;
-            CENTRAL_FINANCE_CLERK_USER_ID = 4451866;
-
             _checkScannerService = checkScannerService;
             _contactRepository = contactRepository;
             _communicationService = communicationService;
@@ -102,22 +98,13 @@ namespace crds_angular.Controllers.API
                     return (Ok(_checkScannerService.CreateDonationsForBatch(batch)));
                 }
 
-                batch.MinistryPlatformContactId = _contactRepository.GetContactId(token);
-                batch.MinistryPlatformUserId = _communicationService.GetUserIdFromContactId(token, batch.MinistryPlatformContactId.Value);
+                // US6745 - Only finance person receives email instead of the user who imports the batch
+                batch.MinistryPlatformContactId = _contactRepository.GetContactIdByEmail(FINANCE_EMAIL);
+                batch.MinistryPlatformUserId = _communicationService.GetUserIdFromContactId(batch.MinistryPlatformContactId.Value);
 
-                // message for user who imports the check batch
                 var message = _messageFactory.CreateMessage(batch);
 
                 _donationsQueue.Send(message);
-
-                batch.MinistryPlatformContactId = CENTRAL_FINANCE_CLERK_CONTACT_ID;
-                batch.MinistryPlatformUserId = CENTRAL_FINANCE_CLERK_USER_ID;
-
-                // central email message for finance (finance@crossroads.net)
-                // this contact has no user record in user table
-                var msgForFinance = _messageFactory.CreateMessage(batch);
-
-                _donationsQueue.Send(msgForFinance);
 
                 return (Ok(batch));
             }));
