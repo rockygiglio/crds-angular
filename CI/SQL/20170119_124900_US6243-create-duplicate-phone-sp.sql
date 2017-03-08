@@ -55,7 +55,7 @@ BEGIN
 				AND c2.Household_Position_ID = @Minor_Child
 		);
 
-	SELECT TOP 1000 main.Household_ID
+	SELECT TOP 500 main.Household_ID
 		, main.Household_Name
 		, main.Contact_ID
 		, main.Display_Name

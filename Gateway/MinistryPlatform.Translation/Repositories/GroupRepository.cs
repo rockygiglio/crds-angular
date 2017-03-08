@@ -520,52 +520,22 @@ namespace MinistryPlatform.Translation.Repositories
 
         private List<MpGroupParticipant> LoadGroupParticipants(int groupId, string token, bool activeGroups = true)
         {
-            var groupParticipants = new List<MpGroupParticipant>();
-            logger.Debug("Getting participants for group " + groupId);
-            List<Dictionary<string, object>> participants;
+            const string columns = "Group_Participant_ID, Group_Participants.Group_ID, Group_Participants.Participant_ID, Group_Participants.Group_Role_ID, Group_ID_Table.Group_Name, Participant_ID_Table.Contact_ID, Participant_ID_Table_Contact_ID_Table.Nickname, Participant_ID_Table_Contact_ID_Table.Display_Name, Participant_ID_Table_Contact_ID_Table.Last_Name, Group_Role_ID_Table.Role_Title, Participant_ID_Table_Contact_ID_Table.Email_Address, Group_ID_Table_Congregation_ID_Table.Congregation_Name as Congregation, Group_Participants.Start_Date AS StartDate, Participant_ID_Table.Approved_Small_Group_Leader AS IsApprovedSmallGroupLeader";
+            string filter = $"Group_Participants.Group_ID = {groupId} AND (Group_Participants.End_Date IS NULL OR Group_Participants.End_Date >= GETDATE())";
 
             if (activeGroups)
             {
-                participants = ministryPlatformService.GetSubpageViewRecords(GroupsParticipantsSubPageId, groupId, token);
+                filter += " AND Group_ID_TABLE.Start_Date <= GETDATE() AND (Group_ID_Table.End_Date IS NULL OR Group_ID_TABLE.End_Date >= GETDATE())";
             }
-            else
-            {
-                participants = ministryPlatformService.GetSubpageViewRecords(CurrentGroupsParticipantsSubPage, groupId, token);
-            }
-            
-            if (participants != null && participants.Count > 0)
-            {
-                foreach (Dictionary<string, object> p in participants)
-                {
-                    object pid = null;
-                    p.TryGetValue("Participant_ID", out pid);
-                    if (pid != null)
-                    {
-                        var parti = new MpGroupParticipant
-                        {
-                            ContactId = p.ToInt("Contact_ID"),
-                            ParticipantId = p.ToInt("Participant_ID"),
-                            IsApprovedSmallGroupLeader = p.ToBool("Approved_Small_Group_Leader"),
-                            GroupParticipantId = p.ToInt("dp_RecordID"),
-                            GroupRoleId = p.ToInt("Group_Role_ID"),
-                            GroupRoleTitle = p.ToString("Role_Title"),
-                            LastName = p.ToString("Last_Name"),
-                            NickName = p.ToString("Nickname"),
-                            Email = p.ToString("Email")
-                        };
 
-                        if (p.ContainsKey("Start_Date"))
-                        {
-                            parti.StartDate = p.ToNullableDate("Start_Date");
-                        }                        
-                        groupParticipants.Add(parti);
-                    }
-                }
-            }
-            else
+            logger.Debug("Getting participants for group " + groupId);
+            var groupParticipants = _ministryPlatformRestRepository.UsingAuthenticationToken(token).Search<MpGroupParticipant>(filter, columns);
+
+            if (!groupParticipants.Any())
             {
                 logger.Debug("No participants found for group id " + groupId);
             }
+
             return groupParticipants;
         }
 
@@ -678,7 +648,7 @@ namespace MinistryPlatform.Translation.Repositories
                 {"Nickname", toContactInfo.Nickname},
                 {"Group_Name", groupInfo.Name},
                 {"Congregation_Name", groupInfo.Congregation},
-                {"Childcare_Needed", (childcareNeeded) ? _contentBlockService["communityGroupChildcare"].Content : ""},
+                {"Childcare_Needed", (childcareNeeded) ? _contentBlockService.GetContent("communityGroupChildcare") : ""},
                 {"Base_Url", _configurationWrapper.GetConfigValue("BaseUrl")}
             };
 
@@ -822,8 +792,33 @@ namespace MinistryPlatform.Translation.Repositories
             return groupDetails.Select(MapRecordToMpGroup).ToList();
         }
 
+        public List<MpGroup> GetGroupsForParticipantByTypeOrID(int participantId,string token = null, int[] groupTypeIds = null, int? groupId = null)
+        {
+            if (token == null) token = ApiLogin();
+            const string columns =
+                "Group_Participants.[Group_Participant_ID], Group_Participants.[Participant_ID], Group_ID_Table.[Group_Name], Group_ID_Table.[Group_ID], Group_ID_Table.[Group_Type_ID], Group_ID_Table_Group_Type_ID_Table.[Group_Type], Group_Role_ID, Group_ID_Table.[Congregation_ID], Group_ID_Table.[Ministry_ID], Group_ID_Table.Primary_Contact, Group_ID_Table_Primary_Contact_Table.[Display_Name] AS [Primary_Contact_Name], Group_ID_Table_Primary_Contact_Table.[Email_Address] AS [Primary_Contact_Email], Group_ID_Table.[Description] AS Group_Description, Group_ID_Table.[Start_Date], Group_ID_Table.[End_Date], Group_ID_Table.[Meeting_Day_ID], Group_ID_Table_Meeting_Day_ID_Table.[Meeting_Day], Group_ID_Table_Meeting_Frequency_ID_Table.[Meeting_Frequency], Group_ID_Table.[Meeting_Time], Group_ID_Table.[Available_Online], Group_ID_Table_Offsite_Meeting_Address_Table.[Address_ID], Group_ID_Table_Offsite_Meeting_Address_Table.[Address_Line_1], Group_ID_Table_Offsite_Meeting_Address_Table.[Address_Line_2], Group_ID_Table_Offsite_Meeting_Address_Table.[City], Group_ID_Table_Offsite_Meeting_Address_Table.[State/Region] AS [State], Group_ID_Table_Offsite_Meeting_Address_Table.[Postal_Code] AS [Zip_Code], Group_ID_Table_Offsite_Meeting_Address_Table.[Foreign_Country], Group_ID_Table.[Maximum_Age], Group_ID_Table.[Kids_Welcome], Group_ID_Table.[Remaining_Capacity]";
+
+            string filter = $"Group_Participants.[Participant_ID] = {participantId} AND (GROUP_ID_TABLE.End_Date IS NULL OR GROUP_ID_TABLE.End_Date >= GetDate()) AND (Group_Participants.End_Date is NULL OR Group_Participants.End_Date >= GetDate())";
+
+            if (groupTypeIds != null)
+            {
+                filter += $" AND Group_ID_Table.Group_Type_ID IN ({string.Join(",", groupTypeIds)})";
+            }
+
+            if (groupId != null)
+            {
+                filter += $" AND Group_ID_Table.Group_ID = {groupId}";
+            }
+
+            var groupDetails = _ministryPlatformRestRepository.UsingAuthenticationToken(token).Search<MpGroupParticipant, MpGroup>(filter, columns);
+
+            return groupDetails;
+        }
+
+        [Obsolete("This call has been replaced by GetMyGroupsByType() which uses the rest API.")]
         public List<MpGroup> GetMyGroupParticipationByType(string token, int[] groupTypeId = null, int? groupId = null)
         {
+
             var groupDetails = ministryPlatformService.GetRecordsDict(MyCurrentGroupParticipationPageId,
                                                                       token,
                                                                       string.Format(",,,{0},{1}",

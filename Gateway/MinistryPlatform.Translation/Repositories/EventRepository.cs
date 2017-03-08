@@ -362,7 +362,7 @@ namespace MinistryPlatform.Translation.Repositories
             var events = records.Select(record => new MpEvent
             {
                 EventTitle = record.ToString("Event_Title"),
-                EventType = record.ToString("Event_Type_ID"),
+                EventType = record.ToString("Event_Type"),
                 EventStartDate = record.ToDate("Event_Start_Date", true),
                 EventEndDate = record.ToDate("Event_End_Date", true),
                 EventId = record.ToInt("Event_ID"),
@@ -384,7 +384,7 @@ namespace MinistryPlatform.Translation.Repositories
                 EventTitle = (string) record["Event_Title"],
                 EventStartDate = (DateTime) record["Event_Start_Date"],
                 EventEndDate = (DateTime) record["Event_End_Date"],
-                EventType = record.ToString("Event_Type_ID"),
+                EventType = record.ToString("Event_Type"),
                 PrimaryContact = new MpContact()
                 {
                     ContactId = record.ToInt("Primary_Contact_ID"),
@@ -401,7 +401,7 @@ namespace MinistryPlatform.Translation.Repositories
                 EventTitle = (string) record["Event_Title"],
                 EventStartDate = (DateTime) record["Event_Start_Date"],
                 EventEndDate = (DateTime) record["Event_End_Date"],
-                EventType = record.ToString("Event_Type_ID"),
+                EventType = record.ToString("Event_Type"),
                 PrimaryContact = new MpContact()
                 {
                     ContactId = record.ToInt("Primary_Contact_ID"),
@@ -450,21 +450,16 @@ namespace MinistryPlatform.Translation.Repositories
             var searchString =  string.Format("\"{0}\",", eventId);
             var records = _ministryPlatformService.GetPageViewRecords(_eventGroupsPageViewId, token, searchString);
 
-            if (records == null)
-            {
-                return null;
-            }
-
-            return records.Select(record => new MpEventGroup
-            {
-                EventGroupId = record.ToInt("Event_Group_ID"),
-                EventId = record.ToInt("Event_ID"),
-                GroupId = record.ToInt("Group_ID"),
-                RoomId = record.ToNullableInt("Room_ID"),
-                Closed = record.ToBool("Closed"),
-                EventRoomId = record.ToNullableInt("Event_Room_ID"),
-                GroupTypeId = record.ToInt("Group_Type_ID")
-            }).ToList();
+            return records?.Select(record => new MpEventGroup
+                                   {
+                                       EventGroupId = record.ToInt("Event_Group_ID"),
+                                       EventId = record.ToInt("Event_ID"),
+                                       GroupId = record.ToInt("Group_ID"),
+                                       RoomId = record.ToNullableInt("Room_ID"),
+                                       Closed = record.ToBool("Closed"),
+                                       EventRoomId = record.ToNullableInt("Event_Room_ID"),
+                                       GroupTypeId = record.ToInt("Group_Type_ID")
+                                   }).ToList();
         } 
 
         public List<MpEventGroup> GetEventGroupsForGroup(int groupId, string token)
@@ -492,10 +487,12 @@ namespace MinistryPlatform.Translation.Repositories
             _ministryPlatformService.DeleteRecord(_eventGroupsPageId, eventGroup.EventGroupId, null, token);
         }
 
-        public void DeleteEventGroupsForEvent(int eventId, string token)
+        public void DeleteEventGroupsForEvent(int eventId, string token, int? groupTypeID = null)
         {
             // get event group ids
-            var discardedEventGroupIds = GetEventGroupsForEvent(eventId, token).Select(r => r.EventGroupId).ToArray();
+            var discardedEventGroupIds = groupTypeID == null 
+                ? GetEventGroupsForEvent(eventId, token).Select(r => r.EventGroupId).ToArray() 
+                : GetEventGroupsForEvent(eventId, token).Where(r => r.GroupTypeId == groupTypeID).Select(r => r.EventGroupId).ToArray();
 
             // MP will throw an error if there are no elements to delete, so we need to exit the function before then
             if (discardedEventGroupIds.Length == 0)

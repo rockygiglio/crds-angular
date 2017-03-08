@@ -1,23 +1,21 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.IO;
-using System.Net;
 using Crossroads.Web.Common.Configuration;
 using Crossroads.Web.Common.MinistryPlatform;
 using Crossroads.Web.Common.Security;
 using log4net;
-using MinistryPlatform.Translation.Extensions;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Repositories.Interfaces;
-using MinistryPlatform.Translation.Helpers;
 using MinistryPlatform.Translation.Models.Finder;
-using Newtonsoft.Json;
+using System.Device.Location;
 
 namespace MinistryPlatform.Translation.Repositories
 {
     public class FinderRepository : BaseRepository, IFinderRepository
     {
+        private const int searchRadius = 6380; 
+
         private readonly IConfigurationWrapper _configurationWrapper;
         private readonly IMinistryPlatformRestRepository _ministryPlatformRest;
         private readonly IMinistryPlatformService _ministryPlatformService;
@@ -57,6 +55,8 @@ namespace MinistryPlatform.Translation.Repositories
             return pinDetails;
         }
 
+        
+
         public void EnablePin(int participantId)
         {
             var dict = new Dictionary<string, object> { { "Participant_ID", participantId }, { "Show_On_Map", true } };
@@ -67,19 +67,32 @@ namespace MinistryPlatform.Translation.Repositories
             _ministryPlatformRest.UsingAuthenticationToken(apiToken).Put("Participants", update);
         }
 
-        public string GetIpForRemoteUser()
+        public List<SpPinDto> GetPinsInRadius(GeoCoordinate originCoords)
         {
-            string ip;
+            var apiToken = _apiUserRepository.GetToken();
 
-            var request = WebRequest.Create("https://api.ipify.org?format=json");
-            using (var response = request.GetResponse())
-            using (var stream = new StreamReader(response.GetResponseStream()))
+            var parms = new Dictionary<string, object>()
             {
-                var responseString = stream.ReadToEnd();
-                var s = JsonConvert.DeserializeObject<RemoteIp>(responseString);
-                ip = s.Ip;
+                {"@Latitude", originCoords.Latitude },
+                {"@Longitude", originCoords.Longitude },
+                {"@RadiusInKilometers", searchRadius }
+            };
+
+            string spName = "api_crds_get_Pins_Within_Range"; 
+
+            try
+            {
+                List<List<SpPinDto>> storedProcReturn = _ministryPlatformRest.UsingAuthenticationToken(apiToken)
+                                                                             .GetFromStoredProc<SpPinDto>(spName, parms);
+                List<SpPinDto> pinsFromSp = storedProcReturn.FirstOrDefault();
+
+                return pinsFromSp; 
             }
-            return ip;
+            catch (Exception ex)
+            {
+                var exception = ex;
+                return new List<SpPinDto>();
+            }
         }
     }
 }

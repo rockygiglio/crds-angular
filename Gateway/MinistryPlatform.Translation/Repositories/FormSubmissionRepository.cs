@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Text;
 using Crossroads.Utilities.Interfaces;
 using Crossroads.Web.Common;
 using Crossroads.Web.Common.Configuration;
@@ -16,14 +17,15 @@ namespace MinistryPlatform.Translation.Repositories
 {
     public class FormSubmissionRepository : BaseRepository, IFormSubmissionRepository
     {
-        private readonly int _formResponsePageId = AppSettings("FormResponsePageId");
-        private readonly int _formAnswerPageId = AppSettings("FormAnswerPageId");
-        private readonly int _formFieldCustomPage = AppSettings("AllFormFieldsView");
-        private readonly int _formResponseGoTripView = AppSettings("GoTripFamilySignup");
+        private readonly int _formResponsePageId;
+        private readonly int _formAnswerPageId;
+        private readonly int _formFieldCustomPage;
+        private readonly int _formResponseGoTripView;
 
         private readonly IMinistryPlatformService _ministryPlatformService;
         private readonly IMinistryPlatformRestRepository _ministryPlatformRestRepository;
         private readonly IDbConnection _dbConnection;
+        private readonly IConfigurationWrapper _configurationWrapper;
 
         public FormSubmissionRepository(IMinistryPlatformService ministryPlatformService, IDbConnection dbConnection, IAuthenticationRepository authenticationService, IConfigurationWrapper configurationWrapper, IMinistryPlatformRestRepository ministryPlatformRest)
             : base(authenticationService,configurationWrapper)
@@ -31,6 +33,12 @@ namespace MinistryPlatform.Translation.Repositories
             _ministryPlatformService = ministryPlatformService;
             _ministryPlatformRestRepository = ministryPlatformRest;
             _dbConnection = dbConnection;
+            _configurationWrapper = configurationWrapper;
+
+            _formResponsePageId = configurationWrapper.GetConfigIntValue("FormResponsePageId");
+            _formAnswerPageId = configurationWrapper.GetConfigIntValue("FormAnswerPageId");
+            _formFieldCustomPage = configurationWrapper.GetConfigIntValue("AllFormFieldsView");
+            _formResponseGoTripView = configurationWrapper.GetConfigIntValue("GoTripFamilySignup");
         }
 
         public int GetFormFieldId(int crossroadsId)
@@ -163,12 +171,12 @@ namespace MinistryPlatform.Translation.Repositories
             return responseId;
         }
 
-        public string GetFormResponseAnswer(int formId, int contactId, int formFieldId)
+        public string GetFormResponseAnswer(int formId, int contactId, int formFieldId, int? eventId = null)
         {
             var apiToken = ApiLogin();
             const string selectColumns = "Response";
 
-            var formResponseId = GetFormResponseIdForFormContact(formId, contactId);
+            var formResponseId = GetFormResponseIdForFormContact(formId, contactId, eventId);
             var formResponseAnswerId = GetFormResponseAnswerIdForFormFeildFormResponse(formResponseId,formFieldId);
             var responseAnswer =_ministryPlatformRestRepository.UsingAuthenticationToken(apiToken).Get<MpFormAnswer>(formResponseAnswerId, selectColumns);
 
@@ -186,11 +194,16 @@ namespace MinistryPlatform.Translation.Repositories
             return DateTime.Parse(signedUp.First()["Response_Date"].ToString());
         }
 
-        public MpFormResponse GetFormResponse(int formId, int contactId)
+        public MpFormResponse GetFormResponse(int formId, int contactId, int? eventId = null)
         {
             var apiToken = ApiLogin();
             var searchString = $"Form_ID={formId} AND Contact_ID={contactId}";
+            if (eventId != null)
+            {
+                searchString = $"{searchString} AND Event_ID={eventId}";
+            }
             var response = _ministryPlatformRestRepository.UsingAuthenticationToken(apiToken).Search<MpFormResponse>(searchString).FirstOrDefault();
+            if (response == null) throw new ApplicationException($"Form response with formId={formId}, contactId={contactId}, eventId={eventId} not found!");
             searchString = $"Form_Response_ID={response.FormResponseId}";
             response.FormAnswers = _ministryPlatformRestRepository.UsingAuthenticationToken(apiToken).Search<MpFormAnswer>(searchString);
             return response;
@@ -205,37 +218,47 @@ namespace MinistryPlatform.Translation.Repositories
                 {"Contact_ID", formResponse.ContactId},
                 {"Opportunity_ID",  formResponse.OpportunityId },
                 {"Opportunity_Response", formResponse.OpportunityResponseId},
-                {"Pledge_Campaign_ID", formResponse.PledgeCampaignId}
+                {"Pledge_Campaign_ID", formResponse.PledgeCampaignId},
+                {"Event_ID", formResponse.EventId }
             };
 
-            // This code is shared by Trips, Camps, and Volunteer Application.  For trips,
+            var formResponseId = _configurationWrapper.GetConfigIntValue("FormResponsePageId");
+
+            // This code is shared by Trips, Camps, and Volunteer Application.  
+            //
+            // For trips:
             // we want to maintain separate form responses per trip.  We can distinguish
             // trips from other callers because PledgeCampaignId is required for trips.
             //
             // TODO: Currently, Camps is sharing form responses if the contact has
             // registered for multiple camps; this will likely need to change in the
             // future.
-            int responseId = (formResponse.PledgeCampaignId != null)
-                ? responseId = GetFormResponseIdForFormContactAndPledgeCampaign(formResponse.FormId, formResponse.ContactId, formResponse.PledgeCampaignId.Value)
-                : responseId = GetFormResponseIdForFormContact(formResponse.FormId, formResponse.ContactId);
-
+            var sb = new StringBuilder($"Contact_ID={formResponse.ContactId} AND Form_ID={formResponse.FormId}");
+            if (formResponse.EventId != null) sb.Append($" AND Event_ID={formResponse.EventId}");
+            if (formResponse.PledgeCampaignId != null) sb.Append($" AND Pledge_Campaign_ID={formResponse.PledgeCampaignId}");
+            var filter = sb.ToString();
+            const string selectColumns = "Form_Response_ID";
+            var response = _ministryPlatformRestRepository.UsingAuthenticationToken(token).Search<MpFormResponse>(filter, selectColumns, null, true);
+            var responseId = response?.FirstOrDefault()?.FormResponseId ?? 0;
+            
             if (responseId == 0)
             {
-                responseId = _ministryPlatformService.CreateRecord(_formResponsePageId, record, token, true);
+                responseId = _ministryPlatformService.CreateRecord(formResponseId, record, token, true);
             }
             else
             {
                 record.Add("Form_Response_ID", responseId);
-                _ministryPlatformService.UpdateRecord(_formResponsePageId, record, token);
+                _ministryPlatformService.UpdateRecord(formResponseId, record, token);
             }
             
             return responseId;
         }
 
-        private int GetFormResponseIdForFormContact(int formId, int contactId)
+        private int GetFormResponseIdForFormContact(int formId, int contactId, int? eventId)
         {
             var apiToken = ApiLogin();
             var searchString = $"Contact_ID='{contactId}' AND Form_ID='{formId}'";
+            if (eventId != null) searchString = $"{searchString} AND Event_ID={eventId}";
             const string selectColumns = "Form_Response_ID";
 
             var formResponse = _ministryPlatformRestRepository.UsingAuthenticationToken(apiToken).Search<MpFormResponse>(searchString, selectColumns, null, true).FirstOrDefault();

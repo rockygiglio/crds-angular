@@ -8,7 +8,8 @@ namespace MinistryPlatform.Translation.Models
         public string Name { get; set; }
         public bool OpenSignup { get; set; }
         public DateTime StartDate { get; set; }
-        public DateTime EndDate { get; set; }
+        public DateTime? EndDate { get; set; }
         public int ContactId { get; set; }
+        public string ImageUrl { get; set; }
     }
 }

@@ -32,6 +32,7 @@ namespace crds_angular.Services
         private readonly IAddressProximityService _addressMatrixService;
         private readonly IEmailCommunication _emailCommunicationService;
         private readonly IAttributeService _attributeService;
+        private readonly IAddressService _addressService;
 
         private readonly int _defaultGroupContactEmailId;
         private readonly int _defaultAuthorUserId;
@@ -70,7 +71,9 @@ namespace crds_angular.Services
             IContactRepository contactRepository,
             IAddressProximityService addressMatrixService,
             IEmailCommunication emailCommunicationService,
-            IAttributeService attributeService)
+            IAttributeService attributeService,
+            IAddressService addressService
+            )
         {
             _groupToolRepository = groupToolRepository;
             _groupRepository = groupRepository;
@@ -84,6 +87,7 @@ namespace crds_angular.Services
             _addressMatrixService = addressMatrixService;
             _emailCommunicationService = emailCommunicationService;
             _attributeService = attributeService;
+            _addressService = addressService;
 
             _defaultGroupContactEmailId = configurationWrapper.GetConfigIntValue("DefaultGroupContactEmailId");
             _defaultAuthorUserId = configurationWrapper.GetConfigIntValue("DefaultAuthorUser");
@@ -692,7 +696,7 @@ namespace crds_angular.Services
 
         public List<GroupDTO> GetGroupToolGroups(string token)
         {
-            var groups = _groupService.GetGroupsForAuthenticatedUser(token, new int[] { _smallGroupTypeId, _onsiteGroupTypeId });
+            var groups = _groupService.GetGroupsByTypeOrId(token,null, new int[] { _smallGroupTypeId, _onsiteGroupTypeId }, null);
 
             return _groupService.RemoveOnsiteParticipantsIfNotLeader(groups, token);
         }
