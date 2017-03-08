@@ -2,9 +2,14 @@
 * Home
 ***************************************************************************************/
 
-.homepage {
+.homepage {  
   .main {
     margin-bottom: 0;
+  }
+
+  .brandbar-container {
+      visibility: hidden;
+      opacity: 0;
   }
 
   footer {
