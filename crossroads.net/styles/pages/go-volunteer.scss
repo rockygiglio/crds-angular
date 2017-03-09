@@ -152,6 +152,10 @@ $gc-red-darker: #44080a;
   .card-dark {
     background: none;
   }
+
+  .media-card-link a {
+    position: inherit;
+  }
 }
 
 .site-image-filter {
