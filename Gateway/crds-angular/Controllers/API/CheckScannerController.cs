@@ -52,7 +52,8 @@ namespace crds_angular.Controllers.API
             var b = configuration.GetConfigValue("CheckScannerDonationsAsynchronousProcessingMode");
             _asynchronous = b != null && bool.Parse(b);
 
-            CROSSROADS_FINANCE_CLERK_CONTACT_ID = Int32.Parse(configuration.GetConfigValue("CrossroadsFinanceClerkContactId"));
+            var id = configuration.GetConfigValue("CrossroadsFinanceClerkContactId");
+            CROSSROADS_FINANCE_CLERK_CONTACT_ID = (id == null ? -1 : Int32.Parse(id));
 
             if (_asynchronous)
             {
@@ -101,12 +102,15 @@ namespace crds_angular.Controllers.API
                 }
 
                 // US6745 - Only finance person receives email instead of the user who imports the batch
-                batch.MinistryPlatformContactId = CROSSROADS_FINANCE_CLERK_CONTACT_ID;
-                batch.MinistryPlatformUserId = _communicationService.GetUserIdFromContactId(batch.MinistryPlatformContactId.Value);
+                if (CROSSROADS_FINANCE_CLERK_CONTACT_ID > 0)
+                {
+                    batch.MinistryPlatformContactId = CROSSROADS_FINANCE_CLERK_CONTACT_ID;
+                    batch.MinistryPlatformUserId = _communicationService.GetUserIdFromContactId(batch.MinistryPlatformContactId.Value);
 
-                var message = _messageFactory.CreateMessage(batch);
+                    var message = _messageFactory.CreateMessage(batch);
 
-                _donationsQueue.Send(message);
+                    _donationsQueue.Send(message);
+                }
 
                 return (Ok(batch));
             }));
