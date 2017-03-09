@@ -1,0 +1,79 @@
+/* Central KY */
+
+.centralky {
+  overflow: hidden;
+  margin-bottom: -40px;
+
+  h1,
+  h2,
+  h3 {
+    font-weight: 200;
+  }
+
+  @media (max-width: 768px) {
+    .img-full-width.centralky-photo-block {
+      width: auto;
+      height: 200px;
+    }
+  }
+
+  .resilient-callout {
+    max-width: 700px;
+
+    .btn-text {
+      color: #747474;
+    }
+  }
+
+  .lex-anywhere-section {
+    color: #fff;
+
+    h1,
+    h2,
+    h3,
+    p {
+      color: #fff;
+    }
+
+    h1 {
+      font-family: "acumin-pro-extra-condensed", sans-serif;
+      font-weight: 600;
+      font-size: 450%;
+
+      @media (max-width: 768px) {
+          font-size: 300%;
+      }
+    }
+  }
+
+  .btn-standard.btn-anywhere {
+    color: #0095d8;
+    background: #fff;
+    transition: all .25s ease-in-out;
+    font-family: "acumin-pro", sans-serif;
+    font-weight: 600;
+
+    &:hover {
+      color: #0083bf;
+      background: #eeeeee;
+    }
+  }
+
+  .crds-card.crds-location-card figcaption {
+    font-family: "acumin-pro-extra-condensed", sans-serif;
+    font-size: 180%;
+
+    a {
+      color: #3a3a3a;
+    }
+  }
+
+  .resilient-ball-img {
+    margin-left: -30px;
+    max-width: 690px;
+
+    @media (min-width: 1600px) {
+      float: right;
+    }
+  }
+}
