@@ -205,6 +205,9 @@ namespace crds_angular.Services
         {
             var apiToken = _apiUserRepository.GetToken();
             var projects = _projectRepository.GetProjectsByInitiative(initiativeId, apiToken);
+            // filter out projects that are not 'ANYWHERE' projects
+            var anywhereId = _configurationWrapper.GetConfigIntValue("AnywhereCongregation");
+            projects = projects.Where((p) => p.LocationId == anywhereId).ToList();
             var cities = projects.Select(p => new ProjectCity {ProjectId = p.ProjectId ,City = p.City, State = p.State}).ToList();
             return cities;
         }
