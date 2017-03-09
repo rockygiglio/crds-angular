@@ -434,13 +434,33 @@ namespace crds_angular.test.Services
 
             var mockCities = MockCityList();
             _projectRepository.Setup(m => m.GetProjectsByInitiative(initiativeId, It.IsAny<string>())).Returns(mockCities);
-
+            _configurationWrapper.Setup(m => m.GetConfigIntValue("AnywhereCongregation")).Returns(4);
             var result = _fixture.GetParticipatingCities(initiativeId);
 
             Assert.IsNotNull(result);
             Assert.IsTrue(result.Any());
             Assert.AreEqual(mockCities.Count, result.Count);
             _projectRepository.VerifyAll();
+        }
+
+        [Test]
+        public void ShouldFilterOutNonAnywhereCities()
+        {
+            const int initiativeId = 12;
+            const int anywhereId = 34;
+
+            var mockCities = MockCityListWithNonAnywhere(anywhereId);
+            _projectRepository.Setup(m => m.GetProjectsByInitiative(initiativeId, It.IsAny<string>())).Returns(mockCities);
+            _configurationWrapper.Setup(m => m.GetConfigIntValue("AnywhereCongregation")).Returns(anywhereId);
+
+            var result = _fixture.GetParticipatingCities(initiativeId);
+
+            Assert.IsNotNull(result);
+            Assert.IsTrue(result.Any());
+            Assert.AreEqual(2, result.Count);
+            
+            _projectRepository.VerifyAll();
+            _configurationWrapper.VerifyAll();
         }
 
         private List<MpProject> MockCityList()
@@ -451,13 +471,43 @@ namespace crds_angular.test.Services
                 {
                     ProjectId = 1,
                     City = "Cleveland",
-                    State = "OH"
+                    State = "OH",
+                    LocationId = 4
                 },
                 new MpProject
                 {
                     ProjectId = 2,
                     City = "Phoenix",
-                    State = "AZ"
+                    State = "AZ",
+                    LocationId = 4
+                }
+            };
+        }
+
+        private List<MpProject> MockCityListWithNonAnywhere(int anywhereId)
+        {
+            return new List<MpProject>
+            {
+                new MpProject
+                {
+                    ProjectId = 1,
+                    City = "Cleveland",
+                    State = "OH",
+                    LocationId = anywhereId
+                },
+                new MpProject
+                {
+                    ProjectId = 2,
+                    City = "Phoenix",
+                    State = "AZ",
+                    LocationId = anywhereId
+                },
+                new MpProject
+                {
+                    ProjectId = 3,
+                    City = "Cincinnati",
+                    State = "OH",
+                    LocationId = anywhereId -2
                 }
             };
         }
