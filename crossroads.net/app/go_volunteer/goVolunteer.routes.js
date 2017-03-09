@@ -513,7 +513,7 @@ function GroupFindConnectors(GoVolunteerService, $state, $stateParams, $q, Group
 
   if ($stateParams.page === 'group-find-connector')  {
     if (GoVolunteerService.organization.openSignup) {
-      GroupConnectors.OpenOrgs.query({initiativeId: 1}, function(data) {
+      GroupConnectors.OpenOrgs.query({initiativeId: $stateParams.initiativeId}, function(data) {
         GoVolunteerService.groupConnectors = data;
         deferred.resolve();
       },
@@ -525,7 +525,7 @@ function GroupFindConnectors(GoVolunteerService, $state, $stateParams, $q, Group
       );
     } else {
       GroupConnectors.ByOrgId.query(
-        {orgId: GoVolunteerService.organization.organizationId, initiativeId: 1}, function(data) {
+        {orgId: GoVolunteerService.organization.organizationId, initiativeId: $stateParams.initiativeId}, function(data) {
         GoVolunteerService.groupConnectors = data;
         deferred.resolve();
       },
