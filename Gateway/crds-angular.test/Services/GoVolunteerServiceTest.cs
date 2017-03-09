@@ -434,7 +434,7 @@ namespace crds_angular.test.Services
 
             var mockCities = MockCityList();
             _projectRepository.Setup(m => m.GetProjectsByInitiative(initiativeId, It.IsAny<string>())).Returns(mockCities);
-
+            _configurationWrapper.Setup(m => m.GetConfigIntValue("AnywhereCongregation")).Returns(4);
             var result = _fixture.GetParticipatingCities(initiativeId);
 
             Assert.IsNotNull(result);
@@ -471,13 +471,15 @@ namespace crds_angular.test.Services
                 {
                     ProjectId = 1,
                     City = "Cleveland",
-                    State = "OH"
+                    State = "OH",
+                    LocationId = 4
                 },
                 new MpProject
                 {
                     ProjectId = 2,
                     City = "Phoenix",
-                    State = "AZ"
+                    State = "AZ",
+                    LocationId = 4
                 }
             };
         }
