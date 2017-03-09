@@ -126,6 +126,9 @@ namespace crds_angular.Models.Crossroads.Groups
         [JsonProperty(PropertyName = "proximity")]
         public decimal? Proximity { get; set; }
 
+        [JsonProperty(PropertyName = "participantId")]
+        public int? ParticipantId { get; set; }
+
         public GroupDTO()
         {
             AttributeTypes = new Dictionary<int, ObjectAttributeTypeDTO>();
