@@ -38,18 +38,18 @@ DECLARE @currentParticipantId AS INT
 DECLARE @fContactId AS INT
 DECLARE @mContactId AS INT
 -------------------------------------------------------------------------------------------------------------------------------------------
---Set Current contact record to 100000020--
+--Set Current contact record to 100000030--
 SET @currentContactId = IDENT_CURRENT('Contacts');
 
 SET IDENTITY_INSERT [dbo].[Contacts] ON;
 
-SET @fContactId = 100000020;
+SET @fContactId = 100000030;
 
 INSERT INTO Contacts 
 (Contact_ID,Company,Company_Name,Display_Name,Prefix_ID,First_Name,Middle_Name,Last_Name,Suffix_ID,Nickname ,Date_of_Birth   ,Gender_ID,Marital_Status_ID,Contact_Status_ID,Household_ID,Household_Position_ID,Participant_Record,Donor_Record,Email_Address,Email_Unlisted,Bulk_Email_Opt_Out,Bulk_SMS_Opt_Out,Mobile_Phone  ,Mobile_Carrier,Mobile_Phone_Unlisted,Company_Phone,Pager_Phone,Fax_Phone,User_Account,Web_Page,Remove_From_Directory,Industry_ID,Occupation_ID,Employer_Name,[SSN/EIN],Anniversary_Date,HS_Graduation_Year,Current_School,Contact_GUID,ID_Card,Domain_ID,__ShelbyID,__ExternalHouseholdID,__ExternalPersonID,__ExternalUserID,__ExternalBusinessID,Maiden_Name,__LastLegacyLogin,__LegacyUserName,__LegacyUserID,__LegacyEmailAddress) VALUES
 (@fContactId,0      ,null        ,'temp'      ,2        ,'temp'    ,null       ,'Temp'   ,null     ,'temp'   ,{d '1975-01-01'},1        ,1                ,1                ,null        ,3                    ,null              ,null        ,null         ,null          ,0                 ,0               ,''           ,null          ,null                 ,null         ,null       ,null     ,null        ,null    ,null                 ,null       ,null         ,null         ,null     ,null            ,null              ,null          ,NEWID()     ,null   ,1        ,null      ,null                 ,null              ,null            ,null                ,null       ,null             ,null            ,null          ,null                );
 
-SET @mContactId = 100000021;
+SET @mContactId = 100000031;
 
 INSERT INTO Contacts 
 (Contact_ID,Company,Company_Name,Display_Name,Prefix_ID,First_Name,Middle_Name,Last_Name,Suffix_ID,Nickname ,Date_of_Birth   ,Gender_ID,Marital_Status_ID,Contact_Status_ID,Household_ID,Household_Position_ID,Participant_Record,Donor_Record,Email_Address,Email_Unlisted,Bulk_Email_Opt_Out,Bulk_SMS_Opt_Out,Mobile_Phone  ,Mobile_Carrier,Mobile_Phone_Unlisted,Company_Phone,Pager_Phone,Fax_Phone,User_Account,Web_Page,Remove_From_Directory,Industry_ID,Occupation_ID,Employer_Name,[SSN/EIN],Anniversary_Date,HS_Graduation_Year,Current_School,Contact_GUID,ID_Card,Domain_ID,__ShelbyID,__ExternalHouseholdID,__ExternalPersonID,__ExternalUserID,__ExternalBusinessID,Maiden_Name,__LastLegacyLogin,__LegacyUserName,__LegacyUserID,__LegacyEmailAddress) VALUES
@@ -129,7 +129,7 @@ SET @currentAddressId = IDENT_CURRENT('Addresses');
 SET IDENTITY_INSERT [dbo].[Addresses] ON;
 
 DECLARE @addressId AS INT
-SET @addressId = 100000020;
+SET @addressId = 100000030;
 
 INSERT INTO Addresses 
 (Address_ID,Address_Line_1         ,Address_Line_2,City    ,[State/Region],Postal_Code,Foreign_Country,Country_Code,Domain_ID,Carrier_Route,Lot_Number,Delivery_Point_Code,Delivery_Point_Check_Digit,Latitude,Longitude,Altitude,Time_Zone,Bar_Code,Area_Code,Last_Validation_Attempt,County,Validated,Do_Not_Validate,Last_GeoCode_Attempt,__ExternalAddressID) VALUES
@@ -148,7 +148,7 @@ SET @currentHouseholdId = IDENT_CURRENT('Households');
 SET IDENTITY_INSERT [dbo].[Households] ON;
 
 DECLARE @householdID AS INT
-SET @householdId = 100000020;
+SET @householdId = 100000030;
 
 INSERT INTO Households 
 (Household_ID,Household_Name,Address_ID  ,Home_Phone      ,Domain_ID,Congregation_ID  ,Care_Person, Household_Source_ID ,Family_Call_Number, Household_Preferences     ,Home_Phone_Unlisted   , Home_Address_Unlisted, Bulk_Mail_Opt_Out, _Last_Donation, _Last_Activity, __ExternalHouseholdID, __ExternalBusinessID) VALUES
