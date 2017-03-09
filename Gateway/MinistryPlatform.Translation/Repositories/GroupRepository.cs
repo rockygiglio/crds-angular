@@ -648,7 +648,7 @@ namespace MinistryPlatform.Translation.Repositories
                 {"Nickname", toContactInfo.Nickname},
                 {"Group_Name", groupInfo.Name},
                 {"Congregation_Name", groupInfo.Congregation},
-                {"Childcare_Needed", (childcareNeeded) ? _contentBlockService["communityGroupChildcare"].Content : ""},
+                {"Childcare_Needed", (childcareNeeded) ? _contentBlockService.GetContent("communityGroupChildcare") : ""},
                 {"Base_Url", _configurationWrapper.GetConfigValue("BaseUrl")}
             };
 
