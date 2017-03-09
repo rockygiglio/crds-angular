@@ -32,7 +32,7 @@ namespace crds_angular.Controllers.API
         private readonly IMessageFactory _messageFactory;
         private readonly ICryptoProvider _cryptoProvider;
 
-        private static readonly string FINANCE_EMAIL = "finance@crossroads.net";
+        private readonly int CROSSROADS_FINANCE_CLERK_CONTACT_ID;
 
         public CheckScannerController(IConfigurationWrapper configuration,
                                       ICheckScannerService checkScannerService,
@@ -51,6 +51,8 @@ namespace crds_angular.Controllers.API
 
             var b = configuration.GetConfigValue("CheckScannerDonationsAsynchronousProcessingMode");
             _asynchronous = b != null && bool.Parse(b);
+
+            CROSSROADS_FINANCE_CLERK_CONTACT_ID = Int32.Parse(configuration.GetConfigValue("CrossroadsFinanceClerkContactId"));
 
             if (_asynchronous)
             {
@@ -99,7 +101,7 @@ namespace crds_angular.Controllers.API
                 }
 
                 // US6745 - Only finance person receives email instead of the user who imports the batch
-                batch.MinistryPlatformContactId = _contactRepository.GetContactIdByEmail(FINANCE_EMAIL);
+                batch.MinistryPlatformContactId = CROSSROADS_FINANCE_CLERK_CONTACT_ID;
                 batch.MinistryPlatformUserId = _communicationService.GetUserIdFromContactId(batch.MinistryPlatformContactId.Value);
 
                 var message = _messageFactory.CreateMessage(batch);
