@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
-using System.IO;
+﻿using System;
+using System.Collections.Generic;
 using Crossroads.Utilities.Interfaces;
 using Crossroads.Utilities.Models;
 using log4net;
 using RestSharp;
+using Newtonsoft.Json;
 
 namespace Crossroads.Utilities.Services
 {
@@ -12,16 +13,42 @@ namespace Crossroads.Utilities.Services
         private readonly ILog _logger = LogManager.GetLogger(typeof(ContentBlockService));
         public ContentBlockService(IRestClient cmsRestClient)
         {
-            var blocks = cmsRestClient.Execute<ContentBlocks>(new RestRequest("/api/ContentBlock", Method.GET));
-            if (blocks.Data == null)
+            try
             {
-                _logger.Fatal(string.Format("Unable to get the content blocks from the CMS! {0}", blocks.ErrorException.Message));
-                return;
+                // NOTE: In order to connect to the CMS server over SSL, you must enable
+                // SecurityProtocolType.Tls12.  This is handled already in TlsHelper.cs
+                // called from Application_Start(), but if this code is reused elsewhere
+                // beware of this dependency.
+                RestRequest request = new RestRequest("/api/ContentBlock", Method.GET);
+                IRestResponse response = cmsRestClient.Execute(request);
+
+                ContentBlocks blocks = JsonConvert.DeserializeObject<ContentBlocks>(response.Content);
+                foreach (ContentBlock b in blocks.contentBlocks)
+                {
+                    Add(b.Title, b);
+                }
             }
-            foreach (var b in blocks.Data.contentBlocks)
+            catch (Exception e)
             {
-                Add(b.Title, b);
-            }            
+                _logger.Error("ContentBlockService: Unable to get the content blocks from the CMS!", e);
+            }
+        }
+
+        public string GetContent(string title)
+        {
+            string content = "";
+
+            ContentBlock contentBlock;
+            if (this.TryGetValue(title, out contentBlock))
+            {
+                content = contentBlock.Content;
+            }
+            else
+            {
+                _logger.Error($"ContentBlockService: Missing CMS content for '{title}'");
+            }
+
+            return content;
         }
     }
 }

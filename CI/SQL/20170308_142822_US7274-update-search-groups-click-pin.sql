@@ -1,10 +1,13 @@
 USE [MinistryPlatform]
 GO
-/****** Object:  StoredProcedure [dbo].[api_crds_SearchGroups]    Script Date: 3/2/2017 1:28:39 PM ******/
+
+/****** Object:  StoredProcedure [dbo].[api_crds_SearchGroups]    Script Date: 3/8/2017 2:27:40 PM ******/
 SET ANSI_NULLS ON
 GO
+
 SET QUOTED_IDENTIFIER ON
 GO
+
 
 ALTER PROCEDURE [dbo].[api_crds_SearchGroups]
 	@GroupTypeId VARCHAR(255) = '1, 8', -- Search Small and Onsite groups by default
@@ -220,3 +223,7 @@ BEGIN
 	END
 
 END
+
+GO
+
+

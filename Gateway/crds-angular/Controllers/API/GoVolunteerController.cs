@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Web.Http;
 using System.Web.Http.Description;
+using crds_angular.Exceptions;
 using crds_angular.Exceptions.Models;
 using crds_angular.Models.Crossroads.Attribute;
 using crds_angular.Models.Crossroads.GoVolunteer;
@@ -302,13 +304,12 @@ namespace crds_angular.Controllers.API
                 var dataError = new ApiErrorDto("Registration Data Invalid", new InvalidOperationException("Invalid Registration Data" + errors));
                 throw new HttpResponseException(dataError.HttpResponseMessage);
             }
+            catch (DuplicateUserException e)
+            {
+                throw new HttpResponseException(HttpStatusCode.Conflict);
+            }
             catch (Exception e)
             {
-                if (e.GetType() == typeof(HttpResponseException))
-                {
-                    throw e;
-                }
-
                 var msg = "GoVolunteerRegistrationController: POST " + goVolunteerRegistration;
                 logger.Error(msg, e);
                 var apiError = new ApiErrorDto(msg, e);

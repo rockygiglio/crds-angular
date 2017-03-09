@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Linq;
+using System.ServiceModel;
+using crds_angular.Exceptions;
 using crds_angular.Models.Crossroads.GoVolunteer;
 using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Services;
@@ -125,13 +127,19 @@ namespace crds_angular.Services
         {
             try
             {
-                MpGroupConnector mpGroupConnector = _groupConnectorService.GetGroupConnectorByProjectId(projectId, token);
+                var apiToken = _apiUserRepository.GetToken();
+                MpGroupConnector mpGroupConnector = _groupConnectorService.GetGroupConnectorByProjectId(projectId, apiToken);
                 registration.GroupConnectorId = mpGroupConnector.Id;
 
                 var participantId = RegistrationContact(registration, token);
                 CreateAnywhereRegistrationDto(registration, participantId);
 
                 return registration;
+            }
+            catch (DuplicateUserException e)
+            {
+                _logger.Error(e.Message, e);
+                throw e;
             }
             catch (Exception e)
             {
@@ -597,16 +605,24 @@ namespace crds_angular.Services
 
         private int ExistingParticipant(Registration registration, string token)
         {
-            // update name/email/dob/mobile
-            var dict = registration.Self.GetDictionary();
-            _contactService.UpdateContact(registration.Self.ContactId, dict);
-
             // update the user record?
             MpUser user = _userService.GetByAuthenticationToken(token);
             user.UserId = registration.Self.EmailAddress;
             user.UserEmail = registration.Self.EmailAddress;
             user.DisplayName = registration.Self.LastName + ", " + registration.Self.FirstName;
-            _userService.UpdateUser(user);
+
+            try
+            {
+                _userService.UpdateUser(user);
+            }
+            catch (FaultException e)
+            {
+                throw new DuplicateUserException(user.UserId);
+            }
+
+            // update name/email/dob/mobile
+            var dict = registration.Self.GetDictionary();
+            _contactService.UpdateContact(registration.Self.ContactId, dict);
 
             //get participant
             var participant = _participantService.GetParticipantRecord(token);

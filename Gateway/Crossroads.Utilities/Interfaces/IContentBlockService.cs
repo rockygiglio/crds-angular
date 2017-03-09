@@ -5,5 +5,6 @@ namespace Crossroads.Utilities.Interfaces
 {
     public interface IContentBlockService : IDictionary<string, ContentBlock>
     {
+        string GetContent(string key);
     }
 }
