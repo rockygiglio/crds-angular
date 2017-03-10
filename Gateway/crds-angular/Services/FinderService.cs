@@ -126,6 +126,11 @@ namespace crds_angular.Services
             _contactRepository.UpdateHouseholdAddress((int) pin.Contact_ID, householdDictionary, addressDictionary);
         }
 
+        public void GatheringJoinRequest(string token, int gatheringId)
+        {
+            _groupToolService.SubmitInquiry(token, gatheringId);
+        }
+
         public AddressDTO GetAddressForIp(string ip)
         {
             var address = new AddressDTO();
