@@ -1,11 +1,7 @@
-(function() {
-  'use strict';
+import CONSTANTS from 'crds-constants';
 
-  var MODULE = require('crds-constants').MODULES.GO_VOLUNTEER;
+import organizationsComponent from './organizations.component';
 
-  require('./organizations.template.html');
-
-  angular.module(MODULE)
-    .directive('goVolunteerOrganizations', require('./organizations.component'))
-    ;
-})();
+angular.module(CONSTANTS.MODULES.GO_VOLUNTEER)
+  .component('goVolunteerOrganizations', organizationsComponent())
+  ;

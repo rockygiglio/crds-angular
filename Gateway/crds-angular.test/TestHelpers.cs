@@ -19,9 +19,9 @@ namespace crds_angular.test
             return Gen.Sample(10000, 10000, Gen.OneOf(Arb.Generate<int>())).HeadOrDefault;
         }
 
-        public static Registration RegistrationNoSpouse()
+        public static CincinnatiRegistration RegistrationNoSpouse()
         {
-            return new Registration()
+            return new CincinnatiRegistration()
             {
                 AdditionalInformation = "something profound",
                 ChildAgeGroup = ListOfChildrenAttending(2, 0, 1),
@@ -42,14 +42,14 @@ namespace crds_angular.test
             };
         }
 
-        public static Registration RegistrationWithSkills()
+        public static CincinnatiRegistration RegistrationWithSkills()
         {
             var reg = RegistrationNoSpouse();
             reg.Skills = ListOfGoSkills(3);
             return reg;
         }
 
-        public static Registration RegistrationWithSpouse()
+        public static CincinnatiRegistration RegistrationWithSpouse()
         {
             var registration = RegistrationNoSpouse();
             registration.SpouseParticipation = true;
@@ -57,7 +57,7 @@ namespace crds_angular.test
             return registration;
         }
 
-        public static Registration RegistrationWithSpouseLimited()
+        public static CincinnatiRegistration RegistrationWithSpouseLimited()
         {
             var registration = RegistrationNoSpouse();
             registration.SpouseParticipation = true;
@@ -65,7 +65,7 @@ namespace crds_angular.test
             return registration;
         }
 
-        public static Registration RegistrationWithGroupConnector()
+        public static CincinnatiRegistration RegistrationWithGroupConnector()
         {
             var registration = RegistrationNoSpouse();
             registration.CreateGroupConnector = false;

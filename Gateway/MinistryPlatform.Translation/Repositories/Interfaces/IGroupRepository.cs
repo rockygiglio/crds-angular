@@ -74,5 +74,7 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
         bool IsMemberOfEventGroup(int contactId, int eventId, string token);
 
         Result<MpGroupParticipant> GetGradeGroupForContact(int contactId, string apiToken);
+
+        List<MpGroup> GetGroupsForParticipantByTypeOrID(int participantId, string token = null, int[] groupTypeIds = null, int? groupId = null);
     }
 }

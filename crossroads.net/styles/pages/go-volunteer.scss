@@ -148,6 +148,14 @@ $gc-red-darker: #44080a;
     transform: translate(-50%, -50%);
     border-radius: 4px;
   }
+
+  .card-dark {
+    background: none;
+  }
+
+  .media-card-link a {
+    position: inherit;
+  }
 }
 
 .site-image-filter {

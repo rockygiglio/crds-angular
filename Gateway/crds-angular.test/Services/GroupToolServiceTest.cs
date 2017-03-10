@@ -36,6 +36,7 @@ namespace crds_angular.test.Services
         private Mock<IAddressProximityService> _addressMatrixService;
         private Mock<IEmailCommunication> _emailCommunicationService;
         private Mock<IAttributeService> _attributeService;
+        private Mock<IAddressService> _addressService;
 
         private const int GroupRoleLeader = 987;
         private const int RemoveParticipantFromGroupEmailTemplateId = 654;
@@ -67,6 +68,7 @@ namespace crds_angular.test.Services
             _addressMatrixService = new Mock<IAddressProximityService>(MockBehavior.Strict);
             _emailCommunicationService = new Mock<IEmailCommunication>(MockBehavior.Strict);
             _attributeService = new Mock<IAttributeService>(MockBehavior.Strict);
+            _addressService = new Mock<IAddressService>(MockBehavior.Strict);
 
             var configuration = new Mock<IConfigurationWrapper>();
 
@@ -94,7 +96,8 @@ namespace crds_angular.test.Services
                                             _contactRepository.Object,
                                             _addressMatrixService.Object,
                                             _emailCommunicationService.Object,
-                                            _attributeService.Object);
+                                            _attributeService.Object,
+                                            _addressService.Object);
         }
 
         [ExpectedException(typeof(GroupNotFoundForParticipantException))]
@@ -1369,8 +1372,9 @@ namespace crds_angular.test.Services
             var geoResults = new List<decimal?> { null, 9, 3 };
             var distanceMatrixResults = new List<decimal?> { 2, 5 };
             _groupToolRepository.Setup(mocked => mocked.SearchGroups(groupTypeId, It.IsAny<string[]>(), null)).Returns(searchResults);
-            _addressProximityService.Setup(mocked => mocked.GetProximity(location, It.IsAny<List<AddressDTO>>())).Returns(geoResults);
-            _addressMatrixService.Setup(mocked => mocked.GetProximity(location, It.IsAny<List<AddressDTO>>())).Returns(distanceMatrixResults);
+            _addressService.Setup(mocked => mocked.FindOrCreateAddress(It.IsAny<AddressDTO>(), true));
+            _addressProximityService.Setup(mocked => mocked.GetProximity(location, It.IsAny<List<AddressDTO>>(), null)).Returns(geoResults);
+            _addressMatrixService.Setup(mocked => mocked.GetProximity(location, It.IsAny<List<AddressDTO>>(), null)).Returns(distanceMatrixResults);
 
             var results = _fixture.SearchGroups(groupTypeId, null, location);
             _addressProximityService.VerifyAll();

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Device.Location;
 using System.Linq;
 using AutoMapper;
 using crds_angular.Exceptions;
@@ -12,6 +13,7 @@ using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 using System.Text.RegularExpressions;
 using crds_angular.Models.Crossroads.Attribute;
+using crds_angular.Models.Finder;
 using Crossroads.Utilities.Extensions;
 using Crossroads.Web.Common;
 using Crossroads.Web.Common.Configuration;
@@ -32,6 +34,7 @@ namespace crds_angular.Services
         private readonly IAddressProximityService _addressMatrixService;
         private readonly IEmailCommunication _emailCommunicationService;
         private readonly IAttributeService _attributeService;
+        private readonly IAddressService _addressService;
 
         private readonly int _defaultGroupContactEmailId;
         private readonly int _defaultAuthorUserId;
@@ -70,7 +73,9 @@ namespace crds_angular.Services
             IContactRepository contactRepository,
             IAddressProximityService addressMatrixService,
             IEmailCommunication emailCommunicationService,
-            IAttributeService attributeService)
+            IAttributeService attributeService,
+            IAddressService addressService
+            )
         {
             _groupToolRepository = groupToolRepository;
             _groupRepository = groupRepository;
@@ -84,6 +89,7 @@ namespace crds_angular.Services
             _addressMatrixService = addressMatrixService;
             _emailCommunicationService = emailCommunicationService;
             _attributeService = attributeService;
+            _addressService = addressService;
 
             _defaultGroupContactEmailId = configurationWrapper.GetConfigIntValue("DefaultGroupContactEmailId");
             _defaultAuthorUserId = configurationWrapper.GetConfigIntValue("DefaultAuthorUser");
@@ -631,7 +637,11 @@ namespace crds_angular.Services
         }
 
 
-        public List<GroupDTO> SearchGroups(int[] groupTypeIds, string keywords = null, string location = null, int? groupId = null)
+        public List<GroupDTO> SearchGroups(int[] groupTypeIds, 
+                                           string keywords = null, 
+                                           string location = null, 
+                                           int? groupId = null,
+                                           GeoCoordinate originCoords = null)
         {
             // Split single search term into multiple words, broken on whitespace
             // TODO Should remove stopwords from search - possibly use a configurable list of words (http://www.link-assistant.com/seo-stop-words.html)
@@ -643,6 +653,7 @@ namespace crds_angular.Services
                     .Split((char[]) null, StringSplitOptions.RemoveEmptyEntries);
 
             var results = _groupToolRepository.SearchGroups(groupTypeIds, search, groupId);
+
             if (results == null || !results.Any())
             {
                 return null;
@@ -658,7 +669,7 @@ namespace crds_angular.Services
             try
             {
                 // first call is for all results
-                var proximities = _addressProximityService.GetProximity(location, groups.Select(g => g.Address).ToList());
+                var proximities = _addressProximityService.GetProximity(location, groups.Select(g => g.Address).ToList(), originCoords);
                 for (var i = 0; i < groups.Count; i++)
                 {
                     groups[i].Proximity = proximities[i];
@@ -692,7 +703,7 @@ namespace crds_angular.Services
 
         public List<GroupDTO> GetGroupToolGroups(string token)
         {
-            var groups = _groupService.GetGroupsForAuthenticatedUser(token, new int[] { _smallGroupTypeId, _onsiteGroupTypeId });
+            var groups = _groupService.GetGroupsByTypeOrId(token,null, new int[] { _smallGroupTypeId, _onsiteGroupTypeId }, null);
 
             return _groupService.RemoveOnsiteParticipantsIfNotLeader(groups, token);
         }

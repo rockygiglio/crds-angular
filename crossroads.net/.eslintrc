@@ -22,6 +22,7 @@
     "crds_utilities": false,
     "_$location_": false,
     "__API_ENDPOINT__": false,
+    "__CROSSROADS_API_TOKEN__": false,
     "moment": false
   }
 }

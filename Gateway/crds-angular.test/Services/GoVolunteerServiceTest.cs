@@ -1,15 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using crds_angular.Exceptions;
 using crds_angular.Models.Crossroads.GoVolunteer;
 using crds_angular.Services;
 using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.FunctionalHelpers;
 using Crossroads.Utilities.Interfaces;
 using Crossroads.Utilities.Services;
-using Crossroads.Web.Common;
 using Crossroads.Web.Common.Configuration;
 using Crossroads.Web.Common.MinistryPlatform;
+using FsCheck.Experimental;
+using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Models.GoCincinnati;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 using MinistryPlatform.Translation.Repositories.Interfaces.GoCincinnati;
@@ -27,17 +29,19 @@ namespace crds_angular.test.Services
 
         private readonly Mock<IAttributeService> _attributeService;
         private readonly Mock<IConfigurationWrapper> _configurationWrapper;
-        private readonly Mock<MinistryPlatform.Translation.Repositories.Interfaces.IContactRelationshipRepository> _contactRelationshipService;
-        private readonly Mock<MinistryPlatform.Translation.Repositories.Interfaces.IContactRepository> _contactService;
+        private readonly Mock<IContactRelationshipRepository> _contactRelationshipService;
+        private readonly Mock<IContactRepository> _contactService;
         private readonly Mock<IGroupConnectorRepository> _groupConnectorService;
-        private readonly Mock<MinistryPlatform.Translation.Repositories.Interfaces.IParticipantRepository> _participantService;
-        private readonly Mock<MinistryPlatform.Translation.Repositories.Interfaces.IProjectTypeRepository> _projectTypeService;
+        private readonly Mock<IParticipantRepository> _participantService;
+        private readonly Mock<IProjectTypeRepository> _projectTypeService;
         private readonly Mock<IRegistrationRepository> _registrationService;
         private readonly Mock<IGoSkillsService> _skillsService;
         private readonly Mock<ICommunicationRepository> _commnuicationService;
         private readonly Mock<IUserRepository> _userService;
         private readonly Mock<IApiUserRepository> _apiUserRepository;
         private readonly Mock<IProjectRepository> _projectRepository;
+
+        private readonly int CrossroadsOrganizationId = 2;
 
         public GoVolunteerServiceTest()
         {
@@ -424,6 +428,91 @@ namespace crds_angular.test.Services
         }
 
         [Test]
+        public void ShouldGetListOfParticipatingCities()
+        {
+            const int initiativeId = 12;
+
+            var mockCities = MockCityList();
+            _projectRepository.Setup(m => m.GetProjectsByInitiative(initiativeId, It.IsAny<string>())).Returns(mockCities);
+            _configurationWrapper.Setup(m => m.GetConfigIntValue("AnywhereCongregation")).Returns(4);
+            var result = _fixture.GetParticipatingCities(initiativeId);
+
+            Assert.IsNotNull(result);
+            Assert.IsTrue(result.Any());
+            Assert.AreEqual(mockCities.Count, result.Count);
+            _projectRepository.VerifyAll();
+        }
+
+        [Test]
+        public void ShouldFilterOutNonAnywhereCities()
+        {
+            const int initiativeId = 12;
+            const int anywhereId = 34;
+
+            var mockCities = MockCityListWithNonAnywhere(anywhereId);
+            _projectRepository.Setup(m => m.GetProjectsByInitiative(initiativeId, It.IsAny<string>())).Returns(mockCities);
+            _configurationWrapper.Setup(m => m.GetConfigIntValue("AnywhereCongregation")).Returns(anywhereId);
+
+            var result = _fixture.GetParticipatingCities(initiativeId);
+
+            Assert.IsNotNull(result);
+            Assert.IsTrue(result.Any());
+            Assert.AreEqual(2, result.Count);
+            
+            _projectRepository.VerifyAll();
+            _configurationWrapper.VerifyAll();
+        }
+
+        private List<MpProject> MockCityList()
+        {
+            return new List<MpProject>
+            {
+                new MpProject
+                {
+                    ProjectId = 1,
+                    City = "Cleveland",
+                    State = "OH",
+                    LocationId = 4
+                },
+                new MpProject
+                {
+                    ProjectId = 2,
+                    City = "Phoenix",
+                    State = "AZ",
+                    LocationId = 4
+                }
+            };
+        }
+
+        private List<MpProject> MockCityListWithNonAnywhere(int anywhereId)
+        {
+            return new List<MpProject>
+            {
+                new MpProject
+                {
+                    ProjectId = 1,
+                    City = "Cleveland",
+                    State = "OH",
+                    LocationId = anywhereId
+                },
+                new MpProject
+                {
+                    ProjectId = 2,
+                    City = "Phoenix",
+                    State = "AZ",
+                    LocationId = anywhereId
+                },
+                new MpProject
+                {
+                    ProjectId = 3,
+                    City = "Cincinnati",
+                    State = "OH",
+                    LocationId = anywhereId -2
+                }
+            };
+        }
+
+        [Test]
         public void ShouldGetProjectDetails()
         {
             const int projectId = 564;
@@ -531,7 +620,189 @@ namespace crds_angular.test.Services
             });
         }
 
-        private string Skills(Registration registration)
+        [Test]
+        public void ShouldSaveAnywhereRegistration()
+        {
+            const int projectId = 564;
+            const string token = "asdf";
+            const string apiToken = "hjlk";
+            const int groupConnectorId = 1324;
+            const int participantId = 9876543;
+            const int preferredLaunchSiteId = 654;
+            const int registrationId = 321654;
+            var user = new MpUser() {};
+            var registration = BuildRegistration();
+            var registrationDto = BuildRegistrationDto(participantId, preferredLaunchSiteId, registration);
+
+            _apiUserRepository.Setup(m => m.GetToken())
+                .Returns(apiToken);
+            _groupConnectorService.Setup(m => m.GetGroupConnectorByProjectId(projectId, apiToken))
+                .Returns(new MpGroupConnector {Id = groupConnectorId});
+            _groupConnectorService.Setup(m => m.GetGroupConnectorById(groupConnectorId))
+                .Returns(new MpGroupConnector() {PreferredLaunchSiteId = preferredLaunchSiteId});
+            _groupConnectorService.Setup(m => m.CreateGroupConnectorRegistration(groupConnectorId, registrationId));
+            _contactService.Setup(m => m.UpdateContact(registration.Self.ContactId, It.IsAny<Dictionary<string, object>>()))
+                .Callback((int cid, Dictionary<string, object> dict) =>
+                          {
+                              Assert.AreEqual(registration.Self.ContactId, cid);
+                              Assert.AreEqual(registration.Self.GetDictionary(), dict);
+                              Assert.AreEqual(registration.Self.FirstName, dict["Nickname"]);
+                          });
+            _userService.Setup(m => m.GetByAuthenticationToken(token))
+                .Returns(user);
+            _userService.Setup(m => m.UpdateUser(It.IsAny<MpUser>()))
+                .Callback((MpUser updatedUser) =>
+                         {
+                             Assert.AreEqual(registration.Self.EmailAddress, updatedUser.UserId);
+                             Assert.AreEqual(registration.Self.EmailAddress, updatedUser.UserEmail);
+                             Assert.AreEqual(registration.Self.LastName + ", " + registration.Self.FirstName, updatedUser.DisplayName);
+                         });
+            _participantService.Setup(m => m.GetParticipantRecord(token))
+                .Returns(new MpParticipant() {ParticipantId = participantId});
+            _configurationWrapper.Setup(m => m.GetConfigIntValue("CrossroadsOrganizationId"))
+                .Returns(CrossroadsOrganizationId);
+            _registrationService.Setup(m => m.CreateRegistration(It.IsAny<MpRegistration>()))
+                .Returns((MpRegistration mpRegistration) =>
+                         {
+                             Assert.AreEqual(mpRegistration.OrganizationId, CrossroadsOrganizationId);
+                             Assert.AreEqual(mpRegistration.ParticipantId, participantId);
+                             Assert.AreEqual(mpRegistration.PreferredLaunchSiteId, preferredLaunchSiteId);
+                             Assert.AreEqual(mpRegistration.InitiativeId, registration.InitiativeId);
+                             Assert.AreEqual(mpRegistration.SpouseParticipation, registration.SpouseParticipation);
+                             return registrationId;
+                         });
+
+            _fixture.CreateAnywhereRegistration(registration, projectId, token);
+
+            _apiUserRepository.VerifyAll();
+            _groupConnectorService.VerifyAll();
+            _contactService.VerifyAll();
+            _userService.VerifyAll();
+            _participantService.VerifyAll();
+            _registrationService.VerifyAll();
+        }
+
+        [Test]
+        public void ShouldThrowExceptionIfGroupConnectorHasNoLaunchSite()
+        {
+            const int projectId = 564;
+            const string token = "asdf";
+            const string apiToken = "hjlk";
+            const int groupConnectorId = 1324;
+            const int participantId = 9876543;
+            const int preferredLaunchSiteId = 654;
+            const int registrationId = 321654;
+            var user = new MpUser() { };
+            var registration = BuildRegistration();
+            var registrationDto = BuildRegistrationDto(participantId, preferredLaunchSiteId, registration);
+
+            _apiUserRepository.Setup(m => m.GetToken())
+                .Returns(apiToken);
+            _groupConnectorService.Setup(m => m.GetGroupConnectorByProjectId(projectId, apiToken))
+                .Returns(new MpGroupConnector { Id = groupConnectorId });
+            _groupConnectorService.Setup(m => m.GetGroupConnectorById(groupConnectorId))
+                .Returns((MpGroupConnector) null);
+            _contactService.Setup(m => m.UpdateContact(registration.Self.ContactId, It.IsAny<Dictionary<string, object>>()))
+                .Callback((int cid, Dictionary<string, object> dict) =>
+                {
+                    Assert.AreEqual(registration.Self.ContactId, cid);
+                    Assert.AreEqual(registration.Self.GetDictionary(), dict);
+                    Assert.AreEqual(registration.Self.FirstName, dict["Nickname"]);
+                });
+            _userService.Setup(m => m.GetByAuthenticationToken(token))
+                .Returns(user);
+            _userService.Setup(m => m.UpdateUser(It.IsAny<MpUser>()))
+                .Callback((MpUser updatedUser) =>
+                {
+                    Assert.AreEqual(registration.Self.EmailAddress, updatedUser.UserId);
+                    Assert.AreEqual(registration.Self.EmailAddress, updatedUser.UserEmail);
+                    Assert.AreEqual(registration.Self.LastName + ", " + registration.Self.FirstName, updatedUser.DisplayName);
+                });
+            _participantService.Setup(m => m.GetParticipantRecord(token))
+                .Returns(new MpParticipant() { ParticipantId = participantId });
+
+            Assert.Throws<Exception>(() =>
+                                     {
+                                         _fixture.CreateAnywhereRegistration(registration, projectId, token);
+                                     });
+            _apiUserRepository.VerifyAll();
+            _groupConnectorService.VerifyAll();
+            _contactService.VerifyAll();
+            _userService.VerifyAll();
+            _participantService.VerifyAll();
+        }
+
+        [Test]
+        public void ShouldThrowDuplicateUserException()
+        {
+            const int projectId = 564;
+            const string token = "asdf";
+            const string apiToken = "hjlk";
+            const int groupConnectorId = 1324;
+            const int participantId = 9876543;
+            const int preferredLaunchSiteId = 654;
+            const int registrationId = 321654;
+            var user = new MpUser() { };
+            var registration = BuildRegistration();
+            var registrationDto = BuildRegistrationDto(participantId, preferredLaunchSiteId, registration);
+
+            _apiUserRepository.Setup(m => m.GetToken())
+                .Returns(apiToken);
+            _groupConnectorService.Setup(m => m.GetGroupConnectorByProjectId(projectId, apiToken))
+                .Returns(new MpGroupConnector { Id = groupConnectorId });
+            _userService.Setup(m => m.GetByAuthenticationToken(token))
+                .Returns(user);
+            _userService.Setup(m => m.UpdateUser(It.IsAny<MpUser>()))
+                .Throws(new DuplicateUserException(registration.Self.EmailAddress));
+            _configurationWrapper.Setup(m => m.GetConfigIntValue("CrossroadsOrganizationId"))
+                .Returns(CrossroadsOrganizationId);
+
+            Assert.Throws<DuplicateUserException>(() =>
+                                                  {
+                                                      _fixture.CreateAnywhereRegistration(registration, projectId, token);
+                                                  });
+
+            _apiUserRepository.VerifyAll();
+            _groupConnectorService.VerifyAll();
+            _contactService.VerifyAll();
+            _userService.VerifyAll();
+            _participantService.VerifyAll();
+            _registrationService.VerifyAll();
+        }
+
+        private AnywhereRegistration BuildRegistration()
+        {
+            return new AnywhereRegistration
+            {
+                GroupConnectorId = 0,
+                InitiativeId = 3,
+                OrganizationId = 0,
+                Self = new Registrant
+                {
+                    ContactId = 1234567,
+                    DateOfBirth = "01/01/1000",
+                    EmailAddress = "abomb@thebomb.com",
+                    FirstName = "a",
+                    LastName = "bomb",
+                    MobilePhone = "555-555-5555"
+                },
+                SpouseParticipation = false
+            };
+        }
+
+        private MpRegistration BuildRegistrationDto(int participantId, int preferredLaunchSiteId, AnywhereRegistration registration)
+        {
+            return new MpRegistration()
+            {
+                ParticipantId = participantId,
+                PreferredLaunchSiteId = preferredLaunchSiteId,
+                InitiativeId = registration.InitiativeId,
+                SpouseParticipation =  registration.SpouseParticipation,
+                OrganizationId = CrossroadsOrganizationId
+            };
+        }
+
+        private string Skills(CincinnatiRegistration registration)
         {
             if (registration.Skills != null && registration.Skills.Where(sk => sk.Checked).ToList().Count > 0)
             {

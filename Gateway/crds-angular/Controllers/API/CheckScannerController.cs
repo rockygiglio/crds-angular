@@ -32,6 +32,8 @@ namespace crds_angular.Controllers.API
         private readonly IMessageFactory _messageFactory;
         private readonly ICryptoProvider _cryptoProvider;
 
+        private readonly int CROSSROADS_FINANCE_CLERK_CONTACT_ID;
+
         public CheckScannerController(IConfigurationWrapper configuration,
                                       ICheckScannerService checkScannerService,
                                       IAuthenticationRepository authenticationService,
@@ -49,6 +51,10 @@ namespace crds_angular.Controllers.API
 
             var b = configuration.GetConfigValue("CheckScannerDonationsAsynchronousProcessingMode");
             _asynchronous = b != null && bool.Parse(b);
+
+            var id = configuration.GetConfigValue("CrossroadsFinanceClerkContactId");
+            CROSSROADS_FINANCE_CLERK_CONTACT_ID = (id == null ? -1 : Int32.Parse(id));
+
             if (_asynchronous)
             {
                 var donationsQueueName = configuration.GetConfigValue("CheckScannerDonationsQueueName");
@@ -95,11 +101,17 @@ namespace crds_angular.Controllers.API
                     return (Ok(_checkScannerService.CreateDonationsForBatch(batch)));
                 }
 
-                batch.MinistryPlatformContactId = _contactRepository.GetContactId(token);
-                batch.MinistryPlatformUserId = _communicationService.GetUserIdFromContactId(token, batch.MinistryPlatformContactId.Value);
+                // US6745 - Only finance person receives email instead of the user who imports the batch
+                if (CROSSROADS_FINANCE_CLERK_CONTACT_ID > 0)
+                {
+                    batch.MinistryPlatformContactId = CROSSROADS_FINANCE_CLERK_CONTACT_ID;
+                    batch.MinistryPlatformUserId = _communicationService.GetUserIdFromContactId(batch.MinistryPlatformContactId.Value);
 
-                var message = _messageFactory.CreateMessage(batch);
-                _donationsQueue.Send(message);
+                    var message = _messageFactory.CreateMessage(batch);
+
+                    _donationsQueue.Send(message);
+                }
+
                 return (Ok(batch));
             }));
         }

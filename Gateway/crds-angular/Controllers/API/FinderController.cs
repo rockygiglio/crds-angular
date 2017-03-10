@@ -1,9 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Device.Location;
+using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Web.Http;
 using System.Web.Http.Description;
 using System.Web.Mvc;
+using System.Web.Services.Description;
 using crds_angular.Exceptions.Models;
 using crds_angular.Models.Crossroads;
 using crds_angular.Models.Finder;
@@ -19,9 +23,11 @@ namespace crds_angular.Controllers.API
     {
         private readonly IAddressService _addressService;
         private readonly IFinderService _finderService;
+        private readonly IAddressGeocodingService _addressGeocodingService;
         private readonly ILog _logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         public FinderController(IAddressService addressService,
+                                IAddressGeocodingService addressGeocodingService, 
                                 IFinderService finderService,
                                 IUserImpersonationService userImpersonationService,
                                 IAuthenticationRepository authenticationRepository)
@@ -29,6 +35,7 @@ namespace crds_angular.Controllers.API
         {
             _addressService = addressService;
             _finderService = finderService;
+            _addressGeocodingService = addressGeocodingService; 
         }
 
         [ResponseType(typeof(PinDto))]
@@ -115,10 +122,10 @@ namespace crds_angular.Controllers.API
 
                     if (pin.Participant_ID == 0 || String.IsNullOrEmpty(pin.Participant_ID.ToString()))
                     {
-                        pin.Participant_ID =_finderService.GetParticipantIdFromContact(pin.Contact_ID);
+                        pin.Participant_ID =_finderService.GetParticipantIdFromContact((int)pin.Contact_ID);
                     }
 
-                    _finderService.EnablePin(pin.Participant_ID);
+                    _finderService.EnablePin((int)pin.Participant_ID);
                     _logger.DebugFormat("Successfully created pin for contact {0} ", pin.Contact_ID);
                     return (Ok(pin));
                 }
@@ -129,6 +136,33 @@ namespace crds_angular.Controllers.API
                     throw new HttpResponseException(apiError.HttpResponseMessage);
                 }
             });
+        }
+
+        [ResponseType(typeof(PinSearchResultsDto))]
+        [VersionedRoute(template: "finder/findpinsbyaddress/{userSearchAddress}/{lat?}/{lng?}", minimumVersion: "1.0.0")]
+        [System.Web.Http.Route("finder/findpinsbyaddress/{userSearchAddress}/{lat?}/{lng?}")]
+        [System.Web.Http.HttpGet]
+        public IHttpActionResult GetFindPinsByAddress([FromUri]string userSearchAddress, [FromUri]string lat = "0", [FromUri]string lng = "0")
+        {
+            try
+            {
+                GeoCoordinate originCoords = _finderService.GetGeoCoordsFromAddressOrLatLang(userSearchAddress, lat, lng);
+                List<PinDto> pinsInRadius = _finderService.GetPinsInRadius(originCoords, userSearchAddress);
+
+                foreach (var pin in pinsInRadius)
+                {
+                    pin.Address = _finderService.RandomizeLatLong(pin.Address);
+                }
+
+                PinSearchResultsDto result = new PinSearchResultsDto(new GeoCoordinates(originCoords.Latitude, originCoords.Longitude), pinsInRadius);
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                var apiError = new ApiErrorDto("Get Pin By Address Failed", ex);
+                throw new HttpResponseException(apiError.HttpResponseMessage);
+            }
         }
 
     }

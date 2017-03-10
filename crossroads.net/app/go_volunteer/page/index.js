@@ -28,4 +28,6 @@
   require('./availablePrep');
   require('./waiver');
   require('./thankYou');
+  require('./anywhereProfile');
+  require('./anywhereProfileConfirm');
 })();
