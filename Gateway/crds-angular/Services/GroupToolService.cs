@@ -99,7 +99,7 @@ namespace crds_angular.Services
             _defaultGroupRoleId = configurationWrapper.GetConfigIntValue("Group_Role_Default_ID");
             _groupRequestPendingReminderEmailTemplateId = configurationWrapper.GetConfigIntValue("GroupRequestPendingReminderEmailTemplateId");
             _attributeTypeGroupCategory = configurationWrapper.GetConfigIntValue("GroupCategoryAttributeTypeId");
-            _anywhereGroupType = configurationWrapper.GetConfigIntValue("AnywhereGroupTypeId");
+            
 
             _removeParticipantFromGroupEmailTemplateId = configurationWrapper.GetConfigIntValue("RemoveParticipantFromGroupEmailTemplateId");
 
@@ -112,6 +112,7 @@ namespace crds_angular.Services
             
             _smallGroupTypeId = configurationWrapper.GetConfigIntValue("SmallGroupTypeId");
             _onsiteGroupTypeId = configurationWrapper.GetConfigIntValue("OnsiteGroupTypeId");
+            _anywhereGroupType = configurationWrapper.GetConfigIntValue("AnywhereGroupTypeId");
         }
 
         public List<Invitation> GetInvitations(int sourceId, int invitationTypeId, string token)
