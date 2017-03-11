@@ -45,7 +45,7 @@ namespace crds_angular.Services
         private readonly int _approvedHost;
         private readonly int _anywhereGroupType;
         private readonly int _leaderRoleID;
-
+        private Random _random = new Random(DateTime.Now.Millisecond);
 
         public FinderService(
                             IAddressGeocodingService addressGeocodingService, 
@@ -215,16 +215,15 @@ namespace crds_angular.Services
         public AddressDTO RandomizeLatLong(AddressDTO address)
         {
             if (!address.HasGeoCoordinates()) return address;
-            var random = new Random(DateTime.Now.Millisecond);
-            var distance = random.Next(75, 300); // up to a quarter mile
-            var angle = random.Next(0, 359);
+            var distance = _random.Next(75, 300); // up to a quarter mile
+            var angle = _random.Next(0, 359);
             const int earthRadius = 6371000; // in meters
 
             var distanceNorth = Math.Sin(angle)*distance;
             var distanceEast = Math.Cos(angle)*distance;
 
-            double newLat = (double) (address.Latitude + (distanceNorth/earthRadius)*180/Math.PI);
-            double newLong = (double) (address.Longitude + (distanceEast/(earthRadius*Math.Cos(newLat*180/Math.PI)))*180/Math.PI);
+            var newLat = (double) (address.Latitude + (distanceNorth/earthRadius)*180/Math.PI);
+            var newLong = (double) (address.Longitude + (distanceEast/(earthRadius*Math.Cos(newLat*180/Math.PI)))*180/Math.PI);
             address.Latitude = newLat;
             address.Longitude = newLong;
 
