@@ -52,6 +52,7 @@ namespace crds_angular.App_Start
                 .ForMember(dest => dest.Participant_ID, opts => opts.MapFrom(src => src.Participant_ID))
                 .ForMember(dest => dest.Host_Status_ID, opts => opts.MapFrom(src => src.Host_Status_ID))
                 .ForMember(dest => dest.Gathering, opts => opts.MapFrom(src => src.Gathering))
+                .ForMember(dest => dest.SiteName, opts => opts.MapFrom(src => src.Site_Name))
                 .ForMember(dest => dest.Household_ID, opts => opts.MapFrom(src => src.Household_ID))
                 .ForMember(dest => dest.Address,
                            opts => opts.MapFrom(src => new AddressDTO(
