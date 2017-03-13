@@ -48,5 +48,8 @@ namespace crds_angular.Models.Finder
 
         [JsonProperty("proximity")]
         public decimal? Proximity { get; set; }
+
+        [JsonProperty("siteName")]
+        public string SiteName { get; set; }
     }
 }
