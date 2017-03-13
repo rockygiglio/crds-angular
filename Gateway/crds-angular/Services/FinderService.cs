@@ -160,9 +160,9 @@ namespace crds_angular.Services
             pins.AddRange(participantAndBuildingPins);
             pins.AddRange(groupPins);
 
-            //calculate proximity for all pins to origin
             foreach (var pin in pins)
             {
+                //calculate proximity for all pins to origin
                 if (pin.Address.Latitude == null) continue;
                 if (pin.Address.Longitude != null) pin.Proximity = GetProximity(originCoords, new GeoCoordinate(pin.Address.Latitude.Value, pin.Address.Longitude.Value));
             }
