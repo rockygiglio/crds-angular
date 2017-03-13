@@ -16,6 +16,8 @@ using Microsoft.Ajax.Utilities;
 using MinistryPlatform.Translation.Models;
 using MPInterfaces = MinistryPlatform.Translation.Repositories.Interfaces;
 using Crossroads.ApiVersioning;
+using Crossroads.Web.Common;
+using Crossroads.Web.Common.Security;
 
 namespace crds_angular.Controllers.API
 {
@@ -25,7 +27,8 @@ namespace crds_angular.Controllers.API
 
         private readonly MPInterfaces.IDonorRepository _mpDonorService;
         private readonly IPaymentProcessorService _stripeService;
-        private readonly MPInterfaces.IAuthenticationRepository _authenticationService;
+        private readonly IAuthenticationRepository _authenticationService;
+        private readonly MPInterfaces.IContactRepository _contactRepository; 
         private readonly IDonorService _gatewayDonorService;
         private readonly IDonationService _gatewayDonationService;
         private readonly IUserImpersonationService _impersonationService;
@@ -36,18 +39,20 @@ namespace crds_angular.Controllers.API
 
         public DonationController(MPInterfaces.IDonorRepository mpDonorService,
                                   IPaymentProcessorService stripeService,
-                                  MPInterfaces.IAuthenticationRepository authenticationService,
+                                  IAuthenticationRepository authenticationService,
+                                  MPInterfaces.IContactRepository contactRepository,
                                   IDonorService gatewayDonorService,
                                   IDonationService gatewayDonationService,
                                   MPInterfaces.IDonationRepository mpDonationService,
                                   MPInterfaces.IPledgeRepository mpPledgeService,
                                   IUserImpersonationService impersonationService,
                                   IPaymentService paymentService,
-                                  MPInterfaces.IInvoiceRepository invoiceRepository)
+                                  MPInterfaces.IInvoiceRepository invoiceRepository) : base(impersonationService, authenticationService)
         {
             _mpDonorService = mpDonorService;
             _stripeService = stripeService;
             _authenticationService = authenticationService;
+            _contactRepository = contactRepository;
             _gatewayDonorService = gatewayDonorService;
             _gatewayDonationService = gatewayDonationService;
             _impersonationService = impersonationService;
@@ -166,7 +171,7 @@ namespace crds_angular.Controllers.API
         {
             return (Authorized(token =>
             {
-                var contactId = _authenticationService.GetContactId(token);
+                var contactId = _contactRepository.GetContactId(token);
                 _gatewayDonationService.SendMessageToDonor(dto.DonorId, dto.DonationDistributionId, contactId, dto.Message, dto.TripName);
                 return Ok();
             }));
@@ -234,7 +239,7 @@ namespace crds_angular.Controllers.API
                     }
                 }
 
-                var contactId = _authenticationService.GetContactId(token);
+                var contactId = _contactRepository.GetContactId(token);
                 var donor = _mpDonorService.GetContactDonor(contactId);
                 var charge = _stripeService.ChargeCustomer(donor.ProcessorId, dto.Amount, donor.DonorId, isPayment);
                 var fee = charge.BalanceTransaction != null ? charge.BalanceTransaction.Fee : null;

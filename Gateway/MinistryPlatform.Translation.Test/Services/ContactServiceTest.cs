@@ -1,6 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Crossroads.Utilities.Interfaces;
+using Crossroads.Web.Common;
+using Crossroads.Web.Common.Configuration;
+using Crossroads.Web.Common.MinistryPlatform;
+using Crossroads.Web.Common.Security;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Repositories;
 using MinistryPlatform.Translation.Repositories.Interfaces;
@@ -39,7 +44,11 @@ namespace MinistryPlatform.Translation.Test.Services
             _configuration.Setup(m => m.GetEnvironmentVarAsString("API_PASSWORD")).Returns("pwd");
             _ministryPlatformRest.Setup(m => m.UsingAuthenticationToken("ABC")).Returns(_ministryPlatformRest.Object);
 
-            _authService.Setup(m => m.Authenticate(It.IsAny<string>(), It.IsAny<string>())).Returns(new Dictionary<string, object> {{"token", "ABC"}, {"exp", "123"}});
+            _authService.Setup(m => m.Authenticate(It.IsAny<string>(), It.IsAny<string>())).Returns(new AuthToken
+            {
+                AccessToken = "ABC",
+                ExpiresIn = 123
+            });
             _fixture = new ContactRepository(_ministryPlatformService.Object, _authService.Object, _configuration.Object, _ministryPlatformRest.Object, _apiUserService.Object);
         }
 
@@ -102,8 +111,8 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Email_Address", "email-address@email.com"},
                     {"Employer_Name", "Crossroads"},
                     {"First_Name", "first-name"},
-                    {"Display_Name", "Displayname" },
-                    {"Current_School", "CurrentSchool" },
+                    {"Display_Name", "Displayname"},
+                    {"Current_School", "CurrentSchool"},
                     {"Foreign_Country", "USA"},
                     {"Gender_ID", 2},
                     {"Home_Phone", "513-555-1234"},
@@ -160,8 +169,8 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Email_Address", "email-address@email.com"},
                     {"Employer_Name", "Crossroads"},
                     {"First_Name", "first-name"},
-                    {"Display_Name", "Displayname" },
-                    {"Current_School", "Currentschool" },
+                    {"Display_Name", "Displayname"},
+                    {"Current_School", "Currentschool"},
                     {"Foreign_Country", "USA"},
                     {"Gender_ID", null},
                     {"Home_Phone", "513-555-1234"},
@@ -220,6 +229,7 @@ namespace MinistryPlatform.Translation.Test.Services
 
             Assert.AreEqual(123, contactId);
         }
+
         [Test]
         public void ShouldCreateContactForGuestGiverGivenFirstnameandLastName()
         {
@@ -307,7 +317,7 @@ namespace MinistryPlatform.Translation.Test.Services
             }
             catch (Exception e)
             {
-                Assert.IsInstanceOf(typeof (ApplicationException), e);
+                Assert.IsInstanceOf(typeof(ApplicationException), e);
                 Assert.AreSame(ex, e.InnerException);
             }
         }
@@ -327,7 +337,7 @@ namespace MinistryPlatform.Translation.Test.Services
             }
             catch (Exception e)
             {
-                Assert.IsInstanceOf(typeof (ApplicationException), e);
+                Assert.IsInstanceOf(typeof(ApplicationException), e);
                 Assert.AreSame(ex, e.InnerException);
             }
         }
@@ -365,12 +375,14 @@ namespace MinistryPlatform.Translation.Test.Services
             familyMembersReturned.Add(childOne);
             familyMembersReturned.Add(childTwo);
 
-            var rc = _ministryPlatformService.Setup(mocked => mocked.GetSubpageViewRecords("HouseholdMembers", 1234567, It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), 0 )).Returns(familyMembersReturned);
-            
+            var rc =
+                _ministryPlatformService.Setup(mocked => mocked.GetSubpageViewRecords("HouseholdMembers", 1234567, It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), 0))
+                    .Returns(familyMembersReturned);
+
             var family = _fixture.GetHouseholdFamilyMembers(householdid);
 
-            Assert.AreEqual(family.Count,2);
-            Assert.AreEqual(family[0].Age,4);
+            Assert.AreEqual(family.Count, 2);
+            Assert.AreEqual(family[0].Age, 4);
         }
 
         [Test]
@@ -383,10 +395,11 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Contact_ID", 1},
                     {"Display_Name", "Nukem, Duke"},
                     {"Email_Address", "Duke.Nukem@compuserv.net"},
-                    {"Extra_Data", 3 }
-                } ,
-                new Dictionary<string, object> {
-                    {"Contact_ID", 2 },
+                    {"Extra_Data", 3}
+                },
+                new Dictionary<string, object>
+                {
+                    {"Contact_ID", 2},
                     {"Display_Name", "Croft, Lara"},
                     {"Email_Address", "Lara.Croft@gmail.com"}
                 }
@@ -403,5 +416,85 @@ namespace MinistryPlatform.Translation.Test.Services
 
             Assert.AreEqual(result, returnData);
         }
+
+        [Test]
+        public void ShouldGetContactByUserRecordId()
+        {
+            string tableName = "Contacts";
+            const int userRecordId = 1234567;
+            Dictionary<string, object> expectedFilter = new Dictionary<string, object>()
+            {
+                {"User_Account", userRecordId}
+            };
+
+            MpMyContact contact = new MpMyContact()
+            {
+                Contact_ID = 2,
+                First_Name = "Testy",
+                Email_Address = "testy@mctestface.com",
+                Age = 30,
+                Mobile_Phone = "1234567890"
+            };
+
+            List<MpMyContact> mockResults = new List<MpMyContact>
+            {
+                contact
+            };
+
+            _ministryPlatformRest.Setup(m => m.UsingAuthenticationToken(It.IsAny<string>())).Returns(_ministryPlatformRest.Object);
+
+            _ministryPlatformRest.Setup(m => m.Get<MpMyContact>(tableName, expectedFilter))
+                .Returns(mockResults);
+
+            var result = _fixture.GetContactByUserRecordId(userRecordId);
+
+            Assert.AreEqual(contact, result);
+        }
+
+        [Test]
+        public void TestGetContactByUserRecordIdNoContact()
+        {
+            string tableName = "Contacts";
+            const int userRecordId = 1234567;
+            Dictionary<string, object> expectedFilter = new Dictionary<string, object>()
+            {
+                {"User_Account", userRecordId}
+            };
+
+            List<MpMyContact> mockResults = new List<MpMyContact>();
+
+            _ministryPlatformRest.Setup(m => m.UsingAuthenticationToken(It.IsAny<string>())).Returns(_ministryPlatformRest.Object);
+
+            _ministryPlatformRest.Setup(m => m.Get<MpMyContact>(tableName, expectedFilter))
+                .Returns(mockResults);
+
+            var result = _fixture.GetContactByUserRecordId(userRecordId);
+
+            Assert.IsNull(result);
+        }
+
+        [Test]
+        public void ShouldGetOtherHouseholdMembers()
+        {
+            const int householdId = 999;
+            var householdContacts = GetContactHouseholds(householdId);
+            _ministryPlatformRest.Setup(m => m.Search<MpContactHousehold>(It.IsAny<string>(), It.IsAny<List<string>>(), null, false)).Returns(householdContacts);
+
+            var householdMembers = _fixture.GetOtherHouseholdMembers(householdId);
+            Assert.AreEqual(1, householdMembers.Count);
+            Assert.AreEqual("Minor Child", householdMembers.First().HouseholdPosition);            
+        }
+
+
+        public static List<MpContactHousehold> GetContactHouseholds(int householdId)
+        {
+            return new List<MpContactHousehold>
+            {
+                new MpContactHousehold() {ContactId = 123445, HouseholdId = householdId, HouseholdPositionId = 2, Age = 10, DateOfBirth = null, FirstName = "Ellie", LastName = "Canterbury", HouseholdPosition = "Minor Child"},
+                new MpContactHousehold() {ContactId = 54321, HouseholdId = householdId, HouseholdPositionId = 1, Age = 59, DateOfBirth = null, FirstName = "Ella", LastName = "Robey", HouseholdPosition = "Adult", EndDate = DateTime.Now.AddDays(-3)}
+            };
+        }
+        
+        
     }
 }

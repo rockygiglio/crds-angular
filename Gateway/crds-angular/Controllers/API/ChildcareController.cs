@@ -15,6 +15,7 @@ using crds_angular.Services.Interfaces;
 using MinistryPlatform.Translation.Exceptions;
 using Newtonsoft.Json;
 using Crossroads.ApiVersioning;
+using Crossroads.Web.Common.Security;
 
 namespace crds_angular.Controllers.API
 {
@@ -24,7 +25,7 @@ namespace crds_angular.Controllers.API
         private readonly IEventService _eventService;
         private readonly IPersonService _personService;
 
-        public ChildcareController(IChildcareService childcareService, IEventService eventService, IPersonService personService)
+        public ChildcareController(IChildcareService childcareService, IEventService eventService, IPersonService personService, IUserImpersonationService userImpersonationService, IAuthenticationRepository authenticationRepository) : base(userImpersonationService, authenticationRepository)
         {
             _childcareService = childcareService;
             _eventService = eventService;

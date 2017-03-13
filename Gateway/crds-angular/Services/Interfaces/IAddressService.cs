@@ -5,5 +5,6 @@ namespace crds_angular.Services.Interfaces
     public interface IAddressService
     {
         void FindOrCreateAddress(AddressDTO address, bool updateGeoCoordinates = false);
+        void SetGeoCoordinates(AddressDTO address);
     }
 }

@@ -15,6 +15,8 @@ using crds_angular.Services.Interfaces;
 using MinistryPlatform.Translation.Models;
 using MPInterfaces = MinistryPlatform.Translation.Repositories.Interfaces;
 using Crossroads.ApiVersioning;
+using Crossroads.Web.Common;
+using Crossroads.Web.Common.Security;
 
 namespace crds_angular.Controllers.API
 {
@@ -24,15 +26,15 @@ namespace crds_angular.Controllers.API
         private readonly IPaymentProcessorService _stripePaymentService;
         private readonly IDonationService _donationService;
         private readonly MPInterfaces.IDonorRepository _mpDonorService;
-        private readonly MPInterfaces.IAuthenticationRepository _authenticationService;
+        private readonly IAuthenticationRepository _authenticationService;
         private readonly IUserImpersonationService _impersonationService;
 
         public DonorController(IDonorService donorService,
                                 IPaymentProcessorService stripePaymentService, 
                                 IDonationService donationService, 
                                 MPInterfaces.IDonorRepository mpDonorService, 
-                                MPInterfaces.IAuthenticationRepository authenticationService,
-                                IUserImpersonationService impersonationService)
+                                IAuthenticationRepository authenticationService,
+                                IUserImpersonationService impersonationService) : base(impersonationService, authenticationService)
         {
             _donorService = donorService;
             _stripePaymentService = stripePaymentService;

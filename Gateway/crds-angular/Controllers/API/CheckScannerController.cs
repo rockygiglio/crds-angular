@@ -16,34 +16,45 @@ using Crossroads.Utilities.Messaging.Interfaces;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 using Crossroads.ApiVersioning;
+using Crossroads.Web.Common;
+using Crossroads.Web.Common.Configuration;
+using Crossroads.Web.Common.Security;
 
 namespace crds_angular.Controllers.API
 {
     public class CheckScannerController : MPAuth
     {
         private readonly bool _asynchronous;
-        private readonly IAuthenticationRepository _authenticationService;
+        private readonly IContactRepository _contactRepository;
         private readonly ICheckScannerService _checkScannerService;
         private readonly ICommunicationRepository _communicationService;
         private readonly MessageQueue _donationsQueue;
         private readonly IMessageFactory _messageFactory;
         private readonly ICryptoProvider _cryptoProvider;
 
+        private readonly int CROSSROADS_FINANCE_CLERK_CONTACT_ID;
+
         public CheckScannerController(IConfigurationWrapper configuration,
                                       ICheckScannerService checkScannerService,
                                       IAuthenticationRepository authenticationService,
+                                      IContactRepository contactRepository,
                                       ICommunicationRepository communicationService,
                                       ICryptoProvider cryptoProvider,
+                                      IUserImpersonationService userImpersonationService,
                                       IMessageQueueFactory messageQueueFactory = null,
-                                      IMessageFactory messageFactory = null)
+                                      IMessageFactory messageFactory = null) : base(userImpersonationService, authenticationService)
         {
             _checkScannerService = checkScannerService;
-            _authenticationService = authenticationService;
+            _contactRepository = contactRepository;
             _communicationService = communicationService;
             _cryptoProvider = cryptoProvider;
 
             var b = configuration.GetConfigValue("CheckScannerDonationsAsynchronousProcessingMode");
             _asynchronous = b != null && bool.Parse(b);
+
+            var id = configuration.GetConfigValue("CrossroadsFinanceClerkContactId");
+            CROSSROADS_FINANCE_CLERK_CONTACT_ID = (id == null ? -1 : Int32.Parse(id));
+
             if (_asynchronous)
             {
                 var donationsQueueName = configuration.GetConfigValue("CheckScannerDonationsQueueName");
@@ -90,11 +101,17 @@ namespace crds_angular.Controllers.API
                     return (Ok(_checkScannerService.CreateDonationsForBatch(batch)));
                 }
 
-                batch.MinistryPlatformContactId = _authenticationService.GetContactId(token);
-                batch.MinistryPlatformUserId = _communicationService.GetUserIdFromContactId(token, batch.MinistryPlatformContactId.Value);
+                // US6745 - Only finance person receives email instead of the user who imports the batch
+                if (CROSSROADS_FINANCE_CLERK_CONTACT_ID > 0)
+                {
+                    batch.MinistryPlatformContactId = CROSSROADS_FINANCE_CLERK_CONTACT_ID;
+                    batch.MinistryPlatformUserId = _communicationService.GetUserIdFromContactId(batch.MinistryPlatformContactId.Value);
 
-                var message = _messageFactory.CreateMessage(batch);
-                _donationsQueue.Send(message);
+                    var message = _messageFactory.CreateMessage(batch);
+
+                    _donationsQueue.Send(message);
+                }
+
                 return (Ok(batch));
             }));
         }
@@ -133,7 +150,7 @@ namespace crds_angular.Controllers.API
         {
             try
             {
-                _authenticationService.GetContactId(token);
+                _contactRepository.GetContactId(token);
                 return (null);
             }
             catch (Exception e)

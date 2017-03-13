@@ -1,28 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http.Headers;
-using System.Web;
 using System.Web.Http;
-using System.Net.Http;
-using System.Web.Http.Description;
-using System.Web.SessionState;
-using System.Diagnostics;
 using log4net;
-using log4net.Config;
 using System.Reflection;
-using System.Threading;
-using crds_angular.Models.Crossroads;
+using crds_angular.Services.Interfaces;
 using crds_angular.Util;
-using Microsoft.Ajax.Utilities;
-using Microsoft.Owin;
-using MinistryPlatform.Translation.Repositories;
+using Crossroads.Web.Common.Security;
 
 namespace crds_angular.Security
 {
     public class MPAuth : ApiController
     {
         protected readonly log4net.ILog logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+
+        private readonly IUserImpersonationService _userImpersonationService;
+        protected readonly IAuthenticationRepository AuthenticationRepository;
+
+        public MPAuth(IUserImpersonationService userImpersonationService, IAuthenticationRepository authenticationRepository)
+        {
+            _userImpersonationService = userImpersonationService;
+            AuthenticationRepository = authenticationRepository;
+        }
 
         /// <summary>
         /// Ensure that a user is authenticated before executing the given lambda expression.  The expression will
@@ -49,15 +48,35 @@ namespace crds_angular.Security
             try
             {
                 IEnumerable<string> refreshTokens;
+                IEnumerable<string> impersonateUserIds;
+                bool impersonate = false;
                 var authorized = "";
+
+                if (Request.Headers.TryGetValues("ImpersonateUserId", out impersonateUserIds) && impersonateUserIds.Any())
+                {
+                    impersonate = true;
+                }
+
                 if (Request.Headers.TryGetValues("RefreshToken", out refreshTokens) && refreshTokens.Any())
                 {
                     var authData = AuthenticationRepository.RefreshToken(refreshTokens.FirstOrDefault());
                     if (authData != null)
                     {
-                        authorized = authData["token"].ToString();
-                        var refreshToken = authData["refreshToken"].ToString();
-                        var result = new HttpAuthResult(actionWhenAuthorized(authorized), authorized, refreshToken);
+                        authorized = authData.AccessToken;
+                        var refreshToken = authData.RefreshToken;
+                        IHttpActionResult result = null;
+                        if (impersonate)
+                        {
+                            result =
+                                new HttpAuthResult(
+                                    _userImpersonationService.WithImpersonation(authorized, impersonateUserIds.FirstOrDefault(), () => actionWhenAuthorized(authorized)),
+                                    authorized,
+                                    refreshToken);
+                        }
+                        else
+                        {
+                            result = new HttpAuthResult(actionWhenAuthorized(authorized), authorized, refreshToken);
+                        }
                         return result;
                     }
                 }
@@ -65,7 +84,14 @@ namespace crds_angular.Security
                 authorized = Request.Headers.GetValues("Authorization").FirstOrDefault();   
                 if (authorized != null && (authorized != "null" || authorized != ""))
                 {
-                    return actionWhenAuthorized(authorized);
+                    if (impersonate)
+                    {
+                        return _userImpersonationService.WithImpersonation(authorized, impersonateUserIds.FirstOrDefault(), () => actionWhenAuthorized(authorized));
+                    }
+                    else
+                    {
+                        return actionWhenAuthorized(authorized);
+                    }
                 }
                 return actionWhenNotAuthorized();
             }

@@ -41,7 +41,9 @@ namespace crds_angular.Services.Interfaces
 
         void LookupParticipantIfEmpty(string token, List<ParticipantSignup> partId);
 
-        List<GroupDTO> GetGroupsByTypeForAuthenticatedUser(string token, int groupTypeId, int? groupId = null);
+        List<GroupDTO> GetGroupsForAuthenticatedUser(string token, int[] groupTypeIds);
+
+        List<GroupDTO> GetGroupByIdForAuthenticatedUser(string token, int groupId);
 
         GroupDTO UpdateGroup(GroupDTO @group);
 
@@ -50,5 +52,8 @@ namespace crds_angular.Services.Interfaces
         void UpdateGroupParticipantRole(GroupParticipantDTO participant);
 
         void SendParticipantsEmail(string token, List<GroupParticipantDTO> participants, string subject, string body);
+
+        List<GroupDTO> RemoveOnsiteParticipantsIfNotLeader(List<GroupDTO> groups, string token);
+        List<GroupDTO> GetGroupsByTypeOrId(string token, int? participantId = null, int[] groupTypeIds = null, int? groupId = null);
     }
 }

@@ -14,6 +14,9 @@ using crds_angular.Services;
 using crds_angular.Models.Json;
 using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Interfaces;
+using Crossroads.Web.Common;
+using Crossroads.Web.Common.Configuration;
+using Crossroads.Web.Common.Security;
 using Moq;
 
 namespace crds_angular.test.controllers
@@ -40,7 +43,7 @@ namespace crds_angular.test.controllers
             _accountService = new Mock<IAccountService>();
             _accountService.Setup(m => m.ChangePassword(It.IsAny<string>(), It.IsAny<string>())).Returns(true);
             
-            accountController = new AccountController(_accountService.Object);   
+            accountController = new AccountController(_accountService.Object, new Mock<IUserImpersonationService>().Object, new Mock<IAuthenticationRepository>().Object);   
         }
 
         [Test]

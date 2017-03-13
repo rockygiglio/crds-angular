@@ -23,6 +23,8 @@
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
     <UseGlobalApplicationHostFile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -69,6 +71,18 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\AWSSDK.Core.3.1.1.0\lib\net45\AWSSDK.Core.dll</HintPath>
     </Reference>
+    <Reference Include="Crossroads.ApiVersioning, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Crossroads.ApiVersioning.1.0.4\lib\net45\Crossroads.ApiVersioning.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Crossroads.ClientApiKeys, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Crossroads.ClientApiKeys.1.0.5\lib\net45\Crossroads.ClientApiKeys.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Crossroads.Web.Common, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Crossroads.Web.Common.1.0.13\lib\net45\Crossroads.Web.Common.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\EntityFramework.6.1.2\lib\net45\EntityFramework.dll</HintPath>
@@ -81,8 +95,9 @@
       <HintPath>..\packages\GoogleMapsAPI.NET.1.0.0\lib\net40\GoogleMapsAPI.NET.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="log4net">
-      <HintPath>..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
+    <Reference Include="log4net, Version=2.0.7.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\packages\log4net.2.0.7\lib\net45-full\log4net.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -157,8 +172,8 @@
       <HintPath>..\packages\Quartz.Unity.1.3.2\lib\net45\Quartz.Unity.45.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="RestSharp, Version=105.2.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\RestSharp.105.2.2\lib\net45\RestSharp.dll</HintPath>
+    <Reference Include="RestSharp, Version=105.2.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\RestSharp.105.2.3\lib\net45\RestSharp.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Swashbuckle.Core">
@@ -170,6 +185,7 @@
     <Reference Include="System.Device" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Messaging" />
+    <Reference Include="System.Net" />
     <Reference Include="System.Net.Http.Formatting, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
@@ -292,6 +308,7 @@
     <Compile Include="Controllers\API\CampController.cs" />
     <Compile Include="Controllers\API\ChildcareController.cs" />
     <Compile Include="Controllers\API\CongregationController.cs" />
+    <Compile Include="Controllers\API\FinderController.cs" />
     <Compile Include="Controllers\API\EventParticipantController.cs" />
     <Compile Include="Controllers\API\EventToolController.cs" />
     <Compile Include="Controllers\API\FormBuilderController.cs" />
@@ -304,14 +321,6 @@
     <Compile Include="Controllers\API\StaffContactController.cs" />
     <Compile Include="Controllers\API\DonorStatementController.cs" />
     <Compile Include="Controllers\API\TextCommunicationController.cs" />
-    <Compile Include="Crossroads.ApiVersioning\ApiRouteProvider.cs" />
-    <Compile Include="Crossroads.ApiVersioning\DeprecatedVersionFilter.cs" />
-    <Compile Include="Crossroads.ApiVersioning\RemovedVersionFilter.cs" />
-    <Compile Include="Crossroads.ApiVersioning\SemanticVersion.cs" />
-    <Compile Include="Crossroads.ApiVersioning\VersionConfig.cs" />
-    <Compile Include="Crossroads.ApiVersioning\VersionConstraint.cs" />
-    <Compile Include="Crossroads.ApiVersioning\VersionedRoute.cs" />
-    <Compile Include="Crossroads.ApiVersioning\VersionSpace.cs" />
     <Compile Include="Exceptions\ChildcareDatesMissingException.cs" />
     <Compile Include="Exceptions\ContactEmailExistsException.cs" />
     <Compile Include="Exceptions\ContactNotFoundException.cs" />
@@ -325,6 +334,13 @@
     <Compile Include="Exceptions\NotHeadOfHouseholdException.cs" />
     <Compile Include="Exceptions\PaymentTypeNotFoundException.cs" />
     <Compile Include="Exceptions\TripFullException.cs" />
+    <Compile Include="Models\Crossroads\GoVolunteer\ProjectCity.cs" />
+    <Compile Include="Models\Crossroads\GoVolunteer\AnywhereRegistration.cs" />
+    <Compile Include="Models\Crossroads\GoVolunteer\CincinnatiRegistration.cs" />
+    <Compile Include="Models\Crossroads\GoVolunteer\Project.cs" />
+    <Compile Include="Models\Finder\GeoCoordinates.cs" />
+    <Compile Include="Models\Finder\PinSearchResultsDto.cs" />
+    <Compile Include="Models\Finder\PinDto.cs" />
     <Compile Include="Models\Crossroads\Events\EventParticipantDTO.cs" />
     <Compile Include="Models\Crossroads\GroupCategoryDTO.cs" />
     <Compile Include="Models\Crossroads\AddressDTO.cs" />
@@ -347,7 +363,7 @@
     <Compile Include="Models\Crossroads\CommunicationDTO.cs" />
     <Compile Include="Models\Crossroads\Congregation.cs" />
     <Compile Include="Models\Crossroads\DonorStatementDTO.cs" />
-    <Compile Include="Controllers\API\SubscriptionsController .cs" />
+    <Compile Include="Controllers\API\SubscriptionsController.cs" />
     <Compile Include="Models\Crossroads\Childcare\ChildcareRsvpDto.cs" />
     <Compile Include="Models\Crossroads\Events\EventRoomDto.cs" />
     <Compile Include="Models\Crossroads\Events\EventRoomEquipmentDto.cs" />
@@ -407,6 +423,7 @@
     <Compile Include="Services\CampRules.cs" />
     <Compile Include="Services\CampService.cs" />
     <Compile Include="Services\CongregationService.cs" />
+    <Compile Include="Services\FinderService.cs" />
     <Compile Include="Services\EquipmentService.cs" />
     <Compile Include="Services\EventParticipantService.cs" />
     <Compile Include="Services\GeocodeCalculationAddressProximityService.cs" />
@@ -423,6 +440,7 @@
     <Compile Include="Services\Interfaces\IAddressProximityService.cs" />
     <Compile Include="Services\Interfaces\ICampRules.cs" />
     <Compile Include="Services\Interfaces\ICampService.cs" />
+    <Compile Include="Services\Interfaces\IFinderService.cs" />
     <Compile Include="Services\Interfaces\IEventParticipantService.cs" />
     <Compile Include="Services\Interfaces\IInvitationService.cs" />
     <Compile Include="Services\Interfaces\IPaymentService.cs" />
@@ -636,7 +654,6 @@
     <Compile Include="Services\ServeService.cs" />
     <Compile Include="Services\StripeEventService.cs" />
     <Compile Include="Services\StripePaymentProcessorService .cs" />
-    <Compile Include="Services\TranslationService.cs" />
     <Compile Include="Services\TripService.cs" />
     <Compile Include="Services\UserImpersonationService.cs" />
     <Compile Include="Services\VolunteerApplicationService.cs" />
@@ -648,7 +665,6 @@
     <Compile Include="Util\HtmlHelper.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Crossroads.ApiVersioning\readme.txt" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <None Include="MinistryPlatform.Debug.config">
@@ -791,9 +807,13 @@
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
+    <Error Condition="!Exists('..\packages\Crossroads.Web.Common.1.0.13\build\Crossroads.Web.Common.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Crossroads.Web.Common.1.0.13\build\Crossroads.Web.Common.targets'))" />
+    <Error Condition="!Exists('..\packages\Crossroads.ClientApiKeys.1.0.5\build\Crossroads.ClientApiKeys.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Crossroads.ClientApiKeys.1.0.5\build\Crossroads.ClientApiKeys.targets'))" />
   </Target>
   <Import Project="$(SlowCheetahTargets)" Condition="Exists('$(SlowCheetahTargets)')" Label="SlowCheetah" />
   <Import Project="..\packages\AutoMapper.3.3.1\tools\AutoMapper.targets" Condition="Exists('..\packages\AutoMapper.3.3.1\tools\AutoMapper.targets')" />
+  <Import Project="..\packages\Crossroads.Web.Common.1.0.13\build\Crossroads.Web.Common.targets" Condition="Exists('..\packages\Crossroads.Web.Common.1.0.13\build\Crossroads.Web.Common.targets')" />
+  <Import Project="..\packages\Crossroads.ClientApiKeys.1.0.5\build\Crossroads.ClientApiKeys.targets" Condition="Exists('..\packages\Crossroads.ClientApiKeys.1.0.5\build\Crossroads.ClientApiKeys.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

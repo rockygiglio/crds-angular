@@ -10,6 +10,9 @@ using crds_angular.Models.Crossroads.Profile;
 using crds_angular.Models.Crossroads.Serve;
 using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Interfaces;
+using Crossroads.Web.Common;
+using Crossroads.Web.Common.Configuration;
+using Crossroads.Web.Common.Security;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Models.DTO;
 using MinistryPlatform.Translation.Repositories.Interfaces;
@@ -53,7 +56,7 @@ namespace crds_angular.test.controllers
 
             _config.Setup(mocked => mocked.GetConfigValue("AdminGetProfileRoles")).Returns("123,456");
 
-            _fixture = new ProfileController(_personServiceMock.Object, _serveServiceMock.Object, _impersonationService.Object, _donorService.Object, _authenticationService.Object, _userService.Object, _contactRelationshipService.Object, _config.Object);
+            _fixture = new ProfileController(_personServiceMock.Object, _serveServiceMock.Object, _impersonationService.Object, _donorService.Object, _authenticationService.Object, _userService.Object, _contactRelationshipService.Object, _config.Object, new Mock<IUserImpersonationService>().Object);
             _authenticationServiceMock = new Mock<IAuthenticationRepository>();
 
             _authType = "auth_type";
@@ -61,8 +64,6 @@ namespace crds_angular.test.controllers
             _fixture.Request = new HttpRequestMessage();
             _fixture.Request.Headers.Authorization = new AuthenticationHeaderValue(_authType, _authToken);
             _fixture.RequestContext = new HttpRequestContext();
-
-            _authenticationServiceMock.Setup(mocked => mocked.GetContactId(_authType + " " + _authToken)).Returns(myContactId);
 
         }
 

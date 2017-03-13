@@ -1,17 +1,20 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using MPInterfaces = MinistryPlatform.Translation.Repositories.Interfaces;
 using crds_angular.Models.Crossroads.GoVolunteer;
 using crds_angular.Services.Interfaces;
+using Crossroads.Web.Common;
+using Crossroads.Web.Common.MinistryPlatform;
 
 namespace crds_angular.Services
 {
     public class OrganizationService : IOrganizationService
     {
         private readonly MPInterfaces.IOrganizationRepository _mpOrganizationService;
-        private readonly MPInterfaces.IApiUserRepository _mpApiUserService;
+        private readonly IApiUserRepository _mpApiUserService;
 
-        public OrganizationService(MPInterfaces.IOrganizationRepository organizationService, MPInterfaces.IApiUserRepository apiUserService)
+        public OrganizationService(MPInterfaces.IOrganizationRepository organizationService, IApiUserRepository apiUserService)
         {
             _mpOrganizationService = organizationService;
             _mpApiUserService = apiUserService;            
@@ -37,7 +40,7 @@ namespace crds_angular.Services
             {
                 var org = new Organization();
                 return org.FromMpOrganization(o);
-            }).ToList();
+            }).Where(l => l.EndDate == null || l.EndDate >= DateTime.Today).ToList();
         }
 
         public List<OrgLocation> GetLocationsForOrganization(int orgId)

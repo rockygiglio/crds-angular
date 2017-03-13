@@ -144,8 +144,8 @@
   }
 
   // Map
-  .map {
-    background-color: #000;
+  .map.multisitemap {
+    background-color: #000 !important;
     background: #000 url(//crds-cms-uploads.imgix.net/content/images/mapmobilefade2.jpg) center center no-repeat;
     background-size: cover;
 
@@ -158,40 +158,24 @@
       background-size: contain;
     }
 
-    .map-title {
-      color: #fff;
-      line-height: 1;
-    }
-
-    .map-description {
-      color: #fff;
-    }
-
-    .map-links {
-  		color: #888;
-  		.map-name {
-  			margin-right: 2%;
-  			visibility: visible;
-  		}
-
-  		a {
-  			color: #38a5df;
-  			&:hover {
-  				color: #90cded;
-  			}
-  		}
-    }
-
     .map-positioning {
       position: absolute;
-    	left: 50%;
-    	transform: translate(-50%, -50%);
-    	width: 100%;
-    	top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 100%;
+      top: 50%;
 
       @media (min-width: $screen-sm-min) {
         top: 20%;
-        transform: translate(-50%, 0);
+        transform: translate(-50%, 0%);
+      }
+
+      .map-title {
+        color: #fff;
+
+        &:after {
+          display: none;
+        }
       }
 
       .map-content-area {
@@ -199,6 +183,27 @@
 
         @media (min-width: $screen-sm-min) {
           background: transparent;
+        }
+      }
+    }
+
+    .map-description {
+      color: #fff;
+    }
+
+    .map-links {
+      color: #888888;
+
+      .map-name {
+        margin-right: 2%;
+        visibility: visible;
+      }
+
+      a {
+        color: #38a5df;
+
+        &:hover {
+          color: lighten(#38a5df, 20%);
         }
       }
     }

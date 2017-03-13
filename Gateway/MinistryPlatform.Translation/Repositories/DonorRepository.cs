@@ -7,6 +7,10 @@ using System.Text;
 using Crossroads.Utilities;
 using Crossroads.Utilities.Interfaces;
 using log4net;
+using Crossroads.Web.Common;
+using Crossroads.Web.Common.Configuration;
+using Crossroads.Web.Common.MinistryPlatform;
+using Crossroads.Web.Common.Security;
 using MinistryPlatform.Translation.Enum;
 using MinistryPlatform.Translation.Extensions;
 using MinistryPlatform.Translation.Models;
@@ -798,7 +802,7 @@ namespace MinistryPlatform.Translation.Repositories
                 donationDate = record["Donation_Date"] as DateTime? ?? DateTime.Now,
                 batchId = null,
                 donationId = record["Donation_ID"] as int? ?? 0,
-                donationNotes = null,
+                donationNotes = record["Notes"] as string,
                 donationStatus = record["Donation_Status_ID"] as int? ?? 0,
                 donationStatusDate = record["Donation_Status_Date"] as DateTime? ?? DateTime.Now,
                 donorId = record["Donor_ID"] as int? ?? 0,

@@ -5,6 +5,7 @@ using System.Text.RegularExpressions;
 using System.Web.ClientServices.Providers;
 using AutoMapper;
 using crds_angular.Models;
+using crds_angular.Models.Finder;
 using crds_angular.Models.Crossroads;
 using crds_angular.Models.Crossroads.Attribute;
 using crds_angular.Models.Crossroads.Events;
@@ -16,6 +17,7 @@ using crds_angular.Models.Crossroads.Stewardship;
 using crds_angular.Models.MailChimp;
 using MinistryPlatform.Translation.Extensions;
 using MinistryPlatform.Translation.Models;
+using MinistryPlatform.Translation.Models.Finder;
 using MinistryPlatform.Translation.Models.DTO;
 using MinistryPlatform.Translation.Models.Opportunities;
 using MinistryPlatform.Translation.Repositories;
@@ -41,6 +43,26 @@ namespace crds_angular.App_Start
             Mapper.CreateMap<Dictionary<string, object>, AccountInfo>()
                 .ForMember(dest => dest.EmailNotifications,
                     opts => opts.MapFrom(src => src["Bulk_Email_Opt_Out"]));
+
+            Mapper.CreateMap<SpPinDto, PinDto>()
+                .ForMember(dest => dest.FirstName, opts => opts.MapFrom(src => src.First_Name))
+                .ForMember(dest => dest.LastName, opts => opts.MapFrom(src => src.Last_Name))
+                .ForMember(dest => dest.EmailAddress, opts => opts.MapFrom(src => src.Email_Address))
+                .ForMember(dest => dest.Contact_ID, opts => opts.MapFrom(src => src.Contact_ID))
+                .ForMember(dest => dest.Participant_ID, opts => opts.MapFrom(src => src.Participant_ID))
+                .ForMember(dest => dest.Host_Status_ID, opts => opts.MapFrom(src => src.Host_Status_ID))
+                .ForMember(dest => dest.Gathering, opts => opts.MapFrom(src => src.Gathering))
+                .ForMember(dest => dest.Household_ID, opts => opts.MapFrom(src => src.Household_ID))
+                .ForMember(dest => dest.Address,
+                           opts => opts.MapFrom(src => new AddressDTO(
+                                                    src.Address_Line_1,
+                                                    src.Address_Line_2,
+                                                    src.City,
+                                                    src.State,
+                                                    src.Postal_Code,
+                                                    src.Longitude,
+                                                    src.Latitude)))
+                .ForMember(dest => dest.PinType, opts => opts.MapFrom(src => src.Pin_Type)); 
 
             Mapper.CreateMap<MpGroup, OpportunityGroup>()
                 .ForMember(dest => dest.GroupId, opts => opts.MapFrom(src => src.GroupId))
@@ -140,6 +162,7 @@ namespace crds_angular.App_Start
                 .ForMember(dest => dest.IncludeOnPrintedStatement, opts => opts.MapFrom(src => src.IncludeOnPrintedStatement))
                 .ForMember(dest => dest.AccountingCompanyName, opts => opts.MapFrom(src => src.AccountingCompanyName))
                 .ForMember(dest => dest.AccountingCompanyIncludeOnPrintedStatement, opts => opts.MapFrom(src => src.AccountingCompanyIncludeOnPrintedStatement))
+                .ForMember(dest => dest.Notes, opts => opts.MapFrom(src => src.donationNotes))
                 .AfterMap((src, dest) =>
                 {
                     dest.Source = new DonationSourceDTO
@@ -356,6 +379,12 @@ namespace crds_angular.App_Start
 
             Mapper.CreateMap<RsvpMember, MpRsvpMember>();
             Mapper.CreateMap<MpRsvpMember, RsvpMember>();
+            Mapper.CreateMap<PinDto, FinderPinDto>();
+            Mapper.CreateMap<FinderPinDto, PinDto>();
+
+            Mapper.CreateMap<GroupDTO, PinDto>()
+                .ForMember(dest => dest.PinType, opt => opt.UseValue<PinType>(PinType.GATHERING));
+
             Mapper.CreateMap<MpSU2SOpportunity, ServeOpportunity>();
             Mapper.CreateMap<ServeOpportunity, MpSU2SOpportunity>();
             Mapper.CreateMap<MpAttributeCategory, AttributeCategoryDTO>()

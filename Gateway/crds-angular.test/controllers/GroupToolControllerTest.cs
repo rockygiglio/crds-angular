@@ -10,6 +10,9 @@ using crds_angular.Models.Crossroads.Groups;
 using crds_angular.Models.Json;
 using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Interfaces;
+using Crossroads.Web.Common;
+using Crossroads.Web.Common.Configuration;
+using Crossroads.Web.Common.Security;
 using MinistryPlatform.Translation.Models;
 using Moq;
 using NUnit.Framework;
@@ -31,8 +34,8 @@ namespace crds_angular.test.controllers
         {
             _groupToolService = new Mock<IGroupToolService>(MockBehavior.Strict);
             _configurationWrapper = new Mock<IConfigurationWrapper>();
-            _configurationWrapper.Setup(mocked => mocked.GetConfigIntValue("GroupTypeSmallId")).Returns(1);
-            _fixture = new GroupToolController(_groupToolService.Object, _configurationWrapper.Object);
+            _configurationWrapper.Setup(mocked => mocked.GetConfigIntValue("SmallGroupTypeId")).Returns(1);
+            _fixture = new GroupToolController(_groupToolService.Object, _configurationWrapper.Object, new Mock<IUserImpersonationService>().Object, new Mock<IAuthenticationRepository>().Object);
             _fixture.SetupAuthorization(AuthType, AuthToken);
 
         }
@@ -40,8 +43,8 @@ namespace crds_angular.test.controllers
         [Test]
         public void TestRemoveParticipantFromMyGroup()
         {
-            _groupToolService.Setup(mocked => mocked.RemoveParticipantFromMyGroup(_auth, 1, 2, 3, "test"));
-            var result = _fixture.RemoveParticipantFromMyGroup(1, 2, 3, "test");
+            _groupToolService.Setup(mocked => mocked.RemoveParticipantFromMyGroup(_auth, 2, 3, "test"));
+            var result = _fixture.RemoveParticipantFromMyGroup(2, 3, "test");
             _groupToolService.VerifyAll();
 
             Assert.IsNotNull(result);
@@ -52,10 +55,10 @@ namespace crds_angular.test.controllers
         public void TestRemoveParticipantFromMyGroupWithGroupParticipantRemovalException()
         {
             var ex = new GroupParticipantRemovalException("message");
-            _groupToolService.Setup(mocked => mocked.RemoveParticipantFromMyGroup(_auth, 1, 2, 3, "test")).Throws(ex);
+            _groupToolService.Setup(mocked => mocked.RemoveParticipantFromMyGroup(_auth, 2, 3, "test")).Throws(ex);
             try
             {
-                _fixture.RemoveParticipantFromMyGroup(1, 2, 3, "test");
+                _fixture.RemoveParticipantFromMyGroup(2, 3, "test");
                 Assert.Fail("Expected exception was not thrown");
             }
             catch (HttpResponseException e)
@@ -70,10 +73,10 @@ namespace crds_angular.test.controllers
         public void TestRemoveParticipantFromMyGroupWithOtherException()
         {
             var ex = new Exception();
-            _groupToolService.Setup(mocked => mocked.RemoveParticipantFromMyGroup(_auth, 1, 2, 3, "test")).Throws(ex);
+            _groupToolService.Setup(mocked => mocked.RemoveParticipantFromMyGroup(_auth, 2, 3, "test")).Throws(ex);
             try
             {
-                _fixture.RemoveParticipantFromMyGroup(1, 2, 3, "test");
+                _fixture.RemoveParticipantFromMyGroup(2, 3, "test");
                 Assert.Fail("Expected exception was not thrown");
             }
             catch (HttpResponseException e)
@@ -168,11 +171,11 @@ namespace crds_angular.test.controllers
         [Test]
         public void TestSearchGroupsNoGroupsFound()
         {
-            const int groupTypeId = 123;
+            int[] groupTypeId = new int[] {123};
             const string keywords = "kw1,kw2";
             const string location = "123 main st";
 
-            _groupToolService.Setup(mocked => mocked.SearchGroups(groupTypeId, keywords, location, null)).Returns(new List<GroupDTO>());
+            _groupToolService.Setup(mocked => mocked.SearchGroups(groupTypeId, keywords, location, null, null)).Returns(new List<GroupDTO>());
             var result = _fixture.SearchGroups(groupTypeId, keywords, location);
             _groupToolService.VerifyAll();
             Assert.IsNotNull(result);
@@ -185,19 +188,19 @@ namespace crds_angular.test.controllers
         [ExpectedException(typeof(HttpResponseException))]
         public void TestSearchGroupsWithException()
         {
-            const int groupTypeId = 123;
+            int[] groupTypeId = new int[] { 123 };
             const string keywords = "kw1,kw2";
             const string location = "123 main st";
             var exception = new Exception("whoa nelly");
 
-            _groupToolService.Setup(mocked => mocked.SearchGroups(groupTypeId, keywords, location, null)).Throws(exception);
+            _groupToolService.Setup(mocked => mocked.SearchGroups(groupTypeId, keywords, location, null, null)).Throws(exception);
             _fixture.SearchGroups(groupTypeId, keywords, location);
         }
 
         [Test]
         public void TestSearchGroups()
         {
-            const int groupTypeId = 123;
+            int[] groupTypeId = new int[] { 123 };
             const string keywords = "kw1,kw2";
             const string location = "123 main st";
             var searchResults = new List<GroupDTO>
@@ -206,7 +209,7 @@ namespace crds_angular.test.controllers
                 new GroupDTO()
             };
 
-            _groupToolService.Setup(mocked => mocked.SearchGroups(groupTypeId, keywords, location, null)).Returns(searchResults);
+            _groupToolService.Setup(mocked => mocked.SearchGroups(groupTypeId, keywords, location, null, null)).Returns(searchResults);
             var result = _fixture.SearchGroups(groupTypeId, keywords, location);
             _groupToolService.VerifyAll();
             Assert.IsNotNull(result);
@@ -218,14 +221,14 @@ namespace crds_angular.test.controllers
         [Test]
         public void TestSearchGroupsWithGroupId()
         {
-            const int groupTypeId = 123;
+            int[] groupTypeId = new int[] { 123 };
             const int groupId = 42;
             var searchResults = new List<GroupDTO>
             {
                 new GroupDTO()
             };
 
-            _groupToolService.Setup(mocked => mocked.SearchGroups(groupTypeId, null, null, groupId)).Returns(searchResults);
+            _groupToolService.Setup(mocked => mocked.SearchGroups(groupTypeId, null, null, groupId, null)).Returns(searchResults);
             var result = _fixture.SearchGroups(groupTypeId, null, null, groupId);
             _groupToolService.VerifyAll();
             Assert.IsNotNull(result);

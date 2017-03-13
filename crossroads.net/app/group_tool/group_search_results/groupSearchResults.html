@@ -1,5 +1,10 @@
 <div>
   <h1 class="page-header">Search Results</h1>
+  <div class="row">
+    <div class="col-md-12">
+      <div dynamic-content="$root.MESSAGES.groupToolSearchPageTopContent.content | html"></div>
+    </div>
+  </div>
   <div class="group-search-tools row">
     <div class="col-sm-5 push-half-bottom">
       <form role="form" name="groupSearchForm" ng-submit="groupSearchResults.submit()">
@@ -72,7 +77,7 @@
     <preloader full-screen='false' ng-show='!groupSearchResults.ready'> </preloader>
 
     <group-search-filter ng-show='groupSearchResults.ready' table-params="groupSearchResults.tableParams" search-results="groupSearchResults.results"
-      selected-filters="groupSearchResults.initialFilters"></group-search-filter>
+      selected-filters="groupSearchResults.currentFilters"></group-search-filter>
 
     <!--
       DESKTOP ONLY results
@@ -101,8 +106,8 @@
           <group-detail-about data="group" for-search="true" class="clearfix" show-share-buttons="true"></group-detail-about>
           <div class="text-right push-top push-half-bottom soft-half-right">       
             <button type="button" class="btn btn-standard" ng-click="group.expanded = false">Close</button>
-            <button type="button" class="btn btn-standard-dark" ng-click="groupSearchResults.requestToJoinOrEmailGroupLeader(group, true)">Contact Group Leader</button>
-            <button type="button" class="btn btn-primary" ng-click="groupSearchResults.requestToJoinOrEmailGroupLeader(group, false)">Request to Join</button>
+            <button type="button" ng-if="group.isOnsiteGroup() === false" class="btn btn-standard-dark" ng-click="groupSearchResults.requestToJoinOrEmailGroupLeader(group, true)">Contact Group Leader</button>
+            <button type="button" ng-if="group.isOnsiteGroup() === false" class="btn btn-primary" ng-click="groupSearchResults.requestToJoinOrEmailGroupLeader(group, false)">Request to Join</button>
           </div>
         </td>
       </tr>
@@ -133,8 +138,8 @@
       <div ng-if="group.expanded" ng-repeat-end class="group-search-detail soft-bottom">
         <group-detail-about data="group" for-search="true" show-share-buttons="true"></group-detail-about>
         <div class="soft-half push-half-top">
-          <button type="button" class="btn btn-primary btn-block" ng-click="groupSearchResults.requestToJoinOrEmailGroupLeader(group, false)">Request to Join</button>
-          <button type="button" class="btn btn-standard-dark btn-block" ng-click="groupSearchResults.requestToJoinOrEmailGroupLeader(group, true)">Contact Group Leader</button>
+          <button type="button" class="btn btn-primary btn-block" ng-if="group.isOnsiteGroup() === false" ng-click="groupSearchResults.requestToJoinOrEmailGroupLeader(group, false)">Request to Join</button>
+          <button type="button" class="btn btn-standard-dark btn-block" ng-if="group.isOnsiteGroup() === false" ng-click="groupSearchResults.requestToJoinOrEmailGroupLeader(group, true)">Contact Group Leader</button>
           <button type="button" class="btn btn-standard btn-block" ng-click="group.expanded = false">Close</button>
         </div>
       </div>

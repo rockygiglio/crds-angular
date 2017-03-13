@@ -8,6 +8,8 @@ using crds_angular.Services.Interfaces;
 using Crossroads.Utilities;
 using Crossroads.Utilities.Interfaces;
 using log4net;
+using Crossroads.Web.Common;
+using Crossroads.Web.Common.Configuration;
 using MinistryPlatform.Translation.Exceptions;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Models.Payments;
@@ -30,7 +32,9 @@ namespace crds_angular.Services
 
         private readonly int _paidinfullStatus;
         private readonly int _somepaidStatus;
+        private readonly int _nonePaidStatus;
         private readonly int _defaultPaymentStatus;
+        private readonly int _declinedPaymentStatus;
         private readonly int _bankErrorRefundContactId;
 
         public PaymentService(IInvoiceRepository invoiceRepository, 
@@ -51,7 +55,9 @@ namespace crds_angular.Services
 
             _paidinfullStatus = configurationWrapper.GetConfigIntValue("PaidInFull");
             _somepaidStatus = configurationWrapper.GetConfigIntValue("SomePaid");
+            _nonePaidStatus = configurationWrapper.GetConfigIntValue("NonePaid");
             _defaultPaymentStatus = configurationWrapper.GetConfigIntValue("DonationStatusPending");
+            _declinedPaymentStatus = configurationWrapper.GetConfigIntValue("DonationStatusDeclined");
             _bankErrorRefundContactId = configurationWrapper.GetConfigIntValue("ContactIdForBankErrorRefund");
         }
 
@@ -95,12 +101,13 @@ namespace crds_angular.Services
                 PaymentStatus = _defaultPaymentStatus,
                 ProcessorFeeAmount = fee
             };
+            var invoiceDetail = _invoiceRepository.GetInvoiceDetailForInvoice(paymentRecord.InvoiceId);
             var paymentDetail = new MpPaymentDetail
             {
                 Payment = payment,
                 PaymentAmount = paymentRecord.DonationAmt,
-                InvoiceDetailId = _invoiceRepository.GetInvoiceDetailForInvoice(paymentRecord.InvoiceId).InvoiceDetailId
-                
+                InvoiceDetailId = invoiceDetail.InvoiceDetailId,
+                CongregationId = _contactRepository.GetContactById(invoiceDetail.RecipientContactId).Congregation_ID ?? _configWrapper.GetConfigIntValue("Congregation_Default_ID")
             };
 
             var result = _paymentRepository.CreatePaymentAndDetail(paymentDetail);
@@ -109,6 +116,7 @@ namespace crds_angular.Services
                 //update invoice payment status
                 var invoice = _invoiceRepository.GetInvoice(paymentRecord.InvoiceId);
                 var payments = _paymentRepository.GetPaymentsForInvoice(paymentRecord.InvoiceId);
+                payments = payments.Where(p => p.PaymentStatus != _declinedPaymentStatus).ToList();
                 var paymentTotal = payments.Sum(p => p.PaymentTotal);
             
                 _invoiceRepository.SetInvoiceStatus(paymentRecord.InvoiceId, paymentTotal >= invoice.InvoiceTotal ? _paidinfullStatus : _somepaidStatus);
@@ -183,7 +191,13 @@ namespace crds_angular.Services
 
         public int UpdatePaymentStatus(int paymentId, int statusId, DateTime? statusDate, string statusNote = null)
         {
-            return (_paymentRepository.UpdatePaymentStatus(paymentId, statusId));
+            var retVal = _paymentRepository.UpdatePaymentStatus(paymentId, statusId);
+            if (statusId == _declinedPaymentStatus)
+            {
+                var invoiceId = _invoiceRepository.GetInvoiceIdForPayment(paymentId);
+                UpdateInvoiceStatusAfterDecline(invoiceId);
+            }
+            return retVal;
         }
 
         public DonationBatchDTO GetPaymentBatch(int batchId)
@@ -227,7 +241,7 @@ namespace crds_angular.Services
                 _logger.Error($"No Payment with payment processor ID {refund.Data[0].Charge.Id} in MP for Refund {refund.Data[0].Id}");
                 return (null);
             }
-
+            _paymentRepository.UpdatePaymentStatus(payment.PaymentId, (int) DonationStatus.Declined); // update the original payment to declined 
             var paymentReverse = new MpPayment
             {
                 InvoiceNumber = payment.InvoiceNumber,
@@ -248,10 +262,18 @@ namespace crds_angular.Services
             {
                 PaymentAmount = -(int.Parse(refund.Data[0].Amount)/Constants.StripeDecimalConversionValue),
                 InvoiceDetailId = invoicedetail.InvoiceDetailId,
-                Payment = paymentReverse
+                Payment = paymentReverse,
+                CongregationId = _contactRepository.GetContactById(invoicedetail.RecipientContactId).Congregation_ID ?? _configWrapper.GetConfigIntValue("Congregation_Default_ID")
             };
-            
-            return (_paymentRepository.CreatePaymentAndDetail(detail).Value.PaymentId);
+            return _paymentRepository.CreatePaymentAndDetail(detail).Value.PaymentId;
+        }
+
+        public void UpdateInvoiceStatusAfterDecline(int invoiceId)
+        {
+            var payments = _paymentRepository.GetPaymentsForInvoice(invoiceId);
+            var paymentTotal = payments.Sum(p => p.PaymentTotal);
+
+            _invoiceRepository.SetInvoiceStatus(invoiceId, paymentTotal > 0 ? _somepaidStatus : _nonePaidStatus);
         }
 
         public bool DepositExists(int invoiceId, string token)

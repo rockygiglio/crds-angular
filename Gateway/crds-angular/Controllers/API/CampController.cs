@@ -9,6 +9,7 @@ using System.Web.Http.Description;
 using crds_angular.Exceptions.Models;
 using crds_angular.Models.Crossroads.Camp;
 using Crossroads.ApiVersioning;
+using Crossroads.Web.Common.Security;
 
 namespace crds_angular.Controllers.API
 {
@@ -16,7 +17,7 @@ namespace crds_angular.Controllers.API
     {
         private readonly ICampService _campService;
 
-        public CampController(ICampService campService)
+        public CampController(ICampService campService, IUserImpersonationService userImpersonationService, IAuthenticationRepository authenticationRepository) : base(userImpersonationService, authenticationRepository)
         {
             _campService = campService;
         }

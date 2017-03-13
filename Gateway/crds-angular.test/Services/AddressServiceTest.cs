@@ -94,7 +94,7 @@ namespace crds_angular.test.Services
             _fixture.FindOrCreateAddress(address, true);
 
             _mpAddressServiceMock.Verify(x => x.FindMatches(It.IsAny<MpAddress>()), Times.Once);
-            _mpAddressServiceMock.Verify(x => x.Update(It.Is<MpAddress>(a => a.Latitude == coords.Latitude && a.Longitude == coords.Longitude)), Times.Once);
+            _mpAddressServiceMock.Verify(x => x.Update(It.Is<MpAddress>(a => a.Latitude == coords.Latitude && a.Longitude == coords.Longitude)), Times.Exactly(2));
             _addressGeocodingService.Verify(mocked => mocked.GetGeoCoordinates(address));
             Assert.AreEqual(address.AddressID, 67890);
             Assert.AreEqual(address.Latitude, coords.Latitude);

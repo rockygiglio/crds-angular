@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using Crossroads.Utilities.Interfaces;
+using Crossroads.Web.Common;
+using Crossroads.Web.Common.Configuration;
+using Crossroads.Web.Common.Security;
 using MinistryPlatform.Translation.Extensions;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Models.DTO;
@@ -47,7 +50,7 @@ namespace MinistryPlatform.Translation.Repositories
 
         public MpUser GetByAuthenticationToken(string authToken)
         {
-            var contactId = _authenticationService.GetContactId(authToken);
+            var contactId = _ministryPlatformService.GetContactInfo(authToken).ContactId;
 
             var searchString = string.Format(",\"{0}\"", contactId);
             return (GetUser(searchString));

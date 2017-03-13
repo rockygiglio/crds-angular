@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using AutoMapper;
 using crds_angular.Models.Crossroads.Profile;
 using crds_angular.Services.Interfaces;
+using Crossroads.Web.Common;
+using Crossroads.Web.Common.MinistryPlatform;
+using Crossroads.Web.Common.Security;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Models.DTO;
 using MinistryPlatform.Translation.Repositories;
@@ -15,17 +18,17 @@ namespace crds_angular.Services
     {
         private readonly MPServices.IContactRepository _contactService;
         private readonly IObjectAttributeService _objectAttributeService;
-        private readonly MPServices.IApiUserRepository _apiUserService;
+        private readonly IApiUserRepository _apiUserService;
         private readonly MPServices.IParticipantRepository _participantService;
         private readonly MPServices.IUserRepository _userService;
-        private readonly MPServices.IAuthenticationRepository _authenticationService;
+        private readonly IAuthenticationRepository _authenticationService;
 
         public PersonService(MPServices.IContactRepository contactService, 
             IObjectAttributeService objectAttributeService, 
-            MPServices.IApiUserRepository apiUserService,
+            IApiUserRepository apiUserService,
             MPServices.IParticipantRepository participantService,
             MPServices.IUserRepository userService,
-            MPServices.IAuthenticationRepository authenticationService)
+            IAuthenticationRepository authenticationService)
         {
             _contactService = contactService;
             _objectAttributeService = objectAttributeService;
@@ -60,7 +63,7 @@ namespace crds_angular.Services
             // update the user values if the email and/or password has changed
             if (!(String.IsNullOrEmpty(person.NewPassword)) || (person.EmailAddress != person.OldEmail && person.OldEmail != null))
             {
-                var authData = TranslationService.Login(person.OldEmail, person.OldPassword);
+                var authData = _authenticationService.Authenticate(person.OldEmail, person.OldPassword);
 
                 if (authData == null)
                 {

@@ -4,6 +4,10 @@ using System.Linq;
 using System.Reflection;
 using Crossroads.Utilities.Interfaces;
 using log4net;
+using Crossroads.Web.Common;
+using Crossroads.Web.Common.Configuration;
+using Crossroads.Web.Common.MinistryPlatform;
+using Crossroads.Web.Common.Security;
 using MinistryPlatform.Translation.Extensions;
 using MinistryPlatform.Translation.Helpers;
 using MinistryPlatform.Translation.Models;
@@ -76,13 +80,13 @@ namespace MinistryPlatform.Translation.Repositories
             return mpInvitations;
         }
 
-        public List<MpGroupSearchResultDto> SearchGroups(int groupTypeId, string[] keywords = null, int? groupId = null)
+        public List<MpGroupSearchResultDto> SearchGroups(int[] groupTypeIds, string[] keywords = null, int? groupId = null)
         {
             var token = _apiUserRepository.GetToken();
 
             var parms = new Dictionary<string, object>
             {
-                {"@GroupTypeId", groupTypeId}
+                {"@GroupTypeId", String.Join(",", groupTypeIds)}
             };
             if (keywords != null && keywords.Any())
             {

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Configuration;
+using System.Linq;
 using System.Reflection;
 using crds_angular.Services;
 using Crossroads.Utilities.Services;
@@ -17,9 +18,13 @@ namespace Crossroads.ChildcareRsvp
 
         private static void Main()
         {
-            var section = (UnityConfigurationSection) ConfigurationManager.GetSection("unity");
             var container = new UnityContainer();
-            section.Configure(container);
+            var unitySections = new[] { "crossroadsCommonUnity", "unity" };
+
+            foreach (var section in unitySections.Select(sectionName => (UnityConfigurationSection)ConfigurationManager.GetSection(sectionName)))
+            {
+                container.LoadConfiguration(section);
+            }
 
             TlsHelper.AllowTls12();
             var exitCode = 0;

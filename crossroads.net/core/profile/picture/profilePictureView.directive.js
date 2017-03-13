@@ -10,7 +10,7 @@
       replace: true,
       bindToController: true,
       scope: {
-        contactId: '=?',
+        contactId: '=?'
       },
       templateUrl: 'picture/profilePictureView.template.html',
       controller: 'ProfilePictureViewController as pictureView',

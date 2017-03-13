@@ -9,6 +9,9 @@ using crds_angular.Services.Interfaces;
 using crds_angular.test.Helpers;
 using Crossroads.Utilities.FunctionalHelpers;
 using Crossroads.Utilities.Interfaces;
+using Crossroads.Web.Common;
+using Crossroads.Web.Common.Configuration;
+using Crossroads.Web.Common.MinistryPlatform;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 using Moq;
@@ -110,7 +113,7 @@ namespace crds_angular.test.Services
 
             _contactService.Setup(m => m.GetMyProfile(token)).Returns(myContact);
             _contactService.Setup(m => m.GetHouseholdFamilyMembers(myContact.Household_ID)).Returns(getFakeHouseholdMembers(myContact));
-            _contactService.Setup(m => m.GetOtherHouseholdMembers(myContactId)).Returns(new List<MpHouseholdMember>());
+            _contactService.Setup(m => m.GetOtherHouseholdMembers(myContact.Household_ID)).Returns(new List<MpHouseholdMember>());
             _apiUserRepository.Setup(m => m.GetToken()).Returns(apiToken);
             _groupRepository.Setup(m => m.IsMemberOfEventGroup(123, eventId, apiToken)).Returns(true);
             _eventParticipantRepository.Setup(m => m.GetEventParticipantEligibility(It.IsAny<int>(), It.IsAny<int>())).Returns(eventParticipant);
@@ -390,7 +393,7 @@ namespace crds_angular.test.Services
 
             _contactService.Setup(m => m.GetMyProfile(token)).Returns(myContact);
             _contactService.Setup(m => m.GetHouseholdFamilyMembers(myContact.Household_ID)).Returns(getFakeHouseholdMembers(myContact));
-            _contactService.Setup(m => m.GetOtherHouseholdMembers(myContactId)).Returns(new List<MpHouseholdMember>());
+            _contactService.Setup(m => m.GetOtherHouseholdMembers(myContact.Household_ID)).Returns(new List<MpHouseholdMember>());
             _apiUserRepository.Setup(m => m.GetToken()).Returns(apiToken);
             _groupRepository.Setup(m => m.IsMemberOfEventGroup(123, eventId, apiToken)).Returns(true);
             _eventParticipantRepository.Setup(m => m.GetEventParticipantEligibility(eventId, It.IsAny<int>())).Returns(eventParticipant);
@@ -552,7 +555,7 @@ namespace crds_angular.test.Services
 
             _contactService.Setup(m => m.GetMyProfile(token)).Returns(myContact);
             _contactService.Setup(m => m.GetHouseholdFamilyMembers(myContact.Household_ID)).Returns(myHousehold);
-            _contactService.Setup(m => m.GetOtherHouseholdMembers(myContact.Contact_ID)).Returns(otherHousehold);
+            _contactService.Setup(m => m.GetOtherHouseholdMembers(myContact.Household_ID)).Returns(otherHousehold);
             _participantRepository.Setup(m => m.GetParticipant(contactId)).Returns(participant);
             _eventRepository.Setup(m => m.SafeRegisterParticipant(eventId, participant.ParticipantId, 0, 0));
             _configurationWrapper.Setup(m => m.GetConfigIntValue("SummerCampFormID")).Returns(formId);
@@ -582,7 +585,7 @@ namespace crds_angular.test.Services
 
             _contactService.Setup(m => m.GetMyProfile(token)).Returns(myContact);
             _contactService.Setup(m => m.GetHouseholdFamilyMembers(myContact.Household_ID)).Returns(family);
-            _contactService.Setup(m => m.GetOtherHouseholdMembers(myContactId)).Returns(new List<MpHouseholdMember>());
+            _contactService.Setup(m => m.GetOtherHouseholdMembers(myContact.Household_ID)).Returns(new List<MpHouseholdMember>());
             _apiUserRepository.Setup(m => m.GetToken()).Returns(apiToken);            
 
             var result = _fixture.GetEligibleFamilyMembers(eventId, token);
@@ -653,14 +656,14 @@ namespace crds_angular.test.Services
             _configurationWrapper.Setup(m => m.GetConfigValue("CampEventTypeName")).Returns(campType);
             _contactService.Setup(m => m.GetMyProfile(token)).Returns(myContact);
             _contactService.Setup(m => m.GetHouseholdFamilyMembers(myContact.Household_ID)).Returns(family);
-            _contactService.Setup(m => m.GetOtherHouseholdMembers(myContactId)).Returns(new List<MpHouseholdMember>());
+            _contactService.Setup(m => m.GetOtherHouseholdMembers(myContact.Household_ID)).Returns(new List<MpHouseholdMember>());
 
             _eventRepository.Setup(m => m.GetEvents(campType, apiToken)).Returns(camps);
             _eventRepository.Setup(m => m.EventParticipants(apiToken, camps.First().EventId)).Returns(campers);
             _eventRepository.Setup(m => m.GetEvent(camps.First().EventId)).Returns(camps.First());
 
             _productRepository.Setup(m => m.GetProductForEvent(camps.First().EventId)).Returns(product);
-            _invoiceRepository.Setup(m => m.GetInvoiceDetailsForProductAndCamperAndContact(product.ProductId, family[0].ContactId, myContactId))
+            _invoiceRepository.Setup(m => m.GetInvoiceDetailsForProductAndCamper(product.ProductId, family[0].ContactId))
                 .Returns(mpInvoiceResult);
             _paymentService.Setup(m => m.GetPaymentDetails(0, mpInvoiceResult.Value.InvoiceId, token)).Returns(paymentDetail);
 
@@ -684,28 +687,7 @@ namespace crds_angular.test.Services
                 MedicationsAdministered = new List<string> { "benedryl", "tylenol" },
                 Allergies = new List<Allergy>(),
                 Medications = new List<Medication>()
-            };
-
-            var mpMedInfo = new MpMedicalInformation
-            {
-                ContactId = 123,
-                InsuranceCompany = "Ins. Co. Name",
-                MedicationsAdministered = "benedryl,tylenol",
-                PhysicianName = "bobby",
-                PhysicianPhone = "123-4567",
-                PolicyHolder = "your mom"                
-            };
-
-            var mpMedInfoReturn = new MpMedicalInformation
-            {
-                ContactId = 123,
-                MedicalInformationId = 12676,
-                InsuranceCompany = "Ins. Co. Name",
-                PhysicianName = "bobby",
-                PhysicianPhone = "123-4567",
-                PolicyHolder = "your mom",
-                MedicationsAdministered = "benedryl,tylenol"
-            };
+            };          
 
             var updateToDictionary = new Dictionary<String, Object>
                 {
@@ -737,9 +719,156 @@ namespace crds_angular.test.Services
 
             _contactService.Setup(m => m.GetMyProfile(token)).Returns(myContact);
             _contactService.Setup(m => m.GetHouseholdFamilyMembers(myContact.Household_ID)).Returns(myHousehold);
-            _contactService.Setup(m => m.GetOtherHouseholdMembers(myContact.Contact_ID)).Returns(otherHousehold);
+            _contactService.Setup(m => m.GetOtherHouseholdMembers(myContact.Household_ID)).Returns(otherHousehold);
 
-            _medicalInformationRepository.Setup(m => m.SaveMedicalInfo(It.IsAny<MpMedicalInformation>(), 123)).Returns(mpMedInfoReturn);
+            _medicalInformationRepository.Setup(m => m.SaveMedicalInfo(It.IsAny<MpMedicalInformation>(), It.IsAny<int>())).Returns((MpMedicalInformation min, int cid) => new MpMedicalInformation
+            {
+                ContactId = 123,
+                MedicalInformationId = 12676,
+                InsuranceCompany = min.InsuranceCompany,
+                PhysicianName = min.PhysicianName,
+                PhysicianPhone = min.PhysicianPhone,
+                PolicyHolder = min.PolicyHolder,
+                MedicationsAdministered = "benedryl,tylenol"
+            });
+            _contactService.Setup(m => m.UpdateContact(contactId, updateToDictionary));
+            _medicalInformationRepository.Setup(m => m.UpdateOrCreateMedAllergy(It.IsAny<List<MpMedicalAllergy>>(), It.IsAny<List<MpMedicalAllergy>>()));
+
+            Assert.DoesNotThrow(() => _fixture.SaveCamperMedicalInfo(medicalInfo, contactId, token));
+        }
+
+        [Test]
+        public void ShouldSaveMedicalInfoWithNullValuesInMedsAdministered()
+        {
+            const string token = "theToken";
+            const int contactId = 123;
+            var medicalInfo = new MedicalInfoDTO
+            {
+                InsuranceCompany = "Ins. Co. Name",
+                PhysicianName = "bobby",
+                PhysicianPhone = "123-4567",
+                PolicyHolder = "your mom",
+                MedicationsAdministered = new List<string> {null, "benedryl", "tylenol", null},
+                Allergies = new List<Allergy>(),
+                Medications = new List<Medication>()
+            };
+
+            var updateToDictionary = new Dictionary<String, Object>
+            {
+                {"Contact_ID", contactId},
+                {"Medicalinformation_ID", 12676}
+            };
+
+            var myContact = new MpMyContact
+            {
+                Contact_ID = 999999,
+                Household_ID = 77777
+            };
+
+            var myHousehold = new List<MpHouseholdMember>
+            {
+                new MpHouseholdMember
+                {
+                    ContactId = contactId
+                }
+            };
+
+            var otherHousehold = new List<MpHouseholdMember>
+            {
+                new MpHouseholdMember
+                {
+                    ContactId = 5555555
+                }
+            };
+
+            _contactService.Setup(m => m.GetMyProfile(token)).Returns(myContact);
+            _contactService.Setup(m => m.GetHouseholdFamilyMembers(myContact.Household_ID)).Returns(myHousehold);
+            _contactService.Setup(m => m.GetOtherHouseholdMembers(myContact.Household_ID)).Returns(otherHousehold);
+
+            _medicalInformationRepository.Setup(m => m.SaveMedicalInfo(It.IsAny<MpMedicalInformation>(), It.IsAny<int>())).Returns((MpMedicalInformation min, int cid) =>
+            {
+                Assert.AreEqual("benedryl,tylenol", min.MedicationsAdministered);
+                return new MpMedicalInformation
+                {
+                    ContactId = 123,
+                    MedicalInformationId = 12676,
+                    InsuranceCompany = min.InsuranceCompany,
+                    PhysicianName = min.PhysicianName,
+                    PhysicianPhone = min.PhysicianPhone,
+                    PolicyHolder = min.PolicyHolder,
+                    MedicationsAdministered = min.MedicationsAdministered
+                };
+            });        
+
+        _contactService.Setup(m => m.UpdateContact(contactId, updateToDictionary));
+            _medicalInformationRepository.Setup(m => m.UpdateOrCreateMedAllergy(It.IsAny<List<MpMedicalAllergy>>(), It.IsAny<List<MpMedicalAllergy>>()));
+
+            Assert.DoesNotThrow(() => _fixture.SaveCamperMedicalInfo(medicalInfo, contactId, token));
+        }
+
+        [Test]
+        public void ShouldSaveMedicalInfoWithAllNullValuesInMedsAdministered()
+        {
+            const string token = "theToken";
+            const int contactId = 123;
+            var medicalInfo = new MedicalInfoDTO
+            {
+                InsuranceCompany = "Ins. Co. Name",
+                PhysicianName = "bobby",
+                PhysicianPhone = "123-4567",
+                PolicyHolder = "your mom",
+                MedicationsAdministered = new List<string> { null, null, null, null },
+                Allergies = new List<Allergy>(),
+                Medications = new List<Medication>()
+            };
+
+            var updateToDictionary = new Dictionary<String, Object>
+            {
+                {"Contact_ID", contactId},
+                {"Medicalinformation_ID", 12676}
+            };
+
+            var myContact = new MpMyContact
+            {
+                Contact_ID = 999999,
+                Household_ID = 77777
+            };
+
+            var myHousehold = new List<MpHouseholdMember>
+            {
+                new MpHouseholdMember
+                {
+                    ContactId = contactId
+                }
+            };
+
+            var otherHousehold = new List<MpHouseholdMember>
+            {
+                new MpHouseholdMember
+                {
+                    ContactId = 5555555
+                }
+            };
+
+            _contactService.Setup(m => m.GetMyProfile(token)).Returns(myContact);
+            _contactService.Setup(m => m.GetHouseholdFamilyMembers(myContact.Household_ID)).Returns(myHousehold);
+            _contactService.Setup(m => m.GetOtherHouseholdMembers(myContact.Household_ID)).Returns(otherHousehold);
+
+            _medicalInformationRepository.Setup(m => m.SaveMedicalInfo(It.IsAny<MpMedicalInformation>(), It.IsAny<int>())).Returns((MpMedicalInformation min, int cid) =>
+            {
+                Assert.AreEqual("", min.MedicationsAdministered);
+                return new MpMedicalInformation
+                {
+                    ContactId = 123,
+                    MedicalInformationId = 12676,
+                    InsuranceCompany = min.InsuranceCompany,
+                    PhysicianName = min.PhysicianName,
+                    PhysicianPhone = min.PhysicianPhone,
+                    PolicyHolder = min.PolicyHolder,
+                    MedicationsAdministered = min.MedicationsAdministered
+                };
+            });
+
             _contactService.Setup(m => m.UpdateContact(contactId, updateToDictionary));
             _medicalInformationRepository.Setup(m => m.UpdateOrCreateMedAllergy(It.IsAny<List<MpMedicalAllergy>>(), It.IsAny<List<MpMedicalAllergy>>()));
 
@@ -769,7 +898,7 @@ namespace crds_angular.test.Services
 
             _contactService.Setup(m => m.GetMyProfile(token)).Returns(me);
             _contactService.Setup(m => m.GetHouseholdFamilyMembers(me.Household_ID)).Returns(family);
-            _contactService.Setup(m => m.GetOtherHouseholdMembers(loggedInContactId)).Returns(new List<MpHouseholdMember>());
+            _contactService.Setup(m => m.GetOtherHouseholdMembers(me.Household_ID)).Returns(new List<MpHouseholdMember>());
             _medicalInformationRepository.Setup(m => m.GetMedicalInformation(contactId)).Returns(mpMedInfo);
             _medicalInformationRepository.Setup(m => m.GetMedicalAllergyInfo(contactId)).Returns(new List<MpMedical>());
             _medicalInformationRepository.Setup(m => m.GetMedications(contactId)).Returns(new List<MpMedication>());
@@ -806,7 +935,7 @@ namespace crds_angular.test.Services
 
             _contactService.Setup(m => m.GetMyProfile(token)).Returns(me);
             _contactService.Setup(m => m.GetHouseholdFamilyMembers(me.Household_ID)).Returns(family);
-            _contactService.Setup(m => m.GetOtherHouseholdMembers(loggedInContactId)).Returns(new List<MpHouseholdMember>());
+            _contactService.Setup(m => m.GetOtherHouseholdMembers(me.Household_ID)).Returns(new List<MpHouseholdMember>());
             _medicalInformationRepository.Setup(m => m.GetMedicalInformation(contactId)).Returns(mpMedInfo);
             _medicalInformationRepository.Setup(m => m.GetMedicalAllergyInfo(contactId)).Returns(new List<MpMedical>());
             _medicalInformationRepository.Setup(m => m.GetMedications(contactId)).Returns(new List<MpMedication>());
@@ -871,16 +1000,16 @@ namespace crds_angular.test.Services
             _configurationWrapper.Setup(m => m.GetConfigIntValue("SummerCampForm.PreferredRoommate")).Returns(preferredRoomateField);
             _configurationWrapper.Setup(m => m.GetConfigIntValue("SummerCampForm.CamperCongregation")).Returns(congregationField);
 
-            _formSubmissionRepository.Setup(m => m.GetFormResponseAnswer(summerCampFormId, contactId, schoolAttendingField)).Returns("Fairview");
-            _formSubmissionRepository.Setup(m => m.GetFormResponseAnswer(summerCampFormId, contactId, preferredRoomateField)).Returns("");
-            _formSubmissionRepository.Setup(m => m.GetFormResponseAnswer(summerCampFormId, contactId, congregationField)).Returns("Oakley");
+            _formSubmissionRepository.Setup(m => m.GetFormResponseAnswer(summerCampFormId, contactId, schoolAttendingField, eventId)).Returns("Fairview");
+            _formSubmissionRepository.Setup(m => m.GetFormResponseAnswer(summerCampFormId, contactId, preferredRoomateField, eventId)).Returns("");
+            _formSubmissionRepository.Setup(m => m.GetFormResponseAnswer(summerCampFormId, contactId, congregationField, eventId)).Returns("Oakley");
 
             // get congregation Id by name
             _congregationRepository.Setup(m => m.GetCongregationByName("Oakley", apiToken)).Returns(new Ok<MpCongregation>(congregation));
 
             _contactService.Setup(m => m.GetMyProfile(token)).Returns(loggedInContact);
             _contactService.Setup(m => m.GetHouseholdFamilyMembers(loggedInContact.Household_ID)).Returns(householdfamily);
-            _contactService.Setup(m => m.GetOtherHouseholdMembers(loggedInContact.Contact_ID)).Returns(otherHouseholdfamily);
+            _contactService.Setup(m => m.GetOtherHouseholdMembers(loggedInContact.Household_ID)).Returns(otherHouseholdfamily);
             _contactService.Setup(m => m.GetContactById(contactId)).Returns(myContact);
             _apiUserRepository.Setup(m => m.GetToken()).Returns(apiToken);
             _groupRepository.Setup(m => m.GetGradeGroupForContact(contactId, apiToken)).Returns(participant);
@@ -933,7 +1062,7 @@ namespace crds_angular.test.Services
             };
             _contactService.Setup(m => m.GetMyProfile(token)).Returns(loggedInContact);
             _contactService.Setup(m => m.GetHouseholdFamilyMembers(loggedInContact.Household_ID)).Returns(householdfamily);
-            _contactService.Setup(m => m.GetOtherHouseholdMembers(loggedInContact.Contact_ID)).Returns(otherHouseholdfamily);
+            _contactService.Setup(m => m.GetOtherHouseholdMembers(loggedInContact.Household_ID)).Returns(otherHouseholdfamily);
             _contactService.Setup(m => m.GetContactById(contactId)).Returns(myContact);
             _apiUserRepository.Setup(m => m.GetToken()).Returns(apiToken);
             _groupRepository.Setup(m => m.GetGradeGroupForContact(contactId, apiToken)).Returns(participant);
@@ -1010,8 +1139,8 @@ namespace crds_angular.test.Services
             _eventRepository.Setup(m => m.GetEvent(eventId)).Returns(mpevent);
             _productRepository.Setup(m => m.GetProductForEvent(eventId)).Returns(product);
             _productRepository.Setup(m => m.GetProductOptionPricesForProduct(product.ProductId)).Returns(mpoptionlist);
-            _formSubmissionRepository.Setup(m => m.GetFormResponseAnswer(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>())).Returns("true");
-            _invoiceRepository.Setup(m => m.GetInvoiceDetailsForProductAndCamperAndContact(product.ProductId, contactid, me.Contact_ID))
+            _formSubmissionRepository.Setup(m => m.GetFormResponseAnswer(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>())).Returns("true");
+            _invoiceRepository.Setup(m => m.GetInvoiceDetailsForProductAndCamper(product.ProductId, contactid))
                 .Returns(mpInvoiceResult);
             _paymentService.Setup(m => m.GetPaymentDetails(0, mpInvoiceResult.Value.InvoiceId, token)).Returns(paymentDetail);
 
@@ -1111,7 +1240,7 @@ namespace crds_angular.test.Services
 
             _contactService.Setup(m => m.GetMyProfile(token)).Returns(myContact);
             _contactService.Setup(m => m.GetHouseholdFamilyMembers(myContact.Household_ID)).Returns(myFamily);
-            _contactService.Setup(m => m.GetOtherHouseholdMembers(loggedInContactId)).Returns(new List<MpHouseholdMember>());
+            _contactService.Setup(m => m.GetOtherHouseholdMembers(myContact.Household_ID)).Returns(new List<MpHouseholdMember>());
 
             _participantRepository.Setup(m => m.GetParticipant(campDto.ContactId)).Returns(participant);
             _eventRepository.Setup(m => m.GetEventParticipantRecordId(campDto.EventId, participant.ParticipantId)).Returns(eventParticipantId);
@@ -1189,7 +1318,7 @@ namespace crds_angular.test.Services
 
             _contactService.Setup(m => m.GetMyProfile(token)).Returns(myContact);
             _contactService.Setup(m => m.GetHouseholdFamilyMembers(myContact.Household_ID)).Returns(myFamily);
-            _contactService.Setup(m => m.GetOtherHouseholdMembers(loggedInContactId)).Returns(new List<MpHouseholdMember>());
+            _contactService.Setup(m => m.GetOtherHouseholdMembers(myContact.Household_ID)).Returns(new List<MpHouseholdMember>());
 
             _participantRepository.Setup(m => m.GetParticipant(campDto.ContactId)).Returns(participant);
             _eventRepository.Setup(m => m.GetEventParticipantRecordId(campDto.EventId, participant.ParticipantId)).Returns(eventParticipantId);
@@ -1238,7 +1367,7 @@ namespace crds_angular.test.Services
 
             _contactService.Setup(m => m.GetMyProfile(token)).Returns(myContact);
             _contactService.Setup(m => m.GetHouseholdFamilyMembers(myContact.Household_ID)).Returns(myFamily);
-            _contactService.Setup(m => m.GetOtherHouseholdMembers(loggedInContactId)).Returns(new List<MpHouseholdMember>());
+            _contactService.Setup(m => m.GetOtherHouseholdMembers(myContact.Household_ID)).Returns(new List<MpHouseholdMember>());
 
             _participantRepository.Setup(m => m.GetParticipant(campDto.ContactId)).Returns(participant);
             _eventRepository.Setup(m => m.GetEventParticipantRecordId(campDto.EventId, participant.ParticipantId)).Returns(eventParticipantId);

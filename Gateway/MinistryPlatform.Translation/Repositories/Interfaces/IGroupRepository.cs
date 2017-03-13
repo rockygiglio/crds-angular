@@ -54,7 +54,7 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
 
         void UpdateGroupInquiry(int groupId, int inquiryId, bool approved);
 
-        List<MpGroup> GetMyGroupParticipationByType(string token, int? groupTypeId = null, int? groupId = null);
+        List<MpGroup> GetMyGroupParticipationByType(string token, int[] groupTypeId = null, int? groupId = null);
 
         void EndDateGroup(int groupId, DateTime? endDate, int? reasonEndedId);
 
@@ -74,5 +74,7 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
         bool IsMemberOfEventGroup(int contactId, int eventId, string token);
 
         Result<MpGroupParticipant> GetGradeGroupForContact(int contactId, string apiToken);
+
+        List<MpGroup> GetGroupsForParticipantByTypeOrID(int participantId, string token = null, int[] groupTypeIds = null, int? groupId = null);
     }
 }

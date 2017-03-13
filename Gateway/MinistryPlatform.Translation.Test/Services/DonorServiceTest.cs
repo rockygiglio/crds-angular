@@ -7,6 +7,10 @@ using System.Security.Cryptography;
 using System.Text;
 using Crossroads.Utilities;
 using Crossroads.Utilities.Interfaces;
+using Crossroads.Web.Common;
+using Crossroads.Web.Common.Configuration;
+using Crossroads.Web.Common.MinistryPlatform;
+using Crossroads.Web.Common.Security;
 using MinistryPlatform.Translation.Enum;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Repositories;
@@ -57,7 +61,11 @@ namespace MinistryPlatform.Translation.Test.Services
             _configuration.Setup(m => m.GetEnvironmentVarAsString("API_USER")).Returns("uid");
             _configuration.Setup(m => m.GetEnvironmentVarAsString("API_PASSWORD")).Returns("pwd");
 
-            _authService.Setup(m => m.Authenticate(It.IsAny<string>(), It.IsAny<string>())).Returns(new Dictionary<string, object> { { "token", "ABC" }, { "exp", "123" } });
+            _authService.Setup(m => m.Authenticate(It.IsAny<string>(), It.IsAny<string>())).Returns(new AuthToken
+            {
+                AccessToken = "ABC",
+                ExpiresIn = 123
+            });
 
             _fixture = new DonorRepository(_ministryPlatformService.Object, _ministryPlatformRestRepository.Object, _programService.Object, _communicationService.Object, _authService.Object, _contactService.Object, _configuration.Object, _crypto.Object);
         }
@@ -1162,7 +1170,8 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Item_Number", null},
                     {"Is_Recurring_Gift", false },
                     {"Company_Name", "Company Name" },
-                    {"Show_Online", true }
+                    {"Show_Online", true },
+                    {"Notes", "1 share of stock" }
                 },
                 new Dictionary<string, object>
                 {
@@ -1180,7 +1189,8 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Item_Number", null},
                     {"Is_Recurring_Gift", false },
                     {"Company_Name", "Company Name" },
-                    {"Show_Online", true }
+                    {"Show_Online", true },
+                    {"Notes", "" }
                 },
                 new Dictionary<string, object>
                 {
@@ -1198,7 +1208,8 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Item_Number", null},
                     {"Is_Recurring_Gift", false },
                     {"Company_Name", "Company Name" },
-                    {"Show_Online", true }
+                    {"Show_Online", true },
+                    {"Notes", "" }
                 }
             };
 
@@ -1222,6 +1233,8 @@ namespace MinistryPlatform.Translation.Test.Services
             Assert.AreEqual(200000, result[1].donationAmt);
             Assert.AreEqual("Program 2", result[1].Distributions[0].donationDistributionProgram);
             Assert.AreEqual(200000, result[1].Distributions[0].donationDistributionAmt);
+
+            Assert.AreEqual("1 share of stock", result[0].donationNotes);
         }
 
         [Test]
@@ -1273,7 +1286,8 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Item_Number", null},
                     {"Is_Recurring_Gift", false },
                     {"Company_Name", "Company Name" },
-                    {"Show_Online", true }
+                    {"Show_Online", true },
+                    {"Notes","34 Shares of Stock" }
                 },
                 new Dictionary<string, object>
                 {
@@ -1291,7 +1305,8 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Item_Number", ""},
                     {"Is_Recurring_Gift", false },
                     {"Company_Name", "Company Name" },
-                    {"Show_Online", true }
+                    {"Show_Online", true },
+                    {"Notes","" }
                 },
                 new Dictionary<string, object>
                 {
@@ -1308,7 +1323,8 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Donor_Display_Name", "Test Name"},
                     {"Is_Recurring_Gift", false },
                     {"Company_Name", "Company Name" },
-                    {"Show_Online", true }
+                    {"Show_Online", true },
+                    {"Notes",null }
                 },
                 new Dictionary<string, object>
                 {
@@ -1326,7 +1342,8 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Item_Number", "1234"},
                     {"Is_Recurring_Gift", false },
                     {"Company_Name", "Company Name" },
-                    {"Show_Online", true }
+                    {"Show_Online", true },
+                    {"Notes","1 million Shares of Stock" }
                 },
             };
 
@@ -1352,7 +1369,8 @@ namespace MinistryPlatform.Translation.Test.Services
             Assert.AreEqual(200000, result[1].Distributions[0].donationDistributionAmt);
 
             Assert.AreEqual("1234", result[2].itemNumber);
-            
+            Assert.AreEqual("34 Shares of Stock", result[0].donationNotes);
+
         }
 
         [Test]
@@ -1404,7 +1422,8 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Item_Number", null},
                     {"Is_Recurring_Gift", false },
                     {"Company_Name", "Company Name3" },
-                    {"Show_Online", false }
+                    {"Show_Online", false },
+                    {"Notes","" }
                 },
                 new Dictionary<string, object>
                 {
@@ -1422,7 +1441,8 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Item_Number", ""},
                     {"Is_Recurring_Gift", false },
                     {"Company_Name", "Company Name2" },
-                    {"Show_Online", true }
+                    {"Show_Online", true },
+                    {"Notes","" }
                 },
                 new Dictionary<string, object>
                 {
@@ -1439,7 +1459,8 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Donor_Display_Name", "Test Name"},
                     {"Is_Recurring_Gift", false },
                     {"Company_Name", "Company Name3" },
-                    {"Show_Online", false }
+                    {"Show_Online", false },
+                    {"Notes","" }
                 },
                 new Dictionary<string, object>
                 {
@@ -1457,7 +1478,8 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Item_Number", "1234"},
                     {"Is_Recurring_Gift", false },
                     {"Company_Name", "Company Name4" },
-                    {"Show_Online", true }
+                    {"Show_Online", true },
+                    {"Notes","" }
                 },
             };
 
@@ -1508,7 +1530,8 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Item_Number", null},
                     {"Is_Recurring_Gift", true },
                     {"Company_Name", "Company Name" },
-                    {"Show_Online", true }
+                    {"Show_Online", true },
+                    {"Notes","" }
                 },
                 new Dictionary<string, object>
                 {
@@ -1526,7 +1549,8 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Item_Number", ""},
                     {"Is_Recurring_Gift", true },
                     {"Company_Name", "Company Name" },
-                    {"Show_Online", true }
+                    {"Show_Online", true },
+                    {"Notes","" }
                 },
                 new Dictionary<string, object>
                 {
@@ -1543,7 +1567,8 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Donor_Display_Name", "Test Name"},
                     {"Is_Recurring_Gift", false },
                     {"Company_Name", "Company Name" },
-                    {"Show_Online", true }
+                    {"Show_Online", true },
+                    {"Notes","" }
                 },
                 new Dictionary<string, object>
                 {
@@ -1561,7 +1586,8 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Item_Number", "1234"},
                     {"Is_Recurring_Gift", false },
                     {"Company_Name", "Company Name" },
-                    {"Show_Online", true }
+                    {"Show_Online", true },
+                    {"Notes","" }
                 },
             };
 
@@ -1618,7 +1644,8 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Item_Number", null},
                     {"Is_Recurring_Gift", false },
                     {"Company_Name", "Company Name" },
-                    {"Show_Online", true }
+                    {"Show_Online", true },
+                    {"Notes",null }
                 },
                 new Dictionary<string, object>
                 {
@@ -1636,7 +1663,8 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Item_Number", null},
                     {"Is_Recurring_Gift", false },
                     {"Company_Name", "Company Name" },
-                    {"Show_Online", true }
+                    {"Show_Online", true },
+                    {"Notes", "White Castle Stock" }
                 },
                 new Dictionary<string, object>
                 {
@@ -1654,7 +1682,8 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Item_Number", null},
                     {"Is_Recurring_Gift", false },
                     {"Company_Name", "Company Name" },
-                    {"Show_Online", true }
+                    {"Show_Online", true },
+                    {"Notes",null }
                 }
             };
 
@@ -1678,6 +1707,7 @@ namespace MinistryPlatform.Translation.Test.Services
             Assert.AreEqual(200000, result[1].donationAmt);
             Assert.AreEqual("Program 2", result[1].Distributions[0].donationDistributionProgram);
             Assert.AreEqual(200000, result[1].Distributions[0].donationDistributionAmt);
+            Assert.AreEqual("White Castle Stock", result[1].donationNotes);
         }
 
 
@@ -1722,7 +1752,8 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Item_Number", null},
                     {"Is_Recurring_Gift", false },
                     {"Company_Name", "Company Name" },
-                    {"Show_Online", true }
+                    {"Show_Online", true },
+                    {"Notes","" }
                 },
                 new Dictionary<string, object>
                 {
@@ -1740,7 +1771,8 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Item_Number", null},
                     {"Is_Recurring_Gift", false },
                     {"Company_Name", "Company Name" },
-                    {"Show_Online", true }
+                    {"Show_Online", true },
+                    {"Notes","" }
                 },
                 new Dictionary<string, object>
                 {
@@ -1757,7 +1789,8 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Donor_Display_Name", "Test Name"},
                     {"Is_Recurring_Gift", false },
                     {"Company_Name", "Company Name" },
-                    {"Show_Online", true }
+                    {"Show_Online", true },
+                    {"Notes","" }
                 }
             };
 

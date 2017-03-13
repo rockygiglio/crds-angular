@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using crds_angular.Services;
+using Crossroads.Web.Common;
+using Crossroads.Web.Common.MinistryPlatform;
 using MinistryPlatform.Translation.Models;
 using Moq;
 using NUnit.Framework;
@@ -12,15 +14,15 @@ namespace crds_angular.test.Services
     {
         private AttributeService _fixture;
         private Mock<MPServices.IAttributeRepository> _mpAttributeRepository;
-        private Mock<MPServices.IMinistryPlatformRestRepository> _mpRestRepository;
-        private Mock<MPServices.IApiUserRepository> _mpApiUserRepository;
+        private Mock<IMinistryPlatformRestRepository> _mpRestRepository;
+        private Mock<IApiUserRepository> _mpApiUserRepository;
 
         [SetUp]
         public void SetUp()
         {
             _mpAttributeRepository = new Mock<MPServices.IAttributeRepository>(MockBehavior.Strict);
-            _mpRestRepository = new Mock<MPServices.IMinistryPlatformRestRepository>();
-            _mpApiUserRepository = new Mock<MPServices.IApiUserRepository>();
+            _mpRestRepository = new Mock<IMinistryPlatformRestRepository>();
+            _mpApiUserRepository = new Mock<IApiUserRepository>();
 
 
             _fixture = new AttributeService(_mpAttributeRepository.Object, _mpRestRepository.Object, _mpApiUserRepository.Object);

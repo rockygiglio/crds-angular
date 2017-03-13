@@ -16,7 +16,7 @@ export default class GroupSearchResultsController {
     this.ready = false;
     this.results = [];
 
-    this.initialFilters = {};
+    this.currentFilters = {};
 
     this.showLocationInput = false;
     this.searchedWithLocation = false;
@@ -25,11 +25,9 @@ export default class GroupSearchResultsController {
   }
 
   $onInit() {
-    this.initialFilters = {};
+    this.currentFilters = {};
 
-    _.forOwn(CONSTANTS.GROUP.SEARCH_FILTERS_QUERY_PARAM_NAMES, (v, k) => {
-      this.initialFilters[v] = this.state.params[v];
-    })
+    this.setCurrentFilters();
 
     this.search = {
       query: this.state.params.query,
@@ -37,6 +35,12 @@ export default class GroupSearchResultsController {
       id: this.state.params.id
     };
     this.doSearch(this.state.params.query, this.state.params.location, this.state.params.id);
+  }
+
+  setCurrentFilters(){
+    _.forOwn(CONSTANTS.GROUP.SEARCH_FILTERS_QUERY_PARAM_NAMES, (v, k) => {
+      this.currentFilters[v] = this.state.params[v];
+    })
   }
 
   doSearch(query, location, id) {
@@ -56,12 +60,13 @@ export default class GroupSearchResultsController {
       queryString.query = query;
     }
 
-    _.forOwn(this.initialFilters, (value, key) => {
+    this.setCurrentFilters();
+
+    _.forOwn(this.currentFilters, (value, key) => {
       if (value && value.length > 0) {
         queryString[key] = value;
       }
     });
-
     this.locationService.search(queryString);
 
     this.showLocationInput = false;

@@ -32,6 +32,8 @@
     var vm = this;
     vm.path = ImageService.ProfileImageBaseURL + vm.contactId;
     vm.defaultImage = ImageService.DefaultProfileImage;
+    vm.navigateToHome = navigateToHome;
+
     $scope.loginShow = false;
     $scope.newuser = User;
     $scope.credentials = {};
@@ -67,9 +69,13 @@
       return;
     };
 
+    function navigateToHome() {
+      $state.go('content', { link: '/' });
+    }
+
     $scope.login = function() {
       if (($scope.credentials === undefined) ||
-          ($scope.credentials.username === undefined ||
+        ($scope.credentials.username === undefined ||
           $scope.credentials.password === undefined)) {
         $scope.pending = true;
         $scope.loginFailed = false;
@@ -77,6 +83,7 @@
       } else {
         $scope.processing = true;
         AuthService.login($scope.credentials).then(function(user) {
+
           $scope.loginShow = false;
           if ($scope.modal) {
             $scope.modal.close();
@@ -98,11 +105,11 @@
                   $state.go(url, JSON.parse(params));
                 }
               } else {
-                $state.go('profile.personal');
+                navigateToHome();
               }
             },
 
-           500);
+              500);
           } else if ($scope.loginCallback) {
             $scope.processing = false;
             $scope.loginCallback();
@@ -113,12 +120,12 @@
           $scope.navlogin.$setPristine();
         },
 
-        function() {
-          $scope.pending = false;
-          $scope.processing = false;
-          $scope.loginFailed = true;
-          $rootScope.$emit('notify', $rootScope.MESSAGES.generalError);
-        });
+          function() {
+            $scope.pending = false;
+            $scope.processing = false;
+            $scope.loginFailed = true;
+            $rootScope.$emit('notify', $rootScope.MESSAGES.generalError);
+          });
       }
     };
 

@@ -9,6 +9,7 @@ using crds_angular.Models.Crossroads.VolunteerApplication;
 using crds_angular.Security;
 using crds_angular.Services.Interfaces;
 using Crossroads.ApiVersioning;
+using Crossroads.Web.Common.Security;
 
 namespace crds_angular.Controllers.API
 {
@@ -17,7 +18,7 @@ namespace crds_angular.Controllers.API
         private readonly IVolunteerApplicationService _volunteerApplicationService;
 
 
-         public VolunteerApplicationController(IVolunteerApplicationService volunteerApplicationService)
+         public VolunteerApplicationController(IVolunteerApplicationService volunteerApplicationService, IUserImpersonationService userImpersonationService, IAuthenticationRepository authenticationRepository) : base(userImpersonationService, authenticationRepository)
         {
             _volunteerApplicationService = volunteerApplicationService;
         }

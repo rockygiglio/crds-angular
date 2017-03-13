@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using Crossroads.Utilities.Interfaces;
 using log4net;
+using Crossroads.Web.Common;
+using Crossroads.Web.Common.Configuration;
+using Crossroads.Web.Common.MinistryPlatform;
+using Crossroads.Web.Common.Security;
 using MinistryPlatform.Translation.Extensions;
 using MinistryPlatform.Translation.Models.GoCincinnati;
 using MinistryPlatform.Translation.Repositories.Interfaces;
@@ -15,12 +19,14 @@ namespace MinistryPlatform.Translation.Repositories.GoCincinnati
     {
         private readonly ILog _logger = LogManager.GetLogger(typeof (RoomRepository));
         private readonly IMinistryPlatformService _ministryPlatformService;
+        private readonly IMinistryPlatformRestRepository _ministryPlatformRestRepository;
         private readonly string _apiToken;
 
-        public GroupConnectorRepository(IMinistryPlatformService ministryPlatformService, IAuthenticationRepository authenticationService, IConfigurationWrapper configuration)
+        public GroupConnectorRepository(IMinistryPlatformService ministryPlatformService, IMinistryPlatformRestRepository ministryPlatformRestRepository, IAuthenticationRepository authenticationService, IConfigurationWrapper configuration)
             : base(authenticationService, configuration)
         {
             _ministryPlatformService = ministryPlatformService;
+            _ministryPlatformRestRepository = ministryPlatformRestRepository;
             _apiToken = ApiLogin();
         }
 
@@ -84,6 +90,13 @@ namespace MinistryPlatform.Translation.Repositories.GoCincinnati
         {
             var searchString = string.Format(",,,,{0},,{1}", organizationId, initiativeId);
             return GetGroupConnectors(searchString);
+        }
+
+        public MpGroupConnector GetGroupConnectorByProjectId(int projectId, string token)
+        {
+            var groupConnectors = _ministryPlatformRestRepository.UsingAuthenticationToken(token).Search<MpGroupConnector>($"Project_ID = {projectId}");
+
+            return groupConnectors.FirstOrDefault();
         }
 
         private List<MpGroupConnector> GetGroupConnectors(string searchString)

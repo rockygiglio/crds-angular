@@ -8,9 +8,13 @@ using System.Web.Http.Description;
 using System.Web.Http.Results;
 using crds_angular.Models.Json;
 using crds_angular.Security;
+using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Interfaces;
 using MinistryPlatform.Translation.Repositories;
 using Crossroads.ApiVersioning;
+using Crossroads.Web.Common;
+using Crossroads.Web.Common.Configuration;
+using Crossroads.Web.Common.Security;
 
 namespace crds_angular.Controllers.API
 {
@@ -18,11 +22,13 @@ namespace crds_angular.Controllers.API
     {
         private IConfigurationWrapper _configurationWrapper;
         private readonly LookupRepository _lookupRepository;
+        private readonly IAuthenticationRepository _authenticationRepository;
 
-        public LookupController(IConfigurationWrapper configurationWrapper, LookupRepository lookupRepository)
+        public LookupController(IConfigurationWrapper configurationWrapper, LookupRepository lookupRepository, IUserImpersonationService userImpersonationService, IAuthenticationRepository authenticationRepository) : base(userImpersonationService, authenticationRepository)
         {
             _configurationWrapper = configurationWrapper;
             _lookupRepository = lookupRepository;
+            _authenticationRepository = authenticationRepository;
         }
 
 
@@ -224,9 +230,9 @@ namespace crds_angular.Controllers.API
                 var apiUser = _configurationWrapper.GetEnvironmentVarAsString("API_USER");
                 var apiPassword = _configurationWrapper.GetEnvironmentVarAsString("API_PASSWORD");
 
-                var authData = AuthenticationRepository.authenticate(apiUser, apiPassword);
-                var token = authData["token"].ToString();
-                var exists = _lookupRepository.EmailSearch(email, token.ToString());
+                var authData = _authenticationRepository.Authenticate(apiUser, apiPassword);
+                var token = authData?.AccessToken;
+                var exists = _lookupRepository.EmailSearch(email, token);
                 if (exists.Count == 0)
                 {
                     return Ok();

@@ -8,6 +8,8 @@ using crds_angular.Services.Interfaces;
 using log4net;
 using Crossroads.Utilities;
 using Crossroads.Utilities.Interfaces;
+using Crossroads.Web.Common;
+using Crossroads.Web.Common.Configuration;
 using MinistryPlatform.Translation.Exceptions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -360,6 +362,7 @@ namespace crds_angular.Services
                 if (_paymentService.CreatePaymentForBankAccountErrorRefund(refund) != null)
                 {
                     payment = _paymentService.GetPaymentByTransactionCode(paymentId);
+                    payment.Status = DonationStatus.Declined; // make sure to set the correct status.
                     _logger.Debug($"Updating charge id {charge.Id} to Declined status");
                     _paymentService.UpdatePaymentStatus(payment.PaymentId, _donationStatusDeclined, refund.Data[0].BalanceTransaction.Created);
                 }

@@ -39,9 +39,24 @@ namespace crds_angular.Models.Crossroads
         [JsonProperty(PropertyName = "latitude")]
         public double? Latitude { get; set; }
 
+        public AddressDTO()
+        {
+        }
+
+        public AddressDTO(string addressLine1, string addressLine2, string city, string state, string postalCode, double? longitude, double? latitude)
+        {
+            this.AddressLine1 = addressLine1;
+            this.AddressLine2 = addressLine2;
+            this.City = city;
+            this.State = state;
+            this.PostalCode = postalCode;
+            this.Longitude = longitude;
+            this.Latitude = latitude; 
+        }
+
         public bool HasGeoCoordinates()
         {
-            return Longitude.HasValue && Latitude.HasValue;
+            return Longitude.HasValue && Latitude.HasValue && Longitude != 0 && Latitude != 0;
         }
 
         public override string ToString()
