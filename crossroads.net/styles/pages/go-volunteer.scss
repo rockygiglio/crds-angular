@@ -1,7 +1,7 @@
-$gc-red: #981b1e;
+$go-local-primary: rgb(0, 177, 64);
+$go-local-secondary: rgb(196, 214, 0);
+$go-local-site-filter: rgba(0, 177, 64, 0.55);
 $gc-green: #9ab73c;
-$gc-red-dark: #641314;
-$gc-red-darker: #44080a;
 
 .go-volunteer {
   background-color: $white;
@@ -27,7 +27,7 @@ $gc-red-darker: #44080a;
     font-size: 2.4em;
   }
   .btn-primary-gc {
-    @include button-variant(#fff, $gc-red, $gc-red);
+    @include button-variant(#fff, $go-local-primary, $go-local-primary);
   }
 
   .navbar {
@@ -112,7 +112,7 @@ $gc-red-darker: #44080a;
     animation-duration: .5s;
   }
   .dropdown-menu > .active > a {
-    background-color: $gc-red;
+    background-color: $go-local-primary;
   }
   .progress {
     height: 3px;
@@ -173,6 +173,10 @@ $gc-red-darker: #44080a;
   .media-card-link a {
     position: inherit;
   }
+
+  .icon-checkmark {
+    color: $go-local-secondary;
+  }
 }
 
 .site-image-filter {
@@ -189,7 +193,7 @@ $gc-red-darker: #44080a;
     bottom: 0;
     left: 0;
     right: 0;
-    background: rgba(0, 56, 100, 0.65);
+    background: $go-local-site-filter;
     background-blend-mode: multiply;
     display: block;
     margin: $line-height-computed/2;
