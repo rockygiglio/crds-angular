@@ -168,7 +168,6 @@ namespace crds_angular.Services
             }
 
             return pins;
-
         }
 
         private static decimal GetProximity(GeoCoordinate originCoords, GeoCoordinate pinCoords)
@@ -239,7 +238,16 @@ namespace crds_angular.Services
 
             foreach (var group in groups)
             {
-                pins.Add(Mapper.Map<PinDto>(group));
+                var pin = Mapper.Map<PinDto>(group);
+                pin.Gathering = group;
+                if (pin.Contact_ID != null)
+                {
+                    var contact = _contactRepository.GetContactById((int)pin.Contact_ID);
+                    pin.FirstName = contact.First_Name;
+                    pin.LastName = contact.Last_Name;
+                }
+               
+                pins.Add(pin);
             }
 
             return pins;
