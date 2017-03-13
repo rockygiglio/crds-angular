@@ -145,84 +145,61 @@
 
   // Map
   .map {
-    background-color: #d9dbe0;
-    .map-position {
-      @extend .vertical-bottom;
-      top: 50%;
-      .map-content {
-        background-color: rgba(217, 219, 224, 0.9);
-        padding-top: $line-height-computed;
-        padding-bottom: $line-height-computed;
-        @media (min-width: $screen-md-min) {
-          background-color: transparent;
-        }
-      }
-    }
-    .map-img {
-      position: absolute;
-      top: 0%;
-      left: 0%;
-      max-width: initial;
-      transform: translate(-30%, 0%);
-      width: 170%;
-      @media (min-width: $screen-md-min) {
-        width: 96%;
-        transform: translate(30%, 0%);
-      }
-    }
-    .map-flag {
-      position: absolute;
-      top: 0%;
-      left: 0%;
-      max-width: initial;
-      width: 20%;
-      visibility: hidden;
-      @media (min-width: $screen-md-min) {
-        width: 9%;
-      }
-    }
-    .map-flag-mason {
-      transform: translate(379%, 0%);
-    }
-    .map-flag-westside {
-      transform: translate(71%, 69%);
-    }
-    .map-flag-oakley {
-      transform: translate(247%, 100%);
-    }
-    .map-flag-uptown {
-      transform: translate(170%, 103%);
-    }
-    .map-flag-florence {
-      transform: translate(55%, 145%);
-    }
-    @media (min-width: $screen-md-min) {
-      .map-flag-mason {
-        transform: translate(1122%, 23%);
-      }
-      .map-flag-westside {
-        transform: translate(737%, 111%);
-      }
-      .map-flag-oakley {
-        transform: translate(957%, 150%);
-      }
-      .map-flag-uptown {
-        transform: translate(857%, 155%);
-      }
-      .map-flag-florence {
-        transform: translate(667%, 211%);
-      }
+    background-color: #000;
+    background: #000 url(//crds-cms-uploads.imgix.net/content/images/mapmobilefade2.jpg) center center no-repeat;
+    background-size: cover;
+
+    @media (min-width: $screen-sm-min) {
+      background-image: url(//crds-cms-uploads.imgix.net/content/images/explorefadeout3.jpg);
+      background-position: right center;
     }
 
-    .map-desc {
-      color: #999999;
+    @media (min-width: 1400px) {
+      background-size: contain;
     }
-    .map-more a {
-      color: #af5e31;
-      margin-right: 2%;
-      visibility: hidden;
-      a:hover {
-        color: #5f331b;
+
+    .map-title {
+      color: #fff;
+      line-height: 1;
+    }
+
+    .map-description {
+      color: #fff;
+    }
+
+    .map-links {
+  		color: #888;
+  		.map-name {
+  			margin-right: 2%;
+  			visibility: visible;
+  		}
+
+  		a {
+  			color: #38a5df;
+  			&:hover {
+  				color: #90cded;
+  			}
+  		}
+    }
+
+    .map-positioning {
+      position: absolute;
+    	left: 50%;
+    	transform: translate(-50%, -50%);
+    	width: 100%;
+    	top: 50%;
+
+      @media (min-width: $screen-sm-min) {
+        top: 20%;
+        transform: translate(-50%, 0);
+      }
+
+      .map-content-area {
+        background: rgba(0,0,0,.5);
+
+        @media (min-width: $screen-sm-min) {
+          background: transparent;
+        }
       }
     }
   }
