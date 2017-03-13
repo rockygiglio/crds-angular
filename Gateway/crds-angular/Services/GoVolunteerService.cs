@@ -517,8 +517,7 @@ namespace crds_angular.Services
 
         private int CreateRegistration(CincinnatiRegistration registration, int participantId)
         {
-            var registrationDto = new MinistryPlatform.Translation.Models.GoCincinnati.MpRegistration();
-            registrationDto.ParticipantId = participantId;
+            var registrationDto = new MpRegistration {ParticipantId = participantId};
             var preferredLaunchSiteId = PreferredLaunchSite(registration);
             registrationDto.AdditionalInformation = registration.AdditionalInformation;
             registrationDto.InitiativeId = registration.InitiativeId;
@@ -570,7 +569,8 @@ namespace crds_angular.Services
             if (registration.PreferredLaunchSite == null || registration.PreferredLaunchSite.Id == 0)
             {
                 // use group connector
-                var groupConnector = _groupConnectorService.GetGroupConnectorById(registration.GroupConnectorId);
+                var groupConnectorId = registration.GroupConnector?.GroupConnectorId ?? registration.GroupConnectorId;
+                var groupConnector = _groupConnectorService.GetGroupConnectorById(groupConnectorId);
                 preferredLaunchSiteId = groupConnector.PreferredLaunchSiteId;
             }
             else
