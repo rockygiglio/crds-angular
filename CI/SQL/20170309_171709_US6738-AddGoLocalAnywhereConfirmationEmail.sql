@@ -23,22 +23,18 @@ BEGIN
 			   (@ConfirmationTemplateID
 			   ,5 --Church Administrator
 			   ,'GO Local Signup Confirmation - Crossroads Anywhere'
-			   ,'Hi [Nickname] [LastName],
-You have successfully signed up to volunteer on May 20 with GO Local!
-
-Below is what you told us when signing up for GO Local. Please double-check the information and make sure everything is correct so we can plan for a super awesome day of serving your city. If you need to make changes to any of this information, please email [Project Leader email].
-
-Name: [Nickname] [LastName]
-Email: [Participant Email address]
-Birthdate: [Date of Birth]
-Mobile Phone: [Mobile Phone]
-Number of Children Ages 0-17: [Number of Children]
-Project Leader: [Group Connector]
-Project Leader Email: [Project Leader Email]
-
-
-Thanks again for joining the team and serving others in your city!
-The GO Local Team'
+			   ,'Hi [Nickname] [LastName],<br>You have successfully signed up to volunteer on May 20 with GO Local!<br><br>
+			   Below is what you told us when signing up for GO Local. Please double-check the information and make sure everything is correct so we can plan for a super awesome day of serving your city. If you need to make changes to any of this information, please email [Project_Leader_Email_Address].<br><br>
+			   Name: [Nickname] [LastName]<br>
+			   Email: [Participant_Email_Address]<br>
+			   Birthdate: [Date_Of_Birth]<br>
+			   Mobile Phone: [Mobile_Phone]<br>
+			   Spouse Participating: [Spouse_Participating]<br>
+			   Number of Children Ages 0-17: [Number_Of_Children]<br>
+			   Project Leader: [Group_Connector]<br>
+			   Project Leader Email: [Project_Leader_Email_Address]<br><br>
+			   Thanks again for joining the team and serving others in your city!<br>
+			   The GO Local Team'
 			   ,1 --Domain ID
 			   ,GETDATE()
 			   ,1 --Draft Status

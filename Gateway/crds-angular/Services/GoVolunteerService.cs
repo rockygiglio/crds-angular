@@ -181,9 +181,10 @@ namespace crds_angular.Services
                 {
                     templateId = _configurationWrapper.GetConfigIntValue("GoLocalAnywhereEmailTemplate");
                     var projectLeader = _groupConnectorService.GetGroupConnectorById(registration.GroupConnectorId);
-                    fromContact = _contactService.GetContactById(0);
-                    replyContact = _contactService.GetContactById(projectLeader.PrimaryContactId);
+                    fromContact = _contactService.GetContactById(_configurationWrapper.GetConfigIntValue("GoLocalAnywhereFromContactId"));
+                    replyContact = _contactService.GetContactById(projectLeader.PrimaryRegistrationID);
                     mergeData = SetupAnywhereMergeData((AnywhereRegistration) registration);
+                    mergeData.Add("Project_Leader_Email_Address", replyContact.Email_Address);
                 }
                 
                 var communication = _communicationService.GetTemplateAsCommunication(templateId,
@@ -326,8 +327,7 @@ namespace crds_angular.Services
                 {"Mobile_Phone", registration.Self.MobilePhone},
                 {"Spouse_Participating", registration.SpouseParticipation ? "Yes": "No"},
                 {"Number_Of_Children", "0"}, //TODO: Populate this when we start asking this question
-                {"Group_Connector", groupConnector.PrimaryContactNickname + " " + groupConnector.PrimaryContactLastName},
-                {"Project_Leader_Email_Address", groupConnector.PrimaryContactEmail},
+                {"Group_Connector", groupConnector.Name}
             };
 
             return merge;
