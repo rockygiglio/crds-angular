@@ -50,5 +50,8 @@ namespace crds_angular.Models.Finder
 
         [JsonProperty("pinType")]
         public PinType PinType { get; set;  }
+
+        [JsonProperty("proximity")]
+        public decimal? Proximity { get; set; }
     }
 }

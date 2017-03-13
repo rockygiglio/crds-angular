@@ -146,15 +146,15 @@ namespace crds_angular.Controllers.API
         {
             try
             {
-                GeoCoordinate originCoords = _finderService.GetGeoCoordsFromAddressOrLatLang(userSearchAddress, lat, lng);
-                List<PinDto> pinsInRadius = _finderService.GetPinsInRadius(originCoords, userSearchAddress);
+                var originCoords = _finderService.GetGeoCoordsFromAddressOrLatLang(userSearchAddress, lat, lng);
+                var pinsInRadius = _finderService.GetPinsInRadius(originCoords, userSearchAddress);
 
                 foreach (var pin in pinsInRadius)
                 {
                     pin.Address = _finderService.RandomizeLatLong(pin.Address);
                 }
 
-                PinSearchResultsDto result = new PinSearchResultsDto(new GeoCoordinates(originCoords.Latitude, originCoords.Longitude), pinsInRadius);
+                var result = new PinSearchResultsDto(new GeoCoordinates(originCoords.Latitude, originCoords.Longitude), pinsInRadius);
 
                 return Ok(result);
             }
