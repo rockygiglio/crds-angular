@@ -21,10 +21,7 @@ namespace crds_angular.Models.Crossroads.GoVolunteer
 
         [JsonProperty(PropertyName = "equipment")]
         public List<Equipment> Equipment { get; set; }
-
-        [JsonProperty(PropertyName = "groupConnector")]
-        public GroupConnector GroupConnector { get; set; }
-
+        
         [JsonProperty(PropertyName = "organizationId")]
         [Required]
         public int OrganizationId { get; set; }
