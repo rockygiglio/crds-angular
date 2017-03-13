@@ -10,7 +10,7 @@
     font-weight: 200;
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: $screen-sm-min) {
     .img-full-width.centralky-photo-block {
       width: auto;
       height: 200px;
@@ -40,7 +40,7 @@
       font-weight: 600;
       font-size: 450%;
 
-      @media (max-width: 768px) {
+      @media (max-width: $screen-sm-min) {
           font-size: 300%;
       }
     }

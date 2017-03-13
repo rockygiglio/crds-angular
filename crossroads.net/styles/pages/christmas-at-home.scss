@@ -131,7 +131,7 @@
         }
       }
 
-      @media only screen and (min-width: 768px) {
+      @media only screen and (min-width: $screen-sm-min) {
         position: relative;
         min-height: 1px;
         padding-left: 15px;
@@ -147,7 +147,7 @@
         }
       }
 
-      @media only screen and (min-width: 768px) and (min-width: 768px) {
+      @media only screen and (min-width: $screen-sm-min) and (min-width: $screen-sm-min) {
         float: left;
         width: 16.66667%;
 

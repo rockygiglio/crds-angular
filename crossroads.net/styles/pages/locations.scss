@@ -35,7 +35,7 @@
       color: #a7e4ff;
     }
 
-    @media (min-width: 1200px) {
+    @media (min-width: $screen-lg) {
       .anywhere-content {
         padding-top: 26px;
       }
@@ -44,11 +44,13 @@
 }
 
 
-.crds-card.crds-location-card figcaption {
-  font-family: "acumin-pro-extra-condensed", sans-serif;
-  font-size: 180%;
+.crds-card.crds-location-card {
+  figcaption {
+    font-family: "acumin-pro-extra-condensed", sans-serif;
+    font-size: 180%;
 
-  a {
-    color: #3a3a3a;
+    a {
+      color: #3a3a3a;
+    }
   }
 }

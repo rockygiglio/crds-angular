@@ -644,7 +644,7 @@ ul.cr-nav {
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: $screen-sm-min) {
   .dropdown-menu-large {
     margin-left: 0 ;
     margin-right: 0 ;

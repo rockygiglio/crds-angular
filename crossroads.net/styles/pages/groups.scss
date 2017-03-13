@@ -143,25 +143,25 @@
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: $screen-sm-min) {
   #groups-landing .group-landing-push-bottom {
     margin-bottom: 8%;
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: $screen-sm-min) {
   #groups-landing .group-landing-push-half-bottom {
     margin-bottom: 4%;
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: $screen-sm-min) {
   #groups-landing .group-landing-mobile-push-half-bottom {
     margin-bottom: 4%;
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: $screen-sm-min) {
   #groups-landing .group-landing-block {
     margin: 6% auto;
     > .aspect-content {
@@ -170,38 +170,38 @@
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: $screen-sm-min) {
   #groups-landing .group-landing-header {
     margin-bottom: 4%;
     font-size: 4.2vw;
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: $screen-sm-min) {
   #groups-landing .group-landing-content {
     font-size: 6vw;
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: $screen-sm-min) {
   #groups-landing .group-landing-subcontent {
     font-size: 5vw;
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: $screen-sm-min) {
   #groups-landing .group-landing-faq-term {
     font-size: 6vw;
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: $screen-sm-min) {
   #groups-landing .group-landing-faq-definition {
     font-size: 5vw;
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: $screen-sm-min) {
   #groups-landing #groups-landing-resources p {
     font-size: 3vw;
   }
@@ -355,43 +355,43 @@
   }
 }
 
-@media (min-width: 1200px) {
+@media (min-width: $screen-lg) {
   #groups-landing-20160826 .group-landing-push-bottom {
     margin-bottom: 4.8%;
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: $screen-sm-min) {
   #groups-landing-20160826 .group-landing-push-bottom {
     margin-bottom: 8%;
   }
 }
 
-@media (min-width: 1200px) {
+@media (min-width: $screen-lg) {
   #groups-landing-20160826 .group-landing-push-half-bottom {
     margin-bottom: 2.4%;
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: $screen-sm-min) {
   #groups-landing-20160826 .group-landing-push-half-bottom {
     margin-bottom: 4%;
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: $screen-sm-min) {
   #groups-landing-20160826 .group-landing-mobile-push-half-bottom {
     margin-bottom: 4%;
   }
 }
 
-@media (min-width: 1200px) {
+@media (min-width: $screen-lg) {
   #groups-landing-20160826 .group-landing-section {
     padding: 2.4%;
   }
 }
 
-@media (min-width: 1200px) {
+@media (min-width: $screen-lg) {
   #groups-landing-20160826 .group-landing-block {
     margin: 3.6% auto;
     > .aspect-content {
@@ -400,7 +400,7 @@
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: $screen-sm-min) {
   #groups-landing-20160826 .group-landing-block {
     margin: 6% auto;
     > .aspect-content {
@@ -409,32 +409,32 @@
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: $screen-sm-min) {
   #groups-landing-20160826 .group-landing-header {
     margin-bottom: 4%;
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: $screen-sm-min) {
   #groups-landing-20160826 .group-landing-subcontent {
     font-size: 115%;
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: $screen-sm-min) {
   #groups-landing-20160826 .group-landing-faq-definition {
     font-size: 115%;
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: $screen-sm-min) {
   #groups-landing-20160826 #groups-landing-resources p {
     font-size: 3vw;
     right: 52%;
   }
 }
 
-@media (min-width: 1200px) {
+@media (min-width: $screen-lg) {
   #groups-landing-20160826 #groups-landing-resources p {
     font-size: 0.9vw;
   }
@@ -528,7 +528,7 @@
   font-size: .8em;
 }
 
-@media (max-width: 768px) {
+@media (max-width: $screen-sm-min) {
   .group-classes {
     padding-left: 15px !important;
     border-left: none;
