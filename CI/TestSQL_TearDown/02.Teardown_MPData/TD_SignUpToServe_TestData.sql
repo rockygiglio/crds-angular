@@ -68,6 +68,8 @@ DELETE FROM [dbo].cr_childcare_requests WHERE GROUP_ID in (select group_id from 
 
 DELETE FROM Group_Attributes WHERE Group_ID IN (SELECT Group_ID FROM Groups WHERE Group_Name = '(t) Superbowl Oakley Group');
 
+DELETE FROM Group_Attributes WHERE Group_ID IN (SELECT Group_ID FROM Groups WHERE Group_Name = '(t) KidsClub Oakley Group');
+
 DELETE FROM Groups WHERE Group_Name = '(t) KidsClub Oakley Group';
 
 DELETE FROM Groups WHERE Group_Name = '(t) Superbowl Oakley Group';
