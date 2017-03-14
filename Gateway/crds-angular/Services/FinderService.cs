@@ -44,8 +44,8 @@ namespace crds_angular.Services
         private readonly IApiUserRepository _apiUserRepository;
         private readonly int _approvedHost;
         private readonly int _anywhereGroupType;
-        private readonly int _leaderRoleID;
-        private Random _random = new Random(DateTime.Now.Millisecond);
+        private readonly int _leaderRoleId;
+        private readonly Random _random = new Random(DateTime.Now.Millisecond);
 
         public FinderService(
                             IAddressGeocodingService addressGeocodingService, 
@@ -68,7 +68,7 @@ namespace crds_angular.Services
             _apiUserRepository = apiUserRepository;
             _approvedHost = configurationWrapper.GetConfigIntValue("ApprovedHostStatus");
             _anywhereGroupType = configurationWrapper.GetConfigIntValue("AnywhereGroupTypeId");
-            _leaderRoleID = configurationWrapper.GetConfigIntValue("GroupRoleLeader");
+            _leaderRoleId = configurationWrapper.GetConfigIntValue("GroupRoleLeader");
             _groupToolService = groupToolService;
             _configurationWrapper = configurationWrapper;
         }
@@ -86,7 +86,7 @@ namespace crds_angular.Services
                 var groups = _groupService.GetGroupsByTypeOrId(token, participantId, new int[] {_anywhereGroupType});
                 foreach (GroupDTO group in groups)
                 {
-                    var leader = group.Participants.Where(p => p.GroupRoleId == _leaderRoleID && p.ParticipantId == participantId).FirstOrDefault();
+                    var leader = group.Participants.Where(p => p.GroupRoleId == _leaderRoleId && p.ParticipantId == participantId).FirstOrDefault();
 
                     if (leader != null)
                     {
@@ -102,7 +102,8 @@ namespace crds_angular.Services
                 _addressService.SetGeoCoordinates(pinDetails.Address);
             }
             // randomize the location
-            pinDetails.Address = RandomizeLatLong(pinDetails.Address);
+                pinDetails.Address = RandomizeLatLong(pinDetails.Address);
+            
             //TODO get group details
             return pinDetails;
         }
@@ -124,6 +125,11 @@ namespace crds_angular.Services
             var addressDictionary = getDictionary(address);
             addressDictionary.Add("State/Region", addressDictionary["State"]);
             _contactRepository.UpdateHouseholdAddress((int) pin.Contact_ID, householdDictionary, addressDictionary);
+        }
+
+        public void GatheringJoinRequest(string token, int gatheringId)
+        {
+            _groupToolService.SubmitInquiry(token, gatheringId);
         }
 
         public AddressDTO GetAddressForIp(string ip)
@@ -201,9 +207,9 @@ namespace crds_angular.Services
             List<SpPinDto> participantPinsFromSp = _finderRepository.GetPinsInRadius(originCoords);
             List<PinDto> participantAndBuildingPins = new List<PinDto>();
 
-            foreach (SpPinDto piFromSP in participantPinsFromSp)
+            foreach (var piFromSP in participantPinsFromSp)
             {
-                PinDto pin = Mapper.Map<PinDto>(piFromSP);
+                var pin = Mapper.Map<PinDto>(piFromSP);
                 participantAndBuildingPins.Add(pin);
             }
 
