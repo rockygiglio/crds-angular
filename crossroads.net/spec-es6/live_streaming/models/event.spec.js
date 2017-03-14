@@ -8,6 +8,9 @@ describe('Live Stream Event', () => {
       currentEvent,
       pastEvent;
 
+  let baseTime = new Date("October 1, 2016 12:00:00"); // set to 10/1/2016 - month appears to be 0 based index however
+
+
   beforeEach(() => {
     upcoming = {
       "start": moment().tz(moment.tz.guess()).add(1, 'hour').format('YYYY-MM-DD H:mm:ss'),
@@ -28,6 +31,8 @@ describe('Live Stream Event', () => {
     futureEvent  = Event.build(upcoming);
     currentEvent = Event.build(broadcasting);
     pastEvent    = Event.build(done);
+
+    jasmine.clock().mockDate(baseTime);
   })
 
   describe('creation', () => {

@@ -9,7 +9,11 @@ describe('Countdown Service', () => {
       streamspotService,
       rootScope;
 
+  let baseTime = new Date("October 1, 2016 12:00:00"); // set to 10/1/2016 - month appears to be 0 based index however
+
   beforeEach(angular.mock.module(constants.MODULES.GROUP_TOOL));
+
+  beforeEach(jasmine.clock().mockDate(baseTime));
 
   beforeEach(inject(function ($injector) {
     rootScope = $injector.get('$rootScope');
