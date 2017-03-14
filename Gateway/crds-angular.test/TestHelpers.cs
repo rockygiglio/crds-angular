@@ -5,6 +5,7 @@ using crds_angular.Models.Crossroads.Attribute;
 using crds_angular.Models.Crossroads.GoVolunteer;
 using FsCheck;
 using MinistryPlatform.Translation.Models;
+using MinistryPlatform.Translation.Models.GoCincinnati;
 using Equipment = crds_angular.Models.Crossroads.GoVolunteer.Equipment;
 using Random = System.Random;
 
@@ -39,6 +40,21 @@ namespace crds_angular.test
                 Self = Registrant(),
                 RoleId = RandomInt(),
                 WaiverSigned = true
+            };
+        }
+
+        public static AnywhereRegistration AnywhereRegistrationNoSpouse()
+        {
+            return new AnywhereRegistration()
+            {
+                InitiativeId = RandomInt(),
+                OrganizationId = RandomInt(),
+                PreferredLaunchSite = PreferredLaunchSite(),
+                SpouseParticipation = false,
+                Spouse = null,
+                RegistrationId = RandomInt(),
+                Self = Registrant(),
+                GroupConnectorId = RandomInt()
             };
         }
 
@@ -130,6 +146,19 @@ namespace crds_angular.test
                 Name = Gen.Sample(1, 1, Gen.OneOf(Arb.Generate<string>())).HeadOrDefault,
                 PreferredLaunchSite = Gen.Sample(1, 1, Gen.OneOf(Arb.Generate<string>())).HeadOrDefault,
                 PrimaryRegistraionContactId = RandomInt(),
+                ProjectMaximumVolunteers = 1000,
+                ProjectMinimumAge = 2
+            };
+        }
+
+        public static MpGroupConnector MpGroupConnector()
+        {
+            return new MpGroupConnector()
+            {
+                AbsoluteMaximumVolunteers = 100,
+                Name = Gen.Sample(1, 1, Gen.OneOf(Arb.Generate<string>())).HeadOrDefault,
+                PreferredLaunchSite = Gen.Sample(1, 1, Gen.OneOf(Arb.Generate<string>())).HeadOrDefault,
+                PrimaryRegistrationID = RandomInt(),
                 ProjectMaximumVolunteers = 1000,
                 ProjectMinimumAge = 2
             };
