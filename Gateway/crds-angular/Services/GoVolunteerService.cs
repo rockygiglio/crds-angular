@@ -128,18 +128,18 @@ namespace crds_angular.Services
             try
             {
                 var apiToken = _apiUserRepository.GetToken();
-                MpGroupConnector mpGroupConnector = _groupConnectorService.GetGroupConnectorByProjectId(projectId, apiToken);
+                var mpGroupConnector = _groupConnectorService.GetGroupConnectorByProjectId(projectId, apiToken);
                 registration.GroupConnectorId = mpGroupConnector.Id;
 
                 var participantId = RegistrationContact(registration, token);
-                CreateAnywhereRegistrationDto(registration, participantId);
-
+                var registrationId = CreateAnywhereRegistrationDto(registration, participantId);
+                ChildAgeGroups(registration, registrationId);
                 return registration;
             }
             catch (DuplicateUserException e)
             {
                 _logger.Error(e.Message, e);
-                throw e;
+                throw;
             }
             catch (Exception e)
             {
@@ -449,6 +449,16 @@ namespace crds_angular.Services
             {
                 _registrationService.AddAgeGroup(registrationId, ageGroup.Id, ageGroup.Count);
             }
+        }
+
+        private void ChildAgeGroups(AnywhereRegistration registration, int registrationId)
+        {
+            var ageGroup = new ChildrenAttending
+            {
+                Count = registration.NumberOfChildren,
+                Id = _configurationWrapper.GetConfigIntValue("GoLocalRegistrationChildrenAttribute")
+            };            
+            _registrationService.AddAgeGroup(registrationId, ageGroup.Id, ageGroup.Count);
         }
 
         private MpContact SpouseInformation(CincinnatiRegistration registration)
