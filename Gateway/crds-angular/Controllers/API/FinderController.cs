@@ -184,8 +184,15 @@ namespace crds_angular.Controllers.API
                 catch (Exception e)
                 {
                     _logger.Error("Could not generate request", e);
-                    var apiError = new ApiErrorDto("Gathering request failed", e);
-                    throw new HttpResponseException(System.Net.HttpStatusCode.Conflict);
+                    if (e.Message == "User is already member or has request")
+                    {
+                        throw new HttpResponseException(System.Net.HttpStatusCode.Conflict);
+                    }
+                    else
+                    {
+                        throw new HttpResponseException(new ApiErrorDto("Gathering request failed", e).HttpResponseMessage);
+                    }
+
                 }
             });
         }
