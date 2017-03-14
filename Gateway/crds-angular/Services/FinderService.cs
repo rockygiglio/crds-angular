@@ -102,10 +102,7 @@ namespace crds_angular.Services
                 _addressService.SetGeoCoordinates(pinDetails.Address);
             }
             // randomize the location
-            if (pinDetails.PinType != PinType.SITE)
-            {
                 pinDetails.Address = RandomizeLatLong(pinDetails.Address);
-            }
             
             //TODO get group details
             return pinDetails;
