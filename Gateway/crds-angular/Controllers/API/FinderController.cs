@@ -169,10 +169,10 @@ namespace crds_angular.Controllers.API
         /// Logged in user requests to join gathering
         /// </summary>
         [RequiresAuthorization]
-        [VersionedRoute(template: "finder/pin/{gatheringId}/gatheringjoinrequest", minimumVersion: "1.0.0")]
-        [System.Web.Http.Route("finder/pin/{gatheringId}/gatheringjoinrequest")]
+        [VersionedRoute(template: "finder/pin/gatheringjoinrequest", minimumVersion: "1.0.0")]
+        [System.Web.Http.Route("finder/pin/gatheringjoinrequest")]
         [System.Web.Http.HttpPost]
-        public IHttpActionResult GatheringJoinRequest([FromUri] int gatheringId)
+        public IHttpActionResult GatheringJoinRequest([FromBody]int gatheringId)
         {
             return Authorized(token =>
             {
@@ -185,7 +185,7 @@ namespace crds_angular.Controllers.API
                 {
                     _logger.Error("Could not generate request", e);
                     var apiError = new ApiErrorDto("Gathering request failed", e);
-                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                    throw new HttpResponseException(System.Net.HttpStatusCode.Conflict);
                 }
             });
         }
