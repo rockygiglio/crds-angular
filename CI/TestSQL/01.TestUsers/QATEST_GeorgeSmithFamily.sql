@@ -164,14 +164,14 @@ SET @fatherContactId = @fContactId;
 SET @fatherDOB = DATEADD(year, -40, GETDATE());
 
 UPDATE [dbo].Contacts 
-SET Display_Name = 'Smith,George', Prefix_ID = 1,First_Name = 'George',  Middle_Name = null, Last_Name = 'Smith', Nickname = 'George', Date_of_Birth = @fatherDOB , Gender_ID = 1, Marital_Status_ID = 2, Household_ID = @householdId, Household_Position_ID = 1,Participant_Record = @fatherParticipantId, Email_Address = 'mpcrds+tremplay.richard@gmail.com', Mobile_Phone = '513-410-3540', Company_Phone = null
+SET Display_Name = 'Smith,George', Prefix_ID = 1,First_Name = 'George',  Middle_Name = null, Last_Name = 'Smith', Nickname = 'George', Date_of_Birth = @fatherDOB , Gender_ID = 1, Marital_Status_ID = 2, Household_ID = @householdId, Household_Position_ID = 1,Participant_Record = @fatherParticipantId, Email_Address = 'mpcrds+auto+georgesmith@gmail.com', Mobile_Phone = '555-963-5033', Company_Phone = null
 WHERE Contact_ID = @fatherContactID;
 
 SET @motherContactId = @mContactId;
 SET @motherDOB = DATEADD(year, -38, GETDATE());
 
 UPDATE [dbo].Contacts 
-SET Display_Name = 'Smith,Sue', Prefix_ID = 2,First_Name = 'Sue',  Middle_Name = null, Last_Name = 'Smith', Nickname = 'Sue', Date_of_Birth = @motherDOB , Gender_ID = 2, Marital_Status_ID = 2, Household_ID = @householdId, Household_Position_ID = 1,Participant_Record = @motherParticipantId, Email_Address = 'mpcrds+tremplay.mary@gmail.com', Mobile_Phone = '513-410-3540', Company_Phone = null
+SET Display_Name = 'Smith,Sue', Prefix_ID = 2,First_Name = 'Sue',  Middle_Name = null, Last_Name = 'Smith', Nickname = 'Sue', Date_of_Birth = @motherDOB , Gender_ID = 2, Marital_Status_ID = 2, Household_ID = @householdId, Household_Position_ID = 1,Participant_Record = @motherParticipantId, Email_Address = 'mpcrds+auto+suesmith@gmail.com', Mobile_Phone = '555-963-5032', Company_Phone = null
 WHERE Contact_ID = @motherContactID;
 
 
@@ -185,13 +185,13 @@ SET @child8ContactId = ((SELECT MAX(Contact_ID) FROM Contacts)+1);
 SET @child8DOB = DATEADD(year, -8, GETDATE());
 INSERT INTO Contacts 
 (Contact_ID      ,Company,Company_Name,Display_Name    ,Prefix_ID,First_Name,Middle_Name,Last_Name ,Suffix_ID,Nickname ,Date_of_Birth   ,Gender_ID,Marital_Status_ID,Contact_Status_ID,Household_ID,Household_Position_ID,Participant_Record,Donor_Record,Email_Address                    ,Email_Unlisted,Bulk_Email_Opt_Out,Bulk_SMS_Opt_Out,Mobile_Phone  ,Mobile_Carrier,Mobile_Phone_Unlisted,Company_Phone,Pager_Phone,Fax_Phone,User_Account,Web_Page,Remove_From_Directory,Industry_ID,Occupation_ID,Employer_Name,[SSN/EIN],Anniversary_Date,HS_Graduation_Year,Current_School,Contact_GUID,ID_Card,Domain_ID,__ShelbyID,__ExternalHouseholdID,__ExternalPersonID,__ExternalUserID,__ExternalBusinessID,Maiden_Name,__LastLegacyLogin,__LegacyUserName,__LegacyUserID,__LegacyEmailAddress) VALUES
-(@child8ContactId,0      ,null       ,'Smith,Frank',2        ,'Frank'   ,null       ,'Smith',null     ,'Frank'  ,@child8DOB     ,2        ,1                ,1                ,@householdId,3                    ,null              ,null        ,'mpcrds+tremplay.johan@gmail.com',null          ,0                 ,0               ,'513-410-3540',null          ,null                 ,null         ,null       ,null     ,null        ,null    ,null                 ,null       ,null         ,null         ,null     ,null            ,null              ,null          ,NEWID()     ,null   ,1        ,null      ,null                 ,null              ,null            ,null                ,null       ,null             ,null            ,null          ,null                );
+(@child8ContactId,0      ,null       ,'Smith,Frank',2        ,'Frank'   ,null       ,'Smith',null     ,'Frank'         ,@child8DOB      ,1        ,1                ,1                ,@householdId,2                    ,null              ,null        ,'mpcrds+auto+franksmith@gmail.com',null          ,0                 ,0               ,'',null          ,null                 ,null         ,null       ,null     ,null        ,null    ,null                 ,null       ,null         ,null         ,null     ,null            ,null              ,null          ,NEWID()     ,null   ,1        ,null      ,null                 ,null              ,null            ,null                ,null       ,null             ,null            ,null          ,null                );
 
 SET @child4ContactId = ((SELECT MAX(Contact_ID) FROM Contacts)+1);
 SET @child4DOB = DATEADD(year, -4, GETDATE());
 INSERT INTO Contacts 
 (Contact_ID      ,Company,Company_Name,Display_Name         ,Prefix_ID,First_Name  ,Middle_Name,Last_Name ,Suffix_ID,Nickname ,Date_of_Birth   ,Gender_ID,Marital_Status_ID,Contact_Status_ID,Household_ID,Household_Position_ID,Participant_Record,Donor_Record,Email_Address                     ,Email_Unlisted,Bulk_Email_Opt_Out,Bulk_SMS_Opt_Out,Mobile_Phone  ,Mobile_Carrier,Mobile_Phone_Unlisted,Company_Phone,Pager_Phone,Fax_Phone,User_Account,Web_Page,Remove_From_Directory,Industry_ID,Occupation_ID,Employer_Name,[SSN/EIN],Anniversary_Date,HS_Graduation_Year,Current_School,Contact_GUID,ID_Card,Domain_ID,__ShelbyID,__ExternalHouseholdID,__ExternalPersonID,__ExternalUserID,__ExternalBusinessID,Maiden_Name,__LastLegacyLogin,__LegacyUserName,__LegacyUserID,__LegacyEmailAddress) VALUES
-(@child4ContactId,0      ,null        ,'Smith,Zoe'    ,2        ,'Zoe'    ,null       ,'Smith',null     ,'Zoe' ,@child4DOB      ,1        ,1                ,1                ,@householdId,3                    ,null              ,null        ,'mpcrds+tremplay.Zoe@gmail.com',null          ,0                 ,0               ,'513-410-3540',null          ,null                 ,null         ,null       ,null     ,null        ,null    ,null                 ,null       ,null         ,null         ,null     ,null            ,null              ,null          ,NEWID()     ,null   ,1        ,null      ,null                 ,null              ,null            ,null                ,null       ,null             ,null            ,null          ,null                );
+(@child4ContactId,0      ,null        ,'Smith,Zoe'    ,2        ,'Zoe'    ,null       ,'Smith',null     ,'Zoe'                ,@child4DOB      ,2        ,1                ,1                ,@householdId,2                    ,null              ,null        ,'mpcrds+auto+zoesmith@gmail.com',null          ,0                 ,0               ,'',null          ,null                 ,null         ,null       ,null     ,null        ,null    ,null                 ,null       ,null         ,null         ,null     ,null            ,null              ,null          ,NEWID()     ,null   ,1        ,null      ,null                 ,null              ,null            ,null                ,null       ,null             ,null            ,null          ,null                );
 
 DBCC CHECKIDENT (Contacts, reseed, @currentContactId);
 SET IDENTITY_INSERT [dbo].[Contacts] OFF;
@@ -272,3 +272,18 @@ INSERT INTO [dbo].Donors
 
 
 -------------------------------------------------------------------------------------------------------------------------------------------
+
+--Create Group Participants for the children
+declare @Child8GroupID as int
+set @Child8GroupID = (select group_id from Groups Where Group_Name = 'Kids Club Grade 3')
+
+INSERT INTO Group_Participants
+(Group_ID       ,Participant_ID          ,Group_Role_ID  ,Domain_ID,Start_Date   ,End_Date,Employee_Role,Hours_Per_Week,Notes,__ExternalPersonGroupRoleID,__ExternalGroupRoleID,__CanManageEvents,__CanMANageMembers,__EmailOptOut,__ISAnonymous,__ServiceTimeID,_First_Attendance,_Second_Attendance,_Third_Attendance,_Last_Attendance,Child_Care_Requested,Share_With_Group,Email_Opt_Out,Need_Book,Preferred_Serving_Time_ID,Enrolled_By,Auto_Promote) VALUES
+(@Child8GroupID ,@child8ParticipantId    ,16             ,1        ,'01/01/2015' , null   ,0         ,null          ,null ,null                       ,null                 ,null             ,null              ,null         ,null         ,null           ,null             ,null              ,null             ,null            ,0                   ,null            ,null         ,0        ,null                     ,null       ,1);
+
+declare @Child4GroupID as int
+set @Child4GroupID = (select group_id from Groups Where Group_Name = 'Kids Club 4 Year Old March')
+
+INSERT INTO Group_Participants
+(Group_ID        ,Participant_ID        ,Group_Role_ID  ,Domain_ID,Start_Date   ,End_Date,Employee_Role,Hours_Per_Week,Notes,__ExternalPersonGroupRoleID,__ExternalGroupRoleID,__CanManageEvents,__CanMANageMembers,__EmailOptOut,__ISAnonymous,__ServiceTimeID,_First_Attendance,_Second_Attendance,_Third_Attendance,_Last_Attendance,Child_Care_Requested,Share_With_Group,Email_Opt_Out,Need_Book,Preferred_Serving_Time_ID,Enrolled_By,Auto_Promote) VALUES
+(@Child4GroupID  ,@child4ParticipantId  ,16             ,1       ,'01/01/2015'  ,null    ,0            ,null          ,null ,null                       ,null                 ,null             ,null              ,null         ,null         ,null           ,null             ,null              ,null             ,null            ,0                   ,null            ,null         ,0        ,null                     ,null       ,1);

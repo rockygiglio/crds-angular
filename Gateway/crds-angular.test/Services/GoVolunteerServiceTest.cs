@@ -632,7 +632,7 @@ namespace crds_angular.test.Services
             const int registrationId = 321654;
             var user = new MpUser() {};
             var registration = BuildRegistration();
-            var registrationDto = BuildRegistrationDto(participantId, preferredLaunchSiteId, registration);
+            //var registrationDto = BuildRegistrationDto(participantId, preferredLaunchSiteId, registration);
 
             _apiUserRepository.Setup(m => m.GetToken())
                 .Returns(apiToken);
@@ -785,7 +785,7 @@ namespace crds_angular.test.Services
                     FirstName = "a",
                     LastName = "bomb",
                     MobilePhone = "555-555-5555"
-                },
+                },            
                 SpouseParticipation = false
             };
         }
