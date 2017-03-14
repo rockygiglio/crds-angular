@@ -123,7 +123,9 @@ namespace crds_angular.test.Services
                                                                             It.IsAny<Dictionary<string, object>>())).Returns(communication);
             _commnuicationService.Setup(m => m.SendMessage(communication, false)).Returns(1);
             var success = _fixture.SendMail(registration);
-            _commnuicationService.Verify();
+            _commnuicationService.VerifyAll();
+            _contactService.VerifyAll();
+            _groupConnectorService.VerifyAll();
             Assert.IsTrue(success);
         }
 

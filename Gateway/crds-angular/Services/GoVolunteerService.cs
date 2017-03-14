@@ -134,7 +134,7 @@ namespace crds_angular.Services
                 var participantId = RegistrationContact(registration, token);
                 CreateAnywhereRegistrationDto(registration, participantId);
 
-                SendMail(registration);
+                Observable.Start(() => SendMail(registration));
 
                 return registration;
             }
@@ -183,7 +183,7 @@ namespace crds_angular.Services
                     var projectLeader = _groupConnectorService.GetGroupConnectorById(registration.GroupConnectorId);
                     fromContact = _contactService.GetContactById(_configurationWrapper.GetConfigIntValue("GoLocalAnywhereFromContactId"));
                     replyContact = _contactService.GetContactById(projectLeader.PrimaryRegistrationID);
-                    mergeData = SetupAnywhereMergeData((AnywhereRegistration) registration);
+                    mergeData = SetupAnywhereMergeData((AnywhereRegistration) registration, projectLeader.Name);
                     mergeData.Add("Project_Leader_Email_Address", replyContact.Email_Address);
                 }
                 
@@ -315,9 +315,8 @@ namespace crds_angular.Services
             return dict;
         }
 
-        private Dictionary<string, object> SetupAnywhereMergeData(AnywhereRegistration registration)
+        private Dictionary<string, object> SetupAnywhereMergeData(AnywhereRegistration registration, string projectLeaderName)
         {
-            var groupConnector = _groupConnectorService.GetGroupConnectorById(registration.GroupConnectorId);
             var merge = new Dictionary<string, object>
             {
                 {"Nickname", registration.Self.FirstName},
@@ -327,7 +326,7 @@ namespace crds_angular.Services
                 {"Mobile_Phone", registration.Self.MobilePhone},
                 {"Spouse_Participating", registration.SpouseParticipation ? "Yes": "No"},
                 {"Number_Of_Children", "0"}, //TODO: Populate this when we start asking this question
-                {"Group_Connector", groupConnector.Name}
+                {"Group_Connector", projectLeaderName}
             };
 
             return merge;
