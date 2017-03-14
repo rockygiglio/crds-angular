@@ -29,13 +29,15 @@ export default class GoVolunteerAnywhereProfileForm {
       email: emailAddress,
       birthDate: dob,
       mobilePhone: mobile,
-      bringSpouse: spouseParticipation
+      bringSpouse: spouseParticipation,
+      numberKids: numberOfChildren
     } = this.model;
     const { contactId } = this.goVolunteerService.person;
 
     const registrationData = {
       initiativeId,
       spouseParticipation,
+      numberOfChildren,
       self: {
         contactId,
         dob,
