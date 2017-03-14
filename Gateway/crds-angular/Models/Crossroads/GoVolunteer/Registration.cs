@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using Newtonsoft.Json;
 
 namespace crds_angular.Models.Crossroads.GoVolunteer
@@ -28,5 +27,8 @@ namespace crds_angular.Models.Crossroads.GoVolunteer
 
         [JsonProperty(PropertyName = "self")]
         public Registrant Self { get; set; }
+
+        [JsonProperty(PropertyName = "spouse")]
+        public Registrant Spouse { get; set; }
     }
 }
