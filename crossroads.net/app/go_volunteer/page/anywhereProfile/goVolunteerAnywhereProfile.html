@@ -1,6 +1,5 @@
-<div ng-if="$ctrl.viewReady">
-  <preloader full-screen='false' ng-show='!$ctrl.viewReady'> </preloader>
-
+<preloader full-screen='false' ng-show='!$ctrl.viewReady'> </preloader>
+<div ng-if="$ctrl.viewReady" class="push-top">
   <go-volunteer-project-card project="$ctrl.project"></go-volunteer-project-card>
 
   <h3>Tell us about yourself, so we can keep you in the loop</h3>
@@ -19,7 +18,7 @@
     </div>
 
     <div class="text-center push-top">
-      <button type="submit" class="btn btn-primary" ng-disabled="$ctrl.anywhereForm.$invalid || $ctrl.submitting">Accept Waiver and Register</button>
+      <button type="submit" class="btn btn-primary-gc" ng-disabled="$ctrl.anywhereForm.$invalid || $ctrl.submitting">Accept Waiver and Register</button>
     </div>
   </form>
 </div>

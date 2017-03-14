@@ -1,7 +1,7 @@
-$gc-red: #981b1e;
+$go-local-primary: rgb(0, 177, 64);
+$go-local-secondary: rgb(196, 214, 0);
+$go-local-site-filter: rgba(0, 177, 64, 0.55);
 $gc-green: #9ab73c;
-$gc-red-dark: #641314;
-$gc-red-darker: #44080a;
 
 .go-volunteer {
   background-color: $white;
@@ -27,40 +27,43 @@ $gc-red-darker: #44080a;
     font-size: 2.4em;
   }
   .btn-primary-gc {
-    @include button-variant(#fff, $gc-red, $gc-red);
+    @include button-variant(#fff, $go-local-primary, $go-local-primary);
   }
 
   .navbar {
-    margin-top: 20px;
-    min-height: 70px;
-    .logo {
-      height: 70px;
-      width: 70px;
+    .banner {
       overflow: hidden;
-      left: 0;
-      right: 0;
-      position: absolute;
-      height: auto;
       margin-left: auto;
       margin-right: auto;
       z-index: $zindex-navbar + 1;
-      transition: all 0.5s ease;
-      &:hover {
-        transform: rotate(10deg);
-      }
+      text-align: center;
+    }
+
+    .banner img {
+      width: 100%;
+      display: inline-block;
+      margin: 0 -100%;
     }
 
     .logo img {
-      width: 70px;
-      height: 70px;
+      height: 80px;
+      display: inline-block;
+      margin: 0 auto;
     }
-    .hamburger-menu {
-      z-index: $zindex-navbar + 2;
 
+    .hamburger-menu {
+      float: inherit;
       .bar, .bar:before, .bar:after {
         background: $black;
       }
+
+      &.gc-menu-right {
+        position: absolute;
+        top: 0;
+        right: 0;
+      }
     }
+
     .back-btn {
       margin-top: 20px;
       margin-left: -7px;
@@ -95,7 +98,7 @@ $gc-red-darker: #44080a;
     animation-duration: .5s;
   }
   .dropdown-menu > .active > a {
-    background-color: $gc-red;
+    background-color: $go-local-primary;
   }
   .progress {
     height: 3px;
@@ -156,6 +159,10 @@ $gc-red-darker: #44080a;
   .media-card-link a {
     position: inherit;
   }
+
+  .icon-checkmark {
+    color: $go-local-secondary;
+  }
 }
 
 .site-image-filter {
@@ -172,8 +179,8 @@ $gc-red-darker: #44080a;
     bottom: 0;
     left: 0;
     right: 0;
-    background: rgba(0, 56, 100, 0.65);
-    background-blend-mode: multiply;
+    //background: $go-local-site-filter;
+    //background-blend-mode: multiply;
     display: block;
     margin: $line-height-computed/2;
     border-radius: 50%;
@@ -193,7 +200,7 @@ $gc-red-darker: #44080a;
     font-size: 2.1rem;
     font-weight: bold;
     position: absolute;
-    background: rgba(0,0,0,.3);
+    //background: rgba(0,0,0,.3);
     width: 60px;
     height: 60px;
     line-height: 60px;

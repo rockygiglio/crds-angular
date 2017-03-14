@@ -1,5 +1,6 @@
-<div ng-if="$ctrl.viewReady">
-  <preloader full-screen='false' ng-show='!$ctrl.viewReady'> </preloader>
+<preloader full-screen='false' ng-show='!$ctrl.viewReady'> </preloader>
+
+<div ng-if="$ctrl.viewReady" class="push-top">
 
   <go-volunteer-project-card project="$ctrl.project"></go-volunteer-project-card>
 
