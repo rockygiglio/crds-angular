@@ -90,11 +90,15 @@ describe('Stream Status Service', () => {
     "title": "Upcoming Event"
   };
 
+  let baseTime = new Date("October 1, 2016 12:00:00"); // set to 10/1/2016 - month appears to be 0 based index however
+
   beforeEach(angular.mock.module(CONSTANTS.MODULES.LIVE_STREAM));
 
   beforeEach(inject(function ($injector) {
     streamStatusService = $injector.get('StreamStatusService');
   }));
+
+  beforeEach(jasmine.clock().mockDate(baseTime));
 
   describe('Stream Status Service', () => {
 

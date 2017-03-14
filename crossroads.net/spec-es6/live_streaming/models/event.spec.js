@@ -8,26 +8,31 @@ describe('Live Stream Event', () => {
       currentEvent,
       pastEvent;
 
+  let baseTime = new Date("October 1, 2016 12:00:00"); // set to 10/1/2016 - month appears to be 0 based index however
+
+
   beforeEach(() => {
     upcoming = {
-      "start": moment().tz(moment.tz.guess()).add(1, 'hour').format('YYYY-MM-DD H:mm:ss'),
-      "end": moment().tz(moment.tz.guess()).add(2, 'hour').format('YYYY-MM-DD H:mm:ss'),
+      "start": moment(baseTime).tz(moment.tz.guess()).add(1, 'hour').format('YYYY-MM-DD H:mm:ss'),
+      "end": moment(baseTime).tz(moment.tz.guess()).add(2, 'hour').format('YYYY-MM-DD H:mm:ss'),
       "title": "Saturday Rehearsal"
     },
     broadcasting = {
-      "start": moment().tz(moment.tz.guess()).subtract(1, 'hour').format('YYYY-MM-DD H:mm:ss'),
-      "end": moment().tz(moment.tz.guess()).add(1, 'hour').format('YYYY-MM-DD H:mm:ss'),
+      "start": moment(baseTime).tz(moment.tz.guess()).subtract(1, 'hour').format('YYYY-MM-DD H:mm:ss'),
+      "end": moment(baseTime).tz(moment.tz.guess()).add(1, 'hour').format('YYYY-MM-DD H:mm:ss'),
       "title": "Saturday Rehearsal"
     };
     done = {
-      "start": moment().tz(moment.tz.guess()).subtract(2, 'hour').format('YYYY-MM-DD H:mm:ss'),
-      "end": moment().tz(moment.tz.guess()).subtract(1, 'hour').format('YYYY-MM-DD H:mm:ss'),
+      "start": moment(baseTime).tz(moment.tz.guess()).subtract(2, 'hour').format('YYYY-MM-DD H:mm:ss'),
+      "end": moment(baseTime).tz(moment.tz.guess()).subtract(1, 'hour').format('YYYY-MM-DD H:mm:ss'),
       "title": "Saturday Rehearsal"
     }
 
     futureEvent  = Event.build(upcoming);
     currentEvent = Event.build(broadcasting);
     pastEvent    = Event.build(done);
+
+    jasmine.clock().mockDate(baseTime);
   })
 
   describe('creation', () => {
