@@ -151,7 +151,10 @@ namespace crds_angular.Controllers.API
 
                 foreach (var pin in pinsInRadius)
                 {
-                    pin.Address = _finderService.RandomizeLatLong(pin.Address);
+                    if (pin.PinType != PinType.SITE)
+                    {
+                        pin.Address = _finderService.RandomizeLatLong(pin.Address);
+                    }
                 }
 
                 var result = new PinSearchResultsDto(new GeoCoordinates(originCoords.Latitude, originCoords.Longitude), pinsInRadius);
