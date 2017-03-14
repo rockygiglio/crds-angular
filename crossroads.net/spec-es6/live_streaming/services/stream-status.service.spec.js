@@ -17,7 +17,7 @@ describe('Stream Status Service', () => {
       isAnyEventLive,
       roundedHrsToNextEvnt;
 
-  let baseTime = moment();
+  let baseTime = new Date("October 1, 2016 12:00:00"); // set to 10/1/2016 - month appears to be 0 based index however
 
   let events = [
     {
@@ -90,7 +90,6 @@ describe('Stream Status Service', () => {
     "title": "Upcoming Event"
   };
 
-  let baseTime = new Date("October 1, 2016 12:00:00"); // set to 10/1/2016 - month appears to be 0 based index however
 
   beforeEach(angular.mock.module(CONSTANTS.MODULES.LIVE_STREAM));
 

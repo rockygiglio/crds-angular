@@ -13,18 +13,18 @@ describe('Live Stream Event', () => {
 
   beforeEach(() => {
     upcoming = {
-      "start": moment(baseTime).tz(moment.tz.guess()).add(1, 'hour').format('YYYY-MM-DD H:mm:ss'),
-      "end": moment(baseTime).tz(moment.tz.guess()).add(2, 'hour').format('YYYY-MM-DD H:mm:ss'),
+      "start": moment().tz(moment.tz.guess()).add(1, 'hour').format('YYYY-MM-DD H:mm:ss'),
+      "end": moment().tz(moment.tz.guess()).add(2, 'hour').format('YYYY-MM-DD H:mm:ss'),
       "title": "Saturday Rehearsal"
     },
     broadcasting = {
-      "start": moment(baseTime).tz(moment.tz.guess()).subtract(1, 'hour').format('YYYY-MM-DD H:mm:ss'),
-      "end": moment(baseTime).tz(moment.tz.guess()).add(1, 'hour').format('YYYY-MM-DD H:mm:ss'),
+      "start": moment().tz(moment.tz.guess()).subtract(1, 'hour').format('YYYY-MM-DD H:mm:ss'),
+      "end": moment().tz(moment.tz.guess()).add(1, 'hour').format('YYYY-MM-DD H:mm:ss'),
       "title": "Saturday Rehearsal"
     };
     done = {
-      "start": moment(baseTime).tz(moment.tz.guess()).subtract(2, 'hour').format('YYYY-MM-DD H:mm:ss'),
-      "end": moment(baseTime).tz(moment.tz.guess()).subtract(1, 'hour').format('YYYY-MM-DD H:mm:ss'),
+      "start": moment().tz(moment.tz.guess()).subtract(2, 'hour').format('YYYY-MM-DD H:mm:ss'),
+      "end": moment().tz(moment.tz.guess()).subtract(1, 'hour').format('YYYY-MM-DD H:mm:ss'),
       "title": "Saturday Rehearsal"
     }
 
