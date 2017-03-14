@@ -1,5 +1,5 @@
-use MinistryPlatform
-GO;
+USE MinistryPlatform
+GO
 
 DECLARE @ATTRIBUTE_TYPE_ID int = 106;
 DECLARE @ATTRIBUTE_ID int = 9041;
@@ -11,11 +11,13 @@ BEGIN
 	INSERT INTO [dbo].[Attribute_Types] (
 		 [Attribute_Type_ID]
 		,[Attribute_Type]
+		,[Description]
 		,[Domain_ID]
 		,[Prevent_Multiple_Selection]
 	) VALUES (
 		 @ATTRIBUTE_TYPE_ID
 		,N'GO Local - Registration Children'
+		,N'This was created for use on the Go Local - Anywhere application because we don''t ask for, nor do we care to know, specific age ranges. '
 		,1
 		,1
 	)
