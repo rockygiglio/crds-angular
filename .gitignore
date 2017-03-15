@@ -210,3 +210,5 @@ Gateway/Crossroads.AsyncJobs/MinistryPlatform.*.config
 Gateway/Crossroads.AsyncJobs/Unity.config
 **/Crossroads.Web.Common-Unity.config
 **/Crossroads.ClientApiKeys-Unity.config
+
+.DS_Store

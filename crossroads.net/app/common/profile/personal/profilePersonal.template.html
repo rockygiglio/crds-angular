@@ -249,6 +249,7 @@
                  placeholder="Enter mobile phone"
                  ng-model="profile.profileData.person.mobilePhone"
                  ng-required='profile.requireMobilePhone'
+                 phone-number-format
                  ng-pattern='profile.phoneFormat' >
           <ng-messages for="profile.pform['mobile-phone'].$error" ng-if="profile.validation.showErrors(profile.pform, 'mobile-phone')" ng-class="{'has-error':  profile.validation.showErrors(profile.pform, 'mobile-phone') }" >
             <span ng-message='required' ng-if='profile.requireMobilePhone'>
