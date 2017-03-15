@@ -51,10 +51,15 @@
         }
 
         this.origCongregation = event.congregationId;
-        this.origStartDate = new Date(event.startDateTime.split('T')[0].replace(/-/g, '/'));
-        this.origEndDate = new Date(event.endDateTime.split('T')[0].replace(/-/g, '/'));
-        this.origStartTime = new Date(event.startDateTime + "-0500");
-        this.origEndTime = new Date(event.endDateTime + "-0500");
+        if (moment(event.startDateTime).isValid()){
+          this.origStartDate = new Date(moment(event.startDateTime).local().format('YYYY/MM/DD'));
+          this.origStartTime = new Date (moment(event.startDateTime).local());
+        }        
+        if (moment(event.endDateTime).isValid()){
+          this.origEndDate = new Date (moment(event.endDateTime).local().format('YYYY/MM/DD'));
+          this.origEndTime = new Date (moment(event.endDateTime).local());
+        } 
+		
         return {
           event: {
             congregation: {
