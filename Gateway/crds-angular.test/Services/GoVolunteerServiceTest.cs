@@ -39,7 +39,8 @@ namespace crds_angular.test.Services
         private readonly Mock<IApiUserRepository> _apiUserRepository;
         private readonly Mock<IProjectRepository> _projectRepository;
 
-        private readonly int CrossroadsOrganizationId = 2;
+        private const int _crossroadsOrganizationId = 2;
+        private const int _goLocalChildrenAttributeId = 9862;
 
         public GoVolunteerServiceTest()
         {
@@ -659,10 +660,9 @@ namespace crds_angular.test.Services
             const int participantId = 9876543;
             const int preferredLaunchSiteId = 654;
             const int registrationId = 321654;
+            const int numberOfChildren = 0;          
             var user = new MpUser() {};
-            var registration = BuildRegistration();
-            //var registrationDto = BuildRegistrationDto(participantId, preferredLaunchSiteId, registration);
-
+            var registration = BuildRegistration(numberOfChildren);
             _apiUserRepository.Setup(m => m.GetToken())
                 .Returns(apiToken);
             _groupConnectorService.Setup(m => m.GetGroupConnectorByProjectId(projectId, apiToken))
@@ -689,11 +689,14 @@ namespace crds_angular.test.Services
             _participantService.Setup(m => m.GetParticipantRecord(token))
                 .Returns(new MpParticipant() {ParticipantId = participantId});
             _configurationWrapper.Setup(m => m.GetConfigIntValue("CrossroadsOrganizationId"))
-                .Returns(CrossroadsOrganizationId);
+                .Returns(_crossroadsOrganizationId);
+            _configurationWrapper.Setup(m => m.GetConfigIntValue("GoLocalRegistrationChildrenAttribute")).Returns(_goLocalChildrenAttributeId);
+
+            _registrationService.Setup(m => m.AddAgeGroup(registrationId, _goLocalChildrenAttributeId, numberOfChildren)).Returns(1);
             _registrationService.Setup(m => m.CreateRegistration(It.IsAny<MpRegistration>()))
                 .Returns((MpRegistration mpRegistration) =>
                          {
-                             Assert.AreEqual(mpRegistration.OrganizationId, CrossroadsOrganizationId);
+                             Assert.AreEqual(mpRegistration.OrganizationId, _crossroadsOrganizationId);
                              Assert.AreEqual(mpRegistration.ParticipantId, participantId);
                              Assert.AreEqual(mpRegistration.PreferredLaunchSiteId, preferredLaunchSiteId);
                              Assert.AreEqual(mpRegistration.InitiativeId, registration.InitiativeId);
@@ -719,11 +722,8 @@ namespace crds_angular.test.Services
             const string apiToken = "hjlk";
             const int groupConnectorId = 1324;
             const int participantId = 9876543;
-            const int preferredLaunchSiteId = 654;
-            const int registrationId = 321654;
             var user = new MpUser() { };
-            var registration = BuildRegistration();
-            var registrationDto = BuildRegistrationDto(participantId, preferredLaunchSiteId, registration);
+            var registration = BuildRegistration();           
 
             _apiUserRepository.Setup(m => m.GetToken())
                 .Returns(apiToken);
@@ -768,12 +768,8 @@ namespace crds_angular.test.Services
             const string token = "asdf";
             const string apiToken = "hjlk";
             const int groupConnectorId = 1324;
-            const int participantId = 9876543;
-            const int preferredLaunchSiteId = 654;
-            const int registrationId = 321654;
             var user = new MpUser() { };
-            var registration = BuildRegistration();
-            var registrationDto = BuildRegistrationDto(participantId, preferredLaunchSiteId, registration);
+            var registration = BuildRegistration();            
 
             _apiUserRepository.Setup(m => m.GetToken())
                 .Returns(apiToken);
@@ -784,7 +780,7 @@ namespace crds_angular.test.Services
             _userService.Setup(m => m.UpdateUser(It.IsAny<MpUser>()))
                 .Throws(new DuplicateUserException(registration.Self.EmailAddress));
             _configurationWrapper.Setup(m => m.GetConfigIntValue("CrossroadsOrganizationId"))
-                .Returns(CrossroadsOrganizationId);
+                .Returns(_crossroadsOrganizationId);
 
             Assert.Throws<DuplicateUserException>(() =>
                                                   {
@@ -799,12 +795,13 @@ namespace crds_angular.test.Services
             _registrationService.VerifyAll();
         }
 
-        private AnywhereRegistration BuildRegistration()
+        private static AnywhereRegistration BuildRegistration(int numberOfChildren = 0)
         {
             return new AnywhereRegistration
             {
                 GroupConnectorId = 0,
                 InitiativeId = 3,
+                NumberOfChildren = numberOfChildren,
                 OrganizationId = 0,
                 Self = new Registrant
                 {
@@ -827,7 +824,7 @@ namespace crds_angular.test.Services
                 PreferredLaunchSiteId = preferredLaunchSiteId,
                 InitiativeId = registration.InitiativeId,
                 SpouseParticipation =  registration.SpouseParticipation,
-                OrganizationId = CrossroadsOrganizationId
+                OrganizationId = _crossroadsOrganizationId
             };
         }
 
