@@ -29,7 +29,14 @@
         <div class="row">
             <div class="form-group col-sm-6" ng-class="{'has-error': tripsSignup.validation.showErrors(tripsSignup.tripAppPage3, 'emergencyPrimaryPhone') }">
               <label for="emergency-primaryphone" class="control-label required">Primary Phone</label>
-              <input ng-model="tripsSignup.signupService.page3.emergencyContactPrimaryPhone" type="text" class="form-control" name="emergencyPrimaryPhone" id="emergency-primaryphone" placeholder="Enter emergency contact primary phone number" ng-required="true" ng-pattern="tripsSignup.phoneFormat" ng-model-options="{updateOn: 'blur'}">
+              <input ng-model="tripsSignup.signupService.page3.emergencyContactPrimaryPhone"
+                     type="text" class="form-control"
+                     name="emergencyPrimaryPhone"
+                     id="emergency-primaryphone"
+                     placeholder="Enter emergency contact primary phone number"
+                     ng-required="true"
+                     phone-number-format
+                     ng-pattern="tripsSignup.phoneFormat">
               <ng-messages for="tripsSignup.tripAppPage3.emergencyPrimaryPhone.$error" ng-if="tripsSignup.validation.showErrors(tripsSignup.tripAppPage3, 'emergencyPrimaryPhone')">
                 <span ng-message="required">
                   <span dynamic-content="$root.MESSAGES.fieldCanNotBeBlank.content | html"></span>
@@ -48,7 +55,7 @@
                      class="form-control"
                      id="emergency-secondaryphone"
                      ng-pattern="tripsSignup.phoneFormat"
-                     ng-model-options="{updateOn: 'blur'}"
+                     phone-number-format
                      placeholder="Enter emergency contact secondary phone number">
               <ng-messages for="tripsSignup.tripAppPage3.emergencySecondaryPhone.$error" ng-if="tripsSignup.validation.showErrors(tripsSignup.tripAppPage3, 'emergencySecondaryPhone')">
                 <span ng-message="pattern">

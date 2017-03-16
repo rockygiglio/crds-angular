@@ -15,13 +15,11 @@
 
                     if (number.match(/^\d{4}$/)) {
                         transformedNumber = number.slice(0, 3) + '-' + number.slice(3);
-                    }
-
-                    if (number.match(/^[\d]{3}-[\d]{4}$/)) {
+                    } else if (number.match(/^[\d]{3}-[\d]{4}$/)) {
                         transformedNumber = number.slice(0, 7) + '-' + number.slice(7);
-                    }
-
-                    if (number.length > 12) {
+                    } else if (number.match(/^[\d]{10}$/)) {
+                        transformedNumber = number.slice(0, 3) + '-' + number.slice(3, 6) + '-' + number.slice(6);
+                    } else if (number.length > 12) {
                         transformedNumber = number.slice(0, 12);
                     }
 
