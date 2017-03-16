@@ -484,7 +484,7 @@ function Skills(GoVolunteerService, SkillsService, $stateParams, $q) {
 function Organization(GoVolunteerService, $state, $stateParams, $q, Organizations) {
   var deferred = $q.defer();
   var param = 'crossroads';
-  if ($state.next.name === 'go-volunteer.page') {
+  if ($state.next.name === 'go-local.page') {
     param = $stateParams.organization;
   }
 
