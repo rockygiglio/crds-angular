@@ -1,8 +1,12 @@
 ﻿-- DE7384: As part of the story to add the All Platform Users role for all users who are 
 -- currently missing that role, we're going to add a new index to dp_User_Roles so that
--- performance is not negatively impacting after we add the 68K new rows that are currently
--- missing.  There is a secondary issue that we have ~100 duplicate rows in dp_Users_Role
--- that we need to delete prior to adding the new UNIQUE index.
+-- performance is not negatively impacted after we add the 68K new rows that are currently
+-- missing.  Originally we wanted to make this a UNQIUE index, but testing revealed that
+-- MP's Combine Contacts tool (Core Tools) will break if we do not allow duplicates.
+-- Apparently Combine Contacts assigns ContactA's roles to ContactB temporarily, then
+-- removes duplicates for ContactB after the fact (which breaks if there is a UNIQUE
+-- constraint).  Also, there are roughly ~100 duplicates in PROD from the past, so we'll
+-- clean those up as well.
 
 USE [MinistryPlatform]
 
@@ -24,7 +28,7 @@ DELETE FROM UserAndRoles WHERE row_num > 1;
 
 -- create new index 
 IF IndexProperty(Object_Id('dp_User_Roles'), 'IX_dp_User_Roles__UserID_DomainID_RoleID', 'IndexId') IS NULL
-	CREATE UNIQUE INDEX IX_dp_User_Roles__UserID_DomainID_RoleID ON dp_User_Roles(User_ID, Domain_ID, Role_ID);
+	CREATE INDEX IX_dp_User_Roles__UserID_DomainID_RoleID ON dp_User_Roles(User_ID, Domain_ID, Role_ID);
 
 
 -- add All Platform Users role to all users who do not already have it
