@@ -146,15 +146,18 @@ namespace crds_angular.Controllers.API
         {
             try
             {
-                GeoCoordinate originCoords = _finderService.GetGeoCoordsFromAddressOrLatLang(userSearchAddress, lat, lng);
-                List<PinDto> pinsInRadius = _finderService.GetPinsInRadius(originCoords, userSearchAddress);
+                var originCoords = _finderService.GetGeoCoordsFromAddressOrLatLang(userSearchAddress, lat, lng);
+                var pinsInRadius = _finderService.GetPinsInRadius(originCoords, userSearchAddress);
 
                 foreach (var pin in pinsInRadius)
                 {
-                    pin.Address = _finderService.RandomizeLatLong(pin.Address);
+                    if (pin.PinType != PinType.SITE)
+                    {
+                        pin.Address = _finderService.RandomizeLatLong(pin.Address);
+                    }
                 }
 
-                PinSearchResultsDto result = new PinSearchResultsDto(new GeoCoordinates(originCoords.Latitude, originCoords.Longitude), pinsInRadius);
+                var result = new PinSearchResultsDto(new GeoCoordinates(originCoords.Latitude, originCoords.Longitude), pinsInRadius);
 
                 return Ok(result);
             }
@@ -163,6 +166,38 @@ namespace crds_angular.Controllers.API
                 var apiError = new ApiErrorDto("Get Pin By Address Failed", ex);
                 throw new HttpResponseException(apiError.HttpResponseMessage);
             }
+        }
+
+        /// <summary>
+        /// Logged in user requests to join gathering
+        /// </summary>
+        [RequiresAuthorization]
+        [VersionedRoute(template: "finder/pin/gatheringjoinrequest", minimumVersion: "1.0.0")]
+        [System.Web.Http.Route("finder/pin/gatheringjoinrequest")]
+        [System.Web.Http.HttpPost]
+        public IHttpActionResult GatheringJoinRequest([FromBody]int gatheringId)
+        {
+            return Authorized(token =>
+            {
+                try
+                {
+                    _finderService.GatheringJoinRequest(token, gatheringId);
+                    return (Ok());
+                }
+                catch (Exception e)
+                {
+                    _logger.Error("Could not generate request", e);
+                    if (e.Message == "User is already member or has request")
+                    {
+                        throw new HttpResponseException(System.Net.HttpStatusCode.Conflict);
+                    }
+                    else
+                    {
+                        throw new HttpResponseException(new ApiErrorDto("Gathering request failed", e).HttpResponseMessage);
+                    }
+
+                }
+            });
         }
 
     }

@@ -77,7 +77,9 @@ export default class OrganizationsController {
   }
 
   selectOrg({ name, }) {
-    if (!name.startsWith('Crossroads')) {
+    if (name === 'Other') {
+      this.state.go('go-local.page', { organization: getOrgSlug(name), page: 'name', initiativeId: this.state.toParams.initiativeId });
+    } else if (!name.startsWith('Crossroads')) {
       this.state.go('go-local.page', { organization: getOrgSlug(name), page: 'profile', initiativeId: this.state.toParams.initiativeId });
     }
   }

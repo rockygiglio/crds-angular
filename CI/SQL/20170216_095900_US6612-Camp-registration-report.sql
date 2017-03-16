@@ -52,7 +52,6 @@ BEGIN
 	INSERT INTO @campFormFieldResponses
 		SELECT Event_Participant_ID 
 			, fra.Form_Field_ID
-			--, REPLACE(Field_Label, ' ', '_')
 			, Field_Label
 			, Response
 		FROM Form_Response_Answers fra
@@ -112,9 +111,9 @@ BEGIN
 		, cfr.Addl_Emergency_Contact_Mobile_Number
 		, cfr.Addl_Emergency_Contact_Email
 		, cfr.Addl_Emergency_Contact_Relationship
-		, MIN(CAST(ISNULL(epw.Accepted, 0) AS int)) Waiver_Accepted
-		, MIN(signee.Display_Name) Waiver_Signee
-		, MIN(signee.__Age) Waiver_Signee_Age
+		, waivers.Waiver_Accepted
+		, waivers.Waiver_Signee
+		, waivers.Waiver_Signee_Age
 		, i.Invoice_Total AS Total_Cost
 		, SUM(pay.Payment_Total) Amount_Paid
 		, i.Invoice_Total - SUM(pay.Payment_Total) AS Remaining_Balance
@@ -138,12 +137,29 @@ BEGIN
 		)
 		JOIN Groups g ON (g.Group_ID = gp.Group_ID AND g.Group_Type_ID = @ageGradeGroup)
 		JOIN Contact_Attributes ca ON (ca.Contact_ID = camper.Contact_ID)
-		JOIN Attributes a ON (a.Attribute_ID = ca.Attribute_ID AND a.Attribute_Type_ID = @tshirtSizeAttrId)
-		JOIN cr_Event_Waivers ew ON (ew.Event_ID = ep.Event_ID)
-		JOIN cr_Event_Participant_Waivers epw ON (epw.Event_Participant_ID = ep.Event_Participant_ID AND epw.Waiver_ID = ew.Waiver_ID)
-		JOIN Contacts signee ON (signee.Contact_ID = epw.Signee_Contact_ID)
+		JOIN Attributes a ON (
+			a.Attribute_ID = ca.Attribute_ID
+			AND a.Attribute_Type_ID = @tshirtSizeAttrId
+			AND (
+				a.End_Date IS NULL
+				OR a.End_Date > GETDATE()
+			)
+		)
+		JOIN (
+			SELECT epw.Event_Participant_ID
+				, MIN(CAST(ISNULL(epw.Accepted, 0) AS int)) Waiver_Accepted
+				, MIN(signee.Display_Name) Waiver_Signee
+				, MIN(signee.__Age) Waiver_Signee_Age
+			FROM [Events] e2
+				JOIN cr_Event_Waivers ew ON (ew.Event_ID = e2.Event_ID)
+				JOIN cr_Event_Participant_Waivers epw ON (epw.Waiver_ID = ew.Waiver_ID)
+				JOIN Contacts signee ON (signee.Contact_ID = epw.Signee_Contact_ID)
+			WHERE e2.Event_ID = @campId
+			GROUP BY epw.Event_Participant_ID
+		) waivers ON (waivers.Event_Participant_ID = ep.Event_Participant_ID)	
 		JOIN campFormResponses cfr ON (cfr.Event_Participant_ID = ep.Event_Participant_ID)
 	WHERE e.Event_ID = @campId
+		AND ep.Event_Participant_ID = 7718396
 	GROUP BY ep.Event_Participant_ID
 		, applicant.Nickname
 		, applicant.Last_Name
@@ -170,6 +186,9 @@ BEGIN
 		, cfr.Addl_Emergency_Contact_Relationship
 		, camper.Mobile_Phone
 		, a.Attribute_Name
+		, waivers.Waiver_Accepted
+		, waivers.Waiver_Signee
+		, waivers.Waiver_Signee_Age
 		, i.Invoice_Total
 END
 GO

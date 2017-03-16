@@ -44,8 +44,8 @@ namespace crds_angular.Services
         private readonly IApiUserRepository _apiUserRepository;
         private readonly int _approvedHost;
         private readonly int _anywhereGroupType;
-        private readonly int _leaderRoleID;
-
+        private readonly int _leaderRoleId;
+        private readonly Random _random = new Random(DateTime.Now.Millisecond);
 
         public FinderService(
                             IAddressGeocodingService addressGeocodingService, 
@@ -68,7 +68,7 @@ namespace crds_angular.Services
             _apiUserRepository = apiUserRepository;
             _approvedHost = configurationWrapper.GetConfigIntValue("ApprovedHostStatus");
             _anywhereGroupType = configurationWrapper.GetConfigIntValue("AnywhereGroupTypeId");
-            _leaderRoleID = configurationWrapper.GetConfigIntValue("GroupRoleLeader");
+            _leaderRoleId = configurationWrapper.GetConfigIntValue("GroupRoleLeader");
             _groupToolService = groupToolService;
             _configurationWrapper = configurationWrapper;
         }
@@ -86,7 +86,7 @@ namespace crds_angular.Services
                 var groups = _groupService.GetGroupsByTypeOrId(token, participantId, new int[] {_anywhereGroupType});
                 foreach (GroupDTO group in groups)
                 {
-                    var leader = group.Participants.Where(p => p.GroupRoleId == _leaderRoleID && p.ParticipantId == participantId).FirstOrDefault();
+                    var leader = group.Participants.Where(p => p.GroupRoleId == _leaderRoleId && p.ParticipantId == participantId).FirstOrDefault();
 
                     if (leader != null)
                     {
@@ -102,7 +102,8 @@ namespace crds_angular.Services
                 _addressService.SetGeoCoordinates(pinDetails.Address);
             }
             // randomize the location
-            pinDetails.Address = RandomizeLatLong(pinDetails.Address);
+                pinDetails.Address = RandomizeLatLong(pinDetails.Address);
+            
             //TODO get group details
             return pinDetails;
         }
@@ -124,6 +125,11 @@ namespace crds_angular.Services
             var addressDictionary = getDictionary(address);
             addressDictionary.Add("State/Region", addressDictionary["State"]);
             _contactRepository.UpdateHouseholdAddress((int) pin.Contact_ID, householdDictionary, addressDictionary);
+        }
+
+        public void GatheringJoinRequest(string token, int gatheringId)
+        {
+            _groupToolService.SubmitInquiry(token, gatheringId);
         }
 
         public AddressDTO GetAddressForIp(string ip)
@@ -160,8 +166,40 @@ namespace crds_angular.Services
             pins.AddRange(participantAndBuildingPins);
             pins.AddRange(groupPins);
 
-            return pins;
+            foreach (var pin in pins)
+            {
+                //calculate proximity for all pins to origin
+                if (pin.Address.Latitude == null) continue;
+                if (pin.Address.Longitude != null) pin.Proximity = GetProximity(originCoords, new GeoCoordinate(pin.Address.Latitude.Value, pin.Address.Longitude.Value));
+            }
 
+            return pins;
+        }
+
+        private static decimal GetProximity(GeoCoordinate originCoords, GeoCoordinate pinCoords)
+        {
+            return (decimal) Proximity(originCoords.Latitude, originCoords.Longitude, pinCoords.Latitude,pinCoords.Longitude);
+        }
+
+        private static double Proximity(double lat1, double lon1, double lat2, double lon2)
+        {
+            var theta = lon1 - lon2;
+            var dist = Math.Sin(Deg2Rad(lat1)) * Math.Sin(Deg2Rad(lat2)) + Math.Cos(Deg2Rad(lat1)) * Math.Cos(Deg2Rad(lat2)) * Math.Cos(Deg2Rad(theta));
+            dist = Math.Acos(dist);
+            dist = Rad2Deg(dist);
+            dist = dist * 60 * 1.1515;
+           
+            return (dist);
+        }
+
+        private static double Deg2Rad(double deg)
+        {
+            return (deg * Math.PI / 180.0);
+        }
+
+        private static double Rad2Deg(double rad)
+        {
+            return (rad / Math.PI * 180.0);
         }
 
         private List<PinDto> GetParticipantAndBuildingPinsInRadius(GeoCoordinate originCoords)
@@ -169,9 +207,9 @@ namespace crds_angular.Services
             List<SpPinDto> participantPinsFromSp = _finderRepository.GetPinsInRadius(originCoords);
             List<PinDto> participantAndBuildingPins = new List<PinDto>();
 
-            foreach (SpPinDto piFromSP in participantPinsFromSp)
+            foreach (var piFromSP in participantPinsFromSp)
             {
-                PinDto pin = Mapper.Map<PinDto>(piFromSP);
+                var pin = Mapper.Map<PinDto>(piFromSP);
                 participantAndBuildingPins.Add(pin);
             }
 
@@ -206,7 +244,16 @@ namespace crds_angular.Services
 
             foreach (var group in groups)
             {
-                pins.Add(Mapper.Map<PinDto>(group));
+                var pin = Mapper.Map<PinDto>(group);
+                pin.Gathering = group;
+                if (pin.Contact_ID != null)
+                {
+                    var contact = _contactRepository.GetContactById((int)pin.Contact_ID);
+                    pin.FirstName = contact.First_Name;
+                    pin.LastName = contact.Last_Name;
+                }
+               
+                pins.Add(pin);
             }
 
             return pins;
@@ -215,16 +262,15 @@ namespace crds_angular.Services
         public AddressDTO RandomizeLatLong(AddressDTO address)
         {
             if (!address.HasGeoCoordinates()) return address;
-            var random = new Random(DateTime.Now.Millisecond);
-            var distance = random.Next(75, 300); // up to a quarter mile
-            var angle = random.Next(0, 359);
+            var distance = _random.Next(75, 300); // up to a quarter mile
+            var angle = _random.Next(0, 359);
             const int earthRadius = 6371000; // in meters
 
             var distanceNorth = Math.Sin(angle)*distance;
             var distanceEast = Math.Cos(angle)*distance;
 
-            double newLat = (double) (address.Latitude + (distanceNorth/earthRadius)*180/Math.PI);
-            double newLong = (double) (address.Longitude + (distanceEast/(earthRadius*Math.Cos(newLat*180/Math.PI)))*180/Math.PI);
+            var newLat = (double) (address.Latitude + (distanceNorth/earthRadius)*180/Math.PI);
+            var newLong = (double) (address.Longitude + (distanceEast/(earthRadius*Math.Cos(newLat*180/Math.PI)))*180/Math.PI);
             address.Latitude = newLat;
             address.Longitude = newLong;
 

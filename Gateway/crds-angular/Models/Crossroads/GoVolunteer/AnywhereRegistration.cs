@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
 namespace crds_angular.Models.Crossroads.GoVolunteer
 {
@@ -10,5 +6,8 @@ namespace crds_angular.Models.Crossroads.GoVolunteer
     {
         [JsonProperty(PropertyName = "organizationId")]
         public int OrganizationId { get; set; }
+
+        [JsonProperty(PropertyName = "numberOfChildren")]
+        public int NumberOfChildren { get; set; }
     }
 }
