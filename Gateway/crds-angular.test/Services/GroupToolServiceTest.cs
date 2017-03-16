@@ -50,6 +50,8 @@ namespace crds_angular.test.Services
         private const int RequestToJoinEmailTemplateId = 954;
         private const int RequestToJoinAnywhereEmailTemplateId = 956;
         private const int GroupRequestPendingReminderEmailTemplateId = 5150;
+        private const int GatheringHostDenyTemplate = 2010;
+        private const int GatheringHostAcceptTemplate = 2009;
         private const int AttributeCategoryGroupCategory = 90;
         private readonly int smallGroupTypeId = 434;
         private readonly int onsiteGroupTypeId = 435;
@@ -92,7 +94,9 @@ namespace crds_angular.test.Services
             configuration.Setup(mocked => mocked.GetConfigIntValue("SmallGroupTypeId")).Returns(smallGroupTypeId);
             configuration.Setup(mocked => mocked.GetConfigIntValue("OnsiteGroupTypeId")).Returns(onsiteGroupTypeId);
             configuration.Setup(mocked => mocked.GetConfigIntValue("AnywhereGroupTypeId")).Returns(anywhereGroupTypeId);
-            
+            configuration.Setup(mocked => mocked.GetConfigIntValue("GatheringHostAcceptTemplate")).Returns(GatheringHostAcceptTemplate);
+            configuration.Setup(mocked => mocked.GetConfigIntValue("GatheringHostDenyTemplate")).Returns(GatheringHostDenyTemplate);
+
             _fixture = new GroupToolService(_groupToolRepository.Object,
                                             _groupRepository.Object,
                                             _groupService.Object,
