@@ -263,19 +263,19 @@ DEALLOCATE group_cursor
 
 -----------------------------------
 ---- Set adventure club status here
+---- TG 3/16 commented this out
 -----------------------------------
 
 -- Correctly set adventure club status - if there are existing event rooms on the AC event, uncancel the AC event -
 -- Do not do the reverse, as it will cancel AC rooms due to an MP trigger
-IF EXISTS (SELECT * FROM Event_Rooms WHERE @EventId = (SELECT Event_ID FROM @Events WHERE Event_Type_ID = @AdventureClubEventTypeID))
-BEGIN
-	UPDATE [Events] SET Cancelled = 0 WHERE Event_ID = (SELECT Event_ID FROM @Events WHERE Event_Type_ID = @AdventureClubEventTypeID)
-END
+-- IF EXISTS (SELECT * FROM Event_Rooms WHERE @EventId = (SELECT Event_ID FROM @Events WHERE Event_Type_ID = @AdventureClubEventTypeID))
+-- BEGIN
+-- 	UPDATE [Events] SET Cancelled = 0 WHERE Event_ID = (SELECT Event_ID FROM @Events WHERE Event_Type_ID = @AdventureClubEventTypeID)
+-- END
 
 -- return the event room data from the proc
 SELECT TOP(1) * FROM Event_Rooms WHERE Event_Room_ID = @EventRoomId
 SELECT * FROM @Events
 
 END
-
 GO
