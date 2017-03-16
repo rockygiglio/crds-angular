@@ -166,6 +166,7 @@ namespace crds_angular.Services
             try
             {
                 int templateId;
+                int leaderTemplateId = 0;
                 MpMyContact fromContact;
                 MpMyContact replyContact;
                 Dictionary<string, object> mergeData;
@@ -180,6 +181,7 @@ namespace crds_angular.Services
                 else
                 {
                     templateId = _configurationWrapper.GetConfigIntValue("GoLocalAnywhereEmailTemplate");
+                    leaderTemplateId = _configurationWrapper.GetConfigIntValue("GoLocalAnywhereLeaderEmailTemplate");
                     var projectLeader = _groupConnectorService.GetGroupConnectorById(registration.GroupConnectorId);
                     fromContact = _contactService.GetContactById(_configurationWrapper.GetConfigIntValue("GoLocalAnywhereFromContactId"));
                     replyContact = _contactService.GetContactById(projectLeader.PrimaryRegistrationID);
@@ -209,6 +211,21 @@ namespace crds_angular.Services
                                                                                                mergeData);
                     _communicationService.SendMessage(spouseCommunication);
                 }
+
+                if (leaderTemplateId != 0)
+                {
+                    mergeData.Add("Anywhere_GO_Contact", fromContact.Contact_ID);
+                    var leaderCommunication = _communicationService.GetTemplateAsCommunication(leaderTemplateId,
+                                                                                               fromContact.Contact_ID,
+                                                                                               fromContact.Email_Address,
+                                                                                               fromContact.Contact_ID,
+                                                                                               fromContact.Email_Address,
+                                                                                               replyContact.Contact_ID,
+                                                                                               replyContact.Email_Address,
+                                                                                               mergeData);
+                    _communicationService.SendMessage(leaderCommunication);
+                }
+
                 return returnVal > 0;
             }
             catch (Exception e)
@@ -326,7 +343,8 @@ namespace crds_angular.Services
                 {"Mobile_Phone", registration.Self.MobilePhone},
                 {"Spouse_Participating", registration.SpouseParticipation ? "Yes": "No"},
                 {"Number_Of_Children", registration.NumberOfChildren},
-                {"Group_Connector", projectLeaderName}
+                {"Group_Connector", projectLeaderName},
+                {"Adults_Participating", registration.SpouseParticipation ? "2": "1"}
             };
 
             return merge;
