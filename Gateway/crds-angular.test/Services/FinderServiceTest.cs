@@ -32,6 +32,7 @@ namespace crds_angular.test.Services
         private Mock<IGroupService> _groupService;
         private Mock<IApiUserRepository> _apiUserRepository;
         private Mock<IAddressProximityService> _addressProximityService;
+        private Mock<IInvitationService> _invitationService;
 
         [SetUp]
         public void SetUp()
@@ -46,12 +47,13 @@ namespace crds_angular.test.Services
             _addressProximityService = new Mock<IAddressProximityService>();
             _apiUserRepository = new Mock<IApiUserRepository>();
             _groupService = new Mock<IGroupService>();
+            _invitationService = new Mock<IInvitationService>();
 
             _mpConfigurationWrapper.Setup(mocked => mocked.GetConfigIntValue("GroupRoleLeader")).Returns(22);
             _mpConfigurationWrapper.Setup(mocked => mocked.GetConfigIntValue("ApprovedHostStatus")).Returns(3);
             _mpConfigurationWrapper.Setup(mocked => mocked.GetConfigIntValue("AnywhereGroupTypeId")).Returns(30);
 
-            _fixture = new FinderService(_addressGeocodingService.Object, _mpFinderRepository.Object, _mpContactRepository.Object, _addressService.Object, _mpParticipantRepository.Object, _groupService.Object, _mpGroupToolService.Object, _apiUserRepository.Object, _mpConfigurationWrapper.Object);
+            _fixture = new FinderService(_addressGeocodingService.Object, _mpFinderRepository.Object, _mpContactRepository.Object, _addressService.Object, _mpParticipantRepository.Object, _groupService.Object, _mpGroupToolService.Object, _apiUserRepository.Object, _mpConfigurationWrapper.Object, _invitationService.Object);
 
             //force AutoMapper to register
             AutoMapperConfig.RegisterMappings();

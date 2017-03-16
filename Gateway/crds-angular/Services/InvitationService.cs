@@ -30,6 +30,9 @@ namespace crds_angular.Services
         private readonly int _tripInvitationType;
         private readonly int _tripInvitationEmailTemplate;
 
+        private readonly int _anywhereGatheringInvitationTypeId;
+        private readonly int _anywhereGatheringInvitationEmailTemplate;
+
         private readonly int _defaultInvitationEmailTemplate;
         private readonly int _domainId;
 
@@ -57,6 +60,8 @@ namespace crds_angular.Services
             _groupInvitationEmailTemplateCustom = configuration.GetConfigIntValue("GroupInvitationEmailTemplateCustom");
             _tripInvitationType = configuration.GetConfigIntValue("TripInvitationType");
             _tripInvitationEmailTemplate = configuration.GetConfigIntValue("PrivateInviteTemplate");
+            _anywhereGatheringInvitationEmailTemplate = configuration.GetConfigIntValue("AnywhereGatheringInvitationEmailTemplate");
+            _anywhereGatheringInvitationTypeId = configuration.GetConfigIntValue("AnywhereGatheringInvitationType");
 
             _defaultInvitationEmailTemplate = configuration.GetConfigIntValue("DefaultInvitationEmailTemplate");
 
@@ -107,6 +112,9 @@ namespace crds_angular.Services
             } else if (dto.InvitationType == _tripInvitationType)
             {
                 ValidateTripInvitation(dto, token);
+            } else if (dto.InvitationType == _anywhereGatheringInvitationTypeId)
+            {
+                ValidateGroupInvitation(dto, token);
             }
 
         }
@@ -166,6 +174,10 @@ namespace crds_angular.Services
             } else if (invitation.InvitationType == _tripInvitationType)
             {
                 emailTemplateId = _tripInvitationEmailTemplate;
+            } else if (invitation.InvitationType == _anywhereGatheringInvitationTypeId)
+            {
+                mergeData.Add("Leader_Name", leaderContact.Nickname.Substring(0,1).ToUpper() + leaderContact.Nickname.Substring(1).ToLower() + " " + leaderContact.Last_Name.Substring(0,1).ToUpper() + ".");
+                emailTemplateId = _anywhereGatheringInvitationEmailTemplate;
             }
             else
             {
