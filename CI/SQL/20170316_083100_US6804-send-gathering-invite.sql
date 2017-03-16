@@ -2,7 +2,9 @@ USE [MinistryPlatform]
 GO
 
 DECLARE @TemplateID int = 2011
-DECLARE @Body VARCHAR(max) = '[Leader_Name]' + 
+DECLARE @Body VARCHAR(max) = '[Recipient_Name],<br />' + 
+							 '<br />' +
+							 '[Leader_Name]' + 
 							 '<br />Bacon ipsum dolor amet if Trump Ipsum weren’t my own words, perhaps I’d be dating it. He’s not a word hero. He’s a word hero because he was captured. I like text that wasn’t captured. He’s not a word hero. He’s a word hero because he was captured. I like text that wasn’t captured.'
 DECLARE @Subject VARCHAR(max) = 'You''ve been invited'
 
@@ -30,8 +32,8 @@ BEGIN
 		,@Body
 		,1
 		,GetDate()
-		,1519180
-		,1519180
+		,768371
+		,768371
 		,1
 		,1
 	)
@@ -43,8 +45,8 @@ BEGIN
    UPDATE [dbo].[dp_Communications]
    SET [Body] = @Body
       ,[Subject] = @Subject
-	  ,[From_Contact] = 1519180
-	  ,[Reply_to_Contact] = 1519180
+	  ,[From_Contact] = 768371
+	  ,[Reply_to_Contact] = 768371
 	  ,[Template] = 1
 	  ,[Active] = 1
    WHERE Communication_ID = @TemplateID
