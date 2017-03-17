@@ -29,13 +29,15 @@ export default class GoVolunteerAnywhereProfileForm {
       email: emailAddress,
       birthDate: dob,
       mobilePhone: mobile,
-      bringSpouse: spouseParticipation
+      bringSpouse: spouseParticipation,
+      numberKids: numberOfChildren
     } = this.model;
     const { contactId } = this.goVolunteerService.person;
 
     const registrationData = {
       initiativeId,
       spouseParticipation,
+      numberOfChildren,
       self: {
         contactId,
         dob,
@@ -159,7 +161,7 @@ export default class GoVolunteerAnywhereProfileForm {
         templateOptions: {
           label: 'If you are bringing your children, please specify how many.',
           helpBlock: '(17 years old or under)',
-          required: false,
+          required: true,
           valueProp: 'value',
           labelProp: 'label',
           options: [{

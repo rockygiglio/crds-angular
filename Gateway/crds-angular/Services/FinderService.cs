@@ -42,10 +42,14 @@ namespace crds_angular.Services
         private readonly IConfigurationWrapper _configurationWrapper;
         private readonly IGroupService _groupService;
         private readonly IApiUserRepository _apiUserRepository;
+        private readonly IInvitationService _invitationService;
         private readonly int _approvedHost;
         private readonly int _anywhereGroupType;
-        private readonly int _leaderRoleID;
-        private Random _random = new Random(DateTime.Now.Millisecond);
+        private readonly int _leaderRoleId;
+        private readonly int _memberRoleId;
+        private readonly int _anywhereGatheringInvitationTypeId;
+
+        private readonly Random _random = new Random(DateTime.Now.Millisecond);
 
         public FinderService(
                             IAddressGeocodingService addressGeocodingService, 
@@ -56,7 +60,8 @@ namespace crds_angular.Services
                             IGroupService groupService,
                             IGroupToolService groupToolService,
                             IApiUserRepository apiUserRepository,
-                            IConfigurationWrapper configurationWrapper
+                            IConfigurationWrapper configurationWrapper,
+                            IInvitationService invitationService
                             )
         {
             _addressGeocodingService = addressGeocodingService;
@@ -68,9 +73,12 @@ namespace crds_angular.Services
             _apiUserRepository = apiUserRepository;
             _approvedHost = configurationWrapper.GetConfigIntValue("ApprovedHostStatus");
             _anywhereGroupType = configurationWrapper.GetConfigIntValue("AnywhereGroupTypeId");
-            _leaderRoleID = configurationWrapper.GetConfigIntValue("GroupRoleLeader");
+            _leaderRoleId = configurationWrapper.GetConfigIntValue("GroupRoleLeader");
+            _memberRoleId = configurationWrapper.GetConfigIntValue("Group_Role_Default_ID");
+            _anywhereGatheringInvitationTypeId = configurationWrapper.GetConfigIntValue("AnywhereGatheringInvitationType");
             _groupToolService = groupToolService;
             _configurationWrapper = configurationWrapper;
+            _invitationService = invitationService;
         }
 
 
@@ -86,7 +94,7 @@ namespace crds_angular.Services
                 var groups = _groupService.GetGroupsByTypeOrId(token, participantId, new int[] {_anywhereGroupType});
                 foreach (GroupDTO group in groups)
                 {
-                    var leader = group.Participants.Where(p => p.GroupRoleId == _leaderRoleID && p.ParticipantId == participantId).FirstOrDefault();
+                    var leader = group.Participants.Where(p => p.GroupRoleId == _leaderRoleId && p.ParticipantId == participantId).FirstOrDefault();
 
                     if (leader != null)
                     {
@@ -102,7 +110,8 @@ namespace crds_angular.Services
                 _addressService.SetGeoCoordinates(pinDetails.Address);
             }
             // randomize the location
-            pinDetails.Address = RandomizeLatLong(pinDetails.Address);
+                pinDetails.Address = RandomizeLatLong(pinDetails.Address);
+            
             //TODO get group details
             return pinDetails;
         }
@@ -206,9 +215,9 @@ namespace crds_angular.Services
             List<SpPinDto> participantPinsFromSp = _finderRepository.GetPinsInRadius(originCoords);
             List<PinDto> participantAndBuildingPins = new List<PinDto>();
 
-            foreach (SpPinDto piFromSP in participantPinsFromSp)
+            foreach (var piFromSP in participantPinsFromSp)
             {
-                PinDto pin = Mapper.Map<PinDto>(piFromSP);
+                var pin = Mapper.Map<PinDto>(piFromSP);
                 participantAndBuildingPins.Add(pin);
             }
 
@@ -274,6 +283,22 @@ namespace crds_angular.Services
             address.Longitude = newLong;
 
             return address;
+        }
+
+
+        public Invitation InviteToGathering(string token, int gatheringId, User person)
+        {
+            var invitation = new Invitation();
+
+            invitation.RecipientName = person.firstName;
+            invitation.EmailAddress = person.email;
+            invitation.SourceId = gatheringId;
+            invitation.GroupRoleId = _memberRoleId;
+            invitation.InvitationType = _anywhereGatheringInvitationTypeId;
+            invitation.RequestDate = DateTime.Now;
+
+            _invitationService.ValidateInvitation(invitation, token);
+            return _invitationService.CreateInvitation(invitation, token);
         }
     }
 }

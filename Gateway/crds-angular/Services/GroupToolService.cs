@@ -41,6 +41,8 @@ namespace crds_angular.Services
         private readonly int _defaultGroupRoleId;
         private readonly int _groupRoleLeaderId;
         private readonly int _removeParticipantFromGroupEmailTemplateId;
+        private readonly int _gatheringHostAcceptTemplate;
+        private readonly int _gatheringHostDenyTemplate;
         private readonly int _domainId;
         private readonly int _groupEndedParticipantEmailTemplate;
         private readonly string _baseUrl;
@@ -104,7 +106,9 @@ namespace crds_angular.Services
             _removeParticipantFromGroupEmailTemplateId = configurationWrapper.GetConfigIntValue("RemoveParticipantFromGroupEmailTemplateId");
 
             _domainId = configurationWrapper.GetConfigIntValue("DomainId");
-            _groupEndedParticipantEmailTemplate = Convert.ToInt32(configurationWrapper.GetConfigIntValue("GroupEndedParticipantEmailTemplate"));
+            _groupEndedParticipantEmailTemplate = configurationWrapper.GetConfigIntValue("GroupEndedParticipantEmailTemplate");
+            _gatheringHostAcceptTemplate = configurationWrapper.GetConfigIntValue("GatheringHostAcceptTemplate");
+            _gatheringHostDenyTemplate = configurationWrapper.GetConfigIntValue("GatheringHostDenyTemplate");
             _groupRequestToJoinEmailTemplate = configurationWrapper.GetConfigIntValue("GroupRequestToJoinEmailTemplate");
             _anywhereGroupRequestToJoinEmailTemplate = configurationWrapper.GetConfigIntValue("AnywhereGroupRequestToJoinEmailTemplate");
             _baseUrl = configurationWrapper.GetConfigValue("BaseURL");
@@ -233,6 +237,8 @@ namespace crds_angular.Services
             var subjectTemplateText = string.IsNullOrWhiteSpace(subjectTemplateContentBlockTitle)
                 ? string.Empty
                 : _contentBlockService[subjectTemplateContentBlockTitle].Content ?? string.Empty;
+           
+
             var emailTemplateText = string.IsNullOrWhiteSpace(emailTemplateContentBlockTitle) ? string.Empty : _contentBlockService[emailTemplateContentBlockTitle].Content;
             var mergeData = getDictionary(participant);
             mergeData["Email_Custom_Message"] = string.IsNullOrWhiteSpace(message) ? string.Empty : message;
@@ -246,7 +252,7 @@ namespace crds_angular.Services
 
             // Since the templates are coming from content blocks, they may have replacement tokens in them as well.
             // These will not get replaced with merge data in _communicationRepository.SendMessage(), (it doesn't doubly
-            // replace) so we'll parse them here before adding them to the merge data.
+            // replace) so we'll parse them here before adding them to the merge data. 
             mergeData["Subject_Template_Text"] = _communicationRepository.ParseTemplateBody(Regex.Replace(subjectTemplateText, "<.*?>", string.Empty), mergeData);
             mergeData["Email_Template_Text"] = _communicationRepository.ParseTemplateBody(emailTemplateText, mergeData);
 
@@ -345,6 +351,11 @@ namespace crds_angular.Services
             _groupService.addContactToGroup(groupId, inquiry.ContactId);
             _groupRepository.UpdateGroupInquiry(groupId, inquiry.InquiryId, true);
 
+            // For now pick template based on group type
+            var emailTemplateId = (group.GroupTypeId == _anywhereGroupType) 
+                                                      ? _gatheringHostAcceptTemplate 
+                                                      : _removeParticipantFromGroupEmailTemplateId;
+
             try
             {
                 SendApproveDenyInquiryEmail(
@@ -353,7 +364,7 @@ namespace crds_angular.Services
                     group,
                     inquiry,
                     me,
-                    _removeParticipantFromGroupEmailTemplateId,
+                    emailTemplateId,
                     GroupToolApproveInquiryEmailTemplateText,
                     message);
             }
@@ -367,6 +378,11 @@ namespace crds_angular.Services
         {
             _groupRepository.UpdateGroupInquiry(groupId, inquiry.InquiryId, false);
 
+            // For now pick template based on group type
+            var emailTemplateId = (group.GroupTypeId == _anywhereGroupType)
+                                                      ? _gatheringHostDenyTemplate
+                                                      : _removeParticipantFromGroupEmailTemplateId;
+
             try
             {
                 SendApproveDenyInquiryEmail(
@@ -375,7 +391,7 @@ namespace crds_angular.Services
                     group,
                     inquiry,
                     me,
-                    _removeParticipantFromGroupEmailTemplateId,
+                    emailTemplateId,
                     GroupToolDenyInquiryEmailTemplateText,
                     message);
             }
@@ -396,7 +412,13 @@ namespace crds_angular.Services
         {
             try
             {
-                var subject = approve ? GroupToolApproveInquirySubjectTemplateText : GroupToolDenyInquirySubjectTemplateText;
+                string subject = null;
+
+                if (group.GroupTypeId != _anywhereGroupType)
+                {
+                    subject = approve ? GroupToolApproveInquirySubjectTemplateText : GroupToolDenyInquirySubjectTemplateText;
+                }
+              
                 var participant = _participantRepository.GetParticipant(inquiry.ContactId);
 
                 SendGroupParticipantEmail(groupId,

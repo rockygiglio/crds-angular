@@ -598,7 +598,7 @@ namespace crds_angular.test.Services
 
             participantService.Setup(mocked => mocked.GetParticipantRecord(token)).Returns(new Participant {ParticipantId = participantId});
 
-            groupRepository.Setup(mocked => mocked.GetGroupsForParticipantByTypeOrID(42, token, groupTypeIds, (int?)null)).Returns(groups);
+            groupRepository.Setup(mocked => mocked.GetGroupsForParticipantByTypeOrID(42, (string)null, groupTypeIds, (int?)null)).Returns(groups);
 
             groupRepository.Setup(mocked => mocked.GetGroupParticipants(groups[0].GroupId, true)).Returns(participants);
 
@@ -676,7 +676,7 @@ namespace crds_angular.test.Services
             _objectAttributeService.Setup(mocked => mocked.GetObjectAttributes(token, It.IsAny<int>(), It.IsAny<MpObjectAttributeConfiguration>(), It.IsAny<List<MpAttribute>>()))
                 .Returns(objectAllAttribute);
 
-            groupRepository.Setup(mocked => mocked.GetGroupsForParticipantByTypeOrID(42, token, groupTypeIds, (int?)null)).Returns(groups);
+            groupRepository.Setup(mocked => mocked.GetGroupsForParticipantByTypeOrID(42, (string)null, groupTypeIds, (int?)null)).Returns(groups);
 
             groupRepository.Setup(mocked => mocked.GetGroupParticipants(groups[0].GroupId, true)).Returns(participants);
 

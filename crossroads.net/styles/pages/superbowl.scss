@@ -197,6 +197,28 @@
   opacity: .7;
 }
 
+.superbowl-description {
+  background-color: #000;
+
+  p {
+    font-size: 1.2em;
+    color: #fff;
+    text-align: center;
+  }
+}
+
+.sb-compete {
+  background: url("//crds-cms-uploads.imgix.net/content/images/crossroads-sb-compete-bg.jpg") center center no-repeat;
+  background-size: cover;
+}
+
+.superbowl-locations h3 {
+  font-family: "acumin-pro-extra-condensed", sans-serif;
+  font-weight: 600;
+  font-size: 300%;
+  text-transform: uppercase;
+}
+
 .superbowl-modal {
   input[type=number]::-webkit-inner-spin-button,
   input[type=number]::-webkit-outer-spin-button {

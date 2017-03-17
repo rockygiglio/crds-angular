@@ -15,6 +15,7 @@ using crds_angular.Security;
 using crds_angular.Services.Interfaces;
 using Crossroads.ApiVersioning;
 using Crossroads.Web.Common.Security;
+using System.ComponentModel.DataAnnotations;
 using log4net;
 
 namespace crds_angular.Controllers.API
@@ -151,7 +152,10 @@ namespace crds_angular.Controllers.API
 
                 foreach (var pin in pinsInRadius)
                 {
-                    pin.Address = _finderService.RandomizeLatLong(pin.Address);
+                    if (pin.PinType != PinType.SITE)
+                    {
+                        pin.Address = _finderService.RandomizeLatLong(pin.Address);
+                    }
                 }
 
                 var result = new PinSearchResultsDto(new GeoCoordinates(originCoords.Latitude, originCoords.Longitude), pinsInRadius);
@@ -163,6 +167,43 @@ namespace crds_angular.Controllers.API
                 var apiError = new ApiErrorDto("Get Pin By Address Failed", ex);
                 throw new HttpResponseException(apiError.HttpResponseMessage);
             }
+        }
+
+        /// <summary>
+        /// Logged in user invites a participant to the gathering
+        /// </summary>
+        [RequiresAuthorization]
+        [VersionedRoute(template: "finder/pin/invitetogathering/{gatheringId}", minimumVersion: "1.0.0")]
+        [System.Web.Http.Route("finder/pin/invitetogathering/{gatheringId}")]
+        [System.Web.Http.HttpPost]
+        public IHttpActionResult InviteToGathering([FromUri] int gatheringId, [FromBody] User person)
+        {
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState.Values.SelectMany(val => val.Errors).Aggregate("", (current, err) => current + err.Exception.Message);
+                var dataError = new ApiErrorDto("CreateInvitation Data Invalid", new InvalidOperationException("Invalid CreateInvitation Data " + errors));
+                throw new HttpResponseException(dataError.HttpResponseMessage);
+            }
+
+            return Authorized(token =>
+            {
+                try
+                {
+                    _finderService.InviteToGathering(token, gatheringId, person);
+                    return (Ok());
+                }
+                catch (ValidationException e)
+                {
+                    var error = new ApiErrorDto("Not authorized to send invitations of this type", e, HttpStatusCode.Forbidden);
+                    throw new HttpResponseException(error.HttpResponseMessage);
+                }
+                catch (Exception e)
+                {
+                    _logger.Error(string.Format("Could not create invitation to recipient {0} ({1}) for group {2}", person.firstName + " " + person.lastName, person.email, 3), e);
+                    var apiError = new ApiErrorDto("CreateInvitation Failed", e, HttpStatusCode.InternalServerError);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+            });
         }
 
         /// <summary>
