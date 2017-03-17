@@ -60,7 +60,7 @@ export default class GoVolunteerAnywhereProfileForm {
     return [
       {
         className: '',
-        wrapper: 'campBootstrapRow',
+        wrapper: 'goVolunteerBootstrapRow',
         fieldGroup: [
           {
             className: 'form-group col-xs-6',
@@ -83,16 +83,21 @@ export default class GoVolunteerAnywhereProfileForm {
         ]
       },
       {
-        key: 'email',
-        type: 'crdsInput',
-        templateOptions: {
-          label: 'Email',
-          required: true,
-        }
+        wrapper: 'goVolunteerEmailChangeWarning',
+        fieldGroup: [
+          {
+            key: 'email',
+            type: 'crdsInput',
+            templateOptions: {
+              label: 'Email',
+              required: true,
+            }
+          }
+        ]
       },
       {
         className: '',
-        wrapper: 'campBootstrapRow',
+        wrapper: 'goVolunteerBootstrapRow',
         fieldGroup: [
           {
             className: 'form-group col-sm-6',
