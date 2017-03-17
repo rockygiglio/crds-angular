@@ -1,8 +1,8 @@
 <div class="row" ng-class="options.templateOptions.row.className">
-  <div class="col-sm-6">
+  <div ng-class="{ 'col-sm-6': $root.username != undefined, 'col-xs-12': $root.username == undefined }">
     <formly-transclude></formly-transclude>
   </div>
-  <div class="col-sm-6 soft-top mobile-hard-top">
+  <div class="col-sm-6 soft-top mobile-hard-top" ng-if="$root.username != undefined">
     <p class="go-local-email-warning">Changing your email will change your username for Crossroads.net.</p>
   </div>
 </div>
