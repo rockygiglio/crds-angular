@@ -14,7 +14,7 @@ AS
 BEGIN
 	DECLARE @DomainID INT = 1
 
-	DECLARE @RowsPerPage FLOAT = 16
+--	DECLARE @RowsPerPage FLOAT = 16
 	DECLARE @AddSoftCredit BIT = 0
 
 	SET NOCOUNT ON
@@ -28,7 +28,7 @@ BEGIN
 		Donor_ID INT
 		, Statement_ID VARCHAR(15)
 		, Contact_Or_Household_ID INT
-	)
+	);
 
 	INSERT INTO #D (
 		Donor_ID
@@ -37,7 +37,7 @@ BEGIN
 	)
 	SELECT
 		Do.Donor_ID
-		, Statement_ID = CASE WHEN C.Household_ID IS NULL OR Do.Statement_Type_ID = 1 THEN 'C' + CONVERT(VARCHAR(10),C.Contact_ID) ELSE 'F' + CONVERT(Varchar(10),C.Household_ID) END
+		, Statement_ID = CASE WHEN C.Household_ID IS NULL OR Do.Statement_Type_ID = 1 THEN 'C' + CONVERT(VARCHAR(10),C.Contact_ID) ELSE 'F' + CONVERT(VARCHAR(10),C.Household_ID) END
 		, Contact_Or_Household_ID = CASE WHEN C.Household_ID IS NULL OR Do.Statement_Type_ID = 1 THEN C.Contact_ID ELSE C.Household_ID END
 	FROM
 		Donors Do
@@ -49,17 +49,14 @@ BEGIN
 			WHERE D.Donor_ID = Do.Donor_ID AND (Donation_Date >= @FromDate AND Donation_Date < @ToDate)
 		)
 		AND Do.Statement_Type_ID = 1		-- TODO: Individual only for now; remove this when adding Family
-	GROUP BY
-		Do.Donor_ID
-		, CASE WHEN C.Household_ID IS NULL OR Do.Statement_Type_ID = 1 THEN 'C' + CONVERT(VARCHAR(10),C.Contact_ID) ELSE 'F' + CONVERT(Varchar(10),C.Household_ID) END
-		, CASE WHEN C.Household_ID IS NULL OR Do.Statement_Type_ID = 1 THEN C.Contact_ID ELSE C.Household_ID END		
+	;
 
-	CREATE INDEX IX_D_DonorID ON #D(Donor_ID)
+	CREATE INDEX IX_D_DonorID ON #D(Donor_ID);
 
-	CREATE TABLE #DONORS (Donor_ID INT, Statement_ID Varchar(11));
+	CREATE TABLE #DONORS (Donor_ID INT, Statement_ID VARCHAR(15));
 	INSERT INTO #DONORS SELECT DISTINCT Donor_ID, Statement_ID FROM #D;
 
-	CREATE INDEX IX_DONORS_DonorID ON #DONORS(Donor_ID)
+	CREATE INDEX IX_DONORS_DonorID ON #DONORS(Donor_ID);
 
 	CREATE TABLE #Gifts(
 		Donation_ID INT
@@ -91,7 +88,7 @@ BEGIN
 		, Section_Title VARCHAR(1000)
 		, Header_Title VARCHAR(1000)
 		, Section_Sort INT
-	)
+	);
 
 	--Tax Deductible and Stock Giving
 	INSERT INTO #Gifts(
@@ -155,15 +152,15 @@ BEGIN
 		, #DONORS.Statement_ID
 		, #D.Contact_Or_Household_ID
 		, D.Donor_ID
-		, ISNULL(C.Gender_ID, 9) AS Gender_ID
-		, ISNULL(C.Household_Position_ID, 9) AS Household_Position_ID
+		, Gender_ID = ISNULL(C.Gender_ID, 9)
+		, Household_Position_ID = ISNULL(C.Household_Position_ID, 9)
 		, Is_Recurring_Gift
 		, Section_Title = CAST(CASE WHEN D.Payment_Type_ID <> 6 AND Prog.Tax_Deductible_Donations = 1 THEN 'Tax-Deductible Information:' ELSE 'Stock Giving' END AS VARCHAR(100))
 		, Header_Title = CAST(CASE WHEN D.Payment_Type_ID = 6 THEN 'Stock Giving' ELSE 'Giving' END AS VARCHAR(50))
 		, Section_Sort = CASE WHEN D.Payment_Type_ID = 6 THEN 2 ELSE 1 END
 	FROM Donations D
 		INNER JOIN #DONORS ON #DONORS.Donor_ID = D.Donor_ID
-		INNER JOIN dp_Domains Dom ON Dom.Domain_ID = D.Domain_ID
+		INNER JOIN #D ON #D.Donor_ID = D.Donor_ID
 		INNER JOIN Donors Do ON Do.Donor_ID = D.Donor_ID
 		INNER JOIN Contacts C ON C.Contact_ID = Do.Contact_ID
 		OUTER APPLY (SELECT Top 1 Contact_ID, Household_ID, Last_Name, Nickname, First_Name, Gender_ID FROM Contacts S WHERE Do.Statement_Type_ID = 2 AND S.Household_ID = C.Household_ID AND C.Contact_ID <> S.Contact_ID AND S.Household_Position_ID = 1 AND C.Household_Position_ID = 1) SP
@@ -177,25 +174,25 @@ BEGIN
 		LEFT OUTER JOIN dbo.[Events] E ON E.Event_ID = DD.Target_Event
 		LEFT OUTER JOIN Pledges Pl ON PL.Pledge_ID = DD.Pledge_ID
 		LEFT OUTER JOIN Pledge_Campaigns PC ON PC.Pledge_Campaign_ID = PL.Pledge_Campaign_ID
-		INNER JOIN #D ON #D.Donor_ID = D.Donor_ID --AND PL.Pledge_ID = #D.Pledge_ID
 		LEFT OUTER JOIN Donors PLDo ON PLDo.Donor_ID = PL.Donor_ID
 		LEFT OUTER JOIN Contacts PLDoC ON PLDoC.Contact_ID = PLDo.Contact_ID
 	WHERE
-		(Donation_Date >= @FromDate AND Donation_Date < @ToDate)
+		(D.Donation_Date >= @FromDate AND D.Donation_Date < @ToDate)
+		AND D.Domain_ID = @DomainID
 		AND DS.Display_On_Statements = 1
-		AND @DomainID = Dom.Domain_ID
-		AND ISNULL(Prog.Tax_Deductible_Donations,0) = 1 --Omit Non Deductible
+		AND ISNULL(Prog.Tax_Deductible_Donations, 0) = 1 --Omit Non Deductible
 		AND Do.Statement_Method_ID <> 4		-- No Statement Needed
 		AND Do.Statement_Frequency_ID <> 3		-- Never
 		AND D.Donation_Status_ID = 2	-- Deposited
+	;
 
-	CREATE INDEX IX_Gifts_DonorID ON #Gifts(Donor_ID)
+	CREATE INDEX IX_Gifts_DonorID ON #Gifts(Donor_ID);
 
 	SELECT
 		Statement_ID
 		, Row_No = DENSE_RANK() OVER (PARTITION BY Statement_ID ORDER BY Section_Sort, Donation_Date, Donation_Distribution_ID)
 		, Donation_ID
-	--	, Donation_Distribution_ID
+--		, Donation_Distribution_ID
 		, Donation_Date
 		, Amount
 		, Non_Deductible_Amount
@@ -212,24 +209,25 @@ BEGIN
 							ELSE ISNULL(Item_Number, Payment_Type)
 						END
 		, Fund_Name AS [Donation_Description]
-	--	, Contact_ID
-	--	, Event_Name
+--		, Contact_ID
+--		, Event_Name
 		, Mail_Name
 		, Address_Line_1
 		, Apt_or_Suite
 		, City
 		, [State]
 		, Postal_Code
-	--	, Donor_Row_No = DENSE_Rank() OVER (Partition By Donor_ID ORDER BY Section_Sort, Donation_Date, Donation_ID)
-	--	, Page_No = Ceiling(Dense_Rank() OVER (Partition By Statement_ID ORDER BY Section_Sort, Donation_Date, Donation_Distribution_ID)/@RowsPerPage)
-	--	, Household_Position_ID
+--		, Donor_Row_No = DENSE_Rank() OVER (Partition By Donor_ID ORDER BY Section_Sort, Donation_Date, Donation_ID)
+--		, Page_No = Ceiling(Dense_Rank() OVER (Partition By Statement_ID ORDER BY Section_Sort, Donation_Date, Donation_Distribution_ID)/@RowsPerPage)
+--		, Household_Position_ID
 		, Section_Title
 		, Header_Title
 		, Section_Sort
 	FROM #Gifts
+	;
 
-	DROP TABLE #D
-	DROP TABLE #DONORS
-	DROP TABLE #Gifts
+	DROP TABLE #D;
+	DROP TABLE #DONORS;
+	DROP TABLE #Gifts;
 
 END
