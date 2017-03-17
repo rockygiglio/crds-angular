@@ -33,7 +33,7 @@
                      type="text" class="form-control"
                      name="emergencyPrimaryPhone"
                      id="emergency-primaryphone"
-                     placeholder="xxx-xxx-xxxx"
+                     placeholder="###-###-####"
                      ng-required="true"
                      phone-number-format
                      ng-pattern="tripsSignup.phoneFormat">
@@ -56,7 +56,7 @@
                      id="emergency-secondaryphone"
                      ng-pattern="tripsSignup.phoneFormat"
                      phone-number-format
-                     placeholder="xxx-xxx-xxxx">
+                     placeholder="###-###-####">
               <ng-messages for="tripsSignup.tripAppPage3.emergencySecondaryPhone.$error" ng-if="tripsSignup.validation.showErrors(tripsSignup.tripAppPage3, 'emergencySecondaryPhone')">
                 <span ng-message="pattern">
                   <span dynamic-content="$root.MESSAGES.invalidPhone.content | html"></span>
