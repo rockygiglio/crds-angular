@@ -29,7 +29,7 @@ $gc-green: #9ab73c;
     font-size: 2.4em;
   }
 
-  h3.go-org-header {
+  h2, h3.go-local-header {
     font-size: 1.63em;
 
     @media (min-width: $screen-xs-min) {
@@ -49,7 +49,7 @@ $gc-green: #9ab73c;
     }
   }
 
-  h3.go-org-title {
+  h3.go-local-title {
     font-size: 1.1em;
 
     @media (min-width: $screen-xs-min) {
