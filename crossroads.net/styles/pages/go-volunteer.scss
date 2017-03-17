@@ -1,5 +1,6 @@
 $go-local-primary: rgb(0, 177, 64);
 $go-local-secondary: rgb(196, 214, 0);
+$go-local-dark: #007e2e;
 $go-local-site-filter: rgba(0, 177, 64, 0.55);
 $gc-green: #9ab73c;
 
@@ -26,8 +27,49 @@ $gc-green: #9ab73c;
   h1 {
     font-size: 2.4em;
   }
+
+  h3.go-org-header {
+    font-size: 1.63em;
+
+    @media (min-width: $screen-xs-min) {
+      font-size: 3.67vw;
+    }
+
+    @media (min-width: $screen-sm-min) {
+      font-size: 1.5em;
+    }
+
+    @media (min-width: $screen-md-min) {
+      font-size: 1.53em;
+    }
+
+    @media (min-width: $screen-lg-min) {
+      font-size: 1.85em;
+    }
+  }
+
+  h3.go-org-title {
+    font-size: 1.1em;
+
+    @media (min-width: $screen-xs-min) {
+      font-size: 1.3em;
+    }
+
+    @media (min-width: $screen-sm-min) {
+      font-size: 1.38em;
+    }
+
+    @media (min-width: $screen-md-min) {
+      font-size: 1.48em;
+    }
+
+    @media (min-width: $screen-lg-min) {
+      font-size: 1.55em;
+    }
+  }
+
   .btn-primary-gc {
-    @include button-variant(#fff, $go-local-primary, $go-local-primary);
+    @include button-variant(#fff, $go-local-dark, $go-local-dark);
   }
 
   .navbar {
@@ -108,8 +150,9 @@ $gc-green: #9ab73c;
     background-color: $gray;
   }
   .card-item {
-    border-left: 5px solid $gray-light;
+    border-left: 5px solid $go-local-primary;
     margin-bottom: 16px;
+    background: rgba($gray-lighter, 0.3);
 
     &.disabled {
       border-left: 5px solid $gray;
@@ -160,8 +203,18 @@ $gc-green: #9ab73c;
     position: inherit;
   }
 
+  .media-card-link {
+    &:hover {
+      background: rgba($go-local-primary, 0.1);
+    }
+  }
+
   .icon-checkmark {
     color: $go-local-secondary;
+  }
+
+  .alert-info {
+    @include alert-variant(lighten(#000, 75%), $gray, $black);
   }
 }
 
