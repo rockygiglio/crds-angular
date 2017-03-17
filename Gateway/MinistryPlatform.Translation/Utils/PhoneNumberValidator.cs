@@ -11,8 +11,6 @@ namespace MinistryPlatform.Translation.Helpers
         {
             foreach (string phoneNumber in phoneNumbers)
             {
-                Console.WriteLine("Phone number to be validated " + phoneNumber);
-
                 if (phoneNumber != null && phoneNumber != "")
                 {
                     if (!Regex.IsMatch(phoneNumber, pattern))
