@@ -15,7 +15,6 @@ BEGIN
 	DECLARE @DomainID INT = 1
 
 --	DECLARE @RowsPerPage FLOAT = 16
-	DECLARE @AddSoftCredit BIT = 0
 
 	SET NOCOUNT ON
 	SET FMTONLY OFF
@@ -53,6 +52,8 @@ BEGIN
 
 	CREATE INDEX IX_D_DonorID ON #D(Donor_ID);
 
+	-- TODO: Currently #DONORS and #D have the same rows (i.e., SELECT DISTINCT provides no benefit
+	-- right now) but this will be used once we add Families so leaving it in for now
 	CREATE TABLE #DONORS (Donor_ID INT, Statement_ID VARCHAR(15));
 	INSERT INTO #DONORS SELECT DISTINCT Donor_ID, Statement_ID FROM #D;
 
@@ -122,7 +123,7 @@ BEGIN
 		, Header_Title
 		, Section_Sort
 	)
-	SELECT TOP 100 PERCENT
+	SELECT
 		D.Donation_ID
 		, DD.Donation_Distribution_ID
 		, D.Donation_Date
@@ -166,7 +167,7 @@ BEGIN
 		OUTER APPLY (SELECT Top 1 Contact_ID, Household_ID, Last_Name, Nickname, First_Name, Gender_ID FROM Contacts S WHERE Do.Statement_Type_ID = 2 AND S.Household_ID = C.Household_ID AND C.Contact_ID <> S.Contact_ID AND S.Household_Position_ID = 1 AND C.Household_Position_ID = 1) SP
 		LEFT OUTER JOIN Households H ON H.Household_ID = C.Household_ID
 		LEFT OUTER JOIN Addresses A ON A.Address_ID = H.Address_ID
-		INNER JOIN Donation_Distributions DD ON DD.Donation_ID = D.Donation_ID AND (@AddSoftCredit = 0 OR DD.Soft_Credit_Donor IS NULL)
+		INNER JOIN Donation_Distributions DD ON DD.Donation_ID = D.Donation_ID AND DD.Soft_Credit_Donor IS NULL
 		INNER JOIN Programs Prog ON Prog.Program_ID = DD.Program_ID
 		INNER JOIN Congregations Cong ON Cong.Congregation_ID = Prog.Congregation_ID AND Cong.Accounting_Company_ID = ISNULL(@AccountingCompanyID, Cong.Accounting_Company_ID)
 		INNER JOIN Payment_Types PT ON PT.Payment_Type_ID = D.Payment_Type_ID
