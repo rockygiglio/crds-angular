@@ -30,7 +30,7 @@ BEGIN
 				Mobile Phone: [Mobile_Phone]<br>
 				Total number of adults: [Adults_Participating]<br>
 				Number of children Ages 0-17: [Number_Of_Children]<br>
-				Total Number of Volunteers on this sign-up form:<br><br>
+				Total Number of Volunteers on this sign-up form: [Total_Volunteers]<br><br>
 				If you need to make any changes to this information, please contact [Anywhere_GO_Contact].<br><br>
 				Thanks for stepping up to lead. Your initiative is changing your city.<br>
 				The GO Local Team'
