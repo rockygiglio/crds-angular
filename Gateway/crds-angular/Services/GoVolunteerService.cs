@@ -334,12 +334,13 @@ namespace crds_angular.Services
         private Dictionary<string, object> SetupAnywhereMergeData(AnywhereRegistration registration, string projectLeaderName)
         {
             var adultsParticipating = registration.SpouseParticipation ? 2 : 1;
+            var birthDate = DateTime.Parse(registration.Self.DateOfBirth);
             var merge = new Dictionary<string, object>
             {
                 {"Nickname", registration.Self.FirstName},
                 {"LastName", registration.Self.LastName},
                 {"Participant_Email_Address", registration.Self.EmailAddress},
-                {"Date_Of_Birth", registration.Self.DateOfBirth},
+                {"Date_Of_Birth", birthDate.Month + "/" + birthDate.Day + "/" + birthDate.Year},
                 {"Mobile_Phone", registration.Self.MobilePhone},
                 {"Spouse_Participating", registration.SpouseParticipation ? "Yes": "No"},
                 {"Number_Of_Children", registration.NumberOfChildren},
