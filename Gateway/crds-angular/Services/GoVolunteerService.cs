@@ -214,7 +214,7 @@ namespace crds_angular.Services
 
                 if (leaderTemplateId != 0)
                 {
-                    mergeData.Add("Anywhere_GO_Contact", fromContact.Contact_ID);
+                    mergeData.Add("Anywhere_GO_Contact", fromContact.Email_Address);
                     var leaderCommunication = _communicationService.GetTemplateAsCommunication(leaderTemplateId,
                                                                                                fromContact.Contact_ID,
                                                                                                fromContact.Email_Address,
@@ -334,6 +334,7 @@ namespace crds_angular.Services
 
         private Dictionary<string, object> SetupAnywhereMergeData(AnywhereRegistration registration, string projectLeaderName)
         {
+            var adultsParticipating = registration.SpouseParticipation ? 2 : 1;
             var merge = new Dictionary<string, object>
             {
                 {"Nickname", registration.Self.FirstName},
@@ -344,7 +345,8 @@ namespace crds_angular.Services
                 {"Spouse_Participating", registration.SpouseParticipation ? "Yes": "No"},
                 {"Number_Of_Children", registration.NumberOfChildren},
                 {"Group_Connector", projectLeaderName},
-                {"Adults_Participating", registration.SpouseParticipation ? "2": "1"}
+                {"Adults_Participating", adultsParticipating},
+                {"Total_Volunteers", registration.NumberOfChildren + adultsParticipating}
             };
 
             return merge;
