@@ -134,7 +134,6 @@ namespace crds_angular.Services
                 var participantId = RegistrationContact(registration, token);
                 var registrationId = CreateAnywhereRegistrationDto(registration, participantId);
                 ChildAgeGroups(registration, registrationId);
-                CreateAnywhereRegistrationDto(registration, participantId);
                 Observable.Start(() => SendMail(registration));
                 return registration;
             }
