@@ -2,6 +2,7 @@ $go-local-primary: rgb(0, 177, 64);
 $go-local-secondary: rgb(196, 214, 0);
 $go-local-dark: #007e2e;
 $go-local-site-filter: rgba(0, 177, 64, 0.55);
+$go-local-closed: #dddddd;
 $gc-green: #9ab73c;
 
 .go-volunteer {
@@ -173,7 +174,10 @@ $gc-green: #9ab73c;
 
   .terms-box {
     background: rgba(255,255,255,.2);
+    overflow-x: hidden;
+    overflow-y: scroll;
   }
+
   h-number label.form-control {
     background: transparent;
     color: $black;
@@ -214,7 +218,7 @@ $gc-green: #9ab73c;
   }
 
   .alert-info {
-    @include alert-variant(lighten(#000, 75%), $gray, $black);
+    @include alert-variant($go-local-closed, $gray, $black);
   }
 }
 
@@ -270,7 +274,7 @@ $gc-green: #9ab73c;
   }
 }
 
-.go-volunteer-waiver-wrapper {
+.go-volunteer-waiver {
   height: 250px;
   overflow-y: scroll;
   background-color: $white;
