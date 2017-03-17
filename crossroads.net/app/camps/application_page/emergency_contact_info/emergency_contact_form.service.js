@@ -92,7 +92,7 @@ class EmergencyContactForm {
         fieldGroup: [{
           className: 'form-group col-xs-6',
           key: 'contacts[0].mobileNumber',
-          type: 'crdsInput',
+          type: 'crdsPhoneNumberInput',
           optionsTypes: ['phoneNumber'],
           templateOptions: {
             label: 'Mobile Number',
@@ -173,7 +173,7 @@ class EmergencyContactForm {
         fieldGroup: [{
           className: 'form-group col-xs-6',
           key: 'contacts[1].mobileNumber',
-          type: 'crdsInput',
+          type: 'crdsPhoneNumberInput',
           optionsTypes: ['phoneNumber'],
           expressionProperties: {
             'templateOptions.required': 'model.additionalContact'
