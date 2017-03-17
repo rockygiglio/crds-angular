@@ -8,7 +8,7 @@ function addPhoneNumberValidator(formlyConfig) {
             if (value == null || value === '') {
               return true;
             }
-            const regex = /^\(?(\d{3})\)?[\s.-]?(\d{3})[\s.-]?(\d{4})$/;
+            const regex = /^\(?(\d{3})\)?-(\d{3})-(\d{4})$/;
             return regex.test(value);
           },
           message: '\'Phone number does not appear to be valid.\''

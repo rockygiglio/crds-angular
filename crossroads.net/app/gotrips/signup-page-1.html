@@ -113,8 +113,9 @@
               <input type="text"
                      class="form-control"
                      id="mobile"
-                     placeholder="Enter mobile phone"
+                     placeholder="xxx-xxx-xxxx"
                      ng-model="contact.mobilePhone"
+                     ng-pattern="phoneFormat"
                      phone-number-format>
           </div>
 
@@ -224,7 +225,8 @@
                                                          type="text"
                                                          class="form-control"
                                                          id="homephone"
-                                                         placeholder="Enter home phone"
+                                                         placeholder="xxx-xxx-xxxx"
+                                                         ng-pattern="phoneFormat"
                                                          phone-number-format>
                                               </div>
                                           </li>

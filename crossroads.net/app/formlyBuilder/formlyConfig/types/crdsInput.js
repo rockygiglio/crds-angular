@@ -13,7 +13,7 @@ export default ngModule => {
     function addCRDSPhoneNumberInput(formlyConfigProvider) {
         formlyConfigProvider.setType({
             name: 'crdsPhoneNumberInput',
-            template: '<input class="form-control" ng-model="model[options.key]" placeholder="{{to.placeholder}}" phone-number-format>',
+            template: '<input class="form-control" ng-model="model[options.key]" placeholder="xxx-xxx-xxxx" phone-number-format>',
             wrapper: ['formlyBuilderHasError', 'formlyBuilderLabel']
         });
     }

@@ -27,7 +27,8 @@
               <input type="text"
                      class="form-control"
                      id="emergency-primaryphone"
-                     placeholder="Enter emergency contact primary phone number"
+                     placeholder="xxx-xxx-xxxx"
+                     ng-pattern="phoneFormat"
                      phone-number-format>
             </div>
             <div class="form-group col-sm-6">
@@ -35,7 +36,8 @@
               <input type="text"
                      class="form-control"
                      id="emergency-secondaryphone"
-                     placeholder="Enter emergency contact secondary phone number"
+                     placeholder="xxx-xxx-xxxx"
+                     ng-pattern="phoneFormat"
                      phone-number-format>
             </div>
             <div class="form-group col-sm-6">
