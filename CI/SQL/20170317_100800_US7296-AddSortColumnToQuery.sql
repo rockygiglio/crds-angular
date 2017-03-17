@@ -1,7 +1,7 @@
 -- =============================================
--- Author:      Dustin Kocher
--- Create date: 2017-3-10
--- Description:	Update each rooms actual event id to display correct count of checked in or signed in.
+-- Author:      Tim Giblin
+-- Create date: 2017-3-17
+-- Description:	Add KC Sort Order
 -- =============================================
 
 USE [MinistryPlatform]
