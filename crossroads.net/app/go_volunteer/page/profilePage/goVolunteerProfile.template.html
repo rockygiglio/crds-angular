@@ -60,7 +60,7 @@
           <span dynamic-content="$root.MESSAGES.invalidEmail.content | html"></span>
         </span>
       </ng-messages>
-      <div ng-if="$root.username != undefined" class="go-local-email-warning">Changing your email will change your username for Crossroads.net.</div>
+      <div ng-if="$root.username !== null && $root.username !== undefined" class="go-local-email-warning">Changing your email will change your username for Crossroads.net.</div>
     </div>
 
   </div>
