@@ -56,7 +56,7 @@ BEGIN
 		Room_ID INT,
 		Room_Name NVARCHAR(50),
 		Time_In DATETIME,
-		Time_Out DATETIME,
+		Time_Confirmed DATETIME,
 		Checkin_Household_ID INT
 	)
 
@@ -72,9 +72,9 @@ BEGIN
 	-- Get the children for this event
 	-- If no Search parameters return them all
 	-- Else return just the ones that work with the search
-	INSERT INTO @Children ( Event_ID, Event_Participant_ID, Participation_Status_ID, First_Name, Last_Name, Nickname, Call_Number, Room_ID, Room_Name, Time_In, Time_Out, Checkin_Household_ID)
+	INSERT INTO @Children ( Event_ID, Event_Participant_ID, Participation_Status_ID, First_Name, Last_Name, Nickname, Call_Number, Room_ID, Room_Name, Time_In, Time_Confirmed, Checkin_Household_ID)
 		SELECT DISTINCT ep.Event_ID, ep.Event_Participant_ID, ep.Participation_Status_ID, c.First_Name, c.Last_Name, c.Nickname,
-			ep.Call_Number, ep.Room_ID, r.Room_Name, ep.Time_In, ep.Time_Out, ep.Checkin_Household_ID
+			ep.Call_Number, ep.Room_ID, r.Room_Name, ep.Time_In, ep.Time_Confirmed, ep.Checkin_Household_ID
 		FROM [dbo].[Event_Participants] ep
 		INNER JOIN [dbo].[Participants] p ON p.Participant_ID = ep.Participant_ID
 		INNER JOIN [dbo].[Contacts] c ON c.Contact_ID = p.Contact_ID
