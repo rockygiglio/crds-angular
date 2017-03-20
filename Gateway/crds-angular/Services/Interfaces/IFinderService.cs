@@ -14,5 +14,8 @@ namespace crds_angular.Services.Interfaces
         int GetParticipantIdFromContact(int contactId);
         List<PinDto> GetPinsInRadius(GeoCoordinate originCoords, string address);
         AddressDTO RandomizeLatLong(AddressDTO address);
+        GeoCoordinate GetGeoCoordsFromAddressOrLatLang(string address, string lat, string lng);
+        void GatheringJoinRequest(string token, int gatheringId);
+        Invitation InviteToGathering(string token, int gatheringId, User person);
     }
 }

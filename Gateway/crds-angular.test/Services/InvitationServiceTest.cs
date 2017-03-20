@@ -30,6 +30,8 @@ namespace crds_angular.test.Services
         private const int DefaultInvitationEmailTemplate = 55;
         private const int DomainId = 66;
         private const int GroupRoleLeader = 77;
+        private const int AnywhereGatheringEmailTemplateID = 2011;
+        private const int AnywhereGatheringInvitationTypeID = 3;
 
 
         [SetUp]
@@ -49,6 +51,8 @@ namespace crds_angular.test.Services
             config.Setup(mocked => mocked.GetConfigIntValue("TripInvitationType")).Returns(TripInvitationType);
             config.Setup(mocked => mocked.GetConfigIntValue("PrivateInviteTemplate")).Returns(TripInvitationEmailTemplate);
             config.Setup(mocked => mocked.GetConfigIntValue("DefaultInvitationEmailTemplate")).Returns(DefaultInvitationEmailTemplate);
+            config.Setup(mocked => mocked.GetConfigIntValue("AnywhereGatheringInvitationEmailTemplate")).Returns(AnywhereGatheringEmailTemplateID);
+            config.Setup(mocked => mocked.GetConfigIntValue("AnywhereGatheringInvitationType")).Returns(AnywhereGatheringInvitationTypeID);
             config.Setup(mocked => mocked.GetConfigIntValue("DomainId")).Returns(DomainId);
             config.Setup(mocked => mocked.GetConfigIntValue("GroupRoleLeader")).Returns(GroupRoleLeader);
 
@@ -154,6 +158,104 @@ namespace crds_angular.test.Services
                                c.MergeData["Leader_Name"].ToString().Equals(leaderContact.Nickname + " " + leaderContact.Last_Name) &&
                                c.MergeData["Group_Name"].ToString().Equals(testGroup.Name)),
                        false)).Returns(77);
+
+            var created = _fixture.CreateInvitation(invitation, token);
+            _invitationRepository.VerifyAll();
+            _communicationService.VerifyAll();
+            Assert.AreSame(invitation, created);
+            Assert.AreEqual(mpInvitation.InvitationId, created.InvitationId);
+            Assert.AreEqual(mpInvitation.InvitationGuid, created.InvitationGuid);
+        }
+
+        [Test]
+        public void CanCreateInvitationsForAnywhereGroups()
+        {
+            const string token = "dude";
+            
+            string groupName = "Dougs Anywhere Gathering";
+            string recipientName = "doug";
+            string formattedRecipientName = "Doug";
+            string leaderFName = "xavier";
+            string leaderLName = "johnson";
+            string formattedLeaderName = "Xavier J.";
+            int sourceId = 12345;
+            int groupRoleId = 16;
+
+            var invitation = new Invitation()
+            {
+                RecipientName = recipientName,
+                EmailAddress = "a@b.com",
+                SourceId = sourceId,
+                GroupRoleId = groupRoleId,
+                InvitationType = AnywhereGatheringInvitationTypeID
+            };
+
+            var mpInvitation = new MpInvitation
+            {
+                InvitationType = invitation.InvitationType,
+                EmailAddress = invitation.EmailAddress,
+                GroupRoleId = invitation.GroupRoleId,
+                RecipientName = invitation.RecipientName,
+                RequestDate = invitation.RequestDate,
+                SourceId = invitation.SourceId,
+                InvitationGuid = "guid123",
+                InvitationId = 11
+            };
+            _invitationRepository.Setup(
+                m =>
+                    m.CreateInvitation(
+                        It.Is<MpInvitation>(
+                            i =>
+                                i.InvitationType == invitation.InvitationType && i.EmailAddress.Equals(invitation.EmailAddress) && i.GroupRoleId == invitation.GroupRoleId &&
+                                i.RecipientName.Equals(invitation.RecipientName) && i.SourceId == invitation.SourceId))).Returns(mpInvitation);
+
+            var testGroup = new MpGroup
+            {
+                GroupId = 33,
+                Name = groupName
+            };
+
+            _groupRepository.Setup(mocked => mocked.getGroupDetails(invitation.SourceId)).Returns(testGroup);
+
+
+            MpParticipant leader = new MpParticipant()
+            {
+                ContactId = 123456789
+            };
+
+            MpMessageTemplate template = new MpMessageTemplate()
+            {
+                Body = "this is the template!",
+                FromContactId = 1,
+                FromEmailAddress = "us@you.com",
+                ReplyToContactId = leader.ContactId,
+                ReplyToEmailAddress = "you@you.com",
+                Subject = "TheSubject!"
+            };
+            MpMyContact leaderContact = new MpMyContact()
+            {
+                Nickname = leaderFName,
+                Last_Name = leaderLName
+            };
+
+            _participantRepository.Setup(mocked => mocked.GetParticipantRecord(token)).Returns(leader);
+            _contactRespository.Setup((c) => c.GetContactById(It.Is<int>((i) => i == leader.ContactId))).Returns(leaderContact);
+            _communicationService.Setup((c) => c.GetTemplate(It.Is<int>((i) => i == AnywhereGatheringEmailTemplateID))).Returns(template);
+            _communicationService.Setup((c) => c.SendMessage(It.Is<MpCommunication>(
+                    (confirmation) => confirmation.EmailBody == template.Body
+                    && confirmation.EmailSubject == template.Subject
+                    && confirmation.AuthorUserId == 5
+                    && confirmation.DomainId == DomainId
+                    && confirmation.FromContact.ContactId == template.FromContactId
+                    && confirmation.ReplyToContact.ContactId == template.ReplyToContactId
+                    && confirmation.TemplateId == AnywhereGatheringEmailTemplateID
+                    && confirmation.ToContacts[0].EmailAddress == invitation.EmailAddress
+                    && (string)confirmation.MergeData["Invitation_GUID"] == mpInvitation.InvitationGuid
+                    && (string)confirmation.MergeData["Recipient_Name"] == formattedRecipientName
+                    && (string)confirmation.MergeData["Leader_Name"] == formattedLeaderName
+                ),
+                false));
+
 
             var created = _fixture.CreateInvitation(invitation, token);
             _invitationRepository.VerifyAll();
