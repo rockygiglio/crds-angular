@@ -223,6 +223,13 @@ $gc-green: #9ab73c;
 
   .go-local-email-warning {
     font-size: 85%;
+    font-weight: 300;
+  }
+
+  .email-change-warning {
+    .form-group {
+      margin-bottom: 0;
+    }
   }
 }
 

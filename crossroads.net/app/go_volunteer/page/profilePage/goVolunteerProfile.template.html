@@ -38,7 +38,7 @@
   </div>
   <div class="row">
 
-    <div class="form-group" ng-class="{ 'col-sm-6': $root.username != undefined, 'col-xs-12': $root.username == undefined, 'has-error': volunteerProfile.validate('email')}">
+    <div class="form-group col-xs-12" ng-class="{ 'has-error': volunteerProfile.validate('email')}">
       <label for="email" class="control-label">Email</label>
       <input type="email"
              class="form-control"
@@ -60,10 +60,7 @@
           <span dynamic-content="$root.MESSAGES.invalidEmail.content | html"></span>
         </span>
       </ng-messages>
-    </div>
-
-    <div class="col-sm-6 soft-top mobile-hard-top" ng-if="$root.username != undefined">
-      <p class="go-local-email-warning">Changing your email will change your username for Crossroads.net.</p>
+      <div ng-if="$root.username != undefined" class="go-local-email-warning">Changing your email will change your username for Crossroads.net.</div>
     </div>
 
   </div>
