@@ -28,8 +28,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 
 ALTER PROCEDURE [dbo].[api_crds_Get_Manage_Children_data]
-	@EventId INT = 4534848,
-	@Search NVARCHAR(200) = 'FRANK'
+	@EventId INT,
+	@Search NVARCHAR(200) = NULL
 AS
 BEGIN
 	
