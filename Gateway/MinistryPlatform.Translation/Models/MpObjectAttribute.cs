@@ -29,8 +29,12 @@ namespace MinistryPlatform.Translation.Models
         [JsonProperty(PropertyName = "Attribute_Category_ID")]
         public int CategoryId { get; set; }
 
+        [JsonProperty(PropertyName = "Start_Date")]
         public DateTime StartDate { get; set; }
+
+        [JsonProperty(PropertyName = "End_Date")]
         public DateTime? EndDate { get; set; }
+
         public string Notes { get; set; }
         public bool Selected { get; set; }
         public string Description { get; set; }
