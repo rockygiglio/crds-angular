@@ -89,7 +89,7 @@ namespace MinistryPlatform.Translation.Repositories
         public List<MpConnectAws> GetAllPinsForAws()
         {
             var apiToken = _apiUserRepository.GetToken();
-            const string spName = "api_crds_get_Pins_Within_Range";
+            const string spName = "api_crds_Get_Connect_AWS_Data";
 
             try
             {
@@ -98,7 +98,7 @@ namespace MinistryPlatform.Translation.Repositories
 
                 return pinsFromSp;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return new List<MpConnectAws>();
             }

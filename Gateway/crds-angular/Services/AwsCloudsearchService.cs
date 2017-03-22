@@ -10,6 +10,7 @@ using Amazon.CloudSearchDomain.Model;
 using AutoMapper;
 using crds_angular.Models.AwsCloudsearch;
 using MinistryPlatform.Translation.Repositories.Interfaces;
+using Newtonsoft.Json;
 
 namespace crds_angular.Services
 {
@@ -34,6 +35,14 @@ namespace crds_angular.Services
             var cloudSearch = new Amazon.CloudSearchDomain.AmazonCloudSearchDomainClient(domainConfig);
 
             var path = @"C:\Users\Markku\Desktop\connect_json.txt";
+
+            var pinList = GetDataForCloudsearch();
+
+            //serialize
+            JsonSerializerSettings settings = new JsonSerializerSettings();
+            settings.Error = (serializer, err) => err.ErrorContext.Handled = true;
+            string json = JsonConvert.SerializeObject(pinList, settings);
+            System.Diagnostics.Debug.Write(json);
 
             //var ms = new MemoryStream();
             //FileStream file = new FileStream(path, FileMode.Open, FileAccess.Read);

@@ -48,23 +48,9 @@ SELECT
 	null AS groupId,
 	null AS groupName,
 	null AS groupDescription,
-	null AS groupTypeName,
-	null AS ministryId,
-	null AS congregationId,
-	null AS congregationName,
 	null AS primarycontactId,
 	null AS primaryContactEmail,
-	null AS startDate,
-	null AS endDate,
-	null AS availableOnline,
-	null AS groupFullInd,
-	null AS childcareInd,
-	null AS meetingDayId,
-	null AS meetingTime,
-	null AS meetingFrequencyId,
-	null AS targetSize,
-	null AS kidsWelcome,
-	null AS participantList,
+	null AS participantCount,
 	null AS groupTypeId,
 	H.Household_ID AS householdId,
 	@participantPinType AS pinType
@@ -92,23 +78,9 @@ SELECT
 	G.Group_ID AS groupId,
 	G.Group_Name AS groupName,
 	G.Description AS groupDescription,
-	'Anywhere Gathering' AS groupTypeName,
-	G.Ministry_ID AS ministryId,
-	G.Congregation_ID AS congregationId,
-	null AS congregationName,
 	G.Primary_Contact as primarycontactId,
 	null AS primaryContactEmail,
-	G.Start_Date AS startDate,
-	G.End_Date AS endDate,
-	G.Available_Online AS availableOnline,
-	G.Group_Is_Full AS groupFullInd,
-	G.Child_Care_Available AS childcareInd,
-	G.Meeting_Day_ID AS meetingDayId,
-	G.Meeting_Time AS meetingTime,
-	G.Meeting_Frequency_ID AS meetingFrequencyId,
-	G.Target_Size AS targetSize,
-	G.Kids_Welcome AS kidsWelcome,
-	(SELECT STUFF((SELECT ',' + CAST(t1.Participant_ID AS varchar(16)) FROM Group_Participants t1 WHERE t1.Group_ID = t2.Group_ID FOR XML PATH ('')) , 1, 1, '') FROM Groups t2 WHERE t2.Group_ID = G.Group_ID GROUP BY t2.Group_ID) AS participantList, -- stuff list of active participant ids here
+	123 as participantCount,
 	G.Group_Type_ID AS groupTypeId,
 	null AS householdId,
 	@groupPinType AS pinType
@@ -134,23 +106,9 @@ SELECT
 	null AS groupId,
 	null AS groupName,
 	null AS groupDescription,
-	null AS groupTypeName,
-	null AS ministryId,
-	null AS congregationId,
-	null AS congregationName,
 	null AS primarycontactId,
 	null AS primaryContactEmail,
-	null AS startDate,
-	null AS endDate,
-	null AS availableOnline,
-	null AS groupFullInd,
-	null AS childcareInd,
-	null AS meetingDayId,
-	null AS meetingTime,
-	null AS meetingFrequencyId,
-	null AS targetSize,
-	null AS kidsWelcome,
-	null AS participantList, 
+	null AS participantCount, 
 	null AS groupTypeId,
 	null AS householdId,
 	@sitePinType AS pinType
@@ -159,5 +117,36 @@ JOIN Locations L ON L.Location_ID = C.Location_ID
 LEFT JOIN Addresses A ON A.Address_ID = L.Address_ID
 WHERE C.Congregation_ID NOT IN (2,5,15) AND C.End_Date IS NULL
 
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM [dbo].[dp_API_Procedures] WHERE [Procedure_Name] = N'api_crds_Get_Connect_AWS_Data')
+BEGIN
+	INSERT INTO [dbo].[dp_API_Procedures] (
+		 Procedure_Name
+		,Description
+	) VALUES (
+		 N'api_crds_Get_Connect_AWS_Data'
+		,N'Get all connect records to upload to AWS Cloudsearch'
+	)
+END
+GO
+
+DECLARE @API_ROLE_ID int = 62;
+DECLARE @API_ID int;
+
+SELECT @API_ID = API_Procedure_ID FROM [dbo].[dp_API_Procedures] WHERE [Procedure_Name] = N'api_crds_Get_Connect_AWS_Data';
+
+IF NOT EXISTS (SELECT 1 FROM [dbo].[dp_Role_API_Procedures] WHERE [Role_ID] = @API_ROLE_ID AND [API_Procedure_ID] = @API_ID)
+BEGIN
+	INSERT INTO [dbo].[dp_Role_API_Procedures] (
+		 [Role_ID]
+		,[API_Procedure_ID]
+		,[Domain_ID]
+	) VALUES (
+		 @API_ROLE_ID
+		,@API_ID
+		,1
+	)
 END
 GO
