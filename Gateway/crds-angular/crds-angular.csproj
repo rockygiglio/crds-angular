@@ -334,6 +334,7 @@
     <Compile Include="Exceptions\NotHeadOfHouseholdException.cs" />
     <Compile Include="Exceptions\PaymentTypeNotFoundException.cs" />
     <Compile Include="Exceptions\TripFullException.cs" />
+    <Compile Include="Models\AwsCloudsearch\AwsCloudsearchDto.cs" />
     <Compile Include="Models\AwsCloudsearch\AwsConnectDto.cs" />
     <Compile Include="Models\Crossroads\GoVolunteer\ProjectCity.cs" />
     <Compile Include="Models\Crossroads\GoVolunteer\AnywhereRegistration.cs" />

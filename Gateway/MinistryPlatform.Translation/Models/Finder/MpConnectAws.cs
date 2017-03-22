@@ -1,4 +1,5 @@
 ﻿using System;
+using Newtonsoft.Json;
 
 namespace MinistryPlatform.Translation.Models.Finder
 {

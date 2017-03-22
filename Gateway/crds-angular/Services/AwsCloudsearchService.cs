@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text;
 using crds_angular.Services.Interfaces;
 using Crossroads.Web.Common.Configuration;
 using Amazon;
@@ -34,29 +36,21 @@ namespace crds_angular.Services
             };
             var cloudSearch = new Amazon.CloudSearchDomain.AmazonCloudSearchDomainClient(domainConfig);
 
-            var path = @"C:\Users\Markku\Desktop\connect_json.txt";
+            //var path = @"C:\Users\Markku\Desktop\connect_json.txt";
 
             var pinList = GetDataForCloudsearch();
 
             //serialize
-            JsonSerializerSettings settings = new JsonSerializerSettings();
-            settings.Error = (serializer, err) => err.ErrorContext.Handled = true;
-            string json = JsonConvert.SerializeObject(pinList, settings);
+            string json = JsonConvert.SerializeObject(pinList, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
             System.Diagnostics.Debug.Write(json);
 
-            //var ms = new MemoryStream();
-            //FileStream file = new FileStream(path, FileMode.Open, FileAccess.Read);
-            //{
-            //    byte[] bytes = new byte[file.Length];
-            //    file.Read(bytes, 0, (int)file.Length);
-            //    ms.Write(bytes, 0, (int)file.Length);
-            //}
+            var ms = new MemoryStream(Encoding.UTF8.GetBytes(json));
 
             var upload = new Amazon.CloudSearchDomain.Model.UploadDocumentsRequest()
             {
                 ContentType = ContentType.ApplicationJson,
-                // Documents = file
-                FilePath = path
+                Documents = ms
+                //FilePath = path
             };
 
             var response = cloudSearch.UploadDocuments(upload);
@@ -67,14 +61,23 @@ namespace crds_angular.Services
 
         
 
-        private List<AwsConnectDto> GetDataForCloudsearch()
+        private List<AwsCloudsearchDto> GetDataForCloudsearch()
         {
-            var awsPins = _finderRepository.GetAllPinsForAws();
-            return awsPins.Select(Mapper.Map<AwsConnectDto>).ToList();
+            var pins= _finderRepository.GetAllPinsForAws().Select(Mapper.Map<AwsConnectDto>).ToList();
+            var pinlist = new List<AwsCloudsearchDto>();
+            foreach (var pin in pins)
+            {
+                var awsRecord = new AwsCloudsearchDto
+                {
+                    type = "add",
+                    id = pin.AddressId.ToString(),
+                    fields = pin
+                };
+                pinlist.Add(awsRecord);
+            }
+            return pinlist;
         }
-
-
-
+        
 
         public SearchResponse SearchConnectAwsCloudsearch()
         {
