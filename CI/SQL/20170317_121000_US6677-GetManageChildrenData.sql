@@ -83,6 +83,7 @@ BEGIN
 			AND ep.End_Date IS NULL
 			AND ep.Call_Number IS NOT NULL
 			AND ep.Checkin_Household_ID IS NOT NULL
+			AND ep.Participation_Status_ID IN (3,4)
 			AND (@Search IS NULL OR
 					(c.First_name LIKE '%' + @Search + '%'
 						OR c.Last_Name LIKE '%' + @Search + '%'
@@ -111,4 +112,3 @@ BEGIN
 
 END
 GO
-
