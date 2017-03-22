@@ -22,6 +22,7 @@ namespace crds_angular.Controllers.API
 {
     public class FinderController : MPAuth
     {
+        private readonly IAwsCloudsearchService _awsCloudsearchService;
         private readonly IAddressService _addressService;
         private readonly IFinderService _finderService;
         private readonly IAddressGeocodingService _addressGeocodingService;
@@ -31,12 +32,14 @@ namespace crds_angular.Controllers.API
                                 IAddressGeocodingService addressGeocodingService, 
                                 IFinderService finderService,
                                 IUserImpersonationService userImpersonationService,
-                                IAuthenticationRepository authenticationRepository)
+                                IAuthenticationRepository authenticationRepository,
+                                IAwsCloudsearchService awsCloudsearchService)
             : base(userImpersonationService, authenticationRepository)
         {
             _addressService = addressService;
             _finderService = finderService;
-            _addressGeocodingService = addressGeocodingService; 
+            _addressGeocodingService = addressGeocodingService;
+            _awsCloudsearchService = awsCloudsearchService;
         }
 
         [ResponseType(typeof(PinDto))]
@@ -238,5 +241,43 @@ namespace crds_angular.Controllers.API
             });
         }
 
+
+        [ResponseType(typeof(PinSearchResultsDto))]
+        [VersionedRoute(template: "finder/testawsupload", minimumVersion: "1.0.0")]
+        [System.Web.Http.Route("finder/testawsupload")]
+        [System.Web.Http.HttpGet]
+        public IHttpActionResult TestAwsUpload()
+        {
+            try
+            {
+                _awsCloudsearchService.UploadAllConnectRecordsToAwsCloudsearch();
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                var apiError = new ApiErrorDto("TestAwsUploadFailed", ex);
+                throw new HttpResponseException(apiError.HttpResponseMessage);
+            }
+        }
+
+        [ResponseType(typeof(PinSearchResultsDto))]
+        [VersionedRoute(template: "finder/testawssearch", minimumVersion: "1.0.0")]
+        [System.Web.Http.Route("finder/testawssearch")]
+        [System.Web.Http.HttpGet]
+        public IHttpActionResult TestAwsSearch()
+        {
+            try
+            {
+                var response = _awsCloudsearchService.SearchConnectAwsCloudsearch();
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                var apiError = new ApiErrorDto("TestAwsSearch Failed", ex);
+                throw new HttpResponseException(apiError.HttpResponseMessage);
+            }
+        }
     }
 }

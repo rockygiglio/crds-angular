@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using crds_angular.Services.Interfaces;
 using Crossroads.Web.Common.Configuration;
 using Amazon;
@@ -6,6 +7,7 @@ using Amazon.CloudSearch;
 using Amazon.CloudSearch.Model;
 using Amazon.CloudSearchDomain;
 using Amazon.CloudSearchDomain.Model;
+using AutoMapper;
 using crds_angular.Models.AwsCloudsearch;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 
@@ -13,52 +15,25 @@ namespace crds_angular.Services
 {
     public class AwsCloudsearchService : MinistryPlatformBaseService, IAwsCloudsearchService
     {
-        private readonly IConfigurationWrapper _configurationWrapper;
         private readonly IFinderRepository _finderRepository;
+        private readonly string amazonSearchURL = "https://search-connect-int-sdjkhnnriypxn3ijhn4k5xkxq4.us-east-1.cloudsearch.amazonaws.com";
 
-        public AwsCloudsearchService(IConfigurationWrapper configurationWrapper,
-                                     IFinderRepository finderRepository)
+        public AwsCloudsearchService(IFinderRepository finderRepository)
         {
-            _configurationWrapper = configurationWrapper;
             _finderRepository = finderRepository;
         }
 
-        private List<AwsCloudseachDto> GetDataForCloudsearch()
-        {
-            var awsPins = _finderRepository.GetAllPinsForAws();
-        }
-
-        private void Test()
-        {
-            System.Diagnostics.Debug.Write("Test");
-            var domainConfig = new AmazonCloudSearchDomainConfig
-            {
-                ServiceURL = "http://search-connect-64vbx6ojcohmptmsmolggqbpte.us-east-1.cloudsearch.amazonaws.com",
-                //RegionEndpoint = Amazon.RegionEndpoint.SAEast1
-            };
-
-            var cloudSearch = new Amazon.CloudSearchDomain.AmazonCloudSearchDomainClient(domainConfig);
-            var searchRequest = new Amazon.CloudSearchDomain.Model.SearchRequest
-            {
-                Query = "Dawg",
-                QueryParser = QueryParser.Lucene
-            };
-
-            var response = cloudSearch.Search(searchRequest);
-            System.Diagnostics.Debug.Write(response);
-        }
-
-        private void Test2()
+        public void UploadAllConnectRecordsToAwsCloudsearch()
         {
             System.Diagnostics.Debug.Write("Testing Upload");
             var domainConfig = new AmazonCloudSearchDomainConfig
             {
-                ServiceURL = "http://search-connect-64vbx6ojcohmptmsmolggqbpte.us-east-1.cloudsearch.amazonaws.com",
+                ServiceURL = amazonSearchURL
                 //RegionEndpoint = Amazon.RegionEndpoint.SAEast1
             };
             var cloudSearch = new Amazon.CloudSearchDomain.AmazonCloudSearchDomainClient(domainConfig);
 
-            var path = @"C:\Users\Markku\Desktop\bobjson.txt";
+            var path = @"C:\Users\Markku\Desktop\connect_json.txt";
 
             //var ms = new MemoryStream();
             //FileStream file = new FileStream(path, FileMode.Open, FileAccess.Read);
@@ -79,6 +54,38 @@ namespace crds_angular.Services
 
             System.Diagnostics.Debug.Write(response);
         }
+
+        
+
+        private List<AwsCloudseachDto> GetDataForCloudsearch()
+        {
+            var awsPins = _finderRepository.GetAllPinsForAws();
+            return awsPins.Select(Mapper.Map<AwsCloudseachDto>).ToList();
+        }
+
+
+
+
+        public SearchResponse SearchConnectAwsCloudsearch()
+        {
+            System.Diagnostics.Debug.Write("Test");
+            var domainConfig = new AmazonCloudSearchDomainConfig
+            {
+                ServiceURL = amazonSearchURL
+                //RegionEndpoint = Amazon.RegionEndpoint.SAEast1
+            };
+
+            var cloudSearch = new Amazon.CloudSearchDomain.AmazonCloudSearchDomainClient(domainConfig);
+            var searchRequest = new Amazon.CloudSearchDomain.Model.SearchRequest
+            {
+                Query = "group"
+            };
+
+            var response = cloudSearch.Search(searchRequest);
+            System.Diagnostics.Debug.Write(response);
+            return (response);
+        }
+
 
     }
 }
