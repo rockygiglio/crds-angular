@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Web;
+﻿using System.Collections.Generic;
 using crds_angular.Services.Interfaces;
 using Crossroads.Web.Common.Configuration;
 using Amazon;
@@ -9,20 +6,27 @@ using Amazon.CloudSearch;
 using Amazon.CloudSearch.Model;
 using Amazon.CloudSearchDomain;
 using Amazon.CloudSearchDomain.Model;
+using crds_angular.Models.AwsCloudsearch;
+using MinistryPlatform.Translation.Repositories.Interfaces;
 
 namespace crds_angular.Services
 {
     public class AwsCloudsearchService : MinistryPlatformBaseService, IAwsCloudsearchService
     {
         private readonly IConfigurationWrapper _configurationWrapper;
+        private readonly IFinderRepository _finderRepository;
 
-        public AwsCloudsearchService(
-            IConfigurationWrapper configurationWrapper)
+        public AwsCloudsearchService(IConfigurationWrapper configurationWrapper,
+                                     IFinderRepository finderRepository)
         {
             _configurationWrapper = configurationWrapper;
+            _finderRepository = finderRepository;
         }
 
-
+        private List<AwsCloudseachDto> GetDataForCloudsearch()
+        {
+            var awsPins = _finderRepository.GetAllPinsForAws();
+        }
 
         private void Test()
         {
@@ -33,9 +37,7 @@ namespace crds_angular.Services
                 //RegionEndpoint = Amazon.RegionEndpoint.SAEast1
             };
 
-
             var cloudSearch = new Amazon.CloudSearchDomain.AmazonCloudSearchDomainClient(domainConfig);
-
             var searchRequest = new Amazon.CloudSearchDomain.Model.SearchRequest
             {
                 Query = "Dawg",
@@ -44,7 +46,6 @@ namespace crds_angular.Services
 
             var response = cloudSearch.Search(searchRequest);
             System.Diagnostics.Debug.Write(response);
-
         }
 
         private void Test2()

@@ -14,7 +14,7 @@ namespace MinistryPlatform.Translation.Repositories
 {
     public class FinderRepository : BaseRepository, IFinderRepository
     {
-        private const int searchRadius = 6380; 
+        private const int SearchRadius = 6380; 
 
         private readonly IConfigurationWrapper _configurationWrapper;
         private readonly IMinistryPlatformRestRepository _ministryPlatformRest;
@@ -35,11 +35,6 @@ namespace MinistryPlatform.Translation.Repositories
             _apiUserRepository = apiUserRepository;
         }
 
-        private class RemoteIp
-        {
-            public string Ip { get; set; }
-        }
-
         public FinderPinDto GetPinDetails(int participantId)
         {
             const string pinSearch = "Email_Address, Nickname as FirstName, Last_Name as LastName, Participant_Record_Table.*, Household_ID";
@@ -54,9 +49,7 @@ namespace MinistryPlatform.Translation.Repositories
 
             return pinDetails;
         }
-
         
-
         public void EnablePin(int participantId)
         {
             var dict = new Dictionary<string, object> { { "Participant_ID", participantId }, { "Show_On_Map", true } };
@@ -75,24 +68,41 @@ namespace MinistryPlatform.Translation.Repositories
             {
                 {"@Latitude", originCoords.Latitude },
                 {"@Longitude", originCoords.Longitude },
-                {"@RadiusInKilometers", searchRadius }
+                {"@RadiusInKilometers", SearchRadius }
             };
 
-            string spName = "api_crds_get_Pins_Within_Range"; 
+            const string spName = "api_crds_get_Pins_Within_Range"; 
 
             try
             {
-                List<List<SpPinDto>> storedProcReturn = _ministryPlatformRest.UsingAuthenticationToken(apiToken)
-                                                                             .GetFromStoredProc<SpPinDto>(spName, parms);
-                List<SpPinDto> pinsFromSp = storedProcReturn.FirstOrDefault();
+                var storedProcReturn = _ministryPlatformRest.UsingAuthenticationToken(apiToken).GetFromStoredProc<SpPinDto>(spName, parms);
+                var pinsFromSp = storedProcReturn.FirstOrDefault();
 
                 return pinsFromSp; 
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                var exception = ex;
                 return new List<SpPinDto>();
             }
         }
+
+        public List<MpConnectAws> GetAllPinsForAws()
+        {
+            var apiToken = _apiUserRepository.GetToken();
+            const string spName = "api_crds_get_Pins_Within_Range";
+
+            try
+            {
+                var storedProcReturn = _ministryPlatformRest.UsingAuthenticationToken(apiToken).GetFromStoredProc<MpConnectAws>(spName);
+                var pinsFromSp = storedProcReturn.FirstOrDefault();
+
+                return pinsFromSp;
+            }
+            catch (Exception)
+            {
+                return new List<MpConnectAws>();
+            }
+        }
+
     }
 }
