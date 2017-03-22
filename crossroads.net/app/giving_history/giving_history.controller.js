@@ -24,6 +24,7 @@
     vm.donations = [];
     vm.donations_all = false;
     vm.donation_history = false;
+    vm.non_soft_credit_donation_history = false;
     vm.donation_view_ready = false;
     vm.ending_donation_date = undefined;
     vm.impersonate_donor_id = GivingHistoryService.impersonateDonorId;
@@ -64,6 +65,7 @@
 
           // Now get the donations for the selected year
           vm.overall_view_ready = true;
+          vm.donation_history = true;
           vm.getDonations();
           vm.getSoftCreditDonations();
         },
@@ -72,6 +74,7 @@
           vm.overall_view_ready = true;
           vm.donation_view_ready = true;
           vm.donation_history = false;
+          vm.non_soft_credit_donation_history = false;
           vm.soft_credit_donation_history = false;
           setErrorState(error);
         });
@@ -81,6 +84,7 @@
         vm.overall_view_ready = true;
         vm.donation_view_ready = true;
         vm.donation_history = false;
+        vm.non_soft_credit_donation_history = false;
         vm.soft_credit_donation_history = false;
         setErrorState(error);
       });
@@ -128,14 +132,16 @@
             vm.donation_total_amount = data.donation_total_amount;
             vm.donation_statement_total_amount = data.donation_statement_total_amount;
             vm.donation_view_ready = true;
-            vm.donation_history = true;
+            // vm.donation_history = true;
+            vm.non_soft_credit_donation_history = true;
             vm.donations_all = vm.selected_giving_year.key === '' ? true : false;
             vm.beginning_donation_date = data.beginning_donation_date;
             vm.ending_donation_date = data.ending_donation_date;
           },
 
           function (error) {
-            vm.donation_history = false;
+            // vm.donation_history = false;
+            vm.non_soft_credit_donation_history = false;
             vm.donation_view_ready = true;
             setErrorState(error);
           });
