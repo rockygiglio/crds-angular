@@ -64,12 +64,13 @@ namespace crds_angular.Services
             System.Diagnostics.Debug.Write(response);
         }
 
+
         
 
-        private List<AwsCloudseachDto> GetDataForCloudsearch()
+        private List<AwsConnectDto> GetDataForCloudsearch()
         {
             var awsPins = _finderRepository.GetAllPinsForAws();
-            return awsPins.Select(Mapper.Map<AwsCloudseachDto>).ToList();
+            return awsPins.Select(Mapper.Map<AwsConnectDto>).ToList();
         }
 
 

@@ -383,8 +383,8 @@ namespace crds_angular.App_Start
             Mapper.CreateMap<MpRsvpMember, RsvpMember>();
             Mapper.CreateMap<PinDto, FinderPinDto>();
             Mapper.CreateMap<FinderPinDto, PinDto>();
-            Mapper.CreateMap<AwsCloudseachDto,MpConnectAws>();
-            Mapper.CreateMap<MpConnectAws,AwsCloudseachDto>();
+            Mapper.CreateMap<AwsConnectDto,MpConnectAws>();
+            Mapper.CreateMap<MpConnectAws,AwsConnectDto>();
 
             Mapper.CreateMap<GroupDTO, PinDto>()
                 .ForMember(dest => dest.PinType, opt => opt.UseValue<PinType>(PinType.GATHERING));
