@@ -31,7 +31,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 
 ALTER PROCEDURE [dbo].[api_crds_Get_Manage_Children_data]
-	@EventId INT,
+	@EventId INT = 4534848,
 	@Search NVARCHAR(200) = NULL
 AS
 BEGIN
@@ -95,8 +95,6 @@ BEGIN
 
 	DECLARE @Household TABLE
 	(
-		Event_ID INT,
-		Event_Participant_ID INT,
 		Household_ID INT,
 		First_Name VARCHAR(50),
 		Last_Name VARCHAR(50),
@@ -104,10 +102,10 @@ BEGIN
 	)
 
 	-- Return Head of Household that belong to the children we got above
-	INSERT INTO @Household ( Event_ID, Event_Participant_ID, Household_ID, First_Name, Last_Name, Nickname )
-		SELECT DISTINCT c.Event_ID, c.Event_Participant_ID, hc.Household_ID, hc.First_Name, hc.Last_Name, hc.Nickname
-		FROM @Children c
-		INNER JOIN [dbo].Contacts hc ON hc.Household_ID = c.Checkin_Household_ID
+	INSERT INTO @Household ( Household_ID, First_Name, Last_Name, Nickname )
+		SELECT DISTINCT hc.Household_ID, hc.First_Name, hc.Last_Name, hc.Nickname
+		FROM [dbo].Contacts hc
+		INNER JOIN @Children c ON hc.Household_ID = c.Checkin_Household_ID
 		WHERE hc.Household_Position_ID IN (1, 7)
 
 	SELECT * FROM @Children
