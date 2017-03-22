@@ -2,7 +2,9 @@ import moment from 'moment';
 
 export default class GoVolunteerAnywhereProfileForm {
   /* @ngInject */
-  constructor(GoVolunteerService, GoVolunteerDataService, $log) {
+  constructor($rootScope, $filter, GoVolunteerService, GoVolunteerDataService, $log) {
+    this.rootScope = $rootScope;
+    this.filter = $filter;
     this.goVolunteerService = GoVolunteerService;
     this.goVolunteerDataService = GoVolunteerDataService;
     this.log = $log;
@@ -106,6 +108,7 @@ export default class GoVolunteerAnywhereProfileForm {
             },
             validation: {
               messages: {
+                date: () => this.filter('htmlToPlainText')(this.rootScope.MESSAGES.invalidData.content),
                 tooYoung: () => 'Must be 18 years old or older to sign up'
               }
             },
