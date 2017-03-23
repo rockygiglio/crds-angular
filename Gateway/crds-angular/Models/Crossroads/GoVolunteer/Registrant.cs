@@ -22,7 +22,7 @@ namespace crds_angular.Models.Crossroads.GoVolunteer
         public string LastName { get; set; }
 
         [JsonProperty(PropertyName = "mobile")]
-        [RegularExpression("[0-9]{3}-[0-9]{3}-[0-9]{4}")]
+        [RegularExpression(@"^\d{3}-\d{3}-\d{4}$")]
         public string MobilePhone { get; set; }
 
         public Dictionary<string, object> GetDictionary()
