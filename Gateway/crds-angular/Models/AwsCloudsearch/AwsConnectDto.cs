@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Web.Script.Serialization;
 using Newtonsoft.Json;
 
 namespace crds_angular.Models.AwsCloudsearch
@@ -24,7 +25,7 @@ namespace crds_angular.Models.AwsCloudsearch
         public int? ParticipantId { get; set; }
 
         [JsonProperty(PropertyName = "addressid")]
-        public int AddressId { get; set; }
+        public int? AddressId { get; set; }
 
         [JsonProperty(PropertyName = "city")]
         public string City { get; set; }
@@ -34,6 +35,12 @@ namespace crds_angular.Models.AwsCloudsearch
 
         [JsonProperty(PropertyName = "zip")]
         public string Zip { get; set; }
+
+        [JsonIgnore]
+        public double? Latitude { get; set; }
+
+        [JsonIgnore]
+        public double? Longitude { get; set; }
 
         [JsonProperty(PropertyName = "latlong")]
         public string LatLong { get; set; }

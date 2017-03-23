@@ -269,7 +269,7 @@ namespace crds_angular.Controllers.API
         {
             try
             {
-                var response = _awsCloudsearchService.SearchConnectAwsCloudsearch(searchstring ,10000, "_all_fields");
+                var response = _awsCloudsearchService.SearchConnectAwsCloudsearch(searchstring, 10000, "_all_fields");
 
                 return Ok(response);
             }

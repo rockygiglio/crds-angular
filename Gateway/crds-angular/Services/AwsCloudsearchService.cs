@@ -96,7 +96,7 @@ namespace crds_angular.Services
                 var awsRecord = new AwsCloudsearchDto
                 {
                     type = "add",
-                    id = pin.AddressId.ToString(),
+                    id = pin.AddressId + "-" + pin.PinType + "-" + pin.ParticipantId + "-" + pin.GroupId,
                     fields = pin
                 };
                 pinlist.Add(awsRecord);
@@ -117,9 +117,14 @@ namespace crds_angular.Services
             var searchRequest = new Amazon.CloudSearchDomain.Model.SearchRequest
             {
                 Query = querystring,
+                //FilterQuery = "latlong:['61.21,-149.9','21.52,-77.78']", // use for bounding box --upperlft, lower right
                 QueryParser = QueryParser.Structured,
                 Size = size,
                 Return = returnfields
+                //Return = "_all_fields,distance,_score",
+                //Expr = "{'distance':'haversin(38.94,-84.54,latlong.latitude,latlong.longitude)'}", // use to sort by proximity
+                
+                //Sort = "distance asc"
             };
 
             var response = cloudSearch.Search(searchRequest);

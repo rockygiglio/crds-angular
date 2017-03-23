@@ -11,7 +11,7 @@ namespace MinistryPlatform.Translation.Models.Finder
         public string EmailAddress { get; set; }
         public int? ContactId { get; set; }
         public int? ParticipantId { get; set; }
-        public int AddressId { get; set; }
+        public int? AddressId { get; set; }
         public string City { get; set; }
         public string State { get; set; }
         public string Zip { get; set; }
