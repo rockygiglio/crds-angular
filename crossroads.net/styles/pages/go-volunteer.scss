@@ -47,7 +47,7 @@ $gc-green: #9ab73c;
     @media (min-width: $screen-lg-min) {
       font-size: 1.85em;
     }
-  }
+    }
 
   h3.go-local-title {
     font-size: 1.1em;
@@ -219,6 +219,17 @@ $gc-green: #9ab73c;
 
   .alert-info {
     @include alert-variant($go-local-closed, $gray, $black);
+  }
+
+  .go-local-email-warning {
+    font-size: 85%;
+    font-weight: 300;
+  }
+
+  .email-change-warning {
+    .form-group {
+      margin-bottom: 0;
+    }
   }
 }
 

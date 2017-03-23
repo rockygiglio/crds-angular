@@ -1,7 +1,7 @@
 <div dynamic-content="$root.MESSAGES.goVolunteerProfileQuestion.content | html"></div>
 
-<div class="row">
-  <ng-form name="volunteerProfile.profileForm" novalidate>
+<ng-form name="volunteerProfile.profileForm" novalidate>
+  <div class="row">
 
     <div class="form-group col-xs-6 soft-right-grid" ng-class="{'has-error': volunteerProfile.validate('firstName')}">
       <label for="firstName" class="control-label required">First Name</label>
@@ -39,6 +39,7 @@
 
     <div class="form-group col-xs-12" ng-class="{'has-error': volunteerProfile.validate('email')}">
       <label for="email" class="control-label required">Email</label>
+
       <input type="email"
              class="form-control"
              name="email"
@@ -59,7 +60,11 @@
           <span dynamic-content="$root.MESSAGES.invalidEmail.content | html"></span>
         </span>
       </ng-messages>
+      <div ng-if="$root.username !== null && $root.username !== undefined" class="go-local-email-warning">Changing your email will change your username for Crossroads.net.</div>
     </div>
+
+  </div>
+  <div class="row">
 
     <div class="form-group col-xs-6 soft-right-grid" ng-class="{'has-error': volunteerProfile.validate('birthdate')}">
       <label for="birthdate" class="control-label required">Birth Date</label>
@@ -117,6 +122,9 @@
       </ng-messages>
     </div>
 
+  </div>
+  <div class="row">
+
     <div class="col-xs-12">
       <button type="submit" class="btn btn-block btn-primary-gc pull-right" ng-click="volunteerProfile.submit()"> Next
         <svg viewBox="0 0 32 32" class="icon icon-arrow-right9">
@@ -124,5 +132,5 @@
         </svg>
       </button>
     </div>
-  </ng-form>
-</div>
+  </div>
+</ng-form>
