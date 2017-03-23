@@ -93,9 +93,10 @@
 
                   // code below prevents console errors during redirect
                   ContentPageService.page = {
-                    content: '404 Content not found',
-                    pageType: '',
-                    title: 'Page not found'
+                    redirectType: 'RedirectorPage',
+                    content: '',
+                    pageType: 'NoHeaderOrFooter',
+                    title: ''
                   };
 
                   $window.location.href = `${link}?${query_params_string}`;
