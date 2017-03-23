@@ -36,6 +36,7 @@ namespace crds_angular.Services
         private readonly IContactRepository _contactRepository;
         private readonly ILog _logger = LogManager.GetLogger(typeof(AddressService));
         private readonly IFinderRepository _finderRepository;
+        private readonly IGroupRepository _groupRepository;
         private readonly IParticipantRepository _participantRepository;
         private readonly IAddressService _addressService;
         private readonly IGroupToolService _groupToolService;
@@ -57,6 +58,7 @@ namespace crds_angular.Services
                             IContactRepository contactRepository, 
                             IAddressService addressService, 
                             IParticipantRepository participantRepository, 
+                            IGroupRepository groupRepository,
                             IGroupService groupService,
                             IGroupToolService groupToolService,
                             IApiUserRepository apiUserRepository,
@@ -70,6 +72,7 @@ namespace crds_angular.Services
             _addressService = addressService;
             _participantRepository = participantRepository;
             _groupService = groupService;
+            _groupRepository = groupRepository;
             _apiUserRepository = apiUserRepository;
             _approvedHost = configurationWrapper.GetConfigIntValue("ApprovedHostStatus");
             _anywhereGroupType = configurationWrapper.GetConfigIntValue("AnywhereGroupTypeId");
@@ -184,6 +187,58 @@ namespace crds_angular.Services
             return pins;
         }
 
+        public List<PinDto> GetMyPins(string token, GeoCoordinate originCoords, int contactId)
+        {
+            var pins = new List<PinDto>();
+            var participantId = GetParticipantIdFromContact(contactId);
+
+            List<PinDto> groupPins = GetMyGroupPins(token, new int[] { _anywhereGroupType}, participantId);
+            PinDto personPin = GetPinDetails(participantId);
+            
+            pins.AddRange(groupPins);
+            pins.Add(personPin);
+
+            foreach (var pin in pins)
+            {
+                //calculate proximity for all pins to origin
+                if (pin.Address.Latitude == null) continue;
+                if (pin.Address.Longitude != null) pin.Proximity = GetProximity(originCoords, new GeoCoordinate(pin.Address.Latitude.Value, pin.Address.Longitude.Value));
+            }
+
+            return pins;
+        }
+
+        public List<PinDto> GetMyGroupPins(string token, int[] groupTypeIds, int participantId)
+        {                      
+            var groupsByType = _groupRepository.GetGroupsForParticipantByTypeOrID(participantId, token, groupTypeIds);
+
+            if (groupsByType == null)
+            {
+                return null;
+            }
+
+            var groupDTOs = groupsByType.Select(Mapper.Map<MpGroup, GroupDTO>).ToList();
+
+            // TODO pull this out - 2x in class - just return what comes out of private method            
+            var pins = new List<PinDto>();
+
+            foreach (var group in groupDTOs)
+            {
+                var pin = Mapper.Map<PinDto>(group);
+                pin.Gathering = group;
+                if (pin.Contact_ID != null) // contactId = 0
+                {
+                    var contact = _contactRepository.GetContactById((int)pin.Contact_ID);
+                    pin.FirstName = contact.First_Name;
+                    pin.LastName = contact.Last_Name;
+                }
+
+                pins.Add(pin);
+            }
+
+            return pins;
+        }
+
         private static decimal GetProximity(GeoCoordinate originCoords, GeoCoordinate pinCoords)
         {
             return (decimal) Proximity(originCoords.Latitude, originCoords.Longitude, pinCoords.Latitude,pinCoords.Longitude);
@@ -227,18 +282,26 @@ namespace crds_angular.Services
 
         public GeoCoordinate GetGeoCoordsFromAddressOrLatLang(string address, string lat, string lng)
         {
-            double latitude = Convert.ToDouble(lat.Replace("$", "."));
-            double longitude = Convert.ToDouble(lng.Replace("$", "."));
+              double latitude = Convert.ToDouble(lat.Replace("$", "."));
+              double longitude = Convert.ToDouble(lng.Replace("$", "."));
 
             bool geoCoordsPassedIn = latitude != 0 && longitude != 0;
 
             GeoCoordinate originCoordsFromGoogle = geoCoordsPassedIn ? null : _addressGeocodingService.GetGeoCoordinates(address);
 
-            GeoCoordinate originCoordsFromClient = new GeoCoordinate(latitude, longitude);
+              GeoCoordinate originCoordsFromClient = new GeoCoordinate(latitude, longitude);
 
             GeoCoordinate originCoordinates = geoCoordsPassedIn ? originCoordsFromClient : originCoordsFromGoogle;
 
-            return originCoordinates;
+              return originCoordinates;
+        }
+
+        public GeoCoordinate GetGeoCoordsFromLatLong(string lat, string lng)
+        {
+            double latitude = Convert.ToDouble(lat.Replace("$", "."));
+            double longitude = Convert.ToDouble(lng.Replace("$", "."));
+
+            return new GeoCoordinate(latitude, longitude);
         }
 
         private List<PinDto> GetGroupPinsinRadius(GeoCoordinate originCoords, string address)
@@ -264,6 +327,14 @@ namespace crds_angular.Services
                 pins.Add(pin);
             }
 
+            return pins;
+        }
+
+        private List<PinDto> GetMyPersonPin(int participantId)
+        {
+            // ignoring originCoords at this time
+            var pins = new List<PinDto>();
+// TODO - get pin details
             return pins;
         }
 

@@ -169,6 +169,37 @@ namespace crds_angular.Controllers.API
             }
         }
 
+        [RequiresAuthorization]
+        [ResponseType(typeof(PinSearchResultsDto))]
+        [VersionedRoute(template: "finder/findmypinsbycontactId/{contactId}/{lat}/{lng}", minimumVersion: "1.0.0")]
+        [System.Web.Http.Route("finder/findpinsbyaddress/{contactId}/{lat}/{lng}")]
+        [System.Web.Http.HttpGet]
+        public IHttpActionResult GetMyPinsByContactId([FromUri]int contactId, [FromUri]string lat, [FromUri]string lng)
+        {
+            return Authorized(token =>
+            {
+                try
+                {
+                    var originCoords = _finderService.GetGeoCoordsFromLatLong(lat, lng);
+
+                    var pinsForContact = _finderService.GetMyPins(token, originCoords, contactId);
+
+                    foreach (var pin in pinsForContact)
+                    {
+                        pin.Address = _finderService.RandomizeLatLong(pin.Address);
+                    }
+
+                    var result = new PinSearchResultsDto(new GeoCoordinates(originCoords.Latitude, originCoords.Longitude), pinsForContact);
+
+                    return Ok(result);
+                }
+                catch (Exception ex)
+                {
+                    var apiError = new ApiErrorDto("Get Pins for My Stuff", ex);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+            });
+        }
         /// <summary>
         /// Logged in user invites a participant to the gathering
         /// </summary>

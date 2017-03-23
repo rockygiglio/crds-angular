@@ -325,6 +325,7 @@ namespace crds_angular.App_Start
 
             Mapper.CreateMap<MpGroup, GroupDTO>()
                 .ForMember(dest => dest.GroupName, opts => opts.MapFrom(src => src.Name))
+                .ForMember(dest => dest.ContactId, opts => opts.MapFrom(src => src.PrimaryContact))
                 .ForMember(dest => dest.GroupTypeId, opts => opts.MapFrom(src => src.GroupType));
 
             Mapper.CreateMap<GroupDTO, MpGroup>()
@@ -384,6 +385,7 @@ namespace crds_angular.App_Start
             Mapper.CreateMap<FinderPinDto, PinDto>();
 
             Mapper.CreateMap<GroupDTO, PinDto>()
+                .ForMember(dest => dest.Contact_ID, opts => opts.MapFrom(src => src.ContactId))
                 .ForMember(dest => dest.PinType, opt => opt.UseValue<PinType>(PinType.GATHERING));
 
             Mapper.CreateMap<MpSU2SOpportunity, ServeOpportunity>();
