@@ -15,6 +15,9 @@ namespace MinistryPlatform.Translation.Models.DTO
         [JsonExtensionData]
         private IDictionary<string, JToken> _unmappedData;
 
+        [JsonProperty("Participant_ID")]
+        public int ParticipantId { get; set; }
+
         public MpGroupSearchResultDto()
         {
             AttributeTypes = new Dictionary<int, MpObjectAttributeType>();

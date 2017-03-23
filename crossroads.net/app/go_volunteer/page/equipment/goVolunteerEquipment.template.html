@@ -1,7 +1,7 @@
 <div dynamic-content="$root.MESSAGES.goVolunteerEquipmentQuestion.content | html"></div>
 <div class="row">
   <div class="col-xs-10 col-xs-offset-1">
-    <div class="checkbox" ng-repeat="item in goEquipment.equipment">
+    <div class="checkbox" ng-repeat="item in goEquipment.equipment | orderBy:'name'">
       <label for="{{item.attributeId}}" class="control-label">
         <input type="checkbox"
                ng-value="item.attributeId"

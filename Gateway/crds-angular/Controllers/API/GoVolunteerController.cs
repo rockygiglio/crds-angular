@@ -356,8 +356,7 @@ namespace crds_angular.Controllers.API
         private IHttpActionResult SaveRegistration(string token, CincinnatiRegistration goVolunteerRegistration)
         {
             try
-            {
-                goVolunteerRegistration.InitiativeId = _configurationWrapper.GetConfigIntValue("GoCincinnatiInitativeId");
+            {                
                 var reg = _goVolunteerService.CreateRegistration(goVolunteerRegistration, token);
                 return Ok(reg);
             }

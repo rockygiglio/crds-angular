@@ -15,6 +15,7 @@ using crds_angular.Security;
 using crds_angular.Services.Interfaces;
 using Crossroads.ApiVersioning;
 using Crossroads.Web.Common.Security;
+using System.ComponentModel.DataAnnotations;
 using log4net;
 
 namespace crds_angular.Controllers.API
@@ -139,25 +140,25 @@ namespace crds_angular.Controllers.API
         }
 
         [ResponseType(typeof(PinSearchResultsDto))]
-        [VersionedRoute(template: "finder/findpinsbyaddress/{userSearchAddress}", minimumVersion: "1.0.0")]
-        [System.Web.Http.Route("finder/findpinsbyaddress/{userSearchAddress}")]
+        [VersionedRoute(template: "finder/findpinsbyaddress/{userSearchAddress}/{lat?}/{lng?}", minimumVersion: "1.0.0")]
+        [System.Web.Http.Route("finder/findpinsbyaddress/{userSearchAddress}/{lat?}/{lng?}")]
         [System.Web.Http.HttpGet]
-        public IHttpActionResult GetFindPinsByAddress(string userSearchAddress)
+        public IHttpActionResult GetFindPinsByAddress([FromUri]string userSearchAddress, [FromUri]string lat = "0", [FromUri]string lng = "0")
         {
             try
             {
+                var originCoords = _finderService.GetGeoCoordsFromAddressOrLatLang(userSearchAddress, lat, lng);
+                var pinsInRadius = _finderService.GetPinsInRadius(originCoords, userSearchAddress);
 
-                GeoCoordinate originCoords = _addressGeocodingService.GetGeoCoordinates(userSearchAddress);
-                GeoCoordinates originGeoCoordinates = new GeoCoordinates(originCoords.Latitude, originCoords.Longitude);
-
-                List<PinDto> pinsInRadius = _finderService.GetPinsInRadius(originCoords, userSearchAddress);
-     
                 foreach (var pin in pinsInRadius)
                 {
-                    pin.Address = _finderService.RandomizeLatLong(pin.Address);
+                    if (pin.PinType != PinType.SITE)
+                    {
+                        pin.Address = _finderService.RandomizeLatLong(pin.Address);
+                    }
                 }
-                
-                PinSearchResultsDto result = new PinSearchResultsDto(originGeoCoordinates, pinsInRadius);
+
+                var result = new PinSearchResultsDto(new GeoCoordinates(originCoords.Latitude, originCoords.Longitude), pinsInRadius);
 
                 return Ok(result);
             }
@@ -166,6 +167,75 @@ namespace crds_angular.Controllers.API
                 var apiError = new ApiErrorDto("Get Pin By Address Failed", ex);
                 throw new HttpResponseException(apiError.HttpResponseMessage);
             }
+        }
+
+        /// <summary>
+        /// Logged in user invites a participant to the gathering
+        /// </summary>
+        [RequiresAuthorization]
+        [VersionedRoute(template: "finder/pin/invitetogathering/{gatheringId}", minimumVersion: "1.0.0")]
+        [System.Web.Http.Route("finder/pin/invitetogathering/{gatheringId}")]
+        [System.Web.Http.HttpPost]
+        public IHttpActionResult InviteToGathering([FromUri] int gatheringId, [FromBody] User person)
+        {
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState.Values.SelectMany(val => val.Errors).Aggregate("", (current, err) => current + err.Exception.Message);
+                var dataError = new ApiErrorDto("CreateInvitation Data Invalid", new InvalidOperationException("Invalid CreateInvitation Data " + errors));
+                throw new HttpResponseException(dataError.HttpResponseMessage);
+            }
+
+            return Authorized(token =>
+            {
+                try
+                {
+                    _finderService.InviteToGathering(token, gatheringId, person);
+                    return (Ok());
+                }
+                catch (ValidationException e)
+                {
+                    var error = new ApiErrorDto("Not authorized to send invitations of this type", e, HttpStatusCode.Forbidden);
+                    throw new HttpResponseException(error.HttpResponseMessage);
+                }
+                catch (Exception e)
+                {
+                    _logger.Error(string.Format("Could not create invitation to recipient {0} ({1}) for group {2}", person.firstName + " " + person.lastName, person.email, 3), e);
+                    var apiError = new ApiErrorDto("CreateInvitation Failed", e, HttpStatusCode.InternalServerError);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+            });
+        }
+
+        /// <summary>
+        /// Logged in user requests to join gathering
+        /// </summary>
+        [RequiresAuthorization]
+        [VersionedRoute(template: "finder/pin/gatheringjoinrequest", minimumVersion: "1.0.0")]
+        [System.Web.Http.Route("finder/pin/gatheringjoinrequest")]
+        [System.Web.Http.HttpPost]
+        public IHttpActionResult GatheringJoinRequest([FromBody]int gatheringId)
+        {
+            return Authorized(token =>
+            {
+                try
+                {
+                    _finderService.GatheringJoinRequest(token, gatheringId);
+                    return (Ok());
+                }
+                catch (Exception e)
+                {
+                    _logger.Error("Could not generate request", e);
+                    if (e.Message == "User is already member or has request")
+                    {
+                        throw new HttpResponseException(System.Net.HttpStatusCode.Conflict);
+                    }
+                    else
+                    {
+                        throw new HttpResponseException(new ApiErrorDto("Gathering request failed", e).HttpResponseMessage);
+                    }
+
+                }
+            });
         }
 
     }
