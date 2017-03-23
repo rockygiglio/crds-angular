@@ -80,7 +80,7 @@ SELECT
 	G.Description AS groupDescription,
 	G.Primary_Contact as primarycontactId,
 	null AS primaryContactEmail,
-	123 as participantCount,
+	(SELECT count(*) FROM group_participants gp WHERE gp.group_id = G.Group_id and gp.end_date is null) AS participantCount,
 	G.Group_Type_ID AS groupTypeId,
 	null AS householdId,
 	@groupPinType AS pinType
