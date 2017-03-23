@@ -7,4 +7,10 @@
   <div dynamic-content="$root.MESSAGES.goVolunteerAnywhereProfileConfirm.content | html"></div>
 
   <p>Contact your leader at <a href="mailto:{{$ctrl.project.email}}">{{$ctrl.project.email}}</a> with any immediate questions.</p>
+
+  <div class="row" ng-if="$root.username != undefined">
+    <div class="col-xs-6 push-top">
+      <a class="btn btn-block btn-primary-gc" ui-sref="logout">Log Out</a>
+    </div>
+  </div>
 </div>
