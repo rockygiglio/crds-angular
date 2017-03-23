@@ -135,6 +135,7 @@ export default class GoVolunteerAnywhereProfileForm {
             optionsTypes: ['phoneNumber'],
             templateOptions: {
               label: 'Mobile Phone',
+              placeholder: '###-###-####',
               required: true
             }
           },
