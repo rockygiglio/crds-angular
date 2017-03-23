@@ -8,7 +8,8 @@ namespace crds_angular.Services.Interfaces
 {
     public interface IAwsCloudsearchService
     {
-        void UploadAllConnectRecordsToAwsCloudsearch();
-        SearchResponse SearchConnectAwsCloudsearch();
+        UploadDocumentsResponse UploadAllConnectRecordsToAwsCloudsearch();
+        UploadDocumentsResponse DeleteAllConnectRecordsInAwsCloudsearch();
+        SearchResponse SearchConnectAwsCloudsearch(string querystring, int size, string returnfields);
     }
 }

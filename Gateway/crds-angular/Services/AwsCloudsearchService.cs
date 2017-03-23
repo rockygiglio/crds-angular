@@ -26,22 +26,18 @@ namespace crds_angular.Services
             _finderRepository = finderRepository;
         }
 
-        public void UploadAllConnectRecordsToAwsCloudsearch()
+        public UploadDocumentsResponse UploadAllConnectRecordsToAwsCloudsearch()
         {
-            System.Diagnostics.Debug.Write("Testing Upload");
             var domainConfig = new AmazonCloudSearchDomainConfig
             {
                 ServiceURL = amazonSearchURL
-                //RegionEndpoint = Amazon.RegionEndpoint.SAEast1
             };
             var cloudSearch = new Amazon.CloudSearchDomain.AmazonCloudSearchDomainClient(domainConfig);
-
-            //var path = @"C:\Users\Markku\Desktop\connect_json.txt";
 
             var pinList = GetDataForCloudsearch();
 
             //serialize
-            string json = JsonConvert.SerializeObject(pinList, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+            var json = JsonConvert.SerializeObject(pinList, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
             System.Diagnostics.Debug.Write(json);
 
             var ms = new MemoryStream(Encoding.UTF8.GetBytes(json));
@@ -50,12 +46,42 @@ namespace crds_angular.Services
             {
                 ContentType = ContentType.ApplicationJson,
                 Documents = ms
-                //FilePath = path
             };
 
-            var response = cloudSearch.UploadDocuments(upload);
+            return(cloudSearch.UploadDocuments(upload));
+        }
 
-            System.Diagnostics.Debug.Write(response);
+        public UploadDocumentsResponse DeleteAllConnectRecordsInAwsCloudsearch()
+        {
+            var domainConfig = new AmazonCloudSearchDomainConfig
+            {
+                ServiceURL = amazonSearchURL
+            };
+            var cloudSearch = new Amazon.CloudSearchDomain.AmazonCloudSearchDomainClient(domainConfig);
+
+            var results = SearchConnectAwsCloudsearch("matchall", 10000, "_no_fields");
+            var deletelist = new List<AwsCloudsearchDto>();
+            foreach (var hit in results.Hits.Hit)
+            {
+                var deleterec = new AwsCloudsearchDto
+                {
+                    id = hit.Id,
+                    type = "delete"
+                };
+                deletelist.Add(deleterec);
+            }
+            // serialize
+            var json = JsonConvert.SerializeObject(deletelist, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+
+            var ms = new MemoryStream(Encoding.UTF8.GetBytes(json));
+
+            var upload = new Amazon.CloudSearchDomain.Model.UploadDocumentsRequest()
+            {
+                ContentType = ContentType.ApplicationJson,
+                Documents = ms
+            };
+
+            return (cloudSearch.UploadDocuments(upload));
         }
 
 
@@ -79,19 +105,21 @@ namespace crds_angular.Services
         }
         
 
-        public SearchResponse SearchConnectAwsCloudsearch()
+        public SearchResponse SearchConnectAwsCloudsearch(string querystring, int size, string returnfields)
         {
             System.Diagnostics.Debug.Write("Test");
             var domainConfig = new AmazonCloudSearchDomainConfig
             {
                 ServiceURL = amazonSearchURL
-                //RegionEndpoint = Amazon.RegionEndpoint.SAEast1
             };
 
             var cloudSearch = new Amazon.CloudSearchDomain.AmazonCloudSearchDomainClient(domainConfig);
             var searchRequest = new Amazon.CloudSearchDomain.Model.SearchRequest
             {
-                Query = "group"
+                Query = querystring,
+                QueryParser = QueryParser.Structured,
+                Size = size,
+                Return = returnfields
             };
 
             var response = cloudSearch.Search(searchRequest);

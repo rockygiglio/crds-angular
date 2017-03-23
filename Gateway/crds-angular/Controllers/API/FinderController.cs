@@ -250,9 +250,9 @@ namespace crds_angular.Controllers.API
         {
             try
             {
-                _awsCloudsearchService.UploadAllConnectRecordsToAwsCloudsearch();
+                var response = _awsCloudsearchService.UploadAllConnectRecordsToAwsCloudsearch();
 
-                return Ok();
+                return Ok(response);
             }
             catch (Exception ex)
             {
@@ -263,19 +263,38 @@ namespace crds_angular.Controllers.API
 
         [ResponseType(typeof(PinSearchResultsDto))]
         [VersionedRoute(template: "finder/testawssearch", minimumVersion: "1.0.0")]
-        [System.Web.Http.Route("finder/testawssearch")]
+        [System.Web.Http.Route("finder/testawssearch/{searchstring}")]
         [System.Web.Http.HttpGet]
-        public IHttpActionResult TestAwsSearch()
+        public IHttpActionResult TestAwsSearch([FromUri] string searchstring)
         {
             try
             {
-                var response = _awsCloudsearchService.SearchConnectAwsCloudsearch();
+                var response = _awsCloudsearchService.SearchConnectAwsCloudsearch(searchstring ,10000, "_all_fields");
 
                 return Ok(response);
             }
             catch (Exception ex)
             {
                 var apiError = new ApiErrorDto("TestAwsSearch Failed", ex);
+                throw new HttpResponseException(apiError.HttpResponseMessage);
+            }
+        }
+
+        [ResponseType(typeof(PinSearchResultsDto))]
+        [VersionedRoute(template: "finder/testawsdelete", minimumVersion: "1.0.0")]
+        [System.Web.Http.Route("finder/testawsdelete")]
+        [System.Web.Http.HttpGet]
+        public IHttpActionResult TestAwsDelete()
+        {
+            try
+            {
+                var response = _awsCloudsearchService.DeleteAllConnectRecordsInAwsCloudsearch();
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                var apiError = new ApiErrorDto("TestAwsDelete Failed", ex);
                 throw new HttpResponseException(apiError.HttpResponseMessage);
             }
         }
