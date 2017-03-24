@@ -16,5 +16,6 @@ namespace crds_angular.Services.Interfaces
         AddressDTO RandomizeLatLong(AddressDTO address);
         GeoCoordinate GetGeoCoordsFromAddressOrLatLang(string address, string lat, string lng);
         void GatheringJoinRequest(string token, int gatheringId);
+        Invitation InviteToGathering(string token, int gatheringId, User person);
     }
 }

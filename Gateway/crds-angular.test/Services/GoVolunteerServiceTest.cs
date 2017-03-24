@@ -103,6 +103,7 @@ namespace crds_angular.test.Services
         public void ShouldSendAnywhereEmailOnlyToVolunteer()
         {
             const int templateId = 123456789;
+            const int leaderTemplateId = 987654321;
             const int fromContactId = 0987;
             var fromContact = TestHelpers.MyContact(fromContactId);
             var registration = TestHelpers.AnywhereRegistrationNoSpouse();
@@ -112,6 +113,7 @@ namespace crds_angular.test.Services
 
             _configurationWrapper.Setup(m => m.GetConfigIntValue("GoLocalAnywhereEmailTemplate")).Returns(templateId);
             _configurationWrapper.Setup(m => m.GetConfigIntValue("GoLocalAnywhereFromContactId")).Returns(fromContactId);
+            _configurationWrapper.Setup(m => m.GetConfigIntValue("GoLocalAnywhereLeaderEmailTemplate")).Returns(leaderTemplateId);
             _contactService.Setup(m => m.GetContactById(It.IsAny<int>())).Returns(fromContact);
             _groupConnectorService.Setup(m => m.GetGroupConnectorById(It.IsAny<int>())).Returns(groupConnector);
             _commnuicationService.Setup(m => m.GetTemplateAsCommunication(templateId,
@@ -124,6 +126,7 @@ namespace crds_angular.test.Services
                                                                             It.IsAny<Dictionary<string, object>>())).Returns(communication);
             _commnuicationService.Setup(m => m.SendMessage(communication, false)).Returns(1);
             var success = _fixture.SendMail(registration);
+            _configurationWrapper.VerifyAll();
             _commnuicationService.VerifyAll();
             _contactService.VerifyAll();
             _groupConnectorService.VerifyAll();

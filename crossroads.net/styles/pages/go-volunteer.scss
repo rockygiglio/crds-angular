@@ -1,6 +1,8 @@
 $go-local-primary: rgb(0, 177, 64);
 $go-local-secondary: rgb(196, 214, 0);
+$go-local-dark: #007e2e;
 $go-local-site-filter: rgba(0, 177, 64, 0.55);
+$go-local-closed: #dddddd;
 $gc-green: #9ab73c;
 
 .go-volunteer {
@@ -26,8 +28,49 @@ $gc-green: #9ab73c;
   h1 {
     font-size: 2.4em;
   }
+
+  h2, h3.go-local-header {
+    font-size: 1.63em;
+
+    @media (min-width: $screen-xs-min) {
+      font-size: 3.67vw;
+    }
+
+    @media (min-width: $screen-sm-min) {
+      font-size: 1.5em;
+    }
+
+    @media (min-width: $screen-md-min) {
+      font-size: 1.53em;
+    }
+
+    @media (min-width: $screen-lg-min) {
+      font-size: 1.85em;
+    }
+    }
+
+  h3.go-local-title {
+    font-size: 1.1em;
+
+    @media (min-width: $screen-xs-min) {
+      font-size: 1.3em;
+    }
+
+    @media (min-width: $screen-sm-min) {
+      font-size: 1.38em;
+    }
+
+    @media (min-width: $screen-md-min) {
+      font-size: 1.48em;
+    }
+
+    @media (min-width: $screen-lg-min) {
+      font-size: 1.55em;
+    }
+  }
+
   .btn-primary-gc {
-    @include button-variant(#fff, $go-local-primary, $go-local-primary);
+    @include button-variant(#fff, $go-local-dark, $go-local-dark);
   }
 
   .navbar {
@@ -108,8 +151,9 @@ $gc-green: #9ab73c;
     background-color: $gray;
   }
   .card-item {
-    border-left: 5px solid $gray-light;
+    border-left: 5px solid $go-local-primary;
     margin-bottom: 16px;
+    background: rgba($gray-lighter, 0.3);
 
     &.disabled {
       border-left: 5px solid $gray;
@@ -130,7 +174,10 @@ $gc-green: #9ab73c;
 
   .terms-box {
     background: rgba(255,255,255,.2);
+    overflow-x: hidden;
+    overflow-y: scroll;
   }
+
   h-number label.form-control {
     background: transparent;
     color: $black;
@@ -160,8 +207,29 @@ $gc-green: #9ab73c;
     position: inherit;
   }
 
+  .media-card-link {
+    &:hover {
+      background: rgba($go-local-primary, 0.1);
+    }
+  }
+
   .icon-checkmark {
     color: $go-local-secondary;
+  }
+
+  .alert-info {
+    @include alert-variant($go-local-closed, $gray, $black);
+  }
+
+  .go-local-email-warning {
+    font-size: 85%;
+    font-weight: 300;
+  }
+
+  .email-change-warning {
+    .form-group {
+      margin-bottom: 0;
+    }
   }
 }
 
@@ -217,7 +285,7 @@ $gc-green: #9ab73c;
   }
 }
 
-.go-volunteer-waiver-wrapper {
+.go-volunteer-waiver {
   height: 250px;
   overflow-y: scroll;
   background-color: $white;

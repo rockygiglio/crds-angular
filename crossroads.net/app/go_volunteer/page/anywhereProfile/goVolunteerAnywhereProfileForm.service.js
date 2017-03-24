@@ -2,7 +2,9 @@ import moment from 'moment';
 
 export default class GoVolunteerAnywhereProfileForm {
   /* @ngInject */
-  constructor(GoVolunteerService, GoVolunteerDataService, $log) {
+  constructor($rootScope, $filter, GoVolunteerService, GoVolunteerDataService, $log) {
+    this.rootScope = $rootScope;
+    this.filter = $filter;
     this.goVolunteerService = GoVolunteerService;
     this.goVolunteerDataService = GoVolunteerDataService;
     this.log = $log;
@@ -60,7 +62,7 @@ export default class GoVolunteerAnywhereProfileForm {
     return [
       {
         className: '',
-        wrapper: 'campBootstrapRow',
+        wrapper: 'goVolunteerBootstrapRow',
         fieldGroup: [
           {
             className: 'form-group col-xs-6',
@@ -83,16 +85,21 @@ export default class GoVolunteerAnywhereProfileForm {
         ]
       },
       {
-        key: 'email',
-        type: 'crdsInput',
-        templateOptions: {
-          label: 'Email',
-          required: true,
-        }
+        wrapper: 'goVolunteerEmailChangeWarning',
+        fieldGroup: [
+          {
+            key: 'email',
+            type: 'crdsInput',
+            templateOptions: {
+              label: 'Email',
+              required: true,
+            }
+          }
+        ]
       },
       {
         className: '',
-        wrapper: 'campBootstrapRow',
+        wrapper: 'goVolunteerBootstrapRow',
         fieldGroup: [
           {
             className: 'form-group col-sm-6',
@@ -106,6 +113,7 @@ export default class GoVolunteerAnywhereProfileForm {
             },
             validation: {
               messages: {
+                date: () => this.filter('htmlToPlainText')(this.rootScope.MESSAGES.invalidData.content),
                 tooYoung: () => 'Must be 18 years old or older to sign up'
               }
             },
@@ -161,7 +169,7 @@ export default class GoVolunteerAnywhereProfileForm {
         templateOptions: {
           label: 'If you are bringing your children, please specify how many.',
           helpBlock: '(17 years old or under)',
-          required: false,
+          required: true,
           valueProp: 'value',
           labelProp: 'label',
           options: [{

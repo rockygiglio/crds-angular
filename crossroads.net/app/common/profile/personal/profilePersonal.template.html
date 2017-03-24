@@ -236,7 +236,7 @@
     </div>
 
     <div class="row">
-      <div class="form-group col-sm-6" >
+      <div class="form-group col-sm-6" ng-class="{'has-error': profile.validation.showErrors(profile.pform, 'mobile-phone')}">
         <label for="mobile-phone" ng-class="{'required': profile.requireMobilePhone}">Mobile Phone</label>
           <div class="small inline bold">
             <span ng-show="phoneToggle" class="link-styling" ng-click="phoneToggle = !phoneToggle">Don't have a mobile phone?</span>
@@ -246,10 +246,11 @@
                  class="form-control"
                  name="mobile-phone"
                  id='mobile-phone'
-                 placeholder="Enter mobile phone"
+                 placeholder="###-###-####"
                  ng-model="profile.profileData.person.mobilePhone"
                  ng-required='profile.requireMobilePhone'
-                 ng-pattern='profile.phoneFormat' >
+                 phone-number-format
+                 ng-pattern='profile.phoneFormat'>
           <ng-messages for="profile.pform['mobile-phone'].$error" ng-if="profile.validation.showErrors(profile.pform, 'mobile-phone')" ng-class="{'has-error':  profile.validation.showErrors(profile.pform, 'mobile-phone') }" >
             <span ng-message='required' ng-if='profile.requireMobilePhone'>
               <span dynamic-content='$root.MESSAGES.fieldCanNotBeBlank.content | html'></span>

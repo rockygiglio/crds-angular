@@ -371,6 +371,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
+    <Compile Include="Utils\PhoneNumberValidator.cs" />
     <Compile Include="Utils\PlatformUtils.cs" />
   </ItemGroup>
   <ItemGroup>

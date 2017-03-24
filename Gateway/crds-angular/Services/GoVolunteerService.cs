@@ -134,7 +134,6 @@ namespace crds_angular.Services
                 var participantId = RegistrationContact(registration, token);
                 var registrationId = CreateAnywhereRegistrationDto(registration, participantId);
                 ChildAgeGroups(registration, registrationId);
-                CreateAnywhereRegistrationDto(registration, participantId);
                 Observable.Start(() => SendMail(registration));
                 return registration;
             }
@@ -166,6 +165,7 @@ namespace crds_angular.Services
             try
             {
                 int templateId;
+                int leaderTemplateId = 0;
                 MpMyContact fromContact;
                 MpMyContact replyContact;
                 Dictionary<string, object> mergeData;
@@ -180,6 +180,7 @@ namespace crds_angular.Services
                 else
                 {
                     templateId = _configurationWrapper.GetConfigIntValue("GoLocalAnywhereEmailTemplate");
+                    leaderTemplateId = _configurationWrapper.GetConfigIntValue("GoLocalAnywhereLeaderEmailTemplate");
                     var projectLeader = _groupConnectorService.GetGroupConnectorById(registration.GroupConnectorId);
                     fromContact = _contactService.GetContactById(_configurationWrapper.GetConfigIntValue("GoLocalAnywhereFromContactId"));
                     replyContact = _contactService.GetContactById(projectLeader.PrimaryRegistrationID);
@@ -209,6 +210,21 @@ namespace crds_angular.Services
                                                                                                mergeData);
                     _communicationService.SendMessage(spouseCommunication);
                 }
+
+                if (leaderTemplateId != 0)
+                {
+                    mergeData.Add("Anywhere_GO_Contact", fromContact.Email_Address);
+                    var leaderCommunication = _communicationService.GetTemplateAsCommunication(leaderTemplateId,
+                                                                                               fromContact.Contact_ID,
+                                                                                               fromContact.Email_Address,
+                                                                                               fromContact.Contact_ID,
+                                                                                               fromContact.Email_Address,
+                                                                                               replyContact.Contact_ID,
+                                                                                               replyContact.Email_Address,
+                                                                                               mergeData);
+                    _communicationService.SendMessage(leaderCommunication);
+                }
+
                 return returnVal > 0;
             }
             catch (Exception e)
@@ -317,16 +333,20 @@ namespace crds_angular.Services
 
         private Dictionary<string, object> SetupAnywhereMergeData(AnywhereRegistration registration, string projectLeaderName)
         {
+            var adultsParticipating = registration.SpouseParticipation ? 2 : 1;
+            var birthDate = DateTime.Parse(registration.Self.DateOfBirth);
             var merge = new Dictionary<string, object>
             {
                 {"Nickname", registration.Self.FirstName},
                 {"LastName", registration.Self.LastName},
                 {"Participant_Email_Address", registration.Self.EmailAddress},
-                {"Date_Of_Birth", registration.Self.DateOfBirth},
+                {"Date_Of_Birth", birthDate.Month + "/" + birthDate.Day + "/" + birthDate.Year},
                 {"Mobile_Phone", registration.Self.MobilePhone},
                 {"Spouse_Participating", registration.SpouseParticipation ? "Yes": "No"},
                 {"Number_Of_Children", registration.NumberOfChildren},
-                {"Group_Connector", projectLeaderName}
+                {"Group_Connector", projectLeaderName},
+                {"Adults_Participating", adultsParticipating},
+                {"Total_Volunteers", registration.NumberOfChildren + adultsParticipating}
             };
 
             return merge;

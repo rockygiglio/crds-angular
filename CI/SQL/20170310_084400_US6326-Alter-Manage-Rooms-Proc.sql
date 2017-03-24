@@ -16,7 +16,7 @@ GO
 
 IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[api_crds_Get_Checkin_Room_Data]') AND type in (N'P', N'PC'))
 BEGIN
-EXEC dbo.sp_executesql @statement = N'CREATE PROCEDURE [dbo].[api_crds_Get_Checkin_Room_Data] AS' 
+EXEC dbo.sp_executesql @statement = N'CREATE PROCEDURE [dbo].[api_crds_Get_Checkin_Room_Data] AS'
 END
 GO
 
@@ -59,7 +59,7 @@ DECLARE @TempEventRooms TABLE
 	Event_ID INT,
 	Event_Room_ID INT NULL,
 	Room_ID INT,
-	Room_Name VARCHAR(50),	
+	Room_Name VARCHAR(50),
 	Signed_In INT,
 	Volunteers INT
 )
@@ -93,7 +93,7 @@ BEGIN
 	SET @Capacity = 0
 	SET @Volunteers = 0
 
-	SELECT 
+	SELECT
 		@Event_Room_Event_ID = Event_ID,
 		@Event_Room_ID = Event_Room_ID,
 		@AllowCheckin = Allow_Checkin,
@@ -132,10 +132,10 @@ DECLARE @EventGroups TABLE
 -- get event groups where the group is tied to an event and has a room reservation,
 -- probably grab the attributes here as well
 INSERT INTO @EventGroups (Event_ID, Group_ID, Event_Group_ID, Event_Room_ID, Room_ID, Checked_In, Signed_In)
-	SELECT 
-		eg.Event_ID, 
-		Group_ID, 
-		Event_Group_ID, 
+	SELECT
+		eg.Event_ID,
+		Group_ID,
+		Event_Group_ID,
 		er.Event_Room_ID,
 		er.Room_ID,
 		Checked_In = [dbo].crds_getEventParticipantStatusCount(@EventID, @Room_ID, 4),
@@ -154,7 +154,7 @@ DECLARE @GroupAttributes TABLE
 
 INSERT INTO @GroupAttributes (Group_ID, Attribute_Type_ID, Attribute_ID, Attribute_Name, Sort_Order)
 	SELECT Group_ID, Attribute_Type_ID, a.Attribute_ID, Attribute_Name, Sort_Order
-	FROM Group_Attributes ga INNER JOIN Attributes a ON ga.Attribute_ID = a.Attribute_ID 
+	FROM Group_Attributes ga INNER JOIN Attributes a ON ga.Attribute_ID = a.Attribute_ID
 	WHERE ga.Group_ID IN (SELECT Group_ID FROM @EventGroups)
 
 SELECT * FROM @TempEventRooms
@@ -163,7 +163,7 @@ SELECT * FROM @EventGroups
 
 SELECT * FROM @GroupAttributes
 
-SELECT a.Attribute_ID, a.Attribute_Name, a.Description, a.Attribute_Type_ID, at.Description as Attribute_Type_Name FROM Attributes a INNER JOIN Attribute_Types at ON a.Attribute_Type_ID = at.Attribute_Type_ID 
+SELECT a.Attribute_ID, a.Attribute_Name, a.Description, a.Attribute_Type_ID, at.Description as Attribute_Type_Name FROM Attributes a INNER JOIN Attribute_Types at ON a.Attribute_Type_ID = at.Attribute_Type_ID
 WHERE at.Attribute_Type_ID IN (@AgeAttributeTypeId, @BirthMonthAttributeTypeId, @GradesAttributeTypeId, @NurseryMonthsAttributeTypeId)
 
 END
