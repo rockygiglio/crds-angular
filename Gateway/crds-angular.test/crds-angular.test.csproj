@@ -79,6 +79,13 @@
       <HintPath>..\packages\Common.Logging.Core.3.0.0\lib\net40\Common.Logging.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Crossroads.ApiVersioning, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Crossroads.ApiVersioning.1.0.4\lib\net45\Crossroads.ApiVersioning.dll</HintPath>
+    </Reference>
+    <Reference Include="Crossroads.ClientApiKeys, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Crossroads.ClientApiKeys.1.0.6\lib\net45\Crossroads.ClientApiKeys.dll</HintPath>
+    </Reference>
     <Reference Include="Crossroads.Web.Common, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Crossroads.Web.Common.1.0.13\lib\net45\Crossroads.Web.Common.dll</HintPath>
       <Private>True</Private>
@@ -193,6 +200,9 @@
     </Reference>
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Web.Cors, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Cors.5.2.3\lib\net45\System.Web.Cors.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.Helpers.dll</HintPath>
@@ -244,6 +254,7 @@
     <Compile Include="controllers\EventParticipantControllerTest.cs" />
     <Compile Include="controllers\GoVolunteerControllerTest.cs" />
     <Compile Include="controllers\GroupToolControllerTest.cs" />
+    <Compile Include="controllers\ImageControllerTest.cs" />
     <Compile Include="controllers\InvitationControllerTest.cs" />
     <Compile Include="controllers\LoginControllerTest.cs" />
     <Compile Include="controllers\LookupControllerTest.cs" />
@@ -396,10 +407,12 @@
     </PropertyGroup>
     <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
     <Error Condition="!Exists('..\packages\Crossroads.Web.Common.1.0.13\build\Crossroads.Web.Common.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Crossroads.Web.Common.1.0.13\build\Crossroads.Web.Common.targets'))" />
+    <Error Condition="!Exists('..\packages\Crossroads.ClientApiKeys.1.0.6\build\Crossroads.ClientApiKeys.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Crossroads.ClientApiKeys.1.0.6\build\Crossroads.ClientApiKeys.targets'))" />
   </Target>
   <Import Project="$(SlowCheetahTargets)" Condition="Exists('$(SlowCheetahTargets)')" Label="SlowCheetah" />
   <Import Project="..\packages\AutoMapper.3.3.1\tools\AutoMapper.targets" Condition="Exists('..\packages\AutoMapper.3.3.1\tools\AutoMapper.targets')" />
   <Import Project="..\packages\Crossroads.Web.Common.1.0.13\build\Crossroads.Web.Common.targets" Condition="Exists('..\packages\Crossroads.Web.Common.1.0.13\build\Crossroads.Web.Common.targets')" />
+  <Import Project="..\packages\Crossroads.ClientApiKeys.1.0.6\build\Crossroads.ClientApiKeys.targets" Condition="Exists('..\packages\Crossroads.ClientApiKeys.1.0.6\build\Crossroads.ClientApiKeys.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

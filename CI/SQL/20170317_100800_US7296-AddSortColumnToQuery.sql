@@ -1,7 +1,7 @@
 -- =============================================
--- Author:      Dustin Kocher
--- Create date: 2017-3-10
--- Description:	Update each rooms actual event id to display correct count of checked in or signed in.
+-- Author:      Tim Giblin
+-- Create date: 2017-3-17
+-- Description:	Add KC Sort Order
 -- =============================================
 
 USE [MinistryPlatform]
@@ -60,13 +60,14 @@ DECLARE @TempEventRooms TABLE
 	Event_Room_ID INT NULL,
 	Room_ID INT,
 	Room_Name VARCHAR(50),
+	KC_Sort_Order INT NULL,
 	Signed_In INT,
 	Volunteers INT
 )
 
 -- this is the rooms only, populated with the default values and room id/room name
-INSERT INTO @TempEventRooms (Event_ID, Room_ID, Room_Name)
-	SELECT @EventId, r.Room_ID, Room_Name
+INSERT INTO @TempEventRooms (Event_ID, Room_ID, Room_Name, KC_Sort_Order)
+	SELECT @EventId, r.Room_ID, Room_Name, KC_Sort_Order
 	FROM Buildings b INNER JOIN Rooms r ON b.Building_ID = r.Building_ID
 	WHERE r.Room_Usage_Type_ID = @RoomUsageKidsClubTypeId
 	AND b.Location_ID = @LocationId
