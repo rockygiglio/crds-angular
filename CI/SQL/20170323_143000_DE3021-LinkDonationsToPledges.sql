@@ -1,3 +1,6 @@
+USE [MinistryPlatform]
+GO
+
 IF IndexProperty(Object_Id('Donors'), 'IX_Donors__ContactID_DomainID', 'IndexId') IS NULL
 	CREATE INDEX IX_Donors__ContactID_DomainID ON Donors(Contact_ID, Domain_ID);
 
@@ -174,3 +177,4 @@ BEGIN
 			ROLLBACK
 	END CATCH
 END
+GO
