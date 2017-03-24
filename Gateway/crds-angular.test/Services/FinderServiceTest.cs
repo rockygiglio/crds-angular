@@ -16,6 +16,7 @@ using crds_angular.Models.Crossroads.Groups;
 using Crossroads.Web.Common.Configuration;
 using Crossroads.Web.Common.MinistryPlatform;
 using Rhino.Mocks;
+using Amazon.CloudSearchDomain.Model;
 
 namespace crds_angular.test.Services
 {
@@ -185,6 +186,25 @@ namespace crds_angular.test.Services
                 Latitude = 39.2844738,
                 Longitude = -84.319614
             };
+
+            var searchresults = new SearchResponse();
+            searchresults.Hits = new Hits();
+            searchresults.Hits.Found = 1;
+            searchresults.Hits.Start = 0;
+            searchresults.Hits.Hit = new List<Hit>();
+            var hit = new Hit();
+            var fields = new Dictionary<string, List<string>>();
+            fields.Add("city", new List<string>() { "Union" });
+            fields.Add("zip", new List<string>() { "41091" });
+            fields.Add("firstname", new List<string>() { "Robert" });
+            fields.Add("lastname", new List<string>() { "Smith" });
+            fields.Add("latlong", new List<string>() { "38.94526,-84.661275" });
+            hit.Fields = fields;
+            searchresults.Hits.Hit.Add(hit);
+
+            _awsCloudsearchService.Setup(mocked => mocked.SearchConnectAwsCloudsearch("matchall", 10000, "_all_fields")).Returns(searchresults);
+
+               // SearchConnectAwsCloudsearch("matchall", 10000, "_all_fields")
 
             _mpConfigurationWrapper.Setup(mocked => mocked.GetConfigIntValue("AnywhereGroupTypeId")).Returns(30);
             _mpGroupToolService.Setup(m => m.SearchGroups(It.IsAny<int[]>(), null, It.IsAny<string>(), null, originCoords)).Returns(new List<GroupDTO>());

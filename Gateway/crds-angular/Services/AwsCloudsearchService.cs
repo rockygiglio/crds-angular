@@ -4,9 +4,6 @@ using System.Linq;
 using System.Text;
 using crds_angular.Services.Interfaces;
 using Crossroads.Web.Common.Configuration;
-using Amazon;
-using Amazon.CloudSearch;
-using Amazon.CloudSearch.Model;
 using Amazon.CloudSearchDomain;
 using Amazon.CloudSearchDomain.Model;
 using AutoMapper;
@@ -19,18 +16,23 @@ namespace crds_angular.Services
     public class AwsCloudsearchService : MinistryPlatformBaseService, IAwsCloudsearchService
     {
         private readonly IFinderRepository _finderRepository;
-        private readonly string amazonSearchURL = "https://search-connect-int-sdjkhnnriypxn3ijhn4k5xkxq4.us-east-1.cloudsearch.amazonaws.com";
+        private readonly IConfigurationWrapper _configurationWrapper;
+        protected string AmazonSearchUrl;
 
-        public AwsCloudsearchService(IFinderRepository finderRepository)
+        public AwsCloudsearchService(IFinderRepository finderRepository,
+                                     IConfigurationWrapper configurationWrapper)
         {
             _finderRepository = finderRepository;
+            _configurationWrapper = configurationWrapper;
+
+            AmazonSearchUrl = _configurationWrapper.GetEnvironmentVarAsString("CRDS_AWS_CONNECT_ENDPOINT");
         }
 
         public UploadDocumentsResponse UploadAllConnectRecordsToAwsCloudsearch()
         {
             var domainConfig = new AmazonCloudSearchDomainConfig
             {
-                ServiceURL = amazonSearchURL
+                ServiceURL = AmazonSearchUrl
             };
             var cloudSearch = new Amazon.CloudSearchDomain.AmazonCloudSearchDomainClient(domainConfig);
 
@@ -55,7 +57,7 @@ namespace crds_angular.Services
         {
             var domainConfig = new AmazonCloudSearchDomainConfig
             {
-                ServiceURL = amazonSearchURL
+                ServiceURL = AmazonSearchUrl
             };
             var cloudSearch = new Amazon.CloudSearchDomain.AmazonCloudSearchDomainClient(domainConfig);
 
@@ -110,7 +112,7 @@ namespace crds_angular.Services
             System.Diagnostics.Debug.Write("Test");
             var domainConfig = new AmazonCloudSearchDomainConfig
             {
-                ServiceURL = amazonSearchURL
+                ServiceURL = AmazonSearchUrl
             };
 
             var cloudSearch = new Amazon.CloudSearchDomain.AmazonCloudSearchDomainClient(domainConfig);
