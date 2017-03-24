@@ -59,15 +59,15 @@ JOIN Contacts C ON C.Contact_ID = P.Contact_ID
 LEFT JOIN Households H ON H.Household_ID = C.Household_ID
 LEFT JOIN Addresses A ON A.Address_ID = H.Address_ID
 WHERE P.Show_On_Map = 1
-UNION
+UNION 
 --GATHERINGS
 SELECT
-    null AS firstName,
-	null AS lastname,
+    C.NickName AS firstName,
+	C.Last_Name AS lastname,
 	null As siteName,
-	null AS emailAddress,
-	null AS contactId,
-	null AS participantId,
+	C.Email_Address AS emailAddress,
+	C.Contact_ID AS contactId,
+	C.Participant_Record AS participantId,
 	G.Offsite_Meeting_Address AS addressId,
 	A.City AS city,
 	A.[State/Region] AS state,
@@ -79,13 +79,14 @@ SELECT
 	G.Group_Name AS groupName,
 	G.Description AS groupDescription,
 	G.Primary_Contact as primarycontactId,
-	null AS primaryContactEmail,
+	C.Email_Address AS primaryContactEmail,
 	(SELECT count(*) FROM group_participants gp WHERE gp.group_id = G.Group_id and gp.end_date is null) AS participantCount,
 	G.Group_Type_ID AS groupTypeId,
-	null AS householdId,
+	C.Household_ID AS householdId,
 	@groupPinType AS pinType
 FROM Groups G
 LEFT JOIN Addresses A ON A.Address_ID = G.Offsite_Meeting_Address
+LEFT JOIN Contacts C ON C.Contact_ID = G.Primary_Contact
 WHERE G.Group_Type_ID = @anywhereGroupTypeId
 UNION
 --SITES
