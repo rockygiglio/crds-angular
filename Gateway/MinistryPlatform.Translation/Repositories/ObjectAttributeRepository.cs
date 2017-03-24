@@ -34,15 +34,15 @@ namespace MinistryPlatform.Translation.Repositories
             _ministryPlatformRest = ministryPlatformRest;
         }
 
-        public List<MpObjectAttribute> GetCurrentObjectAttributes(string token, int objectId, MpObjectAttributeConfiguration configuration, int? attributeTypeIdFilter = null)
+        public List<MpObjectAttribute> GetCurrentObjectAttributes(string token, int objectId, MpObjectAttributeConfiguration configuration, int? attributeIdFilter = null)
         {
             var table = configuration.TableName;
             string columns = $"{table}_Attribute_ID AS ObjectAttributeId, {table}_Attributes.Attribute_ID, {table}_Attributes.Start_Date, {table}_Attributes.End_Date, Attribute_ID_Table.Attribute_Type_ID, Notes, Attribute_ID_Table_Attribute_Category_ID_Table.Attribute_Category, Attribute_ID_Table_Attribute_Type_ID_Table.Attribute_Type, Attribute_ID_Table.Description";
             string filter = $"{table}_ID = {objectId} AND ({table}_Attributes.End_Date Is Null OR {table}_Attributes.End_Date >= GetDate())";
 
-            if (attributeTypeIdFilter != null)
+            if (attributeIdFilter != null)
             {
-                filter += $" AND Attribute_ID_Table.Attribute_Type_ID = {attributeTypeIdFilter}";
+                filter += $" AND Attribute_ID_Table.Attribute_ID = {attributeIdFilter}";
             }
 
             var objectAttributes = _ministryPlatformRest.UsingAuthenticationToken(token).SearchTable<MpObjectAttribute>($"{table}_Attributes", filter, columns);
