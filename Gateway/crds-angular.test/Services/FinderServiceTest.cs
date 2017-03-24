@@ -34,6 +34,7 @@ namespace crds_angular.test.Services
         private Mock<IApiUserRepository> _apiUserRepository;
         private Mock<IAddressProximityService> _addressProximityService;
         private Mock<IInvitationService> _invitationService;
+        private Mock<IAwsCloudsearchService> _awsCloudsearchService;
 
         private int _memberRoleId = 16;
         private int _anywhereGatheringInvitationTypeId = 3;
@@ -52,6 +53,7 @@ namespace crds_angular.test.Services
             _apiUserRepository = new Mock<IApiUserRepository>();
             _groupService = new Mock<IGroupService>();
             _invitationService = new Mock<IInvitationService>();
+            _awsCloudsearchService = new Mock<IAwsCloudsearchService>();
 
             _mpConfigurationWrapper.Setup(mocked => mocked.GetConfigIntValue("GroupRoleLeader")).Returns(22);
             _mpConfigurationWrapper.Setup(mocked => mocked.GetConfigIntValue("ApprovedHostStatus")).Returns(3);
@@ -68,7 +70,8 @@ namespace crds_angular.test.Services
                                          _mpGroupToolService.Object,
                                          _apiUserRepository.Object,
                                          _mpConfigurationWrapper.Object,
-                                         _invitationService.Object);
+                                         _invitationService.Object,
+                                         _awsCloudsearchService.Object);
 
             //force AutoMapper to register
             AutoMapperConfig.RegisterMappings();

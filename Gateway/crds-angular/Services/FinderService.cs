@@ -43,6 +43,7 @@ namespace crds_angular.Services
         private readonly IGroupService _groupService;
         private readonly IApiUserRepository _apiUserRepository;
         private readonly IInvitationService _invitationService;
+        private readonly IAwsCloudsearchService _awsCloudsearchService;
         private readonly int _approvedHost;
         private readonly int _anywhereGroupType;
         private readonly int _leaderRoleId;
@@ -61,7 +62,8 @@ namespace crds_angular.Services
                             IGroupToolService groupToolService,
                             IApiUserRepository apiUserRepository,
                             IConfigurationWrapper configurationWrapper,
-                            IInvitationService invitationService
+                            IInvitationService invitationService,
+                            IAwsCloudsearchService awsCloudsearchService
                             )
         {
             _addressGeocodingService = addressGeocodingService;
@@ -79,6 +81,7 @@ namespace crds_angular.Services
             _groupToolService = groupToolService;
             _configurationWrapper = configurationWrapper;
             _invitationService = invitationService;
+            _awsCloudsearchService = awsCloudsearchService;
         }
 
 
