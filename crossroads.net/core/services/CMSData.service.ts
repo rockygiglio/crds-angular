@@ -54,6 +54,7 @@ export class CMSDataService {
     public getLastSeries() {
         let todaysDate = new Date().toISOString().slice(0, 10);
         let nearestSeriesAPIAddress = `api/series?endDate__LessThanOrEqual=${todaysDate}&endDate__sort=DESC&__limit=1`
+
         return this.http.get(encodeURI(__CMS_ENDPOINT__ + nearestSeriesAPIAddress))
                         .map(rsp => {
                             return rsp.json().series[0]
