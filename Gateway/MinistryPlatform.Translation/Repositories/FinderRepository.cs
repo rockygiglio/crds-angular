@@ -16,7 +16,6 @@ namespace MinistryPlatform.Translation.Repositories
     {
         private const int SearchRadius = 6380; 
 
-        private readonly IConfigurationWrapper _configurationWrapper;
         private readonly IMinistryPlatformRestRepository _ministryPlatformRest;
         private readonly IMinistryPlatformService _ministryPlatformService;
         private readonly IApiUserRepository _apiUserRepository;
@@ -29,7 +28,6 @@ namespace MinistryPlatform.Translation.Repositories
                                 IAuthenticationRepository authenticationService)
             : base(authenticationService, configuration)
         {
-            _configurationWrapper = configuration;
             _ministryPlatformRest = ministryPlatformRest;
             _ministryPlatformService = ministryPlatformService;
             _apiUserRepository = apiUserRepository;
@@ -100,6 +98,7 @@ namespace MinistryPlatform.Translation.Repositories
             }
             catch (Exception ex)
             {
+                _logger.Error("GetAllPinsForAws error" + ex);
                 return new List<MpConnectAws>();
             }
         }

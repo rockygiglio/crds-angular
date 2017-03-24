@@ -1,6 +1,4 @@
-﻿using System;
-using System.Web.Script.Serialization;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
 namespace crds_angular.Models.AwsCloudsearch
 {

@@ -105,7 +105,7 @@ namespace crds_angular.Services
         }
         
 
-        public SearchResponse SearchConnectAwsCloudsearch(string querystring, int size, string returnfields)
+        public SearchResponse SearchConnectAwsCloudsearch(string querystring, int size, string returnFields)
         {
             System.Diagnostics.Debug.Write("Test");
             var domainConfig = new AmazonCloudSearchDomainConfig
@@ -120,11 +120,9 @@ namespace crds_angular.Services
                 //FilterQuery = "latlong:['61.21,-149.9','21.52,-77.78']", // use for bounding box --upperlft, lower right
                 QueryParser = QueryParser.Structured,
                 Size = size,
-                Return = returnfields
-                //Return = "_all_fields,distance,_score",
-                //Expr = "{'distance':'haversin(38.94,-84.54,latlong.latitude,latlong.longitude)'}", // use to sort by proximity
-                
-                //Sort = "distance asc"
+                Return = returnFields + ",distance,_score",
+                Expr = "{'distance':'haversin(38.94,-84.54,latlong.latitude,latlong.longitude)'}", // use to sort by proximity
+                Sort = "distance asc"
             };
 
             var response = cloudSearch.Search(searchRequest);
