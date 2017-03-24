@@ -11,9 +11,7 @@
              id="firstName"
              placeholder="Enter first name"
              required
-             ng-model="volunteerProfile.person.nickName"
-             phone-number-format
-             ng-pattern='volunteerProfile.phoneFormat' >
+             ng-model="volunteerProfile.person.nickName" >
       <ng-messages for="volunteerProfile.profileForm.firstName.$error" ng-if="volunteerProfile.validate('firstName')">
         <span ng-message="required">
           <span dynamic-content="$root.MESSAGES.fieldCanNotBeBlank.content | html"></span>
@@ -113,6 +111,7 @@
              placeholder="###-###-####"
              ng-pattern='volunteerProfile.phoneFormat'
              ng-model="volunteerProfile.person.mobilePhone"
+             phone-number-format
              required >
       <ng-messages for="volunteerProfile.profileForm.phone.$error" ng-if="volunteerProfile.validate('phone')" >
         <span ng-message='required'>
