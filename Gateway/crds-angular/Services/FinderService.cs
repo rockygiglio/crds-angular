@@ -13,6 +13,8 @@ using Newtonsoft.Json;
 using Crossroads.Web.Common.MinistryPlatform;
 using System.Linq;
 using System.Device.Location;
+using System.Web.Services.Description;
+using Amazon.CloudSearchDomain.Model;
 using crds_angular.Models.Crossroads.Groups;
 using MinistryPlatform.Translation.Models.Finder;
 using Crossroads.Web.Common.Configuration;
@@ -126,11 +128,7 @@ namespace crds_angular.Services
 
         public void UpdateHouseholdAddress(PinDto pin)
         {
-            if (pin.isFormDirty || (!pin.isFormDirty && !pin.Address.HasGeoCoordinates()))
-            {
-                _addressService.SetGeoCoordinates(pin.Address);
-            }
-
+            _addressService.SetGeoCoordinates(pin.Address);
             var householdDictionary = new Dictionary<string, object> {{"Household_ID", pin.Household_ID}};
             var address = Mapper.Map<MpAddress>(pin.Address);
             var addressDictionary = getDictionary(address);
@@ -169,13 +167,8 @@ namespace crds_angular.Services
 
         public List<PinDto> GetPinsInRadius(GeoCoordinate originCoords, string address)
         {
-            var pins = new List<PinDto>();
-
-            List<PinDto> groupPins = GetGroupPinsinRadius(originCoords, address);
-            List<PinDto> participantAndBuildingPins = GetParticipantAndBuildingPinsInRadius(originCoords);
-
-            pins.AddRange(participantAndBuildingPins);
-            pins.AddRange(groupPins);
+            var cloudReturn = _awsCloudsearchService.SearchConnectAwsCloudsearch("matchall", 10000, "_all_fields");
+            var pins = ConvertFromAwsSearchResponse(cloudReturn);
 
             foreach (var pin in pins)
             {
@@ -184,6 +177,57 @@ namespace crds_angular.Services
                 if (pin.Address.Longitude != null) pin.Proximity = GetProximity(originCoords, new GeoCoordinate(pin.Address.Latitude.Value, pin.Address.Longitude.Value));
             }
 
+            return pins;
+        }
+
+        private static List<PinDto> ConvertFromAwsSearchResponse(SearchResponse response)
+        {
+            var pins = new List<PinDto>();
+
+            foreach (var hit in response.Hits.Hit)
+            {
+                var pin = new PinDto();
+                pin.Proximity = hit.Fields.ContainsKey("proximity") ? Convert.ToDecimal(hit.Fields["proximity"].FirstOrDefault()) : (decimal?) null;
+                pin.PinType = hit.Fields.ContainsKey("pintype") ? (PinType) Convert.ToInt32(hit.Fields["pintype"].FirstOrDefault()) : PinType.PERSON;
+                pin.FirstName = hit.Fields.ContainsKey("firstname") ? hit.Fields["firstname"].FirstOrDefault() : null;
+                pin.LastName = hit.Fields.ContainsKey("lastname") ? hit.Fields["lastname"].FirstOrDefault() : null;
+                pin.SiteName = hit.Fields.ContainsKey("sitename") ? hit.Fields["sitename"].FirstOrDefault() : null;
+                pin.EmailAddress = hit.Fields.ContainsKey("emailaddress") ? hit.Fields["emailaddress"].FirstOrDefault() : null;
+                pin.Contact_ID = hit.Fields.ContainsKey("contactid") ? Convert.ToInt32(hit.Fields["contactid"].FirstOrDefault()) : (int?) null;
+                pin.Participant_ID = hit.Fields.ContainsKey("participantid") ? Convert.ToInt32(hit.Fields["participantid"].FirstOrDefault()) : (int?) null;
+                pin.Host_Status_ID = hit.Fields.ContainsKey("hoststatus") ? Convert.ToInt32(hit.Fields["hoststatus"].FirstOrDefault()) : (int?) null;
+                pin.Household_ID = hit.Fields.ContainsKey("householdid") ? Convert.ToInt32(hit.Fields["householdid"].FirstOrDefault()) : (int?) null;
+                pin.Address = new AddressDTO
+                {
+                    AddressID = hit.Fields.ContainsKey("addressid") ? Convert.ToInt32(hit.Fields["addressid"].FirstOrDefault()) : (int?) null,
+                    City = hit.Fields.ContainsKey("city") ? hit.Fields["city"].FirstOrDefault() : null,
+                    State = hit.Fields.ContainsKey("state") ? hit.Fields["state"].FirstOrDefault() : null,
+                    PostalCode = hit.Fields.ContainsKey("zip") ? hit.Fields["zip"].FirstOrDefault() : null,
+                    Latitude = hit.Fields.ContainsKey("latitude") ? Convert.ToDouble(hit.Fields["latitude"].FirstOrDefault()) : (double?) null,
+                    Longitude = hit.Fields.ContainsKey("longitude") ? Convert.ToDouble(hit.Fields["longitude"].FirstOrDefault()) : (double?) null,
+                };
+                if (hit.Fields.ContainsKey("latlong"))
+                {
+                    var locationstring = hit.Fields["latlong"].FirstOrDefault() ?? "";
+                    var coordinates = locationstring.Split(',');
+                    pin.Address.Latitude = Convert.ToDouble(coordinates[0]);
+                    pin.Address.Longitude = Convert.ToDouble(coordinates[1]);
+                }
+                if (pin.PinType == PinType.GATHERING)
+                {
+                    pin.Gathering = new GroupDTO
+                    {
+                        GroupId = hit.Fields.ContainsKey("groupid") ? Convert.ToInt32(hit.Fields["groupid"].FirstOrDefault()) : 0,
+                        GroupName = hit.Fields.ContainsKey("groupname") ? hit.Fields["groupname"].FirstOrDefault() : null,
+                        GroupDescription = hit.Fields.ContainsKey("groupdescription") ? hit.Fields["groupdescription"].FirstOrDefault() : null,
+                        PrimaryContactEmail = hit.Fields.ContainsKey("primarycontactemail") ? hit.Fields["primarycontactemail"].FirstOrDefault() : null,
+                        ContactId = hit.Fields.ContainsKey("countactid") ? Convert.ToInt32(hit.Fields["countactid"].FirstOrDefault()) : 0,
+                        Address = pin.Address
+                    };
+                }
+                pins.Add(pin);
+            }
+  
             return pins;
         }
 
