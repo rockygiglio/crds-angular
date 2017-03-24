@@ -20,7 +20,8 @@ module.exports = {
     core: ['./core/core.js'],
     common: ['./app/common/common.module.js'],
     formbuilder: ['./app/formBuilder/formBuilder.module.js'],
-    formlybuilder: ['./app/formlyBuilder/formlyBuilder.module.js']
+    formlybuilder: ['./app/formlyBuilder/formlyBuilder.module.js'],
+    crdsheader: ['./node_modules/crds-shared-header/dist/bundle.js']
   },
   watchPattern: ['app/**/**', 'core/**/**'],
   externals: {
