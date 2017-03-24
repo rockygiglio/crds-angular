@@ -40,7 +40,7 @@ namespace crds_angular.Services
 
         public ObjectAllAttributesDTO GetObjectAttributes(string token, int objectId, MpObjectAttributeConfiguration configuration, List<MpAttribute> mpAttributes)
         {
-            var mpObjectAttributes = _mpObjectAttributeService.GetCurrentObjectAttributes(token, objectId, configuration);
+            var mpObjectAttributes = _mpObjectAttributeService.GetCurrentObjectAttributes(_apiUserService.GetToken(), objectId, configuration);
 
             var allAttributes = new ObjectAllAttributesDTO();
 
@@ -173,7 +173,7 @@ namespace crds_angular.Services
             }
 
             var mpObjectAttribute = TranslateMultiToMPAttribute(objectAttribute, null);            
-            var persistedAttributes = _mpObjectAttributeService.GetCurrentObjectAttributes(token, objectId, configuration, objectAttribute.AttributeId);
+            var persistedAttributes = _mpObjectAttributeService.GetCurrentObjectAttributes(_apiUserService.GetToken(), objectId, configuration, objectAttribute.AttributeId);
 
             if (persistedAttributes.Count >= 1)
             {

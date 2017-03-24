@@ -42,7 +42,7 @@ export default class OrganizationsController {
           name: 'Crossroads Community Church',
           imageUrl: org.imageURL,
           order: 1,
-          cities: [...this.cincinnati, ...this.buildCities()]
+          cities: this.buildCities()
         };
       }
       return {
@@ -55,20 +55,31 @@ export default class OrganizationsController {
   buildCities() {
     return this.cities.map((city) => {
       const name = { name: `${city.city}, ${city.state}` };
-      return Object.assign(name, city);
+      return Object.assign(city, name);
+    }).sort((a, b) => {
+      const cityA = a.city.toUpperCase();
+      const cityB = b.city.toUpperCase();
+
+      if (cityA < cityB) return -1;
+      if (cityA > cityB) return 1;
+      return 0;
     });
   }
 
-  selectCity({ projectId, city }) {
+  selectCity(id) {
+    const projectId = Number(id);
     if (projectId === -1) {
       this.state.go('go-local.cincinnatipage', { initiativeId: this.state.toParams.initiativeId, organization: 'crossroads', page: 'profile' });
     } else {
-      this.state.go('go-local.anywherepage', { initiativeId: this.state.toParams.initiativeId, city, projectId });
+      const city = this.cities.find(c => c.projectId === projectId);
+      this.state.go('go-local.anywherepage', { initiativeId: this.state.toParams.initiativeId, city: city.city, projectId });
     }
   }
 
   selectOrg({ name, }) {
-    if (!name.startsWith('Crossroads')) {
+    if (name === 'Other') {
+      this.state.go('go-local.page', { organization: getOrgSlug(name), page: 'name', initiativeId: this.state.toParams.initiativeId });
+    } else if (!name.startsWith('Crossroads')) {
       this.state.go('go-local.page', { organization: getOrgSlug(name), page: 'profile', initiativeId: this.state.toParams.initiativeId });
     }
   }

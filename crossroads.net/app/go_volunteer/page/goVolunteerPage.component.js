@@ -38,22 +38,26 @@
       vm.showUniqueSkills = showUniqueSkills;
       vm.showEquipment = showEquipment;
       vm.showAdditionalInfo = showAdditionalInfo;
+      vm.showAnywhereProfile = showAnywhereProfile;
       vm.showAvailablePrep = showAvailablePrep;
       vm.showAvailablePrepSpouse = showAvailablePrepSpouse;
       vm.showWaiver = showWaiver;
       vm.showThankYou = showThankYou;
-
+      vm.showAnywhereProfile = () => $stateParams.page === 'anywhere-profile';
       $window.onbeforeunload = onBeforeUnload;
-
       activate();
 
       function activate() {
         // if page is loaded with goVol.reload = true, then send to begining of flow
         // should only occur if user refreshes
-        var fromReload = angular.fromJson($window.sessionStorage.getItem(vm.reload)) || false;
-        if (fromReload) {
+        if ($state.toParams.page === 'profile') {
           $window.sessionStorage.setItem(vm.reload, angular.toJson(false));
-          $state.go('go-local.organizations', { initiativeId: $state.toParams.initiativeId });
+        } else {
+          const fromReload = angular.fromJson($window.sessionStorage.getItem(vm.reload)) || false;
+          if (fromReload) {
+            $window.sessionStorage.setItem(vm.reload, angular.toJson(false));
+            $state.go('go-local.organizations', { initiativeId: $state.toParams.initiativeId });
+          }
         }
       }
 

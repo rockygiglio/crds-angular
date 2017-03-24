@@ -3,77 +3,17 @@
 ***************************************************************************************/
 
 .homepage {
-  background: #000 url('https://crds-cms-uploads.imgix.net/content/images/cupbg.jpg') no-repeat;
-  background-position: -920px top;
-
-  @media only screen and (min-width:  $screen-sm-min){
-    background-position: center top;
-  }
-
   .main {
     margin-bottom: 0;
   }
 
+  .brandbar-container {
+      visibility: hidden;
+      opacity: 0;
+  }
+
   footer {
     margin-top: 0;
-  }
-
-  .brandbar-container {
-    visibility: hidden;
-    opacity: 0;
-  }
-
-  .icon-logo {
-    color: #fff;
-    transition: all .6s;
-
-    &:hover {
-      color: rgba(255, 255, 255, 0.6);
-    }
-  }
-
-  ul.cr-nav > li > a {
-    color: #fff;
-  }
-
-  ul.navbar--login .btn-standard {
-    @extend .btn-standard-darker;
-  }
-
-  .nav__side--toggle .icon-bar {
-    background-color: #fff;
-  }
-
-  .mobile-search {
-    .icon {
-      color: #fff;
-    }
-  }
-
-  h1,
-  h4,
-  .subheading,
-   {
-    background: transparent;
-    color: #fff;
-    border: none;
-  }
-
-  .home-intro {
-    color: #fff;
-    margin-top: $line-height-computed*2;
-    margin-bottom: $line-height-computed*2;
-
-    @media only screen and (min-width: $screen-xs){
-      margin-top: $line-height-computed*5;
-      margin-bottom: $line-height-computed*6;
-    }
-
-    .home-intro-text {
-      @media only screen and (max-width:  $screen-sm-min){
-        max-width: 350px;
-      }
-    }
   }
 
   .home-countdown {
@@ -95,8 +35,10 @@
     background: #A7A9AC;
     overflow: visible;
     position: relative;
-    //@include box-shadow(inset 0 -15px 0 0 #F1F2F2);
-    //@include box-shadow(inset 0 15px 0 0 #F1F2F2);
+
+    h1 {
+      color: #fff;
+    }
 
     &:before,
     &:after {
@@ -104,7 +46,6 @@
       content: ' ';
       left: 0;
       right: 0;
-      background: #F1F2F2;
       position: absolute;
       z-index: 1;
     }
@@ -112,11 +53,13 @@
     &:before {
       top: 0;
       height: 15px;
+      background: #F1F2F2;
     }
 
     &:after {
       bottom: 0;
       height: 30px;
+      background: #FFFFFF;
     }
 
     h4,
@@ -218,8 +161,75 @@
       }
     }
 
-    h1 {
+    h1,
+    h4 {
       color: #fff;
+    }
+  }
+
+  .home-locations {
+    position: relative;
+    background: white;
+    margin-top: 0;
+    padding: 0;
+
+    @media (min-width: 768px) {
+      margin-top: 78px;
+    }
+
+    h2,
+    p,
+    a {
+      color: white;
+    }
+
+    a {
+      text-decoration: underline;
+
+      &:hover {
+        text-decoration: none;
+      }
+    }
+
+    .locations-text {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translateX(-50%) translateY(-50%);
+      z-index: 1;
+      width: 90%;
+
+      @media (min-width: 768px) {
+        width: auto;
+      }
+    }
+  }
+
+  .join-a-group-home {
+    position: relative;
+
+    img {
+      z-index: 1;
+      position: relative;
+    }
+
+    .arrow-down {
+      width: 0;
+      height: 0;
+      border-left: 40px solid transparent;
+      border-right: 40px solid transparent;
+      border-top: 30px solid #FFF;
+      position: absolute;
+      top: 0;
+      left: 50%;
+      margin-left: -40px;
+      z-index: 3;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .home-relationships .h3 {
+      font-size: 18px;
     }
   }
 }

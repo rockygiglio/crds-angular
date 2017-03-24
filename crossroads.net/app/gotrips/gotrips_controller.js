@@ -2,9 +2,9 @@
   'use strict';
   module.exports = GoTripsCtrl;
 
-  GoTripsCtrl.$inject = ['$scope', '$stateParams', '$log', '$location', '$anchorScroll'];
+  GoTripsCtrl.$inject = ['$scope', '$stateParams', '$log', '$location', '$anchorScroll', 'Validation'];
 
-function GoTripsCtrl($scope, $stateParams, $log, $location, $anchorScroll) {
+function GoTripsCtrl($scope, $stateParams, $log, $location, $anchorScroll, Validation) {
 		var vm = this;
 
 		vm.isCollapsed = true;
@@ -13,6 +13,7 @@ function GoTripsCtrl($scope, $stateParams, $log, $location, $anchorScroll) {
     vm.friendlyPageTitle;
     vm.tripName;
     vm.whyPlaceholder = 'Please be specific.';
+    vm.phoneFormat = vm.validation.phoneFormat();
 
     switch(vm.pageTitle) {
       case 'nola':

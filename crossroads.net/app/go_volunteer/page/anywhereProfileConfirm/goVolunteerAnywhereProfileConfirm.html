@@ -1,0 +1,10 @@
+<preloader full-screen='false' ng-show='!$ctrl.viewReady'> </preloader>
+
+<div ng-if="$ctrl.viewReady" class="push-top">
+
+  <go-volunteer-project-card project="$ctrl.project"></go-volunteer-project-card>
+
+  <div dynamic-content="$root.MESSAGES.goVolunteerAnywhereProfileConfirm.content | html"></div>
+
+  <p>Contact your leader at <a href="mailto:{{$ctrl.project.email}}">{{$ctrl.project.email}}</a> with any immediate questions.</p>
+</div>

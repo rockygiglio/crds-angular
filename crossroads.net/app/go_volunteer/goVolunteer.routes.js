@@ -1,5 +1,5 @@
 import constants from '../constants';
-import { CmsInfo, Meta, GetProject, GetCities, GetOrganizations } from './goVolunteer.resolves';
+import { CmsInfo, Meta, GetProject, GetProfile, GetCities, GetOrganizations } from './goVolunteer.resolves';
 
 const cookieNames = constants.COOKIES;
 
@@ -105,6 +105,31 @@ export default function GoVolunteerRoutes($stateProvider, $urlMatcherFactoryProv
       template: '<go-volunteer-page></go-volunteer-page>',
       params: {
         page: 'anywhere-profile'
+      },
+      data: {
+        meta: {
+          title: 'GO Local',
+          description: ''
+        },
+        isProtected: true
+      },
+      resolve: {
+        $state: '$state',
+        $q: '$q',
+        loggedin: crds_utilities.optimisticallyCheckLoggedin,
+        GoVolunteerDataService: 'GoVolunteerDataService',
+        GoVolunteerService: 'GoVolunteerService',
+        Profile: 'Profile',
+        GetProject,
+        GetProfile
+      }
+    })
+    .state('go-local.anywhereconfirm', {
+      parent: 'goCincinnati',
+      url: '/go-local/:initiativeId/crossroads/:city/:projectId/confirm',
+      template: '<go-volunteer-anywhere-profile-confirm></go-volunteer-anywhere-profile-confirm>',
+      params: {
+        page: 'anywhere-profile-confirm'
       },
       data: {
         meta: {
@@ -372,8 +397,8 @@ function GetSpouse(Profile, $cookies, $q, GoVolunteerService, $stateParams) {
 function Locations($cookies, $q, GoVolunteerService, $stateParams, Organizations) {
   var deferred = $q.defer();
 
-  if ($stateParams.page === 'launch-site' && 
-      _.isEmpty(GoVolunteerService.launchSites) && 
+  if ($stateParams.page === 'launch-site' &&
+      _.isEmpty(GoVolunteerService.launchSites) &&
       GoVolunteerService.organization.organizationId) {
     Organizations.LocationsForOrg.query({orgId: GoVolunteerService.organization.organizationId}, function(data) {
       GoVolunteerService.launchSites = data;
@@ -459,7 +484,7 @@ function Skills(GoVolunteerService, SkillsService, $stateParams, $q) {
 function Organization(GoVolunteerService, $state, $stateParams, $q, Organizations) {
   var deferred = $q.defer();
   var param = 'crossroads';
-  if ($state.next.name === 'go-volunteer.page') {
+  if ($state.next.name === 'go-local.page') {
     param = $stateParams.organization;
   }
 
@@ -488,7 +513,7 @@ function GroupFindConnectors(GoVolunteerService, $state, $stateParams, $q, Group
 
   if ($stateParams.page === 'group-find-connector')  {
     if (GoVolunteerService.organization.openSignup) {
-      GroupConnectors.OpenOrgs.query({initiativeId: 1}, function(data) {
+      GroupConnectors.OpenOrgs.query({initiativeId: $stateParams.initiativeId}, function(data) {
         GoVolunteerService.groupConnectors = data;
         deferred.resolve();
       },
@@ -500,7 +525,7 @@ function GroupFindConnectors(GoVolunteerService, $state, $stateParams, $q, Group
       );
     } else {
       GroupConnectors.ByOrgId.query(
-        {orgId: GoVolunteerService.organization.organizationId, initiativeId: 1}, function(data) {
+        {orgId: GoVolunteerService.organization.organizationId, initiativeId: $stateParams.initiativeId}, function(data) {
         GoVolunteerService.groupConnectors = data;
         deferred.resolve();
       },
@@ -547,4 +572,3 @@ function useCachedOrg(org, cachedOrg) {
 
   return false;
 }
-
