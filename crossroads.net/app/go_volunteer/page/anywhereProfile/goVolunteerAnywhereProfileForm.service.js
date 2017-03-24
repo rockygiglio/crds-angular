@@ -92,6 +92,7 @@ export default class GoVolunteerAnywhereProfileForm {
             type: 'crdsInput',
             templateOptions: {
               label: 'Email',
+              type: 'email',
               required: true,
             }
           }
