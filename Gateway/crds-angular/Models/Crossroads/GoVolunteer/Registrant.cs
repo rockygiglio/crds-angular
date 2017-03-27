@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using Newtonsoft.Json;
 
 namespace crds_angular.Models.Crossroads.GoVolunteer
@@ -21,6 +22,7 @@ namespace crds_angular.Models.Crossroads.GoVolunteer
         public string LastName { get; set; }
 
         [JsonProperty(PropertyName = "mobile")]
+        [RegularExpression(@"^\d{3}-\d{3}-\d{4}$")]
         public string MobilePhone { get; set; }
 
         public Dictionary<string, object> GetDictionary()
