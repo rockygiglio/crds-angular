@@ -21,7 +21,7 @@ namespace crds_angular.Services
         private readonly IFinderRepository _finderRepository;
         private readonly IConfigurationWrapper _configurationWrapper;
         protected string AmazonSearchUrl;
-        const int ReturnRecordCount = 10000;
+        private const int ReturnRecordCount = 10000;
 
         public AwsCloudsearchService(IFinderRepository finderRepository,
                                      IConfigurationWrapper configurationWrapper)
@@ -44,7 +44,6 @@ namespace crds_angular.Services
 
             //serialize
             var json = JsonConvert.SerializeObject(pinList, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
-            System.Diagnostics.Debug.Write(json);
 
             var ms = new MemoryStream(Encoding.UTF8.GetBytes(json));
 
@@ -127,7 +126,6 @@ namespace crds_angular.Services
 
         public SearchResponse SearchConnectAwsCloudsearch(string querystring, string returnFields, GeoCoordinate originCoords = null, AwsBoundingBox boundingBox = null)
         {
-            System.Diagnostics.Debug.Write("Test");
             var domainConfig = new AmazonCloudSearchDomainConfig
             {
                 ServiceURL = AmazonSearchUrl
@@ -156,7 +154,6 @@ namespace crds_angular.Services
             }
 
             var response = cloudSearch.Search(searchRequest);
-            System.Diagnostics.Debug.Write(response);
             return (response);
         }
 

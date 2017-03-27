@@ -282,6 +282,7 @@
     <Compile Include="controllers\UserControllerTest.cs" />
     <Compile Include="DataAccess\EzScanCheckScannerDaoTest.cs" />
     <Compile Include="Exceptions\GroupParticipantRemovalExceptionTest.cs" />
+    <Compile Include="Services\AwsCloudsearchServiceTest.cs" />
     <Compile Include="Services\GroupConnectorServiceTest.cs" />
     <Compile Include="Helpers\Factories.cs" />
     <Compile Include="Models\Crossroads\Events\EventHelpers.cs" />

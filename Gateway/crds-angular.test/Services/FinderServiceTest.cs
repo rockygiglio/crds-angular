@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Device.Location;
-using System.Linq;
 using crds_angular.App_Start;
 using crds_angular.Models.Crossroads;
 using crds_angular.Models.Finder;
@@ -203,7 +202,7 @@ namespace crds_angular.test.Services
             hit.Fields = fields;
             searchresults.Hits.Hit.Add(hit);
 
-            _awsCloudsearchService.Setup(mocked => mocked.SearchConnectAwsCloudsearch("matchall", "_all_fields",null,null)).Returns(searchresults);
+            _awsCloudsearchService.Setup(mocked => mocked.SearchConnectAwsCloudsearch("matchall", "_all_fields",It.IsAny<GeoCoordinate>(),It.IsAny<AwsBoundingBox>())).Returns(searchresults);
 
             _mpConfigurationWrapper.Setup(mocked => mocked.GetConfigIntValue("AnywhereGroupTypeId")).Returns(30);
             _mpGroupToolService.Setup(m => m.SearchGroups(It.IsAny<int[]>(), null, It.IsAny<string>(), null, originCoords)).Returns(new List<GroupDTO>());
@@ -211,6 +210,7 @@ namespace crds_angular.test.Services
             _addressGeocodingService.Setup(mocked => mocked.GetGeoCoordinates(address)).Returns(originCoords);
             _addressProximityService.Setup(mocked => mocked.GetProximity(address, new List<AddressDTO>(), originCoords)).Returns(new List<decimal?>());
             _addressProximityService.Setup(mocked => mocked.GetProximity(address, new List<string>(), originCoords)).Returns(new List<decimal?>());
+
 
             var boundingBox = new AwsBoundingBox
             {
