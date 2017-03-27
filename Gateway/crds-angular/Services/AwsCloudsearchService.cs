@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Device.Location;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -8,6 +10,7 @@ using Amazon.CloudSearchDomain;
 using Amazon.CloudSearchDomain.Model;
 using AutoMapper;
 using crds_angular.Models.AwsCloudsearch;
+using crds_angular.Models.Finder;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 using Newtonsoft.Json;
 
@@ -18,6 +21,7 @@ namespace crds_angular.Services
         private readonly IFinderRepository _finderRepository;
         private readonly IConfigurationWrapper _configurationWrapper;
         protected string AmazonSearchUrl;
+        const int ReturnRecordCount = 10000;
 
         public AwsCloudsearchService(IFinderRepository finderRepository,
                                      IConfigurationWrapper configurationWrapper)
@@ -61,7 +65,7 @@ namespace crds_angular.Services
             };
             var cloudSearch = new Amazon.CloudSearchDomain.AmazonCloudSearchDomainClient(domainConfig);
 
-            var results = SearchConnectAwsCloudsearch("matchall", 10000, "_no_fields");
+            var results = SearchConnectAwsCloudsearch("matchall", "_no_fields");
             var deletelist = new List<AwsCloudsearchDto>();
             foreach (var hit in results.Hits.Hit)
             {
@@ -105,9 +109,23 @@ namespace crds_angular.Services
             }
             return pinlist;
         }
-        
 
-        public SearchResponse SearchConnectAwsCloudsearch(string querystring, int size, string returnFields)
+        public AwsBoundingBox BuildBoundingBox(string upperleftlat , string upperleftlng , string bottomrightlat , string bottomrightlng )
+        {
+            var ulLat = Convert.ToDouble(upperleftlat.Replace("$", "."));
+            var ulLng = Convert.ToDouble(upperleftlng.Replace("$", "."));
+
+            var brLat = Convert.ToDouble(bottomrightlat.Replace("$", "."));
+            var brLng = Convert.ToDouble(bottomrightlng.Replace("$", "."));
+
+            return  new AwsBoundingBox
+            {
+                UpperLeftCoordinates = new GeoCoordinates(ulLat,ulLng),
+                BottomRightCoordinates = new GeoCoordinates(brLat,brLng)
+            };
+        }
+
+        public SearchResponse SearchConnectAwsCloudsearch(string querystring, string returnFields, GeoCoordinate originCoords = null, AwsBoundingBox boundingBox = null)
         {
             System.Diagnostics.Debug.Write("Test");
             var domainConfig = new AmazonCloudSearchDomainConfig
@@ -119,13 +137,23 @@ namespace crds_angular.Services
             var searchRequest = new Amazon.CloudSearchDomain.Model.SearchRequest
             {
                 Query = querystring,
-                //FilterQuery = "latlong:['61.21,-149.9','21.52,-77.78']", // use for bounding box --upperlft, lower right
                 QueryParser = QueryParser.Structured,
-                Size = size,
-                Return = returnFields + ",distance,_score",
-                Expr = "{'distance':'haversin(38.94,-84.54,latlong.latitude,latlong.longitude)'}", // use to sort by proximity
-                Sort = "distance asc"
+                Size = ReturnRecordCount,
+                Return = returnFields + ",_score",
+                
             };
+
+            if (boundingBox != null)
+            {
+                searchRequest.FilterQuery = $"latlong:['{boundingBox.UpperLeftCoordinates.Lat},{boundingBox.UpperLeftCoordinates.Lng}','{boundingBox.BottomRightCoordinates.Lat},{boundingBox.BottomRightCoordinates.Lng}']";
+            }
+               
+            if (originCoords != null)
+            {
+                searchRequest.Expr = $"{{'distance':'haversin({originCoords.Latitude},{originCoords.Longitude},latlong.latitude,latlong.longitude)'}}"; // use to sort by proximity
+                searchRequest.Sort = "distance asc";
+                searchRequest.Return += ",distance";
+            }
 
             var response = cloudSearch.Search(searchRequest);
             System.Diagnostics.Debug.Write(response);

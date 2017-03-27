@@ -17,6 +17,7 @@ using Crossroads.Web.Common.Configuration;
 using Crossroads.Web.Common.MinistryPlatform;
 using Rhino.Mocks;
 using Amazon.CloudSearchDomain.Model;
+using crds_angular.Models.AwsCloudsearch;
 
 namespace crds_angular.test.Services
 {
@@ -202,9 +203,7 @@ namespace crds_angular.test.Services
             hit.Fields = fields;
             searchresults.Hits.Hit.Add(hit);
 
-            _awsCloudsearchService.Setup(mocked => mocked.SearchConnectAwsCloudsearch("matchall", 10000, "_all_fields")).Returns(searchresults);
-
-               // SearchConnectAwsCloudsearch("matchall", 10000, "_all_fields")
+            _awsCloudsearchService.Setup(mocked => mocked.SearchConnectAwsCloudsearch("matchall", "_all_fields",null,null)).Returns(searchresults);
 
             _mpConfigurationWrapper.Setup(mocked => mocked.GetConfigIntValue("AnywhereGroupTypeId")).Returns(30);
             _mpGroupToolService.Setup(m => m.SearchGroups(It.IsAny<int[]>(), null, It.IsAny<string>(), null, originCoords)).Returns(new List<GroupDTO>());
@@ -213,7 +212,13 @@ namespace crds_angular.test.Services
             _addressProximityService.Setup(mocked => mocked.GetProximity(address, new List<AddressDTO>(), originCoords)).Returns(new List<decimal?>());
             _addressProximityService.Setup(mocked => mocked.GetProximity(address, new List<string>(), originCoords)).Returns(new List<decimal?>());
 
-            List<PinDto> pins = _fixture.GetPinsInRadius(originCoords, address);
+            var boundingBox = new AwsBoundingBox
+            {
+                UpperLeftCoordinates = new GeoCoordinates(61.21, -149.9),
+                BottomRightCoordinates = new GeoCoordinates(21.52, -77.78)
+            };
+
+            List<PinDto> pins = _fixture.GetPinsInBoundingBox(originCoords, address, boundingBox);
 
             Assert.IsInstanceOf<List<PinDto>>(pins);
         }

@@ -1,4 +1,6 @@
-﻿using Amazon.CloudSearchDomain.Model;
+﻿using System.Device.Location;
+using Amazon.CloudSearchDomain.Model;
+using crds_angular.Models.AwsCloudsearch;
 
 namespace crds_angular.Services.Interfaces
 {
@@ -6,6 +8,7 @@ namespace crds_angular.Services.Interfaces
     {
         UploadDocumentsResponse UploadAllConnectRecordsToAwsCloudsearch();
         UploadDocumentsResponse DeleteAllConnectRecordsInAwsCloudsearch();
-        SearchResponse SearchConnectAwsCloudsearch(string querystring, int size, string returnFields);
+        SearchResponse SearchConnectAwsCloudsearch(string querystring, string returnFields, GeoCoordinate originCoords = null, AwsBoundingBox boundingBox = null);
+        AwsBoundingBox BuildBoundingBox(string upperleftlat, string upperleftlng, string bottomrightlat, string bottomrightlng);
     }
 }

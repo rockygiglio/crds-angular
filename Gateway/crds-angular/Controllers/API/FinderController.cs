@@ -16,6 +16,7 @@ using crds_angular.Services.Interfaces;
 using Crossroads.ApiVersioning;
 using Crossroads.Web.Common.Security;
 using System.ComponentModel.DataAnnotations;
+using crds_angular.Models.AwsCloudsearch;
 using log4net;
 
 namespace crds_angular.Controllers.API
@@ -144,14 +145,21 @@ namespace crds_angular.Controllers.API
 
         [ResponseType(typeof(PinSearchResultsDto))]
         [VersionedRoute(template: "finder/findpinsbyaddress/{userSearchAddress}/{lat?}/{lng?}", minimumVersion: "1.0.0")]
-        [System.Web.Http.Route("finder/findpinsbyaddress/{userSearchAddress}/{lat?}/{lng?}")]
+        [System.Web.Http.Route("finder/findpinsbyaddress/{userSearchAddress}/{lat?}/{lng?}/{upperleftlat?}/{upperleftlng?}/{bottomrightlat?}/{bottomrightlng?}")]
         [System.Web.Http.HttpGet]
-        public IHttpActionResult GetFindPinsByAddress([FromUri]string userSearchAddress, [FromUri]string lat = "0", [FromUri]string lng = "0")
+        public IHttpActionResult GetFindPinsByAddress([FromUri]string userSearchAddress, [FromUri]string lat = "0", [FromUri]string lng = "0", [FromUri]string upperleftlat = "0", [FromUri]string upperleftlng = "0", [FromUri]string bottomrightlat = "0", [FromUri]string bottomrightlng = "0")
         {
             try
             {
+
+                AwsBoundingBox boundingBox = null;
+                if (upperleftlat != "0" && upperleftlng != "0" && bottomrightlat != "0" && bottomrightlng != "0")
+                {
+                    boundingBox = _awsCloudsearchService.BuildBoundingBox(upperleftlat, upperleftlng, bottomrightlat, bottomrightlng);
+                }
+               
                 var originCoords = _finderService.GetGeoCoordsFromAddressOrLatLang(userSearchAddress, lat, lng);
-                var pinsInRadius = _finderService.GetPinsInRadius(originCoords, userSearchAddress);
+                var pinsInRadius = _finderService.GetPinsInBoundingBox(originCoords, userSearchAddress, boundingBox);
 
                 foreach (var pin in pinsInRadius)
                 {
@@ -269,7 +277,7 @@ namespace crds_angular.Controllers.API
         {
             try
             {
-                var response = _awsCloudsearchService.SearchConnectAwsCloudsearch(searchstring, 10000, "_all_fields");
+                var response = _awsCloudsearchService.SearchConnectAwsCloudsearch(searchstring, "_all_fields");
 
                 return Ok(response);
             }

@@ -15,6 +15,7 @@ using System.Linq;
 using System.Device.Location;
 using System.Web.Services.Description;
 using Amazon.CloudSearchDomain.Model;
+using crds_angular.Models.AwsCloudsearch;
 using crds_angular.Models.Crossroads.Groups;
 using MinistryPlatform.Translation.Models.Finder;
 using Crossroads.Web.Common.Configuration;
@@ -165,9 +166,9 @@ namespace crds_angular.Services
             return participant.ParticipantId;
         }
 
-        public List<PinDto> GetPinsInRadius(GeoCoordinate originCoords, string address)
+        public List<PinDto> GetPinsInBoundingBox(GeoCoordinate originCoords, string address, AwsBoundingBox boundingBox)
         {
-            var cloudReturn = _awsCloudsearchService.SearchConnectAwsCloudsearch("matchall", 10000, "_all_fields");
+            var cloudReturn = _awsCloudsearchService.SearchConnectAwsCloudsearch("matchall", "_all_fields", originCoords, boundingBox);
             var pins = ConvertFromAwsSearchResponse(cloudReturn);
 
             foreach (var pin in pins)
