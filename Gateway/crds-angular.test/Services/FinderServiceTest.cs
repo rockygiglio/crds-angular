@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Device.Location;
-using System.Linq;
 using crds_angular.App_Start;
 using crds_angular.Models.Crossroads;
 using crds_angular.Models.Finder;
@@ -16,6 +15,8 @@ using crds_angular.Models.Crossroads.Groups;
 using Crossroads.Web.Common.Configuration;
 using Crossroads.Web.Common.MinistryPlatform;
 using Rhino.Mocks;
+using Amazon.CloudSearchDomain.Model;
+using crds_angular.Models.AwsCloudsearch;
 
 namespace crds_angular.test.Services
 {
@@ -34,6 +35,7 @@ namespace crds_angular.test.Services
         private Mock<IApiUserRepository> _apiUserRepository;
         private Mock<IAddressProximityService> _addressProximityService;
         private Mock<IInvitationService> _invitationService;
+        private Mock<IAwsCloudsearchService> _awsCloudsearchService;
 
         private int _memberRoleId = 16;
         private int _anywhereGatheringInvitationTypeId = 3;
@@ -52,6 +54,7 @@ namespace crds_angular.test.Services
             _apiUserRepository = new Mock<IApiUserRepository>();
             _groupService = new Mock<IGroupService>();
             _invitationService = new Mock<IInvitationService>();
+            _awsCloudsearchService = new Mock<IAwsCloudsearchService>();
 
             _mpConfigurationWrapper.Setup(mocked => mocked.GetConfigIntValue("GroupRoleLeader")).Returns(22);
             _mpConfigurationWrapper.Setup(mocked => mocked.GetConfigIntValue("ApprovedHostStatus")).Returns(3);
@@ -68,7 +71,8 @@ namespace crds_angular.test.Services
                                          _mpGroupToolService.Object,
                                          _apiUserRepository.Object,
                                          _mpConfigurationWrapper.Object,
-                                         _invitationService.Object);
+                                         _invitationService.Object,
+                                         _awsCloudsearchService.Object);
 
             //force AutoMapper to register
             AutoMapperConfig.RegisterMappings();
@@ -183,6 +187,23 @@ namespace crds_angular.test.Services
                 Longitude = -84.319614
             };
 
+            var searchresults = new SearchResponse();
+            searchresults.Hits = new Hits();
+            searchresults.Hits.Found = 1;
+            searchresults.Hits.Start = 0;
+            searchresults.Hits.Hit = new List<Hit>();
+            var hit = new Hit();
+            var fields = new Dictionary<string, List<string>>();
+            fields.Add("city", new List<string>() { "Union" });
+            fields.Add("zip", new List<string>() { "41091" });
+            fields.Add("firstname", new List<string>() { "Robert" });
+            fields.Add("lastname", new List<string>() { "Smith" });
+            fields.Add("latlong", new List<string>() { "38.94526,-84.661275" });
+            hit.Fields = fields;
+            searchresults.Hits.Hit.Add(hit);
+
+            _awsCloudsearchService.Setup(mocked => mocked.SearchConnectAwsCloudsearch("matchall", "_all_fields",It.IsAny<GeoCoordinate>(),It.IsAny<AwsBoundingBox>())).Returns(searchresults);
+
             _mpConfigurationWrapper.Setup(mocked => mocked.GetConfigIntValue("AnywhereGroupTypeId")).Returns(30);
             _mpGroupToolService.Setup(m => m.SearchGroups(It.IsAny<int[]>(), null, It.IsAny<string>(), null, originCoords)).Returns(new List<GroupDTO>());
             _mpFinderRepository.Setup(mocked => mocked.GetPinsInRadius(originCoords)).Returns(new List<SpPinDto>());
@@ -190,7 +211,14 @@ namespace crds_angular.test.Services
             _addressProximityService.Setup(mocked => mocked.GetProximity(address, new List<AddressDTO>(), originCoords)).Returns(new List<decimal?>());
             _addressProximityService.Setup(mocked => mocked.GetProximity(address, new List<string>(), originCoords)).Returns(new List<decimal?>());
 
-            List<PinDto> pins = _fixture.GetPinsInRadius(originCoords, address);
+
+            var boundingBox = new AwsBoundingBox
+            {
+                UpperLeftCoordinates = new GeoCoordinates(61.21, -149.9),
+                BottomRightCoordinates = new GeoCoordinates(21.52, -77.78)
+            };
+
+            List<PinDto> pins = _fixture.GetPinsInBoundingBox(originCoords, address, boundingBox);
 
             Assert.IsInstanceOf<List<PinDto>>(pins);
         }
