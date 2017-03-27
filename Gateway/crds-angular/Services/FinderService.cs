@@ -14,6 +14,7 @@ using Crossroads.Web.Common.MinistryPlatform;
 using System.Linq;
 using System.Device.Location;
 using crds_angular.Models.Crossroads.Groups;
+using crds_angular.Models.Crossroads.Profile;
 using MinistryPlatform.Translation.Models.Finder;
 using Crossroads.Web.Common.Configuration;
 
@@ -81,28 +82,29 @@ namespace crds_angular.Services
             _invitationService = invitationService;
         }
 
-
-        public PinDto GetPinDetails(int participantId)
+        public PinDto GetPinDetailsForGroup(int groupId)
         {
+            //get the groups Primary contact
+            var participantId = GetParticipantIdFromGroup(groupId);
+            //get the pin details for the primary contact
+            var pin = GetPinDetailsForPerson(participantId);
+            
             var token = _apiUserRepository.GetToken();
+
+            //get group details for the primary pin
+            pin.Gathering = _groupService.GetGroupsByTypeOrId(token, participantId, null, groupId).FirstOrDefault();
+            pin.PinType = PinType.GATHERING;
+            if (pin.Gathering != null)
+            {
+                pin.Address = pin.Gathering.Address;
+            }
+            return pin;
+        }
+
+        public PinDto GetPinDetailsForPerson(int participantId)
+        {
             //first get pin details
             var pinDetails = Mapper.Map<PinDto>(_finderRepository.GetPinDetails(participantId));
-
-            //get group details
-            if (pinDetails.Host_Status_ID == _approvedHost)
-            {
-                var groups = _groupService.GetGroupsByTypeOrId(token, participantId, new int[] {_anywhereGroupType});
-                foreach (GroupDTO group in groups)
-                {
-                    var leader = group.Participants.Where(p => p.GroupRoleId == _leaderRoleId && p.ParticipantId == participantId).FirstOrDefault();
-
-                    if (leader != null)
-                    {
-                        pinDetails.Gathering = group;
-                        break;
-                    }
-                }
-            }
             
             //make sure we have a lat/long
             if (pinDetails.Address.Latitude == null || pinDetails.Address.Longitude == null)
@@ -110,8 +112,9 @@ namespace crds_angular.Services
                 _addressService.SetGeoCoordinates(pinDetails.Address);
             }
             // randomize the location
-                pinDetails.Address = RandomizeLatLong(pinDetails.Address);
-            
+            pinDetails.Address = RandomizeLatLong(pinDetails.Address);
+            pinDetails.PinType = PinType.PERSON;
+
             //TODO get group details
             return pinDetails;
         }
@@ -162,6 +165,12 @@ namespace crds_angular.Services
         {
             var participant = _participantRepository.GetParticipant(contactId);
             return participant.ParticipantId;
+        }
+
+        public int GetParticipantIdFromGroup(int groupId)
+        {
+            var participantId = _groupService.GetPrimaryContactParticipantId(groupId);
+            return participantId;
         }
 
         public List<PinDto> GetPinsInRadius(GeoCoordinate originCoords, string address)

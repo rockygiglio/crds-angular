@@ -36,7 +36,7 @@ namespace crds_angular.Controllers.API
         {
             _addressService = addressService;
             _finderService = finderService;
-            _addressGeocodingService = addressGeocodingService; 
+            _addressGeocodingService = addressGeocodingService;
         }
 
         [ResponseType(typeof(PinDto))]
@@ -47,7 +47,25 @@ namespace crds_angular.Controllers.API
         {
             try
             {
-                var list = _finderService.GetPinDetails(participantId);
+                var list = _finderService.GetPinDetailsForPerson(participantId);
+                return Ok(list);
+            }
+            catch (Exception ex)
+            {
+                var apiError = new ApiErrorDto("Get Pin Details Failed", ex);
+                throw new HttpResponseException(apiError.HttpResponseMessage);
+            }
+        }
+
+        [ResponseType(typeof(PinDto))]
+        [VersionedRoute(template: "finder/pinByGroupID/{groupId}", minimumVersion: "1.0.0")]
+        [System.Web.Http.Route("finder/pinByGroupID/{groupId}")]
+        [System.Web.Http.HttpGet]
+        public IHttpActionResult GetPinDetailsByGroup([FromUri]int groupId)
+        {
+            try
+            {
+                var list = _finderService.GetPinDetailsForGroup(groupId);
                 return Ok(list);
             }
             catch (Exception ex)
@@ -66,7 +84,8 @@ namespace crds_angular.Controllers.API
             try
             {
                 var participantId = _finderService.GetParticipantIdFromContact(contactId);
-                var pin = _finderService.GetPinDetails(participantId);
+                //refactor this to JUST get location;
+                var pin = _finderService.GetPinDetailsForPerson(participantId);
                 bool pinHasInvalidGeoCoords = ( (pin.Address.Latitude == null || pin.Address.Longitude == null)
                                                || (pin.Address.Latitude == 0 && pin.Address.Longitude == 0));
 

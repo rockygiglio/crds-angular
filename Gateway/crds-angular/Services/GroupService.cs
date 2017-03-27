@@ -784,6 +784,11 @@ namespace crds_angular.Services
             _mpGroupRepository.UpdateGroupParticipant(participants);
         }
 
+        public int GetPrimaryContactParticipantId(int groupId)
+        {
+            return _mpGroupRepository.GetParticipantIdFromGroup(groupId, _apiUserService.GetToken());
+        }
+
         public void SendParticipantsEmail(string token, List<GroupParticipantDTO> participants, string subject, string body)
         {
             var senderRecord = _participantService.GetParticipantRecord(token);

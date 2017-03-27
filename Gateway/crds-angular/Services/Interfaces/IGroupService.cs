@@ -55,5 +55,7 @@ namespace crds_angular.Services.Interfaces
 
         List<GroupDTO> RemoveOnsiteParticipantsIfNotLeader(List<GroupDTO> groups, string token);
         List<GroupDTO> GetGroupsByTypeOrId(string token, int? participantId = null, int[] groupTypeIds = null, int? groupId = null);
+
+        int GetPrimaryContactParticipantId(int groupId);
     }
 }
