@@ -20,7 +20,7 @@ GO
 ALTER PROCEDURE [dbo].[api_crds_Child_Signin_Search] 
 	@Phone_Number nvarchar(25)
   , @Include_Other_Household bit = 1
-  , @GroupTypeId INT
+  , @GroupTypeId INT = 4 -- default to age grade groups
 AS
 BEGIN
   DECLARE @Phone_Number_Without_Dashes nvarchar(25) = REPLACE(@Phone_Number, '-', '');
