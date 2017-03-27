@@ -280,11 +280,13 @@ namespace MinistryPlatform.Translation.Repositories
                 try
                 {
                     // Validate phone numbers' format before update
-                    var mobileNumber = profileDictionary["Mobile_Phone"] as string;
-
-                    if (!Helpers.PhoneNumberValidator.Validate(mobileNumber))
+                    if (profileDictionary.ContainsKey("Mobile_Phone"))
                     {
-                        throw new ApplicationException("Phone number format is wrong");
+                        var mobileNumber = profileDictionary["Mobile_Phone"] as string;
+                        if (!Helpers.PhoneNumberValidator.Validate(mobileNumber))
+                        {
+                            throw new ApplicationException("Mobile phone format is wrong. Format should be ###-###-####");
+                        }
                     }
 
                     _ministryPlatformService.UpdateRecord(_configurationWrapper.GetConfigIntValue("Contacts"), profileDictionary, token);
@@ -306,12 +308,22 @@ namespace MinistryPlatform.Translation.Repositories
             {
                 try
                 {
-                    var mobileNumber = profileDictionary["Mobile_Phone"] as string;
-                    var homeNumber = householdDictionary["Home_Phone"] as string;
-
-                    if (!Helpers.PhoneNumberValidator.Validate(mobileNumber, homeNumber))
+                    if (profileDictionary.ContainsKey("Mobile_Phone"))
                     {
-                        throw new ApplicationException("One or multiple phone numbers format is wrong");
+                        var mobileNumber = profileDictionary["Mobile_Phone"] as string;
+                        if (!Helpers.PhoneNumberValidator.Validate(mobileNumber))
+                        {
+                            throw new ApplicationException("Mobile phone format is wrong. Format should be ###-###-####");
+                        }
+                    }
+                    if (profileDictionary.ContainsKey("Home_Phone"))
+                    {
+                        var homeNumber = householdDictionary["Home_Phone"] as string;
+
+                        if (!Helpers.PhoneNumberValidator.Validate(homeNumber))
+                        {
+                            throw new ApplicationException("Home phone format is wrong. Format should be ###-###-####");
+                        }
                     }
 
                     _ministryPlatformService.UpdateRecord(_configurationWrapper.GetConfigIntValue("Contacts"), profileDictionary, token);
