@@ -79,7 +79,7 @@ namespace crds_angular.test.Services
         }
 
         [Test]
-        public void ShouldGetPinDetails()
+        public void ShouldGetPersonPinDetails()
         {
             _apiUserRepository.Setup(ar => ar.GetToken()).Returns("abc123");
             _mpFinderRepository.Setup(m => m.GetPinDetails(123))
@@ -95,12 +95,41 @@ namespace crds_angular.test.Services
                     Host_Status_ID = 3
                 });
 
-            _groupService.Setup(gs => gs.GetGroupsByTypeOrId("abc123", 123, new int[] {30}, (int?) null))
+            var result = _fixture.GetPinDetailsForPerson(123);
+
+            _mpFinderRepository.VerifyAll();
+
+            Assert.AreEqual(result.LastName, "Ker");
+            Assert.AreEqual(result.Address.AddressID, 12);
+            Assert.AreEqual(result.PinType, PinType.PERSON);
+        }
+
+
+
+        [Test]
+        public void ShouldGetGroupPinDetails()
+        {
+            _groupService.Setup(g => g.GetPrimaryContactParticipantId(It.IsAny<int>())).Returns(986765);
+            _apiUserRepository.Setup(ar => ar.GetToken()).Returns("abc123");
+            _mpFinderRepository.Setup(m => m.GetPinDetails(986765))
+                .Returns(new FinderPinDto
+                {
+                    LastName = "Ker",
+                    FirstName = "Joe",
+                    Address = new MpAddress { Address_ID = 12, Postal_Code = "1234", Address_Line_1 = "123 street", City = "City", State = "OH" },
+                    Participant_ID = 123,
+                    EmailAddress = "joeker@gmail.com",
+                    Contact_ID = 22,
+                    Household_ID = 13,
+                    Host_Status_ID = 3
+                });
+
+            _groupService.Setup(gs => gs.GetGroupsByTypeOrId("abc123", 986765, null, 121212))
                 .Returns(new List<GroupDTO>
                 {
                     new GroupDTO
                     {
-                        GroupId = 4444444,
+                        GroupId = 121212,
                         Participants = new List<GroupParticipantDTO>
                         {
                             new GroupParticipantDTO
@@ -109,30 +138,19 @@ namespace crds_angular.test.Services
                                 ParticipantId = 222
 
                             }
-                        }
-                    },
-                    new GroupDTO
-                    {
-                        GroupId = 8675309,
-                        Participants = new List<GroupParticipantDTO>
-                        {
-                            new GroupParticipantDTO
-                            {
-                                GroupRoleId = 22,
-                                ParticipantId = 123
-
-                            }
-                        }
+                        },
+                        Address = new AddressDTO() { AddressID = 99, PostalCode = "98765", AddressLine1 = "345 road", City = "Town", State = "CA" }
                     }
                 });
 
-            var result = _fixture.GetPinDetails(123);
+            var result = _fixture.GetPinDetailsForGroup(121212);
 
             _mpFinderRepository.VerifyAll();
 
             Assert.AreEqual(result.LastName, "Ker");
-            Assert.AreEqual(result.Address.AddressID, 12);
-            Assert.AreEqual(result.Gathering.GroupId, 8675309);
+            Assert.AreEqual(result.Address.AddressID, 99);
+            Assert.AreEqual(result.Gathering.GroupId, 121212);
+            Assert.AreEqual(result.PinType, PinType.GATHERING);
         }
 
         [Test]

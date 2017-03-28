@@ -3,12 +3,15 @@ using System.Device.Location;
 using crds_angular.Models.AwsCloudsearch;
 using crds_angular.Models.Finder;
 using crds_angular.Models.Crossroads;
+using crds_angular.Models.Crossroads.Groups;
+using crds_angular.Models.Crossroads.Profile;
 
 namespace crds_angular.Services.Interfaces
 {
     public interface IFinderService
     {
-        PinDto GetPinDetails(int participantId);
+        PinDto GetPinDetailsForPerson(int participantId);
+        PinDto GetPinDetailsForGroup(int groupId);
         void EnablePin(int participantId);
         void UpdateHouseholdAddress(PinDto pin);
         AddressDTO GetAddressForIp(string ip);
@@ -18,5 +21,6 @@ namespace crds_angular.Services.Interfaces
         GeoCoordinate GetGeoCoordsFromAddressOrLatLang(string address, string lat, string lng);
         void GatheringJoinRequest(string token, int gatheringId);
         Invitation InviteToGathering(string token, int gatheringId, User person);
+        List<GroupParticipantDTO> GetParticipantsForGroup(int groupId);
     }
 }
