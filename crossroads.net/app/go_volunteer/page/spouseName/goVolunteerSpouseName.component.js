@@ -33,6 +33,7 @@
       vm.phoneFormat = /^\d{3}-\d{3}-\d{4}$/;
       vm.submit = submit;
       vm.validate = validate;
+      vm.insertDashes = insertDashes;
 
       function openBirthdatePicker($event) {
         $event.preventDefault();
@@ -52,6 +53,21 @@
 
       function validate(fieldName) {
         return Validation.showErrors(vm.spouseForm, fieldName);
+      }
+
+      function insertDashes(e) {
+        const { value } = e.target;
+        const first3Re = /^\d{3}$/;
+        const second3Re = /^\d{3}-\d{3}$/;
+
+        let newValue = value;
+
+        if (first3Re.test(value) || second3Re.test(value)) {
+          newValue = value + '-';
+
+          this.spouseForm.phone.$viewValue = newValue;
+          this.spouseForm.phone.$render();
+        }
       }
     }
   }
