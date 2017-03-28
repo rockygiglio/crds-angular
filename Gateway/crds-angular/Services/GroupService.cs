@@ -563,6 +563,17 @@ namespace crds_angular.Services
             return GetAttributesAndParticipants(token,groups);
         }
 
+        public List<GroupParticipantDTO> GetGroupParticipantsWithoutAttributes(int groupId)
+        {
+            var p = _mpGroupRepository.GetGroupParticipants(groupId, true);
+            if (p != null && p.Any())
+            {
+                return p.Select(Mapper.Map<MpGroupParticipant, GroupParticipantDTO>).ToList();
+            }
+
+            return new List<GroupParticipantDTO>();
+        }
+
         private List<GroupDTO> GetAttributesAndParticipants(string token, List<MpGroup> groups)
         {
             var groupDetail = groups.Select(Mapper.Map<MpGroup, GroupDTO>).ToList();
