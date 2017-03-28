@@ -30,7 +30,7 @@
       vm.oneHundredFiftyYearsAgo = new Date(now.getFullYear() - 150, now.getMonth(), now.getDate());
       vm.openBirthdatePicker = openBirthdatePicker;
       vm.spouse = GoVolunteerService.spouse;
-      vm.phoneFormat = /^\(?(\d{3})\)?[\s.-]?(\d{3})[\s.-]?(\d{4})$/;
+      vm.phoneFormat = /^\d{3}-\d{3}-\d{4}$/;
       vm.submit = submit;
       vm.validate = validate;
 
