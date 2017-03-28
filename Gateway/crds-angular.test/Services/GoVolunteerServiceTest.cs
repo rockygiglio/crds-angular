@@ -5,11 +5,9 @@ using crds_angular.Models.Crossroads.GoVolunteer;
 using crds_angular.Services;
 using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.FunctionalHelpers;
-using Crossroads.Utilities.Interfaces;
 using Crossroads.Utilities.Services;
 using Crossroads.Web.Common.Configuration;
 using Crossroads.Web.Common.MinistryPlatform;
-using FsCheck.Experimental;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Models.GoCincinnati;
 using MinistryPlatform.Translation.Repositories.Interfaces;
@@ -671,6 +669,12 @@ namespace crds_angular.test.Services
             _contactService.VerifyAll();
             _userService.VerifyAll();
             _participantService.VerifyAll();
+        }
+
+        [Test]
+        private void ShouldGetLeaderDashboard()
+        {
+            
         }
 
         private AnywhereRegistration BuildRegistration()
