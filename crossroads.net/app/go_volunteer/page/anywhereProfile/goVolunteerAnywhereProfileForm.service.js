@@ -92,6 +92,7 @@ export default class GoVolunteerAnywhereProfileForm {
             type: 'crdsInput',
             templateOptions: {
               label: 'Email',
+              type: 'email',
               required: true,
             }
           }
@@ -136,10 +137,11 @@ export default class GoVolunteerAnywhereProfileForm {
           {
             className: 'form-group col-sm-6',
             key: 'mobilePhone',
-            type: 'crdsInput',
+            type: 'crdsPhoneNumberInput',
             optionsTypes: ['phoneNumber'],
             templateOptions: {
               label: 'Mobile Phone',
+              placeholder: '###-###-####',
               required: true
             }
           },

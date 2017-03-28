@@ -434,6 +434,22 @@ namespace MinistryPlatform.Translation.Repositories
             return (WithApiLogin(apiToken => { return LoadGroupParticipants(groupId, apiToken, active); }));
         }
 
+        public int GetParticipantIdFromGroup(int groupId, string apiToken)
+        {
+            const string columns = "Primary_Contact_Table.Participant_Record";
+            string filter = $"[Group_ID] = {groupId}";
+
+            logger.Debug("Getting primary contact for groupId: " + groupId);
+            var participantIdDict = _ministryPlatformRestRepository.UsingAuthenticationToken(apiToken).Search<MpGroup, Dictionary<string, int>>(filter, columns).FirstOrDefault();
+
+            if (participantIdDict != null && participantIdDict.Count > 0)
+            {
+                return participantIdDict["Participant_Record"];
+            }
+
+            throw new ApplicationException("Error finding Primary Contact ParticipantID for group");
+        }
+
         public int UpdateGroupParticipant(List<MpGroupParticipant> participants)
         {
             int retValue = -1;

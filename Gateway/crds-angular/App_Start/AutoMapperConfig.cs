@@ -5,6 +5,7 @@ using System.Text.RegularExpressions;
 using System.Web.ClientServices.Providers;
 using AutoMapper;
 using crds_angular.Models;
+using crds_angular.Models.AwsCloudsearch;
 using crds_angular.Models.Finder;
 using crds_angular.Models.Crossroads;
 using crds_angular.Models.Crossroads.Attribute;
@@ -383,6 +384,10 @@ namespace crds_angular.App_Start
             Mapper.CreateMap<MpRsvpMember, RsvpMember>();
             Mapper.CreateMap<PinDto, FinderPinDto>();
             Mapper.CreateMap<FinderPinDto, PinDto>();
+            Mapper.CreateMap<AwsConnectDto,MpConnectAws>();
+            Mapper.CreateMap<MpConnectAws,AwsConnectDto>()
+                .ForMember(dest => dest.LatLong, opts => opts.MapFrom(
+                   src => (src.Latitude==null || src.Longitude==null) ? null : $"{src.Latitude} , {src.Longitude}"));
 
             Mapper.CreateMap<GroupDTO, PinDto>()
                 .ForMember(dest => dest.Contact_ID, opts => opts.MapFrom(src => src.ContactId))
