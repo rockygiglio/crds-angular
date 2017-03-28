@@ -170,6 +170,9 @@ namespace crds_angular.Controllers.API
 
                     _finderService.EnablePin((int)pin.Participant_ID);
                     _logger.DebugFormat("Successfully created pin for contact {0} ", pin.Contact_ID);
+
+                    _awsCloudsearchService.UploadNewPinToAWS(pin); 
+
                     return (Ok(pin));
                 }
                 catch (Exception e)

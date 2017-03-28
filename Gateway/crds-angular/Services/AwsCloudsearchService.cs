@@ -90,7 +90,7 @@ namespace crds_angular.Services
         }
 
 
-        
+
 
         private List<AwsCloudsearchDto> GetDataForCloudsearch()
         {
@@ -155,6 +155,30 @@ namespace crds_angular.Services
 
             var response = cloudSearch.Search(searchRequest);
             return (response);
+        }
+
+        public void UploadNewPinToAWS(PinDto pin)
+        {
+            var domainConfig = new AmazonCloudSearchDomainConfig
+            {
+                ServiceURL = "http://search-connect-int-sdjkhnnriypxn3ijhn4k5xkxq4.us-east-1.cloudsearch.amazonaws.com"
+            };
+
+            var cloudSearch = new Amazon.CloudSearchDomain.AmazonCloudSearchDomainClient(domainConfig);
+
+            var path = @"C:\Code\myjsonfile.txt";
+
+            var ms = new MemoryStream();
+            FileStream jsonFileToUpload = new FileStream(path, FileMode.Open, FileAccess.Read);
+
+            var upload = new Amazon.CloudSearchDomain.Model.UploadDocumentsRequest()
+            {
+                ContentType = ContentType.ApplicationJson,
+                Documents = jsonFileToUpload
+            };
+
+            var response = cloudSearch.UploadDocuments(upload);
+            System.Diagnostics.Debug.WriteLine("test");
         }
 
 
