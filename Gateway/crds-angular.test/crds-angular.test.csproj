@@ -252,6 +252,7 @@
     <Compile Include="controllers\EventLocationControllerTest.cs" />
     <Compile Include="controllers\AccountControllerTest.cs" />
     <Compile Include="controllers\EventParticipantControllerTest.cs" />
+    <Compile Include="controllers\FinderControllerTest.cs" />
     <Compile Include="controllers\GoVolunteerControllerTest.cs" />
     <Compile Include="controllers\GroupToolControllerTest.cs" />
     <Compile Include="controllers\ImageControllerTest.cs" />

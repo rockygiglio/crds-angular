@@ -91,7 +91,7 @@ namespace crds_angular.Controllers.API
         {
             try
             {
-                var address = _finderService.GetAddressForIp(ipAddress.Replace('-','.'));
+                var address = _finderService.GetAddressForIp(ipAddress.Replace('$','.'));
                 return Ok(address);
             }
             catch (Exception ex)
@@ -170,9 +170,9 @@ namespace crds_angular.Controllers.API
         }
 
         [RequiresAuthorization]
-        [ResponseType(typeof(PinSearchResultsDto))]
-        [VersionedRoute(template: "finder/findmypinsbycontactId/{contactId}/{lat}/{lng}", minimumVersion: "1.0.0")]
-        [System.Web.Http.Route("finder/findpinsbyaddress/{contactId}/{lat}/{lng}")]
+        [ResponseType(typeof(PinSearchResultsDto))]                                   
+        [VersionedRoute(template: "finder/findmypinsbycontactid/{contactId}/{lat}/{lng}", minimumVersion: "1.0.0")]
+        [System.Web.Http.Route("finder/findmypinsbycontactid/{contactId}/{lat}/{lng}")]
         [System.Web.Http.HttpGet]
         public IHttpActionResult GetMyPinsByContactId([FromUri]int contactId, [FromUri]string lat, [FromUri]string lng)
         {
@@ -195,7 +195,7 @@ namespace crds_angular.Controllers.API
                 }
                 catch (Exception ex)
                 {
-                    var apiError = new ApiErrorDto("Get Pins for My Stuff", ex);
+                    var apiError = new ApiErrorDto("Get Pins for My Stuff Failed", ex);
                     throw new HttpResponseException(apiError.HttpResponseMessage);
                 }
             });

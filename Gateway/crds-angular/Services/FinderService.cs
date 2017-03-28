@@ -226,7 +226,7 @@ namespace crds_angular.Services
             {
                 var pin = Mapper.Map<PinDto>(group);
                 pin.Gathering = group;
-                if (pin.Contact_ID != null) // contactId = 0
+                if (pin.Contact_ID != null)
                 {
                     var contact = _contactRepository.GetContactById((int)pin.Contact_ID);
                     pin.FirstName = contact.First_Name;
@@ -282,18 +282,18 @@ namespace crds_angular.Services
 
         public GeoCoordinate GetGeoCoordsFromAddressOrLatLang(string address, string lat, string lng)
         {
-              double latitude = Convert.ToDouble(lat.Replace("$", "."));
-              double longitude = Convert.ToDouble(lng.Replace("$", "."));
+            double latitude = Convert.ToDouble(lat.Replace("$", "."));
+            double longitude = Convert.ToDouble(lng.Replace("$", "."));
 
             bool geoCoordsPassedIn = latitude != 0 && longitude != 0;
 
             GeoCoordinate originCoordsFromGoogle = geoCoordsPassedIn ? null : _addressGeocodingService.GetGeoCoordinates(address);
 
-              GeoCoordinate originCoordsFromClient = new GeoCoordinate(latitude, longitude);
+            GeoCoordinate originCoordsFromClient = new GeoCoordinate(latitude, longitude);
 
             GeoCoordinate originCoordinates = geoCoordsPassedIn ? originCoordsFromClient : originCoordsFromGoogle;
 
-              return originCoordinates;
+            return originCoordinates;
         }
 
         public GeoCoordinate GetGeoCoordsFromLatLong(string lat, string lng)
@@ -327,14 +327,6 @@ namespace crds_angular.Services
                 pins.Add(pin);
             }
 
-            return pins;
-        }
-
-        private List<PinDto> GetMyPersonPin(int participantId)
-        {
-            // ignoring originCoords at this time
-            var pins = new List<PinDto>();
-// TODO - get pin details
             return pins;
         }
 
