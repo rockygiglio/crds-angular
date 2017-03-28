@@ -132,7 +132,10 @@ namespace crds_angular.Services
 
         public void UpdateHouseholdAddress(PinDto pin)
         {
-            _addressService.SetGeoCoordinates(pin.Address);
+            var coordinates = _addressService.GetGeoLocationCascading(pin.Address);
+            pin.Address.Latitude = coordinates.Latitude;
+            pin.Address.Longitude = coordinates.Longitude;
+            //_addressService.SetGeoCoordinates(pin.Address);
             var householdDictionary = new Dictionary<string, object> {{"Household_ID", pin.Household_ID}};
             var address = Mapper.Map<MpAddress>(pin.Address);
             var addressDictionary = getDictionary(address);
