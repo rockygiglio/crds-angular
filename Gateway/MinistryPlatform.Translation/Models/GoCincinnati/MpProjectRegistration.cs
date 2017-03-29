@@ -6,25 +6,25 @@ namespace MinistryPlatform.Translation.Models.GoCincinnati
     [MpRestApiTable(Name = "cr_Group_Connector_Registrations")]
     public class MpProjectRegistration
     {
-        [JsonProperty(PropertyName = "Group_Connector_ID_Table_Project_ID_Table.[Project_ID]")]
+        [JsonProperty(PropertyName = "Project_ID")]
         public int ProjectId { get; set; }
 
-        [JsonProperty(PropertyName = "Registration_ID_Table_Participant_ID_Table_Contact_ID_Table.[Nickname]")]
+        [JsonProperty(PropertyName = "Nickname")]
         public string Nickname { get; set; }
 
-        [JsonProperty(PropertyName = "Registration_ID_Table_Participant_ID_Table_Contact_ID_Table.[Last_Name]")]
+        [JsonProperty(PropertyName = "Last_Name")]
         public string LastName { get; set; }
 
-        [JsonProperty(PropertyName = "Registration_ID_Table_Participant_ID_Table_Contact_ID_Table.[Mobile_Phone]")]
+        [JsonProperty(PropertyName = "Mobile_Phone")]
         public string Phone { get; set; }
 
-        [JsonProperty(PropertyName = "Registration_ID_Table_Participant_ID_Table_Contact_ID_Table.[Email_Address]")]
+        [JsonProperty(PropertyName = "Email_Address")]
         public string EmailAddress { get; set; }
 
-        [JsonProperty(PropertyName = "Registration_ID_Table.[Spouse_Participation]")]
+        [JsonProperty(PropertyName = "Spouse_Participation")]
         public bool SpouseParticipating { get; set; }
 
-        [JsonProperty(PropertyName = "Registration_ID_Table.[_Family_Count]")]
+        [JsonProperty(PropertyName = "_Family_Count")]
         public int FamilyCount { get; set; }
 
     }
