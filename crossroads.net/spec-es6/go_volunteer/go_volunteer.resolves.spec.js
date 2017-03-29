@@ -1,5 +1,5 @@
 import goVolunteerModule from '../../app/go_volunteer/goVolunteer.module';
-import { GetProject, GetCities, GetOrganizations } from '../../app/go_volunteer/goVolunteer.resolves';
+import { GetDashboard, GetProject, GetCities, GetOrganizations } from '../../app/go_volunteer/goVolunteer.resolves';
 
 describe('GO Local Resolves', () => {
   let state;
@@ -90,6 +90,47 @@ describe('GO Local Resolves', () => {
     expect(Organizations.getCurrentOrgs).toHaveBeenCalled();
     result.then(() => {
       expect(GoVolunteerService.organizations).toBe(fake);
+    });
+  });
+
+  it('should fail to resolve the dashboard', () => {
+    spyOn(GoVolunteerDataService, 'getDashboard').and.callFake(() => {
+      const deferred = q.defer();
+      deferred.reject({ stausCode: 500 });
+      return deferred.promise;
+    });
+
+    spyOn(logger, 'error');
+
+    const result = GetDashboard(state, GoVolunteerDataService, GoVolunteerService, q, logger);
+    expect(GoVolunteerDataService.getDashboard).toHaveBeenCalledWith(projectId);
+    result.then(() => {
+    }, () => {
+      expect(GoVolunteerService.dashboard).toBe(undefined);
+      expect(logger.error).toHaveBeenCalled();
+    });
+  });
+
+  it('should resovle the dashboard', () => {
+    const participants = [
+      { name: 'Jenny Shultz', email: 'jshultz@hotmail.com', phone: '205-333-5962', adults: 1, children: 2 },
+      { name: 'Jamie Hanks', email: 'jaha95@gmail.com', phone: '205-333-5962', adults: 0, children: 2 },
+      { name: 'Jennie Jones', email: 'jjgirl@yahoo.com', phone: '205-334-5988', adults: 2, children: 0 },
+      { name: 'Jimmy Hatfield', email: 'jhattyhat@yahoo.com', phone: '205-425-5772', adults: 0, children: 2 },
+      { name: 'Elisha Underwood', email: 'eu@yahoo.com', phone: '205-259-2777', adults: 0, children: 2 },
+      { name: 'Terry Washington', email: 'tdub777@yahoo.com', phone: '205-259-8954', adults: 1, children: 1 },
+      { name: 'Jim Wolf', email: 'dwolf@yahoo.com', phone: '205-334-9584', adults: 1, children: 2 }
+    ];
+    spyOn(GoVolunteerDataService, 'getDashboard').and.callFake(() => {
+      const deferred = q.defer();
+      deferred.resolve(participants);
+      return deferred.promise;
+    });
+
+    const result = GetDashboard(state, GoVolunteerDataService, GoVolunteerService, q);
+    expect(GoVolunteerDataService.getDashboard).toHaveBeenCalledWith(projectId);
+    result.then(() => {
+      expect(GoVolunteerService.dashboard).toBe(participants);
     });
   });
 });

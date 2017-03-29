@@ -12,6 +12,11 @@ class GoVolunteerDataService {
     this.CreateAnywhere = $resource(`${__API_ENDPOINT__}api/v1.0.0/go-volunteer/registration/:projectId`);
     this.Project = $resource(`${__API_ENDPOINT__}api/v1.0.0/go-volunteer/project/:projectId`);
     this.ProjectCities = $resource(`${__API_ENDPOINT__}api/v1.0.0/go-volunteer/cities/:initiativeId`);
+    this.Dashboard = $resource(`${__API_ENDPOINT__}api/v1.0.0/go-volunteer/dashboard/:projectId`);
+  }
+
+  getDashboard(projectId) {
+    return this.Dashboard.query({ projectId }).$promise;
   }
 
   getProject(projectId) {

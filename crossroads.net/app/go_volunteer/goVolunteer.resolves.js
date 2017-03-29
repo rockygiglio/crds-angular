@@ -85,6 +85,20 @@ export function GetProject($state, GoVolunteerDataService, GoVolunteerService, $
   return deferred.promise;
 }
 
+export function GetDashboard($state, GoVolunteerDataService, GoVolunteerService, $q, $log) {
+  const deferred = $q.defer();
+  const projectId = $state.toParams.projectId;
+  const gService = GoVolunteerService;
+  GoVolunteerDataService.getDashboard(projectId).then((data) => {
+    gService.dashboard = data;
+    deferred.resolve();
+  }, (err) => {
+    $log.error('Unable to get the dashboard data', err);
+    deferred.reject();
+  });
+  return deferred.promise;
+}
+
 export function GetProfile(Profile, $cookies, $q, GoVolunteerService) {
   const deferred = $q.defer();
   const gService = GoVolunteerService;
