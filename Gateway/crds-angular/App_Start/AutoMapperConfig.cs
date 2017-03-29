@@ -386,7 +386,7 @@ namespace crds_angular.App_Start
             Mapper.CreateMap<AwsConnectDto,MpConnectAws>();
             Mapper.CreateMap<MpConnectAws,AwsConnectDto>()
                 .ForMember(dest => dest.LatLong, opts => opts.MapFrom(
-                   src => (src.Latitude==null || src.Longitude==null) ? null : $"{src.Latitude} , {src.Longitude}"));
+                   src => (src.Latitude==null || src.Longitude==null) ? "0 , 0" : $"{src.Latitude} , {src.Longitude}"));
 
             Mapper.CreateMap<GroupDTO, PinDto>()
                 .ForMember(dest => dest.PinType, opt => opt.UseValue<PinType>(PinType.GATHERING));
