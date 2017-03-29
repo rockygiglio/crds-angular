@@ -166,21 +166,53 @@ namespace crds_angular.Services
 
             var cloudSearch = new Amazon.CloudSearchDomain.AmazonCloudSearchDomainClient(domainConfig);
 
-            var path = @"C:\Code\myjsonfile.txt";
+            //---
+            //serialize
 
-            var ms = new MemoryStream();
-            FileStream jsonFileToUpload = new FileStream(path, FileMode.Open, FileAccess.Read);
+            AwsConnectDto awsPinDto = Mapper.Map<AwsConnectDto>(pin);
+
+            //string jsonAwsPinDto = JsonConvert.SerializeObject(awsPinDto, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+
+            AwsCloudsearchDto awsPostObject = new AwsCloudsearchDto("add", GenerateAwsPinId(pin), awsPinDto);
+
+            string jsonAwsObject = JsonConvert.SerializeObject(awsPostObject, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+
+            MemoryStream jsonAwsPinDtoStream = new MemoryStream(Encoding.UTF8.GetBytes(jsonAwsObject)); 
 
             var upload = new Amazon.CloudSearchDomain.Model.UploadDocumentsRequest()
             {
                 ContentType = ContentType.ApplicationJson,
-                Documents = jsonFileToUpload
+                Documents = jsonAwsPinDtoStream
             };
+
+            //var path = @"C:\Code\myjsonfile.txt";
+
+            //var ms = new MemoryStream();
+            //FileStream jsonFileToUpload = new FileStream(path, FileMode.Open, FileAccess.Read);
+
+            //var upload = new Amazon.CloudSearchDomain.Model.UploadDocumentsRequest()
+            //{
+            //    ContentType = ContentType.ApplicationJson,
+            //    Documents = jsonFileToUpload
+            //};
 
             var response = cloudSearch.UploadDocuments(upload);
             System.Diagnostics.Debug.WriteLine("test");
         }
 
+        public string GenerateAwsPinId(PinDto pin)
+        {
+            string awsPinId = pin.Address.AddressID + "-" + pin.PinType + "-" + pin.Participant_ID + "-" + getPinGroupIdOrEmptyString(pin);
+            return awsPinId; 
+        }
+
+        public string getPinGroupIdOrEmptyString(PinDto pin)
+        {
+            bool isGathering = pin.PinType == PinType.GATHERING;
+            string groupIdAsString = isGathering ? pin.Gathering.GroupId.ToString() : "";
+
+            return groupIdAsString; 
+        }
 
     }
 }
