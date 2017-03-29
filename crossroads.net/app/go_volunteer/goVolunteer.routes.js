@@ -1,5 +1,5 @@
 import constants from '../constants';
-import { CmsInfo, Meta, GetProject, GetProfile, GetCities, GetOrganizations } from './goVolunteer.resolves';
+import { CmsInfo, Meta, GetProject, GetDashboard, GetProfile, GetCities, GetOrganizations } from './goVolunteer.resolves';
 
 
 
@@ -28,10 +28,12 @@ export default function GoVolunteerRoutes($stateProvider, $urlMatcherFactoryProv
       resolve: {
         $state: '$state',
         $q: '$q',
+        $log: '$log',
         loggedin: crds_utilities.optimisticallyCheckLoggedin,
         GoVolunteerDataService: 'GoVolunteerDataService',
         GoVolunteerService: 'GoVolunteerService',
-        GetProject
+        GetProject,
+        GetDashboard
       }
     })
     .state('go-local.organizations', {
