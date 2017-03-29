@@ -166,18 +166,18 @@ namespace crds_angular.Services
 
             var cloudSearch = new Amazon.CloudSearchDomain.AmazonCloudSearchDomainClient(domainConfig);
 
-            //---
-            //serialize
 
-            AwsConnectDto awsPinDto = Mapper.Map<AwsConnectDto>(pin);
+            AwsConnectDto awsPinObject = Mapper.Map<AwsConnectDto>(pin);
 
-            //string jsonAwsPinDto = JsonConvert.SerializeObject(awsPinDto, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+            AwsCloudsearchDto awsPostPinObject = new AwsCloudsearchDto("add", GenerateAwsPinId(pin), awsPinObject);
 
-            AwsCloudsearchDto awsPostObject = new AwsCloudsearchDto("add", GenerateAwsPinId(pin), awsPinDto);
+            var pinlist = new List<AwsCloudsearchDto>();
+            pinlist.Add(awsPostPinObject);
 
-            string jsonAwsObject = JsonConvert.SerializeObject(awsPostObject, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+            //string jsonAwsObject = JsonConvert.SerializeObject(awsPostPinObject, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+            string jsonAwsObject = JsonConvert.SerializeObject(pinlist, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
 
-            MemoryStream jsonAwsPinDtoStream = new MemoryStream(Encoding.UTF8.GetBytes(jsonAwsObject)); 
+            MemoryStream jsonAwsPinDtoStream = new MemoryStream(Encoding.UTF8.GetBytes(jsonAwsObject));
 
             var upload = new Amazon.CloudSearchDomain.Model.UploadDocumentsRequest()
             {
@@ -190,7 +190,7 @@ namespace crds_angular.Services
             //var ms = new MemoryStream();
             //FileStream jsonFileToUpload = new FileStream(path, FileMode.Open, FileAccess.Read);
 
-            //var upload = new Amazon.CloudSearchDomain.Model.UploadDocumentsRequest()
+            //var upload2 = new Amazon.CloudSearchDomain.Model.UploadDocumentsRequest()
             //{
             //    ContentType = ContentType.ApplicationJson,
             //    Documents = jsonFileToUpload
