@@ -116,15 +116,18 @@ namespace crds_angular.Services
             var pinDetails = Mapper.Map<PinDto>(_finderRepository.GetPinDetails(participantId));
 
             //make sure we have a lat/long
-            if (pinDetails.Address.Latitude == null || pinDetails.Address.Longitude == null)
+            if (pinDetails != null && pinDetails.Address.Latitude != null && pinDetails.Address.Longitude != null)
             {
                 _addressService.SetGeoCoordinates(pinDetails.Address);
             }
+            else
+            {
+                return new PinDto();
+            }
+
             // randomize the location
             pinDetails.Address = RandomizeLatLong(pinDetails.Address);
-            pinDetails.PinType = PinType.PERSON;
-
-            //TODO get group details
+            pinDetails.PinType = PinType.PERSON;                       
             return pinDetails;
         }
 
@@ -290,7 +293,10 @@ namespace crds_angular.Services
             PinDto personPin = GetPinDetailsForPerson(participantId);
 
             pins.AddRange(groupPins);
-            pins.Add(personPin);
+            if (personPin != null && personPin.FirstName != null)
+            {
+                pins.Add(personPin);
+            }            
 
             foreach (var pin in pins)
             {
@@ -304,7 +310,7 @@ namespace crds_angular.Services
 
         public List<PinDto> GetMyGroupPins(string token, int[] groupTypeIds, int participantId)
         {
-            var groupsByType = _groupRepository.GetGroupsForParticipantByTypeOrID(participantId, token, groupTypeIds);
+            var groupsByType = _groupRepository.GetGroupsForParticipantByTypeOrID(participantId, null, groupTypeIds);
 
             if (groupsByType == null)
             {

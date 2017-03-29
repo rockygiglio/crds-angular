@@ -9,6 +9,7 @@ using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 using MinistryPlatform.Translation.Models.Finder;
 using System.Device.Location;
+using System.Web.UI;
 
 namespace MinistryPlatform.Translation.Repositories
 {
@@ -35,15 +36,25 @@ namespace MinistryPlatform.Translation.Repositories
 
         public FinderPinDto GetPinDetails(int participantId)
         {
-            const string pinSearch = "Email_Address, Nickname as FirstName, Last_Name as LastName, Participant_Record_Table.*, Household_ID";
-            string filter = $"Participant_Record = {participantId}";
             string token = _apiUserRepository.GetToken();
 
-            var pinDetails = _ministryPlatformRest.UsingAuthenticationToken(token).Search<FinderPinDto>(filter, pinSearch)?.First();
+            const string pinSearch = "Email_Address, Nickname as FirstName, Last_Name as LastName, Participant_Record_Table.*, Household_ID";
+            string pinFilter = $"Participant_Record = {participantId} AND Participant_Record_Table.[Show_On_Map] = 1";
 
-            const string addressSearch = "Household_ID_Table_Address_ID_Table.*";
-            if (pinDetails != null) pinDetails.Address = _ministryPlatformRest.UsingAuthenticationToken(token).Search<MpAddress>(filter, addressSearch)?.First();
+            List<FinderPinDto> myPin = _ministryPlatformRest.UsingAuthenticationToken(token).Search<FinderPinDto>(pinFilter, pinSearch);
+            var pinDetails = new FinderPinDto();
 
+            if (myPin != null && myPin.Count > 0)
+            {
+                pinDetails = myPin.First();
+                const string addressSearch = "Household_ID_Table_Address_ID_Table.*";
+                string addressFilter = $"Participant_Record = {participantId}";
+                pinDetails.Address = _ministryPlatformRest.UsingAuthenticationToken(token).Search<MpAddress>(addressFilter, addressSearch)?.First();
+            }
+            else
+            {
+                pinDetails = null;
+            }           
 
             return pinDetails;
         }
