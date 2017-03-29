@@ -20,9 +20,9 @@
     };
 
     function GoVolunteerSpouseNameController() {
-      var now = new Date();
+      const now = new Date();
 
-      var vm = this;
+      const vm = this;
 
       vm.birthdateOpen = false;
       vm.initDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
@@ -30,10 +30,9 @@
       vm.oneHundredFiftyYearsAgo = new Date(now.getFullYear() - 150, now.getMonth(), now.getDate());
       vm.openBirthdatePicker = openBirthdatePicker;
       vm.spouse = GoVolunteerService.spouse;
-      vm.phoneFormat = /^\d{3}-\d{3}-\d{4}$/;
+      vm.phoneFormat = Validation.phoneFormat();
       vm.submit = submit;
       vm.validate = validate;
-      vm.insertDashes = insertDashes;
 
       function openBirthdatePicker($event) {
         $event.preventDefault();
@@ -45,7 +44,7 @@
       function submit() {
         vm.spouseForm.$setSubmitted();
         if (vm.spouseForm.$valid) {
-          vm.onSubmit({nextState: 'children'});
+          vm.onSubmit({ nextState: 'children' });
         } else {
           $rootScope.$emit('notify', $rootScope.MESSAGES.generalError);
         }
@@ -53,21 +52,6 @@
 
       function validate(fieldName) {
         return Validation.showErrors(vm.spouseForm, fieldName);
-      }
-
-      function insertDashes(e) {
-        const { value } = e.target;
-        const first3Re = /^\d{3}$/;
-        const second3Re = /^\d{3}-\d{3}$/;
-
-        let newValue = value;
-
-        if (first3Re.test(value) || second3Re.test(value)) {
-          newValue = value + '-';
-
-          this.spouseForm.phone.$viewValue = newValue;
-          this.spouseForm.phone.$render();
-        }
       }
     }
   }

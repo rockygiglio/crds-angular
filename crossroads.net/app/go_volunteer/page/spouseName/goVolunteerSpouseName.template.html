@@ -97,9 +97,9 @@
              name="phone"
              id="phone"
              placeholder="###-###-####"
-             ng-keypress="goSpouseName.insertDashes($event)"
              ng-pattern='goSpouseName.phoneFormat'
-             ng-model="goSpouseName.spouse.mobilePhone" >
+             ng-model="goSpouseName.spouse.mobilePhone"
+             phone-number-format >
       <ng-messages for="goSpouseName.spouseForm.phone.$error" ng-if="goSpouseName.validate('phone')" >
         <span ng-message="pattern"><span dynamic-content="$root.MESSAGES.invalidPhone.content | html"></span></span>
       </ng-messages>
