@@ -135,8 +135,13 @@ namespace crds_angular.Services
 
         public void UpdateHouseholdAddress(PinDto pin)
         {
-            _addressService.SetGeoCoordinates(pin.Address);
-            var householdDictionary = new Dictionary<string, object> { { "Household_ID", pin.Household_ID } };
+            // TODO is this supposed to be gone?? merge conflicts
+            // _addressService.SetGeoCoordinates(pin.Address);
+
+            var coordinates = _addressService.GetGeoLocationCascading(pin.Address);
+            pin.Address.Latitude = coordinates.Latitude;
+            pin.Address.Longitude = coordinates.Longitude;
+            var householdDictionary = new Dictionary<string, object> {{"Household_ID", pin.Household_ID}};
             var address = Mapper.Map<MpAddress>(pin.Address);
             var addressDictionary = getDictionary(address);
             addressDictionary.Add("State/Region", addressDictionary["State"]);
