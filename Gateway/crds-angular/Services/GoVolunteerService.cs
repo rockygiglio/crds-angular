@@ -232,7 +232,7 @@ namespace crds_angular.Services
         public List<DashboardDatum> GetRegistrationsForProject(int projectId)
         {
             var registrants = _registrationService.GetRegistrantsForProject(projectId);
-            return (registrants.Select(datum => new {datum, adults = datum.SpouseParticipating ? 2 : 1}).Select(@t => new DashboardDatum
+            return (registrants.Select(datum => new {datum, adults = datum.SpouseParticipating ? 2 : 1}).OrderBy(s => s.datum.LastName).Select(@t => new DashboardDatum
             {
                 RegistrantName = @t.datum.Nickname + " " + @t.datum.LastName,
                 EmailAddress = @t.datum.EmailAddress,

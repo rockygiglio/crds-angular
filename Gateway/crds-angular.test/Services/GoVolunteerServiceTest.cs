@@ -726,22 +726,22 @@ namespace crds_angular.test.Services
                 new MpProjectRegistration
                 {
                     ProjectId = 1,
-                    Nickname = "Bob",
-                    LastName = "Boberson",
-                    Phone = "123-456-7890",
-                    EmailAddress = "bob@bob.com",
-                    SpouseParticipating = true,
-                    FamilyCount = 5
-                },
-                new MpProjectRegistration
-                {
-                    ProjectId = 1,
                     Nickname = "Anita",
                     LastName = "Mann",
                     Phone = "123-456-7890",
                     EmailAddress = "anitamann@aol.com",
                     SpouseParticipating = false,
                     FamilyCount = 6
+                },
+                new MpProjectRegistration
+                {
+                    ProjectId = 1,
+                    Nickname = "Bob",
+                    LastName = "Boberson",
+                    Phone = "123-456-7890",
+                    EmailAddress = "bob@bob.com",
+                    SpouseParticipating = true,
+                    FamilyCount = 5
                 }
             };
         }
