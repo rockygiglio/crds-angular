@@ -39,6 +39,7 @@
     vm.soft_credit_donation_total_amount = undefined;
     vm.soft_credit_donation_history = false;
     vm.soft_credit_donation_view_ready = false;
+    vm.server_error = false;
 
     vm.getDonations = getDonations;
     vm.getSoftCreditDonations = getSoftCreditDonations;
@@ -96,6 +97,11 @@
     };
 
     function setErrorState(error) {
+      // server error happens
+      if (error && error.status >= 500) {
+        vm.server_error = true;
+      }
+
       if (vm.impersonate_donor_id === undefined ||
             error === undefined ||
             error.status === undefined) {
