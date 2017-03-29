@@ -229,6 +229,19 @@ namespace crds_angular.Services
             return jsonProject;
         }
 
+        public List<DashboardDatum> GetRegistrationsForProject(int projectId)
+        {
+            var registrants = _registrationService.GetRegistrantsForProject(projectId);
+            return (registrants.Select(datum => new {datum, adults = datum.SpouseParticipating ? 2 : 1}).Select(@t => new DashboardDatum
+            {
+                RegistrantName = @t.datum.Nickname + " " + @t.datum.LastName,
+                EmailAddress = @t.datum.EmailAddress,
+                PhoneNumber = @t.datum.Phone,
+                AdultsParticipating = @t.adults,
+                ChildrenParticipating = @t.datum.FamilyCount - @t.adults
+            })).ToList();
+        }
+
         public Dictionary<string, object> SetupMergeData(CincinnatiRegistration registration)
         {
             var styles = Styles();
