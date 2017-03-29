@@ -1,5 +1,6 @@
+let copyWebpackPlugin = require('copy-webpack-plugin');
 const webpack = require('webpack');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
+let ExtractTextPlugin = require('extract-text-webpack-plugin');
 const path = require('path');
 const environmentVars = require('./environment.config.js');
 
@@ -95,6 +96,13 @@ module.exports = {
   },
   plugins: [
     new ExtractTextPlugin('[name].css'),
+    new copyWebpackPlugin([
+      {
+        context: './node_modules/crds-styles/assets/svgs/',
+        from: '*.svg',
+        to: 'assets'
+      }
+    ]),
     definePlugin
   ]
 };
