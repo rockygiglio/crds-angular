@@ -26,10 +26,12 @@ AS
 BEGIN
 	SELECT 
 			E.Event_Title AS "Event Title",
+			E.Event_Start_Date,
 			H.Household_Name AS "Household Last Name"
 			, H.Home_Phone AS "Household Phone"
 			, COUNT(EP.Participant_ID) AS "Total Household Children"
 			, CONVERT(time, MIN(P.Participant_Start_Date)) AS "Time Created"
+			, COUNT(DISTINCT H.Household_Name) AS "Total Households"
 	FROM
 			Events E INNER JOIN Event_Participants EP ON E.Event_ID = EP.Event_ID
 			INNER JOIN Participants P ON EP.Participant_ID = P.Participant_ID
@@ -44,6 +46,7 @@ BEGIN
 	GROUP BY
 			E.Event_ID,
 			E.Event_Title,
+			E.Event_Start_Date,
 			H.Household_Name
 			, H.Home_Phone
 END
