@@ -98,11 +98,6 @@ namespace crds_angular.Services
             var pinlist = new List<AwsCloudsearchDto>();
             foreach (var pin in pins)
             {
-                if (pin.Longitude == null || pin.Latitude == null)
-                {
-                    pin.Longitude = 0;
-                    pin.Latitude = 0;
-                }
                 var awsRecord = new AwsCloudsearchDto
                 {
                     type = "add",
