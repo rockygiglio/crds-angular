@@ -229,6 +229,11 @@ $gc-green: #9ab73c;
   .email-change-warning {
     margin-top: -15px;
   }
+
+  form label[required]:after {
+    content: " *";
+    color: #c9302c;
+  }
 }
 
 .site-image-filter {
