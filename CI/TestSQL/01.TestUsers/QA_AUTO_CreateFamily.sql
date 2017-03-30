@@ -37,7 +37,7 @@ WHERE Household_ID = @houseHoldID;
 --Create Donor record for Anakin
 INSERT INTO [dbo].donors 
 (Contact_ID,Statement_Frequency_ID,Statement_Type_ID,Statement_Method_ID,Setup_Date                    ,Envelope_No,Cancel_Envelopes,Notes,First_Contact_Made,Domain_ID,__ExternalPersonID,_First_Donation_Date,_Last_Donation_Date,Processor_ID        ) VALUES
-(@contactID,1                     ,1                ,2                  ,{ts '2017-01-03 12:26:57.503'},null       ,0               ,null ,null              ,1        ,null              ,null                ,null               ,'cus_9s5SXiOeM71zQH');
+(@contactID,1                     ,2                ,2                  ,{ts '2017-01-03 12:26:57.503'},null       ,0               ,null ,null              ,1        ,null              ,null                ,null               ,'cus_9s5SXiOeM71zQH');
 
 --Retrieve Donor ID for Anakin
 DECLARE @donor_id as int
@@ -68,7 +68,7 @@ WHERE Contact_ID = @contactID;
 --Create Padme's Donor record
 INSERT INTO [dbo].donors 
 (Contact_ID,Statement_Frequency_ID,Statement_Type_ID,Statement_Method_ID,Setup_Date                    ,Envelope_No,Cancel_Envelopes,Notes,First_Contact_Made,Domain_ID,__ExternalPersonID,_First_Donation_Date,_Last_Donation_Date,Processor_ID        ) VALUES
-(@contactID,1                     ,1                ,2                  ,{ts '2017-01-03 12:26:57.503'},null       ,0               ,null ,null              ,1        ,null              ,null                ,null               ,null                );
+(@contactID,1                     ,2                ,2                  ,{ts '2017-01-03 12:26:57.503'},null       ,0               ,null ,null              ,1        ,null              ,null                ,null               ,null                );
 
 --Retrieve Donor ID for Padme
 DECLARE @donor_id as int

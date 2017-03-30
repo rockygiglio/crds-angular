@@ -227,9 +227,12 @@ $gc-green: #9ab73c;
   }
 
   .email-change-warning {
-    .form-group {
-      margin-bottom: 0;
-    }
+    margin-top: -15px;
+  }
+
+  form label[required]:after {
+    content: " *";
+    color: #c9302c;
   }
 }
 
