@@ -293,7 +293,7 @@ namespace crds_angular.Services
             PinDto personPin = GetPinDetailsForPerson(participantId);
 
             pins.AddRange(groupPins);
-            if (personPin != null && personPin.FirstName != null)
+            if (personPin != null && personPin.ShowOnMap)
             {
                 pins.Add(personPin);
             }            

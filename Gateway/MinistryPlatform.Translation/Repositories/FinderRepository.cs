@@ -39,7 +39,7 @@ namespace MinistryPlatform.Translation.Repositories
             string token = _apiUserRepository.GetToken();
 
             const string pinSearch = "Email_Address, Nickname as FirstName, Last_Name as LastName, Participant_Record_Table.*, Household_ID";
-            string pinFilter = $"Participant_Record = {participantId} AND Participant_Record_Table.[Show_On_Map] = 1";
+            string pinFilter = $"Participant_Record = {participantId}";
 
             List<FinderPinDto> myPin = _ministryPlatformRest.UsingAuthenticationToken(token).Search<FinderPinDto>(pinFilter, pinSearch);
             var pinDetails = new FinderPinDto();

@@ -109,7 +109,7 @@ namespace crds_angular.Controllers.API
                 var participantId = _finderService.GetParticipantIdFromContact(contactId);
                 //refactor this to JUST get location;
                 var pin = _finderService.GetPinDetailsForPerson(participantId);
-                bool pinHasInvalidGeoCoords = ( (pin.Address.Latitude == null || pin.Address.Longitude == null)
+                bool pinHasInvalidGeoCoords = ( (pin.Address == null) || (pin.Address.Latitude == null || pin.Address.Longitude == null)
                                                || (pin.Address.Latitude == 0 && pin.Address.Longitude == 0));
 
                 if (pinHasInvalidGeoCoords && throwOnEmptyCoordinates)
