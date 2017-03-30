@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using crds_angular.Models.Crossroads.GoVolunteer;
-using MinistryPlatform.Translation.Models.GoCincinnati;
 
 namespace crds_angular.Services.Interfaces
 {
@@ -15,5 +14,6 @@ namespace crds_angular.Services.Interfaces
 
         List<ProjectCity> GetParticipatingCities(int initiativeId);
         Project GetProject(int projectId);
+        List<DashboardDatum> GetRegistrationsForProject(int projectId);
     }
 }

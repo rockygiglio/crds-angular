@@ -18,6 +18,7 @@ export default angular.module(constants.MODULES.GO_VOLUNTEER, ['crossroads.core'
   .name
   ;
 
+require('./anywhereLeader');
 require('./cms');
 require('./city');
 require('./organizations');
