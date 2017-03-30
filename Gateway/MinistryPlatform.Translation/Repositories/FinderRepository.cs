@@ -39,9 +39,9 @@ namespace MinistryPlatform.Translation.Repositories
             string token = _apiUserRepository.GetToken();
 
             const string pinSearch = "Email_Address, Nickname as FirstName, Last_Name as LastName, Participant_Record_Table.*, Household_ID";
-            string pinFilter = $"Participant_Record = {participantId}";
+            string filter = $"Participant_Record = {participantId}";
 
-            List<FinderPinDto> myPin = _ministryPlatformRest.UsingAuthenticationToken(token).Search<FinderPinDto>(pinFilter, pinSearch);
+            List<FinderPinDto> myPin = _ministryPlatformRest.UsingAuthenticationToken(token).Search<FinderPinDto>(filter, pinSearch);
             var pinDetails = new FinderPinDto();
 
             if (myPin != null && myPin.Count > 0)
@@ -49,7 +49,7 @@ namespace MinistryPlatform.Translation.Repositories
                 pinDetails = myPin.First();
                 const string addressSearch = "Household_ID_Table_Address_ID_Table.*";
                 string addressFilter = $"Participant_Record = {participantId}";
-                pinDetails.Address = _ministryPlatformRest.UsingAuthenticationToken(token).Search<MpAddress>(addressFilter, addressSearch)?.First();
+                pinDetails.Address = _ministryPlatformRest.UsingAuthenticationToken(token).Search<MpAddress>(filter, addressSearch)?.First();
             }
             else
             {
