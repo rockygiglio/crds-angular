@@ -173,22 +173,7 @@ namespace crds_angular.Services
 
             var cloudSearch = new Amazon.CloudSearchDomain.AmazonCloudSearchDomainClient(domainConfig);
 
-            AwsConnectDto awsPinObject = Mapper.Map<AwsConnectDto>(pin);
-
-            AwsCloudsearchDto awsPostPinObject = new AwsCloudsearchDto("add", GenerateAwsPinId(pin), awsPinObject);
-
-            var pinlist = new List<AwsCloudsearchDto>();
-            pinlist.Add(awsPostPinObject);
-
-            string jsonAwsObject = JsonConvert.SerializeObject(pinlist, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
-
-            MemoryStream jsonAwsPinDtoStream = new MemoryStream(Encoding.UTF8.GetBytes(jsonAwsObject));
-
-            var upload = new Amazon.CloudSearchDomain.Model.UploadDocumentsRequest()
-            {
-                ContentType = ContentType.ApplicationJson,
-                Documents = jsonAwsPinDtoStream
-            };
+            UploadDocumentsRequest upload = GetObjectToUploadToAws(pin);
 
             var response = cloudSearch.UploadDocuments(upload);
         }
@@ -215,6 +200,28 @@ namespace crds_angular.Services
             pin.Address.Longitude = newAddressCoords.Longitude;
 
             return pin;
+        }
+
+        public UploadDocumentsRequest GetObjectToUploadToAws(PinDto pin)
+        {
+            AwsConnectDto awsPinObject = Mapper.Map<AwsConnectDto>(pin);
+
+            AwsCloudsearchDto awsPostPinObject = new AwsCloudsearchDto("add", GenerateAwsPinId(pin), awsPinObject);
+
+            var pinlist = new List<AwsCloudsearchDto>();
+            pinlist.Add(awsPostPinObject);
+
+            string jsonAwsObject = JsonConvert.SerializeObject(pinlist, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+
+            MemoryStream jsonAwsPinDtoStream = new MemoryStream(Encoding.UTF8.GetBytes(jsonAwsObject));
+
+            UploadDocumentsRequest upload = new Amazon.CloudSearchDomain.Model.UploadDocumentsRequest()
+            {
+                ContentType = ContentType.ApplicationJson,
+                Documents = jsonAwsPinDtoStream
+            };
+
+            return upload;
         }
 
     }
