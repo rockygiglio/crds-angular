@@ -1,5 +1,8 @@
 <preloader full-screen='false' ng-show='!$ctrl.viewReady'> </preloader>
-<div ng-if="$ctrl.viewReady">
+<div ng-if="!$ctrl.showDashboard()">
+  <div dynamic-content="$root.MESSAGES.goLocalDashboardUnauthorized.content | html">   </div>
+</div>
+<div ng-if="$ctrl.showDashboard()">
   <go-volunteer-project-card project="$ctrl.project"></go-volunteer-project-card>
 
   <h3>My Team</h3>

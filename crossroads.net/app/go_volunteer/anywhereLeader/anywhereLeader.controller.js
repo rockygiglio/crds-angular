@@ -1,13 +1,23 @@
 export default class AnywhereLeaderController {
   /* @ngInject */
-  constructor(GoVolunteerService) {
+  constructor(GoVolunteerService, $cookies) {
     this.viewReady = false;
     this.project = GoVolunteerService.project;
     this.participants = GoVolunteerService.dashboard || [];
+    this.cookies = $cookies;
+    this.unauthorized = false;
   }
 
   $onInit() {
+    const userId = this.cookies.get('userId');
+    if (userId !== this.project.contactId.toString()) {
+      this.unauthorized = true;
+    }
     this.viewReady = true;
+  }
+
+  showDashboard() {
+    return (this.viewReady && !this.unauthorized);
   }
 
   totalParticipants() {
