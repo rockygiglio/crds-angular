@@ -7,7 +7,7 @@ import goVolunteerDataService from './goVolunteerData.service';
 import skillsService from './skills.service';
 import groupConnectors from './groupConnectors.service';
 
-export default angular.module(constants.MODULES.GO_VOLUNTEER, ['crossroads.core', 'crossroads.common'])
+export default angular.module(constants.MODULES.GO_VOLUNTEER, ['crossroads.core', 'crossroads.common', 'ngFileSaver'])
   .config(routes)
   .config(formly)
   .service('GoVolunteerService', goVolunteerService)
