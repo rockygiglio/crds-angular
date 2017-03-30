@@ -18,14 +18,17 @@ namespace crds_angular.Services
 {
     public class AwsCloudsearchService : MinistryPlatformBaseService, IAwsCloudsearchService
     {
+        private readonly IAddressGeocodingService _addressGeocodingService;
         private readonly IFinderRepository _finderRepository;
         private readonly IConfigurationWrapper _configurationWrapper;
         protected string AmazonSearchUrl;
         private const int ReturnRecordCount = 10000;
 
-        public AwsCloudsearchService(IFinderRepository finderRepository,
+        public AwsCloudsearchService(IAddressGeocodingService addressGeocodingService, 
+                                     IFinderRepository finderRepository,                          
                                      IConfigurationWrapper configurationWrapper)
         {
+            _addressGeocodingService = addressGeocodingService;
             _finderRepository = finderRepository;
             _configurationWrapper = configurationWrapper;
 
@@ -164,6 +167,8 @@ namespace crds_angular.Services
                 ServiceURL = AmazonSearchUrl
             };
 
+            pin = SetLatAndLangOnPinForNewAddress(pin);
+
             var cloudSearch = new Amazon.CloudSearchDomain.AmazonCloudSearchDomainClient(domainConfig);
 
             AwsConnectDto awsPinObject = Mapper.Map<AwsConnectDto>(pin);
@@ -198,6 +203,16 @@ namespace crds_angular.Services
             string groupIdAsString = isGathering ? pin.Gathering.GroupId.ToString() : "";
 
             return groupIdAsString; 
+        }
+
+        private PinDto SetLatAndLangOnPinForNewAddress(PinDto pin)
+        {
+            GeoCoordinate newAddressCoords = _addressGeocodingService.GetGeoCoordinates(pin.Address);
+
+            pin.Address.Latitude = newAddressCoords.Latitude;
+            pin.Address.Longitude = newAddressCoords.Longitude;
+
+            return pin;
         }
 
     }
