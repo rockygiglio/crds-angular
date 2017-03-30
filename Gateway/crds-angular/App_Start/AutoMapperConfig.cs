@@ -393,7 +393,6 @@ namespace crds_angular.App_Start
                 .ForMember(dest => dest.LastName, opts => opts.MapFrom(src => src.LastName))
                 .ForMember(dest => dest.EmailAddress, opts => opts.MapFrom(src => src.EmailAddress))
                 .ForMember(dest => dest.AddressId, opts => opts.MapFrom(src => src.Address.AddressID))
-                .ForMember(dest => dest.FirstName, opts => opts.MapFrom(src => src.FirstName))//
                 .ForMember(dest => dest.City, opts => opts.MapFrom(src => src.Address.City))
                 .ForMember(dest => dest.State, opts => opts.MapFrom(src => src.Address.State))
                 .ForMember(dest => dest.Zip, opts => opts.MapFrom(src => src.Address.PostalCode))
