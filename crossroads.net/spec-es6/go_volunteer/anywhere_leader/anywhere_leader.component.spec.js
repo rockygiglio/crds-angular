@@ -22,7 +22,7 @@ describe('Go Local Leader Dashboard', () => {
 
   }));
 
-  fdescribe('User is project leader', () => {
+  describe('User is project leader', () => {
     beforeEach(() => {
       GoVolunteerService.project = helpers.project;
       GoVolunteerService.dashboard = helpers.participants;
@@ -39,7 +39,7 @@ describe('Go Local Leader Dashboard', () => {
     });
   });
 
-  fdescribe('User is not project leader', () => {
+  describe('User is not project leader', () => {
     beforeEach(() => {
       GoVolunteerService.project = helpers.project;
       GoVolunteerService.dashboard = helpers.participants;
