@@ -171,8 +171,6 @@ namespace crds_angular.Services
                 ServiceURL = AmazonSearchUrl
             };
 
-            pin = SetLatAndLangOnPinForNewAddress(pin);
-
             var cloudSearch = new Amazon.CloudSearchDomain.AmazonCloudSearchDomainClient(domainConfig);
 
             AwsConnectDto awsPinObject = Mapper.Map<AwsConnectDto>(pin);
