@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reactive.Linq;
 using crds_angular.Models.Crossroads.GoVolunteer;
 using crds_angular.Services.Interfaces;
+using crds_angular.Util;
 using Crossroads.Utilities.Services;
 using log4net;
 using Crossroads.Web.Common.Configuration;
@@ -298,6 +300,15 @@ namespace crds_angular.Services
             }
 
             return dict;
+        }
+
+        public MemoryStream CreateGroupLeaderExport(int projectId)
+        {
+            var glEXport = GetRegistrationsForProject(projectId);
+            var stream = new MemoryStream();
+            CSV.Create(glEXport, DashboardDatum.Headers, stream, ",");
+
+            return stream;
         }
 
         private List<HtmlElement> PrepWorkDetails(CincinnatiRegistration registration)

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Web.Http;
@@ -208,6 +209,19 @@ namespace crds_angular.test.controllers
                 Assert.Throws<HttpResponseException>(() => { _fixture.GetPrepTimes(); });
                 _attributeService.VerifyAll();
             }).QuickCheckThrowOnFailure();
+        }
+
+        [Test]
+        public void ShouldGetTheGroupLeaderExportFile()
+        {
+            var projectId = 123;
+            var stream = new MemoryStream();
+            _goVolunteerService.Setup(m => m.CreateGroupLeaderExport(projectId)).Returns(stream);
+
+            var response = _fixture.GetGroupLeaderExportFile(projectId);
+
+            _goVolunteerService.VerifyAll();
+            Assert.Fail();
         }
 
         private List<OtherOrganization> otherOrganizations()

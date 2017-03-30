@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using crds_angular.Models.Crossroads.GoVolunteer;
 using crds_angular.Services;
 using crds_angular.Services.Interfaces;
+using crds_angular.Util;
 using Crossroads.Utilities.FunctionalHelpers;
 using Crossroads.Utilities.Services;
 using Crossroads.Web.Common.Configuration;
@@ -687,6 +689,22 @@ namespace crds_angular.test.Services
             Assert.AreEqual(5, result[1].ChildrenParticipating);
         }
 
+        [Test]
+        public void ShouldCreateTheGroupLeaderExport()
+        {
+            var projectId = 1234;
+            List<DashboardDatum> mockExportData = MockDashboardDatums();
+            var stream = MemoryStream();
+
+            _registrationService.Setup(m => m.GetRegistrantsForProject(projectId)).Returns(MockProjectRegistrations());
+
+            var result = _fixture.CreateGroupLeaderExport(projectId);
+            // CSV.Create()...
+
+            Assert.IsNotNull(result);
+            Assert.Fail();
+        }
+
         private AnywhereRegistration BuildRegistration()
         {
             return new AnywhereRegistration
@@ -746,6 +764,29 @@ namespace crds_angular.test.Services
             };
         }
 
+        private static List<DashboardDatum> MockDashboardDatums()
+        {
+            return new List<DashboardDatum>()
+            {
+                new DashboardDatum()
+                {
+                    RegistrantName = "Bob Boberson",
+                    EmailAddress = "bob@bob.com",
+                    PhoneNumber = "123-456-7890",
+                    AdultsParticipating = 2,
+                    ChildrenParticipating = 3
+                },
+                new DashboardDatum()
+                {
+                    RegistrantName = "Anita Mann",
+                    EmailAddress = "anitamann@aol.com",
+                    PhoneNumber = "123-456-7890",
+                    AdultsParticipating = 1,
+                    ChildrenParticipating = 5
+                }
+            };
+        }
+
         private string Skills(CincinnatiRegistration registration)
         {
             if (registration.Skills != null && registration.Skills.Where(sk => sk.Checked).ToList().Count > 0)
@@ -772,7 +813,6 @@ namespace crds_angular.test.Services
             }
             ;
             return new HtmlElement("p", els);
-        } 
-
+        }
     }
 }
