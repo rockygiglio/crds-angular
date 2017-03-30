@@ -1,6 +1,6 @@
-let copyWebpackPlugin = require('copy-webpack-plugin');
 const webpack = require('webpack');
-let ExtractTextPlugin = require('extract-text-webpack-plugin');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
+let extractTextPlugin = new ExtractTextPlugin
 const path = require('path');
 const environmentVars = require('./environment.config.js');
 
@@ -64,7 +64,7 @@ module.exports = {
       },
       {
         test: /\.scss$/,
-        loader: ExtractTextPlugin.extract('style-loader', 'css-loader!autoprefixer-loader!sass-loader')
+        loader: extractTextPlugin.extract('style-loader', 'css-loader!autoprefixer-loader!sass-loader')
       },
       {
         test: /\.(jpe?g|png|gif|svg)$/i,
@@ -96,13 +96,6 @@ module.exports = {
   },
   plugins: [
     new ExtractTextPlugin('[name].css'),
-    new copyWebpackPlugin([
-      {
-        context: './node_modules/crds-styles/assets/svgs/',
-        from: '*.svg',
-        to: 'assets'
-      }
-    ]),
     definePlugin
   ]
 };

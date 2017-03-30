@@ -258,7 +258,7 @@ gulp.task('icons', ['svg-sprite'], function () {
 });
 
 // svg sprite
-gulp.task('svg-sprite', function () {
+gulp.task('svg-sprite', ['ddk-svgs'], function () {
   var config = {
     log: 'info',
     mode: {
@@ -276,6 +276,11 @@ gulp.task('svg-sprite', function () {
   return gulp.src('./app/icons/*.svg')
     .pipe(svgSprite(config))
     .pipe(gulp.dest('./build/icons/generated'));
+});
+
+gulp.task('ddk-svgs', function () {
+  return gulp.src('./node_modules/crds-styles/assets/svgs/*.svg')
+    .pipe(gulp.dest('./assets/svgs'));
 });
 
 // Renamed robots.txt for PROD vs NON-PROD environments
