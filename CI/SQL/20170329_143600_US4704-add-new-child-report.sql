@@ -24,8 +24,8 @@ BEGIN
 			   )
 		 VALUES
 			   (316,
-			   N'Childcare Summary'
-			   ,N'Childcare Summary'
+			   N'Checkin New Family'
+			   ,N'Checkin New Family'
 			   ,N'/MPReports/Crossroads/CRDS Checkin New Family'
 			   ,1
 			   ,0          
