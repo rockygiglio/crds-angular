@@ -40,12 +40,17 @@ namespace MinistryPlatform.Translation.Repositories
             string token = _apiUserRepository.GetToken();
 
             var pinDetails = _ministryPlatformRest.UsingAuthenticationToken(token).Search<FinderPinDto>(filter, pinSearch)?.First();
-
-            const string addressSearch = "Household_ID_Table_Address_ID_Table.*";
-            if (pinDetails != null) pinDetails.Address = _ministryPlatformRest.UsingAuthenticationToken(token).Search<MpAddress>(filter, addressSearch)?.First();
-
+            
+            if (pinDetails != null) pinDetails.Address = GetPinAddress(participantId);
 
             return pinDetails;
+        }
+
+        public MpAddress GetPinAddress(int participantId)
+        {
+            string filter = $"Participant_Record = {participantId}";
+            const string addressSearch = "Household_ID_Table_Address_ID_Table.*";
+            return _ministryPlatformRest.UsingAuthenticationToken(_apiUserRepository.GetToken()).Search<MpAddress>(filter, addressSearch)?.First();
         }
         
         public void EnablePin(int participantId)

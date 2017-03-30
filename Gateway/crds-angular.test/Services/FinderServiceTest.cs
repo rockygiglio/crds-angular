@@ -124,7 +124,7 @@ namespace crds_angular.test.Services
                     Host_Status_ID = 3
                 });
 
-            _groupService.Setup(gs => gs.GetGroupsByTypeOrId("abc123", 986765, null, 121212))
+            _groupService.Setup(gs => gs.GetGroupsByTypeOrId("abc123", 986765, null, 121212, (bool?) null, (bool?) null))
                 .Returns(new List<GroupDTO>
                 {
                     new GroupDTO
