@@ -195,7 +195,7 @@ namespace crds_angular.Services
 
         private string GenerateAwsPinId(PinDto pin)
         {
-            string awsPinId = pin.Address.AddressID + "-" + pin.PinType + "-" + pin.Participant_ID + "-" + getPinGroupIdOrEmptyString(pin);
+            string awsPinId = pin.Address.AddressID + "-" + (int)pin.PinType + "-" + pin.Participant_ID + "-" + getPinGroupIdOrEmptyString(pin);
             return awsPinId; 
         }
 
