@@ -5,6 +5,7 @@ using System.Text.RegularExpressions;
 using System.Web.ClientServices.Providers;
 using AutoMapper;
 using crds_angular.Models;
+using crds_angular.Models.AwsCloudsearch;
 using crds_angular.Models.Finder;
 using crds_angular.Models.Crossroads;
 using crds_angular.Models.Crossroads.Attribute;
@@ -50,8 +51,9 @@ namespace crds_angular.App_Start
                 .ForMember(dest => dest.EmailAddress, opts => opts.MapFrom(src => src.Email_Address))
                 .ForMember(dest => dest.Contact_ID, opts => opts.MapFrom(src => src.Contact_ID))
                 .ForMember(dest => dest.Participant_ID, opts => opts.MapFrom(src => src.Participant_ID))
-                .ForMember(dest => dest.Host_Status, opts => opts.MapFrom(src => src.Host_Status_ID))
+                .ForMember(dest => dest.Host_Status_ID, opts => opts.MapFrom(src => src.Host_Status_ID))
                 .ForMember(dest => dest.Gathering, opts => opts.MapFrom(src => src.Gathering))
+                .ForMember(dest => dest.SiteName, opts => opts.MapFrom(src => src.Site_Name))
                 .ForMember(dest => dest.Household_ID, opts => opts.MapFrom(src => src.Household_ID))
                 .ForMember(dest => dest.Address,
                            opts => opts.MapFrom(src => new AddressDTO(
@@ -381,6 +383,10 @@ namespace crds_angular.App_Start
             Mapper.CreateMap<MpRsvpMember, RsvpMember>();
             Mapper.CreateMap<PinDto, FinderPinDto>();
             Mapper.CreateMap<FinderPinDto, PinDto>();
+            Mapper.CreateMap<AwsConnectDto,MpConnectAws>();
+            Mapper.CreateMap<MpConnectAws,AwsConnectDto>()
+                .ForMember(dest => dest.LatLong, opts => opts.MapFrom(
+                   src => (src.Latitude==null || src.Longitude==null) ? "0 , 0" : $"{src.Latitude} , {src.Longitude}"));
 
             Mapper.CreateMap<GroupDTO, PinDto>()
                 .ForMember(dest => dest.PinType, opt => opt.UseValue<PinType>(PinType.GATHERING));

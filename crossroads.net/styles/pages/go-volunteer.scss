@@ -1,7 +1,9 @@
-$gc-red: #981b1e;
+$go-local-primary: rgb(0, 177, 64);
+$go-local-secondary: rgb(196, 214, 0);
+$go-local-dark: #007e2e;
+$go-local-site-filter: rgba(0, 177, 64, 0.55);
+$go-local-closed: #dddddd;
 $gc-green: #9ab73c;
-$gc-red-dark: #641314;
-$gc-red-darker: #44080a;
 
 .go-volunteer {
   background-color: $white;
@@ -26,41 +28,85 @@ $gc-red-darker: #44080a;
   h1 {
     font-size: 2.4em;
   }
+
+  h2, h3.go-local-header {
+    font-size: 1.63em;
+
+    @media (min-width: $screen-xs-min) {
+      font-size: 3.67vw;
+    }
+
+    @media (min-width: $screen-sm-min) {
+      font-size: 1.5em;
+    }
+
+    @media (min-width: $screen-md-min) {
+      font-size: 1.53em;
+    }
+
+    @media (min-width: $screen-lg-min) {
+      font-size: 1.85em;
+    }
+    }
+
+  h3.go-local-title {
+    font-size: 1.1em;
+
+    @media (min-width: $screen-xs-min) {
+      font-size: 1.3em;
+    }
+
+    @media (min-width: $screen-sm-min) {
+      font-size: 1.38em;
+    }
+
+    @media (min-width: $screen-md-min) {
+      font-size: 1.48em;
+    }
+
+    @media (min-width: $screen-lg-min) {
+      font-size: 1.55em;
+    }
+  }
+
   .btn-primary-gc {
-    @include button-variant(#fff, $gc-red, $gc-red);
+    @include button-variant(#fff, $go-local-dark, $go-local-dark);
   }
 
   .navbar {
-    margin-top: 20px;
-    min-height: 70px;
-    .logo {
-      height: 70px;
-      width: 70px;
+    .banner {
       overflow: hidden;
-      left: 0;
-      right: 0;
-      position: absolute;
-      height: auto;
       margin-left: auto;
       margin-right: auto;
       z-index: $zindex-navbar + 1;
-      transition: all 0.5s ease;
-      &:hover {
-        transform: rotate(10deg);
-      }
+      text-align: center;
+    }
+
+    .banner img {
+      width: 100%;
+      display: inline-block;
+      margin: 0 -100%;
     }
 
     .logo img {
-      width: 70px;
-      height: 70px;
+      height: 80px;
+      display: inline-block;
+      margin: 0 auto;
     }
-    .hamburger-menu {
-      z-index: $zindex-navbar + 2;
 
+    .hamburger-menu {
+      float: inherit;
       .bar, .bar:before, .bar:after {
         background: $black;
       }
+
+      &.gc-menu-right {
+        position: absolute;
+        top: 0;
+        right: 0;
+      }
     }
+
     .back-btn {
       margin-top: 20px;
       margin-left: -7px;
@@ -95,7 +141,7 @@ $gc-red-darker: #44080a;
     animation-duration: .5s;
   }
   .dropdown-menu > .active > a {
-    background-color: $gc-red;
+    background-color: $go-local-primary;
   }
   .progress {
     height: 3px;
@@ -105,8 +151,9 @@ $gc-red-darker: #44080a;
     background-color: $gray;
   }
   .card-item {
-    border-left: 5px solid $gray-light;
+    border-left: 5px solid $go-local-primary;
     margin-bottom: 16px;
+    background: rgba($gray-lighter, 0.3);
 
     &.disabled {
       border-left: 5px solid $gray;
@@ -127,7 +174,10 @@ $gc-red-darker: #44080a;
 
   .terms-box {
     background: rgba(255,255,255,.2);
+    overflow-x: hidden;
+    overflow-y: scroll;
   }
+
   h-number label.form-control {
     background: transparent;
     color: $black;
@@ -152,6 +202,38 @@ $gc-red-darker: #44080a;
   .card-dark {
     background: none;
   }
+
+  .media-card-link a {
+    position: inherit;
+  }
+
+  .media-card-link {
+    &:hover {
+      background: rgba($go-local-primary, 0.1);
+    }
+  }
+
+  .icon-checkmark {
+    color: $go-local-secondary;
+  }
+
+  .alert-info {
+    @include alert-variant($go-local-closed, $gray, $black);
+  }
+
+  .go-local-email-warning {
+    font-size: 85%;
+    font-weight: 300;
+  }
+
+  .email-change-warning {
+    margin-top: -15px;
+  }
+
+  form label[required]:after {
+    content: " *";
+    color: #c9302c;
+  }
 }
 
 .site-image-filter {
@@ -168,8 +250,8 @@ $gc-red-darker: #44080a;
     bottom: 0;
     left: 0;
     right: 0;
-    background: rgba(0, 56, 100, 0.65);
-    background-blend-mode: multiply;
+    //background: $go-local-site-filter;
+    //background-blend-mode: multiply;
     display: block;
     margin: $line-height-computed/2;
     border-radius: 50%;
@@ -189,7 +271,7 @@ $gc-red-darker: #44080a;
     font-size: 2.1rem;
     font-weight: bold;
     position: absolute;
-    background: rgba(0,0,0,.3);
+    //background: rgba(0,0,0,.3);
     width: 60px;
     height: 60px;
     line-height: 60px;
@@ -206,7 +288,7 @@ $gc-red-darker: #44080a;
   }
 }
 
-.go-volunteer-waiver-wrapper {
+.go-volunteer-waiver {
   height: 250px;
   overflow-y: scroll;
   background-color: $white;

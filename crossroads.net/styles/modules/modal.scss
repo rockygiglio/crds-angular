@@ -1,3 +1,14 @@
 .modal-backdrop {
   position: fixed;
 }
+
+.modal-body {
+  overflow-y: auto;
+  max-height: 60vh;
+}
+
+@media (min-width: 768px) {
+  .modal-body {
+    max-height: 70vh;
+  }
+}

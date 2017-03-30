@@ -18,20 +18,20 @@ namespace crds_angular.Services
             _addressGeocodingService = addressGeocodingService;
         }
 
-        public List<decimal?> GetProximity(string originAddress, List<string> destinationAddresses)
+        public List<decimal?> GetProximity(string originAddress, List<string> destinationAddresses, GeoCoordinate originCoords = null)
         {
             // This is not implemented mainly because it is an expensive call.  We'd have to geocode each 
             // destination address as a separate call to the geocode service, then calculate distances.
             throw new NotImplementedException("Getting geocode distance for a destination string is not supported");
         }
 
-        public List<decimal?> GetProximity(string originAddress, List<AddressDTO> destinationAddresses)
+        public List<decimal?> GetProximity(string originAddress, List<AddressDTO> destinationAddresses, GeoCoordinate originCoordinates = null)
         {
             var originCoords = _addressGeocodingService.GetGeoCoordinates(originAddress);
             return destinationAddresses.Select(a => CalculateProximity(originCoords, a)).ToList();
         }
 
-        private static decimal? CalculateProximity(GeoCoordinate origin, AddressDTO destination)
+        private static decimal? CalculateProximity(GeoCoordinate origin, AddressDTO destination, GeoCoordinate originCoords = null)
         {
             if (origin == null || destination.Longitude == null || destination.Latitude == null)
             {

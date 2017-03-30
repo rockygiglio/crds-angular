@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Device.Location;
 using System.Linq;
 using AutoMapper;
 using crds_angular.Exceptions;
@@ -12,6 +13,7 @@ using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 using System.Text.RegularExpressions;
 using crds_angular.Models.Crossroads.Attribute;
+using crds_angular.Models.Finder;
 using Crossroads.Utilities.Extensions;
 using Crossroads.Web.Common;
 using Crossroads.Web.Common.Configuration;
@@ -39,15 +41,19 @@ namespace crds_angular.Services
         private readonly int _defaultGroupRoleId;
         private readonly int _groupRoleLeaderId;
         private readonly int _removeParticipantFromGroupEmailTemplateId;
+        private readonly int _gatheringHostAcceptTemplate;
+        private readonly int _gatheringHostDenyTemplate;
         private readonly int _domainId;
         private readonly int _groupEndedParticipantEmailTemplate;
         private readonly string _baseUrl;
         private readonly int _addressMatrixSearchDepth;
         private readonly int _groupRequestToJoinEmailTemplate;
+        private readonly int _anywhereGroupRequestToJoinEmailTemplate;
         private readonly int _groupRequestPendingReminderEmailTemplateId;
         private readonly int _attributeTypeGroupCategory;
         private readonly int _smallGroupTypeId;
         private readonly int _onsiteGroupTypeId;
+        private readonly int _anywhereGroupType;
 
         private const string GroupToolRemoveParticipantEmailTemplateTextTitle = "groupToolRemoveParticipantEmailTemplateText";
         private const string GroupToolRemoveParticipantSubjectTemplateText = "groupToolRemoveParticipantSubjectTemplateText";
@@ -95,17 +101,22 @@ namespace crds_angular.Services
             _defaultGroupRoleId = configurationWrapper.GetConfigIntValue("Group_Role_Default_ID");
             _groupRequestPendingReminderEmailTemplateId = configurationWrapper.GetConfigIntValue("GroupRequestPendingReminderEmailTemplateId");
             _attributeTypeGroupCategory = configurationWrapper.GetConfigIntValue("GroupCategoryAttributeTypeId");
+            
 
             _removeParticipantFromGroupEmailTemplateId = configurationWrapper.GetConfigIntValue("RemoveParticipantFromGroupEmailTemplateId");
 
             _domainId = configurationWrapper.GetConfigIntValue("DomainId");
-            _groupEndedParticipantEmailTemplate = Convert.ToInt32(configurationWrapper.GetConfigIntValue("GroupEndedParticipantEmailTemplate"));
+            _groupEndedParticipantEmailTemplate = configurationWrapper.GetConfigIntValue("GroupEndedParticipantEmailTemplate");
+            _gatheringHostAcceptTemplate = configurationWrapper.GetConfigIntValue("GatheringHostAcceptTemplate");
+            _gatheringHostDenyTemplate = configurationWrapper.GetConfigIntValue("GatheringHostDenyTemplate");
             _groupRequestToJoinEmailTemplate = configurationWrapper.GetConfigIntValue("GroupRequestToJoinEmailTemplate");
+            _anywhereGroupRequestToJoinEmailTemplate = configurationWrapper.GetConfigIntValue("AnywhereGroupRequestToJoinEmailTemplate");
             _baseUrl = configurationWrapper.GetConfigValue("BaseURL");
             _addressMatrixSearchDepth = configurationWrapper.GetConfigIntValue("AddressMatrixSearchDepth");
             
             _smallGroupTypeId = configurationWrapper.GetConfigIntValue("SmallGroupTypeId");
             _onsiteGroupTypeId = configurationWrapper.GetConfigIntValue("OnsiteGroupTypeId");
+            _anywhereGroupType = configurationWrapper.GetConfigIntValue("AnywhereGroupTypeId");
         }
 
         public List<Invitation> GetInvitations(int sourceId, int invitationTypeId, string token)
@@ -226,6 +237,8 @@ namespace crds_angular.Services
             var subjectTemplateText = string.IsNullOrWhiteSpace(subjectTemplateContentBlockTitle)
                 ? string.Empty
                 : _contentBlockService[subjectTemplateContentBlockTitle].Content ?? string.Empty;
+           
+
             var emailTemplateText = string.IsNullOrWhiteSpace(emailTemplateContentBlockTitle) ? string.Empty : _contentBlockService[emailTemplateContentBlockTitle].Content;
             var mergeData = getDictionary(participant);
             mergeData["Email_Custom_Message"] = string.IsNullOrWhiteSpace(message) ? string.Empty : message;
@@ -239,7 +252,7 @@ namespace crds_angular.Services
 
             // Since the templates are coming from content blocks, they may have replacement tokens in them as well.
             // These will not get replaced with merge data in _communicationRepository.SendMessage(), (it doesn't doubly
-            // replace) so we'll parse them here before adding them to the merge data.
+            // replace) so we'll parse them here before adding them to the merge data. 
             mergeData["Subject_Template_Text"] = _communicationRepository.ParseTemplateBody(Regex.Replace(subjectTemplateText, "<.*?>", string.Empty), mergeData);
             mergeData["Email_Template_Text"] = _communicationRepository.ParseTemplateBody(emailTemplateText, mergeData);
 
@@ -338,6 +351,11 @@ namespace crds_angular.Services
             _groupService.addContactToGroup(groupId, inquiry.ContactId);
             _groupRepository.UpdateGroupInquiry(groupId, inquiry.InquiryId, true);
 
+            // For now pick template based on group type
+            var emailTemplateId = (group.GroupTypeId == _anywhereGroupType) 
+                                                      ? _gatheringHostAcceptTemplate 
+                                                      : _removeParticipantFromGroupEmailTemplateId;
+
             try
             {
                 SendApproveDenyInquiryEmail(
@@ -346,7 +364,7 @@ namespace crds_angular.Services
                     group,
                     inquiry,
                     me,
-                    _removeParticipantFromGroupEmailTemplateId,
+                    emailTemplateId,
                     GroupToolApproveInquiryEmailTemplateText,
                     message);
             }
@@ -360,6 +378,11 @@ namespace crds_angular.Services
         {
             _groupRepository.UpdateGroupInquiry(groupId, inquiry.InquiryId, false);
 
+            // For now pick template based on group type
+            var emailTemplateId = (group.GroupTypeId == _anywhereGroupType)
+                                                      ? _gatheringHostDenyTemplate
+                                                      : _removeParticipantFromGroupEmailTemplateId;
+
             try
             {
                 SendApproveDenyInquiryEmail(
@@ -368,7 +391,7 @@ namespace crds_angular.Services
                     group,
                     inquiry,
                     me,
-                    _removeParticipantFromGroupEmailTemplateId,
+                    emailTemplateId,
                     GroupToolDenyInquiryEmailTemplateText,
                     message);
             }
@@ -389,7 +412,13 @@ namespace crds_angular.Services
         {
             try
             {
-                var subject = approve ? GroupToolApproveInquirySubjectTemplateText : GroupToolDenyInquirySubjectTemplateText;
+                string subject = null;
+
+                if (group.GroupTypeId != _anywhereGroupType)
+                {
+                    subject = approve ? GroupToolApproveInquirySubjectTemplateText : GroupToolDenyInquirySubjectTemplateText;
+                }
+              
                 var participant = _participantRepository.GetParticipant(inquiry.ContactId);
 
                 SendGroupParticipantEmail(groupId,
@@ -635,7 +664,11 @@ namespace crds_angular.Services
         }
 
 
-        public List<GroupDTO> SearchGroups(int[] groupTypeIds, string keywords = null, string location = null, int? groupId = null)
+        public List<GroupDTO> SearchGroups(int[] groupTypeIds, 
+                                           string keywords = null, 
+                                           string location = null, 
+                                           int? groupId = null,
+                                           GeoCoordinate originCoords = null)
         {
             // Split single search term into multiple words, broken on whitespace
             // TODO Should remove stopwords from search - possibly use a configurable list of words (http://www.link-assistant.com/seo-stop-words.html)
@@ -647,6 +680,7 @@ namespace crds_angular.Services
                     .Split((char[]) null, StringSplitOptions.RemoveEmptyEntries);
 
             var results = _groupToolRepository.SearchGroups(groupTypeIds, search, groupId);
+
             if (results == null || !results.Any())
             {
                 return null;
@@ -661,17 +695,8 @@ namespace crds_angular.Services
 
             try
             {
-                // geocode if not already geocoded in DB
-                groups.ForEach(group =>
-                {
-                  if (group.Address.Longitude == null || group.Address.Latitude == null)
-                  {
-                    _addressService.FindOrCreateAddress(group.Address, true);
-                  }
-                });                
-
                 // first call is for all results
-                var proximities = _addressProximityService.GetProximity(location, groups.Select(g => g.Address).ToList());
+                var proximities = _addressProximityService.GetProximity(location, groups.Select(g => g.Address).ToList(), originCoords);
                 for (var i = 0; i < groups.Count; i++)
                 {
                     groups[i].Proximity = proximities[i];
@@ -741,12 +766,21 @@ namespace crds_angular.Services
             var leaders = group.Participants.
                 Where(groupParticipant => groupParticipant.GroupRoleId == _groupRoleLeaderId).ToList();
 
-            var Requestor = "<i>" + contact.Nickname + " " + contact.Last_Name + "</i> ";
-
             foreach (var leader in leaders)
             {
-                var mergeData = new Dictionary<string, object> {{"Name", leader.NickName}, {"Requestor", Requestor} };
-                SendSingleGroupParticipantEmail(leader, _groupRequestToJoinEmailTemplate, mergeData);
+                if (group.GroupTypeId == _anywhereGroupType)
+                {
+                    var Requestor = "<i>" + contact.Nickname + " " + contact.Last_Name.Substring(0, 1) + "." + "</i> ";
+                    var RequestorSub = contact.Nickname + " " + contact.Last_Name.Substring(0,1) + ".";
+                    var mergeData = new Dictionary<string, object> { { "Name", leader.NickName }, { "Requestor", Requestor }, { "RequestorSub", RequestorSub } };
+                    SendSingleGroupParticipantEmail(leader, _anywhereGroupRequestToJoinEmailTemplate, mergeData);
+                }
+                else
+                {
+                    var Requestor = "<i>" + contact.Nickname + " " + contact.Last_Name + "</i> ";
+                    var mergeData = new Dictionary<string, object> { { "Name", leader.NickName }, { "Requestor", Requestor } };
+                    SendSingleGroupParticipantEmail(leader, _groupRequestToJoinEmailTemplate, mergeData);
+                }
             }
         }
 

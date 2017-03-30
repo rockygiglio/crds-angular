@@ -46,6 +46,9 @@
           <QueryParameter Name="ShowBldgRm">
             <Value>=Parameters!ShowBldgRm.Value</Value>
           </QueryParameter>
+          <QueryParameter Name="ExcludeRejectedRoomReservation">
+            <Value>=Parameters!ExcludeRejectedRoomReservation.Value</Value>
+          </QueryParameter>
         </QueryParameters>
         <CommandType>StoredProcedure</CommandType>
         <CommandText>report_CRDS_Event_Listing</CommandText>
@@ -843,7 +846,6 @@
                           <KeepTogether>true</KeepTogether>
                           <Style />
                         </Rectangle>
-                        <rd:Selected>true</rd:Selected>
                       </CellContents>
                     </TablixCell>
                   </TablixCells>
@@ -1171,6 +1173,15 @@
       </DefaultValue>
       <Prompt>Show No Rooms Set</Prompt>
     </ReportParameter>
+    <ReportParameter Name="ExcludeRejectedRoomReservation">
+      <DataType>Boolean</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>true</Value>
+        </Values>
+      </DefaultValue>
+      <Prompt>Exclude Rejected Room Reservation</Prompt>
+    </ReportParameter>
   </ReportParameters>
   <EmbeddedImages>
     <EmbeddedImage Name="mp_sm_logo">
@@ -1188,6 +1199,6 @@ IcjR7xEyGMg7KTzTQuBHHaUGsnYjlx44DtGuICelKTuAYsgY0IFzlB5Dha6JJ78Ij37tm8/Z9U0ZrG7F
   <Language>en-US</Language>
   <ConsumeContainerWhitespace>true</ConsumeContainerWhitespace>
   <rd:ReportUnitType>Inch</rd:ReportUnitType>
-  <rd:ReportServerUrl>http://mp-int-web/ReportServer</rd:ReportServerUrl>
+  <rd:ReportServerUrl>http://localhost/ReportServer</rd:ReportServerUrl>
   <rd:ReportID>6835654f-3954-4c4b-bf4b-64ce086231e9</rd:ReportID>
 </Report>

@@ -59,11 +59,14 @@
   @import 'modules/timeline.scss';
   @import 'modules/timepicker.scss';
   @import 'modules/videojs.scss';
+  @import 'pages/anywhere-leadership.scss';
   @import 'pages/atrium.scss';
   @import 'pages/blog.scss';
   @import 'pages/brave.scss';
   @import 'pages/camps.scss';
   @import 'pages/childcare_dashboard.scss';
+  @import 'pages/christmas-at-home.scss';
+  @import 'pages/communications-projects.scss';
   @import 'pages/commitment.scss';
   @import 'pages/corkboard.scss';
   @import 'pages/dashboard.scss';
@@ -71,10 +74,13 @@
   @import 'pages/explore.scss';
   @import 'pages/give.scss';
   @import 'pages/go-volunteer.scss';
+  @import 'pages/groups.scss';
   @import 'pages/group-resources.scss';
   @import 'pages/group-dashboard.scss';
   @import 'pages/home.scss';
+  @import 'pages/iam.scss';
   @import 'pages/live.crossroads.scss';
+  @import 'pages/locations.scss';
   @import 'pages/media.scss';
   @import 'pages/media_topics.scss';
   @import 'pages/nextsteps.scss';
@@ -98,7 +104,7 @@
   @import 'lib/angular-aside.scss';
   @import 'lib/angular-growl.scss';
   @import 'lib/ng-img-crop.scss';
-  @import url('//crossroads-media.s3.amazonaws.com/documents/styles/hotfix.css');
+  @import url('//crossroads-media.s3.amazonaws.com/documents/styles/hotfix-x3.css');
   @import '../node_modules/ng-table/dist/ng-table.css';
 }
 

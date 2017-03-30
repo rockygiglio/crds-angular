@@ -128,6 +128,7 @@
     <Compile Include="Models\DTO\MpBaseDto.cs" />
     <Compile Include="Models\Finder\FinderPinDto.cs" />
     <Compile Include="Models\DTO\PredefinedDonationAmountDTO.cs" />
+    <Compile Include="Models\Finder\MpConnectAws.cs" />
     <Compile Include="Models\Finder\SpPinDto.cs" />
     <Compile Include="Models\GoCincinnati\MpProject.cs" />
     <Compile Include="Models\GoCincinnati\MpProjectRegistration.cs" />
@@ -372,6 +373,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
+    <Compile Include="Utils\PhoneNumberValidator.cs" />
     <Compile Include="Utils\PlatformUtils.cs" />
   </ItemGroup>
   <ItemGroup>
