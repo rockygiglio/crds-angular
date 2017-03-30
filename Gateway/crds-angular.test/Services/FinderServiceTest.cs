@@ -298,6 +298,8 @@ namespace crds_angular.test.Services
 
             _addressService.Setup(m => m.SetGeoCoordinates(pin.Address));
             _mpContactRepository.Setup(m => m.UpdateHouseholdAddress((int) pin.Household_ID, householdDictionary, addressDictionary));
+            _addressService.Setup(m => m.GetGeoLocationCascading(It.IsAny<AddressDTO>())).Returns(new GeoCoordinate(39,-84));
+
             _fixture.UpdateHouseholdAddress(pin);
             _mpFinderRepository.VerifyAll();
         }

@@ -148,6 +148,10 @@ namespace crds_angular.Services
             {
                 searchRequest.FilterQuery = $"latlong:['{boundingBox.UpperLeftCoordinates.Lat},{boundingBox.UpperLeftCoordinates.Lng}','{boundingBox.BottomRightCoordinates.Lat},{boundingBox.BottomRightCoordinates.Lng}']";
             }
+            else
+            {
+                searchRequest.Size = 31;
+            }
                
             if (originCoords != null)
             {
