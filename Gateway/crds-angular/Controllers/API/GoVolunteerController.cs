@@ -376,17 +376,20 @@ namespace crds_angular.Controllers.API
         [HttpGet]
         public IHttpActionResult GetGroupLeaderExportFile(int projectId)
         {
-            try
+            return Authorized(token =>
             {
-                string filename = "groupLeaderExport.csv";
-                var stream = _goVolunteerService.CreateGroupLeaderExport(projectId);
-                return new FileResult(stream, filename);
-            }
-            catch (Exception e)
-            {
-                var apiError = new ApiErrorDto("Unable to get Group Leader Export File", e);
-                throw new HttpResponseException(apiError.HttpResponseMessage);
-            }
+                try
+                {
+                    string filename = "groupLeaderExport.csv";
+                    var stream = _goVolunteerService.CreateGroupLeaderExport(projectId);
+                    return new FileResult(stream, filename);
+                }
+                catch (Exception e)
+                {
+                    var apiError = new ApiErrorDto("Unable to get Group Leader Export File", e);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+            });
         }
 
         private IHttpActionResult SaveRegistration(string token, CincinnatiRegistration goVolunteerRegistration)

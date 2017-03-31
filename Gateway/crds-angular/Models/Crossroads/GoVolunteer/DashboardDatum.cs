@@ -6,32 +6,32 @@ namespace crds_angular.Models.Crossroads.GoVolunteer
     {
         public static readonly string[] Headers =
         {
-            "Registrant Name", "Email Address", "Phone Number",
-            "Adults Participating", "Children Participating"
+            "Name", "Email Address", "Mobile Phone",
+            "Adults", "Children"
         };
 
         [JsonProperty(PropertyName = "name")]
-        public string RegistrantName { get; set; }
+        public string Name { get; set; }
 
         [JsonProperty(PropertyName = "email")]
         public string EmailAddress { get; set; }
 
         [JsonProperty(PropertyName = "phone")]
-        public string PhoneNumber { get; set; }
+        public string MobilePhone { get; set; }
 
         [JsonProperty(PropertyName = "adults")]
-        public int AdultsParticipating { get; set; }
+        public int Adults { get; set; }
 
         [JsonProperty(PropertyName = "children")]
-        public int ChildrenParticipating { get; set; }
+        public int Children { get; set; }
 
         public bool Equals(DashboardDatum other)
         {
-            return this.RegistrantName == other.RegistrantName
+            return this.Name == other.Name
                    && this.EmailAddress == other.EmailAddress
-                   && this.PhoneNumber == other.PhoneNumber
-                   && this.AdultsParticipating == other.AdultsParticipating
-                   && this.ChildrenParticipating == other.ChildrenParticipating;
+                   && this.MobilePhone == other.MobilePhone
+                   && this.Adults == other.Adults
+                   && this.Children == other.Children;
         }
     }
 }

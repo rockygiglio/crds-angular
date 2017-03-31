@@ -776,10 +776,10 @@ namespace crds_angular.test.Services
             var result = _fixture.GetRegistrationsForProject(projectId);
 
             Assert.IsNotNull(result);
-            Assert.AreEqual(2, result[0].AdultsParticipating);
-            Assert.AreEqual(1, result[1].AdultsParticipating);
-            Assert.AreEqual(3, result[0].ChildrenParticipating);
-            Assert.AreEqual(5, result[1].ChildrenParticipating);
+            Assert.AreEqual(2, result[0].Adults);
+            Assert.AreEqual(1, result[1].Adults);
+            Assert.AreEqual(3, result[0].Children);
+            Assert.AreEqual(5, result[1].Children);
         }
 
         [Test]
@@ -800,7 +800,7 @@ namespace crds_angular.test.Services
             _registrationService.Setup(m => m.GetRegistrantsForProject(projectId)).Returns(MockProjectRegistrations());
             var result = _fixture.CreateGroupLeaderExport(projectId);
             var resString = System.Text.Encoding.UTF8.GetString(result.ToArray());
-            const string expected = "﻿Registrant Name,Email Address,Phone Number,Adults Participating,Children Participating\r\nBob Boberson,bob@bob.com,123-456-7890,2,3\r\nAnita Mann,anitamann@aol.com,123-456-7890,1,5\r\n";
+            const string expected = "﻿Name,Email Address,Mobile Phone,Adults,Children\r\nBob Boberson,bob@bob.com,123-456-7890,2,3\r\nAnita Mann,anitamann@aol.com,123-456-7890,1,5\r\n";
             Assert.AreEqual(expected, resString);
             _registrationService.VerifyAll();
         }
