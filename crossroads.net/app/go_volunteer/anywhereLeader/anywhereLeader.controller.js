@@ -34,8 +34,8 @@ export default class AnywhereLeaderController {
   getExport() {
     return this.goVolunteerDataService.getDashboardExport(this.state.toParams.projectId).then((result) => {
       this.fileSaver.saveAs(result.response.blob, result.response.filename);
-    }).catch(() => {
-      this.log.error();
+    }).catch((err) => {
+      this.log.error(err);
       this.rootScope.$emit('notify', this.rootScope.MESSAGES.gpexport_generation_error);
     });
   }
