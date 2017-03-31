@@ -1,7 +1,7 @@
 export default class AnywhereLeaderController {
   /* @ngInject */
-  constructor($rootscope, $state, $log, $cookies, GoVolunteerService, GoVolunteerDataService, FileSaver) {
-    this.rootscope = $rootscope;
+  constructor($rootScope, $state, $log, $cookies, GoVolunteerService, GoVolunteerDataService, FileSaver) {
+    this.rootScope = $rootScope;
     this.state = $state;
     this.log = $log;
     this.cookies = $cookies;
@@ -36,7 +36,7 @@ export default class AnywhereLeaderController {
       this.fileSaver.saveAs(result.response.blob, result.response.filename);
     }).catch(() => {
       this.log.error;
-      this.rootscope.$emit('notify', this.rootscope.MESSAGES.gpexport_generation_error);
+      this.rootScope.$emit('notify', this.rootScope.MESSAGES.gpexport_generation_error);
     });
   }
 }
