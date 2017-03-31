@@ -14,7 +14,7 @@ UPDATE [dbo].[dp_Communications]
 				Total number of adults: [Adults_Participating]<br>
 				Number of children Ages 0-17: [Number_Of_Children]<br>
 				Total Number of Volunteers on this sign-up form: [Total_Volunteers]<br><br>
-				<a href="[Base_URL]/go-volunteer/dashboard/[Project_ID]">View your whole team here.</a><br><br>
+				<a href="[Base_Url]/go-local/dashboard/[Project_ID]">View your whole team here.</a><br><br>
 				If you need to make any changes to this information, please contact [Anywhere_GO_Contact].<br><br>
 				Thanks for stepping up to lead. Your initiative is changing your city.<br>
 				The GO Local Team'
