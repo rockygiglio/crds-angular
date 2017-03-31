@@ -2,6 +2,7 @@
 using Crossroads.Utilities.Models;
 using Crossroads.Utilities.Services;
 using Moq;
+using Newtonsoft.Json;
 using NUnit.Framework;
 using RestSharp;
 
@@ -14,6 +15,26 @@ namespace Crossroads.Utilities.Test.Services
         private Mock<IRestClient> _cmsRestClient;
         private ContentBlocks _contentBlocks;
 
+        private bool AreContentBlocksEqual(ContentBlock a, ContentBlock b)
+        {
+            if (a.Id != b.Id)
+                return false;
+
+            if (a.Title != b.Title)
+                return false;
+
+            if (a.Content != b.Content)
+                return false;
+
+            if (a.Type != b.Type)
+                return false;
+
+            if (a.Category != b.Category)
+                return false;
+
+            return true;
+        }
+
         [SetUp]
         public void SetUp()
         {
@@ -24,25 +45,31 @@ namespace Crossroads.Utilities.Test.Services
                     new ContentBlock
                     {
                         Title = "error1",
-                        Id = 1
+                        Id = 1,
+                        Type = ContentBlockType.Error,
+                        Content = "Error Message Text"
                     },
                     new ContentBlock
                     {
-                        Title = "error2",
-                        Id = 2
+                        Title = "info2",
+                        Id = 2,
+                        Type = ContentBlockType.Info,
+                        Content = "Info Message Text"
                     },
                     new ContentBlock
                     {
-                        Title = "error3",
-                        Id = 3
+                        Title = "success3",
+                        Id = 3,
+                        Type = ContentBlockType.Success,
+                        Content = "Success Message Text"
                     }
                 }
             };
-            var restResponse = new Mock<IRestResponse<ContentBlocks>>();
-            restResponse.Setup(mocked => mocked.Data).Returns(_contentBlocks);
+            var restResponse = new Mock<IRestResponse<string>>();
+            restResponse.Setup(mocked => mocked.Content).Returns(JsonConvert.SerializeObject(_contentBlocks));
 
             _cmsRestClient = new Mock<IRestClient>();
-            _cmsRestClient.Setup(mocked => mocked.Execute<ContentBlocks>(It.IsAny<IRestRequest>())).Returns(restResponse.Object);
+            _cmsRestClient.Setup(mocked => mocked.Execute(It.IsAny<IRestRequest>())).Returns(restResponse.Object);
 
             _fixture = new ContentBlockService(_cmsRestClient.Object);
         }
@@ -50,9 +77,21 @@ namespace Crossroads.Utilities.Test.Services
         [Test]
         public void TestContentBlocks()
         {
-            Assert.AreSame(_contentBlocks.contentBlocks[0], _fixture["error1"]);
-            Assert.AreSame(_contentBlocks.contentBlocks[1], _fixture["error2"]);
-            Assert.AreSame(_contentBlocks.contentBlocks[2], _fixture["error3"]);
+            Assert.IsTrue(AreContentBlocksEqual(_contentBlocks.contentBlocks[0], _fixture["error1"]));
+            Assert.IsTrue(AreContentBlocksEqual(_contentBlocks.contentBlocks[1], _fixture["info2"]));
+            Assert.IsTrue(AreContentBlocksEqual(_contentBlocks.contentBlocks[2], _fixture["success3"]));
+        }
+
+        [Test]
+        public void GetContentForKeyThatExists()
+        {
+            Assert.IsNotNullOrEmpty(_fixture.GetContent("error1"));
+        }
+
+        [Test]
+        public void GetContentForKeyThatDoesNotExist()
+        {
+            Assert.IsEmpty(_fixture.GetContent("DoesNotExist"));
         }
     }
 }

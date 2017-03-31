@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Web.Http;
 using System.Web.Http.Description;
+using crds_angular.Exceptions;
 using crds_angular.Exceptions.Models;
 using crds_angular.Models.Crossroads.Attribute;
 using crds_angular.Models.Crossroads.GoVolunteer;
@@ -60,6 +62,23 @@ namespace crds_angular.Controllers.API
             catch (Exception e)
             {
                 var apiError = new ApiErrorDto("Get Go Volunteer Children Options failed: ", e);
+                throw new HttpResponseException(apiError.HttpResponseMessage);
+            }
+        }
+
+        [ResponseType(typeof(List<DashboardDatum>))]
+        [VersionedRoute(template: "go-volunteer/dashboard/{projectId}", minimumVersion: "1.0.0")]
+        [Route("go-volunteer/dashboard/{projectId}")]
+        [HttpGet]
+        public IHttpActionResult GetDashboardData(int projectId)
+        {
+            try
+            {
+                return Ok(_goVolunteerService.GetRegistrationsForProject(projectId));
+            }
+            catch (Exception e)
+            {
+                var apiError = new ApiErrorDto("Get Dashboard Data failed: ", e);
                 throw new HttpResponseException(apiError.HttpResponseMessage);
             }
         }
@@ -303,13 +322,12 @@ namespace crds_angular.Controllers.API
                 var dataError = new ApiErrorDto("Registration Data Invalid", new InvalidOperationException("Invalid Registration Data" + errors));
                 throw new HttpResponseException(dataError.HttpResponseMessage);
             }
+            catch (DuplicateUserException e)
+            {
+                throw new HttpResponseException(HttpStatusCode.Conflict);
+            }
             catch (Exception e)
             {
-                if (e.GetType() == typeof(HttpResponseException))
-                {
-                    throw e;
-                }
-
                 var msg = "GoVolunteerRegistrationController: POST " + goVolunteerRegistration;
                 logger.Error(msg, e);
                 var apiError = new ApiErrorDto(msg, e);
@@ -353,8 +371,8 @@ namespace crds_angular.Controllers.API
             }
         }
 
-        [VersionedRoute(template: "go-volunteer/group-leader-export/{projectId}", minimumVersion: "1.0.0")]
-        [Route("go-volunteer/group-leader-export/{projectId}")]
+        [VersionedRoute(template: "go-volunteer/dashboard/export/{projectId}", minimumVersion: "1.0.0")]
+        [Route("go-volunteer/dashboard/export/{projectId}")]
         [HttpGet]
         public IHttpActionResult GetGroupLeaderExportFile(int projectId)
         {
@@ -362,7 +380,6 @@ namespace crds_angular.Controllers.API
             {
                 string filename = "groupLeaderExport.csv";
                 var stream = _goVolunteerService.CreateGroupLeaderExport(projectId);
-
                 return new FileResult(stream, filename);
             }
             catch (Exception e)
@@ -375,8 +392,7 @@ namespace crds_angular.Controllers.API
         private IHttpActionResult SaveRegistration(string token, CincinnatiRegistration goVolunteerRegistration)
         {
             try
-            {
-                goVolunteerRegistration.InitiativeId = _configurationWrapper.GetConfigIntValue("GoCincinnatiInitativeId");
+            {                
                 var reg = _goVolunteerService.CreateRegistration(goVolunteerRegistration, token);
                 return Ok(reg);
             }

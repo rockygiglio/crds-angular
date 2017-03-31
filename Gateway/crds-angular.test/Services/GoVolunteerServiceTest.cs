@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using crds_angular.Exceptions;
 using crds_angular.Models.Crossroads.GoVolunteer;
 using crds_angular.Services;
 using crds_angular.Services.Interfaces;
@@ -40,7 +41,8 @@ namespace crds_angular.test.Services
         private readonly Mock<IApiUserRepository> _apiUserRepository;
         private readonly Mock<IProjectRepository> _projectRepository;
 
-        private readonly int CrossroadsOrganizationId = 2;
+        private const int _crossroadsOrganizationId = 2;
+        private const int _goLocalChildrenAttributeId = 9862;
 
         public GoVolunteerServiceTest()
         {
@@ -97,6 +99,40 @@ namespace crds_angular.test.Services
             var success = _fixture.SendMail(registration);
             _commnuicationService.Verify();           
             Assert.IsTrue(success);                            
+        }
+
+        [Test]
+        public void ShouldSendAnywhereEmailOnlyToVolunteer()
+        {
+            const int templateId = 123456789;
+            const int leaderTemplateId = 987654321;
+            const int fromContactId = 0987;
+            var fromContact = TestHelpers.MyContact(fromContactId);
+            var registration = TestHelpers.AnywhereRegistrationNoSpouse();
+            var contactFromRegistration = TestHelpers.ContactFromRegistrant(registration.Self);
+            var communication = TestHelpers.Communication(fromContact, contactFromRegistration, templateId);
+            var groupConnector = TestHelpers.MpGroupConnector();
+
+            _configurationWrapper.Setup(m => m.GetConfigIntValue("GoLocalAnywhereEmailTemplate")).Returns(templateId);
+            _configurationWrapper.Setup(m => m.GetConfigIntValue("GoLocalAnywhereFromContactId")).Returns(fromContactId);
+            _configurationWrapper.Setup(m => m.GetConfigIntValue("GoLocalAnywhereLeaderEmailTemplate")).Returns(leaderTemplateId);
+            _contactService.Setup(m => m.GetContactById(It.IsAny<int>())).Returns(fromContact);
+            _groupConnectorService.Setup(m => m.GetGroupConnectorById(It.IsAny<int>())).Returns(groupConnector);
+            _commnuicationService.Setup(m => m.GetTemplateAsCommunication(templateId,
+                                                                            fromContact.Contact_ID,
+                                                                            fromContact.Email_Address,
+                                                                            fromContact.Contact_ID,
+                                                                            fromContact.Email_Address,
+                                                                            registration.Self.ContactId,
+                                                                            registration.Self.EmailAddress,
+                                                                            It.IsAny<Dictionary<string, object>>())).Returns(communication);
+            _commnuicationService.Setup(m => m.SendMessage(communication, false)).Returns(1);
+            var success = _fixture.SendMail(registration);
+            _configurationWrapper.VerifyAll();
+            _commnuicationService.VerifyAll();
+            _contactService.VerifyAll();
+            _groupConnectorService.VerifyAll();
+            Assert.IsTrue(success);
         }
 
         [Test]
@@ -433,13 +469,33 @@ namespace crds_angular.test.Services
 
             var mockCities = MockCityList();
             _projectRepository.Setup(m => m.GetProjectsByInitiative(initiativeId, It.IsAny<string>())).Returns(mockCities);
-
+            _configurationWrapper.Setup(m => m.GetConfigIntValue("AnywhereCongregation")).Returns(4);
             var result = _fixture.GetParticipatingCities(initiativeId);
 
             Assert.IsNotNull(result);
             Assert.IsTrue(result.Any());
             Assert.AreEqual(mockCities.Count, result.Count);
             _projectRepository.VerifyAll();
+        }
+
+        [Test]
+        public void ShouldFilterOutNonAnywhereCities()
+        {
+            const int initiativeId = 12;
+            const int anywhereId = 34;
+
+            var mockCities = MockCityListWithNonAnywhere(anywhereId);
+            _projectRepository.Setup(m => m.GetProjectsByInitiative(initiativeId, It.IsAny<string>())).Returns(mockCities);
+            _configurationWrapper.Setup(m => m.GetConfigIntValue("AnywhereCongregation")).Returns(anywhereId);
+
+            var result = _fixture.GetParticipatingCities(initiativeId);
+
+            Assert.IsNotNull(result);
+            Assert.IsTrue(result.Any());
+            Assert.AreEqual(2, result.Count);
+            
+            _projectRepository.VerifyAll();
+            _configurationWrapper.VerifyAll();
         }
 
         private List<MpProject> MockCityList()
@@ -450,13 +506,43 @@ namespace crds_angular.test.Services
                 {
                     ProjectId = 1,
                     City = "Cleveland",
-                    State = "OH"
+                    State = "OH",
+                    LocationId = 4
                 },
                 new MpProject
                 {
                     ProjectId = 2,
                     City = "Phoenix",
-                    State = "AZ"
+                    State = "AZ",
+                    LocationId = 4
+                }
+            };
+        }
+
+        private List<MpProject> MockCityListWithNonAnywhere(int anywhereId)
+        {
+            return new List<MpProject>
+            {
+                new MpProject
+                {
+                    ProjectId = 1,
+                    City = "Cleveland",
+                    State = "OH",
+                    LocationId = anywhereId
+                },
+                new MpProject
+                {
+                    ProjectId = 2,
+                    City = "Phoenix",
+                    State = "AZ",
+                    LocationId = anywhereId
+                },
+                new MpProject
+                {
+                    ProjectId = 3,
+                    City = "Cincinnati",
+                    State = "OH",
+                    LocationId = anywhereId -2
                 }
             };
         }
@@ -574,15 +660,17 @@ namespace crds_angular.test.Services
         {
             const int projectId = 564;
             const string token = "asdf";
+            const string apiToken = "hjlk";
             const int groupConnectorId = 1324;
             const int participantId = 9876543;
             const int preferredLaunchSiteId = 654;
             const int registrationId = 321654;
+            const int numberOfChildren = 0;          
             var user = new MpUser() {};
-            var registration = BuildRegistration();
-            var registrationDto = BuildRegistrationDto(participantId, preferredLaunchSiteId, registration);
-
-            _groupConnectorService.Setup(m => m.GetGroupConnectorByProjectId(projectId, token))
+            var registration = BuildRegistration(numberOfChildren);
+            _apiUserRepository.Setup(m => m.GetToken())
+                .Returns(apiToken);
+            _groupConnectorService.Setup(m => m.GetGroupConnectorByProjectId(projectId, apiToken))
                 .Returns(new MpGroupConnector {Id = groupConnectorId});
             _groupConnectorService.Setup(m => m.GetGroupConnectorById(groupConnectorId))
                 .Returns(new MpGroupConnector() {PreferredLaunchSiteId = preferredLaunchSiteId});
@@ -606,11 +694,14 @@ namespace crds_angular.test.Services
             _participantService.Setup(m => m.GetParticipantRecord(token))
                 .Returns(new MpParticipant() {ParticipantId = participantId});
             _configurationWrapper.Setup(m => m.GetConfigIntValue("CrossroadsOrganizationId"))
-                .Returns(CrossroadsOrganizationId);
+                .Returns(_crossroadsOrganizationId);
+            _configurationWrapper.Setup(m => m.GetConfigIntValue("GoLocalRegistrationChildrenAttribute")).Returns(_goLocalChildrenAttributeId);
+
+            _registrationService.Setup(m => m.AddAgeGroup(registrationId, _goLocalChildrenAttributeId, numberOfChildren)).Returns(1);
             _registrationService.Setup(m => m.CreateRegistration(It.IsAny<MpRegistration>()))
                 .Returns((MpRegistration mpRegistration) =>
                          {
-                             Assert.AreEqual(mpRegistration.OrganizationId, CrossroadsOrganizationId);
+                             Assert.AreEqual(mpRegistration.OrganizationId, _crossroadsOrganizationId);
                              Assert.AreEqual(mpRegistration.ParticipantId, participantId);
                              Assert.AreEqual(mpRegistration.PreferredLaunchSiteId, preferredLaunchSiteId);
                              Assert.AreEqual(mpRegistration.InitiativeId, registration.InitiativeId);
@@ -620,6 +711,7 @@ namespace crds_angular.test.Services
 
             _fixture.CreateAnywhereRegistration(registration, projectId, token);
 
+            _apiUserRepository.VerifyAll();
             _groupConnectorService.VerifyAll();
             _contactService.VerifyAll();
             _userService.VerifyAll();
@@ -632,15 +724,15 @@ namespace crds_angular.test.Services
         {
             const int projectId = 564;
             const string token = "asdf";
+            const string apiToken = "hjlk";
             const int groupConnectorId = 1324;
             const int participantId = 9876543;
-            const int preferredLaunchSiteId = 654;
-            const int registrationId = 321654;
             var user = new MpUser() { };
-            var registration = BuildRegistration();
-            var registrationDto = BuildRegistrationDto(participantId, preferredLaunchSiteId, registration);
+            var registration = BuildRegistration();           
 
-            _groupConnectorService.Setup(m => m.GetGroupConnectorByProjectId(projectId, token))
+            _apiUserRepository.Setup(m => m.GetToken())
+                .Returns(apiToken);
+            _groupConnectorService.Setup(m => m.GetGroupConnectorByProjectId(projectId, apiToken))
                 .Returns(new MpGroupConnector { Id = groupConnectorId });
             _groupConnectorService.Setup(m => m.GetGroupConnectorById(groupConnectorId))
                 .Returns((MpGroupConnector) null);
@@ -667,6 +759,7 @@ namespace crds_angular.test.Services
                                      {
                                          _fixture.CreateAnywhereRegistration(registration, projectId, token);
                                      });
+            _apiUserRepository.VerifyAll();
             _groupConnectorService.VerifyAll();
             _contactService.VerifyAll();
             _userService.VerifyAll();
@@ -690,27 +783,69 @@ namespace crds_angular.test.Services
         }
 
         [Test]
-        public void ShouldCreateTheGroupLeaderExport()
+        public void ShouldReturnMemoryStreamWhenCreatingFile()
         {
             var projectId = 1234;
-            List<DashboardDatum> mockExportData = MockDashboardDatums();
-            var stream = MemoryStream();
-
             _registrationService.Setup(m => m.GetRegistrantsForProject(projectId)).Returns(MockProjectRegistrations());
-
             var result = _fixture.CreateGroupLeaderExport(projectId);
-            // CSV.Create()...
-
             Assert.IsNotNull(result);
-            Assert.Fail();
+            Assert.IsInstanceOf<MemoryStream>(result);
+            _registrationService.VerifyAll();
         }
 
-        private AnywhereRegistration BuildRegistration()
+        [Test]
+        public void ShouldBuildExportDatumCorrectly()
+        {
+            var projectId = 1234;
+            _registrationService.Setup(m => m.GetRegistrantsForProject(projectId)).Returns(MockProjectRegistrations());
+            var result = _fixture.CreateGroupLeaderExport(projectId);
+            var resString = System.Text.Encoding.UTF8.GetString(result.ToArray());
+            const string expected = "﻿Registrant Name,Email Address,Phone Number,Adults Participating,Children Participating\r\nBob Boberson,bob@bob.com,123-456-7890,2,3\r\nAnita Mann,anitamann@aol.com,123-456-7890,1,5\r\n";
+            Assert.AreEqual(expected, resString);
+            _registrationService.VerifyAll();
+        }
+
+        [Test]
+        public void ShouldThrowDuplicateUserException()
+        {
+            const int projectId = 564;
+            const string token = "asdf";
+            const string apiToken = "hjlk";
+            const int groupConnectorId = 1324;
+            var user = new MpUser() { };
+            var registration = BuildRegistration();            
+
+            _apiUserRepository.Setup(m => m.GetToken())
+                .Returns(apiToken);
+            _groupConnectorService.Setup(m => m.GetGroupConnectorByProjectId(projectId, apiToken))
+                .Returns(new MpGroupConnector { Id = groupConnectorId });
+            _userService.Setup(m => m.GetByAuthenticationToken(token))
+                .Returns(user);
+            _userService.Setup(m => m.UpdateUser(It.IsAny<MpUser>()))
+                .Throws(new DuplicateUserException(registration.Self.EmailAddress));
+            _configurationWrapper.Setup(m => m.GetConfigIntValue("CrossroadsOrganizationId"))
+                .Returns(_crossroadsOrganizationId);
+
+            Assert.Throws<DuplicateUserException>(() =>
+                                                  {
+                                                      _fixture.CreateAnywhereRegistration(registration, projectId, token);
+                                                  });
+
+            _apiUserRepository.VerifyAll();
+            _groupConnectorService.VerifyAll();
+            _contactService.VerifyAll();
+            _userService.VerifyAll();
+            _participantService.VerifyAll();
+            _registrationService.VerifyAll();
+        }
+
+        private static AnywhereRegistration BuildRegistration(int numberOfChildren = 0)
         {
             return new AnywhereRegistration
             {
                 GroupConnectorId = 0,
                 InitiativeId = 3,
+                NumberOfChildren = numberOfChildren,
                 OrganizationId = 0,
                 Self = new Registrant
                 {
@@ -720,7 +855,7 @@ namespace crds_angular.test.Services
                     FirstName = "a",
                     LastName = "bomb",
                     MobilePhone = "555-555-5555"
-                },
+                },            
                 SpouseParticipation = false
             };
         }
@@ -733,7 +868,7 @@ namespace crds_angular.test.Services
                 PreferredLaunchSiteId = preferredLaunchSiteId,
                 InitiativeId = registration.InitiativeId,
                 SpouseParticipation =  registration.SpouseParticipation,
-                OrganizationId = CrossroadsOrganizationId
+                OrganizationId = _crossroadsOrganizationId
             };
         }
 
@@ -744,49 +879,26 @@ namespace crds_angular.test.Services
                 new MpProjectRegistration
                 {
                     ProjectId = 1,
-                    Nickname = "Bob",
-                    LastName = "Boberson",
-                    Phone = "123-456-7890",
-                    EmailAddress = "bob@bob.com",
-                    SpouseParticipating = true,
-                    FamilyCount = 5
-                },
-                new MpProjectRegistration
-                {
-                    ProjectId = 1,
                     Nickname = "Anita",
                     LastName = "Mann",
                     Phone = "123-456-7890",
                     EmailAddress = "anitamann@aol.com",
                     SpouseParticipating = false,
                     FamilyCount = 6
-                }
-            };
-        }
-
-        private static List<DashboardDatum> MockDashboardDatums()
-        {
-            return new List<DashboardDatum>()
-            {
-                new DashboardDatum()
-                {
-                    RegistrantName = "Bob Boberson",
-                    EmailAddress = "bob@bob.com",
-                    PhoneNumber = "123-456-7890",
-                    AdultsParticipating = 2,
-                    ChildrenParticipating = 3
                 },
-                new DashboardDatum()
+                new MpProjectRegistration
                 {
-                    RegistrantName = "Anita Mann",
-                    EmailAddress = "anitamann@aol.com",
-                    PhoneNumber = "123-456-7890",
-                    AdultsParticipating = 1,
-                    ChildrenParticipating = 5
+                    ProjectId = 1,
+                    Nickname = "Bob",
+                    LastName = "Boberson",
+                    Phone = "123-456-7890",
+                    EmailAddress = "bob@bob.com",
+                    SpouseParticipating = true,
+                    FamilyCount = 5
                 }
             };
         }
-
+       
         private string Skills(CincinnatiRegistration registration)
         {
             if (registration.Skills != null && registration.Skills.Where(sk => sk.Checked).ToList().Count > 0)

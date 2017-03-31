@@ -1,5 +1,5 @@
 import constants from '../constants';
-import { CmsInfo, Meta, GetProject, GetProfile, GetCities, GetOrganizations } from './goVolunteer.resolves';
+import { CmsInfo, Meta, GetProject, GetDashboard, GetProfile, GetCities, GetOrganizations } from './goVolunteer.resolves';
 
 
 
@@ -28,10 +28,12 @@ export default function GoVolunteerRoutes($stateProvider, $urlMatcherFactoryProv
       resolve: {
         $state: '$state',
         $q: '$q',
+        $log: '$log',
         loggedin: crds_utilities.optimisticallyCheckLoggedin,
         GoVolunteerDataService: 'GoVolunteerDataService',
         GoVolunteerService: 'GoVolunteerService',
-        GetProject
+        GetProject,
+        GetDashboard
       }
     })
     .state('go-local.organizations', {
@@ -341,7 +343,7 @@ function Skills(GoVolunteerService, SkillsService, $stateParams, $q) {
 function Organization(GoVolunteerService, $state, $stateParams, $q, Organizations) {
   var deferred = $q.defer();
   var param = 'crossroads';
-  if ($state.next.name === 'go-volunteer.page') {
+  if ($state.next.name === 'go-local.page') {
     param = $stateParams.organization;
   }
 
@@ -370,7 +372,7 @@ function GroupFindConnectors(GoVolunteerService, $state, $stateParams, $q, Group
 
   if ($stateParams.page === 'group-find-connector')  {
     if (GoVolunteerService.organization.openSignup) {
-      GroupConnectors.OpenOrgs.query({initiativeId: 1}, function(data) {
+      GroupConnectors.OpenOrgs.query({initiativeId: $stateParams.initiativeId}, function(data) {
         GoVolunteerService.groupConnectors = data;
         deferred.resolve();
       },
@@ -382,7 +384,7 @@ function GroupFindConnectors(GoVolunteerService, $state, $stateParams, $q, Group
       );
     } else {
       GroupConnectors.ByOrgId.query(
-        {orgId: GoVolunteerService.organization.organizationId, initiativeId: 1}, function(data) {
+        {orgId: GoVolunteerService.organization.organizationId, initiativeId: $stateParams.initiativeId}, function(data) {
         GoVolunteerService.groupConnectors = data;
         deferred.resolve();
       },

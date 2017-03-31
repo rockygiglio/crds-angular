@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Web;
 using Newtonsoft.Json;
 
 namespace crds_angular.Models.Crossroads.GoVolunteer
@@ -21,10 +18,7 @@ namespace crds_angular.Models.Crossroads.GoVolunteer
 
         [JsonProperty(PropertyName = "equipment")]
         public List<Equipment> Equipment { get; set; }
-
-        [JsonProperty(PropertyName = "groupConnector")]
-        public GroupConnector GroupConnector { get; set; }
-
+        
         [JsonProperty(PropertyName = "organizationId")]
         [Required]
         public int OrganizationId { get; set; }
@@ -46,9 +40,6 @@ namespace crds_angular.Models.Crossroads.GoVolunteer
 
         [JsonProperty(PropertyName = "skills")]
         public List<GoSkills> Skills { get; set; }
-
-        [JsonProperty(PropertyName = "spouse")]
-        public Registrant Spouse { get; set; }
 
         [JsonProperty(PropertyName = "waiverSigned")]
         [Required]

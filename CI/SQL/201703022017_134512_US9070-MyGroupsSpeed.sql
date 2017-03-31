@@ -146,7 +146,7 @@ BEGIN
 
 		DECLARE @Site_Subquery NVARCHAR(MAX)
 		SELECT @Site_Subquery = STUFF((
-			select ' UPPER(Congregation) LIKE ''%' + Keyword + '%'' OR '
+			select ' UPPER(Congregation_Name) LIKE ''%' + Keyword + '%'' OR '
 			from #Keywords
 			FOR XML PATH('')
 			)

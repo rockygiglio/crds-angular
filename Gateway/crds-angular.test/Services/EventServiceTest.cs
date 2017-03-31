@@ -790,7 +790,7 @@ namespace crds_angular.test.Services
                     DomainId = 1,
                     GroupId = 42,
                     GroupName = "_childCare",
-                    GroupTypeId = 23,
+                    GroupTypeId = 272727,
                     Created = true,
                     EventGroupId = 1
                 }
@@ -803,7 +803,8 @@ namespace crds_angular.test.Services
                 ChildCareAvailable = true,
                 CongregationId = 1,
                 KidsWelcome = true,
-                TargetSize = 42
+                TargetSize = 42,
+                GroupType = 272727
             };
 
             _eventService.Setup(mock => mock.GetEvent(1)).Returns(oldEventData);
@@ -814,7 +815,7 @@ namespace crds_angular.test.Services
             _eventService.Setup(mock => mock.UpdateEvent(It.IsAny<MpEventReservationDto>()));
             _roomService.Setup(mock => mock.UpdateRoomReservation(It.IsAny<MpRoomReservationDto>()));
             _equipmentService.Setup(mock => mock.UpdateEquipmentReservation(It.IsAny<MpEquipmentReservationDto>()));
-            _eventService.Setup(mock => mock.DeleteEventGroupsForEvent(1, "ABC"));
+            _eventService.Setup(mock => mock.DeleteEventGroupsForEvent(1, "ABC", 272727));
             _groupService.Setup(mock => mock.EndDateGroup(42, null, null));
             _groupService.Setup(mock => mock.getGroupDetails(42)).Returns(mpGroup);
 
@@ -823,7 +824,7 @@ namespace crds_angular.test.Services
             _equipmentService.Verify(m => m.UpdateEquipmentReservation(It.IsAny<MpEquipmentReservationDto>()), Times.Exactly(2));
             _roomService.Verify(m => m.UpdateRoomReservation(It.IsAny<MpRoomReservationDto>()), Times.Exactly(2));
             _eventService.Verify(m => m.UpdateEvent(It.IsAny<MpEventReservationDto>()), Times.Once);
-            _eventService.Verify(m => m.DeleteEventGroupsForEvent(1, "ABC"), Times.Once);
+            _eventService.Verify(m => m.DeleteEventGroupsForEvent(1, "ABC", 272727), Times.Once);
             _groupService.Verify(m => m.EndDateGroup(42, null, null), Times.Once);
         }
 

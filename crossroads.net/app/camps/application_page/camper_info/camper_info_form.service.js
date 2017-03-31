@@ -243,7 +243,7 @@ class CamperInfoForm {
           {
             className: 'form-group col-xs-6',
             key: 'mobilePhone',
-            type: 'crdsInput',
+            type: 'crdsPhoneNumberInput',
             optionsTypes: ['phoneNumber'],
             templateOptions: {
               label: 'Student Mobile Number',

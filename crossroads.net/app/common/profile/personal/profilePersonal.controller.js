@@ -73,7 +73,7 @@
     vm.openStartAttendingDatePicker = openStartAttendingDatePicker;
     vm.password = '';
     vm.passwordPrefix = 'account-page';
-    vm.phoneFormat = /^\(?(\d{3})\)?[\s.-]?(\d{3})[\s.-]?(\d{4})$/;
+    vm.phoneFormat = /^\(?(\d{3})\)?-(\d{3})-(\d{4})$/;
     vm.requireEmail = true;
     vm.requireMobilePhone = angular.isDefined(vm.requireMobilePhone) ? vm.requireMobilePhone : 'false';
     vm.resetCredentialsEntered = false;

@@ -43,7 +43,7 @@ namespace MinistryPlatform.Translation.Test.Services
                 ExpiresIn = 123
             });
             _ministryPlatformRest.Setup(m => m.UsingAuthenticationToken(token)).Returns(_ministryPlatformRest.Object);
-            _ministryPlatformRest.Setup(m => m.Search<MpProjectRegistration>(It.IsAny<string>(), null as string, null, false)).Returns(MockRegistrations());
+            _ministryPlatformRest.Setup(m => m.Search<MpProjectRegistration>(It.IsAny<string>(), It.IsAny<string>(), null, false)).Returns(MockRegistrations());
             
             var results = _fixture.GetRegistrantsForProject(projectId);
             Assert.IsInstanceOf(typeof(List<MpProjectRegistration>), results);
