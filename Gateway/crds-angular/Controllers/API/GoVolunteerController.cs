@@ -353,8 +353,8 @@ namespace crds_angular.Controllers.API
             }
         }
 
-        [VersionedRoute(template: "go-volunteer/group-leader-export/{projectId}", minimumVersion: "1.0.0")]
-        [Route("go-volunteer/group-leader-export/{projectId}")]
+        [VersionedRoute(template: "go-volunteer/dashboard/export/{projectId}", minimumVersion: "1.0.0")]
+        [Route("go-volunteer/dashboard/export/{projectId}")]
         [HttpGet]
         public IHttpActionResult GetGroupLeaderExportFile(int projectId)
         {
