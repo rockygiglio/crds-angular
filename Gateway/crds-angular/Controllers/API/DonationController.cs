@@ -122,14 +122,8 @@ namespace crds_angular.Controllers.API
                 }
                 catch (Exception e)
                 {
-                    _logger.Error(
-                        string.Format(
-                            "Unexcepted exception happens during execution: impersonateUserId: {0}, donationYear: {1}, exceptionMessage: {2}",
-                            impersonateUserId == null ? "null" : impersonateUserId,
-                            donationYear,
-                            e.Message
-                        )
-                    );
+                    var msg = "DonationController: GetDonations " + donationYear + ", " + impersonateDonorId;
+                    _logger.Error(msg, e);
                     return (RestHttpActionResult<ApiErrorDto>.WithStatus(HttpStatusCode.InternalServerError, new ApiErrorDto("Unexpected exception happens at server side")));
                 }
             }));
@@ -164,6 +158,12 @@ namespace crds_angular.Controllers.API
                 catch (UserImpersonationException e)
                 {
                     return (e.GetRestHttpActionResult());
+                }
+                catch (Exception e)
+                {
+                    var msg = "DonationController: GetDonationYears " + impersonateDonorId;
+                    _logger.Error(msg, e);
+                    return (RestHttpActionResult<ApiErrorDto>.WithStatus(HttpStatusCode.InternalServerError, new ApiErrorDto("Unexpected exception happens at server side")));
                 }
             }));
         }
