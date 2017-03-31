@@ -188,6 +188,7 @@ namespace crds_angular.Services
                     replyContact = _contactService.GetContactById(projectLeader.PrimaryRegistrationID);
                     mergeData = SetupAnywhereMergeData((AnywhereRegistration) registration, projectLeader.Name);
                     mergeData.Add("Project_Leader_Email_Address", replyContact.Email_Address);
+                    mergeData.Add("Project_ID", projectLeader.ProjectId);
                 }
                 
                 var communication = _communicationService.GetTemplateAsCommunication(templateId,
@@ -369,7 +370,8 @@ namespace crds_angular.Services
                 {"Number_Of_Children", registration.NumberOfChildren},
                 {"Group_Connector", projectLeaderName},
                 {"Adults_Participating", adultsParticipating},
-                {"Total_Volunteers", registration.NumberOfChildren + adultsParticipating}
+                {"Total_Volunteers", registration.NumberOfChildren + adultsParticipating},
+                {"Base_Url", _configurationWrapper.GetConfigValue("BaseUrl") }
             };
             return merge;
         }
