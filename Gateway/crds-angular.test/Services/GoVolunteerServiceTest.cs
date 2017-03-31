@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using crds_angular.Exceptions;
 using crds_angular.Models.Crossroads.GoVolunteer;
 using crds_angular.Services;
 using crds_angular.Services.Interfaces;
+using crds_angular.Util;
 using Crossroads.Utilities.FunctionalHelpers;
 using Crossroads.Utilities.Services;
 using Crossroads.Web.Common.Configuration;
@@ -780,6 +782,30 @@ namespace crds_angular.test.Services
             Assert.AreEqual(5, result[1].ChildrenParticipating);
         }
 
+        [Test]
+        public void ShouldReturnMemoryStreamWhenCreatingFile()
+        {
+            var projectId = 1234;
+            _registrationService.Setup(m => m.GetRegistrantsForProject(projectId)).Returns(MockProjectRegistrations());
+            var result = _fixture.CreateGroupLeaderExport(projectId);
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOf<MemoryStream>(result);
+            _registrationService.VerifyAll();
+        }
+
+        [Test]
+        public void ShouldBuildExportDatumCorrectly()
+        {
+            var projectId = 1234;
+            _registrationService.Setup(m => m.GetRegistrantsForProject(projectId)).Returns(MockProjectRegistrations());
+            var result = _fixture.CreateGroupLeaderExport(projectId);
+            var resString = System.Text.Encoding.UTF8.GetString(result.ToArray());
+            const string expected = "﻿Registrant Name,Email Address,Phone Number,Adults Participating,Children Participating\r\nBob Boberson,bob@bob.com,123-456-7890,2,3\r\nAnita Mann,anitamann@aol.com,123-456-7890,1,5\r\n";
+            Assert.AreEqual(expected, resString);
+            _registrationService.VerifyAll();
+        }
+
+        [Test]
         public void ShouldThrowDuplicateUserException()
         {
             const int projectId = 564;
@@ -872,7 +898,7 @@ namespace crds_angular.test.Services
                 }
             };
         }
-
+       
         private string Skills(CincinnatiRegistration registration)
         {
             if (registration.Skills != null && registration.Skills.Where(sk => sk.Checked).ToList().Count > 0)
@@ -899,7 +925,6 @@ namespace crds_angular.test.Services
             }
             ;
             return new HtmlElement("p", els);
-        } 
-
+        }
     }
 }

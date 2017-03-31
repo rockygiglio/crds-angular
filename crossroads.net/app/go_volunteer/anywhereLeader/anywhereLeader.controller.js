@@ -1,10 +1,15 @@
 export default class AnywhereLeaderController {
   /* @ngInject */
-  constructor(GoVolunteerService, $cookies) {
+  constructor($rootScope, $state, $log, $cookies, GoVolunteerService, GoVolunteerDataService, FileSaver) {
+    this.rootScope = $rootScope;
+    this.state = $state;
+    this.log = $log;
+    this.cookies = $cookies;
     this.viewReady = false;
     this.project = GoVolunteerService.project;
     this.participants = GoVolunteerService.dashboard || [];
-    this.cookies = $cookies;
+    this.goVolunteerDataService = GoVolunteerDataService;
+    this.fileSaver = FileSaver;
     this.unauthorized = false;
   }
 
@@ -24,5 +29,14 @@ export default class AnywhereLeaderController {
     return this.participants
             .map(participant => participant.adults + participant.children)
             .reduce((acc, val) => acc + val, 1); // start at 1 to account for leader
+  }
+
+  getExport() {
+    return this.goVolunteerDataService.getDashboardExport(this.state.toParams.projectId).then((result) => {
+      this.fileSaver.saveAs(result.response.blob, result.response.filename);
+    }).catch(() => {
+      this.log.error;
+      this.rootScope.$emit('notify', this.rootScope.MESSAGES.gpexport_generation_error);
+    });
   }
 }

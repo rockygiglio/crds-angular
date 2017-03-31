@@ -11,6 +11,7 @@ using crds_angular.Models.Crossroads.GoVolunteer;
 using crds_angular.Models.Crossroads.Lookups;
 using crds_angular.Security;
 using crds_angular.Services.Interfaces;
+using crds_angular.Util;
 using Crossroads.ApiVersioning;
 using Crossroads.Web.Common.Configuration;
 using Crossroads.Web.Common.Security;
@@ -366,6 +367,24 @@ namespace crds_angular.Controllers.API
             catch (Exception e)
             {
                 var apiError = new ApiErrorDto("Unable to get organizations", e);
+                throw new HttpResponseException(apiError.HttpResponseMessage);
+            }
+        }
+
+        [VersionedRoute(template: "go-volunteer/dashboard/export/{projectId}", minimumVersion: "1.0.0")]
+        [Route("go-volunteer/dashboard/export/{projectId}")]
+        [HttpGet]
+        public IHttpActionResult GetGroupLeaderExportFile(int projectId)
+        {
+            try
+            {
+                string filename = "groupLeaderExport.csv";
+                var stream = _goVolunteerService.CreateGroupLeaderExport(projectId);
+                return new FileResult(stream, filename);
+            }
+            catch (Exception e)
+            {
+                var apiError = new ApiErrorDto("Unable to get Group Leader Export File", e);
                 throw new HttpResponseException(apiError.HttpResponseMessage);
             }
         }

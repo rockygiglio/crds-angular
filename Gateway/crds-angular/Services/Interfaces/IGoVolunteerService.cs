@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.IO;
 using crds_angular.Models.Crossroads.GoVolunteer;
 
 namespace crds_angular.Services.Interfaces
@@ -14,6 +15,7 @@ namespace crds_angular.Services.Interfaces
 
         List<ProjectCity> GetParticipatingCities(int initiativeId);
         Project GetProject(int projectId);
+        MemoryStream CreateGroupLeaderExport(int projectId);
         List<DashboardDatum> GetRegistrationsForProject(int projectId);
     }
 }

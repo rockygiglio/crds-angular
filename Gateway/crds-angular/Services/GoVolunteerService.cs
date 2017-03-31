@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reactive.Linq;
 using System.ServiceModel;
 using crds_angular.Exceptions;
 using crds_angular.Models.Crossroads.GoVolunteer;
 using crds_angular.Services.Interfaces;
+using crds_angular.Util;
 using Crossroads.Utilities.Services;
 using log4net;
 using Crossroads.Web.Common.Configuration;
@@ -344,6 +346,14 @@ namespace crds_angular.Services
             return dict;
         }
 
+        public MemoryStream CreateGroupLeaderExport(int projectId)
+        {
+            var glExport = GetRegistrationsForProject(projectId);
+            var stream = new MemoryStream();
+            CSV.Create(glExport, DashboardDatum.Headers, stream, ",");
+            return stream;
+        }
+
         private Dictionary<string, object> SetupAnywhereMergeData(AnywhereRegistration registration, string projectLeaderName)
         {
             var adultsParticipating = registration.SpouseParticipation ? 2 : 1;
@@ -361,7 +371,6 @@ namespace crds_angular.Services
                 {"Adults_Participating", adultsParticipating},
                 {"Total_Volunteers", registration.NumberOfChildren + adultsParticipating}
             };
-
             return merge;
         }
 
