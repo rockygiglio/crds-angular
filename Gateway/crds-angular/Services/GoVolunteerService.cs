@@ -304,10 +304,9 @@ namespace crds_angular.Services
 
         public MemoryStream CreateGroupLeaderExport(int projectId)
         {
-            var glEXport = GetRegistrationsForProject(projectId);
+            var glExport = GetRegistrationsForProject(projectId);
             var stream = new MemoryStream();
-            CSV.Create(glEXport, DashboardDatum.Headers, stream, ",");
-
+            CSV.Create(glExport, DashboardDatum.Headers, stream, ",");
             return stream;
         }
 

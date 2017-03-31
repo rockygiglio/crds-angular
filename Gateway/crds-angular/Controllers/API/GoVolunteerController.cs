@@ -362,7 +362,6 @@ namespace crds_angular.Controllers.API
             {
                 string filename = "groupLeaderExport.csv";
                 var stream = _goVolunteerService.CreateGroupLeaderExport(projectId);
-
                 return new FileResult(stream, filename);
             }
             catch (Exception e)
