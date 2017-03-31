@@ -6,16 +6,54 @@ describe('Go Local Leader Dashboard', () => {
   let componentController;
   let logger;
   let fixture;
+  let cookie;
 
   const bindings = {};
+  const validUserId = '2186211';
+  const invalidUserId = '123456';
 
   beforeEach(angular.mock.module(goVolunteerModule));
 
-  beforeEach(inject((_$componentController_, _$log_, _GoVolunteerService_) => {
+  beforeEach(inject((_$componentController_, _$log_, _GoVolunteerService_, _$cookies_) => {
     logger = _$log_;
     componentController = _$componentController_;
     GoVolunteerService = _GoVolunteerService_;
+    cookie = _$cookies_;
+
   }));
+
+  describe('User is project leader', () => {
+    beforeEach(() => {
+      GoVolunteerService.project = helpers.project;
+      GoVolunteerService.dashboard = helpers.participants;
+      fixture = componentController('anywhereLeader', null, bindings);
+      spyOn(cookie, 'get').and.returnValue(validUserId);
+    });
+
+    it('should allow user to view page', () => {
+      fixture.$onInit();
+      expect(cookie.get).toHaveBeenCalledWith('userId');
+      expect(fixture.unauthorized).toBe(false);
+      expect(fixture.viewReady).toBe(true);
+      expect(fixture.showDashboard()).toBe(true);
+    });
+  });
+
+  describe('User is not project leader', () => {
+    beforeEach(() => {
+      GoVolunteerService.project = helpers.project;
+      GoVolunteerService.dashboard = helpers.participants;
+      fixture = componentController('anywhereLeader', null, bindings);
+      spyOn(cookie, 'get').and.returnValue(invalidUserId);
+    });
+    it('should not allow user to view page', () => {
+      fixture.$onInit();
+      expect(cookie.get).toHaveBeenCalledWith('userId');
+      expect(fixture.unauthorized).toBe(true);
+      expect(fixture.viewReady).toBe(true);
+      expect(fixture.showDashboard()).toBe(false);
+    });
+  });
 
   describe('When data is accurate', () => {
     beforeEach(() => {

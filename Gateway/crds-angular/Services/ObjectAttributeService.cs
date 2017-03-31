@@ -173,7 +173,7 @@ namespace crds_angular.Services
             }
 
             var mpObjectAttribute = TranslateMultiToMPAttribute(objectAttribute, null);            
-            var persistedAttributes = _mpObjectAttributeService.GetCurrentObjectAttributes(token, objectId, configuration, objectAttribute.AttributeId);
+            var persistedAttributes = _mpObjectAttributeService.GetCurrentObjectAttributes(_apiUserService.GetToken(), objectId, configuration, objectAttribute.AttributeId);
 
             if (persistedAttributes.Count >= 1)
             {

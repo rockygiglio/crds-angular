@@ -30,14 +30,15 @@ namespace crds_angular.Services
             _addressGeocodingService = addressGeocodingService;
         }
 
-        public List<decimal?> GetProximity(string originAddress, List<AddressDTO> destinationAddresses)
+        public List<decimal?> GetProximity(string originAddress, List<AddressDTO> destinationAddresses, GeoCoordinate originCoords = null)
         {
             return GetProximity(originAddress, destinationAddresses.Select(a => a.ToString()).ToList());
         }
 
-        public List<decimal?> GetProximity(string originAddress, List<string> destinationAddresses)
+        public List<decimal?> GetProximity(string originAddress, List<string> destinationAddresses, GeoCoordinate originCoordindates = null)
         {
-            var originCoords = _addressGeocodingService.GetGeoCoordinates(originAddress);
+
+            GeoCoordinate originCoords = originCoordindates ?? _addressGeocodingService.GetGeoCoordinates(originAddress);
 
             var numRequests = Math.Ceiling(destinationAddresses.Count / (decimal)MaxDestinationsPerRequest);
 
