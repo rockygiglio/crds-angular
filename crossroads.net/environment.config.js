@@ -23,6 +23,7 @@ module.exports = {
     /* eslint-disable no-underscore-dangle */
     params.__CRDS_ENV__ = JSON.stringify('');
     params.__COOKIE_DOMAIN__ = JSON.stringify('');
+    params.__CROSSROADS_API_TOKEN__ = JSON.stringify('crds_api_token_value');
     /* eslint-enable */
     return params;
   }

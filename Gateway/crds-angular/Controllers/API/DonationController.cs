@@ -108,6 +108,7 @@ namespace crds_angular.Controllers.API
                                                                   () =>
                                                                       _gatewayDonationService.GetDonationsForAuthenticatedUser(token, donationYear, limit, softCredit, includeRecurring))
                         : _gatewayDonationService.GetDonationsForAuthenticatedUser(token, donationYear, limit, softCredit, includeRecurring);
+
                     if (donations == null || !donations.HasDonations)
                     {
                         return (RestHttpActionResult<ApiErrorDto>.WithStatus(HttpStatusCode.NotFound, new ApiErrorDto("No matching donations found")));
@@ -118,6 +119,12 @@ namespace crds_angular.Controllers.API
                 catch (UserImpersonationException e)
                 {
                     return (e.GetRestHttpActionResult());
+                }
+                catch (Exception e)
+                {
+                    var msg = "DonationController: GetDonations " + donationYear + ", " + impersonateDonorId;
+                    _logger.Error(msg, e);
+                    return (RestHttpActionResult<ApiErrorDto>.WithStatus(HttpStatusCode.InternalServerError, new ApiErrorDto("Unexpected exception happens at server side")));
                 }
             }));
         }
@@ -151,6 +158,12 @@ namespace crds_angular.Controllers.API
                 catch (UserImpersonationException e)
                 {
                     return (e.GetRestHttpActionResult());
+                }
+                catch (Exception e)
+                {
+                    var msg = "DonationController: GetDonationYears " + impersonateDonorId;
+                    _logger.Error(msg, e);
+                    return (RestHttpActionResult<ApiErrorDto>.WithStatus(HttpStatusCode.InternalServerError, new ApiErrorDto("Unexpected exception happens at server side")));
                 }
             }));
         }

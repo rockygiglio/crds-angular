@@ -18,14 +18,17 @@ namespace crds_angular.Services
 {
     public class AwsCloudsearchService : MinistryPlatformBaseService, IAwsCloudsearchService
     {
+        private readonly IAddressGeocodingService _addressGeocodingService;
         private readonly IFinderRepository _finderRepository;
         private readonly IConfigurationWrapper _configurationWrapper;
         protected string AmazonSearchUrl;
         private const int ReturnRecordCount = 10000;
 
-        public AwsCloudsearchService(IFinderRepository finderRepository,
+        public AwsCloudsearchService(IAddressGeocodingService addressGeocodingService, 
+                                     IFinderRepository finderRepository,                          
                                      IConfigurationWrapper configurationWrapper)
         {
+            _addressGeocodingService = addressGeocodingService;
             _finderRepository = finderRepository;
             _configurationWrapper = configurationWrapper;
 
@@ -90,7 +93,7 @@ namespace crds_angular.Services
         }
 
 
-        
+
 
         private List<AwsCloudsearchDto> GetDataForCloudsearch()
         {
@@ -145,6 +148,10 @@ namespace crds_angular.Services
             {
                 searchRequest.FilterQuery = $"latlong:['{boundingBox.UpperLeftCoordinates.Lat},{boundingBox.UpperLeftCoordinates.Lng}','{boundingBox.BottomRightCoordinates.Lat},{boundingBox.BottomRightCoordinates.Lng}']";
             }
+            else
+            {
+                searchRequest.Size = 31;
+            }
                
             if (originCoords != null)
             {
@@ -157,6 +164,65 @@ namespace crds_angular.Services
             return (response);
         }
 
+        public void UploadNewPinToAWS(PinDto pin)
+        {
+            var domainConfig = new AmazonCloudSearchDomainConfig
+            {
+                ServiceURL = AmazonSearchUrl
+            };
+
+            var cloudSearch = new Amazon.CloudSearchDomain.AmazonCloudSearchDomainClient(domainConfig);
+
+            UploadDocumentsRequest upload = GetObjectToUploadToAws(pin);
+
+            var response = cloudSearch.UploadDocuments(upload);
+        }
+
+        private string GenerateAwsPinId(PinDto pin)
+        {
+            string awsPinId = pin.Address.AddressID + "-" + (int)pin.PinType + "-" + pin.Participant_ID + "-" + getPinGroupIdOrEmptyString(pin);
+            return awsPinId; 
+        }
+
+        private string getPinGroupIdOrEmptyString(PinDto pin)
+        {
+            bool isGathering = pin.PinType == PinType.GATHERING;
+            string groupIdAsString = isGathering ? pin.Gathering.GroupId.ToString() : "";
+
+            return groupIdAsString; 
+        }
+
+        private PinDto SetLatAndLangOnPinForNewAddress(PinDto pin)
+        {
+            GeoCoordinate newAddressCoords = _addressGeocodingService.GetGeoCoordinates(pin.Address);
+
+            pin.Address.Latitude = newAddressCoords.Latitude;
+            pin.Address.Longitude = newAddressCoords.Longitude;
+
+            return pin;
+        }
+
+        public UploadDocumentsRequest GetObjectToUploadToAws(PinDto pin)
+        {
+            AwsConnectDto awsPinObject = Mapper.Map<AwsConnectDto>(pin);
+
+            AwsCloudsearchDto awsPostPinObject = new AwsCloudsearchDto("add", GenerateAwsPinId(pin), awsPinObject);
+
+            var pinlist = new List<AwsCloudsearchDto>();
+            pinlist.Add(awsPostPinObject);
+
+            string jsonAwsObject = JsonConvert.SerializeObject(pinlist, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+
+            MemoryStream jsonAwsPinDtoStream = new MemoryStream(Encoding.UTF8.GetBytes(jsonAwsObject));
+
+            UploadDocumentsRequest upload = new Amazon.CloudSearchDomain.Model.UploadDocumentsRequest()
+            {
+                ContentType = ContentType.ApplicationJson,
+                Documents = jsonAwsPinDtoStream
+            };
+
+            return upload;
+        }
 
     }
 }

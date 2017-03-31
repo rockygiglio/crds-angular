@@ -245,7 +245,7 @@ describe('GivingHistoryController', function() {
       expect(sut.donations.length).toBe(0);
     });
 
-    it('should not have history if there are no donations', function() {
+    it('should not have history for selected year if there are no donations', function() {
       var profile = {foo: 'bar'};
       httpBackend.expectGET(window.__env__['CRDS_API_ENDPOINT'] + 'api/profile').respond(profile);
       httpBackend
@@ -264,8 +264,9 @@ describe('GivingHistoryController', function() {
       expect(sut.beginning_donation_date).not.toBeDefined();
       expect(sut.ending_donation_date).not.toBeDefined();
 
-      expect(sut.donation_history).toBeFalsy();
+      expect(sut.donation_history).toBeTruthy();
       expect(sut.donation_view_ready).toBeTruthy();
+      expect(sut.non_soft_credit_donation_history).toBeFalsy();
       expect(sut.soft_credit_donation_history).toBeFalsy();
       expect(sut.soft_credit_donation_view_ready).toBeTruthy();
       expect(sut.overall_view_ready).toBeTruthy();
