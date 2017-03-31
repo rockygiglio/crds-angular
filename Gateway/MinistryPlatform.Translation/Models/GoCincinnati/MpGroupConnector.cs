@@ -39,5 +39,7 @@ namespace MinistryPlatform.Translation.Models.GoCincinnati
         [JsonProperty(PropertyName = "Email_Address")]
         public string PrimaryContactEmail { get; set; }
 
+        [JsonProperty(PropertyName = "Project_ID")]
+        public int? ProjectId { get; set; }
     }
 }

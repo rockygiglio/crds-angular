@@ -186,6 +186,7 @@ namespace crds_angular.Services
                     replyContact = _contactService.GetContactById(projectLeader.PrimaryRegistrationID);
                     mergeData = SetupAnywhereMergeData((AnywhereRegistration) registration, projectLeader.Name);
                     mergeData.Add("Project_Leader_Email_Address", replyContact.Email_Address);
+                    mergeData.Add("Project_ID", projectLeader.ProjectId);
                 }
                 
                 var communication = _communicationService.GetTemplateAsCommunication(templateId,
