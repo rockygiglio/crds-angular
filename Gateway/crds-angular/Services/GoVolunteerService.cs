@@ -281,11 +281,11 @@ namespace crds_angular.Services
             var registrants = _registrationService.GetRegistrantsForProject(projectId);
             return (registrants.Select(datum => new {datum, adults = datum.SpouseParticipating ? 2 : 1}).OrderBy(s => s.datum.LastName).Select(@t => new DashboardDatum
             {
-                RegistrantName = @t.datum.Nickname + " " + @t.datum.LastName,
+                Name = @t.datum.Nickname + " " + @t.datum.LastName,
                 EmailAddress = @t.datum.EmailAddress,
-                PhoneNumber = @t.datum.Phone,
-                AdultsParticipating = @t.adults,
-                ChildrenParticipating = @t.datum.FamilyCount - @t.adults
+                MobilePhone = @t.datum.Phone,
+                Adults = @t.adults,
+                Children = @t.datum.FamilyCount - @t.adults
             })).ToList();
         }
 
