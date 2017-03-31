@@ -98,11 +98,14 @@ namespace crds_angular.Services
             var token = _apiUserRepository.GetToken();
 
             //get group details for the primary pin
-            pin.Gathering = _groupService.GetGroupsByTypeOrId(token, participantId, null, groupId).FirstOrDefault();
+            pin.Gathering = _groupService.GetGroupsByTypeOrId(token, participantId, null, groupId, false, false).FirstOrDefault();
             pin.PinType = PinType.GATHERING;
             if (pin.Gathering != null)
             {
+                pin.Gathering.Address.AddressLine1 = "";
+                pin.Gathering.Address.AddressLine2 = "";
                 pin.Address = pin.Gathering.Address;
+
             }
             return pin;
         }
@@ -119,6 +122,8 @@ namespace crds_angular.Services
             }
             // randomize the location
             pinDetails.Address = RandomizeLatLong(pinDetails.Address);
+            pinDetails.Address.AddressLine1 = "";
+            pinDetails.Address.AddressLine2 = "";
             pinDetails.PinType = PinType.PERSON;
 
             //TODO get group details
@@ -363,6 +368,45 @@ namespace crds_angular.Services
 
             _invitationService.ValidateInvitation(invitation, token);
             return _invitationService.CreateInvitation(invitation, token);
+        }
+
+        public AddressDTO GetGroupAddress(string token, int groupId)
+        {
+            var user = _participantRepository.GetParticipantRecord(token);
+            var group = _groupService.GetGroupsByTypeOrId(token, user.ParticipantId, null, groupId, true, false).FirstOrDefault();
+
+            if (user.ContactId == group.ContactId || group.Participants.Any(p => p.ParticipantId == user.ParticipantId))
+            {
+                return group.Address;
+            }
+            else
+            {
+                throw new Exception("User does not have acces to requested address");
+            }
+        }
+
+        public AddressDTO GetPersonAddress(string token, int participantId)
+        {
+            var user = _participantRepository.GetParticipantRecord(token);
+
+            if (user.ParticipantId == participantId)
+            {
+                var address = _finderRepository.GetPinAddress(participantId);
+
+                if (address != null)
+                {
+                    return Mapper.Map<AddressDTO>(address);
+                }
+                else
+                {
+                    throw new Exception("User address not found");
+                }
+            }
+            else
+            {
+                throw new Exception("User does not have acces to requested address");
+            }
+
         }
     }
 }
