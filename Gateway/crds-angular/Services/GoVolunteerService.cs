@@ -360,7 +360,8 @@ namespace crds_angular.Services
                 {"Number_Of_Children", registration.NumberOfChildren},
                 {"Group_Connector", projectLeaderName},
                 {"Adults_Participating", adultsParticipating},
-                {"Total_Volunteers", registration.NumberOfChildren + adultsParticipating}
+                {"Total_Volunteers", registration.NumberOfChildren + adultsParticipating},
+                {"Base_Url", _configurationWrapper.GetConfigValue("BaseUrl") }
             };
 
             return merge;
