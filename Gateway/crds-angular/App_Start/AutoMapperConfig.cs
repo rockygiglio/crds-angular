@@ -389,6 +389,24 @@ namespace crds_angular.App_Start
                 .ForMember(dest => dest.LatLong, opts => opts.MapFrom(
                    src => (src.Latitude==null || src.Longitude==null) ? "0 , 0" : $"{src.Latitude} , {src.Longitude}"));
 
+            Mapper.CreateMap<PinDto, AwsConnectDto>()
+                .ForMember(dest => dest.FirstName, opts => opts.MapFrom(src => src.FirstName))
+                .ForMember(dest => dest.LastName, opts => opts.MapFrom(src => src.LastName))
+                .ForMember(dest => dest.EmailAddress, opts => opts.MapFrom(src => src.EmailAddress))
+                .ForMember(dest => dest.AddressId, opts => opts.MapFrom(src => src.Address.AddressID))
+                .ForMember(dest => dest.City, opts => opts.MapFrom(src => src.Address.City))
+                .ForMember(dest => dest.State, opts => opts.MapFrom(src => src.Address.State))
+                .ForMember(dest => dest.Zip, opts => opts.MapFrom(src => src.Address.PostalCode))
+                .ForMember(dest => dest.ContactId, opts => opts.MapFrom(src => src.Contact_ID))
+                .ForMember(dest => dest.HouseholdId, opts => opts.MapFrom(src => src.Household_ID))
+                .ForMember(dest => dest.PinType, opts => opts.MapFrom(src => src.PinType))
+                .ForMember(dest => dest.HostStatus, opts => opts.MapFrom(src => src.Host_Status_ID))
+                .ForMember(dest => dest.ParticipantId, opts => opts.MapFrom(src => src.Participant_ID))
+                .ForMember(dest => dest.LatLong, opts => opts.MapFrom(
+                   src => (src.Address.Latitude == null || src.Address.Longitude == null) ? "0 , 0" : 
+                                                                                            $"{src.Address.Latitude} , {src.Address.Longitude}"));
+
+
             Mapper.CreateMap<GroupDTO, PinDto>()
                 .ForMember(dest => dest.Contact_ID, opts => opts.MapFrom(src => src.ContactId))
                 .ForMember(dest => dest.PinType, opt => opt.UseValue<PinType>(PinType.GATHERING));

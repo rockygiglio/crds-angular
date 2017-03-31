@@ -65,6 +65,23 @@ namespace crds_angular.Controllers.API
             }
         }
 
+        [ResponseType(typeof(List<DashboardDatum>))]
+        [VersionedRoute(template: "go-volunteer/dashboard/{projectId}", minimumVersion: "1.0.0")]
+        [Route("go-volunteer/dashboard/{projectId}")]
+        [HttpGet]
+        public IHttpActionResult GetDashboardData(int projectId)
+        {
+            try
+            {
+                return Ok(_goVolunteerService.GetRegistrationsForProject(projectId));
+            }
+            catch (Exception e)
+            {
+                var apiError = new ApiErrorDto("Get Dashboard Data failed: ", e);
+                throw new HttpResponseException(apiError.HttpResponseMessage);
+            }
+        }
+
         [ResponseType(typeof(Project))]
         [VersionedRoute(template: "go-volunteer/project/{projectId}", minimumVersion: "1.0.0")]
         [Route("go-volunteer/project/{projectId}")]

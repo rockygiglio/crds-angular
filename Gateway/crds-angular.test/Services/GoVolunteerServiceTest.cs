@@ -765,6 +765,21 @@ namespace crds_angular.test.Services
         }
 
         [Test]
+        public void ShouldGetLeaderDashboard()
+        {
+            var projectId = 1234;
+
+            _registrationService.Setup(m => m.GetRegistrantsForProject(projectId)).Returns(MockProjectRegistrations());
+
+            var result = _fixture.GetRegistrationsForProject(projectId);
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(2, result[0].AdultsParticipating);
+            Assert.AreEqual(1, result[1].AdultsParticipating);
+            Assert.AreEqual(3, result[0].ChildrenParticipating);
+            Assert.AreEqual(5, result[1].ChildrenParticipating);
+        }
+
         public void ShouldThrowDuplicateUserException()
         {
             const int projectId = 564;
@@ -828,6 +843,33 @@ namespace crds_angular.test.Services
                 InitiativeId = registration.InitiativeId,
                 SpouseParticipation =  registration.SpouseParticipation,
                 OrganizationId = _crossroadsOrganizationId
+            };
+        }
+
+        private List<MpProjectRegistration> MockProjectRegistrations()
+        {
+            return new List<MpProjectRegistration>
+            {
+                new MpProjectRegistration
+                {
+                    ProjectId = 1,
+                    Nickname = "Anita",
+                    LastName = "Mann",
+                    Phone = "123-456-7890",
+                    EmailAddress = "anitamann@aol.com",
+                    SpouseParticipating = false,
+                    FamilyCount = 6
+                },
+                new MpProjectRegistration
+                {
+                    ProjectId = 1,
+                    Nickname = "Bob",
+                    LastName = "Boberson",
+                    Phone = "123-456-7890",
+                    EmailAddress = "bob@bob.com",
+                    SpouseParticipating = true,
+                    FamilyCount = 5
+                }
             };
         }
 
