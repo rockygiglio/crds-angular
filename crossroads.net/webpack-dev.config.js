@@ -42,6 +42,9 @@ module.exports = {
   },
   devtool: 'sourcemap',
   debug: true,
+  node: {
+    fs: 'empty'
+  },
   module: {
     loaders: [
       {
@@ -94,12 +97,13 @@ module.exports = {
     ]
   },
   plugins: [
-        new CopyWebpackPlugin([
-      {
-        // context: './node_modules/crds-styles/assets/svgs/',
-        from: 'node_modules/crds-styles/assets',
-      }
-    ]),
+    // new CopyWebpackPlugin([
+    //   {
+    //     context: 'node_modules/crds-styles/assets/svgs',
+    //     from: '*.svg',
+    //     to: 'svgs'
+    //   }
+    // ]),
     new ExtractTextPlugin('[name].css'),
     definePlugin
   ]

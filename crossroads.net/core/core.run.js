@@ -1,4 +1,5 @@
-﻿
+﻿import { SharedHeader } from 'crds-shared-header/dist/bundle';
+
 /* eslint-disable no-param-reassign */
 (() => {
   function AppRun(Session,
@@ -16,6 +17,7 @@
     ContentPageService,
     Impersonate
   ) {
+
     function setupMetaData() {
       const title = ContentSiteConfigService.getTitle();
       const titleSuffix = ` | ${title}`;
@@ -29,7 +31,7 @@
       }
       if (!$rootScope.meta.image || $rootScope.meta.image.filename === '/assets/') {
         $rootScope.meta.image = {
-          filename:'https://crossroads-media.s3.amazonaws.com/images/coffee_cup.jpg'
+          filename: 'https://crossroads-media.s3.amazonaws.com/images/coffee_cup.jpg'
         };
       }
     }
@@ -42,7 +44,7 @@
       if (parts.length === 4) {
         // possible ip address
         const firstChar = parts[0].charAt(0);
-        if (firstChar >= '0' && firstChar <= '9')  {
+        if (firstChar >= '0' && firstChar <= '9') {
           // ip address
           document.domain = domain;
           return;
@@ -54,6 +56,25 @@
       document.domain = parts.join('.');
     }
 
+    function setupHeader() {
+      // header options
+      var options = {
+        el: '[data-header]',
+        cmsEndpoint: __CMS_ENDPOINT__,
+        appEndpoint: __API_ENDPOINT__,
+        imgEndpoint: __IMG_ENDPOINT__,
+        crdsCookiePrefix: __CRDS_ENV__,
+        contentBlockTitle: __HEADER_CONTENTBLOCK_TITLE__,
+        contentBlockCategories: ['common']
+      };
+
+      console.log(JSON.stringify(options));
+
+      var header = new CRDS.SharedHeader(options);
+      header.render();
+
+    }
+
     Impersonate.clear();
     $rootScope.MESSAGES = MESSAGES;
     setOriginForCmsPreviewPane($document);
@@ -62,7 +83,7 @@
     // Detect Browser Agent. use for browser targeting in CSS
     const doc = document.documentElement;
     doc.setAttribute('data-useragent', navigator.userAgent);
-    doc.setAttribute('data-platform', navigator.platform );
+    doc.setAttribute('data-platform', navigator.platform);
 
     $rootScope.$on('$stateChangeStart', (event, toState, toParams, fromState, fromParams) => {
       ContentPageService.reset();
@@ -86,6 +107,7 @@
         $rootScope.meta = toState.data.meta;
       }
       setupMetaData();
+      setupHeader();
     });
   }
 
