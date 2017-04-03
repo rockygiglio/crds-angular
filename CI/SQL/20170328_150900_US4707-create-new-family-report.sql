@@ -41,8 +41,8 @@ BEGIN
 			CONVERT(date, P.Participant_Start_Date) = CONVERT(DATE, E.Event_Start_Date)
 			AND H.Household_Source_ID = 48 -- Kids Club Registration
 			AND E.Congregation_ID IN (SELECT * FROM dbo.fnSplitString(@EventCongregations,','))
-			AND E.Event_Start_Date >= @StartDate
-			AND E.Event_Start_Date <= @EndDate
+			AND CONVERT(date, E.Event_Start_Date) >= @StartDate
+			AND CONVERT(date, E.Event_Start_Date) <= @EndDate
 	GROUP BY
 			E.Event_ID,
 			E.Event_Title,
