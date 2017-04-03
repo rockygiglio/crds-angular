@@ -38,7 +38,7 @@
     vm.groups = Groups;
     vm.lastDate = null;
     vm.loadMore = false;
-    vm.loadNextMonth = loadNextMonth;
+    vm.loadNextMonth = loadNextWeek;
     vm.loadText = 'Load More';
     vm.original = [];
     vm.showButton = showButton;
@@ -76,9 +76,9 @@
       vm.lastDate = formatDate(new Date(), 28);
     }
 
-    function addOneMonth(date) {
+    function addOneWeek(date) {
       var d = angular.copy(date);
-      d.setDate(date.getDate() + 28);
+      d.setDate(date.getDate() + 7);
       return d;
     }
 
@@ -150,7 +150,7 @@
       }).$promise;
     }
 
-    function loadNextMonth() {
+    function loadNextWeek() {
       if (vm.groups[0].day !== undefined) {
         vm.loadMore = true;
         vm.loadText = 'Loading...';
@@ -158,7 +158,7 @@
         var lastDate = new Date(vm.groups[vm.groups.length - 1].day);
         lastDate.setDate(lastDate.getDate() + 1);
 
-        var newDate = addOneMonth(new Date(lastDate));
+        var newDate = addOneWeek(new Date(lastDate));
 
         loadOpportunitiesByDate(lastDate.getTime(), newDate.getTime()).then(function(more) {
           if (more.length === 0) {
