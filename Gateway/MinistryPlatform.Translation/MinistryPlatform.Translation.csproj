@@ -128,8 +128,10 @@
     <Compile Include="Models\DTO\MpBaseDto.cs" />
     <Compile Include="Models\Finder\FinderPinDto.cs" />
     <Compile Include="Models\DTO\PredefinedDonationAmountDTO.cs" />
+    <Compile Include="Models\Finder\MpConnectAws.cs" />
     <Compile Include="Models\Finder\SpPinDto.cs" />
     <Compile Include="Models\GoCincinnati\MpProject.cs" />
+    <Compile Include="Models\GoCincinnati\MpProjectRegistration.cs" />
     <Compile Include="Models\MpAttributeCategory.cs" />
     <Compile Include="Models\MpAllergy.cs" />
     <Compile Include="Models\MpBatch.cs" />

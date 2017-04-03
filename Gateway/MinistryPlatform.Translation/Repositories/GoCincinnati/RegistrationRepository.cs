@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using Crossroads.Utilities.Interfaces;
 using log4net;
-using Crossroads.Web.Common;
 using Crossroads.Web.Common.Configuration;
+using Crossroads.Web.Common.MinistryPlatform;
 using Crossroads.Web.Common.Security;
 using MinistryPlatform.Translation.Models.GoCincinnati;
 using MinistryPlatform.Translation.Repositories.Interfaces;
@@ -15,11 +14,13 @@ namespace MinistryPlatform.Translation.Repositories.GoCincinnati
     {
         private readonly ILog _logger = LogManager.GetLogger(typeof (RoomRepository));
         private readonly IMinistryPlatformService _ministryPlatformService;
+        private readonly IMinistryPlatformRestRepository _ministryPlatformRestRepository;
 
-        public RegistrationRepository(IMinistryPlatformService ministryPlatformService, IAuthenticationRepository authenticationService, IConfigurationWrapper configuration)
+        public RegistrationRepository(IMinistryPlatformService ministryPlatformService, IMinistryPlatformRestRepository ministryPlatformRest, IAuthenticationRepository authenticationService, IConfigurationWrapper configuration)
             : base(authenticationService, configuration)
         {
             _ministryPlatformService = ministryPlatformService;
+            _ministryPlatformRestRepository = ministryPlatformRest;
         }
 
         public int AddAgeGroup(int registrationId, int attributeId, int count)
@@ -104,6 +105,16 @@ namespace MinistryPlatform.Translation.Repositories.GoCincinnati
                 _logger.Error(msg, e);
                 throw (new ApplicationException(msg, e));
             }
+        }
+
+        public List<MpProjectRegistration> GetRegistrantsForProject(int projectId)
+        {
+            var token = ApiLogin();
+            var searchString = $"Group_Connector_ID_Table_Project_ID_Table.[Project_ID] = {projectId}";
+            var columnList =
+                "Group_Connector_ID_Table_Project_ID_Table.[Project_ID], Registration_ID_Table_Participant_ID_Table_Contact_ID_Table.[Nickname], Registration_ID_Table_Participant_ID_Table_Contact_ID_Table.[Last_Name], Registration_ID_Table_Participant_ID_Table_Contact_ID_Table.[Mobile_Phone], Registration_ID_Table_Participant_ID_Table_Contact_ID_Table.[Email_Address], Registration_ID_Table.[Spouse_Participation], Registration_ID_Table.[_Family_Count]";
+            var registrants = _ministryPlatformRestRepository.UsingAuthenticationToken(token).Search<MpProjectRegistration>(searchString, columnList);
+            return registrants;
         }
     }
 }

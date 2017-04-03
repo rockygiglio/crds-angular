@@ -14,9 +14,8 @@ namespace MinistryPlatform.Translation.Repositories
 {
     public class FinderRepository : BaseRepository, IFinderRepository
     {
-        private const int searchRadius = 6380; 
+        private const int SearchRadius = 6380; 
 
-        private readonly IConfigurationWrapper _configurationWrapper;
         private readonly IMinistryPlatformRestRepository _ministryPlatformRest;
         private readonly IMinistryPlatformService _ministryPlatformService;
         private readonly IApiUserRepository _apiUserRepository;
@@ -29,15 +28,9 @@ namespace MinistryPlatform.Translation.Repositories
                                 IAuthenticationRepository authenticationService)
             : base(authenticationService, configuration)
         {
-            _configurationWrapper = configuration;
             _ministryPlatformRest = ministryPlatformRest;
             _ministryPlatformService = ministryPlatformService;
             _apiUserRepository = apiUserRepository;
-        }
-
-        private class RemoteIp
-        {
-            public string Ip { get; set; }
         }
 
         public FinderPinDto GetPinDetails(int participantId)
@@ -47,16 +40,19 @@ namespace MinistryPlatform.Translation.Repositories
             string token = _apiUserRepository.GetToken();
 
             var pinDetails = _ministryPlatformRest.UsingAuthenticationToken(token).Search<FinderPinDto>(filter, pinSearch)?.First();
-
-            const string addressSearch = "Household_ID_Table_Address_ID_Table.*";
-            if (pinDetails != null) pinDetails.Address = _ministryPlatformRest.UsingAuthenticationToken(token).Search<MpAddress>(filter, addressSearch)?.First();
-
+            
+            if (pinDetails != null) pinDetails.Address = GetPinAddress(participantId);
 
             return pinDetails;
         }
 
+        public MpAddress GetPinAddress(int participantId)
+        {
+            string filter = $"Participant_Record = {participantId}";
+            const string addressSearch = "Household_ID_Table_Address_ID_Table.*";
+            return _ministryPlatformRest.UsingAuthenticationToken(_apiUserRepository.GetToken()).Search<MpAddress>(filter, addressSearch)?.First();
+        }
         
-
         public void EnablePin(int participantId)
         {
             var dict = new Dictionary<string, object> { { "Participant_ID", participantId }, { "Show_On_Map", true } };
@@ -75,24 +71,42 @@ namespace MinistryPlatform.Translation.Repositories
             {
                 {"@Latitude", originCoords.Latitude },
                 {"@Longitude", originCoords.Longitude },
-                {"@RadiusInKilometers", searchRadius }
+                {"@RadiusInKilometers", SearchRadius }
             };
 
-            string spName = "api_crds_get_Pins_Within_Range"; 
+            const string spName = "api_crds_get_Pins_Within_Range"; 
 
             try
             {
-                List<List<SpPinDto>> storedProcReturn = _ministryPlatformRest.UsingAuthenticationToken(apiToken)
-                                                                             .GetFromStoredProc<SpPinDto>(spName, parms);
-                List<SpPinDto> pinsFromSp = storedProcReturn.FirstOrDefault();
+                var storedProcReturn = _ministryPlatformRest.UsingAuthenticationToken(apiToken).GetFromStoredProc<SpPinDto>(spName, parms);
+                var pinsFromSp = storedProcReturn.FirstOrDefault();
 
                 return pinsFromSp; 
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                var exception = ex;
                 return new List<SpPinDto>();
             }
         }
+
+        public List<MpConnectAws> GetAllPinsForAws()
+        {
+            var apiToken = _apiUserRepository.GetToken();
+            const string spName = "api_crds_Get_Connect_AWS_Data";
+
+            try
+            {
+                var storedProcReturn = _ministryPlatformRest.UsingAuthenticationToken(apiToken).GetFromStoredProc<MpConnectAws>(spName);
+                var pinsFromSp = storedProcReturn.FirstOrDefault();
+
+                return pinsFromSp;
+            }
+            catch (Exception ex)
+            {
+                _logger.Error("GetAllPinsForAws error" + ex);
+                return new List<MpConnectAws>();
+            }
+        }
+
     }
 }
