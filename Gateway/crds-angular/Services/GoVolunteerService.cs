@@ -351,7 +351,7 @@ namespace crds_angular.Services
         {
             var glExport = GetRegistrationsForProject(projectId);
             var stream = new MemoryStream();
-            CSV.Create(glExport, DashboardDatum.Headers, stream, ",");
+            CSV.Create(glExport, DashboardDatum.Headers, stream, ",", true);
             return stream;
         }
 
