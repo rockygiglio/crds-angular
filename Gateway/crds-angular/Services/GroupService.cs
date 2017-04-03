@@ -501,7 +501,7 @@ namespace crds_angular.Services
         /// <param name="groupTypeId"></param>
         /// <param name="groupId"></param>
         /// <returns></returns>
-        public List<GroupDTO> GetGroupsByTypeOrId(string token, int? participantId = null, int[] groupTypeIds = null, int? groupId = null)
+        public List<GroupDTO> GetGroupsByTypeOrId(string token, int? participantId = null, int[] groupTypeIds = null, int? groupId = null, bool? withParticipants = true, bool? withAttributes = true)
         {
             if (participantId == null) participantId = _participantService.GetParticipantRecord(token).ParticipantId;
             var groupsByType = _mpGroupRepository.GetGroupsForParticipantByTypeOrID(participantId.Value, null, groupTypeIds, groupId);
@@ -513,16 +513,21 @@ namespace crds_angular.Services
 
             var groupDetail = groupsByType.Select(Mapper.Map<MpGroup, GroupDTO>).ToList();
 
-            var configuration = MpObjectAttributeConfigurationFactory.Group();
-            var mpAttributes = _attributeRepository.GetAttributes(null);
-            foreach (var group in groupDetail)
+            if (withAttributes == true)
             {
-                var attributesTypes = _objectAttributeService.GetObjectAttributes(token, group.GroupId, configuration, mpAttributes);
-                group.AttributeTypes = attributesTypes.MultiSelect;
-                group.SingleAttributes = attributesTypes.SingleSelect;
+                var configuration = MpObjectAttributeConfigurationFactory.Group();
+                var mpAttributes = _attributeRepository.GetAttributes(null);
+                foreach (var group in groupDetail)
+                {
+                    var attributesTypes = _objectAttributeService.GetObjectAttributes(token, group.GroupId, configuration, mpAttributes);
+                    group.AttributeTypes = attributesTypes.MultiSelect;
+                    group.SingleAttributes = attributesTypes.SingleSelect;
+                }
             }
-
-            GetGroupParticipants(groupDetail);
+            if (withParticipants == true)
+            {
+                GetGroupParticipants(groupDetail);
+            }
 
             return groupDetail;
         }

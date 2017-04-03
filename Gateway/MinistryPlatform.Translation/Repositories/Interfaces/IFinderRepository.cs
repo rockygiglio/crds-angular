@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using MinistryPlatform.Translation.Models.Finder;
 using System.Device.Location;
+using MinistryPlatform.Translation.Models;
 
 namespace MinistryPlatform.Translation.Repositories.Interfaces
 {
@@ -10,5 +11,6 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
         List<SpPinDto> GetPinsInRadius(GeoCoordinate originCoords);
         void EnablePin(int participantId);
         List<MpConnectAws> GetAllPinsForAws();
+        MpAddress GetPinAddress(int participantId);
     }
 }

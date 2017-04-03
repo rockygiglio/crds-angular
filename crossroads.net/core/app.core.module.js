@@ -30,6 +30,7 @@
     'ui.tinymce',
     'mwl.confirm',
     'ngclipboard',
+    'ngFileSaver',
     'ngStorage'
     ])
     .constant('AUTH_EVENTS', {

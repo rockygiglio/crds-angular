@@ -47,16 +47,22 @@ namespace MinistryPlatform.Translation.Repositories
             if (myPin != null && myPin.Count > 0)
             {
                 pinDetails = myPin.First();
-                const string addressSearch = "Household_ID_Table_Address_ID_Table.*";
-                string addressFilter = $"Participant_Record = {participantId}";
-                pinDetails.Address = _ministryPlatformRest.UsingAuthenticationToken(token).Search<MpAddress>(filter, addressSearch)?.First();
+                pinDetails.Address = GetPinAddress(participantId);
+
             }
             else
             {
                 pinDetails = null;
-            }           
+            }
 
             return pinDetails;
+        }
+
+        public MpAddress GetPinAddress(int participantId)
+        {
+            string filter = $"Participant_Record = {participantId}";
+            const string addressSearch = "Household_ID_Table_Address_ID_Table.*";
+            return _ministryPlatformRest.UsingAuthenticationToken(_apiUserRepository.GetToken()).Search<MpAddress>(filter, addressSearch)?.First();
         }
         
         public void EnablePin(int participantId)

@@ -128,7 +128,7 @@ namespace crds_angular.test.Services
                     Host_Status_ID = 3
                 });
 
-            _groupService.Setup(gs => gs.GetGroupsByTypeOrId("abc123", 986765, null, 121212))
+            _groupService.Setup(gs => gs.GetGroupsByTypeOrId("abc123", 986765, null, 121212, false, false))
                 .Returns(new List<GroupDTO>
                 {
                     new GroupDTO
@@ -153,6 +153,7 @@ namespace crds_angular.test.Services
 
             Assert.AreEqual(result.LastName, "Ker");
             Assert.AreEqual(result.Address.AddressID, 99);
+            Assert.AreEqual(result.Address.AddressLine1, "");
             Assert.AreEqual(result.Gathering.GroupId, 121212);
             Assert.AreEqual(result.PinType, PinType.GATHERING);
         }

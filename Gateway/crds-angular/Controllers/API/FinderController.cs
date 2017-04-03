@@ -143,6 +143,53 @@ namespace crds_angular.Controllers.API
             }
         }
 
+
+        [RequiresAuthorization]
+        [ResponseType(typeof(AddressDTO))]
+        [VersionedRoute(template: "finder/group/address/{groupId}", minimumVersion: "1.0.0")]
+        [System.Web.Http.Route("finder/group/address/{groupId}")]
+        [System.Web.Http.HttpGet]
+        public IHttpActionResult GetGroupAddress([FromUri] int groupId)
+        {
+            return Authorized(token =>
+            {
+                try
+                {
+                    var address = _finderService.GetGroupAddress(token, groupId);
+                    return (Ok(address));
+                }
+                catch (Exception e)
+                {
+                    _logger.Error("Could not get address", e);
+                    var apiError = new ApiErrorDto("Get Address Failed", e);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+            });
+        }
+
+        [RequiresAuthorization]
+        [ResponseType(typeof(AddressDTO))]
+        [VersionedRoute(template: "finder/person/address/{participantId}", minimumVersion: "1.0.0")]
+        [System.Web.Http.Route("finder/person/address/{participantId}")]
+        [System.Web.Http.HttpGet]
+        public IHttpActionResult GetPersonAddress([FromUri] int participantId)
+        {
+            return Authorized(token =>
+            {
+                try
+                {
+                    var address = _finderService.GetPersonAddress(token, participantId);
+                    return (Ok(address));
+                }
+                catch (Exception e)
+                {
+                    _logger.Error("Could not get address", e);
+                    var apiError = new ApiErrorDto("Get Address Failed", e);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+            });
+        }
+
         /// <summary>
         /// Create Pin with provided address details
         /// </summary>

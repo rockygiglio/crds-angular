@@ -114,7 +114,8 @@ namespace MinistryPlatform.Translation.Repositories.GoCincinnati
                 ProjectType = r.ToString("Project_Type"),
                 PreferredLaunchSite = r.ToString("Preferred_Launch_Site"),
                 VolunteerCount = r.ToInt("Volunteer_Count"),
-                PreferredLaunchSiteId = r.ToInt("Preferred_Launch_Site_ID")
+                PreferredLaunchSiteId = r.ToInt("Preferred_Launch_Site_ID"),
+                ProjectId = r.ToNullableInt("Project_ID")
             }).ToList();
         }
     }
