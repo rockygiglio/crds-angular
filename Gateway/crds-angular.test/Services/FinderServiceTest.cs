@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Device.Location;
+using System.Linq;
 using crds_angular.App_Start;
 using crds_angular.Models.Crossroads;
 using crds_angular.Models.Finder;
@@ -35,6 +36,7 @@ namespace crds_angular.test.Services
         private Mock<IApiUserRepository> _apiUserRepository;
         private Mock<IAddressProximityService> _addressProximityService;
         private Mock<IInvitationService> _invitationService;
+        private Mock<IGroupRepository> _mpGroupRepository;
         private Mock<IAwsCloudsearchService> _awsCloudsearchService;
 
         private int _memberRoleId = 16;
@@ -54,6 +56,7 @@ namespace crds_angular.test.Services
             _apiUserRepository = new Mock<IApiUserRepository>();
             _groupService = new Mock<IGroupService>();
             _invitationService = new Mock<IInvitationService>();
+            _mpGroupRepository = new Mock<IGroupRepository>();
             _awsCloudsearchService = new Mock<IAwsCloudsearchService>();
 
             _mpConfigurationWrapper.Setup(mocked => mocked.GetConfigIntValue("GroupRoleLeader")).Returns(22);
@@ -67,6 +70,7 @@ namespace crds_angular.test.Services
                                          _mpContactRepository.Object,
                                          _addressService.Object,
                                          _mpParticipantRepository.Object,
+                                         _mpGroupRepository.Object,
                                          _groupService.Object,
                                          _mpGroupToolService.Object,
                                          _apiUserRepository.Object,
