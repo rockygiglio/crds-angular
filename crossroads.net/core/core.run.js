@@ -68,8 +68,6 @@
         contentBlockCategories: ['common']
       };
 
-      console.log(JSON.stringify(options));
-
       var header = new CRDS.SharedHeader(options);
       header.render();
 

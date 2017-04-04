@@ -15,7 +15,6 @@ var webPackConfigs = [Object.create(webpackConfig)];
 var webPackDevConfigs = [Object.create(webPackDevConfig)];
 var BrowserSyncPlugin = require('browser-sync-webpack-plugin');
 var connectHistory = require('connect-history-api-fallback');
-var del = require('del');
 
 var fallbackOptions = {
   index: '/index.html',
@@ -52,12 +51,6 @@ function htmlReplace(devBuild) {
     };
   } else {
     assets = require('./webpack-assets.json');
-  }
-
-  function postProcessCleanup() {
-    return del([
-      './styles/assets/**/*'
-    ]);
   }
 
   gulp.src('app/index.html')
@@ -107,7 +100,6 @@ gulp.task('clean-assets', function () {
 // Production build
 gulp.task('build', ['clean-assets'], function () {
   gulp.start('webpack:build')
-  postProcessCleanup();
 });
 
 
@@ -119,9 +111,7 @@ gulp.task('build-dev', ['webpack:build-dev'], function () {
     watchPatterns.push(element.watchPattern);
     gutil.log('Adding watch', element.watchPattern);
   });
-
-  postProcessCleanup();
-
+  
   gulp.watch(watchPatterns, ['webpack:build-dev']);
 });
 

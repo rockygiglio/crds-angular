@@ -110,7 +110,7 @@
     "blueimp-load-image": "^1.14.0",
     "bootstrap": "^3.3.7",
     "crds-shared-header": "0.2.3",
-    "crds-styles": "crdschurch/crds-styles",
+    "crds-styles": "0.3.0",
     "es6-shim": "^0.35.1",
     "fastclick": "^1.0.6",
     "iframe-resizer": "^3.5.5",
