@@ -1,20 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Device.Location;
-using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.Results;
 using crds_angular.Controllers.API;
-using crds_angular.Exceptions;
 using crds_angular.Models.Crossroads;
-using crds_angular.Models.Crossroads.Groups;
 using crds_angular.Models.Finder;
-using crds_angular.Models.Json;
 using crds_angular.Services.Interfaces;
-using Crossroads.Web.Common.Configuration;
 using Crossroads.Web.Common.Security;
 using Moq;
 using NUnit.Framework;
@@ -25,124 +18,115 @@ namespace crds_angular.test.controllers
     {
         private FinderController _fixture;
 
-        private Mock<IFinderService> _finderService;
         private Mock<IAddressService> _addressService;
         private Mock<IAddressGeocodingService> _addressGeocodingService;
+        private Mock<IFinderService> _finderService;
+        private Mock<IUserImpersonationService> _userImpersonationService;
+        private Mock<IAuthenticationRepository> _authenticationRepository;
         private Mock<IAwsCloudsearchService> _awsCloudsearchService;
-
-        private Mock<IConfigurationWrapper> _configurationWrapper;
-
-        private const string AuthType = "abc";
-        private const string AuthToken = "123";
-        private readonly string _auth = string.Format("{0} {1}", AuthType, AuthToken);
+        private string _authToken;
+        private string _authType;
 
         [SetUp]
         public void SetUp()
         {
-            _finderService = new Mock<IFinderService>();
             _addressService = new Mock<IAddressService>();
             _addressGeocodingService = new Mock<IAddressGeocodingService>();
-            //_configurationWrapper = new Mock<IConfigurationWrapper>();
-            // _configurationWrapper.Setup(mocked => mocked.GetConfigIntValue("AnywhereGroupTypeId")).Returns(1);
+            _finderService = new Mock<IFinderService>();
+            _userImpersonationService = new Mock<IUserImpersonationService>();
+            _authenticationRepository = new Mock<IAuthenticationRepository>();
+            _awsCloudsearchService = new Mock<IAwsCloudsearchService>();
+
+            _authType = "authType";
+            _authToken = "authToken";
 
             _fixture = new FinderController(_addressService.Object,
                                             _addressGeocodingService.Object,
                                             _finderService.Object,
-                                            new Mock<IUserImpersonationService>().Object,
-                                            new Mock<IAuthenticationRepository>().Object,
-                                            new Mock<IAwsCloudsearchService>().Object);
+                                            _userImpersonationService.Object,
+                                            _authenticationRepository.Object,
+                                            _awsCloudsearchService.Object)
+            {
+                Request = new HttpRequestMessage(),
+                RequestContext = new HttpRequestContext()
+            };
 
-            _fixture.SetupAuthorization(AuthType, AuthToken);
+            _fixture.Request.Headers.Authorization = new AuthenticationHeaderValue(_authType, _authToken);
+        }
+
+        [Test]
+        public void TestObjectInstantiates()
+        {
+            Assert.IsNotNull(_fixture);
         }
 
         [Test]
         public void TestGetMyPinsByContactIdWithResults()
         {
-        //    int contactId = 123;
-        //    string lat = "80.15";
-        //    string lng = "40.25";
+            const int fakecontactid = 12345;
+            const string fakelat = "39.123";
+            const string fakelong = "-84.456";
+            var geoCoordinate = new GeoCoordinate(39.123, -84.456);
+            var listPinDto = GetListOfPinDto();
 
-        //    var pinsForContact = new List<PinDto>
-        //    {
-        //        new PinDto
-        //        {
-        //            Address = new AddressDTO
-        //            {
-        //                AddressID = 741,
-        //                AddressLine1 = "456 Happy Ave",
-        //                City = "Cincinnati",
-        //                State = "OH",
-        //                PostalCode = "45208",
-        //                Latitude = 80.15,
-        //                Longitude = 40.25
-        //            },
-        //            Contact_ID = 123,
-        //            Participant_ID = 456,
-        //            Household_ID = 789,
-        //            EmailAddress = "",
-        //            FirstName = "",
-        //            LastName = "",
-        //            Gathering = new GroupDTO(),
-        //            Host_Status_ID = 0,
-        //            PinType = PinType.GATHERING
-        //        },
-        //        new PinDto
-        //        {
-        //            Address = new AddressDTO
-        //            {
-        //                AddressID = 741,
-        //                AddressLine1 = "123 Main Street",
-        //                City = "Cincinnati",
-        //                State = "OH",
-        //                PostalCode = "45249",
-        //                Latitude = 80.15,
-        //                Longitude = 40.25
-        //            },
-        //            Contact_ID = 123,
-        //            Participant_ID = 456,
-        //            Household_ID = 789,
-        //            EmailAddress = "",
-        //            FirstName = "",
-        //            LastName = "",
-        //            Gathering = null,
-        //            Host_Status_ID = 0,
-        //            PinType = PinType.PERSON
-        //        }
-        //    };
+            _finderService.Setup(m => m.GetGeoCoordsFromLatLong(It.IsAny<string>(),It.IsAny<string>())).Returns(geoCoordinate);
+            _finderService.Setup(m => m.GetMyPins(It.IsAny<string>(), It.IsAny<GeoCoordinate>(), It.IsAny<int>())).Returns(listPinDto);
 
-        //    var randomAddress = new AddressDTO
-        //    {
-        //        AddressID = 741,
-        //        AddressLine1 = "456 Happy Ave",
-        //        City = "Cincinnati",
-        //        State = "OH",
-        //        PostalCode = "45208",
-        //        Latitude = 80.15,
-        //        Longitude = 40.25
-        //    };
+            var response = _fixture.GetMyPinsByContactId(fakecontactid, fakelat, fakelong);
 
-        //    _finderService.Setup(mocked => mocked.GetGeoCoordsFromLatLong(It.IsAny<string>(), It.IsAny<string>()))
-        //        .Returns(new GeoCoordinate(80.15, 40.25));
-        //    _finderService.Setup(mocked => mocked.GetMyPins(_auth, new GeoCoordinate(80.15, 40.25), contactId)).Returns(pinsForContact);
-        //    _finderService.Setup(mocked => mocked.RandomizeLatLong(randomAddress)).Verifiable();
-
-        //    var pinsForContactSearchResults = new PinSearchResultsDto(new GeoCoordinates(80.15, 40.25), pinsForContact);
-
-        //    var result = _fixture.GetMyPinsByContactId(contactId, lat, lng);
-        //    var restResult = (OkNegotiatedContentResult<PinSearchResultsDto>)result;
-
-        //    Assert.IsNotNull(result);
-            
-        //    // restResult.Content.ShouldBeEquivalentTo(pinsForContactSearchResults); // need to remove becuase fluentassertions is not in crds angular test
-        //    Assert.Equals(pinsForContactSearchResults, restResult.Content);
-        //    // Assert.AreEqual(pinsForContactSearchResults, restResult.Content);
-        //    //Assert.AreSame(pinsForContactSearchResults, restResult.Content);
+            Assert.IsNotNull(response);
+            Assert.IsInstanceOf<OkNegotiatedContentResult<PinSearchResultsDto>>(response);
         }
 
         [Test]
-        public void TestGetMyPinsByContactIdNoResults()
+        public void TestGetMyPinsByContactIdReturnsNothing()
         {
+            const int fakecontactid = 12345;
+            const string fakelat = "39.123";
+            const string fakelong = "-84.456";
+            var geoCoordinate = new GeoCoordinate(39.123, -84.456);
+           
+            _finderService.Setup(m => m.GetGeoCoordsFromLatLong(It.IsAny<string>(), It.IsAny<string>())).Returns(geoCoordinate);
+            _finderService.Setup(m => m.GetMyPins(It.IsAny<string>(), It.IsAny<GeoCoordinate>(), It.IsAny<int>())).Returns(new List<PinDto>());
 
+            var response = _fixture.GetMyPinsByContactId(fakecontactid, fakelat, fakelong) as OkNegotiatedContentResult<PinSearchResultsDto>;
+            Assert.That(response != null && response.Content.PinSearchResults.Count == 0);
+        }
+
+        private static List<PinDto> GetListOfPinDto()
+        {
+            var list = new List<PinDto>();
+
+            var addr1 = new AddressDTO
+            {
+                Latitude = 30.1,
+                Longitude = -80.1
+            };
+            var pin1 = new PinDto
+            {
+                Contact_ID = 1,
+                EmailAddress = "pin1@fake.com",
+                FirstName = "pinhead",
+                LastName = "One",
+                Address = addr1
+            };
+
+            var addr2 = new AddressDTO
+            {
+                Latitude = 30.2,
+                Longitude = -80.2
+            };
+            var pin2 = new PinDto
+            {
+                Contact_ID = 2,
+                EmailAddress = "pin2@fake.com",
+                FirstName = "pinhead",
+                LastName = "Two",
+                Address = addr2
+            };
+            list.Add(pin1);
+            list.Add(pin2);
+            return list;
         }
 
     }
