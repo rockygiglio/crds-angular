@@ -71,6 +71,18 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\AutoMapper.3.3.1\lib\net40\AutoMapper.Net4.dll</HintPath>
     </Reference>
+    <Reference Include="AWSSDK.CloudSearch, Version=3.3.0.0, Culture=neutral, PublicKeyToken=885c28607f98e604, processorArchitecture=MSIL">
+      <HintPath>..\packages\AWSSDK.CloudSearch.3.3.0.10\lib\net45\AWSSDK.CloudSearch.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="AWSSDK.CloudSearchDomain, Version=3.3.0.0, Culture=neutral, PublicKeyToken=885c28607f98e604, processorArchitecture=MSIL">
+      <HintPath>..\packages\AWSSDK.CloudSearchDomain.3.3.0.10\lib\net45\AWSSDK.CloudSearchDomain.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="AWSSDK.Core, Version=3.3.0.0, Culture=neutral, PublicKeyToken=885c28607f98e604, processorArchitecture=MSIL">
+      <HintPath>..\packages\AWSSDK.Core.3.3.10.2\lib\net45\AWSSDK.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Common.Logging, Version=3.0.0.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
       <HintPath>..\packages\Common.Logging.3.0.0\lib\net40\Common.Logging.dll</HintPath>
       <Private>True</Private>
@@ -78,6 +90,13 @@
     <Reference Include="Common.Logging.Core, Version=3.0.0.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
       <HintPath>..\packages\Common.Logging.Core.3.0.0\lib\net40\Common.Logging.Core.dll</HintPath>
       <Private>True</Private>
+    </Reference>
+    <Reference Include="Crossroads.ApiVersioning, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Crossroads.ApiVersioning.1.0.4\lib\net45\Crossroads.ApiVersioning.dll</HintPath>
+    </Reference>
+    <Reference Include="Crossroads.ClientApiKeys, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Crossroads.ClientApiKeys.1.0.7\lib\net45\Crossroads.ClientApiKeys.dll</HintPath>
     </Reference>
     <Reference Include="Crossroads.Web.Common, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Crossroads.Web.Common.1.0.13\lib\net45\Crossroads.Web.Common.dll</HintPath>
@@ -193,6 +212,9 @@
     </Reference>
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Web.Cors, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Cors.5.2.3\lib\net45\System.Web.Cors.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.Helpers.dll</HintPath>
@@ -244,6 +266,7 @@
     <Compile Include="controllers\EventParticipantControllerTest.cs" />
     <Compile Include="controllers\GoVolunteerControllerTest.cs" />
     <Compile Include="controllers\GroupToolControllerTest.cs" />
+    <Compile Include="controllers\ImageControllerTest.cs" />
     <Compile Include="controllers\InvitationControllerTest.cs" />
     <Compile Include="controllers\LoginControllerTest.cs" />
     <Compile Include="controllers\LookupControllerTest.cs" />
@@ -259,6 +282,7 @@
     <Compile Include="controllers\UserControllerTest.cs" />
     <Compile Include="DataAccess\EzScanCheckScannerDaoTest.cs" />
     <Compile Include="Exceptions\GroupParticipantRemovalExceptionTest.cs" />
+    <Compile Include="Services\AwsCloudsearchServiceTest.cs" />
     <Compile Include="Services\GroupConnectorServiceTest.cs" />
     <Compile Include="Helpers\Factories.cs" />
     <Compile Include="Models\Crossroads\Events\EventHelpers.cs" />
@@ -369,6 +393,10 @@
   <ItemGroup>
     <Content Include="FsCheckAddin.fs" />
   </ItemGroup>
+  <ItemGroup>
+    <Analyzer Include="..\packages\AWSSDK.CloudSearch.3.3.0.10\analyzers\dotnet\cs\AWSSDK.CloudSearch.CodeAnalysis.dll" />
+    <Analyzer Include="..\packages\AWSSDK.CloudSearchDomain.3.3.0.10\analyzers\dotnet\cs\AWSSDK.CloudSearchDomain.CodeAnalysis.dll" />
+  </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>
@@ -396,10 +424,12 @@
     </PropertyGroup>
     <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
     <Error Condition="!Exists('..\packages\Crossroads.Web.Common.1.0.13\build\Crossroads.Web.Common.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Crossroads.Web.Common.1.0.13\build\Crossroads.Web.Common.targets'))" />
+    <Error Condition="!Exists('..\packages\Crossroads.ClientApiKeys.1.0.7\build\Crossroads.ClientApiKeys.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Crossroads.ClientApiKeys.1.0.7\build\Crossroads.ClientApiKeys.targets'))" />
   </Target>
   <Import Project="$(SlowCheetahTargets)" Condition="Exists('$(SlowCheetahTargets)')" Label="SlowCheetah" />
   <Import Project="..\packages\AutoMapper.3.3.1\tools\AutoMapper.targets" Condition="Exists('..\packages\AutoMapper.3.3.1\tools\AutoMapper.targets')" />
   <Import Project="..\packages\Crossroads.Web.Common.1.0.13\build\Crossroads.Web.Common.targets" Condition="Exists('..\packages\Crossroads.Web.Common.1.0.13\build\Crossroads.Web.Common.targets')" />
+  <Import Project="..\packages\Crossroads.ClientApiKeys.1.0.7\build\Crossroads.ClientApiKeys.targets" Condition="Exists('..\packages\Crossroads.ClientApiKeys.1.0.7\build\Crossroads.ClientApiKeys.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

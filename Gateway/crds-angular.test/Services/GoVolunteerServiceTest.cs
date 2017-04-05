@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using crds_angular.Exceptions;
 using crds_angular.Models.Crossroads.GoVolunteer;
 using crds_angular.Services;
 using crds_angular.Services.Interfaces;
+using crds_angular.Util;
 using Crossroads.Utilities.FunctionalHelpers;
 using Crossroads.Utilities.Services;
 using Crossroads.Web.Common.Configuration;
@@ -765,6 +767,45 @@ namespace crds_angular.test.Services
         }
 
         [Test]
+        public void ShouldGetLeaderDashboard()
+        {
+            var projectId = 1234;
+
+            _registrationService.Setup(m => m.GetRegistrantsForProject(projectId)).Returns(MockProjectRegistrations());
+
+            var result = _fixture.GetRegistrationsForProject(projectId);
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(2, result[0].Adults);
+            Assert.AreEqual(1, result[1].Adults);
+            Assert.AreEqual(3, result[0].Children);
+            Assert.AreEqual(5, result[1].Children);
+        }
+
+        [Test]
+        public void ShouldReturnMemoryStreamWhenCreatingFile()
+        {
+            var projectId = 1234;
+            _registrationService.Setup(m => m.GetRegistrantsForProject(projectId)).Returns(MockProjectRegistrations());
+            var result = _fixture.CreateGroupLeaderExport(projectId);
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOf<MemoryStream>(result);
+            _registrationService.VerifyAll();
+        }
+
+        [Test]
+        public void ShouldBuildExportDatumCorrectly()
+        {
+            var projectId = 1234;
+            _registrationService.Setup(m => m.GetRegistrantsForProject(projectId)).Returns(MockProjectRegistrations());
+            var result = _fixture.CreateGroupLeaderExport(projectId);
+            var resString = System.Text.Encoding.UTF8.GetString(result.ToArray());
+            const string expected = "﻿Name,Email Address,Mobile Phone,Adults,Children\r\nBob Boberson,bob@bob.com,123-456-7890,2,3\r\nAnita Mann,anitamann@aol.com,123-456-7890,1,5\r\n";
+            Assert.AreEqual(expected, resString);
+            _registrationService.VerifyAll();
+        }
+
+        [Test]
         public void ShouldThrowDuplicateUserException()
         {
             const int projectId = 564;
@@ -831,6 +872,33 @@ namespace crds_angular.test.Services
             };
         }
 
+        private List<MpProjectRegistration> MockProjectRegistrations()
+        {
+            return new List<MpProjectRegistration>
+            {
+                new MpProjectRegistration
+                {
+                    ProjectId = 1,
+                    Nickname = "Anita",
+                    LastName = "Mann",
+                    Phone = "123-456-7890",
+                    EmailAddress = "anitamann@aol.com",
+                    SpouseParticipating = false,
+                    FamilyCount = 6
+                },
+                new MpProjectRegistration
+                {
+                    ProjectId = 1,
+                    Nickname = "Bob",
+                    LastName = "Boberson",
+                    Phone = "123-456-7890",
+                    EmailAddress = "bob@bob.com",
+                    SpouseParticipating = true,
+                    FamilyCount = 5
+                }
+            };
+        }
+       
         private string Skills(CincinnatiRegistration registration)
         {
             if (registration.Skills != null && registration.Skills.Where(sk => sk.Checked).ToList().Count > 0)
@@ -857,7 +925,6 @@ namespace crds_angular.test.Services
             }
             ;
             return new HtmlElement("p", els);
-        } 
-
+        }
     }
 }

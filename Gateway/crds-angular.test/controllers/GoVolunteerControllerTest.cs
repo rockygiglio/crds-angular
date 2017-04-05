@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -18,6 +19,7 @@ using Crossroads.Web.Common.Configuration;
 using Crossroads.Web.Common.Security;
 using Moq;
 using NUnit.Framework;
+using crds_angular.Util;
 
 namespace crds_angular.test.controllers
 {
@@ -219,6 +221,32 @@ namespace crds_angular.test.controllers
                 Assert.Throws<HttpResponseException>(() => { _fixture.GetPrepTimes(); });
                 _attributeService.VerifyAll();
             }).QuickCheckThrowOnFailure();
+        }
+
+        [Test]
+        public void ShouldGetTheGroupLeaderExportFile()
+        {
+            var projectId = 123;
+            var stream = new MemoryStream();
+            _goVolunteerService.Setup(m => m.CreateGroupLeaderExport(projectId)).Returns(stream);
+
+            var response = _fixture.GetGroupLeaderExportFile(projectId);
+
+            _goVolunteerService.VerifyAll();
+            Assert.IsInstanceOf<FileResult>(response);
+        }
+
+        [Test]
+        public void ShouldThrowExceptionOnGroupLeaderExportFile()
+        {
+            var projectId = 123;
+            var stream = new MemoryStream();
+            _goVolunteerService.Setup(m => m.CreateGroupLeaderExport(projectId)).Throws<Exception>();
+            Assert.Throws<HttpResponseException>(() =>
+            {
+                var response = _fixture.GetGroupLeaderExportFile(projectId);
+                _goVolunteerService.VerifyAll();
+            });
         }
 
         [Test]

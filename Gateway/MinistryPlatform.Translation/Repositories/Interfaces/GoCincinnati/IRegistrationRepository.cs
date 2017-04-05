@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using MinistryPlatform.Translation.Models.GoCincinnati;
 
 namespace MinistryPlatform.Translation.Repositories.Interfaces.GoCincinnati
@@ -9,5 +10,6 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces.GoCincinnati
         int AddPrepWork(int registrationId, int attributeId, bool spouse);
         int AddEquipment(int registrationId, int equipmentId, string notes);
         int AddProjectPreferences(int registrationId, int projectType, int priority);
+        List<MpProjectRegistration> GetRegistrantsForProject(int projectId);
     }
 }

@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reactive.Linq;
 using System.ServiceModel;
 using crds_angular.Exceptions;
 using crds_angular.Models.Crossroads.GoVolunteer;
 using crds_angular.Services.Interfaces;
+using crds_angular.Util;
 using Crossroads.Utilities.Services;
 using log4net;
 using Crossroads.Web.Common.Configuration;
@@ -186,6 +188,7 @@ namespace crds_angular.Services
                     replyContact = _contactService.GetContactById(projectLeader.PrimaryRegistrationID);
                     mergeData = SetupAnywhereMergeData((AnywhereRegistration) registration, projectLeader.Name);
                     mergeData.Add("Project_Leader_Email_Address", replyContact.Email_Address);
+                    mergeData.Add("Project_ID", projectLeader.ProjectId);
                 }
                 
                 var communication = _communicationService.GetTemplateAsCommunication(templateId,
@@ -273,6 +276,19 @@ namespace crds_angular.Services
             return jsonProject;
         }
 
+        public List<DashboardDatum> GetRegistrationsForProject(int projectId)
+        {
+            var registrants = _registrationService.GetRegistrantsForProject(projectId);
+            return (registrants.Select(datum => new {datum, adults = datum.SpouseParticipating ? 2 : 1}).OrderBy(s => s.datum.LastName).Select(@t => new DashboardDatum
+            {
+                Name = @t.datum.Nickname + " " + @t.datum.LastName,
+                EmailAddress = @t.datum.EmailAddress,
+                MobilePhone = @t.datum.Phone,
+                Adults = @t.adults,
+                Children = @t.datum.FamilyCount - @t.adults
+            })).ToList();
+        }
+
         public Dictionary<string, object> SetupMergeData(CincinnatiRegistration registration)
         {
             var styles = Styles();
@@ -331,6 +347,14 @@ namespace crds_angular.Services
             return dict;
         }
 
+        public MemoryStream CreateGroupLeaderExport(int projectId)
+        {
+            var glExport = GetRegistrationsForProject(projectId);
+            var stream = new MemoryStream();
+            CSV.Create(glExport, DashboardDatum.Headers, stream, ",");
+            return stream;
+        }
+
         private Dictionary<string, object> SetupAnywhereMergeData(AnywhereRegistration registration, string projectLeaderName)
         {
             var adultsParticipating = registration.SpouseParticipation ? 2 : 1;
@@ -346,9 +370,9 @@ namespace crds_angular.Services
                 {"Number_Of_Children", registration.NumberOfChildren},
                 {"Group_Connector", projectLeaderName},
                 {"Adults_Participating", adultsParticipating},
-                {"Total_Volunteers", registration.NumberOfChildren + adultsParticipating}
+                {"Total_Volunteers", registration.NumberOfChildren + adultsParticipating},
+                {"Base_Url", _configurationWrapper.GetConfigValue("BaseUrl") }
             };
-
             return merge;
         }
 
