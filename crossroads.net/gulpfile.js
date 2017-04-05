@@ -71,7 +71,7 @@ function htmlReplace(devBuild) {
       formbuilderjs: {src: assets.formbuilder.js, tpl: '<script src="%s" type="text/javascript"  defer></script>'},
       formlybuilderjs: {src: assets.formlybuilder.js, tpl: '<script src="%s" type="text/javascript"  defer></script>'},
       js: {src: assets.main.js, tpl: '<script src="%s" type="text/javascript"  defer></script>'},
-      legacycss: assets.legacy.css,
+      legacycss: assets.legacy.css
     })).pipe(gulp.dest('./'));
 
   gulp.src('./lib/load-image.all.min.js')
