@@ -30,7 +30,7 @@ describe('MyServeController', function() {
     $httpBackend = $injector.get('$httpBackend');
     mockServeResource = $injector.get('ServeOpportunities');
     Session = $injector.get('Session');
-    mockGroups = $injector("Groups");
+    mockGroups = $injector.get("Groups");
   }));
 
   describe('Serve Controller', function(){
