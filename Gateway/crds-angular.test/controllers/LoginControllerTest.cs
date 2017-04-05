@@ -1,5 +1,7 @@
-﻿using System.Net.Http;
+﻿using System.Linq;
+using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Reflection;
 using System.Web.Http.Controllers;
 using System.Web.Http.Results;
 using crds_angular.Controllers.API;
@@ -10,6 +12,7 @@ using ILoginService = crds_angular.Services.Interfaces.ILoginService;
 using IPersonService = crds_angular.Services.Interfaces.IPersonService;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 using crds_angular.Services.Interfaces;
+using Crossroads.ClientApiKeys;
 using Crossroads.Web.Common.Security;
 
 namespace crds_angular.test.controllers
@@ -52,6 +55,24 @@ namespace crds_angular.test.controllers
             resetRequest.Email = "test_email";
             var result = loginController.RequestPasswordReset(resetRequest);
             Assert.AreEqual(typeof(OkResult), result.GetType());
+        }
+
+        [Test]
+        public void LoginPostShouldIgnoreClientApiKey()
+        {
+            var loginMethod = loginController.GetType().GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly).ToList().Find(m => m.Name.Equals("Post"));
+            Assert.IsNotNull(loginMethod.GetCustomAttribute<IgnoreClientApiKeyAttribute>(), $"Login Post method should have [IgnoreClientApiKey] attribute, so the check scanner controller can use it");
+        }
+
+        [Test]
+        public void AllMethodsExceptLoginPostShouldNotIgnoreClientApiKey()
+        {
+            var publicMethods =
+                loginController.GetType().GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly).ToList().FindAll(m => !m.Name.Equals("Post"));
+            publicMethods.ForEach(m =>
+            {
+                Assert.IsNull(m.GetCustomAttribute<IgnoreClientApiKeyAttribute>(), $"Method {m.Name} should not ignore client API key");
+            });
         }
     }
 }
