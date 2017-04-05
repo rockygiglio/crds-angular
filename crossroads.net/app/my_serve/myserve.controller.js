@@ -38,7 +38,7 @@
     vm.groups = Groups;
     vm.lastDate = null;
     vm.loadMore = false;
-    vm.loadNextMonth = loadNextWeek;
+    vm.loadNextMonth = loadNextWeek; //KD - Yeah, I know we should probably rename this to but we're trying to put in a quick fix for SU2S slowness - US7704. Bigger and better changes coming later
     vm.loadText = 'Load More';
     vm.original = [];
     vm.showButton = showButton;
