@@ -113,7 +113,7 @@ UPDATE [dbo].[dp_Domains]
       ,[External_Server_Name] = @externalServerName
       ,[Application_Title] = @applicationTitle
       ,[Domain_GUID] = @domainGuid
-      ,[API_Password] = @apiPassword
+      --,[API_Service_Password] = @apiPassword -- Commented by John Cleaver 4/5/17 pending info from TM
       ,[GMT_Offset] = -5
       ,[Company_Contact] = 5
       ,[Database_Name] = null
