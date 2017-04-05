@@ -45,6 +45,7 @@ describe('MyServeController', function() {
         }
       };
       controller = $controller('MyServeController', { $scope: $scope });
+      controller.runCtlInTestMode = true;
     }));
 
     it('should show the opportunities message', function(){

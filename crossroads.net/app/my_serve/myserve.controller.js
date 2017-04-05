@@ -43,6 +43,7 @@
     vm.showButton = showButton;
     vm.showNoOpportunitiesMsg = showNoOpportunitiesMsg;
     vm.isLeader = leader.isLeader;
+    vm.runCtlInTestMode = false;
 
     activate();
 
@@ -73,10 +74,12 @@
 
     function activate() {
       vm.lastDate = formatDate(new Date(), 28);
-      Groups.$promise
-            .then((groups) => {
-              vm.groups = groups;
-            });
+      if (!vm.runCtlInTestMode) {
+        Groups.$promise
+              .then((groups) => {
+                vm.groups = groups;
+              });
+      }
     }
 
     function addOneMonth(date) {
