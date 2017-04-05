@@ -579,6 +579,17 @@ namespace MinistryPlatform.Translation.Test.Services
 
             Assert.NotNull(groupConnectors);
         }
+
+        [Test]
+        public void GetRegistrationsForProjectId()
+        {
+            var searchString = "Group_Connector_ID_Table_Project_ID_Table.[Project_ID] = 26";
+            var columnList =
+                "Group_Connector_ID_Table_Project_ID_Table.[Project_ID], Registration_ID_Table_Participant_ID_Table_Contact_ID_Table.[Nickname], Registration_ID_Table_Participant_ID_Table_Contact_ID_Table.[Last_Name], Registration_ID_Table_Participant_ID_Table_Contact_ID_Table.[Mobile_Phone], Registration_ID_Table_Participant_ID_Table_Contact_ID_Table.[Email_Address], Registration_ID_Table.[Spouse_Participation], Registration_ID_Table.[_Family_Count]";
+            var registrations = _fixture.UsingAuthenticationToken(_authToken).Search<MpProjectRegistration>(searchString, columnList);
+
+            Assert.NotNull(registrations);
+        }
     }
 
     [MpRestApiTable(Name = "Payment_Types")]

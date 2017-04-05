@@ -33,7 +33,7 @@ module.exports = {
   output: {
     path: './assets',
     publicPath: '/assets/',
-    filename: '[name].[hash].js',
+    filename: '[name].js',
   },
   resolve: {
     extensions: ['', '.js', '.jsx'],

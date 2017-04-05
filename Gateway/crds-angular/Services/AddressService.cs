@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Device.Location;
 using System.Linq;
 using crds_angular.Exceptions;
 using crds_angular.Models.Crossroads;
+using crds_angular.Models.Finder;
 using crds_angular.Services.Interfaces;
 using log4net;
 using MinistryPlatform.Translation.Models;
@@ -41,6 +43,41 @@ namespace crds_angular.Services
             }
 
             address.AddressID = found ? UpdateAddress(mpAddress) : CreateAddress(mpAddress);
+        }
+
+        public GeoCoordinate GetGeoLocationCascading(AddressDTO addressReal)
+        {
+            var address = new AddressDTO(addressReal);
+
+            var coords = new GeoCoordinate(39.1594616, -84.4255526);
+            //get by the full address. If that fails get by city state. If that fails get by state only
+            try
+            {
+                coords = _addressGeocodingService.GetGeoCoordinates(address);
+            }
+            catch (InvalidAddressException )
+            {
+                address.AddressLine1 = "";
+                address.AddressLine2 = "";
+                try
+                {
+                    coords = _addressGeocodingService.GetGeoCoordinates(address);
+                }
+                catch (InvalidAddressException )
+                {
+                    try
+                    {
+                        address.City = "";
+                        address.PostalCode = "";
+                        coords = _addressGeocodingService.GetGeoCoordinates(address);
+                    }
+                    catch (InvalidAddressException )
+                    {
+                        _logger.Debug("Using default location for geocode.");
+                    }
+                }
+            }
+            return coords;
         }
 
         public void SetGeoCoordinates(AddressDTO address)

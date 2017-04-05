@@ -207,5 +207,8 @@ crossroads.net/.vscode/settings.json
 # Ignore MinistryPlatform.config files in AsyncJobs.  These are linked to crds-angular, but are copied locally during build
 Gateway/Crossroads.AsyncJobs/MinistryPlatform.config
 Gateway/Crossroads.AsyncJobs/MinistryPlatform.*.config
+Gateway/Crossroads.AsyncJobs/Unity.config
 **/Crossroads.Web.Common-Unity.config
 **/Crossroads.ClientApiKeys-Unity.config
+
+.DS_Store

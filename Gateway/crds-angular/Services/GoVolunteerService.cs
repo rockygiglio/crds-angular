@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reactive.Linq;
 using System.ServiceModel;
 using crds_angular.Exceptions;
 using crds_angular.Models.Crossroads.GoVolunteer;
 using crds_angular.Services.Interfaces;
+using crds_angular.Util;
 using Crossroads.Utilities.Services;
 using log4net;
 using Crossroads.Web.Common.Configuration;
@@ -128,18 +130,19 @@ namespace crds_angular.Services
             try
             {
                 var apiToken = _apiUserRepository.GetToken();
-                MpGroupConnector mpGroupConnector = _groupConnectorService.GetGroupConnectorByProjectId(projectId, apiToken);
+                var mpGroupConnector = _groupConnectorService.GetGroupConnectorByProjectId(projectId, apiToken);
                 registration.GroupConnectorId = mpGroupConnector.Id;
 
                 var participantId = RegistrationContact(registration, token);
-                CreateAnywhereRegistrationDto(registration, participantId);
-
+                var registrationId = CreateAnywhereRegistrationDto(registration, participantId);
+                ChildAgeGroups(registration, registrationId);
+                Observable.Start(() => SendMail(registration));
                 return registration;
             }
             catch (DuplicateUserException e)
             {
                 _logger.Error(e.Message, e);
-                throw e;
+                throw;
             }
             catch (Exception e)
             {
@@ -159,39 +162,72 @@ namespace crds_angular.Services
             }).ToList();
         }
 
-        public bool SendMail(CincinnatiRegistration registration)
+        public bool SendMail(Registration registration)
         {
             try
             {
-                var templateId = _configurationWrapper.GetConfigIntValue("GoVolunteerEmailTemplate");
-                var fromContactId = _configurationWrapper.GetConfigIntValue("GoVolunteerEmailFromContactId");
-                var fromContact = _contactService.GetContactById(fromContactId);
-
-
-                var mergeData = SetupMergeData(registration);
-
+                int templateId;
+                int leaderTemplateId = 0;
+                MpMyContact fromContact;
+                MpMyContact replyContact;
+                Dictionary<string, object> mergeData;
+                if (registration.GetType() == typeof(CincinnatiRegistration))
+                {
+                    templateId = _configurationWrapper.GetConfigIntValue("GoVolunteerEmailTemplate");
+                    var fromContactId = _configurationWrapper.GetConfigIntValue("GoVolunteerEmailFromContactId");
+                    fromContact = _contactService.GetContactById(fromContactId);
+                    replyContact = fromContact;
+                    mergeData = SetupMergeData((CincinnatiRegistration) registration);
+                }
+                else
+                {
+                    templateId = _configurationWrapper.GetConfigIntValue("GoLocalAnywhereEmailTemplate");
+                    leaderTemplateId = _configurationWrapper.GetConfigIntValue("GoLocalAnywhereLeaderEmailTemplate");
+                    var projectLeader = _groupConnectorService.GetGroupConnectorById(registration.GroupConnectorId);
+                    fromContact = _contactService.GetContactById(_configurationWrapper.GetConfigIntValue("GoLocalAnywhereFromContactId"));
+                    replyContact = _contactService.GetContactById(projectLeader.PrimaryRegistrationID);
+                    mergeData = SetupAnywhereMergeData((AnywhereRegistration) registration, projectLeader.Name);
+                    mergeData.Add("Project_Leader_Email_Address", replyContact.Email_Address);
+                    mergeData.Add("Project_ID", projectLeader.ProjectId);
+                }
+                
                 var communication = _communicationService.GetTemplateAsCommunication(templateId,
-                                                                                     fromContactId,
+                                                                                     fromContact.Contact_ID,
                                                                                      fromContact.Email_Address,
-                                                                                     fromContactId,
-                                                                                     fromContact.Email_Address,
+                                                                                     replyContact.Contact_ID,
+                                                                                     replyContact.Email_Address,
                                                                                      registration.Self.ContactId,
                                                                                      registration.Self.EmailAddress,
                                                                                      mergeData);
                 var returnVal = _communicationService.SendMessage(communication);
-                if (registration.SpouseParticipation && returnVal > 0)
+                if (registration.SpouseParticipation && registration.Spouse != null && returnVal > 0)
                 {
                     var spouseTemplateId = _configurationWrapper.GetConfigIntValue("GoVolunteerEmailSpouseTemplate");
                     var spouseCommunication = _communicationService.GetTemplateAsCommunication(spouseTemplateId,
-                                                                                               fromContactId,
+                                                                                               fromContact.Contact_ID,
                                                                                                fromContact.Email_Address,
-                                                                                               fromContactId,
+                                                                                               fromContact.Contact_ID,
                                                                                                fromContact.Email_Address,
                                                                                                registration.Spouse.ContactId,
                                                                                                registration.Spouse.EmailAddress,
                                                                                                mergeData);
                     _communicationService.SendMessage(spouseCommunication);
                 }
+
+                if (leaderTemplateId != 0)
+                {
+                    mergeData.Add("Anywhere_GO_Contact", fromContact.Email_Address);
+                    var leaderCommunication = _communicationService.GetTemplateAsCommunication(leaderTemplateId,
+                                                                                               fromContact.Contact_ID,
+                                                                                               fromContact.Email_Address,
+                                                                                               fromContact.Contact_ID,
+                                                                                               fromContact.Email_Address,
+                                                                                               replyContact.Contact_ID,
+                                                                                               replyContact.Email_Address,
+                                                                                               mergeData);
+                    _communicationService.SendMessage(leaderCommunication);
+                }
+
                 return returnVal > 0;
             }
             catch (Exception e)
@@ -238,6 +274,19 @@ namespace crds_angular.Services
             jsonProject.ContactEmail = groupConnector.Value.PrimaryContactEmail;
             jsonProject.ContactDisplayName = name;
             return jsonProject;
+        }
+
+        public List<DashboardDatum> GetRegistrationsForProject(int projectId)
+        {
+            var registrants = _registrationService.GetRegistrantsForProject(projectId);
+            return (registrants.Select(datum => new {datum, adults = datum.SpouseParticipating ? 2 : 1}).OrderBy(s => s.datum.LastName).Select(@t => new DashboardDatum
+            {
+                Name = @t.datum.Nickname + " " + @t.datum.LastName,
+                EmailAddress = @t.datum.EmailAddress,
+                MobilePhone = @t.datum.Phone,
+                Adults = @t.adults,
+                Children = @t.datum.FamilyCount - @t.adults
+            })).ToList();
         }
 
         public Dictionary<string, object> SetupMergeData(CincinnatiRegistration registration)
@@ -296,6 +345,35 @@ namespace crds_angular.Services
             }
 
             return dict;
+        }
+
+        public MemoryStream CreateGroupLeaderExport(int projectId)
+        {
+            var glExport = GetRegistrationsForProject(projectId);
+            var stream = new MemoryStream();
+            CSV.Create(glExport, DashboardDatum.Headers, stream, ",", true);
+            return stream;
+        }
+
+        private Dictionary<string, object> SetupAnywhereMergeData(AnywhereRegistration registration, string projectLeaderName)
+        {
+            var adultsParticipating = registration.SpouseParticipation ? 2 : 1;
+            var birthDate = DateTime.Parse(registration.Self.DateOfBirth);
+            var merge = new Dictionary<string, object>
+            {
+                {"Nickname", registration.Self.FirstName},
+                {"LastName", registration.Self.LastName},
+                {"Participant_Email_Address", registration.Self.EmailAddress},
+                {"Date_Of_Birth", birthDate.Month + "/" + birthDate.Day + "/" + birthDate.Year},
+                {"Mobile_Phone", registration.Self.MobilePhone},
+                {"Spouse_Participating", registration.SpouseParticipation ? "Yes": "No"},
+                {"Number_Of_Children", registration.NumberOfChildren},
+                {"Group_Connector", projectLeaderName},
+                {"Adults_Participating", adultsParticipating},
+                {"Total_Volunteers", registration.NumberOfChildren + adultsParticipating},
+                {"Base_Url", _configurationWrapper.GetConfigValue("BaseUrl") }
+            };
+            return merge;
         }
 
         private List<HtmlElement> PrepWorkDetails(CincinnatiRegistration registration)
@@ -449,6 +527,16 @@ namespace crds_angular.Services
             {
                 _registrationService.AddAgeGroup(registrationId, ageGroup.Id, ageGroup.Count);
             }
+        }
+
+        private void ChildAgeGroups(AnywhereRegistration registration, int registrationId)
+        {
+            var ageGroup = new ChildrenAttending
+            {
+                Count = registration.NumberOfChildren,
+                Id = _configurationWrapper.GetConfigIntValue("GoLocalRegistrationChildrenAttribute")
+            };            
+            _registrationService.AddAgeGroup(registrationId, ageGroup.Id, ageGroup.Count);
         }
 
         private MpContact SpouseInformation(CincinnatiRegistration registration)

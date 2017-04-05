@@ -279,6 +279,16 @@ namespace MinistryPlatform.Translation.Repositories
             {
                 try
                 {
+                    // Validate phone numbers' format before update
+                    if (profileDictionary.ContainsKey("Mobile_Phone"))
+                    {
+                        var mobileNumber = profileDictionary["Mobile_Phone"] as string;
+                        if (!Helpers.PhoneNumberValidator.Validate(mobileNumber))
+                        {
+                            throw new ApplicationException("Mobile phone format is wrong. Format should be ###-###-####");
+                        }
+                    }
+
                     _ministryPlatformService.UpdateRecord(_configurationWrapper.GetConfigIntValue("Contacts"), profileDictionary, token);
                     return 1;
                 }
@@ -298,6 +308,24 @@ namespace MinistryPlatform.Translation.Repositories
             {
                 try
                 {
+                    if (profileDictionary.ContainsKey("Mobile_Phone"))
+                    {
+                        var mobileNumber = profileDictionary["Mobile_Phone"] as string;
+                        if (!Helpers.PhoneNumberValidator.Validate(mobileNumber))
+                        {
+                            throw new ApplicationException("Mobile phone format is wrong. Format should be ###-###-####");
+                        }
+                    }
+                    if (profileDictionary.ContainsKey("Home_Phone"))
+                    {
+                        var homeNumber = householdDictionary["Home_Phone"] as string;
+
+                        if (!Helpers.PhoneNumberValidator.Validate(homeNumber))
+                        {
+                            throw new ApplicationException("Home phone format is wrong. Format should be ###-###-####");
+                        }
+                    }
+
                     _ministryPlatformService.UpdateRecord(_configurationWrapper.GetConfigIntValue("Contacts"), profileDictionary, token);
                     UpdateHouseholdAddress(contactId, householdDictionary, addressDictionary);
                     return 1;

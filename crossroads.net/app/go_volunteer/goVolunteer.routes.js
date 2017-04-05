@@ -1,7 +1,6 @@
 import constants from '../constants';
-import { CmsInfo, Meta, GetProject, GetProfile, GetCities, GetOrganizations } from './goVolunteer.resolves';
+import { CmsInfo, Meta, GetProject, GetDashboard, GetProfile, GetCities, GetOrganizations } from './goVolunteer.resolves';
 
-const cookieNames = constants.COOKIES;
 
 
 export default function GoVolunteerRoutes($stateProvider, $urlMatcherFactoryProvider) {
@@ -14,6 +13,28 @@ export default function GoVolunteerRoutes($stateProvider, $urlMatcherFactoryProv
     .state('go-local', {
       parent: 'goCincinnati',
       abstract: true
+    })
+    .state('go-local.anywhereleader', {
+      parent: 'goCincinnati',
+      url: '/go-local/dashboard/:projectId',
+      template: '<anywhere-leader></anywhere-leader>',
+      data: {
+        meta: {
+          title: 'GO Local',
+          description: ''
+        },
+        isProtected: true
+      },
+      resolve: {
+        $state: '$state',
+        $q: '$q',
+        $log: '$log',
+        loggedin: crds_utilities.optimisticallyCheckLoggedin,
+        GoVolunteerDataService: 'GoVolunteerDataService',
+        GoVolunteerService: 'GoVolunteerService',
+        GetProject,
+        GetDashboard
+      }
     })
     .state('go-local.organizations', {
       parent: 'goCincinnati',
@@ -98,7 +119,6 @@ export default function GoVolunteerRoutes($stateProvider, $urlMatcherFactoryProv
         PrepWork: PrepWork
       }
     })
-
     .state('go-local.anywherepage', {
       parent: 'goCincinnati',
       url: '/go-local/:initiativeId/crossroads/:city/:projectId',
@@ -160,168 +180,7 @@ export default function GoVolunteerRoutes($stateProvider, $urlMatcherFactoryProv
       resolve: {
         $state: '$state'
       }
-    })
-/*    .state('go-volunteer', {*/
-      //parent: 'goCincinnati',
-      //abstract: true
-    //})
-    //// TODO: Currently we are expecting the person to choose a city before seeing the
-    //// organization page. In the new GO Local flow, the organization page also lists the
-    //// Cities. We need to rethink this routing structure to handle showing all organizaitons
-    //// before dealing with city.
-    //.state('go-volunteer.city', {
-      //parent: 'goCincinnati',
-      //url: '/go-volunteer/:city',
-      //template: '<go-volunteer-city></go-volunteer-city>',
-      //data: {
-        //meta: {
-          //title: 'Some Title',
-          //description: ''
-        //}
-      //},
-      //resolve: {
-        //$stateParams: '$stateParams',
-        //Page: 'Page',
-        //$q: '$q',
-        //GoVolunteerService: 'GoVolunteerService',
-        //CmsInfo,
-        //Meta
-      //}
-    //})
-    //.state('go-volunteer.city.organizations', {
-        //parent: 'goCincinnati',
-        //url: '/go-volunteer/:city/organizations',
-        //template: '<go-volunteer-organizations></go-volunteer-organizations>',
-        //data: {
-          //meta: {
-            //title: 'Some Title',
-            //description: ''
-          //}
-        //},
-        //resolve: {
-          //CmsInfo: CmsInfo,
-          //Meta: Meta,
-          //$state: '$state',
-          //LoggedIn: function($state) {
-            //if (crds_utilities.getCookie(cookieNames.SESSION_ID) !== undefined) {
-              //$state.go('go-volunteer.crossroadspage', {page: 'profile'});
-            //}
-          //}
-        //}
-      //})
-    //.state('go-volunteer.signinpage', {
-      //parent: 'goCincinnati',
-      //url: '/go-volunteer/cincinnati/crossroads/signin',
-      //template: '<go-volunteer-signin> </go-volunteer-signin>',
-      //data: {
-        //meta: {
-          //title: 'Some Title',
-          //description: ''
-        //}
-      //},
-      //resolve: {
-        //$state: '$state',
-        //CmsInfo,
-        //Meta
-      //}
-    //})
-    //.state('go-volunteer.crossroadspage', {
-      //parent: 'goCincinnati',
-      //url: '/go-volunteer/cincinnati/crossroads/:page',
-      //template: '<go-volunteer-page></go-volunteer-page>',
-      //data: {
-        //meta: {
-          //title: 'Some Title',
-          //description: ''
-        //},
-        //isProtected: true
-      //},
-      //resolve: {
-        //Meta,
-        //Profile: 'Profile',
-        //Organizations: 'Organizations',
-        //$cookies: '$cookies',
-        //Session: 'Session',
-        //$stateParams: '$stateParams',
-        //SkillsService: 'SkillsService',
-        //loggedin: crds_utilities.optimisticallyCheckLoggedin,
-        //$q: '$q',
-        //GoVolunteerService: 'GoVolunteerService',
-        //Person,
-        //GroupFindConnectors,
-        //PrepWork,
-        //Spouse: GetSpouse,
-        //Organization,
-        //Equipment,
-        //ChildrenOptions,
-        //CmsInfo,
-        //Locations,
-        //ProjectTypes,
-        //Skills
-      //}
-    //})
-    //.state('go-volunteer.anywherepage', {
-      //parent: 'goCincinnati',
-      //url: '/go-volunteer/anywhere/:city/profile',
-      //template: '<go-volunteer-anywhere-profile></go-volunteer-anywhere-profile>',
-      //params: {
-        //page: 'anywhere-profile'
-      //},
-      //data: {
-        //meta: {
-          //title: 'Some Title',
-          //description: ''
-        //}
-      //},
-      //resolve: {
-      //}
-    //})
-    //.state('go-volunteer.cms', {
-      //parent: 'goCincinnati',
-      //url: '/go-volunteer/:city/:cmsPage',
-      //template: '<go-volunteer-cms></go-volunteer-cms>',
-      //data: {
-        //meta: {
-          //title: 'Some Title',
-          //description: ''
-        //}
-      //},
-      //resolve: {
-        //$stateParams: '$stateParams',
-        //$q: '$q',
-        //CmsInfo,
-        //Meta,
-        //Organization,
-        //Locations,
-      //}
-    //})
-    //.state('go-volunteer.page', {
-      //parent: 'goCincinnati',
-      //url: '/go-volunteer/:city/:organization/:page',
-      //template: '<go-volunteer-page></go-volunteer-page>',
-      //data: {
-        //meta: {
-          //title: 'Some Title',
-          //description: ''
-        //}
-      //},
-      //resolve: {
-        //$stateParams: '$stateParams',
-        //$q: '$q',
-        //SkillsService: 'SkillsService',
-        //CmsInfo: CmsInfo,
-        //Meta: Meta,
-        //GroupFindConnectors: GroupFindConnectors,
-        //Organization: Organization,
-        //Locations: Locations,
-        //ProjectTypes: ProjectTypes,
-        //Skills: Skills,
-        //ChildrenOptions: ChildrenOptions,
-        //Equipment: Equipment,
-        //PrepWork: PrepWork
-      //}
-    /*})*/
-    ;
+    });
 }
 
 function ChildrenOptions(GoVolunteerService, GoVolunteerDataService, $stateParams, $q) {
@@ -484,7 +343,7 @@ function Skills(GoVolunteerService, SkillsService, $stateParams, $q) {
 function Organization(GoVolunteerService, $state, $stateParams, $q, Organizations) {
   var deferred = $q.defer();
   var param = 'crossroads';
-  if ($state.next.name === 'go-volunteer.page') {
+  if ($state.next.name === 'go-local.page') {
     param = $stateParams.organization;
   }
 

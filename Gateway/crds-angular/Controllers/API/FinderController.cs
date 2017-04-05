@@ -15,12 +15,16 @@ using crds_angular.Security;
 using crds_angular.Services.Interfaces;
 using Crossroads.ApiVersioning;
 using Crossroads.Web.Common.Security;
+using System.ComponentModel.DataAnnotations;
+using crds_angular.Models.AwsCloudsearch;
+using crds_angular.Models.Crossroads.Groups;
 using log4net;
 
 namespace crds_angular.Controllers.API
 {
     public class FinderController : MPAuth
     {
+        private readonly IAwsCloudsearchService _awsCloudsearchService;
         private readonly IAddressService _addressService;
         private readonly IFinderService _finderService;
         private readonly IAddressGeocodingService _addressGeocodingService;
@@ -30,12 +34,14 @@ namespace crds_angular.Controllers.API
                                 IAddressGeocodingService addressGeocodingService, 
                                 IFinderService finderService,
                                 IUserImpersonationService userImpersonationService,
-                                IAuthenticationRepository authenticationRepository)
+                                IAuthenticationRepository authenticationRepository,
+                                IAwsCloudsearchService awsCloudsearchService)
             : base(userImpersonationService, authenticationRepository)
         {
             _addressService = addressService;
             _finderService = finderService;
-            _addressGeocodingService = addressGeocodingService; 
+            _addressGeocodingService = addressGeocodingService;
+            _awsCloudsearchService = awsCloudsearchService;
         }
 
         [ResponseType(typeof(PinDto))]
@@ -46,12 +52,48 @@ namespace crds_angular.Controllers.API
         {
             try
             {
-                var list = _finderService.GetPinDetails(participantId);
+                var list = _finderService.GetPinDetailsForPerson(participantId);
                 return Ok(list);
             }
             catch (Exception ex)
             {
                 var apiError = new ApiErrorDto("Get Pin Details Failed", ex);
+                throw new HttpResponseException(apiError.HttpResponseMessage);
+            }
+        }
+
+        [ResponseType(typeof(PinDto))]
+        [VersionedRoute(template: "finder/pinByGroupID/{groupId}", minimumVersion: "1.0.0")]
+        [System.Web.Http.Route("finder/pinByGroupID/{groupId}")]
+        [System.Web.Http.HttpGet]
+        public IHttpActionResult GetPinDetailsByGroup([FromUri]int groupId)
+        {
+            try
+            {
+                var list = _finderService.GetPinDetailsForGroup(groupId);
+                return Ok(list);
+            }
+            catch (Exception ex)
+            {
+                var apiError = new ApiErrorDto("Get Pin Details Failed", ex);
+                throw new HttpResponseException(apiError.HttpResponseMessage);
+            }
+        }
+
+        [ResponseType(typeof(GroupParticipantDTO[]))]
+        [VersionedRoute(template: "finder/participants/{groupId}", minimumVersion: "1.0.0")]
+        [System.Web.Http.Route("finder/participants/{groupId}")]
+        [System.Web.Http.HttpGet]
+        public IHttpActionResult GetParticipantsForGroup([FromUri]int groupId)
+        {
+            try
+            {
+                var list = _finderService.GetParticipantsForGroup(groupId);
+                return Ok(list);
+            }
+            catch (Exception ex)
+            {
+                var apiError = new ApiErrorDto("Get Group Participants Failed", ex);
                 throw new HttpResponseException(apiError.HttpResponseMessage);
             }
         }
@@ -65,8 +107,9 @@ namespace crds_angular.Controllers.API
             try
             {
                 var participantId = _finderService.GetParticipantIdFromContact(contactId);
-                var pin = _finderService.GetPinDetails(participantId);
-                bool pinHasInvalidGeoCoords = ( (pin.Address.Latitude == null || pin.Address.Longitude == null)
+                //refactor this to JUST get location;
+                var pin = _finderService.GetPinDetailsForPerson(participantId);
+                bool pinHasInvalidGeoCoords = ( (pin.Address == null) || (pin.Address.Latitude == null || pin.Address.Longitude == null)
                                                || (pin.Address.Latitude == 0 && pin.Address.Longitude == 0));
 
                 if (pinHasInvalidGeoCoords && throwOnEmptyCoordinates)
@@ -90,7 +133,7 @@ namespace crds_angular.Controllers.API
         {
             try
             {
-                var address = _finderService.GetAddressForIp(ipAddress.Replace('-','.'));
+                var address = _finderService.GetAddressForIp(ipAddress.Replace('$','.'));
                 return Ok(address);
             }
             catch (Exception ex)
@@ -98,6 +141,53 @@ namespace crds_angular.Controllers.API
                 var apiError = new ApiErrorDto("Get Pin By Ip Failed", ex);
                 throw new HttpResponseException(apiError.HttpResponseMessage);
             }
+        }
+
+
+        [RequiresAuthorization]
+        [ResponseType(typeof(AddressDTO))]
+        [VersionedRoute(template: "finder/group/address/{groupId}", minimumVersion: "1.0.0")]
+        [System.Web.Http.Route("finder/group/address/{groupId}")]
+        [System.Web.Http.HttpGet]
+        public IHttpActionResult GetGroupAddress([FromUri] int groupId)
+        {
+            return Authorized(token =>
+            {
+                try
+                {
+                    var address = _finderService.GetGroupAddress(token, groupId);
+                    return (Ok(address));
+                }
+                catch (Exception e)
+                {
+                    _logger.Error("Could not get address", e);
+                    var apiError = new ApiErrorDto("Get Address Failed", e);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+            });
+        }
+
+        [RequiresAuthorization]
+        [ResponseType(typeof(AddressDTO))]
+        [VersionedRoute(template: "finder/person/address/{participantId}", minimumVersion: "1.0.0")]
+        [System.Web.Http.Route("finder/person/address/{participantId}")]
+        [System.Web.Http.HttpGet]
+        public IHttpActionResult GetPersonAddress([FromUri] int participantId)
+        {
+            return Authorized(token =>
+            {
+                try
+                {
+                    var address = _finderService.GetPersonAddress(token, participantId);
+                    return (Ok(address));
+                }
+                catch (Exception e)
+                {
+                    _logger.Error("Could not get address", e);
+                    var apiError = new ApiErrorDto("Get Address Failed", e);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+            });
         }
 
         /// <summary>
@@ -127,6 +217,12 @@ namespace crds_angular.Controllers.API
 
                     _finderService.EnablePin((int)pin.Participant_ID);
                     _logger.DebugFormat("Successfully created pin for contact {0} ", pin.Contact_ID);
+
+                    //Ensure that address id is available
+                    var personPin = _finderService.GetPinDetailsForPerson((int)pin.Participant_ID);
+
+                    _awsCloudsearchService.UploadNewPinToAWS(personPin); 
+
                     return (Ok(pin));
                 }
                 catch (Exception e)
@@ -139,19 +235,29 @@ namespace crds_angular.Controllers.API
         }
 
         [ResponseType(typeof(PinSearchResultsDto))]
-        [VersionedRoute(template: "finder/findpinsbyaddress/{userSearchAddress}/{lat?}/{lng?}", minimumVersion: "1.0.0")]
-        [System.Web.Http.Route("finder/findpinsbyaddress/{userSearchAddress}/{lat?}/{lng?}")]
+        [VersionedRoute(template: "finder/findpinsbyaddress/{userSearchAddress}/{lat?}/{lng?}/{upperleftlat?}/{upperleftlng?}/{bottomrightlat?}/{bottomrightlng?}", minimumVersion: "1.0.0")]
+        [System.Web.Http.Route("finder/findpinsbyaddress/{userSearchAddress}/{lat?}/{lng?}/{upperleftlat?}/{upperleftlng?}/{bottomrightlat?}/{bottomrightlng?}")]
         [System.Web.Http.HttpGet]
-        public IHttpActionResult GetFindPinsByAddress([FromUri]string userSearchAddress, [FromUri]string lat = "0", [FromUri]string lng = "0")
+        public IHttpActionResult GetFindPinsByAddress([FromUri]string userSearchAddress, [FromUri]string lat = "0", [FromUri]string lng = "0", [FromUri]string upperleftlat = "0", [FromUri]string upperleftlng = "0", [FromUri]string bottomrightlat = "0", [FromUri]string bottomrightlng = "0")
         {
             try
             {
+
+                AwsBoundingBox boundingBox = null;
+                if (upperleftlat != "0" && upperleftlng != "0" && bottomrightlat != "0" && bottomrightlng != "0")
+                {
+                    boundingBox = _awsCloudsearchService.BuildBoundingBox(upperleftlat, upperleftlng, bottomrightlat, bottomrightlng);
+                }
+               
                 var originCoords = _finderService.GetGeoCoordsFromAddressOrLatLang(userSearchAddress, lat, lng);
-                var pinsInRadius = _finderService.GetPinsInRadius(originCoords, userSearchAddress);
+                var pinsInRadius = _finderService.GetPinsInBoundingBox(originCoords, userSearchAddress, boundingBox);
 
                 foreach (var pin in pinsInRadius)
                 {
-                    pin.Address = _finderService.RandomizeLatLong(pin.Address);
+                    if (pin.PinType != PinType.SITE)
+                    {
+                        pin.Address = _finderService.RandomizeLatLong(pin.Address);
+                    }
                 }
 
                 var result = new PinSearchResultsDto(new GeoCoordinates(originCoords.Latitude, originCoords.Longitude), pinsInRadius);
@@ -165,5 +271,162 @@ namespace crds_angular.Controllers.API
             }
         }
 
+        [RequiresAuthorization]
+        [ResponseType(typeof(PinSearchResultsDto))]                                   
+        [VersionedRoute(template: "finder/findmypinsbycontactid/{contactId}/{lat}/{lng}", minimumVersion: "1.0.0")]
+        [System.Web.Http.Route("finder/findmypinsbycontactid/{contactId}/{lat}/{lng}")]
+        [System.Web.Http.HttpGet]
+        public IHttpActionResult GetMyPinsByContactId([FromUri]int contactId, [FromUri]string lat, [FromUri]string lng)
+        {
+            return Authorized(token =>
+            {
+                try
+                {
+                    var originCoords = _finderService.GetGeoCoordsFromLatLong(lat, lng);
+
+                    var pinsForContact = _finderService.GetMyPins(token, originCoords, contactId);
+
+                    foreach (var pin in pinsForContact)
+                    {
+                        pin.Address = _finderService.RandomizeLatLong(pin.Address);
+                    }
+
+                    var result = new PinSearchResultsDto(new GeoCoordinates(originCoords.Latitude, originCoords.Longitude), pinsForContact);
+
+                    return Ok(result);
+                }
+                catch (Exception ex)
+                {
+                    var apiError = new ApiErrorDto("Get Pins for My Stuff Failed", ex);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+            });
+        }
+        /// <summary>
+        /// Logged in user invites a participant to the gathering
+        /// </summary>
+        [RequiresAuthorization]
+        [VersionedRoute(template: "finder/pin/invitetogathering/{gatheringId}", minimumVersion: "1.0.0")]
+        [System.Web.Http.Route("finder/pin/invitetogathering/{gatheringId}")]
+        [System.Web.Http.HttpPost]
+        public IHttpActionResult InviteToGathering([FromUri] int gatheringId, [FromBody] User person)
+        {
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState.Values.SelectMany(val => val.Errors).Aggregate("", (current, err) => current + err.Exception.Message);
+                var dataError = new ApiErrorDto("CreateInvitation Data Invalid", new InvalidOperationException("Invalid CreateInvitation Data " + errors));
+                throw new HttpResponseException(dataError.HttpResponseMessage);
+            }
+
+            return Authorized(token =>
+            {
+                try
+                {
+                    _finderService.InviteToGathering(token, gatheringId, person);
+                    return (Ok());
+                }
+                catch (ValidationException e)
+                {
+                    var error = new ApiErrorDto("Not authorized to send invitations of this type", e, HttpStatusCode.Forbidden);
+                    throw new HttpResponseException(error.HttpResponseMessage);
+                }
+                catch (Exception e)
+                {
+                    _logger.Error(string.Format("Could not create invitation to recipient {0} ({1}) for group {2}", person.firstName + " " + person.lastName, person.email, 3), e);
+                    var apiError = new ApiErrorDto("CreateInvitation Failed", e, HttpStatusCode.InternalServerError);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+            });
+        }
+
+        /// <summary>
+        /// Logged in user requests to join gathering
+        /// </summary>
+        [RequiresAuthorization]
+        [VersionedRoute(template: "finder/pin/gatheringjoinrequest", minimumVersion: "1.0.0")]
+        [System.Web.Http.Route("finder/pin/gatheringjoinrequest")]
+        [System.Web.Http.HttpPost]
+        public IHttpActionResult GatheringJoinRequest([FromBody]int gatheringId)
+        {
+            return Authorized(token =>
+            {
+                try
+                {
+                    _finderService.GatheringJoinRequest(token, gatheringId);
+                    return (Ok());
+                }
+                catch (Exception e)
+                {
+                    _logger.Error("Could not generate request", e);
+                    if (e.Message == "User is already member or has request")
+                    {
+                        throw new HttpResponseException(System.Net.HttpStatusCode.Conflict);
+                    }
+                    else
+                    {
+                        throw new HttpResponseException(new ApiErrorDto("Gathering request failed", e).HttpResponseMessage);
+                    }
+
+                }
+            });
+        }
+
+
+        [ResponseType(typeof(PinSearchResultsDto))]
+        [VersionedRoute(template: "finder/testawsupload", minimumVersion: "1.0.0")]
+        [System.Web.Http.Route("finder/testawsupload")]
+        [System.Web.Http.HttpGet]
+        public IHttpActionResult TestAwsUpload()
+        {
+            try
+            {
+                var response = _awsCloudsearchService.UploadAllConnectRecordsToAwsCloudsearch();
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                var apiError = new ApiErrorDto("TestAwsUploadFailed", ex);
+                throw new HttpResponseException(apiError.HttpResponseMessage);
+            }
+        }
+
+        [ResponseType(typeof(PinSearchResultsDto))]
+        [VersionedRoute(template: "finder/testawssearch", minimumVersion: "1.0.0")]
+        [System.Web.Http.Route("finder/testawssearch/{searchstring}")]
+        [System.Web.Http.HttpGet]
+        public IHttpActionResult TestAwsSearch([FromUri] string searchstring)
+        {
+            try
+            {
+                var response = _awsCloudsearchService.SearchConnectAwsCloudsearch(searchstring, "_all_fields");
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                var apiError = new ApiErrorDto("TestAwsSearch Failed", ex);
+                throw new HttpResponseException(apiError.HttpResponseMessage);
+            }
+        }
+
+        [ResponseType(typeof(PinSearchResultsDto))]
+        [VersionedRoute(template: "finder/testawsdelete", minimumVersion: "1.0.0")]
+        [System.Web.Http.Route("finder/testawsdelete")]
+        [System.Web.Http.HttpGet]
+        public IHttpActionResult TestAwsDelete()
+        {
+            try
+            {
+                var response = _awsCloudsearchService.DeleteAllConnectRecordsInAwsCloudsearch();
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                var apiError = new ApiErrorDto("TestAwsDelete Failed", ex);
+                throw new HttpResponseException(apiError.HttpResponseMessage);
+            }
+        }
     }
 }

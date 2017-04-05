@@ -46,6 +46,7 @@
         }
       })
       .state('give.recurring', {
+        url: '/recurring',
         controller: 'GiveController as give',
         resolve: {
           RecurringGiving: 'RecurringGiving',

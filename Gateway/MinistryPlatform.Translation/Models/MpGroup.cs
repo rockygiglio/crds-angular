@@ -125,10 +125,12 @@ namespace MinistryPlatform.Translation.Models
             Address.Address_ID = unmappedData.GetUnmappedDataField<int>("Address_ID");
             Address.Address_Line_1 = unmappedData.GetUnmappedDataField<string>("Address_Line_1");
             Address.Address_Line_2 = unmappedData.GetUnmappedDataField<string>("Address_Line_2");
-            Address.City = unmappedData.GetUnmappedDataField<string>("City");
-            Address.State = unmappedData.GetUnmappedDataField<string>("State");
-            Address.Postal_Code = unmappedData.GetUnmappedDataField<string>("Zip_Code");
+            Address.City = unmappedData.GetUnmappedDataField<string>("City");        
+            Address.State = unmappedData.GetUnmappedDataField<string>("State/Region");
+            Address.Postal_Code = unmappedData.GetUnmappedDataField<string>("Postal_Code");
             Address.Foreign_Country = unmappedData.GetUnmappedDataField<string>("Foreign_Country");
+            Address.Longitude = Convert.ToDouble(unmappedData.GetUnmappedDataField<string>("Longitude"));
+            Address.Latitude = Convert.ToDouble(unmappedData.GetUnmappedDataField<string>("Latitude"));
         }
     }
 }

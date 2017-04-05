@@ -42,6 +42,16 @@ namespace crds_angular.Models.Crossroads
         public AddressDTO()
         {
         }
+        public AddressDTO(AddressDTO address)
+        {
+            this.AddressLine1 = address.AddressLine1;
+            this.AddressLine2 = address.AddressLine2;
+            this.City = address.City;
+            this.State = address.State;
+            this.PostalCode = address.PostalCode;
+            this.Longitude = address.Longitude;
+            this.Latitude = address.Latitude;
+        }
 
         public AddressDTO(string addressLine1, string addressLine2, string city, string state, string postalCode, double? longitude, double? latitude)
         {
