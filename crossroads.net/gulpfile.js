@@ -47,7 +47,8 @@ function htmlReplace(devBuild) {
       govolunteer: { js: '/assets/govolunteer.js' },
       main: { js: '/assets/main.js', css: '/assets/main.css' },
       formbuilder: { js: '/assets/formbuilder.js' },
-      formlybuilder: { js: '/assets/formlybuilder.js' }
+      formlybuilder: { js: '/assets/formlybuilder.js' },
+      legacy: { css: '/assets/legacy.css' }
     };
   } else {
     assets = require('./webpack-assets.json');
@@ -69,7 +70,8 @@ function htmlReplace(devBuild) {
       govolunteerjs: {src: assets.govolunteer.js, tpl: '<script src="%s" type="text/javascript"  defer></script>'},
       formbuilderjs: {src: assets.formbuilder.js, tpl: '<script src="%s" type="text/javascript"  defer></script>'},
       formlybuilderjs: {src: assets.formlybuilder.js, tpl: '<script src="%s" type="text/javascript"  defer></script>'},
-      js: {src: assets.main.js, tpl: '<script src="%s" type="text/javascript"  defer></script>'}
+      js: {src: assets.main.js, tpl: '<script src="%s" type="text/javascript"  defer></script>'},
+      legacycss: assets.legacy.css
     })).pipe(gulp.dest('./'));
 
   gulp.src('./lib/load-image.all.min.js')
