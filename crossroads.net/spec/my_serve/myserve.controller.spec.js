@@ -23,20 +23,21 @@ describe('MyServeController', function() {
     $provide.value('Session', mockSession);
   }));
 
-  var $controller, $log, mockServeResource, $httpBackend, Session;
+  var $controller, $log, mockServeResource, $httpBackend, Session, mockGroups;
   beforeEach(inject(function(_$controller_, _$log_, $injector){
     $controller = _$controller_;
     $log = _$log_;
     $httpBackend = $injector.get('$httpBackend');
     mockServeResource = $injector.get('ServeOpportunities');
     Session = $injector.get('Session');
+    mockGroups = $injector("Groups");
   }));
 
   describe('Serve Controller', function(){
 
     var $scope, controller;
 
-    beforeEach(inject(function($log, $httpBackend, Groups){
+    beforeEach(inject(function($log, $httpBackend){
       $scope = {};
       $scope.serveForm = {
         $dirty: false,
@@ -44,7 +45,7 @@ describe('MyServeController', function() {
           return true;
         }
       };
-      controller = $controller('MyServeController', { $scope: $scope });
+      controller = $controller('MyServeController', { $scope: $scope, Groups:  mockGroups});
       controller.runCtlInTestMode = true;
     }));
 
