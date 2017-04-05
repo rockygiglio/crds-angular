@@ -362,6 +362,8 @@
 
   // Clothes
   .clothes {
+    overflow: hidden;
+
     .clothes-pile {
       width: 120%;
       position: absolute;
