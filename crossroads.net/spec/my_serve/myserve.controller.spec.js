@@ -36,7 +36,7 @@ describe('MyServeController', function() {
 
     var $scope, controller;
 
-    beforeEach(inject(function($log, $httpBackend){
+    beforeEach(inject(function($log, $httpBackend, Groups){
       $scope = {};
       $scope.serveForm = {
         $dirty: false,
