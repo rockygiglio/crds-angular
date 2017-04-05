@@ -113,7 +113,7 @@ UPDATE [dbo].[dp_Domains]
       ,[External_Server_Name] = @externalServerName
       ,[Application_Title] = @applicationTitle
       ,[Domain_GUID] = @domainGuid
-      ,[API_Password] = @apiPassword
+      ,[API_Service_Password] = @apiPassword
       --,[GMT_Offset] = -5 Removed by Andy Canterbury on 7/29/2016 to fix TeamCity build.
       ,[Company_Contact] = 5
       ,[Database_Name] = null
