@@ -93,7 +93,7 @@ module.exports = {
     ]
   },
   plugins: [
-    new ExtractTextPlugin('[name].[hash].css'),
+    new ExtractTextPlugin('[name].css'),
     definePlugin,
     assetsPluginInstance,
     new webpack.optimize.UglifyJsPlugin({
