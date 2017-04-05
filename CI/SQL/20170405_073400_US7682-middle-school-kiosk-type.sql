@@ -7,6 +7,8 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 
+-- JPC 4/5/17: Add MSM Kiosk Type for Checkin
+
 BEGIN
 
 SET IDENTITY_INSERT [dbo].[cr_Kiosk_Types] ON
