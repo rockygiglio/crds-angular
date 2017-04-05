@@ -35,7 +35,6 @@
 
     vm.convertToDate = convertToDate;
     vm.filterState = filterState;
-    vm.groups = Groups;
     vm.lastDate = null;
     vm.loadMore = false;
     vm.loadNextMonth = loadNextMonth;
@@ -74,6 +73,10 @@
 
     function activate() {
       vm.lastDate = formatDate(new Date(), 28);
+      Groups.$promise
+            .then((groups) => {
+              vm.groups = groups;
+            });
     }
 
     function addOneMonth(date) {
