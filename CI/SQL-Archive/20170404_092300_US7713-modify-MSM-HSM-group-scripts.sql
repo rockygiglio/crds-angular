@@ -1,10 +1,4 @@
-delete from ministryplatform.dbo.group_participants
-from ministryplatform.[dbo].[Group_Participants] as gp
-join ministryplatform.[dbo].[groups] as g
-on g.group_ID = gp.group_ID
-where g.Group_ID in (173927,173928,173929,173930,173931,173932,173933,173934);
-
---Bring back all active minor contacts and attempt to assign them a Check-In group by adding them as a group participant
+--Bring back all active minor MSM/HSM age contacts and attempt to assign them a Check-In group by adding them as a group participant
 INSERT INTO [dbo].[Group_Participants]
 ([Group_ID],[Participant_ID],[Group_Role_ID],[Domain_ID],[Start_Date],[Employee_Role],[Notes],[Child_Care_Requested],[Need_Book])
 Select T1.Group_ID
@@ -26,7 +20,7 @@ when c.[HS_Graduation_Year] = 2020 then 173930  --9th grade    High School Grade
 when c.[HS_Graduation_Year] = 2021 then 173931  --8th grade    Student Ministry Grade 8
 when c.[HS_Graduation_Year] = 2022 then 173932  --7th grade    Student Ministry Grade 7
 when c.[HS_Graduation_Year] = 2023 then 173933  --6th grade    Student Ministry Grade 6
-when c.[HS_Graduation_Year] = 2024 then 173934  --5th grade   Kids Club Grade 5
+
 else null end as Group_ID
 --,c.[Contact_ID]
 --,c.[Date_of_Birth]
@@ -47,7 +41,10 @@ else null end as Group_ID
 from [dbo].[Contacts] as c (nolock)
 join [dbo].[Participants] as p (nolock)
 on p.contact_id = c.contact_id  
-where c.[Household_Position_ID] = 2 
+where c.[Household_Position_ID] = 2
+and not exists (select * from groups inner join group_participants
+	on groups.group_id = group_participants.group_id where group_participants.participant_id = p.Participant_ID
+	and groups.group_type_id = 4 and group_participants.end_date is null)  
 and c.[Contact_Status_ID] = 1
 and c.Household_id is not null) as T1
 where T1.group_id is not null

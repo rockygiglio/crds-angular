@@ -1,6 +1,5 @@
-
---Bring back all active minor contacts and attempt to assign them a Check-In group by adding them as a group participant, if they do not already
---have a age grade group
+--Bring back all active minor KC-age contacts and attempt to assign them a Check-In group by adding them as a group participant
+-- KC age groups up here
 INSERT INTO [dbo].[Group_Participants] 
 ([Group_ID],[Participant_ID],[Group_Role_ID],[Domain_ID],[Start_Date],[Employee_Role],[Notes],[Child_Care_Requested],[Need_Book])
 Select G.Group_ID
@@ -508,12 +507,8 @@ else null end as Group_name
 from ministryplatform.[dbo].[Contacts] as c (nolock)
 join ministryplatform.[dbo].[Participants] as p (nolock)
 on p.contact_id = c.contact_id 
-where
--- TEST DATA, REMOVE FOR REAL SCRIPT RUN
---c.Contact_ID IN (7693513, 7700456, 7693511) 
---and c.[Household_Position_ID] = 2
--- MAKE SURE THERE IS NOT AN EXISTING GROUP PARTICIPANT RECORD
-c.[Household_Position_ID] = 2
+where c.[Household_Position_ID] = 2
+-- check to make sure participant doesn't already have an age grade group
 and not exists (select * from groups inner join group_participants
 	on groups.group_id = group_participants.group_id where group_participants.participant_id = p.Participant_ID
 	and groups.group_type_id = 4 and group_participants.end_date is null)
@@ -526,7 +521,7 @@ and g.Group_Type_ID = 4
 and g.Ministry_ID = 2
 where T1.group_name is not null;
 
--- grade groups down here
+-- KC grade groups down here
 INSERT INTO [dbo].[Group_Participants] 
 ([Group_ID],[Participant_ID],[Group_Role_ID],[Domain_ID],[Start_Date],[Employee_Role],[Notes],[Child_Care_Requested],[Need_Book])
 Select T1.Group_ID
@@ -568,11 +563,8 @@ else null end as Group_ID
 from ministryplatform.[dbo].[Contacts] as c (nolock)
 join ministryplatform.[dbo].[Participants] as p (nolock)
 on p.contact_id = c.contact_id
--- THIS CHECK IS FOR TESTING PURPOSES ONLY SO WE WORK WITH ONLY ONE CONTACT  
---where c.Contact_ID IN (7693513, 7700456, 7693511) 
---AND c.[Household_Position_ID] = 2
--- MAKE SURE THERE IS NOT AN EXISTING GROUP PARTICIPANT RECORD
-c.[Household_Position_ID] = 2
+where c.[Household_Position_ID] = 2
+-- check to make sure participant doesn't already have an age grade group
 and not exists (select * from groups inner join group_participants
 	on groups.group_id = group_participants.group_id where group_participants.participant_id = p.Participant_ID
 	and groups.group_type_id = 4 and group_participants.end_date is null) 
