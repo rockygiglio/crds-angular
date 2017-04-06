@@ -30,7 +30,6 @@ describe('MyServeController', function() {
     $httpBackend = $injector.get('$httpBackend');
     mockServeResource = $injector.get('ServeOpportunities');
     Session = $injector.get('Session');
-    // mockGroups = $injector.get("Groups");
   }));
 
   describe('Serve Controller', function(){
@@ -45,8 +44,7 @@ describe('MyServeController', function() {
           return true;
         }
       };
-      controller = $controller('MyServeController', { $scope: $scope, Groups:  mockGroups});
-      // controller.runCtlInTestMode = true;
+      controller = $controller('MyServeController', { $scope: $scope});
     }));
 
     it('should show the opportunities message', function(){
