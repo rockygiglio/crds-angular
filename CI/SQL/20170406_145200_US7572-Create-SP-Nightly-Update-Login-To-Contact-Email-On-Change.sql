@@ -14,18 +14,20 @@ GO
 -- one (user did it on crossroads.net or remembered to update everywhere) or the user_name is already
 -- in use (in which case it will email Dan and Mike)
 
-CREATE PROCEDURE [dbo].[crds_service_update_email_nightly] (
-	@DomainID INT
-)
+IF OBJECT_ID('crds_service_update_email_nightly', 'P') IS NOT NULL
+DROP PROC crds_service_update_email_nightly
+GO
+
+CREATE PROCEDURE [dbo].[crds_service_update_email_nightly] 
 AS
 BEGIN
 
-	IF OBJECT_ID('tempdb..#Changes') IS NOT NULL
+	IF OBJECT_ID('tempdb..#ContactChanges') IS NOT NULL
 	  /*Then it exists*/
-	  DROP TABLE #Changes
+	  DROP TABLE #ContactChanges
   
   
-	CREATE TABLE #Changes
+	CREATE TABLE #ContactChanges
 	(
 	   User_ID int,
 	   Email_Address nvarchar(max), 
@@ -36,7 +38,7 @@ BEGIN
 	   OkToUpdate bit
 	)
 
-	INSERT INTO #Changes
+	INSERT INTO #ContactChanges
 	SELECT User_Account, c.Email_Address, u.User_Email, u.User_Name, l.User_Name, Date_Time, 0
 	FROM dp_audit_log l 
 	INNER JOIN dp_audit_detail d ON l.Audit_Item_ID = d.Audit_Item_ID
@@ -49,10 +51,10 @@ BEGIN
 	  AND l.Date_Time > DATEADD(day,-1, cast(GETDATE() as date)) --yesterday at midnight
 	  AND (c.Email_Address <> u.User_Email OR c.Email_Address <> u.User_Name)
 
-	--CHECK TO SEE IF THERE IS ALREADY A USER ACCOUNT WITH THE NEW EMAIL
-	UPDATE #Changes 
+	  	--CHECK TO SEE IF THERE IS ALREADY A USER ACCOUNT WITH THE NEW EMAIL
+	UPDATE #ContactChanges 
 	SET OkToUpdate = 1
-	FROM #Changes c
+	FROM #ContactChanges c
 	LEFT JOIN dp_Users u ON c.Email_Address = u.User_Name
 	WHERE u.User_ID IS NULL 
 
@@ -74,7 +76,7 @@ BEGIN
 		SET @TableName = 'dp_Users'
 
 		DECLARE CursorPUTT CURSOR FAST_FORWARD FOR
-		SELECT User_ID,Email_Address, Old_Email, Old_Login FROM #Changes WHERE OkToUpdate = 1
+		SELECT User_ID,Email_Address, Old_Email, Old_Login FROM #ContactChanges WHERE OkToUpdate = 1
 
 		OPEN CursorPUTT
 		FETCH NEXT FROM CursorPUTT INTO @Update_ID, @New, @CurrentEmail, @CurrentLogin
@@ -117,7 +119,7 @@ BEGIN
 		DEALLOCATE CursorPUTT
 
 	--Email about the users we can't update
-	IF (SELECT count(*) FROM  #Changes WHERE OkToUpdate = 0) > 0
+	IF (SELECT count(*) FROM  #ContactChanges WHERE OkToUpdate = 0) > 0
 	BEGIN
 
 	DECLARE @xml NVARCHAR(MAX)
@@ -125,7 +127,7 @@ BEGIN
 
 	SET @xml = CAST(( SELECT [User_ID] AS 'td','',[Email_Address] AS 'td','',
 		   [Changed_By] AS 'td','', Changed_When AS 'td'
-	FROM  #Changes 
+	FROM  #ContactChanges 
 	WHERE OkToUpdate = 0
 	FOR XML PATH('tr'), ELEMENTS ) AS NVARCHAR(MAX))
 
@@ -138,11 +140,72 @@ BEGIN
 
 	EXEC msdb.dbo.sp_send_dbmail
 	@profile_name = 'MinistryPlatform',
-	@recipients = 'katie.dwyer@ingagepartners.com', --mike fuhrman, dan rye
+	@recipients = 'katie.dwyer@ingagepartners.com; drye@crossroads.net; mike.fuhrman@crossroads.net', --mike fuhrman, dan rye
 	@subject = 'Unable to update user id with new Contact email',
 	@body = @body,
 	@body_format ='HTML'
 
 	END
+
+	--Changes to dp_user user_name should propogate to contact
+	IF OBJECT_ID('tempdb..#LoginChanges') IS NOT NULL
+	  /*Then it exists*/
+	  DROP TABLE #LoginChanges
+
+	CREATE TABLE #LoginChanges
+	(
+	   Contact_ID int,
+	   Email_Address nvarchar(max), 
+	   Old_Email nvarchar(max)
+	)
+
+	INSERT INTO #LoginChanges
+	SELECT c.Contact_ID, u.User_Name, c.Email_Address
+	FROM dp_audit_log l 
+	INNER JOIN dp_audit_detail d ON l.Audit_Item_ID = d.Audit_Item_ID	
+	INNER JOIN dp_Users u ON u.User_ID = l.record_Id 
+	INNER JOIN Contacts c ON c.user_account = u.User_ID
+	WHERE 
+	  d.field_name = 'User_Name' 
+	  AND l.Table_Name = 'dp_Users'
+	  AND l.Audit_Description = 'Updated'
+	  AND l.Date_Time > DATEADD(day,-1, cast(GETDATE() as date)) --yesterday at midnight
+	  AND c.Email_Address <> u.User_Name
+
+
+	SET @TableName = 'Contacts'
+
+	DECLARE CursorPUTT CURSOR FAST_FORWARD FOR
+	SELECT Contact_ID ,Email_Address, Old_Email FROM #LoginChanges 
+
+	OPEN CursorPUTT
+	FETCH NEXT FROM CursorPUTT INTO @Update_ID, @New, @CurrentEmail
+		WHILE @@FETCH_STATUS = 0
+		BEGIN
+
+		
+			UPDATE Contacts 
+			SET [Email_Address] = @New
+			WHERE Contact_ID = @Update_ID 		
+			
+			--Audit Log the Change
+			EXEC [dbo].[crds_Add_Audit] 
+					@TableName 
+				,@Update_ID
+				,'Mass Updated'
+				,@UserName
+				,@UserID
+				,'Email_Address'
+				,'Email Address'
+				,@CurrentEmail
+				,@New
+
+				
+			FETCH NEXT FROM CursorPUTT INTO @Update_ID, @New, @CurrentEmail
+			
+		END
+	CLOSE CursorPUTT
+	DEALLOCATE CursorPUTT
+
 
 END
