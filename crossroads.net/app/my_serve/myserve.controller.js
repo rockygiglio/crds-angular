@@ -44,7 +44,7 @@
     vm.showButton = showButton;
     vm.showNoOpportunitiesMsg = showNoOpportunitiesMsg;
     vm.isLeader = leader.isLeader;
-    vm.runCtlInTestMode = false;
+    // vm.runCtlInTestMode = false;
 
     activate();
 

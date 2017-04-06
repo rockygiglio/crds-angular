@@ -23,14 +23,14 @@ describe('MyServeController', function() {
     $provide.value('Session', mockSession);
   }));
 
-  var $controller, $log, mockServeResource, $httpBackend, Session, mockGroups;
+  var $controller, $log, mockServeResource, $httpBackend, Session;
   beforeEach(inject(function(_$controller_, _$log_, $injector){
     $controller = _$controller_;
     $log = _$log_;
     $httpBackend = $injector.get('$httpBackend');
     mockServeResource = $injector.get('ServeOpportunities');
     Session = $injector.get('Session');
-    mockGroups = $injector.get("Groups");
+    // mockGroups = $injector.get("Groups");
   }));
 
   describe('Serve Controller', function(){
@@ -46,7 +46,7 @@ describe('MyServeController', function() {
         }
       };
       controller = $controller('MyServeController', { $scope: $scope, Groups:  mockGroups});
-      controller.runCtlInTestMode = true;
+      // controller.runCtlInTestMode = true;
     }));
 
     it('should show the opportunities message', function(){
