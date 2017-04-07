@@ -135,11 +135,6 @@ namespace crds_angular.Services
             {
                 searchRequest.FilterQuery = $"latlong:['{boundingBox.UpperLeftCoordinates.Lat},{boundingBox.UpperLeftCoordinates.Lng}','{boundingBox.BottomRightCoordinates.Lat},{boundingBox.BottomRightCoordinates.Lng}']";
             }
-            //else
-            //{
-                    //searchRequest.Size = _configurationWrapper.GetConfigIntValue("ConnectDefaultNumberOfPins");
-
-            //}
                
             if (originCoords != null)
             {
