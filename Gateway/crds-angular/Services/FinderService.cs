@@ -195,7 +195,7 @@ namespace crds_angular.Services
 
         public List<PinDto> GetPinsInBoundingBox(GeoCoordinate originCoords, string address, AwsBoundingBox boundingBox)
         {
-            var cloudReturn = _awsCloudsearchService.SearchConnectAwsCloudsearch("matchall", "_all_fields", originCoords, boundingBox);
+            var cloudReturn = _awsCloudsearchService.SearchConnectAwsCloudsearch("matchall", "_all_fields", _configurationWrapper.GetConfigIntValue("ConnectDefaultNumberOfPins"), originCoords, boundingBox);
             var pins = ConvertFromAwsSearchResponse(cloudReturn);
 
             foreach (var pin in pins)
