@@ -44,7 +44,7 @@ describe('MyServeController', function() {
           return true;
         }
       };
-      controller = $controller('MyServeController', { $scope: $scope });
+      controller = $controller('MyServeController', { $scope: $scope});
     }));
 
     it('should show the opportunities message', function(){
