@@ -221,7 +221,7 @@ namespace crds_angular.Controllers.API
                     //Ensure that address id is available
                     var personPin = _finderService.GetPinDetailsForPerson((int)pin.Participant_ID);
 
-                    _awsCloudsearchService.UploadNewPinToAWS(personPin); 
+                    _awsCloudsearchService.UploadNewPinToAws(personPin); 
 
                     return (Ok(pin));
                 }
@@ -387,25 +387,6 @@ namespace crds_angular.Controllers.API
             catch (Exception ex)
             {
                 var apiError = new ApiErrorDto("TestAwsUploadFailed", ex);
-                throw new HttpResponseException(apiError.HttpResponseMessage);
-            }
-        }
-
-        [ResponseType(typeof(PinSearchResultsDto))]
-        [VersionedRoute(template: "finder/testawssearch", minimumVersion: "1.0.0")]
-        [System.Web.Http.Route("finder/testawssearch/{searchstring}")]
-        [System.Web.Http.HttpGet]
-        public IHttpActionResult TestAwsSearch([FromUri] string searchstring)
-        {
-            try
-            {
-                var response = _awsCloudsearchService.SearchConnectAwsCloudsearch(searchstring, "_all_fields");
-
-                return Ok(response);
-            }
-            catch (Exception ex)
-            {
-                var apiError = new ApiErrorDto("TestAwsSearch Failed", ex);
                 throw new HttpResponseException(apiError.HttpResponseMessage);
             }
         }

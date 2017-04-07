@@ -24,7 +24,6 @@ namespace crds_angular.Services
         protected string AmazonSearchUrl;
         protected string AwsAccessKeyId;
         protected string AwsSecretAccessKey;
-        private const int ReturnRecordCount = 10000;
 
         public AwsCloudsearchService(IAddressGeocodingService addressGeocodingService, 
                                      IFinderRepository finderRepository,                          
@@ -37,6 +36,8 @@ namespace crds_angular.Services
             AmazonSearchUrl    = _configurationWrapper.GetEnvironmentVarAsString("CRDS_AWS_CONNECT_ENDPOINT");
             AwsAccessKeyId     = _configurationWrapper.GetEnvironmentVarAsString("CRDS_AWS_CONNECT_ACCESSKEYID");
             AwsSecretAccessKey = _configurationWrapper.GetEnvironmentVarAsString("CRDS_AWS_CONNECT_SECRETACCESSKEY");
+
+
         }
 
         public UploadDocumentsResponse UploadAllConnectRecordsToAwsCloudsearch()
@@ -119,25 +120,20 @@ namespace crds_angular.Services
             };
         }
 
-        public SearchResponse SearchConnectAwsCloudsearch(string querystring, string returnFields, GeoCoordinate originCoords = null, AwsBoundingBox boundingBox = null)
+        public SearchResponse SearchConnectAwsCloudsearch(string querystring, string returnFields, int returnSize = 10000, GeoCoordinate originCoords = null, AwsBoundingBox boundingBox = null)
         {
             var cloudSearch = new AmazonCloudSearchDomainClient(AwsAccessKeyId, AwsSecretAccessKey, AmazonSearchUrl);
-            var searchRequest = new Amazon.CloudSearchDomain.Model.SearchRequest
+            var searchRequest = new SearchRequest
             {
                 Query = querystring,
                 QueryParser = QueryParser.Structured,
-                Size = ReturnRecordCount,
-                Return = returnFields + ",_score",
-                
+                Size = returnSize,
+                Return = returnFields + ",_score"
             };
 
             if (boundingBox != null)
             {
                 searchRequest.FilterQuery = $"latlong:['{boundingBox.UpperLeftCoordinates.Lat},{boundingBox.UpperLeftCoordinates.Lng}','{boundingBox.BottomRightCoordinates.Lat},{boundingBox.BottomRightCoordinates.Lng}']";
-            }
-            else
-            {
-                searchRequest.Size = 31;
             }
                
             if (originCoords != null)
@@ -151,13 +147,11 @@ namespace crds_angular.Services
             return (response);
         }
 
-        public void UploadNewPinToAWS(PinDto pin)
+        public void UploadNewPinToAws(PinDto pin)
         {
             var cloudSearch = new AmazonCloudSearchDomainClient(AwsAccessKeyId, AwsSecretAccessKey, AmazonSearchUrl);
-
-            UploadDocumentsRequest upload = GetObjectToUploadToAws(pin);
-
-            var response = cloudSearch.UploadDocuments(upload);
+            var upload = GetObjectToUploadToAws(pin);
+            cloudSearch.UploadDocuments(upload);
         }
 
         private string GenerateAwsPinId(PinDto pin)
@@ -186,7 +180,7 @@ namespace crds_angular.Services
 
             MemoryStream jsonAwsPinDtoStream = new MemoryStream(Encoding.UTF8.GetBytes(jsonAwsObject));
 
-            UploadDocumentsRequest upload = new Amazon.CloudSearchDomain.Model.UploadDocumentsRequest()
+            UploadDocumentsRequest upload = new UploadDocumentsRequest()
             {
                 ContentType = ContentType.ApplicationJson,
                 Documents = jsonAwsPinDtoStream
