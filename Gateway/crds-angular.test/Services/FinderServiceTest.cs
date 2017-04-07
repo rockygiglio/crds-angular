@@ -225,7 +225,7 @@ namespace crds_angular.test.Services
             hit.Fields = fields;
             searchresults.Hits.Hit.Add(hit);
 
-            _awsCloudsearchService.Setup(mocked => mocked.SearchConnectAwsCloudsearch("matchall", "_all_fields",It.IsAny<GeoCoordinate>(),It.IsAny<AwsBoundingBox>())).Returns(searchresults);
+            _awsCloudsearchService.Setup(mocked => mocked.SearchConnectAwsCloudsearch("matchall", "_all_fields",10000, It.IsAny<GeoCoordinate>(),It.IsAny<AwsBoundingBox>())).Returns(searchresults);
 
             _mpConfigurationWrapper.Setup(mocked => mocked.GetConfigIntValue("AnywhereGroupTypeId")).Returns(30);
             _mpGroupToolService.Setup(m => m.SearchGroups(It.IsAny<int[]>(), null, It.IsAny<string>(), null, originCoords)).Returns(new List<GroupDTO>());
