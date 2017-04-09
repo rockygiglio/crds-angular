@@ -18,6 +18,7 @@ using MPInterfaces = MinistryPlatform.Translation.Repositories.Interfaces;
 using Crossroads.ApiVersioning;
 using Crossroads.Web.Common;
 using Crossroads.Web.Common.Security;
+using Newtonsoft.Json;
 
 namespace crds_angular.Controllers.API
 {
@@ -238,7 +239,8 @@ namespace crds_angular.Controllers.API
 
         private IHttpActionResult CreateDonationAndDistributionAuthenticated(String token, CreateDonationDTO dto)
         {
-            var isPayment = (dto.TransactionType != null && dto.TransactionType.Equals("PAYMENT"));
+            bool isPayment = (dto.TransactionType != null && dto.TransactionType.Equals("PAYMENT"));
+            MpContactDonor donor = null;
 
             try
             {
@@ -253,7 +255,7 @@ namespace crds_angular.Controllers.API
                 }
 
                 var contactId = _contactRepository.GetContactId(token);
-                var donor = _mpDonorService.GetContactDonor(contactId);
+                donor = _mpDonorService.GetContactDonor(contactId);
                 var charge = _stripeService.ChargeCustomer(donor.ProcessorId, dto.Amount, donor.DonorId, isPayment);
                 var fee = charge.BalanceTransaction != null ? charge.BalanceTransaction.Fee : null;
 
@@ -355,10 +357,12 @@ namespace crds_angular.Controllers.API
             }
             catch (PaymentProcessorException stripeException)
             {
+                LogDonationError("CreateDonationAndDistributionAuthenticated", stripeException, dto, donor);
                 return (stripeException.GetStripeResult());
             }
             catch (Exception exception)
             {
+                LogDonationError("CreateDonationAndDistributionAuthenticated", exception, dto, donor);
                 var apiError = new ApiErrorDto("Donation/Payment Post Failed", exception);
                 throw new HttpResponseException(apiError.HttpResponseMessage);
             }
@@ -367,10 +371,11 @@ namespace crds_angular.Controllers.API
         private IHttpActionResult CreateDonationAndDistributionUnauthenticated(CreateDonationDTO dto)
         {
             bool isPayment = false;
+            MpContactDonor donor = null;
 
             try
             {
-                var donor = _gatewayDonorService.GetContactDonorForEmail(dto.EmailAddress);
+                donor = _gatewayDonorService.GetContactDonorForEmail(dto.EmailAddress);
                 var charge = _stripeService.ChargeCustomer(donor.ProcessorId, dto.Amount, donor.DonorId, isPayment);
                 var fee = charge.BalanceTransaction != null ? charge.BalanceTransaction.Fee : null;
                 int? pledgeId = null;
@@ -418,10 +423,12 @@ namespace crds_angular.Controllers.API
             }
             catch (PaymentProcessorException stripeException)
             {
+                LogDonationError("CreateDonationAndDistributionUnauthenticated", stripeException, dto, donor);
                 return (stripeException.GetStripeResult());
             }
             catch (Exception exception)
             {
+                LogDonationError("CreateDonationAndDistributionUnauthenticated", exception, dto, donor);
                 var apiError = new ApiErrorDto("Donation Post Failed", exception);
                 throw new HttpResponseException(apiError.HttpResponseMessage);
             }
@@ -436,6 +443,21 @@ namespace crds_angular.Controllers.API
             catch (Exception ex) {
                 _logger.Error(string.Format("Send Message From Donor Failed, pledgeId ({0})", pledgeId),ex);
             }
+        }
+
+        private void LogDonationError(string methodName, Exception exception, CreateDonationDTO dto, MpContactDonor donor)
+        {
+            int donorId = donor?.DonorId ?? 0;
+            string processorId = donor?.ProcessorId ?? "";
+            _logger.Error($"{methodName} exception (DonorId = {donorId}, ProcessorId = {processorId})", exception);
+
+            // include donation in error log (serialized json); ignore exceptions during serialization
+            JsonSerializerSettings settings = new JsonSerializerSettings
+            {
+                Error = (serializer, err) => err.ErrorContext.Handled = true
+            };
+            string json = JsonConvert.SerializeObject(dto, settings);
+            _logger.Error($"{methodName} data {json}");
         }
     }
 }
