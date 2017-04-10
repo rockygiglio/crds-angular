@@ -319,6 +319,10 @@
         vm.profileData.person.oldEmail = vm.oldEmail;
         vm.profileData.person.oldPassword = vm.currentPassword;
 
+        // DE3068: convert to string and exclude time to avoid timezone/DST issues  
+        if (_.has(vm.profileData.person, 'dateOfBirth'))
+          vm.profileData.person.dateOfBirth = convertDate(vm.profileData.person.dateOfBirth);
+
         vm.profileData.person['State/Region'] = vm.profileData.person.State;
         if (vm.submitFormCallback !== undefined) {
           vm.submitFormCallback({profile: vm.profileData});
