@@ -15,6 +15,7 @@ require('ui-select/dist/select.css');
       constants.MODULES.CHILDCARE_DASHBOARD,
       constants.MODULES.CORE,
       constants.MODULES.COMMON,
+      constants.MODULES.CORKBOARD,
       constants.MODULES.FORM_BUILDER,
       constants.MODULES.GIVE,
       constants.MODULES.GO_VOLUNTEER,
@@ -34,6 +35,7 @@ require('ui-select/dist/select.css');
     .config(require('./routes'))
     .config(require('./routes.content'));
 
+  require('./corkboard');
   require('./events');
   require('./signup');
   require('./styleguide');
