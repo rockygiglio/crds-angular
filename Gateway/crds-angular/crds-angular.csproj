@@ -316,6 +316,7 @@
     <Compile Include="Controllers\API\EventToolController.cs" />
     <Compile Include="Controllers\API\FormBuilderController.cs" />
     <Compile Include="Controllers\API\GoVolunteerController.cs" />
+    <Compile Include="Controllers\API\GroupLeaderController.cs" />
     <Compile Include="Controllers\API\InvitationController.cs" />
     <Compile Include="Controllers\API\GroupToolController.cs" />
     <Compile Include="Controllers\API\ParticipantController.cs" />
@@ -345,6 +346,7 @@
     <Compile Include="Models\Crossroads\GoVolunteer\AnywhereRegistration.cs" />
     <Compile Include="Models\Crossroads\GoVolunteer\CincinnatiRegistration.cs" />
     <Compile Include="Models\Crossroads\GoVolunteer\Project.cs" />
+    <Compile Include="Models\Crossroads\GroupLeader\GroupLeaderProfileDTO.cs" />
     <Compile Include="Models\Finder\GeoCoordinates.cs" />
     <Compile Include="Models\Finder\PinSearchResultsDto.cs" />
     <Compile Include="Models\Finder\PinDto.cs" />
@@ -425,6 +427,7 @@
     <Compile Include="Models\MailChimp\BulkEmailSubscriberOptDTO.cs" />
     <Compile Include="Models\Crossroads\RsvpMember.cs" />
     <Compile Include="Processors\SendTextMessageJob.cs" />
+    <Compile Include="Security\ReactiveMPAuth.cs" />
     <Compile Include="Services\AddressService.cs" />
     <Compile Include="Services\AwsCloudsearchService.cs" />
     <Compile Include="Services\BulkEmailSyncService.cs" />
@@ -441,9 +444,11 @@
     <Compile Include="Services\GatewayLookupService.cs" />
     <Compile Include="Services\GoVolunteerService.cs" />
     <Compile Include="Services\GoSkillsService.cs" />
+    <Compile Include="Services\GroupLeaderService.cs" />
     <Compile Include="Services\GroupSearchService.cs" />
     <Compile Include="Services\FormBuilderService.cs" />
     <Compile Include="Services\Interfaces\GroupAttributeDTO.cs" />
+    <Compile Include="Services\Interfaces\IGroupLeaderService.cs" />
     <Compile Include="Services\Interfaces\IAddressGeocodingService.cs" />
     <Compile Include="Services\Interfaces\IAddressProximityService.cs" />
     <Compile Include="Services\Interfaces\IAwsCloudsearchService.cs" />
