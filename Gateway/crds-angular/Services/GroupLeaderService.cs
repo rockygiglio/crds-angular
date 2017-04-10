@@ -39,15 +39,15 @@ namespace crds_angular.Services
             var userUpdates = person.GetUserUpdateValues();
             try
             {
-                userUpdates["User_ID"] = _userRepository.GetUserIdByUsername(leader.OldEmail);                
+                userUpdates["User_ID"] = _userRepository.GetUserIdByUsername(leader.OldEmail);               
             }
             catch (Exception e)
             {
-                throw new ApplicationException($"Unable to find the user account for {leader.OldEmail}", e);
+                throw new Exception($"Unable to find the user account for {leader.OldEmail}", e);
             }
             await Observable.CombineLatest(
-                    Observable.Start(() => _personService.SetProfile(token, person)),
-                    Observable.Start(() => _userRepository.UpdateUser(userUpdates)));
+                   Observable.Start(() => _personService.SetProfile(token, person)),
+                   Observable.Start(() => _userRepository.UpdateUser(userUpdates)));
         }      
     }
 }

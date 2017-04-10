@@ -23,18 +23,18 @@ namespace crds_angular.Controllers.API
         [HttpPost]
         public async Task<IHttpActionResult> SaveProfile([FromBody] GroupLeaderProfileDTO profile)
         {
-            return await Authorized(token => {
+            return await Authorized(token => {              
                 try
                 {
-                    Task.Run(() => _groupLeaderService.SaveProfile(token, profile));
+                    _groupLeaderService.SaveProfile(token, profile);
                     return Ok();
                 }
-                catch (Exception exception)
+                catch (Exception e)
                 {
-                    var apiError = new ApiErrorDto("Saving Leader Profile failed:", exception);
+                    var apiError = new ApiErrorDto("Saving Leader Profile failed:", e);
                     throw new HttpResponseException(apiError.HttpResponseMessage);
-                }                
-            });
+                }                                            
+            });                                                               
         }
     }
 }
