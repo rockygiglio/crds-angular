@@ -50,6 +50,7 @@ BEGIN
 	  AND l.Audit_Description = 'Updated'
 	  AND l.Date_Time > DATEADD(day,-1, cast(GETDATE() as date)) --yesterday at midnight
 	  AND (c.Email_Address <> u.User_Email OR c.Email_Address <> u.User_Name)
+	  AND c.Email_Address IS NOT NULL
 
 	  	--CHECK TO SEE IF THERE IS ALREADY A USER ACCOUNT WITH THE NEW EMAIL
 	UPDATE #ContactChanges 
