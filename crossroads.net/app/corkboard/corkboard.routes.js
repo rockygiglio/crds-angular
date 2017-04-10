@@ -19,7 +19,7 @@
                            $locationProvider,
                            CorkboardSessionProvider,
                            CorkboardListings){
-    crds_utilities.preventRouteTypeUrlEncoding($urlMatcherFactory, 'contentRouteType', /^\/.*/);
+    // crds_utilities.preventRouteTypeUrlEncoding($urlMatcherFactory, 'contentRouteType', /^\/.*/);
 
     $stateProvider
     .state('corkboard', {
@@ -47,38 +47,6 @@
         }
       },
       controller: 'CorkboardController as corkboard',
-    })
-    .state('login', {
-      url: '/corkboard/signin',
-      templateUrl: 'login/login_page.html',
-      controller: 'LoginController',
-      data: {
-        isProtected: false,
-        meta: {
-          title: 'Sign In',
-          description: ''
-        }
-      }
-    })
-    .state('logout', {
-      url: '/corkboard/signout',
-      controller: 'LogoutController',
-      data: {
-        isProtected: false,
-        meta: {
-          title: 'Sign Out',
-          description: ''
-        }
-      }
-    })
-    .state('forgotPassword', {
-      parent: 'noSideBar',
-      url: '/forgot-password',
-      templateUrl: 'login/forgot_password.html',
-      controller: 'PasswordController as pwController',
-      data: {
-        isProtected: false
-      }
     })
     .state('corkboard.base', {
       url: '',

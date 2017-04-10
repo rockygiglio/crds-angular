@@ -7,6 +7,8 @@ module.exports = {
       __CROSSROADS_API_TOKEN__: JSON.stringify(process.env.CROSSROADS_API_TOKEN || ''),
       __API_ENDPOINT__: JSON.stringify(process.env.CRDS_API_ENDPOINT || 'https://gatewayint.crossroads.net/gateway/'),
       __CMS_ENDPOINT__: JSON.stringify(process.env.CRDS_CMS_ENDPOINT || 'https://contentint.crossroads.net/'),
+      __CORE_ENDPOINT__: JSON.stringify(process.env.CRDS_CORE_ENDPOINT || 'https://int.crossroads.net/'),
+      __CORKBOARD_API_ENDPOINT__: JSON.stringify(process.env.CRDS_CORKBOARD_API_ENDPOINT || 'https://gatewayint.crossroads.net/corkboardAPI/'),
       __GOOGLE_API_KEY__: JSON.stringify(process.env.CRDS_GOOGLE_API_KEY || 'AIzaSyArKsBK97N0Wi-69x10OL7Sx57Fwlmu6Cs'),
       __STRIPE_PUBKEY__: JSON.stringify(process.env.CRDS_STRIPE_PUBKEY || 'pk_test_U8U15gSZFM4AQtPDLHYnKWqH'),
       __STRIPE_API_VERSION__: JSON.stringify(process.env.CRDS_STRIPE_API_VERSION),
