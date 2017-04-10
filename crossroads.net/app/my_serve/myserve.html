@@ -19,7 +19,7 @@
         <span dynamic-content="$root.MESSAGES.servingFilteredToNone.content | html"></span>
       </div>
 
-      <form name='serveForm'>
+      <form name='serveForm' ng-show="serve.groups">
         <div class="serve-day soft-bottom push-bottom" data-ng-repeat="group in serve.groups" ng-show="group.serveTimes.length > 0">
           <h4 class="flush-top">{{::serve.convertToDate(group.day) | date:'EEEE, MMMM dd, yyyy' }}</h4>
           <serve-tabs opportunity="opp" serve-date="group.day" ng-repeat="opp in group.serveTimes" ng-show="opp.servingTeams.length > 0" >
