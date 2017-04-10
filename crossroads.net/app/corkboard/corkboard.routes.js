@@ -23,6 +23,7 @@
 
     $stateProvider
     .state('corkboard', {
+      parent: 'noSideBar',
       abstract: true,
       url: '',
       template: '<ui-view/>',
