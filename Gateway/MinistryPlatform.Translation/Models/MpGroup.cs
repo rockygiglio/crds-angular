@@ -51,7 +51,7 @@ namespace MinistryPlatform.Translation.Models
         public DateTime? EndDate { get; set; }
 
         [JsonProperty("Available_Online")]
-        public bool AvailableOnline { get; set; }
+        public bool? AvailableOnline { get; set; }
 
         [JsonProperty("Meeting_Time")]
         public string MeetingTime { get; set; }
