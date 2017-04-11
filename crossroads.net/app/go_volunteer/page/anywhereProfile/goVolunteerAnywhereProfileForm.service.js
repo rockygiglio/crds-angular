@@ -25,11 +25,13 @@ export default class GoVolunteerAnywhereProfileForm {
   }
 
   save(initiativeId, projectId) {
+    var formatDate = crds_utilities.formatDate;
+    var dob = formatDate(this.model.birthDate);
+
     const {
       firstName,
       lastName,
       email: emailAddress,
-      birthDate: dob,
       mobilePhone: mobile,
       bringSpouse: spouseParticipation,
       numberKids: numberOfChildren
