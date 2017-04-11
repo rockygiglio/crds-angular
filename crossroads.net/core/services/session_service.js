@@ -192,14 +192,7 @@
           }
           $cookies.put('userId', user.userId);
           $cookies.put('username', user.username);
-          if (stateName === 'login') {
-            $state.go('content', {
-              link: '/'
-            });
-            vm.enableReactiveSso(event, stateName, stateData, stateToParams);
-          } else {
-            vm.enableReactiveSso(event, stateName, stateData, stateToParams);
-          }
+          vm.enableReactiveSso(event, stateName, stateData, stateToParams);
           vm.restoreImpersonation();
         }).error(() => {
           vm.clearAndRedirect(event, stateName, stateToParams);

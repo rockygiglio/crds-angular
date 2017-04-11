@@ -10,6 +10,7 @@
     'MESSAGES',
     'AuthService',
     '$state',
+    '$location',
     '$log',
     'Session',
     '$timeout',
@@ -23,6 +24,7 @@
     MESSAGES,
     AuthService,
     $state,
+    $location,
     $log,
     Session,
     $timeout,
@@ -99,10 +101,20 @@
                 var url = Session.exists('redirectUrl');
                 var params = Session.exists('params');
                 Session.removeRedirectRoute();
-                if (params === undefined) {
-                  $state.go(url);
+
+                var foundState = $state.get().filter(state => state.name === url);
+                if (foundState.length > 0) {
+                  if (params === undefined) {
+                    $state.go(url);
+                  } else {
+                    $state.go(url, JSON.parse(params));
+                  }
                 } else {
-                  $state.go(url, JSON.parse(params));
+                  if (params === undefined) {
+                    $location.url(url);
+                  } else {
+                    $location.url(url).search(JSON.parse(params));
+                  }
                 }
               } else {
                 navigateToHome();

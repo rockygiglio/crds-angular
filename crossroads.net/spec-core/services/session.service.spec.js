@@ -156,13 +156,6 @@ describe('Session Service', function() {
         expect(rootScope.phone).toBe(mockResponse.userPhone);
       });
 
-      it('should redirect to profile if on login page', function() {
-        state.current.name = 'login';
-        Backend.expectGET(window.__env__['CRDS_API_ENDPOINT'] + 'api/authenticated').respond(200, mockResponse);
-        Session.verifyAuthentication(undefined, state.current.name, state.current.data, state.current.params);
-        Backend.flush();
-        expect(state.go).toHaveBeenCalledWith('content', { link: '/' });
-      });
     });
 
     describe('if user session does not exist', function() {
