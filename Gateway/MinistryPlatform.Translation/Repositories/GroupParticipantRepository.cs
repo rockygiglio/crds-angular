@@ -58,7 +58,7 @@ namespace MinistryPlatform.Translation.Repositories
             }
 
             var fromDate = from == 0 ? DateTime.Today : from.FromUnixTime();
-            var toDate = to == 0 ? DateTime.Today.AddDays(29) : to.FromUnixTime();
+            var toDate = to == 0 ? DateTime.Today.AddDays(43) : to.FromUnixTime();
 
             searchFilter += $") AND Event_Start_Date >= '{fromDate:yyyy-MM-dd}' AND Event_Start_Date <= '{toDate:yyyy-MM-dd}' " +
                             "AND Event_Start_Date >= Participant_Start_Date AND (Event_Start_Date <= Participant_End_Date OR Participant_End_Date IS NULL)";
@@ -76,11 +76,30 @@ namespace MinistryPlatform.Translation.Repositories
                     p.DeadlinePassedMessage = defaultDeadlinePassedMessage;
             });
 
-            return groupServingParticipants.OrderBy(g => g.EventStartDateTime)
+            var returnList =  groupServingParticipants.OrderBy(g => g.EventStartDateTime)
                 .ThenBy(g => g.GroupName)
                 .ThenBy(g => g.LoggedInUser == false)
                 .ThenBy(g => g.ParticipantNickname)
                 .ToList();
+
+            //KD
+            //If we are getting the defaults (from ==0), then we should try and send the least number of weeks that we can
+            //that still has data. Up to 6 weeks
+            if (to == 0) 
+            {
+                int foundIndex = -1;
+                int checkDays = 8;
+                while (foundIndex == -1 && checkDays < 43)
+                {
+                    foundIndex = returnList.FindLastIndex(g => g.EventStartDateTime < DateTime.Today.AddDays(checkDays));
+                    if (foundIndex != -1 && ++foundIndex < returnList.Count) //if found index is last then do nothing
+                        returnList.RemoveRange(foundIndex, returnList.Count - foundIndex ); //keep the up to and including the found index, remove the rest
+                    else
+                        checkDays += 7; //check another week
+                }
+            }
+
+            return returnList;
         }
 
         public List<MpRsvpMember> GetRsvpMembers(int groupId, int eventId)

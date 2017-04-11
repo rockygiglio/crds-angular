@@ -73,7 +73,8 @@
     ////////////////////////////
 
     function activate() {
-      vm.lastDate = formatDate(new Date(), 28);
+      //vm.lastDate = formatDate(new Date(), 8);
+      vm.lastDate = formatDate(vm.groups[vm.groups.length - 1].day );
     }
 
     function addOneWeek(date) {
