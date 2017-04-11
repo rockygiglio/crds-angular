@@ -83,9 +83,10 @@ namespace MinistryPlatform.Translation.Repositories
                 .ToList();
 
             //KD
-            //If we are getting the defaults (from ==0), then we should try and send the least number of weeks that we can
-            //that still has data. Up to 6 weeks
-            if (to == 0) 
+            //If we are getting the defaults (from ==0), then we should try and send the least number of weeks 
+            //that we can that still has data. Up to 6 weeks
+            //if we don't have anything at all or just one result then don't bother filtering out the rest
+            if (to == 0 && returnList.Count > 1) 
             {
                 int foundIndex = -1;
                 int checkDays = 8;
