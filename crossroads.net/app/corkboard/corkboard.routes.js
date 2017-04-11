@@ -19,13 +19,11 @@
                            $locationProvider,
                            CorkboardSessionProvider,
                            CorkboardListings){
-    // crds_utilities.preventRouteTypeUrlEncoding($urlMatcherFactory, 'contentRouteType', /^\/.*/);
 
     $stateProvider
     .state('corkboard', {
       parent: 'noSideBar',
       abstract: true,
-      url: '',
       template: '<ui-view/>',
       resolve:{
         items: function(CorkboardListings, $log, CorkboardSession, $rootScope){
@@ -48,16 +46,6 @@
         }
       },
       controller: 'CorkboardController as corkboard',
-    })
-    .state('corkboard.base', {
-      url: '',
-      templateUrl: 'templates/corkboard-listings.html',
-      data: {
-        meta: {
-          title: 'Corkboard',
-          description: 'The Corkboard is for posting needs, FREE items, events and job opportunities.'
-        }
-      },
     })
     .state('corkboard.root', {
       url: '/corkboard/',
