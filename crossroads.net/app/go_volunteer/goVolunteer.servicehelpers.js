@@ -103,9 +103,11 @@ export function projectPreferences(pref1, pref2, pref3) {
 }
 
 export function personDto(person) {
+  var formatDate = crds_utilities.formatDate;
+
   const dto = {
     lastName: person.lastName,
-    dob: person.dateOfBirth,
+    dob: formatDate(person.dateOfBirth),
     mobile: person.mobilePhone
   };
 

@@ -145,7 +145,7 @@
           const url = vm.exists('redirectUrl');
           const params = vm.exists('params');
           vm.removeRedirectRoute();
-          if (params === undefined) {
+          if (params === undefined || params === null || params === '' || params == '{}') {
             $injectedState.go(url);
           } else {
             $injectedState.go(url, JSON.parse(params));

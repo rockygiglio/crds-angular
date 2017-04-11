@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Device.Location;
 using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Web.Http;
 using System.Web.Http.Description;
-using System.Web.Mvc;
-using System.Web.Services.Description;
 using crds_angular.Exceptions.Models;
 using crds_angular.Models.Crossroads;
 using crds_angular.Models.Finder;
@@ -46,8 +42,8 @@ namespace crds_angular.Controllers.API
 
         [ResponseType(typeof(PinDto))]
         [VersionedRoute(template: "finder/pin/{participantId}", minimumVersion: "1.0.0")]
-        [System.Web.Http.Route("finder/pin/{participantId}")]
-        [System.Web.Http.HttpGet]
+        [Route("finder/pin/{participantId}")]
+        [HttpGet]
         public IHttpActionResult GetPinDetails([FromUri]int participantId)
         {
             try
@@ -221,7 +217,7 @@ namespace crds_angular.Controllers.API
                     //Ensure that address id is available
                     var personPin = _finderService.GetPinDetailsForPerson((int)pin.Participant_ID);
 
-                    _awsCloudsearchService.UploadNewPinToAWS(personPin); 
+                    _awsCloudsearchService.UploadNewPinToAws(personPin); 
 
                     return (Ok(pin));
                 }
@@ -332,7 +328,7 @@ namespace crds_angular.Controllers.API
                 }
                 catch (Exception e)
                 {
-                    _logger.Error(string.Format("Could not create invitation to recipient {0} ({1}) for group {2}", person.firstName + " " + person.lastName, person.email, 3), e);
+                    _logger.Error($"Could not create invitation to recipient {person.firstName + " " + person.lastName} ({person.email}) for group {3}", e);
                     var apiError = new ApiErrorDto("CreateInvitation Failed", e, HttpStatusCode.InternalServerError);
                     throw new HttpResponseException(apiError.HttpResponseMessage);
                 }
@@ -360,7 +356,7 @@ namespace crds_angular.Controllers.API
                     _logger.Error("Could not generate request", e);
                     if (e.Message == "User is already member or has request")
                     {
-                        throw new HttpResponseException(System.Net.HttpStatusCode.Conflict);
+                        throw new HttpResponseException(HttpStatusCode.Conflict);
                     }
                     else
                     {
@@ -373,10 +369,10 @@ namespace crds_angular.Controllers.API
 
 
         [ResponseType(typeof(PinSearchResultsDto))]
-        [VersionedRoute(template: "finder/testawsupload", minimumVersion: "1.0.0")]
-        [System.Web.Http.Route("finder/testawsupload")]
+        [VersionedRoute(template: "finder/uploadallcloudsearchrecords", minimumVersion: "1.0.0")]
+        [System.Web.Http.Route("finder/uploadallcloudsearchrecords")]
         [System.Web.Http.HttpGet]
-        public IHttpActionResult TestAwsUpload()
+        public IHttpActionResult UploadAllCloudsearchRecords()
         {
             try
             {
@@ -392,29 +388,10 @@ namespace crds_angular.Controllers.API
         }
 
         [ResponseType(typeof(PinSearchResultsDto))]
-        [VersionedRoute(template: "finder/testawssearch", minimumVersion: "1.0.0")]
-        [System.Web.Http.Route("finder/testawssearch/{searchstring}")]
+        [VersionedRoute(template: "finder/deleteallcloudsearchrecords", minimumVersion: "1.0.0")]
+        [System.Web.Http.Route("finder/deleteallcloudsearchrecords")]
         [System.Web.Http.HttpGet]
-        public IHttpActionResult TestAwsSearch([FromUri] string searchstring)
-        {
-            try
-            {
-                var response = _awsCloudsearchService.SearchConnectAwsCloudsearch(searchstring, "_all_fields");
-
-                return Ok(response);
-            }
-            catch (Exception ex)
-            {
-                var apiError = new ApiErrorDto("TestAwsSearch Failed", ex);
-                throw new HttpResponseException(apiError.HttpResponseMessage);
-            }
-        }
-
-        [ResponseType(typeof(PinSearchResultsDto))]
-        [VersionedRoute(template: "finder/testawsdelete", minimumVersion: "1.0.0")]
-        [System.Web.Http.Route("finder/testawsdelete")]
-        [System.Web.Http.HttpGet]
-        public IHttpActionResult TestAwsDelete()
+        public IHttpActionResult DeleteAllCloudsearchRecords()
         {
             try
             {

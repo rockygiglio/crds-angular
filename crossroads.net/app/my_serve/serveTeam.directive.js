@@ -87,6 +87,8 @@
 
       scope.isTeamTab = isTeamTab;
       scope.isTeamLeader = isTeamLeader;
+
+      scope.capacityReady = false;
       
       //////////////////////////////////////
 
@@ -557,11 +559,16 @@
 
       function updateCapacity() {
         _.each(scope.currentMember.roles, function(r) {
-          r.capacity = Capacity.get({
+          Capacity.get({
             id: r.roleId,
             eventId: scope.team.eventId,
             min: r.minimum,
             max: r.maximum
+          })
+          .$promise
+          .then((result) => {
+            r.capacity = result; 
+            scope.capacityReady = true;
           });
         });
       }

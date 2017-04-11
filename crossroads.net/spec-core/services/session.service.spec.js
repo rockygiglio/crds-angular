@@ -201,7 +201,7 @@ describe('Session Service', function() {
         });
         Session.redirectIfNeeded(state);
         timeout.flush();
-        expect(state.go).toHaveBeenCalledWith('content', null);
+        expect(state.go).toHaveBeenCalledWith('content');
     });
 
     it('should redirect to url with params', function() {
