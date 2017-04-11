@@ -67,7 +67,8 @@
     $rootScope.$on('$stateChangeStart', (event, toState, toParams, fromState, fromParams) => {
       ContentPageService.reset();
       if (toState.name === 'logout') {
-        if (fromState.data === undefined || !fromState.data.isProtected) {
+        if ((fromState.data === undefined || !fromState.data.isProtected) &&
+            (fromState.name !== undefined && fromState.name !== '')) {
           Session.addRedirectRoute(fromState.name, fromParams);
         } else {
           Session.addRedirectRoute('content', { link: '/' });
