@@ -329,7 +329,7 @@
             }
           },
           resolve: {
-            processExternalRedirect: ['$location', 'Session', function($location, Session) {
+            processExternalRedirect: ['$location', function($location) {
 
               var handleRedirectUrlParameter = function() {
                 const qs = $location.search();
