@@ -15,16 +15,16 @@
       });
 
       modal.result.then(
-      () => {
-        // login success
-      },
-      () => {
-        // TODO:Once we stop using rootScope we can remove this and the depenedency on Injector
-        AuthService.logout();
-        $state.go('content', {
-          link: '/'
+        () => {
+          // login success
+        },
+        () => {
+          // TODO:Once we stop using rootScope we can remove this and the depenedency on Injector
+          AuthService.logout();
+          $state.go('content', {
+            link: '/'
+          });
         });
-      });
     }
   }
 
@@ -138,17 +138,22 @@
     vm.getUserRole = () => '';
 
     // TODO: Get this working to DRY up login_controller and register_controller
-    vm.redirectIfNeeded = ($injectedState) => {
+    vm.redirectIfNeeded = ($injectedState, $location) => {
       $timeout(() => {
         // timeout ensures processing occurs on next cycle
         if (vm.hasRedirectionInfo()) {
           const url = vm.exists('redirectUrl');
           const params = vm.exists('params');
           vm.removeRedirectRoute();
-          if (params === undefined || params === null || params === '' || params == '{}') {
-            $injectedState.go(url);
+
+          if ($location !== undefined && url.startsWith('/')) {
+            $location.path(url);
           } else {
-            $injectedState.go(url, JSON.parse(params));
+            if (params === undefined || params === null || params === '' || params == '{}') {
+              $injectedState.go(url);
+            } else {
+              $injectedState.go(url, JSON.parse(params));
+            }
           }
         }
       });
@@ -216,11 +221,11 @@
       const impersonationCookie = $cookies.get(cookieNames.IMPERSONATION_ID);
       if (impersonationCookie && !$rootScope.impersonation.active) {
         Impersonate.start(impersonationCookie)
-        .success((response) => {
-          Impersonate.storeCurrentUser();
-          Impersonate.storeDetails(true, response, impersonationCookie);
-          Impersonate.setCurrentUser(response);
-        });
+          .success((response) => {
+            Impersonate.storeCurrentUser();
+            Impersonate.storeDetails(true, response, impersonationCookie);
+            Impersonate.setCurrentUser(response);
+          });
       }
     };
 
@@ -287,7 +292,7 @@
       }
     };
 
-    vm.clearAndRedirect = (event, toState, toParams) => {                     
+    vm.clearAndRedirect = (event, toState, toParams) => {
       vm.clear();
       vm.resetCredentials();
       vm.addRedirectRoute(toState, toParams);
