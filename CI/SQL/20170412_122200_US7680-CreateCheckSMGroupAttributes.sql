@@ -18,7 +18,8 @@ BEGIN TRY
 
   -- ====================================================================
   -- Attribute types
-  DECLARE @Grade_Attribute_Type_ID int = 107;
+  DECLARE @SM_Middle_School_Grade_Attribute_Type_ID int = 107;
+  DECLARE @SM_High_School_Grade_Attribute_Type_ID int = 108;
 
   DECLARE @AttributeTypes TABLE (
     Attribute_Type_ID int,
@@ -26,7 +27,8 @@ BEGIN TRY
     [Description] nvarchar(500)
   );
   INSERT INTO @AttributeTypes VALUES
-    (@Grade_Attribute_Type_ID, 'SM Checkin Grade', 'Grade for SM Checkin group')
+    (@SM_Middle_School_Grade_Attribute_Type_ID, 'SM Middle School Checkin Grade', 'Grade for SM Middle School Checkin group'),
+    (@SM_High_School_Grade_Attribute_Type_ID, 'SM Middle School Checkin Grade', 'Grade for SM High School Checkin group')
 
   DECLARE @Attribute_Type_ID int, @Attribute_Type nvarchar(50), @Attribute_Type_Description nvarchar(500);
   DECLARE Attribute_Type_Cursor CURSOR FOR
@@ -79,13 +81,13 @@ BEGIN TRY
 
   -- Group Grades
   INSERT INTO @Attributes VALUES
-    (9038, 'Sixth Grade', 'Sixth Grade', @Grade_Attribute_Type_ID, 6),
-    (9042, 'Seventh Grade', 'Seventh Grade', @Grade_Attribute_Type_ID, 8),
-    (9043, 'Eighth Grade', 'Eighth Grade', @Grade_Attribute_Type_ID, 9),
-    (9044, 'Ninth Grade', 'Ninth Grade', @Grade_Attribute_Type_ID, 10),
-    (9045, 'Tenth Grade', 'Tenth Grade', @Grade_Attribute_Type_ID, 11),
-    (9046, 'Eleventh Grade', 'Eleventh Grade', @Grade_Attribute_Type_ID, 12),
-    (9047, 'Twelfth Grade', 'Twelfth Grade', @Grade_Attribute_Type_ID, 13);
+    (9038, 'Sixth Grade', 'Sixth Grade', @SM_Middle_School_Grade_Attribute_Type_ID, 6),
+    (9042, 'Seventh Grade', 'Seventh Grade', @SM_Middle_School_Grade_Attribute_Type_ID, 8),
+    (9043, 'Eighth Grade', 'Eighth Grade', @SM_Middle_School_Grade_Attribute_Type_ID, 9),
+    (9044, 'Ninth Grade', 'Ninth Grade', @SM_High_School_Grade_Attribute_Type_ID, 10),
+    (9045, 'Tenth Grade', 'Tenth Grade', @SM_High_School_Grade_Attribute_Type_ID, 11),
+    (9046, 'Eleventh Grade', 'Eleventh Grade', @SM_High_School_Grade_Attribute_Type_ID, 12),
+    (9047, 'Twelfth Grade', 'Twelfth Grade', @SM_High_School_Grade_Attribute_Type_ID, 13);
 
   DECLARE @Attribute_ID int, @Attribute_Name nvarchar(100), @Attribute_Description nvarchar(255), @Attribute_Sort_Order int;
   DECLARE Attribute_Cursor CURSOR FOR
