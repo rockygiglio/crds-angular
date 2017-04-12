@@ -8,6 +8,37 @@
             </div>
             <!--/row-->
 
+            <!--Commitments-->
+            <div class="row commitments">
+                <div class="col-sm-12">
+                    <h2>Commitments</h2>
+
+                    <commitment-list
+                            commitment-list-input="giving_profile_controller.pledge_commitments">
+                    </commitment-list>
+
+                    <div ng-if="giving_profile_controller.pledge_commitments_data"
+                         dynamic-content="$root.MESSAGES.commitmentDonations.content | html"></div>
+                </div>
+
+                <div ng-if="giving_profile_controller.pledge_commitments_data">
+                    <div class="col-sm-12 text-center">
+                        <a href="/commitment" class="btn btn-primary">Add New</a>
+                    </div>
+                </div>
+
+                <!--  NO ACTIVE COMMITMENTS - ng-show if no records  -->
+                <div ng-show="!giving_profile_controller.pledge_commitments_data && giving_profile_controller.pledge_commitments_view_ready"
+                     class="no-data">
+                    <div class="col-sm-6 col-sm-offset-3">
+                        <svg viewBox="0 0 23 32" class="icon icon-file-text-o">
+                            <use xlink:href="#file-text-o"></use>
+                        </svg>
+                        <div dynamic-content="$root.MESSAGES.no_commitments.content | html"></div>
+                    </div>
+                </div>
+            </div>
+
             <!--Recurring Giving-->
             <div class="row recurring-gifts push-bottom">
                 <div class="col-sm-12">
@@ -89,37 +120,6 @@
                     </div>
                 </div>
                 <!--/row-->
-            </div>
-
-            <!--Commitments-->
-            <div class="row commitments">
-                <div class="col-sm-12">
-                    <h2>Commitments</h2>
-
-                    <commitment-list
-                            commitment-list-input="giving_profile_controller.pledge_commitments">
-                    </commitment-list>
-
-                    <div ng-if="giving_profile_controller.pledge_commitments_data"
-                         dynamic-content="$root.MESSAGES.commitmentDonations.content | html"></div>
-                </div>
-
-                <div ng-if="giving_profile_controller.pledge_commitments_data">
-                    <div class="col-sm-12 text-center">
-                        <a href="/commitment" class="btn btn-primary">Add New</a>
-                    </div>
-                </div>
-
-                <!--  NO ACTIVE COMMITMENTS - ng-show if no records  -->
-                <div ng-show="!giving_profile_controller.pledge_commitments_data && giving_profile_controller.pledge_commitments_view_ready"
-                     class="no-data">
-                    <div class="col-sm-6 col-sm-offset-3">
-                        <svg viewBox="0 0 23 32" class="icon icon-file-text-o">
-                            <use xlink:href="#file-text-o"></use>
-                        </svg>
-                        <div dynamic-content="$root.MESSAGES.no_commitments.content | html"></div>
-                    </div>
-                </div>
             </div>
 
             <div class="panel panel-default push-top">
