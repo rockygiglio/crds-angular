@@ -590,38 +590,6 @@ namespace MinistryPlatform.Translation.Test.Services
 
             Assert.NotNull(registrations);
         }
-
-        //[Test]
-        //public void UpdateContactAndUserAndCongregation()
-        //{
-
-        //    var leaderApp = new MpGroupLeaderProfile(2186211,
-        //        "silbermm@gmail.com",
-        //        "Silbernagel1",
-        //        "Matthew",
-        //        new DateTime(1981, 02, 21),
-        //        1
-        //    );
-
-        //    var upateFields = new List<string>
-        //    {
-        //        "Contacts.[Contact_ID] as Contact_ID",
-        //        "Contacts.[Display_Name]",
-        //        "Contacts.[Last_Name]",
-        //        "Contacts.[Nickname]",
-        //        "Contacts.[Date_of_Birth]",
-        //        "Contacts.[Display_Name]",
-        //        "Household_ID_Table_Congregation_ID_Table.[Congregation_ID]",
-        //        "Household_ID_Table_Congregation_ID_Table_Contact_ID_Table.[Contact_ID] AS [Congregation_Contact ID]"
-        //        "User_Account_Table.[User_Name]",
-        //        "User_Account_Table.[User_Email]",
-        //        "User_Account_Table.[Display_Name]",
-        //        "User_Account_Table.[Contact_ID] as [Blah]"
-        //    };
-
-        //    var leaderUpdate = _fixture.UsingAuthenticationToken(_authToken).Update<MpGroupLeaderProfile>(leaderApp, upateFields);
-        //    Assert.IsNotNull(leaderUpdate);
-        //}
     }
 
     [MpRestApiTable(Name = "Payment_Types")]
