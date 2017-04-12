@@ -26,7 +26,7 @@ namespace crds_angular.Controllers.API
             return await Authorized(token => {              
                 try
                 {
-                    _groupLeaderService.SaveProfile(token, profile);
+                    Task.Run(() => _groupLeaderService.SaveProfile(token, profile)).Wait();                    
                     return Ok();
                 }
                 catch (Exception e)

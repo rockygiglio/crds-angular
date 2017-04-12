@@ -37,7 +37,7 @@ namespace crds_angular.Security
         /// <returns>An Observable<IHttpActionResult> from the "doIt" expression, or UnauthorizedResult if the user is not authenticated.</returns>
         protected async Task<IHttpActionResult> Authorized(Func<string, IHttpActionResult> doIt)
         {
-            return await (Authorized(doIt, () => { return Unauthorized(); }));
+            return await (Authorized(doIt, () => Unauthorized()));
         }
 
         protected async Task<IHttpActionResult> Authorized(Func<string, IHttpActionResult> actionWhenAuthorized, Func<IHttpActionResult> actionWhenNotAuthorized)

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using System.Web;
@@ -23,7 +24,7 @@ namespace crds_angular.Services
             _userRepository = userRepository;
         }
 
-        public async void SaveProfile(string token, GroupLeaderProfileDTO leader)
+        public async Task SaveProfile(string token, GroupLeaderProfileDTO leader)
         {
             var person = new Person
             {
@@ -45,9 +46,10 @@ namespace crds_angular.Services
             {
                 throw new Exception($"Unable to find the user account for {leader.OldEmail}", e);
             }
-            await Observable.CombineLatest(
-                   Observable.Start(() => _personService.SetProfile(token, person)),
-                   Observable.Start(() => _userRepository.UpdateUser(userUpdates)));
+            await Observable.Zip(
+                Observable.Start(() => _personService.SetProfile(token, person)),
+                Observable.Start(() => _userRepository.UpdateUser(userUpdates))
+                );
         }      
     }
 }
