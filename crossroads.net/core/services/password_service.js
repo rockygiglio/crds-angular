@@ -7,11 +7,11 @@
 
   function PasswordService($resource) {
     return {
-      ResetRequest: $resource(__API_ENDPOINT__ + 'api/requestpasswordreset'),
-      VerifyResetToken: $resource(__API_ENDPOINT__ + 'api/verifyresettoken/:token/'),
-      EmailExists: $resource(__API_ENDPOINT__ + 'api/lookup/0/find/'),
-      ResetPassword: $resource(__API_ENDPOINT__ + 'api/resetpassword'),
-      VerifyCredentials: $resource(__API_ENDPOINT__ + 'api/verifycredentials')
+      ResetRequest: $resource(__GATEWAY_CLIENT_ENDPOINT__ + 'api/requestpasswordreset'),
+      VerifyResetToken: $resource(__GATEWAY_CLIENT_ENDPOINT__ + 'api/verifyresettoken/:token/'),
+      EmailExists: $resource(__GATEWAY_CLIENT_ENDPOINT__ + 'api/lookup/0/find/'),
+      ResetPassword: $resource(__GATEWAY_CLIENT_ENDPOINT__ + 'api/resetpassword'),
+      VerifyCredentials: $resource(__GATEWAY_CLIENT_ENDPOINT__ + 'api/verifycredentials')
     };
   }
 

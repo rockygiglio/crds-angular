@@ -124,7 +124,7 @@ require('../../../app/trips/trips.module');
           tripName: tripHelpers.MyTrips[0].tripName,
           donationDistributionId: tripHelpers.MyTrips[0].tripGifts[0].donationDistributionId
         };
-        $httpBackend.expectPOST(__API_ENDPOINT__ + 'api/donation/message', postData).respond(200);
+        $httpBackend.expectPOST(__GATEWAY_CLIENT_ENDPOINT__ + 'api/donation/message', postData).respond(200);
         $httpBackend.flush();
       });
 
@@ -138,7 +138,7 @@ require('../../../app/trips/trips.module');
           tripName: tripHelpers.MyTrips[0].tripName,
           donationDistributionId: tripHelpers.MyTrips[0].tripGifts[0].donationDistributionId
         };
-        $httpBackend.expectPOST(__API_ENDPOINT__ + 'api/donation/message', postData).respond(200);
+        $httpBackend.expectPOST(__GATEWAY_CLIENT_ENDPOINT__ + 'api/donation/message', postData).respond(200);
         $httpBackend.flush();
         expect($rootScope.$emit).toHaveBeenCalledWith('notify', $rootScope.MESSAGES.emailSent);
       });
@@ -153,7 +153,7 @@ require('../../../app/trips/trips.module');
           tripName: tripHelpers.MyTrips[0].tripName,
           donationDistributionId: tripHelpers.MyTrips[0].tripGifts[0].donationDistributionId
         };
-        $httpBackend.expectPOST(__API_ENDPOINT__ + 'api/donation/message', postData).respond(500);
+        $httpBackend.expectPOST(__GATEWAY_CLIENT_ENDPOINT__ + 'api/donation/message', postData).respond(500);
         $httpBackend.flush();
         expect($rootScope.$emit).toHaveBeenCalledWith('notify', $rootScope.MESSAGES.emailSendingError);
       });

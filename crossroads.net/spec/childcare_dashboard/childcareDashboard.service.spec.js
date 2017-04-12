@@ -6,7 +6,7 @@ import childcareModule from '../../app/childcare_dashboard/childcareDashboard.mo
 
 describe('Childcare Dashboard Service', () => {
 
-  const endpoint = window.__env__['CRDS_API_ENDPOINT'] + 'api';
+  const endpoint = window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api';
   const uid = 1234567890;
 
   let childcareService,

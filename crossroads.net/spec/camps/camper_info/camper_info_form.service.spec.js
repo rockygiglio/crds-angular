@@ -7,7 +7,7 @@ describe('Camper Info Form Service', () => {
   let httpBackend;
 
   // eslint-disable-next-line no-underscore-dangle
-  const endpoint = window.__env__.CRDS_API_ENDPOINT + 'api';
+  const endpoint = window.__env__.CRDS_GATEWAY_CLIENT_ENDPOINT + 'api';
 
   beforeEach(angular.mock.module(campsModule));
 

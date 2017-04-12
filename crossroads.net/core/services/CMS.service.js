@@ -11,7 +11,7 @@
 
     vm.http = $http;
 
-    vm.url = `${__CMS_ENDPOINT__}api`;
+    vm.url = `${__CMS_CLIENT_ENDPOINT__}api`;
 
     vm.todaysDate = moment().format('YYYY-MM-DD');
     

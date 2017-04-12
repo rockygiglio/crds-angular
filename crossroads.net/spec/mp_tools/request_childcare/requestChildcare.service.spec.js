@@ -4,7 +4,7 @@ import RequestChildcareService from '../../../app/mp_tools/request_childcare/req
 describe('Request Childcare Service', () => {
   let requestChildcareService, lookupService, log, httpBackend, rootScope, resource;
 
-  const endpoint = window.__env__['CRDS_API_ENDPOINT'] + 'api';
+  const endpoint = window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api';
 
   beforeEach(angular.mock.module(constants.MODULES.MPTOOLS));
 
@@ -57,7 +57,7 @@ describe('Request Childcare Service', () => {
   });
 
   it('should handle getCongregations error', () => {   
-    httpBackend.expectGET(window.__env__['CRDS_API_ENDPOINT'] +
+    httpBackend.expectGET(window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] +
                           'api/lookup/childcarelocations').respond(500,[] );
     var request = requestChildcareService.getCongregations();
     httpBackend.flush();

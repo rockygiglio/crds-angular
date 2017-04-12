@@ -6,7 +6,7 @@ describe('CMSService', () => {
       httpBackend,
       fixture;
 
-  const endpoint = `${window.__env__['CRDS_CMS_ENDPOINT']}api`;
+  const endpoint = `${window.__env__['CRDS_CMS_CLIENT_ENDPOINT']}api`;
 
   let baseTime = new Date(2016, 9, 1); // set to 10/1/2016 - month appears to be 0 based index however
   let todaysDate = moment(baseTime).format('YYYY-MM-DD');

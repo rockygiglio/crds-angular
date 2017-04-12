@@ -75,7 +75,7 @@ describe('Session Service', function() {
 
     it('should set credentials when login is detected', function() {
       $cookies.put(cookieNames.SESSION_ID, mockResponse.userToken);
-      Backend.expectGET(window.__env__['CRDS_API_ENDPOINT'] + 'api/authenticated').respond(200, mockResponse);
+      Backend.expectGET(window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api/authenticated').respond(200, mockResponse);
       Session.performReactiveSso();
       Backend.flush();
       expect(rootScope.userid).toBe(mockResponse.userId);
@@ -147,7 +147,7 @@ describe('Session Service', function() {
       });
 
       it('should handle successful login', function() {
-        Backend.expectGET(window.__env__['CRDS_API_ENDPOINT'] + 'api/authenticated').respond(200, mockResponse);
+        Backend.expectGET(window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api/authenticated').respond(200, mockResponse);
         Session.verifyAuthentication(undefined, state.current.name, state.current.data, state.current.params);
         Backend.flush();
         expect(rootScope.userid).toBe(mockResponse.userId);

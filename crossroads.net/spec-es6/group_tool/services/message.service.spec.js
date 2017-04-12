@@ -10,7 +10,7 @@ describe('Group Tool Message Service', () => {
     deferred,
     httpBackend;
 
-  const endpoint = `${window.__env__['CRDS_API_ENDPOINT']}api`;
+  const endpoint = `${window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT']}api`;
 
   beforeEach(angular.mock.module(CONSTANTS.MODULES.GROUP_TOOL));
 

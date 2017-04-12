@@ -175,7 +175,7 @@
       if (vm.isActive()) {
         const promise = $http({
           method: 'GET',
-          url: `${__API_ENDPOINT__}api/authenticated`,
+          url: `${__GATEWAY_CLIENT_ENDPOINT__}api/authenticated`,
           withCredentials: true,
           headers: {
             Authorization: $cookies.get(cookieNames.SESSION_ID),

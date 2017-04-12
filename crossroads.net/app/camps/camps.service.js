@@ -14,20 +14,20 @@ class CampsService {
     this.attributeTypeService = AttributeTypeService;
     this.sessionStorage = $sessionStorage;
 
-    this.campResource = $resource(`${__API_ENDPOINT__}api/camps/:campId`);
-    this.camperResource = $resource(`${__API_ENDPOINT__}api/camps/:campId/campers/:camperId`);
-    this.campDashboard = $resource(`${__API_ENDPOINT__}api/v1.0.0/camps/my-camp`);
-    this.campFamily = $resource(`${__API_ENDPOINT__}api/v1.0.0/camps/:campId/family`);
-    this.campMedicalResource = $resource(`${__API_ENDPOINT__}api/v1.0.0/camps/:campId/medical/:contactId`, { campId: '@campId', contactId: '@contactId' });
-    this.campWaiversResource = $resource(`${__API_ENDPOINT__}api/v1.0.0/camps/:campId/waivers/:contactId`, { campId: '@campId', contactId: '@contactId' });
-    this.medicalInfoResource = $resource(`${__API_ENDPOINT__}api/camps/medical/:contactId`);
-    this.emergencyContactResource = $resource(`${__API_ENDPOINT__}api/v1.0.0/camps/:campId/emergencycontact/:contactId`, { campId: '@campId', contactId: '@contactId' });
-    this.productSummaryResource = $resource(`${__API_ENDPOINT__}api/camps/:campId/product/:camperId`, { campId: '@campId', camperId: '@camperId', timestamp: moment.now() });
-    this.paymentResource = $resource(`${__API_ENDPOINT__}api/v1.0.0/invoice/:invoiceId/payment/:paymentId`, { invoiceId: 'invoiceId', paymentId: '@paymentId' });
-    this.confirmationResource = $resource(`${__API_ENDPOINT__}api/camps/:campId/confirmation/:contactId`);
-    this.paymentConfirmationResource = $resource(`${__API_ENDPOINT__}api/v1.0.0/payment/:paymentId/confirmation`);
-    this.hasPaymentsResource = $resource(`${__API_ENDPOINT__}api/v1.0.0/invoice/:invoiceId/has-payment`, { method: 'GET', cache: false });
-    this.interestedInResource = $resource(`${__API_ENDPOINT__}api/v1.0.0/contact/:contactId/interested-in/:eventId`);
+    this.campResource = $resource(`${__GATEWAY_CLIENT_ENDPOINT__}api/camps/:campId`);
+    this.camperResource = $resource(`${__GATEWAY_CLIENT_ENDPOINT__}api/camps/:campId/campers/:camperId`);
+    this.campDashboard = $resource(`${__GATEWAY_CLIENT_ENDPOINT__}api/v1.0.0/camps/my-camp`);
+    this.campFamily = $resource(`${__GATEWAY_CLIENT_ENDPOINT__}api/v1.0.0/camps/:campId/family`);
+    this.campMedicalResource = $resource(`${__GATEWAY_CLIENT_ENDPOINT__}api/v1.0.0/camps/:campId/medical/:contactId`, { campId: '@campId', contactId: '@contactId' });
+    this.campWaiversResource = $resource(`${__GATEWAY_CLIENT_ENDPOINT__}api/v1.0.0/camps/:campId/waivers/:contactId`, { campId: '@campId', contactId: '@contactId' });
+    this.medicalInfoResource = $resource(`${__GATEWAY_CLIENT_ENDPOINT__}api/camps/medical/:contactId`);
+    this.emergencyContactResource = $resource(`${__GATEWAY_CLIENT_ENDPOINT__}api/v1.0.0/camps/:campId/emergencycontact/:contactId`, { campId: '@campId', contactId: '@contactId' });
+    this.productSummaryResource = $resource(`${__GATEWAY_CLIENT_ENDPOINT__}api/camps/:campId/product/:camperId`, { campId: '@campId', camperId: '@camperId', timestamp: moment.now() });
+    this.paymentResource = $resource(`${__GATEWAY_CLIENT_ENDPOINT__}api/v1.0.0/invoice/:invoiceId/payment/:paymentId`, { invoiceId: 'invoiceId', paymentId: '@paymentId' });
+    this.confirmationResource = $resource(`${__GATEWAY_CLIENT_ENDPOINT__}api/camps/:campId/confirmation/:contactId`);
+    this.paymentConfirmationResource = $resource(`${__GATEWAY_CLIENT_ENDPOINT__}api/v1.0.0/payment/:paymentId/confirmation`);
+    this.hasPaymentsResource = $resource(`${__GATEWAY_CLIENT_ENDPOINT__}api/v1.0.0/invoice/:invoiceId/has-payment`, { method: 'GET', cache: false });
+    this.interestedInResource = $resource(`${__GATEWAY_CLIENT_ENDPOINT__}api/v1.0.0/contact/:contactId/interested-in/:eventId`);
 
     this.campInfo = null;
     this.campTitle = null;
