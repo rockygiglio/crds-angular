@@ -28,7 +28,7 @@ BEGIN TRY
   );
   INSERT INTO @AttributeTypes VALUES
     (@SM_Middle_School_Grade_Attribute_Type_ID, 'SM Middle School Checkin Grade', 'Grade for SM Middle School Checkin group'),
-    (@SM_High_School_Grade_Attribute_Type_ID, 'SM Middle School Checkin Grade', 'Grade for SM High School Checkin group')
+    (@SM_High_School_Grade_Attribute_Type_ID, 'SM High School Checkin Grade', 'Grade for SM High School Checkin group')
 
   DECLARE @Attribute_Type_ID int, @Attribute_Type nvarchar(50), @Attribute_Type_Description nvarchar(500);
   DECLARE Attribute_Type_Cursor CURSOR FOR
