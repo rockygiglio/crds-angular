@@ -79,6 +79,7 @@ BEGIN TRY
 
   -- Group Grades
   INSERT INTO @Attributes VALUES
+    (9038, 'Sixth Grade', 'Sixth Grade', @Grade_Attribute_Type_ID, 6),
     (9042, 'Seventh Grade', 'Seventh Grade', @Grade_Attribute_Type_ID, 8),
     (9043, 'Eighth Grade', 'Eighth Grade', @Grade_Attribute_Type_ID, 9),
     (9044, 'Ninth Grade', 'Ninth Grade', @Grade_Attribute_Type_ID, 10),
