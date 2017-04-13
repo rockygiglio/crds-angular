@@ -35,6 +35,7 @@
     $log,
     $http,
     $state,
+    $location,
     $interval,
     $timeout,
     $cookies,
@@ -137,23 +138,24 @@
 
     vm.getUserRole = () => '';
 
-    // TODO: Get this working to DRY up login_controller and register_controller
-    vm.redirectIfNeeded = ($injectedState, $location) => {
+    vm.redirectIfNeeded = () => {
       $timeout(() => {
-        // timeout ensures processing occurs on next cycle
         if (vm.hasRedirectionInfo()) {
           const url = vm.exists('redirectUrl');
           const params = vm.exists('params');
           vm.removeRedirectRoute();
 
-          if ($location !== undefined && url.startsWith('/')) {
-            $location.path(url);
-          } else {
-            if (params === undefined || params === null || params === '' || params == '{}') {
-              $injectedState.go(url);
+          const foundState = $state.get().filter(state => state.name === url);
+          if (foundState.length > 0) {
+            if (params === undefined) {
+              $state.go(url);
             } else {
-              $injectedState.go(url, JSON.parse(params));
+              $state.go(url, JSON.parse(params));
             }
+          } else if (params === undefined) {
+            $location.url(url);
+          } else {
+            $location.url(url).search(JSON.parse(params));
           }
         }
       });
@@ -186,7 +188,8 @@
             Authorization: $cookies.get(cookieNames.SESSION_ID),
             RefreshToken: $cookies.get(cookieNames.REFRESH_TOKEN)
           }
-        }).success((user) => {
+        }).then((response) => {
+          var user = response.data;
           $rootScope.userid = user.userId;
           $rootScope.username = user.username;
           $rootScope.email = user.userEmail;
@@ -199,9 +202,11 @@
           $cookies.put('username', user.username);
           vm.enableReactiveSso(event, stateName, stateData, stateToParams);
           vm.restoreImpersonation();
-        }).error(() => {
-          vm.clearAndRedirect(event, stateName, stateToParams);
-          vm.enableReactiveSso(event, stateName, stateData, stateToParams);
+        }, (response) => {
+          if (response.status !== -1) {
+            vm.clearAndRedirect(event, stateName, stateToParams);
+            vm.enableReactiveSso(event, stateName, stateData, stateToParams);
+          }
         });
         return promise;
       } else if (stateData !== undefined && stateData.isProtected) {
@@ -319,6 +324,7 @@
     '$log',
     '$http',
     '$state',
+    '$location',
     '$interval',
     '$timeout',
     '$cookies',

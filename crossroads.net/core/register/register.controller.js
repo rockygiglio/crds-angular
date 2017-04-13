@@ -89,14 +89,7 @@
         if (vm.registerCallback) {
           vm.registerCallback();
         } else if (Session.hasRedirectionInfo()) {
-          var url = Session.exists('redirectUrl');
-          var params = Session.exists('params');
-          Session.removeRedirectRoute();
-          if (params === undefined) {
-            $state.go(url);
-          } else {
-            $state.go(url, JSON.parse(params));
-          }
+          Session.redirectIfNeeded();
         } else {
           $state.go('content', {link:'/getstarted'});
         }
