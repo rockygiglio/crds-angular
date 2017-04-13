@@ -363,9 +363,13 @@ namespace crds_angular.Controllers.API
                 catch (Exception e)
                 {
                     _logger.Error("Could not generate request", e);
-                    if (e.Message == "User is already member or has request")
+                    if (e.Message == "User already has request")
                     {
                         throw new HttpResponseException(HttpStatusCode.Conflict);
+                    }
+                    else if (e.Message == "User already a member")
+                    {
+                        throw new HttpResponseException(HttpStatusCode.NotAcceptable);
                     }
                     else
                     {
