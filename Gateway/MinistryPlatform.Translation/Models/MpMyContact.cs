@@ -15,6 +15,7 @@ namespace MinistryPlatform.Translation.Models
         public int Contact_ID { get; set; }
         public string County { get; set; }
         public string Date_Of_Birth { get; set; }
+        public string Display_Name { get; set; }
         public string Email_Address { get; set; }
         public string Employer_Name { get; set; }
         public string First_Name { get; set; }

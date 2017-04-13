@@ -132,7 +132,7 @@ describe('PaymentService', function() {
 
   describe('function getDonor', function() {
     beforeEach(function() {
-      httpBackend.expectGET(window.__env__['CRDS_API_ENDPOINT'] + 'api/donor/?email=me%2Byou%2Bus@here.com')
+      httpBackend.expectGET(window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api/donor/?email=me%2Byou%2Bus@here.com')
         .respond(200, 'good');
     });
 
@@ -159,7 +159,7 @@ describe('PaymentService', function() {
         callback(200, {id: 'tok_test'});
       });
 
-      httpBackend.expectPOST(window.__env__['CRDS_API_ENDPOINT'] + 'api/donor', postData)
+      httpBackend.expectPOST(window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api/donor', postData)
         .respond({
           id: '12345',
           stripe_customer_id: 'cust_test'
@@ -199,7 +199,7 @@ describe('PaymentService', function() {
         callback(200, {id: 'tok_test'});
       });
 
-      httpBackend.expectPOST(window.__env__['CRDS_API_ENDPOINT'] + 'api/donor', postData)
+      httpBackend.expectPOST(window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api/donor', postData)
         .respond(400, { error: { message: 'Token not found' } });
 
       var successCallback = jasmine.createSpyObj('successCallback', ['onSuccess']);
@@ -232,7 +232,7 @@ describe('PaymentService', function() {
         callback(200, {id: 'tok_test'});
       });
 
-      httpBackend.expectPOST(window.__env__['CRDS_API_ENDPOINT'] + 'api/donor', postData)
+      httpBackend.expectPOST(window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api/donor', postData)
         .respond({
           id: '12345',
           stripe_customer_id: 'cust_test'
@@ -271,7 +271,7 @@ describe('PaymentService', function() {
         callback(200, {id: 'tok_test'});
       });
 
-      httpBackend.expectPOST(window.__env__['CRDS_API_ENDPOINT'] + 'api/donor', postData)
+      httpBackend.expectPOST(window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api/donor', postData)
         .respond(400, { error: { message: 'Token not found' } });
 
       var successCallback = jasmine.createSpyObj('successCallback', ['onSuccess']);
@@ -310,7 +310,7 @@ describe('PaymentService', function() {
         callback(200, {id: 'tok_test'});
       });
 
-      httpBackend.expectPOST(window.__env__['CRDS_API_ENDPOINT'] + 'api/donor/recurrence', postData)
+      httpBackend.expectPOST(window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api/donor/recurrence', postData)
         .respond({
           // TODO: Need to place proper response here
           dummy: ''
@@ -351,7 +351,7 @@ describe('PaymentService', function() {
         callback(200, {id: 'tok_test'});
       });
 
-      httpBackend.expectPOST(window.__env__['CRDS_API_ENDPOINT'] + 'api/donor/recurrence', postData)
+      httpBackend.expectPOST(window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api/donor/recurrence', postData)
         .respond(400, { error: { message: 'Token not found' } });
 
       var successCallback = jasmine.createSpyObj('successCallback', ['onSuccess']);
@@ -391,7 +391,7 @@ describe('PaymentService', function() {
         callback(200, {id: 'tok_test'});
       });
 
-      httpBackend.expectPOST(window.__env__['CRDS_API_ENDPOINT'] + 'api/donor/recurrence', postData)
+      httpBackend.expectPOST(window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api/donor/recurrence', postData)
         .respond({
           // TODO: Need to place proper response here
           dummy: ''
@@ -432,7 +432,7 @@ describe('PaymentService', function() {
         callback(200, {id: 'tok_test'});
       });
 
-      httpBackend.expectPOST(window.__env__['CRDS_API_ENDPOINT'] + 'api/donor/recurrence', postData)
+      httpBackend.expectPOST(window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api/donor/recurrence', postData)
         .respond(400, { error: { message: 'Token not found' } });
 
       var successCallback = jasmine.createSpyObj('successCallback', ['onSuccess']);
@@ -461,7 +461,7 @@ describe('PaymentService', function() {
         donor_id: 'Donor'
       };
 
-      httpBackend.expectPOST(window.__env__['CRDS_API_ENDPOINT'] + 'api/donation', postData)
+      httpBackend.expectPOST(window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api/donation', postData)
         .respond({
           amount: '1234',
           program_id: 'Program'
@@ -502,7 +502,7 @@ describe('PaymentService', function() {
         callback(200, {id: 'tok_test'});
       });
 
-      httpBackend.expectPUT(window.__env__['CRDS_API_ENDPOINT'] + 'api/donor', putData)
+      httpBackend.expectPUT(window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api/donor', putData)
         .respond({
           id: '12345',
           stripe_customer_id: 'cust_test'
@@ -542,7 +542,7 @@ describe('PaymentService', function() {
         callback(200, {id: 'tok_test'});
       });
 
-      httpBackend.expectPUT(window.__env__['CRDS_API_ENDPOINT'] + 'api/donor', putData)
+      httpBackend.expectPUT(window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api/donor', putData)
         .respond(400, { error: { message: 'Token not found' }});
 
       var successCallback = jasmine.createSpyObj('successCallback', ['onSuccess']);
@@ -584,7 +584,7 @@ describe('PaymentService', function() {
         callback(200, {id: 'tok_test'});
       });
 
-      httpBackend.expectPUT(window.__env__['CRDS_API_ENDPOINT'] + 'api/donor', putData)
+      httpBackend.expectPUT(window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api/donor', putData)
         .respond({
           id: '12345',
           stripe_customer_id: 'cust_test'
@@ -624,7 +624,7 @@ describe('PaymentService', function() {
         callback(200, {id: 'tok_test'});
       });
 
-      httpBackend.expectPUT(window.__env__['CRDS_API_ENDPOINT'] + 'api/donor', putData)
+      httpBackend.expectPUT(window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api/donor', putData)
         .respond(400, { error: { message: 'Token not found' }});
 
       var successCallback = jasmine.createSpyObj('successCallback', ['onSuccess']);

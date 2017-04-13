@@ -63,7 +63,7 @@ describe('SiteFilter Directive', function() {
       it('should cotain the following data', function() {
         var isolateScope = element.isolateScope();
         isolateScope.activate();
-        $httpBackend.expectGET(window.__env__['CRDS_API_ENDPOINT'] + 'api/lookup/crossroadslocations')
+        $httpBackend.expectGET(window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api/lookup/crossroadslocations')
                                .respond(mockSites);
         $httpBackend.flush();
         expect(isolateScope.sites.length).toEqual(3);

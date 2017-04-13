@@ -39,7 +39,7 @@ describe('Volunteer Contact MPTools Component', function() {
     MPTools = $injector.get('MPTools');
     Group = $injector.get('Group');
 
-    $httpBackend.whenGET(window.__env__['CRDS_API_ENDPOINT'] + 'api/group/53232')
+    $httpBackend.whenGET(window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api/group/53232')
       .respond(200, helpers.group);
      
     element = '<volunteer-contact></volunteer-contact>';

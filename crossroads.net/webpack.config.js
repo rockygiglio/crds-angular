@@ -20,6 +20,7 @@ module.exports = {
     ang: './core/ang.js',
     govolunteer: './app/go_volunteer/goVolunteer.module.js',
     core: ['./core/core.js'],
+    legacy: ['./styles/legacy.scss'],
     common: ['./app/common/common.module.js'],
     formbuilder: ['./app/formBuilder/formBuilder.module.js'],
     formlybuilder: ['./app/formlyBuilder/formlyBuilder.module.js']
@@ -33,7 +34,7 @@ module.exports = {
   output: {
     path: './assets',
     publicPath: '/assets/',
-    filename: '[name].[hash].js',
+    filename: '[name].js',
   },
   resolve: {
     extensions: ['', '.js', '.jsx'],
@@ -93,7 +94,7 @@ module.exports = {
     ]
   },
   plugins: [
-    new ExtractTextPlugin('[name].[hash].css'),
+    new ExtractTextPlugin('[name].css'),
     definePlugin,
     assetsPluginInstance,
     new webpack.optimize.UglifyJsPlugin({

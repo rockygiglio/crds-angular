@@ -301,7 +301,7 @@ describe('RecurringGivingList Directive', function() {
     });
 
     it('should refresh the recurring giving list when successfully updated', function() {
-      $httpBackend.expectGET(window.__env__['CRDS_API_ENDPOINT'] + 'api/donor/recurrence')
+      $httpBackend.expectGET(window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api/donor/recurrence')
                              .respond(updatedRecurringGifts);
 
       expect(modal.open).toHaveBeenCalled();

@@ -14,7 +14,7 @@
                 var loadEvents = function(){
 
                     $log.debug("In addEventsData directive");
-                    var evts = $resource(__API_ENDPOINT__ + 'api/events/:site').query({site:$stateParams.site}, function(response) {
+                    var evts = $resource(__GATEWAY_CLIENT_ENDPOINT__ + 'api/events/:site').query({site:$stateParams.site}, function(response) {
                         $log.debug("Response: " + response);
                         evts = response;
                         debugger;

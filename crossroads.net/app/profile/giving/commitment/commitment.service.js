@@ -7,7 +7,7 @@
   function CommitmentService($resource) {
 
     return {
-      getPledgeCommitments: $resource(__API_ENDPOINT__ + 'api/donor/pledge'),
+      getPledgeCommitments: $resource(__GATEWAY_CLIENT_ENDPOINT__ + 'api/donor/pledge'),
     };
 
   }

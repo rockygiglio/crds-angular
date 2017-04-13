@@ -22,7 +22,8 @@ namespace crds_angular.Services
         private readonly IFinderRepository _finderRepository;
         private readonly IConfigurationWrapper _configurationWrapper;
         protected string AmazonSearchUrl;
-        private const int ReturnRecordCount = 10000;
+        protected string AwsAccessKeyId;
+        protected string AwsSecretAccessKey;
 
         public AwsCloudsearchService(IAddressGeocodingService addressGeocodingService, 
                                      IFinderRepository finderRepository,                          
@@ -32,25 +33,23 @@ namespace crds_angular.Services
             _finderRepository = finderRepository;
             _configurationWrapper = configurationWrapper;
 
-            AmazonSearchUrl = _configurationWrapper.GetEnvironmentVarAsString("CRDS_AWS_CONNECT_ENDPOINT");
+            AmazonSearchUrl    = _configurationWrapper.GetEnvironmentVarAsString("CRDS_AWS_CONNECT_ENDPOINT");
+            AwsAccessKeyId     = _configurationWrapper.GetEnvironmentVarAsString("CRDS_AWS_CONNECT_ACCESSKEYID");
+            AwsSecretAccessKey = _configurationWrapper.GetEnvironmentVarAsString("CRDS_AWS_CONNECT_SECRETACCESSKEY");
+
+
         }
 
         public UploadDocumentsResponse UploadAllConnectRecordsToAwsCloudsearch()
         {
-            var domainConfig = new AmazonCloudSearchDomainConfig
-            {
-                ServiceURL = AmazonSearchUrl
-            };
-            var cloudSearch = new Amazon.CloudSearchDomain.AmazonCloudSearchDomainClient(domainConfig);
+            var cloudSearch = new AmazonCloudSearchDomainClient(AwsAccessKeyId, AwsSecretAccessKey, AmazonSearchUrl);
 
             var pinList = GetDataForCloudsearch();
 
             //serialize
             var json = JsonConvert.SerializeObject(pinList, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
-
             var ms = new MemoryStream(Encoding.UTF8.GetBytes(json));
-
-            var upload = new Amazon.CloudSearchDomain.Model.UploadDocumentsRequest()
+            var upload = new UploadDocumentsRequest()
             {
                 ContentType = ContentType.ApplicationJson,
                 Documents = ms
@@ -61,11 +60,7 @@ namespace crds_angular.Services
 
         public UploadDocumentsResponse DeleteAllConnectRecordsInAwsCloudsearch()
         {
-            var domainConfig = new AmazonCloudSearchDomainConfig
-            {
-                ServiceURL = AmazonSearchUrl
-            };
-            var cloudSearch = new Amazon.CloudSearchDomain.AmazonCloudSearchDomainClient(domainConfig);
+            var cloudSearch = new AmazonCloudSearchDomainClient(AwsAccessKeyId, AwsSecretAccessKey, AmazonSearchUrl);
 
             var results = SearchConnectAwsCloudsearch("matchall", "_no_fields");
             var deletelist = new List<AwsCloudsearchDto>();
@@ -80,10 +75,8 @@ namespace crds_angular.Services
             }
             // serialize
             var json = JsonConvert.SerializeObject(deletelist, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
-
             var ms = new MemoryStream(Encoding.UTF8.GetBytes(json));
-
-            var upload = new Amazon.CloudSearchDomain.Model.UploadDocumentsRequest()
+            var upload = new UploadDocumentsRequest()
             {
                 ContentType = ContentType.ApplicationJson,
                 Documents = ms
@@ -127,30 +120,20 @@ namespace crds_angular.Services
             };
         }
 
-        public SearchResponse SearchConnectAwsCloudsearch(string querystring, string returnFields, GeoCoordinate originCoords = null, AwsBoundingBox boundingBox = null)
+        public SearchResponse SearchConnectAwsCloudsearch(string querystring, string returnFields, int returnSize = 10000, GeoCoordinate originCoords = null, AwsBoundingBox boundingBox = null)
         {
-            var domainConfig = new AmazonCloudSearchDomainConfig
-            {
-                ServiceURL = AmazonSearchUrl
-            };
-
-            var cloudSearch = new Amazon.CloudSearchDomain.AmazonCloudSearchDomainClient(domainConfig);
-            var searchRequest = new Amazon.CloudSearchDomain.Model.SearchRequest
+            var cloudSearch = new AmazonCloudSearchDomainClient(AwsAccessKeyId, AwsSecretAccessKey, AmazonSearchUrl);
+            var searchRequest = new SearchRequest
             {
                 Query = querystring,
                 QueryParser = QueryParser.Structured,
-                Size = ReturnRecordCount,
-                Return = returnFields + ",_score",
-                
+                Size = returnSize,
+                Return = returnFields + ",_score"
             };
 
             if (boundingBox != null)
             {
                 searchRequest.FilterQuery = $"latlong:['{boundingBox.UpperLeftCoordinates.Lat},{boundingBox.UpperLeftCoordinates.Lng}','{boundingBox.BottomRightCoordinates.Lat},{boundingBox.BottomRightCoordinates.Lng}']";
-            }
-            else
-            {
-                searchRequest.Size = 31;
             }
                
             if (originCoords != null)
@@ -164,42 +147,25 @@ namespace crds_angular.Services
             return (response);
         }
 
-        public void UploadNewPinToAWS(PinDto pin)
+        public void UploadNewPinToAws(PinDto pin)
         {
-            var domainConfig = new AmazonCloudSearchDomainConfig
-            {
-                ServiceURL = AmazonSearchUrl
-            };
-
-            var cloudSearch = new Amazon.CloudSearchDomain.AmazonCloudSearchDomainClient(domainConfig);
-
-            UploadDocumentsRequest upload = GetObjectToUploadToAws(pin);
-
-            var response = cloudSearch.UploadDocuments(upload);
+            var cloudSearch = new AmazonCloudSearchDomainClient(AwsAccessKeyId, AwsSecretAccessKey, AmazonSearchUrl);
+            var upload = GetObjectToUploadToAws(pin);
+            cloudSearch.UploadDocuments(upload);
         }
 
         private string GenerateAwsPinId(PinDto pin)
         {
-            string awsPinId = pin.Address.AddressID + "-" + (int)pin.PinType + "-" + pin.Participant_ID + "-" + getPinGroupIdOrEmptyString(pin);
+            var awsPinId = pin.Address.AddressID + "-" + (int)pin.PinType + "-" + pin.Participant_ID + "-" + GetPinGroupIdOrEmptyString(pin);
             return awsPinId; 
         }
 
-        private string getPinGroupIdOrEmptyString(PinDto pin)
+        private static string GetPinGroupIdOrEmptyString(PinDto pin)
         {
-            bool isGathering = pin.PinType == PinType.GATHERING;
-            string groupIdAsString = isGathering ? pin.Gathering.GroupId.ToString() : "";
+            var isGathering = pin.PinType == PinType.GATHERING;
+            var groupIdAsString = isGathering ? pin.Gathering.GroupId.ToString() : "";
 
             return groupIdAsString; 
-        }
-
-        private PinDto SetLatAndLangOnPinForNewAddress(PinDto pin)
-        {
-            GeoCoordinate newAddressCoords = _addressGeocodingService.GetGeoCoordinates(pin.Address);
-
-            pin.Address.Latitude = newAddressCoords.Latitude;
-            pin.Address.Longitude = newAddressCoords.Longitude;
-
-            return pin;
         }
 
         public UploadDocumentsRequest GetObjectToUploadToAws(PinDto pin)
@@ -208,14 +174,13 @@ namespace crds_angular.Services
 
             AwsCloudsearchDto awsPostPinObject = new AwsCloudsearchDto("add", GenerateAwsPinId(pin), awsPinObject);
 
-            var pinlist = new List<AwsCloudsearchDto>();
-            pinlist.Add(awsPostPinObject);
+            var pinlist = new List<AwsCloudsearchDto> {awsPostPinObject};
 
             string jsonAwsObject = JsonConvert.SerializeObject(pinlist, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
 
             MemoryStream jsonAwsPinDtoStream = new MemoryStream(Encoding.UTF8.GetBytes(jsonAwsObject));
 
-            UploadDocumentsRequest upload = new Amazon.CloudSearchDomain.Model.UploadDocumentsRequest()
+            UploadDocumentsRequest upload = new UploadDocumentsRequest()
             {
                 ContentType = ContentType.ApplicationJson,
                 Documents = jsonAwsPinDtoStream

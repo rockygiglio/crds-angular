@@ -571,7 +571,7 @@
     //Leave the comment below.  Once we have a true 404 page hosted in the same domain, this is how we
     //will handle the routing.
     //.state('404', {
-    //    templateUrl: __CMS_ENDPOINT__ + '/page-not-found/'
+    //    templateUrl: __CMS_CLIENT_ENDPOINT__ + '/page-not-found/'
     //});
 
     $urlRouterProvider.otherwise('/');

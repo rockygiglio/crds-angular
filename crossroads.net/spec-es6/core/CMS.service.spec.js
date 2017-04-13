@@ -6,7 +6,7 @@ describe('CMSService', () => {
       httpBackend,
       fixture;
 
-  const endpoint = `${window.__env__['CRDS_CMS_ENDPOINT']}api`;
+  const endpoint = `${window.__env__['CRDS_CMS_CLIENT_ENDPOINT']}api`;
 
   let baseTime = new Date(2016, 9, 1); // set to 10/1/2016 - month appears to be 0 based index however
   let todaysDate = moment(baseTime).format('YYYY-MM-DD');
@@ -119,7 +119,7 @@ describe('CMSService', () => {
       fixture.getNearestSeries().then(response => {
         expect(response.title).toBe('Series A')
       });
-      httpBackend.expectGET(`${endpoint}/series?startDate__GreaterThanOrEqual=${todaysDate}&startDate__sort=ASC&__limit[]=1`).respond(200, series);
+      httpBackend.expectGET(`${endpoint}/series?startDate__GreaterThanOrEqual=${todaysDate}&startDate__sort=ASC&__limit=1`).respond(200, series);
       httpBackend.flush();
     });
     
@@ -127,7 +127,7 @@ describe('CMSService', () => {
       let lastSeries = {"series":[{"id":318,"title":"Series A","description":"<p><span>asdf2</span></p>","startDate":"2016-08-30","endDate":"2016-08-31","trailerLink":null,"version":"5","messages":[{"id":3879,"title":"test1","description":"<p>test1</p>","date":"2016-09-14","version":"1","series":318,"tags":[{"id":33,"title":"all","series":[194,205,5],"messages":[3579,3578,3588,3640,3879],"created":"2015-09-23T11:52:06-04:00","className":"Tag"}],"created":"2016-09-14T17:03:48-04:00","className":"Message"},{"id":3881,"title":"test2","description":"<p>test2</p>","date":"2016-09-14","version":"1","series":318,"created":"2016-09-14T17:08:34-04:00","className":"Message"},{"id":3882,"title":"test3","description":"<p>test3</p>","date":"2016-12-14","version":"1","series":318,"created":"2016-09-14T17:22:50-04:00","className":"Message"}],"created":"2016-08-30T11:35:43-04:00","className":"Series"}]}
       let fixture = new CMSService(http);
       fixture.getLastSeries();
-      httpBackend.expectGET(`${endpoint}/series?endDate__LessThanOrEqual=${todaysDate}&endDate__sort=DESC&__limit[]=1`).respond(200, lastSeries);
+      httpBackend.expectGET(`${endpoint}/series?endDate__LessThanOrEqual=${todaysDate}&endDate__sort=DESC&__limit=1`).respond(200, lastSeries);
       httpBackend.flush();
     });
 
@@ -186,7 +186,7 @@ describe('CMSService', () => {
       fixture.getRecentMessages(limit).then(response => {
         expect(response.length).toBe(limit);
       });
-      httpBackend.expectGET(`${endpoint}/messages?date__LessThanOrEqual=${todaysDate}&date__sort=DESC&ID__sort=DESC&SeriesID__GreaterThan=0&__limit[]=${limit}`).respond(200, messages);
+      httpBackend.expectGET(`${endpoint}/messages?date__LessThanOrEqual=${todaysDate}&date__sort=DESC&ID__sort=DESC&SeriesID__GreaterThan=0&__limit=${limit}`).respond(200, messages);
       httpBackend.flush();
     })
   })

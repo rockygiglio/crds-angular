@@ -49,7 +49,7 @@ describe('Go Volunteer Group Finder Component', function() {
       GoVolunteerService.organization = helpers.crossroads_organization;
       scope.$digest();
       isolated = element.isolateScope().goGroupFindConnector;
-      $httpBackend.whenGET(window.__env__['CRDS_API_ENDPOINT'] +
+      $httpBackend.whenGET(window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] +
                            'api/group-connectors/open-orgs/1')
       .respond(200, helpers.crossroads_group_connectors);
       
@@ -61,7 +61,7 @@ describe('Go Volunteer Group Finder Component', function() {
       GoVolunteerService.organization = helpers.other_organization;
       scope.$digest();
       isolated = element.isolateScope().goGroupFindConnector;
-      $httpBackend.whenGET(window.__env__['CRDS_API_ENDPOINT'] +
+      $httpBackend.whenGET(window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] +
                            'api/group-connectors/open-orgs/1')
       .respond(200, helpers.crossroads_group_connectors);
       
@@ -73,7 +73,7 @@ describe('Go Volunteer Group Finder Component', function() {
       GoVolunteerService.organization = helpers.arch_organization;
       scope.$digest();
       isolated = element.isolateScope().goGroupFindConnector;
-      $httpBackend.whenGET(window.__env__['CRDS_API_ENDPOINT'] +
+      $httpBackend.whenGET(window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] +
                            'api/group-connectors/' + helpers.arch_organization.organizationId + '/1')
       .respond(200, helpers.crossroads_group_connectors);
     });

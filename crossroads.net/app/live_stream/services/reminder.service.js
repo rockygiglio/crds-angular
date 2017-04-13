@@ -5,7 +5,7 @@ export default class ReminderService {
   constructor($http, $modal) {
     this.http = $http;
     this.modal = $modal;
-    this.url = __API_ENDPOINT__;
+    this.url = __GATEWAY_CLIENT_ENDPOINT__;
     this.headers = { 'Content-Type': 'application/json' };
   }
 

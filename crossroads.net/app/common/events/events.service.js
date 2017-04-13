@@ -16,18 +16,18 @@
 
   function EventService($resource, $log) {
     var eventsService = {
-      res: $resource(__API_ENDPOINT__ + 'api/events/:site'),
-      event: $resource(__API_ENDPOINT__ + 'api/event/:eventId'),
-      eventTool: $resource(__API_ENDPOINT__ + 'api/eventTool/:eventId', null, { update: { method:'PUT' } }),
+      res: $resource(__GATEWAY_CLIENT_ENDPOINT__ + 'api/events/:site'),
+      event: $resource(__GATEWAY_CLIENT_ENDPOINT__ + 'api/event/:eventId'),
+      eventTool: $resource(__GATEWAY_CLIENT_ENDPOINT__ + 'api/eventTool/:eventId', null, { update: { method:'PUT' } }),
       getDailyEvents: function(site) {
         var events = this.res.query({site:site});
         return events;
       },
 
-      create: $resource(__API_ENDPOINT__ + 'api/eventTool'),
-      eventSetup: $resource(__API_ENDPOINT__ + 'api/event/copyeventsetup'),
-      eventsBySite: $resource(__API_ENDPOINT__ + 'api/event/eventsbysite/:site'),
-      eventTemplatesBySite: $resource(__API_ENDPOINT__ + 'api/event/eventtemplatesbysite/:site')
+      create: $resource(__GATEWAY_CLIENT_ENDPOINT__ + 'api/eventTool'),
+      eventSetup: $resource(__GATEWAY_CLIENT_ENDPOINT__ + 'api/event/copyeventsetup'),
+      eventsBySite: $resource(__GATEWAY_CLIENT_ENDPOINT__ + 'api/event/eventsbysite/:site'),
+      eventTemplatesBySite: $resource(__GATEWAY_CLIENT_ENDPOINT__ + 'api/event/eventtemplatesbysite/:site')
     };
     return eventsService;
   }

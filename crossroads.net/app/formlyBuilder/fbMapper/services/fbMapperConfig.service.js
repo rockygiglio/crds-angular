@@ -46,7 +46,7 @@ export default class fbMapperConfig {
     }
 
     _getLookupValues(path) {
-        return this.resource(`${__API_ENDPOINT__}` + path )
+        return this.resource(`${__GATEWAY_CLIENT_ENDPOINT__}` + path )
             .query().$promise.then((data) => { return data;});
     }
 }

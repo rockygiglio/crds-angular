@@ -13,7 +13,7 @@
       setParams: setParams,
       getParams: getParams,
       getSelectedId: getSelectedId,
-      Selection: $resource(__API_ENDPOINT__ + 'api/mptools/selection/:selectionId'),
+      Selection: $resource(__GATEWAY_CLIENT_ENDPOINT__ + 'api/mptools/selection/:selectionId'),
       dto: {
         noSelection: undefined,
         selectionError: undefined,

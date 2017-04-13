@@ -40,6 +40,7 @@ namespace crds_angular.Services
         private readonly IContactRepository _contactRepository;
         private readonly ILog _logger = LogManager.GetLogger(typeof(AddressService));
         private readonly IFinderRepository _finderRepository;
+        private readonly IGroupRepository _groupRepository;
         private readonly IParticipantRepository _participantRepository;
         private readonly IAddressService _addressService;
         private readonly IGroupToolService _groupToolService;
@@ -57,11 +58,12 @@ namespace crds_angular.Services
         private readonly Random _random = new Random(DateTime.Now.Millisecond);
 
         public FinderService(
-                            IAddressGeocodingService addressGeocodingService, 
+                            IAddressGeocodingService addressGeocodingService,
                             IFinderRepository finderRepository,
-                            IContactRepository contactRepository, 
-                            IAddressService addressService, 
-                            IParticipantRepository participantRepository, 
+                            IContactRepository contactRepository,
+                            IAddressService addressService,
+                            IParticipantRepository participantRepository,
+                            IGroupRepository groupRepository,
                             IGroupService groupService,
                             IGroupToolService groupToolService,
                             IApiUserRepository apiUserRepository,
@@ -76,6 +78,7 @@ namespace crds_angular.Services
             _addressService = addressService;
             _participantRepository = participantRepository;
             _groupService = groupService;
+            _groupRepository = groupRepository;
             _apiUserRepository = apiUserRepository;
             _approvedHost = configurationWrapper.GetConfigIntValue("ApprovedHostStatus");
             _anywhereGroupType = configurationWrapper.GetConfigIntValue("AnywhereGroupTypeId");
@@ -94,7 +97,7 @@ namespace crds_angular.Services
             var participantId = GetParticipantIdFromGroup(groupId);
             //get the pin details for the primary contact
             var pin = GetPinDetailsForPerson(participantId);
-            
+
             var token = _apiUserRepository.GetToken();
 
             //get group details for the primary pin
@@ -114,19 +117,19 @@ namespace crds_angular.Services
         {
             //first get pin details
             var pinDetails = Mapper.Map<PinDto>(_finderRepository.GetPinDetails(participantId));
-            
+
             //make sure we have a lat/long
-            if (pinDetails.Address.Latitude == null || pinDetails.Address.Longitude == null)
+            if (pinDetails != null && pinDetails.Address.Latitude != null && pinDetails.Address.Longitude != null)
             {
-                _addressService.SetGeoCoordinates(pinDetails.Address);
+                _addressService.SetGeoCoordinates(pinDetails.Address);                
+                pinDetails.Address = RandomizeLatLong(pinDetails.Address);
             }
+
             // randomize the location
             pinDetails.Address = RandomizeLatLong(pinDetails.Address);
             pinDetails.Address.AddressLine1 = "";
             pinDetails.Address.AddressLine2 = "";
             pinDetails.PinType = PinType.PERSON;
-
-            //TODO get group details
             return pinDetails;
         }
 
@@ -137,6 +140,9 @@ namespace crds_angular.Services
 
         public void UpdateHouseholdAddress(PinDto pin)
         {
+            // TODO is this supposed to be gone?? merge conflicts
+            // _addressService.SetGeoCoordinates(pin.Address);
+
             var coordinates = _addressService.GetGeoLocationCascading(pin.Address);
             pin.Address.Latitude = coordinates.Latitude;
             pin.Address.Longitude = coordinates.Longitude;
@@ -144,7 +150,7 @@ namespace crds_angular.Services
             var address = Mapper.Map<MpAddress>(pin.Address);
             var addressDictionary = getDictionary(address);
             addressDictionary.Add("State/Region", addressDictionary["State"]);
-            _contactRepository.UpdateHouseholdAddress((int) pin.Contact_ID, householdDictionary, addressDictionary);
+            _contactRepository.UpdateHouseholdAddress((int)pin.Contact_ID, householdDictionary, addressDictionary);
         }
 
         public List<GroupParticipantDTO> GetParticipantsForGroup(int groupId)
@@ -189,7 +195,7 @@ namespace crds_angular.Services
 
         public List<PinDto> GetPinsInBoundingBox(GeoCoordinate originCoords, string address, AwsBoundingBox boundingBox)
         {
-            var cloudReturn = _awsCloudsearchService.SearchConnectAwsCloudsearch("matchall", "_all_fields", originCoords, boundingBox);
+            var cloudReturn = _awsCloudsearchService.SearchConnectAwsCloudsearch("matchall", "_all_fields", _configurationWrapper.GetConfigIntValue("ConnectDefaultNumberOfPins"), originCoords, boundingBox);
             var pins = ConvertFromAwsSearchResponse(cloudReturn);
 
             foreach (var pin in pins)
@@ -209,24 +215,24 @@ namespace crds_angular.Services
             foreach (var hit in response.Hits.Hit)
             {
                 var pin = new PinDto();
-                pin.Proximity = hit.Fields.ContainsKey("proximity") ? Convert.ToDecimal(hit.Fields["proximity"].FirstOrDefault()) : (decimal?) null;
-                pin.PinType = hit.Fields.ContainsKey("pintype") ? (PinType) Convert.ToInt32(hit.Fields["pintype"].FirstOrDefault()) : PinType.PERSON;
+                pin.Proximity = hit.Fields.ContainsKey("proximity") ? Convert.ToDecimal(hit.Fields["proximity"].FirstOrDefault()) : (decimal?)null;
+                pin.PinType = hit.Fields.ContainsKey("pintype") ? (PinType)Convert.ToInt32(hit.Fields["pintype"].FirstOrDefault()) : PinType.PERSON;
                 pin.FirstName = hit.Fields.ContainsKey("firstname") ? hit.Fields["firstname"].FirstOrDefault() : null;
                 pin.LastName = hit.Fields.ContainsKey("lastname") ? hit.Fields["lastname"].FirstOrDefault() : null;
                 pin.SiteName = hit.Fields.ContainsKey("sitename") ? hit.Fields["sitename"].FirstOrDefault() : null;
                 pin.EmailAddress = hit.Fields.ContainsKey("emailaddress") ? hit.Fields["emailaddress"].FirstOrDefault() : null;
-                pin.Contact_ID = hit.Fields.ContainsKey("contactid") ? Convert.ToInt32(hit.Fields["contactid"].FirstOrDefault()) : (int?) null;
-                pin.Participant_ID = hit.Fields.ContainsKey("participantid") ? Convert.ToInt32(hit.Fields["participantid"].FirstOrDefault()) : (int?) null;
-                pin.Host_Status_ID = hit.Fields.ContainsKey("hoststatus") ? Convert.ToInt32(hit.Fields["hoststatus"].FirstOrDefault()) : (int?) null;
-                pin.Household_ID = hit.Fields.ContainsKey("householdid") ? Convert.ToInt32(hit.Fields["householdid"].FirstOrDefault()) : (int?) null;
+                pin.Contact_ID = hit.Fields.ContainsKey("contactid") ? Convert.ToInt32(hit.Fields["contactid"].FirstOrDefault()) : (int?)null;
+                pin.Participant_ID = hit.Fields.ContainsKey("participantid") ? Convert.ToInt32(hit.Fields["participantid"].FirstOrDefault()) : (int?)null;
+                pin.Host_Status_ID = hit.Fields.ContainsKey("hoststatus") ? Convert.ToInt32(hit.Fields["hoststatus"].FirstOrDefault()) : (int?)null;
+                pin.Household_ID = hit.Fields.ContainsKey("householdid") ? Convert.ToInt32(hit.Fields["householdid"].FirstOrDefault()) : (int?)null;
                 pin.Address = new AddressDTO
                 {
-                    AddressID = hit.Fields.ContainsKey("addressid") ? Convert.ToInt32(hit.Fields["addressid"].FirstOrDefault()) : (int?) null,
+                    AddressID = hit.Fields.ContainsKey("addressid") ? Convert.ToInt32(hit.Fields["addressid"].FirstOrDefault()) : (int?)null,
                     City = hit.Fields.ContainsKey("city") ? hit.Fields["city"].FirstOrDefault() : null,
                     State = hit.Fields.ContainsKey("state") ? hit.Fields["state"].FirstOrDefault() : null,
                     PostalCode = hit.Fields.ContainsKey("zip") ? hit.Fields["zip"].FirstOrDefault() : null,
-                    Latitude = hit.Fields.ContainsKey("latitude") ? Convert.ToDouble(hit.Fields["latitude"].FirstOrDefault()) : (double?) null,
-                    Longitude = hit.Fields.ContainsKey("longitude") ? Convert.ToDouble(hit.Fields["longitude"].FirstOrDefault()) : (double?) null,
+                    Latitude = hit.Fields.ContainsKey("latitude") ? Convert.ToDouble(hit.Fields["latitude"].FirstOrDefault()) : (double?)null,
+                    Longitude = hit.Fields.ContainsKey("longitude") ? Convert.ToDouble(hit.Fields["longitude"].FirstOrDefault()) : (double?)null,
                 };
                 if (hit.Fields.ContainsKey("latlong"))
                 {
@@ -249,13 +255,13 @@ namespace crds_angular.Services
                 }
                 pins.Add(pin);
             }
-  
+
             return pins;
         }
 
         private static decimal GetProximity(GeoCoordinate originCoords, GeoCoordinate pinCoords)
         {
-            return (decimal) Proximity(originCoords.Latitude, originCoords.Longitude, pinCoords.Latitude,pinCoords.Longitude);
+            return (decimal)Proximity(originCoords.Latitude, originCoords.Longitude, pinCoords.Latitude, pinCoords.Longitude);
         }
 
         private static double Proximity(double lat1, double lon1, double lat2, double lon2)
@@ -265,7 +271,7 @@ namespace crds_angular.Services
             dist = Math.Acos(dist);
             dist = Rad2Deg(dist);
             dist = dist * 60 * 1.1515;
-           
+
             return (dist);
         }
 
@@ -277,6 +283,62 @@ namespace crds_angular.Services
         private static double Rad2Deg(double rad)
         {
             return (rad / Math.PI * 180.0);
+        }
+
+
+        public List<PinDto> GetMyPins(string token, GeoCoordinate originCoords, int contactId)
+        {
+            var pins = new List<PinDto>();
+            var participantId = GetParticipantIdFromContact(contactId);
+
+            List<PinDto> groupPins = GetMyGroupPins(token, new int[] { _anywhereGroupType }, participantId);
+            PinDto personPin = GetPinDetailsForPerson(participantId);
+
+            pins.AddRange(groupPins);
+            if (personPin != null && personPin.ShowOnMap)
+            {
+                pins.Add(personPin);
+            }            
+
+            foreach (var pin in pins)
+            {
+                //calculate proximity for all pins to origin
+                if (pin.Address.Latitude == null) continue;
+                if (pin.Address.Longitude != null) pin.Proximity = GetProximity(originCoords, new GeoCoordinate(pin.Address.Latitude.Value, pin.Address.Longitude.Value));
+            }
+
+            return pins;
+        }
+
+        public List<PinDto> GetMyGroupPins(string token, int[] groupTypeIds, int participantId)
+        {
+            var groupsByType = _groupRepository.GetGroupsForParticipantByTypeOrID(participantId, null, groupTypeIds);
+
+            if (groupsByType == null)
+            {
+                return null;
+            }
+
+            var groupDTOs = groupsByType.Select(Mapper.Map<MpGroup, GroupDTO>).ToList();
+
+            // TODO pull this out - 2x in class - just return what comes out of private method            
+            var pins = new List<PinDto>();
+
+            foreach (var group in groupDTOs)
+            {
+                var pin = Mapper.Map<PinDto>(group);
+                pin.Gathering = group;
+                if (pin.Contact_ID != null)
+                {
+                    var contact = _contactRepository.GetContactById((int)pin.Contact_ID);
+                    pin.FirstName = contact.First_Name;
+                    pin.LastName = contact.Last_Name;
+                }
+
+                pins.Add(pin);
+            }
+
+            return pins;
         }
 
         private List<PinDto> GetParticipantAndBuildingPinsInRadius(GeoCoordinate originCoords)
@@ -310,6 +372,14 @@ namespace crds_angular.Services
             return originCoordinates;
         }
 
+        public GeoCoordinate GetGeoCoordsFromLatLong(string lat, string lng)
+        {
+            double latitude = Convert.ToDouble(lat.Replace("$", "."));
+            double longitude = Convert.ToDouble(lng.Replace("$", "."));
+
+            return new GeoCoordinate(latitude, longitude);
+        }
+
         private List<PinDto> GetGroupPinsinRadius(GeoCoordinate originCoords, string address)
         {
             // ignoring originCoords at this time
@@ -317,7 +387,7 @@ namespace crds_angular.Services
 
             // get group for anywhere gathering
             var anywhereGroupTypeId = _configurationWrapper.GetConfigIntValue("AnywhereGroupTypeId");
-            var groups = _groupToolService.SearchGroups(new int[] {anywhereGroupTypeId}, null, address, null, originCoords);
+            var groups = _groupToolService.SearchGroups(new int[] { anywhereGroupTypeId }, null, address, null, originCoords);
 
             foreach (var group in groups)
             {
@@ -329,7 +399,7 @@ namespace crds_angular.Services
                     pin.FirstName = contact.First_Name;
                     pin.LastName = contact.Last_Name;
                 }
-               
+
                 pins.Add(pin);
             }
 
@@ -343,11 +413,11 @@ namespace crds_angular.Services
             var angle = _random.Next(0, 359);
             const int earthRadius = 6371000; // in meters
 
-            var distanceNorth = Math.Sin(angle)*distance;
-            var distanceEast = Math.Cos(angle)*distance;
+            var distanceNorth = Math.Sin(angle) * distance;
+            var distanceEast = Math.Cos(angle) * distance;
 
-            var newLat = (double) (address.Latitude + (distanceNorth/earthRadius)*180/Math.PI);
-            var newLong = (double) (address.Longitude + (distanceEast/(earthRadius*Math.Cos(newLat*180/Math.PI)))*180/Math.PI);
+            var newLat = (double)(address.Latitude + (distanceNorth / earthRadius) * 180 / Math.PI);
+            var newLong = (double)(address.Longitude + (distanceEast / (earthRadius * Math.Cos(newLat * 180 / Math.PI))) * 180 / Math.PI);
             address.Latitude = newLat;
             address.Longitude = newLong;
 
