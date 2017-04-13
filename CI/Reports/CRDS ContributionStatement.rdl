@@ -471,7 +471,7 @@
                                                                 <Paragraph>
                                                                   <TextRuns>
                                                                     <TextRun>
-                                                                      <Value>=IIf(Fields!Section_Title.Value ="Trust and Foundation Giving", "Non Tax-Deductible Information through Crossroads: (You will receive a tax-deductible statement from the trust or foundation.)", "")</Value>
+                                                                      <Value>=Fields!Header_Title.Value</Value>
                                                                       <Style>
                                                                         <FontWeight>Bold</FontWeight>
                                                                       </Style>
@@ -1973,29 +1973,14 @@
     </ReportParameter>
     <ReportParameter Name="FromDate">
       <DataType>DateTime</DataType>
-      <DefaultValue>
-        <Values>
-          <Value>=IIF(Month(Today())&gt;6 , DateSerial(Year(Today()),01,01), DateSerial((Year(Today())-1),01,01))</Value>
-        </Values>
-      </DefaultValue>
       <Prompt>From Date</Prompt>
     </ReportParameter>
     <ReportParameter Name="ToDate">
       <DataType>DateTime</DataType>
-      <DefaultValue>
-        <Values>
-          <Value>=IIF(Month(Today())&gt;6 , DateSerial(Year(Today()),12,31), DateSerial((Year(Today())-1),12,31))</Value>
-        </Values>
-      </DefaultValue>
       <Prompt>To Date</Prompt>
     </ReportParameter>
     <ReportParameter Name="AccountingCompanyID">
       <DataType>Integer</DataType>
-      <DefaultValue>
-        <Values>
-          <Value>1</Value>
-        </Values>
-      </DefaultValue>
       <Prompt>Accounting Company</Prompt>
       <ValidValues>
         <DataSetReference>
@@ -2007,11 +1992,6 @@
     </ReportParameter>
     <ReportParameter Name="PrintDate">
       <DataType>DateTime</DataType>
-      <DefaultValue>
-        <Values>
-          <Value>=today()</Value>
-        </Values>
-      </DefaultValue>
       <Prompt>Print Date</Prompt>
     </ReportParameter>
   </ReportParameters>
