@@ -707,7 +707,7 @@
                                                             <Paragraph>
                                                               <TextRuns>
                                                                 <TextRun>
-                                                                  <Value>Payment Type</Value>
+                                                                  <Value>=Switch(Fields!Section_Title.Value="Trust and Foundation Giving:", "Trust/Foundation", Fields!Section_Title.Value = "Stock Giving:" ,"Stock", Fields!Section_Title.Value = "Tax-Deductible Information:" , "Payment Type" )</Value>
                                                                   <Style>
                                                                     <FontWeight>Bold</FontWeight>
                                                                   </Style>
