@@ -267,9 +267,7 @@ namespace MinistryPlatform.Translation.Repositories
             var staffContactAttribute = _configurationWrapper.GetConfigIntValue("StaffContactAttribute");
             const string columns = "Contact_ID_Table.*";
             string filter = $"Attribute_ID = {staffContactAttribute} AND Start_Date <= GETDATE() AND (end_date is null OR end_Date > GETDATE())";
-
             var records = _ministryPlatformRest.UsingAuthenticationToken(token).Search<MpContactAttribute, Dictionary<string, object>>(filter, columns, null, true);
-
             return records;
         }
 
