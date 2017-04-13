@@ -327,20 +327,6 @@
               title: 'Sign out',
               description: ''
             }
-          },
-          resolve: {
-            processExternalRedirect: ['$location', function($location) {
-
-              var handleRedirectUrlParameter = function() {
-                const qs = $location.search();
-
-                if(qs.redirectUrl !== undefined && qs.redirectUrl !== '') {
-                  $location.path(qs.redirectUrl);
-                  $location.search('');
-                }
-              }
-              return handleRedirectUrlParameter;
-            }]
           }
         })
         .state('register', {
