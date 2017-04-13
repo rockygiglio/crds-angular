@@ -29,7 +29,7 @@ describe('Trip Deposit Controller', () => {
   const contactId = 12345679945945;
   const email = 'email@email.com';
 
-  const endpoint = window.__env__['CRDS_API_ENDPOINT'] + 'api';
+  const endpoint = window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api';
 
   beforeEach(angular.mock.module('crossroads.trips'));
 

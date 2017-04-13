@@ -9,7 +9,7 @@ describe('Reminder Service', () => {
       modal,
       httpBackend;
 
-  const reminderEndpoint = `${__API_ENDPOINT__}`;
+  const reminderEndpoint = `${__GATEWAY_CLIENT_ENDPOINT__}`;
 
   beforeEach(angular.mock.module(CONSTANTS.MODULES.LIVE_STREAM));
 

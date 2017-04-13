@@ -32,8 +32,8 @@ module.exports = function(config) {
     },
 
     envPreprocessor: [
-      'CRDS_API_ENDPOINT',
-      'CRDS_CMS_ENDPOINT'
+      'CRDS_GATEWAY_CLIENT_ENDPOINT',
+      'CRDS_CMS_CLIENT_ENDPOINT'
     ],
 
     // test results reporter to use

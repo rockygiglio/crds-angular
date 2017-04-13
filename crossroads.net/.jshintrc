@@ -66,7 +66,7 @@
         "after"      : false,
         "afterEach"  : false,
         "_"          : false,
-        "__API_ENDPOINT__" : false,
+        "__GATEWAY_CLIENT_ENDPOINT__" : false,
         "__AWS_SEARCH_ENDPOINT__": false,
         "__PRERENDER_IO_API_KEY__": false,
         "__STRIPE_PUBKEY__": false,

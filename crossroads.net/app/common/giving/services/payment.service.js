@@ -94,7 +94,7 @@
       };
       $http({
         method: 'POST',
-        url: __API_ENDPOINT__ + 'api/donation',
+        url: __GATEWAY_CLIENT_ENDPOINT__ + 'api/donation',
         data: donationRequest,
         headers: {
               Authorization: $cookies.get(cookieNames.SESSION_ID)
@@ -117,7 +117,7 @@
       var def = $q.defer();
       $http({
         method: 'GET',
-        url: __API_ENDPOINT__ + 'api/donor/?email=' + encodedEmail,
+        url: __GATEWAY_CLIENT_ENDPOINT__ + 'api/donor/?email=' + encodedEmail,
         headers: {
           Authorization: $cookies.get(cookieNames.SESSION_ID)
         }
@@ -198,7 +198,7 @@
           var donorRequest = { stripe_token_id: response.id, email_address: email, first_name: firstName, last_name: lastName };
           $http({
             method: apiMethod,
-            url: __API_ENDPOINT__ + 'api/donor',
+            url: __GATEWAY_CLIENT_ENDPOINT__ + 'api/donor',
             headers: {
               Authorization:  $cookies.get(cookieNames.SESSION_ID)
             },
@@ -295,10 +295,10 @@
       }
 
       if (apiMethod === 'POST' || apiMethod === 'QUERY' || recurringGiftId === null) {
-        return __API_ENDPOINT__ + 'api/donor/recurrence' + queryParams;
+        return __GATEWAY_CLIENT_ENDPOINT__ + 'api/donor/recurrence' + queryParams;
       }
 
-      return __API_ENDPOINT__ + 'api/donor/recurrence/' + recurringGiftId + queryParams;
+      return __GATEWAY_CLIENT_ENDPOINT__ + 'api/donor/recurrence/' + recurringGiftId + queryParams;
     }
 
     return paymentService;

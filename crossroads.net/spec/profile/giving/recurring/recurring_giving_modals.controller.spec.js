@@ -113,7 +113,7 @@ describe('RecurringGivingModals', function() {
 
   describe('On remove', function() {
     it('should call the close(true) on $modalInstance when remove is called', function() {
-      httpBackend.expectDELETE(window.__env__['CRDS_API_ENDPOINT'] + 'api/donor/recurrence/12').respond(200);
+      httpBackend.expectDELETE(window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api/donor/recurrence/12').respond(200);
       vm.remove();
       httpBackend.flush();
 
@@ -122,7 +122,7 @@ describe('RecurringGivingModals', function() {
     });
 
     it('should call the close(false) on $modalInstance when remove is called', function() {
-      httpBackend.expectDELETE(window.__env__['CRDS_API_ENDPOINT'] + 'api/donor/recurrence/12').respond(404);
+      httpBackend.expectDELETE(window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api/donor/recurrence/12').respond(404);
       vm.remove();
       httpBackend.flush();
 
@@ -148,7 +148,7 @@ describe('RecurringGivingModals', function() {
     });
 
     it('should call the close(true) on $modalInstance when edit is called', function() {
-      httpBackend.expectPUT(window.__env__['CRDS_API_ENDPOINT'] + 'api/donor/recurrence/12').respond(200);
+      httpBackend.expectPUT(window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api/donor/recurrence/12').respond(200);
       vm.edit(recurringGiveForm);
 
       expect(modalInstance.close).toHaveBeenCalled();
@@ -156,7 +156,7 @@ describe('RecurringGivingModals', function() {
     });
 
     it('should call the close(false) on $modalInstance when edit is called', function() {
-      httpBackend.expectPUT(window.__env__['CRDS_API_ENDPOINT'] + 'api/donor/recurrence/12').respond(404);
+      httpBackend.expectPUT(window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api/donor/recurrence/12').respond(404);
       vm.edit(recurringGiveForm);
 
       expect(modalInstance.dismiss).not.toHaveBeenCalled();

@@ -14,8 +14,7 @@ The following criteria are required for this process to successfully run.
 * The data migration has been run, to create MinistryPlatform Donors, Recurring Gifts, and Donor Accounts from Legacy crossroads.net
 * The following environment variables are set to proper values on the Windows PC/VM where the executable will run:
  * APP_LOG_ROOT - a path where Log4Net log files will be written (e.g. c:\logfiles)
- * CRDS_API_ENDPOINT - the Gateway API endpoint (e.g. https://gatewayint.crossroads.net/gateway/)
- * CRDS_CMS_ENDPOINT - the CMS API endpoint (e.g. https://contentint.crossroads.net/)
+ * CRDS_CMS_SERVER_ENDPOINT - the CMS API endpoint (e.g. https://contentint.crossroads.net/)
  * MP_API_DB_USER - The SQLServer userid for logging in to the MP database (e.g. ApiUser)
  * MP_API_DB_PASSWORD - The SQLServer password for the DB user
  * STRIPE_AUTH_TOKEN - The private/secret Stripe authorization token

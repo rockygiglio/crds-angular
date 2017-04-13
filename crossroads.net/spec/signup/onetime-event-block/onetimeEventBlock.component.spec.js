@@ -99,7 +99,7 @@ describe('Onetime Signup Event Block', function() {
             childcareRequested: false, capacityNeeded: 0, sendConfirmationEmail: true}]
       };
 
-    $httpBackend.expectPOST(window.__env__['CRDS_API_ENDPOINT'] + 'api/event', toPost).respond(500);
+    $httpBackend.expectPOST(window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api/event', toPost).respond(500);
     isolated.onetimeEventBlock.submit();
     $httpBackend.flush();
     expect($rootScope.$emit).toHaveBeenCalledWith('notify', 'rsvpFailed');
@@ -116,7 +116,7 @@ describe('Onetime Signup Event Block', function() {
             childcareRequested: false, capacityNeeded: 0, sendConfirmationEmail: true}]
       };
 
-    $httpBackend.expectPOST(window.__env__['CRDS_API_ENDPOINT'] + 'api/event', toPost)
+    $httpBackend.expectPOST(window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api/event', toPost)
       .respond(200);
 
     isolated.onetimeEventBlock.submit();

@@ -59,7 +59,7 @@ describe('MyServeController', function() {
       var newDate = new Date(lastDate);
       newDate.setDate(newDate.getDate() + 8);
       expect(controller.groups.length).toBe(1);
-      $httpBackend.expect('GET', window.__env__['CRDS_API_ENDPOINT'] + 'api/serve/family-serve-days/12345678?from='+ date/1000+ '&to=' + newDate/1000).respond(200, more);
+      $httpBackend.expect('GET', window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api/serve/family-serve-days/12345678?from='+ date/1000+ '&to=' + newDate/1000).respond(200, more);
       controller.loadNextMonth();
 
       $httpBackend.flush();

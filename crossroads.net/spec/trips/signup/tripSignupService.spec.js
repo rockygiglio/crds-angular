@@ -5,7 +5,7 @@ var tripHelpers = require('../trips.helpers');
 
 describe('TripSignupService', () => {
 
-  const endpoint = window.__env__['CRDS_API_ENDPOINT'] + 'api';
+  const endpoint = window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api';
 
   let rootScope,
       resource,

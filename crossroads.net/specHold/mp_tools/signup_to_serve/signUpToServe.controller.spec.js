@@ -121,8 +121,8 @@ describe('Signup To Serve Tool', function(){
     beforeEach(function(){
       $scope = {};
       controller = $controller('SignupToServeController', { $scope: $scope });
-      $httpBackend.expectGET( window.__env__['CRDS_API_ENDPOINT'] + 'api/opportunity/getGroupParticipantsForOpportunity/2923').respond(expectedReturn);
-      $httpBackend.expectGET( window.__env__['CRDS_API_ENDPOINT'] + 'api/opportunity/getAllOpportunityDates/2923').respond(expectedDates);
+      $httpBackend.expectGET( window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api/opportunity/getGroupParticipantsForOpportunity/2923').respond(expectedReturn);
+      $httpBackend.expectGET( window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api/opportunity/getAllOpportunityDates/2923').respond(expectedDates);
     });
 
     describe('Initial Load', function(){
@@ -148,7 +148,7 @@ describe('Signup To Serve Tool', function(){
 
         $httpBackend.flush();
         $httpBackend.expectPOST(
-          window.__env__['CRDS_API_ENDPOINT'] + 'api/serve/save-rsvp', expectedSingleRSVP
+          window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api/serve/save-rsvp', expectedSingleRSVP
         ).respond(201, '');
         controller.group.eventTypeId = 142;
         controller.participants = singleParticipant;
@@ -162,8 +162,8 @@ describe('Signup To Serve Tool', function(){
       it('should save RSVP for multiple participants', function(){
 
         $httpBackend.flush();
-        $httpBackend.expectPOST( window.__env__['CRDS_API_ENDPOINT'] + 'api/serve/save-rsvp', expectedMultiRSVP1).respond(201, '');
-        $httpBackend.expectPOST( window.__env__['CRDS_API_ENDPOINT'] + 'api/serve/save-rsvp', expectedMultiRSVP2).respond(201, '');
+        $httpBackend.expectPOST( window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api/serve/save-rsvp', expectedMultiRSVP1).respond(201, '');
+        $httpBackend.expectPOST( window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api/serve/save-rsvp', expectedMultiRSVP2).respond(201, '');
         controller.group.eventTypeId = 142;
         controller.participants = multiParticipant;
         controller.selectedFrequency = {'value':0,'text':'Once'};

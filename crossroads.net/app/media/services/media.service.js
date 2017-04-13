@@ -8,7 +8,7 @@
   function Media($resource) {
     return {
       Series: function(params) {
-        return $resource(__CMS_ENDPOINT__ + 'api/series/:id',
+        return $resource(__CMS_CLIENT_ENDPOINT__ + 'api/series/:id',
           params,
           {
             get: { method:'GET', cache: true}
@@ -16,7 +16,7 @@
       },
 
       SingleMedia: function(params) {
-        return $resource(__CMS_ENDPOINT__ + 'api/singleMedia/:id',
+        return $resource(__CMS_CLIENT_ENDPOINT__ + 'api/singleMedia/:id',
           params,
           {
             get: { method:'GET', cache: true}
@@ -24,7 +24,7 @@
       },
 
       Messages: function(params) {
-        return $resource(__CMS_ENDPOINT__ + 'api/message/:id',
+        return $resource(__CMS_CLIENT_ENDPOINT__ + 'api/message/:id',
           params,
           {
             get: { method:'GET', cache: true}
