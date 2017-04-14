@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Crossroads.Utilities.Interfaces;
+using System.Reactive.Linq;
+using System.Reactive.Threading.Tasks;
+using System.Threading.Tasks;
 using log4net;
-using Crossroads.Web.Common;
 using Crossroads.Web.Common.Configuration;
 using Crossroads.Web.Common.MinistryPlatform;
 using Crossroads.Web.Common.Security;
@@ -121,7 +122,6 @@ namespace MinistryPlatform.Translation.Repositories
             {
                 return null;
             }
-
             return ParseProfileRecord(pageViewRecords[0]);
         }
 
@@ -324,7 +324,7 @@ namespace MinistryPlatform.Translation.Repositories
                         }
                     }
 
-                    _ministryPlatformService.UpdateRecord(_configurationWrapper.GetConfigIntValue("Contacts"), profileDictionary, token);
+                    _ministryPlatformService.UpdateRecord(_configurationWrapper.GetConfigIntValue("Contacts"), profileDictionary, token);                                     
                     UpdateHouseholdAddress(contactId, householdDictionary, addressDictionary);
                     return 1;
                 }
@@ -406,6 +406,15 @@ namespace MinistryPlatform.Translation.Repositories
             }
             return records.FirstOrDefault();
 
+        }
+
+        public IObservable<MpHousehold> UpdateContactsCongregation(int householdId, int newCongregation)
+        {
+            var token = ApiLogin();
+            var household = new MpHousehold() {Congregation_ID = newCongregation, Household_ID = householdId};
+            var asyncresult = Task.Run(() => _ministryPlatformRest.UsingAuthenticationToken(token)
+                                                        .Update<MpHousehold>(household));
+            return asyncresult.ToObservable();
         }
 
         private static MpMyContact ParseProfileRecord(Dictionary<string, object> recordsDict)

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Reactive.Linq;
 using crds_angular.App_Start;
 using crds_angular.Models.Crossroads.Attribute;
 using crds_angular.Models.Crossroads.Profile;
@@ -16,7 +17,7 @@ using NUnit.Framework;
 
 namespace crds_angular.test.Services
 {
-    internal class PersonServiceTest_opportunityService
+    public class PersonServiceTest
     {
         private Mock<IObjectAttributeService> _objectAttributeService;
         private Mock<MPInterfaces.IContactRepository> _contactService;
@@ -31,19 +32,26 @@ namespace crds_angular.test.Services
 
         private readonly DateTime startDate = new DateTime(2015, 2, 21);
 
+        [TearDown]
+        public void Teardown()
+        {
+            _objectAttributeService.VerifyAll();
+            _contactService.VerifyAll();
+            _authenticationService.VerifyAll();
+            _participantService.VerifyAll();
+            _userService.VerifyAll();
+            _apiUserService.VerifyAll();
+        }
+
         [SetUp]
         public void SetUp()
         {
             _objectAttributeService = new Mock<IObjectAttributeService>();
-            var allAttributesDto = new ObjectAllAttributesDTO();
-            _objectAttributeService.Setup(mocked => mocked.GetObjectAttributes(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<MpObjectAttributeConfiguration>())).Returns(allAttributesDto);
             _contactService = new Mock<MPInterfaces.IContactRepository>();
             _authenticationService = new Mock<IAuthenticationRepository>();
             _participantService = new Mock<MPInterfaces.IParticipantRepository>();
             _userService = new Mock<MPInterfaces.IUserRepository>();
-
-            _apiUserService = new Mock<IApiUserRepository>();
-            _apiUserService.Setup(m => m.GetToken()).Returns("something");
+            _apiUserService = new Mock<IApiUserRepository>();            
             
             _myContact = new MpMyContact
             {
@@ -82,13 +90,67 @@ namespace crds_angular.test.Services
         }
 
         [Test]
+        public void ShouldNotUpdateCongregationIfCongregationIdIsNull()
+        {
+            var person = MockPerson(_myContact);
+            var participant = MockParticipant(_myContact);
+            const string token = "whateves";
+
+            person.CongregationId = null;
+            _contactService.Setup(m => m.UpdateContact(person.ContactId,
+                                                       It.IsAny<Dictionary<string, object>>(),
+                                                       It.IsAny<Dictionary<string, object>>(),
+                                                       It.IsAny<Dictionary<string, object>>())).Callback((int contactId, Dictionary<string, object> profileDictionary, Dictionary<string, object> houseDictionary, Dictionary<string, object> addressDictionary) =>
+                                                       {
+
+                                                       });
+            _objectAttributeService.Setup(
+                m =>
+                    m.SaveObjectAttributes(It.IsAny<int>(),
+                                           It.IsAny<Dictionary<int, ObjectAttributeTypeDTO>>(),
+                                           It.IsAny<Dictionary<int, ObjectSingleAttributeDTO>>(),
+                                           It.IsAny<MpObjectAttributeConfiguration>()));
+
+            _participantService.Setup(m => m.GetParticipant(person.ContactId)).Returns(participant);
+            _fixture.SetProfile(token, person);
+
+        }
+
+        [Test]
+        public void ShouldUpdateCongregationIfCongregationIdIsNotNull()
+        {
+            var person = MockPerson(_myContact);
+            var participant = MockParticipant(_myContact);
+            var household = new MpHousehold() {Congregation_ID = person.CongregationId, Household_ID = person.HouseholdId};
+            const string token = "whateves";
+            _contactService.Setup(m => m.UpdateContact(person.ContactId,
+                                                       It.IsAny<Dictionary<string, object>>(),
+                                                       It.IsAny<Dictionary<string, object>>(),
+                                                       It.IsAny<Dictionary<string, object>>())).Callback((int contactId, Dictionary<string, object> profileDictionary, Dictionary<string, object> houseDictionary, Dictionary<string, object> addressDictionary) =>
+                                                       {});
+            _contactService.Setup(m => m.UpdateContactsCongregation(person.HouseholdId, (int) person.CongregationId)).Returns(Observable.Start<MpHousehold>(() => household));
+            _objectAttributeService.Setup(
+                m =>
+                    m.SaveObjectAttributes(It.IsAny<int>(),
+                                           It.IsAny<Dictionary<int, ObjectAttributeTypeDTO>>(),
+                                           It.IsAny<Dictionary<int, ObjectSingleAttributeDTO>>(),
+                                           It.IsAny<MpObjectAttributeConfiguration>()));
+
+            _participantService.Setup(m => m.GetParticipant(person.ContactId)).Returns(participant);
+            _fixture.SetProfile(token, person);
+
+        }
+
+        [Test]
         public void TestGetProfileForContactId()
         {
             const int contactId = 123456;
 
             _contactService.Setup(mocked => mocked.GetContactById(contactId)).Returns(_myContact);
             _contactService.Setup(mocked => mocked.GetHouseholdFamilyMembers(7)).Returns(_householdMembers);
-
+            _apiUserService.Setup(m => m.GetToken()).Returns("something");
+            var allAttributesDto = new ObjectAllAttributesDTO();
+            _objectAttributeService.Setup(mocked => mocked.GetObjectAttributes(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<MpObjectAttributeConfiguration>())).Returns(allAttributesDto);
             var person = _fixture.GetPerson(contactId);
             _contactService.VerifyAll();
 
@@ -129,7 +191,9 @@ namespace crds_angular.test.Services
 
             _contactService.Setup(mocked => mocked.GetMyProfile(token)).Returns(_myContact);
             _contactService.Setup(mocked => mocked.GetHouseholdFamilyMembers(7)).Returns(_householdMembers);
-
+            _apiUserService.Setup(m => m.GetToken()).Returns("something");
+            var allAttributesDto = new ObjectAllAttributesDTO();
+            _objectAttributeService.Setup(mocked => mocked.GetObjectAttributes(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<MpObjectAttributeConfiguration>())).Returns(allAttributesDto);
             var person = _fixture.GetLoggedInUserProfile(token);
             _contactService.VerifyAll();
 
@@ -161,6 +225,38 @@ namespace crds_angular.test.Services
             Assert.AreEqual("hh name", person.HouseholdName);
             Assert.AreEqual(6, person.AddressId);
             Assert.AreSame(_householdMembers, person.HouseholdMembers);
+        }
+
+        private MpParticipant MockParticipant(MpMyContact contact)
+        {
+            return new MpParticipant
+            {
+                ContactId = contact.Contact_ID,
+                ParticipantId = 129876,
+                EmailAddress = contact.Email_Address,
+                DisplayName = contact.Display_Name,
+                Nickname = contact.Nickname,
+                Age = contact.Age,
+                PreferredName = contact.Nickname
+            };
+        }
+
+        private Person MockPerson(MpMyContact contact)
+        {
+            return new Person
+            {
+                AddressId = contact.Address_ID,
+                AddressLine1 = contact.Address_Line_1,
+                AddressLine2 = contact.Address_Line_2,
+                Age = contact.Age,
+                CongregationId = contact.Congregation_ID,
+                ContactId = contact.Contact_ID,
+                DateOfBirth = contact.Date_Of_Birth,
+                EmailAddress = contact.Email_Address,
+                FirstName = contact.First_Name,
+                LastName = contact.Last_Name,
+                NickName = contact.Nickname
+            };
         }
     }
 }
