@@ -7,7 +7,7 @@
 
     function LeaveYourMark($resource) {
         return {
-            campaignSummary: $resource(__API_ENDPOINT__ + "api/campaign/summary/:pledgeCampaignId", {
+            campaignSummary: $resource(__GATEWAY_CLIENT_ENDPOINT__ + "api/campaign/summary/:pledgeCampaignId", {
                 pledgeCampaignId: "@pledgeCampaignId"
             })
         }
