@@ -41,13 +41,13 @@ BEGIN
 					WHEN p.Total_Pledge > 0 AND agg.Total_Given IS NOT NULL THEN 100.0 * agg.Total_Given / p.Total_Pledge
 					ELSE 0
 				END,
-			PercentTime =		-- percent of days elapsed so far (unique per pledge)
+			PercentTime =		-- percent of days elapsed so far
 				CASE
-					WHEN @Current_Date > @End_Date THEN 100					-- past the campaign end date
-					WHEN @Current_Date < p.First_Installment_Date THEN 0	-- before the pledge start date
+					WHEN @Current_Date > @End_Date THEN 100			-- past the campaign end date
+					WHEN @Current_Date < @Start_Date THEN 0			-- before the campaign start date
 					ELSE -- DaysUsed / DaysAvailable
-						100.0 * DATEDIFF(DAY, p.First_Installment_Date, DATEADD(DAY, 1, @Current_Date)) / 
-						DATEDIFF(DAY, p.First_Installment_Date, DATEADD(DAY, 1, @End_Date))
+						100.0 * DATEDIFF(DAY, @Start_Date, DATEADD(DAY, 1, @Current_Date)) / 
+						DATEDIFF(DAY, @Start_Date, DATEADD(DAY, 1, @End_Date))
 				END
 		FROM
 			Pledges p
