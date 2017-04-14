@@ -23,16 +23,9 @@ export default function MyServeRouter($httpProvider, $stateProvider) {
         },
         $cookies: '$cookies',
         Groups: function (ServeOpportunities, $cookies) {
-          var now = new Date();
-          var weekOut = new Date();
-          weekOut.setDate(now.getDate() + 7);
-          var from = Math.floor(now.getTime()/1000);
-          var to = Math.floor(weekOut.getTime()/1000);
-
           return ServeOpportunities.ServeDays.query({
-            id:   $cookies.get('userId'),
-            from: from ,
-            to:   to 
+            id: $cookies.get('userId'),
+            to: 1491412741
           }).$promise;
         }
       }
