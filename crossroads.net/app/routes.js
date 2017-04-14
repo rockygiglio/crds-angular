@@ -566,10 +566,7 @@
           parent: 'noSideBar',
           url: '/leaveyourmark',
           controller: 'LeaveYourMarkController as leaveYourMarkCtrl',
-          templateUrl: 'leaveyourmark/leaveyourmark.html' //,
-          // resolve: {
-            
-          // }
+          templateUrl: 'leaveyourmark/leaveyourmark.html'
         });
 
     // Commented out for US2924, will be added back after Corkboard go-live
