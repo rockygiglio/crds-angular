@@ -31,5 +31,14 @@ namespace crds_angular.Models.Crossroads.GroupLeader
 
         [JsonProperty(PropertyName = "householdId")]
         public int HouseholdId { get; set; }
+
+        [JsonProperty(PropertyName = "students")]
+        public string LeadStudents { get; set; }
+
+        [JsonProperty(PropertyName = "member")]
+        public string ReferenceContactId { get; set; }
+
+        [JsonProperty(PropertyName = "huddle")]
+        public string HuddleResponse { get; set; }
     }
 }
