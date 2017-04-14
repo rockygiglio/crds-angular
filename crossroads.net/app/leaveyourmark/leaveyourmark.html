@@ -10,8 +10,7 @@
             <h1>I'M IN Campagian Update</h1>
         </div>
         <div class="row">
-            Donec sodales nulla vel ante ultricies, a consectetur augue pharetra. Fusce eros lacus, laoreet eget arcu vel, lobortis tincidunt velit. Curabitur lobortis lacinia dignissim. Nunc fermentum pretium hendrerit. Sed sit
-            amet fermentum tortor.
+            <div dynamic-content="$root.MESSAGES.imInLeaveyourmark.content | html"></div>
         </div>
         <br>
         <div class="row">
@@ -28,7 +27,7 @@
                 <div class="row"><br><br></div>
                 <div class="row" style="transform: translate(30px, -30px)">
                     <h1>Day</h1>
-                    <h1>{{leaveYourMarkCtrl.currentDay}} / {{leaveYourMarkCtrl.totalDays}}</h1>
+                    <h1>{{leaveYourMarkCtrl.currentDay | number:0}} / {{leaveYourMarkCtrl.totalDays | number:0 }}</h1>
                 </div>
             </div>
 
@@ -68,11 +67,38 @@
              aria-valuenow="{{givenGercentage}}" aria-valuemin="0" aria-valuemax="100" ng-style="{width: leaveYourMarkCtrl.givenGercentage + '%'}"
              data-toggle="popover" data-trigger="hover" data-content="{leaveYourMarkCtrl.givenGercentage} + '%'">
             <div class="text-left" style="margin-top: 10px; margin-left: 20px; font-size: 20px; color: black">
-                {{leaveYourMarkCtrl.given | currency:"USD$":0}} given
+                {{leaveYourMarkCtrl.given | currency:"$":0}} given
             </div>
         </div>
         <div class="text-right" style="margin-top: 5px; margin-right: 20px; font-size: 20px; color: black">
-            {{leaveYourMarkCtrl.committed | currency:"USD$":0}} committed
+            {{leaveYourMarkCtrl.committed | currency:"$":0}} committed
+        </div>
+    </div>
+</div>
+
+<div class="row" ng-show="leaveYourMarkCtrl.viewReady">
+    <div class="col-lg-3 col-md-6 col-sm-12">
+        <div style="text-align: center; margin-top: 30px; border: 1px solid #dddddd; background-color: #f3f3f3">
+            <p style="font-size: 36pt; font-weight: bold">{{leaveYourMarkCtrl.notStartedPercent | number}} %</p>
+            <p>of people haven't started</p>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6 col-sm-12">
+        <div style="text-align: center; margin-top: 30px; border: 1px solid #dddddd; background-color: #f3f3f3">
+            <p style="font-size: 36pt; font-weight: bold">{{leaveYourMarkCtrl.onPacePercent | number}} %</p>
+            <p>of people are on pace</p>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6 col-sm-12">
+        <div style="text-align: center; margin-top: 30px; border: 1px solid #dddddd; background-color: #f3f3f3">
+            <p style="font-size: 36pt; font-weight: bold">{{leaveYourMarkCtrl.behindPercent | number}} %</p>
+            <p>of people are behind</p>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6 col-sm-12">
+        <div style="text-align: center; margin-top: 30px; border: 1px solid #dddddd; background-color: #f3f3f3">
+            <p style="font-size: 36pt; font-weight: bold">{{leaveYourMarkCtrl.completedPercent | number}} %</p>
+            <p>of people are finished</p>
         </div>
     </div>
 </div>

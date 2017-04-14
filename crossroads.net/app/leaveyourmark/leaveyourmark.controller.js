@@ -25,6 +25,10 @@
         vm.given = undefined;
         vm.committed = undefined;
         vm.givenGercentage = undefined
+        vm.notStartedPercent = undefined
+        vm.onPacePercent = undefined
+        vm.behindPercent = undefined
+        vm.completedPercent = undefined
         vm.viewReady = false;
 
         activate();
@@ -34,13 +38,16 @@
                          .get({pledgeCampaignId: 1103})
                          .$promise
                          .then((data) => {
-                            // console.log("Campaign data: ", data);
                             vm.viewReady = true;
                             vm.currentDay = data.currentDay;
                             vm.totalDays = data.totalDays;
                             vm.given = data.totalGiven;
                             vm.committed = data.totalCommitted;
                             vm.givenGercentage = $filter('number')(vm.given / vm.committed * 100, 0);
+                            vm.notStartedPercent = data.notStartedPercent;
+                            vm.onPacePercent = data.onPacePercent;
+                            vm.completedPercent = data.completedPercent;
+                            vm.behindPercent = 100 - data.notStartedPercent - data.onPacePercent - data.completedPercent;
                          })
                          .catch((err) => {
                             vm.viewReady = true;
