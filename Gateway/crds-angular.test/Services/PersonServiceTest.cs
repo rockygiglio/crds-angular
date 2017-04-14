@@ -190,12 +190,8 @@ namespace crds_angular.test.Services
             const string token = "some-string";
 
             _contactService.Setup(mocked => mocked.GetMyProfile(token)).Returns(_myContact);
-            _contactService.Setup(mocked => mocked.GetHouseholdFamilyMembers(7)).Returns(_householdMembers);
-            _apiUserService.Setup(m => m.GetToken()).Returns("something");
-            var allAttributesDto = new ObjectAllAttributesDTO();
-            _objectAttributeService.Setup(mocked => mocked.GetObjectAttributes(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<MpObjectAttributeConfiguration>())).Returns(allAttributesDto);
+            _contactService.Setup(mocked => mocked.GetHouseholdFamilyMembers(7)).Returns(_householdMembers);           
             var person = _fixture.GetLoggedInUserProfile(token);
-            _contactService.VerifyAll();
 
             Assert.IsNotNull(person);
 
