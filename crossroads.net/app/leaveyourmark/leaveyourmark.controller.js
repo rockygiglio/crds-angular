@@ -47,7 +47,7 @@
                             vm.notStartedPercent = data.notStartedPercent;
                             vm.onPacePercent = data.onPacePercent;
                             vm.completedPercent = data.completedPercent;
-                            vm.behindPercent = 100 - data.notStartedPercent - data.onPacePercent - data.completedPercent;
+                            vm.behindPercent = 100 - data.onPacePercent;
                          })
                          .catch((err) => {
                             vm.viewReady = true;
