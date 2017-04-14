@@ -308,6 +308,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\API\AccountController.cs" />
     <Compile Include="Controllers\API\AddressController.cs" />
+    <Compile Include="Controllers\API\CampaignController.cs" />
     <Compile Include="Controllers\API\CampController.cs" />
     <Compile Include="Controllers\API\ChildcareController.cs" />
     <Compile Include="Controllers\API\CongregationController.cs" />
@@ -337,6 +338,7 @@
     <Compile Include="Exceptions\NotHeadOfHouseholdException.cs" />
     <Compile Include="Exceptions\PaymentTypeNotFoundException.cs" />
     <Compile Include="Exceptions\TripFullException.cs" />
+    <Compile Include="Models\Crossroads\Campaign\PledgeCampaignSummaryDto.cs" />
     <Compile Include="Models\Crossroads\GoVolunteer\DashboardDatum.cs" />
     <Compile Include="Models\AwsCloudsearch\AwsBoundingBox.cs" />
     <Compile Include="Models\AwsCloudsearch\AwsCloudsearchDto.cs" />
@@ -428,6 +430,7 @@
     <Compile Include="Services\AddressService.cs" />
     <Compile Include="Services\AwsCloudsearchService.cs" />
     <Compile Include="Services\BulkEmailSyncService.cs" />
+    <Compile Include="Services\CampaignService.cs" />
     <Compile Include="Services\CampRules.cs" />
     <Compile Include="Services\CampService.cs" />
     <Compile Include="Services\CongregationService.cs" />
@@ -447,6 +450,7 @@
     <Compile Include="Services\Interfaces\IAddressGeocodingService.cs" />
     <Compile Include="Services\Interfaces\IAddressProximityService.cs" />
     <Compile Include="Services\Interfaces\IAwsCloudsearchService.cs" />
+    <Compile Include="Services\Interfaces\ICampaignService.cs" />
     <Compile Include="Services\Interfaces\ICampRules.cs" />
     <Compile Include="Services\Interfaces\ICampService.cs" />
     <Compile Include="Services\Interfaces\IFinderService.cs" />
