@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reactive.Linq;
 using System.Threading.Tasks;
 using System.Web.Http;
 using crds_angular.Exceptions.Models;
@@ -25,8 +26,12 @@ namespace crds_angular.Controllers.API
         {
             return await Authorized(token => {              
                 try
-                {
-                    Task.Run(() => _groupLeaderService.SaveProfile(token, profile)).Wait();                    
+                {                    
+                    Task.Run(() =>
+                    {
+                        _groupLeaderService.SaveReferences(profile);
+                        _groupLeaderService.SaveProfile(token, profile);
+                    }).Wait();                    
                     return Ok();
                 }
                 catch (Exception e)

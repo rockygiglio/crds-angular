@@ -5,6 +5,8 @@ using crds_angular.Models.Crossroads.GroupLeader;
 using crds_angular.Models.Crossroads.Profile;
 using crds_angular.Services;
 using crds_angular.Services.Interfaces;
+using Crossroads.Web.Common.Configuration;
+using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 using Moq;
 using NUnit.Framework;
@@ -16,6 +18,8 @@ namespace crds_angular.test.Services
     {
         private Mock<IUserRepository> _userRepo;
         private Mock<IPersonService> _personService;
+        private Mock<IFormSubmissionRepository> _formService;
+        private Mock<IConfigurationWrapper> _configWrapper;
         private IGroupLeaderService _fixture;
 
         [SetUp]
@@ -23,7 +27,9 @@ namespace crds_angular.test.Services
         {
             _userRepo = new Mock<IUserRepository>();
             _personService = new Mock<IPersonService>();
-            _fixture = new GroupLeaderService(_personService.Object, _userRepo.Object);
+            _formService = new Mock<IFormSubmissionRepository>();
+            _configWrapper = new Mock<IConfigurationWrapper>();
+            _fixture = new GroupLeaderService(_personService.Object, _userRepo.Object, _formService.Object, _configWrapper.Object);
         }
 
         [TearDown]
@@ -120,6 +126,53 @@ namespace crds_angular.test.Services
             });
         }
 
+        [Test]
+        public async void ShouldSaveReferenceData()
+        {
+            var fakeDto = GroupLeaderMock();
+
+            const int groupLeaderFormConfig = 23;
+            const int groupLeaderReference = 56;
+            const int groupLeaderHuddle = 92;
+            const int groupLeaderStudent = 126;
+
+            _configWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderFormId")).Returns(groupLeaderFormConfig);
+            _configWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderReferenceFieldId")).Returns(groupLeaderReference);
+            _configWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderHuddleFieldId")).Returns(groupLeaderHuddle);
+            _configWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderStudentFieldId")).Returns(groupLeaderStudent);
+
+            _formService.Setup(m => m.SubmitFormResponse(It.IsAny<MpFormResponse>())).Returns((MpFormResponse form) =>
+            {
+                Assert.AreEqual(groupLeaderFormConfig, form.FormId);
+                return 1;
+            });
+            var responseId = await _fixture.SaveReferences(fakeDto);
+            Assert.AreEqual(responseId, 1);
+        }
+
+        [Test]
+        public void ShouldThrowExceptionWhenSaveReferenceDataFails()
+        {
+            var fakeDto = GroupLeaderMock();
+
+            const int groupLeaderFormConfig = 23;
+            const int groupLeaderReference = 56;
+            const int groupLeaderHuddle = 92;
+            const int groupLeaderStudent = 126;
+
+            _configWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderFormId")).Returns(groupLeaderFormConfig);
+            _configWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderReferenceFieldId")).Returns(groupLeaderReference);
+            _configWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderHuddleFieldId")).Returns(groupLeaderHuddle);
+            _configWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderStudentFieldId")).Returns(groupLeaderStudent);
+
+            _formService.Setup(m => m.SubmitFormResponse(It.IsAny<MpFormResponse>())).Returns((MpFormResponse form) =>
+            {
+                Assert.AreEqual(groupLeaderFormConfig, form.FormId);
+                return 0;
+            });
+
+            Assert.Throws<ApplicationException>(async () => await _fixture.SaveReferences(fakeDto));
+        }
 
         private static GroupLeaderProfileDTO GroupLeaderMock()
         {
@@ -131,7 +184,11 @@ namespace crds_angular.test.Services
                 LastName = "Silbernagel",
                 NickName = "Matt",
                 Site = 1,            
-                OldEmail = "matt.silbernagel@ingagepartners.com"
+                OldEmail = "matt.silbernagel@ingagepartners.com",
+                HouseholdId = 81562,
+                HuddleResponse = "No",
+                LeadStudents = "Yes",
+                ReferenceContactId = "89158"
             };
         }
     }

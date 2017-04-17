@@ -26,7 +26,7 @@ namespace crds_angular.Services
             _configWrapper = configWrapper;
         }
 
-        public async Task SaveReferences(GroupLeaderProfileDTO leader)
+        public Task<int> SaveReferences(GroupLeaderProfileDTO leader)
         {
             var form = new MpFormResponse
             {
@@ -51,7 +51,15 @@ namespace crds_angular.Services
                     }
                 }                   
             };
-            await Task.Run( () => _formSubmissionRepository.SubmitFormResponse(form));            
+            return Task.Run(() =>
+            {
+                var responseId = _formSubmissionRepository.SubmitFormResponse(form);
+                if (responseId == 0)
+                {
+                    throw new ApplicationException("Unable to save form responses for the Group Leader application");
+                }
+                return responseId;
+            });            
         }
 
         public async Task SaveProfile(string token, GroupLeaderProfileDTO leader)
