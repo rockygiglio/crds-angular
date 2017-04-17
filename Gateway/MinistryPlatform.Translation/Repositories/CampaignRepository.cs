@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Crossroads.Utilities.Interfaces;
-using Crossroads.Web.Common;
 using Crossroads.Web.Common.Configuration;
 using Crossroads.Web.Common.MinistryPlatform;
 using Crossroads.Web.Common.Security;
 using MinistryPlatform.Translation.Extensions;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Models.Childcare;
+using MinistryPlatform.Translation.Models.DTO;
 using MinistryPlatform.Translation.Repositories.Interfaces;
+using MinistryPlatform.Translation.Exceptions;
 
 namespace MinistryPlatform.Translation.Repositories
 {
@@ -108,6 +108,25 @@ namespace MinistryPlatform.Translation.Repositories
             var tripRecords = _ministryPlatformRest.UsingAuthenticationToken(apiToken).GetFromStoredProc<MpTripRecord>(_configurationWrapper.GetConfigValue("TripRecordProc"), parms);
             List<MpTripRecord> tripRecord = tripRecords.FirstOrDefault()?? new List<MpTripRecord>();
             return tripRecord;
+        }
+
+        // Retrieve overall summary info for the whole campaign, or throw if the campaign does not exist
+        public MpPledgeCampaignSummaryDto GetPledgeCampaignSummary(string token, int pledgeCampaignId)
+        {
+            var parameters = new Dictionary<string, object>
+            {
+                { "@Pledge_Campaign_ID", pledgeCampaignId }
+            };
+
+            var storedProcReturn = _ministryPlatformRest.UsingAuthenticationToken(token).GetFromStoredProc<MpPledgeCampaignSummaryDto>("api_crds_Get_Pledge_Campaign_Summary", parameters);
+
+            MpPledgeCampaignSummaryDto summary = storedProcReturn.FirstOrDefault()?.FirstOrDefault();
+            if (summary == null)
+                throw new PledgeCampaignNotFoundException(pledgeCampaignId);
+
+            summary.PledgeCampaignId = pledgeCampaignId;
+
+            return summary;
         }
     }
 }

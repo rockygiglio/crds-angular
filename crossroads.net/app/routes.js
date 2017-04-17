@@ -547,6 +547,12 @@
           url: '/thedaily',
           controller: 'TheDailyController as dailyCtrl',
           templateUrl: 'thedaily/thedaily.html'
+        })
+        .state('leaveyourmark', {
+          parent: 'noSideBar',
+          url: '/leaveyourmark',
+          controller: 'LeaveYourMarkController as leaveYourMarkCtrl',
+          templateUrl: 'leaveyourmark/leaveyourmark.html'
         });
 
     // Commented out for US2924, will be added back after Corkboard go-live

@@ -1,14 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
-using System.Web;
 using crds_angular.Models.Crossroads.GroupLeader;
 using crds_angular.Models.Crossroads.Profile;
 using crds_angular.Services.Interfaces;
-using Microsoft.Ajax.Utilities;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 
 namespace crds_angular.Services
@@ -49,6 +44,7 @@ namespace crds_angular.Services
             await Observable.Zip(
                 Observable.Start(() => _personService.SetProfile(token, person)),
                 Observable.Start(() => _userRepository.UpdateUser(userUpdates))
+                
                 );
         }      
     }

@@ -1,0 +1,104 @@
+<!-- first row displays days -->
+<div class = "row">
+    <preloader full-screen="false" ng-show="!leaveYourMarkCtrl.viewReady">
+</div>
+
+<div class="row" ng-show="leaveYourMarkCtrl.viewReady">
+    <div class="col-md-6 col-sm-12">
+        <!-- content block -->
+        <div class="row">
+            <h1>I'M IN Campaign Update</h1>
+        </div>
+        <div class="row">
+            <div dynamic-content="$root.MESSAGES.imInLeaveyourmark.content | html"></div>
+        </div>
+        <br>
+        <div class="row">
+            <a role="button" class="btn btn-default" ng-href="profile/giving">Check Your Status</a>
+        </div>
+    </div>
+
+    <div class="col-md-1 col-sm-12"></div>
+
+    <div class="col-md-5 col-sm-12" style="border: 1px solid lightgrey; transform: translate(0px, 30px); background-color: floralwhite">
+        <!-- days -->
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="row"><br><br></div>
+                <div class="row" style="transform: translate(30px, -30px)">
+                    <h1>Day</h1>
+                    <h1>{{leaveYourMarkCtrl.currentDay | number:0}} / {{leaveYourMarkCtrl.totalDays | number:0 }}</h1>
+                </div>
+            </div>
+
+            <div class="col-sm-6">
+                <div class="row"><br><br></div>
+                <div class="row" style="transform: translate(30px, -30px)">
+                    <div style="background-color: grey; width: 120px; height: 120px; transform: translate(0px, -10px); border-radius: 50%">
+                        <h1 style="transform: translate(25px, 35px); color: white">
+                            {{(leaveYourMarkCtrl.currentDay / leaveYourMarkCtrl.totalDays * 100) | number:0 }}%
+                        </h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="row" style="margin-top: 100px"></div>
+
+<div class="row" ng-show="leaveYourMarkCtrl.viewReady">
+    <div class="pull-right" style="padding: 1px 1px 1px 1px" ng-style="{width: (100 - leaveYourMarkCtrl.givenGercentage) + '%'}">
+        <div style="background-color: lightgray; width: 70px; height: 30px; transform: translate(-25px)">
+            <div style="transform: translate(20px);">
+                {{leaveYourMarkCtrl.givenGercentage}}%
+            </div>
+        </div>
+        <div style="width: 0; height: 0; border-left: 10px solid transparent; border-right: 10px solid transparent; border-top: 10px solid lightgrey;">
+        </div>
+    </div>
+</div>
+
+<!-- progress bar -->
+<div class="row" ng-show="leaveYourMarkCtrl.viewReady">
+    <div class="progress" style="height: 40px">
+        <div class="progress-bar progress-bar-success" role="progressbar"
+             aria-valuenow="{{givenGercentage}}" aria-valuemin="0" aria-valuemax="100" ng-style="{width: leaveYourMarkCtrl.givenGercentage + '%'}"
+             data-toggle="popover" data-trigger="hover" data-content="{leaveYourMarkCtrl.givenGercentage} + '%'">
+            <div class="text-left" style="margin-top: 10px; margin-left: 20px; font-size: 20px; color: black">
+                {{leaveYourMarkCtrl.given | currency:"$":0}} given
+            </div>
+        </div>
+        <div class="text-right" style="margin-top: 5px; margin-right: 20px; font-size: 20px; color: black">
+            {{leaveYourMarkCtrl.committed | currency:"$":0}} committed
+        </div>
+    </div>
+</div>
+
+<div class="row" ng-show="leaveYourMarkCtrl.viewReady">
+    <div class="col-lg-3 col-md-6 col-sm-12">
+        <div style="text-align: center; margin-top: 30px; border: 1px solid #dddddd; background-color: #f3f3f3">
+            <p style="font-size: 36pt; font-weight: bold">{{leaveYourMarkCtrl.notStartedPercent | number}} %</p>
+            <p>of people haven't started</p>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6 col-sm-12">
+        <div style="text-align: center; margin-top: 30px; border: 1px solid #dddddd; background-color: #f3f3f3">
+            <p style="font-size: 36pt; font-weight: bold">{{leaveYourMarkCtrl.onPacePercent | number}} %</p>
+            <p>of people are on pace</p>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6 col-sm-12">
+        <div style="text-align: center; margin-top: 30px; border: 1px solid #dddddd; background-color: #f3f3f3">
+            <p style="font-size: 36pt; font-weight: bold">{{leaveYourMarkCtrl.behindPercent | number}} %</p>
+            <p>of people are behind</p>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6 col-sm-12">
+        <div style="text-align: center; margin-top: 30px; border: 1px solid #dddddd; background-color: #f3f3f3">
+            <p style="font-size: 36pt; font-weight: bold">{{leaveYourMarkCtrl.completedPercent | number}} %</p>
+            <p>of people are finished</p>
+        </div>
+    </div>
+</div>
