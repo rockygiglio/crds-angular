@@ -24,8 +24,8 @@ namespace crds_angular.test.controllers
         private Mock<IAuthenticationRepository> _authenticationRepo;
         private GroupLeaderController _fixture;
 
-        private readonly string authToken = "authtoken";
-        private readonly string authType = "authtype";
+        private const string authToken = "authtoken";
+        private const string authType = "authtype";
 
         [SetUp]
         public void Setup()
@@ -82,6 +82,7 @@ namespace crds_angular.test.controllers
         public void ShouldOnlyAllowAuthenticatedUsers()
         {            
             var mockProfile = GroupLeaderMock();
+            _groupLeaderService.Setup(m => m.SaveReferences(It.IsAny<GroupLeaderProfileDTO>())).Returns(Task.Run(() => 1));
             _groupLeaderService.Setup(m => m.SaveProfile(It.IsAny<string>(), mockProfile)).Throws(new Exception());
             Assert.Throws<HttpResponseException>(async () =>
             {

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using System.Web.Http;
@@ -24,22 +25,29 @@ namespace crds_angular.Controllers.API
         [HttpPost]
         public async Task<IHttpActionResult> SaveProfile([FromBody] GroupLeaderProfileDTO profile)
         {
-            return await Authorized(token => {              
-                try
-                {                    
-                    Task.Run(() =>
-                    {
-                        _groupLeaderService.SaveReferences(profile);
-                        _groupLeaderService.SaveProfile(token, profile);
-                    }).Wait();                    
-                    return Ok();
-                }
-                catch (Exception e)
+            if (ModelState.IsValid)
+            {
+                return await Authorized(token =>
                 {
-                    var apiError = new ApiErrorDto("Saving Leader Profile failed:", e);
-                    throw new HttpResponseException(apiError.HttpResponseMessage);
-                }                                            
-            });                                                               
+                    try
+                    {
+                        Task.Run(() =>
+                        {
+                            _groupLeaderService.SaveReferences(profile);
+                            _groupLeaderService.SaveProfile(token, profile);
+                        }).Wait();
+                        return Ok();
+                    }
+                    catch (Exception e)
+                    {
+                        var apiError = new ApiErrorDto("Saving Leader Profile failed:", e);
+                        throw new HttpResponseException(apiError.HttpResponseMessage);
+                    }
+                });
+            }
+            var errors = ModelState.Values.SelectMany(val => val.Errors).Aggregate("", (current, err) => current + err.ErrorMessage);
+            var dataError = new ApiErrorDto("Registration Data Invalid", new InvalidOperationException("Invalid Registration Data" + errors));
+            throw new HttpResponseException(dataError.HttpResponseMessage);
         }
     }
 }
