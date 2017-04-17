@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Reactive;
 using System.Reactive.Linq;
+using System.Reactive.Threading.Tasks;
 using System.Threading.Tasks;
 using System.Web.Http;
 using crds_angular.Exceptions.Models;
@@ -30,12 +33,11 @@ namespace crds_angular.Controllers.API
                 return await Authorized(token =>
                 {
                     try
-                    {
-                        Task.Run(() =>
-                        {
-                            _groupLeaderService.SaveReferences(profile);
-                            _groupLeaderService.SaveProfile(token, profile);
-                        }).Wait();
+                    {                        
+
+                        _groupLeaderService.SaveReferences(profile).Zip<int, IList<Unit>, int>(_groupLeaderService.SaveProfile(token, profile),
+                                                     (int first, IList<Unit> second) => first).ToTask();
+                        
                         return Ok();
                     }
                     catch (Exception e)

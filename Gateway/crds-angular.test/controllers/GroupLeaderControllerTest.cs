@@ -1,8 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Reactive.Linq;
-using System.Threading.Tasks;
 using System.Web.Http.Controllers;
 using System.Web.Http.Results;
 using crds_angular.Controllers.API;
@@ -54,11 +54,11 @@ namespace crds_angular.test.controllers
         {
             _fixture.Request.Headers.Authorization = new AuthenticationHeaderValue(authType, authToken);
             var mockProfile = GroupLeaderMock();
-            _groupLeaderService.Setup(m => m.SaveReferences(It.IsAny<GroupLeaderProfileDTO>())).Returns(Task.Run(() => 1));
+            _groupLeaderService.Setup(m => m.SaveReferences(It.IsAny<GroupLeaderProfileDTO>())).Returns(Observable.Start(() => 1));
             _groupLeaderService.Setup(m => m.SaveProfile(It.IsAny<string>(), It.IsAny<GroupLeaderProfileDTO>())).Callback((string authTokenParm, GroupLeaderProfileDTO mock) =>
             {
                 Assert.AreEqual($"{authType} {authToken}", authTokenParm);
-            }).Returns(Task.FromResult(Observable.Empty<Unit>()));
+            }).Returns(Observable.Empty<IList<Unit>>());
 
             var response = await _fixture.SaveProfile(mockProfile);
             Assert.IsNotNull(response);
@@ -70,7 +70,7 @@ namespace crds_angular.test.controllers
         {
             _fixture.Request.Headers.Authorization = new AuthenticationHeaderValue(authType, authToken);
             var mockProfile = GroupLeaderMock();
-            _groupLeaderService.Setup(m => m.SaveReferences(It.IsAny<GroupLeaderProfileDTO>())).Returns(Task.Run(() => 1));
+            _groupLeaderService.Setup(m => m.SaveReferences(It.IsAny<GroupLeaderProfileDTO>())).Returns(Observable.Start(() => 1));
             _groupLeaderService.Setup(m => m.SaveProfile(It.IsAny<string>(), mockProfile)).Throws(new Exception());            
             Assert.Throws<HttpResponseException>(async () =>
             {
@@ -82,7 +82,7 @@ namespace crds_angular.test.controllers
         public void ShouldOnlyAllowAuthenticatedUsers()
         {            
             var mockProfile = GroupLeaderMock();
-            _groupLeaderService.Setup(m => m.SaveReferences(It.IsAny<GroupLeaderProfileDTO>())).Returns(Task.Run(() => 1));
+            _groupLeaderService.Setup(m => m.SaveReferences(It.IsAny<GroupLeaderProfileDTO>())).Returns(Observable.Start(() => 1));
             _groupLeaderService.Setup(m => m.SaveProfile(It.IsAny<string>(), mockProfile)).Throws(new Exception());
             Assert.Throws<HttpResponseException>(async () =>
             {
