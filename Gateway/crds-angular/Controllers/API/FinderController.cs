@@ -383,6 +383,38 @@ namespace crds_angular.Controllers.API
             });
         }
 
+        /// <summary>
+        /// Logged in user requests to be a host
+        /// </summary>
+        [RequiresAuthorization]
+        [VersionedRoute(template: "finder/pin/requesttobehost", minimumVersion: "1.0.0")]
+        [Route("finder/pin/requesttobehost")]
+        [HttpPost]
+        public IHttpActionResult RequestToBeHost([FromBody]int gatheringId)
+        {
+            return Authorized(token =>
+            {
+                try
+                {
+                    var hostRequest = new HostRequestDto();
+                    _finderService.RequestToBeHost(token, hostRequest);
+                    return Ok();
+                }
+                catch (Exception e)
+                {
+                    _logger.Error("Failure in RequestToBeHost", e);
+                    switch (e.Message)
+                    {
+                        case "User already has request":
+                            throw new HttpResponseException(HttpStatusCode.Conflict);
+                        case "User already a member":
+                            throw new HttpResponseException(HttpStatusCode.NotAcceptable);
+                        default:
+                            throw new HttpResponseException(new ApiErrorDto("Gathering request failed", e).HttpResponseMessage);
+                    }
+                }
+            });
+        }
 
         [ResponseType(typeof(PinSearchResultsDto))]
         [VersionedRoute(template: "finder/uploadallcloudsearchrecords", minimumVersion: "1.0.0")]

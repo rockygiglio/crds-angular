@@ -16,7 +16,6 @@ using System.Device.Location;
 using Amazon.CloudSearchDomain.Model;
 using crds_angular.Models.AwsCloudsearch;
 using crds_angular.Models.Crossroads.Groups;
-using MinistryPlatform.Translation.Models.Finder;
 using Crossroads.Web.Common.Configuration;
 
 namespace crds_angular.Services
@@ -154,6 +153,11 @@ namespace crds_angular.Services
         public List<GroupParticipantDTO> GetParticipantsForGroup(int groupId)
         {
             return _groupService.GetGroupParticipantsWithoutAttributes(groupId);
+        }
+
+        public void RequestToBeHost(string token, HostRequestDto hostRequest)
+        {
+            // do requesty type stuff
         }
 
         public void GatheringJoinRequest(string token, int gatheringId)
