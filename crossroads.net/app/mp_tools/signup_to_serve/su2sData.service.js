@@ -5,7 +5,7 @@
   Su2sData.$inject = ['$resource'];
 
   function Su2sData($resource){
-    return $resource(__API_ENDPOINT__ + 'api/opportunity/getGroupParticipantsForOpportunity/:oppId');
+    return $resource(__GATEWAY_CLIENT_ENDPOINT__ + 'api/opportunity/getGroupParticipantsForOpportunity/:oppId');
   }
 
 })();

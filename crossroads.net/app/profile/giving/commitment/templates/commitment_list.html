@@ -1,6 +1,6 @@
 <!--Card-->
 <div class="card-item" data-category="view" ng-repeat="pledgeCommitment in pledgeCommitments track by $index">
-  <div class="col-sm-3 col-xs-12 card-img card-dark col-sm-height">
+  <div class="col-sm-3 col-xs-12 card-img card-dark">
     <!--Brian Miller: These need converted to IMGIX once the routes are refactored to trigger IMGIX-->
 
     <div class="card-img-wrapper">
@@ -10,7 +10,7 @@
     </div><!--/card-img-wrapper-->
 
   </div>
-  <div class="col-sm-9 col-xs-12 card-content col-sm-height">
+  <div class="col-sm-9 col-xs-12 card-content">
     <div class="card-header">
       <div class="row">
         <div class="col-sm-8">
@@ -22,8 +22,15 @@
       </div><!--/row-->
       <div class="row">
         <div class="col-sm-12">
-          <p class="flush-bottom text-right trip-funding" style="width: 1.4%">{{pledgeCommitment.pledge_donations | currency}} Given</p>
-          <progressbar ng-class="{'progress-striped' : !commitmentMet(pledgeCommitment.pledge_donations, pledgeCommitment.total_pledge)}" type="success" max="pledgeCommitment.total_pledge" value="pledgeCommitment.pledge_donations">{{commitmentPercent(pledgeCommitment.pledge_donations, pledgeCommitment.total_pledge)}}&#37;</progressbar>
+          <div class="trip-funding">
+            <p class="pull-left flush-bottom">{{pledgeCommitment.pledge_donations | currency}} Given</p>
+            <p class="pull-right flush-bottom hidden-xs">{{commitmentRemaining(pledgeCommitment.pledge_donations, pledgeCommitment.total_pledge) | currency}} Remaining</p>
+          </div>
+          <div style="clear:both">
+            <progressbar ng-class="{'progress-striped' : !commitmentMet(pledgeCommitment.pledge_donations, pledgeCommitment.total_pledge)}" type="success" max="pledgeCommitment.total_pledge" value="pledgeCommitment.pledge_donations">
+              <span class="white bold">{{commitmentPercent(pledgeCommitment.pledge_donations, pledgeCommitment.total_pledge)}}&#37;</span>
+            </progressbar>
+          </div>
           <p class="pull-right funding-goal">{{pledgeCommitment.total_pledge | currency}} Committed</p>
         </div>
       </div><!-- /row -->

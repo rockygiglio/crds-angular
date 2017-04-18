@@ -70,7 +70,7 @@
         if ((fromState.data === undefined || !fromState.data.isProtected) &&
             (fromState.name !== undefined && fromState.name !== '')) {
           Session.addRedirectRoute(fromState.name, fromParams);
-        } else {
+        } else if (!Session.hasRedirectionInfo()) {
           Session.addRedirectRoute('content', { link: '/' });
         }
 

@@ -210,6 +210,18 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
     </Reference>
+    <Reference Include="System.Reactive.Core, Version=2.2.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Rx-Core.2.2.5\lib\net45\System.Reactive.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Reactive.Interfaces, Version=2.2.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Rx-Interfaces.2.2.5\lib\net45\System.Reactive.Interfaces.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Reactive.Linq, Version=2.2.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Rx-Linq.2.2.5\lib\net45\System.Reactive.Linq.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Web.Cors, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -266,6 +278,7 @@
     <Compile Include="controllers\EventParticipantControllerTest.cs" />
     <Compile Include="controllers\FinderControllerTest.cs" />
     <Compile Include="controllers\GoVolunteerControllerTest.cs" />
+    <Compile Include="controllers\GroupLeaderControllerTest.cs" />
     <Compile Include="controllers\GroupToolControllerTest.cs" />
     <Compile Include="controllers\ImageControllerTest.cs" />
     <Compile Include="controllers\InvitationControllerTest.cs" />
@@ -312,6 +325,7 @@
     <Compile Include="Services\GoogleMapsDistanceMatrixAddressProximityServiceTest.cs" />
     <Compile Include="Services\GoSkillsServiceTest.cs" />
     <Compile Include="Services\GoVolunteerServiceTest.cs" />
+    <Compile Include="Services\GroupLeaderServiceTest.cs" />
     <Compile Include="Services\GroupSearchServiceTest.cs" />
     <Compile Include="Services\InvitationServiceTest.cs" />
     <Compile Include="Services\GroupToolServiceTest.cs" />

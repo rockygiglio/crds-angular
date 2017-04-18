@@ -7,7 +7,7 @@
   function AdminCheckinDashboardService($resource) {
 
     return {
-      checkinDashboard: $resource(__API_ENDPOINT__ + 'api/eventTool/:eventId/rooms', null, { update: { method:'PUT' } }),
+      checkinDashboard: $resource(__GATEWAY_CLIENT_ENDPOINT__ + 'api/eventTool/:eventId/rooms', null, { update: { method:'PUT' } }),
     };
 
   }

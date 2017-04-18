@@ -47,7 +47,7 @@ describe('Logout Controller', function () {
 
   }));
 
-  it('should route to homepage when empty \'processExternalRedirect\'', function () {
+  it('should route to homepage when empty', function () {
     spyOn($state, 'go');
     spyOn(Session, 'redirectIfNeeded');
 
@@ -64,27 +64,6 @@ describe('Logout Controller', function () {
     expect(Session.redirectIfNeeded).toHaveBeenCalledTimes(1);
   });
 
-  it('should invoke \'processExternalRedirect\' when not empty and a function', function () {
-    spyOn($state, 'go');
-    spyOn(Session, 'redirectIfNeeded');
 
-    var externalCalled = false;
-    processExternalRedirect = function () {
-      externalCalled = true;
-    }
-
-    LogoutController = $controller('LogoutController', {
-      $scope: $scope,
-      $rootScope: $rootScope,
-      $log: $log,
-      AuthService: AuthService,
-      $state: $state,
-      Session: Session,
-      processExternalRedirect: processExternalRedirect
-    });
-
-    expect(externalCalled).toBe(true);
-    expect($state.go).toHaveBeenCalledTimes(0);
-  });
 
 });

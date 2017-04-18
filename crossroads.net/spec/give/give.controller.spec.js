@@ -399,7 +399,7 @@ describe('GiveController', function() {
 
     it('should call updateDonorWithCard with proper values when changing card info', function() {
 
-      httpBackend.whenGET(window.__env__['CRDS_API_ENDPOINT'] + 'api/authenticated').respond(200);
+      httpBackend.whenGET(window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api/authenticated').respond(200);
 
       controller.giveForm = controllerGiveForm;
       controller.dto.amount = 858;

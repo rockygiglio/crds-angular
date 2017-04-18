@@ -68,9 +68,11 @@ namespace crds_angular.test.controllers
             const string fakelong = "-84.456";
             var geoCoordinate = new GeoCoordinate(39.123, -84.456);
             var listPinDto = GetListOfPinDto();
+            var address = new AddressDTO("123 Main st","","Independence","KY","41051",32,-84);
 
             _finderService.Setup(m => m.GetGeoCoordsFromLatLong(It.IsAny<string>(),It.IsAny<string>())).Returns(geoCoordinate);
             _finderService.Setup(m => m.GetMyPins(It.IsAny<string>(), It.IsAny<GeoCoordinate>(), It.IsAny<int>())).Returns(listPinDto);
+            _finderService.Setup(m => m.RandomizeLatLong(It.IsAny<AddressDTO>())).Returns(address);
 
             var response = _fixture.GetMyPinsByContactId(fakecontactid, fakelat, fakelong);
 

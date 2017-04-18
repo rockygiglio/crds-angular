@@ -25,7 +25,7 @@
                     ngModel.$setValidity('unique', undefined);
                 }
 
-                $http.get(__API_ENDPOINT__ + 'api/lookup/' + userid  + '/find/?email=' +  encodeURI(element.val()), {
+                $http.get(__GATEWAY_CLIENT_ENDPOINT__ + 'api/lookup/' + userid  + '/find/?email=' +  encodeURI(element.val()), {
                     headers: {
                         "X-Use-The-Force": "true"
                     }

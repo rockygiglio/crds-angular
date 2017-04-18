@@ -270,8 +270,8 @@ namespace crds_angular.Controllers.API
         [RequiresAuthorization]
         [ResponseType(typeof(PinSearchResultsDto))]                                   
         [VersionedRoute(template: "finder/findmypinsbycontactid/{contactId}/{lat}/{lng}", minimumVersion: "1.0.0")]
-        [System.Web.Http.Route("finder/findmypinsbycontactid/{contactId}/{lat}/{lng}")]
-        [System.Web.Http.HttpGet]
+        [Route("finder/findmypinsbycontactid/{contactId}/{lat}/{lng}")]
+        [HttpGet]
         public IHttpActionResult GetMyPinsByContactId([FromUri]int contactId, [FromUri]string lat, [FromUri]string lng)
         {
             return Authorized(token =>
@@ -279,16 +279,28 @@ namespace crds_angular.Controllers.API
                 try
                 {
                     var originCoords = _finderService.GetGeoCoordsFromLatLong(lat, lng);
+                    var centerLatitude = originCoords.Latitude;
+                    var centerLongitude = originCoords.Longitude;
 
                     var pinsForContact = _finderService.GetMyPins(token, originCoords, contactId);
-
                     foreach (var pin in pinsForContact)
                     {
-                        pin.Address = _finderService.RandomizeLatLong(pin.Address);
+                        if (pin.PinType != PinType.PERSON) //person pin is already randomized in FinderService.GetPinDetailsForPerson()
+                        {
+                            pin.Address = _finderService.RandomizeLatLong(pin.Address);
+                        }
                     }
 
-                    var result = new PinSearchResultsDto(new GeoCoordinates(originCoords.Latitude, originCoords.Longitude), pinsForContact);
+                    if (pinsForContact.Count > 0)
+                    {
+                        var addressLatitude = pinsForContact[0].Address.Latitude;
+                        if (addressLatitude != null) centerLatitude = (double)addressLatitude;
 
+                        var addressLongitude = pinsForContact[0].Address.Longitude;
+                        if (addressLongitude != null) centerLongitude = (double)addressLongitude;
+                    }
+
+                    var result = new PinSearchResultsDto(new GeoCoordinates(centerLatitude, centerLongitude), pinsForContact);
                     return Ok(result);
                 }
                 catch (Exception ex)
@@ -354,9 +366,13 @@ namespace crds_angular.Controllers.API
                 catch (Exception e)
                 {
                     _logger.Error("Could not generate request", e);
-                    if (e.Message == "User is already member or has request")
+                    if (e.Message == "User already has request")
                     {
                         throw new HttpResponseException(HttpStatusCode.Conflict);
+                    }
+                    else if (e.Message == "User already a member")
+                    {
+                        throw new HttpResponseException(HttpStatusCode.NotAcceptable);
                     }
                     else
                     {
@@ -370,38 +386,36 @@ namespace crds_angular.Controllers.API
 
         [ResponseType(typeof(PinSearchResultsDto))]
         [VersionedRoute(template: "finder/uploadallcloudsearchrecords", minimumVersion: "1.0.0")]
-        [System.Web.Http.Route("finder/uploadallcloudsearchrecords")]
-        [System.Web.Http.HttpGet]
+        [Route("finder/uploadallcloudsearchrecords")]
+        [HttpGet]
         public IHttpActionResult UploadAllCloudsearchRecords()
         {
             try
             {
                 var response = _awsCloudsearchService.UploadAllConnectRecordsToAwsCloudsearch();
-
                 return Ok(response);
             }
             catch (Exception ex)
             {
-                var apiError = new ApiErrorDto("TestAwsUploadFailed", ex);
+                var apiError = new ApiErrorDto("UploadAllCloudsearchRecords", ex);
                 throw new HttpResponseException(apiError.HttpResponseMessage);
             }
         }
 
         [ResponseType(typeof(PinSearchResultsDto))]
         [VersionedRoute(template: "finder/deleteallcloudsearchrecords", minimumVersion: "1.0.0")]
-        [System.Web.Http.Route("finder/deleteallcloudsearchrecords")]
-        [System.Web.Http.HttpGet]
+        [Route("finder/deleteallcloudsearchrecords")]
+        [HttpGet]
         public IHttpActionResult DeleteAllCloudsearchRecords()
         {
             try
             {
                 var response = _awsCloudsearchService.DeleteAllConnectRecordsInAwsCloudsearch();
-
                 return Ok(response);
             }
             catch (Exception ex)
             {
-                var apiError = new ApiErrorDto("TestAwsDelete Failed", ex);
+                var apiError = new ApiErrorDto("DeleteAllCloudsearchRecords Failed", ex);
                 throw new HttpResponseException(apiError.HttpResponseMessage);
             }
         }

@@ -8,7 +8,7 @@ class RequestChildcareService {
   }
 
   getChildcareRequest(requestId, success, error) {
-    this.requestData = this.resource(__API_ENDPOINT__ + 'api/childcare/getrequest/:requestId');
+    this.requestData = this.resource(__GATEWAY_CLIENT_ENDPOINT__ + 'api/childcare/getrequest/:requestId');
     return this.requestData.get({ requestId }, success, error);
   }
 
@@ -60,12 +60,12 @@ class RequestChildcareService {
   }
 
   saveRequest(dto) {
-    this.saveRequest = this.resource(__API_ENDPOINT__ + 'api/childcare/request');
+    this.saveRequest = this.resource(__GATEWAY_CLIENT_ENDPOINT__ + 'api/childcare/request');
     return this.saveRequest.save(dto);
   }
 
   updateRequest(dto) {
-    this.updateRequest = this.resource(__API_ENDPOINT__ + 'api/childcare/updaterequest');
+    this.updateRequest = this.resource(__GATEWAY_CLIENT_ENDPOINT__ + 'api/childcare/updaterequest');
     return this.updateRequest.save(dto);
   }
 }

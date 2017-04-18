@@ -74,7 +74,7 @@ describe('GP Export Tool', function() {
     beforeEach(function() {
       $scope = {};
       controller = $controller('CheckBatchProcessor', { $scope: $scope });
-      $httpBackend.expectGET(window.__env__['CRDS_API_ENDPOINT'] + 'api/gpexport/filenames').respond(selectedDeposits);
+      $httpBackend.expectGET(window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api/gpexport/filenames').respond(selectedDeposits);
     });
 
     describe('Function allowAccess', function() {

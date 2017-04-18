@@ -113,7 +113,7 @@ describe('EventRooms Directive', function() {
       isolateScope.roomsForm = {};
       isolateScope.roomsForm.$dirty = true;
       isolateScope.update(0);
-      $httpBackend.expectPUT(window.__env__['CRDS_API_ENDPOINT'] + 'api/eventTool/1/rooms', putData)
+      $httpBackend.expectPUT(window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api/eventTool/1/rooms', putData)
                              .respond(mockRoomResponse);
       $httpBackend.flush();
 

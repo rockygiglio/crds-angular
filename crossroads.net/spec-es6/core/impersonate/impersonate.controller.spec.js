@@ -37,7 +37,7 @@ describe('Impersonate Controller', () => {
     fixture = new ImpersonateController(rootScope, http, cookies, Impersonate);
     
     cookies.put(constants.COOKIES.SESSION_ID, 'testsession');
-    httpBackend.expectGET(`${window.__env__['CRDS_API_ENDPOINT']}api/authenticated`).respond(200, mockUser);
+    httpBackend.expectGET(`${window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT']}api/authenticated`).respond(200, mockUser);
     Session.verifyAuthentication(undefined, undefined, undefined, undefined);
     httpBackend.flush();
   }));
@@ -52,7 +52,7 @@ describe('Impersonate Controller', () => {
     spyOn(Impersonate, 'storeDetails');
     spyOn(Impersonate, 'setCurrentUser');
 
-    httpBackend.expectGET(`${window.__env__['CRDS_API_ENDPOINT']}api/user?username=${fixture.username}`).respond(200, mockResponse);
+    httpBackend.expectGET(`${window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT']}api/user?username=${fixture.username}`).respond(200, mockResponse);
     fixture.start();
     httpBackend.flush();
 
@@ -62,7 +62,7 @@ describe('Impersonate Controller', () => {
   });
 
   it('should set user details on successful API call', () => {
-    httpBackend.expectGET(`${window.__env__['CRDS_API_ENDPOINT']}api/user?username=${fixture.username}`).respond(200, mockResponse);
+    httpBackend.expectGET(`${window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT']}api/user?username=${fixture.username}`).respond(200, mockResponse);
     fixture.start();
     httpBackend.flush();
 
@@ -74,7 +74,7 @@ describe('Impersonate Controller', () => {
   });
 
   it('should set fail and keep user credentials on unsuccessful API call', () => {
-    httpBackend.expectGET(`${window.__env__['CRDS_API_ENDPOINT']}api/user?username=${fixture.username}`).respond(404);
+    httpBackend.expectGET(`${window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT']}api/user?username=${fixture.username}`).respond(404);
     fixture.start();
     httpBackend.flush();
 
@@ -85,11 +85,11 @@ describe('Impersonate Controller', () => {
   });
 
   it('should NOT overwrite canImpersonate flag when impersonating', () => {
-    httpBackend.expectGET(`${window.__env__['CRDS_API_ENDPOINT']}api/user?username=${fixture.username}`).respond(200, mockResponse);
+    httpBackend.expectGET(`${window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT']}api/user?username=${fixture.username}`).respond(200, mockResponse);
     fixture.start();
     httpBackend.flush();
 
-    httpBackend.expectGET(`${window.__env__['CRDS_API_ENDPOINT']}api/authenticated`).respond(200, mockResponse);
+    httpBackend.expectGET(`${window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT']}api/authenticated`).respond(200, mockResponse);
     Session.verifyAuthentication(undefined, undefined, undefined, undefined);
     httpBackend.flush();
 
@@ -98,7 +98,7 @@ describe('Impersonate Controller', () => {
   });
 
   it('should not send impersonate headers after stopping impersonate', () => {
-    httpBackend.expectGET(`${window.__env__['CRDS_API_ENDPOINT']}api/user?username=${fixture.username}`).respond(200, mockResponse);
+    httpBackend.expectGET(`${window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT']}api/user?username=${fixture.username}`).respond(200, mockResponse);
     fixture.start();
     httpBackend.flush();
 
@@ -111,7 +111,7 @@ describe('Impersonate Controller', () => {
     cookies.put('userId', 'test');
     const user = cookies.get('impersonateUserId');
     spyOn(Impersonate, 'start');
-    httpBackend.expectGET(`${window.__env__['CRDS_API_ENDPOINT']}api/authenticated`).respond(200, mockUser);
+    httpBackend.expectGET(`${window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT']}api/authenticated`).respond(200, mockUser);
     Session.verifyAuthentication(undefined, undefined, undefined, undefined);
     httpBackend.flush();
 
