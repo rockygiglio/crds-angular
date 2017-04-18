@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reactive.Linq;
 using System.Threading;
 using crds_angular.Models.Crossroads.GroupLeader;
 using crds_angular.Models.Crossroads.Profile;
 using crds_angular.Services;
 using crds_angular.Services.Interfaces;
+using Crossroads.Web.Common.Configuration;
+using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 using Moq;
 using NUnit.Framework;
@@ -16,6 +19,8 @@ namespace crds_angular.test.Services
     {
         private Mock<IUserRepository> _userRepo;
         private Mock<IPersonService> _personService;
+        private Mock<IFormSubmissionRepository> _formService;
+        private Mock<IConfigurationWrapper> _configWrapper;
         private IGroupLeaderService _fixture;
 
         [SetUp]
@@ -23,7 +28,9 @@ namespace crds_angular.test.Services
         {
             _userRepo = new Mock<IUserRepository>();
             _personService = new Mock<IPersonService>();
-            _fixture = new GroupLeaderService(_personService.Object, _userRepo.Object);
+            _formService = new Mock<IFormSubmissionRepository>();
+            _configWrapper = new Mock<IConfigurationWrapper>();
+            _fixture = new GroupLeaderService(_personService.Object, _userRepo.Object, _formService.Object, _configWrapper.Object);
         }
 
         [TearDown]
@@ -34,7 +41,7 @@ namespace crds_angular.test.Services
         }
 
         [Test]
-        public async void ShouldSaveProfileWithCorrectDisplayName()
+        public void ShouldSaveProfileWithCorrectDisplayName()
         {
             var leaderDto = GroupLeaderMock();
 
@@ -47,11 +54,11 @@ namespace crds_angular.test.Services
             {
                 Assert.AreEqual(person.GetContact().Display_Name, $"{leaderDto.LastName}, {leaderDto.NickName}");
             });
-            await _fixture.SaveProfile(fakeToken, leaderDto);            
+            _fixture.SaveProfile(fakeToken, leaderDto).Wait();            
         }
 
         [Test]
-        public async void ShouldSaveProfileWithCorrectDisplayNameAndUserWithCorrectEmail()
+        public void ShouldSaveProfileWithCorrectDisplayNameAndUserWithCorrectEmail()
         {
             var leaderDto = GroupLeaderMock();
 
@@ -69,11 +76,11 @@ namespace crds_angular.test.Services
             {
                 Assert.AreEqual(person.GetContact().Display_Name, $"{leaderDto.LastName}, {leaderDto.NickName}");
             });
-            await _fixture.SaveProfile(fakeToken, leaderDto);
+            _fixture.SaveProfile(fakeToken, leaderDto).Wait();
         }
 
         [Test]
-        public async void ShouldUpdateUserWithCorrectEmail()
+        public void ShouldUpdateUserWithCorrectEmail()
         {
             const string fakeToken = "letmein";
             const int fakeUserId = 98124;
@@ -85,7 +92,7 @@ namespace crds_angular.test.Services
                 Assert.AreEqual(leaderDto.Email, userData["User_Name"]);
                 Assert.AreEqual(leaderDto.Email, userData["User_Email"]);
             });
-            await _fixture.SaveProfile(fakeToken, leaderDto);
+            _fixture.SaveProfile(fakeToken, leaderDto).Wait();
         }
 
         [Test]
@@ -95,12 +102,11 @@ namespace crds_angular.test.Services
             const int fakeUserId = 98124;
             var leaderDto = GroupLeaderMock();
             _personService.Setup(m => m.SetProfile(fakeToken, It.IsAny<Person>())).Throws(new Exception("no person to save"));
-            _userRepo.Setup(m => m.GetUserIdByUsername(leaderDto.OldEmail)).Returns(fakeUserId);
-            _userRepo.Setup(m => m.UpdateUser(It.IsAny<Dictionary<string, object>>()));
+            _userRepo.Setup(m => m.GetUserIdByUsername(leaderDto.OldEmail)).Returns(fakeUserId);            
 
-            Assert.Throws<Exception>(async () =>
+            Assert.Throws<Exception>(() =>
             {
-                await _fixture.SaveProfile(fakeToken, leaderDto);
+                _fixture.SaveProfile(fakeToken, leaderDto).Wait();
             });
         }
 
@@ -114,12 +120,59 @@ namespace crds_angular.test.Services
             _userRepo.Setup(m => m.GetUserIdByUsername(leaderDto.OldEmail)).Returns(fakeUserId);
             _userRepo.Setup(m => m.UpdateUser(It.IsAny<Dictionary<string, object>>())).Throws(new Exception("no user to save"));
 
-            Assert.Throws<Exception>(async () =>
+            Assert.Throws<Exception>(() =>
             {
-                await _fixture.SaveProfile(fakeToken, leaderDto);
+                _fixture.SaveProfile(fakeToken, leaderDto).Wait();
             });
         }
 
+        [Test]
+        public void ShouldSaveReferenceData()
+        {
+            var fakeDto = GroupLeaderMock();
+
+            const int groupLeaderFormConfig = 23;
+            const int groupLeaderReference = 56;
+            const int groupLeaderHuddle = 92;
+            const int groupLeaderStudent = 126;
+
+            _configWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderFormId")).Returns(groupLeaderFormConfig);
+            _configWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderReferenceFieldId")).Returns(groupLeaderReference);
+            _configWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderHuddleFieldId")).Returns(groupLeaderHuddle);
+            _configWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderStudentFieldId")).Returns(groupLeaderStudent);
+
+            _formService.Setup(m => m.SubmitFormResponse(It.IsAny<MpFormResponse>())).Returns((MpFormResponse form) =>
+            {
+                Assert.AreEqual(groupLeaderFormConfig, form.FormId);
+                return 1;
+            });
+            var responseId = _fixture.SaveReferences(fakeDto).Wait();
+            Assert.AreEqual(responseId, 1);
+        }
+
+        [Test]
+        public void ShouldThrowExceptionWhenSaveReferenceDataFails()
+        {
+            var fakeDto = GroupLeaderMock();
+
+            const int groupLeaderFormConfig = 23;
+            const int groupLeaderReference = 56;
+            const int groupLeaderHuddle = 92;
+            const int groupLeaderStudent = 126;
+
+            _configWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderFormId")).Returns(groupLeaderFormConfig);
+            _configWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderReferenceFieldId")).Returns(groupLeaderReference);
+            _configWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderHuddleFieldId")).Returns(groupLeaderHuddle);
+            _configWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderStudentFieldId")).Returns(groupLeaderStudent);
+
+            _formService.Setup(m => m.SubmitFormResponse(It.IsAny<MpFormResponse>())).Returns((MpFormResponse form) =>
+            {
+                Assert.AreEqual(groupLeaderFormConfig, form.FormId);
+                return 0;
+            });
+
+            Assert.Throws<ApplicationException>(() => _fixture.SaveReferences(fakeDto).Wait());
+        }
 
         private static GroupLeaderProfileDTO GroupLeaderMock()
         {
@@ -131,7 +184,11 @@ namespace crds_angular.test.Services
                 LastName = "Silbernagel",
                 NickName = "Matt",
                 Site = 1,            
-                OldEmail = "matt.silbernagel@ingagepartners.com"
+                OldEmail = "matt.silbernagel@ingagepartners.com",
+                HouseholdId = 81562,
+                HuddleResponse = "No",
+                LeadStudents = "Yes",
+                ReferenceContactId = "89158"
             };
         }
     }
