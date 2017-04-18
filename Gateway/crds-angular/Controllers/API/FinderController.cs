@@ -285,7 +285,10 @@ namespace crds_angular.Controllers.API
                     var pinsForContact = _finderService.GetMyPins(token, originCoords, contactId);
                     foreach (var pin in pinsForContact)
                     {
-                        pin.Address = _finderService.RandomizeLatLong(pin.Address);
+                        if (pin.PinType != PinType.PERSON) //person pin is already randomized in FinderService.GetPinDetailsForPerson()
+                        {
+                            pin.Address = _finderService.RandomizeLatLong(pin.Address);
+                        }
                     }
 
                     if (pinsForContact.Count > 0)
