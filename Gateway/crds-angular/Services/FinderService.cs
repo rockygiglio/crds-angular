@@ -13,11 +13,9 @@ using Newtonsoft.Json;
 using Crossroads.Web.Common.MinistryPlatform;
 using System.Linq;
 using System.Device.Location;
-using System.Web.Services.Description;
 using Amazon.CloudSearchDomain.Model;
 using crds_angular.Models.AwsCloudsearch;
 using crds_angular.Models.Crossroads.Groups;
-using crds_angular.Models.Crossroads.Profile;
 using MinistryPlatform.Translation.Models.Finder;
 using Crossroads.Web.Common.Configuration;
 
@@ -214,25 +212,27 @@ namespace crds_angular.Services
 
             foreach (var hit in response.Hits.Hit)
             {
-                var pin = new PinDto();
-                pin.Proximity = hit.Fields.ContainsKey("proximity") ? Convert.ToDecimal(hit.Fields["proximity"].FirstOrDefault()) : (decimal?)null;
-                pin.PinType = hit.Fields.ContainsKey("pintype") ? (PinType)Convert.ToInt32(hit.Fields["pintype"].FirstOrDefault()) : PinType.PERSON;
-                pin.FirstName = hit.Fields.ContainsKey("firstname") ? hit.Fields["firstname"].FirstOrDefault() : null;
-                pin.LastName = hit.Fields.ContainsKey("lastname") ? hit.Fields["lastname"].FirstOrDefault() : null;
-                pin.SiteName = hit.Fields.ContainsKey("sitename") ? hit.Fields["sitename"].FirstOrDefault() : null;
-                pin.EmailAddress = hit.Fields.ContainsKey("emailaddress") ? hit.Fields["emailaddress"].FirstOrDefault() : null;
-                pin.Contact_ID = hit.Fields.ContainsKey("contactid") ? Convert.ToInt32(hit.Fields["contactid"].FirstOrDefault()) : (int?)null;
-                pin.Participant_ID = hit.Fields.ContainsKey("participantid") ? Convert.ToInt32(hit.Fields["participantid"].FirstOrDefault()) : (int?)null;
-                pin.Host_Status_ID = hit.Fields.ContainsKey("hoststatus") ? Convert.ToInt32(hit.Fields["hoststatus"].FirstOrDefault()) : (int?)null;
-                pin.Household_ID = hit.Fields.ContainsKey("householdid") ? Convert.ToInt32(hit.Fields["householdid"].FirstOrDefault()) : (int?)null;
-                pin.Address = new AddressDTO
+                var pin = new PinDto
                 {
-                    AddressID = hit.Fields.ContainsKey("addressid") ? Convert.ToInt32(hit.Fields["addressid"].FirstOrDefault()) : (int?)null,
-                    City = hit.Fields.ContainsKey("city") ? hit.Fields["city"].FirstOrDefault() : null,
-                    State = hit.Fields.ContainsKey("state") ? hit.Fields["state"].FirstOrDefault() : null,
-                    PostalCode = hit.Fields.ContainsKey("zip") ? hit.Fields["zip"].FirstOrDefault() : null,
-                    Latitude = hit.Fields.ContainsKey("latitude") ? Convert.ToDouble(hit.Fields["latitude"].FirstOrDefault()) : (double?)null,
-                    Longitude = hit.Fields.ContainsKey("longitude") ? Convert.ToDouble(hit.Fields["longitude"].FirstOrDefault()) : (double?)null,
+                    Proximity = hit.Fields.ContainsKey("proximity") ? Convert.ToDecimal(hit.Fields["proximity"].FirstOrDefault()) : (decimal?) null,
+                    PinType = hit.Fields.ContainsKey("pintype") ? (PinType) Convert.ToInt32(hit.Fields["pintype"].FirstOrDefault()) : PinType.PERSON,
+                    FirstName = hit.Fields.ContainsKey("firstname") ? hit.Fields["firstname"].FirstOrDefault() : null,
+                    LastName = hit.Fields.ContainsKey("lastname") ? hit.Fields["lastname"].FirstOrDefault() : null,
+                    SiteName = hit.Fields.ContainsKey("sitename") ? hit.Fields["sitename"].FirstOrDefault() : null,
+                    EmailAddress = hit.Fields.ContainsKey("emailaddress") ? hit.Fields["emailaddress"].FirstOrDefault() : null,
+                    Contact_ID = hit.Fields.ContainsKey("contactid") ? Convert.ToInt32(hit.Fields["contactid"].FirstOrDefault()) : (int?) null,
+                    Participant_ID = hit.Fields.ContainsKey("participantid") ? Convert.ToInt32(hit.Fields["participantid"].FirstOrDefault()) : (int?) null,
+                    Host_Status_ID = hit.Fields.ContainsKey("hoststatus") ? Convert.ToInt32(hit.Fields["hoststatus"].FirstOrDefault()) : (int?) null,
+                    Household_ID = hit.Fields.ContainsKey("householdid") ? Convert.ToInt32(hit.Fields["householdid"].FirstOrDefault()) : (int?) null,
+                    Address = new AddressDTO
+                    {
+                        AddressID = hit.Fields.ContainsKey("addressid") ? Convert.ToInt32(hit.Fields["addressid"].FirstOrDefault()) : (int?) null,
+                        City = hit.Fields.ContainsKey("city") ? hit.Fields["city"].FirstOrDefault() : null,
+                        State = hit.Fields.ContainsKey("state") ? hit.Fields["state"].FirstOrDefault() : null,
+                        PostalCode = hit.Fields.ContainsKey("zip") ? hit.Fields["zip"].FirstOrDefault() : null,
+                        Latitude = hit.Fields.ContainsKey("latitude") ? Convert.ToDouble(hit.Fields["latitude"].FirstOrDefault()) : (double?) null,
+                        Longitude = hit.Fields.ContainsKey("longitude") ? Convert.ToDouble(hit.Fields["longitude"].FirstOrDefault()) : (double?) null,
+                    }
                 };
                 if (hit.Fields.ContainsKey("latlong"))
                 {
@@ -285,14 +285,13 @@ namespace crds_angular.Services
             return (rad / Math.PI * 180.0);
         }
 
-
         public List<PinDto> GetMyPins(string token, GeoCoordinate originCoords, int contactId)
         {
             var pins = new List<PinDto>();
             var participantId = GetParticipantIdFromContact(contactId);
 
-            List<PinDto> groupPins = GetMyGroupPins(token, new int[] { _anywhereGroupType }, participantId);
-            PinDto personPin = GetPinDetailsForPerson(participantId);
+            var groupPins = GetMyGroupPins(token, new int[] { _anywhereGroupType }, participantId);
+            var personPin = GetPinDetailsForPerson(participantId);
 
             pins.AddRange(groupPins);
             if (personPin != null && personPin.ShowOnMap)
@@ -341,27 +340,12 @@ namespace crds_angular.Services
             return pins;
         }
 
-        private List<PinDto> GetParticipantAndBuildingPinsInRadius(GeoCoordinate originCoords)
-        {
-            List<SpPinDto> participantPinsFromSp = _finderRepository.GetPinsInRadius(originCoords);
-            List<PinDto> participantAndBuildingPins = new List<PinDto>();
-
-            foreach (var piFromSP in participantPinsFromSp)
-            {
-                var pin = Mapper.Map<PinDto>(piFromSP);
-                participantAndBuildingPins.Add(pin);
-            }
-
-            return participantAndBuildingPins;
-        }
-
-
         public GeoCoordinate GetGeoCoordsFromAddressOrLatLang(string address, string lat, string lng)
         {
             double latitude = Convert.ToDouble(lat.Replace("$", "."));
             double longitude = Convert.ToDouble(lng.Replace("$", "."));
 
-            bool geoCoordsPassedIn = latitude != 0 && longitude != 0;
+            var geoCoordsPassedIn = latitude != 0 && longitude != 0;
 
             GeoCoordinate originCoordsFromGoogle = geoCoordsPassedIn ? null : _addressGeocodingService.GetGeoCoordinates(address);
 
@@ -374,8 +358,8 @@ namespace crds_angular.Services
 
         public GeoCoordinate GetGeoCoordsFromLatLong(string lat, string lng)
         {
-            double latitude = Convert.ToDouble(lat.Replace("$", "."));
-            double longitude = Convert.ToDouble(lng.Replace("$", "."));
+            var latitude = Convert.ToDouble(lat.Replace("$", "."));
+            var longitude = Convert.ToDouble(lng.Replace("$", "."));
 
             return new GeoCoordinate(latitude, longitude);
         }
@@ -427,15 +411,16 @@ namespace crds_angular.Services
 
         public Invitation InviteToGathering(string token, int gatheringId, User person)
         {
-            var invitation = new Invitation();
-
-            invitation.RecipientName = person.firstName;
-            invitation.EmailAddress = person.email;
-            invitation.SourceId = gatheringId;
-            invitation.GroupRoleId = _memberRoleId;
-            invitation.InvitationType = _anywhereGatheringInvitationTypeId;
-            invitation.RequestDate = DateTime.Now;
-
+            var invitation = new Invitation
+            {
+                RecipientName = person.firstName,
+                EmailAddress = person.email,
+                SourceId = gatheringId,
+                GroupRoleId = _memberRoleId,
+                InvitationType = _anywhereGatheringInvitationTypeId,
+                RequestDate = DateTime.Now
+            };
+            
             _invitationService.ValidateInvitation(invitation, token);
             return _invitationService.CreateInvitation(invitation, token);
         }
