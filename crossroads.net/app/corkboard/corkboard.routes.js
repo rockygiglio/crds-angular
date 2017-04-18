@@ -18,26 +18,28 @@
                            $urlMatcherFactory,
                            $locationProvider,
                            CorkboardSessionProvider,
-                           CorkboardListings){
+                           CorkboardListings) {
 
     $stateProvider
     .state('corkboard', {
       parent: 'noSideBar',
       abstract: true,
       template: '<ui-view/>',
-      resolve:{
-        items: function(CorkboardListings, $log, CorkboardSession, $rootScope){
+      resolve: {
+        items: function (CorkboardListings, $log, CorkboardSession, $rootScope) {
           var promise = CorkboardListings.post().query().$promise;
 
-          promise.then(function(posts) {
+          promise.then(function (posts) {
             CorkboardSession.posts = posts;
-          }, function(error) {
+          }, function (error) {
+
             $rootScope.$emit('notify', $rootScope.MESSAGES.generalError);
           });
 
           return promise;
         },
-        selectedItem : function(){}
+
+        selectedItem: function () {}
       },
       data: {
         meta: {
@@ -59,9 +61,10 @@
     })
     .state('corkboard.create', {
       url: '/corkboard/create/:type',
-      templateUrl: function ($stateParams){
+      templateUrl: function ($stateParams) {
         return 'templates/post-' + $stateParams.type + '.html';
       },
+
       controller: 'CorkboardEditController as corkboardEdit',
       resolve: {
         loggedin: crds_utilities.checkLoggedin
@@ -75,14 +78,15 @@
       templateUrl: 'templates/corkboard-listing-detail.html',
       controller: 'CorkboardController as corkboard',
       resolve: {
-        selectedItem : function(items, $stateParams) {
+        selectedItem: function (items, $stateParams) {
           return _.find(items, function (item) {
             return (item._id.$oid === $stateParams.id);
           });
         },
+
         Meta: function (selectedItem, $state) {
           $state.next.data.meta = {
-            title: 'Corkboard | '+selectedItem.Title,
+            title: 'Corkboard | ' + selectedItem.Title,
             description: selectedItem.Description,
             type: 'article',
             card: 'summary'
@@ -99,11 +103,12 @@
       templateUrl: 'templates/corkboard-listing-detail.html',
       controller: 'CorkboardController as corkboard',
       resolve: {
-        selectedItem : function(items, $stateParams) {
+        selectedItem: function (items, $stateParams) {
           return _.find(items, function (item) {
             return (item._id.$oid === $stateParams.id);
           });
         },
+
         loggedin: crds_utilities.checkLoggedin
       },
       data: {

@@ -1,15 +1,15 @@
 (function () {
-    'use strict';
+'use strict';
 
-    module.exports = CorkboardSession;
+module.exports = CorkboardSession;
 
-    CorkboardSession.$inject = [];
+CorkboardSession.$inject = [];
 
-    function CorkboardSession() {
-        var session = {};
+function CorkboardSession() {
+  var session = {};
 
-        session.posts = [];
+  session.posts = [];
 
-        return session;
-    };
+  return session;
+};
 })();

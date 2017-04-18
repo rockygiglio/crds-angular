@@ -1,22 +1,22 @@
 (function () {
-    'use strict';
+'use strict';
 
-    module.exports = ContactAboutPost;
-    var emailEndpoint = __API_ENDPOINT__ + 'api/sendemail/';
+module.exports = ContactAboutPost;
+var emailEndpoint = __API_ENDPOINT__ + 'api/sendemail/';
 
-    ContactAboutPost.$inject = ['$resource', '$http'];
+ContactAboutPost.$inject = ['$resource', '$http'];
 
-    function ContactAboutPost($resource, $http) {
+function ContactAboutPost($resource, $http) {
 
-        return {
-            post: function(post) {
-                return $resource(emailEndpoint,
-                    post,
-                    {
-                        'post': { method:'POST' }
-                    });
-            }
+  return {
+      post: function (post) {
+          return $resource(emailEndpoint,
+              post,
+              {
+                  post: { method: 'POST' }
+                });
         }
     };
+};
 
 })();
