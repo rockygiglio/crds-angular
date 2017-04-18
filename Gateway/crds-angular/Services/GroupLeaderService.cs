@@ -46,6 +46,11 @@ namespace crds_angular.Services
                 Observable.Start(() => _userRepository.UpdateUser(userUpdates))
                 
                 );
-        }      
+        }
+
+        public async Task SaveSpiritualGrowth(string token,  /* spiritualGrowth */)
+        {
+            
+        }
     }
 }

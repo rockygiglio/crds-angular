@@ -120,6 +120,12 @@ namespace crds_angular.test.Services
             });
         }
 
+        [Test]
+        public void ShouldSaveSpiritualGrowthAnswers()
+        {
+            Assert.Fail();
+        }
+
 
         private static GroupLeaderProfileDTO GroupLeaderMock()
         {

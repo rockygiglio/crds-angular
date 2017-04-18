@@ -79,7 +79,7 @@ namespace crds_angular.test.controllers
         }
 
         [Test]
-        public void ShouldOnlyAllowAutenticatedUsers()
+        public void ShouldOnlyAllowAuthenticatedUsersToSaveProfile()
         {            
             var mockProfile = GroupLeaderMock();
             _groupLeaderService.Setup(m => m.SaveProfile(It.IsAny<string>(), mockProfile)).Throws(new Exception());
@@ -88,6 +88,24 @@ namespace crds_angular.test.controllers
                 await _fixture.SaveProfile(mockProfile);                
             });
 
+        }
+
+        [Test]
+        public void ShouldSaveSpiritualGrowthAnswers()
+        {
+            Assert.Fail();
+        }
+
+        [Test]
+        public void ShouldThrowExceptionWhenSpiritualGrowthAnswersArentSaved()
+        {
+            Assert.Fail();
+        }
+
+        [Test]
+        public void ShouldOnlyAllowAuthenticatedUsersToSaveSpiritualGrowthAnswers()
+        {
+            Assert.Fail();
         }
 
         private static GroupLeaderProfileDTO GroupLeaderMock()

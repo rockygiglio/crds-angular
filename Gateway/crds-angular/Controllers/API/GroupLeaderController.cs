@@ -36,5 +36,12 @@ namespace crds_angular.Controllers.API
                 }                                            
             });                                                               
         }
+
+        [VersionedRoute(template: "group-leader/spiritual-growth", minimumVersion: "1.0.0")]
+        [HttpPost]
+        public async Task<IHttpActionResult> SaveSpiritualGrowth(/* [FromBody] type spiritualGrowth */)
+        {
+            
+        }
     }
 }
