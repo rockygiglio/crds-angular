@@ -92,6 +92,7 @@
           // Remove angular properties that are added by saving individual object, that are not needed by the CorkboardListings
           delete post.$promise;
           delete post.$resolved;
+
           vm.flagging = false;
       }, function(error) {
           vm.selectedItem.removed = false;
@@ -147,7 +148,7 @@
       // verify that the user is logged in before allowing a reply
       if (!$rootScope.userid) {
         Session.addRedirectRoute('corkboard.reply', $state.params);
-        $state.go("login");
+        $state.go('login');
       }
       else {
         vm.showReplySection = true;

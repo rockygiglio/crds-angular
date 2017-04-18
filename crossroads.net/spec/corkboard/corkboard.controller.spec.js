@@ -7,7 +7,19 @@ describe('CorkboardController',function(){
     var crdsApiEndpoint = window.__env__.CRDS_API_ENDPOINT || 'http://gatewayint.crossroads.net/gateway/';
     var crdsCorkboardApiEndpoint = window.__env__.CRDS_CORKBOARD_API_ENDPOINT || "http://gatewayint.crossroads.net/corkboardAPI/";
     var crdsCoreEndpoint = window.__env__.CRDS_CORE_ENDPOINT || "http://int.crossroads.net/";
+    var $rootScope;
+    var $scope;
+    var $log;
+    var $httpBackend;
+    var selectedItem;
+    var CorkboardPostTypes;
+    var $controller;
+    var $state;
+    var Session;
+    var $window;
+    var $q;
 
+    var corkboardListings;
     var mockAdminRootScope = getAdminRootScope();
     var mockCreatorRootScope = getCreatorRootScope();
     var mockNonCreatorRootScope = getNonCreatorRootScope();
@@ -25,17 +37,22 @@ describe('CorkboardController',function(){
     }));
 
     var $controller, $log, $httpBackend, $scope, selectedItem, CorkboardPostTypes, $state, Session, $window, ContactAboutPost;
-    beforeEach(inject(function(_$controller_, _$rootScope_, _$log_, _$state_, _Session_, _$window_, $injector){
+    beforeEach(inject(function(_$controller_, _$rootScope_, _$log_, _$state_, _Session_, _$window_, $injector, _CorkboardListings_, _$q_){
       $log = _$log_;
       $httpBackend = $injector.get('$httpBackend');
 
+      $q = _$q_;
       $httpBackend.whenGET(/SiteConfig*/).respond('');
-
-      $rootScope = _$rootScope_.$new();
+      corkboardListings = _CorkboardListings_;
+      $rootScope = _$rootScope_;
       $scope = _$rootScope_.$new();
       selectedItem = $injector.get('selectedItem');
       CorkboardPostTypes = $injector.get('CorkboardPostTypes');
-      $controller = _$controller_('CorkboardController', { $scope:$scope });
+      $controller = _$controller_('CorkboardController', { 
+        $scope: $scope,
+        $rootScope: $rootScope,
+        CorkboardListings: corkboardListings 
+      });
       $state = _$state_;
       Session = _Session_;
       $window = _$window_;
@@ -58,7 +75,7 @@ describe('CorkboardController',function(){
     describe('Admin User', function(){
       beforeEach(inject(function(_$controller_) {
         $rootScope = _.merge($rootScope, mockAdminRootScope);
-        $controller = _$controller_('CorkboardController', { $scope:$scope, $rootScope:$rootScope});
+        $controller = _$controller_('CorkboardController', { $scope:$scope});
       }));
 
       it("Should have remove rights",function(){
@@ -131,6 +148,7 @@ describe('CorkboardController',function(){
 
       it("Should save off redirect route", function() {
         spyOn(Session, 'addRedirectRoute');
+        spyOn($state, 'go');
         $controller.showReply();
         expect(Session.addRedirectRoute).toHaveBeenCalledWith('corkboard.reply', $state.params);
       });
@@ -182,37 +200,75 @@ describe('CorkboardController',function(){
         expect($controller.replyText).toBe("");
       });
 
-      it ("Should increment flagCount and set flagSate on post being flagged", function() {
+      it ("Should increment flagCount and set flagSate on post being flagged", function() {    
         $controller.selectedItem.FlagCount = 2;
 
-        var id = $controller.selectedItem._id.$oid;
-        $httpBackend.expectPOST(crdsCorkboardApiEndpoint + 'api/posts/flag/' + id).respond(200);
+        spyOn(corkboardListings, 'flag').and.callFake(function() {
+          return {
+            post: function() {
+              var deferred = $q.defer();
+              deferred.resolve(result);
+
+              var result = {
+                $promise: deferred.promise,
+                $resolved: true
+              };
+
+              return result;
+            }
+          }          
+        });
 
         $controller.flagPost();
-        $httpBackend.flush();
+        $rootScope.$apply();
 
         expect($controller.flagState).toBe($controller.flaggedAsInappropriate);
         expect($controller.selectedItem.FlagCount).toBe(3);
       });
 
-      it ("Should call flag service on post being flagged", function() {
-        var id = $controller.selectedItem._id.$oid;
-        $httpBackend.expectPOST(crdsCorkboardApiEndpoint + 'api/posts/flag/' + id).respond(200);
+      it ("Should call flag service on post being flagged", function() {        
+        spyOn(corkboardListings, 'flag').and.callFake(function() {
+          return {
+            post: function() {
+              var deferred = $q.defer();
+              deferred.resolve(result);
+
+              var result = {
+                $promise: deferred.promise,
+                $resolved: true
+              };
+
+              return result;
+            }
+          }
+        });
 
         $controller.flagPost();
+        $rootScope.$apply();
 
-        $httpBackend.flush();
+        expect(corkboardListings.flag).toHaveBeenCalled();
       });
 
       it ("Should not update flagCount or set flagSate on failed API to flag a post", function() {
         $controller.selectedItem.FlagCount = 2;
 
-        var id = $controller.selectedItem._id.$oid;
-        $httpBackend.expectPOST(crdsCorkboardApiEndpoint + 'api/posts/flag/' + id).respond(500);
+        spyOn(corkboardListings, 'flag').and.callFake(function() {
+          return {
+            post: function() {
+              var deferred = $q.defer();
+              deferred.reject();
 
+              var result = {
+                $promise: deferred.promise
+              };
 
+              return result;
+            }
+          }
+        });
+        
         $controller.flagPost();
-        $httpBackend.flush();
+        $rootScope.$apply();    
 
         expect($controller.flagState).not.toBe($controller.flaggedAsInappropriate);
         expect($controller.flagState).toBe($controller.flagAsInappropriate);
