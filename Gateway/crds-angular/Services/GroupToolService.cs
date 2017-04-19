@@ -744,9 +744,14 @@ namespace crds_angular.Services
             var requestsForContact = _groupToolRepository.GetInquiries(groupId).Where(r => r.ContactId == participant.ContactId && r.Placed == null);
             var participants = _groupRepository.GetGroupParticipants(groupId, true).Where(r => r.ContactId == participant.ContactId);
 
-            if (requestsForContact.Any() || participants.Any())
+            if (participants.Any())
             {
-                throw new ExistingRequestException("User is already member or has request");
+                throw new ExistingRequestException("User already a member");
+
+            }
+            if (requestsForContact.Any())
+            {
+                throw new ExistingRequestException("User already has request");
             }
 
             var mpInquiry = new MpInquiry

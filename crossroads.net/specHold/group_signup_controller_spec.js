@@ -81,7 +81,7 @@ describe('GroupSignupController', function() {
     }
   ];
 
-  //var endpoint = JSON.stringify(process.env.CRDS_API_ENDPOINT || "http://localhost:49380/");
+  //var endpoint = JSON.stringify(process.env.CRDS_GATEWAY_CLIENT_ENDPOINT || "http://localhost:49380/");
 
   // Set up the module
   beforeEach(angular.mock.module('crossroads'));
@@ -110,13 +110,13 @@ describe('GroupSignupController', function() {
           return $controller('CommunityGroupSignupController', {$scope: scope, $stateParams: $stateParams});
         };
 
-        $httpBackend.when('GET', window.__env__['CRDS_API_ENDPOINT'] + 'api/profile')
+        $httpBackend.when('GET', window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api/profile')
           .respond(userGetResponse);
 
-        $httpBackend.when('GET', window.__env__['CRDS_CMS_ENDPOINT'] + '/api/Page/?link=test%2F')
+        $httpBackend.when('GET', window.__env__['CRDS_CMS_CLIENT_ENDPOINT'] + '/api/Page/?link=test%2F')
           .respond(pageGetResponse);
 
-        $httpBackend.when('GET', window.__env__['CRDS_API_ENDPOINT'] + 'api/group/1')
+        $httpBackend.when('GET', window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api/group/1')
           .respond(groupGetDetailResponse);
 
       }));
@@ -127,7 +127,7 @@ describe('GroupSignupController', function() {
   });
 
   it('should signup a person for a community group', function() {
-    $httpBackend.when('POST', window.__env__['CRDS_API_ENDPOINT'] + 'api/group/1/participants')
+    $httpBackend.when('POST', window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api/group/1/participants')
       .respond(successResponse);
 
     var controller = groupSignupController();
@@ -135,13 +135,13 @@ describe('GroupSignupController', function() {
     var person = controller.person;
     expect(controller.signup).toBeDefined();
     controller.signup();
-    $httpBackend.expectPOST(window.__env__['CRDS_API_ENDPOINT'] + 'api/group/1/participants').respond(successResponse);
+    $httpBackend.expectPOST(window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api/group/1/participants').respond(successResponse);
     $httpBackend.flush();
 
   });
 
   it('should give error when signing up and group is full', function() {
-    $httpBackend.when('POST', window.__env__['CRDS_API_ENDPOINT'] + 'api/group/1/participants')
+    $httpBackend.when('POST', window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api/group/1/participants')
       .respond(function() {
         return [422, {}, {}];
       });
@@ -151,7 +151,7 @@ describe('GroupSignupController', function() {
     var person = controller.person;
     expect(controller.signup).toBeDefined();
     controller.signup();
-    $httpBackend.expectPOST(window.__env__['CRDS_API_ENDPOINT'] + 'api/group/1/participants');
+    $httpBackend.expectPOST(window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api/group/1/participants');
     $httpBackend.flush();
     expect(controller.showFull).toEqual(true);
     expect(controller.showContent).toEqual(false);
@@ -159,7 +159,7 @@ describe('GroupSignupController', function() {
   });
 
   it('should give error when signing up and HTTP error is returned', function() {
-    $httpBackend.when('POST', window.__env__['CRDS_API_ENDPOINT'] + 'api/group/1/participants')
+    $httpBackend.when('POST', window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api/group/1/participants')
       .respond(function() {
         return [400, {}, {}];
       });
@@ -169,7 +169,7 @@ describe('GroupSignupController', function() {
     var person = controller.person;
     expect(controller.signup).toBeDefined();
     controller.signup();
-    $httpBackend.expectPOST(window.__env__['CRDS_API_ENDPOINT'] + 'api/group/1/participants');
+    $httpBackend.expectPOST(window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api/group/1/participants');
     $httpBackend.flush();
     expect(controller.showFull).toEqual(false);
     expect(controller.showContent).toEqual(true);
@@ -177,7 +177,7 @@ describe('GroupSignupController', function() {
   });
 
   it('should set the alreadySignedUp flag to TRUE ', function() {
-    $httpBackend.when('POST', window.__env__['CRDS_API_ENDPOINT'] + 'api/group/1/participants')
+    $httpBackend.when('POST', window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api/group/1/participants')
       .respond(successResponse);
 
     var controller = groupSignupController();
@@ -211,7 +211,7 @@ describe('GroupSignupController', function() {
   });
 
   it('should retun object containing newAdd value(s)', function() {
-    $httpBackend.when('POST', window.__env__['CRDS_API_ENDPOINT'] + 'api/group/1/participants')
+    $httpBackend.when('POST', window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api/group/1/participants')
       .respond(successResponse);
 
     var controller = groupSignupController();
@@ -283,9 +283,9 @@ describe('GroupSignupController', function() {
   });
 
   function verifyExpectations() {
-    $httpBackend.expectGET(window.__env__['CRDS_CMS_ENDPOINT'] + '/api/Page/?link=test%2F');
+    $httpBackend.expectGET(window.__env__['CRDS_CMS_CLIENT_ENDPOINT'] + '/api/Page/?link=test%2F');
 
-    $httpBackend.expectGET(window.__env__['CRDS_API_ENDPOINT'] + 'api/group/1');
+    $httpBackend.expectGET(window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api/group/1');
     $httpBackend.flush();
   }
 });

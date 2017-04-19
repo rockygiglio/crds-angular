@@ -6,8 +6,8 @@
 
   function CheckScannerBatches($resource) {
     return({
-      batches: $resource(__API_ENDPOINT__ + 'api/checkscanner/batches'),
-      checks: $resource(__API_ENDPOINT__ + 'api/checkscanner/batches/:batchName/checks')
+      batches: $resource(__GATEWAY_CLIENT_ENDPOINT__ + 'api/checkscanner/batches'),
+      checks: $resource(__GATEWAY_CLIENT_ENDPOINT__ + 'api/checkscanner/batches/:batchName/checks')
     });
   }
 

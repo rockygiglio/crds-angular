@@ -83,7 +83,7 @@ describe('Childcare Event Directive', function() {
       ]
     };
 
-    $httpBackend.expectPOST(window.__env__['CRDS_API_ENDPOINT'] + 'api/childcare/rsvp', participants).respond(200);
+    $httpBackend.expectPOST(window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api/childcare/rsvp', participants).respond(200);
     isolate.childcareEvent.submit();
 
     $httpBackend.flush();
@@ -100,7 +100,7 @@ describe('Childcare Event Directive', function() {
       ]
     };
 
-    $httpBackend.expectPOST(window.__env__['CRDS_API_ENDPOINT'] + 'api/childcare/rsvp', participants).respond(500);
+    $httpBackend.expectPOST(window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api/childcare/rsvp', participants).respond(500);
     isolate.childcareEvent.submit();
 
     $httpBackend.flush();

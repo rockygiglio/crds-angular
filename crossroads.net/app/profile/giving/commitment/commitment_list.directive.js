@@ -35,6 +35,14 @@
           return Math.round(percent);
         }
       };
+
+      scope.commitmentRemaining = function(donations, commitment) {
+        var remaining = commitment - donations;
+        if (remaining < 0)
+          remaining = 0;
+
+        return remaining;
+      };
     }
   }
 })();

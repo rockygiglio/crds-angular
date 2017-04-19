@@ -10,7 +10,7 @@ describe('Login Controller', function () {
         login: function () {
           return {
             then: function (callback) {
-              return callback("username");
+              return callback('username');
             }
           };
         },
@@ -20,7 +20,7 @@ describe('Login Controller', function () {
     });
   });
 
-  beforeEach(inject(function (_$controller_, _$rootScope_, _MESSAGES_, _$state_, _$log_, _AuthService_, _$timeout_) {
+  beforeEach(inject(function (_$controller_, _$rootScope_, _MESSAGES_, _$state_, _$log_, _AuthService_, _$timeout_, _Session_) {
     $controller = _$controller_;
     $rootScope = _$rootScope_;
     MESSAGES = _MESSAGES_;
@@ -29,13 +29,7 @@ describe('Login Controller', function () {
     $scope = $rootScope.$new();
     AuthService = _AuthService_;
     $timeout = _$timeout_;
-
-    Session = {
-      hasRedirectionInfo: function () {
-        return false;
-      }
-    }
-
+    Session = _Session_;
     LoginController = $controller('LoginController', {
       $scope: $scope,
       $rootScope: $rootScope,
@@ -61,8 +55,8 @@ describe('Login Controller', function () {
     };
 
     $scope.credentials = {
-      username: "username",
-      password: "password"
+      username: 'username',
+      password: 'password'
     };
 
     $state.current.name = 'login';

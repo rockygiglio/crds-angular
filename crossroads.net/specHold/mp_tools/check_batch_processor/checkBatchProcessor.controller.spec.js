@@ -99,9 +99,9 @@ describe('Check Batch Processor Tool', function() {
     beforeEach(function() {
       $scope = {};
       controller = $controller('CheckBatchProcessor', { $scope: $scope });
-      $httpBackend.expectGET(window.__env__['CRDS_API_ENDPOINT'] + 'api/checkscanner/batches?onlyOpen=false').respond(allBatchList);
-      $httpBackend.expectGET(window.__env__['CRDS_API_ENDPOINT'] + 'api/checkscanner/batches').respond(openBatchList);
-      $httpBackend.expectGET(window.__env__['CRDS_API_ENDPOINT'] + 'api/programs?excludeTypes%5B%5D=' + GIVE_PROGRAM_TYPES.NonFinancial).respond(programList);
+      $httpBackend.expectGET(window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api/checkscanner/batches?onlyOpen=false').respond(allBatchList);
+      $httpBackend.expectGET(window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api/checkscanner/batches').respond(openBatchList);
+      $httpBackend.expectGET(window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api/programs?excludeTypes%5B%5D=' + GIVE_PROGRAM_TYPES.NonFinancial).respond(programList);
     });
 
     describe('Function allowAccess', function() {
@@ -186,11 +186,11 @@ describe('Check Batch Processor Tool', function() {
           { id: 3, exported: false }
         ];
         $httpBackend.flush();
-        $httpBackend.expectGET(window.__env__['CRDS_API_ENDPOINT'] + 'api/checkscanner/batches/General194200382/checks').respond(checksList);
+        $httpBackend.expectGET(window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api/checkscanner/batches/General194200382/checks').respond(checksList);
       });
 
       it('should successfully submit the selected Batch with the selected Program', function(){
-        $httpBackend.expectPOST( window.__env__['CRDS_API_ENDPOINT'] + 'api/checkscanner/batches', postData).respond(200, '');
+        $httpBackend.expectPOST( window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api/checkscanner/batches', postData).respond(200, '');
 
         controller.batch = openBatchList[1];
         controller.program = programList[1];
@@ -220,7 +220,7 @@ describe('Check Batch Processor Tool', function() {
       });
 
       it('should report error when error is returned from the submit', function(){
-        $httpBackend.expectPOST( window.__env__['CRDS_API_ENDPOINT'] + 'api/checkscanner/batches', postData).respond(500, '');
+        $httpBackend.expectPOST( window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api/checkscanner/batches', postData).respond(500, '');
 
         controller.batch = openBatchList[1];
         controller.program = programList[1];

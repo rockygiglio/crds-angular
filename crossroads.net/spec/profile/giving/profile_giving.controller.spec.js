@@ -178,11 +178,11 @@ describe('ProfileGivingController', function() {
     });
 
     it('should retrieve most recent giving year donations for current user and commitments', function() {
-      httpBackend.expectGET(window.__env__['CRDS_API_ENDPOINT'] + 'api/donations?limit=3')
+      httpBackend.expectGET(window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api/donations?limit=3')
                              .respond(mockDonationResponse);
-      httpBackend.expectGET(window.__env__['CRDS_API_ENDPOINT'] + 'api/donor/recurrence')
+      httpBackend.expectGET(window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api/donor/recurrence')
                              .respond(mockRecurringGiftsRespons);
-      httpBackend.expectGET(window.__env__['CRDS_API_ENDPOINT'] + 'api/donor/pledge')
+      httpBackend.expectGET(window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api/donor/pledge')
                             .respond(mockPledgeCommitmentsResponse);
 
       httpBackend.flush();
@@ -205,9 +205,9 @@ describe('ProfileGivingController', function() {
     });
 
     it('should not have history if there are no donations', function() {
-      httpBackend.expectGET(window.__env__['CRDS_API_ENDPOINT'] + 'api/donations?limit=3').respond(404, {});
-      httpBackend.expectGET(window.__env__['CRDS_API_ENDPOINT'] + 'api/donor/recurrence').respond(404, {});
-      httpBackend.expectGET(window.__env__['CRDS_API_ENDPOINT'] + 'api/donor/pledge').respond(404, {});
+      httpBackend.expectGET(window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api/donations?limit=3').respond(404, {});
+      httpBackend.expectGET(window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api/donor/recurrence').respond(404, {});
+      httpBackend.expectGET(window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api/donor/pledge').respond(404, {});
       httpBackend.flush();
 
       expect(sut.donation_history).toBeFalsy();

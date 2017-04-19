@@ -51,5 +51,8 @@ namespace crds_angular.Models.Finder
 
         [JsonProperty("siteName")]
         public string SiteName { get; set; }
+
+        [JsonProperty("Show_On_Map")]
+        public bool ShowOnMap { get; set; }
     }
 }

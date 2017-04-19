@@ -46,4 +46,5 @@ require('ui-select/dist/select.css');
   require('./volunteer_signup');
   require('./volunteer_application');
   require('./giving_history');
+  require('./leaveyourmark');
 })();

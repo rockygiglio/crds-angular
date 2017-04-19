@@ -8,7 +8,7 @@ namespace crds_angular.Util
 {
     public static class CSV
     {
-        public static void Create<T>(List<T> list, string[] headers, Stream stream, string delimiter) where T : class
+        public static void Create<T>(List<T> list, string[] headers, Stream stream, string delimiter, bool useQuotes = false) where T : class
         {
             var sw = new StreamWriter(stream, Encoding.UTF8);
             var wroteHeaderRow = false;
@@ -17,18 +17,18 @@ namespace crds_angular.Util
             {
                 if (!wroteHeaderRow)
                 {
-                    WriteHeaders(sw, headers, delimiter);
+                    WriteHeaders(sw, headers, delimiter, useQuotes);
                     wroteHeaderRow = true;
                 }
 
-                WriteRow(sw, row, headers, delimiter);
+                WriteRow(sw, row, headers, delimiter, useQuotes);
             }
 
             // Reset the stream position to the beginning
             stream.Seek(0, SeekOrigin.Begin);
         }
 
-        private static void WriteHeaders(TextWriter sw, IEnumerable<string> headers, string delimiter)
+        private static void WriteHeaders(TextWriter sw, IEnumerable<string> headers, string delimiter, bool useQuotes)
         {
             var initialCell = true;
 
@@ -39,7 +39,14 @@ namespace crds_angular.Util
                     sw.Write(delimiter);
                 }
 
-                sw.Write(header);
+                if (useQuotes)
+                {
+                    sw.Write($"\"{header}\"");
+                }
+                else
+                {
+                    sw.Write(header);
+                }
                 initialCell = false;
             }
 
@@ -47,7 +54,7 @@ namespace crds_angular.Util
             sw.Flush();
         }
 
-        private static void WriteRow<T>(TextWriter sw, T row, IEnumerable<string> headers, string delimiter)
+        private static void WriteRow<T>(TextWriter sw, T row, IEnumerable<string> headers, string delimiter, bool useQuotes)
         {
             var initialCell = true;
 
@@ -63,7 +70,14 @@ namespace crds_angular.Util
                 var value = method.Invoke(row, null);
                 var sValue = (value == null ? "" : value.ToString());
 
-                sw.Write(sValue);
+                if (useQuotes)
+                {
+                    sw.Write($"\"{sValue}\"");
+                }
+                else
+                {
+                    sw.Write(sValue);
+                }
                 initialCell = false;
             }
 

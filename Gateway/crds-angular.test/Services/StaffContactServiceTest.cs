@@ -28,11 +28,15 @@ namespace crds_angular.test.Services
                     {"Contact_ID", 1},
                     {"Display_Name", "Nukem, Duke"},
                     {"Email_Address", "Duke.Nukem@compuserv.net"},
+                    {"First_Name", "Duke"},
+                    {"Last_Name", "Nukem" },
                     {"Extra_Data", 3 }
                 } ,
                 new Dictionary<string, object> {
                     {"Contact_ID", 2 },
                     {"Display_Name", "Croft, Lara"},
+                    {"First_Name", "Lara"},
+                    {"Last_Name", "Croft" },
                     {"Email_Address", "Lara.Croft@gmail.com"}
                 }
             };

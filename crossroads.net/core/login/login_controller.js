@@ -94,22 +94,13 @@
           // If the state name ends with login or register (like 'login' or 'give.one_time_login'),
           // either redirect to specified URL, or redirect to profile if URL is not specified.
           if (_.endsWith($state.current.name, 'login') || _.endsWith($state.current.name, 'register')) {
-            $timeout(function() {
+            $timeout(function () {
               if (Session.hasRedirectionInfo()) {
-                var url = Session.exists('redirectUrl');
-                var params = Session.exists('params');
-                Session.removeRedirectRoute();
-                if (params === undefined) {
-                  $state.go(url);
-                } else {
-                  $state.go(url, JSON.parse(params));
-                }
+                Session.redirectIfNeeded();
               } else {
                 navigateToHome();
               }
-            },
-
-              500);
+            }, 500);
           } else if ($scope.loginCallback) {
             $scope.processing = false;
             $scope.loginCallback();

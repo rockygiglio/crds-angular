@@ -40,22 +40,23 @@ Mac and Linux (replace the prefix value below with the path to your NodeJS insta
 ``` npm install -g gulp ```
 
 ###Configuration
-By default webpack inserts `http://localhost:49380` everywhere it finds `__API_ENDPOINT__` in the javascript. This can be changed by creating and setting an environment variable called **CRDS_API_ENDPOINT**. 
-By default webpack inserts `http://content.crossroads.net` everywhere it finds `__CMS_ENDPOINT__` in the javascript. This can be changed by creating and setting an environment variable called **CRDS_CMS_ENDPOINT**. By default webpack inserts Crossroads Stripe Publishable Key as `pk_test_TR1GulD113hGh2RgoLhFqO0M` everywhere it find `__STRIPE_PUBKEY__` in the javascript. This can be changed by creating and setting an environment variable called **CRDS_STRIPE_PUBKEY**.
+By default webpack inserts `http://localhost:49380` everywhere it finds `__GATEWAY_CLIENT_ENDPOINT__` in the javascript. This can be changed by creating and setting an environment variable called **CRDS_GATEWAY_CLIENT_ENDPOINT**. 
+By default webpack inserts `http://content.crossroads.net` everywhere it finds `__CMS_CLIENT_ENDPOINT__` in the javascript. This can be changed by creating and setting an environment variable called **CRDS_CMS_CLIENT_ENDPOINT**. 
+By default webpack inserts Crossroads Stripe Publishable Key as `pk_test_TR1GulD113hGh2RgoLhFqO0M` everywhere it find `__STRIPE_PUBKEY__` in the javascript. This can be changed by creating and setting an environment variable called **CRDS_STRIPE_PUBKEY**.
 By default webpack defaults to use the API Version of Stripe as configured in the account. This can be overridden by creating an environment variable named CRDS_STRIPE_API_VERSION and setting to a particular verion. (i.e. 2015-04-07) 
 
 For windows users:
 ```
-set CRDS_API_ENDPOINT = https://path-to-api-host/
-set CRDS_CMS_ENDPOINT = https://path-to-content-host/
+set CRDS_GATEWAY_CLIENT_ENDPOINT = https://path-to-api-host/
+set CRDS_CMS_CLIENT_ENDPOINT = https://path-to-content-host/
 set CRDS_STRIPE_PUBKEY = <obtain from Stripe site>
 set CROSSROADS_API_TOKEN = <obtain from Ministry Platform Client API Keys>
 ```
 
 Mac and Linux:
 ```
-export CRDS_API_ENDPOINT = https://path-to-api-host/
-export CRDS_CMS_ENDPOINT = https://path-to-content-host/
+export CRDS_GATEWAY_CLIENT_ENDPOINT = https://path-to-api-host/
+export CRDS_CMS_CLIENT_ENDPOINT = https://path-to-content-host/
 export CRDS_STRIPE_PUBKEY = <obtain from Stripe site>
 export CROSSROADS_API_TOKEN = <obtain from Ministry Platform Client API Keys>
 ```
@@ -167,7 +168,7 @@ Follow these instructions in order to setup the application to call Gateway serv
 3. Click **Details...**
 4. Note the `IPv4 Address`, most likely `192.168.56.101`
 5. Back on OS X, create a entry in `/etc/hosts` using the VM name as the DNS name, e.g. `192.168.56.101  silbervm`
-6. As described above, add the **CRDS_API_ENDPOINT** environment variable to match the configuration, e.g. `export  CRDS_API_ENDPOINT=http://silbervm:49380/`
+6. As described above, add the **CRDS_GATEWAY_CLIENT_ENDPOINT** environment variable to match the configuration, e.g. `export  CRDS_GATEWAY_CLIENT_ENDPOINT=http://silbervm:49380/`
 
 ##Folder Naming Convention
 1. Use descriptive folder names

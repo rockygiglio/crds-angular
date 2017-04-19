@@ -196,7 +196,7 @@ describe('Volunteer Application Controller', function() {
     });
 
     it('should call the opportunity resonponse service', function(){
-      httpBackend.expectGET( window.__env__['CRDS_API_ENDPOINT'] +
+      httpBackend.expectGET( window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] +
           'api/opportunity/getResponseForOpportunity/'+
           mockPageInfo.pages[0].opportunity + '/' + controller.contactId ).respond(200);
 

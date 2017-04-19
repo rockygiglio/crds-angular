@@ -9,6 +9,7 @@ using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 using MinistryPlatform.Translation.Models.Finder;
 using System.Device.Location;
+using System.Web.UI;
 
 namespace MinistryPlatform.Translation.Repositories
 {
@@ -35,13 +36,24 @@ namespace MinistryPlatform.Translation.Repositories
 
         public FinderPinDto GetPinDetails(int participantId)
         {
-            const string pinSearch = "Email_Address, Nickname as FirstName, Last_Name as LastName, Participant_Record_Table.*, Household_ID";
-            string filter = $"Participant_Record = {participantId}";
             string token = _apiUserRepository.GetToken();
 
-            var pinDetails = _ministryPlatformRest.UsingAuthenticationToken(token).Search<FinderPinDto>(filter, pinSearch)?.First();
-            
-            if (pinDetails != null) pinDetails.Address = GetPinAddress(participantId);
+            const string pinSearch = "Email_Address, Nickname as FirstName, Last_Name as LastName, Participant_Record_Table.*, Household_ID";
+            string filter = $"Participant_Record = {participantId}";
+
+            List<FinderPinDto> myPin = _ministryPlatformRest.UsingAuthenticationToken(token).Search<FinderPinDto>(filter, pinSearch);
+            var pinDetails = new FinderPinDto();
+
+            if (myPin != null && myPin.Count > 0)
+            {
+                pinDetails = myPin.First();
+                pinDetails.Address = GetPinAddress(participantId);
+
+            }
+            else
+            {
+                pinDetails = null;
+            }
 
             return pinDetails;
         }
