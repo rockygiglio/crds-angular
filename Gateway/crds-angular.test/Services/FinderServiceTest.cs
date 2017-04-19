@@ -39,6 +39,7 @@ namespace crds_angular.test.Services
         private Mock<IInvitationService> _invitationService;
         private Mock<IGroupRepository> _mpGroupRepository;
         private Mock<IAwsCloudsearchService> _awsCloudsearchService;
+        private Mock<IFinderService> _mpFinderServiceMock;
 
         private int _memberRoleId = 16;
         private int _anywhereGatheringInvitationTypeId = 3;
@@ -59,6 +60,8 @@ namespace crds_angular.test.Services
             _invitationService = new Mock<IInvitationService>();
             _mpGroupRepository = new Mock<IGroupRepository>();
             _awsCloudsearchService = new Mock<IAwsCloudsearchService>();
+
+            _mpFinderServiceMock = new Mock<IFinderService>(MockBehavior.Strict);
 
             _mpConfigurationWrapper.Setup(mocked => mocked.GetConfigIntValue("GroupRoleLeader")).Returns(22);
             _mpConfigurationWrapper.Setup(mocked => mocked.GetConfigIntValue("ApprovedHostStatus")).Returns(3);
@@ -308,6 +311,52 @@ namespace crds_angular.test.Services
 
             _fixture.UpdateHouseholdAddress(pin);
             _mpFinderRepository.VerifyAll();
+        }
+
+        [Test]
+        public void TestRequestToBeHost()
+        {
+            var token = "faketoken";
+            var hostRequestDto = new HostRequestDto
+            {
+                ContactId = 123,
+                GroupDescription = "fake group description",
+                IsHomeAddress = false,
+                ContactNumber = "555-123-4567",
+                Address = new AddressDTO
+                {
+                    AddressID = 1,
+                    AddressLine1 = "123 Main St",
+                    City = "Cincinnati",
+                    State = "OH",
+                    PostalCode = "45249"
+                }
+            };
+
+            var contact = new MpMyContact
+            {
+                Contact_ID = 123,
+                Email_Address = "bob@bob.com",
+                Nickname = "Bob",
+                Last_Name = "Bobert"
+            };
+            var participant = new MpParticipant {ParticipantId = 999};
+
+            var group = new GroupDTO();
+            group.GroupId = 555;
+
+
+            _mpContactRepository.Setup(m => m.GetContactById(It.IsAny<int>())).Returns(contact);
+            _mpParticipantRepository.Setup(m => m.GetParticipant(It.IsAny<int>())).Returns(participant);
+            _groupService.Setup(m => m.CreateGroup(It.IsAny<GroupDTO>())).Returns(group);
+            _groupService.Setup(m => m.addParticipantToGroupNoEvents(It.IsAny<int>(), It.IsAny<ParticipantSignup>()));
+            _addressService.Setup(m => m.CreateAddress(It.IsAny<AddressDTO>())).Returns(57);
+
+            _fixture.RequestToBeHost(token,hostRequestDto);
+
+            _groupService.Verify(x => x.addParticipantToGroupNoEvents(It.IsAny<int>(), It.IsAny<ParticipantSignup>()), Times.Once);
+            _mpContactRepository.Verify(x => x.SetHouseholdAddress(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>()), Times.Never);
+
         }
 
         [Test]
