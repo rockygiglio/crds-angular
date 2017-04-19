@@ -16,13 +16,20 @@ BEGIN
         VALUES
            (1119
 		   , 'Connect - Pending Hosts'
-           , 355 
+           , 322 -- Groups 
            ,'Connect hosts awaiting apporval from staff'
-           ,'Contact_ID_Table.[Last_Name] AS [Last Name]
-              , Contact_ID_Table.[First_Name] AS [First Name]
-              , Contact_ID_Table.[Email_Address] AS [Email Address]
-              , Host_Status_ID_Table.[Description] AS [Description]'
-           ,'Host_Status_ID_Table.[Host_Status_ID] = ''1''')
+           ,'CASE WHEN Primary_Contact_Table_Participant_Record_Table_Host_Status_ID_Table.[Host_Status_ID] = 1 THEN ''Pending''
+                WHEN Primary_Contact_Table_Participant_Record_Table_Host_Status_ID_Table.[Host_Status_ID] = 3 THEN ''Approved''
+                WHEN Primary_Contact_Table_Participant_Record_Table_Host_Status_ID_Table.[Host_Status_ID] = 2 THEN ''Denied''
+             END AS [Host_Status]
+           , CASE WHEN Groups.[Available_Online] = 1 THEN ''Public''
+               WHEN Groups.[Available_Online] = 0 THEN ''Private''
+             END AS [Available Online]
+           , Groups.[Group_Name] AS [Group Name]
+           , Primary_Contact_Table.[First_Name] AS [First Name]
+           , Primary_Contact_Table.[Last_Name] AS [Last Name]'
+         ,'Primary_Contact_Table_Participant_Record_Table_Host_Status_ID_Table.[Host_Status_ID] ! = 0
+           AND Group_Type_ID_Table.[Group_Type_ID] = ''30''')
 END
 SET IDENTITY_INSERT dp_Page_Views OFF
 GO
