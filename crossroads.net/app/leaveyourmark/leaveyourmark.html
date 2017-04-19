@@ -7,7 +7,6 @@
             <img src="//crds-cms-uploads.imgix.net/content/images/iminlogotext.png" class="im-in-logo push-bottom" />
             <p class="lead">
               <div dynamic-content="$root.MESSAGES.imInLeaveyourmark.content | html"></div>
-              Since November 2016, the Crossroads team has been charging after a three-year financial campaign called I’M IN. It’s a bold, risky mission to take enemy ground for the Kingdom. To broadcast a clear voice of truth through a barrage of lies. To bring spiritual and physical freedom to the oppressed. To run after our friends and neighbors, introducing them to a God that loves and pursues them. No matter where He calls us, we’re in.
             </p>
             <p>
               <a ng-href="commitment" class="btn btn-primary btn-lg push-half-right">I Want In</a>
@@ -35,10 +34,10 @@
   <div class="container">
 
     <div class="row" ng-show="leaveYourMarkCtrl.viewReady">
-        <div class="pull-right" style="padding: 1px 1px 1px 1px" ng-style="{width: (100 - leaveYourMarkCtrl.givenGercentage) + '%'}">
+        <div class="pull-right" style="padding: 1px 1px 1px 1px" ng-style="{width: (100 - leaveYourMarkCtrl.givenPercentage) + '%'}">
             <div style="background-color: lightgray; width: 70px; height: 40px; line-height: 40px; transform: translate(-25px)">
                 <div class="text-center">
-                    {{leaveYourMarkCtrl.givenGercentage}}%
+                    {{leaveYourMarkCtrl.givenPercentage}}%
                 </div>
             </div>
             <div style="width: 0; height: 0; border-left: 10px solid transparent; border-right: 10px solid transparent; border-top: 10px solid lightgrey;">
@@ -50,8 +49,8 @@
     <div ng-show="leaveYourMarkCtrl.viewReady">
         <div class="progress" style="height: 40px">
             <div class="progress-bar progress-bar-imin" role="progressbar"
-                 aria-valuenow="{{givenGercentage}}" aria-valuemin="0" aria-valuemax="100" ng-style="{width: leaveYourMarkCtrl.givenGercentage + '%'}"
-                 data-toggle="popover" data-trigger="hover" data-content="{leaveYourMarkCtrl.givenGercentage} + '%'">
+                 aria-valuenow="{{givenPercentage}}" aria-valuemin="0" aria-valuemax="100" ng-style="{width: leaveYourMarkCtrl.givenPercentage + '%'}"
+                 data-toggle="popover" data-trigger="hover" data-content="{leaveYourMarkCtrl.givenPercentage} + '%'">
                 <div class="text-left push-left lead" style="margin-top: 5px;">
                     {{leaveYourMarkCtrl.given | currency:"$":0}} given
                 </div>
@@ -63,25 +62,31 @@
     </div>
 
     <div class="row" ng-show="leaveYourMarkCtrl.viewReady">
-        <div class="col-lg-3 col-md-6 col-sm-12">
+        <div class="col-lg-2 col-md-6 col-sm-12 col-lg-offset-1">
             <div style="text-align: center; margin-top: 30px; border: 1px solid #dddddd; background: url('//imincampaign.net/wp-content/themes/ImIn/assets/img/BackgroundTexture-map-white.png')">
                 <p style="font-size: 36pt; font-weight: bold">{{leaveYourMarkCtrl.notStartedPercent | number}} %</p>
                 <p>of people haven't started</p>
             </div>
         </div>
-        <div class="col-lg-3 col-md-6 col-sm-12">
-            <div style="text-align: center; margin-top: 30px; border: 1px solid #dddddd; background-color: #f3f3f3">
-                <p style="font-size: 36pt; font-weight: bold">{{leaveYourMarkCtrl.onPacePercent | number}} %</p>
-                <p>of people are on pace</p>
-            </div>
-        </div>
-        <div class="col-lg-3 col-md-6 col-sm-12">
+        <div class="col-lg-2 col-md-6 col-sm-12">
             <div style="text-align: center; margin-top: 30px; border: 1px solid #dddddd; background-color: #f3f3f3">
                 <p style="font-size: 36pt; font-weight: bold">{{leaveYourMarkCtrl.behindPercent | number}} %</p>
                 <p>of people are behind</p>
             </div>
         </div>
-        <div class="col-lg-3 col-md-6 col-sm-12">
+        <div class="col-lg-2 col-md-6 col-sm-12">
+            <div style="text-align: center; margin-top: 30px; border: 1px solid #dddddd; background-color: #f3f3f3">
+                <p style="font-size: 36pt; font-weight: bold">{{leaveYourMarkCtrl.onPacePercent | number}} %</p>
+                <p>of people are on pace</p>
+            </div>
+        </div>
+        <div class="col-lg-2 col-md-6 col-sm-12">
+            <div style="text-align: center; margin-top: 30px; border: 1px solid #dddddd; background-color: #f3f3f3">
+                <p style="font-size: 36pt; font-weight: bold">{{leaveYourMarkCtrl.aheadPercent | number}} %</p>
+                <p>of people are ahead</p>
+            </div>
+        </div>
+        <div class="col-lg-2 col-md-6 col-sm-12">
             <div style="text-align: center; margin-top: 30px; border: 1px solid #dddddd; background-color: #f3f3f3">
                 <p style="font-size: 36pt; font-weight: bold">{{leaveYourMarkCtrl.completedPercent | number}} %</p>
                 <p>of people are finished</p>
