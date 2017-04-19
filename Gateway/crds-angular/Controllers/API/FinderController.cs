@@ -390,13 +390,12 @@ namespace crds_angular.Controllers.API
         [VersionedRoute(template: "finder/pin/requesttobehost", minimumVersion: "1.0.0")]
         [Route("finder/pin/requesttobehost")]
         [HttpPost]
-        public IHttpActionResult RequestToBeHost([FromBody]int gatheringId)
+        public IHttpActionResult RequestToBeHost([FromBody]HostRequestDto hostRequest)
         {
             return Authorized(token =>
             {
                 try
                 {
-                    var hostRequest = new HostRequestDto();
                     _finderService.RequestToBeHost(token, hostRequest);
                     return Ok();
                 }

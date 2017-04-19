@@ -3,7 +3,6 @@ using System.Device.Location;
 using System.Linq;
 using crds_angular.Exceptions;
 using crds_angular.Models.Crossroads;
-using crds_angular.Models.Finder;
 using crds_angular.Services.Interfaces;
 using log4net;
 using MinistryPlatform.Translation.Models;
@@ -98,6 +97,16 @@ namespace crds_angular.Services
             {
                 _logger.Error($"Error getting GeoCoordinates for address '{address}'", e);
             }
+        }
+
+        public int CreateAddress(AddressDTO address)
+        {
+            var coords = _addressGeocodingService.GetGeoCoordinates(address);
+            address.Longitude = coords.Longitude;
+            address.Latitude = coords.Latitude;
+
+            var mpAddress = AutoMapper.Mapper.Map<MpAddress>(address);
+            return CreateAddress(mpAddress);
         }
 
         private int CreateAddress(MpAddress address)

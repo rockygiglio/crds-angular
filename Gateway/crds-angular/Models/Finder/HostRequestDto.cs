@@ -5,13 +5,19 @@ namespace crds_angular.Models.Finder
 {
     public class HostRequestDto
     {
-        [JsonProperty("participantId")]
-        public int ParticipantId { get; set; }
-
-        [JsonProperty("groupName")]
-        public int GroupName { get; set; }
+        [JsonProperty("contactId")] 
+        public int ContactId { get; set; }
 
         [JsonProperty("address")]
         public AddressDTO Address { get; set; }
+
+        [JsonProperty("isHomeAddress")]
+        public bool IsHomeAddress { get; set; }
+
+        [JsonProperty("contactNumber")]
+        public string ContactNumber { get; set; }
+
+        [JsonProperty("groupDescription")]
+        public string GroupDescription { get; set; }
     }
 }

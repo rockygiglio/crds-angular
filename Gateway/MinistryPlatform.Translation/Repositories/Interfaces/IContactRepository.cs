@@ -29,5 +29,6 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
         List<MpRecordID> CreateContact(MpContact minorContact);
         MpMyContact GetContactByUserRecordId(int userRecordId);
         IObservable<MpHousehold> UpdateContactsCongregation(int householdId, int newCongregation);
+        void SetHouseholdAddress(int contactId, int householdId, int addressId);
     }
 }
