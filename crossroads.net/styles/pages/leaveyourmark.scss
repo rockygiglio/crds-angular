@@ -1,0 +1,79 @@
+$imin-blue: #008CBA;
+
+.leaveyourmark-header {
+  background: url("http://imincampaign.net/wp-content/themes/ImIn/assets/img/ImInFooter.jpg") center center no-repeat;
+  color: #fff;
+  background-size: cover;
+
+  h1 {
+    color: #fff;
+  }
+
+  .btn {
+    border-radius: 2px;
+    border: none;
+  }
+
+  .btn-primary {
+    background-color: rgba($imin-blue, 0.7);
+
+    &:hover {
+      background-color: rgba($imin-blue, .9);
+    }
+  }
+
+  .btn-default {
+    background-color: rgba(209,209,209, 0.3);
+    color: #ffffff;
+
+    &:hover {
+      background-color: rgba(209,209,209, 0.5);
+      color: #ffffff;
+    }
+  }
+}
+
+.im-in-logo {
+  height: 50px;
+  width: auto;
+}
+
+.chart {
+  position: relative;
+  display: inline-block;
+  width: 180px;
+  height: 180px;
+  margin-top: 70px;
+  margin-bottom: 20px;
+  text-align: center;
+
+  canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+}
+.percent {
+  display: inline-block;
+  line-height: 180px;
+  z-index: 2;
+  font-size: 3rem;
+}
+.percent:after {
+  content: '%';
+  margin-left: 0.1em;
+}
+
+.percent:after {
+    content: '%';
+    margin-left: 0.1em;
+    font-size: .8em;
+}
+
+.day-countdown {
+  background: rgba(0,0,0,.4);
+}
+.progress-bar-imin {
+  background-color: #008CBA;
+  color: #fff;
+}

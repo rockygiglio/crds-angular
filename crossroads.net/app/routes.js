@@ -549,7 +549,7 @@
           templateUrl: 'thedaily/thedaily.html'
         })
         .state('leaveyourmark', {
-          parent: 'noSideBar',
+          parent: 'screenWidth',
           url: '/leaveyourmark',
           controller: 'LeaveYourMarkController as leaveYourMarkCtrl',
           templateUrl: 'leaveyourmark/leaveyourmark.html'

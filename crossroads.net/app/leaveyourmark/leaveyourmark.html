@@ -1,104 +1,115 @@
-<!-- first row displays days -->
-<div class = "row">
-    <preloader full-screen="false" ng-show="!leaveYourMarkCtrl.viewReady">
-</div>
+<div class="row">
 
-<div class="row" ng-show="leaveYourMarkCtrl.viewReady">
-    <div class="col-md-6 col-sm-12">
-        <!-- content block -->
-        <div class="row">
-            <h1>I'M IN Campaign Update</h1>
+  <div class="leaveyourmark-header">
+      <div class="container soft-ends">
+        <div class="row soft-ends">
+          <div class="col-sm-7">
+            <img src="//crds-cms-uploads.imgix.net/content/images/iminlogotext.png" class="im-in-logo push-bottom" />
+            <p class="lead">
+              <div dynamic-content="$root.MESSAGES.imInLeaveyourmark.content | html"></div>
+              Since November 2016, the Crossroads team has been charging after a three-year financial campaign called I’M IN. It’s a bold, risky mission to take enemy ground for the Kingdom. To broadcast a clear voice of truth through a barrage of lies. To bring spiritual and physical freedom to the oppressed. To run after our friends and neighbors, introducing them to a God that loves and pursues them. No matter where He calls us, we’re in.
+            </p>
+            <p>
+              <a ng-href="commitment" class="btn btn-primary btn-lg push-half-right">I Want In</a>
+              <a ng-href="profile/giving" class="btn btn-default btn-lg">Check Your Status</a>
+            </p>
+          </div>
+          <div class="col-sm-4 col-sm-offset-1 day-countdown" ng-show="leaveYourMarkCtrl.viewReady">
+              <!-- days -->
+              <div class="text-center">
+                <div class="chart" data-percent="{{(leaveYourMarkCtrl.currentDay / leaveYourMarkCtrl.totalDays * 100) | number:0 }}" data-scale-color="#ffb400">
+                  <span class="percent">{{(leaveYourMarkCtrl.currentDay / leaveYourMarkCtrl.totalDays * 100) | number:0 }}</span>
+                </div>
+                <h3>Day {{leaveYourMarkCtrl.currentDay | number:0}} / {{leaveYourMarkCtrl.totalDays | number:0 }}</h3>
+              </div>
+          </div>
         </div>
-        <div class="row">
-            <div dynamic-content="$root.MESSAGES.imInLeaveyourmark.content | html"></div>
-        </div>
-        <br>
-        <div class="row">
-            <a role="button" class="btn btn-default" ng-href="profile/giving">Check Your Status</a>
-        </div>
-    </div>
+      </div>
+  </div>
 
-    <div class="col-md-1 col-sm-12"></div>
+  <!-- first row displays days -->
+  <div class="push-top">
+      <preloader full-screen="false" ng-show="!leaveYourMarkCtrl.viewReady">
+  </div>
 
-    <div class="col-md-5 col-sm-12" style="border: 1px solid lightgrey; transform: translate(0px, 30px); background-color: floralwhite">
-        <!-- days -->
-        <div class="row">
-            <div class="col-sm-6">
-                <div class="row"><br><br></div>
-                <div class="row" style="transform: translate(30px, -30px)">
-                    <h1>Day</h1>
-                    <h1>{{leaveYourMarkCtrl.currentDay | number:0}} / {{leaveYourMarkCtrl.totalDays | number:0 }}</h1>
+  <div class="container">
+
+    <div class="row" ng-show="leaveYourMarkCtrl.viewReady">
+        <div class="pull-right" style="padding: 1px 1px 1px 1px" ng-style="{width: (100 - leaveYourMarkCtrl.givenGercentage) + '%'}">
+            <div style="background-color: lightgray; width: 70px; height: 40px; line-height: 40px; transform: translate(-25px)">
+                <div class="text-center">
+                    {{leaveYourMarkCtrl.givenGercentage}}%
                 </div>
             </div>
+            <div style="width: 0; height: 0; border-left: 10px solid transparent; border-right: 10px solid transparent; border-top: 10px solid lightgrey;">
+            </div>
+        </div>
+    </div>
 
-            <div class="col-sm-6">
-                <div class="row"><br><br></div>
-                <div class="row" style="transform: translate(30px, -30px)">
-                    <div style="background-color: grey; width: 120px; height: 120px; transform: translate(0px, -10px); border-radius: 50%">
-                        <h1 style="transform: translate(25px, 35px); color: white">
-                            {{(leaveYourMarkCtrl.currentDay / leaveYourMarkCtrl.totalDays * 100) | number:0 }}%
-                        </h1>
-                    </div>
+    <!-- progress bar -->
+    <div ng-show="leaveYourMarkCtrl.viewReady">
+        <div class="progress" style="height: 40px">
+            <div class="progress-bar progress-bar-imin" role="progressbar"
+                 aria-valuenow="{{givenGercentage}}" aria-valuemin="0" aria-valuemax="100" ng-style="{width: leaveYourMarkCtrl.givenGercentage + '%'}"
+                 data-toggle="popover" data-trigger="hover" data-content="{leaveYourMarkCtrl.givenGercentage} + '%'">
+                <div class="text-left push-left lead" style="margin-top: 5px;">
+                    {{leaveYourMarkCtrl.given | currency:"$":0}} given
                 </div>
             </div>
-        </div>
-
-    </div>
-</div>
-
-<div class="row" style="margin-top: 100px"></div>
-
-<div class="row" ng-show="leaveYourMarkCtrl.viewReady">
-    <div class="pull-right" style="padding: 1px 1px 1px 1px" ng-style="{width: (100 - leaveYourMarkCtrl.givenGercentage) + '%'}">
-        <div style="background-color: lightgray; width: 70px; height: 30px; transform: translate(-25px)">
-            <div style="transform: translate(20px);">
-                {{leaveYourMarkCtrl.givenGercentage}}%
+            <div class="text-right push-right lead" style="margin-top: 5px;">
+                {{leaveYourMarkCtrl.committed | currency:"$":0}} committed
             </div>
         </div>
-        <div style="width: 0; height: 0; border-left: 10px solid transparent; border-right: 10px solid transparent; border-top: 10px solid lightgrey;">
-        </div>
     </div>
-</div>
 
-<!-- progress bar -->
-<div class="row" ng-show="leaveYourMarkCtrl.viewReady">
-    <div class="progress" style="height: 40px">
-        <div class="progress-bar progress-bar-success" role="progressbar"
-             aria-valuenow="{{givenGercentage}}" aria-valuemin="0" aria-valuemax="100" ng-style="{width: leaveYourMarkCtrl.givenGercentage + '%'}"
-             data-toggle="popover" data-trigger="hover" data-content="{leaveYourMarkCtrl.givenGercentage} + '%'">
-            <div class="text-left" style="margin-top: 10px; margin-left: 20px; font-size: 20px; color: black">
-                {{leaveYourMarkCtrl.given | currency:"$":0}} given
+    <div class="row" ng-show="leaveYourMarkCtrl.viewReady">
+        <div class="col-lg-3 col-md-6 col-sm-12">
+            <div style="text-align: center; margin-top: 30px; border: 1px solid #dddddd; background: url('//imincampaign.net/wp-content/themes/ImIn/assets/img/BackgroundTexture-map-white.png')">
+                <p style="font-size: 36pt; font-weight: bold">{{leaveYourMarkCtrl.notStartedPercent | number}} %</p>
+                <p>of people haven't started</p>
             </div>
         </div>
-        <div class="text-right" style="margin-top: 5px; margin-right: 20px; font-size: 20px; color: black">
-            {{leaveYourMarkCtrl.committed | currency:"$":0}} committed
+        <div class="col-lg-3 col-md-6 col-sm-12">
+            <div style="text-align: center; margin-top: 30px; border: 1px solid #dddddd; background-color: #f3f3f3">
+                <p style="font-size: 36pt; font-weight: bold">{{leaveYourMarkCtrl.onPacePercent | number}} %</p>
+                <p>of people are on pace</p>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-sm-12">
+            <div style="text-align: center; margin-top: 30px; border: 1px solid #dddddd; background-color: #f3f3f3">
+                <p style="font-size: 36pt; font-weight: bold">{{leaveYourMarkCtrl.behindPercent | number}} %</p>
+                <p>of people are behind</p>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-sm-12">
+            <div style="text-align: center; margin-top: 30px; border: 1px solid #dddddd; background-color: #f3f3f3">
+                <p style="font-size: 36pt; font-weight: bold">{{leaveYourMarkCtrl.completedPercent | number}} %</p>
+                <p>of people are finished</p>
+            </div>
         </div>
     </div>
+  </div>
 </div>
 
-<div class="row" ng-show="leaveYourMarkCtrl.viewReady">
-    <div class="col-lg-3 col-md-6 col-sm-12">
-        <div style="text-align: center; margin-top: 30px; border: 1px solid #dddddd; background-color: #f3f3f3">
-            <p style="font-size: 36pt; font-weight: bold">{{leaveYourMarkCtrl.notStartedPercent | number}} %</p>
-            <p>of people haven't started</p>
-        </div>
-    </div>
-    <div class="col-lg-3 col-md-6 col-sm-12">
-        <div style="text-align: center; margin-top: 30px; border: 1px solid #dddddd; background-color: #f3f3f3">
-            <p style="font-size: 36pt; font-weight: bold">{{leaveYourMarkCtrl.onPacePercent | number}} %</p>
-            <p>of people are on pace</p>
-        </div>
-    </div>
-    <div class="col-lg-3 col-md-6 col-sm-12">
-        <div style="text-align: center; margin-top: 30px; border: 1px solid #dddddd; background-color: #f3f3f3">
-            <p style="font-size: 36pt; font-weight: bold">{{leaveYourMarkCtrl.behindPercent | number}} %</p>
-            <p>of people are behind</p>
-        </div>
-    </div>
-    <div class="col-lg-3 col-md-6 col-sm-12">
-        <div style="text-align: center; margin-top: 30px; border: 1px solid #dddddd; background-color: #f3f3f3">
-            <p style="font-size: 36pt; font-weight: bold">{{leaveYourMarkCtrl.completedPercent | number}} %</p>
-            <p>of people are finished</p>
-        </div>
-    </div>
-</div>
+<script src="//crossroads-media.s3.amazonaws.com/documents/leaveyourmark/easy-pie-chart/jquery.easypiechart.min.js"></script>
+<script>
+    $(function() {
+      setTimeout(
+        function()
+        {
+          $('.chart').easyPieChart({
+            easing: 'easeOutElastic',
+      			delay: 1000,
+      			barColor: '#008CBA',
+      			trackColor: '#615957',
+      			scaleColor: false,
+      			lineWidth: 10,
+      			trackWidth: 10,
+            lineCap: 'round',
+            scaleLength: 0,
+            size: 180
+          });
+        }, 3000);
+
+    });
+</script>
