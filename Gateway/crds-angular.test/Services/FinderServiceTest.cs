@@ -353,7 +353,7 @@ namespace crds_angular.test.Services
             _groupService.Setup(m => m.addParticipantToGroupNoEvents(It.IsAny<int>(), It.IsAny<ParticipantSignup>()));
             _addressService.Setup(m => m.CreateAddress(It.IsAny<AddressDTO>())).Returns(57);
 
-            _mpGroupRepository.Setup(m => m.GetSearchResults(It.IsAny<int>())).Returns(new List<MpGroupSearchResult>());
+            _mpGroupRepository.Setup(m => m.GetGroupsByGroupType(It.IsAny<int>())).Returns(new List<MpGroup>());
 
             _fixture.RequestToBeHost(token,hostRequestDto);
 
@@ -380,9 +380,10 @@ namespace crds_angular.test.Services
                 }
             };
 
-            var searchResult1 = new MpGroupSearchResult
+            var searchResult1 = new MpGroup
             {
                 ContactId = 456,
+                PrimaryContact = "456",
                 Address = new MpAddress()
                 {
                     Address_ID = 1,
@@ -392,9 +393,10 @@ namespace crds_angular.test.Services
                     Postal_Code = "45202"
                 }
             };
-            var searchResult2 = new MpGroupSearchResult
+            var searchResult2 = new MpGroup
             {
                 ContactId = 123,
+                PrimaryContact = "123",
                 Address = new MpAddress()
                 {
                     Address_ID = 2,
@@ -405,9 +407,10 @@ namespace crds_angular.test.Services
                 }
             };
 
-            var searchResult3 = new MpGroupSearchResult
+            var searchResult3 = new MpGroup
             {
                 ContactId = 123,
+                PrimaryContact = "123",
                 Address = new MpAddress()
                 {
                     Address_ID = 2,
@@ -417,8 +420,8 @@ namespace crds_angular.test.Services
                     Postal_Code = "45249"
                 }
             };
-            var searchResults = new List<MpGroupSearchResult> {searchResult1, searchResult2, searchResult3};
-            _mpGroupRepository.Setup(m => m.GetSearchResults(It.IsAny<int>())).Returns(searchResults);
+            var searchResults = new List<MpGroup> {searchResult1, searchResult2, searchResult3};
+            _mpGroupRepository.Setup(m => m.GetGroupsByGroupType(It.IsAny<int>())).Returns(searchResults);
 
             Assert.That(() => _fixture.RequestToBeHost(token, hostRequestDto),
                 Throws.Exception
