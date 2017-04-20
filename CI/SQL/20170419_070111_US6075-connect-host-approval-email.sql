@@ -24,8 +24,9 @@ BEGIN
 			   ,5 --Church Administrator
 			   ,'Crossroads Connect Gathering Host Approved'
 			   ,'We are excited that you will be on the map as a Gathering Host on Crossroads Connect.<br><br>
-			   Thanks again for joining the team and welcoming others!<br>
-			   The Crossroads Anywhere Team'
+                 It may take up to one day for your new Gathering to be visible on the Connect Map.<br><br>
+                 Thanks again for joining the team and welcoming others!<br><br>
+                 The Crossroads Anywhere Team'
 			   ,1 --Domain ID
 			   ,GETDATE()
 			   ,1 --Draft Status
