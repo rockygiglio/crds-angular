@@ -15,7 +15,9 @@ module.exports = {
       __STREAMSPOT_ENDPOINT__: JSON.stringify(process.env.CRDS_STREAMSPOT_ENDPOINT || 'https://api.streamspot.com/'),
       __STREAMSPOT_API_KEY__: JSON.stringify(process.env.CRDS_STREAMSPOT_API_KEY || '82437b4d-4e38-42e2-83b6-148fcfaf36fb'),
       __STREAMSPOT_SSID__: JSON.stringify(process.env.CRDS_STREAMSPOT_SSID || 'crossr4915'),
-      __STREAMSPOT_PLAYER_ID__: JSON.stringify(process.env.CRDS_STREAMSPOT_PLAYER_ID || '1adb55de')
+      __STREAMSPOT_PLAYER_ID__: JSON.stringify(process.env.CRDS_STREAMSPOT_PLAYER_ID || '1adb55de'),
+      __IMG_ENDPOINT__: JSON.stringify(process.env.CRDS_GATEWAY_CLIENT_ENDPOINT || 'https://int.crossroads.net/'),
+      __HEADER_CONTENTBLOCK_TITLE__: JSON.stringify(process.env.HEADER_CONTENTBLOCK_TITLE || 'sharedGlobalHeader')
     };
   },
   getTest() {
@@ -28,4 +30,3 @@ module.exports = {
     return params;
   }
 };
-
