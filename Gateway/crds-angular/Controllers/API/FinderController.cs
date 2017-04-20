@@ -12,6 +12,7 @@ using crds_angular.Services.Interfaces;
 using Crossroads.ApiVersioning;
 using Crossroads.Web.Common.Security;
 using System.ComponentModel.DataAnnotations;
+using crds_angular.Exceptions;
 using crds_angular.Models.AwsCloudsearch;
 using crds_angular.Models.Crossroads.Groups;
 using log4net;
@@ -399,18 +400,15 @@ namespace crds_angular.Controllers.API
                     _finderService.RequestToBeHost(token, hostRequest);
                     return Ok();
                 }
+                catch (GatheringException e)
+                {
+                    _logger.Error("Host already has a gathering at this location.", e);
+                    throw new HttpResponseException(HttpStatusCode.NotAcceptable);
+                }
                 catch (Exception e)
                 {
-                    _logger.Error("Failure in RequestToBeHost", e);
-                    switch (e.Message)
-                    {
-                        case "User already has request":
-                            throw new HttpResponseException(HttpStatusCode.Conflict);
-                        case "User already a member":
-                            throw new HttpResponseException(HttpStatusCode.NotAcceptable);
-                        default:
-                            throw new HttpResponseException(new ApiErrorDto("Gathering request failed", e).HttpResponseMessage);
-                    }
+                    _logger.Error("Could not generate request", e);
+                    throw new HttpResponseException(new ApiErrorDto("Gathering request failed", e).HttpResponseMessage);
                 }
             });
         }

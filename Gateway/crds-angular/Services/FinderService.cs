@@ -14,6 +14,7 @@ using Crossroads.Web.Common.MinistryPlatform;
 using System.Linq;
 using System.Device.Location;
 using Amazon.CloudSearchDomain.Model;
+using crds_angular.Exceptions;
 using crds_angular.Models.AwsCloudsearch;
 using crds_angular.Models.Crossroads.Groups;
 using Crossroads.Web.Common.Configuration;
@@ -155,8 +156,28 @@ namespace crds_angular.Services
             return _groupService.GetGroupParticipantsWithoutAttributes(groupId);
         }
 
-        public void RequestToBeHost(string token, HostRequestDto hostRequest)
+        private void GatheringValidityCheck(int contactId, AddressDTO address)
         {
+            //get the list of anywhere groups
+            var groups = _groupRepository.GetSearchResults(_configurationWrapper.GetConfigIntValue("AnywhereGroupTypeId"));
+
+            //get groups that this user is the primary contact for at this address
+            var matchingGroupsCount = groups.Where(x => x.ContactId == contactId)
+                                       .Where(x => x.Address.Address_Line_1 == address.AddressLine1)
+                                       .Where(x => x.Address.City == address.City)
+                                       .Where(x => x.Address.State == address.State).Count();
+
+            if (matchingGroupsCount > 0)
+            {
+                throw new GatheringException(contactId);
+            }
+        }
+
+    public void RequestToBeHost(string token, HostRequestDto hostRequest)
+        {
+            //check if they are already a host at this address. If they are then throw
+            GatheringValidityCheck(hostRequest.ContactId,hostRequest.Address);
+
             // get contact data
             var contact = _contactRepository.GetContactById(hostRequest.ContactId);
             var participant = _participantRepository.GetParticipant(hostRequest.ContactId);
@@ -194,7 +215,7 @@ namespace crds_angular.Services
             if (!hostRequest.IsHomeAddress) return;
             var addressId = _addressService.CreateAddress(hostRequest.Address);
             // assign new id to users household
-            _contactRepository.SetHouseholdAddress(hostRequest.ContactId, contact.Household_ID,addressId);
+            _contactRepository.SetHouseholdAddress(hostRequest.ContactId, contact.Household_ID, addressId);
         }
 
         public void GatheringJoinRequest(string token, int gatheringId)

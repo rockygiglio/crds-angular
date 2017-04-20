@@ -18,6 +18,7 @@ using Crossroads.Web.Common.Configuration;
 using Crossroads.Web.Common.MinistryPlatform;
 using Rhino.Mocks;
 using Amazon.CloudSearchDomain.Model;
+using crds_angular.Exceptions;
 using crds_angular.Models.AwsCloudsearch;
 
 namespace crds_angular.test.Services
@@ -352,11 +353,76 @@ namespace crds_angular.test.Services
             _groupService.Setup(m => m.addParticipantToGroupNoEvents(It.IsAny<int>(), It.IsAny<ParticipantSignup>()));
             _addressService.Setup(m => m.CreateAddress(It.IsAny<AddressDTO>())).Returns(57);
 
+            _mpGroupRepository.Setup(m => m.GetSearchResults(It.IsAny<int>())).Returns(new List<MpGroupSearchResult>());
+
             _fixture.RequestToBeHost(token,hostRequestDto);
 
             _groupService.Verify(x => x.addParticipantToGroupNoEvents(It.IsAny<int>(), It.IsAny<ParticipantSignup>()), Times.Once);
             _mpContactRepository.Verify(x => x.SetHouseholdAddress(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>()), Times.Never);
+        }
 
+        [Test]
+        public void RequestToBeHostShouldThrow()
+        {
+            var token = "faketoken";
+            var hostRequestDto = new HostRequestDto
+            {
+                ContactId = 123,
+                GroupDescription = "fake group description",
+                IsHomeAddress = false,
+                ContactNumber = "555-123-4567",
+                Address = new AddressDTO
+                {
+                    AddressLine1 = "123 Main St",
+                    City = "Cincinnati",
+                    State = "OH",
+                    PostalCode = "45249"
+                }
+            };
+
+            var searchResult1 = new MpGroupSearchResult
+            {
+                ContactId = 456,
+                Address = new MpAddress()
+                {
+                    Address_ID = 1,
+                    Address_Line_1 = "42 Elm St",
+                    City = "Florence",
+                    State = "KY",
+                    Postal_Code = "45202"
+                }
+            };
+            var searchResult2 = new MpGroupSearchResult
+            {
+                ContactId = 123,
+                Address = new MpAddress()
+                {
+                    Address_ID = 2,
+                    Address_Line_1 = "123 Main St",
+                    City = "Cincinnati",
+                    State = "OH",
+                    Postal_Code = "45249"
+                }
+            };
+
+            var searchResult3 = new MpGroupSearchResult
+            {
+                ContactId = 123,
+                Address = new MpAddress()
+                {
+                    Address_ID = 2,
+                    Address_Line_1 = "99 SomewhereElse Ave",
+                    City = "Cincinnati",
+                    State = "OH",
+                    Postal_Code = "45249"
+                }
+            };
+            var searchResults = new List<MpGroupSearchResult> {searchResult1, searchResult2, searchResult3};
+            _mpGroupRepository.Setup(m => m.GetSearchResults(It.IsAny<int>())).Returns(searchResults);
+
+            Assert.That(() => _fixture.RequestToBeHost(token, hostRequestDto),
+                Throws.Exception
+                .TypeOf<GatheringException>());
         }
 
         [Test]

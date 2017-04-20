@@ -332,6 +332,7 @@
     <Compile Include="Exceptions\DuplicateChildcareEventsException.cs" />
     <Compile Include="Exceptions\DuplicateUserException.cs" />
     <Compile Include="Exceptions\EventMissingException.cs" />
+    <Compile Include="Exceptions\GatheringException.cs" />
     <Compile Include="Exceptions\GroupParticipantRemovalException.cs" />
     <Compile Include="Exceptions\InvalidAddressException.cs" />
     <Compile Include="Exceptions\InvoiceNotFoundException.cs" />
