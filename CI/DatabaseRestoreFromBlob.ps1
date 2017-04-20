@@ -33,11 +33,17 @@ Param (
   [Parameter(Mandatory=$true)]
   [string] $EmailUserName,
   [Parameter(Mandatory=$true)]
-  [string] $RegisterApiPasswordHash
+  [string] $RegisterApiPasswordHash,
+  [Parameter(Mandatory=$true)]
+  [string] $ReportingServerAddress,
+  [Parameter(Mandatory=$true)]
+  [string] $SMTPServerName
 )
 
+$SourceDBName = "MinistryPlatform";
+
 $backupDateStamp = Get-Date -format 'yyyyMMdd';
-$BackupUrl = "$BackupUrl/$DBName-Backup-$backupDateStamp.trn";
+$BackupUrl = "$BackupUrl/$SourceDBName-Backup-$backupDateStamp.trn";
 
 $connectionString = "Server=$DBServer;uid=$DBUser;pwd=$DBPassword;Database=master;Integrated Security=False;";
 
@@ -132,6 +138,13 @@ DECLARE @scheduledTasksUser varchar(50) = '$InternalServerName\MPAdmin';
 -- DECLARE @domainGuid = NEWID();
 DECLARE @domainGuid UNIQUEIDENTIFIER = CAST('$DomainGuid' AS UNIQUEIDENTIFIER);
 
+-- Reporting Server Address
+DECLARE @reportingServerAddress nvarchar(128) = '$ReportingServerAddress';
+
+-- SMTP Server Name
+DECLARE @SMTPServerName nvarchar(50) = '$SMTPServerName';
+
+
 USE [$DBName];
 
 SELECT * FROM dp_Domains;
@@ -145,7 +158,13 @@ UPDATE [dbo].[dp_Domains]
       --,[GMT_Offset] = -5 Removed by Andy Canterbury on 7/29/2016 to fix TeamCity build.
       ,[Company_Contact] = 5
       ,[Database_Name] = null
-      ,[Max_Secured_Users] = null;
+      ,[Max_Secured_Users] = null
+	  ,[Reporting_Server_Address] = @reportingServerAddress
+	  ,[SMTP_Server_Name] = @SMTPServerName
+	  ,[SMTP_Server_Port] = null
+      ,[SMTP_Server_Username] = null
+      ,[SMTP_Server_Password] = null
+      ,[SMTP_Enable_SSL] = 0;
 
 SELECT * FROM dp_Domains;
 
