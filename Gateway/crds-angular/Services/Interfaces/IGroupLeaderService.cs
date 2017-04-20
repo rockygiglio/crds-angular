@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reactive;
-using System.Threading.Tasks;
 using crds_angular.Models.Crossroads.GroupLeader;
 
 namespace crds_angular.Services.Interfaces
@@ -10,6 +9,7 @@ namespace crds_angular.Services.Interfaces
     {
         IObservable<IList<Unit>> SaveProfile(string token, GroupLeaderProfileDTO leader);
         IObservable<int> SaveReferences(GroupLeaderProfileDTO leader);
+        void SetInterested(string token);
     }
     
 }

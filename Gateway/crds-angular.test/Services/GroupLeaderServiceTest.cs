@@ -20,6 +20,7 @@ namespace crds_angular.test.Services
         private Mock<IUserRepository> _userRepo;
         private Mock<IPersonService> _personService;
         private Mock<IFormSubmissionRepository> _formService;
+        private Mock<IParticipantRepository> _participantRepository;
         private Mock<IConfigurationWrapper> _configWrapper;
         private IGroupLeaderService _fixture;
 
@@ -29,14 +30,16 @@ namespace crds_angular.test.Services
             _userRepo = new Mock<IUserRepository>();
             _personService = new Mock<IPersonService>();
             _formService = new Mock<IFormSubmissionRepository>();
+            _participantRepository = new Mock<IParticipantRepository>();
             _configWrapper = new Mock<IConfigurationWrapper>();
-            _fixture = new GroupLeaderService(_personService.Object, _userRepo.Object, _formService.Object, _configWrapper.Object);
+            _fixture = new GroupLeaderService(_personService.Object, _userRepo.Object, _formService.Object, _participantRepository.Object, _configWrapper.Object);
         }
 
         [TearDown]
         public void Teardown()
         {
             _personService.VerifyAll();
+            _participantRepository.VerifyAll();
             _userRepo.VerifyAll();
         }
 
@@ -174,6 +177,20 @@ namespace crds_angular.test.Services
             Assert.Throws<ApplicationException>(() => _fixture.SaveReferences(fakeDto).Wait());
         }
 
+        [Test]
+        public void ShouldSetStatusToInterested()
+        {
+            var fakeToken = "letmein";
+            const int groupLeaderInterested = 2;
+            var mockParticpant = ParticipantMock();
+
+            _configWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderInterested")).Returns(groupLeaderInterested);
+            _participantRepository.Setup(m => m.GetParticipantRecord(fakeToken)).Returns(mockParticpant);
+            mockParticpant.GroupLeaderStatus = groupLeaderInterested;
+            _participantRepository.Setup(m => m.UpdateParticipant(mockParticpant));
+            _fixture.SetInterested(fakeToken);
+        }
+
         private static GroupLeaderProfileDTO GroupLeaderMock()
         {
             return new GroupLeaderProfileDTO()
@@ -189,6 +206,17 @@ namespace crds_angular.test.Services
                 HuddleResponse = "No",
                 LeadStudents = "Yes",
                 ReferenceContactId = "89158"
+            };
+        }
+
+        private static MpParticipant ParticipantMock()
+        {
+            return new MpParticipant
+            {
+                ContactId = 12345,
+                ParticipantId = 67890,
+                GroupLeaderStatus = 1,
+                DisplayName = "Fakerson, Fakey"
             };
         }
     }

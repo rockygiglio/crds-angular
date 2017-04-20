@@ -110,7 +110,8 @@ namespace MinistryPlatform.Translation.Repositories
             {
                 {"Participant_ID", participant.ParticipantId },
                 {"Attendance_Start_Date", participant.AttendanceStart },
-                {"Approved_Small_Group", participant.ApprovedSmallGroupLeader }
+                {"Approved_Small_Group", participant.ApprovedSmallGroupLeader },
+                {"Group_Leader_Status_ID", participant.GroupLeaderStatus }
             };
             UpdateParticipant(participantDict);
         }

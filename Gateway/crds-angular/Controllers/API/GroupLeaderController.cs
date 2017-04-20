@@ -24,6 +24,17 @@ namespace crds_angular.Controllers.API
             _groupLeaderService = groupLeaderService;
         }
 
+        [VersionedRoute(template: "group-leader/interested", minimumVersion: "1.0.0")]
+        [HttpPost]
+        public async Task<IHttpActionResult> InterestedInGroupLeadership()
+        {
+            return await Authorized(token =>
+            {
+                _groupLeaderService.SetInterested(token);
+                return Ok();
+            });
+        }
+
         [VersionedRoute(template: "group-leader/profile", minimumVersion: "1.0.0")]
         [HttpPost]
         public async Task<IHttpActionResult> SaveProfile([FromBody] GroupLeaderProfileDTO profile)

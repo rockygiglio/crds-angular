@@ -17,5 +17,6 @@ namespace MinistryPlatform.Translation.Models
         public string Role { get; set; }
         public string GroupName { get; set; }
         public string Nickname { get; set; }
+        public int GroupLeaderStatus { get; set; }
     }
 }
