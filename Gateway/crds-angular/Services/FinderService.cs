@@ -159,10 +159,11 @@ namespace crds_angular.Services
         private void GatheringValidityCheck(int contactId, AddressDTO address)
         {
             //get the list of anywhere groups
-            var groups = _groupRepository.GetSearchResults(_configurationWrapper.GetConfigIntValue("AnywhereGroupTypeId"));
+
+            var groups = _groupRepository.GetGroupsByGroupType(_configurationWrapper.GetConfigIntValue("AnywhereGroupTypeId"));
 
             //get groups that this user is the primary contact for at this address
-            var matchingGroupsCount = groups.Where(x => x.ContactId == contactId)
+            var matchingGroupsCount = groups.Where(x => x.PrimaryContact == contactId.ToString())
                                        .Where(x => x.Address.Address_Line_1 == address.AddressLine1)
                                        .Where(x => x.Address.City == address.City)
                                        .Where(x => x.Address.State == address.State).Count();
