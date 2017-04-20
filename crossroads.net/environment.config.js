@@ -16,8 +16,9 @@ module.exports = {
       __STREAMSPOT_API_KEY__: JSON.stringify(process.env.CRDS_STREAMSPOT_API_KEY || '82437b4d-4e38-42e2-83b6-148fcfaf36fb'),
       __STREAMSPOT_SSID__: JSON.stringify(process.env.CRDS_STREAMSPOT_SSID || 'crossr4915'),
       __STREAMSPOT_PLAYER_ID__: JSON.stringify(process.env.CRDS_STREAMSPOT_PLAYER_ID || '1adb55de'),
-      __IMG_ENDPOINT__: JSON.stringify(process.env.CRDS_GATEWAY_CLIENT_ENDPOINT || 'https://int.crossroads.net/'),
-      __HEADER_CONTENTBLOCK_TITLE__: JSON.stringify(process.env.HEADER_CONTENTBLOCK_TITLE || 'sharedGlobalHeader')
+      __IMG_ENDPOINT__: JSON.stringify((process.env.CRDS_GATEWAY_CLIENT_ENDPOINT + 'api/image/profile/') || 'https://gatewayint.crossroads.net/gateway/api/image/profile/'),
+      __HEADER_CONTENTBLOCK_TITLE__: JSON.stringify(process.env.HEADER_CONTENTBLOCK_TITLE || 'sharedGlobalHeader'),
+      __APP_CLIENT_ENDPOINT__: JSON.stringify(process.env.CRDS_APP_CLIENT_ENDPOINT || '/')
     };
   },
   getTest() {

@@ -40,7 +40,7 @@
       var options = {
         el: '[data-header]',
         cmsEndpoint: __CMS_CLIENT_ENDPOINT__,
-        appEndpoint: __GATEWAY_CLIENT_ENDPOINT__,
+        appEndpoint: __APP_CLIENT_ENDPOINT__,
         imgEndpoint: __IMG_ENDPOINT__,
         crdsCookiePrefix: __CRDS_ENV__,
         contentBlockTitle: __HEADER_CONTENTBLOCK_TITLE__,
