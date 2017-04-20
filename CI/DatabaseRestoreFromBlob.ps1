@@ -9,7 +9,7 @@
 Param (
   [Parameter(Mandatory=$true)]
   [string]$DBServer,
-  [string]$DBName = "MinistryPlatform", # default to MinistryPlatform
+  [string]$DBName = "TestRestoreProcess", # default to MinistryPlatform
   [Parameter(Mandatory=$true)]
   [string]$BackupUrl,
   [string]$DBUser = $(Get-ChildItem Env:MP_TARGET_DB_USER).Value, # Default to environment variable
