@@ -12,6 +12,7 @@ using crds_angular.Services.Interfaces;
 using Crossroads.ApiVersioning;
 using Crossroads.Web.Common.Security;
 using System.ComponentModel.DataAnnotations;
+using crds_angular.Exceptions;
 using crds_angular.Models.AwsCloudsearch;
 using crds_angular.Models.Crossroads.Groups;
 using log4net;
@@ -60,8 +61,8 @@ namespace crds_angular.Controllers.API
 
         [ResponseType(typeof(PinDto))]
         [VersionedRoute(template: "finder/pinByGroupID/{groupId}", minimumVersion: "1.0.0")]
-        [System.Web.Http.Route("finder/pinByGroupID/{groupId}")]
-        [System.Web.Http.HttpGet]
+        [Route("finder/pinByGroupID/{groupId}")]
+        [HttpGet]
         public IHttpActionResult GetPinDetailsByGroup([FromUri]int groupId)
         {
             try
@@ -78,8 +79,8 @@ namespace crds_angular.Controllers.API
 
         [ResponseType(typeof(GroupParticipantDTO[]))]
         [VersionedRoute(template: "finder/participants/{groupId}", minimumVersion: "1.0.0")]
-        [System.Web.Http.Route("finder/participants/{groupId}")]
-        [System.Web.Http.HttpGet]
+        [Route("finder/participants/{groupId}")]
+        [HttpGet]
         public IHttpActionResult GetParticipantsForGroup([FromUri]int groupId)
         {
             try
@@ -96,8 +97,8 @@ namespace crds_angular.Controllers.API
 
         [ResponseType(typeof(PinDto))]
         [VersionedRoute(template: "finder/pin/contact/{contactId}/{throwOnEmptyCoordinates?}", minimumVersion: "1.0.0")]
-        [System.Web.Http.Route("finder/pin/contact/{contactId}/{throwOnEmptyCoordinates?}")]
-        [System.Web.Http.HttpGet]
+        [Route("finder/pin/contact/{contactId}/{throwOnEmptyCoordinates?}")]
+        [HttpGet]
         public IHttpActionResult GetPinDetailsByContact([FromUri]int contactId, [FromUri]bool throwOnEmptyCoordinates = true)
         {
             try
@@ -123,8 +124,8 @@ namespace crds_angular.Controllers.API
 
         [ResponseType(typeof(AddressDTO))]
         [VersionedRoute(template: "finder/pinbyip/{ipAddress}", minimumVersion: "1.0.0")]
-        [System.Web.Http.Route("finder/pinbyip/{ipAddress}")]
-        [System.Web.Http.HttpGet]
+        [Route("finder/pinbyip/{ipAddress}")]
+        [HttpGet]
         public IHttpActionResult GetPinByIpAddress([FromUri]string ipAddress)
         {
             try
@@ -143,8 +144,8 @@ namespace crds_angular.Controllers.API
         [RequiresAuthorization]
         [ResponseType(typeof(AddressDTO))]
         [VersionedRoute(template: "finder/group/address/{groupId}", minimumVersion: "1.0.0")]
-        [System.Web.Http.Route("finder/group/address/{groupId}")]
-        [System.Web.Http.HttpGet]
+        [Route("finder/group/address/{groupId}")]
+        [HttpGet]
         public IHttpActionResult GetGroupAddress([FromUri] int groupId)
         {
             return Authorized(token =>
@@ -166,8 +167,8 @@ namespace crds_angular.Controllers.API
         [RequiresAuthorization]
         [ResponseType(typeof(AddressDTO))]
         [VersionedRoute(template: "finder/person/address/{participantId}", minimumVersion: "1.0.0")]
-        [System.Web.Http.Route("finder/person/address/{participantId}")]
-        [System.Web.Http.HttpGet]
+        [Route("finder/person/address/{participantId}")]
+        [HttpGet]
         public IHttpActionResult GetPersonAddress([FromUri] int participantId)
         {
             return Authorized(token =>
@@ -192,8 +193,8 @@ namespace crds_angular.Controllers.API
         [RequiresAuthorization]
         [ResponseType(typeof(PinDto))]
         [VersionedRoute(template: "finder/pin", minimumVersion: "1.0.0")]
-        [System.Web.Http.Route("finder/pin")]
-        [System.Web.Http.HttpPost]
+        [Route("finder/pin")]
+        [HttpPost]
         public IHttpActionResult PostPin([FromBody] PinDto pin)
         {
             return Authorized(token =>
@@ -232,8 +233,8 @@ namespace crds_angular.Controllers.API
 
         [ResponseType(typeof(PinSearchResultsDto))]
         [VersionedRoute(template: "finder/findpinsbyaddress/{userSearchAddress}/{lat?}/{lng?}/{upperleftlat?}/{upperleftlng?}/{bottomrightlat?}/{bottomrightlng?}", minimumVersion: "1.0.0")]
-        [System.Web.Http.Route("finder/findpinsbyaddress/{userSearchAddress}/{lat?}/{lng?}/{upperleftlat?}/{upperleftlng?}/{bottomrightlat?}/{bottomrightlng?}")]
-        [System.Web.Http.HttpGet]
+        [Route("finder/findpinsbyaddress/{userSearchAddress}/{lat?}/{lng?}/{upperleftlat?}/{upperleftlng?}/{bottomrightlat?}/{bottomrightlng?}")]
+        [HttpGet]
         public IHttpActionResult GetFindPinsByAddress([FromUri]string userSearchAddress, [FromUri]string lat = "0", [FromUri]string lng = "0", [FromUri]string upperleftlat = "0", [FromUri]string upperleftlng = "0", [FromUri]string bottomrightlat = "0", [FromUri]string bottomrightlng = "0")
         {
             try
@@ -315,8 +316,8 @@ namespace crds_angular.Controllers.API
         /// </summary>
         [RequiresAuthorization]
         [VersionedRoute(template: "finder/pin/invitetogathering/{gatheringId}", minimumVersion: "1.0.0")]
-        [System.Web.Http.Route("finder/pin/invitetogathering/{gatheringId}")]
-        [System.Web.Http.HttpPost]
+        [Route("finder/pin/invitetogathering/{gatheringId}")]
+        [HttpPost]
         public IHttpActionResult InviteToGathering([FromUri] int gatheringId, [FromBody] User person)
         {
             if (!ModelState.IsValid)
@@ -352,8 +353,8 @@ namespace crds_angular.Controllers.API
         /// </summary>
         [RequiresAuthorization]
         [VersionedRoute(template: "finder/pin/gatheringjoinrequest", minimumVersion: "1.0.0")]
-        [System.Web.Http.Route("finder/pin/gatheringjoinrequest")]
-        [System.Web.Http.HttpPost]
+        [Route("finder/pin/gatheringjoinrequest")]
+        [HttpPost]
         public IHttpActionResult GatheringJoinRequest([FromBody]int gatheringId)
         {
             return Authorized(token =>
@@ -383,6 +384,35 @@ namespace crds_angular.Controllers.API
             });
         }
 
+        /// <summary>
+        /// Logged in user requests to be a host
+        /// </summary>
+        [RequiresAuthorization]
+        [VersionedRoute(template: "finder/pin/requesttobehost", minimumVersion: "1.0.0")]
+        [Route("finder/pin/requesttobehost")]
+        [HttpPost]
+        public IHttpActionResult RequestToBeHost([FromBody]HostRequestDto hostRequest)
+        {
+            return Authorized(token =>
+            {
+                try
+                {
+
+                    _finderService.RequestToBeHost(token, hostRequest);
+                    return Ok();
+                }
+                catch (GatheringException e)
+                {
+                    _logger.Error("Host already has a gathering at this location.", e);
+                    throw new HttpResponseException(HttpStatusCode.NotAcceptable);
+                }
+                catch (Exception e)
+                {
+                    _logger.Error("Could not generate request", e);
+                    throw new HttpResponseException(new ApiErrorDto("Gathering request failed", e).HttpResponseMessage);
+                }
+            });
+        }
 
         [ResponseType(typeof(PinSearchResultsDto))]
         [VersionedRoute(template: "finder/uploadallcloudsearchrecords", minimumVersion: "1.0.0")]

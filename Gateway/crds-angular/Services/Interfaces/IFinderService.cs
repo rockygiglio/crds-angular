@@ -4,7 +4,6 @@ using crds_angular.Models.AwsCloudsearch;
 using crds_angular.Models.Finder;
 using crds_angular.Models.Crossroads;
 using crds_angular.Models.Crossroads.Groups;
-using crds_angular.Models.Crossroads.Profile;
 
 namespace crds_angular.Services.Interfaces
 {
@@ -26,5 +25,6 @@ namespace crds_angular.Services.Interfaces
         List<GroupParticipantDTO> GetParticipantsForGroup(int groupId);
         AddressDTO GetGroupAddress(string token, int groupId);
         AddressDTO GetPersonAddress(string token, int participantId);
+        void RequestToBeHost(string token, HostRequestDto hostRequest);
     }
 }

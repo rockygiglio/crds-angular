@@ -403,7 +403,7 @@ namespace crds_angular.Services
                 detail.GroupDescription = g.GroupDescription;
                 detail.GroupId = g.GroupId;
                 detail.GroupFullInd = g.Full;
-                detail.WaitListInd = g.WaitList;
+                detail.WaitListInd = g.WaitList ?? false;
                 detail.ChildCareAvailable = g.ChildCareAvailable;
                 detail.WaitListGroupId = g.WaitListGroupId;
                 detail.OnlineRsvpMinimumAge = g.MinimumAge;
