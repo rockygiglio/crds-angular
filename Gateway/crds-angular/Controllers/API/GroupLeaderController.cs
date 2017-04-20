@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Http;
 using crds_angular.Exceptions.Models;
@@ -39,9 +40,23 @@ namespace crds_angular.Controllers.API
 
         [VersionedRoute(template: "group-leader/spiritual-growth", minimumVersion: "1.0.0")]
         [HttpPost]
-        public async Task<IHttpActionResult> SaveSpiritualGrowth(/* [FromBody] type spiritualGrowth */)
+        public async Task<IHttpActionResult> SaveSpiritualGrowth([FromBody] SpiritualGrowthDTO spiritualGrowth)
         {
-            
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    return Ok();
+                }
+                catch (Exception e)
+                {
+                    var apiError = new ApiErrorDto("Saving Leader Profile failed:", e);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+            }
+            var errors = ModelState.Values.SelectMany(val => val.Errors).Aggregate("", (current, err) => current + err.ErrorMessage);
+            var dataError = new ApiErrorDto("Spiritual Growth Data Invalid", new InvalidOperationException("Invalid Spiritual Growth Data" + errors));
+            throw new HttpResponseException(dataError.HttpResponseMessage);
         }
     }
 }

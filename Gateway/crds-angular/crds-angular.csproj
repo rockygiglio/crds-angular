@@ -349,6 +349,7 @@
     <Compile Include="Models\Crossroads\GoVolunteer\CincinnatiRegistration.cs" />
     <Compile Include="Models\Crossroads\GoVolunteer\Project.cs" />
     <Compile Include="Models\Crossroads\GroupLeader\GroupLeaderProfileDTO.cs" />
+    <Compile Include="Models\Crossroads\GroupLeader\SpiritualGrowthDTO.cs" />
     <Compile Include="Models\Finder\GeoCoordinates.cs" />
     <Compile Include="Models\Finder\PinSearchResultsDto.cs" />
     <Compile Include="Models\Finder\PinDto.cs" />
