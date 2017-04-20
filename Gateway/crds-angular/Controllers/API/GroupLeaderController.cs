@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Reactive.Linq;
 using System.Threading.Tasks;
 using System.Web.Http;
 using crds_angular.Exceptions.Models;
@@ -46,6 +47,7 @@ namespace crds_angular.Controllers.API
             {
                 try
                 {
+                    _groupLeaderService.SaveSpiritualGrowth(spiritualGrowth).Wait();
                     return Ok();
                 }
                 catch (Exception e)

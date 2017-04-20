@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Reactive.Linq;
@@ -7,7 +6,6 @@ using System.Threading.Tasks;
 using System.Web.Http.Controllers;
 using System.Web.Http.Results;
 using crds_angular.Controllers.API;
-using crds_angular.Models.Crossroads.GoVolunteer;
 using crds_angular.Models.Crossroads.GroupLeader;
 using crds_angular.Services.Interfaces;
 using Crossroads.Web.Common.Security;
@@ -91,21 +89,27 @@ namespace crds_angular.test.controllers
         }
 
         [Test]
-        public void ShouldSaveSpiritualGrowthAnswers()
+        public async void ShouldSaveSpiritualGrowthAnswers()
         {
-            Assert.Fail();
+            var mockSpiritualGrowth = SpiritualGrowthMock();
+
+            _groupLeaderService.Setup(m => m.SaveSpiritualGrowth(It.IsAny<SpiritualGrowthDTO>())).Returns(Observable.Start(() => 1));
+
+            var response = await _fixture.SaveSpiritualGrowth(mockSpiritualGrowth);
+            Assert.IsInstanceOf<OkResult>(response);
         }
 
         [Test]
         public void ShouldThrowExceptionWhenSpiritualGrowthAnswersArentSaved()
         {
-            Assert.Fail();
-        }
+            var mockSpiritualGrowth = SpiritualGrowthMock();
 
-        [Test]
-        public void ShouldOnlyAllowAuthenticatedUsersToSaveSpiritualGrowthAnswers()
-        {
-            Assert.Fail();
+            _groupLeaderService.Setup(m => m.SaveSpiritualGrowth(It.IsAny<SpiritualGrowthDTO>())).Throws(new Exception());
+
+            Assert.Throws<HttpResponseException>(async () =>
+            {
+                await _fixture.SaveSpiritualGrowth(mockSpiritualGrowth);
+            });
         }
 
         private static GroupLeaderProfileDTO GroupLeaderMock()
@@ -119,6 +123,17 @@ namespace crds_angular.test.controllers
                 NickName = "Matt",
                 Site = 1,
                 OldEmail = "matt.silbernagel@ingagepartners.com"
+            };
+        }
+
+        private static SpiritualGrowthDTO SpiritualGrowthMock()
+        {
+            return new SpiritualGrowthDTO()
+            {
+                ContactId = 654321,
+                EmailAddress = "hornerjn@gmail.com",
+                Story = "my diary",
+                Taught = "i lEarnDed hOw to ReAd"
             };
         }
     }

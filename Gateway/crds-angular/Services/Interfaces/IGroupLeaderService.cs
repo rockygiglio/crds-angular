@@ -7,7 +7,7 @@ namespace crds_angular.Services.Interfaces
     public interface IGroupLeaderService
     {
         Task SaveProfile(string token, GroupLeaderProfileDTO leader);
-        IObservable<int> SaveSpiritualGrowth(string token, SpiritualGrowthDTO spiritualGrowth);
+        IObservable<int> SaveSpiritualGrowth(SpiritualGrowthDTO spiritualGrowth);
     }
     
 }

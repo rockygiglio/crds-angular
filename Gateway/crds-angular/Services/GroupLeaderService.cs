@@ -55,7 +55,7 @@ namespace crds_angular.Services
             );
         }
 
-        public IObservable<int> SaveSpiritualGrowth(string token, SpiritualGrowthDTO spiritualGrowth)
+        public IObservable<int> SaveSpiritualGrowth(SpiritualGrowthDTO spiritualGrowth)
         {
             var form = new MpFormResponse()
             {

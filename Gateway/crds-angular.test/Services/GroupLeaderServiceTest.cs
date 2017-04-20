@@ -135,8 +135,6 @@ namespace crds_angular.test.Services
         [Test]
         public void ShouldSaveSpiritualGrowthAnswers()
         {
-            const string fakeToken = "letmein";
-            const int fakeUserId = 123456;
             const int fakeFormId = 5;
             const int fakeStoryFieldId = 1;
             const int fakeTaughtFieldId = 2;
@@ -144,7 +142,6 @@ namespace crds_angular.test.Services
             
             var growthDto = SpiritualGrowthMock();
 
-            //_userRepo.Setup(m => m.GetUserIdByUsername(growthDto.EmailAddress)).Returns(fakeUserId);
             _configurationWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderFormId")).Returns(fakeFormId);
             _configurationWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderFormStoryFieldId")).Returns(fakeStoryFieldId);
             _configurationWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderFormTaughtFieldId")).Returns(fakeTaughtFieldId);
@@ -155,15 +152,13 @@ namespace crds_angular.test.Services
                 return fakeResponseId;
             });
 
-            var responseId = _fixture.SaveSpiritualGrowth(fakeToken, growthDto).Wait();
+            var responseId = _fixture.SaveSpiritualGrowth(growthDto).Wait();
             Assert.AreEqual(fakeResponseId, responseId);
         }
 
         [Test]
         public void ShouldThrowExceptionWhenSavingSpiritualGrowthFails()
         {
-            const string fakeToken = "letmein";
-            const int fakeUserId = 123456;
             const int fakeFormId = 5;
             const int fakeStoryFieldId = 1;
             const int fakeTaughtFieldId = 2;
@@ -171,7 +166,6 @@ namespace crds_angular.test.Services
 
             var growthDto = SpiritualGrowthMock();
 
-            //_userRepo.Setup(m => m.GetUserIdByUsername(growthDto.EmailAddress)).Returns(fakeUserId);
             _configurationWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderFormId")).Returns(fakeFormId);
             _configurationWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderFormStoryFieldId")).Returns(fakeStoryFieldId);
             _configurationWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderFormTaughtFieldId")).Returns(fakeTaughtFieldId);
@@ -182,7 +176,7 @@ namespace crds_angular.test.Services
                 return errorResponseId;
             });
 
-            Assert.Throws<ApplicationException>(() => _fixture.SaveSpiritualGrowth(fakeToken, growthDto).Wait());
+            Assert.Throws<ApplicationException>(() => _fixture.SaveSpiritualGrowth(growthDto).Wait());
         }
 
 
