@@ -83,9 +83,9 @@ ALTER DATABASE [$DBName] SET OFFLINE WITH ROLLBACK IMMEDIATE;
 
 RESTORE DATABASE [$DBName]
 FROM URL = N'$backupUrl' 
-WITH CREDENTIAL = N'$StorageCred', FILE = 1, NOUNLOAD, REPLACE, STATS = 5;
---MOVE N'$logFileName' TO N'$logFilePhysicalName',
---MOVE N'$dataFileName' TO N'$dataFilePhysicalName';
+WITH CREDENTIAL = N'$StorageCred', FILE = 1, NOUNLOAD, REPLACE, STATS = 5,
+MOVE N'$logFileName' TO N'$logFilePhysicalName',
+MOVE N'$dataFileName' TO N'$dataFilePhysicalName';
 
 ALTER DATABASE [$DBName] SET ONLINE;
 "@;
