@@ -9,7 +9,7 @@
 Param (
   [Parameter(Mandatory=$true)]
   [string]$DBServer,
-  [string]$DBName = "TestRestoreProcess", # default to MinistryPlatform
+  [string]$DBName = "MinistryPlatform", # default to MinistryPlatform
   [Parameter(Mandatory=$true)]
   [string]$BackupUrl,
   [string]$DBUser = $(Get-ChildItem Env:MP_TARGET_DB_USER).Value, # Default to environment variable
@@ -81,11 +81,11 @@ USE [master];
 
 ALTER DATABASE [$DBName] SET OFFLINE WITH ROLLBACK IMMEDIATE;
 
-RESTORE DATABASE [$DBName]
+RESTORE DATABASE [$DBName] 
 FROM URL = N'$backupUrl' 
 WITH CREDENTIAL = N'$StorageCred', FILE = 1, NOUNLOAD, REPLACE, STATS = 5,
-MOVE N'$logFileName' TO N'$logFilePhysicalName',
-MOVE N'$dataFileName' TO N'$dataFilePhysicalName';
+MOVE N'MinistryPlatform' TO N'$logFilePhysicalName',
+MOVE N'MinistryPlatform_log' TO N'$dataFilePhysicalName';
 
 ALTER DATABASE [$DBName] SET ONLINE;
 "@;
