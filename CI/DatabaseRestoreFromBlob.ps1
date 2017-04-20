@@ -34,9 +34,7 @@ Param (
   [string] $EmailUserName,
   [Parameter(Mandatory=$true)]
   [string] $RegisterApiPasswordHash,
-  [Parameter(Mandatory=$true)]
   [string] $ReportingServerAddress,
-  [Parameter(Mandatory=$true)]
   [string] $SMTPServerName
 )
 
