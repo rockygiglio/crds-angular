@@ -22,9 +22,12 @@
           <QueryParameter Name="EventCongregations">
             <Value>=Join(Parameters!CongregationId.Value,",")</Value>
           </QueryParameter>
+          <QueryParameter Name="EventType">
+            <Value>=Parameters!EventType.Value</Value>
+          </QueryParameter>
         </QueryParameters>
         <CommandType>StoredProcedure</CommandType>
-        <CommandText>report_CRDS_Checkin_New_Families</CommandText>
+        <CommandText>report_CRDS_Checkin_Guest_Families</CommandText>
         <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
       </Query>
       <Fields>
@@ -934,6 +937,22 @@ FROM
         </DataSetReference>
       </ValidValues>
       <MultiValue>true</MultiValue>
+    </ReportParameter>
+    <ReportParameter Name="EventType">
+      <DataType>Integer</DataType>
+      <Prompt>Event Type</Prompt>
+      <ValidValues>
+        <ParameterValues>
+          <ParameterValue>
+            <Value>1</Value>
+            <Label>Kids Club</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>2</Value>
+            <Label>Student Ministry</Label>
+          </ParameterValue>
+        </ParameterValues>
+      </ValidValues>
     </ReportParameter>
   </ReportParameters>
   <ConsumeContainerWhitespace>true</ConsumeContainerWhitespace>
