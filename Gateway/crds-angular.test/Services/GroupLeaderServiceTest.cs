@@ -20,7 +20,8 @@ namespace crds_angular.test.Services
         private Mock<IUserRepository> _userRepo;
         private Mock<IPersonService> _personService;
         private Mock<IFormSubmissionRepository> _formService;
-        private Mock<IConfigurationWrapper> _configWrapper;
+        private Mock<IContactRepository> _contactRepo;
+        private Mock<IConfigurationWrapper> _configurationWrapper;
         private IGroupLeaderService _fixture;
 
         [SetUp]
@@ -29,8 +30,9 @@ namespace crds_angular.test.Services
             _userRepo = new Mock<IUserRepository>();
             _personService = new Mock<IPersonService>();
             _formService = new Mock<IFormSubmissionRepository>();
-            _configWrapper = new Mock<IConfigurationWrapper>();
-            _fixture = new GroupLeaderService(_personService.Object, _userRepo.Object, _formService.Object, _configWrapper.Object);
+            _contactRepo = new Mock<IContactRepository>();
+            _configurationWrapper = new Mock<IConfigurationWrapper>();
+            _fixture = new GroupLeaderService(_personService.Object, _userRepo.Object, _formService.Object, _configurationWrapper.Object);
         }
 
         [TearDown]
@@ -38,6 +40,9 @@ namespace crds_angular.test.Services
         {
             _personService.VerifyAll();
             _userRepo.VerifyAll();
+            _formService.VerifyAll();
+            _contactRepo.VerifyAll();
+            _configurationWrapper.VerifyAll();
         }
 
         [Test]
@@ -71,7 +76,7 @@ namespace crds_angular.test.Services
                 Thread.Sleep(5000);
                 Assert.AreEqual(leaderDto.Email, userData["User_Name"]);
                 Assert.AreEqual(leaderDto.Email, userData["User_Email"]);
-            }); ;
+            });
             _personService.Setup(m => m.SetProfile(fakeToken, It.IsAny<Person>())).Callback((string token, Person person) =>
             {
                 Assert.AreEqual(person.GetContact().Display_Name, $"{leaderDto.LastName}, {leaderDto.NickName}");
@@ -136,10 +141,10 @@ namespace crds_angular.test.Services
             const int groupLeaderHuddle = 92;
             const int groupLeaderStudent = 126;
 
-            _configWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderFormId")).Returns(groupLeaderFormConfig);
-            _configWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderReferenceFieldId")).Returns(groupLeaderReference);
-            _configWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderHuddleFieldId")).Returns(groupLeaderHuddle);
-            _configWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderStudentFieldId")).Returns(groupLeaderStudent);
+            _configurationWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderFormId")).Returns(groupLeaderFormConfig);
+            _configurationWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderReferenceFieldId")).Returns(groupLeaderReference);
+            _configurationWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderHuddleFieldId")).Returns(groupLeaderHuddle);
+            _configurationWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderStudentFieldId")).Returns(groupLeaderStudent);
 
             _formService.Setup(m => m.SubmitFormResponse(It.IsAny<MpFormResponse>())).Returns((MpFormResponse form) =>
             {
@@ -149,8 +154,8 @@ namespace crds_angular.test.Services
             var responseId = _fixture.SaveReferences(fakeDto).Wait();
             Assert.AreEqual(responseId, 1);
         }
-
-        [Test]
+	
+	[Test]
         public void ShouldThrowExceptionWhenSaveReferenceDataFails()
         {
             var fakeDto = GroupLeaderMock();
@@ -160,10 +165,10 @@ namespace crds_angular.test.Services
             const int groupLeaderHuddle = 92;
             const int groupLeaderStudent = 126;
 
-            _configWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderFormId")).Returns(groupLeaderFormConfig);
-            _configWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderReferenceFieldId")).Returns(groupLeaderReference);
-            _configWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderHuddleFieldId")).Returns(groupLeaderHuddle);
-            _configWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderStudentFieldId")).Returns(groupLeaderStudent);
+            _configurationWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderFormId")).Returns(groupLeaderFormConfig);
+            _configurationWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderReferenceFieldId")).Returns(groupLeaderReference);
+            _configurationWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderHuddleFieldId")).Returns(groupLeaderHuddle);
+            _configurationWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderStudentFieldId")).Returns(groupLeaderStudent);
 
             _formService.Setup(m => m.SubmitFormResponse(It.IsAny<MpFormResponse>())).Returns((MpFormResponse form) =>
             {
@@ -172,6 +177,53 @@ namespace crds_angular.test.Services
             });
 
             Assert.Throws<ApplicationException>(() => _fixture.SaveReferences(fakeDto).Wait());
+        }
+
+        [Test]
+        public void ShouldSaveSpiritualGrowthAnswers()
+        {
+            const int fakeFormId = 5;
+            const int fakeStoryFieldId = 1;
+            const int fakeTaughtFieldId = 2;
+            const int fakeResponseId = 10;
+            
+            var growthDto = SpiritualGrowthMock();
+
+            _configurationWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderFormId")).Returns(fakeFormId);
+            _configurationWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderFormStoryFieldId")).Returns(fakeStoryFieldId);
+            _configurationWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderFormTaughtFieldId")).Returns(fakeTaughtFieldId);
+
+            _formService.Setup(m => m.SubmitFormResponse(It.IsAny<MpFormResponse>())).Returns((MpFormResponse form) =>
+            {
+                Assert.AreEqual(fakeFormId, form.FormId);
+                return fakeResponseId;
+            });
+
+            var responseId = _fixture.SaveSpiritualGrowth(growthDto).Wait();
+            Assert.AreEqual(fakeResponseId, responseId);
+        }
+
+        [Test]
+        public void ShouldThrowExceptionWhenSavingSpiritualGrowthFails()
+        {
+            const int fakeFormId = 5;
+            const int fakeStoryFieldId = 1;
+            const int fakeTaughtFieldId = 2;
+            const int errorResponseId = 0;
+
+            var growthDto = SpiritualGrowthMock();
+
+            _configurationWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderFormId")).Returns(fakeFormId);
+            _configurationWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderFormStoryFieldId")).Returns(fakeStoryFieldId);
+            _configurationWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderFormTaughtFieldId")).Returns(fakeTaughtFieldId);
+
+            _formService.Setup(m => m.SubmitFormResponse(It.IsAny<MpFormResponse>())).Returns((MpFormResponse form) =>
+            {
+                Assert.AreEqual(fakeFormId, form.FormId);
+                return errorResponseId;
+            });
+
+            Assert.Throws<ApplicationException>(() => _fixture.SaveSpiritualGrowth(growthDto).Wait());
         }
 
         private static GroupLeaderProfileDTO GroupLeaderMock()
@@ -189,6 +241,17 @@ namespace crds_angular.test.Services
                 HuddleResponse = "No",
                 LeadStudents = "Yes",
                 ReferenceContactId = "89158"
+            };
+        }
+
+        private static SpiritualGrowthDTO SpiritualGrowthMock()
+        {
+            return new SpiritualGrowthDTO()
+            {
+                ContactId = 654321,
+                EmailAddress = "hornerjn@gmail.com",
+                Story = "my diary",
+                Taught = "i lEarnDed hOw to ReAd"
             };
         }
     }

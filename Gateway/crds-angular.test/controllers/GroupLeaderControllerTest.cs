@@ -91,6 +91,30 @@ namespace crds_angular.test.controllers
 
         }
 
+        [Test]
+        public async void ShouldSaveSpiritualGrowthAnswers()
+        {
+            var mockSpiritualGrowth = SpiritualGrowthMock();
+
+            _groupLeaderService.Setup(m => m.SaveSpiritualGrowth(It.IsAny<SpiritualGrowthDTO>())).Returns(Observable.Start(() => 1));
+
+            var response = await _fixture.SaveSpiritualGrowth(mockSpiritualGrowth);
+            Assert.IsInstanceOf<OkResult>(response);
+        }
+
+        [Test]
+        public void ShouldThrowExceptionWhenSpiritualGrowthAnswersArentSaved()
+        {
+            var mockSpiritualGrowth = SpiritualGrowthMock();
+
+            _groupLeaderService.Setup(m => m.SaveSpiritualGrowth(It.IsAny<SpiritualGrowthDTO>())).Throws(new Exception());
+
+            Assert.Throws<HttpResponseException>(async () =>
+            {
+                await _fixture.SaveSpiritualGrowth(mockSpiritualGrowth);
+            });
+        }
+
         private static GroupLeaderProfileDTO GroupLeaderMock()
         {
             return new GroupLeaderProfileDTO()
@@ -102,6 +126,17 @@ namespace crds_angular.test.controllers
                 NickName = "Matt",
                 Site = 1,
                 OldEmail = "matt.silbernagel@ingagepartners.com"
+            };
+        }
+
+        private static SpiritualGrowthDTO SpiritualGrowthMock()
+        {
+            return new SpiritualGrowthDTO()
+            {
+                ContactId = 654321,
+                EmailAddress = "hornerjn@gmail.com",
+                Story = "my diary",
+                Taught = "i lEarnDed hOw to ReAd"
             };
         }
     }
