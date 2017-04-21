@@ -30,8 +30,16 @@ namespace crds_angular.Controllers.API
         {
             return await Authorized(token =>
             {
-                _groupLeaderService.SetInterested(token);
-                return Ok();
+                try
+                {
+                    _groupLeaderService.SetInterested(token);
+                    return Ok();
+                }
+                catch (Exception e)
+                {
+                    var apiError = new ApiErrorDto("Failed to start the application", e);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
             });
         }
 

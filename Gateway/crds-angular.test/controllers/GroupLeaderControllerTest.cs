@@ -91,6 +91,29 @@ namespace crds_angular.test.controllers
 
         }
 
+        [Test]
+        public async void ShouldSaveInterestedStaus()
+        {
+            _fixture.Request.Headers.Authorization = new AuthenticationHeaderValue(authType, authToken);
+            _groupLeaderService.Setup(m => m.SetInterested($"{authType} {authToken}"));
+
+            var response = await _fixture.InterestedInGroupLeadership();
+            Assert.IsNotNull(response);
+            Assert.IsInstanceOf<OkResult>(response);
+        }
+
+        [Test]
+        public void ShouldThrowWhenSavingInterestedStaus()
+        {
+            _fixture.Request.Headers.Authorization = new AuthenticationHeaderValue(authType, authToken);
+            _groupLeaderService.Setup(m => m.SetInterested($"{authType} {authToken}")).Throws(new Exception());
+
+            Assert.Throws<HttpResponseException>(async () =>
+            {
+                await _fixture.InterestedInGroupLeadership();
+            });
+        }
+
         private static GroupLeaderProfileDTO GroupLeaderMock()
         {
             return new GroupLeaderProfileDTO()
