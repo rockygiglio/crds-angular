@@ -49,8 +49,9 @@ namespace crds_angular.Controllers.API
         {
             try
             {
-                var list = _finderService.GetPinDetailsForPerson(participantId);
-                return Ok(list);
+                var pin = _finderService.GetPinDetailsForPerson(participantId);
+                pin.Address = _finderService.RandomizeLatLong(pin.Address);
+                return Ok(pin);
             }
             catch (Exception ex)
             {
@@ -113,6 +114,7 @@ namespace crds_angular.Controllers.API
                 {
                    return Content(HttpStatusCode.ExpectationFailed, "Invalid Latitude/Longitude");
                 }
+                pin.Address = _finderService.RandomizeLatLong(pin.Address);
                 return Ok(pin);
             }
             catch (Exception ex)
