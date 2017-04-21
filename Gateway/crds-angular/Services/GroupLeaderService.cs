@@ -114,11 +114,10 @@ namespace crds_angular.Services
                     }
                 }
             };
-            Console.WriteLine(form.FormId);
+
             return Observable.Create<int>(observer =>
             {
                 var responseId = _formSubmissionRepository.SubmitFormResponse(form);
-                Console.WriteLine(responseId);
                 if (responseId == 0)
                 {
                     observer.OnError(new ApplicationException("Unable to submit Spiritual Growth form for Group Leader"));
