@@ -49,8 +49,9 @@ namespace crds_angular.Controllers.API
         {
             try
             {
-                var list = _finderService.GetPinDetailsForPerson(participantId);
-                return Ok(list);
+                var pin = _finderService.GetPinDetailsForPerson(participantId);
+                pin.Address = _finderService.RandomizeLatLong(pin.Address);
+                return Ok(pin);
             }
             catch (Exception ex)
             {
@@ -113,6 +114,7 @@ namespace crds_angular.Controllers.API
                 {
                    return Content(HttpStatusCode.ExpectationFailed, "Invalid Latitude/Longitude");
                 }
+                pin.Address = _finderService.RandomizeLatLong(pin.Address);
                 return Ok(pin);
             }
             catch (Exception ex)
@@ -284,13 +286,6 @@ namespace crds_angular.Controllers.API
                     var centerLongitude = originCoords.Longitude;
 
                     var pinsForContact = _finderService.GetMyPins(token, originCoords, contactId);
-                    foreach (var pin in pinsForContact)
-                    {
-                        if (pin.PinType != PinType.PERSON) //person pin is already randomized in FinderService.GetPinDetailsForPerson()
-                        {
-                            pin.Address = _finderService.RandomizeLatLong(pin.Address);
-                        }
-                    }
 
                     if (pinsForContact.Count > 0)
                     {
