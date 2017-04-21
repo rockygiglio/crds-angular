@@ -135,9 +135,6 @@ namespace crds_angular.Services
 
         public void UpdateHouseholdAddress(PinDto pin)
         {
-            // TODO is this supposed to be gone?? merge conflicts
-            // _addressService.SetGeoCoordinates(pin.Address);
-
             var coordinates = _addressService.GetGeoLocationCascading(pin.Address);
             pin.Address.Latitude = coordinates.Latitude;
             pin.Address.Longitude = coordinates.Longitude;
@@ -179,6 +176,15 @@ namespace crds_angular.Services
             // get contact data
             var contact = _contactRepository.GetContactById(hostRequest.ContactId);
             var participant = _participantRepository.GetParticipant(hostRequest.ContactId);
+
+            //update mobile phone number on contact record
+            contact.Mobile_Phone = hostRequest.ContactNumber;
+            var updateToDictionary = new Dictionary<string, object>
+                {
+                    {"Contact_ID", hostRequest.ContactId},
+                    {"Mobile_Phone",hostRequest.ContactNumber}
+                };
+            _contactRepository.UpdateContact(hostRequest.ContactId, updateToDictionary);
 
             // create the address for the group
             var hostAddressId = _addressService.CreateAddress(hostRequest.Address);

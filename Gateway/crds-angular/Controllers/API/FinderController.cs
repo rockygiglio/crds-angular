@@ -392,7 +392,6 @@ namespace crds_angular.Controllers.API
             {
                 try
                 {
-
                     _finderService.RequestToBeHost(token, hostRequest);
                     return Ok();
                 }
