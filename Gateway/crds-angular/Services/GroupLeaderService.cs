@@ -95,10 +95,9 @@ namespace crds_angular.Services
             {
                 throw new Exception($"Unable to find the user account for {leader.OldEmail}", e);
             }
-           return Observable.Zip(
+            return Observable.Zip(
                 Observable.Start(() => _personService.SetProfile(token, person)),
-                Observable.Start(() => _userRepository.UpdateUser(userUpdates))                
-                );
+                Observable.Start(() => _userRepository.UpdateUser(userUpdates)));
         }
 
         private void SetGroupLeaderStatus(MpParticipant participant, int statusId)
@@ -106,5 +105,39 @@ namespace crds_angular.Services
             participant.GroupLeaderStatus = statusId;
             _participantRepository.UpdateParticipant(participant);
         }
-    }
+
+        public IObservable<int> SaveSpiritualGrowth(SpiritualGrowthDTO spiritualGrowth)
+        {
+            var form = new MpFormResponse()
+            {
+                ContactId = spiritualGrowth.ContactId,
+                FormId = _configWrapper.GetConfigIntValue("GroupLeaderFormId"),
+                FormAnswers = new List<MpFormAnswer>
+                {
+                    new MpFormAnswer
+                    {
+                        FieldId = _configWrapper.GetConfigIntValue("GroupLeaderFormStoryFieldId"),
+                        Response = spiritualGrowth.Story
+                    },
+                    new MpFormAnswer
+                    {
+                        FieldId = _configWrapper.GetConfigIntValue("GroupLeaderFormTaughtFieldId"),
+                        Response = spiritualGrowth.Taught
+                    }
+                }
+            };
+
+            return Observable.Create<int>(observer =>
+            {
+                var responseId = _formSubmissionRepository.SubmitFormResponse(form);
+                if (responseId == 0)
+                {
+                    observer.OnError(new ApplicationException("Unable to submit Spiritual Growth form for Group Leader"));
+                }
+                observer.OnNext(responseId);
+                observer.OnCompleted();
+                return Disposable.Create(() => Console.WriteLine("Observable Destroyed"));
+            });
+        }
+   }
 }

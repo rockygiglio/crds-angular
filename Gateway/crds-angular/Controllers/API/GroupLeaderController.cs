@@ -70,5 +70,27 @@ namespace crds_angular.Controllers.API
             var dataError = new ApiErrorDto("Registration Data Invalid", new InvalidOperationException("Invalid Registration Data" + errors));
             throw new HttpResponseException(dataError.HttpResponseMessage);
         }
+
+        [VersionedRoute(template: "group-leader/spiritual-growth", minimumVersion: "1.0.0")]
+        [HttpPost]
+        public async Task<IHttpActionResult> SaveSpiritualGrowth([FromBody] SpiritualGrowthDTO spiritualGrowth)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _groupLeaderService.SaveSpiritualGrowth(spiritualGrowth).Wait();
+                    return Ok();
+                }
+                catch (Exception e)
+                {
+                    var apiError = new ApiErrorDto("Saving Leader Profile failed:", e);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+            }
+            var errors = ModelState.Values.SelectMany(val => val.Errors).Aggregate("", (current, err) => current + err.ErrorMessage);
+            var dataError = new ApiErrorDto("Spiritual Growth Data Invalid", new InvalidOperationException("Invalid Spiritual Growth Data" + errors));
+            throw new HttpResponseException(dataError.HttpResponseMessage);
+        }
     }
 }
