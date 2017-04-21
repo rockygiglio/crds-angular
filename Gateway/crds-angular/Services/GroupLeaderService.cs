@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Threading.Tasks;
 using crds_angular.Models.Crossroads.GroupLeader;
 using crds_angular.Models.Crossroads.Profile;
 using crds_angular.Services.Interfaces;
@@ -19,12 +18,14 @@ namespace crds_angular.Services
         private readonly IUserRepository _userRepository;
         private readonly IConfigurationWrapper _configWrapper;
         private readonly IFormSubmissionRepository _formSubmissionRepository;
+        private readonly IParticipantRepository _participantRepository;
 
-        public GroupLeaderService(IPersonService personService, IUserRepository userRepository, IFormSubmissionRepository formSubmissionRepository, IConfigurationWrapper configWrapper)
+        public GroupLeaderService(IPersonService personService, IUserRepository userRepository, IFormSubmissionRepository formSubmissionRepository, IParticipantRepository participantRepository, IConfigurationWrapper configWrapper)
         {
             _personService = personService;
             _userRepository = userRepository;
             _formSubmissionRepository = formSubmissionRepository;
+            _participantRepository = participantRepository;
             _configWrapper = configWrapper;
         }
 
@@ -66,6 +67,12 @@ namespace crds_angular.Services
             });         
         }
 
+        public void SetInterested(string token)
+        {
+            var participant = _participantRepository.GetParticipantRecord(token);
+            SetGroupLeaderStatus(participant, _configWrapper.GetConfigIntValue("GroupLeaderInterested"));
+        }
+
         public IObservable<IList<Unit>> SaveProfile(string token, GroupLeaderProfileDTO leader)
         {
             var person = new Person
@@ -90,8 +97,13 @@ namespace crds_angular.Services
             }
             return Observable.Zip(
                 Observable.Start(() => _personService.SetProfile(token, person)),
-                Observable.Start(() => _userRepository.UpdateUser(userUpdates))
-            );
+                Observable.Start(() => _userRepository.UpdateUser(userUpdates)));
+        }
+
+        private void SetGroupLeaderStatus(MpParticipant participant, int statusId)
+        {
+            participant.GroupLeaderStatus = statusId;
+            _participantRepository.UpdateParticipant(participant);
         }
 
         public IObservable<int> SaveSpiritualGrowth(SpiritualGrowthDTO spiritualGrowth)
