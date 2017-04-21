@@ -5,13 +5,11 @@ using System.Reflection;
 using Crossroads.Utilities.FunctionalHelpers;
 using Crossroads.Utilities.Interfaces;
 using log4net;
-using Crossroads.Web.Common;
 using Crossroads.Web.Common.Configuration;
 using Crossroads.Web.Common.MinistryPlatform;
 using Crossroads.Web.Common.Security;
 using MinistryPlatform.Translation.Extensions;
 using MinistryPlatform.Translation.Models;
-using MinistryPlatform.Translation.Repositories;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 
 namespace MinistryPlatform.Translation.Repositories
@@ -398,7 +396,7 @@ namespace MinistryPlatform.Translation.Repositories
                     g.MinistryId = (int)mid;
                 }
 
-                if (g.WaitList)
+                if (g.WaitList ?? false)
                 {
                     var subGroups = ministryPlatformService.GetSubPageRecords(GroupsSubgroupsPageId,
                                                                               groupId,
@@ -479,6 +477,21 @@ namespace MinistryPlatform.Translation.Repositories
             }
 
             return retValue;
+        }
+
+        public List<MpGroup> GetGroupsByGroupType(int groupTypeId)
+        {
+            var token = ApiLogin();
+            const string columns = "Group_ID, Group_Name, Group_Type_ID, Description, Ministry_ID, Congregation_ID, Start_Date, End_Date, Available_Online, Meeting_Time, Meeting_Day_ID, Meeting_Frequency_ID, Kids_Welcome, Offsite_Meeting_Address, Target_Size, Group_Is_Full, Enable_Waiting_List, Child_Care_Available, Maximum_Age, Remaining_Capacity, Minimum_Participants, Primary_Contact ";
+            string filter = $"Group_Type_ID = {groupTypeId} ";
+
+            var groups = _ministryPlatformRestRepository.UsingAuthenticationToken(token).Search<MpGroup>(filter, columns);
+
+            foreach (var group in groups)
+            {
+                if (@group.OffsiteMeetingAddressId != null) @group.Address = _addressRepository.GetAddressById(token, (int) @group.OffsiteMeetingAddressId);
+            }
+            return groups;
         }
 
         public List<MpGroupSearchResult> GetSearchResults(int groupTypeId)

@@ -332,6 +332,7 @@
     <Compile Include="Exceptions\DuplicateChildcareEventsException.cs" />
     <Compile Include="Exceptions\DuplicateUserException.cs" />
     <Compile Include="Exceptions\EventMissingException.cs" />
+    <Compile Include="Exceptions\GatheringException.cs" />
     <Compile Include="Exceptions\GroupParticipantRemovalException.cs" />
     <Compile Include="Exceptions\InvalidAddressException.cs" />
     <Compile Include="Exceptions\InvoiceNotFoundException.cs" />
@@ -350,6 +351,7 @@
     <Compile Include="Models\Crossroads\GoVolunteer\Project.cs" />
     <Compile Include="Models\Crossroads\GroupLeader\GroupLeaderProfileDTO.cs" />
     <Compile Include="Models\Finder\GeoCoordinates.cs" />
+    <Compile Include="Models\Finder\HostRequestDto.cs" />
     <Compile Include="Models\Finder\PinSearchResultsDto.cs" />
     <Compile Include="Models\Finder\PinDto.cs" />
     <Compile Include="Models\Crossroads\Events\EventParticipantDTO.cs" />
