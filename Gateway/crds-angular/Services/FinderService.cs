@@ -120,14 +120,11 @@ namespace crds_angular.Services
             if (pinDetails != null && pinDetails.Address.Latitude != null && pinDetails.Address.Longitude != null)
             {
                 _addressService.SetGeoCoordinates(pinDetails.Address);                
-                pinDetails.Address = RandomizeLatLong(pinDetails.Address);
+                pinDetails.Address.AddressLine1 = "";
+                pinDetails.Address.AddressLine2 = "";
+                pinDetails.PinType = PinType.PERSON;
             }
 
-            // randomize the location
-            pinDetails.Address = RandomizeLatLong(pinDetails.Address);
-            pinDetails.Address.AddressLine1 = "";
-            pinDetails.Address.AddressLine2 = "";
-            pinDetails.PinType = PinType.PERSON;
             return pinDetails;
         }
 
