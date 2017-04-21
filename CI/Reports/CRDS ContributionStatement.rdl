@@ -1568,6 +1568,11 @@
                                                             <TablixMembers>
                                                               <TablixMember>
                                                                 <Group Name="Donation_Description" />
+                                                                <SortExpressions>
+                                                                  <SortExpression>
+                                                                    <Value>=Fields!Donation_Date.Value</Value>
+                                                                  </SortExpression>
+                                                                </SortExpressions>
                                                               </TablixMember>
                                                               <TablixMember>
                                                                 <KeepWithGroup>Before</KeepWithGroup>

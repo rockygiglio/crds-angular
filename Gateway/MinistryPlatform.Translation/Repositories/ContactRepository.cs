@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reactive.Linq;
 using System.Reactive.Threading.Tasks;
 using System.Threading.Tasks;
 using log4net;
@@ -335,6 +334,13 @@ namespace MinistryPlatform.Translation.Repositories
             });
         }
 
+        public void SetHouseholdAddress(int contactId, int householdId, int addressId)
+        {
+            var token = ApiLogin();
+            var household = new MpHousehold() { Address_ID = addressId, Household_ID = householdId };
+            _ministryPlatformRest.UsingAuthenticationToken(token).Update<MpHousehold>(household);
+        }
+
         public void UpdateHouseholdAddress(int contactId,
                                   Dictionary<string, object> householdDictionary,
                                   Dictionary<string, object> addressDictionary)
@@ -481,15 +487,6 @@ namespace MinistryPlatform.Translation.Repositories
             return null;
         }
 
-        private static string ParseAnniversaryDate(DateTime? anniversary)
-        {
-            if (anniversary != null)
-            {
-                return String.Format("{0:MM/yyyy}", anniversary);
-            }
-            return null;
-        }
-
         public MpContact CreateSimpleContact(string firstName, string lastName, string email, string dob, string mobile)
         {
             var contactId = CreateContact(new MpMyContact
@@ -556,10 +553,7 @@ namespace MinistryPlatform.Translation.Repositories
             }
             catch (Exception e)
             {
-                var msg = string.Format("Error creating Contact, firstName: {0} lastName: {1} idCard: {2}",
-                                        contact.First_Name,
-                                        contact.Last_Name,
-                                        contact.ID_Number);
+                var msg = $"Error creating Contact, firstName: {contact.First_Name} lastName: {contact.Last_Name} idCard: {contact.ID_Number}";
                 _logger.Error(msg, e);
                 throw (new ApplicationException(msg, e));
             }

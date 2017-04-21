@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Reactive;
 using System.Reactive.Linq;
+using System.Reactive.Threading.Tasks;
 using System.Threading.Tasks;
 using System.Web.Http;
 using crds_angular.Exceptions.Models;
@@ -25,18 +28,28 @@ namespace crds_angular.Controllers.API
         [HttpPost]
         public async Task<IHttpActionResult> SaveProfile([FromBody] GroupLeaderProfileDTO profile)
         {
-            return await Authorized(token => {              
-                try
+            if (ModelState.IsValid)
+            {
+                return await Authorized(token =>
                 {
-                    Task.Run(() => _groupLeaderService.SaveProfile(token, profile)).Wait();                    
-                    return Ok();
-                }
-                catch (Exception e)
-                {
-                    var apiError = new ApiErrorDto("Saving Leader Profile failed:", e);
-                    throw new HttpResponseException(apiError.HttpResponseMessage);
-                }                                            
-            });                                                               
+                    try
+                    {                        
+
+                        _groupLeaderService.SaveReferences(profile).Zip<int, IList<Unit>, int>(_groupLeaderService.SaveProfile(token, profile),
+                                                     (int first, IList<Unit> second) => first).ToTask();
+                        
+                        return Ok();
+                    }
+                    catch (Exception e)
+                    {
+                        var apiError = new ApiErrorDto("Saving Leader Profile failed:", e);
+                        throw new HttpResponseException(apiError.HttpResponseMessage);
+                    }
+                });
+            }
+            var errors = ModelState.Values.SelectMany(val => val.Errors).Aggregate("", (current, err) => current + err.ErrorMessage);
+            var dataError = new ApiErrorDto("Registration Data Invalid", new InvalidOperationException("Invalid Registration Data" + errors));
+            throw new HttpResponseException(dataError.HttpResponseMessage);
         }
 
         [VersionedRoute(template: "group-leader/spiritual-growth", minimumVersion: "1.0.0")]
