@@ -36,20 +36,26 @@
     }
 
     function setupHeader() {
-      // header options
-      var options = {
-        el: '[data-header]',
-        cmsEndpoint: __CMS_CLIENT_ENDPOINT__,
-        appEndpoint: __APP_CLIENT_ENDPOINT__,
-        imgEndpoint: __IMG_ENDPOINT__,
-        crdsCookiePrefix: __CRDS_ENV__,
-        contentBlockTitle: __HEADER_CONTENTBLOCK_TITLE__,
-        contentBlockCategories: ['common']
-      };
+        // header options
+        var options = {
+          el: '[data-header]',
+          cmsEndpoint: __CMS_CLIENT_ENDPOINT__,
+          appEndpoint: __APP_CLIENT_ENDPOINT__,
+          imgEndpoint: __IMG_ENDPOINT__,
+          crdsCookiePrefix: __CRDS_ENV__,
+          contentBlockTitle: __HEADER_CONTENTBLOCK_TITLE__,
+          contentBlockCategories: ['common']
+        };
 
-      var header = new CRDS.SharedHeader(options);
-      header.render();
+        var targetHeader = document.querySelector(options.el);
 
+        if(targetHeader != undefined && targetHeader != null){
+          var header = new CRDS.SharedHeader(options);
+          header.render();
+          console.log('header found');
+        } else {
+          console.debug('not found');
+        }
     }
 
     function setOriginForCmsPreviewPane($injectedDocument) {
@@ -104,6 +110,7 @@
       if (toState.data && toState.data.meta) {
         $rootScope.meta = toState.data.meta;
       }
+      console.debug('state change');
       setupMetaData();
       setupHeader();
     });
