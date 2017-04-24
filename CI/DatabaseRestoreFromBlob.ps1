@@ -35,9 +35,13 @@ Param (
   [Parameter(Mandatory=$true)]
   [string] $RegisterApiPasswordHash,
   [Parameter(Mandatory=$true)]
+  [string] $BaseUri,
+  [Parameter(Mandatory=$true)]
   [string] $ReportingServerAddress,
   [Parameter(Mandatory=$true)]
-  [string] $SMTPServerName
+  [string] $SMTPServerName,
+  [Parameter(Mandatory=$true)]
+  [string] $SMTPServerPort
 )
 
 $SourceDBName = "MinistryPlatform";
@@ -83,11 +87,11 @@ USE [master];
 
 ALTER DATABASE [$DBName] SET OFFLINE WITH ROLLBACK IMMEDIATE;
 
-RESTORE DATABASE [$DBName] 
+RESTORE DATABASE [$DBName]
 FROM URL = N'$backupUrl' 
 WITH CREDENTIAL = N'$StorageCred', FILE = 1, NOUNLOAD, REPLACE, STATS = 5,
-MOVE N'MinistryPlatform' TO N'$logFilePhysicalName',
-MOVE N'MinistryPlatform_log' TO N'$dataFilePhysicalName';
+MOVE N'$logFileName' TO N'$logFilePhysicalName',
+MOVE N'$dataFileName' TO N'$dataFilePhysicalName';
 
 ALTER DATABASE [$DBName] SET ONLINE;
 "@;
@@ -138,11 +142,15 @@ DECLARE @scheduledTasksUser varchar(50) = '$InternalServerName\MPAdmin';
 -- DECLARE @domainGuid = NEWID();
 DECLARE @domainGuid UNIQUEIDENTIFIER = CAST('$DomainGuid' AS UNIQUEIDENTIFIER);
 
+DECLARE @baseUri nvarchar(128) = '$BaseUri';
+
 -- Reporting Server Address
 DECLARE @reportingServerAddress nvarchar(128) = '$ReportingServerAddress';
 
 -- SMTP Server Name
 DECLARE @SMTPServerName nvarchar(50) = '$SMTPServerName';
+
+DECLARE @SMTPServerPort int = $SMTPServerPort;
 
 
 USE [$DBName];
@@ -159,9 +167,11 @@ UPDATE [dbo].[dp_Domains]
       ,[Company_Contact] = 5
       ,[Database_Name] = null
       ,[Max_Secured_Users] = null
+	  ,[Base_Uri] = @baseUri
+	  ,[Database_Server_Name] = null
 	  ,[Reporting_Server_Address] = @reportingServerAddress
 	  ,[SMTP_Server_Name] = @SMTPServerName
-	  ,[SMTP_Server_Port] = null
+	  ,[SMTP_Server_Port] = @SMTPServerPort
       ,[SMTP_Server_Username] = null
       ,[SMTP_Server_Password] = null
       ,[SMTP_Enable_SSL] = 0;
