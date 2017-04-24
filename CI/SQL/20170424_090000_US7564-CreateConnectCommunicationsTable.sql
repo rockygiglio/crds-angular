@@ -14,13 +14,16 @@ BEGIN
 		[FromUser_Contact_ID] [int] NOT NULL,
 		[ToUser_Contact_ID] [int] NOT NULL,
 		[Communication_ID] [int] NOT NULL,
-		[Status] [varchar](50) NULL,
+		[Communication_Type] [varchar](50) NULL,
+		[Communication_Status] [varchar](50) NULL,
 		[Domain_ID] [int] NOT NULL,
 	 CONSTRAINT [PK_cr_Connect_Communications] PRIMARY KEY CLUSTERED 
 	(
 		[Connect_Communications_ID] ASC
 	)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 	) ON [PRIMARY]
+
+	ALTER TABLE [dbo].[cr_Connect_Communications] ADD  CONSTRAINT [DF_cr_Connect_Communications_Domain_ID]  DEFAULT ((1)) FOR [Domain_ID]
 
 	/* FromUser */
 	ALTER TABLE [dbo].[cr_Connect_Communications]  WITH CHECK ADD  CONSTRAINT [FK_cr_Connect_Communications_Contacts_From] FOREIGN KEY([FromUser_Contact_ID])
