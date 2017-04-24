@@ -9,7 +9,6 @@ using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 using MinistryPlatform.Translation.Models.Finder;
 using System.Device.Location;
-using System.Web.UI;
 
 namespace MinistryPlatform.Translation.Repositories
 {
@@ -18,31 +17,28 @@ namespace MinistryPlatform.Translation.Repositories
         private const int SearchRadius = 6380; 
 
         private readonly IMinistryPlatformRestRepository _ministryPlatformRest;
-        private readonly IMinistryPlatformService _ministryPlatformService;
         private readonly IApiUserRepository _apiUserRepository;
         private readonly ILog _logger = LogManager.GetLogger(typeof(CampRepository));
 
         public FinderRepository(IConfigurationWrapper configuration,
                                 IMinistryPlatformRestRepository ministryPlatformRest,
-                                IMinistryPlatformService ministryPlatformService,
                                 IApiUserRepository apiUserRepository,
                                 IAuthenticationRepository authenticationService)
             : base(authenticationService, configuration)
         {
             _ministryPlatformRest = ministryPlatformRest;
-            _ministryPlatformService = ministryPlatformService;
             _apiUserRepository = apiUserRepository;
         }
 
         public FinderPinDto GetPinDetails(int participantId)
         {
-            string token = _apiUserRepository.GetToken();
+            var token = _apiUserRepository.GetToken();
 
             const string pinSearch = "Email_Address, Nickname as FirstName, Last_Name as LastName, Participant_Record_Table.*, Household_ID";
             string filter = $"Participant_Record = {participantId}";
 
-            List<FinderPinDto> myPin = _ministryPlatformRest.UsingAuthenticationToken(token).Search<FinderPinDto>(filter, pinSearch);
-            var pinDetails = new FinderPinDto();
+            var myPin = _ministryPlatformRest.UsingAuthenticationToken(token).Search<FinderPinDto>(filter, pinSearch);
+            FinderPinDto pinDetails;
 
             if (myPin != null && myPin.Count > 0)
             {
@@ -120,5 +116,18 @@ namespace MinistryPlatform.Translation.Repositories
             }
         }
 
+        public void RecordConnection(MpConnectCommunication connection)
+        {
+            var apiToken = _apiUserRepository.GetToken();
+
+            try
+            {
+                _ministryPlatformRest.UsingAuthenticationToken(apiToken).Create(connection);
+            }
+            catch (Exception ex)
+            {
+                _logger.Error("RecordConnection error" + ex);
+            }
+        }
     }
 }

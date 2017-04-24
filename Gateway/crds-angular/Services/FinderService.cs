@@ -18,6 +18,7 @@ using crds_angular.Exceptions;
 using crds_angular.Models.AwsCloudsearch;
 using crds_angular.Models.Crossroads.Groups;
 using Crossroads.Web.Common.Configuration;
+using MinistryPlatform.Translation.Models.Finder;
 
 namespace crds_angular.Services
 {
@@ -430,32 +431,6 @@ namespace crds_angular.Services
             return new GeoCoordinate(latitude, longitude);
         }
 
-        private List<PinDto> GetGroupPinsinRadius(GeoCoordinate originCoords, string address)
-        {
-            // ignoring originCoords at this time
-            var pins = new List<PinDto>();
-
-            // get group for anywhere gathering
-            var anywhereGroupTypeId = _configurationWrapper.GetConfigIntValue("AnywhereGroupTypeId");
-            var groups = _groupToolService.SearchGroups(new int[] { anywhereGroupTypeId }, null, address, null, originCoords);
-
-            foreach (var group in groups)
-            {
-                var pin = Mapper.Map<PinDto>(group);
-                pin.Gathering = group;
-                if (pin.Contact_ID != null)
-                {
-                    var contact = _contactRepository.GetContactById((int)pin.Contact_ID);
-                    pin.FirstName = contact.First_Name;
-                    pin.LastName = contact.Last_Name;
-                }
-
-                pins.Add(pin);
-            }
-
-            return pins;
-        }
-
         public AddressDTO RandomizeLatLong(AddressDTO address)
         {
             if (!address.HasGeoCoordinates()) return address;
@@ -488,7 +463,17 @@ namespace crds_angular.Services
             };
             
             _invitationService.ValidateInvitation(invitation, token);
-            return _invitationService.CreateInvitation(invitation, token);
+            invitation = _invitationService.CreateInvitation(invitation, token);
+
+            var connection = new ConnectCommunicationDto
+            {
+                CommunicationType = "Invite To Gathering",
+                CommunicationsId = invitation.InvitationId,
+                ToUserContactId = _contactRepository.GetContactIdByEmail(person.email),
+                FromUserContactId = _contactRepository.GetContactId(token)
+            };
+            RecordCommunication(connection);
+            return invitation;
         }
 
         public AddressDTO GetGroupAddress(string token, int groupId)
@@ -502,7 +487,7 @@ namespace crds_angular.Services
             }
             else
             {
-                throw new Exception("User does not have acces to requested address");
+                throw new Exception("User does not have access to requested address");
             }
         }
 
@@ -525,9 +510,13 @@ namespace crds_angular.Services
             }
             else
             {
-                throw new Exception("User does not have acces to requested address");
+                throw new Exception("User does not have access to requested address");
             }
+        }
 
+        public void RecordCommunication(ConnectCommunicationDto connection)
+        {
+            _finderRepository.RecordConnection(Mapper.Map<MpConnectCommunication>(connection));
         }
     }
 }
