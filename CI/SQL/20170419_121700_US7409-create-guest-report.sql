@@ -55,8 +55,8 @@ BEGIN
 	GROUP BY
 			E.Event_ID,
 			E.Event_Title,
-			E.Event_Start_Date,
-			H.Household_Name
+			E.Event_Start_Date
+			, H.Household_Name
 			, H.Home_Phone
 			, H.Household_ID
 END
