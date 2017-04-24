@@ -30,7 +30,9 @@ BEGIN
 		E.Event_Start_Date,
 		H.Household_Name AS "Household Last Name"
 		, H.Home_Phone AS "Household Phone"
-		, COUNT(EP.Participant_ID) AS "Total Household Children"
+		, (SELECT COUNT(s_c.Contact_Id) FROM contacts s_c WHERE s_c.household_position_id=2 and
+			s_c.Household_Id = H.Household_ID) AS "Total Household Children"
+		, COUNT (EP.Participant_ID) AS "Total Children"
 		, CONVERT(time, MIN(P.Participant_Start_Date)) AS "Time Created"
 		, COUNT(DISTINCT H.Household_Name) AS "Total Households"
 	FROM
@@ -40,9 +42,9 @@ BEGIN
 			-- C.Household_ID would show "Guest Household" for every household in the report
 			INNER JOIN Households H ON H.Household_ID = EP.Checkin_Household_ID
 	WHERE
-			C.Household_Id = 5771805 -- Guest checkin household
-			AND EP.Checkin_Household_ID != C.Household_ID
-			AND EP.Guest_Sign_In = 1
+			--C.Household_Id = 5771805 -- Guest checkin household
+			EP.Checkin_Household_ID != C.Household_ID
+			AND EXISTS (SELECT * FROM Event_Participants s_EP WHERE EP.Guest_Sign_In = 1)
 			AND E.Congregation_ID IN (SELECT * FROM dbo.fnSplitString(@EventCongregations,','))
 			AND CONVERT(date, E.Event_Start_Date) >= @StartDate
 			AND CONVERT(date, E.Event_Start_Date) <= @EndDate
@@ -56,4 +58,5 @@ BEGIN
 			E.Event_Start_Date,
 			H.Household_Name
 			, H.Home_Phone
+			, H.Household_ID
 END
