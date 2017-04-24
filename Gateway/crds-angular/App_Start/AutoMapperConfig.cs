@@ -411,6 +411,9 @@ namespace crds_angular.App_Start
                 .ForMember(dest => dest.Contact_ID, opts => opts.MapFrom(src => src.ContactId))
                 .ForMember(dest => dest.PinType, opt => opt.UseValue<PinType>(PinType.GATHERING));
 
+            Mapper.CreateMap<ConnectCommunicationDto, MpConnectCommunication>();
+            Mapper.CreateMap<MpConnectCommunication, ConnectCommunicationDto>();
+
             Mapper.CreateMap<MpSU2SOpportunity, ServeOpportunity>();
             Mapper.CreateMap<ServeOpportunity, MpSU2SOpportunity>();
             Mapper.CreateMap<MpAttributeCategory, AttributeCategoryDTO>()
