@@ -27,7 +27,7 @@ BEGIN
 			   ,NULL
 			   ,NULL
 			   ,'Host_Status_ID'
-			   ,'Host_Status_ID=1')
+			   ,'Host_Status_ID=3')
 	SET IDENTITY_INSERT [dbo].[dp_Processes] OFF
 END
 
@@ -60,7 +60,7 @@ BEGIN
 			   ,0
 			   ,1
 			   ,50
-			   ,NULL
+			   ,4460578 --crossroads anywhere
 			   ,0
 			   ,NULL
 			   ,1
