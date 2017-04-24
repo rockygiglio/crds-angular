@@ -70,7 +70,6 @@ BEGIN
 			   ,NULL
 			   ,'Participant_ID_Table_Contact_ID_Table.Contact_ID'
 			   ,NULL)
-	SET IDENTITY_INSERT [dbo].[dp_Process_Steps] ON
+	SET IDENTITY_INSERT [dbo].[dp_Process_Steps] OFF
 END
-
-
+GO
