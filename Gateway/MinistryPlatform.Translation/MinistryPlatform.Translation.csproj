@@ -130,6 +130,7 @@
     <Compile Include="Models\DTO\MpPledgeCampaignSummaryDto.cs" />
     <Compile Include="Models\Finder\FinderPinDto.cs" />
     <Compile Include="Models\DTO\PredefinedDonationAmountDTO.cs" />
+    <Compile Include="Models\Finder\GatheringDto.cs" />
     <Compile Include="Models\Finder\MpConnectAws.cs" />
     <Compile Include="Models\Finder\SpPinDto.cs" />
     <Compile Include="Models\GoCincinnati\MpProject.cs" />

@@ -18,6 +18,7 @@ using crds_angular.Exceptions;
 using crds_angular.Models.AwsCloudsearch;
 using crds_angular.Models.Crossroads.Groups;
 using Crossroads.Web.Common.Configuration;
+using MinistryPlatform.Translation.Models.Finder;
 
 namespace crds_angular.Services
 {
@@ -133,6 +134,20 @@ namespace crds_angular.Services
             _finderRepository.EnablePin(participantId);
         }
 
+        public PinDto UpdateGathering(PinDto pin)
+        {
+            // Update coordinates
+            var coordinates = _addressService.GetGeoLocationCascading(pin.Address);
+            pin.Gathering.Address.Latitude = coordinates.Latitude;
+            pin.Gathering.Address.Longitude = coordinates.Longitude;
+
+            var gathering = Mapper.Map<GatheringDto>(pin.Gathering);
+
+            pin.Gathering = Mapper.Map<GroupDTO>(_finderRepository.UpdateGathering(gathering));
+
+            return pin;
+        }
+
         public void UpdateHouseholdAddress(PinDto pin)
         {
             var coordinates = _addressService.GetGeoLocationCascading(pin.Address);
@@ -142,7 +157,7 @@ namespace crds_angular.Services
             var address = Mapper.Map<MpAddress>(pin.Address);
             var addressDictionary = getDictionary(address);
             addressDictionary.Add("State/Region", addressDictionary["State"]);
-            _contactRepository.UpdateHouseholdAddress((int)pin.Contact_ID, householdDictionary, addressDictionary);
+            _contactRepository.UpdateHouseholdAddress((int)pin.Contact_ID, null, addressDictionary);
         }
 
         public List<GroupParticipantDTO> GetParticipantsForGroup(int groupId)

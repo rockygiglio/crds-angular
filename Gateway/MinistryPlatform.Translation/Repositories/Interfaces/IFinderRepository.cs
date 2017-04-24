@@ -12,5 +12,6 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
         void EnablePin(int participantId);
         List<MpConnectAws> GetAllPinsForAws();
         MpAddress GetPinAddress(int participantId);
+        GatheringDto UpdateGathering(GatheringDto gathering);
     }
 }
