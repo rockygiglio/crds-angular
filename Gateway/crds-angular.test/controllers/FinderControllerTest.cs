@@ -102,6 +102,7 @@ namespace crds_angular.test.controllers
         public void TestNotAuthorized()
         {
             _authenticationRepository.Setup(mocked => mocked.GetContactId("abc")).Returns(123456);
+            _fixture.EditGatheringPin(GetListOfPinDto()[0]);
         }
 
         private static List<PinDto> GetListOfPinDto()
