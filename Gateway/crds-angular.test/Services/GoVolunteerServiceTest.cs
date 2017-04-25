@@ -308,7 +308,6 @@ namespace crds_angular.test.Services
                 BuildParagraph("Mobile Phone: ", registration.Self.MobilePhone),
                 BuildParagraph("Spouse Name: ", registration.Spouse.FirstName + " " + registration.Spouse.LastName),
                 BuildParagraph("Spouse Email: ", registration.Spouse.EmailAddress),
-                BuildParagraph("Spouse Birthdate: ",  "2/21/1980"),
                 BuildParagraph("Spouse Mobile Phone: ", registration.Spouse.MobilePhone),
                 BuildParagraph("Number of Children Ages 2-7: ", registration.ChildAgeGroup[0].Count.ToString()),
                 new HtmlElement("p"),
