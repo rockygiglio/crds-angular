@@ -10,7 +10,7 @@ using Newtonsoft.Json.Linq;
 namespace MinistryPlatform.Translation.Models.Finder
 {
     [MpRestApiTable(Name = "Groups")]
-    public class GatheringDto : MpBaseDto
+    public class FinderGatheringDto : MpBaseDto
     {
         [JsonProperty("Group_ID")]
         public int GroupId { get; set; }

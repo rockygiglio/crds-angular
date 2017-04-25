@@ -137,11 +137,11 @@ namespace crds_angular.Services
         public PinDto UpdateGathering(PinDto pin)
         {
             // Update coordinates
-            var coordinates = _addressService.GetGeoLocationCascading(pin.Address);
+            var coordinates = _addressService.GetGeoLocationCascading(pin.Gathering.Address);
             pin.Gathering.Address.Latitude = coordinates.Latitude;
             pin.Gathering.Address.Longitude = coordinates.Longitude;
 
-            var gathering = Mapper.Map<GatheringDto>(pin.Gathering);
+            var gathering = Mapper.Map<FinderGatheringDto>(pin.Gathering);
 
             pin.Gathering = Mapper.Map<GroupDTO>(_finderRepository.UpdateGathering(gathering));
 

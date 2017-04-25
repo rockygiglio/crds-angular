@@ -74,10 +74,10 @@ namespace MinistryPlatform.Translation.Repositories
             return pinDetails;
         }
 
-        public GatheringDto UpdateGathering(GatheringDto gathering)
+        public FinderGatheringDto UpdateGathering(FinderGatheringDto finderGathering)
         {
             var token = base.ApiLogin();       
-            return _ministryPlatformRest.UsingAuthenticationToken(token).Update<GatheringDto>(gathering, _groupColumns);
+            return _ministryPlatformRest.UsingAuthenticationToken(token).Update<FinderGatheringDto>(finderGathering, _groupColumns);
         }
 
         public MpAddress GetPinAddress(int participantId)

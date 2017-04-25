@@ -246,14 +246,14 @@ namespace crds_angular.App_Start
                 .ForMember(dest => dest.MeetingInstructions, opts => opts.MapFrom(src => src.MeetingInstructions))
                 .ForMember(dest => dest.ParticipantsExpected, opts => opts.MapFrom(src => src.ParticipantsExpected));
 
-            Mapper.CreateMap<GroupDTO, GatheringDto>()
+            Mapper.CreateMap<GroupDTO, FinderGatheringDto>()
                 .ForMember(dest => dest.PrimaryContact, opts => opts.MapFrom(src => src.ContactId))
                 .ForMember(dest => dest.Address, opts => opts.MapFrom(src => src.Address))
                 .ForMember(dest => dest.AvailableOnline, opts => opts.MapFrom(src => src.AvailableOnline))
                 .ForMember(dest => dest.Name, opts => opts.MapFrom(src => src.GroupName))
                 .ForMember(dest => dest.GroupType, opts => opts.MapFrom(src => src.GroupTypeId));
 
-            Mapper.CreateMap<GatheringDto, GroupDTO>()
+            Mapper.CreateMap<FinderGatheringDto, GroupDTO>()
                 .ForMember(dest => dest.ContactId, opts => opts.MapFrom(src => src.PrimaryContact))
                 .ForMember(dest => dest.Address, opts => opts.MapFrom(src => src.Address))
                 .ForMember(dest => dest.GroupName, opts => opts.MapFrom(src => src.Name))
