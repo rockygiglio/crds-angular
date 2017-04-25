@@ -468,7 +468,7 @@ namespace crds_angular.Services
             var connection = new ConnectCommunicationDto
             {
                 CommunicationType = "Invite To Gathering",
-                CommunicationsId = invitation.InvitationId,
+                CommunicationId = (int) invitation.CommunicationId,
                 ToUserContactId = _contactRepository.GetContactIdByEmail(person.email),
                 FromUserContactId = _contactRepository.GetContactId(token)
             };

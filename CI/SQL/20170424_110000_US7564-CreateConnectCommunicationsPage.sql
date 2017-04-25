@@ -41,5 +41,12 @@ BEGIN
 	insert into dp_Role_Pages(role_id, page_id,access_level,scope_all,Approver,File_Attacher,Data_Importer,Data_Exporter,Secure_Records,Allow_Comments,Quick_Add)
              values(107,	629,	3,	0,	0,	1,	0,	1,	1,	0,	1);
 END
+
+/*sapi user */
+IF NOT EXISTS(SELECT * FROM dp_Role_Pages where role_id = 62 and page_id = 629)
+BEGIN
+	insert into dp_Role_Pages(role_id, page_id,access_level,scope_all,Approver,File_Attacher,Data_Importer,Data_Exporter,Secure_Records,Allow_Comments,Quick_Add)
+             values(107,	629,	3,	0,	0,	0,	0,	0,	0,	0,	0);
+END
 GO
 

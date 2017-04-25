@@ -14,8 +14,8 @@ namespace crds_angular.Models.Finder
         [JsonProperty("toUserContactId")]
         public int ToUserContactId { get; set; }
 
-        [JsonProperty("communicationsId")]
-        public int CommunicationsId { get; set; }
+        [JsonProperty("communicationId")]
+        public int CommunicationId { get; set; }
 
         [JsonProperty("communicationType")]
         public string CommunicationType { get; set; }

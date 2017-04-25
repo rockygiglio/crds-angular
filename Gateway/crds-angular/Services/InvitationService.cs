@@ -6,9 +6,7 @@ using System.Linq;
 using AutoMapper;
 using crds_angular.Models.Crossroads;
 using crds_angular.Services.Interfaces;
-using Crossroads.Utilities.Interfaces;
 using log4net;
-using Crossroads.Web.Common;
 using Crossroads.Web.Common.Configuration;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Repositories.Interfaces;
@@ -84,12 +82,11 @@ namespace crds_angular.Services
 
                 try
                 {
-                    //SendEmail(invitation, leaderParticipantRecord.DisplayName, group.Name);
-                    SendEmail(invitation, leaderParticipantRecord, group.Name);
+                    dto.CommunicationId = SendEmail(invitation, leaderParticipantRecord, group.Name);
                 }
                 catch (Exception e)
                 {
-                    _logger.Error(string.Format("Error sending email to {0} for invitation {1}", invitation.EmailAddress, invitation.InvitationGuid), e);
+                    _logger.Error($"Error sending email to {invitation.EmailAddress} for invitation {invitation.InvitationGuid}", e);
                 }
 
                 dto.InvitationGuid = invitation.InvitationGuid;
@@ -98,7 +95,7 @@ namespace crds_angular.Services
             }
             catch (Exception e)
             {
-                var message = string.Format("Exception creating invitation for {0}, SourceID = {1}.", dto.RecipientName, dto.SourceId);
+                var message = $"Exception creating invitation for {dto.RecipientName}, SourceID = {dto.SourceId}.";
                 _logger.Error(message, e);
                 throw new ApplicationException(message, e);
             }
@@ -146,7 +143,7 @@ namespace crds_angular.Services
             // TODO Implement validation, make sure the token represents someone who is allowed to send this trip invitation
         }
 
-        private void SendEmail(MpInvitation invitation, MpParticipant leader, string groupName)
+        private int SendEmail(MpInvitation invitation, MpParticipant leader, string groupName)
         {
             var leaderContact = _contactRepository.GetContactById(leader.ContactId);
 
@@ -220,8 +217,7 @@ namespace crds_angular.Services
                 ToContacts = to,
                 MergeData = mergeData
             };
-            _communicationService.SendMessage(confirmation);
-
+            return _communicationService.SendMessage(confirmation);
         }
 
     }
