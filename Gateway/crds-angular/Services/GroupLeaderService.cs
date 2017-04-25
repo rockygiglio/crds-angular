@@ -67,6 +67,26 @@ namespace crds_angular.Services
             });         
         }
 
+        public IObservable<int> SetApplied(string token)
+        {
+            return Observable.Create<int>(observer =>
+            {
+                try
+                {
+                    var participant = _participantRepository.GetParticipantRecord(token);
+                    SetGroupLeaderStatus(participant, _configWrapper.GetConfigIntValue("GroupLeaderApplied"));
+                    observer.OnNext(1);
+                    observer.OnCompleted();
+                }
+                catch (Exception e)
+                {
+                    observer.OnError(new ApplicationException("Unable to submit Set the participant as applied", e));
+                }                
+                return Disposable.Empty;
+            });
+           
+        }
+
         public void SetInterested(string token)
         {
             var participant = _participantRepository.GetParticipantRecord(token);

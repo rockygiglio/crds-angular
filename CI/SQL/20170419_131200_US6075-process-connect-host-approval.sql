@@ -1,6 +1,29 @@
 USE [MinistryPlatform]
 GO
 
+
+IF NOT EXISTS(SELECT 1 FROM [dbo].[dp_Users] WHERE User_ID = 4460578)
+BEGIN
+	SET IDENTITY_INSERT [dbo].[dp_Users] ON
+	INSERT INTO [dbo].[dp_Users]
+           ([User_ID]
+		   ,[User_Name]
+		   ,[User_Email]
+           ,[Display_Name]
+		   ,[Contact_ID]
+		   ,[Domain_ID]
+		   )
+	VALUES
+		   (4460578
+		   ,'anywhere@crossroads.net'
+		   ,'anywhere@crossroads.net'
+           ,'Crossroads Anywhere'
+		   ,768371
+		   ,1
+		   )	 
+	SET IDENTITY_INSERT [dbo].[dp_Users] OFF
+END
+
 IF NOT EXISTS(SELECT 1 FROM [dbo].[dp_Processes] WHERE Process_ID = 50)
 BEGIN
 	SET IDENTITY_INSERT [dbo].[dp_Processes] ON
@@ -27,7 +50,7 @@ BEGIN
 			   ,NULL
 			   ,NULL
 			   ,'Host_Status_ID'
-			   ,'Host_Status_ID=1')
+			   ,'Host_Status_ID=3')
 	SET IDENTITY_INSERT [dbo].[dp_Processes] OFF
 END
 
@@ -60,7 +83,7 @@ BEGIN
 			   ,0
 			   ,1
 			   ,50
-			   ,NULL
+			   ,4460578 --crossroads anywhere
 			   ,0
 			   ,NULL
 			   ,1
@@ -70,7 +93,6 @@ BEGIN
 			   ,NULL
 			   ,'Participant_ID_Table_Contact_ID_Table.Contact_ID'
 			   ,NULL)
-	SET IDENTITY_INSERT [dbo].[dp_Process_Steps] ON
+	SET IDENTITY_INSERT [dbo].[dp_Process_Steps] OFF
 END
-
-
+GO
