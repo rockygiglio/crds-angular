@@ -1,7 +1,7 @@
 $imin-blue: #008CBA;
 
 .leaveyourmark-header {
-  background: url("http://imincampaign.net/wp-content/themes/ImIn/assets/img/ImInFooter.jpg") center center no-repeat;
+  background: url("https://crds-cms-uploads.imgix.net/content/images/im-in-dashboard-header-bg.jpg") center center no-repeat;
   color: #fff;
   background-size: cover;
 
@@ -43,8 +43,6 @@ $imin-blue: #008CBA;
   display: inline-block;
   width: 180px;
   height: 180px;
-  margin-top: 70px;
-  margin-bottom: 20px;
   text-align: center;
 
   canvas {
@@ -72,8 +70,81 @@ $imin-blue: #008CBA;
 
 .day-countdown {
   background: rgba(0,0,0,.4);
+
+  h3 {
+    color: #fff;
+  }
 }
+
+.progress {
+  overflow: visible;
+}
+
 .progress-bar-imin {
   background-color: #008CBA;
   color: #fff;
+  font-size: 1em;
+}
+
+.imin-progress-label {
+  line-height: 1;
+
+  > div {
+    margin-top: $line-height-computed/2;
+  }
+
+  @media (min-width: $screen-sm-min) {
+    > div {
+      margin-top: -28px;
+    }
+
+    &.text-left {
+      color: #fff;
+    }
+  }
+}
+
+.progress-marker-wrapper {
+  position: relative;
+  .progress-marker {
+    width: 50px;
+    height: 35px;
+    line-height: 35px;
+    background: #000;
+    color: #fff;
+    position: absolute;
+    left: -25px;
+    top: -50px;
+    text-align: center;
+
+    .arrow-down {
+    	width: 0;
+    	height: 0;
+      border-left: 10px solid transparent;
+      border-right: 10px solid transparent;
+      border-top: 10px solid #000;
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      margin-left: -10px;
+      z-index: 3;
+    }
+  }
+}
+
+.im-in-stat {
+  text-align: center;
+  margin-top: 30px;
+  border: 1px solid #dddddd;
+  background: url('//crds-cms-uploads.imgix.net/content/images/imin-map-lg.png');
+  font-weight: bold;
+}
+
+.giving-progress-heading {
+  color: $imin-blue;
+  font-weight: bold;
+}
+
+.im-in-stories {
+  background: #EFEEE8;
 }

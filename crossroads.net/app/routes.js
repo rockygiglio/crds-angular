@@ -552,7 +552,13 @@
           parent: 'screenWidth',
           url: '/leaveyourmark',
           controller: 'LeaveYourMarkController as leaveYourMarkCtrl',
-          templateUrl: 'leaveyourmark/leaveyourmark.html'
+          templateUrl: 'leaveyourmark/leaveyourmark.html',
+          data: {
+            meta: {
+              title: 'Leave Your Mark',
+              description: ''
+            }
+          }
         });
 
     // Commented out for US2924, will be added back after Corkboard go-live
