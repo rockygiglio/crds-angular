@@ -9,19 +9,19 @@ namespace MinistryPlatform.Translation.Models.Finder
         [JsonProperty(PropertyName = "Connect_Communication_ID")]
         public int ConnectCommunicationId { get; set; }
 
-        [JsonProperty(PropertyName = "FromUser_Contact_ID")]
-        public int FromUserContactId { get; set; }
+        [JsonProperty(PropertyName = "From_Contact_ID")]
+        public int FromContactId { get; set; }
 
-        [JsonProperty(PropertyName = "ToUser_Contact_ID")]
-        public int ToUserContactId { get; set; }
+        [JsonProperty(PropertyName = "To_Contact_ID")]
+        public int ToContactId { get; set; }
 
         [JsonProperty(PropertyName = "Communication_ID")]
         public int CommunicationId { get; set; }
 
-        [JsonProperty(PropertyName = "Communication_Type")]
-        public string CommunicationType { get; set; }
+        [JsonProperty(PropertyName = "Communication_Type_ID")]
+        public int CommunicationType { get; set; }
 
-        [JsonProperty(PropertyName = "Communication_Status")]
-        public string CommunicationStatus { get; set; }
+        [JsonProperty(PropertyName = "Communication_Status_ID")]
+        public int CommunicationStatus { get; set; }
     }
 }
