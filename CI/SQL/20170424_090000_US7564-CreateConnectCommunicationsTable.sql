@@ -11,11 +11,11 @@ IF NOT EXISTS (SELECT * FROM MinistryPlatform.INFORMATION_SCHEMA.TABLES WHERE TA
 BEGIN
 	CREATE TABLE [dbo].[cr_Connect_Communications](
 		[Connect_Communications_ID] [int] IDENTITY(1,1) NOT NULL,
-		[FromUser_Contact_ID] [int] NOT NULL,
-		[ToUser_Contact_ID] [int] NOT NULL,
+		[From_Contact_ID] [int] NOT NULL,
+		[To_Contact_ID] [int] NOT NULL,
 		[Communication_ID] [int] NOT NULL,
-		[Communication_Type] [varchar](50) NULL,
-		[Communication_Status] [varchar](50) NULL,
+		[Communication_Type_ID] [int] NOT NULL,
+		[Communication_Status_ID] [int] NOT NULL,
 		[Domain_ID] [int] NOT NULL,
 	 CONSTRAINT [PK_cr_Connect_Communications] PRIMARY KEY CLUSTERED 
 	(
@@ -26,25 +26,34 @@ BEGIN
 	ALTER TABLE [dbo].[cr_Connect_Communications] ADD  CONSTRAINT [DF_cr_Connect_Communications_Domain_ID]  DEFAULT ((1)) FOR [Domain_ID]
 
 	/* FromUser */
-	ALTER TABLE [dbo].[cr_Connect_Communications]  WITH CHECK ADD  CONSTRAINT [FK_cr_Connect_Communications_Contacts_From] FOREIGN KEY([FromUser_Contact_ID])
+	ALTER TABLE [dbo].[cr_Connect_Communications]  WITH CHECK ADD  CONSTRAINT [FK_cr_Connect_Communications_Contacts_From] FOREIGN KEY([From_Contact_ID])
 	REFERENCES [dbo].[Contacts] ([Contact_ID])
 	
 	ALTER TABLE [dbo].[cr_Connect_Communications] CHECK CONSTRAINT [FK_cr_Connect_Communications_Contacts_From]
 	
-
 	/* ToUser */
-	ALTER TABLE [dbo].[cr_Connect_Communications]  WITH CHECK ADD  CONSTRAINT [FK_cr_Connect_Communications_Contacts_To] FOREIGN KEY([ToUser_Contact_ID])
+	ALTER TABLE [dbo].[cr_Connect_Communications]  WITH CHECK ADD  CONSTRAINT [FK_cr_Connect_Communications_Contacts_To] FOREIGN KEY([To_Contact_ID])
 	REFERENCES [dbo].[Contacts] ([Contact_ID])
 	
 	ALTER TABLE [dbo].[cr_Connect_Communications] CHECK CONSTRAINT [FK_cr_Connect_Communications_Contacts_To]
-	
 
 	/* Message */
 	ALTER TABLE [dbo].[cr_Connect_Communications]  WITH CHECK ADD  CONSTRAINT [FK_cr_Connect_Communications_Communication_ID] FOREIGN KEY([Communication_ID])
 	REFERENCES [dbo].[dp_Communications] ([Communication_ID])
 	
 	ALTER TABLE [dbo].[cr_Connect_Communications] CHECK CONSTRAINT [FK_cr_Connect_Communications_Communication_ID]
+
+	/* Communication Type */
+	ALTER TABLE [dbo].[cr_Connect_Communications]  WITH CHECK ADD  CONSTRAINT [FK_cr_Connect_Communications_Communication_Type_ID] FOREIGN KEY([Communication_Type_ID])
+	REFERENCES [dbo].[cr_Connect_Communications_Type] ([Connect_Communications_Type_ID])
 	
+	ALTER TABLE [dbo].[cr_Connect_Communications] CHECK CONSTRAINT [FK_cr_Connect_Communications_Communication_Type_ID]
+	
+	/* Communication Status */
+	ALTER TABLE [dbo].[cr_Connect_Communications]  WITH CHECK ADD  CONSTRAINT [FK_cr_Connect_Communications_Communication_Status_ID] FOREIGN KEY([Communication_Status_ID])
+	REFERENCES [dbo].[cr_Connect_Communications_Status] ([Connect_Communications_Status_ID])
+	
+	ALTER TABLE [dbo].[cr_Connect_Communications] CHECK CONSTRAINT [FK_cr_Connect_Communications_Communication_Status_ID]
 
 	/* Domain */
 	ALTER TABLE [dbo].[cr_Connect_Communications]  WITH CHECK ADD  CONSTRAINT [FK_cr_Connect_Communications_dp_Domains] FOREIGN KEY([Domain_ID])
