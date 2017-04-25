@@ -9,9 +9,6 @@ using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 using MinistryPlatform.Translation.Models.Finder;
 using System.Device.Location;
-using System.Reflection;
-using System.Web.UI;
-using Newtonsoft.Json;
 
 namespace MinistryPlatform.Translation.Repositories
 {
