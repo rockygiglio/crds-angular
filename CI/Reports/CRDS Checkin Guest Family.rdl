@@ -929,7 +929,7 @@ FROM
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>="Total New Children: " &amp; Sum(Fields!Total_Household_Children.Value, "dsNewFamilyHouseholds")</Value>
+                    <Value>="Guests: " &amp; Sum(Fields!Total_Children.Value, "dsNewFamilyHouseholds")</Value>
                     <Style />
                   </TextRun>
                 </TextRuns>
