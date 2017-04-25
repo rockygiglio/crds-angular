@@ -23,6 +23,7 @@ namespace crds_angular.test.Services
         private Mock<IParticipantRepository> _participantRepository;
         private Mock<IConfigurationWrapper> _configWrapper;
         private Mock<IContactRepository> _contactRepo;
+        private Mock<ICommunicationRepository> _communicationRepository;
         private IGroupLeaderService _fixture;
 
         [SetUp]
@@ -33,7 +34,8 @@ namespace crds_angular.test.Services
             _formService = new Mock<IFormSubmissionRepository>();
             _participantRepository = new Mock<IParticipantRepository>();
             _configWrapper = new Mock<IConfigurationWrapper>();
-            _fixture = new GroupLeaderService(_personService.Object, _userRepo.Object, _formService.Object, _participantRepository.Object, _configWrapper.Object);
+            _communicationRepository = new Mock<ICommunicationRepository>();
+            _fixture = new GroupLeaderService(_personService.Object, _userRepo.Object, _formService.Object, _participantRepository.Object, _configWrapper.Object, _communicationRepository.Object);
             _contactRepo = new Mock<IContactRepository>();
         }
 
@@ -46,6 +48,7 @@ namespace crds_angular.test.Services
             _formService.VerifyAll();
             _contactRepo.VerifyAll();
             _configWrapper.VerifyAll();
+            _communicationRepository.VerifyAll();
         }
 
         [Test]
@@ -203,18 +206,22 @@ namespace crds_angular.test.Services
             const int fakeStoryFieldId = 1;
             const int fakeTaughtFieldId = 2;
             const int fakeResponseId = 10;
+            const int fakeTemplateId = 12;
             
             var growthDto = SpiritualGrowthMock();
 
             _configWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderFormId")).Returns(fakeFormId);
             _configWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderFormStoryFieldId")).Returns(fakeStoryFieldId);
             _configWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderFormTaughtFieldId")).Returns(fakeTaughtFieldId);
+            _configWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderConfirmationTemplate")).Returns(fakeTemplateId);
 
             _formService.Setup(m => m.SubmitFormResponse(It.IsAny<MpFormResponse>())).Returns((MpFormResponse form) =>
             {
                 Assert.AreEqual(fakeFormId, form.FormId);
                 return fakeResponseId;
             });
+
+            _communicationRepository.Setup(m => m.GetTemplate(fakeTemplateId)).Returns(ConfirmationEmailMock());
 
             var responseId = _fixture.SaveSpiritualGrowth(growthDto).Wait();
             Assert.AreEqual(fakeResponseId, responseId);
@@ -227,12 +234,14 @@ namespace crds_angular.test.Services
             const int fakeStoryFieldId = 1;
             const int fakeTaughtFieldId = 2;
             const int errorResponseId = 0;
+            const int fakeTemplateId = 12;
 
             var growthDto = SpiritualGrowthMock();
 
             _configWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderFormId")).Returns(fakeFormId);
             _configWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderFormStoryFieldId")).Returns(fakeStoryFieldId);
             _configWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderFormTaughtFieldId")).Returns(fakeTaughtFieldId);
+            _configWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderConfirmationTemplate")).Returns(fakeTemplateId);
 
             _formService.Setup(m => m.SubmitFormResponse(It.IsAny<MpFormResponse>())).Returns((MpFormResponse form) =>
             {
@@ -240,7 +249,22 @@ namespace crds_angular.test.Services
                 return errorResponseId;
             });
 
+            _communicationRepository.Setup(m => m.GetTemplate(fakeTemplateId)).Returns(ConfirmationEmailMock());
+
             Assert.Throws<ApplicationException>(() => _fixture.SaveSpiritualGrowth(growthDto).Wait());
+        }
+
+        private MpMessageTemplate ConfirmationEmailMock()
+        {
+            return new MpMessageTemplate
+            {
+                FromContactId = 1234,
+                FromEmailAddress = "donotreply@crossroads.net",
+                ReplyToContactId = 1235,
+                ReplyToEmailAddress = "seriouslydonotreply@crossroads.net",
+                Subject = "This is a test email",
+                Body = "Some testing content here."
+            };
         }
 
         [Test]
