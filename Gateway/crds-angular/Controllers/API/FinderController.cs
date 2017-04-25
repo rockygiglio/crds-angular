@@ -24,6 +24,7 @@ namespace crds_angular.Controllers.API
         private readonly IAwsCloudsearchService _awsCloudsearchService;
         private readonly IAddressService _addressService;
         private readonly IFinderService _finderService;
+        private readonly IAuthenticationRepository _authenticationRepo;
         private readonly IAddressGeocodingService _addressGeocodingService;
         private readonly ILog _logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -39,6 +40,7 @@ namespace crds_angular.Controllers.API
             _finderService = finderService;
             _addressGeocodingService = addressGeocodingService;
             _awsCloudsearchService = awsCloudsearchService;
+            _authenticationRepo = authenticationRepository;
         }
 
         [ResponseType(typeof(PinDto))]
@@ -233,6 +235,39 @@ namespace crds_angular.Controllers.API
             });
         }
 
+        /// <summary>
+        /// Create Pin with provided address details
+        /// </summary>
+        [RequiresAuthorization]
+        [ResponseType(typeof(PinDto))]
+        [VersionedRoute(template: "finder/gathering/edit", minimumVersion: "1.0.0")]
+        [Route("finder/gathering/edit")]
+        [HttpPut]
+        public IHttpActionResult EditGatheringPin([FromBody] PinDto pin)
+        {
+            return Authorized(token =>
+            {
+                try
+                {
+                    if (pin.Contact_ID != _authenticationRepo.GetContactId(token))
+                    {
+                        throw new HttpResponseException(HttpStatusCode.Unauthorized);
+                    }
+
+                    pin = _finderService.UpdateGathering(pin);
+                    _awsCloudsearchService.UploadNewPinToAws(pin);
+
+                    return (Ok(pin));
+                }
+                catch (Exception e)
+                {
+                    _logger.Error("Could not update pin", e);
+                    var apiError = new ApiErrorDto("Save Pin Failed", e);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+            });
+        }
+
         [ResponseType(typeof(PinSearchResultsDto))]
         [VersionedRoute(template: "finder/findpinsbyaddress/{userSearchAddress}/{lat?}/{lng?}/{upperleftlat?}/{upperleftlng?}/{bottomrightlat?}/{bottomrightlng?}", minimumVersion: "1.0.0")]
         [Route("finder/findpinsbyaddress/{userSearchAddress}/{lat?}/{lng?}/{upperleftlat?}/{upperleftlng?}/{bottomrightlat?}/{bottomrightlng?}")]
@@ -392,7 +427,6 @@ namespace crds_angular.Controllers.API
             {
                 try
                 {
-
                     _finderService.RequestToBeHost(token, hostRequest);
                     return Ok();
                 }

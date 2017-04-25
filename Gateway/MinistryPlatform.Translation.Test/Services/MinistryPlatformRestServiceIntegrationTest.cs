@@ -590,6 +590,41 @@ namespace MinistryPlatform.Translation.Test.Services
 
             Assert.NotNull(registrations);
         }
+
+        [Test]
+        public void ShouldGetParticpantByContactId()
+        {
+            const int id = 2186211;
+            var searchString = $"Contact_ID_Table.[Contact_ID]={id}";
+            var columnList = new List<string>
+            {
+                "Contact_ID_Table.Contact_ID",
+                "Participants.[Participant_ID]",
+                "Contact_ID_Table.Email_Address",
+                "Contact_ID_Table.Nickname as [NickName]",
+                "Contact_ID_Table.Display_Name",
+                "Contact_ID_Table.Nickname",
+                "Contact_ID_Table.__Age as [Age]",
+                "Participants.Attendance_Start_Date",
+                "Participants.[Approved_Small_Group_Leader]",
+                "Participant_Type_ID_Table.Participant_Type",
+                "Group_Leader_Status_ID_Table.Group_Leader_Status_ID"
+            };
+            var participant = _fixture.UsingAuthenticationToken(_authToken).Search<MpParticipant>(searchString, columnList);
+            Assert.IsNotNull(participant);
+            Assert.AreEqual(participant.Count, 1);
+            Assert.IsNotEmpty(participant.First().EmailAddress);
+            Assert.AreEqual(participant.First().ContactId, id);
+            Assert.AreNotEqual(0, participant.First().ParticipantId);
+            Assert.AreNotEqual(0, participant.First().Age);
+            Assert.IsNotEmpty(participant.First().PreferredName);
+            Assert.IsNotEmpty(participant.First().DisplayName);
+            Assert.IsNotEmpty(participant.First().Nickname);
+            Assert.IsNotNull(participant.First().AttendanceStart);
+            Assert.IsTrue(participant.First().ApprovedSmallGroupLeader);
+            Assert.AreEqual("Attendee", participant.First().Role);
+            Assert.AreEqual(2, participant.First().GroupLeaderStatus);
+        }
     }
 
     [MpRestApiTable(Name = "Payment_Types")]

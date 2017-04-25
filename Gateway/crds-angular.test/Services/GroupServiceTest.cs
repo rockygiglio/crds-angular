@@ -835,7 +835,7 @@ namespace crds_angular.test.Services
             participantService.Setup(x => x.GetParticipantRecord(token)).Returns(participant);
 
             Assert.Throws<InvalidOperationException>(() => fixture.SendJourneyEmailInvite(communication, token));
-            _communicationService.Verify(x => x.SendMessage(It.IsAny<MpCommunication>(), false), Times.Never);
+            _communicationService.Verify(x => x.SendMessage(It.IsAny<MinistryPlatform.Translation.Models.MpCommunication>(), false), Times.Never);
         }
 
         [Test]
@@ -859,7 +859,7 @@ namespace crds_angular.test.Services
             var membership = groups.Where(group => group.GroupId == groupId).ToList();
             Assert.AreEqual(membership.Count, 0);
             Assert.Throws<InvalidOperationException>(() => fixture.SendJourneyEmailInvite(communication, token));
-            _communicationService.Verify(x => x.SendMessage(It.IsAny<MpCommunication>(), false), Times.Never);
+            _communicationService.Verify(x => x.SendMessage(It.IsAny<MinistryPlatform.Translation.Models.MpCommunication>(), false), Times.Never);
         }
 
         [Test]
@@ -901,12 +901,12 @@ namespace crds_angular.test.Services
             _contactService.Setup(mocked => mocked.GetContactById(It.IsAny<int>())).Returns(contact);
             _objectAttributeService.Setup(mocked => mocked.GetObjectAttributes(token, It.IsAny<int>(), It.IsAny<MpObjectAttributeConfiguration>(), It.IsAny<List<MpAttribute>>()))
                 .Returns(attributes);
-            _communicationService.Setup(m => m.SendMessage(It.IsAny<MpCommunication>(), false)).Verifiable();
+            _communicationService.Setup(m => m.SendMessage(It.IsAny<MinistryPlatform.Translation.Models.MpCommunication>(), false)).Verifiable();
 
             var membership = groups.Where(group => group.GroupId == groupId).ToList();
             fixture.SendJourneyEmailInvite(communication, token);
             Assert.AreEqual(membership.Count, 1);
-            _communicationService.Verify(m => m.SendMessage(It.IsAny<MpCommunication>(), false), Times.Once);
+            _communicationService.Verify(m => m.SendMessage(It.IsAny<MinistryPlatform.Translation.Models.MpCommunication>(), false), Times.Once);
         }
 
         public void shouldThrowGroupIsFullExceptionWhenGroupFullIndicatorIsSet()
@@ -1102,7 +1102,7 @@ namespace crds_angular.test.Services
             _communicationService.Setup(
                 mocked =>
                     mocked.SendMessage(
-                        It.Is<MpCommunication>(
+                        It.Is<MinistryPlatform.Translation.Models.MpCommunication>(
                             c =>
                                 c.AuthorUserId == 5 && c.DomainId == DOMAIN_ID && c.EmailBody.Equals(template.Body) && c.EmailSubject.Equals(template.Subject) &&
                                 c.FromContact.ContactId == template.FromContactId && c.FromContact.EmailAddress.Equals(template.FromEmailAddress) &&
@@ -1182,7 +1182,7 @@ namespace crds_angular.test.Services
             _communicationService.Setup(
                 mocked =>
                     mocked.SendMessage(
-                        It.Is<MpCommunication>(
+                        It.Is<MinistryPlatform.Translation.Models.MpCommunication>(
                             c =>
                                 c.AuthorUserId == 5 && c.DomainId == DOMAIN_ID && c.EmailBody.Equals(template.Body) && c.EmailSubject.Equals(template.Subject) &&
                                 c.FromContact.ContactId == template.FromContactId && c.FromContact.EmailAddress.Equals(template.FromEmailAddress) &&
@@ -1327,7 +1327,7 @@ namespace crds_angular.test.Services
             }).ToList();
 
             participantService.Setup(mocked => mocked.GetParticipantRecord(token)).Returns(sender);
-            _communicationService.Setup(mocked => mocked.SendMessage(It.Is<MpCommunication>(
+            _communicationService.Setup(mocked => mocked.SendMessage(It.Is<MinistryPlatform.Translation.Models.MpCommunication>(
                 c =>
                     c.AuthorUserId == authorId && c.DomainId == DOMAIN_ID && c.EmailBody.Equals(body) && c.EmailSubject.Equals(subject) &&
                     c.FromContact.ContactId == fromContact.ContactId && c.FromContact.EmailAddress.Equals(fromContact.EmailAddress) &&

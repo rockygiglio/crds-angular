@@ -72,7 +72,6 @@ namespace MinistryPlatform.Translation.Repositories
         public MpParticipant GetParticipant(int contactId)
         {
             MpParticipant participant;
-            //var records = new List<Dictionary<string, object>>();
             try
             {
                 var searchStr = contactId.ToString() + ",";
@@ -87,8 +86,8 @@ namespace MinistryPlatform.Translation.Repositories
                     ContactId = record.ToInt("Contact_ID"),
                     ParticipantId = record.ToInt("Participant_ID"),
                     EmailAddress = record.ToString("Email_Address"),
-                    PreferredName = record.ToString("Nickname"), 
-                    DisplayName =  record.ToString("Display_Name"), 
+                    PreferredName = record.ToString("Nickname"),
+                    DisplayName = record.ToString("Display_Name"),
                     Age = record.ToInt("__Age"),
                     ApprovedSmallGroupLeader = record.ToBool("Approved_Small_Group_Leader"),
                     AttendanceStart = record.ToDate("Attendance_Start_Date")
@@ -99,9 +98,7 @@ namespace MinistryPlatform.Translation.Repositories
                 throw new ApplicationException(
                     string.Format("GetParticipant failed.  Contact Id: {0}", contactId), ex);
             }
-
-
-            return participant;
+            return participant;       
         }
 
         public void UpdateParticipant(MpParticipant participant)

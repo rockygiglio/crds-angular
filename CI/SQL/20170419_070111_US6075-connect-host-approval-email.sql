@@ -38,3 +38,5 @@ BEGIN
 	SET IDENTITY_INSERT [dbo].[dp_Communications] OFF
 
 END
+GO
+

@@ -267,6 +267,66 @@ namespace crds_angular.test.Services
             };
         }
 
+        [Test]
+        public void ShouldSetApplicantAsApplied()
+        {
+            const int groupLeaderAppliedId = 3;
+            const string fakeToken = "letmein";
+            var fakeParticipant = ParticipantMock();          
+            _participantRepository.Setup(m => m.GetParticipantRecord(fakeToken)).Returns(fakeParticipant);
+            _participantRepository.Setup(m => m.UpdateParticipant(It.IsAny<MpParticipant>())).Callback((MpParticipant p) =>
+            {
+                Assert.AreEqual(groupLeaderAppliedId, p.GroupLeaderStatus);
+            });
+            _configWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderApplied")).Returns(groupLeaderAppliedId);
+
+            var res = _fixture.SetApplied(fakeToken);
+
+            res.Subscribe((n) =>
+            {
+                Assert.AreEqual(n, 1);
+            },
+            (err) =>
+            {
+                Assert.Fail();
+            });
+        }
+
+        [Test]
+        public void ShouldFailToSetApplicantAsAppliedIfUpdateFails()
+        {
+            const int groupLeaderAppliedId = 3;
+            const string fakeToken = "letmein";
+            var fakeParticipant = ParticipantMock();
+            _participantRepository.Setup(m => m.GetParticipantRecord(fakeToken)).Returns(fakeParticipant);
+            _participantRepository.Setup(m => m.UpdateParticipant(It.IsAny<MpParticipant>())).Callback((MpParticipant p) =>
+            {
+                Assert.AreEqual(groupLeaderAppliedId, p.GroupLeaderStatus);
+            }).Throws<Exception>();
+            _configWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderApplied")).Returns(groupLeaderAppliedId);
+
+            var res = _fixture.SetApplied(fakeToken);
+
+            res.Subscribe((n) =>
+            {
+                Assert.Fail();
+            },
+            Assert.IsInstanceOf<Exception>);
+        }
+
+        [Test]
+        public void ShouldFailToSetApplicantAsAppliedIfUpGetProfileFails()
+        {           
+            const string fakeToken = "letmein";            
+            _participantRepository.Setup(m => m.GetParticipantRecord(fakeToken)).Throws<Exception>();                      
+            var res = _fixture.SetApplied(fakeToken);
+            res.Subscribe((n) =>
+            {
+                Assert.Fail();
+            },
+            Assert.IsInstanceOf<Exception>);
+        }
+
         private static GroupLeaderProfileDTO GroupLeaderMock()
         {
             return new GroupLeaderProfileDTO()

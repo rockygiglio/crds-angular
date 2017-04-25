@@ -18,6 +18,7 @@ using crds_angular.Exceptions;
 using crds_angular.Models.AwsCloudsearch;
 using crds_angular.Models.Crossroads.Groups;
 using Crossroads.Web.Common.Configuration;
+using MinistryPlatform.Translation.Models.Finder;
 
 namespace crds_angular.Services
 {
@@ -133,11 +134,22 @@ namespace crds_angular.Services
             _finderRepository.EnablePin(participantId);
         }
 
+        public PinDto UpdateGathering(PinDto pin)
+        {
+            // Update coordinates
+            var coordinates = _addressService.GetGeoLocationCascading(pin.Gathering.Address);
+            pin.Gathering.Address.Latitude = coordinates.Latitude;
+            pin.Gathering.Address.Longitude = coordinates.Longitude;
+
+            var gathering = Mapper.Map<FinderGatheringDto>(pin.Gathering);
+
+            pin.Gathering = Mapper.Map<GroupDTO>(_finderRepository.UpdateGathering(gathering));
+
+            return pin;
+        }
+
         public void UpdateHouseholdAddress(PinDto pin)
         {
-            // TODO is this supposed to be gone?? merge conflicts
-            // _addressService.SetGeoCoordinates(pin.Address);
-
             var coordinates = _addressService.GetGeoLocationCascading(pin.Address);
             pin.Address.Latitude = coordinates.Latitude;
             pin.Address.Longitude = coordinates.Longitude;
@@ -145,7 +157,7 @@ namespace crds_angular.Services
             var address = Mapper.Map<MpAddress>(pin.Address);
             var addressDictionary = getDictionary(address);
             addressDictionary.Add("State/Region", addressDictionary["State"]);
-            _contactRepository.UpdateHouseholdAddress((int)pin.Contact_ID, householdDictionary, addressDictionary);
+            _contactRepository.UpdateHouseholdAddress((int)pin.Contact_ID, null, addressDictionary);
         }
 
         public List<GroupParticipantDTO> GetParticipantsForGroup(int groupId)
@@ -179,6 +191,15 @@ namespace crds_angular.Services
             // get contact data
             var contact = _contactRepository.GetContactById(hostRequest.ContactId);
             var participant = _participantRepository.GetParticipant(hostRequest.ContactId);
+
+            //update mobile phone number on contact record
+            contact.Mobile_Phone = hostRequest.ContactNumber;
+            var updateToDictionary = new Dictionary<string, object>
+                {
+                    {"Contact_ID", hostRequest.ContactId},
+                    {"Mobile_Phone",hostRequest.ContactNumber}
+                };
+            _contactRepository.UpdateContact(hostRequest.ContactId, updateToDictionary);
 
             // create the address for the group
             var hostAddressId = _addressService.CreateAddress(hostRequest.Address);
