@@ -12,6 +12,7 @@ using Crossroads.Web.Common.Security;
 using Moq;
 using NUnit.Framework;
 using System.Reactive;
+using System.Reactive.Disposables;
 using System.Web.Http;
 
 namespace crds_angular.test.controllers
@@ -104,9 +105,11 @@ namespace crds_angular.test.controllers
         [Test]
         public async void ShouldSaveSpiritualGrowthAnswers()
         {
+            _fixture.Request.Headers.Authorization = new AuthenticationHeaderValue(authType, authToken);
             var mockSpiritualGrowth = SpiritualGrowthMock();
 
             _groupLeaderService.Setup(m => m.SaveSpiritualGrowth(It.IsAny<SpiritualGrowthDTO>())).Returns(Observable.Start(() => 1));
+            _groupLeaderService.Setup(m => m.SetApplied(It.IsAny<string>())).Returns(Observable.Start(() => 1));
 
             var response = await _fixture.SaveSpiritualGrowth(mockSpiritualGrowth);
             Assert.IsInstanceOf<OkResult>(response);
@@ -126,6 +129,23 @@ namespace crds_angular.test.controllers
 
         [Test]
         public void ShouldThrowExceptionWhenSpiritualGrowthAnswersArentSaved()
+        {
+            var mockSpiritualGrowth = SpiritualGrowthMock();
+            _groupLeaderService.Setup(m => m.SaveSpiritualGrowth(It.IsAny<SpiritualGrowthDTO>())).Returns(Observable.Start(() => 1));
+            _groupLeaderService.Setup(m => m.SetApplied(It.IsAny<string>())).Returns(Observable.Create<int>((observer) =>
+            {
+                observer.OnError(new Exception(""));
+                return Disposable.Empty;
+            }));
+
+            Assert.Throws<HttpResponseException>(async () =>
+            {
+                await _fixture.SaveSpiritualGrowth(mockSpiritualGrowth);
+            });
+        }
+
+        [Test]
+        public void ShouldThrowExceptionWhenSpiritualGrowthAnswersAreSavedButNotApplied()
         {
             var mockSpiritualGrowth = SpiritualGrowthMock();
 
