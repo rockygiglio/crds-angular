@@ -90,7 +90,6 @@ namespace MinistryPlatform.Translation.Repositories
                     DisplayName = record.ToString("Display_Name"),
                     Age = record.ToInt("__Age"),
                     ApprovedSmallGroupLeader = record.ToBool("Approved_Small_Group_Leader"),
-                    GroupLeaderStatus = record.ToInt("Group_Leader_Status"),
                     AttendanceStart = record.ToDate("Attendance_Start_Date")
                 };
             }
