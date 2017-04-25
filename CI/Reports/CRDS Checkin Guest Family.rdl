@@ -59,10 +59,6 @@
           <DataField>Total Children</DataField>
           <rd:TypeName>System.Int32</rd:TypeName>
         </Field>
-        <Field Name="Total_Guest_Children">
-          <DataField>Total Guest Children</DataField>
-          <rd:TypeName>System.Int32</rd:TypeName>
-        </Field>
         <Field Name="Total_Households">
           <DataField>Total Households</DataField>
           <rd:TypeName>System.Int32</rd:TypeName>
@@ -481,7 +477,7 @@ FROM
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!Total_Household_Children.Value</Value>
+                                  <Value>="Household Children: " &amp; Fields!Total_Household_Children.Value</Value>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <Color>#4d4d4d</Color>
@@ -514,7 +510,7 @@ FROM
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Sum(Fields!Total_Children.Value, "dsNewFamilyHouseholds")</Value>
+                                  <Value>="Guests: " &amp; Fields!Total_Children.Value</Value>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <Color>#4d4d4d</Color>
@@ -933,7 +929,7 @@ FROM
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>="Total New Children: " &amp; Sum(Fields!Total_Household_Children.Value, "dsNewFamilyHouseholds")</Value>
+                    <Value>="Guests: " &amp; Sum(Fields!Total_Children.Value, "dsNewFamilyHouseholds")</Value>
                     <Style />
                   </TextRun>
                 </TextRuns>
