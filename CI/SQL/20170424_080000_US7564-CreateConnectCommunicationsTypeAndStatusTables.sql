@@ -50,16 +50,20 @@ GO
 /* insert some initial values */
 IF NOT EXISTS(SELECT * FROM [cr_Connect_Communications_Type] WHERE Communication_Type = 'Say Hi')
 BEGIN
-	INSERT INTO [dbo].[cr_Connect_Communications_Type](Communication_Type) VALUES('Say Hi');
-	INSERT INTO [dbo].[cr_Connect_Communications_Type](Communication_Type) VALUES('Invite To Gathering');
-	INSERT INTO [dbo].[cr_Connect_Communications_Type](Communication_Type) VALUES('Request To Join');
+    SET IDENTITY_INSERT cr_Connect_Communications_Type ON;
+	INSERT INTO [dbo].[cr_Connect_Communications_Type](Connect_Communications_Type_ID, Communication_Type) VALUES(1, 'Say Hi');
+	INSERT INTO [dbo].[cr_Connect_Communications_Type](Connect_Communications_Type_ID, Communication_Type) VALUES(2, 'Invite To Gathering');
+	INSERT INTO [dbo].[cr_Connect_Communications_Type](Connect_Communications_Type_ID, Communication_Type) VALUES(3, 'Request To Join');
+	SET IDENTITY_INSERT cr_Connect_Communications_Type OFF;
 END
 
 IF NOT EXISTS(SELECT * FROM [cr_Connect_Communications_Status] WHERE Communication_Status = 'Say Hi')
 BEGIN
-	INSERT INTO [dbo].[cr_Connect_Communications_Status](Communication_Status) VALUES('Accepted');
-	INSERT INTO [dbo].[cr_Connect_Communications_Status](Communication_Status) VALUES('Declined');
-	INSERT INTO [dbo].[cr_Connect_Communications_Status](Communication_Status) VALUES('N/A');
-	INSERT INTO [dbo].[cr_Connect_Communications_Status](Communication_Status) VALUES('Unanswered');
+    SET IDENTITY_INSERT cr_Connect_Communications_Status ON;
+	INSERT INTO [dbo].[cr_Connect_Communications_Status](Connect_Communications_Status_ID, Communication_Status) VALUES(1,'Accepted');
+	INSERT INTO [dbo].[cr_Connect_Communications_Status](Connect_Communications_Status_ID, Communication_Status) VALUES(2, 'Declined');
+	INSERT INTO [dbo].[cr_Connect_Communications_Status](Connect_Communications_Status_ID, Communication_Status) VALUES(3, 'N/A');
+	INSERT INTO [dbo].[cr_Connect_Communications_Status](Connect_Communications_Status_ID, Communication_Status) VALUES(4, 'Unanswered');
+	SET IDENTITY_INSERT cr_Connect_Communications_Status OFF;
 END
 GO
