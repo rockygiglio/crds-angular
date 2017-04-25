@@ -239,6 +239,16 @@ namespace crds_angular.Services
 
         public void GatheringJoinRequest(string token, int gatheringId)
         {
+
+            //var connection = new ConnectCommunicationDto
+            //{
+            //    CommunicationType = "Invite To Gathering",
+            //    CommunicationId = (int)invitation.CommunicationId,
+            //    ToUserContactId = _contactRepository.GetContactIdByEmail(person.email),
+            //    FromUserContactId = _contactRepository.GetContactId(token)
+            //};
+            //RecordCommunication(connection);
+
             _groupToolService.SubmitInquiry(token, gatheringId);
         }
 
@@ -478,14 +488,12 @@ namespace crds_angular.Services
             
             _invitationService.ValidateInvitation(invitation, token);
             invitation = _invitationService.CreateInvitation(invitation, token);
-
-            var connection = new ConnectCommunicationDto
-            {
-                CommunicationType = "Invite To Gathering",
-                CommunicationId = (int) invitation.CommunicationId,
-                ToUserContactId = _contactRepository.GetContactIdByEmail(person.email),
-                FromUserContactId = _contactRepository.GetContactId(token)
-            };
+            var connection = new ConnectCommunicationDto();
+            connection.CommunicationTypeId = _configurationWrapper.GetConfigIntValue("ConnectCommunicationTypeInviteToGathering");
+            connection.CommunicationId = (int) invitation.CommunicationId;
+            connection.ToContactId = _contactRepository.GetContactIdByEmail(person.email);
+            connection.FromContactId = _contactRepository.GetContactId(token);
+            
             RecordCommunication(connection);
             return invitation;
         }
