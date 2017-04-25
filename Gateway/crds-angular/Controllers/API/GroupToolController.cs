@@ -246,6 +246,7 @@ namespace crds_angular.Controllers.API
 
         /// <summary>
         /// Allows an invitee to accept or deny a group invitation.
+        /// DEPRICATED -- Use the function in the finder controller.
         /// </summary>
         /// <param name="groupId">An integer identifying the group that the invitation is associated to.</param>
         /// <param name="invitationKey">An string identifying the private invitation.</param>
