@@ -25,6 +25,7 @@ namespace crds_angular.Services.Interfaces
         List<GroupParticipantDTO> GetParticipantsForGroup(int groupId);
         AddressDTO GetGroupAddress(string token, int groupId);
         AddressDTO GetPersonAddress(string token, int participantId);
+        PinDto UpdateGathering(PinDto pin);
         void RequestToBeHost(string token, HostRequestDto hostRequest);
     }
 }
