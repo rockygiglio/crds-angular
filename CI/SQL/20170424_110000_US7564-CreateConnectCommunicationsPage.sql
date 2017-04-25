@@ -23,7 +23,7 @@ BEGIN
 						, 300
 						, 'cr_Connect_Communications'
 						, 'Connect_Communications_ID'
-						, 'From_Contact_ID_Table.[Display_Name] AS From_Contact_Name,From_Contact_ID_Table.[Email_Address] AS From_Contact_Email, To_Contact_ID_Table.[Display_Name] AS To_Contact_Name, To_Contact_ID_Table.[Email_Address] AS To_Contact_Email, Communication_ID_Table.[Start_Date] AS Communication_Date, Communication_Type_ID_Table.[Communication_Type], Communication_Status_ID_Table.[Communication_Status]'
+						, 'From_Contact_ID_Table.[Display_Name] AS From_Contact_Name,From_Contact_ID_Table.[Email_Address] AS From_Contact_Email, To_Contact_ID_Table.[Display_Name] AS To_Contact_Name, To_Contact_ID_Table.[Email_Address] AS To_Contact_Email, Communication_Date, Communication_Type_ID_Table.[Communication_Type], Communication_Status_ID_Table.[Communication_Status], Group_ID_Table.[Group_Name] Gathering_Name'
 						, 'Connect_Communications_ID'
 						, 1)
 	SET IDENTITY_INSERT dbo.dp_Pages OFF; 

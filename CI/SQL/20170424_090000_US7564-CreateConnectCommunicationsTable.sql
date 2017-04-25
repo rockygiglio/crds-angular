@@ -13,9 +13,10 @@ BEGIN
 		[Connect_Communications_ID] [int] IDENTITY(1,1) NOT NULL,
 		[From_Contact_ID] [int] NOT NULL,
 		[To_Contact_ID] [int] NOT NULL,
-		[Communication_ID] [int] NOT NULL,
+		[Communication_Date] [datetime] NOT NULL,
 		[Communication_Type_ID] [int] NOT NULL,
 		[Communication_Status_ID] [int] NOT NULL,
+		[Group_ID] [int] NULL,
 		[Domain_ID] [int] NOT NULL,
 	 CONSTRAINT [PK_cr_Connect_Communications] PRIMARY KEY CLUSTERED 
 	(
@@ -24,6 +25,7 @@ BEGIN
 	) ON [PRIMARY]
 
 	ALTER TABLE [dbo].[cr_Connect_Communications] ADD  CONSTRAINT [DF_cr_Connect_Communications_Domain_ID]  DEFAULT ((1)) FOR [Domain_ID]
+	ALTER TABLE [dbo].[cr_Connect_Communications] ADD  CONSTRAINT [DF_cr_Connect_Communications_Start_Date]  DEFAULT (getdate()) FOR [Communication_Date]
 
 	/* FromUser */
 	ALTER TABLE [dbo].[cr_Connect_Communications]  WITH CHECK ADD  CONSTRAINT [FK_cr_Connect_Communications_Contacts_From] FOREIGN KEY([From_Contact_ID])
@@ -37,11 +39,11 @@ BEGIN
 	
 	ALTER TABLE [dbo].[cr_Connect_Communications] CHECK CONSTRAINT [FK_cr_Connect_Communications_Contacts_To]
 
-	/* Message */
-	ALTER TABLE [dbo].[cr_Connect_Communications]  WITH CHECK ADD  CONSTRAINT [FK_cr_Connect_Communications_Communication_ID] FOREIGN KEY([Communication_ID])
-	REFERENCES [dbo].[dp_Communications] ([Communication_ID])
+	/* Group */
+	ALTER TABLE [dbo].[cr_Connect_Communications]  WITH CHECK ADD  CONSTRAINT [FK_cr_Connect_Communications_Group] FOREIGN KEY([Group_ID])
+	REFERENCES [dbo].[Groups] ([Group_ID])
 	
-	ALTER TABLE [dbo].[cr_Connect_Communications] CHECK CONSTRAINT [FK_cr_Connect_Communications_Communication_ID]
+	ALTER TABLE [dbo].[cr_Connect_Communications] CHECK CONSTRAINT [FK_cr_Connect_Communications_Group]
 
 	/* Communication Type */
 	ALTER TABLE [dbo].[cr_Connect_Communications]  WITH CHECK ADD  CONSTRAINT [FK_cr_Connect_Communications_Communication_Type_ID] FOREIGN KEY([Communication_Type_ID])
