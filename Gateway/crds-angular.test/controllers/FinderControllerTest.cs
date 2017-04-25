@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Device.Location;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.Results;
 using crds_angular.Controllers.API;
@@ -93,6 +95,13 @@ namespace crds_angular.test.controllers
 
             var response = _fixture.GetMyPinsByContactId(fakecontactid, fakelat, fakelong) as OkNegotiatedContentResult<PinSearchResultsDto>;
             Assert.That(response != null && response.Content.PinSearchResults.Count == 0);
+        }
+
+        [Test]
+        [ExpectedException(typeof(HttpResponseException))]
+        public void TestNotAuthorized()
+        {
+            _authenticationRepository.Setup(mocked => mocked.GetContactId("abc")).Returns(123456);
         }
 
         private static List<PinDto> GetListOfPinDto()

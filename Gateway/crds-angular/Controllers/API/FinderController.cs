@@ -251,7 +251,7 @@ namespace crds_angular.Controllers.API
                 {
                     if (pin.Contact_ID != _authenticationRepo.GetContactId(token))
                     {
-                        throw new Exception("User does not own pin that is being updated");
+                        throw new HttpResponseException(HttpStatusCode.Unauthorized);
                     }
 
                     pin = _finderService.UpdateGathering(pin);
