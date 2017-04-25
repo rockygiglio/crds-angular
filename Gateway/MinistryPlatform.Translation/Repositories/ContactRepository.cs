@@ -163,19 +163,18 @@ namespace MinistryPlatform.Translation.Repositories
 
         public int GetContactIdByEmail(string email)
         {
-            var token = ApiLogin();
-            var filter = new Dictionary<string, object>()
-            {
-                {"Email_Address", email}
-            };
-            var records = _ministryPlatformRest.UsingAuthenticationToken(token).Get<MpMyContact>("Contacts", filter);
+            var records = _ministryPlatformService.GetRecordsDict(_configurationWrapper.GetConfigIntValue("Contacts"), ApiLogin(), (email));
             if (records.Count > 1)
             {
-                throw new ApplicationException("GetContactIdByEmail returned multiple records");
+                throw new Exception("User email did not return exactly one user record");
             }
-            
-            var firstOrDefault = records.FirstOrDefault();
-            return firstOrDefault?.Contact_ID ?? 0;
+            if (records.Count < 1)
+            {
+                return 0;
+            }
+
+            var record = records[0];
+            return record.ToInt("dp_RecordID");
         }
 
         public int GetContactIdByParticipantId(int participantId)
