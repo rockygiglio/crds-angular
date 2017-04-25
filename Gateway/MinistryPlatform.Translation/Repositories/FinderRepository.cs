@@ -76,7 +76,7 @@ namespace MinistryPlatform.Translation.Repositories
 
         public FinderGatheringDto UpdateGathering(FinderGatheringDto finderGathering)
         {
-            var token = base.ApiLogin();       
+            string token = _apiUserRepository.GetToken();
             return _ministryPlatformRest.UsingAuthenticationToken(token).Update<FinderGatheringDto>(finderGathering, _groupColumns);
         }
 

@@ -27,7 +27,21 @@ namespace MinistryPlatform.Translation.Test.Services
         private Mock<IConfigurationWrapper> _config;
         private Mock<IApiUserRepository> _apiUserRepo;
 
-        private FinderRepository _fixture;
+        private List<string> _groupColumns = new List<string>
+            {
+                "Groups.Group_ID",
+                "Groups.Group_Name",
+                "Groups.Description",
+                "Groups.Start_Date",
+                "Groups.End_Date",
+                "Offsite_Meeting_Address_Table.*",
+                "Groups.Available_Online",
+                "Groups.Primary_Contact",
+                "Groups.Congregation_ID",
+                "Groups.Ministry_ID"
+            };
+
+    private FinderRepository _fixture;
 
 
         [SetUp]
@@ -109,6 +123,59 @@ namespace MinistryPlatform.Translation.Test.Services
             _fixture.EnablePin(123);
             _ministryPlatformRestRepository.VerifyAll();
 
+        }
+
+        [Test]
+        public void ShouldUpdateGathering()
+        {
+            _apiUserRepo.Setup(m => m.GetToken()).Returns("abc");
+            
+
+            var gathering = this.GetAGatheringDto();
+
+            _ministryPlatformRestRepository.Setup(mocked => mocked.Update<FinderGatheringDto>(gathering, _groupColumns)).Returns(gathering);
+
+            _fixture.UpdateGathering(gathering);
+            _ministryPlatformRestRepository.VerifyAll();
+        }
+
+        private FinderGatheringDto GetAGatheringDto(int designator = 1)
+        {
+            return new FinderGatheringDto()
+            {
+                Address = this.GetAnAddress(),
+                AvailableOnline = true,
+                ChildCareAvailable = false,
+                CongregationId = designator,
+                Congregation = "Congregation",
+                EndDate = null,
+                Full = false,
+                GroupDescription = "This is not the greatest group in the world",
+                GroupId = designator,
+                GroupRoleId = designator,
+                PrimaryContact = designator,
+                GroupType = 30,
+                Name = "Test Gathering",
+                MinistryId = designator,
+                StartDate = DateTime.Now
+            };
+        }
+
+        private MpAddress GetAnAddress(int designator = 1)
+        {
+            return new MpAddress()
+            {
+                Address_ID = designator,
+                Address_Line_1 = $"{designator} Test Street",
+                Address_Line_2 = null,
+                City = "City!",
+                County = "county",
+                Foreign_Country = "USA",
+                Latitude = designator,
+                Longitude = designator,
+                Postal_Code = "12345",
+                State = "OH"
+            };
         }
     }
 }
