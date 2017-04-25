@@ -74,34 +74,10 @@ namespace MinistryPlatform.Translation.Repositories
             return pinDetails;
         }
 
-        /// <summary>
-        /// Updates a gathering
-        /// </summary>
-        /// <param name="gathering"></param>
         public GatheringDto UpdateGathering(GatheringDto gathering)
         {
-            var token = base.ApiLogin();
-            
+            var token = base.ApiLogin();       
             return _ministryPlatformRest.UsingAuthenticationToken(token).Update<GatheringDto>(gathering, _groupColumns);
-  
-        }
-
-        private Dictionary<string, object> ObjectToDictionary<T>(T item)
-        {
-            Type objectType = item.GetType();
-            Dictionary<string, object> dict = new Dictionary<string, object>();
-            var indexer = new object[0];
-            PropertyInfo[] properties = objectType.GetProperties();
-            foreach (var info in properties)
-            {
-                var value = info.GetValue(item, indexer);
-                if (value != null)
-                {
-                    dict.Add(info.Name, value);
-                }
-            }
-
-            return dict;
         }
 
         public MpAddress GetPinAddress(int participantId)
