@@ -2,6 +2,12 @@ USE [MinistryPlatform]
 GO
 
 /****** Object:  StoredProcedure [dbo].[report_CRDS_Donor_Contribution_Statement]    Script Date: 4/19/2017 12:41:11 PM ******/
+/* Updates:
+		     KD 4/26/17: added soft credit check to account for data weirdness. prob only a problem in int, but still a fail-safe everywhere
+			             added congregation filter
+						 added campaign contributions
+*/
+
 SET ANSI_NULLS ON
 GO
 
@@ -9,23 +15,23 @@ SET QUOTED_IDENTIFIER ON
 GO
 
 
-
 -- Created 4/6/2017 for Paper Statements
 ALTER PROCEDURE [dbo].[report_CRDS_Donor_Contribution_Statement] (
 	@FromDate DateTime,
 	@ToDate DateTime,
 	@AccountingCompanyID Int,
+	@Congregations varchar(max),
 	@Campaigns varchar(max)
 )
 AS
 
-
 --For Testing 
 /*
-Declare @FromDate DateTime = '20170419'
-Declare	@ToDate DateTime = '20170419'
+Declare @FromDate DateTime = '20160101'
+Declare	@ToDate DateTime = '20161231'
 Declare	@AccountingCompanyID Int = 1 --Crossroads
-Declare @Campaigns varchar(max) = '1103,60'
+Declare @Campaigns varchar(max) = '1103,60' --Oakley
+Declare @Congregations varchar(max) = '7' --Oakley
 */
 
 BEGIN
@@ -37,6 +43,9 @@ BEGIN
 	-- Normalize dates to remove time and ensure end date is inclusive
 	SET @FromDate = CONVERT(DATE, @FromDate)
 	SET @ToDate = CONVERT(DATE, @ToDate + 1)
+
+	CREATE TABLE #Congregations (Congregation_ID INT)
+	INSERT INTO #Congregations SELECT item FROM dp_Split(@Congregations, ',')
 
 	CREATE TABLE #Campaigns (Campaign_ID INT)
 	INSERT INTO #Campaigns SELECT item FROM dp_Split(@Campaigns, ',')
@@ -110,6 +119,8 @@ BEGIN
 	FROM
 		Donors Do
 		INNER JOIN Contacts C ON C.Contact_ID = Do.Contact_ID
+		INNER JOIN Households H ON C.Household_ID = H.Household_ID
+		INNER JOIN #Congregations cong ON H.Congregation_ID = cong.Congregation_ID
 	WHERE --Using EXISTS instead of JOIN because we only want one row per donor and #Donations will have one row for each donation
 		EXISTS ( 
 			SELECT 1
@@ -131,8 +142,10 @@ BEGIN
 		Donation_Distributions DD
 		INNER JOIN Donors Do ON Do.Donor_ID = DD.Soft_Credit_Donor
 		INNER JOIN Contacts C ON C.Contact_ID = Do.Contact_ID
+		INNER JOIN Households H ON C.Household_ID = H.Household_ID
+		INNER JOIN #Congregations cong ON H.Congregation_ID = cong.Congregation_ID
 	WHERE
-		EXISTS ( --Using EXISTS instead of JOIN because we only want one row per donor and #Donations will have one row for each donation
+		 EXISTS ( --Using EXISTS instead of JOIN because we only want one row per donor and #Donations will have one row for each donation
 			SELECT 1
 			FROM #Donations D
 			JOIN Donation_Distributions DD ON DD.Donation_ID = D.Donation_ID
@@ -151,6 +164,55 @@ BEGIN
 
 	CREATE INDEX IX_DONORS_DonorID ON #DONORS(Donor_ID);
 
+	--Handle Campaign Pledges 
+	--getting all of them so we can handle spouse, children, etc
+	--#Pledges will hold all information about pledges all campaigns in the list
+	CREATE TABLE #Pledges (Donor_ID INT, Pledge_ID INT, Pledge_Campaign_ID INT, Total_Pledge money, Campaign_Name varchar (50) )
+	INSERT INTO #Pledges
+	SELECT Donor_ID, p.Pledge_ID, p.Pledge_Campaign_id, p.Total_Pledge, c.Campaign_Name
+	FROM Pledges p
+	INNER JOIN Pledge_Campaigns c on p.Pledge_Campaign_ID = c.Pledge_Campaign_ID
+	WHERE p.Pledge_Campaign_ID in (SELECT Campaign_ID FROM #Campaigns) 
+	AND p.Pledge_Status_ID in (1,2) --only report on active or completed pledges
+
+	--#PledgeTotals holds all pledge totals for the campaign
+	CREATE TABLE #PledgeTotals (Pledge_ID INT, Pledge_Owner INT, Total_Pledge money, Sum_Donations_ForPledge money,Campaign_Name varchar (50))	  
+	--#PledgeData will hold all information about pledges for any statement_id in the list
+	CREATE TABLE #PledgeData (Pledge_ID INT, Total_Pledge money, Sum_Donations_ForPledge money, Statement_ID VARCHAR(15),Campaign_Name varchar (50))
+	
+	
+	--If they selected none in the list we aren't going to give them any even if they selected other ones
+	IF NOT EXISTS (Select 1 from #Campaigns where campaign_id = 0)
+	BEGIN
+
+	  --We can't join on donors yet because we want all donations for the pledge regardless of the donor
+	
+	  INSERT INTO #PledgeTotals 
+	  SELECT p.Pledge_ID, p.Donor_ID, p.Total_Pledge, SUM (dd.amount),p.campaign_name
+	  FROM Donation_Distributions dd
+	  INNER JOIN #Pledges p ON dd.Pledge_ID =p.Pledge_ID
+	  WHERE Pledge_Campaign_ID in (SELECT Campaign_ID from #Campaigns)
+	  GROUP BY p.Pledge_ID, p.Donor_ID, p.Total_Pledge, p.campaign_name
+	  
+	  --get the statement_id for the pledge the same way as we got it for the #Gifts and sum the donations for the pledge
+	  --using distinct instead of exists because it's waaaayyy faster 21 seconds vs > 3 minutes when I killed it
+	  
+	  INSERT INTO #PledgeData
+	  SELECT distinct
+	    pt.Pledge_ID,
+		pt.Total_Pledge, 
+		pt.Sum_Donations_ForPledge, 
+		Statement_ID = CASE WHEN C.Household_ID IS NULL OR d.Statement_Type_ID = 1 THEN 'C' + CONVERT(VARCHAR(10),C.Contact_ID) ELSE 'F' + CONVERT(VARCHAR(10),C.Household_ID) END,
+		pt.Campaign_Name
+      FROM #PledgeTotals pt
+      INNER JOIN Donors d ON d.Donor_ID = pt.Pledge_Owner
+	  INNER JOIN Contacts c ON d.Contact_ID = c.Contact_ID
+	  INNER JOIN #Donors fd ON fd.Contact_Or_Household_ID = 
+		     CASE WHEN fd.Statement_Type_ID = 1 THEN c.Contact_ID
+	              WHEN fd.Statement_Type_ID = 2 THEN c.Household_ID
+			      ELSE 'x' --leave them off
+			      END
+	END 
 
 	--#Gifts will contain all of the donations for the time period with the information setup for the statements
 	CREATE TABLE #Gifts(
@@ -265,52 +327,7 @@ BEGIN
 
 	CREATE INDEX IX_Gifts_DonorID ON #Gifts(Donor_ID)
 
-
-	--Handle Campaign Pledges 
-
-	--getting all of them so we can handle spouse, children, etc
-	--#Pledges will hold all information about pledges all campaigns in the list
-	CREATE TABLE #Pledges (Donor_ID INT, Pledge_ID INT, Pledge_Campaign_ID INT, Total_Pledge money, Campaign_Name varchar (50) )
-	INSERT INTO #Pledges
-	SELECT Donor_ID, p.Pledge_ID, p.Pledge_Campaign_id, p.Total_Pledge, c.Campaign_Name
-	FROM Pledges p
-	INNER JOIN Pledge_Campaigns c on p.Pledge_Campaign_ID = c.Pledge_Campaign_ID
-	WHERE p.Pledge_Campaign_ID in (SELECT Campaign_ID FROM #Campaigns) 
-	AND p.Pledge_Status_ID in (1,2) --only report on active or completed pledges
-
 	
-
-
-	  --We can't join on donors yet because we want all donations for the pledge regardless of the donor
-	  CREATE TABLE #PledgeTotals (Pledge_ID INT, Pledge_Owner INT, Total_Pledge money, Sum_Donations_ForPledge money,Campaign_Name varchar (50))	  
-	  INSERT INTO #PledgeTotals 
-	  SELECT p.Pledge_ID, p.Donor_ID, p.Total_Pledge, SUM (dd.amount),p.campaign_name
-	  FROM Donation_Distributions dd
-	  INNER JOIN #Pledges p ON dd.Pledge_ID =p.Pledge_ID
-	  WHERE Pledge_Campaign_ID in (SELECT Campaign_ID from #Campaigns)
-	  GROUP BY p.Pledge_ID, p.Donor_ID, p.Total_Pledge, p.campaign_name
-	  
-	  --get the statement_id for the pledge the same way as we got it for the #Gifts and sum the donations for the pledge
-	  --#PledgeData will hold all information about pledges and amounts for any campaigns in the list 
-	CREATE TABLE #PledgeData (Pledge_ID INT, Total_Pledge money, Sum_Donations_ForPledge money, Statement_ID VARCHAR(15),Campaign_Name varchar (50))
-	  INSERT INTO #PledgeData
-	  SELECT 
-	    pt.Pledge_ID,
-		pt.Total_Pledge, 
-		pt.Sum_Donations_ForPledge, 
-		Statement_ID = CASE WHEN C.Household_ID IS NULL OR d.Statement_Type_ID = 1 THEN 'C' + CONVERT(VARCHAR(10),C.Contact_ID) ELSE 'F' + CONVERT(VARCHAR(10),C.Household_ID) END,
-		pt.Campaign_Name
-      FROM #PledgeTotals pt
-      INNER JOIN Donors d ON d.Donor_ID = pt.Pledge_Owner
-	  INNER JOIN Contacts c ON d.Contact_ID = c.Contact_ID	  
-	  WHERE  --Use exists instead of join becuase we don't want everything. Get rid of all pledges for donors we aren't including in the report
-	    EXISTS ( 
-		   SELECT 1 FROM #Donors fd 
-		   WHERE 
-		        (fd.Statement_Type_ID = 1 AND fd.Contact_Or_Household_ID = c.Contact_ID )  -- Matching single
-			 OR (fd.Statement_Type_ID = 2 AND fd.Contact_Or_Household_ID = c.Household_ID  )--matching family
-         ); 
-
 
 	SELECT
 		Statement_ID
@@ -343,49 +360,47 @@ BEGIN
 		, Section_Sort
 		, Row_No
 		, NULL AS Total_Pledge
-		, NULL AS Given_to_Pledge
-		, NULL AS Campaign_Name
-	FROM #Gifts
-	UNION 
-	--The campaign pledge data
-	SELECT 
-	      Statement_ID
-		, NULL
-		, NULL
-		, NULL
-		, NULL
-		, NULL
-		, NULL
-		, NULL
-		, NULL
-		, NULL
-		, NULL
-		, NULL
-		, NULL
-		, NULL
-		, NULL
-		, NULL
-		, 4 --Camapaign Contributions
-		, NULL
-		, Total_Pledge		
-		, Sum_Donations_ForPledge AS Given_to_Pledge
-		, Campaign_Name 	
-    FROM #PledgeData
-	ORDER BY statement_id, Campaign_Name
-	;
-	
-	
+ 		, NULL AS Given_to_Pledge
+ 		, NULL AS Campaign_Name
+	FROM #Gifts 
+		UNION 
+ 	--The campaign pledge data
+ 	SELECT 
+ 	      Statement_ID
+ 		, NULL
+ 		, NULL
+ 		, NULL
+ 		, NULL
+ 		, NULL
+ 		, NULL
+ 		, NULL
+ 		, NULL
+ 		, NULL
+ 		, NULL
+ 		, NULL
+ 		, NULL
+ 		, NULL
+ 		, NULL
+ 		, NULL
+ 		, 4 --Camapaign Contributions
+ 		, NULL
+ 		, Total_Pledge		
+ 		, Sum_Donations_ForPledge AS Given_to_Pledge
+ 		, Campaign_Name
+	FROM #PledgeData
+	ORDER BY statement_id, section_sort
+
 	DROP TABLE #Donations;
 	DROP TABLE #D;
 	DROP TABLE #DONORS;
 	DROP TABLE #Gifts;
+	DROP TABLE #Congregations;
 
 	DROP TABLE #Campaigns;
 	DROP TABLE #Pledges;
-	DROP TABLE #PledgeData;
+	DROP TABLE #PledgeData; 
 	DROP TABLE #PledgeTotals;
 	
-
 END
 
 GO
