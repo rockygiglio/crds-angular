@@ -485,6 +485,33 @@ namespace MinistryPlatform.Translation.Test.Services
             Assert.AreEqual("Minor Child", householdMembers.First().HouseholdPosition);            
         }
 
+        [Test]
+        public void ShouldNotDeleteFirstNameIfOneIsntProvidedOnUpdate()
+        {
+            var fakeProfileDict = new Dictionary<string, object>();
+            var fakeHouseholdDict = new Dictionary<string, object>();
+            var fakeAddressDict = new Dictionary<string, object>();
+            const int fakeContactId = 546879;
+            const int fakeContactsRecordId = 5;
+
+            _configuration.Setup(m => m.GetConfigIntValue("Contacts")).Returns(fakeContactsRecordId);
+            _ministryPlatformService.Setup(m => m.UpdateRecord(fakeContactsRecordId, fakeProfileDict, It.IsAny<string>()))
+                .Callback(
+                    (int recordId, Dictionary<string, object> profileDict, string token) =>
+                    {
+                        try
+                        {
+                            Assert.True(profileDict.ContainsKey("FirstName"));
+                            Assert.NotNull(profileDict["FirstName"]);
+                        }
+                        catch (Exception e)
+                        {
+                            Assert.Fail();
+                        }
+                    });
+
+            _fixture.UpdateContact(fakeContactId, fakeProfileDict, fakeHouseholdDict, fakeAddressDict);
+        }
 
         public static List<MpContactHousehold> GetContactHouseholds(int householdId)
         {
