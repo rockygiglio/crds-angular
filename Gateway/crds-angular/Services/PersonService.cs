@@ -46,7 +46,7 @@ namespace crds_angular.Services
             _contactService.UpdateContact(person.ContactId, contactDictionary, householdDictionary, addressDictionary);
             if (person.CongregationId != null)
             {
-                _contactService.UpdateContactsCongregation(person.HouseholdId, (int) person.CongregationId).Subscribe(updated => person.CongregationId = updated.Congregation_ID);
+                _contactService.UpdateContactsCongregation(person.HouseholdId, (int) person.CongregationId, person.AddressId).Subscribe(updated => person.CongregationId = updated.Congregation_ID);
             }
             var configuration = MpObjectAttributeConfigurationFactory.Contact();            
             _objectAttributeService.SaveObjectAttributes(person.ContactId, person.AttributeTypes, person.SingleAttributes, configuration);
