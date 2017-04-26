@@ -101,7 +101,7 @@ namespace crds_angular.Services
                 LoggedInUser = true,
                 ParticipantId = me.ParticipantId,
                 PreferredName = me.PreferredName,
-                Age = me.Age
+                Age = me.Age ?? 0
             };
             relationships.Add(myParticipant);
 
