@@ -478,5 +478,48 @@ namespace crds_angular.Controllers.API
                 throw new HttpResponseException(apiError.HttpResponseMessage);
             }
         }
+
+
+
+        /// <summary>
+        /// Allows an invitee to accept or deny a group invitation.
+        /// </summary>
+        /// <param name="groupId">An integer identifying the group that the invitation is associated to.</param>
+        /// <param name="invitationKey">An string identifying the private invitation.</param>
+        /// <param name="accept">A boolean showing if the invitation is being approved or denied.</param>
+        [AcceptVerbs("POST")]
+        // note - This AcceptVerbs attribute on an entry with the Http* Method attribute causes the
+        //        API not to be included in the swagger output. We're doing it because there's a fail
+        //        in the swagger code when the body has a boolean in it that breaks in the JS causing
+        //        the GroopTool and all subsequent controller APIs not to show on the page. This is a
+        //        stupid fix for a bug that is out of our control.
+        [RequiresAuthorization]
+        [VersionedRoute(template: "finder/group/{groupId}/invitation/{invitationKey}", minimumVersion: "1.0.0")]
+        [Route("finder/group/{groupId:int}/invitation/{invitationKey}")]
+        [HttpPost]
+        public IHttpActionResult ApproveDenyGroupInvitation([FromUri] int groupId, [FromUri] string invitationKey, [FromBody] bool accept)
+        {
+            return Authorized(token =>
+            {
+                try
+                {
+                    _finderService.AcceptDenyGroupInvitation(token, groupId, invitationKey, accept);
+                    return Ok();
+                }
+                catch (GroupParticipantRemovalException e)
+                {
+                    throw new HttpResponseException(HttpStatusCode.NotAcceptable);
+                }
+                catch (DuplicateGroupParticipantException e)
+                {
+                    throw new HttpResponseException(HttpStatusCode.Conflict);
+                }
+                catch (Exception ex)
+                {
+                    var apiError = new ApiErrorDto(string.Format("Error when accepting: {0}, for group {1}", accept, groupId), ex);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+            });
+        }
     }
 }
