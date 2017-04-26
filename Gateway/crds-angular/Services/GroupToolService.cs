@@ -12,10 +12,7 @@ using log4net;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 using System.Text.RegularExpressions;
-using crds_angular.Models.Crossroads.Attribute;
-using crds_angular.Models.Finder;
 using Crossroads.Utilities.Extensions;
-using Crossroads.Web.Common;
 using Crossroads.Web.Common.Configuration;
 
 namespace crds_angular.Services
@@ -626,7 +623,7 @@ namespace crds_angular.Services
         /// <param name="participant"></param>
         /// <param name="templateId"></param>
         /// <param name="mergeData"></param>
-        public void SendSingleGroupParticipantEmail(GroupParticipantDTO participant, int templateId, Dictionary<string, object> mergeData)
+        public int SendSingleGroupParticipantEmail(GroupParticipantDTO participant, int templateId, Dictionary<string, object> mergeData)
         {
             var emailTemplate = _communicationRepository.GetTemplate(templateId);
 
@@ -660,7 +657,7 @@ namespace crds_angular.Services
                 StartDate = DateTime.Now
             };
             // ReSharper disable once RedundantArgumentDefaultValue
-            _communicationRepository.SendMessage(message, false);
+            return _communicationRepository.SendMessage(message, false);
         }
 
 

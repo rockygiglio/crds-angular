@@ -282,6 +282,7 @@ namespace MinistryPlatform.Translation.Repositories
                 if (c != null)
                 {
                     g.ContactId = (int)c;
+                    g.PrimaryContact = c.ToString();
                 }
 
                 object mf = null;

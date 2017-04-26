@@ -15,13 +15,13 @@ namespace MinistryPlatform.Translation.Models.Finder
         [JsonProperty(PropertyName = "To_Contact_ID")]
         public int ToContactId { get; set; }
 
-        [JsonProperty(PropertyName = "Communication_ID")]
-        public int CommunicationId { get; set; }
-
         [JsonProperty(PropertyName = "Communication_Type_ID")]
-        public int CommunicationType { get; set; }
+        public int CommunicationTypeId { get; set; }
 
         [JsonProperty(PropertyName = "Communication_Status_ID")]
-        public int CommunicationStatus { get; set; }
+        public int CommunicationStatusId { get; set; }
+
+        [JsonProperty(PropertyName = "Group_ID")]
+        public int GroupId { get; set; }
     }
 }

@@ -33,7 +33,7 @@ namespace crds_angular.Services.Interfaces
                                     string location = null, int? groupId = null, GeoCoordinate originCoords = null);
         void SubmitInquiry(string token, int groupId);
         void EndGroup(int groupId, int reasonEndedId);
-        void SendSingleGroupParticipantEmail(GroupParticipantDTO participant, int templateId, Dictionary<string, object> mergeData);
+        int SendSingleGroupParticipantEmail(GroupParticipantDTO participant, int templateId, Dictionary<string, object> mergeData);
         MyGroup GetMyGroupInfo(string token, int groupId);
         void SendSmallGroupPendingInquiryReminderEmails();
         List<AttributeCategoryDTO> GetGroupCategories();
