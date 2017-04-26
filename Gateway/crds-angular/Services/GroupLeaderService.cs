@@ -19,14 +19,16 @@ namespace crds_angular.Services
         private readonly IConfigurationWrapper _configWrapper;
         private readonly IFormSubmissionRepository _formSubmissionRepository;
         private readonly IParticipantRepository _participantRepository;
+        private readonly ICommunicationRepository _communicationRepository;
 
-        public GroupLeaderService(IPersonService personService, IUserRepository userRepository, IFormSubmissionRepository formSubmissionRepository, IParticipantRepository participantRepository, IConfigurationWrapper configWrapper)
+        public GroupLeaderService(IPersonService personService, IUserRepository userRepository, IFormSubmissionRepository formSubmissionRepository, IParticipantRepository participantRepository, IConfigurationWrapper configWrapper, ICommunicationRepository communicationRepository)
         {
             _personService = personService;
             _userRepository = userRepository;
             _formSubmissionRepository = formSubmissionRepository;
             _participantRepository = participantRepository;
             _configWrapper = configWrapper;
+            _communicationRepository = communicationRepository;
         }
 
         public IObservable<int> SaveReferences(GroupLeaderProfileDTO leader)
@@ -67,6 +69,26 @@ namespace crds_angular.Services
             });         
         }
 
+        public IObservable<int> SetApplied(string token)
+        {
+            return Observable.Create<int>(observer =>
+            {
+                try
+                {
+                    var participant = _participantRepository.GetParticipantRecord(token);
+                    SetGroupLeaderStatus(participant, _configWrapper.GetConfigIntValue("GroupLeaderApplied"));
+                    observer.OnNext(1);
+                    observer.OnCompleted();
+                }
+                catch (Exception e)
+                {
+                    observer.OnError(new ApplicationException("Unable to submit Set the participant as applied", e));
+                }                
+                return Disposable.Empty;
+            });
+           
+        }
+
         public void SetInterested(string token)
         {
             var participant = _participantRepository.GetParticipantRecord(token);
@@ -84,7 +106,8 @@ namespace crds_angular.Services
                 EmailAddress = leader.Email,
                 DateOfBirth = leader.BirthDate.ToShortDateString(),
                 HouseholdId = leader.HouseholdId,
-                MobilePhone = leader.MobilePhone,                
+                MobilePhone = leader.MobilePhone,
+                AddressId = leader.AddressId
             };
             var userUpdates = person.GetUserUpdateValues();
             try
@@ -134,10 +157,29 @@ namespace crds_angular.Services
                 {
                     observer.OnError(new ApplicationException("Unable to submit Spiritual Growth form for Group Leader"));
                 }
+
+                SendConfirmationEmail(spiritualGrowth.ContactId, spiritualGrowth.EmailAddress);
+
                 observer.OnNext(responseId);
                 observer.OnCompleted();
                 return Disposable.Create(() => Console.WriteLine("Observable Destroyed"));
             });
+        }
+
+        private void SendConfirmationEmail(int toContactId, string toEmailAddress)
+        {         
+            var templateId = _configWrapper.GetConfigIntValue("GroupLeaderConfirmationTemplate");
+            var template = _communicationRepository.GetTemplate(templateId);
+            var mergeData = new Dictionary<string, object> {{"Reply_To_Email", $"<a href=\"mailto:{template.ReplyToEmailAddress}\">{template.ReplyToEmailAddress}</a>"}};
+            var confirmation = _communicationRepository.GetTemplateAsCommunication(templateId,
+                                                                template.FromContactId,
+                                                                template.FromEmailAddress,
+                                                                template.ReplyToContactId,
+                                                                template.ReplyToEmailAddress,
+                                                                toContactId,
+                                                                toEmailAddress,
+                                                                mergeData);
+            _communicationRepository.SendMessage(confirmation);
         }
    }
 }

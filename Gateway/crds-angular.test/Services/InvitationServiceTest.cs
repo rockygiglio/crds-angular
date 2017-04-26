@@ -178,6 +178,10 @@ namespace crds_angular.test.Services
             string leaderFName = "xavier";
             string leaderLName = "johnson";
             string formattedLeaderName = "Xavier J.";
+
+            string city = "Lima";
+            string state = "Ohio";
+            string description = "descriptive description";
             int sourceId = 12345;
             int groupRoleId = 16;
 
@@ -212,7 +216,13 @@ namespace crds_angular.test.Services
             var testGroup = new MpGroup
             {
                 GroupId = 33,
-                Name = groupName
+                Name = groupName,
+                Address = new MpAddress()
+                {
+                    City = city,
+                    State = state
+                }, 
+                GroupDescription = description
             };
 
             _groupRepository.Setup(mocked => mocked.getGroupDetails(invitation.SourceId)).Returns(testGroup);

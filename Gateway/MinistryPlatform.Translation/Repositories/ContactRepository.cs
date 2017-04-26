@@ -414,10 +414,10 @@ namespace MinistryPlatform.Translation.Repositories
 
         }
 
-        public IObservable<MpHousehold> UpdateContactsCongregation(int householdId, int newCongregation)
+        public IObservable<MpHousehold> UpdateContactsCongregation(int householdId, int newCongregation, int? addressId)
         {
             var token = ApiLogin();
-            var household = new MpHousehold() {Congregation_ID = newCongregation, Household_ID = householdId};
+            var household = new MpHousehold() {Address_ID = addressId, Congregation_ID = newCongregation, Household_ID = householdId};
             var asyncresult = Task.Run(() => _ministryPlatformRest.UsingAuthenticationToken(token)
                                                         .Update<MpHousehold>(household));
             return asyncresult.ToObservable();

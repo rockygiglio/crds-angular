@@ -85,7 +85,7 @@ namespace crds_angular.Services
                 try
                 {
                     //SendEmail(invitation, leaderParticipantRecord.DisplayName, group.Name);
-                    SendEmail(invitation, leaderParticipantRecord, group.Name);
+                    SendEmail(invitation, leaderParticipantRecord, group);
                 }
                 catch (Exception e)
                 {
@@ -117,7 +117,7 @@ namespace crds_angular.Services
                 ValidateGroupInvitation(dto, token);
             }
 
-        }
+        } 
 
         private void ValidateGroupInvitation(Invitation dto, string token)
         {
@@ -146,7 +146,7 @@ namespace crds_angular.Services
             // TODO Implement validation, make sure the token represents someone who is allowed to send this trip invitation
         }
 
-        private void SendEmail(MpInvitation invitation, MpParticipant leader, string groupName)
+        private void SendEmail(MpInvitation invitation, MpParticipant leader, MpGroup group)
         {
             var leaderContact = _contactRepository.GetContactById(leader.ContactId);
 
@@ -160,28 +160,25 @@ namespace crds_angular.Services
             int emailTemplateId;
             if (invitation.InvitationType == _groupInvitationType)
             {
-                if (invitation.CustomMessage != null)
-                {
+                if (invitation.CustomMessage != null) {
                     emailTemplateId = _groupInvitationEmailTemplateCustom;
                     mergeData.Add("Leader_Message", invitation.CustomMessage);
-                }
-                else
-                {
+                } else {
                     emailTemplateId = _groupInvitationEmailTemplate;
                 }
                 mergeData.Add("Leader_Name", leaderContact.Nickname + " " + leaderContact.Last_Name);
-                mergeData.Add("Group_Name", groupName);
-            } else if (invitation.InvitationType == _tripInvitationType)
-            {
+                mergeData.Add("Group_Name", group.Name);
+            } else if (invitation.InvitationType == _tripInvitationType) {
                 emailTemplateId = _tripInvitationEmailTemplate;
-            } else if (invitation.InvitationType == _anywhereGatheringInvitationTypeId)
-            {
+            } else if (invitation.InvitationType == _anywhereGatheringInvitationTypeId) {
                 mergeData["Recipient_Name"] = invitation.RecipientName.Substring(0, 1).ToUpper() + invitation.RecipientName.Substring(1).ToLower();
                 mergeData.Add("Leader_Name", leaderContact.Nickname.Substring(0,1).ToUpper() + leaderContact.Nickname.Substring(1).ToLower() + " " + leaderContact.Last_Name.Substring(0,1).ToUpper() + ".");
+                mergeData.Add("City", group.Address.City);
+                mergeData.Add("State", group.Address.State);
+                mergeData.Add("Description", group.GroupDescription);
+                mergeData.Add("Group_ID", group.GroupId);
                 emailTemplateId = _anywhereGatheringInvitationEmailTemplate;
-            }
-            else
-            {
+            } else {
                 emailTemplateId = _defaultInvitationEmailTemplate;
             }
             var emailTemplate = _communicationService.GetTemplate(emailTemplateId);

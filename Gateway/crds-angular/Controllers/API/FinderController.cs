@@ -24,6 +24,7 @@ namespace crds_angular.Controllers.API
         private readonly IAwsCloudsearchService _awsCloudsearchService;
         private readonly IAddressService _addressService;
         private readonly IFinderService _finderService;
+        private readonly IAuthenticationRepository _authenticationRepo;
         private readonly IAddressGeocodingService _addressGeocodingService;
         private readonly ILog _logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -39,6 +40,7 @@ namespace crds_angular.Controllers.API
             _finderService = finderService;
             _addressGeocodingService = addressGeocodingService;
             _awsCloudsearchService = awsCloudsearchService;
+            _authenticationRepo = authenticationRepository;
         }
 
         [ResponseType(typeof(PinDto))]
@@ -227,6 +229,39 @@ namespace crds_angular.Controllers.API
                 catch (Exception e)
                 {
                     _logger.Error("Could not create pin", e);
+                    var apiError = new ApiErrorDto("Save Pin Failed", e);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+            });
+        }
+
+        /// <summary>
+        /// Create Pin with provided address details
+        /// </summary>
+        [RequiresAuthorization]
+        [ResponseType(typeof(PinDto))]
+        [VersionedRoute(template: "finder/gathering/edit", minimumVersion: "1.0.0")]
+        [Route("finder/gathering/edit")]
+        [HttpPut]
+        public IHttpActionResult EditGatheringPin([FromBody] PinDto pin)
+        {
+            return Authorized(token =>
+            {
+                try
+                {
+                    if (pin.Contact_ID != _authenticationRepo.GetContactId(token))
+                    {
+                        throw new HttpResponseException(HttpStatusCode.Unauthorized);
+                    }
+
+                    pin = _finderService.UpdateGathering(pin);
+                    _awsCloudsearchService.UploadNewPinToAws(pin);
+
+                    return (Ok(pin));
+                }
+                catch (Exception e)
+                {
+                    _logger.Error("Could not update pin", e);
                     var apiError = new ApiErrorDto("Save Pin Failed", e);
                     throw new HttpResponseException(apiError.HttpResponseMessage);
                 }
@@ -442,6 +477,49 @@ namespace crds_angular.Controllers.API
                 var apiError = new ApiErrorDto("DeleteAllCloudsearchRecords Failed", ex);
                 throw new HttpResponseException(apiError.HttpResponseMessage);
             }
+        }
+
+
+
+        /// <summary>
+        /// Allows an invitee to accept or deny a group invitation.
+        /// </summary>
+        /// <param name="groupId">An integer identifying the group that the invitation is associated to.</param>
+        /// <param name="invitationKey">An string identifying the private invitation.</param>
+        /// <param name="accept">A boolean showing if the invitation is being approved or denied.</param>
+        [AcceptVerbs("POST")]
+        // note - This AcceptVerbs attribute on an entry with the Http* Method attribute causes the
+        //        API not to be included in the swagger output. We're doing it because there's a fail
+        //        in the swagger code when the body has a boolean in it that breaks in the JS causing
+        //        the GroopTool and all subsequent controller APIs not to show on the page. This is a
+        //        stupid fix for a bug that is out of our control.
+        [RequiresAuthorization]
+        [VersionedRoute(template: "finder/group/{groupId}/invitation/{invitationKey}", minimumVersion: "1.0.0")]
+        [Route("finder/group/{groupId:int}/invitation/{invitationKey}")]
+        [HttpPost]
+        public IHttpActionResult ApproveDenyGroupInvitation([FromUri] int groupId, [FromUri] string invitationKey, [FromBody] bool accept)
+        {
+            return Authorized(token =>
+            {
+                try
+                {
+                    _finderService.AcceptDenyGroupInvitation(token, groupId, invitationKey, accept);
+                    return Ok();
+                }
+                catch (GroupParticipantRemovalException e)
+                {
+                    throw new HttpResponseException(HttpStatusCode.NotAcceptable);
+                }
+                catch (DuplicateGroupParticipantException e)
+                {
+                    throw new HttpResponseException(HttpStatusCode.Conflict);
+                }
+                catch (Exception ex)
+                {
+                    var apiError = new ApiErrorDto(string.Format("Error when accepting: {0}, for group {1}", accept, groupId), ex);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+            });
         }
     }
 }

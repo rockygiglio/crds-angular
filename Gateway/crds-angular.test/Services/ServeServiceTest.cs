@@ -232,7 +232,7 @@ namespace crds_angular.test.Services
 
                 var contact = new MpContact() {ContactId = fakeGroupContact.Contact_ID, EmailAddress = fakeGroupContact.Email_Address};
                 var toContact = new MpContact() {ContactId = fakeMyContact.Contact_ID, EmailAddress = fakeMyContact.Email_Address};
-                var fakeCommunication = new MpCommunication()
+                var fakeCommunication = new MinistryPlatform.Translation.Models.MpCommunication()
                 {
                     AuthorUserId = fakeGroupContact.Contact_ID,
                     DomainId = 1,
@@ -612,7 +612,7 @@ namespace crds_angular.test.Services
 
             _communicationService.Verify(m => m.GetTemplate(rsvpChangeId));
 
-            var comm = new MpCommunication
+            var comm = new MinistryPlatform.Translation.Models.MpCommunication
             {
                 AuthorUserId = 5,
                 DomainId = 1,
@@ -637,8 +637,8 @@ namespace crds_angular.test.Services
                 {"Previous_Opportunity_Name", It.IsAny<string>()}
             };
 
-            _communicationService.Setup(m => m.SendMessage(It.IsAny<MpCommunication>(), false));
-            _communicationService.Verify(m => m.SendMessage(It.IsAny<MpCommunication>(),false));
+            _communicationService.Setup(m => m.SendMessage(It.IsAny<MinistryPlatform.Translation.Models.MpCommunication>(), false));
+            _communicationService.Verify(m => m.SendMessage(It.IsAny<MinistryPlatform.Translation.Models.MpCommunication>(),false));
         }
 
         [Test]

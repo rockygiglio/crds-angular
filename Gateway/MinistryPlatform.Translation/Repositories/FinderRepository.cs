@@ -9,7 +9,6 @@ using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 using MinistryPlatform.Translation.Models.Finder;
 using System.Device.Location;
-using System.Web.UI;
 
 namespace MinistryPlatform.Translation.Repositories
 {
@@ -21,6 +20,7 @@ namespace MinistryPlatform.Translation.Repositories
         private readonly IMinistryPlatformService _ministryPlatformService;
         private readonly IApiUserRepository _apiUserRepository;
         private readonly ILog _logger = LogManager.GetLogger(typeof(CampRepository));
+        private readonly List<string> _groupColumns;
 
         public FinderRepository(IConfigurationWrapper configuration,
                                 IMinistryPlatformRestRepository ministryPlatformRest,
@@ -32,6 +32,19 @@ namespace MinistryPlatform.Translation.Repositories
             _ministryPlatformRest = ministryPlatformRest;
             _ministryPlatformService = ministryPlatformService;
             _apiUserRepository = apiUserRepository;
+            _groupColumns = new List<string>
+            {
+                "Groups.Group_ID",
+                "Groups.Group_Name",
+                "Groups.Description",
+                "Groups.Start_Date",
+                "Groups.End_Date",
+                "Offsite_Meeting_Address_Table.*",
+                "Groups.Available_Online",
+                "Groups.Primary_Contact",
+                "Groups.Congregation_ID",
+                "Groups.Ministry_ID"
+            };
         }
 
         public FinderPinDto GetPinDetails(int participantId)
@@ -56,6 +69,12 @@ namespace MinistryPlatform.Translation.Repositories
             }
 
             return pinDetails;
+        }
+
+        public FinderGatheringDto UpdateGathering(FinderGatheringDto finderGathering)
+        {
+            string token = _apiUserRepository.GetToken();
+            return _ministryPlatformRest.UsingAuthenticationToken(token).Update<FinderGatheringDto>(finderGathering, _groupColumns);
         }
 
         public MpAddress GetPinAddress(int participantId)
