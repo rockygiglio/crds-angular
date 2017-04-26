@@ -12,8 +12,10 @@ using log4net;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 using System.Text.RegularExpressions;
+using crds_angular.Models.Finder;
 using Crossroads.Utilities.Extensions;
 using Crossroads.Web.Common.Configuration;
+using MinistryPlatform.Translation.Models.Finder;
 
 namespace crds_angular.Services
 {
@@ -32,6 +34,7 @@ namespace crds_angular.Services
         private readonly IEmailCommunication _emailCommunicationService;
         private readonly IAttributeService _attributeService;
         private readonly IAddressService _addressService;
+        private readonly IFinderRepository _finderRepository;
 
         private readonly int _defaultGroupContactEmailId;
         private readonly int _defaultAuthorUserId;
@@ -51,6 +54,9 @@ namespace crds_angular.Services
         private readonly int _smallGroupTypeId;
         private readonly int _onsiteGroupTypeId;
         private readonly int _anywhereGroupType;
+        private readonly int _connectGatheringStatusAccept;
+        private readonly int _connectGatheringStatusDeny;
+        private readonly int _connectGatheringRequestToJoin;
 
         private const string GroupToolRemoveParticipantEmailTemplateTextTitle = "groupToolRemoveParticipantEmailTemplateText";
         private const string GroupToolRemoveParticipantSubjectTemplateText = "groupToolRemoveParticipantSubjectTemplateText";
@@ -75,7 +81,8 @@ namespace crds_angular.Services
             IAddressProximityService addressMatrixService,
             IEmailCommunication emailCommunicationService,
             IAttributeService attributeService,
-            IAddressService addressService
+            IAddressService addressService,
+            IFinderRepository finderRepository
             )
         {
             _groupToolRepository = groupToolRepository;
@@ -91,6 +98,7 @@ namespace crds_angular.Services
             _emailCommunicationService = emailCommunicationService;
             _attributeService = attributeService;
             _addressService = addressService;
+            _finderRepository = finderRepository;
 
             _defaultGroupContactEmailId = configurationWrapper.GetConfigIntValue("DefaultGroupContactEmailId");
             _defaultAuthorUserId = configurationWrapper.GetConfigIntValue("DefaultAuthorUser");
@@ -99,7 +107,6 @@ namespace crds_angular.Services
             _groupRequestPendingReminderEmailTemplateId = configurationWrapper.GetConfigIntValue("GroupRequestPendingReminderEmailTemplateId");
             _attributeTypeGroupCategory = configurationWrapper.GetConfigIntValue("GroupCategoryAttributeTypeId");
             
-
             _removeParticipantFromGroupEmailTemplateId = configurationWrapper.GetConfigIntValue("RemoveParticipantFromGroupEmailTemplateId");
 
             _domainId = configurationWrapper.GetConfigIntValue("DomainId");
@@ -114,6 +121,9 @@ namespace crds_angular.Services
             _smallGroupTypeId = configurationWrapper.GetConfigIntValue("SmallGroupTypeId");
             _onsiteGroupTypeId = configurationWrapper.GetConfigIntValue("OnsiteGroupTypeId");
             _anywhereGroupType = configurationWrapper.GetConfigIntValue("AnywhereGroupTypeId");
+            _connectGatheringStatusAccept = configurationWrapper.GetConfigIntValue("ConnectCommunicationStatusAccepted");
+            _connectGatheringStatusDeny = configurationWrapper.GetConfigIntValue("ConnectCommunicationStatusDeclined");
+            _connectGatheringRequestToJoin = configurationWrapper.GetConfigIntValue("ConnectCommunicationTypeRequestToJoin");
         }
 
         public List<Invitation> GetInvitations(int sourceId, int invitationTypeId, string token)
@@ -343,11 +353,24 @@ namespace crds_angular.Services
             }
         }
 
+        private void RecordConnectInteraction(int groupId, int fromContactId, int toContactId, int connectionType, int connectionStatus)
+        {
+            var connection = new MpConnectCommunication
+            {
+                GroupId = groupId,
+                FromContactId = fromContactId,
+                ToContactId = toContactId,
+                CommunicationTypeId = connectionType,
+                CommunicationStatusId = connectionStatus
+            };
+            _finderRepository.RecordConnection(connection);
+        }
+
         private void ApproveInquiry(int groupId, GroupDTO group, Inquiry inquiry, MpParticipant me, string message)
         {
             _groupService.addContactToGroup(groupId, inquiry.ContactId);
             _groupRepository.UpdateGroupInquiry(groupId, inquiry.InquiryId, true);
-
+            RecordConnectInteraction(groupId, me.ContactId, inquiry.ContactId, _connectGatheringRequestToJoin, _connectGatheringStatusAccept);
             // For now pick template based on group type
             var emailTemplateId = (group.GroupTypeId == _anywhereGroupType) 
                                                       ? _gatheringHostAcceptTemplate 
@@ -374,7 +397,7 @@ namespace crds_angular.Services
         private void DenyInquiry(int groupId, GroupDTO group, Inquiry inquiry, MpParticipant me, string message)
         {
             _groupRepository.UpdateGroupInquiry(groupId, inquiry.InquiryId, false);
-
+            RecordConnectInteraction(groupId, me.ContactId, inquiry.ContactId, _connectGatheringRequestToJoin, _connectGatheringStatusDeny);
             // For now pick template based on group type
             var emailTemplateId = (group.GroupTypeId == _anywhereGroupType)
                                                       ? _gatheringHostDenyTemplate

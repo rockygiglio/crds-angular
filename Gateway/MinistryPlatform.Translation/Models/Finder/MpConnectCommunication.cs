@@ -6,7 +6,7 @@ namespace MinistryPlatform.Translation.Models.Finder
     [MpRestApiTable(Name = "cr_Connect_Communications")]
     public class MpConnectCommunication
     {
-        [JsonProperty(PropertyName = "Connect_Communication_ID")]
+        [JsonProperty(PropertyName = "Connect_Communications_ID")]
         public int ConnectCommunicationId { get; set; }
 
         [JsonProperty(PropertyName = "From_Contact_ID")]

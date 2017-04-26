@@ -142,6 +142,22 @@ namespace MinistryPlatform.Translation.Repositories
 
             try
             {
+                if (connection.CommunicationStatusId == _configurationWrapper.GetConfigIntValue("ConnectCommunicationStatusAccepted") ||
+                    connection.CommunicationStatusId == _configurationWrapper.GetConfigIntValue("ConnectCommunicationStatusDeclined"))
+                {
+                    string filter = $"Group_ID = {connection.GroupId} AND From_Contact_ID = {connection.FromContactId} AND To_Contact_ID = {connection.ToContactId} AND Communication_Type_ID = {connection.CommunicationTypeId}";
+                    const string columnList = ".Connect_Communications_ID";
+
+                    var communicationsToUpdate = _ministryPlatformRest.UsingAuthenticationToken(apiToken).Search<MpConnectCommunication>(filter , columnList).ToList();
+                    foreach (var communication  in communicationsToUpdate)
+                    {
+                        //Update
+                        var dict = new Dictionary<string, object> { { "Connect_Communication_ID", communication.ConnectCommunicationId }, { "Communication_Status_ID", connection.CommunicationStatusId } };
+                        var update = new List<Dictionary<string, object>> { dict };
+                        _ministryPlatformRest.UsingAuthenticationToken(apiToken).Put("cr_Connect_Communications", update);
+                    }
+
+                }
                 _ministryPlatformRest.UsingAuthenticationToken(apiToken).Create(connection);
             }
             catch (Exception ex)

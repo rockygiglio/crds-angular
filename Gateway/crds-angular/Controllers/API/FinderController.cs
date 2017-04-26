@@ -419,7 +419,7 @@ namespace crds_angular.Controllers.API
         /// </summary>
         [RequiresAuthorization]
         [VersionedRoute(template: "finder/sayhi/{fromId}/{toId}", minimumVersion: "1.0.0")]
-        [Route("finder/sayhi")]
+        [Route("finder/sayhi/{fromId}/{toId}")]
         [HttpPost]
         public IHttpActionResult SayHi([FromUri]int fromId, [FromUri]int toId)
         {
