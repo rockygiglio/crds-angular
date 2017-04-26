@@ -155,6 +155,25 @@ namespace crds_angular.Services
             pin.Gathering.Address.Latitude = coordinates.Latitude;
             pin.Gathering.Address.Longitude = coordinates.Longitude;
 
+            if (pin.ShouldUpdateHomeAddress)
+            {
+                var pinAddressId = pin.Address.AddressID;
+                pin.Address = new AddressDTO
+                {
+                    AddressID = pinAddressId,
+                    AddressLine1 = pin.Gathering.Address.AddressLine1,
+                    AddressLine2 = pin.Gathering.Address.AddressLine2,
+                    City = pin.Gathering.Address.City,
+                    County = pin.Gathering.Address.County,
+                    ForeignCountry = pin.Gathering.Address.ForeignCountry,
+                    Latitude = pin.Gathering.Address.Latitude,
+                    Longitude = pin.Gathering.Address.Longitude,
+                    PostalCode = pin.Gathering.Address.PostalCode,
+                    State = pin.Gathering.Address.State
+                };
+                this.UpdateHouseholdAddress(pin);
+            }
+
             var gathering = Mapper.Map<FinderGatheringDto>(pin.Gathering);
 
             pin.Gathering = Mapper.Map<GroupDTO>(_finderRepository.UpdateGathering(gathering));
