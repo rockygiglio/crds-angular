@@ -104,7 +104,8 @@ namespace crds_angular.Services
                 EmailAddress = leader.Email,
                 DateOfBirth = leader.BirthDate.ToShortDateString(),
                 HouseholdId = leader.HouseholdId,
-                MobilePhone = leader.MobilePhone,                
+                MobilePhone = leader.MobilePhone,
+                AddressId = leader.AddressId
             };
             var userUpdates = person.GetUserUpdateValues();
             try
