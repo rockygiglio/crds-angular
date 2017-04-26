@@ -167,11 +167,13 @@ namespace crds_angular.Services
             var coordinates = _addressService.GetGeoLocationCascading(pin.Address);
             pin.Address.Latitude = coordinates.Latitude;
             pin.Address.Longitude = coordinates.Longitude;
-            var householdDictionary = new Dictionary<string, object> {{"Household_ID", pin.Household_ID}};
+            var householdDictionary = (pin.Address.AddressID == null) 
+                ? new Dictionary<string, object>{{"Household_ID", pin.Household_ID}} 
+                :  null;
             var address = Mapper.Map<MpAddress>(pin.Address);
             var addressDictionary = getDictionary(address);
             addressDictionary.Add("State/Region", addressDictionary["State"]);
-            _contactRepository.UpdateHouseholdAddress((int)pin.Contact_ID, null, addressDictionary);
+            _contactRepository.UpdateHouseholdAddress((int)pin.Contact_ID, householdDictionary, addressDictionary);
         }
 
         public List<GroupParticipantDTO> GetParticipantsForGroup(int groupId)
