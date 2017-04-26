@@ -23,6 +23,7 @@ using crds_angular.Exceptions;
 using crds_angular.Models.AwsCloudsearch;
 using MvcContrib.TestHelper;
 
+
 namespace crds_angular.test.Services
 {
     [TestFixture]
@@ -437,7 +438,7 @@ namespace crds_angular.test.Services
             _addressService.Setup(mocked => mocked.GetGeoLocationCascading(pin.Gathering.Address))
                 .Returns(new GeoCoordinate() {Altitude = 0, Course = 0, HorizontalAccuracy = 0, Latitude = 10, Longitude = 20, Speed = 0, VerticalAccuracy = 0});
 
-            var expectedPin = pin;
+            var expectedPin = this.GetAPin();
             expectedPin.Gathering.Address.Longitude = 20;
             expectedPin.Gathering.Address.Latitude = 10;
 
@@ -449,6 +450,47 @@ namespace crds_angular.test.Services
             _addressService.VerifyAll();
             _mpFinderRepository.VerifyAll();
             result.ShouldBe(pin);
+        }
+
+        [Test]
+        public void ShouldUpdateGatheringAndUpdateHouseholdAddress()
+        {
+            var geoCodes = new GeoCoordinate() {Altitude = 0, Course = 0, HorizontalAccuracy = 0, Latitude = 10, Longitude = 20, Speed = 0, VerticalAccuracy = 0};
+            var pin = this.GetAPin();
+            var updatedAddress = new AddressDTO()
+            {
+                AddressID = pin.Address.AddressID,
+                AddressLine1 = pin.Gathering.Address.AddressLine1,
+                AddressLine2 = pin.Gathering.Address.AddressLine2,
+                Longitude = pin.Gathering.Address.Longitude,
+                Latitude = pin.Gathering.Address.Latitude,
+                City = pin.Gathering.Address.City,
+                County = pin.Gathering.Address.County,
+                ForeignCountry = pin.Gathering.Address.ForeignCountry,
+                PostalCode = pin.Gathering.Address.PostalCode,
+                State = pin.Gathering.Address.State
+            };
+
+            var expectedPin = this.GetAPin();
+            expectedPin.Gathering.Address.Longitude = 20;
+            expectedPin.Gathering.Address.Latitude = 10;
+            expectedPin.ShouldUpdateHomeAddress = true;
+            expectedPin.Address = updatedAddress;
+
+            var expectedFinderGathering = Mapper.Map<FinderGatheringDto>(expectedPin.Gathering);
+
+            pin.ShouldUpdateHomeAddress = true;
+
+            _addressService.Setup(mocked => mocked.GetGeoLocationCascading(It.IsAny<AddressDTO>())).Returns(geoCodes);
+            _mpContactRepository.Setup(mocked => mocked.UpdateHouseholdAddress(pin.Contact_ID.Value, null, It.IsAny <Dictionary<string, object>>()));
+            _mpFinderRepository.Setup(mocked => mocked.UpdateGathering(It.IsAny<FinderGatheringDto>())).Returns(expectedFinderGathering);
+
+            var result = _fixture.UpdateGathering(pin);
+            _addressService.Verify(ver => ver.GetGeoLocationCascading(It.IsAny<AddressDTO>()), Times.Exactly(2));
+            _mpFinderRepository.VerifyAll();
+            _mpContactRepository.VerifyAll();
+            Assert.AreEqual(result.Address.AddressLine1, expectedPin.Address.AddressLine1);
+            Assert.AreEqual(result.Address.AddressID, expectedPin.Address.AddressID);
         }
 
         [Test]
@@ -498,7 +540,7 @@ namespace crds_angular.test.Services
                 Gathering = new GroupDTO()
                 {
                     GroupId = designator * 10,
-                    Address = this.getAnAddress(designator),
+                    Address = this.getAnAddress(designator * 10),
                     ContactId = designator,
                     AttributeTypes = null,
                     ChildCareAvailable = false,
@@ -545,7 +587,8 @@ namespace crds_angular.test.Services
                 Participant_ID = designator,
                 PinType = PinType.GATHERING,
                 ShowOnMap = true,
-                SiteName = "Anywheres"
+                SiteName = "Anywheres",
+                ShouldUpdateHomeAddress = false
             };
         }
 
