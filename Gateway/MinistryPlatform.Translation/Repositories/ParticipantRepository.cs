@@ -90,7 +90,8 @@ namespace MinistryPlatform.Translation.Repositories
                     DisplayName = record.ToString("Display_Name"),
                     Age = record.ToInt("__Age"),
                     ApprovedSmallGroupLeader = record.ToBool("Approved_Small_Group_Leader"),
-                    AttendanceStart = record.ToDate("Attendance_Start_Date")
+                    AttendanceStart = record.ToDate("Attendance_Start_Date"),
+                    HostStatus = record.ToInt("Host_Status_ID")                    
                 };
             }
             catch (Exception ex)
@@ -112,7 +113,16 @@ namespace MinistryPlatform.Translation.Repositories
             };
             UpdateParticipant(participantDict);
         }
-            
+
+        public void UpdateParticipantHostStatus(MpParticipant participant)
+        {
+            var participantDict = new Dictionary<string, object>()
+            {
+                {"Participant_ID", participant.ParticipantId },
+                {"Host_Status_ID", participant.HostStatus }
+            };
+            UpdateParticipant(participantDict);
+        }
 
         public void UpdateParticipant(Dictionary<string, object> participant)
         {
