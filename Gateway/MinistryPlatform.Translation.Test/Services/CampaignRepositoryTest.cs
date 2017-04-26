@@ -5,7 +5,9 @@ using Crossroads.Web.Common;
 using Crossroads.Web.Common.Configuration;
 using Crossroads.Web.Common.MinistryPlatform;
 using Crossroads.Web.Common.Security;
+using MinistryPlatform.Translation.Exceptions;
 using MinistryPlatform.Translation.Models;
+using MinistryPlatform.Translation.Models.DTO;
 using MinistryPlatform.Translation.Repositories;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 using Moq;
@@ -157,6 +159,74 @@ namespace MinistryPlatform.Translation.Test.Services
             });
         }
 
+        [Test]
+        public void ShouldGetPledgeCampaignSummary()
+        {
+            const string token = "xyz789";
+            const int pledgeCampaignId = 12345;
+
+            var dto = new MpPledgeCampaignSummaryDto()
+            {
+                PledgeCampaignId = pledgeCampaignId,
+                NoCommitmentCount = 1100,
+                NoCommitmentAmount = 1200000.00M,
+                TotalGiven = 38000000.00M,
+                TotalCommitted = 95000000.00M,
+                StartDate = new DateTime(2015, 11, 15),
+                EndDate = new DateTime(2018, 12, 31),
+                NotStartedCount = 1800,
+                BehindCount = 3200,
+                OnPaceCount = 1400,
+                AheadCount = 500,
+                CompletedCount = 390,
+                TotalCount = 1800 + 3200 + 1400 + 500 + 390
+            };
+
+            var listOfList = new List<List<MpPledgeCampaignSummaryDto>>
+            {
+                new List<MpPledgeCampaignSummaryDto>
+                {
+                    dto
+                }
+            };
+
+            _ministryPlatformRest.Setup(m => m.UsingAuthenticationToken(token)).Returns(_ministryPlatformRest.Object);
+            _ministryPlatformRest.Setup(m => m.GetFromStoredProc<MpPledgeCampaignSummaryDto>(
+                                            CampaignRepository.CampaignSummaryProcName,
+                                            It.Is<Dictionary<string, object>>(parms =>
+                                                parms.Count == 1 &&
+                                                parms["@Pledge_Campaign_ID"].Equals(pledgeCampaignId))
+                                        )).Returns(listOfList);
+
+            var result = _fixture.GetPledgeCampaignSummary(token, pledgeCampaignId);
+            Assert.AreEqual(dto.PledgeCampaignId, result.PledgeCampaignId);
+            Assert.AreEqual(dto.TotalGiven, result.TotalGiven);
+            Assert.AreEqual(dto.TotalCommitted, result.TotalCommitted);
+            Assert.AreEqual(dto.TotalCount, result.TotalCount);
+        }
+
+        [Test]
+        public void ShouldThrowExceptionIfPledgeCampaignSummaryNotFound()
+        {
+            const string token = "xyz789";
+            const int pledgeCampaignId = 98765;
+
+            var data = new List<List<MpPledgeCampaignSummaryDto>>();
+
+            _ministryPlatformRest.Setup(m => m.UsingAuthenticationToken(token)).Returns(_ministryPlatformRest.Object);
+            _ministryPlatformRest.Setup(m => m.GetFromStoredProc<MpPledgeCampaignSummaryDto>(
+                                            CampaignRepository.CampaignSummaryProcName,
+                                            It.Is<Dictionary<string, object>>(parms =>
+                                                parms.Count == 1 &&
+                                                parms["@Pledge_Campaign_ID"].Equals(pledgeCampaignId))
+                                        )).Returns(data);
+
+            Assert.Throws<PledgeCampaignNotFoundException>(() =>
+            {
+                _fixture.GetPledgeCampaignSummary(token, pledgeCampaignId);
+            });
+        }
+
         private List<Dictionary<string, object>> AgeExceptions()
         {
             return new List<Dictionary<string, object>>
@@ -189,6 +259,5 @@ namespace MinistryPlatform.Translation.Test.Services
                 }
             };
         }
-
     }
 }

@@ -6,11 +6,9 @@ using crds_angular.Models.Crossroads.Attribute;
 using crds_angular.Models.Crossroads.Profile;
 using crds_angular.Services;
 using crds_angular.Services.Interfaces;
-using Crossroads.Web.Common;
 using Crossroads.Web.Common.MinistryPlatform;
 using Crossroads.Web.Common.Security;
 using MinistryPlatform.Translation.Models;
-using MinistryPlatform.Translation.Repositories;
 using MPInterfaces = MinistryPlatform.Translation.Repositories.Interfaces;
 using Moq;
 using NUnit.Framework;
@@ -128,7 +126,7 @@ namespace crds_angular.test.Services
                                                        It.IsAny<Dictionary<string, object>>(),
                                                        It.IsAny<Dictionary<string, object>>())).Callback((int contactId, Dictionary<string, object> profileDictionary, Dictionary<string, object> houseDictionary, Dictionary<string, object> addressDictionary) =>
                                                        {});
-            _contactService.Setup(m => m.UpdateContactsCongregation(person.HouseholdId, (int) person.CongregationId)).Returns(Observable.Start<MpHousehold>(() => household));
+            _contactService.Setup(m => m.UpdateContactsCongregation(person.HouseholdId, (int) person.CongregationId, person.AddressId)).Returns(Observable.Start<MpHousehold>(() => household));
             _objectAttributeService.Setup(
                 m =>
                     m.SaveObjectAttributes(It.IsAny<int>(),

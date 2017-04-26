@@ -77,16 +77,20 @@ namespace crds_angular.Controllers.API
         {
             if (ModelState.IsValid)
             {
-                try
+                return await Authorized(token =>
                 {
-                    _groupLeaderService.SaveSpiritualGrowth(spiritualGrowth).Wait();
-                    return Ok();
-                }
-                catch (Exception e)
-                {
-                    var apiError = new ApiErrorDto("Saving Leader Profile failed:", e);
-                    throw new HttpResponseException(apiError.HttpResponseMessage);
-                }
+                    try
+                    {
+                        _groupLeaderService.SaveSpiritualGrowth(spiritualGrowth)
+                            .Concat(_groupLeaderService.SetApplied(token)).Wait();                       
+                        return Ok();
+                    }
+                    catch (Exception e)
+                    {
+                        var apiError = new ApiErrorDto("Saving SpiritualGrowth failed:", e);
+                        throw new HttpResponseException(apiError.HttpResponseMessage);
+                    }
+                });
             }
             var errors = ModelState.Values.SelectMany(val => val.Errors).Aggregate("", (current, err) => current + err.ErrorMessage);
             var dataError = new ApiErrorDto("Spiritual Growth Data Invalid", new InvalidOperationException("Invalid Spiritual Growth Data" + errors));

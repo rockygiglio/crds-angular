@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Crossroads.Utilities.Interfaces;
-using Crossroads.Web.Common;
 using Crossroads.Web.Common.Configuration;
+using Crossroads.Web.Common.MinistryPlatform;
 using Crossroads.Web.Common.Security;
 using MinistryPlatform.Translation.Exceptions;
 using MinistryPlatform.Translation.Extensions;
@@ -15,11 +14,13 @@ namespace MinistryPlatform.Translation.Repositories
     public class ParticipantRepository : BaseRepository, IParticipantRepository
     {
         private IMinistryPlatformService _ministryPlatformService;
+        private IMinistryPlatformRestRepository _ministryPlatformRestRepository;
 
-        public ParticipantRepository(IMinistryPlatformService ministryPlatformService, IAuthenticationRepository authenticationService , IConfigurationWrapper configurationWrapper)
+        public ParticipantRepository(IMinistryPlatformService ministryPlatformService, IMinistryPlatformRestRepository ministryPlatformRestRepository, IAuthenticationRepository authenticationService , IConfigurationWrapper configurationWrapper)
             : base(authenticationService, configurationWrapper)
         {
             this._ministryPlatformService = ministryPlatformService;
+            this._ministryPlatformRestRepository = ministryPlatformRestRepository;
         }
 
         public int CreateParticipantRecord(int contactId)
@@ -70,38 +71,38 @@ namespace MinistryPlatform.Translation.Repositories
         }
 
         public MpParticipant GetParticipant(int contactId)
-        {
-            MpParticipant participant;
-            //var records = new List<Dictionary<string, object>>();
+        {             
             try
             {
-                var searchStr = contactId.ToString() + ",";
-                var records =
-                    WithApiLogin<List<Dictionary<string, object>>>(
-                        apiToken =>
-                            (_ministryPlatformService.GetPageViewRecords("ParticipantByContactId", apiToken, searchStr,
-                                "")));
-                var record = records.Single();
-                participant = new MpParticipant
+                var searchString = $"Contact_ID_Table.[Contact_ID]={contactId}";
+                var columnList = new List<string>
                 {
-                    ContactId = record.ToInt("Contact_ID"),
-                    ParticipantId = record.ToInt("Participant_ID"),
-                    EmailAddress = record.ToString("Email_Address"),
-                    PreferredName = record.ToString("Nickname"), 
-                    DisplayName =  record.ToString("Display_Name"), 
-                    Age = record.ToInt("__Age"),
-                    ApprovedSmallGroupLeader = record.ToBool("Approved_Small_Group_Leader"),
-                    AttendanceStart = record.ToDate("Attendance_Start_Date")
+                    "Contact_ID_Table.Contact_ID",
+                    "Participants.[Participant_ID]",
+                    "Contact_ID_Table.Email_Address",
+                    "Contact_ID_Table.Nickname as [NickName]",
+                    "Contact_ID_Table.Display_Name",
+                    "Contact_ID_Table.Nickname",
+                    "Contact_ID_Table.__Age as [Age]",
+                    "Participants.Attendance_Start_Date",
+                    "Participants.[Approved_Small_Group_Leader]",
+                    "Participant_Type_ID_Table.Participant_Type",
+                    "Group_Leader_Status_ID_Table.Group_Leader_Status_ID"
                 };
+                var token = ApiLogin();
+                var participant = _ministryPlatformRestRepository.UsingAuthenticationToken(token).Search<MpParticipant>(searchString, columnList);
+                if (participant.Count == 1)
+                {
+                    var p = participant.First();
+                    p.PreferredName = p.Nickname;
+                    return p;
+                }
+                throw new ApplicationException($"GetParticipant failed.  Contact Id: {contactId}");
             }
             catch (Exception ex)
             {
-                throw new ApplicationException(
-                    string.Format("GetParticipant failed.  Contact Id: {0}", contactId), ex);
+                throw new ApplicationException($"GetParticipant failed.  Contact Id: {contactId}", ex);
             }
-
-
-            return participant;
         }
 
         public void UpdateParticipant(MpParticipant participant)
