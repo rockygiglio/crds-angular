@@ -592,6 +592,20 @@ namespace MinistryPlatform.Translation.Test.Services
         }
 
         [Test]
+        public void ShouldSetHouseholdCongregation()
+        {
+
+            var household = new MpHousehold
+            {
+                Household_ID = 1709940,
+                Congregation_ID = 21,
+                Address_ID = 2928137
+            };
+            var result = _fixture.UsingAuthenticationToken(_authToken).Update<MpHousehold>(household);
+            Assert.NotNull(result);
+        }
+
+        [Test]
         public void ShouldGetParticpantByContactId()
         {
             const int id = 2186211;
