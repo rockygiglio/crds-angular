@@ -57,7 +57,7 @@ namespace MinistryPlatform.Translation.Test.Services
                 DisplayName = "display-name",
                 ApprovedSmallGroupLeader = true,
                 AttendanceStart = backToTheFuture,
-                GroupLeaderStatus = 3
+                GroupLeaderStatus = 4
             };
 
             _ministryPlatformRestMock.Setup(m => m.UsingAuthenticationToken(It.IsAny<string>())).Returns(_ministryPlatformRestMock.Object);
@@ -89,10 +89,11 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Nickname", "nick-name"},
                     {"Display_Name", "display-name"},
                     {"Age", 99},
-                    {"Approved_Small_Group_Leader", true }
+                    {"Group_Leader_Status_ID", 4 }
                 }
             };
 
+            _configWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderApproved")).Returns(4);
             _mpServiceMock.Setup(m => m.GetRecordsDict(viewKey, token, string.Empty, string.Empty)).Returns(mockDictionaryList);
 
             var participant = _fixture.GetParticipantRecord(token);
