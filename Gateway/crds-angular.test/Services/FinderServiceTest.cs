@@ -452,6 +452,16 @@ namespace crds_angular.test.Services
         }
 
         [Test]
+        public void ShouldSayHi()
+        {
+            _mpConfigurationWrapper.Setup(x => x.GetConfigIntValue(It.IsAny<string>())).Returns(1);
+            _mpFinderRepository.Setup(mocked => mocked.RecordConnection(It.IsAny<MpConnectCommunication>()));
+            
+            _fixture.SayHi(123, 456);
+            _mpFinderRepository.Verify(m => m.RecordConnection(It.IsAny<MpConnectCommunication>()), Times.Once);
+        }
+
+        [Test]
         public void ShouldInviteToGathering()
         {
             string token = "abc";
