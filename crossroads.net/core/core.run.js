@@ -47,15 +47,8 @@
           contentBlockCategories: ['common']
         };
 
-        var targetHeader = document.querySelector(options.el);
-
-        if(targetHeader != undefined && targetHeader != null){
-          var header = new CRDS.SharedHeader(options);
-          header.render();
-          console.log('header found');
-        } else {
-          console.debug('not found');
-        }
+        var header = new CRDS.SharedHeader(options);
+        header.render();
     }
 
     function setOriginForCmsPreviewPane($injectedDocument) {
