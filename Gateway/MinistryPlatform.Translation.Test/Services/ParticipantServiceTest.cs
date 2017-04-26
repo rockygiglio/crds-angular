@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using Crossroads.Utilities.Interfaces;
 using Crossroads.Web.Common;
 using Crossroads.Web.Common.Configuration;
+using Crossroads.Web.Common.MinistryPlatform;
 using Crossroads.Web.Common.Security;
+using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Repositories;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 using Moq;
@@ -18,6 +20,7 @@ namespace MinistryPlatform.Translation.Test.Services
         private Mock<IMinistryPlatformService> _mpServiceMock;
         private Mock<IAuthenticationRepository> _authService;
         private Mock<IConfigurationWrapper> _configWrapper;
+        private Mock<IMinistryPlatformRestRepository> _ministryPlatformRestMock;
 
         [SetUp]
         public void SetUp()
@@ -25,7 +28,7 @@ namespace MinistryPlatform.Translation.Test.Services
             _mpServiceMock = new Mock<IMinistryPlatformService>();
             _authService = new Mock<IAuthenticationRepository>();
             _configWrapper = new Mock<IConfigurationWrapper>();
-
+            _ministryPlatformRestMock = new Mock<IMinistryPlatformRestRepository>();
             _configWrapper.Setup(m => m.GetEnvironmentVarAsString("API_USER")).Returns("uid");
             _configWrapper.Setup(m => m.GetEnvironmentVarAsString("API_PASSWORD")).Returns("pwd");
             _configWrapper.Setup(m => m.GetConfigIntValue("Participants")).Returns(355);
@@ -35,37 +38,32 @@ namespace MinistryPlatform.Translation.Test.Services
                 ExpiresIn = 123
             });
 
-            _fixture = new ParticipantRepository(_mpServiceMock.Object, _authService.Object, _configWrapper.Object);
+            _fixture = new ParticipantRepository(_mpServiceMock.Object, _ministryPlatformRestMock.Object, _authService.Object, _configWrapper.Object);
         }
 
         [Test]
         public void GetParticipantByParticipantId()
         {
             const int contactId = 99999;
-
-            const string viewKey = "ParticipantByContactId";
-            var searchString = contactId.ToString() + ",";
-            DateTime backToTheFuture = new DateTime(2015, 10, 21);
-            var mockDictionaryList = new List<Dictionary<string, object>>
+            var searchString = $"Contact_ID_Table.[Contact_ID]={contactId}";
+            var backToTheFuture = new DateTime(2015, 10, 21);
+            var mockParticpant = new MpParticipant
             {
-                new Dictionary<string, object>
-                {
-                    {"Contact_ID", 99999},
-                    {"Participant_ID", 100},
-                    {"Email_Address", "email-address"},
-                    {"Nickname", "nick-name"},
-                    {"Display_Name", "display-name"},
-                    {"__Age", 99},
-                    {"Approved_Small_Group_Leader", true },
-                    {"Attendance_Start_Date", backToTheFuture}
-                }
+                ContactId = contactId,
+                Age = 99,
+                ParticipantId = 100,
+                EmailAddress = "email-address",
+                Nickname = "nick-name",
+                DisplayName = "display-name",
+                ApprovedSmallGroupLeader = true,
+                AttendanceStart = backToTheFuture,
+                GroupLeaderStatus = 3
             };
 
-            _mpServiceMock.Setup(m => m.GetPageViewRecords(viewKey, It.IsAny<string>(), searchString, "", 0)).Returns(mockDictionaryList);
+            _ministryPlatformRestMock.Setup(m => m.UsingAuthenticationToken(It.IsAny<string>())).Returns(_ministryPlatformRestMock.Object);
+            _ministryPlatformRestMock.Setup(m => m.Search<MpParticipant>(searchString, It.IsAny<List<string>>(), null, false)).Returns(new List<MpParticipant> { mockParticpant });
 
             var participant = _fixture.GetParticipant(contactId);
-
-            _mpServiceMock.VerifyAll();
 
             Assert.IsNotNull(participant);
             Assert.AreEqual("nick-name", participant.PreferredName);

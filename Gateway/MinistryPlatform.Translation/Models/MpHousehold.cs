@@ -14,6 +14,7 @@ namespace MinistryPlatform.Translation.Models
         [JsonProperty(PropertyName = "Household_ID")]
         public int Household_ID { get; set; }
        
-        public int Address_ID { get; set; }
+        [JsonProperty(PropertyName = "Address_ID")]
+        public int? Address_ID { get; set; }
     }
 }
