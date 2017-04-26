@@ -27,5 +27,6 @@ namespace crds_angular.Services.Interfaces
         AddressDTO GetPersonAddress(string token, int participantId);
         PinDto UpdateGathering(PinDto pin);
         void RequestToBeHost(string token, HostRequestDto hostRequest);
+        void SayHi(int fromContactId, int toContactId);
     }
 }

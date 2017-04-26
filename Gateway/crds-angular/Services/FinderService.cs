@@ -540,9 +540,22 @@ namespace crds_angular.Services
             }
         }
 
-        public void RecordCommunication(ConnectCommunicationDto connection)
+        private void RecordCommunication(ConnectCommunicationDto connection)
         {
             _finderRepository.RecordConnection(Mapper.Map<MpConnectCommunication>(connection));
+        }
+
+        public void SayHi(int fromContactId, int toContactId)
+        {
+            var connection = new ConnectCommunicationDto
+            {
+                FromContactId = fromContactId,
+                ToContactId = toContactId,
+                CommunicationTypeId = _configurationWrapper.GetConfigIntValue("ConnectCommunicationTypeSayHi"),
+                CommunicationStatusId = _configurationWrapper.GetConfigIntValue("ConnectCommunicationStatusNA"),
+                GroupId = null
+            };
+            RecordCommunication(connection);
         }
     }
 }

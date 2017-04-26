@@ -10,6 +10,6 @@ namespace crds_angular.Models.Finder
         public int ToContactId { get; set; }
         public int CommunicationTypeId { get; set; }
         public int CommunicationStatusId { get; set; }
-        public int GroupId { get; set; }
+        public int? GroupId { get; set; }
     }
 }

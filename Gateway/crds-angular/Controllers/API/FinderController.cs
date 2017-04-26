@@ -415,6 +415,30 @@ namespace crds_angular.Controllers.API
         }
 
         /// <summary>
+        /// Logged in user requests to join gathering
+        /// </summary>
+        [RequiresAuthorization]
+        [VersionedRoute(template: "finder/sayhi/{fromId}/{toId}", minimumVersion: "1.0.0")]
+        [Route("finder/sayhi")]
+        [HttpPost]
+        public IHttpActionResult SayHi([FromUri]int fromId, [FromUri]int toId)
+        {
+            return Authorized(token =>
+            {
+                try
+                {
+                    _finderService.SayHi(fromId, toId);
+                    return Ok();
+                }
+                catch (Exception e)
+                {
+                    var apiError = new ApiErrorDto("Say Hi Failed", e);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+            });
+        }
+
+        /// <summary>
         /// Logged in user requests to be a host
         /// </summary>
         [RequiresAuthorization]

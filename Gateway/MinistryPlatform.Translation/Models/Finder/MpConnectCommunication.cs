@@ -22,6 +22,6 @@ namespace MinistryPlatform.Translation.Models.Finder
         public int CommunicationStatusId { get; set; }
 
         [JsonProperty(PropertyName = "Group_ID")]
-        public int GroupId { get; set; }
+        public int? GroupId { get; set; }
     }
 }
