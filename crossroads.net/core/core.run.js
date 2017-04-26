@@ -103,7 +103,6 @@
       if (toState.data && toState.data.meta) {
         $rootScope.meta = toState.data.meta;
       }
-      console.debug('state change');
       setupMetaData();
       setupHeader();
     });
