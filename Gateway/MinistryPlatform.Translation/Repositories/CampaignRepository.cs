@@ -15,7 +15,8 @@ namespace MinistryPlatform.Translation.Repositories
 {
     public class CampaignRepository : BaseRepository, ICampaignRepository
     {
-        
+        public const string CampaignSummaryProcName = "api_crds_Get_Pledge_Campaign_Summary";
+
         private readonly IMinistryPlatformService _ministryPlatformService;
         private readonly IMinistryPlatformRestRepository _ministryPlatformRest;
         private readonly IApiUserRepository _apiUserRepository;
@@ -118,7 +119,7 @@ namespace MinistryPlatform.Translation.Repositories
                 { "@Pledge_Campaign_ID", pledgeCampaignId }
             };
 
-            var storedProcReturn = _ministryPlatformRest.UsingAuthenticationToken(token).GetFromStoredProc<MpPledgeCampaignSummaryDto>("api_crds_Get_Pledge_Campaign_Summary", parameters);
+            var storedProcReturn = _ministryPlatformRest.UsingAuthenticationToken(token).GetFromStoredProc<MpPledgeCampaignSummaryDto>(CampaignSummaryProcName, parameters);
 
             MpPledgeCampaignSummaryDto summary = storedProcReturn.FirstOrDefault()?.FirstOrDefault();
             if (summary == null)
