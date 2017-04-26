@@ -101,6 +101,7 @@ namespace crds_angular.Services
             {
                 ContactId = leader.ContactId,
                 CongregationId = leader.Site,
+                FirstName = leader.FirstName,
                 NickName = leader.NickName,
                 LastName = leader.LastName,
                 EmailAddress = leader.Email,

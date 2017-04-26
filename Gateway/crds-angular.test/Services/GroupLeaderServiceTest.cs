@@ -69,24 +69,6 @@ namespace crds_angular.test.Services
         }
 
         [Test]
-        public void ShouldSaveWithCorrectFirstname()
-        {
-            var leaderDto = GroupLeaderMock();
-            const string fakeToken = "letmein";
-            const int fakeUserId = 654987;
-
-            _userRepo.Setup(m => m.GetUserIdByUsername(leaderDto.OldEmail)).Returns(fakeUserId);
-            _userRepo.Setup(m => m.UpdateUser(It.IsAny<Dictionary<string, object>>()));
-            _personService.Setup(m => m.SetProfile(fakeToken, It.IsAny<Person>()))
-                .Callback((string token, Person person) =>
-                {
-                    Assert.AreEqual(leaderDto.FirstName, person.GetContact().First_Name);
-                });
-
-            _fixture.SaveProfile(fakeToken, leaderDto).Wait();
-        }
-
-        [Test]
         public void ShouldSaveProfileWithCorrectDisplayNameAndUserWithCorrectEmail()
         {
             var leaderDto = GroupLeaderMock();

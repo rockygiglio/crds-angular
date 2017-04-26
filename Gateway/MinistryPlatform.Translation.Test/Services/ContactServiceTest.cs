@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Crossroads.Utilities.Interfaces;
 using Crossroads.Web.Common;
 using Crossroads.Web.Common.Configuration;
@@ -486,31 +487,81 @@ namespace MinistryPlatform.Translation.Test.Services
         }
 
         [Test]
-        public void ShouldNotDeleteFirstNameIfOneIsntProvidedOnUpdate()
+        public void ShouldThrowApplicationExceptionIfNoFirstNameProvidedOnUpdate()
         {
             var fakeProfileDict = new Dictionary<string, object>();
             var fakeHouseholdDict = new Dictionary<string, object>();
             var fakeAddressDict = new Dictionary<string, object>();
             const int fakeContactId = 546879;
-            const int fakeContactsRecordId = 5;
 
-            _configuration.Setup(m => m.GetConfigIntValue("Contacts")).Returns(fakeContactsRecordId);
-            _ministryPlatformService.Setup(m => m.UpdateRecord(fakeContactsRecordId, fakeProfileDict, It.IsAny<string>()))
-                .Callback(
-                    (int recordId, Dictionary<string, object> profileDict, string token) =>
-                    {
-                        try
-                        {
-                            Assert.True(profileDict.ContainsKey("FirstName"));
-                            Assert.NotNull(profileDict["FirstName"]);
-                        }
-                        catch (Exception e)
-                        {
-                            Assert.Fail();
-                        }
-                    });
+            try
+            {
+                _fixture.UpdateContact(fakeContactId, fakeProfileDict, fakeHouseholdDict, fakeAddressDict);
+                Assert.Fail("Application Exception wasn\'t thrown");
+            }
+            catch (ApplicationException e)
+            {
+                Assert.True(e.Message.Contains("First_Name was not found or was null"));
+            }
+        }
 
-            _fixture.UpdateContact(fakeContactId, fakeProfileDict, fakeHouseholdDict, fakeAddressDict);
+        [Test]
+        public void ShouldThrowApplicationExceptionIfNoFirstNameProvidedOnUpdateProfile()
+        {
+            var fakeProfileDict = new Dictionary<string, object>();
+            const int fakeContactId = 546879;
+
+            try
+            {
+                _fixture.UpdateContact(fakeContactId, fakeProfileDict);
+                Assert.Fail("Application Exception wasn\'t thrown");
+            }
+            catch (ApplicationException e)
+            {
+                Assert.True(e.Message.Contains("First_Name was not found or was null"));
+            }
+        }
+
+        [Test]
+        public void ShouldThrowApplicationExceptionIfFirstNameIsNullOnUpdate()
+        {
+            var fakeProfileDict = new Dictionary<string, object>
+            {
+                { "First_Name", null }
+            };
+            var fakeHouseholdDict = new Dictionary<string, object>();
+            var fakeAddressDict = new Dictionary<string, object>();
+            const int fakeContactId = 546879;
+
+            try
+            {
+                _fixture.UpdateContact(fakeContactId, fakeProfileDict, fakeHouseholdDict, fakeAddressDict);
+                Assert.Fail("Application Exception wasn\'t thrown");
+            }
+            catch (ApplicationException e)
+            {
+                Assert.True(e.Message.Contains("First_Name was not found or was null"));
+            }
+        }
+
+        [Test]
+        public void ShouldThrowApplicationExceptionIfFirstNameIsNullOnUpdateProfile()
+        {
+            var fakeProfileDict = new Dictionary<string, object>
+            {
+                { "First_Name", null }
+            };
+            const int fakeContactId = 546879;
+
+            try
+            {
+                _fixture.UpdateContact(fakeContactId, fakeProfileDict);
+                Assert.Fail("Application Exception wasn\'t thrown");
+            }
+            catch (ApplicationException e)
+            {
+                Assert.True(e.Message.Contains("First_Name was not found or was null"));
+            }
         }
 
         public static List<MpContactHousehold> GetContactHouseholds(int householdId)
@@ -521,7 +572,5 @@ namespace MinistryPlatform.Translation.Test.Services
                 new MpContactHousehold() {ContactId = 54321, HouseholdId = householdId, HouseholdPositionId = 1, Age = 59, DateOfBirth = null, FirstName = "Ella", LastName = "Robey", HouseholdPosition = "Adult", EndDate = DateTime.Now.AddDays(-3)}
             };
         }
-        
-        
     }
 }
