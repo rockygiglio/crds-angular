@@ -568,7 +568,7 @@ namespace crds_angular.Services
                 // basic merge data here
                 var mergeData = new Dictionary<string, object>
                 {
-                    { "Community_Member", communityMember.Nickname + " " + communityMember},
+                    { "Community_Member", communityMember.Nickname + " " + communityMember.Last_Name},
                     { "Host", host.FirstName },
                 };
 

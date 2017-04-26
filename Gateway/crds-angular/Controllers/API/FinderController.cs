@@ -473,13 +473,11 @@ namespace crds_angular.Controllers.API
                 }
                 catch (GroupParticipantRemovalException e)
                 {
-                    var apiError = new ApiErrorDto(e.Message, null, e.StatusCode);
-                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                    throw new HttpResponseException(HttpStatusCode.NotAcceptable);
                 }
                 catch (DuplicateGroupParticipantException e)
                 {
-                    var apiError = new ApiErrorDto(e.Message, null, e.StatusCode);
-                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                    throw new HttpResponseException(HttpStatusCode.Conflict);
                 }
                 catch (Exception ex)
                 {
