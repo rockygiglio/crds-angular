@@ -126,7 +126,8 @@ namespace crds_angular.test.Services
                                                        It.IsAny<Dictionary<string, object>>(),
                                                        It.IsAny<Dictionary<string, object>>())).Callback((int contactId, Dictionary<string, object> profileDictionary, Dictionary<string, object> houseDictionary, Dictionary<string, object> addressDictionary) =>
                                                        {});
-            _contactService.Setup(m => m.UpdateContactsCongregation(person.HouseholdId, (int) person.CongregationId, person.AddressId)).Returns(Observable.Start<MpHousehold>(() => household));
+            
+            _contactService.Setup(m => m.UpdateHousehold(household)).Returns(Observable.Start<MpHousehold>(() => household));
             _objectAttributeService.Setup(
                 m =>
                     m.SaveObjectAttributes(It.IsAny<int>(),

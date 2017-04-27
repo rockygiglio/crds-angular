@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Crossroads.Web.Common;
 using Crossroads.Web.Common.Configuration;
 using Crossroads.Web.Common.MinistryPlatform;
 using Crossroads.Web.Common.Security;
@@ -638,6 +637,11 @@ namespace MinistryPlatform.Translation.Test.Services
             Assert.IsTrue(participant.First().ApprovedSmallGroupLeader);
             Assert.AreEqual("Attendee", participant.First().Role);
             Assert.AreEqual(2, participant.First().GroupLeaderStatus);
+        }
+
+        public void ShouldNotRemoveHomePhone()
+        {
+            
         }
     }
 
