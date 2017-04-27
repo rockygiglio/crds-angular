@@ -52,10 +52,9 @@ namespace crds_angular.Controllers.API
                 return await Authorized(token =>
                 {
                     try
-                    {                        
-
+                    {                                                
                         _groupLeaderService.SaveReferences(profile).Zip<int, IList<Unit>, int>(_groupLeaderService.SaveProfile(token, profile),
-                                                     (int first, IList<Unit> second) => first).ToTask();
+                                                     (int first, IList<Unit> second) => first).Wait();
                         
                         return Ok();
                     }
