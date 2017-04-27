@@ -22,7 +22,7 @@ namespace crds_angular.Models.Crossroads.Profile
         public string DisplayName { get; set; }
 
         [JsonProperty(PropertyName = "Age")]
-        public int Age { get; set; }
+        public int? Age { get; set; }
 
         [JsonProperty(PropertyName = "AttendanceStart")]
         public DateTime? AttendanceStart { get; set; }
