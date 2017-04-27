@@ -236,6 +236,32 @@ namespace crds_angular.Controllers.API
         }
 
         /// <summary>
+        /// Remove pin from map
+        /// </summary>
+        [RequiresAuthorization]
+        [VersionedRoute(template: "finder/pin/removeFromMap", minimumVersion: "1.0.0")]
+        [Route("finder/pin/removeFromMap")]
+        [HttpPost]
+        public IHttpActionResult RemovePinFromMap([FromBody] int participantId)
+        {
+            return Authorized(token =>
+            {
+                try
+                {
+                    _finderService.DisablePin(participantId);
+                    return Ok();
+
+                }
+                catch (Exception e)
+                {
+                    _logger.Error("Could not create pin", e);
+                    var apiError = new ApiErrorDto("Remove pin from map failed", e);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+            });
+        }
+
+        /// <summary>
         /// Create Pin with provided address details
         /// </summary>
         [RequiresAuthorization]
