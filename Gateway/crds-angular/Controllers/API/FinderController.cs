@@ -540,7 +540,7 @@ namespace crds_angular.Controllers.API
                 }
                 catch (Exception ex)
                 {
-                    var apiError = new ApiErrorDto(string.Format("Error when accepting: {0}, for group {1}", accept, groupId), ex);
+                    var apiError = new ApiErrorDto($"Error when accepting: {accept}, for group {groupId}", ex);
                     throw new HttpResponseException(apiError.HttpResponseMessage);
                 }
             });

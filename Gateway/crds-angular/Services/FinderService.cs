@@ -591,6 +591,16 @@ namespace crds_angular.Services
                 var host = GetPinDetailsForPerson(GetLeaderParticipantIdFromGroup(groupId));
                 var cm = _contactRepository.GetContactById(_authenticationRepository.GetContactId(token));
 
+                var connection = new ConnectCommunicationDto
+                {
+                    FromContactId = (int) host.Contact_ID,
+                    ToContactId = cm.Contact_ID,
+                    CommunicationTypeId = _configurationWrapper.GetConfigIntValue("ConnectCommunicationTypeInviteToGathering"),
+                    CommunicationStatusId = accept ? _configurationWrapper.GetConfigIntValue("ConnectCommunicationStatusAccepted") : _configurationWrapper.GetConfigIntValue("ConnectCommunicationStatusDeclined"),
+                    GroupId = groupId
+                };
+                RecordCommunication(connection);
+
                 SendGatheringInviteResponseEmail(accept, host, cm);
             }
             catch (Exception e)
