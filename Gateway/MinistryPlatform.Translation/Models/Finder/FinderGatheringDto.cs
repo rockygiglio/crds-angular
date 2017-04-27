@@ -64,7 +64,7 @@ namespace MinistryPlatform.Translation.Models.Finder
         public int? MeetingFrequencyID { get; set; }
 
         [JsonProperty("Kids_Welcome")]
-        public bool? KidsWelcome { get; set; }
+        public bool KidsWelcome { get; set; } = false;
 
         [JsonProperty("Target_Size")]
         public int? TargetSize { get; set; }
