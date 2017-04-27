@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Antlr.Runtime.Misc;
 using AutoMapper;
 using crds_angular.Models.Crossroads;
 using crds_angular.Models.Crossroads.Attribute;
 using crds_angular.Models.Crossroads.Groups;
+using crds_angular.Models.Crossroads.Profile;
 using crds_angular.Services.Interfaces;
-using Crossroads.Utilities.Interfaces;
 using log4net;
-using Crossroads.Web.Common;
 using Crossroads.Web.Common.Configuration;
 using Crossroads.Web.Common.MinistryPlatform;
 using MinistryPlatform.Translation.Exceptions;
@@ -20,7 +18,6 @@ using IAttributeRepository = MinistryPlatform.Translation.Repositories.Interface
 using IEventRepository = MinistryPlatform.Translation.Repositories.Interfaces.IEventRepository;
 using IGroupRepository = MinistryPlatform.Translation.Repositories.Interfaces.IGroupRepository;
 using IObjectAttributeService = crds_angular.Services.Interfaces.IObjectAttributeService;
-using Participant = MinistryPlatform.Translation.Models.MpParticipant;
 
 namespace crds_angular.Services
 {
@@ -279,7 +276,7 @@ namespace crds_angular.Services
 
         public void addContactToGroup(int groupId, int contactId)
         {
-            Participant participant;
+            MpParticipant participant;
 
             try
             {
@@ -371,7 +368,7 @@ namespace crds_angular.Services
             return groups[0];
         }
 
-        public GroupDTO getGroupDetails(int groupId, int contactId, Participant participant, string authUserToken)
+        public GroupDTO getGroupDetails(int groupId, int contactId, MpParticipant participant, string authUserToken)
         {
             int participantId = participant.ParticipantId;
             MpGroup g = _mpGroupRepository.getGroupDetails(groupId);
@@ -630,8 +627,22 @@ namespace crds_angular.Services
 
         public Participant GetParticipantRecord(string token) 
         {
-            var participant = _participantService.GetParticipantRecord(token);            
-            return participant;
+            var participant = _participantService.GetParticipantRecord(token);
+            return new Participant
+            {
+                Age = participant.Age,
+                ApprovedSmallGroupLeader = participant.ApprovedSmallGroupLeader,
+                AttendanceStart = participant.AttendanceStart,
+                ContactId = participant.ContactId,
+                DisplayName = participant.DisplayName,
+                EmailAddress = participant.EmailAddress,
+                GroupLeaderStatus = participant.GroupLeaderStatus,
+                GroupName = participant.GroupName,
+                Nickname = participant.Nickname,
+                ParticipantId = participant.ParticipantId,
+                PreferredName = participant.PreferredName,
+                Role = participant.Role
+            };
         }
 
         public void SendJourneyEmailInvite(EmailCommunicationDTO communication, string token)
