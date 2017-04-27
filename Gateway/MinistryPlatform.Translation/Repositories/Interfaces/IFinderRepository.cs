@@ -13,5 +13,6 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
         List<MpConnectAws> GetAllPinsForAws();
         MpAddress GetPinAddress(int participantId);
         FinderGatheringDto UpdateGathering(FinderGatheringDto finderGathering);
+        void RecordConnection(MpConnectCommunication connection);
     }
 }

@@ -502,6 +502,16 @@ namespace crds_angular.test.Services
         }
 
         [Test]
+        public void ShouldSayHi()
+        {
+            _mpConfigurationWrapper.Setup(x => x.GetConfigIntValue(It.IsAny<string>())).Returns(1);
+            _mpFinderRepository.Setup(mocked => mocked.RecordConnection(It.IsAny<MpConnectCommunication>()));
+            
+            _fixture.SayHi(123, 456);
+            _mpFinderRepository.Verify(m => m.RecordConnection(It.IsAny<MpConnectCommunication>()), Times.Once);
+        }
+
+        [Test]
         public void ShouldInviteToGathering()
         {
             string token = "abc";
@@ -519,7 +529,8 @@ namespace crds_angular.test.Services
                 EmailAddress = person.email,
                 SourceId = gatheringId,
                 GroupRoleId = _memberRoleId,
-                InvitationType = _anywhereGatheringInvitationTypeId
+                InvitationType = _anywhereGatheringInvitationTypeId,
+                CommunicationId = 7
             };
 
             _invitationService.Setup(i => i.ValidateInvitation(It.Is<Invitation>(
@@ -536,8 +547,12 @@ namespace crds_angular.test.Services
                                                                           && inv.SourceId == expectedInvitation.SourceId
                                                                           && inv.GroupRoleId == expectedInvitation.GroupRoleId
                                                                           && inv.InvitationType == expectedInvitation.InvitationType),
-                                                             It.Is<string>((s) => s == token)));
-            _fixture.InviteToGathering(token, gatheringId, person);
+                                                             It.Is<string>((s) => s == token))).Returns(expectedInvitation);
+            _mpFinderRepository.Setup(x => x.RecordConnection(It.IsAny<MpConnectCommunication>()));
+            _mpConfigurationWrapper.Setup(x => x.GetConfigIntValue(It.IsAny<string>())).Returns(1);
+            _mpContactRepository.Setup(x => x.GetContactIdByEmail(It.IsAny<string>())).Returns(2);
+            _mpContactRepository.Setup(x => x.GetContactId(It.IsAny<string>())).Returns(3);
+           _fixture.InviteToGathering(token, gatheringId, person);
             _invitationService.VerifyAll();
         }
 

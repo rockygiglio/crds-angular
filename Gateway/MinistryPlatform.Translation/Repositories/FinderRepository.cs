@@ -17,20 +17,17 @@ namespace MinistryPlatform.Translation.Repositories
         private const int SearchRadius = 6380; 
 
         private readonly IMinistryPlatformRestRepository _ministryPlatformRest;
-        private readonly IMinistryPlatformService _ministryPlatformService;
         private readonly IApiUserRepository _apiUserRepository;
         private readonly ILog _logger = LogManager.GetLogger(typeof(CampRepository));
         private readonly List<string> _groupColumns;
 
         public FinderRepository(IConfigurationWrapper configuration,
                                 IMinistryPlatformRestRepository ministryPlatformRest,
-                                IMinistryPlatformService ministryPlatformService,
                                 IApiUserRepository apiUserRepository,
                                 IAuthenticationRepository authenticationService)
             : base(authenticationService, configuration)
         {
             _ministryPlatformRest = ministryPlatformRest;
-            _ministryPlatformService = ministryPlatformService;
             _apiUserRepository = apiUserRepository;
             _groupColumns = new List<string>
             {
@@ -49,13 +46,13 @@ namespace MinistryPlatform.Translation.Repositories
 
         public FinderPinDto GetPinDetails(int participantId)
         {
-            string token = _apiUserRepository.GetToken();
+            var token = _apiUserRepository.GetToken();
 
             const string pinSearch = "Email_Address, Nickname as FirstName, Last_Name as LastName, Participant_Record_Table.*, Household_ID";
             string filter = $"Participant_Record = {participantId}";
 
-            List<FinderPinDto> myPin = _ministryPlatformRest.UsingAuthenticationToken(token).Search<FinderPinDto>(filter, pinSearch);
-            var pinDetails = new FinderPinDto();
+            var myPin = _ministryPlatformRest.UsingAuthenticationToken(token).Search<FinderPinDto>(filter, pinSearch);
+            FinderPinDto pinDetails;
 
             if (myPin != null && myPin.Count > 0)
             {
@@ -139,5 +136,34 @@ namespace MinistryPlatform.Translation.Repositories
             }
         }
 
+        public void RecordConnection(MpConnectCommunication connection)
+        {
+            var apiToken = _apiUserRepository.GetToken();
+
+            try
+            {
+                if (connection.CommunicationStatusId == _configurationWrapper.GetConfigIntValue("ConnectCommunicationStatusAccepted") ||
+                    connection.CommunicationStatusId == _configurationWrapper.GetConfigIntValue("ConnectCommunicationStatusDeclined"))
+                {
+                    string filter = $"Group_ID = {connection.GroupId} AND From_Contact_ID = {connection.FromContactId} AND To_Contact_ID = {connection.ToContactId} AND Communication_Type_ID = {connection.CommunicationTypeId}";
+                    const string columnList = ".Connect_Communications_ID";
+
+                    var communicationsToUpdate = _ministryPlatformRest.UsingAuthenticationToken(apiToken).Search<MpConnectCommunication>(filter , columnList).ToList();
+                    foreach (var communication  in communicationsToUpdate)
+                    {
+                        //Update
+                        var dict = new Dictionary<string, object> { { "Connect_Communication_ID", communication.ConnectCommunicationId }, { "Communication_Status_ID", connection.CommunicationStatusId } };
+                        var update = new List<Dictionary<string, object>> { dict };
+                        _ministryPlatformRest.UsingAuthenticationToken(apiToken).Put("cr_Connect_Communications", update);
+                    }
+
+                }
+                _ministryPlatformRest.UsingAuthenticationToken(apiToken).Create(connection);
+            }
+            catch (Exception ex)
+            {
+                _logger.Error("RecordConnection error" + ex);
+            }
+        }
     }
 }

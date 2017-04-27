@@ -1,20 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using crds_angular.Models.Crossroads;
-using Crossroads.Utilities.Interfaces;
-
-using Crossroads.Web.Common;
 using Crossroads.Web.Common.Configuration;
 using Crossroads.Web.Common.MinistryPlatform;
 using Crossroads.Web.Common.Security;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Models.Finder;
-using MinistryPlatform.Translation.PlatformService;
 using MinistryPlatform.Translation.Repositories;
 using Moq;
 using NUnit.Framework;
-using MinistryPlatform.Translation.Repositories.Interfaces;
-using MinistryPlatform.Translation.Test.Helpers;
 
 namespace MinistryPlatform.Translation.Test.Services
 {
@@ -22,7 +15,6 @@ namespace MinistryPlatform.Translation.Test.Services
     public class FinderRepositoryTest
     {
         private Mock<IMinistryPlatformRestRepository> _ministryPlatformRestRepository;
-        private Mock<IMinistryPlatformService> _ministryPlatformService;
         private Mock<IAuthenticationRepository> _authenticationService;  
         private Mock<IConfigurationWrapper> _config;
         private Mock<IApiUserRepository> _apiUserRepo;
@@ -48,14 +40,13 @@ namespace MinistryPlatform.Translation.Test.Services
         public void SetUp()
         {
             _ministryPlatformRestRepository = new Mock<IMinistryPlatformRestRepository>();
-            _ministryPlatformService = new Mock<IMinistryPlatformService>();
             _authenticationService = new Mock<IAuthenticationRepository>();
             _config = new Mock<IConfigurationWrapper>();
             _apiUserRepo = new Mock<IApiUserRepository>();
 
             _ministryPlatformRestRepository.Setup(m => m.UsingAuthenticationToken("abc")).Returns(_ministryPlatformRestRepository.Object);
 
-            _fixture = new FinderRepository(_config.Object, _ministryPlatformRestRepository.Object, _ministryPlatformService.Object, _apiUserRepo.Object, _authenticationService.Object);
+            _fixture = new FinderRepository(_config.Object, _ministryPlatformRestRepository.Object, _apiUserRepo.Object, _authenticationService.Object);
         }
 
         [Test]

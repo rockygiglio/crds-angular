@@ -6,9 +6,7 @@ using System.Linq;
 using AutoMapper;
 using crds_angular.Models.Crossroads;
 using crds_angular.Services.Interfaces;
-using Crossroads.Utilities.Interfaces;
 using log4net;
-using Crossroads.Web.Common;
 using Crossroads.Web.Common.Configuration;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Repositories.Interfaces;
@@ -89,7 +87,7 @@ namespace crds_angular.Services
                 }
                 catch (Exception e)
                 {
-                    _logger.Error(string.Format("Error sending email to {0} for invitation {1}", invitation.EmailAddress, invitation.InvitationGuid), e);
+                    _logger.Error($"Error sending email to {invitation.EmailAddress} for invitation {invitation.InvitationGuid}", e);
                 }
 
                 dto.InvitationGuid = invitation.InvitationGuid;
@@ -98,7 +96,7 @@ namespace crds_angular.Services
             }
             catch (Exception e)
             {
-                var message = string.Format("Exception creating invitation for {0}, SourceID = {1}.", dto.RecipientName, dto.SourceId);
+                var message = $"Exception creating invitation for {dto.RecipientName}, SourceID = {dto.SourceId}.";
                 _logger.Error(message, e);
                 throw new ApplicationException(message, e);
             }
@@ -218,7 +216,6 @@ namespace crds_angular.Services
                 MergeData = mergeData
             };
             _communicationService.SendMessage(confirmation);
-
         }
 
     }

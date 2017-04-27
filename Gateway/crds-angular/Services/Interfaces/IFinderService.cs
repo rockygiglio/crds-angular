@@ -28,5 +28,6 @@ namespace crds_angular.Services.Interfaces
         PinDto UpdateGathering(PinDto pin);
         void RequestToBeHost(string token, HostRequestDto hostRequest);
         void AcceptDenyGroupInvitation(string token, int groupId, string invitationGuid, bool accept);
+        void SayHi(int fromContactId, int toContactId);
     }
 }

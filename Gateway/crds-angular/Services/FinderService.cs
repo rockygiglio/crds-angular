@@ -283,6 +283,17 @@ namespace crds_angular.Services
 
         public void GatheringJoinRequest(string token, int gatheringId)
         {
+            var group = _groupService.GetGroupDetails(gatheringId);
+            var connection = new ConnectCommunicationDto
+            {
+                CommunicationTypeId = _configurationWrapper.GetConfigIntValue("ConnectCommunicationTypeRequestToJoin"),
+                ToContactId = group.ContactId,
+                FromContactId = _contactRepository.GetContactId(token),
+                CommunicationStatusId = _configurationWrapper.GetConfigIntValue("ConnectCommunicationStatusUnanswered"),
+                GroupId = gatheringId
+            };
+            RecordCommunication(connection);
+
             _groupToolService.SubmitInquiry(token, gatheringId);
         }
 
@@ -489,32 +500,6 @@ namespace crds_angular.Services
             return new GeoCoordinate(latitude, longitude);
         }
 
-        private List<PinDto> GetGroupPinsinRadius(GeoCoordinate originCoords, string address)
-        {
-            // ignoring originCoords at this time
-            var pins = new List<PinDto>();
-
-            // get group for anywhere gathering
-            var anywhereGroupTypeId = _configurationWrapper.GetConfigIntValue("AnywhereGroupTypeId");
-            var groups = _groupToolService.SearchGroups(new int[] { anywhereGroupTypeId }, null, address, null, originCoords);
-
-            foreach (var group in groups)
-            {
-                var pin = Mapper.Map<PinDto>(group);
-                pin.Gathering = group;
-                if (pin.Contact_ID != null)
-                {
-                    var contact = _contactRepository.GetContactById((int)pin.Contact_ID);
-                    pin.FirstName = contact.First_Name;
-                    pin.LastName = contact.Last_Name;
-                }
-
-                pins.Add(pin);
-            }
-
-            return pins;
-        }
-
         public AddressDTO RandomizeLatLong(AddressDTO address)
         {
             if (!address.HasGeoCoordinates()) return address;
@@ -547,7 +532,26 @@ namespace crds_angular.Services
             };
             
             _invitationService.ValidateInvitation(invitation, token);
-            return _invitationService.CreateInvitation(invitation, token);
+            invitation = _invitationService.CreateInvitation(invitation, token);
+
+            //if the invitee does not have a contact then create one
+            var toContactId = _contactRepository.GetContactIdByEmail(person.email);
+            if (toContactId == 0)
+            {
+                toContactId = _contactRepository.CreateContactForGuestGiver(person.email, $"{person.lastName}, {person.firstName}", person.firstName, person.lastName);
+            }
+
+            var connection = new ConnectCommunicationDto
+            {
+                CommunicationTypeId = _configurationWrapper.GetConfigIntValue("ConnectCommunicationTypeInviteToGathering"),
+                ToContactId = toContactId,
+                FromContactId = _contactRepository.GetContactId(token),
+                CommunicationStatusId = _configurationWrapper.GetConfigIntValue("ConnectCommunicationStatusUnanswered"),
+                GroupId = gatheringId
+            };
+
+            RecordCommunication(connection);
+            return invitation;
         }
 
         public AddressDTO GetGroupAddress(string token, int groupId)
@@ -561,7 +565,7 @@ namespace crds_angular.Services
             }
             else
             {
-                throw new Exception("User does not have acces to requested address");
+                throw new Exception("User does not have access to requested address");
             }
         }
 
@@ -584,9 +588,26 @@ namespace crds_angular.Services
             }
             else
             {
-                throw new Exception("User does not have acces to requested address");
+                throw new Exception("User does not have access to requested address");
             }
+        }
 
+        private void RecordCommunication(ConnectCommunicationDto connection)
+        {
+            _finderRepository.RecordConnection(Mapper.Map<MpConnectCommunication>(connection));
+        }
+
+        public void SayHi(int fromContactId, int toContactId)
+        {
+            var connection = new ConnectCommunicationDto
+            {
+                FromContactId = fromContactId,
+                ToContactId = toContactId,
+                CommunicationTypeId = _configurationWrapper.GetConfigIntValue("ConnectCommunicationTypeSayHi"),
+                CommunicationStatusId = _configurationWrapper.GetConfigIntValue("ConnectCommunicationStatusNA"),
+                GroupId = null
+            };
+            RecordCommunication(connection);
         }
 
         public void AcceptDenyGroupInvitation(string token, int groupId, string invitationGuid, bool accept)
@@ -597,6 +618,16 @@ namespace crds_angular.Services
 
                 var host = GetPinDetailsForPerson(GetLeaderParticipantIdFromGroup(groupId));
                 var cm = _contactRepository.GetContactById(_authenticationRepository.GetContactId(token));
+
+                var connection = new ConnectCommunicationDto
+                {
+                    FromContactId = (int) host.Contact_ID,
+                    ToContactId = cm.Contact_ID,
+                    CommunicationTypeId = _configurationWrapper.GetConfigIntValue("ConnectCommunicationTypeInviteToGathering"),
+                    CommunicationStatusId = accept ? _configurationWrapper.GetConfigIntValue("ConnectCommunicationStatusAccepted") : _configurationWrapper.GetConfigIntValue("ConnectCommunicationStatusDeclined"),
+                    GroupId = groupId
+                };
+                RecordCommunication(connection);
 
                 SendGatheringInviteResponseEmail(accept, host, cm);
             }
