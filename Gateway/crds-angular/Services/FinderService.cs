@@ -52,6 +52,7 @@ namespace crds_angular.Services
         private readonly IAuthenticationRepository _authenticationRepository;
         private readonly ICommunicationRepository _communicationRepository;
         private readonly int _approvedHost;
+        private readonly int _pendingHost;
         private readonly int _anywhereGroupType;
         private readonly int _leaderRoleId;
         private readonly int _memberRoleId;
@@ -88,6 +89,7 @@ namespace crds_angular.Services
             _groupRepository = groupRepository;
             _apiUserRepository = apiUserRepository;
             _approvedHost = configurationWrapper.GetConfigIntValue("ApprovedHostStatus");
+            _pendingHost = configurationWrapper.GetConfigIntValue("PendingHostStatus");
             _anywhereGroupType = configurationWrapper.GetConfigIntValue("AnywhereGroupTypeId");
             _leaderRoleId = configurationWrapper.GetConfigIntValue("GroupRoleLeader");
             _memberRoleId = configurationWrapper.GetConfigIntValue("Group_Role_Default_ID");
@@ -226,6 +228,12 @@ namespace crds_angular.Services
             // get contact data
             var contact = _contactRepository.GetContactById(hostRequest.ContactId);
             var participant = _participantRepository.GetParticipant(hostRequest.ContactId);
+            
+            if (participant.HostStatus != _approvedHost)
+            {
+                participant.HostStatus = _pendingHost;
+                _participantRepository.UpdateParticipantHostStatus(participant);
+            }
 
             //update mobile phone number on contact record
             contact.Mobile_Phone = hostRequest.ContactNumber;
@@ -604,7 +612,7 @@ namespace crds_angular.Services
                 // basic merge data here
                 var mergeData = new Dictionary<string, object>
                 {
-                    { "Community_Member", communityMember.Nickname + " " + communityMember},
+                    { "Community_Member", communityMember.Nickname + " " + communityMember.Last_Name},
                     { "Host", host.FirstName },
                 };
 

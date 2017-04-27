@@ -21,6 +21,7 @@ using Rhino.Mocks;
 using Amazon.CloudSearchDomain.Model;
 using crds_angular.Exceptions;
 using crds_angular.Models.AwsCloudsearch;
+using Crossroads.Web.Common.Security;
 using MvcContrib.TestHelper;
 
 
@@ -44,6 +45,8 @@ namespace crds_angular.test.Services
         private Mock<IGroupRepository> _mpGroupRepository;
         private Mock<IAwsCloudsearchService> _awsCloudsearchService;
         private Mock<IFinderService> _mpFinderServiceMock;
+        private Mock<IAuthenticationRepository> _authenticationRepository;
+        private Mock<ICommunicationRepository> _communicationRepository;
 
         private int _memberRoleId = 16;
         private int _anywhereGatheringInvitationTypeId = 3;
@@ -64,6 +67,9 @@ namespace crds_angular.test.Services
             _invitationService = new Mock<IInvitationService>();
             _mpGroupRepository = new Mock<IGroupRepository>();
             _awsCloudsearchService = new Mock<IAwsCloudsearchService>();
+            _authenticationRepository = new Mock<IAuthenticationRepository>();
+            _communicationRepository = new Mock<ICommunicationRepository>();
+
 
             _mpFinderServiceMock = new Mock<IFinderService>(MockBehavior.Strict);
 
@@ -84,7 +90,9 @@ namespace crds_angular.test.Services
                                          _apiUserRepository.Object,
                                          _mpConfigurationWrapper.Object,
                                          _invitationService.Object,
-                                         _awsCloudsearchService.Object);
+                                         _awsCloudsearchService.Object,
+                                         _authenticationRepository.Object,
+                                         _communicationRepository.Object);
 
             //force AutoMapper to register
             AutoMapperConfig.RegisterMappings();

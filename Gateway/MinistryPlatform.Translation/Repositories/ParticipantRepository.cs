@@ -77,6 +77,7 @@ namespace MinistryPlatform.Translation.Repositories
                 var searchString = $"Contact_ID_Table.[Contact_ID]={contactId}";
                 var columnList = new List<string>
                 {
+
                     "Contact_ID_Table.Contact_ID",
                     "Participants.[Participant_ID]",
                     "Contact_ID_Table.Email_Address",
@@ -87,7 +88,8 @@ namespace MinistryPlatform.Translation.Repositories
                     "Participants.Attendance_Start_Date",
                     "Participants.[Approved_Small_Group_Leader]",
                     "Participant_Type_ID_Table.Participant_Type",
-                    "Group_Leader_Status_ID_Table.Group_Leader_Status_ID"
+                    "Group_Leader_Status_ID_Table.Group_Leader_Status_ID",
+                    "Host_Status_ID_Table.[Host_Status_ID]"
                 };
                 var token = ApiLogin();
                 var participant = _ministryPlatformRestRepository.UsingAuthenticationToken(token).Search<MpParticipant>(searchString, columnList);
@@ -116,7 +118,16 @@ namespace MinistryPlatform.Translation.Repositories
             };
             UpdateParticipant(participantDict);
         }
-            
+
+        public void UpdateParticipantHostStatus(MpParticipant participant)
+        {
+            var participantDict = new Dictionary<string, object>()
+            {
+                {"Participant_ID", participant.ParticipantId },
+                {"Host_Status_ID", participant.HostStatus }
+            };
+            UpdateParticipant(participantDict);
+        }
 
         public void UpdateParticipant(Dictionary<string, object> participant)
         {
