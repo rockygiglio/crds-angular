@@ -51,22 +51,6 @@ namespace crds_angular.test.controllers
         }
 
         [Test]
-        public async void ShouldSaveTheProfile()
-        {
-            _fixture.Request.Headers.Authorization = new AuthenticationHeaderValue(authType, authToken);
-            var mockProfile = GroupLeaderMock();
-            _groupLeaderService.Setup(m => m.SaveReferences(It.IsAny<GroupLeaderProfileDTO>())).Returns(Observable.Start(() => 1));
-            _groupLeaderService.Setup(m => m.SaveProfile(It.IsAny<string>(), It.IsAny<GroupLeaderProfileDTO>())).Callback((string authTokenParm, GroupLeaderProfileDTO mock) =>
-            {
-                Assert.AreEqual($"{authType} {authToken}", authTokenParm);
-            }).Returns(Observable.Empty<IList<Unit>>());
-
-            var response = await _fixture.SaveProfile(mockProfile);
-            Assert.IsNotNull(response);
-            Assert.IsInstanceOf<OkResult>(response);
-        }
-
-        [Test]
         public void ShouldThrowExceptionWhenProfileIsNotSaved()
         {
             _fixture.Request.Headers.Authorization = new AuthenticationHeaderValue(authType, authToken);
@@ -181,7 +165,8 @@ namespace crds_angular.test.controllers
                 LastName = "Silbernagel",
                 NickName = "Matt",
                 Site = 1,
-                OldEmail = "matt.silbernagel@ingagepartners.com"
+                OldEmail = "matt.silbernagel@ingagepartners.com",
+                HomePhone = "123-456-7890"
             };
         }
 
