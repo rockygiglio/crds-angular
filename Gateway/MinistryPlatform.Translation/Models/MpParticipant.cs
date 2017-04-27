@@ -28,7 +28,6 @@ namespace MinistryPlatform.Translation.Models
         [JsonProperty(PropertyName = "Attendance_Start_Date")]
         public DateTime? AttendanceStart { get; set; }
 
-        [JsonProperty(PropertyName = "Approved_Small_Group_Leader")]
         public bool ApprovedSmallGroupLeader { get; set; }
 
         [JsonProperty(PropertyName = "Participant_Type")]
