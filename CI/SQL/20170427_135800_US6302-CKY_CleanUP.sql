@@ -34,12 +34,12 @@ GO
 --PAGES Same ids in all envs
 --Sync Events, Sync Event Types, Sync Event Operations(script referenced had as sub page but this is a page), Sync Sources. 
 
-DELETE FROM dp_Pages 
-WHERE page_id in (1002, 1003, 1004, 1005) 
-
 DELETE FROM dp_Page_Section_Pages where Page_ID in (1002, 1003, 1004, 1005)
 
 DELETE FROM dp_Role_Pages WHERE Page_ID in (1002, 1003, 1004, 1005)
+
+DELETE FROM dp_Pages --do pages last for fk constraints
+WHERE page_id in (1002, 1003, 1004, 1005) 
 
 --TABLES
 DROP TABLE Sync_Sources;
