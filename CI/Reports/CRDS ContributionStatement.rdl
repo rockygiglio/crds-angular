@@ -22,6 +22,10 @@
           <QueryParameter Name="AccountingCompanyID">
             <Value>=Parameters!AccountingCompanyID.Value</Value>
           </QueryParameter>
+          <QueryParameter Name="Congregations">
+            <Value>=JOIN(Parameters!Congregations.Value,",")</Value>
+            <rd:UserDefined>true</rd:UserDefined>
+          </QueryParameter>
           <QueryParameter Name="Campaigns">
             <Value>=JOIN(Parameters!Campaigns.Value,",")</Value>
             <rd:UserDefined>true</rd:UserDefined>
@@ -183,7 +187,7 @@
         </Field>
       </Fields>
     </DataSet>
-    <DataSet Name="data_Campaigns">
+    <DataSet Name="data_Lookup_Campaigns">
       <Query>
         <DataSourceName>MPReportsDS</DataSourceName>
         <QueryParameters>
@@ -201,6 +205,37 @@
         </Field>
         <Field Name="Pledge_Campaign_ID">
           <DataField>Pledge_Campaign_ID</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
+    <DataSet Name="data_Lookup_Congregations">
+      <Query>
+        <DataSourceName>MPReportsDS</DataSourceName>
+        <QueryParameters>
+          <QueryParameter Name="DomainID">
+            <Value>=Parameters!DomainID.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="UserID">
+            <Value>=Parameters!UserID.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="PageID">
+            <Value>=Parameters!PageID.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="AccountingCompanyID">
+            <Value>=Parameters!AccountingCompanyID.Value</Value>
+          </QueryParameter>
+        </QueryParameters>
+        <CommandType>StoredProcedure</CommandType>
+        <CommandText>report_crds_filter_congregations</CommandText>
+      </Query>
+      <Fields>
+        <Field Name="Congregation_Name">
+          <DataField>Congregation_Name</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Congregation_ID">
+          <DataField>Congregation_ID</DataField>
           <rd:TypeName>System.Int32</rd:TypeName>
         </Field>
       </Fields>
@@ -2060,7 +2095,6 @@
                 </Paragraph>
               </Paragraphs>
               <rd:DefaultName>Deductible_Amount</rd:DefaultName>
-              <Left>0in</Left>
               <Height>0.25in</Height>
               <Width>8.86459in</Width>
               <Style>
@@ -2142,12 +2176,34 @@
       <DataType>DateTime</DataType>
       <Prompt>Print Date</Prompt>
     </ReportParameter>
+    <ReportParameter Name="IsMulti">
+      <DataType>Boolean</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>true</Value>
+        </Values>
+      </DefaultValue>
+      <Prompt>IsMulti</Prompt>
+      <Hidden>true</Hidden>
+    </ReportParameter>
+    <ReportParameter Name="Congregations">
+      <DataType>String</DataType>
+      <Prompt>Congregations</Prompt>
+      <ValidValues>
+        <DataSetReference>
+          <DataSetName>data_Lookup_Congregations</DataSetName>
+          <ValueField>Congregation_ID</ValueField>
+          <LabelField>Congregation_Name</LabelField>
+        </DataSetReference>
+      </ValidValues>
+      <MultiValue>true</MultiValue>
+    </ReportParameter>
     <ReportParameter Name="Campaigns">
       <DataType>String</DataType>
       <Prompt>Campaigns</Prompt>
       <ValidValues>
         <DataSetReference>
-          <DataSetName>data_Campaigns</DataSetName>
+          <DataSetName>data_Lookup_Campaigns</DataSetName>
           <ValueField>Pledge_Campaign_ID</ValueField>
           <LabelField>Campaign_Name</LabelField>
         </DataSetReference>
