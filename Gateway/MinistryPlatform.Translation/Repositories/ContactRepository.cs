@@ -285,6 +285,10 @@ namespace MinistryPlatform.Translation.Repositories
                             throw new ApplicationException("Mobile phone format is wrong. Format should be ###-###-####");
                         }
                     }
+                    if (!profileDictionary.ContainsKey("First_Name") || profileDictionary["First_Name"] == null)
+                    {
+                        throw new ApplicationException("First_Name was not found or was null");
+                    }
 
                     _ministryPlatformService.UpdateRecord(_configurationWrapper.GetConfigIntValue("Contacts"), profileDictionary, token);
                     return 1;
@@ -322,14 +326,19 @@ namespace MinistryPlatform.Translation.Repositories
                             throw new ApplicationException("Home phone format is wrong. Format should be ###-###-####");
                         }
                     }
+                    if (!profileDictionary.ContainsKey("First_Name") || profileDictionary["First_Name"] == null)
+                    {
+                        throw new ApplicationException("First_Name was not found or was null");
+                    }
 
-                    _ministryPlatformService.UpdateRecord(_configurationWrapper.GetConfigIntValue("Contacts"), profileDictionary, token);                                     
+                    _ministryPlatformService.UpdateRecord(_configurationWrapper.GetConfigIntValue("Contacts"), profileDictionary, token);
+
                     UpdateHouseholdAddress(contactId, householdDictionary, addressDictionary);
                     return 1;
                 }
                 catch (Exception e)
                 {
-                    return 0;
+                    throw new ApplicationException("Error Saving mpContact: " + e.Message);
                 }
             });
         }
@@ -414,10 +423,9 @@ namespace MinistryPlatform.Translation.Repositories
 
         }
 
-        public IObservable<MpHousehold> UpdateContactsCongregation(int householdId, int newCongregation, int? addressId)
+        public IObservable<MpHousehold> UpdateHousehold(MpHousehold household)
         {
-            var token = ApiLogin();
-            var household = new MpHousehold() {Address_ID = addressId, Congregation_ID = newCongregation, Household_ID = householdId};
+            var token = ApiLogin();            
             var asyncresult = Task.Run(() => _ministryPlatformRest.UsingAuthenticationToken(token)
                                                         .Update<MpHousehold>(household));
             return asyncresult.ToObservable();

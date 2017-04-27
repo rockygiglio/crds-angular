@@ -51,7 +51,6 @@ namespace crds_angular.Services
         private readonly IAwsCloudsearchService _awsCloudsearchService;
         private readonly IAuthenticationRepository _authenticationRepository;
         private readonly ICommunicationRepository _communicationRepository;
-
         private readonly int _approvedHost;
         private readonly int _pendingHost;
         private readonly int _anywhereGroupType;

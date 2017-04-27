@@ -68,7 +68,7 @@ namespace MinistryPlatform.Translation.Models
         public int? MeetingFrequencyID { get; set; }
 
         [JsonProperty("Kids_Welcome")]
-        public bool? KidsWelcome { get; set; }
+        public bool? KidsWelcome { get; set; } = false;
 
         [JsonProperty("Offsite_Meeting_Address")]
         public int? OffsiteMeetingAddressId { get; set; }
