@@ -26,6 +26,7 @@ BEGIN
 
 	ALTER TABLE [dbo].[cr_Connect_Communications] ADD  CONSTRAINT [DF_cr_Connect_Communications_Domain_ID]  DEFAULT ((1)) FOR [Domain_ID]
 	ALTER TABLE [dbo].[cr_Connect_Communications] ADD  CONSTRAINT [DF_cr_Connect_Communications_Start_Date]  DEFAULT (getdate()) FOR [Communication_Date]
+	ALTER TABLE [dbo].[cr_Connect_Communications] ADD  CONSTRAINT [DF_cr_Connect_Communications_Status]  DEFAULT (3) FOR [Communication_Status_ID]
 
 	/* FromUser */
 	ALTER TABLE [dbo].[cr_Connect_Communications]  WITH CHECK ADD  CONSTRAINT [FK_cr_Connect_Communications_Contacts_From] FOREIGN KEY([From_Contact_ID])

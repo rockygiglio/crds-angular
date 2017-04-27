@@ -11,7 +11,7 @@ IF NOT EXISTS (SELECT * FROM MinistryPlatform.INFORMATION_SCHEMA.TABLES WHERE TA
 BEGIN
 	CREATE TABLE [dbo].[cr_Connect_Communications_Type](
 		[Connect_Communications_Type_ID] [int] IDENTITY(1,1) NOT NULL,
-		[Communication_Type] [varchar](50) NULL,
+		[Communication_Type] [varchar](50) NOT NULL,
 		[Start_Date] [datetime] NOT NULL,
 		[End_Date] [datetime] NULL,
 		[Domain_ID] [int] NOT NULL,
@@ -31,7 +31,7 @@ IF NOT EXISTS (SELECT * FROM MinistryPlatform.INFORMATION_SCHEMA.TABLES WHERE TA
 BEGIN
 	CREATE TABLE [dbo].[cr_Connect_Communications_Status](
 		[Connect_Communications_Status_ID] [int] IDENTITY(1,1) NOT NULL,
-		[Communication_Status] [varchar](50) NULL,
+		[Communication_Status] [varchar](50) NOT NULL,
 		[Start_Date] [datetime] NOT NULL,
 		[End_Date] [datetime] NULL,
 		[Domain_ID] [int] NOT NULL,
