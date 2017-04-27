@@ -41,5 +41,8 @@ namespace MinistryPlatform.Translation.Models
 
         [JsonProperty(PropertyName = "Group_Leader_Status_ID")]
         public int GroupLeaderStatus { get; set; }
+
+        [JsonProperty(PropertyName = "Host_Status_ID")]
+        public int HostStatus { get; set; }
     }
 }
