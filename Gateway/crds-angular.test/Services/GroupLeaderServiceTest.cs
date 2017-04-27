@@ -133,7 +133,7 @@ namespace crds_angular.test.Services
             const string fakeToken = "letmein";
             const int fakeUserId = 98124;
             var leaderDto = GroupLeaderMock();
-            var fakePerson = PersonMock(leaderDto);
+            var fakePerson = PersonMock(leaderDto); 
             _personService.Setup(m => m.GetLoggedInUserProfile(fakeToken)).Returns(fakePerson);
             _userRepo.Setup(m => m.GetUserIdByUsername(leaderDto.OldEmail)).Returns(fakeUserId);
             _userRepo.Setup(m => m.UpdateUser(It.IsAny<Dictionary<string, object>>())).Throws(new Exception("no user to save"));
@@ -197,9 +197,10 @@ namespace crds_angular.test.Services
         {
             const string fakeToken = "letmein";
             var leaderDto = new GroupLeaderProfileDTO();
-
+            var fakePerson = PersonMock(leaderDto);
+            _personService.Setup(m => m.GetLoggedInUserProfile(fakeToken)).Returns(fakePerson);
             _userRepo.Setup(m => m.GetUserIdByUsername(It.IsAny<string>()));
-            _personService.Setup(m => m.SetProfile(fakeToken, It.IsAny<Person>())).Throws<ApplicationException>();
+            _contactMock.Setup(m => m.UpdateContact(It.IsAny<int>(), It.IsAny<Dictionary<string, object>>())).Throws<ApplicationException>();
             _userRepo.Setup(m => m.UpdateUser(It.IsAny<Dictionary<string, object>>()));
 
             Assert.Throws<ApplicationException>(() => _fixture.SaveProfile(fakeToken, leaderDto).Wait());

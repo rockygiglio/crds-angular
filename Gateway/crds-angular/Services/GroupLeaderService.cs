@@ -126,6 +126,7 @@ namespace crds_angular.Services
             {
                 throw new Exception($"Unable to find the user account for {leader.OldEmail}", e);
             }
+
             return Observable.Zip(
                 Observable.Start(() =>
                 {
