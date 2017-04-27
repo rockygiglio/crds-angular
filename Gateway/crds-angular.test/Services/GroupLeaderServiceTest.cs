@@ -59,13 +59,7 @@ namespace crds_angular.test.Services
 
             const string fakeToken = "letmein";
             const int fakeUserId = 98124;
-            var fakePerson = new Person
-            {
-                FirstName = leaderDto.NickName,
-                LastName = leaderDto.LastName,
-                NickName = leaderDto.NickName,
-                EmailAddress = leaderDto.Email
-            };
+            var fakePerson = PersonMock(leaderDto);
 
             _userRepo.Setup(m => m.GetUserIdByUsername(leaderDto.OldEmail)).Returns(fakeUserId);
             _userRepo.Setup(m => m.UpdateUser(It.IsAny<Dictionary<string, object>>()));
@@ -85,13 +79,7 @@ namespace crds_angular.test.Services
 
             const string fakeToken = "letmein";
             const int fakeUserId = 98124;
-            var fakePerson = new Person
-            {
-                FirstName = leaderDto.NickName,
-                LastName = leaderDto.LastName,
-                NickName = leaderDto.NickName,
-                EmailAddress = leaderDto.Email
-            };
+            var fakePerson = PersonMock(leaderDto);
 
             _personService.Setup(m => m.GetLoggedInUserProfile(fakeToken)).Returns(fakePerson);
             _userRepo.Setup(m => m.GetUserIdByUsername(leaderDto.OldEmail)).Returns(fakeUserId);
@@ -112,13 +100,7 @@ namespace crds_angular.test.Services
             const string fakeToken = "letmein";
             const int fakeUserId = 98124;
             var leaderDto = GroupLeaderMock();
-            var fakePerson = new Person
-            {
-                FirstName = leaderDto.NickName,
-                LastName = leaderDto.LastName,
-                NickName = leaderDto.NickName,
-                EmailAddress = leaderDto.Email
-            };
+            var fakePerson = PersonMock(leaderDto);
             _personService.Setup(m => m.GetLoggedInUserProfile(fakeToken)).Returns(fakePerson);
             _userRepo.Setup(m => m.GetUserIdByUsername(leaderDto.OldEmail)).Returns(fakeUserId);
             _userRepo.Setup(m => m.UpdateUser(It.IsAny<Dictionary<string, object>>())).Callback((Dictionary<string, object> userData) =>
@@ -151,13 +133,7 @@ namespace crds_angular.test.Services
             const string fakeToken = "letmein";
             const int fakeUserId = 98124;
             var leaderDto = GroupLeaderMock();
-            var fakePerson = new Person
-            {
-                FirstName = leaderDto.NickName,
-                LastName = leaderDto.LastName,
-                NickName = leaderDto.NickName,
-                EmailAddress = leaderDto.Email
-            };
+            var fakePerson = PersonMock(leaderDto);
             _personService.Setup(m => m.GetLoggedInUserProfile(fakeToken)).Returns(fakePerson);
             _userRepo.Setup(m => m.GetUserIdByUsername(leaderDto.OldEmail)).Returns(fakeUserId);
             _userRepo.Setup(m => m.UpdateUser(It.IsAny<Dictionary<string, object>>())).Throws(new Exception("no user to save"));
@@ -398,6 +374,17 @@ namespace crds_angular.test.Services
                 ParticipantId = 67890,
                 GroupLeaderStatus = 1,
                 DisplayName = "Fakerson, Fakey"
+            };
+        }
+
+        private static Person PersonMock(GroupLeaderProfileDTO leaderDto)
+        {
+            return new Person
+            {
+                FirstName = leaderDto.NickName,
+                LastName = leaderDto.LastName,
+                NickName = leaderDto.NickName,
+                EmailAddress = leaderDto.Email
             };
         }
 
