@@ -5,7 +5,7 @@ namespace crds_angular.Models.Crossroads.Serve
     public class FamilyMember
     {
         [JsonProperty(PropertyName = "age")]
-        public int Age { get; set; }
+        public int? Age { get; set; }
         
         [JsonProperty(PropertyName = "contactId")]
         public int ContactId { get; set; }

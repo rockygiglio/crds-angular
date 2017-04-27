@@ -172,6 +172,17 @@ namespace crds_angular.Services
         {
             AwsConnectDto awsPinObject = Mapper.Map<AwsConnectDto>(pin);
 
+            if (pin.PinType == PinType.GATHERING)
+            {
+                awsPinObject.AddressId = pin.Gathering.Address.AddressID;
+                awsPinObject.Latitude = pin.Gathering.Address.Latitude;
+                awsPinObject.City = pin.Gathering.Address.City;
+                awsPinObject.LatLong =  (pin.Gathering.Address.Latitude == null || pin.Gathering.Address.Longitude == null)  
+                    ? "0 , 0" : $"{pin.Gathering.Address.Latitude} , {pin.Gathering.Address.Longitude}";
+                awsPinObject.State = pin.Gathering.Address.State;
+                awsPinObject.Zip = pin.Gathering.Address.PostalCode;
+            }
+
             AwsCloudsearchDto awsPostPinObject = new AwsCloudsearchDto("add", GenerateAwsPinId(pin), awsPinObject);
 
             var pinlist = new List<AwsCloudsearchDto> {awsPostPinObject};

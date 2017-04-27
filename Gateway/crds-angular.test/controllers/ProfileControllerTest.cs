@@ -185,7 +185,7 @@ namespace crds_angular.test.controllers
             {
                 new MpContactRelationship()
                 {
-                    Age = heather.Age,
+                    Age = heather.Age.Value,
                     Contact_Id = heather.ContactId,
                     Participant_Id = 346323,
                     Last_Name = heather.LastName,
