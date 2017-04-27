@@ -186,6 +186,19 @@ namespace crds_angular.test.Services
         }
 
         [Test]
+        public void ShouldThrowExceptionWhenSaveProfileFails()
+        {
+            const string fakeToken = "letmein";
+            var leaderDto = new GroupLeaderProfileDTO();
+
+            _userRepo.Setup(m => m.GetUserIdByUsername(It.IsAny<string>()));
+            _personService.Setup(m => m.SetProfile(fakeToken, It.IsAny<Person>())).Throws<ApplicationException>();
+            _userRepo.Setup(m => m.UpdateUser(It.IsAny<Dictionary<string, object>>()));
+
+            Assert.Throws<ApplicationException>(() => _fixture.SaveProfile(fakeToken, leaderDto).Wait());
+        }
+
+        [Test]
         public void ShouldSetStatusToInterested()
         {
             var fakeToken = "letmein";

@@ -55,7 +55,7 @@ namespace crds_angular.Controllers.API
                     {                        
 
                         _groupLeaderService.SaveReferences(profile).Zip<int, IList<Unit>, int>(_groupLeaderService.SaveProfile(token, profile),
-                                                     (int first, IList<Unit> second) => first).ToTask();
+                                                     (int first, IList<Unit> second) => first).ToTask().Wait();
                         
                         return Ok();
                     }

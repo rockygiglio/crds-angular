@@ -157,6 +157,20 @@ namespace crds_angular.test.controllers
             });
         }
 
+        [Test]
+        public void ShouldThrowExceptionWhenSaveProfileThrowsException()
+        {
+            var mockProfile = GroupLeaderMock();
+
+            _groupLeaderService.Setup(m => m.SaveReferences(It.IsAny<GroupLeaderProfileDTO>())).Returns(Observable.Start(() => 1));
+            _groupLeaderService.Setup(m => m.SaveProfile(It.IsAny<string>(), It.IsAny<GroupLeaderProfileDTO>())).Throws<ApplicationException>();
+
+            Assert.Throws<HttpResponseException>(async () =>
+            {
+                await _fixture.SaveProfile(mockProfile);
+            });
+        }
+
         private static GroupLeaderProfileDTO GroupLeaderMock()
         {
             return new GroupLeaderProfileDTO()
