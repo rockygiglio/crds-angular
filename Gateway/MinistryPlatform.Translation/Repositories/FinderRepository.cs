@@ -40,7 +40,8 @@ namespace MinistryPlatform.Translation.Repositories
                 "Groups.Available_Online",
                 "Groups.Primary_Contact",
                 "Groups.Congregation_ID",
-                "Groups.Ministry_ID"
+                "Groups.Ministry_ID",
+                "Groups.Kids_Welcome"
             };
         }
 
