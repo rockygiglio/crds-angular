@@ -638,11 +638,6 @@ namespace MinistryPlatform.Translation.Test.Services
             Assert.AreEqual("Attendee", participant.First().Role);
             Assert.AreEqual(2, participant.First().GroupLeaderStatus);
         }
-
-        public void ShouldNotRemoveHomePhone()
-        {
-            
-        }
     }
 
     [MpRestApiTable(Name = "Payment_Types")]
