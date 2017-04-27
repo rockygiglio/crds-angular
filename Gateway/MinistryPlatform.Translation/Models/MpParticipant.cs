@@ -23,7 +23,7 @@ namespace MinistryPlatform.Translation.Models
         public string DisplayName { get; set; }
 
         [JsonProperty(PropertyName = "Age")]
-        public int Age { get; set; }
+        public int? Age { get; set; }
 
         [JsonProperty(PropertyName = "Attendance_Start_Date")]
         public DateTime? AttendanceStart { get; set; }
