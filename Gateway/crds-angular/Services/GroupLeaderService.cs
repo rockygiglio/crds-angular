@@ -4,7 +4,6 @@ using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using crds_angular.Models.Crossroads.GroupLeader;
-using crds_angular.Models.Crossroads.Profile;
 using crds_angular.Services.Interfaces;
 using Crossroads.Web.Common.Configuration;
 using MinistryPlatform.Translation.Models;
@@ -114,23 +113,10 @@ namespace crds_angular.Services
             var userUpdates = currentPerson.GetUserUpdateValues();
             var household = new MpHousehold
             {
-<<<<<<< HEAD
-                ContactId = leader.ContactId,
-                CongregationId = leader.Site,
-                FirstName = leader.FirstName,
-                NickName = leader.NickName,
-                LastName = leader.LastName,
-                EmailAddress = leader.Email,
-                DateOfBirth = leader.BirthDate.ToShortDateString(),
-                HouseholdId = leader.HouseholdId,
-                MobilePhone = leader.MobilePhone,
-                AddressId = leader.AddressId
-=======
                 Address_ID = currentPerson.AddressId,
                 Congregation_ID = currentPerson.CongregationId,
                 Home_Phone = currentPerson.HomePhone,
                 Household_ID = currentPerson.HouseholdId
->>>>>>> defect/DE3351-deleting-user-first-name-2
             };
             try
             {
