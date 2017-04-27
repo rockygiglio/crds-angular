@@ -51,5 +51,8 @@ namespace crds_angular.Models.Finder
 
         [JsonProperty("Show_On_Map")]
         public bool ShowOnMap { get; set; }
+
+        [JsonProperty("updateHomeAddress")]
+        public bool ShouldUpdateHomeAddress { get; set; } = false;
     }
 }
