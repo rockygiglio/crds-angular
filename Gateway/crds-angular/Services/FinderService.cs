@@ -505,10 +505,18 @@ namespace crds_angular.Services
             
             _invitationService.ValidateInvitation(invitation, token);
             invitation = _invitationService.CreateInvitation(invitation, token);
+
+            //if the invitee does not have a contact then create one
+            var toContactId = _contactRepository.GetContactIdByEmail(person.email);
+            if (toContactId == 0)
+            {
+                toContactId = _contactRepository.CreateContactForGuestGiver(person.email, $"{person.lastName}, {person.firstName}", person.firstName, person.lastName);
+            }
+
             var connection = new ConnectCommunicationDto
             {
                 CommunicationTypeId = _configurationWrapper.GetConfigIntValue("ConnectCommunicationTypeInviteToGathering"),
-                ToContactId = _contactRepository.GetContactIdByEmail(person.email),
+                ToContactId = toContactId,
                 FromContactId = _contactRepository.GetContactId(token),
                 CommunicationStatusId = _configurationWrapper.GetConfigIntValue("ConnectCommunicationStatusUnanswered"),
                 GroupId = gatheringId
