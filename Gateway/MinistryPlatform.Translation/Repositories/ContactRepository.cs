@@ -331,7 +331,8 @@ namespace MinistryPlatform.Translation.Repositories
                         throw new ApplicationException("First_Name was not found or was null");
                     }
 
-                    _ministryPlatformService.UpdateRecord(_configurationWrapper.GetConfigIntValue("Contacts"), profileDictionary, token);                                     
+                    _ministryPlatformService.UpdateRecord(_configurationWrapper.GetConfigIntValue("Contacts"), profileDictionary, token);
+
                     UpdateHouseholdAddress(contactId, householdDictionary, addressDictionary);
                     return 1;
                 }
@@ -422,10 +423,9 @@ namespace MinistryPlatform.Translation.Repositories
 
         }
 
-        public IObservable<MpHousehold> UpdateContactsCongregation(int householdId, int newCongregation, int? addressId)
+        public IObservable<MpHousehold> UpdateHousehold(MpHousehold household)
         {
-            var token = ApiLogin();
-            var household = new MpHousehold() {Address_ID = addressId, Congregation_ID = newCongregation, Household_ID = householdId};
+            var token = ApiLogin();            
             var asyncresult = Task.Run(() => _ministryPlatformRest.UsingAuthenticationToken(token)
                                                         .Update<MpHousehold>(household));
             return asyncresult.ToObservable();
