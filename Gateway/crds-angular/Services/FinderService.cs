@@ -240,7 +240,8 @@ namespace crds_angular.Services
             var updateToDictionary = new Dictionary<string, object>
                 {
                     {"Contact_ID", hostRequest.ContactId},
-                    {"Mobile_Phone",hostRequest.ContactNumber}
+                    {"Mobile_Phone",hostRequest.ContactNumber},
+                    {"First_Name", contact.First_Name }
                 };
             _contactRepository.UpdateContact(hostRequest.ContactId, updateToDictionary);
 
