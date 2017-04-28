@@ -184,6 +184,7 @@ namespace crds_angular.Services
                     ? "0 , 0" : $"{pin.Gathering.Address.Latitude} , {pin.Gathering.Address.Longitude}";
                 awsPinObject.State = pin.Gathering.Address.State;
                 awsPinObject.Zip = pin.Gathering.Address.PostalCode;
+                awsPinObject.GroupStartDate = pin.Gathering.StartDate;
             }
 
             AwsCloudsearchDto awsPostPinObject = new AwsCloudsearchDto("add", GenerateAwsPinId(pin), awsPinObject);

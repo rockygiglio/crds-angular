@@ -60,6 +60,8 @@ namespace crds_angular.Services
         private readonly int _domainId;
         private readonly int _inviteAcceptedTemplateId;
         private readonly int _inviteDeclinedTemplateId;
+        private readonly int _anywhereCongregationId;
+        private readonly int _spritualGrowthMinistryId;
 
         private readonly Random _random = new Random(DateTime.Now.Millisecond);
 
@@ -80,6 +82,7 @@ namespace crds_angular.Services
                             ICommunicationRepository communicationRepository
                             )
         {
+            // services
             _addressGeocodingService = addressGeocodingService;
             _finderRepository = finderRepository;
             _contactRepository = contactRepository;
@@ -88,6 +91,14 @@ namespace crds_angular.Services
             _groupService = groupService;
             _groupRepository = groupRepository;
             _apiUserRepository = apiUserRepository;
+            _authenticationRepository = authenticationRepository;
+            _groupToolService = groupToolService;
+            _configurationWrapper = configurationWrapper;
+            _invitationService = invitationService;
+            _awsCloudsearchService = awsCloudsearchService;
+            _communicationRepository = communicationRepository;
+            // constants
+            _anywhereCongregationId = _configurationWrapper.GetConfigIntValue("AnywhereCongregationId");
             _approvedHost = configurationWrapper.GetConfigIntValue("ApprovedHostStatus");
             _pendingHost = configurationWrapper.GetConfigIntValue("PendingHostStatus");
             _anywhereGroupType = configurationWrapper.GetConfigIntValue("AnywhereGroupTypeId");
@@ -97,13 +108,8 @@ namespace crds_angular.Services
             _domainId = configurationWrapper.GetConfigIntValue("DomainId");
             _inviteAcceptedTemplateId = configurationWrapper.GetConfigIntValue("AnywhereGatheringInvitationAcceptedTemplateId");
             _inviteDeclinedTemplateId = configurationWrapper.GetConfigIntValue("AnywhereGatheringInvitationDeclinedTemplateId");
-            _domainId = configurationWrapper.GetConfigIntValue("DomainId");
-            _authenticationRepository = authenticationRepository;
-            _groupToolService = groupToolService;
-            _configurationWrapper = configurationWrapper;
-            _invitationService = invitationService;
-            _awsCloudsearchService = awsCloudsearchService;
-            _communicationRepository = communicationRepository;
+            _domainId = configurationWrapper.GetConfigIntValue("DomainId");          
+            _spritualGrowthMinistryId = _configurationWrapper.GetConfigIntValue("SpiritualGrowthMinistryId");
         }
 
         public PinDto GetPinDetailsForGroup(int groupId)
@@ -156,6 +162,7 @@ namespace crds_angular.Services
             var coordinates = _addressService.GetGeoLocationCascading(pin.Gathering.Address);
             pin.Gathering.Address.Latitude = coordinates.Latitude;
             pin.Gathering.Address.Longitude = coordinates.Longitude;
+            pin.Gathering.GroupTypeId = _anywhereGroupType;
 
             if (pin.ShouldUpdateHomeAddress)
             {
@@ -206,7 +213,7 @@ namespace crds_angular.Services
         {
             //get the list of anywhere groups
 
-            var groups = _groupRepository.GetGroupsByGroupType(_configurationWrapper.GetConfigIntValue("AnywhereGroupTypeId"));
+            var groups = _groupRepository.GetGroupsByGroupType(_anywhereGroupType);
 
             //get groups that this user is the primary contact for at this address
             var matchingGroupsCount = groups.Where(x => x.PrimaryContact == contactId.ToString())
@@ -260,9 +267,9 @@ namespace crds_angular.Services
             group.AvailableOnline = false;
             group.GroupFullInd = false;
             group.ChildCareAvailable = false;
-            group.CongregationId = _configurationWrapper.GetConfigIntValue("AnywhereCongregationId");
-            group.GroupTypeId = _configurationWrapper.GetConfigIntValue("AnywhereGroupTypeId");
-            group.MinistryId = _configurationWrapper.GetConfigIntValue("SpiritualGrowthMinistryId");
+            group.CongregationId = _anywhereCongregationId;
+            group.GroupTypeId = _anywhereGroupType;
+            group.MinistryId = _spritualGrowthMinistryId;
             _groupService.CreateGroup(group);
 
             //add our contact to the group as a leader
@@ -341,7 +348,7 @@ namespace crds_angular.Services
             return pins;
         }
 
-        private static List<PinDto> ConvertFromAwsSearchResponse(SearchResponse response)
+        private List<PinDto> ConvertFromAwsSearchResponse(SearchResponse response)
         {
             var pins = new List<PinDto>();
 
@@ -378,15 +385,26 @@ namespace crds_angular.Services
                 }
                 if (pin.PinType == PinType.GATHERING)
                 {
+                    
                     pin.Gathering = new GroupDTO
                     {
                         GroupId = hit.Fields.ContainsKey("groupid") ? Convert.ToInt32(hit.Fields["groupid"].FirstOrDefault()) : 0,
                         GroupName = hit.Fields.ContainsKey("groupname") ? hit.Fields["groupname"].FirstOrDefault() : null,
                         GroupDescription = hit.Fields.ContainsKey("groupdescription") ? hit.Fields["groupdescription"].FirstOrDefault() : null,
                         PrimaryContactEmail = hit.Fields.ContainsKey("primarycontactemail") ? hit.Fields["primarycontactemail"].FirstOrDefault() : null,
-                        ContactId = hit.Fields.ContainsKey("countactid") ? Convert.ToInt32(hit.Fields["countactid"].FirstOrDefault()) : 0,
-                        Address = pin.Address
+                        ContactId = pin.Contact_ID.Value,
+                        GroupTypeId = _anywhereGroupType,
+                        CongregationId = _anywhereCongregationId,
+                        MinistryId = _spritualGrowthMinistryId
                     };
+                    
+                    if (hit.Fields.ContainsKey("groupstartdate") && !String.IsNullOrWhiteSpace(hit.Fields["groupstartdate"].First()))
+                    {
+                        DateTime? startDate = null;
+                        startDate = Convert.ToDateTime(hit.Fields["groupstartdate"].First());
+                        pin.Gathering.StartDate = (DateTime)startDate;
+                    }
+                    
                 }
                 pins.Add(pin);
             }

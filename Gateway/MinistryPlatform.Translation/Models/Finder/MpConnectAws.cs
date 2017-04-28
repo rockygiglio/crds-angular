@@ -27,5 +27,6 @@ namespace MinistryPlatform.Translation.Models.Finder
         public int? GroupTypeId { get; set; }
         public int? HouseholdId { get; set; }
         public int PinType { get; set; }
+        public DateTime? GroupStartDate { get; set; }
     }
 }

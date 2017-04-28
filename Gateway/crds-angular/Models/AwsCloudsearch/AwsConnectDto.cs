@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using System;
+using Newtonsoft.Json;
 
 namespace crds_angular.Models.AwsCloudsearch
 {
@@ -51,6 +52,9 @@ namespace crds_angular.Models.AwsCloudsearch
 
         [JsonProperty(PropertyName = "groupname")]
         public string GroupName { get; set; }
+
+        [JsonProperty(PropertyName = "groupstartdate")]
+        public DateTime? GroupStartDate { get; set; } = null;
 
         [JsonProperty(PropertyName = "groupdescription")]
         public string GroupDescription { get; set; }
