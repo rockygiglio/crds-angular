@@ -156,11 +156,19 @@ namespace crds_angular.Services
 
         private string GenerateAwsPinId(PinDto pin)
         {
-            var isGathering = pin.PinType == PinType.GATHERING;
-            var awsPinId = (isGathering ? pin.Gathering.Address.AddressID : pin.Address.AddressID) + "-";
-            awsPinId += (int) pin.PinType + "-" + pin.Participant_ID + "-";
-            awsPinId += (isGathering) ? pin.Gathering.GroupId.ToString() : "";           
-            return awsPinId; 
+            if (pin.PinType == PinType.GATHERING)
+            {
+                return GenerateAwsPinString(pin, pin.Gathering.Address.AddressID.ToString(), pin.Gathering.GroupId.ToString());
+            }
+            else
+            {
+                return GenerateAwsPinString(pin, pin.Address.AddressID.ToString());
+            }
+        }
+
+        private string GenerateAwsPinString(PinDto pin, string addressId, string groupId = "")
+        {
+            return addressId + "-" + (int) pin.PinType + '-' + pin.Participant_ID + "-" + groupId;
         }
 
         public UploadDocumentsRequest GetObjectToUploadToAws(PinDto pin)
