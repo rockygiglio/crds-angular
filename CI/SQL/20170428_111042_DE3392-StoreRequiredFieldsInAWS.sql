@@ -1,0 +1,114 @@
+USE [MinistryPlatform]
+GO
+/****** Object:  StoredProcedure [dbo].[api_crds_Get_Connect_AWS_Data]    Script Date: 4/28/2017 11:08:21 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+ALTER PROCEDURE [dbo].[api_crds_Get_Connect_AWS_Data] 
+AS 
+
+BEGIN
+SET nocount ON;
+
+DECLARE @anywhereGroupTypeId INTEGER = 30; 
+DECLARE @participantPinType INTEGER = 1;
+DECLARE @groupPinType       INTEGER = 2;
+DECLARE @sitePinType        INTEGER = 3;
+DECLARE @approvedStatusId   INTEGER = 3;
+
+-- PARTICIPANTS
+SELECT
+    C.Nickname AS firstName,
+	C.Last_Name AS lastname,
+	null AS siteName,
+	C.Email_Address AS emailAddress,
+	C.Contact_ID AS contactId,
+	P.Participant_ID AS participantId,
+	A.Address_ID AS addressId,
+	A.City AS city,
+	A.[State/Region] AS state,
+	A.Postal_Code AS zip,
+	A.Latitude AS latitude,
+	A.Longitude AS longitude,
+	P.Host_Status_ID AS hostStatus,
+	null AS groupId,
+	null AS groupName,
+	null AS groupStartDate,
+	null AS groupDescription,
+	null AS primarycontactId,
+	null AS primaryContactEmail,
+	null AS participantCount,
+	null AS groupTypeId,
+	H.Household_ID AS householdId,
+	@participantPinType AS pinType
+FROM Participants P 
+JOIN Contacts C ON C.Contact_ID = P.Contact_ID
+LEFT JOIN Households H ON H.Household_ID = C.Household_ID
+LEFT JOIN Addresses A ON A.Address_ID = H.Address_ID
+WHERE P.Show_On_Map = 1
+UNION 
+--GATHERINGS
+SELECT
+    C.NickName AS firstName,
+	C.Last_Name AS lastname,
+	null As siteName,
+	C.Email_Address AS emailAddress,
+	C.Contact_ID AS contactId,
+	C.Participant_Record AS participantId,
+	G.Offsite_Meeting_Address AS addressId,
+	A.City AS city,
+	A.[State/Region] AS state,
+	A.Postal_Code AS zip,
+	A.Latitude AS latitude,
+	A.Longitude AS longitude,
+	null AS hostStatus,
+	G.Group_ID AS groupId,
+	G.Group_Name AS groupName,
+	G.Start_Date as groupStartDate,
+	G.Description AS groupDescription,
+	G.Primary_Contact AS primarycontactId,
+	C.Email_Address AS primaryContactEmail,
+	(SELECT count(*) FROM group_participants gp WHERE gp.group_id = G.Group_id and gp.end_date is null) AS participantCount,
+	G.Group_Type_ID AS groupTypeId,
+	C.Household_ID AS householdId,
+	@groupPinType AS pinType
+FROM Groups G
+LEFT JOIN Addresses A ON A.Address_ID = G.Offsite_Meeting_Address
+LEFT JOIN Contacts C ON C.Contact_ID = G.Primary_Contact
+LEFT JOIN Participants P ON P.Contact_ID = C.Contact_ID
+WHERE G.Group_Type_ID = @anywhereGroupTypeId AND G.Available_Online = 1 AND P.Host_Status_ID = @approvedStatusId
+UNION
+--SITES
+SELECT
+    null AS firstName,
+	null AS lastname,
+	L.Location_Name AS siteName,
+	null AS emailAddress,
+	null AS contactId,
+	null AS participantId,
+	A.Address_ID AS addressId,
+	A.City AS city,
+	A.[State/Region] AS state,
+	A.Postal_Code AS zip,
+	A.Latitude AS latitude,
+	A.Longitude AS longitude,
+	null AS hostStatus,
+	null AS groupId,
+	null AS groupName,
+	null AS groupStartDate,
+	null AS groupDescription,
+	null AS primarycontactId,
+	null AS primaryContactEmail,
+	null AS participantCount, 
+	null AS groupTypeId,
+	null AS householdId,
+	@sitePinType AS pinType
+FROM Congregations C
+JOIN Locations L ON L.Location_ID = C.Location_ID
+LEFT JOIN Addresses A ON A.Address_ID = L.Address_ID
+WHERE C.Congregation_ID NOT IN (2,5,15) AND C.End_Date IS NULL
+
+END
+
