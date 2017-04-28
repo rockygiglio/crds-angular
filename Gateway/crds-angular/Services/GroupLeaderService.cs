@@ -4,7 +4,6 @@ using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using crds_angular.Models.Crossroads.GroupLeader;
-using crds_angular.Models.Crossroads.Profile;
 using crds_angular.Services.Interfaces;
 using Crossroads.Web.Common.Configuration;
 using MinistryPlatform.Translation.Models;
@@ -12,7 +11,7 @@ using MinistryPlatform.Translation.Repositories.Interfaces;
 
 namespace crds_angular.Services
 {
-    public class GroupLeaderService : IGroupLeaderService
+    public class GroupLeaderService : MinistryPlatformBaseService, IGroupLeaderService
     {
         private readonly IPersonService _personService;
         private readonly IUserRepository _userRepository;
@@ -20,8 +19,9 @@ namespace crds_angular.Services
         private readonly IFormSubmissionRepository _formSubmissionRepository;
         private readonly IParticipantRepository _participantRepository;
         private readonly ICommunicationRepository _communicationRepository;
+        private readonly IContactRepository _contactRepository;
 
-        public GroupLeaderService(IPersonService personService, IUserRepository userRepository, IFormSubmissionRepository formSubmissionRepository, IParticipantRepository participantRepository, IConfigurationWrapper configWrapper, ICommunicationRepository communicationRepository)
+        public GroupLeaderService(IPersonService personService, IUserRepository userRepository, IFormSubmissionRepository formSubmissionRepository, IParticipantRepository participantRepository, IConfigurationWrapper configWrapper, ICommunicationRepository communicationRepository, IContactRepository contactRepository)
         {
             _personService = personService;
             _userRepository = userRepository;
@@ -29,6 +29,7 @@ namespace crds_angular.Services
             _participantRepository = participantRepository;
             _configWrapper = configWrapper;
             _communicationRepository = communicationRepository;
+            _contactRepository = contactRepository;
         }
 
         public IObservable<int> SaveReferences(GroupLeaderProfileDTO leader)
@@ -97,19 +98,26 @@ namespace crds_angular.Services
 
         public IObservable<IList<Unit>> SaveProfile(string token, GroupLeaderProfileDTO leader)
         {
-            var person = new Person
+            // get the current contact data....
+            var currentPerson = _personService.GetLoggedInUserProfile(token);
+            currentPerson.CongregationId = leader.Site;
+            currentPerson.NickName = leader.NickName;
+            currentPerson.LastName = leader.LastName;
+            currentPerson.EmailAddress = leader.Email;
+            currentPerson.DateOfBirth = leader.BirthDate.ToShortDateString();
+            currentPerson.HouseholdId = leader.HouseholdId;
+            currentPerson.MobilePhone = leader.MobilePhone;
+            currentPerson.AddressId = leader.AddressId;
+
+            var personDict = getDictionary(currentPerson.GetContact());
+            var userUpdates = currentPerson.GetUserUpdateValues();
+            var household = new MpHousehold
             {
-                ContactId = leader.ContactId,
-                CongregationId = leader.Site,
-                NickName = leader.NickName,
-                LastName = leader.LastName,
-                EmailAddress = leader.Email,
-                DateOfBirth = leader.BirthDate.ToShortDateString(),
-                HouseholdId = leader.HouseholdId,
-                MobilePhone = leader.MobilePhone,
-                AddressId = leader.AddressId
+                Address_ID = currentPerson.AddressId,
+                Congregation_ID = currentPerson.CongregationId,
+                Home_Phone = currentPerson.HomePhone,
+                Household_ID = currentPerson.HouseholdId
             };
-            var userUpdates = person.GetUserUpdateValues();
             try
             {
                 userUpdates["User_ID"] = _userRepository.GetUserIdByUsername(leader.OldEmail);               
@@ -118,8 +126,13 @@ namespace crds_angular.Services
             {
                 throw new Exception($"Unable to find the user account for {leader.OldEmail}", e);
             }
+
             return Observable.Zip(
-                Observable.Start(() => _personService.SetProfile(token, person)),
+                Observable.Start(() =>
+                {
+                    _contactRepository.UpdateContact(currentPerson.ContactId, personDict);                   
+                    _contactRepository.UpdateHousehold(household);
+                }),
                 Observable.Start(() => _userRepository.UpdateUser(userUpdates)));
         }
 

@@ -115,31 +115,6 @@ namespace crds_angular.test.Services
         }
 
         [Test]
-        public void ShouldUpdateCongregationIfCongregationIdIsNotNull()
-        {
-            var person = MockPerson(_myContact);
-            var participant = MockParticipant(_myContact);
-            var household = new MpHousehold() {Congregation_ID = person.CongregationId, Household_ID = person.HouseholdId};
-            const string token = "whateves";
-            _contactService.Setup(m => m.UpdateContact(person.ContactId,
-                                                       It.IsAny<Dictionary<string, object>>(),
-                                                       It.IsAny<Dictionary<string, object>>(),
-                                                       It.IsAny<Dictionary<string, object>>())).Callback((int contactId, Dictionary<string, object> profileDictionary, Dictionary<string, object> houseDictionary, Dictionary<string, object> addressDictionary) =>
-                                                       {});
-            _contactService.Setup(m => m.UpdateContactsCongregation(person.HouseholdId, (int) person.CongregationId, person.AddressId)).Returns(Observable.Start<MpHousehold>(() => household));
-            _objectAttributeService.Setup(
-                m =>
-                    m.SaveObjectAttributes(It.IsAny<int>(),
-                                           It.IsAny<Dictionary<int, ObjectAttributeTypeDTO>>(),
-                                           It.IsAny<Dictionary<int, ObjectSingleAttributeDTO>>(),
-                                           It.IsAny<MpObjectAttributeConfiguration>()));
-
-            _participantService.Setup(m => m.GetParticipant(person.ContactId)).Returns(participant);
-            _fixture.SetProfile(token, person);
-
-        }
-
-        [Test]
         public void TestGetProfileForContactId()
         {
             const int contactId = 123456;

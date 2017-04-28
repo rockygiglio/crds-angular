@@ -22,8 +22,8 @@ namespace crds_angular.test.Services
         private Mock<IFormSubmissionRepository> _formService;
         private Mock<IParticipantRepository> _participantRepository;
         private Mock<IConfigurationWrapper> _configWrapper;
-        private Mock<IContactRepository> _contactRepo;
         private Mock<ICommunicationRepository> _communicationRepository;
+        private Mock<IContactRepository> _contactMock;
         private IGroupLeaderService _fixture;
 
         [SetUp]
@@ -35,8 +35,8 @@ namespace crds_angular.test.Services
             _participantRepository = new Mock<IParticipantRepository>();
             _configWrapper = new Mock<IConfigurationWrapper>();
             _communicationRepository = new Mock<ICommunicationRepository>();
-            _fixture = new GroupLeaderService(_personService.Object, _userRepo.Object, _formService.Object, _participantRepository.Object, _configWrapper.Object, _communicationRepository.Object);
-            _contactRepo = new Mock<IContactRepository>();
+            _contactMock = new Mock<IContactRepository>();
+            _fixture = new GroupLeaderService(_personService.Object, _userRepo.Object, _formService.Object, _participantRepository.Object, _configWrapper.Object, _communicationRepository.Object, _contactMock.Object);
         }
 
         [TearDown]
@@ -46,9 +46,10 @@ namespace crds_angular.test.Services
             _participantRepository.VerifyAll();
             _userRepo.VerifyAll();
             _formService.VerifyAll();
-            _contactRepo.VerifyAll();
+            _contactMock.VerifyAll();
             _configWrapper.VerifyAll();
             _communicationRepository.VerifyAll();
+            _contactMock.VerifyAll();
         }
 
         [Test]
@@ -58,13 +59,16 @@ namespace crds_angular.test.Services
 
             const string fakeToken = "letmein";
             const int fakeUserId = 98124;
+            var fakePerson = PersonMock(leaderDto);
 
             _userRepo.Setup(m => m.GetUserIdByUsername(leaderDto.OldEmail)).Returns(fakeUserId);
             _userRepo.Setup(m => m.UpdateUser(It.IsAny<Dictionary<string, object>>()));
-            _personService.Setup(m => m.SetProfile(fakeToken, It.IsAny<Person>())).Callback((string token, Person person) =>
+            _personService.Setup(m => m.GetLoggedInUserProfile(fakeToken)).Returns(fakePerson);
+            _contactMock.Setup(m => m.UpdateContact(It.IsAny<int>(), It.IsAny<Dictionary<string, object>>())).Callback((int contactId, Dictionary<string, object> obj) =>
             {
-                Assert.AreEqual(person.GetContact().Display_Name, $"{leaderDto.LastName}, {leaderDto.NickName}");
+                Assert.AreEqual(obj["Display_Name"], $"{leaderDto.LastName}, {leaderDto.NickName}");
             });
+            _contactMock.Setup(m => m.UpdateHousehold(It.IsAny<MpHousehold>())).Returns(Observable.Start(() => new MpHousehold()));
             _fixture.SaveProfile(fakeToken, leaderDto).Wait();            
         }
 
@@ -75,7 +79,9 @@ namespace crds_angular.test.Services
 
             const string fakeToken = "letmein";
             const int fakeUserId = 98124;
+            var fakePerson = PersonMock(leaderDto);
 
+            _personService.Setup(m => m.GetLoggedInUserProfile(fakeToken)).Returns(fakePerson);
             _userRepo.Setup(m => m.GetUserIdByUsername(leaderDto.OldEmail)).Returns(fakeUserId);
             _userRepo.Setup(m => m.UpdateUser(It.IsAny<Dictionary<string, object>>())).Callback((Dictionary<string, object> userData) =>
             {
@@ -83,10 +89,8 @@ namespace crds_angular.test.Services
                 Assert.AreEqual(leaderDto.Email, userData["User_Name"]);
                 Assert.AreEqual(leaderDto.Email, userData["User_Email"]);
             });
-            _personService.Setup(m => m.SetProfile(fakeToken, It.IsAny<Person>())).Callback((string token, Person person) =>
-            {
-                Assert.AreEqual(person.GetContact().Display_Name, $"{leaderDto.LastName}, {leaderDto.NickName}");
-            });
+            _contactMock.Setup(m => m.UpdateContact(It.IsAny<int>(), It.IsAny<Dictionary<string, object>>()));
+            _contactMock.Setup(m => m.UpdateHousehold(It.IsAny<MpHousehold>())).Returns(Observable.Start(() => new MpHousehold()));           
             _fixture.SaveProfile(fakeToken, leaderDto).Wait();
         }
 
@@ -96,13 +100,16 @@ namespace crds_angular.test.Services
             const string fakeToken = "letmein";
             const int fakeUserId = 98124;
             var leaderDto = GroupLeaderMock();
-            _personService.Setup(m => m.SetProfile(fakeToken, It.IsAny<Person>()));
+            var fakePerson = PersonMock(leaderDto);
+            _personService.Setup(m => m.GetLoggedInUserProfile(fakeToken)).Returns(fakePerson);
             _userRepo.Setup(m => m.GetUserIdByUsername(leaderDto.OldEmail)).Returns(fakeUserId);
             _userRepo.Setup(m => m.UpdateUser(It.IsAny<Dictionary<string, object>>())).Callback((Dictionary<string, object> userData) =>
             {
                 Assert.AreEqual(leaderDto.Email, userData["User_Name"]);
                 Assert.AreEqual(leaderDto.Email, userData["User_Email"]);
             });
+            _contactMock.Setup(m => m.UpdateContact(It.IsAny<int>(), It.IsAny<Dictionary<string, object>>()));
+            _contactMock.Setup(m => m.UpdateHousehold(It.IsAny<MpHousehold>())).Returns(Observable.Start(() => new MpHousehold()));
             _fixture.SaveProfile(fakeToken, leaderDto).Wait();
         }
 
@@ -112,9 +119,8 @@ namespace crds_angular.test.Services
             const string fakeToken = "letmein";
             const int fakeUserId = 98124;
             var leaderDto = GroupLeaderMock();
-            _personService.Setup(m => m.SetProfile(fakeToken, It.IsAny<Person>())).Throws(new Exception("no person to save"));
-            _userRepo.Setup(m => m.GetUserIdByUsername(leaderDto.OldEmail)).Returns(fakeUserId);            
 
+            _personService.Setup(m => m.GetLoggedInUserProfile(fakeToken)).Throws(new Exception("no person to get"));            
             Assert.Throws<Exception>(() =>
             {
                 _fixture.SaveProfile(fakeToken, leaderDto).Wait();
@@ -127,7 +133,8 @@ namespace crds_angular.test.Services
             const string fakeToken = "letmein";
             const int fakeUserId = 98124;
             var leaderDto = GroupLeaderMock();
-            _personService.Setup(m => m.SetProfile(fakeToken, It.IsAny<Person>()));
+            var fakePerson = PersonMock(leaderDto); 
+            _personService.Setup(m => m.GetLoggedInUserProfile(fakeToken)).Returns(fakePerson);
             _userRepo.Setup(m => m.GetUserIdByUsername(leaderDto.OldEmail)).Returns(fakeUserId);
             _userRepo.Setup(m => m.UpdateUser(It.IsAny<Dictionary<string, object>>())).Throws(new Exception("no user to save"));
 
@@ -183,6 +190,20 @@ namespace crds_angular.test.Services
             });
 
             Assert.Throws<ApplicationException>(() => _fixture.SaveReferences(fakeDto).Wait());
+        }
+
+        [Test]
+        public void ShouldThrowExceptionWhenSaveProfileFails()
+        {
+            const string fakeToken = "letmein";
+            var leaderDto = new GroupLeaderProfileDTO();
+            var fakePerson = PersonMock(leaderDto);
+            _personService.Setup(m => m.GetLoggedInUserProfile(fakeToken)).Returns(fakePerson);
+            _userRepo.Setup(m => m.GetUserIdByUsername(It.IsAny<string>()));
+            _contactMock.Setup(m => m.UpdateContact(It.IsAny<int>(), It.IsAny<Dictionary<string, object>>())).Throws<ApplicationException>();
+            _userRepo.Setup(m => m.UpdateUser(It.IsAny<Dictionary<string, object>>()));
+
+            Assert.Throws<ApplicationException>(() => _fixture.SaveProfile(fakeToken, leaderDto).Wait());
         }
 
         [Test]
@@ -336,6 +357,7 @@ namespace crds_angular.test.Services
                 Email = "silbermm@gmail.com",
                 LastName = "Silbernagel",
                 NickName = "Matt",
+                FirstName = "Matty-boy",
                 Site = 1,            
                 OldEmail = "matt.silbernagel@ingagepartners.com",
                 HouseholdId = 81562,
@@ -353,6 +375,17 @@ namespace crds_angular.test.Services
                 ParticipantId = 67890,
                 GroupLeaderStatus = 1,
                 DisplayName = "Fakerson, Fakey"
+            };
+        }
+
+        private static Person PersonMock(GroupLeaderProfileDTO leaderDto)
+        {
+            return new Person
+            {
+                FirstName = leaderDto.NickName,
+                LastName = leaderDto.LastName,
+                NickName = leaderDto.NickName,
+                EmailAddress = leaderDto.Email
             };
         }
 
