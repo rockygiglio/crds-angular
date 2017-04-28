@@ -463,7 +463,7 @@ namespace crds_angular.Services
                 var pin = Mapper.Map<PinDto>(group);
                 pin.Gathering = group;
                 pin.Participant_ID = participantId;
-                pin.ShowOnMap = true;
+
                 if (pin.Contact_ID != null)
                 {
                     var contact = _contactRepository.GetContactById((int)pin.Contact_ID);
