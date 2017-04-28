@@ -392,6 +392,7 @@ namespace crds_angular.Services
                         GroupName = hit.Fields.ContainsKey("groupname") ? hit.Fields["groupname"].FirstOrDefault() : null,
                         GroupDescription = hit.Fields.ContainsKey("groupdescription") ? hit.Fields["groupdescription"].FirstOrDefault() : null,
                         PrimaryContactEmail = hit.Fields.ContainsKey("primarycontactemail") ? hit.Fields["primarycontactemail"].FirstOrDefault() : null,
+                        Address = pin.Address, 
                         ContactId = pin.Contact_ID.Value,
                         GroupTypeId = _anywhereGroupType,
                         CongregationId = _anywhereCongregationId,
