@@ -179,6 +179,7 @@ namespace crds_angular.Services
             {
                 awsPinObject.AddressId = pin.Gathering.Address.AddressID;
                 awsPinObject.Latitude = pin.Gathering.Address.Latitude;
+                awsPinObject.Longitude = pin.Gathering.Address.Longitude;
                 awsPinObject.City = pin.Gathering.Address.City;
                 awsPinObject.LatLong =  (pin.Gathering.Address.Latitude == null || pin.Gathering.Address.Longitude == null)  
                     ? "0 , 0" : $"{pin.Gathering.Address.Latitude} , {pin.Gathering.Address.Longitude}";
