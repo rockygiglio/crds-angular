@@ -482,13 +482,14 @@ namespace crds_angular.Services
             {
                 var pin = Mapper.Map<PinDto>(group);
                 pin.Gathering = group;
-                pin.Participant_ID = participantId;
 
                 if (pin.Contact_ID != null)
                 {
+                    pin.Participant_ID = _participantRepository.GetParticipant(pin.Contact_ID.Value).ParticipantId;
                     var contact = _contactRepository.GetContactById((int)pin.Contact_ID);
                     pin.FirstName = contact.First_Name;
                     pin.LastName = contact.Last_Name;
+                    pin.Gathering.ContactId = pin.Contact_ID.Value;
                 }
 
                 pins.Add(pin);

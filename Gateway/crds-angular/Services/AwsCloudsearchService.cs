@@ -185,6 +185,10 @@ namespace crds_angular.Services
                 awsPinObject.State = pin.Gathering.Address.State;
                 awsPinObject.Zip = pin.Gathering.Address.PostalCode;
                 awsPinObject.GroupStartDate = pin.Gathering.StartDate;
+                awsPinObject.GroupId = pin.Gathering.GroupId;
+                awsPinObject.GroupTypeId = pin.Gathering.GroupTypeId;
+                awsPinObject.GroupDescription = pin.Gathering.GroupDescription;
+                awsPinObject.GroupName = pin.Gathering.GroupName;
             }
 
             AwsCloudsearchDto awsPostPinObject = new AwsCloudsearchDto("add", GenerateAwsPinId(pin), awsPinObject);
