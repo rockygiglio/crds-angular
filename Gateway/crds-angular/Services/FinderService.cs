@@ -185,7 +185,7 @@ namespace crds_angular.Services
 
             var gathering = Mapper.Map<FinderGatheringDto>(pin.Gathering);
 
-            pin.Gathering = Mapper.Map<GroupDTO>(_finderRepository.UpdateGathering(gathering));
+            _finderRepository.UpdateGathering(gathering);
 
             return pin;
         }
