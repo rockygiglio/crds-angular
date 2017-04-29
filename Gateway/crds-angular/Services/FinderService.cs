@@ -643,8 +643,8 @@ namespace crds_angular.Services
 
                 var connection = new ConnectCommunicationDto
                 {
-                    FromContactId = (int) host.Contact_ID,
-                    ToContactId = cm.Contact_ID,
+                    FromContactId = cm.Contact_ID,
+                    ToContactId = (int)host.Contact_ID,
                     CommunicationTypeId = _configurationWrapper.GetConfigIntValue("ConnectCommunicationTypeInviteToGathering"),
                     CommunicationStatusId = accept ? _configurationWrapper.GetConfigIntValue("ConnectCommunicationStatusAccepted") : _configurationWrapper.GetConfigIntValue("ConnectCommunicationStatusDeclined"),
                     GroupId = groupId
@@ -670,15 +670,7 @@ namespace crds_angular.Services
                     { "Host", host.FirstName },
                 };
 
-                int emailTemplateId;
-                if (inviteAccepted)
-                {
-                    emailTemplateId = _inviteAcceptedTemplateId;
-                }
-                else
-                {
-                    emailTemplateId = _inviteDeclinedTemplateId;
-                }
+                int emailTemplateId = inviteAccepted ? _inviteAcceptedTemplateId : _inviteDeclinedTemplateId;
 
                 var emailTemplate = _communicationRepository.GetTemplate(emailTemplateId);
                 var fromContact = new MpContact
@@ -697,7 +689,7 @@ namespace crds_angular.Services
                     new MpContact
                     {
                         // Just need a contact ID here, doesn't have to be for the recipient
-                        ContactId = communityMember.Contact_ID,
+                        ContactId = host.Contact_ID.Value,
                         EmailAddress = communityMember.Email_Address
                     }
                 };
