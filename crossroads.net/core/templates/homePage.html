@@ -1,19 +1,20 @@
-<div ng-class="{'homepage' : !app.resolving}">
-	<ng-include src="'templates/header.html'"></ng-include>
+<ng-include src="'templates/header.html'"></ng-include>
 
-	<div class="container-fluid main animated fadeIn">
-		<div class="row">
-			<div class="col-md-12">
-				<preloader ng-if="app.resolving" full-screen='true'> </preloader>
-				<div ng-if="!app.resolving">
-					<div ui-view> </div>
-					<form-builder page="page"></form-builder>
+<div class="crds-legacy-styles">
+	<div ng-class="{'homepage' : !app.resolving}">
+		<div class="container-fluid main animated fadeIn">
+			<div class="row">
+				<div class="col-md-12">
+					<preloader ng-if="app.resolving" full-screen='true'> </preloader>
+					<div ng-if="!app.resolving">
+						<div ui-view> </div>
+						<form-builder page="page"></form-builder>
+					</div>
 				</div>
 			</div>
 		</div>
+		<!--/container-->
+		<ng-include src="'templates/footer.html'"></ng-include>
 	</div>
-	<!--/container-->
-
-	<ng-include src="'templates/footer.html'"></ng-include>
 </div>
 <!--/homepage-->
