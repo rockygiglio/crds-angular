@@ -492,11 +492,13 @@ namespace crds_angular.test.Services
             _addressService.Setup(mocked => mocked.GetGeoLocationCascading(It.IsAny<AddressDTO>())).Returns(geoCodes);
             _mpContactRepository.Setup(mocked => mocked.UpdateHouseholdAddress(pin.Contact_ID.Value, null, It.IsAny <Dictionary<string, object>>()));
             _mpFinderRepository.Setup(mocked => mocked.UpdateGathering(It.IsAny<FinderGatheringDto>())).Returns(expectedFinderGathering);
+            _awsCloudsearchService.Setup(mocked => mocked.UploadNewPinToAws(It.IsAny<PinDto>()));
 
             var result = _fixture.UpdateGathering(pin);
             _addressService.Verify(ver => ver.GetGeoLocationCascading(It.IsAny<AddressDTO>()), Times.Exactly(2));
             _mpFinderRepository.VerifyAll();
             _mpContactRepository.VerifyAll();
+            _awsCloudsearchService.VerifyAll();
             Assert.AreEqual(result.Address.AddressLine1, expectedPin.Address.AddressLine1);
             Assert.AreEqual(result.Address.AddressID, expectedPin.Address.AddressID);
         }
