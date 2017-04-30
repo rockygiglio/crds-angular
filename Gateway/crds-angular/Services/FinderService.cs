@@ -181,6 +181,9 @@ namespace crds_angular.Services
                     State = pin.Gathering.Address.State
                 };
                 this.UpdateHouseholdAddress(pin);
+                pin.PinType = PinType.PERSON;
+                _awsCloudsearchService.UploadNewPinToAws(pin);
+                pin.PinType = PinType.GATHERING;
             }
 
             var gathering = Mapper.Map<FinderGatheringDto>(pin.Gathering);
