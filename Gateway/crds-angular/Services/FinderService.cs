@@ -690,7 +690,7 @@ namespace crds_angular.Services
                     {
                         // Just need a contact ID here, doesn't have to be for the recipient
                         ContactId = host.Contact_ID.Value,
-                        EmailAddress = communityMember.Email_Address
+                        EmailAddress = host.EmailAddress
                     }
                 };
 
