@@ -156,21 +156,41 @@ namespace crds_angular.Services
 
         private string GenerateAwsPinId(PinDto pin)
         {
-            var awsPinId = pin.Address.AddressID + "-" + (int)pin.PinType + "-" + pin.Participant_ID + "-" + GetPinGroupIdOrEmptyString(pin);
-            return awsPinId; 
+            if (pin.PinType == PinType.GATHERING)
+            {
+                return GenerateAwsPinString(pin, pin.Gathering.Address.AddressID.ToString(), pin.Gathering.GroupId.ToString());
+            }
+            else
+            {
+                return GenerateAwsPinString(pin, pin.Address.AddressID.ToString());
+            }
         }
 
-        private static string GetPinGroupIdOrEmptyString(PinDto pin)
+        private string GenerateAwsPinString(PinDto pin, string addressId, string groupId = "")
         {
-            var isGathering = pin.PinType == PinType.GATHERING;
-            var groupIdAsString = isGathering ? pin.Gathering.GroupId.ToString() : "";
-
-            return groupIdAsString; 
+            return addressId + "-" + (int) pin.PinType + '-' + pin.Participant_ID + "-" + groupId;
         }
 
         public UploadDocumentsRequest GetObjectToUploadToAws(PinDto pin)
         {
             AwsConnectDto awsPinObject = Mapper.Map<AwsConnectDto>(pin);
+
+            if (pin.PinType == PinType.GATHERING)
+            {
+                awsPinObject.AddressId = pin.Gathering.Address.AddressID;
+                awsPinObject.Latitude = pin.Gathering.Address.Latitude;
+                awsPinObject.Longitude = pin.Gathering.Address.Longitude;
+                awsPinObject.City = pin.Gathering.Address.City;
+                awsPinObject.LatLong =  (pin.Gathering.Address.Latitude == null || pin.Gathering.Address.Longitude == null)  
+                    ? "0 , 0" : $"{pin.Gathering.Address.Latitude} , {pin.Gathering.Address.Longitude}";
+                awsPinObject.State = pin.Gathering.Address.State;
+                awsPinObject.Zip = pin.Gathering.Address.PostalCode;
+                awsPinObject.GroupStartDate = pin.Gathering.StartDate;
+                awsPinObject.GroupId = pin.Gathering.GroupId;
+                awsPinObject.GroupTypeId = pin.Gathering.GroupTypeId;
+                awsPinObject.GroupDescription = pin.Gathering.GroupDescription;
+                awsPinObject.GroupName = pin.Gathering.GroupName;
+            }
 
             AwsCloudsearchDto awsPostPinObject = new AwsCloudsearchDto("add", GenerateAwsPinId(pin), awsPinObject);
 

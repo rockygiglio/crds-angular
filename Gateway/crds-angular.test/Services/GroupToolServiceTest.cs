@@ -38,6 +38,7 @@ namespace crds_angular.test.Services
         private Mock<IEmailCommunication> _emailCommunicationService;
         private Mock<IAttributeService> _attributeService;
         private Mock<IAddressService> _addressService;
+        private Mock<MPServices.IFinderRepository> _finderRepository;
 
         private const int GroupRoleLeader = 987;
         private const int RemoveParticipantFromGroupEmailTemplateId = 654;
@@ -76,6 +77,7 @@ namespace crds_angular.test.Services
             _emailCommunicationService = new Mock<IEmailCommunication>(MockBehavior.Strict);
             _attributeService = new Mock<IAttributeService>(MockBehavior.Strict);
             _addressService = new Mock<IAddressService>(MockBehavior.Strict);
+            _finderRepository = new Mock<MPServices.IFinderRepository>();
 
             var configuration = new Mock<IConfigurationWrapper>();
 
@@ -110,7 +112,8 @@ namespace crds_angular.test.Services
                                             _addressMatrixService.Object,
                                             _emailCommunicationService.Object,
                                             _attributeService.Object,
-                                            _addressService.Object);
+                                            _addressService.Object,
+                                            _finderRepository.Object);
         }
 
         [ExpectedException(typeof(GroupNotFoundForParticipantException))]

@@ -12,6 +12,7 @@ using Crossroads.Web.Common.Security;
 using Moq;
 using NUnit.Framework;
 using System.Reactive;
+using System.Reactive.Disposables;
 using System.Web.Http;
 
 namespace crds_angular.test.controllers
@@ -50,22 +51,6 @@ namespace crds_angular.test.controllers
         }
 
         [Test]
-        public async void ShouldSaveTheProfile()
-        {
-            _fixture.Request.Headers.Authorization = new AuthenticationHeaderValue(authType, authToken);
-            var mockProfile = GroupLeaderMock();
-            _groupLeaderService.Setup(m => m.SaveReferences(It.IsAny<GroupLeaderProfileDTO>())).Returns(Observable.Start(() => 1));
-            _groupLeaderService.Setup(m => m.SaveProfile(It.IsAny<string>(), It.IsAny<GroupLeaderProfileDTO>())).Callback((string authTokenParm, GroupLeaderProfileDTO mock) =>
-            {
-                Assert.AreEqual($"{authType} {authToken}", authTokenParm);
-            }).Returns(Observable.Empty<IList<Unit>>());
-
-            var response = await _fixture.SaveProfile(mockProfile);
-            Assert.IsNotNull(response);
-            Assert.IsInstanceOf<OkResult>(response);
-        }
-
-        [Test]
         public void ShouldThrowExceptionWhenProfileIsNotSaved()
         {
             _fixture.Request.Headers.Authorization = new AuthenticationHeaderValue(authType, authToken);
@@ -91,6 +76,85 @@ namespace crds_angular.test.controllers
 
         }
 
+        [Test]
+        public async void ShouldSaveInterestedStaus()
+        {
+            _fixture.Request.Headers.Authorization = new AuthenticationHeaderValue(authType, authToken);
+            _groupLeaderService.Setup(m => m.SetInterested($"{authType} {authToken}"));
+
+            var response = await _fixture.InterestedInGroupLeadership();
+            Assert.IsNotNull(response);
+        }
+
+        [Test]
+        public async void ShouldSaveSpiritualGrowthAnswers()
+        {
+            _fixture.Request.Headers.Authorization = new AuthenticationHeaderValue(authType, authToken);
+            var mockSpiritualGrowth = SpiritualGrowthMock();
+
+            _groupLeaderService.Setup(m => m.SaveSpiritualGrowth(It.IsAny<SpiritualGrowthDTO>())).Returns(Observable.Start(() => 1));
+            _groupLeaderService.Setup(m => m.SetApplied(It.IsAny<string>())).Returns(Observable.Start(() => 1));
+
+            var response = await _fixture.SaveSpiritualGrowth(mockSpiritualGrowth);
+            Assert.IsInstanceOf<OkResult>(response);
+        }
+
+        [Test]
+        public void ShouldThrowWhenSavingInterestedStaus()
+        {
+            _fixture.Request.Headers.Authorization = new AuthenticationHeaderValue(authType, authToken);
+            _groupLeaderService.Setup(m => m.SetInterested($"{authType} {authToken}")).Throws(new Exception());
+
+            Assert.Throws<HttpResponseException>(async () =>
+            {
+                await _fixture.InterestedInGroupLeadership();
+            });
+        }
+
+        [Test]
+        public void ShouldThrowExceptionWhenSpiritualGrowthAnswersArentSaved()
+        {
+            var mockSpiritualGrowth = SpiritualGrowthMock();
+            _groupLeaderService.Setup(m => m.SaveSpiritualGrowth(It.IsAny<SpiritualGrowthDTO>())).Returns(Observable.Start(() => 1));
+            _groupLeaderService.Setup(m => m.SetApplied(It.IsAny<string>())).Returns(Observable.Create<int>((observer) =>
+            {
+                observer.OnError(new Exception(""));
+                return Disposable.Empty;
+            }));
+
+            Assert.Throws<HttpResponseException>(async () =>
+            {
+                await _fixture.SaveSpiritualGrowth(mockSpiritualGrowth);
+            });
+        }
+
+        [Test]
+        public void ShouldThrowExceptionWhenSpiritualGrowthAnswersAreSavedButNotApplied()
+        {
+            var mockSpiritualGrowth = SpiritualGrowthMock();
+
+            _groupLeaderService.Setup(m => m.SaveSpiritualGrowth(It.IsAny<SpiritualGrowthDTO>())).Throws(new Exception());
+
+            Assert.Throws<HttpResponseException>(async () =>
+            {
+                await _fixture.SaveSpiritualGrowth(mockSpiritualGrowth);
+            });
+        }
+
+        [Test]
+        public void ShouldThrowExceptionWhenSaveProfileThrowsException()
+        {
+            var mockProfile = GroupLeaderMock();
+
+            _groupLeaderService.Setup(m => m.SaveReferences(It.IsAny<GroupLeaderProfileDTO>())).Returns(Observable.Start(() => 1));
+            _groupLeaderService.Setup(m => m.SaveProfile(It.IsAny<string>(), It.IsAny<GroupLeaderProfileDTO>())).Throws<ApplicationException>();
+
+            Assert.Throws<HttpResponseException>(async () =>
+            {
+                await _fixture.SaveProfile(mockProfile);
+            });
+        }
+
         private static GroupLeaderProfileDTO GroupLeaderMock()
         {
             return new GroupLeaderProfileDTO()
@@ -101,7 +165,19 @@ namespace crds_angular.test.controllers
                 LastName = "Silbernagel",
                 NickName = "Matt",
                 Site = 1,
-                OldEmail = "matt.silbernagel@ingagepartners.com"
+                OldEmail = "matt.silbernagel@ingagepartners.com",
+                HomePhone = "123-456-7890"
+            };
+        }
+
+        private static SpiritualGrowthDTO SpiritualGrowthMock()
+        {
+            return new SpiritualGrowthDTO()
+            {
+                ContactId = 654321,
+                EmailAddress = "hornerjn@gmail.com",
+                Story = "my diary",
+                Taught = "i lEarnDed hOw to ReAd"
             };
         }
     }

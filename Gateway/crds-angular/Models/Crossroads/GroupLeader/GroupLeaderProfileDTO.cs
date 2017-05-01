@@ -5,8 +5,17 @@ namespace crds_angular.Models.Crossroads.GroupLeader
 {
     public class GroupLeaderProfileDTO
     {
+        [JsonProperty(PropertyName = "addressId")]
+        public int? AddressId { get; set; }
+
+        [JsonProperty(PropertyName = "homePhone")]
+        public string HomePhone { get; set; }
+
         [JsonProperty(PropertyName = "contactId", Required = Required.Always)]
         public int ContactId { get; set; }
+
+        [JsonProperty(PropertyName = "oldFirstName", Required = Required.Always)]
+        public string FirstName { get; set; }
 
         [JsonProperty(PropertyName = "firstName", Required = Required.Always)]
         public string NickName { get; set; }
