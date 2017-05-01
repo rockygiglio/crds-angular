@@ -38,14 +38,19 @@ DELETE FROM dp_Page_Section_Pages where Page_ID in (1002, 1003, 1004, 1005)
 
 DELETE FROM dp_Role_Pages WHERE Page_ID in (1002, 1003, 1004, 1005)
 
+DELETE FROM dp_Role_Sub_Pages WHERE Sub_Page_ID in (1001)
+
+DELETE FROM dp_Sub_Pages
+WHERE sub_page_id in (1001) 
+
 DELETE FROM dp_Pages --do pages last for fk constraints
 WHERE page_id in (1002, 1003, 1004, 1005) 
 
 --TABLES
-DROP TABLE Sync_Sources;
-DROP TABLE Sync_Event_Types;
-DROP TABLE Sync_Events;
 DROP TABLE Sync_Event_Operations;
+DROP TABLE Sync_Events;
+DROP TABLE Sync_Event_Types;
+DROP TABLE Sync_Sources;
 
 --Adam: I think that these are yours. Ok to clean up?
 DROP TABLE temp_CKY_batches;
