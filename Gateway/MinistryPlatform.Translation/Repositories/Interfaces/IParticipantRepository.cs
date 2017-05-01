@@ -9,6 +9,7 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
         List<MpResponse> GetParticipantResponses(int participantId);
         MpParticipant GetParticipantRecord(string token);
         void UpdateParticipant(MpParticipant participant);
+        void UpdateParticipantHostStatus(MpParticipant participant);
         void UpdateParticipant(Dictionary<string, object> getDictionary);
         int CreateParticipantRecord(int contactId);
     }

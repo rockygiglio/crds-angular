@@ -610,7 +610,12 @@ namespace crds_angular.Services
             var token = _apiUserService.GetToken();
             var eventList = EventsReadyForPrimaryContactReminder(token);
 
-            eventList.ForEach(evt => { SendPrimaryContactReminderEmail(evt, token); });
+            eventList.ForEach(evt =>
+            {
+                var rooms = _roomService.GetRoomReservations(evt.EventId).Where(r => (!r.Cancelled && !r.Hidden)).Select(s => s.Name).ToList();
+                var roomsString = rooms.Count > 0 ? string.Join(", ", (object[]) rooms.ToArray()) : "No Room Reserved under the Date and Time";
+                SendPrimaryContactReminderEmail(evt, roomsString, token);
+            });
         }
 
         private void SendEventReminderEmail(Models.Crossroads.Events.Event evt, Participant participant, MpEvent childcareEvent, IList<Participant> children, string token)
@@ -660,7 +665,7 @@ namespace crds_angular.Services
         }
 
         // ReSharper disable once UnusedParameter.Local
-        private void SendPrimaryContactReminderEmail(Models.Crossroads.Events.Event evt, string token)
+        private void SendPrimaryContactReminderEmail(Models.Crossroads.Events.Event evt, string rooms, string token)
         {
             try
             {
@@ -670,6 +675,7 @@ namespace crds_angular.Services
                     {"Event_Title", evt.name},
                     {"Event_Start_Date", evt.StartDate.ToShortDateString()},
                     {"Event_Start_Time", evt.StartDate.ToShortTimeString()},
+                    {"Room_Name", rooms },
                     {"Base_Url", _configurationWrapper.GetConfigValue("BaseMPUrl")}
                 };
 

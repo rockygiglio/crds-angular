@@ -44,10 +44,6 @@ namespace crds_angular.Services
             var addressDictionary = getDictionary(person.GetAddress());
             addressDictionary.Add("State/Region", addressDictionary["State"]);
             _contactService.UpdateContact(person.ContactId, contactDictionary, householdDictionary, addressDictionary);
-            if (person.CongregationId != null)
-            {
-                _contactService.UpdateContactsCongregation(person.HouseholdId, (int) person.CongregationId).Subscribe(updated => person.CongregationId = updated.Congregation_ID);
-            }
             var configuration = MpObjectAttributeConfigurationFactory.Contact();            
             _objectAttributeService.SaveObjectAttributes(person.ContactId, person.AttributeTypes, person.SingleAttributes, configuration);
 

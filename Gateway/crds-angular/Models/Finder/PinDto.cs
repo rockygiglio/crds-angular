@@ -40,9 +40,6 @@ namespace crds_angular.Models.Finder
         [JsonProperty("householdId")]
         public int? Household_ID { get; set; }
 
-        [JsonProperty("isFormDirty")]
-        public bool isFormDirty { get; set; }
-
         [JsonProperty("pinType")]
         public PinType PinType { get; set;  }
 
@@ -54,5 +51,8 @@ namespace crds_angular.Models.Finder
 
         [JsonProperty("Show_On_Map")]
         public bool ShowOnMap { get; set; }
+
+        [JsonProperty("updateHomeAddress")]
+        public bool ShouldUpdateHomeAddress { get; set; } = false;
     }
 }

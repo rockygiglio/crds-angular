@@ -217,5 +217,26 @@ namespace crds_angular.test.Services
 
             Assert.AreEqual(address.AddressID, 12345);
         }
+
+        [Test]
+        public void TestCreateAddress()
+        {
+            var address = new AddressDTO()
+            {
+                AddressLine1 = "123 Sesame St",
+                AddressLine2 = "",
+                City = "South Side",
+                State = "OH",
+                PostalCode = "12312"
+            };
+
+            var coords = new GeoCoordinate(39.15946159999999, -84.42336390000003);
+            _addressGeocodingService.Setup(mocked => mocked.GetGeoCoordinates(It.IsAny<AddressDTO>())).Returns(coords);
+            _mpAddressServiceMock.Setup(m => m.Create(It.IsAny<MpAddress>())).Returns(8675309);
+
+            _fixture.CreateAddress(address);
+
+            _mpAddressServiceMock.Verify(x => x.Create(It.IsAny<MpAddress>()), Times.Once);
+        }
     }
 }

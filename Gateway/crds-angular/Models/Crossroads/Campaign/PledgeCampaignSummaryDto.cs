@@ -23,8 +23,14 @@ namespace crds_angular.Models.Crossroads.Campaign
         [JsonProperty(PropertyName = "notStartedPercent")]
         public int NotStartedPercent { get; set; }
 
+        [JsonProperty(PropertyName = "behindPercent")]
+        public int BehindPercent { get; set; }
+
         [JsonProperty(PropertyName = "onPacePercent")]
         public int OnPacePercent { get; set; }
+
+        [JsonProperty(PropertyName = "aheadPercent")]
+        public int AheadPercent { get; set; }
 
         [JsonProperty(PropertyName = "completedPercent")]
         public int CompletedPercent { get; set; }

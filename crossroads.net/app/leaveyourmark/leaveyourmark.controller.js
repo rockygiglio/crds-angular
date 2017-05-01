@@ -26,8 +26,9 @@
         vm.committed = undefined;
         vm.givenGercentage = undefined
         vm.notStartedPercent = undefined
-        vm.onPacePercent = undefined
         vm.behindPercent = undefined
+        vm.onPacePercent = undefined
+        vm.aheadPercent = undefined
         vm.completedPercent = undefined
         vm.viewReady = false;
 
@@ -43,11 +44,12 @@
                             vm.totalDays = data.totalDays;
                             vm.given = data.totalGiven;
                             vm.committed = data.totalCommitted;
-                            vm.givenGercentage = $filter('number')(vm.given / vm.committed * 100, 0);
+                            vm.givenPercentage = $filter('number')(vm.given / vm.committed * 100, 0);
                             vm.notStartedPercent = data.notStartedPercent;
+                            vm.behindPercent = data.behindPercent;
                             vm.onPacePercent = data.onPacePercent;
+                            vm.aheadPercent = data.aheadPercent;
                             vm.completedPercent = data.completedPercent;
-                            vm.behindPercent = 100 - data.onPacePercent;
                          })
                          .catch((err) => {
                             vm.viewReady = true;

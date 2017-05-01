@@ -8,6 +8,12 @@ namespace MinistryPlatform.Translation.Models.DTO
         [JsonProperty(PropertyName = "Pledge_Campaign_Id")]
         public int PledgeCampaignId { get; set; }
 
+        [JsonProperty(PropertyName = "No_Commitment_Count")]
+        public int NoCommitmentCount { get; set; }
+
+        [JsonProperty(PropertyName = "No_Commitment_Amount")]
+        public decimal NoCommitmentAmount { get; set; }
+
         [JsonProperty(PropertyName = "Total_Given")]
         public decimal TotalGiven { get; set; }
 
@@ -23,8 +29,14 @@ namespace MinistryPlatform.Translation.Models.DTO
         [JsonProperty(PropertyName = "Not_Started_Count")]
         public int NotStartedCount { get; set; }
 
+        [JsonProperty(PropertyName = "Behind_Count")]
+        public int BehindCount { get; set; }
+
         [JsonProperty(PropertyName = "On_Pace_Count")]
         public int OnPaceCount { get; set; }
+
+        [JsonProperty(PropertyName = "Ahead_Count")]
+        public int AheadCount { get; set; }
 
         [JsonProperty(PropertyName = "Completed_Count")]
         public int CompletedCount { get; set; }
