@@ -4,7 +4,7 @@
     module.exports = CorkboardListings;
 
     CorkboardListings.$inject = ['$resource', '$http', '$cacheFactory'];
-    var postEndpoint = __SERVICES_CLIENT_ENDPOINT__ + '/corkboard/api/posts/';
+    var postEndpoint = __SERVICES_CLIENT_ENDPOINT__ + '/corkboard/api/v1.0.0/posts/';
 
     function CorkboardListings($resource, $http, $cacheFactory, $log) {
         return {

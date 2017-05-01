@@ -2,7 +2,7 @@
   'use strict';
 
   module.exports = ContactAboutPost;
-  var emailEndpoint = __GATEWAY_CLIENT_ENDPOINT__ + 'corkboard/api/sendemail/';
+  var emailEndpoint = __GATEWAY_CLIENT_ENDPOINT__ + 'api/v1.0.0/send-email/';
 
   ContactAboutPost.$inject = ['$resource', '$http'];
 

@@ -164,8 +164,8 @@
       if (vm.replyForm.$invalid) {
         $rootScope.$emit('notify', $rootScope.MESSAGES.generalError);
         vm.sending = false;
-      } else {
-        var link = __CORE_ENDPOINT__ + 'corkboard/detail/' + vm.selectedItem._id.$oid;
+      } else {        
+        var link = __APP_SERVER_ENDPOINT__ + 'corkboard/detail/' + vm.selectedItem._id.$oid;
 
         var replyPost = {
           templateId: CORKBOARD_TEMPLATES.replyToTemplateId,
