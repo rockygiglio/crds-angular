@@ -30,8 +30,11 @@ namespace MinistryPlatform.Translation.Test.Services
                 "Groups.Available_Online",
                 "Groups.Primary_Contact",
                 "Groups.Congregation_ID",
-                "Groups.Ministry_ID"
+                "Groups.Ministry_ID",
+                "Groups.Kids_Welcome"
             };
+
+
 
     private FinderRepository _fixture;
 

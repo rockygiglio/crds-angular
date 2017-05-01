@@ -619,7 +619,6 @@ namespace MinistryPlatform.Translation.Test.Services
                 "Contact_ID_Table.Nickname",
                 "Contact_ID_Table.__Age as [Age]",
                 "Participants.Attendance_Start_Date",
-                "Participants.[Approved_Small_Group_Leader]",
                 "Participant_Type_ID_Table.Participant_Type",
                 "Group_Leader_Status_ID_Table.Group_Leader_Status_ID"
             };
