@@ -249,6 +249,7 @@ namespace crds_angular.Controllers.API
                 try
                 {
                     _finderService.DisablePin(participantId);
+                    _awsCloudsearchService.DeleteSingleConnectRecordInAwsCloudsearch(participantId, 1);
                     return Ok();
 
                 }
