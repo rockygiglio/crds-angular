@@ -388,7 +388,7 @@ BEGIN
  		, 4 --Camapaign Contributions
  		, NULL
  		, Total_Pledge		
- 		, Sum_Donations_ForPledge AS Given_to_Pledge
+ 		, ISNULL(Sum_Donations_ForPledge,0)  AS Given_to_Pledge
  		, Campaign_Name
 	FROM #PledgeData
 	ORDER BY statement_id, section_sort
