@@ -50,7 +50,7 @@
       controller: 'CorkboardController as corkboard',
     })
     .state('corkboard.root', {
-      url: '/corkboard/',
+      url: '/corkboard',
       templateUrl: 'templates/corkboard-listings.html',
       data: {
         meta: {
