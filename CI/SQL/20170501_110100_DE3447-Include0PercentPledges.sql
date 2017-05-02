@@ -194,7 +194,7 @@ BEGIN
 	  LEFT JOIN Donation_Distributions dd ON dd.Pledge_ID =p.Pledge_ID
 	  LEFT JOIN Donations d ON dd.Donation_ID = d.Donation_ID
 	  WHERE Pledge_Campaign_ID in (SELECT Campaign_ID from #Campaigns)
-	  AND d.Donation_Status_ID = 2 --deposited only
+	  AND (d.Donation_Status_ID = 2 OR d.Donation_Status_ID IS NULL) --deposited only or there are no donations
 	  GROUP BY p.Pledge_ID, p.Donor_ID, p.Total_Pledge, p.campaign_name
 	  
 	  	--select * from #PledgeTotals where pledge_owner = 7557276
