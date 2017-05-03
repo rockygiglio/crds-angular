@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reactive.Linq;
 using System.Reactive.Threading.Tasks;
 using System.Threading.Tasks;
 using log4net;
@@ -286,6 +285,10 @@ namespace MinistryPlatform.Translation.Repositories
                             throw new ApplicationException("Mobile phone format is wrong. Format should be ###-###-####");
                         }
                     }
+                    if (!profileDictionary.ContainsKey("First_Name") || profileDictionary["First_Name"] == null)
+                    {
+                        throw new ApplicationException("First_Name was not found or was null");
+                    }
 
                     _ministryPlatformService.UpdateRecord(_configurationWrapper.GetConfigIntValue("Contacts"), profileDictionary, token);
                     return 1;
@@ -323,16 +326,28 @@ namespace MinistryPlatform.Translation.Repositories
                             throw new ApplicationException("Home phone format is wrong. Format should be ###-###-####");
                         }
                     }
+                    if (!profileDictionary.ContainsKey("First_Name") || profileDictionary["First_Name"] == null)
+                    {
+                        throw new ApplicationException("First_Name was not found or was null");
+                    }
 
-                    _ministryPlatformService.UpdateRecord(_configurationWrapper.GetConfigIntValue("Contacts"), profileDictionary, token);                                     
+                    _ministryPlatformService.UpdateRecord(_configurationWrapper.GetConfigIntValue("Contacts"), profileDictionary, token);
+
                     UpdateHouseholdAddress(contactId, householdDictionary, addressDictionary);
                     return 1;
                 }
                 catch (Exception e)
                 {
-                    return 0;
+                    throw new ApplicationException("Error Saving mpContact: " + e.Message);
                 }
             });
+        }
+
+        public void SetHouseholdAddress(int contactId, int householdId, int addressId)
+        {
+            var token = ApiLogin();
+            var household = new MpHousehold() { Address_ID = addressId, Household_ID = householdId };
+            _ministryPlatformRest.UsingAuthenticationToken(token).Update<MpHousehold>(household);
         }
 
         public void UpdateHouseholdAddress(int contactId,
@@ -408,10 +423,9 @@ namespace MinistryPlatform.Translation.Repositories
 
         }
 
-        public IObservable<MpHousehold> UpdateContactsCongregation(int householdId, int newCongregation)
+        public IObservable<MpHousehold> UpdateHousehold(MpHousehold household)
         {
-            var token = ApiLogin();
-            var household = new MpHousehold() {Congregation_ID = newCongregation, Household_ID = householdId};
+            var token = ApiLogin();            
             var asyncresult = Task.Run(() => _ministryPlatformRest.UsingAuthenticationToken(token)
                                                         .Update<MpHousehold>(household));
             return asyncresult.ToObservable();
@@ -477,15 +491,6 @@ namespace MinistryPlatform.Translation.Repositories
             if (date != null)
             {
                 return String.Format("{0:MM/dd/yyyy}", date);
-            }
-            return null;
-        }
-
-        private static string ParseAnniversaryDate(DateTime? anniversary)
-        {
-            if (anniversary != null)
-            {
-                return String.Format("{0:MM/yyyy}", anniversary);
             }
             return null;
         }
@@ -556,10 +561,7 @@ namespace MinistryPlatform.Translation.Repositories
             }
             catch (Exception e)
             {
-                var msg = string.Format("Error creating Contact, firstName: {0} lastName: {1} idCard: {2}",
-                                        contact.First_Name,
-                                        contact.Last_Name,
-                                        contact.ID_Number);
+                var msg = $"Error creating Contact, firstName: {contact.First_Name} lastName: {contact.Last_Name} idCard: {contact.ID_Number}";
                 _logger.Error(msg, e);
                 throw (new ApplicationException(msg, e));
             }

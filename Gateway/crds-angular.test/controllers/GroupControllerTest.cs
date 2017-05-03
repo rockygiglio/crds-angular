@@ -9,8 +9,8 @@ using System.Web.Http.Results;
 using crds_angular.Controllers.API;
 using crds_angular.Models.Crossroads;
 using crds_angular.Models.Crossroads.Groups;
+using crds_angular.Models.Crossroads.Profile;
 using crds_angular.Services.Interfaces;
-using Crossroads.Web.Common;
 using Crossroads.Web.Common.Security;
 using MinistryPlatform.Translation.Exceptions;
 using MinistryPlatform.Translation.Models;
@@ -297,7 +297,7 @@ namespace crds_angular.test.controllers
             const string token = "1234frd32";
             const int groupTypeId = 19;
           
-            MpParticipant participant = new MpParticipant() 
+            var participant = new Participant() 
             { 
                 ParticipantId = 90210
             };
@@ -320,7 +320,7 @@ namespace crds_angular.test.controllers
         {
             const int groupTypeId = 19;
 
-            MpParticipant participant = new MpParticipant()
+            var participant = new Participant()
             {
                 ParticipantId = 90210
             };

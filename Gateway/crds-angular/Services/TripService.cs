@@ -472,7 +472,7 @@ namespace crds_angular.Services
             return invite.PrivateInvitationId;
         }
 
-        private MpCommunication PrivateInviteCommunication(MpPrivateInvite invite)
+        private MinistryPlatform.Translation.Models.MpCommunication PrivateInviteCommunication(MpPrivateInvite invite)
         {
             var templateId = _configurationWrapper.GetConfigIntValue("PrivateInviteTemplate");
             var template = _communicationService.GetTemplate(templateId);
@@ -480,7 +480,7 @@ namespace crds_angular.Services
             var replyToContact = _contactService.GetContactById(_configurationWrapper.GetConfigIntValue("GoTripsReplyToContactId"));
             var mergeData = SetMergeData(invite.PledgeCampaignIdText, invite.PledgeCampaignId, invite.InvitationGuid, invite.RecipientName);
 
-            return new MpCommunication
+            return new MinistryPlatform.Translation.Models.MpCommunication
             {
                 AuthorUserId = 5,
                 DomainId = 1,

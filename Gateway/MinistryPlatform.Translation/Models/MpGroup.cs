@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using Crossroads.Web.Common;
 using Crossroads.Web.Common.MinistryPlatform;
 using MinistryPlatform.Translation.Extensions;
 using MinistryPlatform.Translation.Models.DTO;
@@ -69,19 +68,19 @@ namespace MinistryPlatform.Translation.Models
         public int? MeetingFrequencyID { get; set; }
 
         [JsonProperty("Kids_Welcome")]
-        public bool? KidsWelcome { get; set; }
+        public bool? KidsWelcome { get; set; } = false;
 
         [JsonProperty("Offsite_Meeting_Address")]
         public int? OffsiteMeetingAddressId { get; set; }
 
         [JsonProperty("Target_Size")]
-        public int TargetSize { get; set; }
+        public int? TargetSize { get; set; }
 
         [JsonProperty("Group_Is_Full")]
-        public Boolean Full { get; set; }
+        public bool Full { get; set; }
 
         [JsonProperty("Enable_Waiting_List")]
-        public Boolean WaitList { get; set; }
+        public bool? WaitList { get; set; }
 
         [JsonProperty("Primary_Contact_Name")]
         public string PrimaryContactName { get; set; }
@@ -105,7 +104,7 @@ namespace MinistryPlatform.Translation.Models
         public int ContactId { get; set; }
 
         [JsonProperty("Minimum_Participants")]
-        public int MinimumParticipants { get; set; }
+        public int? MinimumParticipants { get; set; }
 
         public int WaitListGroupId { get; set; }       
         public int EventTypeId { get; set; }           
