@@ -441,6 +441,7 @@
     <Compile Include="Services\CampRules.cs" />
     <Compile Include="Services\CampService.cs" />
     <Compile Include="Services\CongregationService.cs" />
+    <Compile Include="Services\CorkboardService.cs" />
     <Compile Include="Services\FinderService.cs" />
     <Compile Include="Services\EquipmentService.cs" />
     <Compile Include="Services\EventParticipantService.cs" />
@@ -455,6 +456,7 @@
     <Compile Include="Services\GroupSearchService.cs" />
     <Compile Include="Services\FormBuilderService.cs" />
     <Compile Include="Services\Interfaces\GroupAttributeDTO.cs" />
+    <Compile Include="Services\Interfaces\ICorkboardService.cs" />
     <Compile Include="Services\Interfaces\IGroupLeaderService.cs" />
     <Compile Include="Services\Interfaces\IAddressGeocodingService.cs" />
     <Compile Include="Services\Interfaces\IAddressProximityService.cs" />

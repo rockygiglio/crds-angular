@@ -164,12 +164,13 @@
       if (vm.replyForm.$invalid) {
         $rootScope.$emit('notify', $rootScope.MESSAGES.generalError);
         vm.sending = false;
-      } else {        
+      } else {
         var link = __APP_SERVER_ENDPOINT__ + 'corkboard/detail/' + vm.selectedItem._id.$oid;
 
         var replyPost = {
           templateId: CORKBOARD_TEMPLATES.replyToTemplateId,
           fromContactId: crds_utilities.getCookie('userId'),
+          replyToContact: crds_utilities.getCookie('userId'),
           toContactId: vm.selectedItem.ContactId,
           mergeData: { Title: vm.selectedItem.Title, Description: vm.selectedItem.Description, ReplyText: vm.replyText, Link: link }
         };
