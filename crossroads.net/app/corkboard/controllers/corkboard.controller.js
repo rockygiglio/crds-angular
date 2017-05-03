@@ -106,7 +106,7 @@
     }
 
     function canRemove() {
-      return ($rootScope.userid == vm.selectedItem.UserId) ||
+      return ($rootScope.userid == vm.selectedItem.ContactId) ||
         ($rootScope.roles && $rootScope.roles.filter(
           function (e) {
             return e.Id === CORKBOARD_ADMIN_ROLE_ID;
@@ -170,7 +170,7 @@
         var replyPost = {
           templateId: CORKBOARD_TEMPLATES.replyToTemplateId,
           fromContactId: crds_utilities.getCookie('userId'),
-          toContactId: vm.selectedItem.UserId,
+          toContactId: vm.selectedItem.ContactId,
           mergeData: { Title: vm.selectedItem.Title, Description: vm.selectedItem.Description, ReplyText: vm.replyText, Link: link }
         };
 
