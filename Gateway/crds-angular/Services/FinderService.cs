@@ -363,16 +363,17 @@ namespace crds_angular.Services
         private string GetPinTitle(PinDto pin)
         {
             string jsonData="";
+            var lastname = string.IsNullOrEmpty(pin.LastName) ? " " : pin.LastName[0].ToString();
             switch (pin.PinType)
             {
                 case PinType.SITE:
                     jsonData = $"{{ 'siteName': '{pin.SiteName}','isHost':  false,'isMe': false,'pinType': {(int)pin.PinType}}}";
                     break;
                 case PinType.GATHERING:
-                    jsonData = $"{{ 'firstName': '{pin.FirstName}', 'lastInitial': '{pin.LastName[0]}','isHost':  true,'isMe': false,'pinType': {(int)pin.PinType}}}";
+                    jsonData = $"{{ 'firstName': '{pin.FirstName}', 'lastInitial': '{lastname}','isHost':  true,'isMe': false,'pinType': {(int)pin.PinType}}}";
                     break;
                 case PinType.PERSON:
-                    jsonData = $"{{ 'firstName': '{pin.FirstName}', 'lastInitial': '{pin.LastName[0]}','isHost':  false,'isMe': false,'pinType': {(int)pin.PinType}}}";
+                    jsonData = $"{{ 'firstName': '{pin.FirstName}', 'lastInitial': '{lastname}','isHost':  false,'isMe': false,'pinType': {(int)pin.PinType}}}";
                     break;
             }
            
