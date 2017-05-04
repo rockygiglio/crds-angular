@@ -260,6 +260,9 @@ namespace crds_angular.test.Services
 
                 }
             };
+
+            var mygroup = new GroupDTO {GroupTypeId = 5};
+
             _groupService.Setup(mocked => mocked.GetGroupByIdForAuthenticatedUser("abc", 2)).Returns(groups);
 
             var inquiry = new Inquiry
@@ -300,6 +303,9 @@ namespace crds_angular.test.Services
 
             _contentBlockService.SetupGet(mocked => mocked["groupToolApproveInquirySubjectTemplateText"]).Returns(new ContentBlock());
             _contentBlockService.SetupGet(mocked => mocked["groupToolApproveInquiryEmailTemplateText"]).Returns(new ContentBlock());
+            _groupService.Setup(mocked => mocked.GetGroupDetails(It.IsAny<int>())).Returns(mygroup);
+
+
 
             _fixture.ApproveDenyInquiryFromMyGroup("abc", 1, 2, true, inquiry, message);
 
@@ -341,6 +347,7 @@ namespace crds_angular.test.Services
 
                 }
             };
+            var mygroup = new GroupDTO { GroupTypeId = 5 };
             _groupService.Setup(mocked => mocked.GetGroupByIdForAuthenticatedUser("abc", 2)).Returns(groups);
 
             var inquiry = new Inquiry
@@ -380,6 +387,7 @@ namespace crds_angular.test.Services
 
             _contentBlockService.SetupGet(mocked => mocked["groupToolDenyInquirySubjectTemplateText"]).Returns(new ContentBlock());
             _contentBlockService.SetupGet(mocked => mocked["groupToolDenyInquiryEmailTemplateText"]).Returns(new ContentBlock());
+            _groupService.Setup(mocked => mocked.GetGroupDetails(It.IsAny<int>())).Returns(mygroup);
 
             _fixture.ApproveDenyInquiryFromMyGroup("abc", 1, 2, false, inquiry, message);
 

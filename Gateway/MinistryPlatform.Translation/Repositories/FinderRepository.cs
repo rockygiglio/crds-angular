@@ -147,7 +147,7 @@ namespace MinistryPlatform.Translation.Repositories
                     connection.CommunicationStatusId == _configurationWrapper.GetConfigIntValue("ConnectCommunicationStatusDeclined"))
                 {
                     string filter = $"Group_ID = {connection.GroupId} AND From_Contact_ID = {connection.FromContactId} AND To_Contact_ID = {connection.ToContactId} AND Communication_Type_ID = {connection.CommunicationTypeId}";
-                    const string columnList = ".Connect_Communications_ID";
+                    const string columnList = "Connect_Communications_ID";
 
                     var communicationsToUpdate = _ministryPlatformRest.UsingAuthenticationToken(apiToken).Search<MpConnectCommunication>(filter , columnList).ToList();
                     foreach (var communication  in communicationsToUpdate)
