@@ -344,12 +344,43 @@ namespace crds_angular.Services
 
             foreach (var pin in pins)
             {
+                pin.Title = GetPinTitle(pin);
+                pin.IconUrl = GetPinUrl(pin.PinType);
                 //calculate proximity for all pins to origin
                 if (pin.Address.Latitude == null) continue;
                 if (pin.Address.Longitude != null) pin.Proximity = GetProximity(originCoords, new GeoCoordinate(pin.Address.Latitude.Value, pin.Address.Longitude.Value));
             }
 
             return pins;
+        }
+
+        private string GetPinTitle(PinDto pin)
+        {
+            string jsonData =
+                $"{{ 'firstName': '{pin.FirstName}', 'lastInitial': '{pin.LastName[0]}','isHost':  {(pin.PinType == PinType.GATHERING ? "true" : "false")},'isMe': false,'pinType': {(int)PinType.GATHERING}}}";
+            return jsonData.Replace("'", "\"");
+            
+        }
+        private string GetPinUrl(PinType pintype)
+        {
+            const string baseUrl = "http://crds-cms-uploads.s3.amazonaws.com/connect/";
+            string pin;
+            switch (pintype)
+            {
+                case PinType.GATHERING:
+                    pin = "SITE.svg";
+                    break;
+                case PinType.SITE:
+                    pin = "GATHERING.svg";
+                    break;
+                case PinType.PERSON:
+                    pin = "PERSON.svg";
+                    break;
+                default:
+                    pin = "PERSON.svg";
+                    break;
+            }
+            return baseUrl + pin;
         }
 
         private List<PinDto> ConvertFromAwsSearchResponse(SearchResponse response)
