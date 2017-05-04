@@ -8,12 +8,12 @@ namespace crds_angular.Services
 {
     public class CorkboardService: ICorkboardService
     {
-        private readonly IRestClient _corkboardRestClient;
+        private readonly IRestClient _servicesRestClient;
         private readonly IApiUserRepository _apiUserRepository;
 
-        public CorkboardService(IRestClient corkboardRestClient, IApiUserRepository apiUserRepository)
+        public CorkboardService(IRestClient servicesRestClient, IApiUserRepository apiUserRepository)
         {
-            _corkboardRestClient = corkboardRestClient;
+            _servicesRestClient = servicesRestClient;
             _apiUserRepository = apiUserRepository;
         }
 
@@ -25,7 +25,7 @@ namespace crds_angular.Services
             var request = new RestRequest("corkboard/api/v1.0.0/syncposts", Method.POST);
             request.AddParameter("Authorization",$"Bearer {token}", ParameterType.HttpHeader);
 
-            var response = _corkboardRestClient.Execute(request);
+            var response = _servicesRestClient.Execute(request);
             if (response.StatusCode != HttpStatusCode.OK)
             {
                 throw new ApplicationException($"Received {response.StatusCode} status code from corkboard api.");
