@@ -62,6 +62,9 @@ namespace crds_angular.Services
         private readonly int _inviteDeclinedTemplateId;
         private readonly int _anywhereCongregationId;
         private readonly int _spritualGrowthMinistryId;
+        private readonly string _connectPersonPinUrl;
+        private readonly string _connectSitePinUrl;
+        private readonly string _connectGatheringPinUrl;
 
         private readonly Random _random = new Random(DateTime.Now.Millisecond);
 
@@ -110,6 +113,9 @@ namespace crds_angular.Services
             _inviteDeclinedTemplateId = configurationWrapper.GetConfigIntValue("AnywhereGatheringInvitationDeclinedTemplateId");
             _domainId = configurationWrapper.GetConfigIntValue("DomainId");          
             _spritualGrowthMinistryId = _configurationWrapper.GetConfigIntValue("SpiritualGrowthMinistryId");
+            _connectPersonPinUrl = _configurationWrapper.GetConfigValue("ConnectPersonPinUrl");
+            _connectSitePinUrl = _configurationWrapper.GetConfigValue("ConnectSitePinUrl");
+            _connectGatheringPinUrl = _configurationWrapper.GetConfigValue("ConnectGatheringPinUrl");
         }
 
         public PinDto GetPinDetailsForGroup(int groupId)
@@ -356,31 +362,35 @@ namespace crds_angular.Services
 
         private string GetPinTitle(PinDto pin)
         {
-            string jsonData =
-                $"{{ 'firstName': '{pin.FirstName}', 'lastInitial': '{pin.LastName[0]}','isHost':  {(pin.PinType == PinType.GATHERING ? "true" : "false")},'isMe': false,'pinType': {(int)PinType.GATHERING}}}";
+            string jsonData="";
+            switch (pin.PinType)
+            {
+                case PinType.SITE:
+                    jsonData = $"{{ 'siteName': '{pin.SiteName}','isHost':  false,'isMe': false,'pinType': {(int)pin.PinType}}}";
+                    break;
+                case PinType.GATHERING:
+                    jsonData = $"{{ 'firstName': '{pin.FirstName}', 'lastInitial': '{pin.LastName[0]}','isHost':  true,'isMe': false,'pinType': {(int)pin.PinType}}}";
+                    break;
+                case PinType.PERSON:
+                    jsonData = $"{{ 'firstName': '{pin.FirstName}', 'lastInitial': '{pin.LastName[0]}','isHost':  false,'isMe': false,'pinType': {(int)pin.PinType}}}";
+                    break;
+            }
+           
             return jsonData.Replace("'", "\"");
-            
         }
         private string GetPinUrl(PinType pintype)
         {
-            const string baseUrl = "http://crds-cms-uploads.s3.amazonaws.com/connect/";
-            string pin;
             switch (pintype)
             {
                 case PinType.GATHERING:
-                    pin = "SITE.svg";
-                    break;
+                    return _connectGatheringPinUrl;
                 case PinType.SITE:
-                    pin = "GATHERING.svg";
-                    break;
+                    return _connectSitePinUrl;
                 case PinType.PERSON:
-                    pin = "PERSON.svg";
-                    break;
+                    return _connectPersonPinUrl;
                 default:
-                    pin = "PERSON.svg";
-                    break;
+                    return _connectPersonPinUrl;
             }
-            return baseUrl + pin;
         }
 
         private List<PinDto> ConvertFromAwsSearchResponse(SearchResponse response)
