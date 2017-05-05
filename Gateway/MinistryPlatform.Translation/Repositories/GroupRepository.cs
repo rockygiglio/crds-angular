@@ -684,7 +684,7 @@ namespace MinistryPlatform.Translation.Repositories
                 }
             };
 
-            var confirmation = new MpCommunication
+            var confirmation = new Models.MpCommunication
             {
                 EmailBody = emailTemplate.Body,
                 EmailSubject = emailTemplate.Subject,
@@ -733,7 +733,7 @@ namespace MinistryPlatform.Translation.Repositories
                 }
             };
 
-            var newStudentMinistryGroup = new MpCommunication
+            var newStudentMinistryGroup = new Models.MpCommunication
             {
                 EmailBody = emailTemplate.Body,
                 EmailSubject = emailTemplate.Subject,

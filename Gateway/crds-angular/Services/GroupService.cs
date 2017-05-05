@@ -655,14 +655,14 @@ namespace crds_angular.Services
         }
 
 
-        private MpCommunication CreateJourneyInvitation(EmailCommunicationDTO communication, Participant particpant)
+        private MinistryPlatform.Translation.Models.MpCommunication CreateJourneyInvitation(EmailCommunicationDTO communication, Participant particpant)
         {
             var template = _communicationService.GetTemplate(communication.TemplateId);
             var fromContact = _contactService.GetContactById(_configurationWrapper.GetConfigIntValue("DefaultContactEmailId"));
             var replyTo = _contactService.GetContactById(particpant.ContactId);
             var mergeData = SetupMergeData(particpant.PreferredName, communication.groupId.Value);
 
-            return new MpCommunication
+            return new MinistryPlatform.Translation.Models.MpCommunication
             {
                 AuthorUserId = 5,
                 DomainId = 1,
@@ -827,7 +827,7 @@ namespace crds_angular.Services
                 EmailAddress = p.Email
             }).ToList();
 
-            var email = new MpCommunication
+            var email = new MinistryPlatform.Translation.Models.MpCommunication
             {
                 EmailBody = body,
                 EmailSubject = subject,

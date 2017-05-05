@@ -722,11 +722,11 @@ namespace crds_angular.Services
             _communicationService.SendMessage(communication);
         }
 
-        private MpCommunication SetupCommunication(int templateId, MpMyContact groupContact, MpMyContact toContact, Dictionary<string, object> mergeData)
+        private MinistryPlatform.Translation.Models.MpCommunication SetupCommunication(int templateId, MpMyContact groupContact, MpMyContact toContact, Dictionary<string, object> mergeData)
         {
             var template = _communicationService.GetTemplate(templateId);
             var defaultContact = _contactService.GetContactById(_configurationWrapper.GetConfigIntValue("DefaultContactEmailId"));
-            return new MpCommunication
+            return new MinistryPlatform.Translation.Models.MpCommunication
             {
                 AuthorUserId = 5,
                 DomainId = 1,
