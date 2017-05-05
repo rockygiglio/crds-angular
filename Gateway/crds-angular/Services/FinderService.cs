@@ -62,6 +62,9 @@ namespace crds_angular.Services
         private readonly int _inviteDeclinedTemplateId;
         private readonly int _anywhereCongregationId;
         private readonly int _spritualGrowthMinistryId;
+        private readonly string _connectPersonPinUrl;
+        private readonly string _connectSitePinUrl;
+        private readonly string _connectGatheringPinUrl;
 
         private readonly Random _random = new Random(DateTime.Now.Millisecond);
 
@@ -110,6 +113,9 @@ namespace crds_angular.Services
             _inviteDeclinedTemplateId = configurationWrapper.GetConfigIntValue("AnywhereGatheringInvitationDeclinedTemplateId");
             _domainId = configurationWrapper.GetConfigIntValue("DomainId");          
             _spritualGrowthMinistryId = _configurationWrapper.GetConfigIntValue("SpiritualGrowthMinistryId");
+            _connectPersonPinUrl = _configurationWrapper.GetConfigValue("ConnectPersonPinUrl");
+            _connectSitePinUrl = _configurationWrapper.GetConfigValue("ConnectSitePinUrl");
+            _connectGatheringPinUrl = _configurationWrapper.GetConfigValue("ConnectGatheringPinUrl");
         }
 
         public PinDto GetPinDetailsForGroup(int groupId)
@@ -344,12 +350,48 @@ namespace crds_angular.Services
 
             foreach (var pin in pins)
             {
+                pin.Title = GetPinTitle(pin);
+                pin.IconUrl = GetPinUrl(pin.PinType);
                 //calculate proximity for all pins to origin
                 if (pin.Address.Latitude == null) continue;
                 if (pin.Address.Longitude != null) pin.Proximity = GetProximity(originCoords, new GeoCoordinate(pin.Address.Latitude.Value, pin.Address.Longitude.Value));
             }
 
             return pins;
+        }
+
+        private string GetPinTitle(PinDto pin)
+        {
+            string jsonData="";
+            var lastname = string.IsNullOrEmpty(pin.LastName) ? " " : pin.LastName[0].ToString();
+            switch (pin.PinType)
+            {
+                case PinType.SITE:
+                    jsonData = $"{{ 'siteName': '{pin.SiteName}','isHost':  false,'isMe': false,'pinType': {(int)pin.PinType}}}";
+                    break;
+                case PinType.GATHERING:
+                    jsonData = $"{{ 'firstName': '{pin.FirstName}', 'lastInitial': '{lastname}','isHost':  true,'isMe': false,'pinType': {(int)pin.PinType}}}";
+                    break;
+                case PinType.PERSON:
+                    jsonData = $"{{ 'firstName': '{pin.FirstName}', 'lastInitial': '{lastname}','isHost':  false,'isMe': false,'pinType': {(int)pin.PinType}}}";
+                    break;
+            }
+           
+            return jsonData.Replace("'", "\"");
+        }
+        private string GetPinUrl(PinType pintype)
+        {
+            switch (pintype)
+            {
+                case PinType.GATHERING:
+                    return _connectGatheringPinUrl;
+                case PinType.SITE:
+                    return _connectSitePinUrl;
+                case PinType.PERSON:
+                    return _connectPersonPinUrl;
+                default:
+                    return _connectPersonPinUrl;
+            }
         }
 
         private List<PinDto> ConvertFromAwsSearchResponse(SearchResponse response)
