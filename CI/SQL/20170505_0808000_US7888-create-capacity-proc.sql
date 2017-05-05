@@ -172,43 +172,37 @@ BEGIN
 			173934
 		)
 
-	--DECLARE @Event_Room_ID INT
-	--DECLARE @Age_Bracket_Key NVARCHAR(20)
-	--DECLARE room_cursor CURSOR FOR SELECT Event_Room_ID, Age_Bracket_Key FROM @RoomCapacityData
+	DECLARE @Event_Room_ID INT
+	DECLARE @Age_Bracket_Key NVARCHAR(20)
+	DECLARE room_cursor CURSOR FOR SELECT Event_Room_ID, Age_Bracket_Key FROM @RoomCapacityData
 
-	--OPEN room_cursor
-	--FETCH NEXT FROM room_cursor INTO @Event_Room_ID, @Age_Bracket_Key
+	OPEN room_cursor
+	FETCH NEXT FROM room_cursor INTO @Event_Room_ID, @Age_Bracket_Key
 
-	--WHILE @@FETCH_STATUS = 0
-	--BEGIN
-	--	-- JPC - this is a little kludgy, might not hurt to explore refactoring if we think this is the correct approach 
-	--	DECLARE @Capacity INT = 0
-	--	DECLARE @Attendance INT = 0
+	WHILE @@FETCH_STATUS = 0
+	BEGIN
+		-- JPC - this is a little kludgy, might not hurt to explore refactoring if we think this is the correct approach 
+		DECLARE @Capacity INT = 0
+		DECLARE @Attendance INT = 0
 
-	--	-- this is jacked, needed to see why it's not right - 
-	--	SELECT @Capacity = (select SUM(Capacity) from cr_Bumping_Rules br 
-	--		INNER JOIN event_rooms er on br.to_event_room_id=er.Event_Room_ID where er.Event_ID=@EventId and er.Event_Room_ID != @Event_Room_ID
-	--		and br.From_Event_Room_ID = @Event_Room_ID
-	--		and er.Capacity IS NOT NULL)
+		SELECT @Capacity = (select SUM(Capacity) from cr_Bumping_Rules br 
+			INNER JOIN event_rooms er on br.to_event_room_id=er.Event_Room_ID where er.Event_ID=@EventId and er.Event_Room_ID != @Event_Room_ID
+			and br.From_Event_Room_ID = @Event_Room_ID
+			and er.Capacity IS NOT NULL)
 
-	--	--SELECT @Capacity
+		SELECT @Attendance = (
+			select SUM([dbo].crds_getEventParticipantStatusCount(ISNULL(@EventId, er.Room_ID), er.Room_ID, 3) +
+			[dbo].crds_getEventParticipantStatusCount(ISNULL(@EventId, er.Room_ID), er.Room_ID, 4)) AS 'Attendance' 
+			from cr_Bumping_Rules br INNER JOIN event_rooms er on br.to_event_room_id=er.Event_Room_ID where er.Event_ID=@EventId)
 
-	--	SELECT @Attendance = (
-	--		select SUM([dbo].crds_getEventParticipantStatusCount(ISNULL(@EventId, er.Room_ID), er.Room_ID, 3) +
-	--		[dbo].crds_getEventParticipantStatusCount(ISNULL(@EventId, er.Room_ID), er.Room_ID, 4)) AS 'Attendance' 
-	--		from cr_Bumping_Rules br INNER JOIN event_rooms er on br.to_event_room_id=er.Event_Room_ID where er.Event_ID=@EventId)
+		UPDATE @RoomCapacityData SET Capacity = Capacity + @Capacity WHERE Event_Room_ID = @Event_Room_ID AND Age_Bracket_Key = @Age_Bracket_Key
+		UPDATE @RoomCapacityData SET Attendance = Attendance + @Attendance WHERE Event_Room_ID = @Event_Room_ID AND Age_Bracket_Key = @Age_Bracket_Key
 
-	--	SELECT @Capacity, @Attendance, @Age_Bracket_Key
-	--	-- this is incrementing the room capacity - maybe, not sure - I feel like we need to do 
-	--	-- something different about adding to the capacity...
-	--	UPDATE @RoomCapacityData SET Capacity = Capacity + @Capacity WHERE Event_Room_ID = @Event_Room_ID AND Age_Bracket_Key = @Age_Bracket_Key
-	--	UPDATE @RoomCapacityData SET Attendance = Attendance + @Attendance WHERE Event_Room_ID = @Event_Room_ID AND Age_Bracket_Key = @Age_Bracket_Key
+		FETCH NEXT FROM room_cursor INTO @Event_Room_ID, @Age_Bracket_Key
+	END
 
-	--	FETCH NEXT FROM room_cursor INTO @Event_Room_ID, @Age_Bracket_Key
-	--END
-
-	--CLOSE room_cursor
-	--DEALLOCATE room_cursor
+	CLOSE room_cursor
+	DEALLOCATE room_cursor
 
 	SELECT * FROM @RoomCapacityData
 
