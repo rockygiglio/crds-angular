@@ -355,6 +355,13 @@ namespace crds_angular.Services
 
         private void RecordConnectInteraction(int groupId, int fromContactId, int toContactId, int connectionType, int connectionStatus)
         {
+            //only record anywhere group type interactions
+            var group = _groupService.GetGroupDetails(groupId);
+            if (group.GroupTypeId != _anywhereGroupType)
+            {
+                return;
+            }
+
             var connection = new MpConnectCommunication
             {
                 GroupId = groupId,
