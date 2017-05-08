@@ -195,8 +195,8 @@ BEGIN
 			[dbo].crds_getEventParticipantStatusCount(ISNULL(@EventId, er.Room_ID), er.Room_ID, 4)) AS 'Attendance' 
 			from cr_Bumping_Rules br INNER JOIN event_rooms er on br.to_event_room_id=er.Event_Room_ID where er.Event_ID=@EventId)
 
-		UPDATE @RoomCapacityData SET Capacity = Capacity + @Capacity WHERE Event_Room_ID = @Event_Room_ID AND Age_Bracket_Key = @Age_Bracket_Key
-		UPDATE @RoomCapacityData SET Attendance = Attendance + @Attendance WHERE Event_Room_ID = @Event_Room_ID AND Age_Bracket_Key = @Age_Bracket_Key
+		UPDATE @RoomCapacityData SET Capacity = Capacity + @Capacity WHERE Event_Room_ID = @Event_Room_ID AND Age_Bracket_Key = @Age_Bracket_Key AND @Capacity IS NOT NULL
+		UPDATE @RoomCapacityData SET Attendance = Attendance + @Attendance WHERE Event_Room_ID = @Event_Room_ID AND Age_Bracket_Key = @Age_Bracket_Key AND @Attendance IS NOT NULL
 
 		FETCH NEXT FROM room_cursor INTO @Event_Room_ID, @Age_Bracket_Key
 	END
