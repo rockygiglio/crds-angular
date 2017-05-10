@@ -3,6 +3,7 @@ GO
 
 DECLARE @ReportID int = 318;
 DECLARE @PageID int = 605;
+DECLARE @RoleID int = 1005;
 
 IF NOT EXISTS(SELECT 1 FROM [dbo].[dp_Reports] WHERE Report_ID = @ReportID)
 BEGIN
@@ -37,3 +38,16 @@ BEGIN
 			(@ReportID
 			,@PageID)
 END
+
+IF NOT EXISTS(SELECT 1 FROM [dbo].[dp_Role_Reports] WHERE Report_ID = @ReportID AND Role_ID = @RoleID)
+BEGIN
+INSERT INTO [dbo].[dp_Role_Reports]
+           ([Role_ID]
+           ,[Report_ID]
+           ,[Domain_ID])
+     VALUES
+           (@RoleID
+           ,@ReportID
+           ,1)
+END
+
