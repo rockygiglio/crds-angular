@@ -71,22 +71,13 @@
             <Value>=Parameters!DomainID.Value</Value>
             <rd:UserDefined>true</rd:UserDefined>
           </QueryParameter>
-          <QueryParameter Name="DomainID">
-            <Value>=Parameters!DomainID.Value</Value>
-          </QueryParameter>
           <QueryParameter Name="@UserID">
             <Value>=Parameters!UserID.Value</Value>
             <rd:UserDefined>true</rd:UserDefined>
           </QueryParameter>
-          <QueryParameter Name="UserID">
-            <Value>=Parameters!UserID.Value</Value>
-          </QueryParameter>
           <QueryParameter Name="@PageID">
             <Value>=Parameters!PageID.Value</Value>
             <rd:UserDefined>true</rd:UserDefined>
-          </QueryParameter>
-          <QueryParameter Name="PageID">
-            <Value>=Parameters!PageID.Value</Value>
           </QueryParameter>
         </QueryParameters>
         <CommandType>StoredProcedure</CommandType>
@@ -495,6 +486,6 @@
   <Language>en-US</Language>
   <ConsumeContainerWhitespace>true</ConsumeContainerWhitespace>
   <rd:ReportUnitType>Inch</rd:ReportUnitType>
-  <rd:ReportServerUrl>http://adminint.crossroads.net/reportserver</rd:ReportServerUrl>
+  <rd:ReportServerUrl>https://adminint.crossroads.net/reportserver</rd:ReportServerUrl>
   <rd:ReportID>6835654f-3954-4c4b-bf4b-64ce086231e9</rd:ReportID>
 </Report>
