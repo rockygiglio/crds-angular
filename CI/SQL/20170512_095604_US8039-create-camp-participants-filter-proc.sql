@@ -1,52 +1,50 @@
 USE [MinistryPlatform]
 GO
 
-DECLARE @ReportID int = 319;
-DECLARE @PageID int = 605;
-DECLARE @RoleID int = 1005;
+/****** Object:  StoredProcedure [dbo].[report_filter_camp_participants_crossroads]    Script Date: 5/12/2017 10:07:35 AM ******/
+SET ANSI_NULLS ON
+GO
 
-IF NOT EXISTS(SELECT 1 FROM [dbo].[dp_Reports] WHERE Report_ID = @ReportID)
+SET QUOTED_IDENTIFIER ON
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[report_filter_camp_participants_crossroads]') AND type in (N'P', N'PC'))
 BEGIN
-	SET IDENTITY_INSERT [dbo].[dp_Reports] ON
-	INSERT INTO [dbo].[dp_Reports]
-           ([Report_ID]
-		   ,[Report_Name]
-           ,[Description]
-           ,[Report_Path]
-           ,[Pass_Selected_Records]
-           ,[Pass_LinkTo_Records]
-           ,[On_Reports_Tab]
-           ,[Pass_Database_Connection])
-     VALUES
-           (@ReportID
-		   ,'Medical Info Report'
-           ,'Medical Info Report'
-           ,'/MPReports/Crossroads/CRDS Summer Camp Waiver'
-           ,0
-           ,0
-           ,0
-           ,0)
-	SET IDENTITY_INSERT [dbo].[dp_Reports] OFF
+EXEC dbo.sp_executesql @statement = N'CREATE PROCEDURE [dbo].[report_filter_camp_participants_crossroads] AS' 
+END
+GO
+
+ALTER PROCEDURE [dbo].[report_filter_camp_participants_crossroads]
+
+	@DomainID varchar(40)
+	,@UserID varchar(40)
+	,@PageID int
+	,@EventID int
+
+AS
+BEGIN
+
+	DECLARE @Domain_ID int = (SELECT Domain_ID FROM dp_Domains WHERE CAST(Domain_GUID as varchar(40)) = @DomainID)
+
+	SELECT P.Participant_ID, C.Display_Name
+	FROM cr_Event_Participant_Waivers W
+		JOIN Event_Participants EP ON W.Event_Participant_ID = EP.Event_Participant_ID
+		JOIN Participants P ON EP.Participant_ID = P.Participant_ID
+		JOIN Contacts C ON P.Contact_ID = C.Contact_ID
+	WHERE P.Domain_ID = @Domain_ID
+		AND W.Accepted = 1 
+		AND EP.Event_ID = @EventID
+		AND EP.Participation_Status_ID = 2 -- Registered
+
+	UNION 
+
+	SELECT NULL AS Participant_ID, '*All Participants' AS Display_Name
+		WHERE EXISTS(SELECT 1 FROM Events WHERE Events.Event_ID = @EventID) 
+
+	ORDER BY Display_Name
+
 END
 
-IF NOT EXISTS(SELECT 1 FROM [dbo].[dp_Report_Pages] WHERE Report_ID = @ReportID)
-BEGIN
-	INSERT INTO [dbo].[dp_Report_Pages]
-			(Report_ID
-			,Page_ID)
-	VALUES
-			(@ReportID
-			,@PageID)
-END
 
-IF NOT EXISTS(SELECT 1 FROM [dbo].[dp_Role_Reports] WHERE Report_ID = @ReportID AND Role_ID = @RoleID)
-BEGIN
-INSERT INTO [dbo].[dp_Role_Reports]
-           ([Role_ID]
-           ,[Report_ID]
-           ,[Domain_ID])
-     VALUES
-           (@RoleID
-           ,@ReportID
-           ,1)
-END
+GO
+
