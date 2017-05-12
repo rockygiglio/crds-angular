@@ -36,8 +36,9 @@ $singleInstanceMutex = New-Object System.Threading.Mutex($false, $uniqueName)
 
 try
 {   
+    echo "Trying to aquire mutex lock at $(Get-Date)"
 	$singleInstanceMutex.WaitOne()
-    echo "Aquired Mutex at $(Get-Date)"
+    echo "Aquired mutex lock at $(Get-Date)"
 
 	.\CI\MPDemoDatabaseBackup.ps1 -DBServer $BackupDBServer -DBName $DBName -BackupPath $BackupPath -DBUser $DBUser -DBPassword $DBPassword -ForceBackup $ForceBackup
 

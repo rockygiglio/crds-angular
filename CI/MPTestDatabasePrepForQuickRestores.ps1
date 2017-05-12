@@ -20,7 +20,7 @@ echo "Starting database prep for quick restores script at $(Get-Date)"
 
 $backupDateStamp = Get-Date -format 'yyyyMMdd';
 
-$restorFileName="$DBName-Backup-$backupDateStamp.trn";
+$restoreFileName="$DBName-Backup-$backupDateStamp.trn";
 $restoreFileNameFull="$BackupPath\$restoreFileName";
 
 $backupFileName="$DBName-Backup-$backupDateStamp-simple.trn";
