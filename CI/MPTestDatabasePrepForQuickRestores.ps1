@@ -65,9 +65,6 @@ WHERE
 	b.Physical_Device_Name like '$BackupPath%$backupFileName'
 "@;
 
-# TODO: Remove this, but is helpful for speeding up testing
-$ForceBackup = $TRUE;
-
 if ($ForceBackup -eq $FALSE)
 {
     echo "Checking if existing prepped backup exists at $(Get-Date)"

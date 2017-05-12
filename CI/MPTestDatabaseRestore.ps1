@@ -24,6 +24,11 @@ $connection = New-Object System.Data.SqlClient.SqlConnection;
 $connection.ConnectionString = $connectionString;
 $connection.Open();
 
+# Add SQL Message output to the console
+$sqlMessageHandler = [System.Data.SqlClient.SqlInfoMessageEventHandler] {param($sender, $event) Write-Host $event.Message };
+$connection.add_InfoMessage($sqlMessageHandler);
+$connection.FireInfoMessageEventOnUserErrors = $true;
+
 echo "Determine existing DB file locations at $(Get-Date)"
 
 # Determine the current log and data file locations, so we can relocate from the backup.
@@ -145,7 +150,7 @@ END;
 USE [$DBName];
 
 -- Update the user identity for mpadmin with the proper mpadmin user
-echo "Determine existing DB file locations at $(Get-Date)"echo "Determine existing DB file locations at $(Get-Date)"echo "Determine existing DB file locations at $(Get-Date)"UPDATE [dbo].[dp_User_Identities]
+UPDATE [dbo].[dp_User_Identities]
    SET [Value] = @scheduledTasksUser
 WHERE
    [User_Identity_ID] = 1;
