@@ -60,6 +60,9 @@ WHERE
 	b.Physical_Device_Name like '$BackupPath%$backupFileName'
 "@;
 
+# TODO: Remove this, but is helpful for speeding up testing
+$ForceBackup = $TRUE;
+
 if ($ForceBackup -eq $FALSE)
 {
     echo "Checking if existing prepped backup exists at $(Get-Date)"
@@ -158,8 +161,11 @@ if($exitCode -ne 0) {
 # Set DB to simple recovery and shrink to improve restore performance
 $simpleAndShrinkSql = @"
 USE [master];
+GO
 ALTER DATABASE [$DBName] SET RECOVERY SIMPLE WITH NO_WAIT
+GO
 DBCC SHRINKFILE (N'$logFileName' , 0, TRUNCATEONLY)
+GO
 "@;
 
 $command = $connection.CreateCommand();
