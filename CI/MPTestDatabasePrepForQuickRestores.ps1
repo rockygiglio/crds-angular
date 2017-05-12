@@ -33,6 +33,10 @@ $connection = New-Object System.Data.SqlClient.SqlConnection;
 $connection.ConnectionString = $connectionString;
 $connection.Open();
 
+$sqlMessageHandler = [System.Data.SqlClient.SqlInfoMessageEventHandler] {param($sender, $event) Write-Host $event.Message };
+$connection.add_InfoMessage($sqlMessageHandler);
+$connection.FireInfoMessageEventOnUserErrors = $true;
+
 $backupAlreadyExists = @"
 WITH LastBackup AS
 (
@@ -161,9 +165,10 @@ if($exitCode -ne 0) {
 # Set DB to simple recovery and shrink to improve restore performance
 $simpleAndShrinkSql = @"
 USE [master];
-GO
 ALTER DATABASE [$DBName] SET RECOVERY SIMPLE WITH NO_WAIT
 GO
+
+USE [$DBName]
 DBCC SHRINKFILE (N'$logFileName' , 0, TRUNCATEONLY)
 GO
 "@;
