@@ -37,8 +37,14 @@ $singleInstanceMutex = New-Object System.Threading.Mutex($false, $uniqueName)
 try
 {   
 	$singleInstanceMutex.WaitOne()
+    echo "Aquired Mutex at $(Get-Date)"
 
 	.\CI\MPDemoDatabaseBackup.ps1 -DBServer $BackupDBServer -DBName $DBName -BackupPath $BackupPath -DBUser $DBUser -DBPassword $DBPassword -ForceBackup $ForceBackup
+
+    if($LASTEXITCODE -eq 0) 
+    {
+        .\CI\MPTestDatabasePrepForQuickRestores.ps1 -DBServer $RestoreDBServer -DBName $DBName -BackupPath $BackupPath -DBUser $DBUser -DBPassword $DBPassword -ForceBackup $ForceBackup
+    }
 
     if($LASTEXITCODE -eq 0) 
     {
