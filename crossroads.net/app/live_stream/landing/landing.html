@@ -19,6 +19,29 @@
     </div>
   </section>
 
+  <section class="landing-connect">
+    <header class="crds-hero">
+      <div>
+        <div dynamic-content="$root.MESSAGES.streamingLandingConnectIntro.content | html"></div>
+      </div>
+    </header>
+    <div class="container">
+      <div>
+        <article>
+          <div dynamic-content="$root.MESSAGES.streamingLandingConnectMap.content | html" ></div>
+        </article>
+        <article>
+          <div dynamic-content="$root.MESSAGES.streamingLandingConnectNearby.content | html" ></div>
+        </article>
+        <article>
+          <div dynamic-content="$root.MESSAGES.streamingLandingConnectTogether.content | html" ></div>
+        </article>
+      </div>
+    </div>
+    <br>
+    <div class="text-center" dynamic-content="$root.MESSAGES.streamingLandingConnectButton.content | html" ></div>
+  </section>
+
   <countdown-intro ng-show="landing.streamStatus === 'Upcoming'"></countdown-intro>
   <current-series></current-series>
 
