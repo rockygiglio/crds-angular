@@ -37,7 +37,6 @@ namespace crds_angular.Services
             var response = _servicesRestClient.Execute(request);
             if (response.StatusCode != HttpStatusCode.OK)
             {
-                DomainLockedApiKeyFilter a;
                 throw new ApplicationException($"Received {response.StatusCode} status code from corkboard api.");
             }
         }
