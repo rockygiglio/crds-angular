@@ -48,6 +48,8 @@ $(document).ready(function() {
           exploreTweens['opening_fades'] = tweenFadeFast('.opening', 1.5);
           break;
         case 2:
+          // Remove bubbles if populated
+          $("#bubbles .bubble").remove();
           //Map paragraph
           exploreTweens['map_text'] = tweenFadeUp('.map');
           break;
@@ -128,6 +130,9 @@ $(document).ready(function() {
 
           if (direction == 'down') {
               exploreTweens['studentministry_text'] = tweenFadeUp('.studentministry', .3);
+          }
+          if (direction == 'up') {
+            $("#bubbles .bubble").remove();
           }
           break;
         case 4:
