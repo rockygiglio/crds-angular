@@ -20,6 +20,7 @@ using crds_angular.Models.AwsCloudsearch;
 using crds_angular.Models.Crossroads.Groups;
 using Crossroads.Web.Common.Configuration;
 using MinistryPlatform.Translation.Models.Finder;
+using MpCommunication = MinistryPlatform.Translation.Models.MpCommunication;
 
 namespace crds_angular.Services
 {

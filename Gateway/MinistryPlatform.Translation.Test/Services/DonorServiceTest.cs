@@ -13,6 +13,7 @@ using Crossroads.Web.Common.MinistryPlatform;
 using Crossroads.Web.Common.Security;
 using MinistryPlatform.Translation.Enum;
 using MinistryPlatform.Translation.Models;
+using MpCommunication = MinistryPlatform.Translation.Models.MpCommunication;
 using MinistryPlatform.Translation.Repositories;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 using Moq;
