@@ -92,6 +92,16 @@ namespace MinistryPlatform.Translation.Repositories
             _ministryPlatformRest.UsingAuthenticationToken(apiToken).Put("Participants", update);
         }
 
+        public void DisablePin(int participantId)
+        {
+            var dict = new Dictionary<string, object> { { "Participant_ID", participantId }, { "Show_On_Map", false } };
+
+            var update = new List<Dictionary<string, object>> { dict };
+
+            var apiToken = _apiUserRepository.GetToken();
+            _ministryPlatformRest.UsingAuthenticationToken(apiToken).Put("Participants", update);
+        }
+
         public List<SpPinDto> GetPinsInRadius(GeoCoordinate originCoords)
         {
             var apiToken = _apiUserRepository.GetToken();
@@ -147,7 +157,7 @@ namespace MinistryPlatform.Translation.Repositories
                     connection.CommunicationStatusId == _configurationWrapper.GetConfigIntValue("ConnectCommunicationStatusDeclined"))
                 {
                     string filter = $"Group_ID = {connection.GroupId} AND From_Contact_ID = {connection.FromContactId} AND To_Contact_ID = {connection.ToContactId} AND Communication_Type_ID = {connection.CommunicationTypeId}";
-                    const string columnList = ".Connect_Communications_ID";
+                    const string columnList = "Connect_Communications_ID";
 
                     var communicationsToUpdate = _ministryPlatformRest.UsingAuthenticationToken(apiToken).Search<MpConnectCommunication>(filter , columnList).ToList();
                     foreach (var communication  in communicationsToUpdate)

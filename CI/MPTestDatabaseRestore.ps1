@@ -13,15 +13,23 @@ Param (
   [string]$DBUser = $(Get-ChildItem Env:MP_TARGET_DB_USER).Value, # Default to environment variable
   [string]$DBPassword = $(Get-ChildItem Env:MP_TARGET_DB_PASSWORD).Value # Default to environment variable
 )
+echo "Starting database restore script at $(Get-Date)"
 
 $backupDateStamp = Get-Date -format 'yyyyMMdd';
-$backupFileName="$BackupPath\$DBName-Backup-$backupDateStamp.trn"
+$backupFileName="$BackupPath\$DBName-Backup-$backupDateStamp-simple.trn"
 
 $connectionString = "Server=$DBServer;uid=$DBUser;pwd=$DBPassword;Database=master;Integrated Security=False;";
 
 $connection = New-Object System.Data.SqlClient.SqlConnection;
 $connection.ConnectionString = $connectionString;
 $connection.Open();
+
+# Add SQL Message output to the console
+$sqlMessageHandler = [System.Data.SqlClient.SqlInfoMessageEventHandler] {param($sender, $event) Write-Host $event.Message };
+$connection.add_InfoMessage($sqlMessageHandler);
+$connection.FireInfoMessageEventOnUserErrors = $true;
+
+echo "Determine existing DB file locations at $(Get-Date)"
 
 # Determine the current log and data file locations, so we can relocate from the backup.
 # This is needed because the servers are not setup with identical drives and paths.
@@ -48,6 +56,8 @@ $dataFilePhysicalName = $dataFile.physical_name;
 
 $logFileName = $logFile.name;
 $logFilePhysicalName = $logFile.physical_name;
+
+echo "Finished determining existing DB file locations at $(Get-Date)"
 
 # Restore the database - need to take it offline, restore, then bring back online
 $restoreSql = @"
