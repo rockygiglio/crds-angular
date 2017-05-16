@@ -92,6 +92,16 @@ namespace MinistryPlatform.Translation.Repositories
             _ministryPlatformRest.UsingAuthenticationToken(apiToken).Put("Participants", update);
         }
 
+        public void DisablePin(int participantId)
+        {
+            var dict = new Dictionary<string, object> { { "Participant_ID", participantId }, { "Show_On_Map", false } };
+
+            var update = new List<Dictionary<string, object>> { dict };
+
+            var apiToken = _apiUserRepository.GetToken();
+            _ministryPlatformRest.UsingAuthenticationToken(apiToken).Put("Participants", update);
+        }
+
         public List<SpPinDto> GetPinsInRadius(GeoCoordinate originCoords)
         {
             var apiToken = _apiUserRepository.GetToken();

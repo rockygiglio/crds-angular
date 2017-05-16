@@ -181,6 +181,15 @@ namespace crds_angular.test.Services
         }
 
         [Test]
+        public void ShouldDisablePin()
+        {
+            _mpFinderRepository.Setup(m => m.EnablePin(123));
+            _fixture.EnablePin(123);
+            _fixture.DisablePin(123);
+            _mpFinderRepository.VerifyAll();
+        }
+
+        [Test]
         public void ShouldGetGeoCoordinatesFromLatLang()
         {
             const string address = "123 Main Street, Walton, KY";

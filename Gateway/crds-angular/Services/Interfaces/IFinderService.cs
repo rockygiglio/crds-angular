@@ -12,6 +12,7 @@ namespace crds_angular.Services.Interfaces
         PinDto GetPinDetailsForPerson(int participantId);
         PinDto GetPinDetailsForGroup(int groupId);
         void EnablePin(int participantId);
+        void DisablePin(int participantId);
         void UpdateHouseholdAddress(PinDto pin);
         AddressDTO GetAddressForIp(string ip);
         List<PinDto> GetMyPins(string token, GeoCoordinate originCoords, int contactId);        

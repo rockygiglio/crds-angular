@@ -86,6 +86,33 @@ namespace crds_angular.Services
         }
 
 
+        public UploadDocumentsResponse DeleteSingleConnectRecordInAwsCloudsearch(int participantId, int pinType)
+        {
+            var cloudSearch = new AmazonCloudSearchDomainClient(AwsAccessKeyId, AwsSecretAccessKey, AmazonSearchUrl);
+
+            var results = SearchConnectAwsCloudsearch($"(and participantid:{participantId} pintype:{pinType})", "_no_fields");
+            var deletelist = new List<AwsCloudsearchDto>();
+            foreach (var hit in results.Hits.Hit)
+            {
+                var deleterec = new AwsCloudsearchDto
+                {
+                    id = hit.Id,
+                    type = "delete"
+                };
+                deletelist.Add(deleterec);
+            }
+            // serialize
+            var json = JsonConvert.SerializeObject(deletelist, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+            var ms = new MemoryStream(Encoding.UTF8.GetBytes(json));
+            var upload = new UploadDocumentsRequest()
+            {
+                ContentType = ContentType.ApplicationJson,
+                Documents = ms
+            };
+
+            return (cloudSearch.UploadDocuments(upload));
+        }
+
 
 
         private List<AwsCloudsearchDto> GetDataForCloudsearch()
