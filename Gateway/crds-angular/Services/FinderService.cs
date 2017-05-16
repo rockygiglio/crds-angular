@@ -163,6 +163,11 @@ namespace crds_angular.Services
             _finderRepository.EnablePin(participantId);
         }
 
+        public void DisablePin(int participantId)
+        {
+            _finderRepository.DisablePin(participantId);
+        }
+
         public PinDto UpdateGathering(PinDto pin)
         {
             // Update coordinates
