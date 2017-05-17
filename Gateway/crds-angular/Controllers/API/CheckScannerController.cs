@@ -20,7 +20,7 @@ using Crossroads.Web.Common.Security;
 
 namespace crds_angular.Controllers.API
 {
-    // TODO - Once Ez-Scan has been updated to send a client API key, remove the IgnoreClientApiKey attribute
+    // TODO - Once Ez-Scan has been updated to send a client API key (US7764), remove the IgnoreClientApiKey attribute
     [IgnoreClientApiKey]
     public class CheckScannerController : MPAuth
     {
