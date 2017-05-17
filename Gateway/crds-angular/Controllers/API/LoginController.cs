@@ -113,7 +113,7 @@ namespace crds_angular.Controllers.API
         [VersionedRoute(template: "login", minimumVersion: "1.0.0")]
         [Route("login")]
         [ResponseType(typeof (LoginReturn))]
-        // TODO - Once Ez-Scan has been updated to send a client API key, remove the IgnoreClientApiKey attribute
+        // TODO - Once Ez-Scan has been updated to send a client API key (US7764), remove the IgnoreClientApiKey attribute
         [IgnoreClientApiKey]
         public IHttpActionResult Post([FromBody] Credentials cred)
         {
