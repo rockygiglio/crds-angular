@@ -387,6 +387,16 @@ namespace crds_angular.Services
 
                 pins = this.TransformGroupDtoToPinDto(groupDTOs, _finderGroupTool);
 
+                //TODO: Move this out into a separate method - it violates DRY
+                foreach (var pin in pins)
+                {
+                    pin.Title = GetPinTitle(pin);
+                    pin.IconUrl = GetPinUrl(pin.PinType);
+                    //calculate proximity for all pins to origin
+                    if (pin.Address.Latitude == null) continue;
+                    if (pin.Address.Longitude != null) pin.Proximity = GetProximity(originCoords, new GeoCoordinate(pin.Address.Latitude.Value, pin.Address.Longitude.Value));
+                }
+
             }
             else
             {
@@ -412,6 +422,9 @@ namespace crds_angular.Services
                 case PinType.PERSON:
                     jsonData = $"{{ 'firstName': '{pin.FirstName}', 'lastInitial': '{lastname}','isHost':  false,'isMe': false,'pinType': {(int) pin.PinType}}}";
                     break;
+                case PinType.SMALL_GROUP:
+                    jsonData = $"{{ 'firstName': '{pin.Gathering.GroupName}', 'lastInitial': '{lastname}','isHost':  false,'isMe': false,'pinType': {(int)pin.PinType}}}";
+                    break; 
             }
 
             return jsonData.Replace("'", "\"");
