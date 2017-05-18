@@ -12,7 +12,7 @@ namespace crds_angular.Services.Interfaces
         void SetInterested(string token);
         IObservable<int> SetApplied(string token );
         IObservable<int> SaveSpiritualGrowth(SpiritualGrowthDTO spiritualGrowth);
-        IObservable<int> SendReferenceEmail(int contactId);
+        IObservable<bool> SendReferenceEmail(int contactId);
     }
     
 }

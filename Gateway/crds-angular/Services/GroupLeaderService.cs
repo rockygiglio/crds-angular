@@ -178,6 +178,37 @@ namespace crds_angular.Services
             });
         }
 
+        public IObservable<bool> SendReferenceEmail(int contactId)
+        {
+            var formId = _configWrapper.GetConfigIntValue("GroupLeaderFormId");
+            var formFieldId = _configWrapper.GetConfigIntValue("GroupLeaderFormReferenceContact");
+            var groupContactId = _configWrapper.GetConfigIntValue("GroupLeaderFormReferenceContact");
+            var groupContactEmail = _configWrapper.GetConfigValue("GroupsEmailAddress");
+
+            var applicantData = Observable.Return<MpParticipant>(_participantRepository.GetParticipant(contactId)).Zip(
+                Observable.Return<MpMyContact>(_contactRepository.GetContactById(contactId)),
+                Observable.Return<string>(_formSubmissionRepository.GetFormResponseAnswer(formId, contactId, formFieldId, null)),
+                (participant, contact, answer) => new Dictionary<string, object>
+                {
+                    {"participant", participant},
+                    {"contact", contact},
+                    {"referenceContactId", answer }
+                });
+
+            applicantData.Subscribe((data) =>
+            {
+                try
+                {
+
+                }
+                catch (Exception e)
+                {
+                    
+                }                
+            });
+
+        }
+
         private void SendConfirmationEmail(int toContactId, string toEmailAddress)
         {         
             var templateId = _configWrapper.GetConfigIntValue("GroupLeaderConfirmationTemplate");

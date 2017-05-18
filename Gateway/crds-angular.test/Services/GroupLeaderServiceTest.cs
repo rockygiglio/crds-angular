@@ -348,23 +348,35 @@ namespace crds_angular.test.Services
             Assert.IsInstanceOf<Exception>);
         }
 
+        [Test]
         public void ShouldSendAnEmailToThePersonsReference()
         {
             const int contactId = 12345;
             const int referenceContactId = 9876545;
             var contact = ContactMock(contactId);
+            var referenceContact = ContactMock(referenceContactId);
 
             _participantRepository.Setup(m => m.GetParticipant(contactId)).Returns(ParticipantMock());
             _contactMock.Setup(m => m.GetContactById(contactId)).Returns(contact);
+
             _configWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderFormId")).Returns(29);
             _configWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderFormReferenceContact")).Returns(1519);
+            _configWrapper.Setup(m => m.GetConfigIntValue("GroupsContactId")).Returns(1256);
+            _configWrapper.Setup(m => m.GetConfigValue("GroupsEmailAddress")).Returns("groups@crossroads.net");
+
             _formService.Setup(m => m.GetFormResponseAnswer(29, contactId, 1519, null)).Returns(referenceContactId.ToString());
 
-            _contactMock.Setup(m => m.GetContactById(referenceContactId)).Returns(ContactMock(referenceContactId));
+            _contactMock.Setup(m => m.GetContactById(referenceContactId)).Returns(referenceContact);
             _configWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderReferenceEmailTemplate")).Returns(2018);
-            _communicationRepository.Setup(m => m.GetTemplateAsCommunication(ReferenceCommunication(2018, new Dictionary<string, object>(), contact));
 
-            _communicationRepository.Setup(m => m.SendMessage());
+            var mergeData = new Dictionary<string, object>();
+            var communication = ReferenceCommunication(2018, mergeData, referenceContact);
+
+            _communicationRepository.Setup(m => m.GetTemplateAsCommunication(2018, It.IsAny<int>(), "group@crossroads.net", It.IsAny<int>(), "groups@crossroads.net", referenceContact.Contact_ID, referenceContact.Email_Address, It.IsAny<Dictionary<string, object>>() ));           
+            _communicationRepository.Setup(m => m.SendMessage(communication, false));
+
+            var result = _fixture.SendReferenceEmail(contactId).Wait();
+            Assert.IsTrue(result);
 
 
         }
