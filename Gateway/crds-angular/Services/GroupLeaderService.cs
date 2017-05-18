@@ -86,8 +86,7 @@ namespace crds_angular.Services
                     observer.OnError(new ApplicationException("Unable to submit Set the participant as applied", e));
                 }                
                 return Disposable.Empty;
-            });
-           
+            });           
         }
 
         public void SetInterested(string token)

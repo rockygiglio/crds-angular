@@ -348,6 +348,57 @@ namespace crds_angular.test.Services
             Assert.IsInstanceOf<Exception>);
         }
 
+        public void ShouldSendAnEmailToThePersonsReference()
+        {
+            const int contactId = 12345;
+            const int referenceContactId = 9876545;
+            var contact = ContactMock(contactId);
+
+            _participantRepository.Setup(m => m.GetParticipant(contactId)).Returns(ParticipantMock());
+            _contactMock.Setup(m => m.GetContactById(contactId)).Returns(contact);
+            _configWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderFormId")).Returns(29);
+            _configWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderFormReferenceContact")).Returns(1519);
+            _formService.Setup(m => m.GetFormResponseAnswer(29, contactId, 1519, null)).Returns(referenceContactId.ToString());
+
+            _contactMock.Setup(m => m.GetContactById(referenceContactId)).Returns(ContactMock(referenceContactId));
+            _configWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderReferenceEmailTemplate")).Returns(2018);
+            _communicationRepository.Setup(m => m.GetTemplateAsCommunication(ReferenceCommunication(2018, new Dictionary<string, object>(), contact));
+
+            _communicationRepository.Setup(m => m.SendMessage());
+
+
+        }
+
+        private static MpCommunication ReferenceCommunication(int templateId, Dictionary<string, object> mergeData, MpMyContact toContact)
+        {
+            var from = new MpContact {ContactId = 122222, EmailAddress = "groups@crossroads.net"};
+            return new MpCommunication
+            {
+                AuthorUserId = 1,
+                DomainId = 1,
+                EmailBody = "<h1> hello </h1>",
+                FromContact = from,
+                ReplyToContact = from,
+                TemplateId = templateId,
+                EmailSubject = "whateva",
+                MergeData = mergeData,
+                ToContacts = new List<MpContact>() {new MpContact {EmailAddress = toContact.Email_Address, ContactId = toContact.Contact_ID} }
+            };
+        }
+
+        private static MpMessageTemplate ReferenceTemplate()
+        {
+            return new MpMessageTemplate
+            {
+                Body = "<h1> hello </h1>",
+                FromContactId = 122222,
+                FromEmailAddress = "groups@crossroads.net",
+                ReplyToContactId = 1222222,
+                ReplyToEmailAddress = "groups@crossroads.net",
+                Subject = "whateva"
+            };
+        }
+
         private static GroupLeaderProfileDTO GroupLeaderMock()
         {
             return new GroupLeaderProfileDTO()
@@ -367,6 +418,17 @@ namespace crds_angular.test.Services
             };
         }
 
+        private static MpMyContact ContactMock(int contactId)
+        {
+            return new MpMyContact
+            {
+                First_Name = "Blah",
+                Last_Name = "Halb",
+                Contact_ID = contactId,
+                Nickname = "B"
+            };
+        }
+
         private static MpParticipant ParticipantMock()
         {
             return new MpParticipant
@@ -374,7 +436,7 @@ namespace crds_angular.test.Services
                 ContactId = 12345,
                 ParticipantId = 67890,
                 GroupLeaderStatus = 1,
-                DisplayName = "Fakerson, Fakey"
+                DisplayName = "Fakerson, Fakey"                
             };
         }
 
