@@ -152,16 +152,15 @@ namespace crds_angular.Services
 
         public PinDto GetPinDetailsForPerson(int participantId)
         {
-            //first get pin details
             var pinDetails = Mapper.Map<PinDto>(_finderRepository.GetPinDetails(participantId));
 
             //make sure we have a lat/long
-            if (pinDetails != null && pinDetails.Address.Latitude != null && pinDetails.Address.Longitude != null)
-            {
-                _addressService.SetGeoCoordinates(pinDetails.Address);
-                pinDetails.Address.AddressLine1 = "";
-                pinDetails.Address.AddressLine2 = "";
-            }
+            //if (pinDetails != null && pinDetails.Address.Latitude != null && pinDetails.Address.Longitude != null)
+            //{
+            //    // _addressService.SetGeoCoordinates(pinDetails.Address);
+            //    pinDetails.Address.AddressLine1 = "";
+            //    pinDetails.Address.AddressLine2 = "";
+            //}
 
             pinDetails.PinType = PinType.PERSON;
             return pinDetails;
@@ -181,6 +180,7 @@ namespace crds_angular.Services
         {
             // Update coordinates
             var coordinates = _addressService.GetGeoLocationCascading(pin.Gathering.Address);
+
             pin.Gathering.Address.Latitude = coordinates.Latitude;
             pin.Gathering.Address.Longitude = coordinates.Longitude;
             pin.Gathering.GroupTypeId = _anywhereGroupType;
@@ -216,9 +216,11 @@ namespace crds_angular.Services
 
         public void UpdateHouseholdAddress(PinDto pin)
         {
-            var coordinates = _addressService.GetGeoLocationCascading(pin.Address);
-            pin.Address.Latitude = coordinates.Latitude;
-            pin.Address.Longitude = coordinates.Longitude;
+            // Already have good coordinates
+            //var coordinates = _addressService.GetGeoLocationCascading(pin.Address);
+            //pin.Address.Latitude = coordinates.Latitude;
+            //pin.Address.Longitude = coordinates.Longitude;
+
             var householdDictionary = (pin.Address.AddressID == null)
                 ? new Dictionary<string, object> {{"Household_ID", pin.Household_ID}}
                 : null;
@@ -370,9 +372,6 @@ namespace crds_angular.Services
                                                                                      originCoords,
                                                                                      boundingBox);
                 pins = ConvertFromAwsSearchResponse(cloudReturn);
-
-                // TODO do I need to return and set back into pins object???
-                pins = this.AddPinMetaData(pins, originCoords);
             }
             else if (finderType.Equals(_finderGroupTool))
             {
@@ -380,18 +379,16 @@ namespace crds_angular.Services
                 var groupTypeIds = new int[1] {_smallGroupType};
                 var groupDTOs = _groupToolService.SearchGroups(groupTypeIds);
 
+                // TODO - do I have an address ID?? NO - need to add to SP
+
                 pins = this.TransformGroupDtoToPinDto(groupDTOs, finderType);
-
-                // TODO do I need to return and set back into pins object???
-                pins = this.AddPinMetaData(pins, originCoords);
-
             }
             else
-            {
-                // TODO handle error case - no matching connect type passed in
+            {     
+                throw new Exception("No pin search performed - finder type not found");
             }
 
-
+            this.AddPinMetaData(pins, originCoords);
             return pins;
         }
 
@@ -562,7 +559,6 @@ namespace crds_angular.Services
             var groupDTOs = groupsByType.Select(Mapper.Map<MpGroup, GroupDTO>).ToList();
 
             // TODO when do MY STUFF for Group Tool, will need to account for changing this flag to _finderGroupTool
-            // TODO - go back to code deleted out of TransformGroupDtoToPinDto - need for both CONNECT and GROUPS
             var pins = this.TransformGroupDtoToPinDto(groupDTOs, _finderConnect);
 
             return pins;
@@ -570,6 +566,7 @@ namespace crds_angular.Services
 
         public GeoCoordinate GetGeoCoordsFromAddressOrLatLang(string address, string lat, string lng)
         {
+
             double latitude = Convert.ToDouble(lat.Replace("$", "."));
             double longitude = Convert.ToDouble(lng.Replace("$", "."));
 
@@ -816,9 +813,8 @@ namespace crds_angular.Services
                     pin.Gathering = group;
                     pin.PinType = PinType.SMALL_GROUP;
 
-                    pin.FirstName = "FirstNamePlaceHolder"; // TODO missing data - add to SP and add to GroupDTO  //group.PrimaryContactName
-                                                            // OR wait and add in with AWS
-                    pin.LastName = "LastNamePlaceHolder"; // TODO missing data - add to SP  and add to GroupDTO
+                    pin.FirstName = "FirstNamePlaceHolder"; // TODO wait and add in with AWS Data returned                                                            
+                    pin.LastName = "LastNamePlaceHolder"; // TODO wait and add in with AWS Data returned
                     pin.Gathering.ContactId = group.ContactId;
                     pin.Participant_ID = group.ParticipantId;
 
@@ -836,7 +832,16 @@ namespace crds_angular.Services
                 pin.Title = GetPinTitle(pin);
                 pin.IconUrl = GetPinUrl(pin.PinType);
 
-                // TODO also handle pins with address, but no coordinates here?
+                // Have GROUP address, but no coordinates, get geocordinates and save in MP
+                if ((pin.PinType == PinType.GATHERING || pin.PinType == PinType.SMALL_GROUP) && pin.Address.PostalCode != null && pin.Address.Longitude == null)
+                {
+                    // TODO - Everything will go to a state level with bad address - because state is required select control
+                    _addressService.SetGroupPinGeoCoordinates(pin);
+
+                    // TODO check error handling here - I did an update on non-existant group and hosed up AWS
+                    // TODO uncomment when small groups are in AWS
+                    // _awsCloudsearchService.UploadNewPinToAws(pin);
+                }
 
                 //calculate proximity for all pins to origin
                 if (pin.Address.Latitude == null) continue;

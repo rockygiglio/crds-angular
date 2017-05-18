@@ -210,6 +210,9 @@ namespace crds_angular.Controllers.API
 
                     if (pin.Address != null && string.IsNullOrEmpty(pin.Address.AddressLine1) == false)
                     {
+                        var coordinates = _addressService.GetGeoLocationCascading(pin.Gathering.Address);
+                        pin.Address.Longitude = coordinates.Longitude;
+                        pin.Address.Latitude = coordinates.Latitude;
                         _finderService.UpdateHouseholdAddress(pin);
                     }
 
