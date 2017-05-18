@@ -379,8 +379,6 @@ namespace crds_angular.Services
                 var groupTypeIds = new int[1] {_smallGroupType};
                 var groupDTOs = _groupToolService.SearchGroups(groupTypeIds);
 
-                // TODO - do I have an address ID?? NO - need to add to SP
-
                 pins = this.TransformGroupDtoToPinDto(groupDTOs, finderType);
             }
             else

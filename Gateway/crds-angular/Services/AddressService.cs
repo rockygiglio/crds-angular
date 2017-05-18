@@ -48,6 +48,7 @@ namespace crds_angular.Services
         public GeoCoordinate GetGeoLocationCascading(AddressDTO addressReal)
         {
             var address = new AddressDTO(addressReal);
+            var stateTemp = address.State;
 
             var coords = new GeoCoordinate();
             //get by the full address. If that fails get by city state. If that fails get by state only
@@ -67,13 +68,26 @@ namespace crds_angular.Services
                 {
                     try
                     {
+                        // only zip
                         address.City = "";
-                        address.PostalCode = "";
+                        address.State = "";
                         coords = _addressGeocodingService.GetGeoCoordinates(address);
                     }
                     catch (InvalidAddressException )
                     {
-                        _logger.Debug("Using default location for geocode.");
+                        try
+                        {
+                            // only state
+                            address.State = stateTemp;
+                            address.PostalCode = "";
+                            coords = _addressGeocodingService.GetGeoCoordinates(address);
+
+                            _logger.Debug("Address geocoded on state level.");
+                        }
+                        catch (InvalidAddressException)
+                        {
+                            _logger.Debug("Unable to geocode address.");
+                        }
                     }
                 }
             }
