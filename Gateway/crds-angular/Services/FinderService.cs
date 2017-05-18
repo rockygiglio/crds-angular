@@ -67,6 +67,7 @@ namespace crds_angular.Services
         private readonly string _connectPersonPinUrl;
         private readonly string _connectSitePinUrl;
         private readonly string _connectGatheringPinUrl;
+        private readonly string _connectSmallGroupPinUrl;
         private readonly int _smallGroupType;
 
         private readonly Random _random = new Random(DateTime.Now.Millisecond);
@@ -122,6 +123,7 @@ namespace crds_angular.Services
             _connectPersonPinUrl = _configurationWrapper.GetConfigValue("ConnectPersonPinUrl");
             _connectSitePinUrl = _configurationWrapper.GetConfigValue("ConnectSitePinUrl");
             _connectGatheringPinUrl = _configurationWrapper.GetConfigValue("ConnectGatheringPinUrl");
+            _connectSmallGroupPinUrl = _configurationWrapper.GetConfigValue("ConnectSmallGroupPinUrl");
             _smallGroupType = _configurationWrapper.GetConfigIntValue("SmallGroupTypeId");
 
         }
@@ -369,15 +371,8 @@ namespace crds_angular.Services
                                                                                      boundingBox);
                 pins = ConvertFromAwsSearchResponse(cloudReturn);
 
-                // TODO need similar looping for group tool groups??
-                foreach (var pin in pins)
-                {
-                    pin.Title = GetPinTitle(pin);
-                    pin.IconUrl = GetPinUrl(pin.PinType);
-                    //calculate proximity for all pins to origin
-                    if (pin.Address.Latitude == null) continue;
-                    if (pin.Address.Longitude != null) pin.Proximity = GetProximity(originCoords, new GeoCoordinate(pin.Address.Latitude.Value, pin.Address.Longitude.Value));
-                }
+                // TODO do I need to return and set back into pins object???
+                pins = this.AddPinMetaData(pins, originCoords);
             }
             else if (finderType.Equals(_finderGroupTool))
             {
@@ -385,17 +380,10 @@ namespace crds_angular.Services
                 var groupTypeIds = new int[1] {_smallGroupType};
                 var groupDTOs = _groupToolService.SearchGroups(groupTypeIds);
 
-                pins = this.TransformGroupDtoToPinDto(groupDTOs, _finderGroupTool);
+                pins = this.TransformGroupDtoToPinDto(groupDTOs, finderType);
 
-                //TODO: Move this out into a separate method - it violates DRY
-                foreach (var pin in pins)
-                {
-                    pin.Title = GetPinTitle(pin);
-                    pin.IconUrl = GetPinUrl(pin.PinType);
-                    //calculate proximity for all pins to origin
-                    if (pin.Address.Latitude == null) continue;
-                    if (pin.Address.Longitude != null) pin.Proximity = GetProximity(originCoords, new GeoCoordinate(pin.Address.Latitude.Value, pin.Address.Longitude.Value));
-                }
+                // TODO do I need to return and set back into pins object???
+                pins = this.AddPinMetaData(pins, originCoords);
 
             }
             else
@@ -440,6 +428,8 @@ namespace crds_angular.Services
                     return _connectSitePinUrl;
                 case PinType.PERSON:
                     return _connectPersonPinUrl;
+                case PinType.SMALL_GROUP:
+                    return _connectSmallGroupPinUrl;
                 default:
                     return _connectPersonPinUrl;
             }
@@ -572,6 +562,7 @@ namespace crds_angular.Services
             var groupDTOs = groupsByType.Select(Mapper.Map<MpGroup, GroupDTO>).ToList();
 
             // TODO when do MY STUFF for Group Tool, will need to account for changing this flag to _finderGroupTool
+            // TODO - go back to code deleted out of TransformGroupDtoToPinDto - need for both CONNECT and GROUPS
             var pins = this.TransformGroupDtoToPinDto(groupDTOs, _finderConnect);
 
             return pins;
@@ -807,41 +798,29 @@ namespace crds_angular.Services
                     var pin = Mapper.Map<PinDto>(group);
                     pin.Gathering = group;
 
-                    if (pin.Contact_ID != null)
-                    {
-                        pin.Participant_ID = _participantRepository.GetParticipant(pin.Contact_ID.Value).ParticipantId;
-                        //TODO get rid of this contact call
-                        var contact = _contactRepository.GetContactById((int)pin.Contact_ID);
-                        pin.FirstName = contact.First_Name;
-                        pin.LastName = contact.Last_Name;
-                        pin.Gathering.ContactId = pin.Contact_ID.Value;
-                    }
+                    pin.Gathering.ContactId = group.ContactId;
+                    pin.Participant_ID = group.ParticipantId;
+
+                    // TODO need to get rid of this call to GetContactById if get name from search instead
+                    var contact = _contactRepository.GetContactById((int)pin.Contact_ID);
+                    pin.FirstName = contact.First_Name;
+                    pin.LastName = contact.Last_Name;
                     pins.Add(pin);
                 }
             }
             else if (finderType.Equals(_finderGroupTool))
             {
-                // TODO - longitude and latitude and proximity included here???
                 foreach (var group in groupDTOs)
                 {
                     var pin = Mapper.Map<PinDto>(group);
                     pin.Gathering = group;
                     pin.PinType = PinType.SMALL_GROUP;
 
-                    pin.FirstName = group.PrimaryContactName;
+                    pin.FirstName = "FirstNamePlaceHolder"; // TODO missing data - add to SP and add to GroupDTO  //group.PrimaryContactName
+                                                            // OR wait and add in with AWS
+                    pin.LastName = "LastNamePlaceHolder"; // TODO missing data - add to SP  and add to GroupDTO
                     pin.Gathering.ContactId = group.ContactId;
-
-                    // if (pin.Contact_ID != null)
-                    // {
-                        // TODO getParticipant failed on small groups --- fix??
-                        //pin.Participant_ID = _participantRepository.GetParticipant(pin.Contact_ID.Value).ParticipantId;                        
-
-                        // TODO must get rid of additional call to GetContactById - VERY SLOW and can get data on group returned from SP (in groupDTOs object above)
-                        //var contact = _contactRepository.GetContactById((int)pin.Contact_ID);
-                        //pin.FirstName = contact.First_Name;
-                        //pin.LastName = contact.Last_Name;
-                        // pin.Gathering.ContactId = pin.Contact_ID.Value;
-                   // }
+                    pin.Participant_ID = group.ParticipantId;
 
                     pins.Add(pin);
                 }
@@ -850,5 +829,22 @@ namespace crds_angular.Services
             return pins;
         }
 
+        private List<PinDto> AddPinMetaData(List<PinDto> pins, GeoCoordinate originCoords)
+        {
+            foreach (var pin in pins)
+            {
+                pin.Title = GetPinTitle(pin);
+                pin.IconUrl = GetPinUrl(pin.PinType);
+
+                // TODO also handle pins with address, but no coordinates here?
+
+                //calculate proximity for all pins to origin
+                if (pin.Address.Latitude == null) continue;
+                if (pin.Address.Longitude != null) pin.Proximity = GetProximity(originCoords, new GeoCoordinate(pin.Address.Latitude.Value, pin.Address.Longitude.Value));
+            }
+            return pins;
+        }
+
     }
 }
+
