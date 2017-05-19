@@ -76,6 +76,7 @@ namespace crds_angular.test.Services
             _mpConfigurationWrapper.Setup(mocked => mocked.GetConfigIntValue("GroupRoleLeader")).Returns(22);
             _mpConfigurationWrapper.Setup(mocked => mocked.GetConfigIntValue("ApprovedHostStatus")).Returns(3);
             _mpConfigurationWrapper.Setup(mocked => mocked.GetConfigIntValue("AnywhereGroupTypeId")).Returns(30);
+            _mpConfigurationWrapper.Setup(mocked => mocked.GetConfigValue("FinderConnectFlag")).Returns("CONNECT");
             _mpConfigurationWrapper.Setup(mocked => mocked.GetConfigIntValue("Group_Role_Default_ID")).Returns(_memberRoleId);
             _mpConfigurationWrapper.Setup(mocked => mocked.GetConfigIntValue("AnywhereGatheringInvitationType")).Returns(_anywhereGatheringInvitationTypeId);
 
@@ -252,7 +253,6 @@ namespace crds_angular.test.Services
                     mocked => mocked.SearchConnectAwsCloudsearch("matchall", "_all_fields", It.IsAny<int>(), It.IsAny<GeoCoordinate>(), It.IsAny<AwsBoundingBox>()))
                 .Returns(searchresults);
 
-            _mpConfigurationWrapper.Setup(mocked => mocked.GetConfigIntValue("AnywhereGroupTypeId")).Returns(30);
             _mpGroupToolService.Setup(m => m.SearchGroups(It.IsAny<int[]>(), null, It.IsAny<string>(), null, originCoords)).Returns(new List<GroupDTO>());
             _mpFinderRepository.Setup(mocked => mocked.GetPinsInRadius(originCoords)).Returns(new List<SpPinDto>());
             _addressGeocodingService.Setup(mocked => mocked.GetGeoCoordinates(address)).Returns(originCoords);
