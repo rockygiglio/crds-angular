@@ -285,10 +285,6 @@ namespace MinistryPlatform.Translation.Repositories
                             throw new ApplicationException("Mobile phone format is wrong. Format should be ###-###-####");
                         }
                     }
-                    if (!profileDictionary.ContainsKey("First_Name") || profileDictionary["First_Name"] == null)
-                    {
-                        throw new ApplicationException("First_Name was not found or was null");
-                    }
 
                     _ministryPlatformService.UpdateRecord(_configurationWrapper.GetConfigIntValue("Contacts"), profileDictionary, token);
                     return 1;
@@ -325,10 +321,6 @@ namespace MinistryPlatform.Translation.Repositories
                         {
                             throw new ApplicationException("Home phone format is wrong. Format should be ###-###-####");
                         }
-                    }
-                    if (!profileDictionary.ContainsKey("First_Name") || profileDictionary["First_Name"] == null)
-                    {
-                        throw new ApplicationException("First_Name was not found or was null");
                     }
 
                     _ministryPlatformService.UpdateRecord(_configurationWrapper.GetConfigIntValue("Contacts"), profileDictionary, token);
@@ -367,7 +359,7 @@ namespace MinistryPlatform.Translation.Repositories
                     {
                         //address does not exist, create it, then attach to household
                         var addressId = _ministryPlatformService.CreateRecord(_configurationWrapper.GetConfigIntValue("Addresses"), addressDictionary, token);
-                        householdDictionary.Add("Address_ID", addressId);
+                        householdDictionary["Address_ID"] = addressId;
                     }
                     _ministryPlatformService.UpdateRecord(_configurationWrapper.GetConfigIntValue("Households"), householdDictionary, token);
                     return 1;

@@ -16,6 +16,8 @@ Param (
   [boolean]$ForceBackup = $FALSE # Default to use existing backup file
 )
 
+echo "Starting database backup script at $(Get-Date)"
+
 $backupDateStamp = Get-Date -format 'yyyyMMdd';
 $backupFileName="$DBName-Backup-$backupDateStamp.trn";
 $backupFileNameFull="$BackupPath\$backupFileName";
@@ -56,6 +58,8 @@ WHERE
 
 if ($ForceBackup -eq $FALSE)
 {
+    echo "Checking if existing backup exists at $(Get-Date)"
+    
     $lastRestoreCommand = $connection.CreateCommand();
     $lastRestoreCommand.CommandText = "$backupAlreadyExists";
     $lastRestoreCommand.CommandTimeout = 10000;    
@@ -69,6 +73,8 @@ if ($ForceBackup -eq $FALSE)
             echo "Status: Skipping backup since backup file already exists";
             exit 0;
         }
+
+        echo "Finished checking and database backup does not exists at $(Get-Date)"
     }
     finally
     {

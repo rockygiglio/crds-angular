@@ -62,6 +62,9 @@ namespace crds_angular.Services
         private readonly int _inviteDeclinedTemplateId;
         private readonly int _anywhereCongregationId;
         private readonly int _spritualGrowthMinistryId;
+        private readonly string _connectPersonPinUrl;
+        private readonly string _connectSitePinUrl;
+        private readonly string _connectGatheringPinUrl;
 
         private readonly Random _random = new Random(DateTime.Now.Millisecond);
 
@@ -110,6 +113,9 @@ namespace crds_angular.Services
             _inviteDeclinedTemplateId = configurationWrapper.GetConfigIntValue("AnywhereGatheringInvitationDeclinedTemplateId");
             _domainId = configurationWrapper.GetConfigIntValue("DomainId");          
             _spritualGrowthMinistryId = _configurationWrapper.GetConfigIntValue("SpiritualGrowthMinistryId");
+            _connectPersonPinUrl = _configurationWrapper.GetConfigValue("ConnectPersonPinUrl");
+            _connectSitePinUrl = _configurationWrapper.GetConfigValue("ConnectSitePinUrl");
+            _connectGatheringPinUrl = _configurationWrapper.GetConfigValue("ConnectGatheringPinUrl");
         }
 
         public PinDto GetPinDetailsForGroup(int groupId)
@@ -156,6 +162,11 @@ namespace crds_angular.Services
             _finderRepository.EnablePin(participantId);
         }
 
+        public void DisablePin(int participantId)
+        {
+            _finderRepository.DisablePin(participantId);
+        }
+
         public PinDto UpdateGathering(PinDto pin)
         {
             // Update coordinates
@@ -181,11 +192,14 @@ namespace crds_angular.Services
                     State = pin.Gathering.Address.State
                 };
                 this.UpdateHouseholdAddress(pin);
+                pin.PinType = PinType.PERSON;
+                _awsCloudsearchService.UploadNewPinToAws(pin);
+                pin.PinType = PinType.GATHERING;
             }
 
             var gathering = Mapper.Map<FinderGatheringDto>(pin.Gathering);
 
-            pin.Gathering = Mapper.Map<GroupDTO>(_finderRepository.UpdateGathering(gathering));
+            _finderRepository.UpdateGathering(gathering);
 
             return pin;
         }
@@ -341,12 +355,48 @@ namespace crds_angular.Services
 
             foreach (var pin in pins)
             {
+                pin.Title = GetPinTitle(pin);
+                pin.IconUrl = GetPinUrl(pin.PinType);
                 //calculate proximity for all pins to origin
                 if (pin.Address.Latitude == null) continue;
                 if (pin.Address.Longitude != null) pin.Proximity = GetProximity(originCoords, new GeoCoordinate(pin.Address.Latitude.Value, pin.Address.Longitude.Value));
             }
 
             return pins;
+        }
+
+        private string GetPinTitle(PinDto pin)
+        {
+            string jsonData="";
+            var lastname = string.IsNullOrEmpty(pin.LastName) ? " " : pin.LastName[0].ToString();
+            switch (pin.PinType)
+            {
+                case PinType.SITE:
+                    jsonData = $"{{ 'siteName': '{pin.SiteName}','isHost':  false,'isMe': false,'pinType': {(int)pin.PinType}}}";
+                    break;
+                case PinType.GATHERING:
+                    jsonData = $"{{ 'firstName': '{pin.FirstName}', 'lastInitial': '{lastname}','isHost':  true,'isMe': false,'pinType': {(int)pin.PinType}}}";
+                    break;
+                case PinType.PERSON:
+                    jsonData = $"{{ 'firstName': '{pin.FirstName}', 'lastInitial': '{lastname}','isHost':  false,'isMe': false,'pinType': {(int)pin.PinType}}}";
+                    break;
+            }
+           
+            return jsonData.Replace("'", "\"");
+        }
+        private string GetPinUrl(PinType pintype)
+        {
+            switch (pintype)
+            {
+                case PinType.GATHERING:
+                    return _connectGatheringPinUrl;
+                case PinType.SITE:
+                    return _connectSitePinUrl;
+                case PinType.PERSON:
+                    return _connectPersonPinUrl;
+                default:
+                    return _connectPersonPinUrl;
+            }
         }
 
         private List<PinDto> ConvertFromAwsSearchResponse(SearchResponse response)
@@ -482,13 +532,14 @@ namespace crds_angular.Services
             {
                 var pin = Mapper.Map<PinDto>(group);
                 pin.Gathering = group;
-                pin.Participant_ID = participantId;
 
                 if (pin.Contact_ID != null)
                 {
+                    pin.Participant_ID = _participantRepository.GetParticipant(pin.Contact_ID.Value).ParticipantId;
                     var contact = _contactRepository.GetContactById((int)pin.Contact_ID);
                     pin.FirstName = contact.First_Name;
                     pin.LastName = contact.Last_Name;
+                    pin.Gathering.ContactId = pin.Contact_ID.Value;
                 }
 
                 pins.Add(pin);
@@ -642,8 +693,8 @@ namespace crds_angular.Services
 
                 var connection = new ConnectCommunicationDto
                 {
-                    FromContactId = (int) host.Contact_ID,
-                    ToContactId = cm.Contact_ID,
+                    FromContactId = cm.Contact_ID,
+                    ToContactId = (int)host.Contact_ID,
                     CommunicationTypeId = _configurationWrapper.GetConfigIntValue("ConnectCommunicationTypeInviteToGathering"),
                     CommunicationStatusId = accept ? _configurationWrapper.GetConfigIntValue("ConnectCommunicationStatusAccepted") : _configurationWrapper.GetConfigIntValue("ConnectCommunicationStatusDeclined"),
                     GroupId = groupId
@@ -669,15 +720,7 @@ namespace crds_angular.Services
                     { "Host", host.FirstName },
                 };
 
-                int emailTemplateId;
-                if (inviteAccepted)
-                {
-                    emailTemplateId = _inviteAcceptedTemplateId;
-                }
-                else
-                {
-                    emailTemplateId = _inviteDeclinedTemplateId;
-                }
+                int emailTemplateId = inviteAccepted ? _inviteAcceptedTemplateId : _inviteDeclinedTemplateId;
 
                 var emailTemplate = _communicationRepository.GetTemplate(emailTemplateId);
                 var fromContact = new MpContact
@@ -696,8 +739,8 @@ namespace crds_angular.Services
                     new MpContact
                     {
                         // Just need a contact ID here, doesn't have to be for the recipient
-                        ContactId = communityMember.Contact_ID,
-                        EmailAddress = communityMember.Email_Address
+                        ContactId = host.Contact_ID.Value,
+                        EmailAddress = host.EmailAddress
                     }
                 };
 
