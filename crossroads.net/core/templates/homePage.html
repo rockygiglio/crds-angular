@@ -1,7 +1,7 @@
 <div ng-class="{'homepage-wrapper' : !app.resolving}" class="clearfix">
 	<ng-include src="'templates/header.html'"></ng-include>
 
-	<div class="crds-legacy-styles">
+	<div ng-class="{'crds-legacy-styles': renderLegacyStyles, 'crds-styles': !renderLegacyStyles}">
 		<div ng-class="{'homepage' : !app.resolving}">
 			<div class="container-fluid main animated fadeIn">
 				<div class="row">

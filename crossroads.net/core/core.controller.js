@@ -78,9 +78,6 @@
       if ($rootScope.renderLegacyStyles === false) {
         document.body.classList.remove('crds-legacy-styles');
       }
-      vm.bodyClasses['crds-legacy-styles'] = $rootScope.renderLegacyStyles;
-      vm.bodyClasses['crds-styles'] = !$rootScope.renderLegacyStyles;
-
       if (typeof $rootScope.bodyClasses !== 'undefined') {
         var bodyClasses = $rootScope.bodyClasses || fromParams.bodyClasses;
         bodyClasses.forEach(function(klass) {

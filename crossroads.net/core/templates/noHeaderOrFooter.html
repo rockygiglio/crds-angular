@@ -1,4 +1,4 @@
-<div class="crds-legacy-styles">
+<div ng-class="{'crds-legacy-styles': renderLegacyStyles, 'crds-styles': !renderLegacyStyles}">
   <preloader ng-if="app.resolving" full-screen='true'> </preloader>
   <div ng-if="!app.resolving">
     <div ui-view> </div>
