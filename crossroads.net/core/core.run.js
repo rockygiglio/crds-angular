@@ -104,7 +104,7 @@
         $rootScope.meta = toState.data.meta;
       }
       setupMetaData();
-      // setupHeader();
+      setupHeader();
     });
   }
 
