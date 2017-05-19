@@ -504,7 +504,7 @@ namespace crds_angular.test.Services
             _awsCloudsearchService.Setup(mocked => mocked.UploadNewPinToAws(It.IsAny<PinDto>()));
 
             var result = _fixture.UpdateGathering(pin);
-            _addressService.Verify(ver => ver.GetGeoLocationCascading(It.IsAny<AddressDTO>()), Times.Exactly(2));
+            _addressService.Verify(ver => ver.GetGeoLocationCascading(It.IsAny<AddressDTO>()), Times.Exactly(1));
             _mpFinderRepository.VerifyAll();
             _mpContactRepository.VerifyAll();
             _awsCloudsearchService.VerifyAll();
