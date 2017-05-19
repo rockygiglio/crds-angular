@@ -36,19 +36,17 @@
     }
 
     function setupHeader() {
-        // header options
-        var options = {
-          el: '[data-header]',
-          cmsEndpoint: __CMS_CLIENT_ENDPOINT__,
-          appEndpoint: __APP_CLIENT_ENDPOINT__,
-          imgEndpoint: __IMG_ENDPOINT__,
-          crdsCookiePrefix: __CRDS_ENV__,
-          contentBlockTitle: __HEADER_CONTENTBLOCK_TITLE__,
-          contentBlockCategories: ['common']
-        };
-
-        var header = new CRDS.SharedHeader(options);
-        header.render();
+      // header options
+      var options = {
+        el: '[data-header]',
+        cmsEndpoint: __CMS_CLIENT_ENDPOINT__,
+        appEndpoint: __APP_CLIENT_ENDPOINT__,
+        imgEndpoint: __IMG_ENDPOINT__,
+        crdsCookiePrefix: __CRDS_ENV__,
+        contentBlockTitle: __HEADER_CONTENTBLOCK_TITLE__,
+        contentBlockCategories: ['common']
+      };
+      new CRDS.SharedHeader(options).render();
     }
 
     function setOriginForCmsPreviewPane($injectedDocument) {

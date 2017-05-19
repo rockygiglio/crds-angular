@@ -2,7 +2,7 @@
 	<ng-include src="'templates/header.html'"></ng-include>
 
 	<div class="crds-legacy-styles">
-		<div class="homepage">
+		<div ng-class="{'homepage' : !app.resolving}">
 			<div class="container-fluid main animated fadeIn">
 				<div class="row">
 					<div class="col-md-12">
