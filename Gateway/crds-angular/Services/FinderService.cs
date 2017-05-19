@@ -71,6 +71,8 @@ namespace crds_angular.Services
         private readonly int _smallGroupType;
 
         private readonly Random _random = new Random(DateTime.Now.Millisecond);
+        private const double MinutesInDegree = 60;
+        private const double StatuteMilesInNauticalMile = 1.1515;
 
         public FinderService(
             IAddressGeocodingService addressGeocodingService,
@@ -503,7 +505,7 @@ namespace crds_angular.Services
             var dist = Math.Sin(Deg2Rad(lat1))*Math.Sin(Deg2Rad(lat2)) + Math.Cos(Deg2Rad(lat1))*Math.Cos(Deg2Rad(lat2))*Math.Cos(Deg2Rad(theta));
             dist = Math.Acos(dist);
             dist = Rad2Deg(dist);
-            dist = dist*60*1.1515;
+            dist = dist* MinutesInDegree * StatuteMilesInNauticalMile;
 
             return (dist);
         }
