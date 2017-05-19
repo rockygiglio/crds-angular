@@ -2,16 +2,14 @@
   <img class='img-responsive imgix-fluid group-participant-image' ng-src='{{groupDetailParticipantCard.participant.imageUrl}}' err-src='{{groupDetailParticipantCard.defaultProfileImageUrl}}'>
   <div class="group-participant-data">
     <div>
-      <span class='group-participant-name'>
+      <div class='group-participant-name'>
         {{groupDetailParticipantCard.participant.getDisplayName()}}
-      </span>
-      <span class='label label-standard label-sm push-half-left' ng-show='{{groupDetailParticipantCard.participant.isLeader()}}'>Leader</span>
-      <span class='label label-standard label-sm push-half-left' ng-show='{{groupDetailParticipantCard.participant.isApprentice()}}'>Apprentice</span>
+      </div>
+      <div class='label label-standard label-sm' ng-show='{{groupDetailParticipantCard.participant.isLeader()}}'>Leader</div>
+      <div class='label label-standard label-sm' ng-show='{{groupDetailParticipantCard.participant.isApprentice()}}'>Apprentice</div>
     </div>
-    <div>
-      <span class='group-participant-name'>
-        <a href="mailto:{{groupDetailParticipantCard.participant.email}}">{{groupDetailParticipantCard.participant.email}}</a>
-      </span>
+    <div class='group-participant-name'>
+      <a href="mailto:{{groupDetailParticipantCard.participant.email}}">{{groupDetailParticipantCard.participant.email}}</a>
     </div>
     <div class="push-half-top push-bottom" ng-if='!groupDetailParticipantCard.participant.me && !groupDetailParticipantCard.participant.primary && groupDetailParticipantCard.edit'>
       <div>
