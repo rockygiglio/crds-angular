@@ -216,11 +216,6 @@ namespace crds_angular.Services
 
         public void UpdateHouseholdAddress(PinDto pin)
         {
-            // Already have good coordinates
-            //var coordinates = _addressService.GetGeoLocationCascading(pin.Address);
-            //pin.Address.Latitude = coordinates.Latitude;
-            //pin.Address.Longitude = coordinates.Longitude;
-
             var householdDictionary = (pin.Address.AddressID == null)
                 ? new Dictionary<string, object> {{"Household_ID", pin.Household_ID}}
                 : null;
