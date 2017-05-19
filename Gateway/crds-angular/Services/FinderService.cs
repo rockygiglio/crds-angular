@@ -58,6 +58,8 @@ namespace crds_angular.Services
         private readonly int _memberRoleId;
         private readonly int _anywhereGatheringInvitationTypeId;
         private readonly int _domainId;
+        private readonly string _finderConnect;
+        private readonly string _finderGroupTool;
         private readonly int _inviteAcceptedTemplateId;
         private readonly int _inviteDeclinedTemplateId;
         private readonly int _anywhereCongregationId;
@@ -65,25 +67,29 @@ namespace crds_angular.Services
         private readonly string _connectPersonPinUrl;
         private readonly string _connectSitePinUrl;
         private readonly string _connectGatheringPinUrl;
+        private readonly string _connectSmallGroupPinUrl;
+        private readonly int _smallGroupType;
 
         private readonly Random _random = new Random(DateTime.Now.Millisecond);
+        private const double MinutesInDegree = 60;
+        private const double StatuteMilesInNauticalMile = 1.1515;
 
         public FinderService(
-                            IAddressGeocodingService addressGeocodingService,
-                            IFinderRepository finderRepository,
-                            IContactRepository contactRepository,
-                            IAddressService addressService,
-                            IParticipantRepository participantRepository,
-                            IGroupRepository groupRepository,
-                            IGroupService groupService,
-                            IGroupToolService groupToolService,
-                            IApiUserRepository apiUserRepository,
-                            IConfigurationWrapper configurationWrapper,
-                            IInvitationService invitationService,
-                            IAwsCloudsearchService awsCloudsearchService,
-                            IAuthenticationRepository authenticationRepository,
-                            ICommunicationRepository communicationRepository
-                            )
+            IAddressGeocodingService addressGeocodingService,
+            IFinderRepository finderRepository,
+            IContactRepository contactRepository,
+            IAddressService addressService,
+            IParticipantRepository participantRepository,
+            IGroupRepository groupRepository,
+            IGroupService groupService,
+            IGroupToolService groupToolService,
+            IApiUserRepository apiUserRepository,
+            IConfigurationWrapper configurationWrapper,
+            IInvitationService invitationService,
+            IAwsCloudsearchService awsCloudsearchService,
+            IAuthenticationRepository authenticationRepository,
+            ICommunicationRepository communicationRepository
+        )
         {
             // services
             _addressGeocodingService = addressGeocodingService;
@@ -107,15 +113,21 @@ namespace crds_angular.Services
             _anywhereGroupType = configurationWrapper.GetConfigIntValue("AnywhereGroupTypeId");
             _leaderRoleId = configurationWrapper.GetConfigIntValue("GroupRoleLeader");
             _memberRoleId = configurationWrapper.GetConfigIntValue("Group_Role_Default_ID");
+            _memberRoleId = configurationWrapper.GetConfigIntValue("Group_Role_Default_ID");
             _anywhereGatheringInvitationTypeId = configurationWrapper.GetConfigIntValue("AnywhereGatheringInvitationType");
             _domainId = configurationWrapper.GetConfigIntValue("DomainId");
+            _finderConnect = configurationWrapper.GetConfigValue("FinderConnectFlag");
+            _finderGroupTool = configurationWrapper.GetConfigValue("FinderGroupToolFlag");
             _inviteAcceptedTemplateId = configurationWrapper.GetConfigIntValue("AnywhereGatheringInvitationAcceptedTemplateId");
             _inviteDeclinedTemplateId = configurationWrapper.GetConfigIntValue("AnywhereGatheringInvitationDeclinedTemplateId");
-            _domainId = configurationWrapper.GetConfigIntValue("DomainId");          
+            _domainId = configurationWrapper.GetConfigIntValue("DomainId");
             _spritualGrowthMinistryId = _configurationWrapper.GetConfigIntValue("SpiritualGrowthMinistryId");
             _connectPersonPinUrl = _configurationWrapper.GetConfigValue("ConnectPersonPinUrl");
             _connectSitePinUrl = _configurationWrapper.GetConfigValue("ConnectSitePinUrl");
             _connectGatheringPinUrl = _configurationWrapper.GetConfigValue("ConnectGatheringPinUrl");
+            _connectSmallGroupPinUrl = _configurationWrapper.GetConfigValue("ConnectSmallGroupPinUrl");
+            _smallGroupType = _configurationWrapper.GetConfigIntValue("SmallGroupTypeId");
+
         }
 
         public PinDto GetPinDetailsForGroup(int groupId)
@@ -142,7 +154,6 @@ namespace crds_angular.Services
 
         public PinDto GetPinDetailsForPerson(int participantId)
         {
-            //first get pin details
             var pinDetails = Mapper.Map<PinDto>(_finderRepository.GetPinDetails(participantId));
 
             //make sure we have a lat/long
@@ -171,6 +182,7 @@ namespace crds_angular.Services
         {
             // Update coordinates
             var coordinates = _addressService.GetGeoLocationCascading(pin.Gathering.Address);
+
             pin.Gathering.Address.Latitude = coordinates.Latitude;
             pin.Gathering.Address.Longitude = coordinates.Longitude;
             pin.Gathering.GroupTypeId = _anywhereGroupType;
@@ -206,16 +218,13 @@ namespace crds_angular.Services
 
         public void UpdateHouseholdAddress(PinDto pin)
         {
-            var coordinates = _addressService.GetGeoLocationCascading(pin.Address);
-            pin.Address.Latitude = coordinates.Latitude;
-            pin.Address.Longitude = coordinates.Longitude;
-            var householdDictionary = (pin.Address.AddressID == null) 
-                ? new Dictionary<string, object>{{"Household_ID", pin.Household_ID}} 
-                :  null;
+            var householdDictionary = (pin.Address.AddressID == null)
+                ? new Dictionary<string, object> {{"Household_ID", pin.Household_ID}}
+                : null;
             var address = Mapper.Map<MpAddress>(pin.Address);
             var addressDictionary = getDictionary(address);
             addressDictionary.Add("State/Region", addressDictionary["State"]);
-            _contactRepository.UpdateHouseholdAddress((int)pin.Contact_ID, householdDictionary, addressDictionary);
+            _contactRepository.UpdateHouseholdAddress((int) pin.Contact_ID, householdDictionary, addressDictionary);
         }
 
         public List<GroupParticipantDTO> GetParticipantsForGroup(int groupId)
@@ -231,9 +240,9 @@ namespace crds_angular.Services
 
             //get groups that this user is the primary contact for at this address
             var matchingGroupsCount = groups.Where(x => x.PrimaryContact == contactId.ToString())
-                                       .Where(x => x.Address.Address_Line_1 == address.AddressLine1)
-                                       .Where(x => x.Address.City == address.City)
-                                       .Where(x => x.Address.State == address.State).Count();
+                .Where(x => x.Address.Address_Line_1 == address.AddressLine1)
+                .Where(x => x.Address.City == address.City)
+                .Where(x => x.Address.State == address.State).Count();
 
             if (matchingGroupsCount > 0)
             {
@@ -241,15 +250,15 @@ namespace crds_angular.Services
             }
         }
 
-    public void RequestToBeHost(string token, HostRequestDto hostRequest)
+        public void RequestToBeHost(string token, HostRequestDto hostRequest)
         {
             //check if they are already a host at this address. If they are then throw
-            GatheringValidityCheck(hostRequest.ContactId,hostRequest.Address);
+            GatheringValidityCheck(hostRequest.ContactId, hostRequest.Address);
 
             // get contact data
             var contact = _contactRepository.GetContactById(hostRequest.ContactId);
             var participant = _participantRepository.GetParticipant(hostRequest.ContactId);
-            
+
             if (participant.HostStatus != _approvedHost)
             {
                 participant.HostStatus = _pendingHost;
@@ -259,17 +268,17 @@ namespace crds_angular.Services
             //update mobile phone number on contact record
             contact.Mobile_Phone = hostRequest.ContactNumber;
             var updateToDictionary = new Dictionary<string, object>
-                {
-                    {"Contact_ID", hostRequest.ContactId},
-                    {"Mobile_Phone",hostRequest.ContactNumber},
-                    {"First_Name", contact.First_Name }
-                };
+            {
+                {"Contact_ID", hostRequest.ContactId},
+                {"Mobile_Phone", hostRequest.ContactNumber},
+                {"First_Name", contact.First_Name}
+            };
             _contactRepository.UpdateContact(hostRequest.ContactId, updateToDictionary);
 
             // create the address for the group
             var hostAddressId = _addressService.CreateAddress(hostRequest.Address);
             hostRequest.Address.AddressID = hostAddressId;
-            
+
             // create the group
             var group = new GroupDTO();
             group.GroupName = contact.Nickname + " " + contact.Last_Name[0];
@@ -348,42 +357,61 @@ namespace crds_angular.Services
             return participantId;
         }
 
-        public List<PinDto> GetPinsInBoundingBox(GeoCoordinate originCoords, string address, AwsBoundingBox boundingBox)
+        public List<PinDto> GetPinsInBoundingBox(GeoCoordinate originCoords, string address, AwsBoundingBox boundingBox, string finderType)
         {
-            var cloudReturn = _awsCloudsearchService.SearchConnectAwsCloudsearch("matchall", "_all_fields", _configurationWrapper.GetConfigIntValue("ConnectDefaultNumberOfPins"), originCoords, boundingBox);
-            var pins = ConvertFromAwsSearchResponse(cloudReturn);
+            List<PinDto> pins = null;
 
-            foreach (var pin in pins)
+            int id = _anywhereGroupType; 
+
+            if (finderType.Equals(_finderConnect))
             {
-                pin.Title = GetPinTitle(pin);
-                pin.IconUrl = GetPinUrl(pin.PinType);
-                //calculate proximity for all pins to origin
-                if (pin.Address.Latitude == null) continue;
-                if (pin.Address.Longitude != null) pin.Proximity = GetProximity(originCoords, new GeoCoordinate(pin.Address.Latitude.Value, pin.Address.Longitude.Value));
+                var cloudReturn = _awsCloudsearchService.SearchConnectAwsCloudsearch("matchall",
+                                                                                     "_all_fields",
+                                                                                     _configurationWrapper.GetConfigIntValue("ConnectDefaultNumberOfPins"),
+                                                                                     originCoords,
+                                                                                     boundingBox);
+                pins = ConvertFromAwsSearchResponse(cloudReturn);
+            }
+            else if (finderType.Equals(_finderGroupTool))
+            {
+                
+                var groupTypeIds = new int[1] {_smallGroupType};
+                var groupDTOs = _groupToolService.SearchGroups(groupTypeIds);
+
+                pins = this.TransformGroupDtoToPinDto(groupDTOs, finderType);
+            }
+            else
+            {     
+                throw new Exception("No pin search performed - finder type not found");
             }
 
+            this.AddPinMetaData(pins, originCoords);
             return pins;
         }
 
         private string GetPinTitle(PinDto pin)
         {
-            string jsonData="";
+            string jsonData = "";
             var lastname = string.IsNullOrEmpty(pin.LastName) ? " " : pin.LastName[0].ToString();
             switch (pin.PinType)
             {
                 case PinType.SITE:
-                    jsonData = $"{{ 'siteName': '{pin.SiteName}','isHost':  false,'isMe': false,'pinType': {(int)pin.PinType}}}";
+                    jsonData = $"{{ 'siteName': '{pin.SiteName}','isHost':  false,'isMe': false,'pinType': {(int) pin.PinType}}}";
                     break;
                 case PinType.GATHERING:
-                    jsonData = $"{{ 'firstName': '{pin.FirstName}', 'lastInitial': '{lastname}','isHost':  true,'isMe': false,'pinType': {(int)pin.PinType}}}";
+                    jsonData = $"{{ 'firstName': '{pin.FirstName}', 'lastInitial': '{lastname}','isHost':  true,'isMe': false,'pinType': {(int) pin.PinType}}}";
                     break;
                 case PinType.PERSON:
-                    jsonData = $"{{ 'firstName': '{pin.FirstName}', 'lastInitial': '{lastname}','isHost':  false,'isMe': false,'pinType': {(int)pin.PinType}}}";
+                    jsonData = $"{{ 'firstName': '{pin.FirstName}', 'lastInitial': '{lastname}','isHost':  false,'isMe': false,'pinType': {(int) pin.PinType}}}";
                     break;
+                case PinType.SMALL_GROUP:
+                    jsonData = $"{{ 'firstName': '{pin.Gathering.GroupName}', 'lastInitial': '{lastname}','isHost':  false,'isMe': false,'pinType': {(int)pin.PinType}}}";
+                    break; 
             }
-           
+
             return jsonData.Replace("'", "\"");
         }
+
         private string GetPinUrl(PinType pintype)
         {
             switch (pintype)
@@ -394,6 +422,8 @@ namespace crds_angular.Services
                     return _connectSitePinUrl;
                 case PinType.PERSON:
                     return _connectPersonPinUrl;
+                case PinType.SMALL_GROUP:
+                    return _connectSmallGroupPinUrl;
                 default:
                     return _connectPersonPinUrl;
             }
@@ -436,27 +466,27 @@ namespace crds_angular.Services
                 }
                 if (pin.PinType == PinType.GATHERING)
                 {
-                    
+
                     pin.Gathering = new GroupDTO
                     {
                         GroupId = hit.Fields.ContainsKey("groupid") ? Convert.ToInt32(hit.Fields["groupid"].FirstOrDefault()) : 0,
                         GroupName = hit.Fields.ContainsKey("groupname") ? hit.Fields["groupname"].FirstOrDefault() : null,
                         GroupDescription = hit.Fields.ContainsKey("groupdescription") ? hit.Fields["groupdescription"].FirstOrDefault() : null,
                         PrimaryContactEmail = hit.Fields.ContainsKey("primarycontactemail") ? hit.Fields["primarycontactemail"].FirstOrDefault() : null,
-                        Address = pin.Address, 
+                        Address = pin.Address,
                         ContactId = pin.Contact_ID.Value,
                         GroupTypeId = _anywhereGroupType,
                         CongregationId = _anywhereCongregationId,
                         MinistryId = _spritualGrowthMinistryId
                     };
-                    
+
                     if (hit.Fields.ContainsKey("groupstartdate") && !String.IsNullOrWhiteSpace(hit.Fields["groupstartdate"].First()))
                     {
                         DateTime? startDate = null;
                         startDate = Convert.ToDateTime(hit.Fields["groupstartdate"].First());
-                        pin.Gathering.StartDate = (DateTime)startDate;
+                        pin.Gathering.StartDate = (DateTime) startDate;
                     }
-                    
+
                 }
                 pins.Add(pin);
             }
@@ -466,28 +496,28 @@ namespace crds_angular.Services
 
         private static decimal GetProximity(GeoCoordinate originCoords, GeoCoordinate pinCoords)
         {
-            return (decimal)Proximity(originCoords.Latitude, originCoords.Longitude, pinCoords.Latitude, pinCoords.Longitude);
+            return (decimal) Proximity(originCoords.Latitude, originCoords.Longitude, pinCoords.Latitude, pinCoords.Longitude);
         }
 
         private static double Proximity(double lat1, double lon1, double lat2, double lon2)
         {
             var theta = lon1 - lon2;
-            var dist = Math.Sin(Deg2Rad(lat1)) * Math.Sin(Deg2Rad(lat2)) + Math.Cos(Deg2Rad(lat1)) * Math.Cos(Deg2Rad(lat2)) * Math.Cos(Deg2Rad(theta));
+            var dist = Math.Sin(Deg2Rad(lat1))*Math.Sin(Deg2Rad(lat2)) + Math.Cos(Deg2Rad(lat1))*Math.Cos(Deg2Rad(lat2))*Math.Cos(Deg2Rad(theta));
             dist = Math.Acos(dist);
             dist = Rad2Deg(dist);
-            dist = dist * 60 * 1.1515;
+            dist = dist* MinutesInDegree * StatuteMilesInNauticalMile;
 
             return (dist);
         }
 
         private static double Deg2Rad(double deg)
         {
-            return (deg * Math.PI / 180.0);
+            return (deg*Math.PI/180.0);
         }
 
         private static double Rad2Deg(double rad)
         {
-            return (rad / Math.PI * 180.0);
+            return (rad/Math.PI*180.0);
         }
 
         public List<PinDto> GetMyPins(string token, GeoCoordinate originCoords, int contactId)
@@ -495,14 +525,14 @@ namespace crds_angular.Services
             var pins = new List<PinDto>();
             var participantId = GetParticipantIdFromContact(contactId);
 
-            var groupPins = GetMyGroupPins(token, new int[] { _anywhereGroupType }, participantId);
+            var groupPins = GetMyGroupPins(token, new int[] {_anywhereGroupType}, participantId);
             var personPin = GetPinDetailsForPerson(participantId);
 
             pins.AddRange(groupPins);
             if (personPin != null && personPin.ShowOnMap)
             {
                 pins.Add(personPin);
-            }            
+            }
 
             foreach (var pin in pins)
             {
@@ -525,31 +555,15 @@ namespace crds_angular.Services
 
             var groupDTOs = groupsByType.Select(Mapper.Map<MpGroup, GroupDTO>).ToList();
 
-            // TODO pull this out - 2x in class - just return what comes out of private method            
-            var pins = new List<PinDto>();
-
-            foreach (var group in groupDTOs)
-            {
-                var pin = Mapper.Map<PinDto>(group);
-                pin.Gathering = group;
-
-                if (pin.Contact_ID != null)
-                {
-                    pin.Participant_ID = _participantRepository.GetParticipant(pin.Contact_ID.Value).ParticipantId;
-                    var contact = _contactRepository.GetContactById((int)pin.Contact_ID);
-                    pin.FirstName = contact.First_Name;
-                    pin.LastName = contact.Last_Name;
-                    pin.Gathering.ContactId = pin.Contact_ID.Value;
-                }
-
-                pins.Add(pin);
-            }
+            // TODO when do MY STUFF for Group Tool, will need to account for changing this flag to _finderGroupTool
+            var pins = this.TransformGroupDtoToPinDto(groupDTOs, _finderConnect);
 
             return pins;
         }
 
         public GeoCoordinate GetGeoCoordsFromAddressOrLatLang(string address, string lat, string lng)
         {
+
             double latitude = Convert.ToDouble(lat.Replace("$", "."));
             double longitude = Convert.ToDouble(lng.Replace("$", "."));
 
@@ -579,11 +593,11 @@ namespace crds_angular.Services
             var angle = _random.Next(0, 359);
             const int earthRadius = 6371000; // in meters
 
-            var distanceNorth = Math.Sin(angle) * distance;
-            var distanceEast = Math.Cos(angle) * distance;
+            var distanceNorth = Math.Sin(angle)*distance;
+            var distanceEast = Math.Cos(angle)*distance;
 
-            var newLat = (double)(address.Latitude + (distanceNorth / earthRadius) * 180 / Math.PI);
-            var newLong = (double)(address.Longitude + (distanceEast / (earthRadius * Math.Cos(newLat * 180 / Math.PI))) * 180 / Math.PI);
+            var newLat = (double) (address.Latitude + (distanceNorth/earthRadius)*180/Math.PI);
+            var newLong = (double) (address.Longitude + (distanceEast/(earthRadius*Math.Cos(newLat*180/Math.PI)))*180/Math.PI);
             address.Latitude = newLat;
             address.Longitude = newLong;
 
@@ -602,7 +616,7 @@ namespace crds_angular.Services
                 InvitationType = _anywhereGatheringInvitationTypeId,
                 RequestDate = DateTime.Now
             };
-            
+
             _invitationService.ValidateInvitation(invitation, token);
             invitation = _invitationService.CreateInvitation(invitation, token);
 
@@ -694,9 +708,12 @@ namespace crds_angular.Services
                 var connection = new ConnectCommunicationDto
                 {
                     FromContactId = cm.Contact_ID,
-                    ToContactId = (int)host.Contact_ID,
+                    ToContactId = (int) host.Contact_ID,
                     CommunicationTypeId = _configurationWrapper.GetConfigIntValue("ConnectCommunicationTypeInviteToGathering"),
-                    CommunicationStatusId = accept ? _configurationWrapper.GetConfigIntValue("ConnectCommunicationStatusAccepted") : _configurationWrapper.GetConfigIntValue("ConnectCommunicationStatusDeclined"),
+                    CommunicationStatusId =
+                        accept
+                            ? _configurationWrapper.GetConfigIntValue("ConnectCommunicationStatusAccepted")
+                            : _configurationWrapper.GetConfigIntValue("ConnectCommunicationStatusDeclined"),
                     GroupId = groupId
                 };
                 RecordCommunication(connection);
@@ -716,8 +733,8 @@ namespace crds_angular.Services
                 // basic merge data here
                 var mergeData = new Dictionary<string, object>
                 {
-                    { "Community_Member", communityMember.Nickname + " " + communityMember.Last_Name},
-                    { "Host", host.FirstName },
+                    {"Community_Member", communityMember.Nickname + " " + communityMember.Last_Name},
+                    {"Host", host.FirstName},
                 };
 
                 int emailTemplateId = inviteAccepted ? _inviteAcceptedTemplateId : _inviteDeclinedTemplateId;
@@ -763,5 +780,73 @@ namespace crds_angular.Services
                 return;
             }
         }
+
+        private List<PinDto> TransformGroupDtoToPinDto(List<GroupDTO> groupDTOs, string finderType)
+        {
+            var pins = new List<PinDto>();
+
+            if (finderType.Equals(_finderConnect))
+            {
+                foreach (var group in groupDTOs)
+                {
+                    var pin = Mapper.Map<PinDto>(group);
+                    pin.Gathering = group;
+
+                    pin.Gathering.ContactId = group.ContactId;
+                    pin.Participant_ID = group.ParticipantId;
+
+                    // TODO need to get rid of this call to GetContactById if get name from search instead
+                    var contact = _contactRepository.GetContactById((int)pin.Contact_ID);
+                    pin.FirstName = contact.First_Name;
+                    pin.LastName = contact.Last_Name;
+                    pins.Add(pin);
+                }
+            }
+            else if (finderType.Equals(_finderGroupTool))
+            {
+                foreach (var group in groupDTOs)
+                {
+                    var pin = Mapper.Map<PinDto>(group);
+                    pin.Gathering = group;
+                    pin.PinType = PinType.SMALL_GROUP;
+
+                    pin.FirstName = "FirstNamePlaceHolder"; // TODO wait and add in with AWS Data returned                                                            
+                    pin.LastName = "LastNamePlaceHolder"; // TODO wait and add in with AWS Data returned
+                    pin.Gathering.ContactId = group.ContactId;
+                    pin.Participant_ID = group.ParticipantId;
+
+                    pins.Add(pin);
+                }
+            }
+
+            return pins;
+        }
+
+        private List<PinDto> AddPinMetaData(List<PinDto> pins, GeoCoordinate originCoords)
+        {
+            foreach (var pin in pins)
+            {
+                pin.Title = GetPinTitle(pin);
+                pin.IconUrl = GetPinUrl(pin.PinType);
+
+                // Have GROUP address, but no coordinates, get geocordinates and save in MP
+                if ((pin.PinType == PinType.GATHERING || pin.PinType == PinType.SMALL_GROUP) && pin.Address.PostalCode != null && pin.Address.Longitude == null)
+                {
+                    // TODO - Everything will go to a state level with bad address - because state is required select control
+                    _addressService.SetGroupPinGeoCoordinates(pin);
+
+                    // TODO check error handling here - I did an update on non-existant group and hosed up AWS
+                    // TODO uncomment when small groups are in AWS
+                    // _awsCloudsearchService.UploadNewPinToAws(pin);
+                }
+
+                //calculate proximity for all pins to origin
+                if (pin.Address.Latitude == null) continue;
+                if (pin.Address.Longitude != null) pin.Proximity = GetProximity(originCoords, new GeoCoordinate(pin.Address.Latitude.Value, pin.Address.Longitude.Value));
+            }
+            return pins;
+        }
+
     }
 }
+
