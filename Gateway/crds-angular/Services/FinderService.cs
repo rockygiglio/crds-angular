@@ -155,12 +155,12 @@ namespace crds_angular.Services
             var pinDetails = Mapper.Map<PinDto>(_finderRepository.GetPinDetails(participantId));
 
             //make sure we have a lat/long
-            //if (pinDetails != null && pinDetails.Address.Latitude != null && pinDetails.Address.Longitude != null)
-            //{
-            //    // _addressService.SetGeoCoordinates(pinDetails.Address);
-            //    pinDetails.Address.AddressLine1 = "";
-            //    pinDetails.Address.AddressLine2 = "";
-            //}
+            if (pinDetails != null && pinDetails.Address.Latitude != null && pinDetails.Address.Longitude != null)
+            {
+                _addressService.SetGeoCoordinates(pinDetails.Address);
+                pinDetails.Address.AddressLine1 = "";
+                pinDetails.Address.AddressLine2 = "";
+            }
 
             pinDetails.PinType = PinType.PERSON;
             return pinDetails;
@@ -358,6 +358,8 @@ namespace crds_angular.Services
         public List<PinDto> GetPinsInBoundingBox(GeoCoordinate originCoords, string address, AwsBoundingBox boundingBox, string finderType)
         {
             List<PinDto> pins = null;
+
+            int id = _anywhereGroupType; 
 
             if (finderType.Equals(_finderConnect))
             {
