@@ -5,7 +5,7 @@ import InvoiceRoutes from './invoices.routes';
 console.log('2');
 import InvoiceComponent from './invoice.component';
 console.log('3');
-import InvoiceService from './invoices.service';
+import InvoicesService from './invoices.service';
 console.log('4');
 
 import './invoice.html';
