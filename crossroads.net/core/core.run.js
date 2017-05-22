@@ -30,7 +30,7 @@
       }
       if (!$rootScope.meta.image || $rootScope.meta.image.filename === '/assets/') {
         $rootScope.meta.image = {
-          filename: 'https://crossroads-media.s3.amazonaws.com/images/coffee_cup.jpg'
+          filename: 'http://crds-cms-uploads.imgix.net/content/images/cr-social-sharing-still-bg.png'
         };
       }
     }
