@@ -16,7 +16,7 @@ module.exports = {
     media: './app/media/media.module.js',
     give: './app/give/give.module.js',
     profile: './app/profile/profile.module.js',
-    invoice: './app/invoices/invoices.module.js',
+    invoices: './app/invoices/invoices.module.js',
     main: './app/app.js',
     ang: './core/ang.js',
     govolunteer: './app/go_volunteer/goVolunteer.module.js',
