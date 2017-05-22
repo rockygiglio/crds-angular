@@ -141,7 +141,20 @@ namespace crds_angular.Services
 
             //get group details for the primary pin
             pin.Gathering = _groupService.GetGroupsByTypeOrId(token, participantId, null, groupId, false, false).FirstOrDefault();
-            pin.PinType = PinType.GATHERING;
+
+            if (pin.Gathering?.GroupTypeId == _anywhereGroupType)
+            {
+                pin.PinType = PinType.GATHERING;
+            }
+            else if (pin.Gathering?.GroupTypeId == _smallGroupType)
+            {
+                pin.PinType = PinType.SMALL_GROUP;
+            }
+            else
+            {
+                throw new Exception("Get Pin Details Failed, group type not valid");
+            }            
+            
             if (pin.Gathering != null)
             {
                 pin.Gathering.Address.AddressLine1 = "";
