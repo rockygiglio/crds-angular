@@ -64,6 +64,7 @@ function htmlReplace(devBuild) {
       profilejs: {src: assets.profile.js, tpl: '<script src="%s" type="text/javascript"  defer></script>'},
       tripsjs: {src: assets.trips.js, tpl: '<script src="%s" type="text/javascript"  defer></script>'},
       campsjs: {src: assets.camps.js, tpl: '<script src="%s" type="text/javascript" defer></script>'},
+      invoicesjs: {src: assets.invoices.js, tpl: '<script src="%s" type="text/javascript" defer></script>'},
       childcarejs: {src: assets.childcare.js, tpl: '<script src="%s" type="text/javascript"  defer></script>'},
       searchjs: {src: assets.search.js, tpl: '<script src="%s" type="text/javascript"  defer></script>'},
       mediajs: {src: assets.media.js, tpl: '<script src="%s" type="text/javascript"  defer></script>'},

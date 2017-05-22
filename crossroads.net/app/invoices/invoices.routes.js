@@ -8,7 +8,7 @@ export default function InvoicesRoutes($stateProvider, $urlMatcherFactoryProvide
       data: {
         renderLegacyStyles: true
       }
-    })
+    }) 
     .state('invoices.invoice', {
       parent: 'noSideBar',
       url: '/invoices/:invoiceId',
