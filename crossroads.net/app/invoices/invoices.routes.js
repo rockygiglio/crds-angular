@@ -1,4 +1,4 @@
-export default function InvoiceRoutes($stateProvider, $urlMatcherFactoryProvider) {
+export default function InvoicesRoutes($stateProvider, $urlMatcherFactoryProvider) {
   $httpProvider.defaults.useXDomain = true;
 
   $stateProvider

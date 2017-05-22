@@ -1,7 +1,7 @@
 /* @ngInject */
 class InvoiceController {
 
-  constructor(InvoiceService, $rootScope) {
+  constructor(InvoicesService, $rootScope) {
     this.campId = $stateParams.campId;
     this.campsService = CampsService;
     this.viewReady = false;

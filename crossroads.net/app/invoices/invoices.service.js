@@ -2,7 +2,7 @@
 import constants from 'crds-constants';
 
 /* ngInject */
-class InvoiceService {
+class InvoicesService {
   constructor($resource, $rootScope, $stateParams, $log, AttributeTypeService, $sessionStorage) {
     this.log = $log;
     this.scope = $rootScope;
