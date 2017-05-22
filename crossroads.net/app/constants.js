@@ -27,7 +27,7 @@
       SEARCH: 'crossroads.search',
       SIGNUP: 'crossroads.signup',
       TRIPS: 'crossroads.trips',
-      INVOICES: 'crossroads.invoices',
+      INVOICES: 'crossroads.invoice',
 
     },
     ATTRIBUTE_TYPE_IDS: {
