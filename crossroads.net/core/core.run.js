@@ -30,7 +30,7 @@
       }
       if (!$rootScope.meta.image || $rootScope.meta.image.filename === '/assets/') {
         $rootScope.meta.image = {
-          filename: 'http://crds-cms-uploads.imgix.net/content/images/cr-social-sharing-still-bg.png'
+          filename: 'http://crds-cms-uploads.imgix.net/content/images/cr-social-sharing-still-bg.jpg'
         };
       }
     }
