@@ -67,6 +67,7 @@
     });
 
     $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
+      vm.bodyClasses = {};
       if (typeof fromParams.renderLegacyStyles !== 'undefined') {
         $rootScope.renderLegacyStyles = fromParams.renderLegacyStyles;
       }
