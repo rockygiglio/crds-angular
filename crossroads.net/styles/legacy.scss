@@ -105,34 +105,6 @@
   @import 'lib/angular-aside.scss';
   @import 'lib/angular-growl.scss';
   @import 'lib/ng-img-crop.scss';
-  @import url('//crossroads-media.s3.amazonaws.com/documents/styles/hotfix-x3.css');
+  @import url('//crossroads-media.s3.amazonaws.com/documents/styles/hotfix-y1.css');
   @import '../node_modules/ng-table/dist/ng-table.css';
-}
-
-/* Tate - 03/21/17 - Revert to cup at the top of the homepage */
-
-.homepage-wrapper .homepage {
-  background: transparent !important;
-}
-
-.homepage-wrapper {
-  background: #fff url(https://crds-cms-uploads.imgix.net/content/images/crossroads-church-home.jpg) no-repeat !important;
-  background-position: -170px top !important;
-  height: 100%;
-}
-@media only screen and (min-width:768px){
-  .homepage-wrapper {
-    background-position:center top !important;
-  }
-}
-
-.homepage-wrapper .navbar-brand.logo .icon-logo,
-.homepage-wrapper ul.cr-nav>li>a,
-.homepage-wrapper .header .navbar-brand.logo svg,
-.homepage-wrapper .header .nav>li>a:not(.cta) {
-  color: #fff;
-}
-
-.homepage-wrapper .navbar-brand.logo {
-  fill: #FFF;
 }
