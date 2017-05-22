@@ -13,7 +13,7 @@ import './invoice.html';
 export default angular.module(constants.MODULES.INVOICES, [
   constants.MODULES.CORE,
   constants.MODULES.COMMON])
-  .config(InvoiceRoutes)
+  .config(InvoicesRoutes)
   .component('invoice', InvoiceComponent)
-  .service('InvoiceService', InvoiceService)
+  .service('InvoicesService', InvoicesService)
   .name;
