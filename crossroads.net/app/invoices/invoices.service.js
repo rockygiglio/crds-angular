@@ -25,4 +25,4 @@ class InvoicesService {
   }
 }
 
-export default InvoiceService;
+export default InvoicesService;

@@ -1,12 +1,7 @@
-console.log('0', 'in invoices');
 import constants from '../constants';
-console.log('1');
-import InvoiceRoutes from './invoices.routes';
-console.log('2');
+import InvoicesRoutes from './invoices.routes';
 import InvoiceComponent from './invoice.component';
-console.log('3');
 import InvoicesService from './invoices.service';
-console.log('4');
 
 import './invoice.html';
 
