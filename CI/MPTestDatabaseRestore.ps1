@@ -13,10 +13,7 @@ Param (
   [string]$DBUser = $(Get-ChildItem Env:MP_TARGET_DB_USER).Value, # Default to environment variable
   [string]$DBPassword = $(Get-ChildItem Env:MP_TARGET_DB_PASSWORD).Value # Default to environment variable
 )
-echo "Starting database restore script at $(Get-Date)"
-
-$backupDateStamp = Get-Date -format 'yyyyMMdd';
-$backupFileName="$BackupPath\$DBName-Backup-$backupDateStamp-simple.trn"
+Write-Output "Starting database restore script at $(Get-Date)"
 
 $connectionString = "Server=$DBServer;uid=$DBUser;pwd=$DBPassword;Database=master;Integrated Security=False;";
 
@@ -27,49 +24,17 @@ $connection.Open();
 # Add SQL Message output to the console
 $sqlMessageHandler = [System.Data.SqlClient.SqlInfoMessageEventHandler] {param($sender, $event) Write-Host $event.Message };
 $connection.add_InfoMessage($sqlMessageHandler);
-$connection.FireInfoMessageEventOnUserErrors = $true;
-
-echo "Determine existing DB file locations at $(Get-Date)"
-
-# Determine the current log and data file locations, so we can relocate from the backup.
-# This is needed because the servers are not setup with identical drives and paths.
-$sql = @"
-SELECT type, name, physical_name
-FROM sys.master_files
-WHERE [database_id] = DB_ID('$DBName')
-ORDER BY type, name;
-"@;
-
-$command = $connection.CreateCommand();
-$command.CommandText = "$sql";
-
-$reader = $command.ExecuteReader();
-
-$table = New-Object System.Data.DataTable;
-$table.Load($reader);
-
-$dataFile = $table | Where-Object {$_.type -eq 0};
-$logFile = $table | Where-Object {$_.type -eq 1};
-
-$dataFileName = $dataFile.name;
-$dataFilePhysicalName = $dataFile.physical_name;
-
-$logFileName = $logFile.name;
-$logFilePhysicalName = $logFile.physical_name;
-
-echo "Finished determining existing DB file locations at $(Get-Date)"
 
 # Restore the database - need to take it offline, restore, then bring back online
+$snapshotDBName = $DBName + "_Snapshot";
+
 $restoreSql = @"
 USE [master];
 
 ALTER DATABASE [$DBName] SET OFFLINE WITH ROLLBACK IMMEDIATE;
 
-RESTORE DATABASE [$DBName]
-FROM DISK = N'$backupFileName'
-WITH FILE = 1, NOUNLOAD, REPLACE, STATS = 5,
-MOVE N'$logFileName' TO N'$logFilePhysicalName',
-MOVE N'$dataFileName' TO N'$dataFilePhysicalName';
+RESTORE DATABASE [$DBName] 
+FROM DATABASE_SNAPSHOT = '$snapshotDBName';
 
 ALTER DATABASE [$DBName] SET ONLINE;
 "@;
@@ -81,18 +46,18 @@ $command.CommandTimeout = 600000;
 $exitCode = 0;
 $exitMessage = "Success";
 
-echo "$(Get-Date -format 'yyyy-MM-dd HH:mm:ss') Beginning restore from file $backupFileName on server $DBServer"
+Write-Output "$(Get-Date -format 'yyyy-MM-dd HH:mm:ss') Beginning restore from snapshot $snapshotDBName on server $DBServer"
 try {
   $command.ExecuteNonQuery();
 } catch [System.Exception] {
   $exitCode = 1;
   $exitMessage = "ERROR - Restore failed: " + $_.Exception.Message;
 }
-echo "$(Get-Date -format 'yyyy-MM-dd HH:mm:ss') Finished restore from file $backupFileName on server $DBServer"
+Write-Output "$(Get-Date -format 'yyyy-MM-dd HH:mm:ss') Finished restore from snapshot $snapshotDBName on server $DBServer"
 
 # If the restore failed, exit now
 if($exitCode -ne 0) {
-  echo "Status: $exitMessage";
+  Write-Output "Status: $exitMessage";
   exit $exitCode;
 }
 
@@ -209,14 +174,14 @@ $command = $connection.CreateCommand();
 $command.CommandText = "$updateSql";
 $command.CommandTimeout = 600000;
 
-echo "$(Get-Date -format 'yyyy-MM-dd HH:mm:ss') Beginning update of database $DBName on server $DBServer"
+Write-Output "$(Get-Date -format 'yyyy-MM-dd HH:mm:ss') Beginning update of database $DBName on server $DBServer"
 try {
   $command.ExecuteNonQuery();
 } catch [System.Exception] {
   $exitCode = 1;
   $exitMessage = "ERROR - Update failed: " + $_.Exception.Message;
 }
-echo "$(Get-Date -format 'yyyy-MM-dd HH:mm:ss') Finished update of database $DBName on server $DBServer"
+Write-Output "$(Get-Date -format 'yyyy-MM-dd HH:mm:ss') Finished update of database $DBName on server $DBServer"
 
-echo "Status: $exitMessage"
+Write-Output "Status: $exitMessage"
 exit $exitCode

@@ -44,7 +44,7 @@ try
 
     if($LASTEXITCODE -eq 0) 
     {
-        .\CI\MPTestDatabasePrepForQuickRestores.ps1 -DBServer $RestoreDBServer -DBName $DBName -BackupPath $BackupPath -DBUser $DBUser -DBPassword $DBPassword -ForceBackup $ForceBackup
+        .\CI\MPTestDatabasePrepSnapshot.ps1 -DBServer $RestoreDBServer -DBName $DBName -BackupPath $BackupPath -DBUser $DBUser -DBPassword $DBPassword -ForceBackup $ForceBackup
     }
 
     if($LASTEXITCODE -eq 0) 

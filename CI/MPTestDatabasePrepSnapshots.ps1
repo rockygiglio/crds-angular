@@ -23,10 +23,6 @@ $backupDateStamp = Get-Date -format 'yyyyMMdd';
 $restoreFileName="$DBName-Backup-$backupDateStamp.trn";
 $restoreFileNameFull="$BackupPath\$restoreFileName";
 
-$backupFileName="$DBName-Backup-$backupDateStamp-simple.trn";
-$backupFileNameFull="$BackupPath\$backupFileName";
-$backupDescription="$DBName - Full Database Backup $backupDateStamp"
-
 $connectionString = "Server=$DBServer;uid=$DBUser;pwd=$DBPassword;Database=master;Integrated Security=False;";
 
 $connection = New-Object System.Data.SqlClient.SqlConnection;
@@ -122,6 +118,65 @@ $logFilePhysicalName = $logFile.physical_name;
 
 Write-Output "Finished determining existing DB file locations at $(Get-Date)"
 
+#Determine default location for DB
+Write-Output "Determine Default file locations at $(Get-Date)"
+
+$sql = @"
+SELECT SERVERPROPERTY('INSTANCEDEFAULTDATAPATH')
+"@;
+
+$command = $connection.CreateCommand();
+$command.CommandText = "$sql";
+
+$reader = $command.ExecuteReader();
+
+$defaultFileLocation = $reader.GetString(0);
+
+Write-Output "Finished determining Default file locations at $(Get-Date)"
+
+# Delete existing snapshots if they existing
+$removeSnapshotSql = @"
+DECLARE @database VARCHAR(100)
+DECLARE @sql NVARCHAR(4000)
+DECLARE cur_db CURSOR FOR
+	SELECT name
+	FROM sys.databases
+	WHERE
+		source_database_id IN (SELECT database_id FROM sys.databases WHERE name = '$DBName')
+	ORDER BY create_date DESC
+	FOR READ ONLY
+
+OPEN cur_db
+FETCH NEXT FROM cur_db INTO @database
+WHILE (@@FETCH_STATUS = 0 )
+BEGIN
+
+	SET @sql = 'ALTER DATABASE ['+@database+'] SET OFFLINE WITH ROLLBACK IMMEDIATE;'
+	EXEC sp_executesql @sql
+	SET @sql = 'DROP DATABASE ['+@database+'];'
+	EXEC sp_executesql @sql
+	FETCH NEXT FROM cur_db INTO @database
+END
+CLOSE cur_db
+DEALLOCATE cur_db
+"@;
+
+$command = $connection.CreateCommand();
+$command.CommandText = "$removeSnapshotSql";
+$command.CommandTimeout = 600000;
+
+$exitCode = 0;
+$exitMessage = "Success";
+
+Write-Output "$(Get-Date -format 'yyyy-MM-dd HH:mm:ss') Beginning delete of snapshots of $DBName database"
+try {
+  $command.ExecuteNonQuery();
+} catch [System.Exception] {
+  $exitCode = 1;
+  $exitMessage = "ERROR - Restore failed: " + $_.Exception.Message;
+}
+Write-Output "$(Get-Date -format 'yyyy-MM-dd HH:mm:ss') Finished deleting snapshots of $DBName database"
+
 # Restore the database - need to take it offline, restore, then bring back online
 $restoreSql = @"
 USE [master];
@@ -159,53 +214,36 @@ if($exitCode -ne 0) {
   exit $exitCode;
 }
 
-# Set DB to simple recovery and shrink to improve restore performance
-$simpleAndShrinkSql = @"
-USE [master];
-ALTER DATABASE [$DBName] SET RECOVERY SIMPLE WITH NO_WAIT;
+# Create a snapshot of the database for quick restores
+$snapshotFilename = $defaultFileLocation + $DBName + "_snapshot.ss"; 
+$snapshotDBName = $DBName + "_Snapshot";
+
+$createSnapshotSql = @"
 USE [$DBName];
-DBCC SHRINKFILE (N'$logFileName' , 0, TRUNCATEONLY);
+
+CREATE DATABASE ON $snapshotDBName
+( 
+    NAME = $DBName, 
+    FILENAME = '$snapshotFilename'
+)
+AS SNAPSHOT OF $DBName;
 "@;
 
 $command = $connection.CreateCommand();
-$command.CommandText = "$simpleAndShrinkSql";
+$command.CommandText = "$createSnapshotSql";
 $command.CommandTimeout = 600000;
 
 $exitCode = 0;
 $exitMessage = "Success";
 
-Write-Output "Setting DB to simple recovery and shrinking at $(Get-Date)"
+Write-Output "Creating Snapshot DB at $(Get-Date)"
 try {
   $command.ExecuteNonQuery();
 } catch [System.Exception] {
   $exitCode = 1;
-  $exitMessage = "ERROR - Backup failed: " + $_.Exception.Message;
+  $exitMessage = "ERROR - Creating snapshot failed: " + $_.Exception.Message;
 }
-Write-Output "Finished setting DB to simple recovery and shrinking at $(Get-Date)"
-
-# Backup database that has been shrunk and set to simple recover mode
-$backupSql = @"
-USE [master];
-BACKUP DATABASE [$DBName]
-TO DISK = N'$backupFileNameFull'
-WITH COPY_ONLY, NOFORMAT, INIT, NAME = N'$backupDescription', SKIP, NOREWIND, NOUNLOAD, COMPRESSION, STATS = 10;
-"@
-
-$command = $connection.CreateCommand();
-$command.CommandText = "$backupSql";
-$command.CommandTimeout = 600000;
-
-$exitCode = 0;
-$exitMessage = "Success";
-
-Write-Output "$(Get-Date -format 'yyyy-MM-dd HH:mm:ss') Beginning backup to file $backupFileNameFull on server $DBServer"
-try {
-  $command.ExecuteNonQuery();
-} catch [System.Exception] {
-  $exitCode = 1;
-  $exitMessage = "ERROR - Backup failed: " + $_.Exception.Message;
-}
-Write-Output "$(Get-Date -format 'yyyy-MM-dd HH:mm:ss') Finished backup to file $backupFileNameFull on server $DBServer"
+Write-Output "Finished creating Snapshot DB at $(Get-Date)"
 
 Write-Output "Status: $exitMessage"
 exit $exitCode
