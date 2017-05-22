@@ -10,7 +10,7 @@ require('ui-select/dist/select.css');
   'use strict()';
 
   var constants = require('./constants');
-
+  console.log("app", constants.MODULES);
   angular.module(constants.MODULES.CROSSROADS, [
       constants.MODULES.CHILDCARE_DASHBOARD,
       constants.MODULES.CORE,

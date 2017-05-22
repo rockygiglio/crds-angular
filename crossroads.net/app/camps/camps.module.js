@@ -16,7 +16,7 @@ import CampsService from './camps.service';
 import ApplicationPage from './application_page/application_page.module';
 
 
-console.log('in camps')
+console.log('in camps 123')
 export default angular.module(constants.MODULES.CAMPS, [
   constants.MODULES.CORE,
   constants.MODULES.COMMON,

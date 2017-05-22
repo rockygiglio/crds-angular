@@ -40,6 +40,7 @@ function htmlReplace(devBuild) {
       profile: { js: '/assets/profile.js' },
       trips: { js: '/assets/trips.js' },
       camps: { js: '/assets/camps.js'},
+      invoices: { js: '/assets/invoice.js'},
       childcare: { js: '/assets/childcare.js' },
       search: { js: '/assets/search.js' },
       media: { js: '/assets/media.js' },
