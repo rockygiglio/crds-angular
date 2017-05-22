@@ -46,7 +46,11 @@
         contentBlockTitle: __HEADER_CONTENTBLOCK_TITLE__,
         contentBlockCategories: ['common']
       };
-      new CRDS.SharedHeader(options).render();
+      setTimeout(() => {
+        if ($('[data-header]').length > 0) {
+          new CRDS.SharedHeader(options).render();
+        }
+      }, 100);
     }
 
     function setOriginForCmsPreviewPane($injectedDocument) {
