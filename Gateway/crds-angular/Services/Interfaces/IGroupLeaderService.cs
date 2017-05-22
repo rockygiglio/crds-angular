@@ -12,7 +12,8 @@ namespace crds_angular.Services.Interfaces
         void SetInterested(string token);
         IObservable<int> SetApplied(string token );
         IObservable<int> SaveSpiritualGrowth(SpiritualGrowthDTO spiritualGrowth);
-        IObservable<bool> SendReferenceEmail(int contactId);
+        IObservable<Dictionary<string, object>> GetReferenceData(int contactId); 
+        IObservable<int> SendReferenceEmail(Dictionary<string,object> referenceData );
     }
     
 }

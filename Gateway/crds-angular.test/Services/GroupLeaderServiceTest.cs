@@ -200,8 +200,7 @@ namespace crds_angular.test.Services
             var fakePerson = PersonMock(leaderDto);
             _personService.Setup(m => m.GetLoggedInUserProfile(fakeToken)).Returns(fakePerson);
             _userRepo.Setup(m => m.GetUserIdByUsername(It.IsAny<string>()));
-            _contactMock.Setup(m => m.UpdateContact(It.IsAny<int>(), It.IsAny<Dictionary<string, object>>())).Throws<ApplicationException>();
-            _userRepo.Setup(m => m.UpdateUser(It.IsAny<Dictionary<string, object>>()));
+            _contactMock.Setup(m => m.UpdateContact(It.IsAny<int>(), It.IsAny<Dictionary<string, object>>())).Throws<ApplicationException>();            
 
             Assert.Throws<ApplicationException>(() => _fixture.SaveProfile(fakeToken, leaderDto).Wait());
         }
@@ -349,22 +348,98 @@ namespace crds_angular.test.Services
         }
 
         [Test]
-        public void ShouldSendAnEmailToThePersonsReference()
+        public void ShouldGetReferenceData()
         {
-            const int contactId = 12345;
-            const int referenceContactId = 9876545;
+            const int contactId = 123456;
+            const int refContactId = 987654;
             var contact = ContactMock(contactId);
-            var referenceContact = ContactMock(referenceContactId);
-
-            _participantRepository.Setup(m => m.GetParticipant(contactId)).Returns(ParticipantMock());
-            _contactMock.Setup(m => m.GetContactById(contactId)).Returns(contact);
+            var participant = ParticipantMock();
 
             _configWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderFormId")).Returns(29);
             _configWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderFormReferenceContact")).Returns(1519);
+            _participantRepository.Setup(m => m.GetParticipant(contactId)).Returns(participant);
+            _contactMock.Setup(m => m.GetContactById(contactId)).Returns(contact);
+            _formService.Setup(m => m.GetFormResponseAnswer(29, contactId, 1519, null)).Returns(refContactId.ToString());
+
+            var res = _fixture.GetReferenceData(contactId);
+
+            res.Subscribe((result) =>
+            {
+                Assert.AreEqual(participant, result["participant"]);
+                Assert.AreEqual(contact, result["contact"]);
+                Assert.AreEqual("987654", result["referenceContactId"]);
+            },
+            (err) =>
+            {
+                Assert.Fail(err.ToString());
+            });
+        }
+
+        [Test]
+        public void ShouldGetNoReferenceId()
+        {
+            const int contactId = 123456;
+            var contact = ContactMock(contactId);
+            var participant = ParticipantMock();
+
+            _configWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderFormId")).Returns(29);
+            _configWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderFormReferenceContact")).Returns(1519);
+            _participantRepository.Setup(m => m.GetParticipant(contactId)).Returns(participant);
+            _contactMock.Setup(m => m.GetContactById(contactId)).Returns(contact);
+            _formService.Setup(m => m.GetFormResponseAnswer(29, contactId, 1519, null));
+
+            var res = _fixture.GetReferenceData(contactId);
+
+            res.Subscribe((result) =>
+            {
+                Assert.AreEqual(participant, result["participant"]);
+                Assert.AreEqual(contact, result["contact"]);
+                Assert.AreEqual("0", result["referenceContactId"]);
+            },
+            (err) =>
+            {
+                Assert.Fail(err.ToString());
+            });
+        }
+
+        [Test]
+        [ExpectedException(typeof(ApplicationException))]
+        public void ShouldThrowApplicationExceptionOnGetReferenceData()
+        {
+            const int contactId = 123456;
+            const int refContactId = 987654;
+            var contact = ContactMock(contactId);
+
+            _configWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderFormId")).Returns(29);
+            _configWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderFormReferenceContact")).Returns(1519);
+            _participantRepository.Setup(m => m.GetParticipant(contactId)).Throws<ApplicationException>();
+
+            var res = _fixture.GetReferenceData(contactId);
+
+            res.Subscribe((result) =>
+            {
+                Assert.Fail("No Exception Thrown");
+            });
+        }
+
+        [Test]
+        public void ShouldSendAnEmailToThePersonsReference()
+        {
+            const int contactId = 123456;
+            const int referenceContactId = 9876545;
+            const int messageId = 456;
+            var participant = ParticipantMock();
+            var contact = ContactMock(contactId);
+            var referenceContact = ContactMock(referenceContactId);
+            var referenceData = new Dictionary<string,object>
+            {
+                { "participant", participant },
+                { "contact", contact },
+                { "referenceContactId", referenceContactId.ToString() }
+            };
+
             _configWrapper.Setup(m => m.GetConfigIntValue("GroupsContactId")).Returns(1256);
             _configWrapper.Setup(m => m.GetConfigValue("GroupsEmailAddress")).Returns("groups@crossroads.net");
-
-            _formService.Setup(m => m.GetFormResponseAnswer(29, contactId, 1519, null)).Returns(referenceContactId.ToString());
 
             _contactMock.Setup(m => m.GetContactById(referenceContactId)).Returns(referenceContact);
             _configWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderReferenceEmailTemplate")).Returns(2018);
@@ -372,13 +447,19 @@ namespace crds_angular.test.Services
             var mergeData = new Dictionary<string, object>();
             var communication = ReferenceCommunication(2018, mergeData, referenceContact);
 
-            _communicationRepository.Setup(m => m.GetTemplateAsCommunication(2018, It.IsAny<int>(), "group@crossroads.net", It.IsAny<int>(), "groups@crossroads.net", referenceContact.Contact_ID, referenceContact.Email_Address, It.IsAny<Dictionary<string, object>>() ));           
-            _communicationRepository.Setup(m => m.SendMessage(communication, false));
+            _communicationRepository.Setup(m => m.GetTemplateAsCommunication(2018, 1256, "groups@crossroads.net", 1256, "groups@crossroads.net", referenceContact.Contact_ID, It.IsAny<string>(), It.IsAny<Dictionary<string, object>>())).Returns(communication);
+            _communicationRepository.Setup(m => m.SendMessage(communication, false)).Returns(messageId);
 
-            var result = _fixture.SendReferenceEmail(contactId).Wait();
-            Assert.IsTrue(result);
+            var result = _fixture.SendReferenceEmail(referenceData);
 
-
+            result.Subscribe((n) =>
+            {
+                Assert.AreEqual(messageId, result);
+            },
+            (err) =>
+            {
+                Assert.Fail(err.ToString());
+            });
         }
 
         private static MpCommunication ReferenceCommunication(int templateId, Dictionary<string, object> mergeData, MpMyContact toContact)
@@ -437,7 +518,8 @@ namespace crds_angular.test.Services
                 First_Name = "Blah",
                 Last_Name = "Halb",
                 Contact_ID = contactId,
-                Nickname = "B"
+                Nickname = "B",
+                Email_Address = "sumemail@mock.com"
             };
         }
 
