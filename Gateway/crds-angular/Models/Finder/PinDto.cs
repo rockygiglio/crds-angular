@@ -8,7 +8,8 @@ namespace crds_angular.Models.Finder
     {
         PERSON = 1,
         GATHERING = 2,
-        SITE = 3 
+        SITE = 3,
+        SMALL_GROUP = 4
     };
 
     public class PinDto

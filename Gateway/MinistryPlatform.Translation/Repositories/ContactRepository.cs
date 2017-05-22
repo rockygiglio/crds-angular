@@ -359,7 +359,7 @@ namespace MinistryPlatform.Translation.Repositories
                     {
                         //address does not exist, create it, then attach to household
                         var addressId = _ministryPlatformService.CreateRecord(_configurationWrapper.GetConfigIntValue("Addresses"), addressDictionary, token);
-                        householdDictionary.Add("Address_ID", addressId);
+                        householdDictionary["Address_ID"] = addressId;
                     }
                     _ministryPlatformService.UpdateRecord(_configurationWrapper.GetConfigIntValue("Households"), householdDictionary, token);
                     return 1;

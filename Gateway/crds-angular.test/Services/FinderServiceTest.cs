@@ -76,6 +76,7 @@ namespace crds_angular.test.Services
             _mpConfigurationWrapper.Setup(mocked => mocked.GetConfigIntValue("GroupRoleLeader")).Returns(22);
             _mpConfigurationWrapper.Setup(mocked => mocked.GetConfigIntValue("ApprovedHostStatus")).Returns(3);
             _mpConfigurationWrapper.Setup(mocked => mocked.GetConfigIntValue("AnywhereGroupTypeId")).Returns(30);
+            _mpConfigurationWrapper.Setup(mocked => mocked.GetConfigValue("FinderConnectFlag")).Returns("CONNECT");
             _mpConfigurationWrapper.Setup(mocked => mocked.GetConfigIntValue("Group_Role_Default_ID")).Returns(_memberRoleId);
             _mpConfigurationWrapper.Setup(mocked => mocked.GetConfigIntValue("AnywhereGatheringInvitationType")).Returns(_anywhereGatheringInvitationTypeId);
 
@@ -252,7 +253,6 @@ namespace crds_angular.test.Services
                     mocked => mocked.SearchConnectAwsCloudsearch("matchall", "_all_fields", It.IsAny<int>(), It.IsAny<GeoCoordinate>(), It.IsAny<AwsBoundingBox>()))
                 .Returns(searchresults);
 
-            _mpConfigurationWrapper.Setup(mocked => mocked.GetConfigIntValue("AnywhereGroupTypeId")).Returns(30);
             _mpGroupToolService.Setup(m => m.SearchGroups(It.IsAny<int[]>(), null, It.IsAny<string>(), null, originCoords)).Returns(new List<GroupDTO>());
             _mpFinderRepository.Setup(mocked => mocked.GetPinsInRadius(originCoords)).Returns(new List<SpPinDto>());
             _addressGeocodingService.Setup(mocked => mocked.GetGeoCoordinates(address)).Returns(originCoords);
@@ -266,7 +266,7 @@ namespace crds_angular.test.Services
                 BottomRightCoordinates = new GeoCoordinates(21.52, -77.78)
             };
 
-            List<PinDto> pins = _fixture.GetPinsInBoundingBox(originCoords, address, boundingBox);
+            List<PinDto> pins = _fixture.GetPinsInBoundingBox(originCoords, address, boundingBox, "CONNECT");
 
             Assert.IsInstanceOf<List<PinDto>>(pins);
         }
@@ -504,7 +504,7 @@ namespace crds_angular.test.Services
             _awsCloudsearchService.Setup(mocked => mocked.UploadNewPinToAws(It.IsAny<PinDto>()));
 
             var result = _fixture.UpdateGathering(pin);
-            _addressService.Verify(ver => ver.GetGeoLocationCascading(It.IsAny<AddressDTO>()), Times.Exactly(2));
+            _addressService.Verify(ver => ver.GetGeoLocationCascading(It.IsAny<AddressDTO>()), Times.Exactly(1));
             _mpFinderRepository.VerifyAll();
             _mpContactRepository.VerifyAll();
             _awsCloudsearchService.VerifyAll();
