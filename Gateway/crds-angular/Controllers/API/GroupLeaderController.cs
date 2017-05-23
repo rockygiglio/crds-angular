@@ -86,7 +86,7 @@ namespace crds_angular.Controllers.API
 
                         _groupLeaderService.GetReferenceData(spiritualGrowth.ContactId).Subscribe((res) =>
                         {
-                            _groupLeaderService.SendReferenceEmail(res).RunAsync(CancellationToken.None);
+                            _groupLeaderService.SendReferenceEmail(res).Subscribe(CancellationToken.None);
                         });
                         return Ok();
                     }

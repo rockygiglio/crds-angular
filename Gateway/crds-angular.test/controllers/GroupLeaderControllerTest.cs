@@ -11,11 +11,9 @@ using crds_angular.Services.Interfaces;
 using Crossroads.Web.Common.Security;
 using Moq;
 using NUnit.Framework;
-using System.Reactive;
 using System.Reactive.Disposables;
 using System.Web.Http;
 using MinistryPlatform.Translation.Models;
-using MvcContrib;
 
 namespace crds_angular.test.controllers
 {
@@ -109,6 +107,31 @@ namespace crds_angular.test.controllers
 
             var response = await _fixture.SaveSpiritualGrowth(mockSpiritualGrowth);
             Assert.IsInstanceOf<OkResult>(response);
+        }
+
+        [Test]
+        public void ShouldNotSendEmailIfSpiritualGrowthFails()
+        {
+            _fixture.Request.Headers.Authorization = new AuthenticationHeaderValue(authType, authToken);
+            var mockSpiritualGrowth = SpiritualGrowthMock();
+            const int referenceContactId = 987654;
+            var participant = ParticipantMock();
+            var contact = ContactMock(mockSpiritualGrowth.ContactId);
+            var referenceData = new Dictionary<string, object>
+            {
+                { "participant", participant },
+                { "contact", contact },
+                { "referenceContactId", referenceContactId.ToString() }
+            };
+            _groupLeaderService.Setup(m => m.SaveSpiritualGrowth(It.IsAny<SpiritualGrowthDTO>())).Returns(Observable.Create<int>((observer) =>
+            {
+                observer.OnError(new Exception(""));
+                return Disposable.Empty;
+            }));
+            Assert.Throws<HttpResponseException>(async () =>
+            {
+                await _fixture.SaveSpiritualGrowth(mockSpiritualGrowth);
+            });
         }
 
         [Test]
