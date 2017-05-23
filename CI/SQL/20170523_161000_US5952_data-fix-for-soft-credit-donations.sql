@@ -59,5 +59,5 @@ CLOSE CursorPUTT
 DEALLOCATE CursorPUTT
 
 
-SELECT * FROM #NeedToUpdate
+
 DROP TABLE #NeedToUpdate
