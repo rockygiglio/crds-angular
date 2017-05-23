@@ -147,6 +147,9 @@ namespace MinistryPlatform.Translation.Repositories
             }
         }
 
+        
+        // TODO account for type of communication - initiated from connect or groups
+
         public void RecordConnection(MpConnectCommunication connection)
         {
             var apiToken = _apiUserRepository.GetToken();

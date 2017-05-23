@@ -57,6 +57,7 @@ namespace crds_angular.Services
         private readonly int _leaderRoleId;
         private readonly int _memberRoleId;
         private readonly int _anywhereGatheringInvitationTypeId;
+        private readonly int _groupInvitationTypeId;
         private readonly int _domainId;
         private readonly string _finderConnect;
         private readonly string _finderGroupTool;
@@ -115,6 +116,7 @@ namespace crds_angular.Services
             _memberRoleId = configurationWrapper.GetConfigIntValue("Group_Role_Default_ID");
             _memberRoleId = configurationWrapper.GetConfigIntValue("Group_Role_Default_ID");
             _anywhereGatheringInvitationTypeId = configurationWrapper.GetConfigIntValue("AnywhereGatheringInvitationType");
+            _groupInvitationTypeId = configurationWrapper.GetConfigIntValue("GroupInvitationType");
             _domainId = configurationWrapper.GetConfigIntValue("DomainId");
             _finderConnect = configurationWrapper.GetConfigValue("FinderConnectFlag");
             _finderGroupTool = configurationWrapper.GetConfigValue("FinderGroupToolFlag");
@@ -618,21 +620,25 @@ namespace crds_angular.Services
         }
 
 
-        public Invitation InviteToGathering(string token, int gatheringId, User person)
-        {
+        public Invitation InviteToGroup(string token, int gatheringId, User person, string finderFlag)
+        {            
+            var inviteType = finderFlag.Equals(_finderConnect) ? _anywhereGatheringInvitationTypeId : _groupInvitationTypeId;
+
             var invitation = new Invitation
             {
                 RecipientName = person.firstName,
                 EmailAddress = person.email,
                 SourceId = gatheringId,
                 GroupRoleId = _memberRoleId,
-                InvitationType = _anywhereGatheringInvitationTypeId,
+                InvitationType = inviteType, 
                 RequestDate = DateTime.Now
             };
 
             _invitationService.ValidateInvitation(invitation, token);
             invitation = _invitationService.CreateInvitation(invitation, token);
 
+            // TODO US8247 - Guest giver stuff - see story for info
+            
             //if the invitee does not have a contact then create one
             var toContactId = _contactRepository.GetContactIdByEmail(person.email);
             if (toContactId == 0)
@@ -648,6 +654,8 @@ namespace crds_angular.Services
                 CommunicationStatusId = _configurationWrapper.GetConfigIntValue("ConnectCommunicationStatusUnanswered"),
                 GroupId = gatheringId
             };
+
+            // TODO connect communication audit log - groups vs connect
 
             RecordCommunication(connection);
             return invitation;
