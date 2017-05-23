@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Reactive.Threading.Tasks;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http;
 using crds_angular.Exceptions.Models;
@@ -81,7 +82,12 @@ namespace crds_angular.Controllers.API
                     try
                     {
                         _groupLeaderService.SaveSpiritualGrowth(spiritualGrowth)
-                            .Concat(_groupLeaderService.SetApplied(token)).Wait();                       
+                            .Concat(_groupLeaderService.SetApplied(token)).Wait();
+
+                        _groupLeaderService.GetReferenceData(spiritualGrowth.ContactId).Subscribe((res) =>
+                        {
+                            _groupLeaderService.SendReferenceEmail(res).Subscribe(CancellationToken.None);
+                        });
                         return Ok();
                     }
                     catch (Exception e)
