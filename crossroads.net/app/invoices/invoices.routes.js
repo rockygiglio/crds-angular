@@ -14,7 +14,7 @@ export default function InvoicesRoutes($httpProvider, $stateProvider) {
       url: '/invoices/:invoiceId',
       template: '<invoice></invoice>',
       data: {
-        isProtected: true,
+        isProtected: false,
         meta: {
           title: 'Invoice',
           description: ''
