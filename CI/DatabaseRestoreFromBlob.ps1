@@ -47,9 +47,7 @@ Param (
   [Parameter(Mandatory=$true)]
   [string]$DpToolUriToBeReplaced
   [Parameter(Mandatory=$true)]
-  [string]$DpToolUriPrefix,
-  [Parameter(Mandatory=$true)]
-  [string]$DpToolBaseUpdateUriToken
+  [string]$DpToolNewUri
 )
 
 $SourceDBName = "MinistryPlatform";
@@ -62,13 +60,6 @@ $connectionString = "Server=$DBServer;uid=$DBUser;pwd=$DBPassword;Database=maste
 $connection = New-Object System.Data.SqlClient.SqlConnection;
 $connection.ConnectionString = $connectionString;
 $connection.Open();
-
-# Update dp_Tool Launch_Page value prefix based on environment
-if ($Branch -eq "development") {
-    $DpToolUriPrefix += "-int."
-} elseif ($Branch -eq "release") {
-    $DpToolUriPrefix += "-demo."
-}
 
 # Determine the current log and data file locations, so we can relocate from the backup.
 # This is needed because the servers are not setup with identical drives and paths.
@@ -222,7 +213,7 @@ DROP TABLE #NewConfigSettings
 
 -- Update dp_Tools Launch_Page value
 UPDATE dp_Tools
-    SET Launch_Page = REPLACE(Launch_Page, '$DpToolUriToBeReplaced', '$DpToolUriPrefix + $DpToolBaseUpdateUriToken')
+    SET Launch_Page = REPLACE(Launch_Page, '$DpToolUriToBeReplaced', '$DpToolNewUri')
 
 -- The following Scripts are necessary to enable the application to work with the database.
 -- Please don't adjust anything by the Database Name in these scripts.
