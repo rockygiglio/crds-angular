@@ -60,7 +60,7 @@ namespace MinistryPlatform.Translation.Repositories
             string columns = "User_ID, User_Name, User_Email, User_GUID, Can_Impersonate";
             var userList = _ministryPlatformRest.UsingAuthenticationToken(ApiLogin()).SearchTable<MpUser>("dp_Users", search, columns);
 
-            return userList.First();
+            return userList.FirstOrDefault();
         }
 
         public MpUser GetUserByResetToken(string resetToken)
