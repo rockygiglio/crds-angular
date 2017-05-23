@@ -45,6 +45,8 @@ Param (
   [Parameter(Mandatory=$true)]
   [string] $SMTPServerPort,
   [Parameter(Mandatory=$true)]
+  [string]$DpToolUriToBeReplaced
+  [Parameter(Mandatory=$true)]
   [string]$DpToolUriPrefix,
   [Parameter(Mandatory=$true)]
   [string]$DpToolBaseUpdateUriToken
@@ -62,31 +64,11 @@ $connection.ConnectionString = $connectionString;
 $connection.Open();
 
 # Update dp_Tool Launch_Page value prefix based on environment
-if ($Branch-eq "development") {
+if ($Branch -eq "development") {
     $DpToolUriPrefix += "-int."
-} elseif ($Branch-eq "release") {
+} elseif ($Branch -eq "release") {
     $DpToolUriPrefix += "-demo."
 }
-
-$toolsToBeUpdated = @{
-    2 = "Family";
-    6 = "ConnectionCard";
-    13 = "Inactivate";
-    15 = "ContactLog";
-    32 = "DeceasedPerson";
-    375 = "ResetUser";
-    601 = "CustomFormEditor";
-    602 = "SendGrid";
-}
-
-$sqlInsertValues = "";
-
-foreach ($key in @($toolsToBeUpdated.Keys)) {
-    $toolsToBeUpdated[$key] = $dpToolUriPrefix + $DpToolBaseUpdateUriToken + $toolsToBeUpdated[$key] + "/"
-    $sqlInsertValues += "($key, '$($toolsToBeUpdated[$key])'), "
-}
-
-$sqlInsertValues = $sqlInsertValues.TrimEnd(", ")
 
 # Determine the current log and data file locations, so we can relocate from the backup.
 # This is needed because the servers are not setup with identical drives and paths.
@@ -239,19 +221,8 @@ UPDATE s
 DROP TABLE #NewConfigSettings
 
 -- Update dp_Tools Launch_Page value
-CREATE TABLE #NewDpToolValues(Tool_ID INT, Launch_Page NVARCHAR(1024))
-
-INSERT INTO #NewDpToolValues
-    (Tool_ID, Launch_Page)
-    VALUES
-    $sqlInsertValues
-
 UPDATE dp_Tools
-    SET dp_Tools.Launch_Page = new.Launch_Page
-        INNER JOIN #NewDpToolValues new ON
-            dp_Tools.Tool_ID = new.Tool_ID
-
-DROP TABLE #NewDpToolValues
+    SET Launch_Page = REPLACE(Launch_Page, '$DpToolUriToBeReplaced', '$DpToolUriPrefix + $DpToolBaseUpdateUriToken')
 
 -- The following Scripts are necessary to enable the application to work with the database.
 -- Please don't adjust anything by the Database Name in these scripts.
