@@ -104,7 +104,7 @@ namespace MinistryPlatform.Translation.Test.Services
         {
             _ministryPlatformService.Setup(mocked => mocked.GetContactInfo("logged in")).Returns(new PlatformService.UserInfo() { UserId = 123 });
             _ministryPlatformRest.Setup(mocked => mocked.UsingAuthenticationToken("ABC")).Returns(_ministryPlatformRest.Object);
-            _ministryPlatformRest.Setup(mocked => mocked.SearchTable<MpUser>("dp_Users", It.IsAny<string>(), It.IsAny<string>(), (string) null, false)).Returns(
+            _ministryPlatformRest.Setup(mocked => mocked.Search<MpUser>(It.IsAny<string>(), It.IsAny<string>(), (string) null, false)).Returns(
                 new List<MpUser>()
                 {
                     new MpUser()

@@ -58,9 +58,9 @@ namespace MinistryPlatform.Translation.Repositories
 
             string search = $"User_ID = {userId}";
             string columns = "User_ID, User_Name, User_Email, User_GUID, Can_Impersonate";
-            var userList = _ministryPlatformRest.UsingAuthenticationToken(ApiLogin()).SearchTable<MpUser>("dp_Users", search, columns);
+            var userList = _ministryPlatformRest.UsingAuthenticationToken(ApiLogin()).Search<MpUser>(search, columns);
 
-            return userList.FirstOrDefault();
+            return userList?.FirstOrDefault();
         }
 
         public MpUser GetUserByResetToken(string resetToken)

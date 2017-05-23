@@ -1,7 +1,9 @@
-﻿using Newtonsoft.Json;
+﻿using Crossroads.Web.Common.MinistryPlatform;
+using Newtonsoft.Json;
 
 namespace MinistryPlatform.Translation.Models
 {
+    [MpRestApiTable(Name = "dp_Users")]
     public class MpUser
     {
         [JsonProperty(PropertyName = "User_Name")]
