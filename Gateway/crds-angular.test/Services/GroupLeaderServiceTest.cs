@@ -429,7 +429,6 @@ namespace crds_angular.test.Services
             const int referenceContactId = 9876545;
             const int messageId = 456;
             const int templateId = 2018;
-            var mpTemplate = ReferenceTemplate();
             var participant = ParticipantMock();
             var contact = ContactMock(contactId);
             var referenceContact = ContactMock(referenceContactId);
@@ -440,15 +439,13 @@ namespace crds_angular.test.Services
                 { "referenceContactId", referenceContactId.ToString() }
             };
 
-
-            _communicationRepository.Setup(m => m.GetTemplate(templateId)).Returns(mpTemplate);
             _contactMock.Setup(m => m.GetContactById(referenceContactId)).Returns(referenceContact);
             _configWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderReferenceEmailTemplate")).Returns(templateId);
 
             var mergeData = new Dictionary<string, object>();
             var communication = ReferenceCommunication(2018, mergeData, referenceContact);
 
-            _communicationRepository.Setup(m => m.GetTemplateAsCommunication(2018, mpTemplate.FromContactId, mpTemplate.FromEmailAddress, mpTemplate.ReplyToContactId, mpTemplate.ReplyToEmailAddress, referenceContact.Contact_ID, It.IsAny<string>(), It.IsAny<Dictionary<string, object>>())).Returns(communication);
+            _communicationRepository.Setup(m => m.GetTemplateAsCommunication(2018, referenceContact.Contact_ID, It.IsAny<string>(), It.IsAny<Dictionary<string, object>>())).Returns(communication);
             _communicationRepository.Setup(m => m.SendMessage(communication, false)).Returns(messageId);
 
             var result = _fixture.SendReferenceEmail(referenceData);
@@ -470,7 +467,6 @@ namespace crds_angular.test.Services
             const int referenceContactId = 9876545;
             const int messageId = 456;
             const int templateId = 2018;
-            var mpTemplate = ReferenceTemplate();
             var participant = ParticipantMock();
             var contact = ContactMock(contactId);
             var referenceContact = ContactMock(referenceContactId);
@@ -480,9 +476,7 @@ namespace crds_angular.test.Services
                 { "contact", contact },
                 { "referenceContactId", referenceContactId.ToString() }
             };
-
-
-            _communicationRepository.Setup(m => m.GetTemplate(templateId)).Returns(mpTemplate);
+     
             _contactMock.Setup(m => m.GetContactById(referenceContactId)).Returns(referenceContact);
             _configWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderReferenceEmailTemplate")).Returns(templateId);
             _configWrapper.Setup(m => m.GetConfigValue("BaseUrl")).Returns("/");
@@ -498,7 +492,7 @@ namespace crds_angular.test.Services
 
             var communication = ReferenceCommunication(2018, mergeData, referenceContact);
 
-            _communicationRepository.Setup(m => m.GetTemplateAsCommunication(2018, mpTemplate.FromContactId, mpTemplate.FromEmailAddress, mpTemplate.ReplyToContactId, mpTemplate.ReplyToEmailAddress, referenceContact.Contact_ID, It.IsAny<string>(), mergeData)).Returns(communication);
+            _communicationRepository.Setup(m => m.GetTemplateAsCommunication(2018, referenceContact.Contact_ID, It.IsAny<string>(), mergeData)).Returns(communication);
             _communicationRepository.Setup(m => m.SendMessage(communication, false)).Returns(messageId);
 
             var result = _fixture.SendReferenceEmail(referenceData);

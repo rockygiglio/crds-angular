@@ -196,9 +196,7 @@ namespace crds_angular.Services
 
         public IObservable<int> SendReferenceEmail(Dictionary<string, object> referenceData)
         {
-            var templateId = _configWrapper.GetConfigIntValue("GroupLeaderReferenceEmailTemplate");
-            var mpTemplate = _communicationRepository.GetTemplate(templateId);
-
+            var templateId = _configWrapper.GetConfigIntValue("GroupLeaderReferenceEmailTemplate");           
             return Observable.Create<int>(observer =>
             {
                 try
@@ -206,11 +204,7 @@ namespace crds_angular.Services
                     var referenceId = int.Parse((string)referenceData["referenceContactId"]);
                     var reference = _contactRepository.GetContactById(referenceId);
                     var template = _communicationRepository.GetTemplateAsCommunication(
-                        templateId,
-                        mpTemplate.FromContactId,
-                        mpTemplate.FromEmailAddress,
-                        mpTemplate.ReplyToContactId,
-                        mpTemplate.ReplyToEmailAddress,
+                        templateId,                        
                         referenceId,
                         reference.Email_Address,
                         SetupReferenceEmailMergeData(reference, (MpMyContact)referenceData["contact"], ((MpParticipant)referenceData["participant"]).ParticipantId));
