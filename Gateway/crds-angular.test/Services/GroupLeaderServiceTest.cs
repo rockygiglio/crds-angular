@@ -428,6 +428,8 @@ namespace crds_angular.test.Services
             const int contactId = 123456;
             const int referenceContactId = 9876545;
             const int messageId = 456;
+            const int templateId = 2018;
+            var mpTemplate = ReferenceTemplate();
             var participant = ParticipantMock();
             var contact = ContactMock(contactId);
             var referenceContact = ContactMock(referenceContactId);
@@ -438,16 +440,65 @@ namespace crds_angular.test.Services
                 { "referenceContactId", referenceContactId.ToString() }
             };
 
-            _configWrapper.Setup(m => m.GetConfigIntValue("GroupsContactId")).Returns(1256);
-            _configWrapper.Setup(m => m.GetConfigValue("GroupsEmailAddress")).Returns("groups@crossroads.net");
 
+            _communicationRepository.Setup(m => m.GetTemplate(templateId)).Returns(mpTemplate);
             _contactMock.Setup(m => m.GetContactById(referenceContactId)).Returns(referenceContact);
-            _configWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderReferenceEmailTemplate")).Returns(2018);
+            _configWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderReferenceEmailTemplate")).Returns(templateId);
 
             var mergeData = new Dictionary<string, object>();
             var communication = ReferenceCommunication(2018, mergeData, referenceContact);
 
-            _communicationRepository.Setup(m => m.GetTemplateAsCommunication(2018, 1256, "groups@crossroads.net", 1256, "groups@crossroads.net", referenceContact.Contact_ID, It.IsAny<string>(), It.IsAny<Dictionary<string, object>>())).Returns(communication);
+            _communicationRepository.Setup(m => m.GetTemplateAsCommunication(2018, mpTemplate.FromContactId, mpTemplate.FromEmailAddress, mpTemplate.ReplyToContactId, mpTemplate.ReplyToEmailAddress, referenceContact.Contact_ID, It.IsAny<string>(), It.IsAny<Dictionary<string, object>>())).Returns(communication);
+            _communicationRepository.Setup(m => m.SendMessage(communication, false)).Returns(messageId);
+
+            var result = _fixture.SendReferenceEmail(referenceData);
+
+            result.Subscribe((n) =>
+            {
+                Assert.AreEqual(messageId, result);
+            },
+            (err) =>
+            {
+                Assert.Fail(err.ToString());
+            });
+        }
+
+        [Test]
+        public void ShouldSetupMergeDataCorrectly()
+        {
+            const int contactId = 123456;
+            const int referenceContactId = 9876545;
+            const int messageId = 456;
+            const int templateId = 2018;
+            var mpTemplate = ReferenceTemplate();
+            var participant = ParticipantMock();
+            var contact = ContactMock(contactId);
+            var referenceContact = ContactMock(referenceContactId);
+            var referenceData = new Dictionary<string, object>
+            {
+                { "participant", participant },
+                { "contact", contact },
+                { "referenceContactId", referenceContactId.ToString() }
+            };
+
+
+            _communicationRepository.Setup(m => m.GetTemplate(templateId)).Returns(mpTemplate);
+            _contactMock.Setup(m => m.GetContactById(referenceContactId)).Returns(referenceContact);
+            _configWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderReferenceEmailTemplate")).Returns(templateId);
+            _configWrapper.Setup(m => m.GetConfigValue("BaseUrl")).Returns("/");
+
+            var mergeData = new Dictionary<string, object>
+            {
+                {"Recipient_First_Name", referenceContact.Nickname },
+                {"First_Name" , contact.Nickname },
+                {"Last_Name", contact.Last_Name },
+                {"Participant_ID", participant.ParticipantId },
+                {"Base_Url", "/"}
+            };
+
+            var communication = ReferenceCommunication(2018, mergeData, referenceContact);
+
+            _communicationRepository.Setup(m => m.GetTemplateAsCommunication(2018, mpTemplate.FromContactId, mpTemplate.FromEmailAddress, mpTemplate.ReplyToContactId, mpTemplate.ReplyToEmailAddress, referenceContact.Contact_ID, It.IsAny<string>(), mergeData)).Returns(communication);
             _communicationRepository.Setup(m => m.SendMessage(communication, false)).Returns(messageId);
 
             var result = _fixture.SendReferenceEmail(referenceData);

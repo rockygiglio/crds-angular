@@ -196,9 +196,9 @@ namespace crds_angular.Services
 
         public IObservable<int> SendReferenceEmail(Dictionary<string, object> referenceData)
         {
-            var groupContactId = _configWrapper.GetConfigIntValue("GroupsContactId");
-            var groupContactEmail = _configWrapper.GetConfigValue("GroupsEmailAddress");
             var templateId = _configWrapper.GetConfigIntValue("GroupLeaderReferenceEmailTemplate");
+            var mpTemplate = _communicationRepository.GetTemplate(templateId);
+
             return Observable.Create<int>(observer =>
             {
                 try
@@ -207,10 +207,10 @@ namespace crds_angular.Services
                     var reference = _contactRepository.GetContactById(referenceId);
                     var template = _communicationRepository.GetTemplateAsCommunication(
                         templateId,
-                        groupContactId,
-                        groupContactEmail,
-                        groupContactId,
-                        groupContactEmail,
+                        mpTemplate.FromContactId,
+                        mpTemplate.FromEmailAddress,
+                        mpTemplate.ReplyToContactId,
+                        mpTemplate.ReplyToEmailAddress,
                         referenceId,
                         reference.Email_Address,
                         SetupReferenceEmailMergeData(reference, (MpMyContact)referenceData["contact"], ((MpParticipant)referenceData["participant"]).ParticipantId));
@@ -221,8 +221,7 @@ namespace crds_angular.Services
                 {
                     observer.OnError(new ApplicationException("Unable to send reference email", e));
                 }
-
-                return Disposable.Create(() => Console.WriteLine("Observable Destroyed"));
+                return Disposable.Empty;
             });                              
         }
 
