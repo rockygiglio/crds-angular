@@ -8,8 +8,6 @@
 
 Param (
   [Parameter(Mandatory=$true)]
-  [string]$Branch,
-  [Parameter(Mandatory=$true)]
   [string]$DBServer,
   [string]$DBName = "MinistryPlatform", # default to MinistryPlatform
   [Parameter(Mandatory=$true)]
