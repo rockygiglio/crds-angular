@@ -96,25 +96,6 @@ Once karma-cli is installed, just run the commands below which will open chrome 
 * For the main application run `karma start crossroads.conf.js`
 * For the core folders run `karma start core.tests.conf.js`
  
-#### Functional Tests
-We use protractor to run the tests and Jasmine to write the specs. You will need to install protractor globally. 
-
-Functional Tests are kept in (e2e)[./e2e]
-
-Windows users can run:
-``` npm set prefix "C:\Program Files\nodejs" ```
-
-``` npm install -g protractor ```
-
-Mac and Linux users can run:
-``` npm install -g protractor ```
-
-Next, update the selenium drivers. `webdriver-manager update --out_dir=node_modules/protractor/selenium`. 
-
-To run tests in safari, you will need to download the safari plugin from (here)[http://selenium-release.storage.googleapis.com/index.html?path=2.45/] and install it.
-
-You will now be able to run protractor by typing `protractor protractor.conf.js`. 
-
 ###Run
 To run the project, run `gulp start` and point your browser to `http://localhost:8080`. If you want live reload, use `http://localhost:8080/webpack-dev-server` but keep in mind that the angular inspector will not work correctly and routes will not show up correctly with live reload. 
 

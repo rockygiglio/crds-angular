@@ -74,8 +74,6 @@
     "npm": "^2.14.3",
     "phantomjs": "^1.9.17",
     "phantomjs-polyfill": "0.0.1",
-    "protractor": "^2.0.0",
-    "protractor-html-screenshot-reporter": "0.0.19",
     "sass-loader": "^3.1.2",
     "style-loader": "^0.12.3",
     "url-loader": "^0.5.6",
