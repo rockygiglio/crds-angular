@@ -623,7 +623,7 @@ namespace crds_angular.test.Services
                 new MpEvent
                 {
                     EventId = 123,
-                    EventEndDate = new DateTime(2017, 5, 20),
+                    EventEndDate = DateTime.Today.AddDays(5),
                     EventStartDate = new DateTime(2017, 5, 15),
                     EventTitle = "Summer Camp",
                     PrimaryContact = new MpContact

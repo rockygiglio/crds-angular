@@ -56,6 +56,10 @@ namespace MinistryPlatform.Translation.Models.DTO
         private void MapAddressFields()
         {
             Address = new MpAddress();
+            if (_unmappedData.ContainsKey("Address_ID"))
+            {
+                Address.Address_ID = Convert.ToInt32(_unmappedData["Address_ID"].Value<string>());
+            }
             if (_unmappedData.ContainsKey("Address_Line_1"))
             {
                 Address.Address_Line_1 = _unmappedData["Address_Line_1"].Value<string>();

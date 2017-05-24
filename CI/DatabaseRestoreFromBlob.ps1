@@ -41,7 +41,11 @@ Param (
   [Parameter(Mandatory=$true)]
   [string] $SMTPServerName,
   [Parameter(Mandatory=$true)]
-  [string] $SMTPServerPort
+  [string] $SMTPServerPort,
+  [Parameter(Mandatory=$true)]
+  [string]$DpToolUriToBeReplaced
+  [Parameter(Mandatory=$true)]
+  [string]$DpToolNewUri
 )
 
 $SourceDBName = "MinistryPlatform";
@@ -205,6 +209,9 @@ UPDATE s
 
 DROP TABLE #NewConfigSettings
 
+-- Update dp_Tools Launch_Page value
+UPDATE dp_Tools
+    SET Launch_Page = REPLACE(Launch_Page, '$DpToolUriToBeReplaced', '$DpToolNewUri')
 
 -- The following Scripts are necessary to enable the application to work with the database.
 -- Please don't adjust anything by the Database Name in these scripts.
