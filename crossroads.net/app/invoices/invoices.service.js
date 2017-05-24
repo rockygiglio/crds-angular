@@ -8,7 +8,7 @@ class InvoicesService {
     this.scope = $rootScope;
     this.stateParams = $stateParams;
     this.resource = $resource;
-    this.invoicesResource = $resource(`${__GATEWAY_CLIENT_ENDPOINT__}api/invoice/:invoiceId`);
+    this.invoicesResource = $resource(`${__GATEWAY_CLIENT_ENDPOINT__}api/v1.0.0/invoice/:invoiceId`);
     this.invoice = {};
   }
 

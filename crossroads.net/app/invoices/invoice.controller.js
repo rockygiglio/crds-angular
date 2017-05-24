@@ -12,20 +12,15 @@ class InvoiceController {
     this.setGatewayUrls();
     this.invoicesService.getInvoice(this.invoiceId).then(
       (data) => {
-        console.log("invoice data", data);
-        // TODO get cost, min payment
-        this.url = this.buildUrl(this.invoiceId, 43542, 43542);
+        this.url = this.buildUrl(this.invoiceId, data.invoiceTotal, data.paymentLeft);
       }, (err) => {
         console.error(err);
-        this.url = this.buildUrl(this.invoiceId, 43542, 43542);
-
       }).finally(() => {
         this.viewReady = true;
       });
   }
 
   setGatewayUrls() {
-    console.log('__CRDS_ENV__', __CRDS_ENV__);
     switch (__CRDS_ENV__) {
       case 'local':
         this.baseUrl = 'http://localhost:8080';
