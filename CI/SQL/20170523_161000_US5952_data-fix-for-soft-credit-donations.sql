@@ -22,7 +22,7 @@ SELECT
  FROM Donation_Distributions dd
  JOIN Donors d ON dd.Soft_Credit_Donor = d.donor_id
  JOIN Contacts c on d.contact_id = c.contact_id
- JOIN Households h on c.household_id = h.household_id
+ LEFT JOIN Households h on c.household_id = h.household_id
 WHERE Soft_Credit_Donor IS NOT NULL 
 
 
