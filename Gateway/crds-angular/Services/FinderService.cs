@@ -326,10 +326,13 @@ namespace crds_angular.Services
 
         public void GatheringJoinRequest(string token, int gatheringId)
         {
-            var group = _groupService.GetGroupDetails(gatheringId);
+            GroupDTO group = _groupService.GetGroupDetails(gatheringId);
+            string commType = group.GroupTypeId == _smallGroupType ? "ConnectCommunicationTypeRequestToJoinSmallGroup"
+                                                                   : "ConnectCommunicationTypeRequestToJoinGathering";
+
             var connection = new ConnectCommunicationDto
             {
-                CommunicationTypeId = _configurationWrapper.GetConfigIntValue("ConnectCommunicationTypeRequestToJoin"),
+                CommunicationTypeId = _configurationWrapper.GetConfigIntValue(commType),
                 ToContactId = group.ContactId,
                 FromContactId = _contactRepository.GetContactId(token),
                 CommunicationStatusId = _configurationWrapper.GetConfigIntValue("ConnectCommunicationStatusUnanswered"),
