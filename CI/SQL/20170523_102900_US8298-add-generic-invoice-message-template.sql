@@ -14,10 +14,9 @@ DECLARE @Body VARCHAR(max) = '<div>Hey there!</div>
 <div>You have a new invoice for [Product_Name] in the amount of [Line_Total].</div>
 <div></br></div>
 <div>In order to make a payment, you can do so at any time by going to https://www.crossroads.net/invoices/[InvoiceID].</div>
-<div>Please note that these payments are <strong>NOT tax deductible.</strong></div>
+<div>Please note that these payments are <strong>NOT tax deductible.</strong> If you have any questions, please reach out to your staff contact.</div>
 <div></br></div>
-<div>Thanks,</div>
-<div>[DISPLAY_NAME]</div>'
+<div>Thanks!</div>'
 DECLARE @Subject VARCHAR(max) = 'You Have a New Invoice from Crossroads'
 
 IF NOT EXISTS (SELECT 1 FROM [dbo].[dp_Communications] WHERE Communication_ID = @TemplateID)
