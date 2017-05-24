@@ -5,6 +5,7 @@ using System.Linq;
 using Crossroads.Utilities.Interfaces;
 using Crossroads.Web.Common;
 using Crossroads.Web.Common.Configuration;
+using Crossroads.Web.Common.MinistryPlatform;
 using Crossroads.Web.Common.Security;
 using MinistryPlatform.Translation.Extensions;
 using MinistryPlatform.Translation.Models;
@@ -16,12 +17,15 @@ namespace MinistryPlatform.Translation.Repositories
     public class UserRepository : BaseRepository, IUserRepository
     {
         private readonly IMinistryPlatformService _ministryPlatformService;
+        private readonly IMinistryPlatformRestRepository _ministryPlatformRest;
         private readonly int _usersApiLookupPageViewId;
         private readonly int _usersPageId;
 
-        public UserRepository(IAuthenticationRepository authenticationService, IConfigurationWrapper configurationWrapper, IMinistryPlatformService ministryPlatformService) : base(authenticationService, configurationWrapper)
+        public UserRepository(IAuthenticationRepository authenticationService, IConfigurationWrapper configurationWrapper,
+            IMinistryPlatformService ministryPlatformService, IMinistryPlatformRestRepository ministryPlatformRest) : base(authenticationService, configurationWrapper)
         {
             _ministryPlatformService = ministryPlatformService;
+            _ministryPlatformRest = ministryPlatformRest;
             _usersApiLookupPageViewId = _configurationWrapper.GetConfigIntValue("UsersApiLookupPageView");
             _usersPageId = _configurationWrapper.GetConfigIntValue("Users");
         }
@@ -50,10 +54,27 @@ namespace MinistryPlatform.Translation.Repositories
 
         public MpUser GetByAuthenticationToken(string authToken)
         {
-            var contactId = _ministryPlatformService.GetContactInfo(authToken).ContactId;
+            MpUser user = null;
 
-            var searchString = string.Format(",\"{0}\"", contactId);
-            return (GetUser(searchString));
+            var userId = _ministryPlatformService.GetContactInfo(authToken).UserId;
+
+            string search = $"User_ID = {userId}";
+            string columns = "User_ID, User_Name, User_Email, User_GUID, Can_Impersonate";
+            var userList = _ministryPlatformRest.UsingAuthenticationToken(ApiLogin()).SearchTable<Dictionary<string, object>>("dp_Users", search, columns);
+
+            if (userList != null && userList.Count > 0)
+            {
+                user = new MpUser
+                {
+                    CanImpersonate = userList[0]["Can_Impersonate"] as bool? ?? false,
+                    Guid = userList[0]["User_GUID"].ToString(),
+                    UserId = userList[0]["User_Name"] as string,
+                    UserEmail = userList[0]["User_Email"] as string,
+                    UserRecordId = Int32.Parse(userList[0]["User_ID"].ToString())
+                };
+            }
+
+            return user;
         }
 
         public MpUser GetUserByResetToken(string resetToken)
