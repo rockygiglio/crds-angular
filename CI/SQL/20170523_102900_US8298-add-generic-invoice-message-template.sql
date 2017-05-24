@@ -9,7 +9,15 @@ GO
 -- =============================================
 
 DECLARE @TemplateID int = 2019
-DECLARE @Body VARCHAR(max) = '<div>Hey there!</div><div></div><div><br /></div><div>In order to make a payment, you can do so at any time by going to https://[BASE_URL]/invoices/[INVOICE_ID]. Please note that these payments are <b>NOT tax deductible.</b><br /></div><div><br /></div><div>[EVENT_TITLE] will be from [EVENT_START_DATE] through [EVENT_END_DATE]<div></br>Thanks,</div><div>[DISPLAY_NAME]</div>'
+DECLARE @Body VARCHAR(max) = '<div>Hey there!</div>
+<div></br></div>
+<div>You have a new invoice for [Product_Name] in the amount of [Line_Total].</div>
+<div></br></div>
+<div>In order to make a payment, you can do so at any time by going to https://www.crossroads.net/invoices/[InvoiceID].</div>
+<div>Please note that these payments are <strong>NOT tax deductible.</strong></div>
+<div></br></div>
+<div>Thanks,</div>
+<div>[DISPLAY_NAME]</div>'
 DECLARE @Subject VARCHAR(max) = 'You Have a New Invoice from Crossroads'
 
 IF NOT EXISTS (SELECT 1 FROM [dbo].[dp_Communications] WHERE Communication_ID = @TemplateID)
