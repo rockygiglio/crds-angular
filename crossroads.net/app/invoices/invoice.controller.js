@@ -12,7 +12,7 @@ class InvoiceController {
     this.setGatewayUrls();
     this.invoicesService.getInvoice(this.invoiceId).then(
       (data) => {
-        this.url = this.buildUrl(this.invoiceId, data.invoiceTotal, data.paymentLeft);
+        this.url = this.buildUrl(this.invoiceId, data.paymentLeft, data.paymentLeft);
       }, (err) => {
         console.error(err);
       }).finally(() => {
