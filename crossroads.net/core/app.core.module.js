@@ -31,8 +31,9 @@
     'mwl.confirm',
     'ngclipboard',
     'ngFileSaver',
-    'ngStorage'
-    ])
+    'ngStorage',
+    'svgBaseFix'
+  ])
     .constant('AUTH_EVENTS', {
       loginSuccess: 'auth-login-success',
       loginFailed: 'auth-login-failed',
