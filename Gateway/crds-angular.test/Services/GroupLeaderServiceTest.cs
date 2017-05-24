@@ -511,13 +511,46 @@ namespace crds_angular.test.Services
         public void ShouldSendNoReferenceEmail()
         {
             const int templateId = 5;
+            const int applicantContactId = 9987654;
             const int groupsContactId = 1123456;
             const string groupsEmail = "groups@groups.com";
+            const int messageId = 7;
+            var applicantContact = ContactMock(applicantContactId);
+            var groupsContact = new MpMyContact
+            {
+                Contact_ID = groupsContactId,
+                Email_Address = groupsEmail
+            };
+            var mergeData = new Dictionary<string, object>
+            {
+                { "First_Name", applicantContact.Nickname },
+                { "Last_Name", applicantContact.Last_Name },
+                { "Email_Address", applicantContact.Email_Address }
+            };
+            var communication = NoReferenceCommunication(templateId, mergeData, groupsContact);
+            var referenceData = new Dictionary<string, object>
+            {
+                { "contact", applicantContact },
+                { "participant", ParticipantMock() },
+                { "referenceContactId", "0" }
+            };
 
             _configWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderNoReferenceEmailTemplate")).Returns(templateId);
             _configWrapper.Setup(m => m.GetConfigIntValue("DefaultGroupContactEmailId")).Returns(groupsContactId);
             _contactMock.Setup(m => m.GetContactEmail(groupsContactId)).Returns(groupsEmail);
+            _communicationRepository.Setup(m => m.GetTemplateAsCommunication(templateId, groupsContactId, groupsEmail, mergeData)).Returns(communication);
+            _communicationRepository.Setup(m => m.SendMessage(communication, false)).Returns(messageId);
 
+            var response = _fixture.SendNoReferenceEmail(referenceData);
+
+            response.Subscribe((n) =>
+                               {
+                                   Assert.AreEqual(messageId, response);
+                               },
+                               (err) =>
+                               {
+                                   Assert.Fail(err.ToString());
+                               });
         }
 
         private static MpCommunication ReferenceCommunication(int templateId, Dictionary<string, object> mergeData, MpMyContact toContact)
@@ -534,6 +567,23 @@ namespace crds_angular.test.Services
                 EmailSubject = "whateva",
                 MergeData = mergeData,
                 ToContacts = new List<MpContact>() {new MpContact {EmailAddress = toContact.Email_Address, ContactId = toContact.Contact_ID} }
+            };
+        }
+
+        private static MpCommunication NoReferenceCommunication(int templateId, Dictionary<string, object> mergeData, MpMyContact toContact)
+        {
+            var from = new MpContact() {ContactId = 122222, EmailAddress = "groups@crossroads.net"};
+            return new MpCommunication
+            {
+                AuthorUserId = 1,
+                DomainId = 1,
+                EmailBody = "<h1> hello </h1>",
+                FromContact = from,
+                ReplyToContact = from,
+                TemplateId = templateId,
+                EmailSubject = "Interview Needed",
+                MergeData = mergeData,
+                ToContacts = new List<MpContact> { new MpContact { EmailAddress = toContact.Email_Address, ContactId = toContact.Contact_ID} }
             };
         }
 
