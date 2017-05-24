@@ -70,6 +70,9 @@ namespace crds_angular.Services
         private readonly string _connectGatheringPinUrl;
         private readonly string _connectSmallGroupPinUrl;
         private readonly int _smallGroupType;
+        private readonly int _connectCommunicationTypeInviteToGathering;
+        private readonly int _connectCommunicationTypeInviteToSmallGroup;
+
 
         private readonly Random _random = new Random(DateTime.Now.Millisecond);
         private const double MinutesInDegree = 60;
@@ -129,7 +132,8 @@ namespace crds_angular.Services
             _connectGatheringPinUrl = _configurationWrapper.GetConfigValue("ConnectGatheringPinUrl");
             _connectSmallGroupPinUrl = _configurationWrapper.GetConfigValue("ConnectSmallGroupPinUrl");
             _smallGroupType = _configurationWrapper.GetConfigIntValue("SmallGroupTypeId");
-
+            _connectCommunicationTypeInviteToGathering = _configurationWrapper.GetConfigIntValue("ConnectCommunicationTypeInviteToGathering");
+            _connectCommunicationTypeInviteToSmallGroup = _configurationWrapper.GetConfigIntValue("ConnectCommunicationTypeInviteToSmallGroup");
         }
 
         public PinDto GetPinDetailsForGroup(int groupId)
@@ -331,7 +335,7 @@ namespace crds_angular.Services
             var group = _groupService.GetGroupDetails(gatheringId);
             var connection = new ConnectCommunicationDto
             {
-                CommunicationTypeId = _configurationWrapper.GetConfigIntValue("ConnectCommunicationTypeRequestToJoin"),
+                CommunicationTypeId = _configurationWrapper.GetConfigIntValue("ConnectCommunicationTypeRequestToJoinGathering"),
                 ToContactId = group.ContactId,
                 FromContactId = _contactRepository.GetContactId(token),
                 CommunicationStatusId = _configurationWrapper.GetConfigIntValue("ConnectCommunicationStatusUnanswered"),
@@ -646,17 +650,17 @@ namespace crds_angular.Services
                 toContactId = _contactRepository.CreateContactForGuestGiver(person.email, $"{person.lastName}, {person.firstName}", person.firstName, person.lastName);
             }
 
+            var communicationType = finderFlag.Equals(_finderConnect) ? _connectCommunicationTypeInviteToGathering : _connectCommunicationTypeInviteToSmallGroup;
+
             var connection = new ConnectCommunicationDto
-            {
-                CommunicationTypeId = _configurationWrapper.GetConfigIntValue("ConnectCommunicationTypeInviteToGathering"),
+            {               
+                CommunicationTypeId = communicationType,
                 ToContactId = toContactId,
                 FromContactId = _contactRepository.GetContactId(token),
                 CommunicationStatusId = _configurationWrapper.GetConfigIntValue("ConnectCommunicationStatusUnanswered"),
                 GroupId = gatheringId
             };
-
-            // TODO connect communication audit log - groups vs connect
-
+            
             RecordCommunication(connection);
             return invitation;
         }
@@ -730,7 +734,7 @@ namespace crds_angular.Services
                 {
                     FromContactId = cm.Contact_ID,
                     ToContactId = (int) host.Contact_ID,
-                    CommunicationTypeId = _configurationWrapper.GetConfigIntValue("ConnectCommunicationTypeInviteToGathering"),
+                    CommunicationTypeId = _connectCommunicationTypeInviteToGathering,
                     CommunicationStatusId =
                         accept
                             ? _configurationWrapper.GetConfigIntValue("ConnectCommunicationStatusAccepted")
@@ -816,7 +820,7 @@ namespace crds_angular.Services
                     pin.Gathering.ContactId = group.ContactId;
                     pin.Participant_ID = group.ParticipantId;
 
-                    // TODO need to get rid of this call to GetContactById if get name from search instead
+                    // TODO need to get rid of this call to GetContactById if get name from AWS search instead
                     var contact = _contactRepository.GetContactById((int)pin.Contact_ID);
                     pin.FirstName = contact.First_Name;
                     pin.LastName = contact.Last_Name;
@@ -831,8 +835,8 @@ namespace crds_angular.Services
                     pin.Gathering = group;
                     pin.PinType = PinType.SMALL_GROUP;
 
-                    pin.FirstName = "FirstNamePlaceHolder"; // TODO wait and add in with AWS Data returned                                                            
-                    pin.LastName = "LastNamePlaceHolder"; // TODO wait and add in with AWS Data returned
+                    pin.FirstName = "FirstNamePlaceHolder"; // TODO wait and add in with AWS Data returned  - also refactor line 825 above
+                    pin.LastName = "LastNamePlaceHolder"; // TODO wait and add in with AWS Data returned  - also refactor line 825 above
                     pin.Gathering.ContactId = group.ContactId;
                     pin.Participant_ID = group.ParticipantId;
 
@@ -853,7 +857,7 @@ namespace crds_angular.Services
                 // Have GROUP address, but no coordinates, get geocordinates and save in MP
                 if ((pin.PinType == PinType.GATHERING || pin.PinType == PinType.SMALL_GROUP) && pin.Address.PostalCode != null && pin.Address.Longitude == null)
                 {
-                    // TODO - Everything will go to a state level with bad address - because state is required select control
+                    // Everything will go to a state level with bad address - because state is required select control
                     _addressService.SetGroupPinGeoCoordinates(pin);
 
                     // TODO check error handling here - I did an update on non-existant group and hosed up AWS
