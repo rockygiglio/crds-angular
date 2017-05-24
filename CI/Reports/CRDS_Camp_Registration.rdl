@@ -500,7 +500,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Applicant Phone</Value>
+                                  <Value>Applicant Mobile Number</Value>
                                   <Style />
                                 </TextRun>
                               </TextRuns>
@@ -2549,7 +2549,7 @@
             <Top>1.08208in</Top>
             <Left>0.47917in</Left>
             <Height>0.5in</Height>
-            <Width>34.30209in</Width>
+            <Width>34.30208in</Width>
             <ZIndex>3</ZIndex>
             <Style>
               <Border>

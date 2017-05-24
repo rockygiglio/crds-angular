@@ -17,7 +17,7 @@ namespace crds_angular.Services.Interfaces
         AddressDTO GetAddressForIp(string ip);
         List<PinDto> GetMyPins(string token, GeoCoordinate originCoords, int contactId);        
         int GetParticipantIdFromContact(int contactId);
-        List<PinDto> GetPinsInBoundingBox(GeoCoordinate originCoords, string address, AwsBoundingBox boundingBox);
+        List<PinDto> GetPinsInBoundingBox(GeoCoordinate originCoords, string address, AwsBoundingBox boundingBox, string finderType);
         AddressDTO RandomizeLatLong(AddressDTO address);
         GeoCoordinate GetGeoCoordsFromAddressOrLatLang(string address, string lat, string lng);
         GeoCoordinate GetGeoCoordsFromLatLong(string lat, string lng);
@@ -29,6 +29,6 @@ namespace crds_angular.Services.Interfaces
         PinDto UpdateGathering(PinDto pin);
         void RequestToBeHost(string token, HostRequestDto hostRequest);
         void AcceptDenyGroupInvitation(string token, int groupId, string invitationGuid, bool accept);
-        void SayHi(int fromContactId, int toContactId);
+        void SayHi(int fromContactId, int toContactId);        
     }
 }
