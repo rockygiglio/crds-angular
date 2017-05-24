@@ -571,6 +571,8 @@ namespace crds_angular.Services
                 if (pin.Address.Longitude != null) pin.Proximity = GetProximity(originCoords, new GeoCoordinate(pin.Address.Latitude.Value, pin.Address.Longitude.Value));
             }
 
+            pins = this.AddPinMetaData(pins, originCoords);
+
             return pins;
         }
 
@@ -852,7 +854,7 @@ namespace crds_angular.Services
             return pins;
         }
 
-        private List<PinDto> AddPinMetaData(List<PinDto> pins, GeoCoordinate originCoords)
+        public List<PinDto> AddPinMetaData(List<PinDto> pins, GeoCoordinate originCoords)
         {
             foreach (var pin in pins)
             {
