@@ -104,17 +104,14 @@ namespace MinistryPlatform.Translation.Test.Services
         {
             _ministryPlatformService.Setup(mocked => mocked.GetContactInfo("logged in")).Returns(new PlatformService.UserInfo() { UserId = 123 });
             _ministryPlatformRest.Setup(mocked => mocked.UsingAuthenticationToken("ABC")).Returns(_ministryPlatformRest.Object);
-            _ministryPlatformRest.Setup(mocked => mocked.SearchTable<Dictionary<string, object>>("dp_Users", It.IsAny<string>(), It.IsAny<string>(), (string) null, false)).Returns(
-                new List<Dictionary<string, object>>()
+            _ministryPlatformRest.Setup(mocked => mocked.Get<MpUser>(123, It.IsAny<string>())).Returns(
+                new MpUser()
                 {
-                    new Dictionary<string, object>
-                    {
-                        { "Can_Impersonate", true },
-                        { "User_GUID", "123e4567-e89b-12d3-a456-426655440000" },
-                        { "User_Name", "me@here.com" },
-                        { "User_Email", "me@here.com" },
-                        { "User_ID", 1 },
-                    }
+                    CanImpersonate = true,
+                    Guid = "123e4567-e89b-12d3-a456-426655440000",
+                    UserId = "me@here.com",
+                    UserEmail = "me@here.com",
+                    UserRecordId = 1
                 }
             );
 
