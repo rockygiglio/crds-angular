@@ -70,6 +70,24 @@ namespace crds_angular.Services
             });         
         }
 
+        public IObservable<int> GetGroupLeaderStatus(string token)
+        {
+            return Observable.Create<int>(observer =>
+            {
+                try
+                {
+                    var participant = _participantRepository.GetParticipantRecord(token);
+                    observer.OnNext(participant.GroupLeaderStatus);
+                }
+                catch (Exception e)
+                {
+                    observer.OnError(new ApplicationException("Failed to get Group Leader Status: ", e));
+                }
+
+                return Disposable.Empty;
+            });
+        }
+
         public IObservable<int> SetApplied(string token)
         {
             return Observable.Create<int>(observer =>

@@ -190,6 +190,26 @@ namespace crds_angular.test.controllers
             });
         }
 
+        [Test]
+        public async void ShouldGetLeaderStatus()
+        {
+            _groupLeaderService.Setup(m => m.GetGroupLeaderStatus(It.IsAny<string>())).Returns(Observable.Start(() => 0));
+
+            var response = await _fixture.GetLeaderStatus();
+            Assert.IsInstanceOf<OkNegotiatedContentResult<IObservable<int>>>(response);
+        }
+
+        [Test]
+        public void ShouldThrowExceptionWhenGettingStatusFails()
+        {
+            _groupLeaderService.Setup(m => m.GetGroupLeaderStatus(It.IsAny<string>())).Throws<ApplicationException>();
+
+            Assert.Throws<HttpResponseException>(async () =>
+            {
+                await _fixture.GetLeaderStatus();
+            });
+        }
+
         private static GroupLeaderProfileDTO GroupLeaderMock()
         {
             return new GroupLeaderProfileDTO()
