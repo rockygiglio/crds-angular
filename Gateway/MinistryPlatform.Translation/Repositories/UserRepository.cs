@@ -56,11 +56,10 @@ namespace MinistryPlatform.Translation.Repositories
         {
             var userId = _ministryPlatformService.GetContactInfo(authToken).UserId;
 
-            string search = $"User_ID = {userId}";
-            string columns = "User_ID, User_Name, User_Email, User_GUID, Can_Impersonate";
-            var userList = _ministryPlatformRest.UsingAuthenticationToken(ApiLogin()).Search<MpUser>(search, columns);
+            string columns = "User_ID, User_Name, User_Email, User_GUID, COALESCE(Can_Impersonate, 0) AS Can_Impersonate";
+            MpUser user = _ministryPlatformRest.UsingAuthenticationToken(ApiLogin()).Get<MpUser>(userId, columns);
 
-            return userList?.FirstOrDefault();
+            return user;
         }
 
         public MpUser GetUserByResetToken(string resetToken)
