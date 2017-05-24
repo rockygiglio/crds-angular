@@ -342,33 +342,34 @@ namespace MinistryPlatform.Translation.Repositories
             _ministryPlatformRest.UsingAuthenticationToken(token).Update<MpHousehold>(household);
         }
 
+        // This function will insert/update the Addresses table, and optionally update
+        // the Households table.  householdDictionary is optional when updating an
+        // existing address, but required when creating a new address.
         public void UpdateHouseholdAddress(int contactId,
                                   Dictionary<string, object> householdDictionary,
                                   Dictionary<string, object> addressDictionary)
         {
-            WithApiLogin<int>(token =>
+            // don't create orphaned address records
+            bool addressAlreadyExists = addressDictionary["Address_ID"] != null ? true : false;
+            if (!addressAlreadyExists && householdDictionary == null)
+                throw new ArgumentException("Household is required when adding a new address");
+
+            string apiToken = _apiUserRepository.GetToken();
+
+            if (addressAlreadyExists)
             {
-                try
-                {
-                    if (addressDictionary["Address_ID"] != null)
-                    {
-                        //address exists, update it
-                        _ministryPlatformService.UpdateRecord(_configurationWrapper.GetConfigIntValue("Addresses"), addressDictionary, token);
-                    }
-                    else
-                    {
-                        //address does not exist, create it, then attach to household
-                        var addressId = _ministryPlatformService.CreateRecord(_configurationWrapper.GetConfigIntValue("Addresses"), addressDictionary, token);
-                        householdDictionary["Address_ID"] = addressId;
-                    }
-                    _ministryPlatformService.UpdateRecord(_configurationWrapper.GetConfigIntValue("Households"), householdDictionary, token);
-                    return 1;
-                }
-                catch (Exception e)
-                {
-                    return 0;
-                }
-            });
+                //address exists, update it
+                _ministryPlatformService.UpdateRecord(_configurationWrapper.GetConfigIntValue("Addresses"), addressDictionary, apiToken);
+            }
+            else
+            {
+                //address does not exist, create it, then attach to household
+                var addressId = _ministryPlatformService.CreateRecord(_configurationWrapper.GetConfigIntValue("Addresses"), addressDictionary, apiToken);
+                householdDictionary["Address_ID"] = addressId;
+            }
+
+            if (householdDictionary != null)
+                _ministryPlatformService.UpdateRecord(_configurationWrapper.GetConfigIntValue("Households"), householdDictionary, apiToken);
         }
 
         public List<MpRecordID> CreateContact(MpContact minorContact)
