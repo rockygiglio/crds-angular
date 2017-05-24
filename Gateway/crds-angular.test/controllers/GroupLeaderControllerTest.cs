@@ -196,7 +196,7 @@ namespace crds_angular.test.controllers
             _groupLeaderService.Setup(m => m.GetGroupLeaderStatus(It.IsAny<string>())).Returns(Observable.Start(() => 0));
 
             var response = await _fixture.GetLeaderStatus();
-            Assert.IsInstanceOf<OkNegotiatedContentResult<IObservable<int>>>(response);
+            Assert.IsInstanceOf<OkNegotiatedContentResult<GroupLeaderStatusDTO>>(response);
         }
 
         [Test]

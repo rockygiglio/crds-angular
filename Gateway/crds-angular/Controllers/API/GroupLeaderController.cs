@@ -111,7 +111,10 @@ namespace crds_angular.Controllers.API
                 try
                 {
                     var status = _groupLeaderService.GetGroupLeaderStatus(token).Wait();
-                    return Ok(status);
+                    return Ok(new GroupLeaderStatusDTO
+                    {
+                        Status = status
+                    });
                 }
                 catch (Exception e)
                 {
