@@ -61,7 +61,7 @@ BEGIN
 			   ,[Email_To_Contact_Field]
 			   ,[SQL_Statement])
 		 VALUES
-			   (74
+			   (86
 			   ,'Send Generic Invoice Notification'
 			   ,NULL
 			   ,4
