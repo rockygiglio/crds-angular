@@ -507,6 +507,19 @@ namespace crds_angular.test.Services
             });
         }
 
+        [Test]
+        public void ShouldSendNoReferenceEmail()
+        {
+            const int templateId = 5;
+            const int groupsContactId = 1123456;
+            const string groupsEmail = "groups@groups.com";
+
+            _configWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderNoReferenceEmailTemplate")).Returns(templateId);
+            _configWrapper.Setup(m => m.GetConfigIntValue("DefaultGroupContactEmailId")).Returns(groupsContactId);
+            _contactMock.Setup(m => m.GetContactEmail(groupsContactId)).Returns(groupsEmail);
+
+        }
+
         private static MpCommunication ReferenceCommunication(int templateId, Dictionary<string, object> mergeData, MpMyContact toContact)
         {
             var from = new MpContact {ContactId = 122222, EmailAddress = "groups@crossroads.net"};
