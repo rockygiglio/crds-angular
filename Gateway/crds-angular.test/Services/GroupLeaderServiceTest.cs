@@ -348,6 +348,42 @@ namespace crds_angular.test.Services
         }
 
         [Test]
+        public void ShouldGetGroupLeaderStatus()
+        {
+            const string token = "letmein";
+            var participant = ParticipantMock();
+
+            _participantRepository.Setup(m => m.GetParticipantRecord(token)).Returns(participant);
+
+            var response = _fixture.GetGroupLeaderStatus(token);
+            response.Subscribe((n) =>
+                               {
+                                   Assert.AreEqual(participant.GroupLeaderStatus, response);
+                               },
+                               (err) =>
+                               {
+                                   Assert.Fail(err.ToString());
+                               });
+        }
+
+
+
+        [Test]
+        [ExpectedException(typeof(ApplicationException))]
+        public void ShouldThrowExceptionWhenGettingStatusFails()
+        {
+            const string token = "letmein";
+
+            _participantRepository.Setup(m => m.GetParticipantRecord(token)).Throws<Exception>();
+
+            var response = _fixture.GetGroupLeaderStatus(token);
+            response.Subscribe((n) =>
+            {
+                Assert.Fail("Didn't throw ApplicationException");
+            });
+        }
+
+        [Test]
         public void ShouldGetReferenceData()
         {
             const int contactId = 123456;
