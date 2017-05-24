@@ -31,6 +31,7 @@ export default class AuthModalService {
       templateUrl: 'auth_modal/authModal.html',
       controller: 'AuthModalController',
       controllerAs: 'authModal',
+      openedClass: 'crds-legacy-styles',
       size: 'md',
       resolve: {
         // Pass the target modal options to the auth modal component
