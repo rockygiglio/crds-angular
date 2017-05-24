@@ -1,8 +1,8 @@
 ﻿-- This is a Think Ministry stored proc that is called once each time a user
 -- logs in to MP or CR.net
 --
--- Original Think Ministry version (unmodified) below:
-
+-- Modified version of dp_Authorize_User that is signficantly faster because
+-- it uses the IX_dp_User_Roles__UserID_DomainID_RoleID index on dp_User_Roles:
 
 USE [MinistryPlatform]
 GO
@@ -55,10 +55,14 @@ AS
 		,MAX(RP.Secure_Records) AS Can_Secure
 		,MAX(RP.Allow_Comments) AS Can_Comment
 		,MAX(RP.Quick_Add) AS On_Quick_Add
-	FROM dp_Role_Pages RP
-	LEFT JOIN dp_User_Roles UR ON RP.Role_ID = UR.Role_ID
-	WHERE UR.[User_ID] = @UserID OR RP.Role_ID = @UsersRoleId
-	GROUP BY RP.Page_ID
+	FROM
+		dp_Role_Pages RP
+	WHERE
+		RP.Role_ID = @UsersRoleId
+		OR RP.Role_ID IN (SELECT Role_ID FROM dp_User_Roles WHERE [User_ID] = @UserID)
+	GROUP BY
+		RP.Page_ID
+	;
 
 	-- Retrieve restricted columns
 	SELECT
@@ -77,27 +81,36 @@ AS
 		SP.Sub_Page_ID
 		,SP.Page_ID
 		,ISNULL(MAX(CASE RSP.Access_Level WHEN 9 THEN -1 ELSE RSP.Access_Level END), 0) AS Access_Level
-	FROM dp_Role_Sub_Pages RSP
-	INNER JOIN dp_Sub_Pages SP ON SP.Sub_Page_ID = RSP.Sub_Page_ID
-	LEFT JOIN dp_User_Roles UR ON RSP.Role_ID = UR.Role_ID
-	WHERE UR.[User_ID] = @UserID OR RSP.Role_ID = @UsersRoleId
+	FROM
+		dp_Role_Sub_Pages RSP
+		INNER JOIN dp_Sub_Pages SP ON SP.Sub_Page_ID = RSP.Sub_Page_ID
+	WHERE
+		RSP.Role_ID = @UsersRoleId
+		OR RSP.Role_ID IN (SELECT Role_ID FROM dp_User_Roles WHERE [User_ID] = @UserID)
 	GROUP BY
 		SP.Sub_Page_ID,
 		SP.Page_ID
+	;
 
 	-- Retrieve authorized tools
 	SELECT DISTINCT
-		RT.Tool_ID
-	FROM dp_Role_Tools RT
-	LEFT JOIN dp_User_Roles UR ON RT.Role_ID = UR.Role_ID
-	WHERE UR.[User_ID] = @UserID OR RT.Role_ID = @UsersRoleId
+		Tool_ID
+	FROM
+		dp_Role_Tools
+	WHERE
+		Role_ID = @UsersRoleId
+		OR Role_ID IN (SELECT Role_ID FROM dp_User_Roles WHERE [User_ID] = @UserID)
+	;
 	
 	-- Retrieve authorized reports
 	SELECT DISTINCT
-		RR.Report_ID
-	FROM dp_Role_Reports RR
-	LEFT JOIN dp_User_Roles UR ON RR.Role_ID = UR.Role_ID
-	WHERE UR.[User_ID] = @UserID OR RR.Role_ID = @UsersRoleId
+		Report_ID
+	FROM
+		dp_Role_Reports
+	WHERE
+		Role_ID = @UsersRoleId
+		OR Role_ID IN (SELECT Role_ID FROM dp_User_Roles WHERE [User_ID] = @UserID)
+	;
 
 	-- Retrieve page views
 	SELECT
@@ -173,7 +186,10 @@ AS
 
 	-- Retrieve authorized routines
 	SELECT DISTINCT
-		RR.API_Procedure_ID
-	FROM dp_Role_API_Procedures RR
-	LEFT JOIN dp_User_Roles UR ON RR.Role_ID = UR.Role_ID
-	WHERE UR.[User_ID] = @UserID OR RR.Role_ID = @UsersRoleId;
+		API_Procedure_ID
+	FROM
+		dp_Role_API_Procedures
+	WHERE
+		Role_ID = @UsersRoleId
+		OR Role_ID IN (SELECT Role_ID FROM dp_User_Roles WHERE [User_ID] = @UserID)
+	;
