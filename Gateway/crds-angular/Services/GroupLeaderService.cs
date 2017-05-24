@@ -84,6 +84,7 @@ namespace crds_angular.Services
                     observer.OnError(new ApplicationException("Failed to get Group Leader Status: ", e));
                 }
 
+                observer.OnCompleted();
                 return Disposable.Empty;
             });
         }

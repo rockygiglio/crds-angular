@@ -110,7 +110,7 @@ namespace crds_angular.Controllers.API
             {
                 try
                 {
-                    var status = _groupLeaderService.GetGroupLeaderStatus(token);
+                    var status = _groupLeaderService.GetGroupLeaderStatus(token).Wait();
                     return Ok(status);
                 }
                 catch (Exception e)
