@@ -219,6 +219,34 @@ namespace crds_angular.Services
             });                              
         }
 
+        public IObservable<int> SendNoReferenceEmail(Dictionary<string, object> referenceData)
+        {
+            var templateId = _configWrapper.GetConfigIntValue("GroupLeaderNoReferenceEmailTemplate");
+            return Observable.Create<int>(observer =>
+            {
+                try
+                {
+                    var toContactId = _configWrapper.GetConfigIntValue("DefaultGroupContactEmailId");
+                    var toContactEmail = _contactRepository.GetContactEmail(toContactId);
+                    var template = _communicationRepository.GetTemplateAsCommunication(
+                        templateId,
+                        toContactId,
+                        toContactEmail,
+                        SetupNoReferenceEmailMergeData((MpMyContact) referenceData["contact"])
+                    );
+
+                    var messageId = _communicationRepository.SendMessage(template);
+                    observer.OnNext(messageId);
+                }
+                catch (Exception e)
+                {
+                    observer.OnError(new ApplicationException("Unable to send no reference email"));
+                }
+
+                return Disposable.Empty;
+            });
+        }
+
         private Dictionary<string, object> SetupReferenceEmailMergeData(MpMyContact reference, MpMyContact applicant, int participant_Id)
         {
             return new Dictionary<string, object>
@@ -228,6 +256,16 @@ namespace crds_angular.Services
                 {"Last_Name", applicant.Last_Name },
                 {"Participant_ID", participant_Id },
                 {"Base_Url", _configWrapper.GetConfigValue("BaseUrl") }
+            };
+        }
+
+        private Dictionary<string, object> SetupNoReferenceEmailMergeData(MpMyContact applicant)
+        {
+            return new Dictionary<string, object>
+            {
+                { "First_Name", applicant.Nickname ?? applicant.First_Name },
+                { "Last_Name", applicant.Last_Name },
+                { "Email_Address", applicant.Email_Address }
             };
         }
 
