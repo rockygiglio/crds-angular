@@ -72,7 +72,8 @@ namespace crds_angular.Services
         private readonly int _smallGroupType;
         private readonly int _connectCommunicationTypeInviteToGathering;
         private readonly int _connectCommunicationTypeInviteToSmallGroup;
-
+        private readonly int _connectCommunicationTypeRequestToJoinSmallGroup;
+        private readonly int _connectCommunicationTypeRequestToJoinGathering;
 
         private readonly Random _random = new Random(DateTime.Now.Millisecond);
         private const double MinutesInDegree = 60;
@@ -332,10 +333,13 @@ namespace crds_angular.Services
 
         public void GatheringJoinRequest(string token, int gatheringId)
         {
-            var group = _groupService.GetGroupDetails(gatheringId);
+            GroupDTO group = _groupService.GetGroupDetails(gatheringId);
+
+            int commType = group.GroupTypeId == _smallGroupType ? _connectCommunicationTypeRequestToJoinSmallGroup : _connectCommunicationTypeRequestToJoinGathering;
+
             var connection = new ConnectCommunicationDto
             {
-                CommunicationTypeId = _configurationWrapper.GetConfigIntValue("ConnectCommunicationTypeRequestToJoinGathering"),
+                CommunicationTypeId = commType,
                 ToContactId = group.ContactId,
                 FromContactId = _contactRepository.GetContactId(token),
                 CommunicationStatusId = _configurationWrapper.GetConfigIntValue("ConnectCommunicationStatusUnanswered"),
