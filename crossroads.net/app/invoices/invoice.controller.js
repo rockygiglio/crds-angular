@@ -24,19 +24,19 @@ class InvoiceController {
     switch (__CRDS_ENV__) {
       case 'local':
         this.baseUrl = 'http://localhost:8080';
-        this.returnUrl = 'http://local.crossroads.net:3000/camps';
+        this.returnUrl = 'http://local.crossroads.net:3000/';
         break;
       case 'int':
         this.baseUrl = 'https://embedint.crossroads.net';
-        this.returnUrl = 'https://int.crossroads.net/camps';
+        this.returnUrl = 'https://int.crossroads.net/';
         break;
       case 'demo':
         this.baseUrl = 'https://embeddemo.crossroads.net';
-        this.returnUrl = 'https://demo.crossroads.net/camps';
+        this.returnUrl = 'https://demo.crossroads.net/';
         break;
       default:
         this.baseUrl = 'https://embed.crossroads.net';
-        this.returnUrl = 'https://crossroads.net/camps';
+        this.returnUrl = 'https://crossroads.net/';
         break;
     }
   }
