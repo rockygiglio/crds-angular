@@ -9,13 +9,19 @@ class InvoiceController {
   }
 
   $onInit() {
+    console.log("ON INIT");
     this.setGatewayUrls();
+    console.log("THIS", this);
+    console.log('abt to call getinvoice', this.invoiceId);
     this.invoicesService.getInvoice(this.invoiceId).then(
       (data) => {
+        console.log("1");
         this.url = this.buildUrl(this.invoiceId, data.paymentLeft, data.paymentLeft);
       }, (err) => {
+        console.log("2");
         console.error(err);
       }).finally(() => {
+        console.log("3");
         this.viewReady = true;
       });
   }

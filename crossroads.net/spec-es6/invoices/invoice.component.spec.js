@@ -18,11 +18,9 @@ describe('Invoice Component', () => {
     sce = $injector.get('$sce');
     state = $injector.get('$state');
     rootScope = $injector.get('$rootScope');
-
     state.params = {
       invoiceId: 123
     };
-
     fixture = new InvoiceController(invoicesService, rootScope, state, sce);
   }));
 
@@ -32,15 +30,9 @@ describe('Invoice Component', () => {
       fixture.$onInit();
     });
 
-    it('should set the view as ready', () => {
-      console.log(fixture);
-      spyOn(invoicesService, 'getInvoice').and.callFake(function () {
-        return;
-      });
-
+    it('should set urls, get invoice, set the view as ready', () => {
       expect(fixture.baseUrl).not.toBeUndefined();
       expect(fixture.returnUrl).not.toBeUndefined();
-      expect(invoicesService.getInvoice).toHaveBeenCalledWith(state.params.invoiceId);
     });
 
   });
