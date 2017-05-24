@@ -30,8 +30,8 @@ BEGIN
 
 <div><br /></div>
 
-<div>First Name: [First_Name]</div><div><br /></div>
-<div>Last Name: [Last_Name]</div><div><br /></div>
+<div>First Name: [First_Name]</div>
+<div>Last Name: [Last_Name]</div>
 <div>Email Address: [Email_Address]</div>'
 		, 1
 		, '2017-05-24'
