@@ -11,7 +11,7 @@ GO
 
 
 /* Modifications: 
-	KD 5/25: Added participant count
+	KD 5/25: Added expected participants
 */
 
 -- =============================================
@@ -54,7 +54,7 @@ AS
 	   FROM Buildings
 	   WHERE location_id = @BuildingID
 
-      SELECT E.event_id, count(distinct p.event_participant_id) as ParticipantCount
+      SELECT E.event_id
         INTO #e
         FROM events E
 		JOIN event_participants p on E.event_id = p.event_id
@@ -117,7 +117,7 @@ AS
 		                                          FROM event_equipment ee
 								                 WHERE ee.event_id = e.event_id
 									               AND ee.equipment_id = @EquipID))
-	GROUP BY e.event_id
+
 
 
       CREATE INDEX ix_e_eventid
@@ -165,7 +165,7 @@ AS
 			 ,NULL AS equip_notes
 			 ,NULL AS equip_reservation_start
 			 ,NULL AS equip_reservation_end
-			 ,#e.participantCount
+			 ,e.ParticipantsExpected
         FROM events e
 		JOIN #e on #e.event_id = e.event_id
 --  LEFT OUTER JOIN congregations c ON c.congregation_id = e.congregation_id
@@ -231,7 +231,7 @@ AS
 			 ,ee.notes AS equip_notes
              ,LEFT(CONVERT(VARCHAR, Dateadd(n,-(1 * e.minutes_for_setup),e.event_start_date), 120),16) AS equip_reservation_start
              ,LEFT(CONVERT(VARCHAR, Dateadd(n, e.minutes_for_cleanup,e.event_end_date),120),16) AS equip_reservation_end 
-			  ,#e.participantCount
+			 ,e.ParticipantsExpected
         FROM events e
 		JOIN #e on #e.event_id = e.event_id
 --  LEFT OUTER JOIN congregations c ON c.congregation_id = e.congregation_id
@@ -300,7 +300,7 @@ AS
 			 ,NULL AS  equip_notes
              ,NULL AS equip_reservation_start
              ,NULL AS equip_reservation_end
-			  ,#e.participantCount
+			 ,e.ParticipantsExpected
         FROM events e
 		JOIN #e on #e.event_id = e.event_id      
         JOIN event_types et ON et.event_type_id = e.event_type_id
