@@ -379,7 +379,7 @@ namespace crds_angular.Services
             return participantId;
         }
 
-        public List<PinDto> GetPinsInBoundingBox(GeoCoordinate originCoords, string address, AwsBoundingBox boundingBox, string finderType)
+        public List<PinDto> GetPinsInBoundingBox(GeoCoordinate originCoords, string address, AwsBoundingBox boundingBox, string finderType, int contactId)
         {
             List<PinDto> pins = null;
 
@@ -407,11 +407,23 @@ namespace crds_angular.Services
                 throw new Exception("No pin search performed - finder type not found");
             }
 
-            this.AddPinMetaData(pins, originCoords);
+            this.AddPinMetaData(pins, originCoords, contactId);
             return pins;
         }
 
-        private string GetPinTitle(PinDto pin)
+        private Boolean isMyPin(PinDto pin, int contactId)
+        {
+            Boolean isMyPin = pin.Contact_ID == contactId && contactId != 0; 
+            return isMyPin; 
+        }
+
+        private string isMyPinAsString(PinDto pin, int contactId)
+        {
+            string isMyPinString = isMyPin(pin, contactId).ToString().ToLower();
+            return isMyPinString; 
+        }
+
+        private string GetPinTitle(PinDto pin, int contactId = 0)
         {
             string jsonData = "";
             var lastname = string.IsNullOrEmpty(pin.LastName) ? " " : pin.LastName[0].ToString();
@@ -424,7 +436,7 @@ namespace crds_angular.Services
                     jsonData = $"{{ 'firstName': '{RemoveSpecialCharacters(pin.FirstName)}', 'lastInitial': '{RemoveSpecialCharacters(lastname)}','isHost':  true,'isMe': false,'pinType': {(int) pin.PinType}}}";
                     break;
                 case PinType.PERSON:
-                    jsonData = $"{{ 'firstName': '{RemoveSpecialCharacters(pin.FirstName)}', 'lastInitial': '{RemoveSpecialCharacters(lastname)}','isHost':  false,'isMe': false,'pinType': {(int) pin.PinType}}}";
+                    jsonData = $"{{ 'firstName': '{RemoveSpecialCharacters(pin.FirstName)}', 'lastInitial': '{RemoveSpecialCharacters(lastname)}','isHost':  false,'isMe': {isMyPinAsString(pin, contactId)},'pinType': {(int) pin.PinType}}}";
                     break;
                 case PinType.SMALL_GROUP:
                     jsonData = $"{{ 'firstName': '{RemoveSpecialCharacters(pin.Gathering.GroupName)}', 'lastInitial': '','isHost':  false,'isMe': false,'pinType': {(int)pin.PinType}}}";
@@ -576,7 +588,7 @@ namespace crds_angular.Services
                 if (pin.Address.Longitude != null) pin.Proximity = GetProximity(originCoords, new GeoCoordinate(pin.Address.Latitude.Value, pin.Address.Longitude.Value));
             }
 
-            pins = this.AddPinMetaData(pins, originCoords);
+            pins = this.AddPinMetaData(pins, originCoords, contactId);
 
             return pins;
         }
@@ -859,11 +871,11 @@ namespace crds_angular.Services
             return pins;
         }
 
-        public List<PinDto> AddPinMetaData(List<PinDto> pins, GeoCoordinate originCoords)
+        public List<PinDto> AddPinMetaData(List<PinDto> pins, GeoCoordinate originCoords, int contactId = 0)
         {
             foreach (var pin in pins)
             {
-                pin.Title = GetPinTitle(pin);
+                pin.Title = GetPinTitle(pin, contactId);
                 pin.IconUrl = GetPinUrl(pin.PinType);
 
                 // Have GROUP address, but no coordinates, get geocordinates and save in MP

@@ -17,7 +17,7 @@ namespace crds_angular.Services.Interfaces
         AddressDTO GetAddressForIp(string ip);
         List<PinDto> GetMyPins(string token, GeoCoordinate originCoords, int contactId);        
         int GetParticipantIdFromContact(int contactId);
-        List<PinDto> GetPinsInBoundingBox(GeoCoordinate originCoords, string address, AwsBoundingBox boundingBox, string finderType);
+        List<PinDto> GetPinsInBoundingBox(GeoCoordinate originCoords, string address, AwsBoundingBox boundingBox, string finderType, int contactId);
         AddressDTO RandomizeLatLong(AddressDTO address);
         GeoCoordinate GetGeoCoordsFromAddressOrLatLang(string address, string lat, string lng);
         GeoCoordinate GetGeoCoordsFromLatLong(string lat, string lng);

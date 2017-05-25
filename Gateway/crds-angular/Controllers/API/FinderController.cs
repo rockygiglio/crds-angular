@@ -298,10 +298,10 @@ namespace crds_angular.Controllers.API
         }
 
         [ResponseType(typeof(PinSearchResultsDto))]
-        [VersionedRoute(template: "finder/findpinsbyaddress/{userSearchAddress}/{finderFlag}/{lat?}/{lng?}/{upperleftlat?}/{upperleftlng?}/{bottomrightlat?}/{bottomrightlng?}", minimumVersion: "1.0.0")]
-        [Route("finder/findpinsbyaddress/{userSearchAddress}/{finderFlag}/{lat?}/{lng?}/{upperleftlat?}/{upperleftlng?}/{bottomrightlat?}/{bottomrightlng?}")]
+        [VersionedRoute(template: "finder/findpinsbyaddress/{userSearchAddress}/{finderFlag}/{contactId?}/{lat?}/{lng?}/{upperleftlat?}/{upperleftlng?}/{bottomrightlat?}/{bottomrightlng?}", minimumVersion: "1.0.0")]
+        [Route("finder/findpinsbyaddress/{userSearchAddress}/{finderFlag}/{contactId?}/{lat?}/{lng?}/{upperleftlat?}/{upperleftlng?}/{bottomrightlat?}/{bottomrightlng?}")]
         [HttpGet]
-        public IHttpActionResult GetPinsByAddress([FromUri]string userSearchAddress, [FromUri]string finderFlag, [FromUri]string lat = "0", [FromUri]string lng = "0", [FromUri]string upperleftlat = "0", [FromUri]string upperleftlng = "0", [FromUri]string bottomrightlat = "0", [FromUri]string bottomrightlng = "0")
+        public IHttpActionResult GetPinsByAddress([FromUri]string userSearchAddress, [FromUri]string finderFlag, [FromUri]int contactId = 0, [FromUri]string lat = "0", [FromUri]string lng = "0", [FromUri]string upperleftlat = "0", [FromUri]string upperleftlng = "0", [FromUri]string bottomrightlat = "0", [FromUri]string bottomrightlng = "0")
         {
             try
             {
@@ -314,7 +314,7 @@ namespace crds_angular.Controllers.API
                
                 var originCoords = _finderService.GetGeoCoordsFromAddressOrLatLang(userSearchAddress, lat, lng);
 
-                var pinsInRadius = _finderService.GetPinsInBoundingBox(originCoords, userSearchAddress, boundingBox, finderFlag);
+                var pinsInRadius = _finderService.GetPinsInBoundingBox(originCoords, userSearchAddress, boundingBox, finderFlag, contactId);
 
                 foreach (var pin in pinsInRadius)
                 {

@@ -315,7 +315,7 @@ namespace crds_angular.test.Services
                 BottomRightCoordinates = new GeoCoordinates(21.52, -77.78)
             };
 
-            List<PinDto> pins = _fixture.GetPinsInBoundingBox(originCoords, address, boundingBox, "CONNECT");
+            List<PinDto> pins = _fixture.GetPinsInBoundingBox(originCoords, address, boundingBox, "CONNECT", 0);
 
             Assert.IsInstanceOf<List<PinDto>>(pins);
         }
