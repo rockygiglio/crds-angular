@@ -28,7 +28,7 @@ BEGIN
 			   (51
 			   ,'InvoiceDetailNotification'
 			   ,5
-			   ,1
+			   ,0
 			   ,'Send email on Invoice Detail creation'
 			   ,272
 			   ,1
