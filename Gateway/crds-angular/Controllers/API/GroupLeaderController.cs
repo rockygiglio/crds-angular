@@ -86,7 +86,14 @@ namespace crds_angular.Controllers.API
 
                         _groupLeaderService.GetReferenceData(spiritualGrowth.ContactId).Subscribe((res) =>
                         {
-                            _groupLeaderService.SendReferenceEmail(res).Subscribe(CancellationToken.None);
+                            if ((string)res["referenceContactId"] != "0")
+                            {
+                                _groupLeaderService.SendReferenceEmail(res).Subscribe(CancellationToken.None);
+                            }
+                            else
+                            {
+                                _groupLeaderService.SendNoReferenceEmail(res).Subscribe(CancellationToken.None);
+                            }
                         });
                         return Ok();
                     }
@@ -100,6 +107,28 @@ namespace crds_angular.Controllers.API
             var errors = ModelState.Values.SelectMany(val => val.Errors).Aggregate("", (current, err) => current + err.ErrorMessage);
             var dataError = new ApiErrorDto("Spiritual Growth Data Invalid", new InvalidOperationException("Invalid Spiritual Growth Data" + errors));
             throw new HttpResponseException(dataError.HttpResponseMessage);
+        }
+
+        [VersionedRoute(template: "group-leader/leader-status", minimumVersion: "1.0.0")]
+        [HttpGet]
+        public async Task<IHttpActionResult> GetLeaderStatus()
+        {
+            return await Authorized(token =>
+            {
+                try
+                {
+                    var status = _groupLeaderService.GetGroupLeaderStatus(token).Wait();
+                    return Ok(new GroupLeaderStatusDTO
+                    {
+                        Status = status
+                    });
+                }
+                catch (Exception e)
+                {
+                    var apiError = new ApiErrorDto("Getting group leader status failed: ", e);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+            });
         }
     }
 }
