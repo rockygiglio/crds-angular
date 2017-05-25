@@ -383,7 +383,7 @@ namespace crds_angular.Services
 
             int commType = group.GroupTypeId == _smallGroupTypeId ? _connectCommunicationTypeRequestToJoinSmallGroup : _connectGatheringRequestToJoin;
             RecordConnectInteraction(groupId, me.ContactId, inquiry.ContactId, commType, _connectGatheringStatusAccept);
-            // For now pick template based on group type
+
             var emailTemplateId = (group.GroupTypeId == _anywhereGroupType) 
                                                       ? _gatheringHostAcceptTemplate 
                                                       : _removeParticipantFromGroupEmailTemplateId;
@@ -409,8 +409,10 @@ namespace crds_angular.Services
         private void DenyInquiry(int groupId, GroupDTO group, Inquiry inquiry, MpParticipant me, string message)
         {
             _groupRepository.UpdateGroupInquiry(groupId, inquiry.InquiryId, false);
-            RecordConnectInteraction(groupId, me.ContactId, inquiry.ContactId, _connectGatheringRequestToJoin, _connectGatheringStatusDeny);
-            // For now pick template based on group type
+
+            int commType = group.GroupTypeId == _smallGroupTypeId ? _connectCommunicationTypeRequestToJoinSmallGroup : _connectGatheringRequestToJoin;
+            RecordConnectInteraction(groupId, me.ContactId, inquiry.ContactId, commType, _connectGatheringStatusDeny);
+
             var emailTemplateId = (group.GroupTypeId == _anywhereGroupType)
                                                       ? _gatheringHostDenyTemplate
                                                       : _removeParticipantFromGroupEmailTemplateId;
