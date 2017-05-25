@@ -27,7 +27,7 @@ require('ui-select/dist/select.css');
       constants.MODULES.SIGNUP,
       constants.MODULES.TRIPS,
       constants.MODULES.CAMPS,
-      constants.MODULES.INVOICES,
+      // constants.MODULES.INVOICES,
    ]);
 
   angular.module(constants.MODULES.CROSSROADS)
