@@ -43,8 +43,8 @@ BEGIN
 		,@Body
 		,1
 		,GetDate()
-		,7656635 -- finance@crossroads.net
-		,7656635 -- finance@crossroads.net
+		,7680233 -- accounts@crossroads.net
+		,7680233 -- accounts@crossroads.net
 		,1
 		,1
 	)
