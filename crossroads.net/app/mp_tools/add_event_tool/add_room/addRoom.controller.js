@@ -80,6 +80,7 @@ export default class AddRoomController {
     const modalInstance = this.modal.open({
       controller: 'RemoveRoomController',
       controllerAs: 'removeRoom',
+      openedClass: 'crds-legacy-styles',
       templateUrl: 'remove_room/remove_room.html',
       resolve: {
         items() {
