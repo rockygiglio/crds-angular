@@ -200,8 +200,7 @@ namespace crds_angular.test.Services
             var fakePerson = PersonMock(leaderDto);
             _personService.Setup(m => m.GetLoggedInUserProfile(fakeToken)).Returns(fakePerson);
             _userRepo.Setup(m => m.GetUserIdByUsername(It.IsAny<string>()));
-            _contactMock.Setup(m => m.UpdateContact(It.IsAny<int>(), It.IsAny<Dictionary<string, object>>())).Throws<ApplicationException>();
-            _userRepo.Setup(m => m.UpdateUser(It.IsAny<Dictionary<string, object>>()));
+            _contactMock.Setup(m => m.UpdateContact(It.IsAny<int>(), It.IsAny<Dictionary<string, object>>())).Throws<ApplicationException>();            
 
             Assert.Throws<ApplicationException>(() => _fixture.SaveProfile(fakeToken, leaderDto).Wait());
         }
@@ -348,6 +347,232 @@ namespace crds_angular.test.Services
             Assert.IsInstanceOf<Exception>);
         }
 
+        [Test]
+        public void ShouldGetGroupLeaderStatus()
+        {
+            const string token = "letmein";
+            var participant = ParticipantMock();
+
+            _participantRepository.Setup(m => m.GetParticipantRecord(token)).Returns(participant);
+
+            var response = _fixture.GetGroupLeaderStatus(token);
+            response.Subscribe((n) =>
+                               {
+                                   Assert.AreEqual(participant.GroupLeaderStatus, response);
+                               },
+                               (err) =>
+                               {
+                                   Assert.Fail(err.ToString());
+                               });
+        }
+
+
+
+        [Test]
+        [ExpectedException(typeof(ApplicationException))]
+        public void ShouldThrowExceptionWhenGettingStatusFails()
+        {
+            const string token = "letmein";
+
+            _participantRepository.Setup(m => m.GetParticipantRecord(token)).Throws<Exception>();
+
+            var response = _fixture.GetGroupLeaderStatus(token);
+            response.Subscribe((n) =>
+            {
+                Assert.Fail("Didn't throw ApplicationException");
+            });
+        }
+
+        [Test]
+        public void ShouldGetReferenceData()
+        {
+            const int contactId = 123456;
+            const int refContactId = 987654;
+            var contact = ContactMock(contactId);
+            var participant = ParticipantMock();
+
+            _configWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderFormId")).Returns(29);
+            _configWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderFormReferenceContact")).Returns(1519);
+            _participantRepository.Setup(m => m.GetParticipant(contactId)).Returns(participant);
+            _contactMock.Setup(m => m.GetContactById(contactId)).Returns(contact);
+            _formService.Setup(m => m.GetFormResponseAnswer(29, contactId, 1519, null)).Returns(refContactId.ToString());
+
+            var res = _fixture.GetReferenceData(contactId);
+
+            res.Subscribe((result) =>
+            {
+                Assert.AreEqual(participant, result["participant"]);
+                Assert.AreEqual(contact, result["contact"]);
+                Assert.AreEqual("987654", result["referenceContactId"]);
+            },
+            (err) =>
+            {
+                Assert.Fail(err.ToString());
+            });
+        }
+
+        [Test]
+        public void ShouldGetNoReferenceId()
+        {
+            const int contactId = 123456;
+            var contact = ContactMock(contactId);
+            var participant = ParticipantMock();
+
+            _configWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderFormId")).Returns(29);
+            _configWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderFormReferenceContact")).Returns(1519);
+            _participantRepository.Setup(m => m.GetParticipant(contactId)).Returns(participant);
+            _contactMock.Setup(m => m.GetContactById(contactId)).Returns(contact);
+            _formService.Setup(m => m.GetFormResponseAnswer(29, contactId, 1519, null));
+
+            var res = _fixture.GetReferenceData(contactId);
+
+            res.Subscribe((result) =>
+            {
+                Assert.AreEqual(participant, result["participant"]);
+                Assert.AreEqual(contact, result["contact"]);
+                Assert.AreEqual("0", result["referenceContactId"]);
+            },
+            (err) =>
+            {
+                Assert.Fail(err.ToString());
+            });
+        }
+
+        [Test]
+        [ExpectedException(typeof(ApplicationException))]
+        public void ShouldThrowApplicationExceptionOnGetReferenceData()
+        {
+            const int contactId = 123456;
+            const int refContactId = 987654;
+            var contact = ContactMock(contactId);
+
+            _configWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderFormId")).Returns(29);
+            _configWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderFormReferenceContact")).Returns(1519);
+            _participantRepository.Setup(m => m.GetParticipant(contactId)).Throws<ApplicationException>();
+
+            var res = _fixture.GetReferenceData(contactId);
+
+            res.Subscribe((result) =>
+            {
+                Assert.Fail("No Exception Thrown");
+            });
+        }
+
+        [Test]
+        public void ShouldSendAnEmailToThePersonsReference()
+        {
+            const int contactId = 123456;
+            const int referenceContactId = 9876545;
+            const int messageId = 456;
+            const int templateId = 2018;
+            var participant = ParticipantMock();
+            var contact = ContactMock(contactId);
+            var referenceContact = ContactMock(referenceContactId);
+            var referenceData = new Dictionary<string,object>
+            {
+                { "participant", participant },
+                { "contact", contact },
+                { "referenceContactId", referenceContactId.ToString() }
+            };
+
+            _contactMock.Setup(m => m.GetContactById(referenceContactId)).Returns(referenceContact);
+            _configWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderReferenceEmailTemplate")).Returns(templateId);
+
+            var mergeData = new Dictionary<string, object>();
+            var communication = ReferenceCommunication(2018, mergeData, referenceContact);
+
+            _communicationRepository.Setup(m => m.GetTemplateAsCommunication(2018, referenceContact.Contact_ID, It.IsAny<string>(), It.IsAny<Dictionary<string, object>>())).Returns(communication);
+            _communicationRepository.Setup(m => m.SendMessage(communication, false)).Returns(messageId);
+
+            var result = _fixture.SendReferenceEmail(referenceData);
+
+            result.Subscribe((n) =>
+            {
+                Assert.AreEqual(messageId, result);
+            },
+            (err) =>
+            {
+                Assert.Fail(err.ToString());
+            });
+        }
+
+        [Test]
+        public void ShouldSetupMergeDataCorrectly()
+        {
+            const int contactId = 123456;
+            const int referenceContactId = 9876545;
+            const int messageId = 456;
+            const int templateId = 2018;
+            var participant = ParticipantMock();
+            var contact = ContactMock(contactId);
+            var referenceContact = ContactMock(referenceContactId);
+            var referenceData = new Dictionary<string, object>
+            {
+                { "participant", participant },
+                { "contact", contact },
+                { "referenceContactId", referenceContactId.ToString() }
+            };
+     
+            _contactMock.Setup(m => m.GetContactById(referenceContactId)).Returns(referenceContact);
+            _configWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderReferenceEmailTemplate")).Returns(templateId);
+            _configWrapper.Setup(m => m.GetConfigValue("BaseUrl")).Returns("/");
+
+            var mergeData = new Dictionary<string, object>
+            {
+                {"Recipient_First_Name", referenceContact.Nickname },
+                {"First_Name" , contact.Nickname },
+                {"Last_Name", contact.Last_Name },
+                {"Participant_ID", participant.ParticipantId },
+                {"Base_Url", "/"}
+            };
+
+            var communication = ReferenceCommunication(2018, mergeData, referenceContact);
+
+            _communicationRepository.Setup(m => m.GetTemplateAsCommunication(2018, referenceContact.Contact_ID, It.IsAny<string>(), mergeData)).Returns(communication);
+            _communicationRepository.Setup(m => m.SendMessage(communication, false)).Returns(messageId);
+
+            var result = _fixture.SendReferenceEmail(referenceData);
+
+            result.Subscribe((n) =>
+            {
+                Assert.AreEqual(messageId, result);
+            },
+            (err) =>
+            {
+                Assert.Fail(err.ToString());
+            });
+        }
+
+        private static MpCommunication ReferenceCommunication(int templateId, Dictionary<string, object> mergeData, MpMyContact toContact)
+        {
+            var from = new MpContact {ContactId = 122222, EmailAddress = "groups@crossroads.net"};
+            return new MpCommunication
+            {
+                AuthorUserId = 1,
+                DomainId = 1,
+                EmailBody = "<h1> hello </h1>",
+                FromContact = from,
+                ReplyToContact = from,
+                TemplateId = templateId,
+                EmailSubject = "whateva",
+                MergeData = mergeData,
+                ToContacts = new List<MpContact>() {new MpContact {EmailAddress = toContact.Email_Address, ContactId = toContact.Contact_ID} }
+            };
+        }
+
+        private static MpMessageTemplate ReferenceTemplate()
+        {
+            return new MpMessageTemplate
+            {
+                Body = "<h1> hello </h1>",
+                FromContactId = 122222,
+                FromEmailAddress = "groups@crossroads.net",
+                ReplyToContactId = 1222222,
+                ReplyToEmailAddress = "groups@crossroads.net",
+                Subject = "whateva"
+            };
+        }
+
         private static GroupLeaderProfileDTO GroupLeaderMock()
         {
             return new GroupLeaderProfileDTO()
@@ -367,6 +592,18 @@ namespace crds_angular.test.Services
             };
         }
 
+        private static MpMyContact ContactMock(int contactId)
+        {
+            return new MpMyContact
+            {
+                First_Name = "Blah",
+                Last_Name = "Halb",
+                Contact_ID = contactId,
+                Nickname = "B",
+                Email_Address = "sumemail@mock.com"
+            };
+        }
+
         private static MpParticipant ParticipantMock()
         {
             return new MpParticipant
@@ -374,7 +611,7 @@ namespace crds_angular.test.Services
                 ContactId = 12345,
                 ParticipantId = 67890,
                 GroupLeaderStatus = 1,
-                DisplayName = "Fakerson, Fakey"
+                DisplayName = "Fakerson, Fakey"                
             };
         }
 

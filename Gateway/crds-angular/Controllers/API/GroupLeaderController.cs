@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Reactive.Threading.Tasks;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http;
 using crds_angular.Exceptions.Models;
@@ -81,7 +82,12 @@ namespace crds_angular.Controllers.API
                     try
                     {
                         _groupLeaderService.SaveSpiritualGrowth(spiritualGrowth)
-                            .Concat(_groupLeaderService.SetApplied(token)).Wait();                       
+                            .Concat(_groupLeaderService.SetApplied(token)).Wait();
+
+                        _groupLeaderService.GetReferenceData(spiritualGrowth.ContactId).Subscribe((res) =>
+                        {
+                            _groupLeaderService.SendReferenceEmail(res).Subscribe(CancellationToken.None);
+                        });
                         return Ok();
                     }
                     catch (Exception e)
@@ -94,6 +100,28 @@ namespace crds_angular.Controllers.API
             var errors = ModelState.Values.SelectMany(val => val.Errors).Aggregate("", (current, err) => current + err.ErrorMessage);
             var dataError = new ApiErrorDto("Spiritual Growth Data Invalid", new InvalidOperationException("Invalid Spiritual Growth Data" + errors));
             throw new HttpResponseException(dataError.HttpResponseMessage);
+        }
+
+        [VersionedRoute(template: "group-leader/leader-status", minimumVersion: "1.0.0")]
+        [HttpGet]
+        public async Task<IHttpActionResult> GetLeaderStatus()
+        {
+            return await Authorized(token =>
+            {
+                try
+                {
+                    var status = _groupLeaderService.GetGroupLeaderStatus(token).Wait();
+                    return Ok(new GroupLeaderStatusDTO
+                    {
+                        Status = status
+                    });
+                }
+                catch (Exception e)
+                {
+                    var apiError = new ApiErrorDto("Getting group leader status failed: ", e);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+            });
         }
     }
 }
