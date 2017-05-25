@@ -39,7 +39,7 @@ namespace crds_angular.Services
     {
         private readonly IAddressGeocodingService _addressGeocodingService;
         private readonly IContactRepository _contactRepository;
-        private readonly ILog _logger = LogManager.GetLogger(typeof(AddressService));
+        private readonly ILog _logger = LogManager.GetLogger(typeof(FinderService));
         private readonly IFinderRepository _finderRepository;
         private readonly IGroupRepository _groupRepository;
         private readonly IParticipantRepository _participantRepository;
@@ -667,9 +667,20 @@ namespace crds_angular.Services
             invitation = _invitationService.CreateInvitation(invitation, token);
 
             // TODO US8247 - Guest giver stuff - see story for info
-            
+
             //if the invitee does not have a contact then create one
-            var toContactId = _contactRepository.GetContactIdByEmail(person.email);
+            int toContactId;
+
+            try
+            {
+                toContactId = _contactRepository.GetContactIdByEmail(person.email);
+            }
+            catch (Exception e) //go ahead and create additional contact, becuase we don't know which contactId to use
+            {
+                _logger.Info($"Can't get specific contact_id,  '{person.email}', already has multiple contact records, create another, becuase don't know which one to pick", e);
+                toContactId = _contactRepository.CreateContactForGuestGiver(person.email, $"{person.lastName}, {person.firstName}", person.firstName, person.lastName);
+            }
+            
             if (toContactId == 0)
             {
                 toContactId = _contactRepository.CreateContactForGuestGiver(person.email, $"{person.lastName}, {person.firstName}", person.firstName, person.lastName);
