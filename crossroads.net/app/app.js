@@ -5,6 +5,7 @@ require('./mp_tools');
 require('./group_tool');
 require('./live_stream');
 require('ui-select/dist/select.css');
+require('./invoices/invoices.module');
 
 (function () {
   'use strict()';
