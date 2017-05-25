@@ -68,7 +68,7 @@ class ChildcareDecisionController {
     return content;
   }
   duplicateEventContent(date) {
-   let requestDate = `<li> ${moment(date).format('L')} </li>`;  
+   let requestDate = `<li> ${moment(date).format('L')} </li>`;
    let content = '<p><strong>There are duplicate Childcare Events for the Requested Date</strong>' +
       requestDate + '</p>';
    return content;
@@ -88,6 +88,7 @@ class ChildcareDecisionController {
     this.modalInstance = this.modal.open({
       controller: 'DecisionModalController as modal',
       templateUrl: 'childcare_decision/decisionModal.html',
+      openedClass: 'crds-legacy-styles',
       backdrop: true
     });
     this.modalInstance.result.then(() => {

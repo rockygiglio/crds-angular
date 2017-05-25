@@ -83,6 +83,7 @@ export default class AddEventToolController {
     const modalInstance = this.modal.open({
       controller: 'ContinueEditController',
       controllerAs: 'continueEdit',
+      openedClass: 'crds-legacy-styles',
       templateUrl: 'continue_reservation_edit/continue_edit.html'
     });
     return modalInstance;
@@ -103,6 +104,7 @@ export default class AddEventToolController {
     const modalInstance = this.modal.open({
       controller: 'RecurringEventController',
       controllerAs: 'recurringEvent',
+      openedClass: 'crds-legacy-styles',
       templateUrl: 'recurring_event/recurring_event.html'
     });
   }
@@ -111,6 +113,7 @@ export default class AddEventToolController {
     const modalInstance = this.modal.open({
       controller: 'CancelEventController',
       controllerAs: 'cancelEvent',
+      openedClass: 'crds-legacy-styles',
       templateUrl: 'cancel_event/cancel_event.html'
     });
 

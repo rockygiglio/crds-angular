@@ -82,6 +82,7 @@ class ChildcareDashboardGroupController {
       templateUrl: 'childcare_group/noTakeBacks.html',
       controller: NoTakeBacksController,
       controllerAs: 'noTakeBacks',
+      openedClass: 'crds-legacy-styles',
       size: 'sm'
     });
 
@@ -99,7 +100,7 @@ class ChildcareDashboardGroupController {
       }, () => {
         child.rsvpness = !child.rsvpness;
       });
-    } else { 
+    } else {
       this.rsvp(child);
     }
     return true;
