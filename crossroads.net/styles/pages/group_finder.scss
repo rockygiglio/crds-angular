@@ -43,13 +43,13 @@ $gf-danger: #c9302c;
     @include clearfix;
   }
 
-  // .navbar-brand.logo {
-  //   @include clearfix;
-  //   color: $white;
-  //   float: left;
-  //   position: static;
-  //   margin: 0 0 1em;
-  // }
+  .navbar-brand.logo {
+    @include clearfix;
+    color: $white;
+    float: left;
+    position: static;
+    margin: 0 0 1em;
+  }
 
   html[data-useragent*='MSIE'] select.form-control,html[data-useragent*='Trident'] select.form-control {
     background-color: #fff;
