@@ -151,11 +151,13 @@ namespace crds_angular.test.Services
 
             const int groupLeaderFormConfig = 23;
             const int groupLeaderReference = 56;
+            const int groupLeaderReferenceName = 57;
             const int groupLeaderHuddle = 92;
             const int groupLeaderStudent = 126;
 
             _configWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderFormId")).Returns(groupLeaderFormConfig);
             _configWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderReferenceFieldId")).Returns(groupLeaderReference);
+            _configWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderReferenceNameFieldId")).Returns(groupLeaderReferenceName);
             _configWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderHuddleFieldId")).Returns(groupLeaderHuddle);
             _configWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderStudentFieldId")).Returns(groupLeaderStudent);
 
@@ -175,11 +177,13 @@ namespace crds_angular.test.Services
 
             const int groupLeaderFormConfig = 23;
             const int groupLeaderReference = 56;
+            const int groupLeaderReferenceName = 57;
             const int groupLeaderHuddle = 92;
             const int groupLeaderStudent = 126;
 
             _configWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderFormId")).Returns(groupLeaderFormConfig);
             _configWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderReferenceFieldId")).Returns(groupLeaderReference);
+            _configWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderReferenceNameFieldId")).Returns(groupLeaderReferenceName);
             _configWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderHuddleFieldId")).Returns(groupLeaderHuddle);
             _configWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderStudentFieldId")).Returns(groupLeaderStudent);
 
