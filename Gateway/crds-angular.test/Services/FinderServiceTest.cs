@@ -366,6 +366,8 @@ namespace crds_angular.test.Services
                 Host_Status_ID = 0
             };
 
+            var geoCodes = new GeoCoordinate() { Altitude = 0, Course = 0, HorizontalAccuracy = 0, Latitude = 10, Longitude = 20, Speed = 0, VerticalAccuracy = 0 };
+
             var address = Mapper.Map<MpAddress>(pin.Address);
             var addressDictionary = new Dictionary<string, object>
             {
@@ -377,6 +379,7 @@ namespace crds_angular.test.Services
             };
             var householdDictionary = new Dictionary<string, object> {{"Household_ID", pin.Household_ID}};
 
+            _addressGeocodingService.Setup(mocked => mocked.GetGeoCoordinates(It.IsAny<AddressDTO>())).Returns(geoCodes);
             _addressService.Setup(m => m.SetGeoCoordinates(pin.Address));
             _mpContactRepository.Setup(m => m.UpdateHouseholdAddress((int) pin.Household_ID, householdDictionary, addressDictionary));
             _addressService.Setup(m => m.GetGeoLocationCascading(It.IsAny<AddressDTO>())).Returns(new GeoCoordinate(39, -84));
@@ -549,6 +552,7 @@ namespace crds_angular.test.Services
 
             pin.ShouldUpdateHomeAddress = true;
 
+            _addressGeocodingService.Setup(mocked => mocked.GetGeoCoordinates(It.IsAny<AddressDTO>())).Returns(geoCodes);
             _addressService.Setup(mocked => mocked.GetGeoLocationCascading(It.IsAny<AddressDTO>())).Returns(geoCodes);
             _mpContactRepository.Setup(mocked => mocked.UpdateHouseholdAddress(pin.Contact_ID.Value, null, It.IsAny <Dictionary<string, object>>()));
             _mpFinderRepository.Setup(mocked => mocked.UpdateGathering(It.IsAny<FinderGatheringDto>())).Returns(expectedFinderGathering);

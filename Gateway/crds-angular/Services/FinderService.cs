@@ -239,10 +239,15 @@ namespace crds_angular.Services
 
         public void UpdateHouseholdAddress(PinDto pin)
         {
+            var coords = _addressGeocodingService.GetGeoCoordinates(pin.Address);
+            pin.Address.Longitude = coords.Longitude;
+            pin.Address.Latitude = coords.Latitude;
+
             var householdDictionary = (pin.Address.AddressID == null)
                 ? new Dictionary<string, object> {{"Household_ID", pin.Household_ID}}
                 : null;
             var address = Mapper.Map<MpAddress>(pin.Address);
+
             var addressDictionary = getDictionary(address);
             addressDictionary.Add("State/Region", addressDictionary["State"]);
             _contactRepository.UpdateHouseholdAddress((int) pin.Contact_ID, householdDictionary, addressDictionary);
