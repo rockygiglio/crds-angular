@@ -477,6 +477,7 @@ namespace crds_angular.test.Services
 
             _contactMock.Setup(m => m.GetContactById(referenceContactId)).Returns(referenceContact);
             _configWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderReferenceEmailTemplate")).Returns(templateId);
+            _configWrapper.Setup(m => m.GetConfigValue("BaseMPUrl")).Returns("adminint");
 
             var mergeData = new Dictionary<string, object>();
             var communication = ReferenceCommunication(2018, mergeData, referenceContact);
@@ -515,7 +516,7 @@ namespace crds_angular.test.Services
      
             _contactMock.Setup(m => m.GetContactById(referenceContactId)).Returns(referenceContact);
             _configWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderReferenceEmailTemplate")).Returns(templateId);
-            _configWrapper.Setup(m => m.GetConfigValue("BaseUrl")).Returns("/");
+            _configWrapper.Setup(m => m.GetConfigValue("BaseMPUrl")).Returns("/");
 
             var mergeData = new Dictionary<string, object>
             {

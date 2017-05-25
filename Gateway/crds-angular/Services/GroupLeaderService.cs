@@ -274,7 +274,7 @@ namespace crds_angular.Services
                 {"First_Name" , applicant.Nickname ?? applicant.First_Name },
                 {"Last_Name", applicant.Last_Name },
                 {"Participant_ID", participant_Id },
-                {"Base_Url", _configWrapper.GetConfigValue("BaseUrl") }
+                {"Base_Url", _configWrapper.GetConfigValue("BaseMPUrl") }
             };
         }
 
