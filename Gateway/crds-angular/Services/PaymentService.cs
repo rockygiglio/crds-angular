@@ -10,6 +10,7 @@ using Crossroads.Utilities.Interfaces;
 using log4net;
 using Crossroads.Web.Common;
 using Crossroads.Web.Common.Configuration;
+using Crossroads.Web.Common.MinistryPlatform;
 using MinistryPlatform.Translation.Exceptions;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Models.Payments;
@@ -29,6 +30,7 @@ namespace crds_angular.Services
         private readonly IEventRepository _eventPRepository;
         private readonly ICommunicationRepository _communicationRepository;
         private readonly IConfigurationWrapper _configWrapper;
+        private readonly IApiUserRepository _apiUserRepository;
 
         private readonly int _paidinfullStatus;
         private readonly int _somepaidStatus;
@@ -43,7 +45,8 @@ namespace crds_angular.Services
             IContactRepository contactRepository, 
             IPaymentTypeRepository paymentTypeRepository, 
             IEventRepository eventRepository,
-            ICommunicationRepository communicationRepository)
+            ICommunicationRepository communicationRepository,
+            IApiUserRepository apiUserRepository)
         {
             _invoiceRepository = invoiceRepository;
             _paymentRepository = paymentRepository;
@@ -52,6 +55,7 @@ namespace crds_angular.Services
             _communicationRepository = communicationRepository;
             _configWrapper = configurationWrapper;
             _eventPRepository = eventRepository;
+            _apiUserRepository = apiUserRepository;
 
             _paidinfullStatus = configurationWrapper.GetConfigIntValue("PaidInFull");
             _somepaidStatus = configurationWrapper.GetConfigIntValue("SomePaid");
@@ -126,6 +130,12 @@ namespace crds_angular.Services
             {
                 throw new Exception("Unable to save payment data");
             }
+        }
+
+        public PaymentDetailDTO GetPaymentDetails(int invoiceId)
+        {
+            var apiToken = _apiUserRepository.GetToken();
+            return GetPaymentDetails(0, invoiceId, apiToken);
         }
 
         public PaymentDetailDTO GetPaymentDetails(int paymentId, int invoiceId, string token)

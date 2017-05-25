@@ -4,12 +4,12 @@ const path = require('path');
 const environmentVars = require('./environment.config.js');
 
 const definePlugin = new webpack.DefinePlugin(environmentVars.get());
-
 module.exports = {
   entry: {
     childcare: './app/childcare_dashboard/childcareDashboard.module.js',
     trips: './app/trips/trips.module.js',
     camps: './app/camps/camps.module.js',
+    invoices: './app/invoices/invoices.module.js',
     search: './app/search/search.module.js',
     media: './app/media/media.module.js',
     give: './app/give/give.module.js',

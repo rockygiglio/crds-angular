@@ -19,6 +19,23 @@ namespace crds_angular.Controllers.API
         }
 
         [RequiresAuthorization]
+        [VersionedRoute(template: "invoice/{invoiceId}", minimumVersion: "1.0.0")]
+        [AcceptVerbs("GET")]
+        public IHttpActionResult GetInvoicePaymentDetails(int invoiceId)
+        {
+            try
+            {
+                var res = _paymentService.GetPaymentDetails(invoiceId);
+                return Ok(res);
+            }
+            catch (Exception e)
+            {
+                var apiError = new ApiErrorDto("Unable to get payment details", e);
+                throw new HttpResponseException(apiError.HttpResponseMessage);
+            }
+        }
+
+        [RequiresAuthorization]
         [VersionedRoute(template: "invoice/{invoiceId}/has-payment", minimumVersion: "1.0.0")]
         [HttpGet]
         public IHttpActionResult AlreadyPaidDeposit(int invoiceId)
