@@ -8,7 +8,6 @@ import core from '../core/core';
 import search from '../app/search/search.module';
 import media from '../app/media/media.module';
 import formly from '../app/formlyBuilder/formlyBuilder.module';
-import invoices from '../app/invoices/invoices.module';
 import formBuilder from '../app/formBuilder/formBuilder.module'
 import goVolunteer from '../app/go_volunteer/goVolunteer.module';
 import childcareModule from '../app/childcare_dashboard/childcareDashboard.module';
