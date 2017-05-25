@@ -57,6 +57,7 @@ namespace crds_angular.Services
         private readonly int _connectGatheringStatusAccept;
         private readonly int _connectGatheringStatusDeny;
         private readonly int _connectGatheringRequestToJoin;
+        private readonly int _connectCommunicationTypeRequestToJoinSmallGroup;
 
         private const string GroupToolRemoveParticipantEmailTemplateTextTitle = "groupToolRemoveParticipantEmailTemplateText";
         private const string GroupToolRemoveParticipantSubjectTemplateText = "groupToolRemoveParticipantSubjectTemplateText";
@@ -118,12 +119,14 @@ namespace crds_angular.Services
             _baseUrl = configurationWrapper.GetConfigValue("BaseURL");
             _addressMatrixSearchDepth = configurationWrapper.GetConfigIntValue("AddressMatrixSearchDepth");
             
-            _smallGroupTypeId = configurationWrapper.GetConfigIntValue("SmallGroupTypeId");
+            _smallGroupTypeId = configurationWrapper.GetConfigIntValue("SmallGroupTypeId" +
+                                                                       "");
             _onsiteGroupTypeId = configurationWrapper.GetConfigIntValue("OnsiteGroupTypeId");
             _anywhereGroupType = configurationWrapper.GetConfigIntValue("AnywhereGroupTypeId");
             _connectGatheringStatusAccept = configurationWrapper.GetConfigIntValue("ConnectCommunicationStatusAccepted");
             _connectGatheringStatusDeny = configurationWrapper.GetConfigIntValue("ConnectCommunicationStatusDeclined");
             _connectGatheringRequestToJoin = configurationWrapper.GetConfigIntValue("ConnectCommunicationTypeRequestToJoinGathering");
+            _connectCommunicationTypeRequestToJoinSmallGroup = configurationWrapper.GetConfigIntValue("ConnectCommunicationTypeRequestToJoinSmallGroup");
         }
 
         public List<Invitation> GetInvitations(int sourceId, int invitationTypeId, string token)
@@ -357,7 +360,7 @@ namespace crds_angular.Services
         {
             //only record anywhere group type interactions
             var group = _groupService.GetGroupDetails(groupId);
-            if (group.GroupTypeId != _anywhereGroupType)
+            if (group.GroupTypeId != _anywhereGroupType && group.GroupTypeId != _smallGroupTypeId)
             {
                 return;
             }
@@ -377,7 +380,9 @@ namespace crds_angular.Services
         {
             _groupService.addContactToGroup(groupId, inquiry.ContactId);
             _groupRepository.UpdateGroupInquiry(groupId, inquiry.InquiryId, true);
-            RecordConnectInteraction(groupId, me.ContactId, inquiry.ContactId, _connectGatheringRequestToJoin, _connectGatheringStatusAccept);
+
+            int commType = group.GroupTypeId == _smallGroupTypeId ? _connectCommunicationTypeRequestToJoinSmallGroup : _connectGatheringRequestToJoin;
+            RecordConnectInteraction(groupId, me.ContactId, inquiry.ContactId, commType, _connectGatheringStatusAccept);
             // For now pick template based on group type
             var emailTemplateId = (group.GroupTypeId == _anywhereGroupType) 
                                                       ? _gatheringHostAcceptTemplate 
