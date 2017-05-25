@@ -165,7 +165,7 @@ AS
 			 ,NULL AS equip_notes
 			 ,NULL AS equip_reservation_start
 			 ,NULL AS equip_reservation_end
-			 ,e.ParticipantsExpected
+			 ,e.Participants_Expected
         FROM events e
 		JOIN #e on #e.event_id = e.event_id
 --  LEFT OUTER JOIN congregations c ON c.congregation_id = e.congregation_id
@@ -231,7 +231,7 @@ AS
 			 ,ee.notes AS equip_notes
              ,LEFT(CONVERT(VARCHAR, Dateadd(n,-(1 * e.minutes_for_setup),e.event_start_date), 120),16) AS equip_reservation_start
              ,LEFT(CONVERT(VARCHAR, Dateadd(n, e.minutes_for_cleanup,e.event_end_date),120),16) AS equip_reservation_end 
-			 ,e.ParticipantsExpected
+			 ,e.Participants_Expected
         FROM events e
 		JOIN #e on #e.event_id = e.event_id
 --  LEFT OUTER JOIN congregations c ON c.congregation_id = e.congregation_id
@@ -300,7 +300,7 @@ AS
 			 ,NULL AS  equip_notes
              ,NULL AS equip_reservation_start
              ,NULL AS equip_reservation_end
-			 ,e.ParticipantsExpected
+			 ,e.Participants_Expected
         FROM events e
 		JOIN #e on #e.event_id = e.event_id      
         JOIN event_types et ON et.event_type_id = e.event_type_id
