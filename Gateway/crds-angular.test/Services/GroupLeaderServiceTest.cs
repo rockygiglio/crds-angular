@@ -169,6 +169,35 @@ namespace crds_angular.test.Services
             var responseId = _fixture.SaveReferences(fakeDto).Wait();
             Assert.AreEqual(responseId, 1);
         }
+
+        [Test]
+        public void ShouldSaveNoReferenceData()
+        {
+            var fakeDto = NoReferenceProfileMock();
+
+            const int groupLeaderFormConfig = 23;
+            const int groupLeaderReference = 56;
+            const int groupLeaderReferenceName = 57;
+            const int groupLeaderHuddle = 92;
+            const int groupLeaderStudent = 126;
+
+            _configWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderFormId")).Returns(groupLeaderFormConfig);
+            _configWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderReferenceFieldId")).Returns(groupLeaderReference);
+            _configWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderReferenceNameFieldId")).Returns(groupLeaderReferenceName);
+            _configWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderHuddleFieldId")).Returns(groupLeaderHuddle);
+            _configWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderStudentFieldId")).Returns(groupLeaderStudent);
+
+            _formService.Setup(m => m.SubmitFormResponse(It.IsAny<MpFormResponse>()))
+                .Returns((MpFormResponse form) =>
+                {
+                    // Make sure that referenceDisplayName is an empty string not null
+                    Assert.AreEqual("", form.FormAnswers[1].Response);
+                    return 1;
+                });
+
+            var responseId = _fixture.SaveReferences(fakeDto).Wait();
+            Assert.AreEqual(1, responseId);
+        }
 	
 	    [Test]
         public void ShouldThrowExceptionWhenSaveReferenceDataFails()
@@ -656,7 +685,28 @@ namespace crds_angular.test.Services
                 HouseholdId = 81562,
                 HuddleResponse = "No",
                 LeadStudents = "Yes",
-                ReferenceContactId = "89158"
+                ReferenceContactId = "89158",
+                ReferenceDisplayName = "Horner, Jon"
+            };
+        }
+
+        private static GroupLeaderProfileDTO NoReferenceProfileMock()
+        {
+            return new GroupLeaderProfileDTO
+            {
+                ContactId = 12345,
+                BirthDate = new DateTime(1980, 02, 21),
+                Email = "silbermm@gmail.com",
+                LastName = "Silbernagel",
+                NickName = "Matt",
+                FirstName = "Matty-boy",
+                Site = 1,
+                OldEmail = "matt.silbernagel@ingagepartners.com",
+                HouseholdId = 81562,
+                HuddleResponse = "No",
+                LeadStudents = "Yes",
+                ReferenceContactId = "0",
+                ReferenceDisplayName = null
             };
         }
 
