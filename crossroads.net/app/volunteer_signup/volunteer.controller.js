@@ -30,7 +30,7 @@
     ///////////////////////////////////////////
 
     function activate() {
-      if (CmsInfo.pages.length > 0) {   
+      if (CmsInfo.pages.length > 0) {
         ServeOpportunities.QualifiedServers.query({
             groupId: vm.pageInfo.group,
             opportunityId: vm.pageInfo.opportunity
@@ -91,6 +91,7 @@
         templateUrl: 'profile/editProfile.html',
         backdrop: true,
         controller: "ProfileModalController as modal",
+        openedClass: 'crds-legacy-styles',
         // This is needed in order to get our scope
         // into the modal - by default, it uses $rootScope
         scope: $scope,
@@ -106,7 +107,7 @@
       });
     }
 
-    
+
     function pageInfo(cmsInfo) {
       return cmsInfo.pages[0];
     }

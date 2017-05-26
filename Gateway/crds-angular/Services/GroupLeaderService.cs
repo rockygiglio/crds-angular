@@ -47,6 +47,11 @@ namespace crds_angular.Services
                     },
                     new MpFormAnswer
                     {
+                        FieldId = _configWrapper.GetConfigIntValue("GroupLeaderReferenceNameFieldId"),
+                        Response = leader.ReferenceDisplayName
+                    },
+                    new MpFormAnswer
+                    {
                          FieldId = _configWrapper.GetConfigIntValue("GroupLeaderHuddleFieldId"),
                         Response = leader.HuddleResponse
                     },
@@ -70,6 +75,25 @@ namespace crds_angular.Services
             });         
         }
 
+        public IObservable<int> GetGroupLeaderStatus(string token)
+        {
+            return Observable.Create<int>(observer =>
+            {
+                try
+                {
+                    var participant = _participantRepository.GetParticipantRecord(token);
+                    observer.OnNext(participant.GroupLeaderStatus);
+                }
+                catch (Exception e)
+                {
+                    observer.OnError(new ApplicationException("Failed to get Group Leader Status: ", e));
+                }
+
+                observer.OnCompleted();
+                return Disposable.Empty;
+            });
+        }
+
         public IObservable<int> SetApplied(string token)
         {
             return Observable.Create<int>(observer =>
@@ -86,8 +110,7 @@ namespace crds_angular.Services
                     observer.OnError(new ApplicationException("Unable to submit Set the participant as applied", e));
                 }                
                 return Disposable.Empty;
-            });
-           
+            });           
         }
 
         public void SetInterested(string token)
@@ -177,6 +200,97 @@ namespace crds_angular.Services
                 observer.OnCompleted();
                 return Disposable.Create(() => Console.WriteLine("Observable Destroyed"));
             });
+        }
+
+        public IObservable<Dictionary<string, object>> GetReferenceData(int contactId)
+        {
+            var formId = _configWrapper.GetConfigIntValue("GroupLeaderFormId");
+            var formFieldId = _configWrapper.GetConfigIntValue("GroupLeaderFormReferenceContact");
+
+            return Observable.Return<MpParticipant>(_participantRepository.GetParticipant(contactId)).Zip(
+                Observable.Return<MpMyContact>(_contactRepository.GetContactById(contactId)),
+                Observable.Return<string>(_formSubmissionRepository.GetFormResponseAnswer(formId, contactId, formFieldId, null)),
+                (participant, contact, answer) => new Dictionary<string, object>
+                {
+                    {"participant", participant},
+                    {"contact", contact},
+                    {"referenceContactId", answer ?? "0" }
+                });
+        }
+
+        public IObservable<int> SendReferenceEmail(Dictionary<string, object> referenceData)
+        {
+            var templateId = _configWrapper.GetConfigIntValue("GroupLeaderReferenceEmailTemplate");           
+            return Observable.Create<int>(observer =>
+            {
+                try
+                {
+                    var referenceId = int.Parse((string)referenceData["referenceContactId"]);
+                    var reference = _contactRepository.GetContactById(referenceId);
+                    var template = _communicationRepository.GetTemplateAsCommunication(
+                        templateId,                        
+                        referenceId,
+                        reference.Email_Address,
+                        SetupReferenceEmailMergeData(reference, (MpMyContact)referenceData["contact"], ((MpParticipant)referenceData["participant"]).ParticipantId));
+                    var messageId = _communicationRepository.SendMessage(template);
+                    observer.OnNext(messageId);
+                }
+                catch (Exception e)
+                {
+                    observer.OnError(new ApplicationException("Unable to send reference email", e));
+                }
+                return Disposable.Empty;
+            });                              
+        }
+
+        public IObservable<int> SendNoReferenceEmail(Dictionary<string, object> referenceData)
+        {
+            var templateId = _configWrapper.GetConfigIntValue("GroupLeaderNoReferenceEmailTemplate");
+            return Observable.Create<int>(observer =>
+            {
+                try
+                {
+                    var toContactId = _configWrapper.GetConfigIntValue("DefaultGroupContactEmailId");
+                    var toContactEmail = _contactRepository.GetContactEmail(toContactId);
+                    var template = _communicationRepository.GetTemplateAsCommunication(
+                        templateId,
+                        toContactId,
+                        toContactEmail,
+                        SetupNoReferenceEmailMergeData((MpMyContact) referenceData["contact"])
+                    );
+
+                    var messageId = _communicationRepository.SendMessage(template);
+                    observer.OnNext(messageId);
+                }
+                catch (Exception e)
+                {
+                    observer.OnError(new ApplicationException("Unable to send no reference email"));
+                }
+
+                return Disposable.Empty;
+            });
+        }
+
+        private Dictionary<string, object> SetupReferenceEmailMergeData(MpMyContact reference, MpMyContact applicant, int participant_Id)
+        {
+            return new Dictionary<string, object>
+            {
+                {"Recipient_First_Name", reference.Nickname ?? reference.First_Name },
+                {"First_Name" , applicant.Nickname ?? applicant.First_Name },
+                {"Last_Name", applicant.Last_Name },
+                {"Participant_ID", participant_Id },
+                {"Base_Url", _configWrapper.GetConfigValue("BaseMPUrl") }
+            };
+        }
+
+        private Dictionary<string, object> SetupNoReferenceEmailMergeData(MpMyContact applicant)
+        {
+            return new Dictionary<string, object>
+            {
+                { "First_Name", applicant.Nickname ?? applicant.First_Name },
+                { "Last_Name", applicant.Last_Name },
+                { "Email_Address", applicant.Email_Address }
+            };
         }
 
         private void SendConfirmationEmail(int toContactId, string toEmailAddress)

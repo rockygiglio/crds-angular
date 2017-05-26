@@ -89,7 +89,7 @@
       scope.isTeamLeader = isTeamLeader;
 
       scope.capacityReady = false;
-      
+
       //////////////////////////////////////
 
       function isTeamTab() {
@@ -177,7 +177,7 @@
           templateUrl: 'profile/editProfile.html',
           backdrop: true,
           controller: 'ProfileModalController as modal',
-
+          openedClass: 'crds-legacy-styles',
           // This is needed in order to get our scope
           // into the modal - by default, it uses $rootScope
           scope: scope,
@@ -567,7 +567,7 @@
           })
           .$promise
           .then((result) => {
-            r.capacity = result; 
+            r.capacity = result;
             scope.capacityReady = true;
           });
         });

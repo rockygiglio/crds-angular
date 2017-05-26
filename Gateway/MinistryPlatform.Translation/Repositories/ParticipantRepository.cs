@@ -64,7 +64,8 @@ namespace MinistryPlatform.Translation.Repositories
                 EmailAddress = result.ToString("Email_Address"),
                 PreferredName = result.ToString("Nickname"),
                 DisplayName = result.ToString("Display_Name"),
-                ApprovedSmallGroupLeader = result.ToInt("Group_Leader_Status_ID") == _configurationWrapper.GetConfigIntValue("GroupLeaderApproved")
+                ApprovedSmallGroupLeader = result.ToInt("Group_Leader_Status_ID") == _configurationWrapper.GetConfigIntValue("GroupLeaderApproved"),
+                GroupLeaderStatus = result.ToInt("Group_Leader_Status_ID")
             };
 
             return participant;

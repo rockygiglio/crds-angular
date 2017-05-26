@@ -24,6 +24,7 @@
       var modalInstance = $modal.open({
         templateUrl: 'templates/group_contact_modal.html',
         controller: 'GroupContactCtrl as contactModal',
+        openedClass: 'crds-legacy-styles',
         resolve: {
           fromContactId: function() {
             return vm.group.contactId;
