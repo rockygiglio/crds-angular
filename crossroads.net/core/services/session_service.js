@@ -12,6 +12,7 @@
         backdrop: 'static',
         keyboard: false,
         show: false,
+        openedClass: 'crds-legacy-styles'
       });
 
       modal.result.then(
