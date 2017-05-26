@@ -206,7 +206,8 @@
       var stayLoggedInPrompt = $modal.open({
         templateUrl: 'stayLoggedInModal/stayLoggedInModal.html',
         controller: 'StayLoggedInController as StayLoggedIn',
-        backdrop: true
+        backdrop: true,
+        openedClass: 'crds-legacy-styles'
       });
     }
 

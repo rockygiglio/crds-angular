@@ -110,6 +110,7 @@ describe('Session Service', function () {
         backdrop: 'static',
         keyboard: false,
         show: false,
+        openedClass: 'crds-legacy-styles'
       });
     });
 
