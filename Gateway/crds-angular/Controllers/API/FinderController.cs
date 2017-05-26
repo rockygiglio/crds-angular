@@ -372,13 +372,13 @@ namespace crds_angular.Controllers.API
             });
         }
         /// <summary>
-        /// Logged in user invites a participant to the gathering
+        /// Logged in user invites a participant to the group of types - gathering or small group
         /// </summary>
         [RequiresAuthorization]
-        [VersionedRoute(template: "finder/pin/invitetogathering/{gatheringId}", minimumVersion: "1.0.0")]
-        [Route("finder/pin/invitetogathering/{gatheringId}")]
+        [VersionedRoute(template: "finder/pin/invitetogroup/{groupId}/{finderFlag}", minimumVersion: "1.0.0")]
+        [Route("finder/pin/invitetogroup/{groupId}/{finderFlag}")]
         [HttpPost]
-        public IHttpActionResult InviteToGathering([FromUri] int gatheringId, [FromBody] User person)
+        public IHttpActionResult InviteToGroup([FromUri] int groupId, [FromUri]string finderFlag, [FromBody] User person)
         {
             if (!ModelState.IsValid)
             {
@@ -391,7 +391,7 @@ namespace crds_angular.Controllers.API
             {
                 try
                 {
-                    _finderService.InviteToGathering(token, gatheringId, person);
+                    _finderService.InviteToGroup(token, groupId, person, finderFlag);
                     return (Ok());
                 }
                 catch (ValidationException e)

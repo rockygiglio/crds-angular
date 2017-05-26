@@ -146,7 +146,7 @@ namespace MinistryPlatform.Translation.Repositories
                 return new List<MpConnectAws>();
             }
         }
-
+       
         public void RecordConnection(MpConnectCommunication connection)
         {
             var apiToken = _apiUserRepository.GetToken();
