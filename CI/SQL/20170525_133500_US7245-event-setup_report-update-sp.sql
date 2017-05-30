@@ -56,8 +56,7 @@ AS
 
       SELECT E.event_id
         INTO #e
-        FROM events E
-		JOIN event_participants p on E.event_id = p.event_id
+        FROM events E	
        WHERE  (@BeginDate IS NULL OR E.event_start_date >= @BeginDate)
          AND (@EndDate IS NULL OR E.event_start_date < @EndDate + 1)
          AND (@CongregationID IS NULL OR EXISTS (SELECT 1
