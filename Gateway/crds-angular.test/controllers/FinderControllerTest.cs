@@ -68,6 +68,7 @@ namespace crds_angular.test.controllers
             const int fakecontactid = 12345;
             const string fakelat = "39.123";
             const string fakelong = "-84.456";
+            const string fakeFinderType = "CONNECT";
             var geoCoordinate = new GeoCoordinate(39.123, -84.456);
             var listPinDto = GetListOfPinDto();
             var address = new AddressDTO("123 Main st","","Independence","KY","41051",32,-84);
@@ -76,7 +77,7 @@ namespace crds_angular.test.controllers
             _finderService.Setup(m => m.GetMyPins(It.IsAny<string>(), It.IsAny<GeoCoordinate>(), It.IsAny<int>())).Returns(listPinDto);
             _finderService.Setup(m => m.RandomizeLatLong(It.IsAny<AddressDTO>())).Returns(address);
 
-            var response = _fixture.GetMyPinsByContactId(fakecontactid, fakelat, fakelong);
+            var response = _fixture.GetMyPinsByContactId(fakecontactid, fakelat, fakelong, fakeFinderType);
 
             Assert.IsNotNull(response);
             Assert.IsInstanceOf<OkNegotiatedContentResult<PinSearchResultsDto>>(response);
@@ -88,12 +89,13 @@ namespace crds_angular.test.controllers
             const int fakecontactid = 12345;
             const string fakelat = "39.123";
             const string fakelong = "-84.456";
+            const string fakeFinderType = "CONNECT";
             var geoCoordinate = new GeoCoordinate(39.123, -84.456);
            
             _finderService.Setup(m => m.GetGeoCoordsFromLatLong(It.IsAny<string>(), It.IsAny<string>())).Returns(geoCoordinate);
             _finderService.Setup(m => m.GetMyPins(It.IsAny<string>(), It.IsAny<GeoCoordinate>(), It.IsAny<int>())).Returns(new List<PinDto>());
 
-            var response = _fixture.GetMyPinsByContactId(fakecontactid, fakelat, fakelong) as OkNegotiatedContentResult<PinSearchResultsDto>;
+            var response = _fixture.GetMyPinsByContactId(fakecontactid, fakelat, fakelong, fakeFinderType) as OkNegotiatedContentResult<PinSearchResultsDto>;
             Assert.That(response != null && response.Content.PinSearchResults.Count == 0);
         }
 

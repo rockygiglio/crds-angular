@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Reflection;
@@ -337,10 +338,10 @@ namespace crds_angular.Controllers.API
 
         [RequiresAuthorization]
         [ResponseType(typeof(PinSearchResultsDto))]                                   
-        [VersionedRoute(template: "finder/findmypinsbycontactid/{contactId}/{lat}/{lng}", minimumVersion: "1.0.0")]
-        [Route("finder/findmypinsbycontactid/{contactId}/{lat}/{lng}")]
+        [VersionedRoute(template: "finder/findmypinsbycontactid/{contactId}/{lat}/{lng}/{finderType}", minimumVersion: "1.0.0")]
+        [Route("finder/findmypinsbycontactid/{contactId}/{lat}/{lng}/{finderType}")]
         [HttpGet]
-        public IHttpActionResult GetMyPinsByContactId([FromUri]int contactId, [FromUri]string lat, [FromUri]string lng)
+        public IHttpActionResult GetMyPinsByContactId([FromUri]int contactId, [FromUri]string lat, [FromUri]string lng, [FromUri]string finderType )
         {
             return Authorized(token =>
             {
@@ -350,7 +351,15 @@ namespace crds_angular.Controllers.API
                     var centerLatitude = originCoords.Latitude;
                     var centerLongitude = originCoords.Longitude;
 
-                    var pinsForContact = _finderService.GetMyPins(token, originCoords, contactId);
+                    var pinsForContact = new List<PinDto>();
+
+                    if (finderType == "CONNECT")
+                    {
+                        pinsForContact = _finderService.GetMyPins(token, originCoords, contactId);
+                    } else if (finderType == "SMALL_GROUPS")
+                    {
+                        pinsForContact = _finderService.GetMyGroupPins(token, new int[] {1, 30}, 7571435/*contactId*/);
+                    }
 
                     if (pinsForContact.Count > 0)
                     {

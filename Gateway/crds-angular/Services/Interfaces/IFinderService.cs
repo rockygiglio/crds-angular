@@ -15,7 +15,8 @@ namespace crds_angular.Services.Interfaces
         void DisablePin(int participantId);
         void UpdateHouseholdAddress(PinDto pin);
         AddressDTO GetAddressForIp(string ip);
-        List<PinDto> GetMyPins(string token, GeoCoordinate originCoords, int contactId);        
+        List<PinDto> GetMyPins(string token, GeoCoordinate originCoords, int contactId);
+        List<PinDto> GetMyGroupPins(string token, int[] groupTypeIds, int participantId);
         int GetParticipantIdFromContact(int contactId);
         List<PinDto> GetPinsInBoundingBox(GeoCoordinate originCoords, string address, AwsBoundingBox boundingBox, string finderType, int contactId);
         AddressDTO RandomizeLatLong(AddressDTO address);
