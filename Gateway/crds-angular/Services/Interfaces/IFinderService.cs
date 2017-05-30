@@ -23,7 +23,7 @@ namespace crds_angular.Services.Interfaces
         GeoCoordinate GetGeoCoordsFromAddressOrLatLang(string address, string lat, string lng);
         GeoCoordinate GetGeoCoordsFromLatLong(string lat, string lng);
         void GatheringJoinRequest(string token, int gatheringId);
-        Invitation InviteToGathering(string token, int gatheringId, User person);
+        Invitation InviteToGroup(string token, int gatheringId, User person, string finderFlag);
         List<GroupParticipantDTO> GetParticipantsForGroup(int groupId);
         AddressDTO GetGroupAddress(string token, int groupId);
         AddressDTO GetPersonAddress(string token, int participantId);
