@@ -95,6 +95,10 @@
 
         return;
       }
+      if (toState.name === 'login' && fromState.name !== '') {
+        Session.addRedirectRoute(fromState.name, fromParams);
+      }
+
       if (toState.data !== undefined && toState.data.preventRouteAuthentication) {
         return;
       }
