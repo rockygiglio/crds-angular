@@ -63,6 +63,7 @@
         parent: 'noSideBar',
         templateUrl: 'recurring_giving_create_modal',
         controller: 'RecurringGivingModals as recurringGift',
+        openedClass: 'crds-legacy-styles',
         resolve: {
           donation: function() {
             return null;

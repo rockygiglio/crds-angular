@@ -14,6 +14,7 @@ using Newtonsoft.Json;
 using Crossroads.Web.Common.MinistryPlatform;
 using System.Linq;
 using System.Device.Location;
+using System.Text;
 using Amazon.CloudSearchDomain.Model;
 using crds_angular.Exceptions;
 using crds_angular.Models.AwsCloudsearch;
@@ -231,10 +232,15 @@ namespace crds_angular.Services
 
         public void UpdateHouseholdAddress(PinDto pin)
         {
+            var coords = _addressGeocodingService.GetGeoCoordinates(pin.Address);
+            pin.Address.Longitude = coords.Longitude;
+            pin.Address.Latitude = coords.Latitude;
+
             var householdDictionary = (pin.Address.AddressID == null)
                 ? new Dictionary<string, object> {{"Household_ID", pin.Household_ID}}
                 : null;
             var address = Mapper.Map<MpAddress>(pin.Address);
+
             var addressDictionary = getDictionary(address);
             addressDictionary.Add("State/Region", addressDictionary["State"]);
             _contactRepository.UpdateHouseholdAddress((int) pin.Contact_ID, householdDictionary, addressDictionary);
@@ -326,10 +332,13 @@ namespace crds_angular.Services
 
         public void GatheringJoinRequest(string token, int gatheringId)
         {
-            var group = _groupService.GetGroupDetails(gatheringId);
+            GroupDTO group = _groupService.GetGroupDetails(gatheringId);
+            string commType = group.GroupTypeId == _smallGroupType ? "ConnectCommunicationTypeRequestToJoinSmallGroup"
+                                                                   : "ConnectCommunicationTypeRequestToJoinGathering";
+
             var connection = new ConnectCommunicationDto
             {
-                CommunicationTypeId = _configurationWrapper.GetConfigIntValue("ConnectCommunicationTypeRequestToJoin"),
+                CommunicationTypeId = _configurationWrapper.GetConfigIntValue(commType),
                 ToContactId = group.ContactId,
                 FromContactId = _contactRepository.GetContactId(token),
                 CommunicationStatusId = _configurationWrapper.GetConfigIntValue("ConnectCommunicationStatusUnanswered"),
@@ -409,20 +418,33 @@ namespace crds_angular.Services
             switch (pin.PinType)
             {
                 case PinType.SITE:
-                    jsonData = $"{{ 'siteName': '{pin.SiteName}','isHost':  false,'isMe': false,'pinType': {(int) pin.PinType}}}";
+                    jsonData = $"{{ 'siteName': '{RemoveSpecialCharacters(pin.SiteName)}','isHost':  false,'isMe': false,'pinType': {(int) pin.PinType}}}";
                     break;
                 case PinType.GATHERING:
-                    jsonData = $"{{ 'firstName': '{pin.FirstName}', 'lastInitial': '{lastname}','isHost':  true,'isMe': false,'pinType': {(int) pin.PinType}}}";
+                    jsonData = $"{{ 'firstName': '{RemoveSpecialCharacters(pin.FirstName)}', 'lastInitial': '{RemoveSpecialCharacters(lastname)}','isHost':  true,'isMe': false,'pinType': {(int) pin.PinType}}}";
                     break;
                 case PinType.PERSON:
-                    jsonData = $"{{ 'firstName': '{pin.FirstName}', 'lastInitial': '{lastname}','isHost':  false,'isMe': false,'pinType': {(int) pin.PinType}}}";
+                    jsonData = $"{{ 'firstName': '{RemoveSpecialCharacters(pin.FirstName)}', 'lastInitial': '{RemoveSpecialCharacters(lastname)}','isHost':  false,'isMe': false,'pinType': {(int) pin.PinType}}}";
                     break;
                 case PinType.SMALL_GROUP:
-                    jsonData = $"{{ 'firstName': '{pin.Gathering.GroupName}', 'lastInitial': '{lastname}','isHost':  false,'isMe': false,'pinType': {(int)pin.PinType}}}";
+                    jsonData = $"{{ 'firstName': '{RemoveSpecialCharacters(pin.Gathering.GroupName)}', 'lastInitial': '','isHost':  false,'isMe': false,'pinType': {(int)pin.PinType}}}";
                     break; 
             }
 
             return jsonData.Replace("'", "\"");
+        }
+
+        private static string RemoveSpecialCharacters(string str)
+        {
+            var sb = new StringBuilder();
+            foreach (var c in str)
+            {
+                if ((c >= '0' && c <= '9') || (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || c == '.' || c == '_')
+                {
+                    sb.Append(c);
+                }
+            }
+            return sb.ToString();
         }
 
         private string GetPinUrl(PinType pintype)
@@ -553,6 +575,8 @@ namespace crds_angular.Services
                 if (pin.Address.Latitude == null) continue;
                 if (pin.Address.Longitude != null) pin.Proximity = GetProximity(originCoords, new GeoCoordinate(pin.Address.Latitude.Value, pin.Address.Longitude.Value));
             }
+
+            pins = this.AddPinMetaData(pins, originCoords);
 
             return pins;
         }
@@ -835,7 +859,7 @@ namespace crds_angular.Services
             return pins;
         }
 
-        private List<PinDto> AddPinMetaData(List<PinDto> pins, GeoCoordinate originCoords)
+        public List<PinDto> AddPinMetaData(List<PinDto> pins, GeoCoordinate originCoords)
         {
             foreach (var pin in pins)
             {

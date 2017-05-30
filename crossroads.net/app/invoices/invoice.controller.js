@@ -2,31 +2,47 @@
 class InvoiceController {
 
   constructor(InvoicesService, $rootScope, $stateParams, $sce) {
-    this.campId = $stateParams.campId;
+    this.invoiceId = $stateParams.invoiceId;
     this.sce = $sce;
     this.invoicesService = InvoicesService;
     this.viewReady = false;
   }
 
   $onInit() {
-    console.log("oninit");
-    this.invoicesService.getInvoice(3421).then(
+    this.setGatewayUrls();
+    this.invoicesService.getInvoice(this.invoiceId).then(
       (data) => {
-        console.log("invoice data", data);
-      },
-      (err) => {
-        console.log("err", err);
-      }).finally(
-        () => {
-          console.log("finnnnally");
-          this.viewReady = true;
+        this.url = this.buildUrl(this.invoiceId, data.paymentLeft, data.paymentLeft);
+      }, (err) => {
+        console.error(err);
+      }).finally(() => {
+        this.viewReady = true;
       });
   }
 
-  buildUrl() {
-    console.log("buildurl invoice", this);
-    // return this.sce.trustAsResourceUrl(`http://localhost:8080/?type=donation&min_payment=123&invoice_id=1234&total_cost=1234`);
-    return this.sce.trustAsResourceUrl(`http://localhost:8080/?type=payment&min_payment=123&invoice_id=1234&total_cost=1234`);
+  setGatewayUrls() {
+    switch (__CRDS_ENV__) {
+      case 'local':
+        this.baseUrl = 'http://localhost:8080';
+        this.returnUrl = 'http://local.crossroads.net:3000/';
+        break;
+      case 'int':
+        this.baseUrl = 'https://embedint.crossroads.net';
+        this.returnUrl = 'https://int.crossroads.net/';
+        break;
+      case 'demo':
+        this.baseUrl = 'https://embeddemo.crossroads.net';
+        this.returnUrl = 'https://demo.crossroads.net/';
+        break;
+      default:
+        this.baseUrl = 'https://embed.crossroads.net';
+        this.returnUrl = 'https://crossroads.net/';
+        break;
+    }
+  }
+
+  buildUrl(invoiceId, totalCost, minPayment) {
+    return this.sce.trustAsResourceUrl(`${this.baseUrl}/?type=payment&invoice_id=${invoiceId}&total_cost=${totalCost}&min_payment=${minPayment}&url=${this.returnUrl}`);
   }
 }
 export default InvoiceController;

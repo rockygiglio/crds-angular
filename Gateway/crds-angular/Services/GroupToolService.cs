@@ -123,7 +123,7 @@ namespace crds_angular.Services
             _anywhereGroupType = configurationWrapper.GetConfigIntValue("AnywhereGroupTypeId");
             _connectGatheringStatusAccept = configurationWrapper.GetConfigIntValue("ConnectCommunicationStatusAccepted");
             _connectGatheringStatusDeny = configurationWrapper.GetConfigIntValue("ConnectCommunicationStatusDeclined");
-            _connectGatheringRequestToJoin = configurationWrapper.GetConfigIntValue("ConnectCommunicationTypeRequestToJoin");
+            _connectGatheringRequestToJoin = configurationWrapper.GetConfigIntValue("ConnectCommunicationTypeRequestToJoinGathering");
         }
 
         public List<Invitation> GetInvitations(int sourceId, int invitationTypeId, string token)
