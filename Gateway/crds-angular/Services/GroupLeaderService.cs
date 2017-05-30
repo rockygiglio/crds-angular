@@ -48,7 +48,7 @@ namespace crds_angular.Services
                     new MpFormAnswer
                     {
                         FieldId = _configWrapper.GetConfigIntValue("GroupLeaderReferenceNameFieldId"),
-                        Response = leader.ReferenceDisplayName
+                        Response = leader.ReferenceDisplayName ?? ""
                     },
                     new MpFormAnswer
                     {
