@@ -39,7 +39,7 @@ fdescribe('Invoice Component', () => {
       expect(fixture.viewReady).toBeTruthy();
     });
 
-    it('should set urls, get invoice', () => {
+    it('should set urls, invoiceId, get invoice', () => {
       expect(fixture.baseUrl).toBeDefined();
       expect(fixture.returnUrl).toBeDefined();
       expect(fixture.invoiceId).toBe(invoiceId);

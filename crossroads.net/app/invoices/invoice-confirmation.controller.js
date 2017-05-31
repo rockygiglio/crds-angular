@@ -2,6 +2,7 @@
 class InvoiceConfirmationController {
 
   constructor(InvoicesService, $rootScope, $stateParams, $sce) {
+    this.invoiceId = $stateParams.invoiceId;
     this.viewReady = false;
     this.invoicesService = InvoicesService;
   }
