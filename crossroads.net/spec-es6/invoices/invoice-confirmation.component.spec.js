@@ -30,17 +30,16 @@ fdescribe('Invoice Confirmation Component', () => {
 
   describe('#onInit', () => {
     beforeEach(() => {
-      fixture.$onInit();
-      let deferred = qApi.defer();
-      deferred.resolve({});
-      spyOn(invoicesService, 'getPaymentDetails').and.callFake(function() {
-        return(deferred.promise);
+      spyOn(invoicesService, 'getInvoice').and.callFake(() => {
+        const deferred = qApi.defer();
+        deferred.resolve({ status: 302 });
+        return deferred.promise;
       });
       fixture.$onInit();
       rootScope.$digest();
     });
 
-    it('should set urls, set the view as ready', () => {
+    it('should set view as ready', () => {
       expect(fixture.viewReady).toBeTruthy();
     });
 

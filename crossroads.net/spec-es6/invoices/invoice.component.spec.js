@@ -25,23 +25,22 @@ fdescribe('Invoice Component', () => {
 
   describe('#onInit', () => {
     beforeEach(() => {
-      fixture.$onInit();
-      let deferred = qApi.defer();
-      deferred.resolve({});
-      spyOn(invoicesService, 'getInvoice').and.callFake(function() {
-        return(deferred.promise);
+      spyOn(invoicesService, 'getInvoice').and.callFake(() => {
+        const deferred = qApi.defer();
+        deferred.resolve({ status: 302 });
+        return deferred.promise;
       });
       fixture.$onInit();
       rootScope.$digest();
     });
 
     it('should set urls, set the view as ready', () => {
+      expect(fixture.baseUrl).toBeDefined();
+      expect(fixture.returnUrl).toBeDefined();
       expect(fixture.viewReady).toBeTruthy();
     });
 
-    it('should set urls, invoiceId, get invoice', () => {
-      expect(fixture.baseUrl).toBeDefined();
-      expect(fixture.returnUrl).toBeDefined();
+    it('should set invoiceId, get invoice', () => {
       expect(fixture.invoiceId).toBe(invoiceId);
       expect(invoicesService.getInvoice).toHaveBeenCalledWith(invoiceId);
     });
