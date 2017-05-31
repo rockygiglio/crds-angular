@@ -662,7 +662,7 @@
                                                             <Paragraph>
                                                               <TextRuns>
                                                                 <TextRun>
-                                                                  <Value>=IIF(Fields!Section_Title.Value = "Stock Giving","","Amount")</Value>
+                                                                  <Value>=IIF(Fields!Section_Title.Value = "Stock Giving:","","Amount")</Value>
                                                                   <Style>
                                                                     <FontWeight>Bold</FontWeight>
                                                                   </Style>
@@ -866,7 +866,7 @@
                                                                           <Paragraph>
                                                                             <TextRuns>
                                                                               <TextRun>
-                                                                                <Value>=IIF(Fields!Section_Title.Value = "Stock Giving","",Fields!Amount.Value)</Value>
+                                                                                <Value>=IIF(Fields!Section_Title.Value = "Stock Giving:","",Fields!Amount.Value)</Value>
                                                                                 <Style>
                                                                                   <Format>'$'#,0.00;('$'#,0.00)</Format>
                                                                                 </Style>
@@ -1151,7 +1151,7 @@
                                                                           <Paragraph>
                                                                             <TextRuns>
                                                                               <TextRun>
-                                                                                <Value>=IIF(Fields!Section_Title.Value = "Stock Giving","","Total:")</Value>
+                                                                                <Value>=IIF(Fields!Section_Title.Value = "Stock Giving:","","Total:")</Value>
                                                                                 <Style>
                                                                                   <FontWeight>Bold</FontWeight>
                                                                                 </Style>
@@ -1184,7 +1184,7 @@
                                                                           <Paragraph>
                                                                             <TextRuns>
                                                                               <TextRun>
-                                                                                <Value>=IIF(Fields!Section_Title.Value = "Stock Giving","",Sum(Fields!Amount.Value))</Value>
+                                                                                <Value>=IIF(Fields!Section_Title.Value = "Stock Giving:","",Sum(Fields!Amount.Value))</Value>
                                                                                 <Style>
                                                                                   <FontWeight>Bold</FontWeight>
                                                                                   <Format>'$'#,0.00;('$'#,0.00)</Format>
