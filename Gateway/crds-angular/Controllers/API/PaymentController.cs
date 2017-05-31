@@ -34,7 +34,7 @@ namespace crds_angular.Controllers.API
             }
         }
 
-        [VersionedRoute(template: "invoice/{invoiceId}", minimumVersion: "1.0.0")]
+        [VersionedRoute(template: "invoice/{invoiceId}/payments", minimumVersion: "1.0.0")]
         [AcceptVerbs("GET")]
         public IHttpActionResult GetInvoicePaymentDetails(int invoiceId)
         {
