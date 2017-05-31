@@ -15,9 +15,10 @@ describe('Invoice Service', () => {
   }));
 
   it('should make the API call to get invoice', () => {
-    httpBackend.expectGET(`${endpoint}/v1.0.0/invoice/${invoiceId}`)
+    const invoiceId = 111;
+    httpBackend.expectGET(`${endpoint}/v1.0.0/invoice/${invoiceId}/payments`)
       .respond(200, {});
-    invoicesService.getInvoice(invoiceId);
+    invoicesService.getInvoicePayments(invoiceId);
   });
 
   it('should make the API call to get invoice payment details', () => {
@@ -25,5 +26,5 @@ describe('Invoice Service', () => {
       .respond(200, {});
     invoicesService.getPaymentDetails(invoiceId);
   });
-
+  
 });

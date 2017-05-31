@@ -10,7 +10,10 @@ class InvoiceController {
 
   $onInit() {
     this.setGatewayUrls();
-    this.invoicesService.getInvoice(this.invoiceId).then(
+
+    this.invoicesService.getInvoiceDetail(this.invoiceId);
+
+    this.invoicesService.getInvoicePayments(this.invoiceId).then(
       (data) => {
         this.url = this.buildUrl(this.invoiceId, data.paymentLeft, data.paymentLeft);
       }, (err) => {

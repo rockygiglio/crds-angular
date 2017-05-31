@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using AutoMapper;
 using crds_angular.Exceptions;
+using crds_angular.Models.Crossroads;
+using crds_angular.Models.Crossroads.Camp;
 using crds_angular.Models.Crossroads.Payment;
 using crds_angular.Models.Crossroads.Stewardship;
 using crds_angular.Services.Interfaces;
 using Crossroads.Utilities;
-using Crossroads.Utilities.Interfaces;
 using log4net;
-using Crossroads.Web.Common;
 using Crossroads.Web.Common.Configuration;
 using Crossroads.Web.Common.MinistryPlatform;
 using MinistryPlatform.Translation.Exceptions;
@@ -31,6 +32,7 @@ namespace crds_angular.Services
         private readonly ICommunicationRepository _communicationRepository;
         private readonly IConfigurationWrapper _configWrapper;
         private readonly IApiUserRepository _apiUserRepository;
+        private readonly IProductRepository _productRepository;
 
         private readonly int _paidinfullStatus;
         private readonly int _somepaidStatus;
@@ -46,7 +48,8 @@ namespace crds_angular.Services
             IPaymentTypeRepository paymentTypeRepository, 
             IEventRepository eventRepository,
             ICommunicationRepository communicationRepository,
-            IApiUserRepository apiUserRepository)
+            IApiUserRepository apiUserRepository,
+            IProductRepository productRepository)
         {
             _invoiceRepository = invoiceRepository;
             _paymentRepository = paymentRepository;
@@ -56,6 +59,7 @@ namespace crds_angular.Services
             _configWrapper = configurationWrapper;
             _eventPRepository = eventRepository;
             _apiUserRepository = apiUserRepository;
+            _productRepository = productRepository;
 
             _paidinfullStatus = configurationWrapper.GetConfigIntValue("PaidInFull");
             _somepaidStatus = configurationWrapper.GetConfigIntValue("SomePaid");
@@ -193,7 +197,7 @@ namespace crds_angular.Services
                     BatchId = payment.BatchId
                 };
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 throw new PaymentNotFoundException(stripePaymentId);
             }
@@ -320,6 +324,14 @@ namespace crds_angular.Services
                                                                 me.Email_Address,
                                                                 mergeData);
             _communicationRepository.SendMessage(comm);
+        }
+    
+        public InvoiceDetailDTO GetInvoiceDetail(int invoiceId)
+        {
+            var invoiceDetail = Mapper.Map<InvoiceDetailDTO>(_invoiceRepository.GetInvoiceDetailForInvoice(invoiceId));
+            invoiceDetail.Product = Mapper.Map<ProductDTO>(_productRepository.GetProduct(invoiceDetail.ProductId));
+
+            return invoiceDetail;
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using crds_angular.App_Start;
 using crds_angular.Exceptions;
 using crds_angular.Models.Crossroads.Payment;
 using crds_angular.Services;
@@ -11,6 +12,7 @@ using Crossroads.Web.Common.MinistryPlatform;
 using MinistryPlatform.Translation.Exceptions;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Models.Payments;
+using MinistryPlatform.Translation.Models.Product;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 using Moq;
 using NUnit.Framework;
@@ -29,6 +31,7 @@ namespace crds_angular.test.Services
         private readonly Mock<ICommunicationRepository> _communicationRepository;
         private readonly Mock<IConfigurationWrapper> _configWrapper;
         private readonly Mock<IApiUserRepository> _apiUserRepository;
+        private readonly Mock<IProductRepository> _productRepository;
 
         private readonly IPaymentService _fixture;
 
@@ -41,6 +44,8 @@ namespace crds_angular.test.Services
 
         public PaymentServiceTest()
         {
+            AutoMapperConfig.RegisterMappings();
+
             Factories.MpPayment();
             Factories.MpEvent();
             Factories.MpMyContact();
@@ -53,12 +58,14 @@ namespace crds_angular.test.Services
             _communicationRepository = new Mock<ICommunicationRepository>();
             _configWrapper = new Mock<IConfigurationWrapper>();
             _apiUserRepository = new Mock<IApiUserRepository>();
+            _productRepository = new Mock<IProductRepository>();
             _configWrapper.Setup(m => m.GetConfigIntValue("PaidInFull")).Returns(paidInFull);
             _configWrapper.Setup(m => m.GetConfigIntValue("SomePaid")).Returns(somePaid);
             _configWrapper.Setup(m => m.GetConfigIntValue("NonePaid")).Returns(nonePaid);
             _configWrapper.Setup(m => m.GetConfigIntValue("DonationStatusPending")).Returns(defaultPaymentStatus);
             _configWrapper.Setup(m => m.GetConfigIntValue("DonationStatusDeclined")).Returns(declinedPaymentStatus);
-            _fixture = new PaymentService(_invoiceRepository.Object, _paymentRepository.Object, _configWrapper.Object, _contactRepository.Object, _paymentTypeRepository.Object, _eventRepository.Object, _communicationRepository.Object, _apiUserRepository.Object);            
+
+            _fixture = new PaymentService(_invoiceRepository.Object, _paymentRepository.Object, _configWrapper.Object, _contactRepository.Object, _paymentTypeRepository.Object, _eventRepository.Object, _communicationRepository.Object, _apiUserRepository.Object, _productRepository.Object);            
         }         
 
         [Test]
@@ -618,6 +625,24 @@ namespace crds_angular.test.Services
             _configWrapper.VerifyAll();
         }
 
+        [Test]
+        public void ShouldGetInvoiceDetailWithProductInfo()
+        {
+            const int invoiceId = 1234;
+            var invoiceDetail = fakeInvoiceDetail(invoiceId);
+            var product = fakeProduct(invoiceDetail.ProductId);
+
+            _invoiceRepository.Setup(m => m.GetInvoiceDetailForInvoice(invoiceId)).Returns(invoiceDetail);
+            _productRepository.Setup(m => m.GetProduct(invoiceDetail.ProductId)).Returns(product);
+
+
+            var val = _fixture.GetInvoiceDetail(invoiceId);
+            Assert.AreEqual(invoiceDetail.RecipientContactId, val.RecipientContactId);
+            Assert.AreEqual(product.ProductName, val.Product.ProductName);
+            _invoiceRepository.VerifyAll();
+            _productRepository.VerifyAll();
+        }
+
         private static List<MpPayment> fakePayments(int payerId, decimal paymentTotal, int paymentIdOfOne = 34525, int paymentStatus = 0)
         {
             return new List<MpPayment>
@@ -656,7 +681,8 @@ namespace crds_angular.test.Services
             {
                 InvoiceDetailId = 1346,
                 InvoiceId = invoiceId,
-                RecipientContactId = 9428
+                RecipientContactId = 9428,
+                ProductId = 1231
             };
         }
 
@@ -678,6 +704,15 @@ namespace crds_angular.test.Services
             {
                 Contact_ID = contactId,
                 Email_Address = emailAddress
+            };
+        }
+
+        private static MpProduct fakeProduct(int productId)
+        {
+            return new MpProduct()
+            {
+                ProductId = productId,
+                ProductName = "Test Product",
             };
         }
 

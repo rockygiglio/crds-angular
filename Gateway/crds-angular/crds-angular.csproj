@@ -352,6 +352,7 @@
     <Compile Include="Models\Crossroads\GroupLeader\GroupLeaderProfileDTO.cs" />
     <Compile Include="Models\Crossroads\GroupLeader\GroupLeaderStatusDTO.cs" />
     <Compile Include="Models\Crossroads\GroupLeader\SpiritualGrowthDTO.cs" />
+    <Compile Include="Models\Crossroads\InvoiceDetailDTO.cs" />
     <Compile Include="Models\Finder\ConnectCommunicationDto.cs" />
     <Compile Include="Models\Finder\GeoCoordinates.cs" />
     <Compile Include="Models\Finder\HostRequestDto.cs" />
