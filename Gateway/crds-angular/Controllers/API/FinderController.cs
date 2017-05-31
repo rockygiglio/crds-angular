@@ -351,15 +351,7 @@ namespace crds_angular.Controllers.API
                     var centerLatitude = originCoords.Latitude;
                     var centerLongitude = originCoords.Longitude;
 
-                    var pinsForContact = new List<PinDto>();
-
-                    if (finderType == "CONNECT")
-                    {
-                        pinsForContact = _finderService.GetMyPins(token, originCoords, contactId);
-                    } else if (finderType == "SMALL_GROUPS")
-                    {
-                        pinsForContact = _finderService.GetMyGroupPins(token, new int[] {1, 30}, 7571435/*contactId*/);
-                    }
+                    var pinsForContact = _finderService.GetMyPins(token, originCoords, contactId, finderType);
 
                     if (pinsForContact.Count > 0)
                     {
