@@ -28,6 +28,14 @@
           <QueryParameter Name="CongregationID">
             <Value>=Parameters!CongregationID.Value</Value>
           </QueryParameter>
+          <QueryParameter Name="BeginDate">
+            <Value>=Parameters!BeginDate.Value</Value>
+            <rd:UserDefined>true</rd:UserDefined>
+          </QueryParameter>
+          <QueryParameter Name="EndDate">
+            <Value>=Parameters!EndDate.Value</Value>
+            <rd:UserDefined>true</rd:UserDefined>
+          </QueryParameter>
         </QueryParameters>
         <CommandType>StoredProcedure</CommandType>
         <CommandText>report_Event_Double_Booked_ByCongregation</CommandText>
@@ -840,6 +848,14 @@
           <LabelField>Congregation_Name</LabelField>
         </DataSetReference>
       </ValidValues>
+    </ReportParameter>
+    <ReportParameter Name="BeginDate">
+      <DataType>DateTime</DataType>
+      <Prompt>Begin Date</Prompt>
+    </ReportParameter>
+    <ReportParameter Name="EndDate">
+      <DataType>DateTime</DataType>
+      <Prompt>End Date</Prompt>
     </ReportParameter>
   </ReportParameters>
   <Language>en-US</Language>
