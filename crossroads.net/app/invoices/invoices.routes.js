@@ -8,7 +8,7 @@ export default function InvoicesRoutes($httpProvider, $stateProvider) {
       data: {
         renderLegacyStyles: true
       }
-    }) 
+    })
     .state('invoices.invoice', {
       parent: 'noSideBar',
       url: '/invoices/:invoiceId',
@@ -17,6 +17,18 @@ export default function InvoicesRoutes($httpProvider, $stateProvider) {
         isProtected: false,
         meta: {
           title: 'Invoice',
+          description: ''
+        }
+      }
+    })
+    .state('invoices.confirmation', {
+      parent: 'noSideBar',
+      url: '/invoices/:invoiceId/confirmation',
+      template: '<invoice-confirmation></invoice-confirmation>',
+      data: {
+        isProtected: false,
+        meta: {
+          title: 'Invoice Paid',
           description: ''
         }
       }

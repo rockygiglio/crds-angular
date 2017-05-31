@@ -1,34 +1,43 @@
 import invoicesModule from '../../app/invoices/invoices.module';
-import InvoiceController from '../../app/invoices/invoice.controller';
+import InvoiceConfirmationController from '../../app/invoices/invoice-confirmation.controller';
 
-fdescribe('Invoice Component', () => {
+describe('Invoice Confirmation Component', () => {
   let $componentController;
   let fixture;
   let invoicesService;
   let rootScope;
-  let stateParams;
+  let state;
   let sce;
   let qApi;
   const invoiceId = 344;
+
+  const bindings = {};
 
   beforeEach(angular.mock.module(invoicesModule));
 
   beforeEach(inject(function (_$rootScope_, $injector, $sce) {
     invoicesService = $injector.get('InvoicesService');
     sce = $injector.get('$sce');
+    state = $injector.get('$state');
     rootScope = $injector.get('$rootScope');
-    stateParams = $injector.get('$stateParams');
-    stateParams.invoiceId = invoiceId;
     qApi = $injector.get('$q');
-    fixture = new InvoiceController(invoicesService, rootScope, stateParams, sce);
+    state.params = {
+      invoiceId: invoiceId
+    };
+    fixture = new InvoiceConfirmationController(invoicesService, rootScope, state, sce);
   }));
+
+
+  beforeEach(() => {
+    fixture.$onInit();
+  });
 
   describe('#onInit', () => {
     beforeEach(() => {
       fixture.$onInit();
       let deferred = qApi.defer();
       deferred.resolve({});
-      spyOn(invoicesService, 'getInvoice').and.callFake(function() {
+      spyOn(invoicesService, 'getPaymentDetails').and.callFake(function() {
         return(deferred.promise);
       });
       fixture.$onInit();
@@ -39,12 +48,10 @@ fdescribe('Invoice Component', () => {
       expect(fixture.viewReady).toBeTruthy();
     });
 
-    it('should set urls, get invoice', () => {
-      expect(fixture.baseUrl).toBeDefined();
-      expect(fixture.returnUrl).toBeDefined();
-      expect(fixture.invoiceId).toBe(invoiceId);
-      expect(invoicesService.getInvoice).toHaveBeenCalledWith(invoiceId);
+    it('get invoice payment details', () => {
+      expect(invoicesService.getPaymentDetails).toHaveBeenCalledWith(invoiceId);
     });
 
   });
+
 });
