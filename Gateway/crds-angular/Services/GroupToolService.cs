@@ -377,6 +377,8 @@ namespace crds_angular.Services
         {
             _groupService.addContactToGroup(groupId, inquiry.ContactId);
             _groupRepository.UpdateGroupInquiry(groupId, inquiry.InquiryId, true);
+            // TODO should not be hard coded to gathering - needs to differentiate between gathering or small group
+            // TODO Refactor needed when work US8242
             RecordConnectInteraction(groupId, me.ContactId, inquiry.ContactId, _connectGatheringRequestToJoin, _connectGatheringStatusAccept);
             // For now pick template based on group type
             var emailTemplateId = (group.GroupTypeId == _anywhereGroupType) 

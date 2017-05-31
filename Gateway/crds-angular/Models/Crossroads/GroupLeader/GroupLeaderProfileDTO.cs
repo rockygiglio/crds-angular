@@ -47,6 +47,9 @@ namespace crds_angular.Models.Crossroads.GroupLeader
         [JsonProperty(PropertyName = "member", Required = Required.Always)]
         public string ReferenceContactId { get; set; }
 
+        [JsonProperty(PropertyName = "referenceDisplayName", Required = Required.AllowNull)]
+        public string ReferenceDisplayName { get; set; }
+
         [JsonProperty(PropertyName = "huddle", Required = Required.Always)]
         public string HuddleResponse { get; set; }
     }

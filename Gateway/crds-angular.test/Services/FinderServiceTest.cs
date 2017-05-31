@@ -50,6 +50,7 @@ namespace crds_angular.test.Services
 
         private int _memberRoleId = 16;
         private int _anywhereGatheringInvitationTypeId = 3;
+        private int _groupInvitationTypeId = 1;
 
         [SetUp]
         public void SetUp()
@@ -80,6 +81,7 @@ namespace crds_angular.test.Services
             _mpConfigurationWrapper.Setup(mocked => mocked.GetConfigValue("FinderConnectFlag")).Returns("CONNECT");
             _mpConfigurationWrapper.Setup(mocked => mocked.GetConfigIntValue("Group_Role_Default_ID")).Returns(_memberRoleId);
             _mpConfigurationWrapper.Setup(mocked => mocked.GetConfigIntValue("AnywhereGatheringInvitationType")).Returns(_anywhereGatheringInvitationTypeId);
+            _mpConfigurationWrapper.Setup(mocked => mocked.GetConfigIntValue("GroupInvitationType")).Returns(_groupInvitationTypeId);
 
             _fixture = new FinderService(_addressGeocodingService.Object,
                                          _mpFinderRepository.Object,
@@ -315,7 +317,7 @@ namespace crds_angular.test.Services
                 BottomRightCoordinates = new GeoCoordinates(21.52, -77.78)
             };
 
-            List<PinDto> pins = _fixture.GetPinsInBoundingBox(originCoords, address, boundingBox, "CONNECT");
+            List<PinDto> pins = _fixture.GetPinsInBoundingBox(originCoords, address, boundingBox, "CONNECT", 0);
 
             Assert.IsInstanceOf<List<PinDto>>(pins);
         }
@@ -364,6 +366,8 @@ namespace crds_angular.test.Services
                 Host_Status_ID = 0
             };
 
+            var geoCodes = new GeoCoordinate() { Altitude = 0, Course = 0, HorizontalAccuracy = 0, Latitude = 10, Longitude = 20, Speed = 0, VerticalAccuracy = 0 };
+
             var address = Mapper.Map<MpAddress>(pin.Address);
             var addressDictionary = new Dictionary<string, object>
             {
@@ -375,6 +379,7 @@ namespace crds_angular.test.Services
             };
             var householdDictionary = new Dictionary<string, object> {{"Household_ID", pin.Household_ID}};
 
+            _addressGeocodingService.Setup(mocked => mocked.GetGeoCoordinates(It.IsAny<AddressDTO>())).Returns(geoCodes);
             _addressService.Setup(m => m.SetGeoCoordinates(pin.Address));
             _mpContactRepository.Setup(m => m.UpdateHouseholdAddress((int) pin.Household_ID, householdDictionary, addressDictionary));
             _addressService.Setup(m => m.GetGeoLocationCascading(It.IsAny<AddressDTO>())).Returns(new GeoCoordinate(39, -84));
@@ -547,6 +552,7 @@ namespace crds_angular.test.Services
 
             pin.ShouldUpdateHomeAddress = true;
 
+            _addressGeocodingService.Setup(mocked => mocked.GetGeoCoordinates(It.IsAny<AddressDTO>())).Returns(geoCodes);
             _addressService.Setup(mocked => mocked.GetGeoLocationCascading(It.IsAny<AddressDTO>())).Returns(geoCodes);
             _mpContactRepository.Setup(mocked => mocked.UpdateHouseholdAddress(pin.Contact_ID.Value, null, It.IsAny <Dictionary<string, object>>()));
             _mpFinderRepository.Setup(mocked => mocked.UpdateGathering(It.IsAny<FinderGatheringDto>())).Returns(expectedFinderGathering);
@@ -612,7 +618,52 @@ namespace crds_angular.test.Services
             _mpConfigurationWrapper.Setup(x => x.GetConfigIntValue(It.IsAny<string>())).Returns(1);
             _mpContactRepository.Setup(x => x.GetContactIdByEmail(It.IsAny<string>())).Returns(2);
             _mpContactRepository.Setup(x => x.GetContactId(It.IsAny<string>())).Returns(3);
-           _fixture.InviteToGathering(token, gatheringId, person);
+           _fixture.InviteToGroup(token, gatheringId, person, "CONNECT");
+            _invitationService.VerifyAll();
+        }
+
+        [Test]
+        public void ShouldInviteToSmallGroup()
+        {
+            string token = "abc";
+            int gatheringId = 12345;
+            User person = new User()
+            {
+                firstName = "doug",
+                lastName = "shannon",
+                email = "a@b.com",
+            };            
+
+            Invitation expectedInvitation = new Invitation()
+            {
+                RecipientName = person.firstName,
+                EmailAddress = person.email,
+                SourceId = gatheringId,
+                GroupRoleId = _memberRoleId,
+                InvitationType = _groupInvitationTypeId,
+                CommunicationId = 7
+            };
+
+            _invitationService.Setup(i => i.ValidateInvitation(It.Is<Invitation>(
+                                                                   (inv) => inv.RecipientName == expectedInvitation.RecipientName
+                                                                            && inv.EmailAddress == expectedInvitation.EmailAddress
+                                                                            && inv.SourceId == expectedInvitation.SourceId
+                                                                            && inv.GroupRoleId == expectedInvitation.GroupRoleId
+                                                                            && inv.InvitationType == expectedInvitation.InvitationType),
+                                                               It.Is<string>((s) => s == token)));
+
+            _invitationService.Setup(i => i.CreateInvitation(It.Is<Invitation>(
+                                                                 (inv) => inv.RecipientName == expectedInvitation.RecipientName
+                                                                          && inv.EmailAddress == expectedInvitation.EmailAddress
+                                                                          && inv.SourceId == expectedInvitation.SourceId
+                                                                          && inv.GroupRoleId == expectedInvitation.GroupRoleId
+                                                                          && inv.InvitationType == expectedInvitation.InvitationType),
+                                                             It.Is<string>((s) => s == token))).Returns(expectedInvitation);
+            _mpFinderRepository.Setup(x => x.RecordConnection(It.IsAny<MpConnectCommunication>()));
+            _mpConfigurationWrapper.Setup(x => x.GetConfigIntValue(It.IsAny<string>())).Returns(1);
+            _mpContactRepository.Setup(x => x.GetContactIdByEmail(It.IsAny<string>())).Returns(2);
+            _mpContactRepository.Setup(x => x.GetContactId(It.IsAny<string>())).Returns(3);
+            _fixture.InviteToGroup(token, gatheringId, person, "SMALL_GROUP");
             _invitationService.VerifyAll();
         }
 

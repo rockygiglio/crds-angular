@@ -151,11 +151,13 @@ namespace crds_angular.test.Services
 
             const int groupLeaderFormConfig = 23;
             const int groupLeaderReference = 56;
+            const int groupLeaderReferenceName = 57;
             const int groupLeaderHuddle = 92;
             const int groupLeaderStudent = 126;
 
             _configWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderFormId")).Returns(groupLeaderFormConfig);
             _configWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderReferenceFieldId")).Returns(groupLeaderReference);
+            _configWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderReferenceNameFieldId")).Returns(groupLeaderReferenceName);
             _configWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderHuddleFieldId")).Returns(groupLeaderHuddle);
             _configWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderStudentFieldId")).Returns(groupLeaderStudent);
 
@@ -167,6 +169,35 @@ namespace crds_angular.test.Services
             var responseId = _fixture.SaveReferences(fakeDto).Wait();
             Assert.AreEqual(responseId, 1);
         }
+
+        [Test]
+        public void ShouldSaveNoReferenceData()
+        {
+            var fakeDto = NoReferenceProfileMock();
+
+            const int groupLeaderFormConfig = 23;
+            const int groupLeaderReference = 56;
+            const int groupLeaderReferenceName = 57;
+            const int groupLeaderHuddle = 92;
+            const int groupLeaderStudent = 126;
+
+            _configWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderFormId")).Returns(groupLeaderFormConfig);
+            _configWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderReferenceFieldId")).Returns(groupLeaderReference);
+            _configWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderReferenceNameFieldId")).Returns(groupLeaderReferenceName);
+            _configWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderHuddleFieldId")).Returns(groupLeaderHuddle);
+            _configWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderStudentFieldId")).Returns(groupLeaderStudent);
+
+            _formService.Setup(m => m.SubmitFormResponse(It.IsAny<MpFormResponse>()))
+                .Returns((MpFormResponse form) =>
+                {
+                    // Make sure that referenceDisplayName is an empty string not null
+                    Assert.AreEqual("", form.FormAnswers[1].Response);
+                    return 1;
+                });
+
+            var responseId = _fixture.SaveReferences(fakeDto).Wait();
+            Assert.AreEqual(1, responseId);
+        }
 	
 	    [Test]
         public void ShouldThrowExceptionWhenSaveReferenceDataFails()
@@ -175,11 +206,13 @@ namespace crds_angular.test.Services
 
             const int groupLeaderFormConfig = 23;
             const int groupLeaderReference = 56;
+            const int groupLeaderReferenceName = 57;
             const int groupLeaderHuddle = 92;
             const int groupLeaderStudent = 126;
 
             _configWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderFormId")).Returns(groupLeaderFormConfig);
             _configWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderReferenceFieldId")).Returns(groupLeaderReference);
+            _configWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderReferenceNameFieldId")).Returns(groupLeaderReferenceName);
             _configWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderHuddleFieldId")).Returns(groupLeaderHuddle);
             _configWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderStudentFieldId")).Returns(groupLeaderStudent);
 
@@ -477,6 +510,7 @@ namespace crds_angular.test.Services
 
             _contactMock.Setup(m => m.GetContactById(referenceContactId)).Returns(referenceContact);
             _configWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderReferenceEmailTemplate")).Returns(templateId);
+            _configWrapper.Setup(m => m.GetConfigValue("BaseMPUrl")).Returns("adminint");
 
             var mergeData = new Dictionary<string, object>();
             var communication = ReferenceCommunication(2018, mergeData, referenceContact);
@@ -515,7 +549,7 @@ namespace crds_angular.test.Services
      
             _contactMock.Setup(m => m.GetContactById(referenceContactId)).Returns(referenceContact);
             _configWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderReferenceEmailTemplate")).Returns(templateId);
-            _configWrapper.Setup(m => m.GetConfigValue("BaseUrl")).Returns("/");
+            _configWrapper.Setup(m => m.GetConfigValue("BaseMPUrl")).Returns("/");
 
             var mergeData = new Dictionary<string, object>
             {
@@ -543,6 +577,52 @@ namespace crds_angular.test.Services
             });
         }
 
+        [Test]
+        public void ShouldSendNoReferenceEmail()
+        {
+            const int templateId = 5;
+            const int applicantContactId = 9987654;
+            const int groupsContactId = 1123456;
+            const string groupsEmail = "groups@groups.com";
+            const int messageId = 7;
+            var applicantContact = ContactMock(applicantContactId);
+            var groupsContact = new MpMyContact
+            {
+                Contact_ID = groupsContactId,
+                Email_Address = groupsEmail
+            };
+            var mergeData = new Dictionary<string, object>
+            {
+                { "First_Name", applicantContact.Nickname },
+                { "Last_Name", applicantContact.Last_Name },
+                { "Email_Address", applicantContact.Email_Address }
+            };
+            var communication = NoReferenceCommunication(templateId, mergeData, groupsContact);
+            var referenceData = new Dictionary<string, object>
+            {
+                { "contact", applicantContact },
+                { "participant", ParticipantMock() },
+                { "referenceContactId", "0" }
+            };
+
+            _configWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderNoReferenceEmailTemplate")).Returns(templateId);
+            _configWrapper.Setup(m => m.GetConfigIntValue("DefaultGroupContactEmailId")).Returns(groupsContactId);
+            _contactMock.Setup(m => m.GetContactEmail(groupsContactId)).Returns(groupsEmail);
+            _communicationRepository.Setup(m => m.GetTemplateAsCommunication(templateId, groupsContactId, groupsEmail, mergeData)).Returns(communication);
+            _communicationRepository.Setup(m => m.SendMessage(communication, false)).Returns(messageId);
+
+            var response = _fixture.SendNoReferenceEmail(referenceData);
+
+            response.Subscribe((n) =>
+                               {
+                                   Assert.AreEqual(messageId, response);
+                               },
+                               (err) =>
+                               {
+                                   Assert.Fail(err.ToString());
+                               });
+        }
+
         private static MpCommunication ReferenceCommunication(int templateId, Dictionary<string, object> mergeData, MpMyContact toContact)
         {
             var from = new MpContact {ContactId = 122222, EmailAddress = "groups@crossroads.net"};
@@ -557,6 +637,23 @@ namespace crds_angular.test.Services
                 EmailSubject = "whateva",
                 MergeData = mergeData,
                 ToContacts = new List<MpContact>() {new MpContact {EmailAddress = toContact.Email_Address, ContactId = toContact.Contact_ID} }
+            };
+        }
+
+        private static MpCommunication NoReferenceCommunication(int templateId, Dictionary<string, object> mergeData, MpMyContact toContact)
+        {
+            var from = new MpContact() {ContactId = 122222, EmailAddress = "groups@crossroads.net"};
+            return new MpCommunication
+            {
+                AuthorUserId = 1,
+                DomainId = 1,
+                EmailBody = "<h1> hello </h1>",
+                FromContact = from,
+                ReplyToContact = from,
+                TemplateId = templateId,
+                EmailSubject = "Interview Needed",
+                MergeData = mergeData,
+                ToContacts = new List<MpContact> { new MpContact { EmailAddress = toContact.Email_Address, ContactId = toContact.Contact_ID} }
             };
         }
 
@@ -588,7 +685,28 @@ namespace crds_angular.test.Services
                 HouseholdId = 81562,
                 HuddleResponse = "No",
                 LeadStudents = "Yes",
-                ReferenceContactId = "89158"
+                ReferenceContactId = "89158",
+                ReferenceDisplayName = "Horner, Jon"
+            };
+        }
+
+        private static GroupLeaderProfileDTO NoReferenceProfileMock()
+        {
+            return new GroupLeaderProfileDTO
+            {
+                ContactId = 12345,
+                BirthDate = new DateTime(1980, 02, 21),
+                Email = "silbermm@gmail.com",
+                LastName = "Silbernagel",
+                NickName = "Matt",
+                FirstName = "Matty-boy",
+                Site = 1,
+                OldEmail = "matt.silbernagel@ingagepartners.com",
+                HouseholdId = 81562,
+                HuddleResponse = "No",
+                LeadStudents = "Yes",
+                ReferenceContactId = "0",
+                ReferenceDisplayName = null
             };
         }
 

@@ -112,8 +112,8 @@
       // fix for de3046
       // emailChange is a singleton object, so everytime when controller actives
       // the serivice object doesn't reconstruct
-      // the first time when user goes to my-profile page, 
-      // this line of code emailChange.setEmail(vm.profileData.person.emailAddress) will 
+      // the first time when user goes to my-profile page,
+      // this line of code emailChange.setEmail(vm.profileData.person.emailAddress) will
       // cause emailChange.isSet to be set to true, then when you go to other pages and come back to my-profile page
       // emailChange.isSet will not change (since it's a singleton object), which cause setOldEmail() do nothing
       // emailChange.reset() will only be called for a successful update, but really it should be called
@@ -319,7 +319,7 @@
         vm.profileData.person.oldEmail = vm.oldEmail;
         vm.profileData.person.oldPassword = vm.currentPassword;
 
-        // DE3068: convert to string and exclude time to avoid timezone/DST issues  
+        // DE3068: convert to string and exclude time to avoid timezone/DST issues
         if (_.has(vm.profileData.person, 'dateOfBirth'))
           vm.profileData.person.dateOfBirth = convertDate(vm.profileData.person.dateOfBirth);
 
@@ -422,6 +422,7 @@
       var modalInstance = $modal.open({
         templateUrl: 'personal/confirmPassword.html',
         controller: 'ConfirmPasswordCtrl as pwModal',
+        openedClass: 'crds-legacy-styles',
         backdrop: 'static',
         resolve: {
           modalTypeItem: function() {

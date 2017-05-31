@@ -7,6 +7,7 @@ using crds_angular.Services.Interfaces;
 using crds_angular.test.Helpers;
 using Crossroads.Utilities.FunctionalHelpers;
 using Crossroads.Web.Common.Configuration;
+using Crossroads.Web.Common.MinistryPlatform;
 using MinistryPlatform.Translation.Exceptions;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Models.Payments;
@@ -27,6 +28,8 @@ namespace crds_angular.test.Services
         private readonly Mock<IEventRepository> _eventRepository;
         private readonly Mock<ICommunicationRepository> _communicationRepository;
         private readonly Mock<IConfigurationWrapper> _configWrapper;
+        private readonly Mock<IApiUserRepository> _apiUserRepository;
+
         private readonly IPaymentService _fixture;
 
         private readonly int paidInFull = 54;
@@ -49,12 +52,13 @@ namespace crds_angular.test.Services
             _paymentTypeRepository = new Mock<IPaymentTypeRepository>();
             _communicationRepository = new Mock<ICommunicationRepository>();
             _configWrapper = new Mock<IConfigurationWrapper>();
+            _apiUserRepository = new Mock<IApiUserRepository>();
             _configWrapper.Setup(m => m.GetConfigIntValue("PaidInFull")).Returns(paidInFull);
             _configWrapper.Setup(m => m.GetConfigIntValue("SomePaid")).Returns(somePaid);
             _configWrapper.Setup(m => m.GetConfigIntValue("NonePaid")).Returns(nonePaid);
             _configWrapper.Setup(m => m.GetConfigIntValue("DonationStatusPending")).Returns(defaultPaymentStatus);
             _configWrapper.Setup(m => m.GetConfigIntValue("DonationStatusDeclined")).Returns(declinedPaymentStatus);
-            _fixture = new PaymentService(_invoiceRepository.Object, _paymentRepository.Object, _configWrapper.Object, _contactRepository.Object, _paymentTypeRepository.Object, _eventRepository.Object, _communicationRepository.Object );            
+            _fixture = new PaymentService(_invoiceRepository.Object, _paymentRepository.Object, _configWrapper.Object, _contactRepository.Object, _paymentTypeRepository.Object, _eventRepository.Object, _communicationRepository.Object, _apiUserRepository.Object);            
         }         
 
         [Test]

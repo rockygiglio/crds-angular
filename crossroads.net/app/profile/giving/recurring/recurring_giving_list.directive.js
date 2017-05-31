@@ -30,6 +30,7 @@
           parent: 'noSideBar',
           templateUrl: 'recurring_giving_remove_modal',
           controller: 'RecurringGivingModals as recurringGift',
+          openedClass: 'crds-legacy-styles',
           resolve: {
             donation: function() {
               return selectedDonation;
@@ -64,6 +65,7 @@
           parent: 'noSideBar',
           templateUrl: 'recurring_giving_edit_modal',
           controller: 'RecurringGivingModals as recurringGift',
+          openedClass: 'crds-legacy-styles',
           resolve: {
             donation: function() {
               return selectedDonation;
