@@ -60,9 +60,13 @@
           <DataField>EndTime</DataField>
           <rd:TypeName>System.DateTime</rd:TypeName>
         </Field>
+        <Field Name="ParticipantId">
+          <DataField>ParticipantId</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
         <Field Name="Age">
           <DataField>Age</DataField>
-          <rd:TypeName>System.Int32</rd:TypeName>
+          <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="Date_of_Birth">
           <DataField>Date_of_Birth</DataField>
@@ -84,15 +88,17 @@
           <DataField>GradeGroup</DataField>
           <rd:UserDefined>true</rd:UserDefined>
         </Field>
-        <Field Name="RSVPOnline">
-          <Value>=IIF(Fields!GroupParticipantStartDate.Value &lt;= DATEADD(DateInterval.Day, -6, Fields!EventDate.Value), "Yes", "No")</Value>
-        </Field>
-        <Field Name="RSVPOverride">
-          <Value>=IIF(Fields!GroupParticipantStartDate.Value &gt; DATEADD(DateInterval.Day, -6, Fields!EventDate.Value), "Yes", "No")</Value>
-        </Field>
         <Field Name="GroupParticipantStartDate">
           <DataField>GroupParticipantStartDate</DataField>
           <rd:UserDefined>true</rd:UserDefined>
+        </Field>
+        <Field Name="RSVPOnline">
+          <DataField>RSVPOnline</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="RSVPOverride">
+          <DataField>RSVPOverride</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
         </Field>
       </Fields>
     </DataSet>
@@ -444,7 +450,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Age or Grade Group</Value>
+                                  <Value>Age/Grade Group</Value>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>11pt</FontSize>
@@ -983,7 +989,6 @@
                             <PaddingBottom>2pt</PaddingBottom>
                           </Style>
                         </Textbox>
-                        <rd:Selected>true</rd:Selected>
                       </CellContents>
                     </TablixCell>
                   </TablixCells>
