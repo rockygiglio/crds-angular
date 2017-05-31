@@ -15,11 +15,10 @@ BEGIN
 	IF UPDATE(End_Date)
 	BEGIN
 		UPDATE gpa
-		SET gpa.End_Date = gp.End_Date
+		SET gpa.End_Date = i.End_Date
 		FROM
 			INSERTED i
-			INNER JOIN Group_Participants gp ON gp.Group_Participant_ID = i.Group_Participant_ID
-			INNER JOIN Group_Participant_Attributes gpa ON gpa.Group_Participant_ID = gp.Group_Participant_ID
+			INNER JOIN Group_Participant_Attributes gpa ON gpa.Group_Participant_ID = i.Group_Participant_ID
 		;
 	END
 END
