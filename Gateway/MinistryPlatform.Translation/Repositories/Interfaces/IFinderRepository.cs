@@ -10,6 +10,7 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
         FinderPinDto GetPinDetails(int participantId);
         List<SpPinDto> GetPinsInRadius(GeoCoordinate originCoords);
         void EnablePin(int participantId);
+        void DisablePin(int participantId);
         List<MpConnectAws> GetAllPinsForAws();
         MpAddress GetPinAddress(int participantId);
         FinderGatheringDto UpdateGathering(FinderGatheringDto finderGathering);

@@ -89,6 +89,7 @@
                   // page not found....
                   // remove the previous link from the history?
                   const query_params = Object.assign({}, $location.search(), { resolve: true });
+                  link = removeTrailingSlashIfNecessary($stateParams.link);
                   const query_params_string = $httpParamSerializer(query_params);
 
                   // code below prevents console errors during redirect
@@ -201,6 +202,14 @@
   function addTrailingSlashIfNecessary(link) {
     if (_.endsWith(link, '/') === false) {
       return link + '/';
+    }
+
+    return link;
+  }
+
+  function removeTrailingSlashIfNecessary(link) {
+    if (_.endsWith(link, '/') === true) {
+      return link.substring(0, link.length - 1);
     }
 
     return link;

@@ -171,5 +171,19 @@ namespace MinistryPlatform.Translation.Test.Services
                 State = "OH"
             };
         }
+
+        [Test]
+        public void ShouldDisablePin()
+        {
+            _apiUserRepo.Setup(m => m.GetToken()).Returns("abc");
+            _ministryPlatformRestRepository.Setup(
+                mocked =>
+                        mocked.Put("Participants", It.IsAny<List<Dictionary<string, object>>>())
+            );
+
+            _fixture.DisablePin(123);
+            _ministryPlatformRestRepository.VerifyAll();
+
+        }
     }
 }

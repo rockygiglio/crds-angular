@@ -65,7 +65,7 @@ export default class StreamingController {
         templateUrl: 'geolocation_modal/geolocationModal.html',
         controller: 'GeolocationModalController',
         controllerAs: 'geolocationModal',
-        openedClass: 'geolocation-modal',
+        openedClass: 'geolocation-modal crds-legacy-styles',
         backdrop: 'static',
         size: 'lg'
       });

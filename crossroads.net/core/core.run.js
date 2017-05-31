@@ -30,25 +30,27 @@
       }
       if (!$rootScope.meta.image || $rootScope.meta.image.filename === '/assets/') {
         $rootScope.meta.image = {
-          filename: 'https://crossroads-media.s3.amazonaws.com/images/coffee_cup.jpg'
+          filename: 'http://crds-cms-uploads.imgix.net/content/images/cr-social-sharing-still-bg.jpg'
         };
       }
     }
 
     function setupHeader() {
-        // header options
-        var options = {
-          el: '[data-header]',
-          cmsEndpoint: __CMS_CLIENT_ENDPOINT__,
-          appEndpoint: __APP_CLIENT_ENDPOINT__,
-          imgEndpoint: __IMG_ENDPOINT__,
-          crdsCookiePrefix: __CRDS_ENV__,
-          contentBlockTitle: __HEADER_CONTENTBLOCK_TITLE__,
-          contentBlockCategories: ['common']
-        };
-
-        var header = new CRDS.SharedHeader(options);
-        header.render();
+      // header options
+      var options = {
+        el: '[data-header]',
+        cmsEndpoint: __CMS_CLIENT_ENDPOINT__,
+        appEndpoint: __APP_CLIENT_ENDPOINT__,
+        imgEndpoint: __IMG_ENDPOINT__,
+        crdsCookiePrefix: __CRDS_ENV__,
+        contentBlockTitle: __HEADER_CONTENTBLOCK_TITLE__,
+        contentBlockCategories: ['common']
+      };
+      setTimeout(() => {
+        if ($('[data-header]').length > 0) {
+          new CRDS.SharedHeader(options).render();
+        }
+      }, 100);
     }
 
     function setOriginForCmsPreviewPane($injectedDocument) {
@@ -93,6 +95,10 @@
 
         return;
       }
+      if (toState.name === 'login' && fromState.name !== '') {
+        Session.addRedirectRoute(fromState.name, fromParams);
+      }
+
       if (toState.data !== undefined && toState.data.preventRouteAuthentication) {
         return;
       }
@@ -104,7 +110,7 @@
         $rootScope.meta = toState.data.meta;
       }
       setupMetaData();
-      // setupHeader();
+      setupHeader();
     });
   }
 

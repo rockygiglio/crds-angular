@@ -79,6 +79,7 @@
   @import 'pages/group-dashboard.scss';
   @import 'pages/home.scss';
   @import 'pages/iam.scss';
+  @import 'pages/invoices.scss';
   @import 'pages/leaveyourmark.scss';
   @import 'pages/live.crossroads.scss';
   @import 'pages/locations.scss';
@@ -105,6 +106,44 @@
   @import 'lib/angular-aside.scss';
   @import 'lib/angular-growl.scss';
   @import 'lib/ng-img-crop.scss';
-  @import url('//crossroads-media.s3.amazonaws.com/documents/styles/hotfix-x3.css');
+  @import url('//crossroads-media.s3.amazonaws.com/documents/styles/hotfix-y1.css');
   @import '../node_modules/ng-table/dist/ng-table.css';
+}
+
+.noscroll {
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+}
+
+[ng-app="crossroads"] {
+  .modal-backdrop {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 10;
+    background-color: #000;
+    &.fade {
+      opacity: 0;
+      filter: alpha(opacity=0);
+    }
+    &.in {
+      opacity: 0.5;
+      filter: alpha(opacity=50);
+    }
+  }
+
+  .mobile-menu {
+    position: fixed;
+    top: 0;
+
+    &:not(.in) {
+      .modal-dialog {
+        -webkit-transform: translate3d(-25vw, 0, 0);
+        transform: translate3d(-25vw, 0, 0);
+      }
+    }
+  }
 }

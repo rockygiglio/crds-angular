@@ -24,6 +24,7 @@
 
       var modalInstance = $modal.open({
         templateUrl: 'styleModalContent.html',
+        openedClass: 'crds-legacy-styles',
         backdrop: true,
         size: size,
       })

@@ -35,7 +35,7 @@ export default class CurrentSeriesController {
       templateUrl: 'current_series_modal/currentSeriesModal.html',
       controller: 'CurrentSeriesModalController',
       controllerAs: 'modal',
-      openedClass: 'crds-modal',
+      openedClass: 'crds-modal crds-legacy-styles',
       resolve: {
         options: function() {
           return options;
@@ -70,7 +70,7 @@ export default class CurrentSeriesController {
 
       this.setRunningDates(response);
       this.setTagsArray(response);
-      
+
       this.visible = true;
       this.ResponsiveImageService.updateResponsiveImages();
     }

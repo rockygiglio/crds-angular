@@ -15,6 +15,7 @@ using System.ComponentModel.DataAnnotations;
 using crds_angular.Exceptions;
 using crds_angular.Models.AwsCloudsearch;
 using crds_angular.Models.Crossroads.Groups;
+using Crossroads.Web.Common.Configuration;
 using log4net;
 
 namespace crds_angular.Controllers.API
@@ -26,6 +27,7 @@ namespace crds_angular.Controllers.API
         private readonly IFinderService _finderService;
         private readonly IAuthenticationRepository _authenticationRepo;
         private readonly IAddressGeocodingService _addressGeocodingService;
+        private readonly IConfigurationWrapper _configurationWrapper;
         private readonly ILog _logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         public FinderController(IAddressService addressService,
@@ -236,6 +238,33 @@ namespace crds_angular.Controllers.API
         }
 
         /// <summary>
+        /// Remove pin from map
+        /// </summary>
+        [RequiresAuthorization]
+        [VersionedRoute(template: "finder/pin/removeFromMap", minimumVersion: "1.0.0")]
+        [Route("finder/pin/removeFromMap")]
+        [HttpPost]
+        public IHttpActionResult RemovePinFromMap([FromBody] int participantId)
+        {
+            return Authorized(token =>
+            {
+                try
+                {
+                    _finderService.DisablePin(participantId);
+                    _awsCloudsearchService.DeleteSingleConnectRecordInAwsCloudsearch(participantId, 1);
+                    return Ok();
+
+                }
+                catch (Exception e)
+                {
+                    _logger.Error("Could not create pin", e);
+                    var apiError = new ApiErrorDto("Remove pin from map failed", e);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+            });
+        }
+
+        /// <summary>
         /// Create Pin with provided address details
         /// </summary>
         [RequiresAuthorization]
@@ -269,10 +298,10 @@ namespace crds_angular.Controllers.API
         }
 
         [ResponseType(typeof(PinSearchResultsDto))]
-        [VersionedRoute(template: "finder/findpinsbyaddress/{userSearchAddress}/{lat?}/{lng?}/{upperleftlat?}/{upperleftlng?}/{bottomrightlat?}/{bottomrightlng?}", minimumVersion: "1.0.0")]
-        [Route("finder/findpinsbyaddress/{userSearchAddress}/{lat?}/{lng?}/{upperleftlat?}/{upperleftlng?}/{bottomrightlat?}/{bottomrightlng?}")]
+        [VersionedRoute(template: "finder/findpinsbyaddress/{userSearchAddress}/{finderFlag}/{lat?}/{lng?}/{upperleftlat?}/{upperleftlng?}/{bottomrightlat?}/{bottomrightlng?}", minimumVersion: "1.0.0")]
+        [Route("finder/findpinsbyaddress/{userSearchAddress}/{finderFlag}/{lat?}/{lng?}/{upperleftlat?}/{upperleftlng?}/{bottomrightlat?}/{bottomrightlng?}")]
         [HttpGet]
-        public IHttpActionResult GetFindPinsByAddress([FromUri]string userSearchAddress, [FromUri]string lat = "0", [FromUri]string lng = "0", [FromUri]string upperleftlat = "0", [FromUri]string upperleftlng = "0", [FromUri]string bottomrightlat = "0", [FromUri]string bottomrightlng = "0")
+        public IHttpActionResult GetPinsByAddress([FromUri]string userSearchAddress, [FromUri]string finderFlag, [FromUri]string lat = "0", [FromUri]string lng = "0", [FromUri]string upperleftlat = "0", [FromUri]string upperleftlng = "0", [FromUri]string bottomrightlat = "0", [FromUri]string bottomrightlng = "0")
         {
             try
             {
@@ -284,7 +313,8 @@ namespace crds_angular.Controllers.API
                 }
                
                 var originCoords = _finderService.GetGeoCoordsFromAddressOrLatLang(userSearchAddress, lat, lng);
-                var pinsInRadius = _finderService.GetPinsInBoundingBox(originCoords, userSearchAddress, boundingBox);
+
+                var pinsInRadius = _finderService.GetPinsInBoundingBox(originCoords, userSearchAddress, boundingBox, finderFlag);
 
                 foreach (var pin in pinsInRadius)
                 {

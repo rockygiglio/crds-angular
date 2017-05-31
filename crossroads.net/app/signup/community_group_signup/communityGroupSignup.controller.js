@@ -203,6 +203,7 @@
     function editProfile() {
       vm.modalInstance = $modal.open({
         templateUrl: 'editProfile.html',
+        openedClass: 'crds-legacy-styles',
         backdrop: true,
         scope: $scope
       });

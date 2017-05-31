@@ -7,6 +7,7 @@ angular.module('crossroads').controller('ModalCtrl', function ($scope, $modal, $
     var modalInstance = $modal.open({
       templateUrl: 'profile_giving_remove_modal',
       controller: 'confirmPassword',
+      openedClass: 'crds-legacy-styles',
       size: size,
       resolve: {
         items: function () {
@@ -21,12 +22,13 @@ angular.module('crossroads').controller('ModalCtrl', function ($scope, $modal, $
       $log.info('Modal dismissed at: ' + new Date());
     });
   };
-  
+
   $scope.openEditGiftModal = function (size) {
 
     var modalInstance = $modal.open({
       templateUrl: 'profile_giving_edit_modal',
       controller: 'ModalInstanceCtrl',
+      openedClass: 'crds-legacy-styles',
       size: size,
       resolve: {
         items: function () {
