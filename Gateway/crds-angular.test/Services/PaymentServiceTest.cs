@@ -457,7 +457,7 @@ namespace crds_angular.test.Services
                                                  me.Contact_ID,
                                                  me.Email_Address,
                                                  mergeData));
-            _communicationRepository.Setup(m => m.SendMessage(It.IsAny<MpCommunication>(), false));
+            _communicationRepository.Setup(m => m.SendMessage(It.IsAny<MinistryPlatform.Translation.Models.MpCommunication>(), false));
             _fixture.SendPaymentConfirmation(paymentId, eventId, token);
 
             _paymentRepository.VerifyAll();
@@ -520,7 +520,7 @@ namespace crds_angular.test.Services
                                                  me.Contact_ID,
                                                  me.Email_Address,
                                                  mergeData));
-            _communicationRepository.Setup(m => m.SendMessage(It.IsAny<MpCommunication>(), false));
+            _communicationRepository.Setup(m => m.SendMessage(It.IsAny<MinistryPlatform.Translation.Models.MpCommunication>(), false));
             _fixture.SendPaymentConfirmation(paymentId, eventId, token);
 
             _paymentRepository.VerifyAll();
@@ -683,3 +683,4 @@ namespace crds_angular.test.Services
 
     }
 }
+
