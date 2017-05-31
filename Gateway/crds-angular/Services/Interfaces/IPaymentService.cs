@@ -1,5 +1,6 @@
 ﻿
 using System;
+using crds_angular.Models.Crossroads;
 using crds_angular.Models.Crossroads.Payment;
 using crds_angular.Models.Crossroads.Stewardship;
 using MinistryPlatform.Translation.Models;
@@ -20,5 +21,6 @@ namespace crds_angular.Services.Interfaces
         bool DepositExists(int invoiceId, string token);
         void SendPaymentConfirmation(int paymentId, int eventId, string token);
         void UpdateInvoiceStatusAfterDecline(int invoiceId);
+        InvoiceDetailDTO GetInvoiceDetail(int invoiceId);
     }
 }
