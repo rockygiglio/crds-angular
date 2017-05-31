@@ -1,14 +1,14 @@
 import invoicesModule from '../../app/invoices/invoices.module';
 import InvoiceController from '../../app/invoices/invoice.controller';
 
-fdescribe('Invoice Component', () => {
-  let $componentController;
-  let fixture;
-  let invoicesService;
-  let rootScope;
-  let stateParams;
-  let sce;
-  let qApi;
+describe('Invoice Component', () => {
+  let $componentController,
+    fixture,
+    invoicesService,
+    rootScope,
+    stateParams,
+    sce,
+    q;
   const invoiceId = 344;
 
   beforeEach(angular.mock.module(invoicesModule));
@@ -19,15 +19,15 @@ fdescribe('Invoice Component', () => {
     rootScope = $injector.get('$rootScope');
     stateParams = $injector.get('$stateParams');
     stateParams.invoiceId = invoiceId;
-    qApi = $injector.get('$q');
+    q = $injector.get('$q');
     fixture = new InvoiceController(invoicesService, rootScope, stateParams, sce);
   }));
 
   describe('#onInit', () => {
     beforeEach(() => {
       spyOn(invoicesService, 'getInvoice').and.callFake(() => {
-        const deferred = qApi.defer();
-        deferred.resolve({ status: 302 });
+        const deferred = q.defer();
+        deferred.resolve({ status: 200 });
         return deferred.promise;
       });
       fixture.$onInit();
