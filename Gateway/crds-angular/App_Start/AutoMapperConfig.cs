@@ -6,6 +6,7 @@ using crds_angular.Models.AwsCloudsearch;
 using crds_angular.Models.Finder;
 using crds_angular.Models.Crossroads;
 using crds_angular.Models.Crossroads.Attribute;
+using crds_angular.Models.Crossroads.Camp;
 using crds_angular.Models.Crossroads.Events;
 using crds_angular.Models.Crossroads.Groups;
 using crds_angular.Models.Crossroads.Opportunity;
@@ -18,6 +19,7 @@ using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Models.Finder;
 using MinistryPlatform.Translation.Models.DTO;
 using MinistryPlatform.Translation.Models.Payments;
+using MinistryPlatform.Translation.Models.Product;
 using MpAddress = MinistryPlatform.Translation.Models.MpAddress;
 using DonationStatus = crds_angular.Models.Crossroads.Stewardship.DonationStatus;
 using MpEvent = MinistryPlatform.Translation.Models.MpEvent;
@@ -428,6 +430,8 @@ namespace crds_angular.App_Start
             Mapper.CreateMap<ServeOpportunity, MpSU2SOpportunity>();
             Mapper.CreateMap<MpInvoiceDetail, InvoiceDetailDTO>();
             Mapper.CreateMap<InvoiceDetailDTO, MpInvoiceDetail>();
+            Mapper.CreateMap<MpProduct, ProductDTO>();
+            Mapper.CreateMap<ProductDTO, MpProduct>();
             Mapper.CreateMap<MpAttributeCategory, AttributeCategoryDTO>()
                 .ForMember(dest => dest.CategoryId, opts => opts.MapFrom(src => src.Attribute_Category_ID))
                 .ForMember(dest => dest.AttributeCategory, opts => opts.MapFrom(src => src.Attribute_Category))
