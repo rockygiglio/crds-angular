@@ -18,7 +18,7 @@ namespace crds_angular.Controllers.API
             _paymentService = paymentService;
         }
 
-        [VersionedRoute(template: "invoice/{invoiceId}/details", minimumVersion: "1.0.0")]
+        [VersionedRoute(template: "invoice/{invoiceId}", minimumVersion: "1.0.0")]
         [AcceptVerbs("GET")]
         public IHttpActionResult GetInvoiceDetail(int invoiceId)
         {
@@ -29,7 +29,7 @@ namespace crds_angular.Controllers.API
             }
             catch (Exception e)
             {
-                var apiError = new ApiErrorDto("Unable to get payment details", e);
+                var apiError = new ApiErrorDto("Unable to get invoice details", e);
                 throw new HttpResponseException(apiError.HttpResponseMessage);
             }
         }
