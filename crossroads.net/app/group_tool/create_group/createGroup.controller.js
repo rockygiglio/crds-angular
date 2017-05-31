@@ -1,5 +1,6 @@
 
 import SmallGroup from '../model/smallGroup';
+import CONSTANTS from 'crds-constants';
 
 export default class CreateGroupController {
     /*@ngInject*/
@@ -28,13 +29,13 @@ export default class CreateGroupController {
                 this.approvedLeader = true;
                 this.ready = true;
             } else {
-                this.state.go("content", { "link": "/groups/leader" });
+                this.window.location.href = this.window.location.origin + CONSTANTS.MICROCLIENTS.GROUP_LEADER_FORM.URL;
             }
         },
 
             (err) => {
                 this.log.error(`Unable to get Participant for logged-in user: ${err.status} - ${err.statusText}`);
-                this.state.go("content", { "link": "/groups/leader" });
+                this.window.location.href = this.window.location.origin + CONSTANTS.MICROCLIENTS.GROUP_LEADER_FORM.URL;
             });
 
         this.fields = this.createGroupService.getFields();
