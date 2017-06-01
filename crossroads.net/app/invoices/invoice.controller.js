@@ -6,6 +6,7 @@ class InvoiceController {
     this.sce = $sce;
     this.invoicesService = InvoicesService;
     this.viewReady = false;
+    this.alreadyPaid = false;
   }
 
   $onInit() {
@@ -15,6 +16,7 @@ class InvoiceController {
 
     this.invoicesService.getInvoicePayments(this.invoiceId).then(
       (data) => {
+        this.alreadyPaid = (data.paymentLeft === 0)
         this.url = this.buildUrl(this.invoiceId, data.paymentLeft, data.paymentLeft);
       }, (err) => {
         console.error(err);
