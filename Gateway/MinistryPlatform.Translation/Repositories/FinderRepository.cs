@@ -131,7 +131,24 @@ namespace MinistryPlatform.Translation.Repositories
         public List<MpConnectAws> GetAllPinsForAws()
         {
             var apiToken = _apiUserRepository.GetToken();
-            const string spName = "api_crds_Get_Connect_AWS_Data";
+            const string spName = "api_crds_Get_Connect_AWS_Data_v2";
+
+
+//            {
+//                "type": "add",
+//  "id":   "tt0484562",
+//  "fields": {
+//                    "title": "The Seeker: The Dark Is Rising",
+//    "directors": "Cunningham, David L.",
+//    "genres": ["Adventure","Drama","Fantasy","Thriller"],
+//    "actors": ["McShane, Ian","Eccleston, Christopher","Conroy, Frances",
+//              "Crewson, Wendy","Ludwig, Alexander","Cosmo, James",
+//              "Warner, Amelia","Hickey, John Benjamin","Piddock, Jim",
+//              "Lockhart, Emma"]
+//    }
+//},
+
+
 
             try
             {
