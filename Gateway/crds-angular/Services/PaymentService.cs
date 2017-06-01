@@ -149,8 +149,9 @@ namespace crds_angular.Services
 
         public PaymentDetailDTO GetPaymentDetails(int paymentId, int invoiceId, string token)
         {
-            var me = _contactRepository.GetMyProfile(token);
             var invoice = _invoiceRepository.GetInvoice(invoiceId);
+            var me = _contactRepository.GetContactById(invoice.PurchaserContactId);
+
             var payments = _paymentRepository.GetPaymentsForInvoice(invoiceId);
             
             var currentPayment = payments.Where(p => p.PaymentId == paymentId && p.ContactId == me.Contact_ID).ToList();
@@ -170,7 +171,7 @@ namespace crds_angular.Services
                     RecipientEmail = me.Email_Address,
                     TotalToPay = leftToPay,
                     InvoiceTotal = invoice.InvoiceTotal,
-                    RecentPaymentAmount = payments.First().PaymentTotal,
+                    RecentPaymentAmount = payments.Any() ? payments.First().PaymentTotal : 0,
                     RecentPaymentLastFour = charge != null ? charge.Source.AccountNumberLast4 : ""
                 };
             }
