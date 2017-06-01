@@ -15,5 +15,11 @@ namespace crds_angular.Models.Crossroads.Payment
 
         [JsonProperty(PropertyName = "invoiceTotal")]
         public decimal InvoiceTotal { get; set; }
+
+        [JsonProperty(PropertyName = "recentPaymentAmount")]
+        public decimal? RecentPaymentAmount { get; set; }
+
+        [JsonProperty(PropertyName = "recentPaymentLastFour")]
+        public string RecentPaymentLastFour { get; set; }
     }
 }
