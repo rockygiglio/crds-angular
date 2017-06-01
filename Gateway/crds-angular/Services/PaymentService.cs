@@ -180,6 +180,7 @@ namespace crds_angular.Services
                     RecipientEmail = me.Email_Address,
                     TotalToPay = leftToPay,
                     InvoiceTotal = invoice.InvoiceTotal,
+                    RecentPaymentId = payments.Any() ? payments.First().PaymentId : 0,
                     RecentPaymentAmount = payments.Any() ? payments.First().PaymentTotal : 0,
                     RecentPaymentLastFour = charge != null ? charge.Source.AccountNumberLast4 : ""
                 };
