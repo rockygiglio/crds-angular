@@ -1,7 +1,7 @@
 import invoicesModule from '../../app/invoices/invoices.module';
 import InvoiceController from '../../app/invoices/invoice.controller';
 
-describe('Invoice Component', () => {
+fdescribe('Invoice Component', () => {
   let $componentController,
     fixture,
     invoicesService,
@@ -20,12 +20,17 @@ describe('Invoice Component', () => {
     stateParams = $injector.get('$stateParams');
     stateParams.invoiceId = invoiceId;
     q = $injector.get('$q');
-    fixture = new InvoiceController(invoicesService, rootScope, stateParams, sce);
+    fixture = new InvoiceController(invoicesService, rootScope, stateParams, sce, q);
   }));
 
   describe('#onInit', () => {
     beforeEach(() => {
-      spyOn(invoicesService, 'getInvoice').and.callFake(() => {
+      spyOn(invoicesService, 'getPaymentDetails').and.callFake(() => {
+        const deferred = q.defer();
+        deferred.resolve({ status: 200 });
+        return deferred.promise;
+      });
+      spyOn(invoicesService, 'getInvoiceDetails').and.callFake(() => {
         const deferred = q.defer();
         deferred.resolve({ status: 200 });
         return deferred.promise;
@@ -42,7 +47,7 @@ describe('Invoice Component', () => {
 
     it('should set invoiceId, get invoice', () => {
       expect(fixture.invoiceId).toBe(invoiceId);
-      expect(invoicesService.getInvoice).toHaveBeenCalledWith(invoiceId);
+      expect(invoicesService.getInvoiceDetails).toHaveBeenCalledWith(invoiceId);
     });
 
   });
