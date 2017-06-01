@@ -43,7 +43,7 @@ Param (
   [Parameter(Mandatory=$true)]
   [string] $SMTPServerPort,
   [Parameter(Mandatory=$true)]
-  [string]$DpToolUriToBeReplaced
+  [string]$DpToolUriToBeReplaced,
   [Parameter(Mandatory=$true)]
   [string]$DpToolNewUri
 )
