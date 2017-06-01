@@ -574,12 +574,14 @@ namespace crds_angular.Services
             return (rad/Math.PI*180.0);
         }
 
-        public List<PinDto> GetMyPins(string token, GeoCoordinate originCoords, int contactId)
+        public List<PinDto> GetMyPins(string token, GeoCoordinate originCoords, int contactId, string finderType)
         {
             var pins = new List<PinDto>();
             var participantId = GetParticipantIdFromContact(contactId);
 
-            var groupPins = GetMyGroupPins(token, new int[] {_anywhereGroupType}, participantId);
+            int[] groupTypesToFetch = finderType == _finderConnect ? new int[] { _anywhereGroupType } : new int[] { _smallGroupType };
+
+            var groupPins = GetMyGroupPins(token, groupTypesToFetch, participantId);
             var personPin = GetPinDetailsForPerson(participantId);
 
             pins.AddRange(groupPins);
