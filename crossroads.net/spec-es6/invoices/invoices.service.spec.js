@@ -1,6 +1,6 @@
 import invoicesModule from '../../app/invoices/invoices.module';
 
-fdescribe('Invoice Service', () => {
+describe('Invoice Service', () => {
   // eslint-disable-next-line no-underscore-dangle
   const endpoint = `${window.__env__.CRDS_GATEWAY_CLIENT_ENDPOINT}api`;
   let invoicesService;

@@ -1,7 +1,7 @@
 import invoicesModule from '../../app/invoices/invoices.module';
 import InvoiceConfirmationController from '../../app/invoices/invoice-confirmation.controller';
 
-fdescribe('Invoice Confirmation Component', () => {
+describe('Invoice Confirmation Component', () => {
   let $componentController,
     fixture,
     invoicesService,
