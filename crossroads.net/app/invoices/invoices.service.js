@@ -8,13 +8,27 @@ class InvoicesService {
     this.scope = $rootScope;
     this.stateParams = $stateParams;
     this.resource = $resource;
-    this.invoicesResource = $resource(`${__GATEWAY_CLIENT_ENDPOINT__}api/v1.0.0/invoice/:invoiceId`);
-    this.invoice = {};
+
+    this.invoicesPaymentsResource = $resource(`${__GATEWAY_CLIENT_ENDPOINT__}api/v1.0.0/invoice/:invoiceId/payments`);
+    this.invoiceDetailResource = $resource(`${__GATEWAY_CLIENT_ENDPOINT__}api/v1.0.0/invoice/:invoiceId/details`);
+
+    this.invoicePayments = {};
+    this.invoiceDetail = {};
   }
 
-  getInvoice(invoiceId) {
-    return this.invoicesResource.get({ invoiceId }, (invoice) => {
-      this.invoice = invoice;
+  getInvoicePayments(invoiceId) {
+    return this.invoicesPaymentsResource.get({ invoiceId }, (invoicePayments) => {
+      this.invoicePayments = invoicePayments;
+    },
+
+    (err) => {
+      this.log.error(err);
+    }).$promise;
+  }
+
+  getInvoiceDetail(invoiceId) {
+    return this.invoiceDetailResource.get({ invoiceId }, (invoiceDetail) => {
+      this.invoiceDetail = invoiceDetail;
     },
 
     (err) => {
