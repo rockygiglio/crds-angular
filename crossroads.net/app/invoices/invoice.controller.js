@@ -30,19 +30,19 @@ class InvoiceController {
     switch (__CRDS_ENV__) {
       case 'local':
         this.baseUrl = 'http://localhost:8080';
-        this.returnUrl = `http://local.crossroads.net:3000/invoices/${this.invoiceId}/confirmation`;
+        this.returnUrl = `http://local.crossroads.net:3000/invoices/${this.invoiceId}/confirmation/email`;
         break;
       case 'int':
         this.baseUrl = 'https://embedint.crossroads.net';
-        this.returnUrl = `https://int.crossroads.net/invoices/${this.invoiceId}/confirmation`;
+        this.returnUrl = `https://int.crossroads.net/invoices/${this.invoiceId}/confirmation/email`;
         break;
       case 'demo':
         this.baseUrl = 'https://embeddemo.crossroads.net';
-        this.returnUrl = `https://demo.crossroads.net/invoices/${this.invoiceId}/confirmation`;
+        this.returnUrl = `https://demo.crossroads.net/invoices/${this.invoiceId}/confirmation/email`;
         break;
       default:
         this.baseUrl = 'https://embed.crossroads.net';
-        this.returnUrl = `https://crossroads.net/invoices/${this.invoiceId}/confirmation`;
+        this.returnUrl = `https://crossroads.net/invoices/${this.invoiceId}/confirmation/email`;
         break;
     }
   }

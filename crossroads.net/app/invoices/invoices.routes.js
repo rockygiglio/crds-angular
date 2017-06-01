@@ -21,6 +21,23 @@ export default function InvoicesRoutes($httpProvider, $stateProvider) {
         }
       }
     })
+    .state('invoices.email.confirmation', {
+      parent: 'noSideBar',
+      url: '/invoices/:invoiceId/payments/:paymentId/email',
+      template: '<invoice-confirmation></invoice-confirmation>',
+      resolve: {
+        InvoicesService: 'InvoicesService',
+        $state: '$state',
+        sendConfirmation: (InvoicesService, $state) => InvoicesService.sendPaymentConfirmation(
+            $state.toParams.invoiceId,
+            $state.toParams.paymentId)
+          .finally(() => {
+            console.log("finally....");
+            const toParams = Object.assign($state.toParams, { wasPayment: true });
+            $state.go('invoices.confirmation', toParams, { location: 'replace' });
+          })
+      }
+    })
     .state('invoices.confirmation', {
       parent: 'noSideBar',
       url: '/invoices/:invoiceId/confirmation',
@@ -32,6 +49,5 @@ export default function InvoicesRoutes($httpProvider, $stateProvider) {
           description: ''
         }
       }
-    })
-    ;
+    });
 }
