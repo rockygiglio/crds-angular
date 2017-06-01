@@ -175,13 +175,17 @@ namespace crds_angular.Services
 
                 _groupService.endDateGroupParticipant(groupId, groupParticipantId);
 
+                // TODO need to get MPParticipant here?!?!?!?  -- don't have a contactID to pass in, is this really needed??
+                // need it due to merge fields on email templates
+                // get participant by passing in a GroupParticipantID instead of a contactID
+                var participant = _participantRepository.GetParticipant(1231212);
+
                 try
                 {
                     SendGroupParticipantEmail(groupId,
-                                              groupParticipantId,
                                               myGroup.Group,
                                               _removeParticipantFromGroupEmailTemplateId,
-                                              null,
+                                              participant, // can I get this?? //need new method to get from groupParticipantID
                                               GroupToolRemoveParticipantSubjectTemplateText,
                                               GroupToolRemoveParticipantEmailTemplateTextTitle,
                                               message,
@@ -189,7 +193,8 @@ namespace crds_angular.Services
                 }
                 catch (Exception e)
                 {
-                    _logger.Warn($"Could not send email to group participant {groupParticipantId} notifying of removal from group {groupId}", e);
+                    // TODO need to handle this not just log
+                    _logger.Error($"Could not send email to group participant {groupParticipantId} notifying of removal from group {groupId}", e);
                 }
             }
             catch (GroupParticipantRemovalException e)
@@ -203,32 +208,32 @@ namespace crds_angular.Services
             }
         }
 
-        public void SendGroupParticipantEmail(int groupId,
-                                              int? toGroupParticipantId,
+        public void SendGroupParticipantEmail(int groupId,                                             
                                               GroupDTO group,
                                               int emailTemplateId,
-                                              MpParticipant toParticipant = null,
+                                              MpParticipant toParticipant,
                                               string subjectTemplateContentBlockTitle = null,
                                               string emailTemplateContentBlockTitle = null,
                                               string message = null,
                                               MpParticipant fromParticipant = null)
         {
-            var participant = toParticipant == null
-                ? group.Participants.Find(p => p.GroupParticipantId == toGroupParticipantId)
-                : new GroupParticipantDTO
-                {
-                    ContactId = toParticipant.ContactId,
-                    Email = toParticipant.EmailAddress,
-                    NickName = toParticipant.PreferredName,
-                    ParticipantId = toParticipant.ParticipantId
-                };
+            var participant = new GroupParticipantDTO
+            {
+                ContactId = toParticipant.ContactId,
+                Email = toParticipant.EmailAddress,
+                NickName = toParticipant.PreferredName,
+                ParticipantId = toParticipant.ParticipantId
+            };
 
+            // TODO may not have template ID - if template is in CMS instead of MP -- do we need generic template - like the remove one?
             var emailTemplate = _communicationRepository.GetTemplate(emailTemplateId);
+
             var fromContact = new MpContact
             {
                 ContactId = emailTemplate.FromContactId,
                 EmailAddress = emailTemplate.FromEmailAddress
             };
+
             var replyTo = new MpContact
             {
                 ContactId = fromParticipant?.ContactId ?? emailTemplate.ReplyToContactId,
@@ -247,9 +252,11 @@ namespace crds_angular.Services
             var subjectTemplateText = string.IsNullOrWhiteSpace(subjectTemplateContentBlockTitle)
                 ? string.Empty
                 : _contentBlockService[subjectTemplateContentBlockTitle].Content ?? string.Empty;
-           
+
+            // TODO Exception ---- Content Service -- not found in dictionary  - groupToolApproveInquiryEmailTemplateText
 
             var emailTemplateText = string.IsNullOrWhiteSpace(emailTemplateContentBlockTitle) ? string.Empty : _contentBlockService[emailTemplateContentBlockTitle].Content;
+
             var mergeData = getDictionary(participant);
             mergeData["Email_Custom_Message"] = string.IsNullOrWhiteSpace(message) ? string.Empty : message;
             mergeData["Group_Name"] = group.GroupName;
@@ -378,31 +385,51 @@ namespace crds_angular.Services
 
         private void ApproveInquiry(int groupId, GroupDTO group, Inquiry inquiry, MpParticipant me, string message)
         {
-            _groupService.addContactToGroup(groupId, inquiry.ContactId);
+            var groupParticipantId = _groupService.addContactToGroup(groupId, inquiry.ContactId);
             _groupRepository.UpdateGroupInquiry(groupId, inquiry.InquiryId, true);
 
             int commType = group.GroupTypeId == _smallGroupTypeId ? _connectCommunicationTypeRequestToJoinSmallGroup : _connectGatheringRequestToJoin;
             RecordConnectInteraction(groupId, me.ContactId, inquiry.ContactId, commType, _connectGatheringStatusAccept);
 
             var emailTemplateId = (group.GroupTypeId == _anywhereGroupType) 
-                                                      ? _gatheringHostAcceptTemplate 
-                                                      : _removeParticipantFromGroupEmailTemplateId;
+                ? _gatheringHostAcceptTemplate 
+                : _removeParticipantFromGroupEmailTemplateId; // is this really a generic template - used for cms templated data????
+                                                                                                    
+            // assumes small group - group tool
+            string subject = (group.GroupTypeId != _anywhereGroupType)
+                ? GroupToolApproveInquirySubjectTemplateText
+                : null;
+
+            var participant = _participantRepository.GetParticipant(inquiry.ContactId);
+
 
             try
             {
-                SendApproveDenyInquiryEmail(
-                    true,
-                    groupId,
-                    group,
-                    inquiry,
-                    me,
-                    emailTemplateId,
-                    GroupToolApproveInquiryEmailTemplateText,
-                    message);
+                // TODO skip this call 
+                // SendApproveDenyInquiryEmail(
+                //    true,
+                //    groupId,
+                //    group,
+                //    inquiry,
+                //    me,
+                //    emailTemplateId,
+                //    GroupToolApproveInquiryEmailTemplateText,
+                //    message);
+
+                SendGroupParticipantEmail(groupId,
+                                          group,
+                                          emailTemplateId,
+                                          participant,
+                                          subject,
+                                          GroupToolApproveInquiryEmailTemplateText,
+                                          message,
+                                          me);
+
             }
             catch (Exception e)
             {
-                _logger.Warn($"Could not send email to Inquirier {inquiry.InquiryId} notifying of being approved to group {groupId}", e);
+                // TODO rethrow - handle this!!!!
+                _logger.Error($"Could not send email to Inquirier {inquiry.InquiryId} notifying of being approved to group {groupId}", e);
             }
         }
 
@@ -415,7 +442,8 @@ namespace crds_angular.Services
 
             var emailTemplateId = (group.GroupTypeId == _anywhereGroupType)
                                                       ? _gatheringHostDenyTemplate
-                                                      : _removeParticipantFromGroupEmailTemplateId;
+                                                      : _removeParticipantFromGroupEmailTemplateId; // is this really a generic template - used for cms templated data????
+                                                      // : _smallGroupLeaderDenyTemplate; 
 
             try
             {
@@ -435,6 +463,8 @@ namespace crds_angular.Services
             }
         }
 
+
+        // TODO DELETE this method
         private void SendApproveDenyInquiryEmail(bool approve,
                                                  int groupId,
                                                  GroupDTO group,
@@ -448,15 +478,21 @@ namespace crds_angular.Services
             {
                 string subject = null;
 
-                if (group.GroupTypeId != _anywhereGroupType)
+                if (group.GroupTypeId != _anywhereGroupType)  // assumes small group - group tool
                 {
                     subject = approve ? GroupToolApproveInquirySubjectTemplateText : GroupToolDenyInquirySubjectTemplateText;
                 }
-              
-                var participant = _participantRepository.GetParticipant(inquiry.ContactId);
 
-                SendGroupParticipantEmail(groupId,
-                                          null,
+
+                var participant = _participantRepository.GetParticipant(inquiry.ContactId);
+                // TODO need GROUP Participant ID, not participantID
+
+                
+                // TODO why an additional call here?? This is way too complicated...
+
+
+
+                SendGroupParticipantEmail(groupId,                                          
                                           group,
                                           emailTemplateId,
                                           participant,
@@ -467,7 +503,8 @@ namespace crds_angular.Services
             }
             catch (Exception e)
             {
-                _logger.Warn($"Could not send email to Inquirer {inquiry.InquiryId} notifying for group {groupId}", e);
+                // TODO Throw and/or handle better
+                _logger.Error($"Could not send email to Inquirer {inquiry.InquiryId} notifying for group {groupId}", e);
             }
         }
 
