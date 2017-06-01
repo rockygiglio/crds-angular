@@ -178,6 +178,11 @@
       EVENT_TYPES: {
         CHILDCARE: 243
       }
+    },
+    MICROCLIENTS: {
+      GROUP_LEADER_FORM: {
+        URL: '/group-leader'
+      }
     }
   };
 }());
