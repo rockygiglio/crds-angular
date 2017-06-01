@@ -6,7 +6,8 @@ describe('GroupToolCmsController', () => {
     let fixture,
       page,
       participantService,
-      state;
+      state,
+      window;
 
   beforeEach(angular.mock.module(constants.MODULES.GROUP_TOOL));
 
@@ -14,8 +15,11 @@ describe('GroupToolCmsController', () => {
       page = $injector.get('Page');
       participantService = $injector.get('ParticipantService');
       state = $injector.get('$state');
+      window = $injector.get('$state');
 
-      fixture = new GroupToolCmsController(page, participantService, state);
+      fixture = new GroupToolCmsController(page, participantService, state, window);
+
+      window.location = {origin: 'origin', href: 'href' };
   }));
 
   describe('$onInit() function', () => {
@@ -54,11 +58,10 @@ describe('GroupToolCmsController', () => {
           }
         )
 
-        spyOn(state, 'go').and.callFake(function() {});
 
         fixture.$onInit();
 
-        expect(state.go).toHaveBeenCalled();
+        expect(window.location.href).toEqual(window.location.origin + constants.MICROCLIENTS.GROUP_LEADER_FORM.URL);
     });
   });
 });

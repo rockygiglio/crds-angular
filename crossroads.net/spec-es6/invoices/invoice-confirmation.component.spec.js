@@ -13,11 +13,11 @@ describe('Invoice Confirmation Component', () => {
 
   beforeEach(angular.mock.module(invoicesModule));
 
-  beforeEach(inject(function (_$rootScope_, _$q_, $injector, $sce) {
+  beforeEach(inject(function (_$rootScope_, $injector, $sce) {
     invoicesService = $injector.get('InvoicesService');
     sce = $injector.get('$sce');
     rootScope = $injector.get('$rootScope');
-    q = _$q_;
+    q = $injector.get('$q');
     stateParams = $injector.get('$stateParams');
     stateParams.invoiceId = invoiceId;
     fixture = new InvoiceConfirmationController(invoicesService, rootScope, stateParams, sce, q);
