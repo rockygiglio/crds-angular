@@ -144,13 +144,22 @@ namespace crds_angular.Services
         public PaymentDetailDTO GetPaymentDetails(int invoiceId)
         {
             var apiToken = _apiUserRepository.GetToken();
-            return GetPaymentDetails(0, invoiceId, apiToken);
+            return GetPaymentDetails(0, invoiceId, apiToken, true);
         }
 
-        public PaymentDetailDTO GetPaymentDetails(int paymentId, int invoiceId, string token)
+        public PaymentDetailDTO GetPaymentDetails(int paymentId, int invoiceId, string token, bool useInvoiceContact = false)
         {
+
             var invoice = _invoiceRepository.GetInvoice(invoiceId);
-            var me = _contactRepository.GetContactById(invoice.PurchaserContactId);
+            var me = new MpMyContact();
+             if (useInvoiceContact)
+            {
+                me = _contactRepository.GetContactById(invoice.PurchaserContactId);
+            }
+            else
+            {
+                me = _contactRepository.GetMyProfile(token);
+            }
 
             var payments = _paymentRepository.GetPaymentsForInvoice(invoiceId);
             

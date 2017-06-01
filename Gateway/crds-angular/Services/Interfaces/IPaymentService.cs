@@ -12,7 +12,7 @@ namespace crds_angular.Services.Interfaces
     {
         MpPaymentDetailReturn PostPayment(MpDonationAndDistributionRecord payment);
         PaymentDetailDTO GetPaymentDetails(int invoiceId);
-        PaymentDetailDTO GetPaymentDetails(int paymentId, int invoiceId, string token);
+        PaymentDetailDTO GetPaymentDetails(int paymentId, int invoiceId, string token, bool useInvoiceContact = false);
         PaymentDTO GetPaymentByTransactionCode(string stripePaymentId);
         int UpdatePaymentStatus(int paymentId, int statusId, DateTime? statusDate, string statusNote = null);
         DonationBatchDTO GetPaymentBatch(int batchId);
