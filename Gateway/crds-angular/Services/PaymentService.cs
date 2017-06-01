@@ -34,6 +34,8 @@ namespace crds_angular.Services
         private readonly IApiUserRepository _apiUserRepository;
         private readonly IProductRepository _productRepository;
 
+        private readonly IPaymentProcessorService _paymentProcessorService;
+
         private readonly int _paidinfullStatus;
         private readonly int _somepaidStatus;
         private readonly int _nonePaidStatus;
@@ -49,7 +51,8 @@ namespace crds_angular.Services
             IEventRepository eventRepository,
             ICommunicationRepository communicationRepository,
             IApiUserRepository apiUserRepository,
-            IProductRepository productRepository)
+            IProductRepository productRepository,
+            IPaymentProcessorService paymentProcessorService)
         {
             _invoiceRepository = invoiceRepository;
             _paymentRepository = paymentRepository;
@@ -60,6 +63,8 @@ namespace crds_angular.Services
             _eventPRepository = eventRepository;
             _apiUserRepository = apiUserRepository;
             _productRepository = productRepository;
+
+            _paymentProcessorService = paymentProcessorService;
 
             _paidinfullStatus = configurationWrapper.GetConfigIntValue("PaidInFull");
             _somepaidStatus = configurationWrapper.GetConfigIntValue("SomePaid");
@@ -139,13 +144,23 @@ namespace crds_angular.Services
         public PaymentDetailDTO GetPaymentDetails(int invoiceId)
         {
             var apiToken = _apiUserRepository.GetToken();
-            return GetPaymentDetails(0, invoiceId, apiToken);
+            return GetPaymentDetails(0, invoiceId, apiToken, true);
         }
 
-        public PaymentDetailDTO GetPaymentDetails(int paymentId, int invoiceId, string token)
+        public PaymentDetailDTO GetPaymentDetails(int paymentId, int invoiceId, string token, bool useInvoiceContact = false)
         {
-            var me = _contactRepository.GetMyProfile(token);
+
             var invoice = _invoiceRepository.GetInvoice(invoiceId);
+            var me = new MpMyContact();
+             if (useInvoiceContact)
+            {
+                me = _contactRepository.GetContactById(invoice.PurchaserContactId);
+            }
+            else
+            {
+                me = _contactRepository.GetMyProfile(token);
+            }
+
             var payments = _paymentRepository.GetPaymentsForInvoice(invoiceId);
             
             var currentPayment = payments.Where(p => p.PaymentId == paymentId && p.ContactId == me.Contact_ID).ToList();
@@ -154,12 +169,19 @@ namespace crds_angular.Services
             {
                 var totalPaymentsMade = payments.Sum(p => p.PaymentTotal);
                 var leftToPay = invoice.InvoiceTotal - totalPaymentsMade;
+                StripeCharge charge = null;
+                if (payments.Count > 0)
+                {
+                    charge = _paymentProcessorService.GetCharge(payments.First().TransactionCode);
+                }
                 return new PaymentDetailDTO()
                 {
                     PaymentAmount = currentPayment.Any() ? currentPayment.First().PaymentTotal : 0M,
                     RecipientEmail = me.Email_Address,
                     TotalToPay = leftToPay,
-                    InvoiceTotal = invoice.InvoiceTotal
+                    InvoiceTotal = invoice.InvoiceTotal,
+                    RecentPaymentAmount = payments.Any() ? payments.First().PaymentTotal : 0,
+                    RecentPaymentLastFour = charge != null ? charge.Source.AccountNumberLast4 : ""
                 };
             }
             throw new Exception("No Payment found for " + me.Email_Address + " with id " + paymentId);

@@ -1,28 +1,29 @@
 /* @ngInject */
 class InvoiceController {
 
-  constructor(InvoicesService, $rootScope, $stateParams, $sce) {
+  constructor(InvoicesService, $rootScope, $stateParams, $sce, $q) {
     this.invoiceId = $stateParams.invoiceId;
     this.sce = $sce;
     this.invoicesService = InvoicesService;
     this.viewReady = false;
+    this.q = $q;
     this.alreadyPaid = false;
   }
 
   $onInit() {
     this.setGatewayUrls();
-
-    this.invoicesService.getInvoiceDetail(this.invoiceId);
-
-    this.invoicesService.getInvoicePayments(this.invoiceId).then(
-      (data) => {
-        this.alreadyPaid = (data.paymentLeft === 0)
-        this.url = this.buildUrl(this.invoiceId, data.paymentLeft, data.paymentLeft);
-      }, (err) => {
-        console.error(err);
-      }).finally(() => {
-        this.viewReady = true;
-      });
+    this.q.all([
+      this.invoicesService.getInvoiceDetails(this.invoiceId),
+      this.invoicesService.getPaymentDetails(this.invoiceId).then(
+        (data) => {
+          this.alreadyPaid = (data.paymentLeft === 0)
+          this.url = this.buildUrl(this.invoiceId, data.paymentLeft, data.paymentLeft);
+        }, (err) => {
+          console.error(err);
+        })
+    ]).then(value => {
+      this.viewReady = true;
+    });
   }
 
   setGatewayUrls() {

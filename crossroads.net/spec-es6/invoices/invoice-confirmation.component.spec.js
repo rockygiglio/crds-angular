@@ -1,7 +1,7 @@
 import invoicesModule from '../../app/invoices/invoices.module';
-import InvoiceController from '../../app/invoices/invoice.controller';
+import InvoiceConfirmationController from '../../app/invoices/invoice-confirmation.controller';
 
-describe('Invoice Component', () => {
+describe('Invoice Confirmation Component', () => {
   let $componentController,
     fixture,
     invoicesService,
@@ -9,7 +9,7 @@ describe('Invoice Component', () => {
     stateParams,
     sce,
     q;
-  const invoiceId = 344;
+  const invoiceId = 456;
 
   beforeEach(angular.mock.module(invoicesModule));
 
@@ -17,10 +17,10 @@ describe('Invoice Component', () => {
     invoicesService = $injector.get('InvoicesService');
     sce = $injector.get('$sce');
     rootScope = $injector.get('$rootScope');
+    q = $injector.get('$q');
     stateParams = $injector.get('$stateParams');
     stateParams.invoiceId = invoiceId;
-    q = $injector.get('$q');
-    fixture = new InvoiceController(invoicesService, rootScope, stateParams, sce, q);
+    fixture = new InvoiceConfirmationController(invoicesService, rootScope, stateParams, sce, q);
   }));
 
   describe('#onInit', () => {
@@ -39,16 +39,15 @@ describe('Invoice Component', () => {
       rootScope.$digest();
     });
 
-    it('should set urls, set the view as ready', () => {
-      expect(fixture.baseUrl).toBeDefined();
-      expect(fixture.returnUrl).toBeDefined();
+    it('should set view as ready', () => {
       expect(fixture.viewReady).toBeTruthy();
     });
 
-    it('should set invoiceId, get invoice', () => {
+    it('set invoiceId, get invoice payment details', () => {
       expect(fixture.invoiceId).toBe(invoiceId);
-      expect(invoicesService.getInvoiceDetails).toHaveBeenCalledWith(invoiceId);
+      expect(invoicesService.getPaymentDetails).toHaveBeenCalledWith(invoiceId);
     });
 
   });
+
 });

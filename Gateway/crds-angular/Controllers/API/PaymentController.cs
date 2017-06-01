@@ -29,7 +29,7 @@ namespace crds_angular.Controllers.API
             }
             catch (Exception e)
             {
-                var apiError = new ApiErrorDto("Unable to get payment details", e);
+                var apiError = new ApiErrorDto("Unable to get invoice details", e);
                 throw new HttpResponseException(apiError.HttpResponseMessage);
             }
         }
