@@ -1,11 +1,12 @@
 import invoicesModule from '../../app/invoices/invoices.module';
 
-describe('Invoice Service', () => {
+fdescribe('Invoice Service', () => {
   // eslint-disable-next-line no-underscore-dangle
   const endpoint = `${window.__env__.CRDS_GATEWAY_CLIENT_ENDPOINT}api`;
   let invoicesService;
   let httpBackend;
   const invoiceId = 111;
+  const paymentId = 222;
 
   beforeEach(angular.mock.module(invoicesModule));
 
@@ -25,6 +26,12 @@ describe('Invoice Service', () => {
     httpBackend.expectGET(`${endpoint}/v1.0.0/invoice/${invoiceId}/payments`)
       .respond(200, {});
     invoicesService.getPaymentDetails(invoiceId);
+  });
+
+  it('should make the API call to send payment email confirmation', () => {
+    httpBackend.expectPOST(`${endpoint}/v1.0.0/invoice/${invoiceId}/payments/${paymentId}/confirmation`)
+      .respond(200, {});
+    invoicesService.sendPaymentConfirmation(invoiceId, paymentId);
   });
 
 });

@@ -1,7 +1,7 @@
 import invoicesModule from '../../app/invoices/invoices.module';
 import InvoiceController from '../../app/invoices/invoice.controller';
 
-describe('Invoice Component', () => {
+fdescribe('Invoice Component', () => {
   let $componentController,
     fixture,
     invoicesService,
@@ -40,8 +40,8 @@ describe('Invoice Component', () => {
     });
 
     it('should set urls, set the view as ready', () => {
-      expect(fixture.baseUrl).toBeDefined();
-      expect(fixture.returnUrl).toBeDefined();
+      expect(fixture.baseUrl).toBe('https://embed.crossroads.net');
+      expect(fixture.returnUrl).toBe(`https://crossroads.net/invoices/${invoiceId}/confirmation`);
       expect(fixture.viewReady).toBeTruthy();
     });
 
