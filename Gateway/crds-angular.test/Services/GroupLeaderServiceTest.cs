@@ -423,11 +423,14 @@ namespace crds_angular.test.Services
             const int refContactId = 987654;
             var contact = ContactMock(contactId);
             var participant = ParticipantMock();
+            var studentLeaderInterest = "true";
 
             _configWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderFormId")).Returns(29);
             _configWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderFormReferenceContact")).Returns(1519);
+            _configWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderStudentFieldId")).Returns(123);
             _participantRepository.Setup(m => m.GetParticipant(contactId)).Returns(participant);
             _contactMock.Setup(m => m.GetContactById(contactId)).Returns(contact);
+            _formService.Setup(m => m.GetFormResponseAnswer(29, contactId, 123, null)).Returns(studentLeaderInterest);
             _formService.Setup(m => m.GetFormResponseAnswer(29, contactId, 1519, null)).Returns(refContactId.ToString());
 
             var res = _fixture.GetReferenceData(contactId);
@@ -437,6 +440,7 @@ namespace crds_angular.test.Services
                 Assert.AreEqual(participant, result["participant"]);
                 Assert.AreEqual(contact, result["contact"]);
                 Assert.AreEqual("987654", result["referenceContactId"]);
+                Assert.AreEqual(studentLeaderInterest, result["studentLeaderRequest"]);
             },
             (err) =>
             {
@@ -489,6 +493,48 @@ namespace crds_angular.test.Services
             {
                 Assert.Fail("No Exception Thrown");
             });
+        }
+
+
+
+        [Test]
+        public void ShouldSendAnEmailToStudentMinistry()
+        {
+            const int messageId = 456;
+            const int templateId = 2021;
+            const int hsmsContactId = 987;
+            const int contactId = 13524;
+            const string emailAddr = "1@2.com";
+            var participant = ParticipantMock();
+            var contact = ContactMock(contactId);
+            
+            var referenceData = new Dictionary<string, object>
+            {
+                { "participant", participant },
+                { "contact", contact }
+
+            };
+
+            _contactMock.Setup(m => m.GetContactEmail(hsmsContactId)).Returns(emailAddr);
+            _configWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderForStudentsEmailTemplate")).Returns(templateId);
+            _configWrapper.Setup(m => m.GetConfigIntValue("StudentMinistryContactId")).Returns(hsmsContactId);
+
+            var mergeData = new Dictionary<string, object>();
+            var communication = SMCommunication(templateId, mergeData, emailAddr, hsmsContactId);
+
+            _communicationRepository.Setup(m => m.GetTemplateAsCommunication(templateId, hsmsContactId, It.IsAny<string>(), It.IsAny<Dictionary<string, object>>())).Returns(communication);
+            _communicationRepository.Setup(m => m.SendMessage(communication, false)).Returns(messageId);
+
+            var result = _fixture.SendStudentMinistryRequestEmail(referenceData);
+
+            result.Subscribe((n) =>
+                             {
+                                 Assert.AreEqual(messageId, result);
+                             },
+                             (err) =>
+                             {
+                                 Assert.Fail(err.ToString());
+                             });
         }
 
         [Test]
@@ -637,6 +683,23 @@ namespace crds_angular.test.Services
                 EmailSubject = "whateva",
                 MergeData = mergeData,
                 ToContacts = new List<MpContact>() {new MpContact {EmailAddress = toContact.Email_Address, ContactId = toContact.Contact_ID} }
+            };
+        }
+
+        private static MpCommunication SMCommunication(int templateId, Dictionary<string, object> mergeData, string emailAddr, int contactId)
+        {
+            var from = new MpContact { ContactId = 122222, EmailAddress = "groups@crossroads.net" };
+            return new MpCommunication
+            {
+                AuthorUserId = 1,
+                DomainId = 1,
+                EmailBody = "<h1> hello </h1>",
+                FromContact = from,
+                ReplyToContact = from,
+                TemplateId = templateId,
+                EmailSubject = "whateva",
+                MergeData = mergeData,
+                ToContacts = new List<MpContact>() { new MpContact { EmailAddress = emailAddr, ContactId = contactId } }
             };
         }
 

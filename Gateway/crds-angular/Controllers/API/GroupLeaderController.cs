@@ -94,6 +94,11 @@ namespace crds_angular.Controllers.API
                             {
                                 _groupLeaderService.SendNoReferenceEmail(res).Subscribe(CancellationToken.None);
                             }
+
+                            if (((string)res["studentLeaderRequest"]).ToUpper() == "TRUE")
+                            {
+                                _groupLeaderService.SendStudentMinistryRequestEmail(res).Subscribe(CancellationToken.None);
+                            }
                         });
                         return Ok();
                     }
