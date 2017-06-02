@@ -615,9 +615,18 @@ namespace MinistryPlatform.Translation.Repositories
 
         public bool ParticipantGroupMember(int groupId, int participantId)
         {
+            return (GetParticipantGroupMemberId(groupId, participantId) > 0);
+        }
+
+        public int GetParticipantGroupMemberId(int groupId, int participantId)
+        {
+            object gpid = null;
             var searchString = string.Format(",{0},{1}", groupId, participantId);
             var teams = ministryPlatformService.GetPageViewRecords("GroupParticipantsById", ApiLogin(), searchString);
-            return teams.Count != 0;
+            if (teams.Count!=0 && teams.FirstOrDefault().TryGetValue("Group_Participant_ID", out gpid))
+                return (int)gpid;
+            else
+                return -1;
         }
 
         public bool checkIfUserInGroup(int participantId, IList<MpGroupParticipant> groupParticipants)
