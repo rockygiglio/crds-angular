@@ -3,7 +3,7 @@ GO
 
 DECLARE @TOOL_ID int = 425;
 DECLARE @EVENT_PAGE_ID int = 308;
-DECLARE @SYS_ADMIN_ROLE_ID int = 107;
+DECLARE @TRIP_TOOLS_ROLE_ID int = 113;
 
 IF NOT EXISTS (SELECT 1 FROM [dbo].[dp_Tools] WHERE Tool_ID = @TOOL_ID)
 BEGIN
@@ -36,13 +36,13 @@ BEGIN
 	)
 END
 
-IF NOT EXISTS (SELECT 1 FROM [dbo].[dp_Role_Tools] WHERE [Role_ID] = @SYS_ADMIN_ROLE_ID AND [Tool_ID] = @TOOL_ID)
+IF NOT EXISTS (SELECT 1 FROM [dbo].[dp_Role_Tools] WHERE [Role_ID] = @TRIP_TOOLS_ROLE_ID AND [Tool_ID] = @TOOL_ID)
 BEGIN
 	INSERT INTO [dbo].[dp_Role_Tools] (
 		 [Role_ID]
 		,[Tool_ID]
 	) VALUES (
-	    @SYS_ADMIN_ROLE_ID
+	    @TRIP_TOOLS_ROLE_ID
 	   ,@TOOL_ID
 	)
 END
