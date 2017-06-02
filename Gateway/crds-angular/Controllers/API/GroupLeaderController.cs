@@ -84,7 +84,7 @@ namespace crds_angular.Controllers.API
                         _groupLeaderService.SaveSpiritualGrowth(spiritualGrowth)
                             .Concat(_groupLeaderService.SetApplied(token)).Wait();
 
-                        _groupLeaderService.GetReferenceData(spiritualGrowth.ContactId).Subscribe((res) =>
+                        _groupLeaderService.GetApplicationData(spiritualGrowth.ContactId).Subscribe((res) =>
                         {
                             if ((string)res["referenceContactId"] != "0")
                             {

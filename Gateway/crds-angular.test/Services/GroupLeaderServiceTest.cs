@@ -433,7 +433,7 @@ namespace crds_angular.test.Services
             _formService.Setup(m => m.GetFormResponseAnswer(29, contactId, 123, null)).Returns(studentLeaderInterest);
             _formService.Setup(m => m.GetFormResponseAnswer(29, contactId, 1519, null)).Returns(refContactId.ToString());
 
-            var res = _fixture.GetReferenceData(contactId);
+            var res = _fixture.GetApplicationData(contactId);
 
             res.Subscribe((result) =>
             {
@@ -461,7 +461,7 @@ namespace crds_angular.test.Services
             _contactMock.Setup(m => m.GetContactById(contactId)).Returns(contact);
             _formService.Setup(m => m.GetFormResponseAnswer(29, contactId, 1519, null));
 
-            var res = _fixture.GetReferenceData(contactId);
+            var res = _fixture.GetApplicationData(contactId);
 
             res.Subscribe((result) =>
             {
@@ -487,7 +487,7 @@ namespace crds_angular.test.Services
             _configWrapper.Setup(m => m.GetConfigIntValue("GroupLeaderFormReferenceContact")).Returns(1519);
             _participantRepository.Setup(m => m.GetParticipant(contactId)).Throws<ApplicationException>();
 
-            var res = _fixture.GetReferenceData(contactId);
+            var res = _fixture.GetApplicationData(contactId);
 
             res.Subscribe((result) =>
             {

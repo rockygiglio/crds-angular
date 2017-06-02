@@ -13,7 +13,7 @@ DECLARE @Body VARCHAR(max) = '<div>A community member has applied to be a group 
 							  <div>First Name: [First_Name]</div>
 							  <div>Last Name: [Last_Name]</div>
 							  <div>Email Address: [Email_Address]</div>
-							  <div>If you have questions, email us at groups@crossroads.net.</div><br />'
+							  <div>If you have questions, email us at <a href="mailto:groups@crossroads.net">groups@crossroads.net</a>.</div><br />'
 DECLARE @Subject VARCHAR(max) = 'Action Required: Group Leader Application - Background Check'
 
 IF NOT EXISTS (SELECT 1 FROM [dbo].[dp_Communications] WHERE Communication_ID = @TemplateID)

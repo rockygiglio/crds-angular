@@ -202,7 +202,7 @@ namespace crds_angular.Services
             });
         }
 
-        public IObservable<Dictionary<string, object>> GetReferenceData(int contactId)
+        public IObservable<Dictionary<string, object>> GetApplicationData(int contactId)
         {
             var formId = _configWrapper.GetConfigIntValue("GroupLeaderFormId");
             var referenceFormFieldId = _configWrapper.GetConfigIntValue("GroupLeaderFormReferenceContact");
@@ -217,7 +217,7 @@ namespace crds_angular.Services
                     {"participant", participant},
                     {"contact", contact},
                     {"referenceContactId", referenceAnswer ?? "0" },
-                    {"studentLeaderRequest", studentAnswer ?? "0" }
+                    {"studentLeaderRequest", studentAnswer ?? "false" }
                 });
         }
 
