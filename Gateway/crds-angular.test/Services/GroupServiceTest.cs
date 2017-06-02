@@ -389,7 +389,8 @@ namespace crds_angular.test.Services
             };
             groupRepository.Setup(mocked => mocked.getAllEventsForGroup(456)).Returns(events);
             groupRepository.Setup(mocked => mocked.GetParticipantGroupMemberId(456,999)).Returns(999456);
-            groupRepository.Setup(mocked => mocked.GetParticipantGroupMemberId(456, 888)).Returns(888456);
+            groupRepository.Setup(mocked => mocked.GetParticipantGroupMemberId(456, 888)).Returns(-1);
+            groupRepository.Setup(mocked => mocked.addParticipantToGroup(888, 456, GROUP_ROLE_DEFAULT_ID, false, It.IsAny<DateTime>(), null, false, null)).Returns(888456);
 
             eventService.Setup(mocked => mocked.SafeRegisterParticipant(777, 999, 456, 999456)).Returns(999777);
             eventService.Setup(mocked => mocked.SafeRegisterParticipant(555, 999, 456, 999456)).Returns(999555);
