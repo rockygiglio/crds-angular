@@ -30,24 +30,25 @@ class InvoiceController {
     switch (__CRDS_ENV__) {
       case 'local':
         this.baseUrl = 'http://localhost:8080';
-        this.returnUrl = `http://local.crossroads.net:3000/invoices/${this.invoiceId}/confirmation/email`;
+        this.returnUrl = `http://localhost:3000/invoices/${this.invoiceId}/email`;
         break;
       case 'int':
         this.baseUrl = 'https://embedint.crossroads.net';
-        this.returnUrl = `https://int.crossroads.net/invoices/${this.invoiceId}/confirmation/email`;
+        this.returnUrl = `https://int.crossroads.net/invoices/${this.invoiceId}/email`;
         break;
       case 'demo':
         this.baseUrl = 'https://embeddemo.crossroads.net';
-        this.returnUrl = `https://demo.crossroads.net/invoices/${this.invoiceId}/confirmation/email`;
+        this.returnUrl = `https://demo.crossroads.net/invoices/${this.invoiceId}/email`;
         break;
       default:
         this.baseUrl = 'https://embed.crossroads.net';
-        this.returnUrl = `https://crossroads.net/invoices/${this.invoiceId}/confirmation/email`;
+        this.returnUrl = `https://crossroads.net/invoices/${this.invoiceId}/email`;
         break;
     }
   }
 
   buildUrl(invoiceId, totalCost, minPayment) {
+    console.log(`${this.baseUrl}/?type=payment&invoice_id=${invoiceId}&total_cost=${totalCost}&min_payment=${minPayment}&url=${this.returnUrl}`);
     return this.sce.trustAsResourceUrl(`${this.baseUrl}/?type=payment&invoice_id=${invoiceId}&total_cost=${totalCost}&min_payment=${minPayment}&url=${this.returnUrl}`);
   }
 }

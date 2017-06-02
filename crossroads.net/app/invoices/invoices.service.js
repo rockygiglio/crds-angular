@@ -32,7 +32,8 @@ class InvoicesService {
   }
 
   sendPaymentConfirmation(invoiceId, paymentId) {
-    return this.invoicesPaymentConfirmationResource.post({ invoiceId, paymentId }, (invoicePayments) => {
+    console.log("sendPaymentConfirmation", invoiceId, paymentId);
+    return this.invoicesPaymentConfirmationResource.save({ invoiceId, paymentId }, (invoicePayments) => {
     }, (err) => {
       this.log.error(err);
     }).$promise;

@@ -1,3 +1,5 @@
+import redirectingTemplate from './invoice-confirmation-redirecting.html';
+
 export default function InvoicesRoutes($httpProvider, $stateProvider) {
   $httpProvider.defaults.useXDomain = true;
 
@@ -21,26 +23,28 @@ export default function InvoicesRoutes($httpProvider, $stateProvider) {
         }
       }
     })
-    .state('invoices.email.confirmation', {
+    .state('invoices.confirmation.email', {
       parent: 'noSideBar',
-      url: '/invoices/:invoiceId/payments/:paymentId/email',
-      template: '<invoice-confirmation></invoice-confirmation>',
+      url: '/invoices/:invoiceId/email',
+      template: redirectingTemplate,
       resolve: {
         InvoicesService: 'InvoicesService',
         $state: '$state',
-        sendConfirmation: (InvoicesService, $state) => InvoicesService.sendPaymentConfirmation(
-            $state.toParams.invoiceId,
-            $state.toParams.paymentId)
-          .finally(() => {
-            console.log("finally....");
-            const toParams = Object.assign($state.toParams, { wasPayment: true });
-            $state.go('invoices.confirmation', toParams, { location: 'replace' });
+        getPaymentDetails: (InvoicesService, $state) => InvoicesService.getPaymentDetails(
+            $state.toParams.invoiceId)
+          .then((data) => {
+            InvoicesService.sendPaymentConfirmation(
+                $state.toParams.invoiceId, data.recentPaymentId)
+              .finally(() => {
+                const toParams = Object.assign($state.toParams, { paymentId: data.recentPaymentId });
+                $state.go('invoices.confirmation', toParams, { location: 'replace' });
+              })
           })
       }
     })
     .state('invoices.confirmation', {
       parent: 'noSideBar',
-      url: '/invoices/:invoiceId/confirmation',
+      url: '/invoices/:invoiceId/payments/:paymentId/confirmation',
       template: '<invoice-confirmation></invoice-confirmation>',
       data: {
         isProtected: false,
