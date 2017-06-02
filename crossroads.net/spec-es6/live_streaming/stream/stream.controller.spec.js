@@ -61,7 +61,9 @@ describe('Stream Controller', () => {
           "created": "2016-08-26T11:30:24-04:00",
           "className": "CloudImage"
         },
-        "section": 2,
+        "sections": [
+          2
+        ],
         "created": "2016-08-26T13:20:03-04:00",
         "className": "Feature"
       },
@@ -92,7 +94,9 @@ describe('Stream Controller', () => {
           "created": "2016-08-26T10:41:52-04:00",
           "className": "CloudImage"
         },
-        "section": 1,
+        "sections": [
+          1
+        ],
         "created": "2016-08-26T13:31:48-04:00",
         "className": "Feature"
       },
@@ -123,7 +127,9 @@ describe('Stream Controller', () => {
           "created": "2016-08-26T10:26:09-04:00",
           "className": "CloudImage"
         },
-        "section": 1,
+        "sections": [
+          1
+        ],
         "created": "2016-08-26T13:34:20-04:00",
         "className": "Feature"
       },
