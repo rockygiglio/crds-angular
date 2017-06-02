@@ -10,7 +10,7 @@ class InvoicesService {
     this.resource = $resource;
     this.invoiceDetailsResource = $resource(`${__GATEWAY_CLIENT_ENDPOINT__}api/v1.0.0/invoice/:invoiceId/details`);
     this.invoicesPaymentsResource = $resource(`${__GATEWAY_CLIENT_ENDPOINT__}api/v1.0.0/invoice/:invoiceId/payments`);
-    this.invoicesPaymentConfirmationResource = $resource(`${__GATEWAY_CLIENT_ENDPOINT__}api/v1.0.0/invoice/:invoiceId/payments/:paymentId/confirmation`);
+    this.invoicesPaymentConfirmationResource = $resource(`${__GATEWAY_CLIENT_ENDPOINT__}api/v1.0.0/invoice/:invoiceId/payment/:paymentId/confirmation`, { invoiceId: '@invoiceId', paymentId: '@paymentId' });
     this.invoiceDetails = {};
     this.invoicePayments = {};
   }
