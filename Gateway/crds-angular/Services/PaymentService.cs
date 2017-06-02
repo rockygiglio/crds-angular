@@ -356,5 +356,32 @@ namespace crds_angular.Services
 
             return invoiceDetail;
         }
+
+        public void SendInvoicePaymentConfirmation(int paymentId, int invoiceId, string token)
+        {
+            var payment = _paymentRepository.GetPaymentById(paymentId);
+            var invoiceDetail = _invoiceRepository.GetInvoiceDetailForInvoice(invoiceId);
+            var me = _contactRepository.GetMyProfile(token);
+            
+            var templateId = _configWrapper.GetConfigIntValue("DefaultInvoicePaymentEmailTemplate");
+            var mergeData = new Dictionary<string, object>
+            {
+                {"Event_Title", mpEvent.EventTitle},
+                {"Payment_Total", payment.PaymentTotal.ToString(".00") },
+                {"Primary_Contact_Email", mpEvent.PrimaryContact.EmailAddress },
+                {"Primary_Contact_Display_Name", mpEvent.PrimaryContact.PreferredName},
+                {"Base_Url", _configWrapper.GetConfigValue("BaseUrl") }
+            };
+
+            var comm = _communicationRepository.GetTemplateAsCommunication(templateId,
+                                                                mpEvent.PrimaryContactId,
+                                                                mpEvent.PrimaryContact.EmailAddress,
+                                                                mpEvent.PrimaryContactId,
+                                                                mpEvent.PrimaryContact.EmailAddress,
+                                                                me.Contact_ID,
+                                                                me.Email_Address,
+                                                                mergeData);
+            _communicationRepository.SendMessage(comm);
+        }
     }
 }
