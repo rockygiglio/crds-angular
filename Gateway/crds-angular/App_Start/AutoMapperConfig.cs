@@ -435,6 +435,9 @@ namespace crds_angular.App_Start
             Mapper.CreateMap<ConnectCommunicationDto, MpConnectCommunication>();
             Mapper.CreateMap<MpConnectCommunication, ConnectCommunicationDto>();
 
+            Mapper.CreateMap<FinderGroupDto, GroupDTO>();
+            Mapper.CreateMap<GroupDTO, FinderGroupDto>();
+
             Mapper.CreateMap<MpSU2SOpportunity, ServeOpportunity>();
             Mapper.CreateMap<ServeOpportunity, MpSU2SOpportunity>();
             Mapper.CreateMap<MpAttributeCategory, AttributeCategoryDTO>()

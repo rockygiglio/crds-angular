@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Device.Location;
-using System.Linq;
-using Amazon.CloudSearch.Model.Internal.MarshallTransformations;
 using crds_angular.App_Start;
 using crds_angular.Models.Crossroads;
 using crds_angular.Models.Finder;
@@ -301,7 +299,7 @@ namespace crds_angular.test.Services
             searchresults.Hits.Hit.Add(hit);
 
             _awsCloudsearchService.Setup(
-                    mocked => mocked.SearchConnectAwsCloudsearch("matchall", "_all_fields", It.IsAny<int>(), It.IsAny<GeoCoordinate>(), It.IsAny<AwsBoundingBox>()))
+                    mocked => mocked.SearchConnectAwsCloudsearch(It.IsAny<string>(), "_all_fields", It.IsAny<int>(), It.IsAny<GeoCoordinate>(), It.IsAny<AwsBoundingBox>()))
                 .Returns(searchresults);
 
             _mpGroupToolService.Setup(m => m.SearchGroups(It.IsAny<int[]>(), null, It.IsAny<string>(), null, originCoords)).Returns(new List<GroupDTO>());
@@ -368,7 +366,6 @@ namespace crds_angular.test.Services
 
             var geoCodes = new GeoCoordinate() { Altitude = 0, Course = 0, HorizontalAccuracy = 0, Latitude = 10, Longitude = 20, Speed = 0, VerticalAccuracy = 0 };
 
-            var address = Mapper.Map<MpAddress>(pin.Address);
             var addressDictionary = new Dictionary<string, object>
             {
                 {"AddressID", pin.Address.AddressID},
@@ -671,7 +668,7 @@ namespace crds_angular.test.Services
         {
             return new PinDto()
             {
-                Gathering = new GroupDTO()
+                Gathering = new FinderGroupDto
                 {
                     GroupId = designator * 10,
                     Address = this.getAnAddress(designator * 10),

@@ -120,7 +120,7 @@ LEFT JOIN Meeting_Frequencies MF ON MF.Meeting_Frequency_ID = G.Meeting_Frequenc
 LEFT JOIN Households H ON H.Household_ID = C.Household_ID
   LEFT JOIN Congregations CON ON CON.Congregation_ID = H.Congregation_ID
 WHERE (G.Group_Type_ID IN (@anywhereGroupTypeId) AND G.Available_Online = 1 AND P.Host_Status_ID = @approvedStatusId AND (G.End_Date IS NULL OR G.END_DATE > GETDATE())) OR --ANYWHERE GATHERINGS
-      (G.Group_Type_ID IN (@smallGroupTypeId, @onsiteGroupTypeId) AND (G.End_Date IS NULL OR G.END_DATE > GETDATE()))                                                       --SMALL GROUPS
+      (G.Group_Type_ID IN (@smallGroupTypeId) AND G.Available_Online = 1 AND G.Group_Is_Full = 0 AND (G.End_Date IS NULL OR G.END_DATE > GETDATE()))                            --SMALL GROUPS
 UNION
 --SITES
 SELECT
