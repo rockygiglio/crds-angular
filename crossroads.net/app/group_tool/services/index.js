@@ -2,6 +2,7 @@ import participantService from './participant.service';
 import groupService from './group.service';
 import createGroupService from './createGroup.service';
 import groupDetailService from './groupDetail.service';
+import groupUrlService from './groupUrl.service';
 import CONSTANTS from 'crds-constants';
 
 export default angular.
@@ -9,4 +10,5 @@ export default angular.
   service('ParticipantService', participantService).
   service('GroupService', groupService).
   service('CreateGroupService', createGroupService).
-  service('GroupDetailService', groupDetailService);
+  service('GroupDetailService', groupDetailService).
+  service('GroupUrlService', groupUrlService);
