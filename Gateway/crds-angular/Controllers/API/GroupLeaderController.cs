@@ -84,7 +84,7 @@ namespace crds_angular.Controllers.API
                         _groupLeaderService.SaveSpiritualGrowth(spiritualGrowth)
                             .Concat(_groupLeaderService.SetApplied(token)).Wait();
 
-                        _groupLeaderService.GetReferenceData(spiritualGrowth.ContactId).Subscribe((res) =>
+                        _groupLeaderService.GetApplicationData(spiritualGrowth.ContactId).Subscribe((res) =>
                         {
                             if ((string)res["referenceContactId"] != "0")
                             {
@@ -93,6 +93,11 @@ namespace crds_angular.Controllers.API
                             else
                             {
                                 _groupLeaderService.SendNoReferenceEmail(res).Subscribe(CancellationToken.None);
+                            }
+
+                            if (((string)res["studentLeaderRequest"]).ToUpper() == "TRUE")
+                            {
+                                _groupLeaderService.SendStudentMinistryRequestEmail(res).Subscribe(CancellationToken.None);
                             }
                         });
                         return Ok();

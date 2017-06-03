@@ -202,19 +202,22 @@ namespace crds_angular.Services
             });
         }
 
-        public IObservable<Dictionary<string, object>> GetReferenceData(int contactId)
+        public IObservable<Dictionary<string, object>> GetApplicationData(int contactId)
         {
             var formId = _configWrapper.GetConfigIntValue("GroupLeaderFormId");
-            var formFieldId = _configWrapper.GetConfigIntValue("GroupLeaderFormReferenceContact");
+            var referenceFormFieldId = _configWrapper.GetConfigIntValue("GroupLeaderFormReferenceContact");
+            var studentLeaderFormFieldId = _configWrapper.GetConfigIntValue("GroupLeaderStudentFieldId");
 
             return Observable.Return<MpParticipant>(_participantRepository.GetParticipant(contactId)).Zip(
                 Observable.Return<MpMyContact>(_contactRepository.GetContactById(contactId)),
-                Observable.Return<string>(_formSubmissionRepository.GetFormResponseAnswer(formId, contactId, formFieldId, null)),
-                (participant, contact, answer) => new Dictionary<string, object>
+                Observable.Return<string>(_formSubmissionRepository.GetFormResponseAnswer(formId, contactId, referenceFormFieldId, null)),
+                Observable.Return<string>(_formSubmissionRepository.GetFormResponseAnswer(formId, contactId, studentLeaderFormFieldId, null)),
+                (participant, contact, referenceAnswer, studentAnswer) => new Dictionary<string, object>
                 {
                     {"participant", participant},
                     {"contact", contact},
-                    {"referenceContactId", answer ?? "0" }
+                    {"referenceContactId", referenceAnswer ?? "0" },
+                    {"studentLeaderRequest", studentAnswer ?? "false" }
                 });
         }
 
@@ -240,7 +243,32 @@ namespace crds_angular.Services
                     observer.OnError(new ApplicationException("Unable to send reference email", e));
                 }
                 return Disposable.Empty;
-            });                              
+            });
+        }
+
+        public IObservable<int> SendStudentMinistryRequestEmail(Dictionary<string, object> referenceData)
+        {
+            var templateId = _configWrapper.GetConfigIntValue("GroupLeaderForStudentsEmailTemplate");
+            return Observable.Create<int>(observer =>
+            {
+                try
+                {
+                    var studentMinistryId = _configWrapper.GetConfigIntValue("StudentMinistryContactId");
+                    var studentMinistryEmail = _contactRepository.GetContactEmail(studentMinistryId);
+                    var template = _communicationRepository.GetTemplateAsCommunication(
+                        templateId,
+                        studentMinistryId,
+                        studentMinistryEmail,
+                        SetupGenericEmailMergeData((MpMyContact)referenceData["contact"]));
+                    var messageId = _communicationRepository.SendMessage(template);
+                    observer.OnNext(messageId);
+                }
+                catch (Exception e)
+                {
+                    observer.OnError(new ApplicationException("Unable to send student ministry email", e));
+                }
+                return Disposable.Empty;
+            });
         }
 
         public IObservable<int> SendNoReferenceEmail(Dictionary<string, object> referenceData)
@@ -256,7 +284,7 @@ namespace crds_angular.Services
                         templateId,
                         toContactId,
                         toContactEmail,
-                        SetupNoReferenceEmailMergeData((MpMyContact) referenceData["contact"])
+                        SetupGenericEmailMergeData((MpMyContact) referenceData["contact"])
                     );
 
                     var messageId = _communicationRepository.SendMessage(template);
@@ -283,7 +311,7 @@ namespace crds_angular.Services
             };
         }
 
-        private Dictionary<string, object> SetupNoReferenceEmailMergeData(MpMyContact applicant)
+        private Dictionary<string, object> SetupGenericEmailMergeData(MpMyContact applicant)
         {
             return new Dictionary<string, object>
             {
