@@ -160,6 +160,23 @@ namespace MinistryPlatform.Translation.Repositories
             return template;
         }
 
+        public MpCommunication GetTemplateAsCommunication(int templateId, int toContactId, string toEmailAddress, Dictionary<string, object> mergeData = null)
+        {
+            var template = GetTemplate(templateId);
+            return new MpCommunication
+            {
+                AuthorUserId = _configurationWrapper.GetConfigIntValue("DefaultAuthorUser"),
+                DomainId = 1,
+                EmailBody = template.Body,
+                EmailSubject = template.Subject,
+                FromContact = new MpContact { ContactId = template.FromContactId, EmailAddress = template.FromEmailAddress },
+                ReplyToContact = new MpContact { ContactId = template.ReplyToContactId, EmailAddress = template.ReplyToEmailAddress },
+                ToContacts = new List<MpContact> { new MpContact { ContactId = toContactId, EmailAddress = toEmailAddress } },
+                TemplateId = templateId,
+                MergeData = mergeData
+            };
+        }
+
         public MpCommunication GetTemplateAsCommunication(int templateId, int fromContactId, string fromEmailAddress, int replyContactId, string replyEmailAddress, int toContactId, string toEmailAddress, Dictionary<string, object> mergeData = null)
         {
             var template = GetTemplate(templateId);

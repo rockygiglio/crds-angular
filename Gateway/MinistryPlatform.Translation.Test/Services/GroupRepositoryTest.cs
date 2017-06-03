@@ -747,6 +747,7 @@ namespace MinistryPlatform.Translation.Test.Services
                 MaximumAge = 99,
                 KidsWelcome = false,
                 MeetingFrequencyID = null,
+                TargetSize = 0,
                 Address = new MpAddress()
                 {
                     Address_ID = 43567

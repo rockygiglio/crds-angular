@@ -75,8 +75,10 @@
     ////////////////////////////
 
     function activate() {
-      console.log('activate()');
-      vm.lastDate = formatDate(new Date(), 28);
+      if (vm.groups && vm.groups.length > 0)        
+        vm.lastDate = formatDate(vm.groups[vm.groups.length - 1].day );
+      else
+        vm.lastDate= formatDate(new Date(), 42); //kd we search 6 weeks to see if we can find anything on load 
     }
 
     function addOneMonth(date) {

@@ -1,10 +1,14 @@
+
+import CONSTANTS from 'crds-constants';
+
 export default class GroupToolCms {
   /*@ngInject*/
-  constructor(Page, ParticipantService, $state) {
+  constructor(Page, ParticipantService, $state, $window) {
     this.page = Page;
     this.participantService = ParticipantService;
     this.state = $state;
     this.content = '';
+    this.window = $window;
   }
 
   $onInit() {
@@ -18,7 +22,7 @@ export default class GroupToolCms {
           }
         });
       } else {
-        this.state.go("content", { "link": "/groups/leader" });
+        this.window.location.href = this.window.location.origin + CONSTANTS.MICROCLIENTS.GROUP_LEADER_FORM.URL;
       }
     });
   }

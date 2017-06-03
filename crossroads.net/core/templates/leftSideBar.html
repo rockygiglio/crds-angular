@@ -1,6 +1,7 @@
 <ng-include src="'templates/header.html'"></ng-include>
 
-<div class="container main animated fadeIn">
+<div ng-class="{'crds-legacy-styles': renderLegacyStyles, 'crds-styles': !renderLegacyStyles}">
+  <div class="container main animated fadeIn ">
   <preloader ng-if="app.resolving" full-screen='true'> </preloader>
   <div class="row" ng-if="!app.resolving">
       <div class="col-md-4">
@@ -11,6 +12,7 @@
           <form-builder page="page"></form-builder>
       </div>
   </div>
-</div><!--/container-->
+  </div><!--/container-->
 
-<ng-include src="'templates/footer.html'"></ng-include>
+  <ng-include src="'templates/footer.html'"></ng-include>
+</div>

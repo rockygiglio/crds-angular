@@ -176,6 +176,7 @@ namespace crds_angular.Models.Crossroads.Profile
         {
             return new MpHousehold
             {
+                Address_ID = AddressId,
                 Household_ID = HouseholdId,
                 Home_Phone = HomePhone,
                 Congregation_ID = CongregationId

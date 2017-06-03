@@ -8,7 +8,8 @@ namespace crds_angular.Models.Finder
     {
         PERSON = 1,
         GATHERING = 2,
-        SITE = 3 
+        SITE = 3,
+        SMALL_GROUP = 4
     };
 
     public class PinDto
@@ -40,9 +41,6 @@ namespace crds_angular.Models.Finder
         [JsonProperty("householdId")]
         public int? Household_ID { get; set; }
 
-        [JsonProperty("isFormDirty")]
-        public bool isFormDirty { get; set; }
-
         [JsonProperty("pinType")]
         public PinType PinType { get; set;  }
 
@@ -54,5 +52,14 @@ namespace crds_angular.Models.Finder
 
         [JsonProperty("Show_On_Map")]
         public bool ShowOnMap { get; set; }
+
+        [JsonProperty("updateHomeAddress")]
+        public bool ShouldUpdateHomeAddress { get; set; }
+
+        [JsonProperty("iconUrl")]
+        public string IconUrl { get; set; }
+
+        [JsonProperty("title")]
+        public string Title { get; set; }
     }
 }
