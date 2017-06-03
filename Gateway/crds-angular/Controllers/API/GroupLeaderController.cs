@@ -71,6 +71,22 @@ namespace crds_angular.Controllers.API
             throw new HttpResponseException(dataError.HttpResponseMessage);
         }
 
+        [VersionedRoute(template: "group-leader/url-segment", minimumVersion: "1.0.0")]
+        [HttpGet]
+        public async Task<IHttpActionResult> GetURLSegment()
+        {
+                try
+                {
+                    var urlSegment = _groupLeaderService.GetUrlSegment().Wait();
+                    return Ok(urlSegment);
+                }
+                catch (Exception e)
+                {
+                    var apiError = new ApiErrorDto("Getting Url Segment Failed: ", e);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+        }
+
         [VersionedRoute(template: "group-leader/spiritual-growth", minimumVersion: "1.0.0")]
         [HttpPost]
         public async Task<IHttpActionResult> SaveSpiritualGrowth([FromBody] SpiritualGrowthDTO spiritualGrowth)
