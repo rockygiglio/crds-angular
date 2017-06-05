@@ -38,7 +38,7 @@
     vm.groups = Groups;
     vm.lastDate = null;
     vm.loadMore = false;
-    vm.loadNextMonth = loadNextMonth;
+    vm.loadNextMonth = loadNextWeek; //KD - Yeah, I know we should probably rename this to but we're trying to put in a quick fix for SU2S slowness - US7704. Bigger and better changes coming later
     vm.loadText = 'Load More';
     vm.original = [];
     vm.showButton = showButton;
@@ -53,7 +53,6 @@
     $rootScope.$on('personUpdated', personUpdateHandler);
 
     $rootScope.$on('filterDone', function(event, data) {
-      console.log('filterDone');
       vm.groups = data;
     });
 
@@ -62,7 +61,6 @@
     $rootScope.$on('updateAfterSave', updateAfterSave);
 
     $rootScope.$on(AUTH_EVENTS.logoutSuccess, function(event, data) {
-      console.log('logoutSuccess');
       vm.filterState.clearAll();
     });
 
@@ -81,14 +79,13 @@
         vm.lastDate= formatDate(new Date(), 42); //kd we search 6 weeks to see if we can find anything on load 
     }
 
-    function addOneMonth(date) {
+    function addOneWeek(date) {
       var d = angular.copy(date);
-      d.setDate(date.getDate() + 28);
+      d.setDate(date.getDate() + 7);
       return d;
     }
 
     function checkChildForms() {
-      console.log('checkChildForms()');
       var form = $scope.serveForm;
       var keys = _.keys(form);
       var dirty = [];
@@ -112,7 +109,6 @@
     }
 
     function filterByDates(event, data) {
-      console.log('filterByDates()');
       loadOpportunitiesByDate(data.fromDate, data.toDate).then(function(opps) {
         vm.groups = opps;
         vm.original = opps;
@@ -150,7 +146,6 @@
      * @returns a promise
      */
     function loadOpportunitiesByDate(fromDate, toDate) {
-      console.log('loadOpportunitiesByDate()');
       return ServeOpportunities.ServeDays.query({
         id: Session.exists('userId'),
         from: fromDate / 1000,
@@ -158,8 +153,7 @@
       }).$promise;
     }
 
-    function loadNextMonth() {
-      console.log('loadNextMonth()');
+    function loadNextWeek() {
       if (vm.groups[0].day !== undefined) {
         vm.loadMore = true;
         vm.loadText = 'Loading...';
@@ -167,7 +161,7 @@
         var lastDate = new Date(vm.groups[vm.groups.length - 1].day);
         lastDate.setDate(lastDate.getDate() + 1);
 
-        var newDate = addOneMonth(new Date(lastDate));
+        var newDate = addOneWeek(new Date(lastDate));
 
         loadOpportunitiesByDate(lastDate.getTime(), newDate.getTime()).then(function(more) {
           if (more.length === 0) {
@@ -190,7 +184,6 @@
     }
 
     function onBeforeUnload() {
-      console.log('onBeforeUnload()');
       checkChildForms();
       if ($scope.serveForm.$dirty) {
         return '';
@@ -198,7 +191,6 @@
     }
 
     function personUpdateHandler(event, data) {
-      console.log('personUpdateHandler()');
       vm.groups = angular.copy(vm.original);
       _.each(vm.groups, function(group) {
         _.each(group.serveTimes, function(serveTime) {
@@ -220,22 +212,18 @@
     }
 
     function showButton() {
-      return false;
-      // console.log('showButton()');
-      // if (showNoOpportunitiesMsg()) {
-      //   return false;
-      // } else {
-      //   return !filterState.isActive();
-      // }
+      if (showNoOpportunitiesMsg()) {
+        return false;
+      } else {
+        return !filterState.isActive();
+      }
     }
 
     function showNoOpportunitiesMsg() {
-      // console.log('showNoOpportunitiesMsg()');
-      return vm.groups.length < 1;// || totalServeTimesLength() === 0;
+      return vm.groups.length < 1 || totalServeTimesLength() === 0;
     }
 
     function stateChangeStart(event, toState, toParams, fromState, fromParams) {
-      console.log('stateChangeStart()');
       if ($scope.serveForm !== undefined) {
         checkChildForms();
         if ($scope.serveForm.$dirty) {
@@ -248,7 +236,6 @@
     }
 
     function totalServeTimesLength() {
-      console.log('totalServeTimesLength()');
       var len = _.reduce(vm.groups, function(total, n) {
         return total + n.serveTimes.length;
       },
@@ -258,7 +245,6 @@
     }
 
     function updateAfterSave(event, data) {
-      console.log('updateAfterSave()');
       _.each(vm.groups, function(group) {
         _.each(group.serveTimes, function(serveTime) {
           _.each(serveTime.servingTeams, function(servingTeam) {
