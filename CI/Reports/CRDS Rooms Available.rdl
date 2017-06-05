@@ -19,9 +19,6 @@
           <QueryParameter Name="EndDate">
             <Value>=Parameters!EndDate.Value</Value>
           </QueryParameter>
-          <QueryParameter Name="LocationId">
-            <Value>=Parameters!LocationId.Value</Value>
-          </QueryParameter>
           <QueryParameter Name="DomainID">
             <Value>=Parameters!DomainID.Value</Value>
           </QueryParameter>
@@ -48,7 +45,7 @@
           </QueryParameter>
         </QueryParameters>
         <CommandType>StoredProcedure</CommandType>
-        <CommandText>api_crds_GetReservedAndAvailableRoomsByLocation</CommandText>
+        <CommandText>report_CRDS_Rooms_Available</CommandText>
       </Query>
       <Fields>
         <Field Name="StartDate">
@@ -1170,7 +1167,7 @@
           <Value>1</Value>
         </Values>
       </DefaultValue>
-      <Prompt>Location Id</Prompt>
+      <Prompt>LocationId</Prompt>
       <Hidden>true</Hidden>
     </ReportParameter>
   </ReportParameters>

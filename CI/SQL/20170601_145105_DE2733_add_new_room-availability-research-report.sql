@@ -4,7 +4,7 @@ GO
 DECLARE @REPORT_ID INT = 320
 DECLARE @BUILDINGS_PAGE_ID INT = 283
 DECLARE @EVENTS_PAGE_ID INT = 308
-DECLARE @ROOM_RESERVATIONS_PAGE_ID INT = 308
+DECLARE @ROOM_RESERVATIONS_PAGE_ID INT = 384
 DECLARE @ROOMS_PAGE_ID INT = 386
 
 IF NOT EXISTS (SELECT 1 FROM [dbo].[dp_Reports] WHERE [Report_ID] = @REPORT_ID)
@@ -20,7 +20,7 @@ BEGIN
    	 ,[On_Reports_Tab]
     ) VALUES (
    	  @REPORT_ID
-   	 ,N'Rooms Available'
+   	 ,N'CRDS Rooms Available Research'
    	 ,N'Generate a list of rooms which are available for reservation'
    	 ,N'/MPReports/Crossroads/CRDS Rooms Available'
    	 ,0
