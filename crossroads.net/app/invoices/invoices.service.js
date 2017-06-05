@@ -10,6 +10,7 @@ class InvoicesService {
     this.resource = $resource;
     this.invoiceDetailsResource = $resource(`${__GATEWAY_CLIENT_ENDPOINT__}api/v1.0.0/invoice/:invoiceId/details`);
     this.invoicesPaymentsResource = $resource(`${__GATEWAY_CLIENT_ENDPOINT__}api/v1.0.0/invoice/:invoiceId/payments`);
+    this.invoicesPaymentConfirmationResource = $resource(`${__GATEWAY_CLIENT_ENDPOINT__}api/v1.0.0/invoice/:invoiceId/payment/:paymentId/confirmation`, { invoiceId: '@invoiceId', paymentId: '@paymentId' });
     this.invoiceDetails = {};
     this.invoicePayments = {};
   }
@@ -25,6 +26,13 @@ class InvoicesService {
   getPaymentDetails(invoiceId) {
     return this.invoicesPaymentsResource.get({ invoiceId }, (invoicePayments) => {
       this.invoicePayments = invoicePayments;
+    }, (err) => {
+      this.log.error(err);
+    }).$promise;
+  }
+
+  sendPaymentConfirmation(invoiceId, paymentId) {
+    return this.invoicesPaymentConfirmationResource.save({ invoiceId, paymentId }, (invoicePayments) => {
     }, (err) => {
       this.log.error(err);
     }).$promise;
