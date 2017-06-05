@@ -8,7 +8,7 @@ GO
 -- =============================================
 
 DECLARE @Configuration_Setting_ID int = 301
-DECLARE @Application_Code VARCHAR(max) = 'GroupLeader'
+DECLARE @Application_Code VARCHAR(max) = 'GROUPLEADER'
 DECLARE @Key_Name VARCHAR(max) = 'UrlSegment'
 DECLARE @Config_Value VARCHAR(max) = '/groups/leader'
 DECLARE @Config_Description VARCHAR(max) = 'This acts as the switch between the new and old group leader application. {/group-leader (new)} or {/groups/leader (old)}.'
