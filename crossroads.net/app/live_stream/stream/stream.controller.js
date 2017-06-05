@@ -46,10 +46,13 @@ export default class StreamingController {
         } else {
           feature.image = 'https://crds-cms-uploads.imgix.net/content/images/register-bg.jpg';
         }
-        if (feature.section === 1) {
-          this.dontMiss.push(feature);
-        } else if (feature.section === 2) {
-          this.beTheChurch.push(feature);
+        if (feature.sections !== undefined) {
+          if (feature.sections.includes(1)) {
+            this.dontMiss.push(feature);
+          }
+          if (feature.sections.includes(2)) {
+            this.beTheChurch.push(feature);
+          }
         }
       }
     });

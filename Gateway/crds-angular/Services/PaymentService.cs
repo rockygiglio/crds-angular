@@ -15,6 +15,7 @@ using Crossroads.Web.Common.MinistryPlatform;
 using MinistryPlatform.Translation.Exceptions;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Models.Payments;
+using MinistryPlatform.Translation.Models.Product;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 using PaymentType = MinistryPlatform.Translation.Enum.PaymentType;
 
@@ -180,6 +181,7 @@ namespace crds_angular.Services
                     RecipientEmail = me.Email_Address,
                     TotalToPay = leftToPay,
                     InvoiceTotal = invoice.InvoiceTotal,
+                    RecentPaymentId = payments.Any() ? payments.First().PaymentId : 0,
                     RecentPaymentAmount = payments.Any() ? payments.First().PaymentTotal : 0,
                     RecentPaymentLastFour = charge != null ? charge.Source.AccountNumberLast4 : ""
                 };
@@ -354,6 +356,37 @@ namespace crds_angular.Services
             invoiceDetail.Product = Mapper.Map<ProductDTO>(_productRepository.GetProduct(invoiceDetail.ProductId));
 
             return invoiceDetail;
+        }
+
+        public void SendInvoicePaymentConfirmation(int paymentId, int invoiceId, string token)
+        {
+            var payment = _paymentRepository.GetPaymentById(paymentId);
+            var me = _contactRepository.GetMyProfile(token);
+            var invoiceDetail = Mapper.Map<MpInvoiceDetail, InvoiceDetailDTO>(_invoiceRepository.GetInvoiceDetailForInvoice(invoiceId));
+            invoiceDetail.Product = Mapper.Map<MpProduct, ProductDTO>(_productRepository.GetProduct(invoiceDetail.ProductId));
+            
+            var templateId = _configWrapper.GetConfigIntValue("DefaultInvoicePaymentEmailTemplate");
+
+            var primaryContactId = _configWrapper.GetConfigIntValue("CrossroadsFinanceClerkContactId");
+            var primaryContact = _contactRepository.GetContactById(primaryContactId);
+
+            var mergeData = new Dictionary<string, object>
+            {
+                {"Product_Name", invoiceDetail.Product.ProductName},
+                {"Payment_Total", payment.PaymentTotal.ToString(".00") },
+                {"Primary_Contact_Email", primaryContact.Email_Address },
+                {"Primary_Contact_Display_Name", primaryContact.Display_Name}
+            };
+
+            var comm = _communicationRepository.GetTemplateAsCommunication(templateId,
+                                                                primaryContactId,
+                                                                primaryContact.Email_Address,
+                                                                primaryContactId,
+                                                                primaryContact.Email_Address,
+                                                                me.Contact_ID,
+                                                                me.Email_Address,
+                                                                mergeData);
+            _communicationRepository.SendMessage(comm);
         }
     }
 }

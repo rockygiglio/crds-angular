@@ -40,7 +40,7 @@ namespace crds_angular.Services
         private readonly int _defaultAuthorUserId;
         private readonly int _defaultGroupRoleId;
         private readonly int _groupRoleLeaderId;
-        private readonly int _removeParticipantFromGroupEmailTemplateId;
+        private readonly int _genericGroupForCMSMergeEmailTemplateId;
         private readonly int _gatheringHostAcceptTemplate;
         private readonly int _gatheringHostDenyTemplate;
         private readonly int _domainId;
@@ -57,6 +57,8 @@ namespace crds_angular.Services
         private readonly int _connectGatheringStatusAccept;
         private readonly int _connectGatheringStatusDeny;
         private readonly int _connectGatheringRequestToJoin;
+        private readonly int _connectCommunicationTypeRequestToJoinSmallGroup;
+        private readonly int _emailAuthorId;
 
         private const string GroupToolRemoveParticipantEmailTemplateTextTitle = "groupToolRemoveParticipantEmailTemplateText";
         private const string GroupToolRemoveParticipantSubjectTemplateText = "groupToolRemoveParticipantSubjectTemplateText";
@@ -106,8 +108,8 @@ namespace crds_angular.Services
             _defaultGroupRoleId = configurationWrapper.GetConfigIntValue("Group_Role_Default_ID");
             _groupRequestPendingReminderEmailTemplateId = configurationWrapper.GetConfigIntValue("GroupRequestPendingReminderEmailTemplateId");
             _attributeTypeGroupCategory = configurationWrapper.GetConfigIntValue("GroupCategoryAttributeTypeId");
-            
-            _removeParticipantFromGroupEmailTemplateId = configurationWrapper.GetConfigIntValue("RemoveParticipantFromGroupEmailTemplateId");
+
+            _genericGroupForCMSMergeEmailTemplateId = configurationWrapper.GetConfigIntValue("GenericGroupForCMSMergeEmailTemplateId");
 
             _domainId = configurationWrapper.GetConfigIntValue("DomainId");
             _groupEndedParticipantEmailTemplate = configurationWrapper.GetConfigIntValue("GroupEndedParticipantEmailTemplate");
@@ -124,7 +126,9 @@ namespace crds_angular.Services
             _connectGatheringStatusAccept = configurationWrapper.GetConfigIntValue("ConnectCommunicationStatusAccepted");
             _connectGatheringStatusDeny = configurationWrapper.GetConfigIntValue("ConnectCommunicationStatusDeclined");
             _connectGatheringRequestToJoin = configurationWrapper.GetConfigIntValue("ConnectCommunicationTypeRequestToJoinGathering");
-        }
+            _connectCommunicationTypeRequestToJoinSmallGroup = configurationWrapper.GetConfigIntValue("ConnectCommunicationTypeRequestToJoinSmallGroup");
+            _emailAuthorId = configurationWrapper.GetConfigIntValue("EmailAuthorId");
+    }
 
         public List<Invitation> GetInvitations(int sourceId, int invitationTypeId, string token)
         {
@@ -171,14 +175,22 @@ namespace crds_angular.Services
                 var myGroup = GetMyGroupInfo(token, groupId);
 
                 _groupService.endDateGroupParticipant(groupId, groupParticipantId);
+               
+                var participant = myGroup.Group.Participants.Find(p => p.GroupParticipantId == groupParticipantId);
+                MpParticipant toParticipant = new MpParticipant
+                {
+                    ContactId = participant.ContactId,
+                    EmailAddress = participant.Email,
+                    PreferredName = participant.NickName,
+                    ParticipantId = participant.ParticipantId
+                };
 
                 try
                 {
                     SendGroupParticipantEmail(groupId,
-                                              groupParticipantId,
                                               myGroup.Group,
-                                              _removeParticipantFromGroupEmailTemplateId,
-                                              null,
+                                              _genericGroupForCMSMergeEmailTemplateId,
+                                              toParticipant, 
                                               GroupToolRemoveParticipantSubjectTemplateText,
                                               GroupToolRemoveParticipantEmailTemplateTextTitle,
                                               message,
@@ -186,7 +198,7 @@ namespace crds_angular.Services
                 }
                 catch (Exception e)
                 {
-                    _logger.Warn($"Could not send email to group participant {groupParticipantId} notifying of removal from group {groupId}", e);
+                    _logger.Error($"Could not send email to group participant {groupParticipantId} notifying of removal from group {groupId}", e);
                 }
             }
             catch (GroupParticipantRemovalException e)
@@ -200,32 +212,31 @@ namespace crds_angular.Services
             }
         }
 
-        public void SendGroupParticipantEmail(int groupId,
-                                              int? toGroupParticipantId,
+        public void SendGroupParticipantEmail(int groupId,                                             
                                               GroupDTO group,
                                               int emailTemplateId,
-                                              MpParticipant toParticipant = null,
+                                              MpParticipant toParticipant,
                                               string subjectTemplateContentBlockTitle = null,
                                               string emailTemplateContentBlockTitle = null,
                                               string message = null,
                                               MpParticipant fromParticipant = null)
         {
-            var participant = toParticipant == null
-                ? group.Participants.Find(p => p.GroupParticipantId == toGroupParticipantId)
-                : new GroupParticipantDTO
-                {
-                    ContactId = toParticipant.ContactId,
-                    Email = toParticipant.EmailAddress,
-                    NickName = toParticipant.PreferredName,
-                    ParticipantId = toParticipant.ParticipantId
-                };
+            var participant = new GroupParticipantDTO
+            {
+                ContactId = toParticipant.ContactId,
+                Email = toParticipant.EmailAddress,
+                NickName = toParticipant.PreferredName,
+                ParticipantId = toParticipant.ParticipantId
+            };
 
             var emailTemplate = _communicationRepository.GetTemplate(emailTemplateId);
+
             var fromContact = new MpContact
             {
                 ContactId = emailTemplate.FromContactId,
                 EmailAddress = emailTemplate.FromEmailAddress
             };
+
             var replyTo = new MpContact
             {
                 ContactId = fromParticipant?.ContactId ?? emailTemplate.ReplyToContactId,
@@ -244,9 +255,9 @@ namespace crds_angular.Services
             var subjectTemplateText = string.IsNullOrWhiteSpace(subjectTemplateContentBlockTitle)
                 ? string.Empty
                 : _contentBlockService[subjectTemplateContentBlockTitle].Content ?? string.Empty;
-           
 
             var emailTemplateText = string.IsNullOrWhiteSpace(emailTemplateContentBlockTitle) ? string.Empty : _contentBlockService[emailTemplateContentBlockTitle].Content;
+
             var mergeData = getDictionary(participant);
             mergeData["Email_Custom_Message"] = string.IsNullOrWhiteSpace(message) ? string.Empty : message;
             mergeData["Group_Name"] = group.GroupName;
@@ -267,7 +278,7 @@ namespace crds_angular.Services
             {
                 EmailBody = emailTemplate.Body,
                 EmailSubject = emailTemplate.Subject,
-                AuthorUserId = 5,
+                AuthorUserId = _emailAuthorId,
                 DomainId = _domainId,
                 FromContact = fromContact,
                 ReplyToContact = replyTo,
@@ -357,7 +368,7 @@ namespace crds_angular.Services
         {
             //only record anywhere group type interactions
             var group = _groupService.GetGroupDetails(groupId);
-            if (group.GroupTypeId != _anywhereGroupType)
+            if (group.GroupTypeId != _anywhereGroupType && group.GroupTypeId != _smallGroupTypeId)
             {
                 return;
             }
@@ -377,92 +388,73 @@ namespace crds_angular.Services
         {
             _groupService.addContactToGroup(groupId, inquiry.ContactId);
             _groupRepository.UpdateGroupInquiry(groupId, inquiry.InquiryId, true);
-            // TODO should not be hard coded to gathering - needs to differentiate between gathering or small group
-            // TODO Refactor needed when work US8242
-            RecordConnectInteraction(groupId, me.ContactId, inquiry.ContactId, _connectGatheringRequestToJoin, _connectGatheringStatusAccept);
-            // For now pick template based on group type
+
+            int commType = group.GroupTypeId == _smallGroupTypeId ? _connectCommunicationTypeRequestToJoinSmallGroup : _connectGatheringRequestToJoin;
+            RecordConnectInteraction(groupId, me.ContactId, inquiry.ContactId, commType, _connectGatheringStatusAccept);
+
             var emailTemplateId = (group.GroupTypeId == _anywhereGroupType) 
-                                                      ? _gatheringHostAcceptTemplate 
-                                                      : _removeParticipantFromGroupEmailTemplateId;
+                ? _gatheringHostAcceptTemplate 
+                : _genericGroupForCMSMergeEmailTemplateId;
+                                                                                                    
+            // assumes small group - group tool, if not anywhere
+            string subject = (group.GroupTypeId != _anywhereGroupType)
+                ? GroupToolApproveInquirySubjectTemplateText
+                : null;
+
+            var participant = _participantRepository.GetParticipant(inquiry.ContactId);
 
             try
             {
-                SendApproveDenyInquiryEmail(
-                    true,
-                    groupId,
-                    group,
-                    inquiry,
-                    me,
-                    emailTemplateId,
-                    GroupToolApproveInquiryEmailTemplateText,
-                    message);
+                SendGroupParticipantEmail(groupId,
+                                          group,
+                                          emailTemplateId,
+                                          participant,
+                                          subject,
+                                          GroupToolApproveInquiryEmailTemplateText,
+                                          message,
+                                          me);
+
             }
             catch (Exception e)
             {
-                _logger.Warn($"Could not send email to Inquirier {inquiry.InquiryId} notifying of being approved to group {groupId}", e);
+                _logger.Error($"Could not send email to Inquirier {inquiry.InquiryId} notifying of being approved to group {groupId}", e);
+                throw;
             }
         }
 
         private void DenyInquiry(int groupId, GroupDTO group, Inquiry inquiry, MpParticipant me, string message)
         {
             _groupRepository.UpdateGroupInquiry(groupId, inquiry.InquiryId, false);
-            RecordConnectInteraction(groupId, me.ContactId, inquiry.ContactId, _connectGatheringRequestToJoin, _connectGatheringStatusDeny);
-            // For now pick template based on group type
+
+            int commType = group.GroupTypeId == _smallGroupTypeId ? _connectCommunicationTypeRequestToJoinSmallGroup : _connectGatheringRequestToJoin;
+            RecordConnectInteraction(groupId, me.ContactId, inquiry.ContactId, commType, _connectGatheringStatusDeny);
+
             var emailTemplateId = (group.GroupTypeId == _anywhereGroupType)
                                                       ? _gatheringHostDenyTemplate
-                                                      : _removeParticipantFromGroupEmailTemplateId;
+                                                      : _genericGroupForCMSMergeEmailTemplateId;
+
+            // assumes small group - group tool, if not anywhere
+            string subject = (group.GroupTypeId != _anywhereGroupType)
+                ? GroupToolDenyInquirySubjectTemplateText
+                : null;
+
+            var participant = _participantRepository.GetParticipant(inquiry.ContactId);
 
             try
             {
-                SendApproveDenyInquiryEmail(
-                    false,
-                    groupId,
-                    group,
-                    inquiry,
-                    me,
-                    emailTemplateId,
-                    GroupToolDenyInquiryEmailTemplateText,
-                    message);
-            }
-            catch (Exception e)
-            {
-                _logger.Warn($"Could not send email to Inquirier {inquiry.InquiryId} notifying of being denied from group {groupId}", e);
-            }
-        }
-
-        private void SendApproveDenyInquiryEmail(bool approve,
-                                                 int groupId,
-                                                 GroupDTO group,
-                                                 Inquiry inquiry,
-                                                 MpParticipant me,
-                                                 int emailTemplateId,
-                                                 string emailTemplateContentBlockTitle,
-                                                 string message)
-        {
-            try
-            {
-                string subject = null;
-
-                if (group.GroupTypeId != _anywhereGroupType)
-                {
-                    subject = approve ? GroupToolApproveInquirySubjectTemplateText : GroupToolDenyInquirySubjectTemplateText;
-                }
-              
-                var participant = _participantRepository.GetParticipant(inquiry.ContactId);
-
                 SendGroupParticipantEmail(groupId,
-                                          null,
                                           group,
                                           emailTemplateId,
                                           participant,
                                           subject,
-                                          emailTemplateContentBlockTitle,
+                                          GroupToolDenyInquiryEmailTemplateText,
                                           message,
                                           me);
+
             }
             catch (Exception e)
             {
-                _logger.Warn($"Could not send email to Inquirer {inquiry.InquiryId} notifying for group {groupId}", e);
+                _logger.Error($"Could not send email to Inquirier {inquiry.InquiryId} notifying of being approved to group {groupId}", e);
             }
         }
 

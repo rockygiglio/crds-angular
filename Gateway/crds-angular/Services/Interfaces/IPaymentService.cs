@@ -22,5 +22,6 @@ namespace crds_angular.Services.Interfaces
         void SendPaymentConfirmation(int paymentId, int eventId, string token);
         void UpdateInvoiceStatusAfterDecline(int invoiceId);
         InvoiceDetailDTO GetInvoiceDetail(int invoiceId);
+        void SendInvoicePaymentConfirmation(int paymentId, int invoiceId, string token);
     }
 }
