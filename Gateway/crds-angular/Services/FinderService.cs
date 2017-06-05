@@ -446,7 +446,10 @@ namespace crds_angular.Services
                     jsonData = $"{{ 'firstName': '{RemoveSpecialCharacters(pin.FirstName)}', 'lastInitial': '{RemoveSpecialCharacters(lastname)}','isHost':  false,'isMe': {isMyPinAsString(pin, contactId)},'pinType': {(int) pin.PinType}}}";
                     break;
                 case PinType.SMALL_GROUP:
-                    jsonData = $"{{ 'firstName': '{RemoveSpecialCharacters(pin.Gathering.GroupName)}', 'lastInitial': '','isHost':  false,'isMe': false,'pinType': {(int)pin.PinType}}}";
+                    var groupName = pin.Gathering.GroupName.Trim().Length > 22
+                        ? RemoveSpecialCharacters(pin.Gathering.GroupName).Trim().Substring(0, 21)
+                        : RemoveSpecialCharacters(pin.Gathering.GroupName).Trim();
+                    jsonData = $"{{ 'firstName': '{groupName}', 'lastInitial': '','isHost':  false,'isMe': false,'pinType': {(int)pin.PinType}}}";
                     break; 
             }
 
@@ -458,7 +461,7 @@ namespace crds_angular.Services
             var sb = new StringBuilder();
             foreach (var c in str)
             {
-                if ((c >= '0' && c <= '9') || (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || c == '.' || c == '_')
+                if ((c >= '0' && c <= '9') || (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || c == '.' || c == '_' || c == ' ')
                 {
                     sb.Append(c);
                 }
