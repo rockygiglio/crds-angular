@@ -13,12 +13,6 @@
       <Query>
         <DataSourceName>MPReportsDS</DataSourceName>
         <QueryParameters>
-          <QueryParameter Name="StartDate">
-            <Value>=Parameters!StartDate.Value</Value>
-          </QueryParameter>
-          <QueryParameter Name="EndDate">
-            <Value>=Parameters!EndDate.Value</Value>
-          </QueryParameter>
           <QueryParameter Name="DomainID">
             <Value>=Parameters!DomainID.Value</Value>
           </QueryParameter>
@@ -27,6 +21,12 @@
           </QueryParameter>
           <QueryParameter Name="PageID">
             <Value>=Parameters!PageID.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="StartDate">
+            <Value>=Parameters!StartDate.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="EndDate">
+            <Value>=Parameters!EndDate.Value</Value>
           </QueryParameter>
           <QueryParameter Name="Time">
             <Value>=Parameters!Time.Value</Value>
@@ -1087,6 +1087,16 @@
         </ParameterValues>
       </ValidValues>
     </ReportParameter>
+    <ReportParameter Name="Hours">
+      <DataType>Integer</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>6</Value>
+        </Values>
+      </DefaultValue>
+      <Prompt>Hours</Prompt>
+      <Hidden>true</Hidden>
+    </ReportParameter>
     <ReportParameter Name="DayofWeek">
       <DataType>Integer</DataType>
       <Nullable>true</Nullable>
@@ -1159,16 +1169,6 @@
         </DataSetReference>
       </ValidValues>
       <MultiValue>true</MultiValue>
-    </ReportParameter>
-    <ReportParameter Name="LocationId">
-      <DataType>Integer</DataType>
-      <DefaultValue>
-        <Values>
-          <Value>1</Value>
-        </Values>
-      </DefaultValue>
-      <Prompt>LocationId</Prompt>
-      <Hidden>true</Hidden>
     </ReportParameter>
   </ReportParameters>
   <EmbeddedImages>
