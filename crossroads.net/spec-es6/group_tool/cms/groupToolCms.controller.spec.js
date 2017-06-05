@@ -7,7 +7,7 @@ describe('GroupToolCmsController', () => {
     participantService,
     state,
     window,
-    groupUrlService;
+    groupService;
 
   beforeEach(angular.mock.module(constants.MODULES.GROUP_TOOL));
 
@@ -16,9 +16,9 @@ describe('GroupToolCmsController', () => {
     participantService = $injector.get('ParticipantService');
     state = $injector.get('$state');
     window = $injector.get('$state');
-    groupUrlService = jasmine.createSpyObj('groupUrlService', ['groupLeaderUrl']);
+    groupService = jasmine.createSpyObj('groupService', ['groupLeaderUrl']);
 
-    fixture = new GroupToolCmsController(page, participantService, state, window, groupUrlService);
+    fixture = new GroupToolCmsController(page, participantService, state, window, groupService);
 
     window.location = {
       origin: 'origin',
@@ -47,7 +47,7 @@ describe('GroupToolCmsController', () => {
       expect(fixture.url).toEqual('/groups/leader/resources/');
     });
 
-    fit('is not an approved group leader', () => {
+    it('is not an approved group leader', () => {
       let url = 'test';
       spyOn(participantService, 'get').and.callFake(
         function () {
@@ -61,7 +61,7 @@ describe('GroupToolCmsController', () => {
         }
       )
 
-      groupUrlService.groupLeaderUrl.and.callFake(
+      groupService.groupLeaderUrl.and.callFake(
         function () {
           return {
             then: function (callback) {

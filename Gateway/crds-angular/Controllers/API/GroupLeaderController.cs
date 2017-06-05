@@ -7,12 +7,14 @@ using System.Reactive.Threading.Tasks;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http;
+using System.Web.Http.Description;
 using crds_angular.Exceptions.Models;
 using crds_angular.Models.Crossroads.GroupLeader;
 using crds_angular.Security;
 using crds_angular.Services.Interfaces;
 using Crossroads.ApiVersioning;
 using Crossroads.Web.Common.Security;
+using ThirdParty.Json.LitJson;
 
 namespace crds_angular.Controllers.API
 {
@@ -71,6 +73,7 @@ namespace crds_angular.Controllers.API
             throw new HttpResponseException(dataError.HttpResponseMessage);
         }
 
+        [ResponseType(typeof(object))]
         [VersionedRoute(template: "group-leader/url-segment", minimumVersion: "1.0.0")]
         [HttpGet]
         public async Task<IHttpActionResult> GetURLSegment()
@@ -78,8 +81,8 @@ namespace crds_angular.Controllers.API
                 try
                 {
                     var urlSegment = _groupLeaderService.GetUrlSegment().Wait();
-                    return Ok(urlSegment);
-                }
+                    return Ok(new { url = urlSegment });
+            }
                 catch (Exception e)
                 {
                     var apiError = new ApiErrorDto("Getting Url Segment Failed: ", e);

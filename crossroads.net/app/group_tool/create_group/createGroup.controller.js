@@ -3,7 +3,7 @@ import CONSTANTS from 'crds-constants';
 
 export default class CreateGroupController {
     /*@ngInject*/
-    constructor(ParticipantService, $state, $stateParams, $log, CreateGroupService, GroupService, $rootScope, $window, GroupUrlService) {
+    constructor(ParticipantService, $state, $stateParams, $log, CreateGroupService, GroupService, $rootScope, $window) {
         this.log = $log;
         this.state = $state;
         this.participantService = ParticipantService;
@@ -16,7 +16,6 @@ export default class CreateGroupController {
         this.createGroupForm = {};
         this.options = {};
         this.window = $window;
-        this.groupUrlService = GroupUrlService;
 
         // If the state that called this component has a specific state route for the Cancel button set it now
         // The cancel button will be hidden if there isn't a cancelSref
@@ -29,7 +28,7 @@ export default class CreateGroupController {
                     this.approvedLeader = true;
                     this.ready = true;
                 } else {
-                    this.groupUrlService.groupLeaderUrl().then((segment) => {
+                    this.groupService.groupLeaderUrl().then((segment) => {
                         this.window.location.href = this.window.location.origin + segment;
                     });
                 }
@@ -37,7 +36,7 @@ export default class CreateGroupController {
 
             (err) => {
                 this.log.error(`Unable to get Participant for logged-in user: ${err.status} - ${err.statusText}`);
-                    this.groupUrlService.groupLeaderUrl().then((segment) => {
+                    this.groupService.groupLeaderUrl().then((segment) => {
                         this.window.location.href = this.window.location.origin + segment;
                     });
             });

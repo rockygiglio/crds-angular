@@ -2,13 +2,13 @@ import CONSTANTS from 'crds-constants';
 
 export default class GroupToolCms {
   /*@ngInject*/
-  constructor(Page, ParticipantService, $state, $window, GroupUrlService) {
+  constructor(Page, ParticipantService, $state, $window, GroupService) {
     this.page = Page;
     this.participantService = ParticipantService;
     this.state = $state;
     this.content = '';
     this.window = $window;
-    this.groupUrlService = GroupUrlService;
+    this.groupService = GroupService;
   }
 
   $onInit() {
@@ -24,8 +24,7 @@ export default class GroupToolCms {
           }
         });
       } else {
-        console.log(this.groupUrlService.groupLeaderUrl())
-        this.groupUrlService.groupLeaderUrl().then((segment) => {
+        this.groupService.groupLeaderUrl().then((segment) => {
           this.window.location.href = this.window.location.origin + segment;
         });
       }
