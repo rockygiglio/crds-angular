@@ -585,7 +585,8 @@ namespace crds_angular.Services
             var personPin = GetPinDetailsForPerson(participantId);
 
             pins.AddRange(groupPins);
-            if (personPin != null && personPin.ShowOnMap)
+
+            if (personPin != null && personPin.ShowOnMap && finderType == _finderConnect)
             {
                 pins.Add(personPin);
             }
