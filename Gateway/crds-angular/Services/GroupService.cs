@@ -283,7 +283,7 @@ namespace crds_angular.Services
             _mpGroupRepository.UpdateGroupRemainingCapacity(group);
         }
 
-        public void addContactToGroup(int groupId, int contactId)
+        public int addContactToGroup(int groupId, int contactId)
         {
             MpParticipant participant;
 
@@ -300,7 +300,7 @@ namespace crds_angular.Services
 
             try
             {
-                _mpGroupRepository.addParticipantToGroup(participant.ParticipantId, groupId, _groupRoleDefaultId, false, DateTime.Now);
+                return _mpGroupRepository.addParticipantToGroup(participant.ParticipantId, groupId, _groupRoleDefaultId, false, DateTime.Now);
             }
             catch (Exception e)
             {
