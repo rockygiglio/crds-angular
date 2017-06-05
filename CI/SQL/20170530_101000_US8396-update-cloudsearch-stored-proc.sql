@@ -94,7 +94,7 @@ SELECT
 	G.Description AS groupDescription,
 	G.Primary_Contact AS primarycontactId,
 	C.Email_Address AS primaryContactEmail,
-	(SELECT count(*) FROM group_participants gp WHERE gp.group_id = G.Group_id AND gp.end_date IS NULL) AS participantCount,
+	(SELECT count(*) FROM group_participants gp WHERE gp.group_id = G.Group_id AND (GP.End_Date IS NULL OR GP.END_DATE > GETDATE())) AS participantCount,
 	G.Group_Type_ID AS groupTypeId,
 	C.Household_ID AS householdId,
 	(IIF(G.Group_Type_ID = @anywhereGroupTypeId, @gatheringPinType, @smallGroupPinType)) AS pinType,
@@ -162,7 +162,7 @@ SELECT
 FROM Congregations C
 JOIN Locations L ON L.Location_ID = C.Location_ID
 LEFT JOIN Addresses A ON A.Address_ID = L.Address_ID
-WHERE C.Congregation_ID NOT IN (2,5,15) AND C.End_Date IS NULL
+WHERE C.Congregation_ID NOT IN (2,5,15) AND (C.End_Date IS NULL OR C.END_DATE > GETDATE())
 
 END
 
