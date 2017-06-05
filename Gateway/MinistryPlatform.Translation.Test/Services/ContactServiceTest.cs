@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Crossroads.Utilities.Interfaces;
-using Crossroads.Web.Common;
 using Crossroads.Web.Common.Configuration;
 using Crossroads.Web.Common.MinistryPlatform;
 using Crossroads.Web.Common.Security;
@@ -483,8 +481,7 @@ namespace MinistryPlatform.Translation.Test.Services
             var householdMembers = _fixture.GetOtherHouseholdMembers(householdId);
             Assert.AreEqual(1, householdMembers.Count);
             Assert.AreEqual("Minor Child", householdMembers.First().HouseholdPosition);            
-        }
-
+        }     
 
         public static List<MpContactHousehold> GetContactHouseholds(int householdId)
         {
@@ -494,7 +491,5 @@ namespace MinistryPlatform.Translation.Test.Services
                 new MpContactHousehold() {ContactId = 54321, HouseholdId = householdId, HouseholdPositionId = 1, Age = 59, DateOfBirth = null, FirstName = "Ella", LastName = "Robey", HouseholdPosition = "Adult", EndDate = DateTime.Now.AddDays(-3)}
             };
         }
-        
-        
     }
 }

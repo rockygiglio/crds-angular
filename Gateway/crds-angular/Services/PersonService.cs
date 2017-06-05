@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using AutoMapper;
 using crds_angular.Models.Crossroads.Profile;
 using crds_angular.Services.Interfaces;
-using Crossroads.Web.Common;
 using Crossroads.Web.Common.MinistryPlatform;
 using Crossroads.Web.Common.Security;
 using MinistryPlatform.Translation.Models;
@@ -38,15 +37,14 @@ namespace crds_angular.Services
             _authenticationService = authenticationService;
         }
 
-        public void SetProfile(String token, Person person)
+        public void SetProfile(string token, Person person)
         {
             var contactDictionary = getDictionary(person.GetContact());
             var householdDictionary = getDictionary(person.GetHousehold());
             var addressDictionary = getDictionary(person.GetAddress());
             addressDictionary.Add("State/Region", addressDictionary["State"]);
             _contactService.UpdateContact(person.ContactId, contactDictionary, householdDictionary, addressDictionary);
-
-            var configuration = MpObjectAttributeConfigurationFactory.Contact();
+            var configuration = MpObjectAttributeConfigurationFactory.Contact();            
             _objectAttributeService.SaveObjectAttributes(person.ContactId, person.AttributeTypes, person.SingleAttributes, configuration);
 
             var participant = _participantService.GetParticipant(person.ContactId);

@@ -17,7 +17,7 @@
                     var evts = $resource(__GATEWAY_CLIENT_ENDPOINT__ + 'api/events/:site').query({site:$stateParams.site}, function(response) {
                         $log.debug("Response: " + response);
                         evts = response;
-                        debugger;
+
                         var tbody = $('<tbody>');
                         for(var i = 0; i < evts.length; i++) {
                             $log.debug("Event: " + evts[i]);

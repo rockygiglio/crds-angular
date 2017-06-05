@@ -140,7 +140,7 @@ namespace crds_angular.test.Services
                 };
 
                 var contact = new MpContact() {ContactId = defaultContact.Contact_ID, EmailAddress = defaultContact.Email_Address};
-                var fakeCommunication = new MpCommunication()
+                var fakeCommunication = new MinistryPlatform.Translation.Models.MpCommunication()
                 {
                     AuthorUserId = defaultContact.Contact_ID,
                     DomainId = 1,

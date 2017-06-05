@@ -38,6 +38,7 @@ namespace crds_angular.test.Services
         private Mock<IEmailCommunication> _emailCommunicationService;
         private Mock<IAttributeService> _attributeService;
         private Mock<IAddressService> _addressService;
+        private Mock<MPServices.IFinderRepository> _finderRepository;
 
         private const int GroupRoleLeader = 987;
         private const int RemoveParticipantFromGroupEmailTemplateId = 654;
@@ -76,6 +77,7 @@ namespace crds_angular.test.Services
             _emailCommunicationService = new Mock<IEmailCommunication>(MockBehavior.Strict);
             _attributeService = new Mock<IAttributeService>(MockBehavior.Strict);
             _addressService = new Mock<IAddressService>(MockBehavior.Strict);
+            _finderRepository = new Mock<MPServices.IFinderRepository>();
 
             var configuration = new Mock<IConfigurationWrapper>();
 
@@ -110,7 +112,8 @@ namespace crds_angular.test.Services
                                             _addressMatrixService.Object,
                                             _emailCommunicationService.Object,
                                             _attributeService.Object,
-                                            _addressService.Object);
+                                            _addressService.Object,
+                                            _finderRepository.Object);
         }
 
         [ExpectedException(typeof(GroupNotFoundForParticipantException))]
@@ -257,6 +260,9 @@ namespace crds_angular.test.Services
 
                 }
             };
+
+            var mygroup = new GroupDTO {GroupTypeId = 5};
+
             _groupService.Setup(mocked => mocked.GetGroupByIdForAuthenticatedUser("abc", 2)).Returns(groups);
 
             var inquiry = new Inquiry
@@ -297,6 +303,9 @@ namespace crds_angular.test.Services
 
             _contentBlockService.SetupGet(mocked => mocked["groupToolApproveInquirySubjectTemplateText"]).Returns(new ContentBlock());
             _contentBlockService.SetupGet(mocked => mocked["groupToolApproveInquiryEmailTemplateText"]).Returns(new ContentBlock());
+            _groupService.Setup(mocked => mocked.GetGroupDetails(It.IsAny<int>())).Returns(mygroup);
+
+
 
             _fixture.ApproveDenyInquiryFromMyGroup("abc", 1, 2, true, inquiry, message);
 
@@ -338,6 +347,7 @@ namespace crds_angular.test.Services
 
                 }
             };
+            var mygroup = new GroupDTO { GroupTypeId = 5 };
             _groupService.Setup(mocked => mocked.GetGroupByIdForAuthenticatedUser("abc", 2)).Returns(groups);
 
             var inquiry = new Inquiry
@@ -377,6 +387,7 @@ namespace crds_angular.test.Services
 
             _contentBlockService.SetupGet(mocked => mocked["groupToolDenyInquirySubjectTemplateText"]).Returns(new ContentBlock());
             _contentBlockService.SetupGet(mocked => mocked["groupToolDenyInquiryEmailTemplateText"]).Returns(new ContentBlock());
+            _groupService.Setup(mocked => mocked.GetGroupDetails(It.IsAny<int>())).Returns(mygroup);
 
             _fixture.ApproveDenyInquiryFromMyGroup("abc", 1, 2, false, inquiry, message);
 

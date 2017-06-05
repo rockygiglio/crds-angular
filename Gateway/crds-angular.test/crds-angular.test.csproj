@@ -271,6 +271,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="controllers\AddressControllerTest.cs" />
+    <Compile Include="controllers\CampaignControllerTest.cs" />
     <Compile Include="controllers\CheckScannerControllerTest.cs" />
     <Compile Include="controllers\DonationControllerTest.cs" />
     <Compile Include="controllers\DonorControllerTest.cs" />
@@ -298,6 +299,7 @@
     <Compile Include="DataAccess\EzScanCheckScannerDaoTest.cs" />
     <Compile Include="Exceptions\GroupParticipantRemovalExceptionTest.cs" />
     <Compile Include="Services\AwsCloudsearchServiceTest.cs" />
+    <Compile Include="Services\CampaignServiceTest.cs" />
     <Compile Include="Services\GroupConnectorServiceTest.cs" />
     <Compile Include="Helpers\Factories.cs" />
     <Compile Include="Models\Crossroads\Events\EventHelpers.cs" />

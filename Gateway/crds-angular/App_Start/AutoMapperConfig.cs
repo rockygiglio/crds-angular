@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text.RegularExpressions;
-using System.Web.ClientServices.Providers;
 using AutoMapper;
-using crds_angular.Models;
 using crds_angular.Models.AwsCloudsearch;
 using crds_angular.Models.Finder;
 using crds_angular.Models.Crossroads;
 using crds_angular.Models.Crossroads.Attribute;
+using crds_angular.Models.Crossroads.Camp;
 using crds_angular.Models.Crossroads.Events;
 using crds_angular.Models.Crossroads.Groups;
 using crds_angular.Models.Crossroads.Opportunity;
@@ -20,8 +18,8 @@ using MinistryPlatform.Translation.Extensions;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Models.Finder;
 using MinistryPlatform.Translation.Models.DTO;
-using MinistryPlatform.Translation.Models.Opportunities;
-using MinistryPlatform.Translation.Repositories;
+using MinistryPlatform.Translation.Models.Payments;
+using MinistryPlatform.Translation.Models.Product;
 using MpAddress = MinistryPlatform.Translation.Models.MpAddress;
 using DonationStatus = crds_angular.Models.Crossroads.Stewardship.DonationStatus;
 using MpEvent = MinistryPlatform.Translation.Models.MpEvent;
@@ -246,6 +244,20 @@ namespace crds_angular.App_Start
                 .ForMember(dest => dest.MeetingInstructions, opts => opts.MapFrom(src => src.MeetingInstructions))
                 .ForMember(dest => dest.ParticipantsExpected, opts => opts.MapFrom(src => src.ParticipantsExpected));
 
+            Mapper.CreateMap<GroupDTO, FinderGatheringDto>()
+                .ForMember(dest => dest.PrimaryContact, opts => opts.MapFrom(src => src.ContactId))
+                .ForMember(dest => dest.Address, opts => opts.MapFrom(src => src.Address))
+                .ForMember(dest => dest.AvailableOnline, opts => opts.MapFrom(src => src.AvailableOnline))
+                .ForMember(dest => dest.Name, opts => opts.MapFrom(src => src.GroupName))
+                .ForMember(dest => dest.GroupType, opts => opts.MapFrom(src => src.GroupTypeId));
+
+            Mapper.CreateMap<FinderGatheringDto, GroupDTO>()
+                .ForMember(dest => dest.ContactId, opts => opts.MapFrom(src => src.PrimaryContact))
+                .ForMember(dest => dest.Address, opts => opts.MapFrom(src => src.Address))
+                .ForMember(dest => dest.GroupName, opts => opts.MapFrom(src => src.Name))
+                .ForMember(dest => dest.GroupTypeId, opts => opts.MapFrom(src => src.GroupType));
+                
+
             Mapper.CreateMap<EventToolDto, MpEvent>()
                 .ForMember(dest => dest.CongregationId, opts => opts.MapFrom(src => src.CongregationId))
                 .ForMember(dest => dest.EventEndDate, opts => opts.MapFrom(src => src.EndDateTime))
@@ -300,7 +312,7 @@ namespace crds_angular.App_Start
             Mapper.CreateMap<MpDonorStatement, DonorStatementDTO>();
             Mapper.CreateMap<DonorStatementDTO, MpDonorStatement>();
 
-            Mapper.CreateMap<MpEvent, Models.Crossroads.Events.Event>()
+            Mapper.CreateMap<MpEvent, Event>()
                 .ForMember(dest => dest.EventId, opts => opts.MapFrom(src => src.EventId))
                 .ForMember(dest => dest.name, opts => opts.MapFrom(src => src.EventTitle))
                 .ForMember(dest => dest.location, opts => opts.MapFrom(src => src.Congregation))
@@ -411,8 +423,15 @@ namespace crds_angular.App_Start
                 .ForMember(dest => dest.Contact_ID, opts => opts.MapFrom(src => src.ContactId))
                 .ForMember(dest => dest.PinType, opt => opt.UseValue<PinType>(PinType.GATHERING));
 
+            Mapper.CreateMap<ConnectCommunicationDto, MpConnectCommunication>();
+            Mapper.CreateMap<MpConnectCommunication, ConnectCommunicationDto>();
+
             Mapper.CreateMap<MpSU2SOpportunity, ServeOpportunity>();
             Mapper.CreateMap<ServeOpportunity, MpSU2SOpportunity>();
+            Mapper.CreateMap<MpInvoiceDetail, InvoiceDetailDTO>();
+            Mapper.CreateMap<InvoiceDetailDTO, MpInvoiceDetail>();
+            Mapper.CreateMap<MpProduct, ProductDTO>();
+            Mapper.CreateMap<ProductDTO, MpProduct>();
             Mapper.CreateMap<MpAttributeCategory, AttributeCategoryDTO>()
                 .ForMember(dest => dest.CategoryId, opts => opts.MapFrom(src => src.Attribute_Category_ID))
                 .ForMember(dest => dest.AttributeCategory, opts => opts.MapFrom(src => src.Attribute_Category))

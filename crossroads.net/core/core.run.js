@@ -1,4 +1,5 @@
-﻿
+﻿import { SharedHeader } from 'crds-shared-header/dist/bundle';
+
 /* eslint-disable no-param-reassign */
 (() => {
   function AppRun(Session,
@@ -29,9 +30,27 @@
       }
       if (!$rootScope.meta.image || $rootScope.meta.image.filename === '/assets/') {
         $rootScope.meta.image = {
-          filename:'https://crossroads-media.s3.amazonaws.com/images/coffee_cup.jpg'
+          filename: 'http://crds-cms-uploads.imgix.net/content/images/cr-social-sharing-still-bg.jpg'
         };
       }
+    }
+
+    function setupHeader() {
+      // header options
+      var options = {
+        el: '[data-header]',
+        cmsEndpoint: __CMS_CLIENT_ENDPOINT__,
+        appEndpoint: __APP_CLIENT_ENDPOINT__,
+        imgEndpoint: __IMG_ENDPOINT__,
+        crdsCookiePrefix: __CRDS_ENV__,
+        contentBlockTitle: __HEADER_CONTENTBLOCK_TITLE__,
+        contentBlockCategories: ['common']
+      };
+      setTimeout(() => {
+        if ($('[data-header]').length > 0) {
+          new CRDS.SharedHeader(options).render();
+        }
+      }, 100);
     }
 
     function setOriginForCmsPreviewPane($injectedDocument) {
@@ -42,7 +61,7 @@
       if (parts.length === 4) {
         // possible ip address
         const firstChar = parts[0].charAt(0);
-        if (firstChar >= '0' && firstChar <= '9')  {
+        if (firstChar >= '0' && firstChar <= '9') {
           // ip address
           document.domain = domain;
           return;
@@ -62,13 +81,13 @@
     // Detect Browser Agent. use for browser targeting in CSS
     const doc = document.documentElement;
     doc.setAttribute('data-useragent', navigator.userAgent);
-    doc.setAttribute('data-platform', navigator.platform );
+    doc.setAttribute('data-platform', navigator.platform);
 
     $rootScope.$on('$stateChangeStart', (event, toState, toParams, fromState, fromParams) => {
       ContentPageService.reset();
       if (toState.name === 'logout') {
         if ((fromState.data === undefined || !fromState.data.isProtected) &&
-            (fromState.name !== undefined && fromState.name !== '')) {
+          (fromState.name !== undefined && fromState.name !== '')) {
           Session.addRedirectRoute(fromState.name, fromParams);
         } else if (!Session.hasRedirectionInfo()) {
           Session.addRedirectRoute('content', { link: '/' });
@@ -76,6 +95,10 @@
 
         return;
       }
+      if (toState.name === 'login' && fromState.name !== '') {
+        Session.addRedirectRoute(fromState.name, fromParams);
+      }
+
       if (toState.data !== undefined && toState.data.preventRouteAuthentication) {
         return;
       }
@@ -87,6 +110,7 @@
         $rootScope.meta = toState.data.meta;
       }
       setupMetaData();
+      setupHeader();
     });
   }
 

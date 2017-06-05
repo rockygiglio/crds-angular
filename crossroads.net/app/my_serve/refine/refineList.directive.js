@@ -2,7 +2,7 @@
 (function() {
 
   var formatDate = crds_utilities.formatDate;
-  
+
   module.exports = RefineDirective;
 
   RefineDirective.$inject = ['$rootScope', 'ServeTeamFilterState', 'screenSize', '$modal'];
@@ -364,10 +364,11 @@
           backdrop: true,
           size: 'sm',
           controller: 'ServeModalController as modal',
+          openedClass: 'crds-legacy-styles',
           resolve: {
             dates: function () {
               return {
-                'fromDate': scope.filterFromDate, 
+                'fromDate': scope.filterFromDate,
                 'toDate': scope.lastDate
               };
             }
