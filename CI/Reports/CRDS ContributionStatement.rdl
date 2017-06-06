@@ -780,7 +780,7 @@
                                                             <Paragraph>
                                                               <TextRuns>
                                                                 <TextRun>
-                                                                  <Value>=Switch(Fields!Section_Title.Value="Trust and Foundation Giving:", "Trust/Foundation", Fields!Section_Title.Value = "Stock Giving:" ,"Stock", Fields!Section_Title.Value = "Tax-Deductible Information:" , "Payment Type" )</Value>
+                                                                  <Value>=Switch(Fields!Section_Title.Value = "Stock Giving:" ,"Stock", Fields!Section_Title.Value = "Tax-Deductible Information:" , "Payment Type" )</Value>
                                                                   <Style>
                                                                     <FontWeight>Bold</FontWeight>
                                                                   </Style>
@@ -835,7 +835,7 @@
                                                             </TablixColumns>
                                                             <TablixRows>
                                                               <TablixRow>
-                                                                <Height>0.23121in</Height>
+                                                                <Height>0.28901in</Height>
                                                                 <TablixCells>
                                                                   <TablixCell>
                                                                     <CellContents>
@@ -996,7 +996,7 @@
                                                                 </TablixCells>
                                                               </TablixRow>
                                                               <TablixRow>
-                                                                <Height>0.23121in</Height>
+                                                                <Height>0.28901in</Height>
                                                                 <TablixCells>
                                                                   <TablixCell>
                                                                     <CellContents>
@@ -1152,166 +1152,7 @@
                                                                 </TablixCells>
                                                               </TablixRow>
                                                               <TablixRow>
-                                                                <Height>0.23121in</Height>
-                                                                <TablixCells>
-                                                                  <TablixCell>
-                                                                    <CellContents>
-                                                                      <Textbox Name="Textbox300">
-                                                                        <CanGrow>true</CanGrow>
-                                                                        <KeepTogether>true</KeepTogether>
-                                                                        <Paragraphs>
-                                                                          <Paragraph>
-                                                                            <TextRuns>
-                                                                              <TextRun>
-                                                                                <Value>=IIF(Fields!Section_Title.Value = "Stock Giving:","","Total:")</Value>
-                                                                                <Style>
-                                                                                  <FontWeight>Bold</FontWeight>
-                                                                                </Style>
-                                                                              </TextRun>
-                                                                            </TextRuns>
-                                                                            <Style>
-                                                                              <TextAlign>Left</TextAlign>
-                                                                            </Style>
-                                                                          </Paragraph>
-                                                                        </Paragraphs>
-                                                                        <rd:DefaultName>Textbox300</rd:DefaultName>
-                                                                        <Style>
-                                                                          <Border>
-                                                                            <Style>None</Style>
-                                                                          </Border>
-                                                                          <PaddingLeft>2pt</PaddingLeft>
-                                                                          <PaddingRight>2pt</PaddingRight>
-                                                                          <PaddingTop>2pt</PaddingTop>
-                                                                          <PaddingBottom>2pt</PaddingBottom>
-                                                                        </Style>
-                                                                      </Textbox>
-                                                                    </CellContents>
-                                                                  </TablixCell>
-                                                                  <TablixCell>
-                                                                    <CellContents>
-                                                                      <Textbox Name="Textbox301">
-                                                                        <CanGrow>true</CanGrow>
-                                                                        <KeepTogether>true</KeepTogether>
-                                                                        <Paragraphs>
-                                                                          <Paragraph>
-                                                                            <TextRuns>
-                                                                              <TextRun>
-                                                                                <Value>=IIF(Fields!Section_Title.Value = "Stock Giving:","",Sum(Fields!Amount.Value))</Value>
-                                                                                <Style>
-                                                                                  <FontWeight>Bold</FontWeight>
-                                                                                  <Format>'$'#,0.00;('$'#,0.00)</Format>
-                                                                                </Style>
-                                                                              </TextRun>
-                                                                            </TextRuns>
-                                                                            <Style>
-                                                                              <TextAlign>Right</TextAlign>
-                                                                            </Style>
-                                                                          </Paragraph>
-                                                                        </Paragraphs>
-                                                                        <rd:DefaultName>Textbox301</rd:DefaultName>
-                                                                        <Style>
-                                                                          <Border>
-                                                                            <Style>None</Style>
-                                                                          </Border>
-                                                                          <PaddingLeft>2pt</PaddingLeft>
-                                                                          <PaddingRight>2pt</PaddingRight>
-                                                                          <PaddingTop>2pt</PaddingTop>
-                                                                          <PaddingBottom>2pt</PaddingBottom>
-                                                                        </Style>
-                                                                      </Textbox>
-                                                                    </CellContents>
-                                                                  </TablixCell>
-                                                                  <TablixCell>
-                                                                    <CellContents>
-                                                                      <Textbox Name="Textbox302">
-                                                                        <CanGrow>true</CanGrow>
-                                                                        <KeepTogether>true</KeepTogether>
-                                                                        <Paragraphs>
-                                                                          <Paragraph>
-                                                                            <TextRuns>
-                                                                              <TextRun>
-                                                                                <Value />
-                                                                                <Style />
-                                                                              </TextRun>
-                                                                            </TextRuns>
-                                                                            <Style />
-                                                                          </Paragraph>
-                                                                        </Paragraphs>
-                                                                        <rd:DefaultName>Textbox302</rd:DefaultName>
-                                                                        <Style>
-                                                                          <Border>
-                                                                            <Style>None</Style>
-                                                                          </Border>
-                                                                          <PaddingLeft>2pt</PaddingLeft>
-                                                                          <PaddingRight>2pt</PaddingRight>
-                                                                          <PaddingTop>2pt</PaddingTop>
-                                                                          <PaddingBottom>2pt</PaddingBottom>
-                                                                        </Style>
-                                                                      </Textbox>
-                                                                    </CellContents>
-                                                                  </TablixCell>
-                                                                  <TablixCell>
-                                                                    <CellContents>
-                                                                      <Textbox Name="Textbox303">
-                                                                        <CanGrow>true</CanGrow>
-                                                                        <KeepTogether>true</KeepTogether>
-                                                                        <Paragraphs>
-                                                                          <Paragraph>
-                                                                            <TextRuns>
-                                                                              <TextRun>
-                                                                                <Value />
-                                                                                <Style />
-                                                                              </TextRun>
-                                                                            </TextRuns>
-                                                                            <Style />
-                                                                          </Paragraph>
-                                                                        </Paragraphs>
-                                                                        <rd:DefaultName>Textbox303</rd:DefaultName>
-                                                                        <Style>
-                                                                          <Border>
-                                                                            <Style>None</Style>
-                                                                          </Border>
-                                                                          <PaddingLeft>2pt</PaddingLeft>
-                                                                          <PaddingRight>2pt</PaddingRight>
-                                                                          <PaddingTop>2pt</PaddingTop>
-                                                                          <PaddingBottom>2pt</PaddingBottom>
-                                                                        </Style>
-                                                                      </Textbox>
-                                                                    </CellContents>
-                                                                  </TablixCell>
-                                                                  <TablixCell>
-                                                                    <CellContents>
-                                                                      <Textbox Name="Textbox304">
-                                                                        <CanGrow>true</CanGrow>
-                                                                        <KeepTogether>true</KeepTogether>
-                                                                        <Paragraphs>
-                                                                          <Paragraph>
-                                                                            <TextRuns>
-                                                                              <TextRun>
-                                                                                <Value />
-                                                                                <Style />
-                                                                              </TextRun>
-                                                                            </TextRuns>
-                                                                            <Style />
-                                                                          </Paragraph>
-                                                                        </Paragraphs>
-                                                                        <rd:DefaultName>Textbox304</rd:DefaultName>
-                                                                        <Style>
-                                                                          <Border>
-                                                                            <Style>None</Style>
-                                                                          </Border>
-                                                                          <PaddingLeft>2pt</PaddingLeft>
-                                                                          <PaddingRight>2pt</PaddingRight>
-                                                                          <PaddingTop>2pt</PaddingTop>
-                                                                          <PaddingBottom>2pt</PaddingBottom>
-                                                                        </Style>
-                                                                      </Textbox>
-                                                                    </CellContents>
-                                                                  </TablixCell>
-                                                                </TablixCells>
-                                                              </TablixRow>
-                                                              <TablixRow>
-                                                                <Height>0.23121in</Height>
+                                                                <Height>0.28901in</Height>
                                                                 <TablixCells>
                                                                   <TablixCell>
                                                                     <CellContents>
@@ -1469,7 +1310,7 @@
                                                                 </TablixCells>
                                                               </TablixRow>
                                                               <TablixRow>
-                                                                <Height>0.23121in</Height>
+                                                                <Height>0.28901in</Height>
                                                                 <TablixCells>
                                                                   <TablixCell>
                                                                     <CellContents>
@@ -1646,9 +1487,6 @@
                                                                     <Value>=Fields!Donation_Date.Value</Value>
                                                                   </SortExpression>
                                                                 </SortExpressions>
-                                                              </TablixMember>
-                                                              <TablixMember>
-                                                                <KeepWithGroup>Before</KeepWithGroup>
                                                               </TablixMember>
                                                               <TablixMember>
                                                                 <KeepWithGroup>Before</KeepWithGroup>
