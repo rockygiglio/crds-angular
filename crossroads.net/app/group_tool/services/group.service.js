@@ -18,8 +18,14 @@ export default class GroupService {
     this.imgService = ImageService;
   }
 
+  groupLeaderUrl() {
+    return this.resource(__GATEWAY_CLIENT_ENDPOINT__ + 'api/v1.0.0/group-leader/url-segment').get().$promise.then((result) => {
+      return result.url;
+    });
+  }
+
   getAgeRanges() {
-    return this.resource(__API_ENDPOINT__ + 'api/attributetype/:attributeTypeId').
+    return this.resource(__GATEWAY_CLIENT_ENDPOINT__ + 'api/attributetype/:attributeTypeId').
       get({ attributeTypeId: CONSTANTS.ATTRIBUTE_TYPE_IDS.GROUP_AGE_RANGE }).$promise;
   }
 
@@ -28,25 +34,25 @@ export default class GroupService {
   }
 
   getGroupData(groupId) {
-    return this.resource(__API_ENDPOINT__ + 'api/group/:groupId').
+    return this.resource(__GATEWAY_CLIENT_ENDPOINT__ + 'api/group/:groupId').
       get({ groupId: groupId }).$promise;
   }
 
   getGroupGenderMixType() {
-    return this.resource(__API_ENDPOINT__ + 'api/attributetype/:attributeTypeId').
+    return this.resource(__GATEWAY_CLIENT_ENDPOINT__ + 'api/attributetype/:attributeTypeId').
       get({ attributeTypeId: CONSTANTS.ATTRIBUTE_TYPE_IDS.GROUP_TYPE }).$promise;
   }
 
   getEndedReasons() {
-    return this.resource(__API_ENDPOINT__ + 'api/lookup/groupreasonended').query().$promise;
+    return this.resource(__GATEWAY_CLIENT_ENDPOINT__ + 'api/lookup/groupreasonended').query().$promise;
   }
 
   getStates() {
-    return this.resource(__API_ENDPOINT__ + 'api/lookup/states').query().$promise;
+    return this.resource(__GATEWAY_CLIENT_ENDPOINT__ + 'api/lookup/states').query().$promise;
   }
 
   getCountries() {
-    return this.resource(__API_ENDPOINT__ + 'api/lookup/countries').query().$promise;
+    return this.resource(__GATEWAY_CLIENT_ENDPOINT__ + 'api/lookup/countries').query().$promise;
   }
 
   getSites() {
@@ -62,15 +68,15 @@ export default class GroupService {
   }
 
   getGroupTypeCategories() {
-    return this.resource(__API_ENDPOINT__ + 'api/grouptool/categories').query().$promise;
+    return this.resource(__GATEWAY_CLIENT_ENDPOINT__ + 'api/grouptool/categories').query().$promise;
   }
 
   sendGroupInvitation(invitation) {
-    return this.resource(__API_ENDPOINT__ + 'api/invitation').save(invitation).$promise;
+    return this.resource(__GATEWAY_CLIENT_ENDPOINT__ + 'api/invitation').save(invitation).$promise;
   }
 
   getMyGroups() {
-    let promised = this.resource(`${__API_ENDPOINT__}api/group/mine`).query().$promise;
+    let promised = this.resource(`${__GATEWAY_CLIENT_ENDPOINT__}api/group/mine`).query().$promise;
 
     return promised.then((data) => {
       let groups = data.map((group) => {
@@ -85,7 +91,7 @@ export default class GroupService {
   }
 
   getGroup(groupId) {
-    let promise = this.resource(`${__API_ENDPOINT__}api/group/mine/:groupId`).
+    let promise = this.resource(`${__GATEWAY_CLIENT_ENDPOINT__}api/group/mine/:groupId`).
       query({ groupId: groupId }).$promise;
 
     return promise.then((data) => {
@@ -106,7 +112,7 @@ export default class GroupService {
   }
 
   getGroupParticipants(groupId) {
-    let promise = this.resource(`${__API_ENDPOINT__}api/group/mine/:groupId`).
+    let promise = this.resource(`${__GATEWAY_CLIENT_ENDPOINT__}api/group/mine/:groupId`).
       query({ groupId: groupId }).$promise;
 
     return promise.then((data) => {
@@ -131,7 +137,7 @@ export default class GroupService {
   }
 
   removeGroupParticipant(groupId, participant) {
-    let promise = this.resource(`${__API_ENDPOINT__}api/grouptool/group/:groupId/participant/:groupParticipantId`).
+    let promise = this.resource(`${__GATEWAY_CLIENT_ENDPOINT__}api/grouptool/group/:groupId/participant/:groupParticipantId`).
       delete({
         groupId: groupId,
         groupParticipantId: participant.groupParticipantId,
@@ -146,7 +152,7 @@ export default class GroupService {
   }
 
   endGroup(groupId, groupReasonEndedId) {
-    let promise = this.resource(`${__API_ENDPOINT__}api/grouptool/:groupId/endsmallgroup`)
+    let promise = this.resource(`${__GATEWAY_CLIENT_ENDPOINT__}api/grouptool/:groupId/endsmallgroup`)
       .save({ groupId: groupId, groupReasonEndedId: groupReasonEndedId }, {}).$promise;
     return promise.then((data) => {
       return data;
@@ -156,7 +162,7 @@ export default class GroupService {
   }
 
   approveDenyInquiry(groupId, approve, inquiry) {
-    let promise = this.resource(`${__API_ENDPOINT__}api/grouptool/grouptype/:groupTypeId/group/:groupId/inquiry/approve/:approve`).
+    let promise = this.resource(`${__GATEWAY_CLIENT_ENDPOINT__}api/grouptool/grouptype/:groupTypeId/group/:groupId/inquiry/approve/:approve`).
       save({ groupTypeId: CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS, groupId: groupId, approve: approve }, inquiry).$promise;
 
     return promise.then((data) => {
@@ -167,7 +173,7 @@ export default class GroupService {
   }
 
   getInvities(groupId) {
-    let promised = this.resource(`${__API_ENDPOINT__}api/grouptool/invitations/:sourceId/:invitationTypeId`).
+    let promised = this.resource(`${__GATEWAY_CLIENT_ENDPOINT__}api/grouptool/invitations/:sourceId/:invitationTypeId`).
       query({ sourceId: groupId, invitationTypeId: CONSTANTS.INVITATION.TYPES.GROUP }).$promise;
 
     return promised.then((data) => {
@@ -184,7 +190,7 @@ export default class GroupService {
   }
 
   getInquiries(groupId) {
-    let promised = this.resource(`${__API_ENDPOINT__}api/grouptool/inquiries/:groupId`).
+    let promised = this.resource(`${__GATEWAY_CLIENT_ENDPOINT__}api/grouptool/inquiries/:groupId`).
       query({ groupId: groupId }).$promise;
 
     return promised.then((data) => {
@@ -202,7 +208,7 @@ export default class GroupService {
   }
 
   saveCreateGroupForm(smallGroup) {
-    let promise = this.resource(`${__API_ENDPOINT__}api/group`)
+    let promise = this.resource(`${__GATEWAY_CLIENT_ENDPOINT__}api/group`)
       .save({}, smallGroup).$promise;
     return promise.then((data) => {
       return data;
@@ -212,7 +218,7 @@ export default class GroupService {
   }
 
   saveEditGroupForm(smallGroup) {
-    let promise = this.resource(`${__API_ENDPOINT__}api/group/edit`)
+    let promise = this.resource(`${__GATEWAY_CLIENT_ENDPOINT__}api/group/edit`)
       .save({}, smallGroup).$promise;
     return promise.then((data) => {
       this.saveProfile(smallGroup.profile);
@@ -222,7 +228,7 @@ export default class GroupService {
   }
 
   saveParticipant(participants, groupId) {
-    let promise = this.resource(`${__API_ENDPOINT__}api/group/:groupId/participants`)
+    let promise = this.resource(`${__GATEWAY_CLIENT_ENDPOINT__}api/group/:groupId/participants`)
       .save({ groupId: groupId }, participants).$promise;
 
     return promise.then((data) => {
@@ -233,7 +239,7 @@ export default class GroupService {
   }
 
   saveProfile(profile) {
-    let promise = this.resource(`${__API_ENDPOINT__}api/profile`)
+    let promise = this.resource(`${__GATEWAY_CLIENT_ENDPOINT__}api/profile`)
       .save({}, profile).$promise;
 
     return promise.then((data) => {
@@ -244,7 +250,7 @@ export default class GroupService {
   }
 
   getGroupByInvitationGUID(invitationGUID) {
-    let promise = this.resource(`${__API_ENDPOINT__}api/group/invitation/:invitationGUID`).
+    let promise = this.resource(`${__GATEWAY_CLIENT_ENDPOINT__}api/group/invitation/:invitationGUID`).
       get({ invitationGUID: invitationGUID }).$promise;
 
     return promise.then((data) => {
@@ -262,7 +268,7 @@ export default class GroupService {
   }
 
   getIsLeader(groupId) {
-    let promise = this.resource(`${__API_ENDPOINT__}api/grouptool/:groupId/isleader`).
+    let promise = this.resource(`${__GATEWAY_CLIENT_ENDPOINT__}api/grouptool/:groupId/isleader`).
       get({ groupId: groupId }).$promise;
 
     return promise.then((data) => {
@@ -274,7 +280,7 @@ export default class GroupService {
   }
 
   getGroupType(groupId) { 
-    const promise = this.resource(`${__API_ENDPOINT__}api/group/:groupId/groupType`)
+    const promise = this.resource(`${__GATEWAY_CLIENT_ENDPOINT__}api/group/:groupId/groupType`)
       .get({ groupId }).$promise;
 
     return promise.then((data) => {
@@ -285,7 +291,7 @@ export default class GroupService {
   }
 
   search(searchString, locationString, groupId) {
-    let promise = this.resource(`${__API_ENDPOINT__}api/grouptool/group/search`)
+    let promise = this.resource(`${__GATEWAY_CLIENT_ENDPOINT__}api/grouptool/group/search`)
       .query({ s: searchString, loc: locationString, groupTypeIds: [CONSTANTS.GROUP.GROUP_TYPE_ID.SMALL_GROUPS, CONSTANTS.GROUP.GROUP_TYPE_ID.ONSITE_GROUPS], id: groupId }).$promise;
 
     return promise.then((data) => {
@@ -306,7 +312,7 @@ export default class GroupService {
   }
 
   updateParticipant(participant) {
-    let promise = this.resource(`${__API_ENDPOINT__}api/group/updateParticipantRole`)
+    let promise = this.resource(`${__GATEWAY_CLIENT_ENDPOINT__}api/group/updateParticipantRole`)
       .save({}, participant).$promise;
     return promise.then((data) => {
       return data;
@@ -316,7 +322,7 @@ export default class GroupService {
   }
 
   submitJoinRequest(groupId) {
-    return this.resource(`${__API_ENDPOINT__}api/grouptool/group/:groupId/submitinquiry`)
+    return this.resource(`${__GATEWAY_CLIENT_ENDPOINT__}api/grouptool/group/:groupId/submitinquiry`)
       .save({ groupId: groupId }, {}).$promise;
   }
 

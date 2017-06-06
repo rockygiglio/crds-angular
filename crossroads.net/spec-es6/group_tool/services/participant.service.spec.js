@@ -11,7 +11,7 @@ describe('Group Tool Participant Service', () => {
     authenticated,
     httpBackend;
 
-  const endpoint = window.__env__['CRDS_API_ENDPOINT'] + 'api';
+  const endpoint = window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api';
 
   beforeEach(angular.mock.module(constants.MODULES.GROUP_TOOL));
 

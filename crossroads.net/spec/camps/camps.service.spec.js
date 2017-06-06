@@ -2,7 +2,7 @@ import campsModule from '../../app/camps/camps.module';
 
 describe('Camp Service', () => {
   // eslint-disable-next-line no-underscore-dangle
-  const endpoint = `${window.__env__.CRDS_API_ENDPOINT}api`;
+  const endpoint = `${window.__env__.CRDS_GATEWAY_CLIENT_ENDPOINT}api`;
   let campsService;
   let httpBackend;
 

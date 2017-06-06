@@ -11,11 +11,9 @@ using crds_angular.Models.Crossroads.Profile;
 using crds_angular.Models.Crossroads.Serve;
 using crds_angular.Services.Interfaces;
 using crds_angular.Util.Interfaces;
-using Crossroads.Utilities.Interfaces;
 using Crossroads.Utilities.Services;
 using log4net;
 using Microsoft.Ajax.Utilities;
-using Crossroads.Web.Common;
 using Crossroads.Web.Common.Configuration;
 using Crossroads.Web.Common.MinistryPlatform;
 using MinistryPlatform.Translation.Models;
@@ -253,7 +251,7 @@ namespace crds_angular.Services
             };                                   
         }
 
-        public MpCommunication SetupChilcareReminderCommunication(MpContact recipient, Dictionary<string,object> mergeData)
+        public MinistryPlatform.Translation.Models.MpCommunication SetupChilcareReminderCommunication(MpContact recipient, Dictionary<string,object> mergeData)
         {
             var templateId = _configurationWrapper.GetConfigIntValue("ChildcareReminderTemplateId");
             var template = _communicationService.GetTemplate(templateId);
@@ -514,7 +512,7 @@ namespace crds_angular.Services
             var toContactsList = new List<MpContact> {new MpContact {ContactId = childcareRequestEmail.RequesterId, EmailAddress = childcareRequestEmail.RequesterEmail}};
 
 
-            var communication = new MpCommunication
+            var communication = new MinistryPlatform.Translation.Models.MpCommunication
             {
                 AuthorUserId = authorUserId,
                 EmailBody = template.Body,
@@ -556,7 +554,7 @@ namespace crds_angular.Services
                 {"Base_Url", _configurationWrapper.GetConfigValue("BaseMPUrl")}
             };
 
-            var communication = new MpCommunication
+            var communication = new MinistryPlatform.Translation.Models.MpCommunication
              {
                 AuthorUserId = authorUserId,
                 EmailBody = template.Body,
@@ -655,7 +653,7 @@ namespace crds_angular.Services
             return replyToContact;
         }
 
-        private static MpCommunication FormatCommunication(int authorUserId,
+        private static MinistryPlatform.Translation.Models.MpCommunication FormatCommunication(int authorUserId,
                                                          int domainId,
                                                          MpMessageTemplate template,
                                                          MpMyContact fromContact,
@@ -664,7 +662,7 @@ namespace crds_angular.Services
                                                          string participantEmail,
                                                          Dictionary<string, object> mergeData)
         {
-            var communication = new MpCommunication
+            var communication = new MinistryPlatform.Translation.Models.MpCommunication
             {
                 AuthorUserId = authorUserId,
                 DomainId = domainId,
@@ -733,7 +731,7 @@ namespace crds_angular.Services
                     {"Childcare_Day", participant.ChildcareEventDate.ToString("dddd, MMMM dd") },
                     {"Child_List", kiddos}
                 };
-                var comm = new MpCommunication
+                var comm = new MinistryPlatform.Translation.Models.MpCommunication
                 {
                     AuthorUserId = authorUserId,
                     DomainId = 1,

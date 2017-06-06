@@ -43,17 +43,17 @@ describe('Go Volunteer Other Organization Component', function() {
     element = $compile(element)(scope);
     scope.$digest();
     isolated = element.isolateScope();
-    $httpBackend.whenGET( window.__env__['CRDS_API_ENDPOINT'] + 
+    $httpBackend.whenGET( window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 
                            'api/organizations/other').respond(200, helpers.otherOrganizations);
     isolated.goOrgName.activate();
     $httpBackend.flush();
-    $httpBackend.expectGET( window.__env__['CRDS_API_ENDPOINT'] + 
+    $httpBackend.expectGET( window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 
                            'api/organizations/other');
 
   }));
 
   it('should query for other organizations', function() {
-    $httpBackend.expectGET( window.__env__['CRDS_API_ENDPOINT'] + 
+    $httpBackend.expectGET( window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 
                            'api/organizations/other');
     expect(element.isolateScope().goOrgName.availableOptions.length).toEqual(helpers.otherOrganizations.length);
   });

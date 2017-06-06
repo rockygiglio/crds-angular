@@ -11,7 +11,7 @@
     };
 
     function AttributeTypes(params) {
-      return $resource(__API_ENDPOINT__ + 'api/AttributeType/:id',
+      return $resource(__GATEWAY_CLIENT_ENDPOINT__ + 'api/AttributeType/:id',
           params,
           {
             get: { method:'GET', cache: true },

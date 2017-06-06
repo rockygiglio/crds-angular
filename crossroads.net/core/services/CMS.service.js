@@ -11,7 +11,7 @@
 
     vm.http = $http;
 
-    vm.url = `${__CMS_ENDPOINT__}api`;
+    vm.url = `${__CMS_CLIENT_ENDPOINT__}api`;
 
     vm.todaysDate = moment().format('YYYY-MM-DD');
     
@@ -71,6 +71,11 @@
     vm.getDigitalProgram = function() {
       return vm.http.get(`${this.url}/features`)
               .then(rsp => {return rsp.data.features});
+    }
+
+    vm.getSections = function() {
+      return vm.http.get(`${this.url}/sections`)
+              .then(rsp => {return rsp.data.sections});
     }
 
     vm.getContentBlock = function(query) {

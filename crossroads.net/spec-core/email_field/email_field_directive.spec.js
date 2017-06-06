@@ -66,7 +66,7 @@ describe('Email Field Directive', function() {
   describe('markup', function(){
     var element;
     beforeEach(function() {
-      $httpBackend.whenGET(window.__env__['CRDS_API_ENDPOINT'] + 'api/lookup/0/find/?email=me@here.com').respond(404, 'not found');
+      $httpBackend.whenGET(window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api/lookup/0/find/?email=me@here.com').respond(404, 'not found');
 
       element = $compile(templateString)(scope);
       scope.$digest();
@@ -88,7 +88,7 @@ describe('Email Field Directive', function() {
     var element, form, isolateScope;
     beforeEach(function() {
       scope.model.emailModel = 'me+you@here.com';
-      $httpBackend.whenGET(window.__env__['CRDS_API_ENDPOINT'] + 'api/lookup/0/find/?email=me%2Byou@here.com').respond(404, 'not found');
+      $httpBackend.whenGET(window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api/lookup/0/find/?email=me%2Byou@here.com').respond(404, 'not found');
       element = $compile(templateString)(scope);
       scope.$digest();
       isolateScope = element.isolateScope();
@@ -106,7 +106,7 @@ describe('Email Field Directive', function() {
     });
 
     it('should lookup an email with an encoded plus sign', function() {
-      $httpBackend.expectGET(window.__env__['CRDS_API_ENDPOINT'] + 'api/lookup/0/find/?email=me%2Byou%2Bus@there.com').respond(404, 'existing email');
+      $httpBackend.expectGET(window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api/lookup/0/find/?email=me%2Byou%2Bus@there.com').respond(404, 'existing email');
 
       form.email.$setViewValue('me+you+us@there.com');
       isolateScope.$digest();
@@ -114,7 +114,7 @@ describe('Email Field Directive', function() {
     });
 
     it('should call onEmailNotFound callback if API returns a 200', function() {
-      $httpBackend.expectGET(window.__env__['CRDS_API_ENDPOINT'] + 'api/lookup/0/find/?email=me%2Byou@there.com').respond(200, 'email ok');
+      $httpBackend.expectGET(window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api/lookup/0/find/?email=me%2Byou@there.com').respond(200, 'email ok');
 
       form.email.$setViewValue('me+you@there.com');
       isolateScope.$digest();
@@ -127,7 +127,7 @@ describe('Email Field Directive', function() {
     });
 
     it('should call onEmailFound callback if API returns a 404', function() {
-      $httpBackend.expectGET(window.__env__['CRDS_API_ENDPOINT'] + 'api/lookup/0/find/?email=me%2Byou@there.com').respond(404, 'existing email');
+      $httpBackend.expectGET(window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api/lookup/0/find/?email=me%2Byou@there.com').respond(404, 'existing email');
 
       form.email.$setViewValue('me+you@there.com');
       isolateScope.$digest();

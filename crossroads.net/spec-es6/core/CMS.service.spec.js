@@ -6,7 +6,7 @@ describe('CMSService', () => {
       httpBackend,
       fixture;
 
-  const endpoint = `${window.__env__['CRDS_CMS_ENDPOINT']}api`;
+  const endpoint = `${window.__env__['CRDS_CMS_CLIENT_ENDPOINT']}api`;
 
   let baseTime = new Date(2016, 9, 1); // set to 10/1/2016 - month appears to be 0 based index however
   let todaysDate = moment(baseTime).format('YYYY-MM-DD');
@@ -150,6 +150,17 @@ describe('CMSService', () => {
         expect(response.length).toBe(6)
       });
       httpBackend.expectGET(`${endpoint}/features`).respond(200, features);
+      httpBackend.flush();
+    });
+  })
+
+  describe('Sections', () => {
+    it('should use HTTP to obtain sections', () => {
+      let sections = {"sections":[{"id":5,"title":"Events","created":"2017-05-25T15:33:04+02:00","className":"Section"},{"id":6,"title":"be the church","features":[{"id":2,"title":"btc1","description":"<p>Feature1<\/p>","status":null,"link":null,"version":"6","sections":[6,7],"created":"2017-06-01T17:34:37+02:00","className":"Feature"}],"manyManyExtraFields":{"features":{"2":{"sortOrder":"1"}}},"created":"2017-05-30T20:13:46+02:00","className":"Section"},{"id":7,"title":"don't miss","features":[{"id":5,"title":"dm2","description":"<p>4<\/p>","status":null,"link":null,"version":"6","sections":[7],"created":"2017-06-01T18:08:34+02:00","className":"Feature"},{"id":2,"title":"btc1","description":"<p>Feature1<\/p>","status":null,"link":null,"version":"6","sections":[6,7],"created":"2017-06-01T17:34:37+02:00","className":"Feature"}],"manyManyExtraFields":{"features":{"5":{"sortOrder":"2"},"2":{"sortOrder":"3"}}},"created":"2017-05-30T20:14:16+02:00","className":"Section"}]};
+      fixture.getSections().then((response) => {
+        expect(response.length).toBe(3)
+      });
+      httpBackend.expectGET(`${endpoint}/sections`).respond(200, sections);
       httpBackend.flush();
     });
   })

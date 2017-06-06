@@ -77,6 +77,11 @@ namespace crds_angular.Models.Crossroads
         /// </summary>
         [JsonProperty(PropertyName = "invitationGuid")]
         public string InvitationGuid { get; set; }
+
+        /// <summary>
+        /// The id of the communication (if any) that is sent out.
+        /// </summary>
+        public int? CommunicationId { get; set; }
     }
 
 }

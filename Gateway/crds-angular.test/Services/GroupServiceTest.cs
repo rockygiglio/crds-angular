@@ -379,9 +379,6 @@ namespace crds_angular.test.Services
                 Participants = new List<MpGroupParticipant>()
             };
             groupRepository.Setup(mocked => mocked.getGroupDetails(456)).Returns(g);
-
-            groupRepository.Setup(mocked => mocked.addParticipantToGroup(999, 456, GROUP_ROLE_DEFAULT_ID, false, It.IsAny<DateTime>(), null, false, null)).Returns(999456);
-            groupRepository.Setup(mocked => mocked.addParticipantToGroup(888, 456, GROUP_ROLE_DEFAULT_ID, false, It.IsAny<DateTime>(), null, false, null)).Returns(888456);
             groupRepository.Setup(mocked => mocked.SendCommunityGroupConfirmationEmail(It.IsAny<int>(), 456, true, false));
 
             var events = new List<MpEvent>
@@ -391,14 +388,17 @@ namespace crds_angular.test.Services
                 new MpEvent {EventId = 444}
             };
             groupRepository.Setup(mocked => mocked.getAllEventsForGroup(456)).Returns(events);
+            groupRepository.Setup(mocked => mocked.GetParticipantGroupMemberId(456,999)).Returns(999456);
+            groupRepository.Setup(mocked => mocked.GetParticipantGroupMemberId(456, 888)).Returns(-1);
+            groupRepository.Setup(mocked => mocked.addParticipantToGroup(888, 456, GROUP_ROLE_DEFAULT_ID, false, It.IsAny<DateTime>(), null, false, null)).Returns(888456);
 
-            eventService.Setup(mocked => mocked.RegisterParticipantForEvent(999, 777, 456, 999456)).Returns(999777);
-            eventService.Setup(mocked => mocked.RegisterParticipantForEvent(999, 555, 456, 999456)).Returns(999555);
-            eventService.Setup(mocked => mocked.RegisterParticipantForEvent(999, 444, 456, 999456)).Returns(999444);
+            eventService.Setup(mocked => mocked.SafeRegisterParticipant(777, 999, 456, 999456)).Returns(999777);
+            eventService.Setup(mocked => mocked.SafeRegisterParticipant(555, 999, 456, 999456)).Returns(999555);
+            eventService.Setup(mocked => mocked.SafeRegisterParticipant(444, 999, 456, 999456)).Returns(999444);
 
-            eventService.Setup(mocked => mocked.RegisterParticipantForEvent(888, 777, 456, 888456)).Returns(888777);
-            eventService.Setup(mocked => mocked.RegisterParticipantForEvent(888, 555, 456, 888456)).Returns(888555);
-            eventService.Setup(mocked => mocked.RegisterParticipantForEvent(888, 444, 456, 888456)).Returns(888444);
+            eventService.Setup(mocked => mocked.SafeRegisterParticipant(777, 888, 456, 888456)).Returns(888777);
+            eventService.Setup(mocked => mocked.SafeRegisterParticipant(555, 888, 456, 888456)).Returns(888555);
+            eventService.Setup(mocked => mocked.SafeRegisterParticipant(444, 888, 456, 888456)).Returns(888444);
 
             fixture.addParticipantsToGroup(456, mockParticipantSignup);
 
@@ -835,7 +835,7 @@ namespace crds_angular.test.Services
             participantService.Setup(x => x.GetParticipantRecord(token)).Returns(participant);
 
             Assert.Throws<InvalidOperationException>(() => fixture.SendJourneyEmailInvite(communication, token));
-            _communicationService.Verify(x => x.SendMessage(It.IsAny<MpCommunication>(), false), Times.Never);
+            _communicationService.Verify(x => x.SendMessage(It.IsAny<MinistryPlatform.Translation.Models.MpCommunication>(), false), Times.Never);
         }
 
         [Test]
@@ -859,7 +859,7 @@ namespace crds_angular.test.Services
             var membership = groups.Where(group => group.GroupId == groupId).ToList();
             Assert.AreEqual(membership.Count, 0);
             Assert.Throws<InvalidOperationException>(() => fixture.SendJourneyEmailInvite(communication, token));
-            _communicationService.Verify(x => x.SendMessage(It.IsAny<MpCommunication>(), false), Times.Never);
+            _communicationService.Verify(x => x.SendMessage(It.IsAny<MinistryPlatform.Translation.Models.MpCommunication>(), false), Times.Never);
         }
 
         [Test]
@@ -901,12 +901,12 @@ namespace crds_angular.test.Services
             _contactService.Setup(mocked => mocked.GetContactById(It.IsAny<int>())).Returns(contact);
             _objectAttributeService.Setup(mocked => mocked.GetObjectAttributes(token, It.IsAny<int>(), It.IsAny<MpObjectAttributeConfiguration>(), It.IsAny<List<MpAttribute>>()))
                 .Returns(attributes);
-            _communicationService.Setup(m => m.SendMessage(It.IsAny<MpCommunication>(), false)).Verifiable();
+            _communicationService.Setup(m => m.SendMessage(It.IsAny<MinistryPlatform.Translation.Models.MpCommunication>(), false)).Verifiable();
 
             var membership = groups.Where(group => group.GroupId == groupId).ToList();
             fixture.SendJourneyEmailInvite(communication, token);
             Assert.AreEqual(membership.Count, 1);
-            _communicationService.Verify(m => m.SendMessage(It.IsAny<MpCommunication>(), false), Times.Once);
+            _communicationService.Verify(m => m.SendMessage(It.IsAny<MinistryPlatform.Translation.Models.MpCommunication>(), false), Times.Once);
         }
 
         public void shouldThrowGroupIsFullExceptionWhenGroupFullIndicatorIsSet()
@@ -1102,7 +1102,7 @@ namespace crds_angular.test.Services
             _communicationService.Setup(
                 mocked =>
                     mocked.SendMessage(
-                        It.Is<MpCommunication>(
+                        It.Is<MinistryPlatform.Translation.Models.MpCommunication>(
                             c =>
                                 c.AuthorUserId == 5 && c.DomainId == DOMAIN_ID && c.EmailBody.Equals(template.Body) && c.EmailSubject.Equals(template.Subject) &&
                                 c.FromContact.ContactId == template.FromContactId && c.FromContact.EmailAddress.Equals(template.FromEmailAddress) &&
@@ -1182,7 +1182,7 @@ namespace crds_angular.test.Services
             _communicationService.Setup(
                 mocked =>
                     mocked.SendMessage(
-                        It.Is<MpCommunication>(
+                        It.Is<MinistryPlatform.Translation.Models.MpCommunication>(
                             c =>
                                 c.AuthorUserId == 5 && c.DomainId == DOMAIN_ID && c.EmailBody.Equals(template.Body) && c.EmailSubject.Equals(template.Subject) &&
                                 c.FromContact.ContactId == template.FromContactId && c.FromContact.EmailAddress.Equals(template.FromEmailAddress) &&
@@ -1327,7 +1327,7 @@ namespace crds_angular.test.Services
             }).ToList();
 
             participantService.Setup(mocked => mocked.GetParticipantRecord(token)).Returns(sender);
-            _communicationService.Setup(mocked => mocked.SendMessage(It.Is<MpCommunication>(
+            _communicationService.Setup(mocked => mocked.SendMessage(It.Is<MinistryPlatform.Translation.Models.MpCommunication>(
                 c =>
                     c.AuthorUserId == authorId && c.DomainId == DOMAIN_ID && c.EmailBody.Equals(body) && c.EmailSubject.Equals(subject) &&
                     c.FromContact.ContactId == fromContact.ContactId && c.FromContact.EmailAddress.Equals(fromContact.EmailAddress) &&

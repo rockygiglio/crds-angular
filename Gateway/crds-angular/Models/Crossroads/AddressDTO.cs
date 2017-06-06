@@ -71,7 +71,7 @@ namespace crds_angular.Models.Crossroads
 
         public override string ToString()
         {
-            return $"{AddressLine1} {AddressLine2}, {City}, {State}, {PostalCode}";
+            return $"{AddressLine1}, {City}, {State}, {PostalCode}";
         }
     }
 }

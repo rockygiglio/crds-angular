@@ -71,16 +71,21 @@
       <HintPath>..\packages\AWSSDK.Core.3.3.10.2\lib\net45\AWSSDK.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Common.Logging, Version=3.3.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
+      <HintPath>..\packages\Common.Logging.3.3.1\lib\net40\Common.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="Common.Logging.Core, Version=3.3.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
+      <HintPath>..\packages\Common.Logging.Core.3.3.1\lib\net40\Common.Logging.Core.dll</HintPath>
+    </Reference>
     <Reference Include="Crossroads.ApiVersioning, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Crossroads.ApiVersioning.1.0.4\lib\net45\Crossroads.ApiVersioning.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Crossroads.ClientApiKeys, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Crossroads.ClientApiKeys.1.0.7\lib\net45\Crossroads.ClientApiKeys.dll</HintPath>
+      <HintPath>..\packages\Crossroads.ClientApiKeys.1.0.9\lib\net45\Crossroads.ClientApiKeys.dll</HintPath>
     </Reference>
     <Reference Include="Crossroads.Web.Common, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Crossroads.Web.Common.1.0.13\lib\net45\Crossroads.Web.Common.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\packages\Crossroads.Web.Common.1.0.16\lib\net45\Crossroads.Web.Common.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -151,29 +156,33 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Microsoft.Owin.Security.Twitter.3.0.1\lib\net45\Microsoft.Owin.Security.Twitter.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Practices.Unity, Version=3.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Unity.3.5.1404.0\lib\net45\Microsoft.Practices.Unity.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\CommonServiceLocator.1.3\lib\portable-net4+sl5+netcore45+wpa81+wp8\Microsoft.Practices.ServiceLocation.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Practices.Unity.Configuration, Version=3.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Unity.3.5.1404.0\lib\net45\Microsoft.Practices.Unity.Configuration.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Microsoft.Practices.Unity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=6d32ff45e0ccc69f, processorArchitecture=MSIL">
+      <HintPath>..\packages\Unity.4.0.1\lib\net45\Microsoft.Practices.Unity.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Practices.Unity.RegistrationByConvention, Version=3.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Unity.3.5.1404.0\lib\net45\Microsoft.Practices.Unity.RegistrationByConvention.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Microsoft.Practices.Unity.Configuration, Version=4.0.0.0, Culture=neutral, PublicKeyToken=6d32ff45e0ccc69f, processorArchitecture=MSIL">
+      <HintPath>..\packages\Unity.4.0.1\lib\net45\Microsoft.Practices.Unity.Configuration.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Unity.Interception, Version=4.0.0.0, Culture=neutral, PublicKeyToken=6d32ff45e0ccc69f, processorArchitecture=MSIL">
+      <HintPath>..\packages\Unity.Interception.4.0.1\lib\Net45\Microsoft.Practices.Unity.Interception.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Unity.Interception.Configuration, Version=4.0.0.0, Culture=neutral, PublicKeyToken=6d32ff45e0ccc69f, processorArchitecture=MSIL">
+      <HintPath>..\packages\Unity.Interception.4.0.1\lib\Net45\Microsoft.Practices.Unity.Interception.Configuration.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Unity.RegistrationByConvention, Version=4.0.0.0, Culture=neutral, PublicKeyToken=6d32ff45e0ccc69f, processorArchitecture=MSIL">
+      <HintPath>..\packages\Unity.4.0.1\lib\net45\Microsoft.Practices.Unity.RegistrationByConvention.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Quartz, Version=2.3.3.0, Culture=neutral, PublicKeyToken=f6b8c98a402cc8a4, processorArchitecture=MSIL">
-      <HintPath>..\packages\Quartz.2.3.3\lib\net40\Quartz.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Quartz, Version=2.5.0.0, Culture=neutral, PublicKeyToken=f6b8c98a402cc8a4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Quartz.2.5.0\lib\net40\Quartz.dll</HintPath>
     </Reference>
     <Reference Include="Quartz.Unity.45, Version=1.0.0.0, Culture=neutral, PublicKeyToken=5e6e0db19dcea0c2, processorArchitecture=MSIL">
-      <HintPath>..\packages\Quartz.Unity.1.3.2\lib\net45\Quartz.Unity.45.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\packages\Quartz.Unity.1.4.0\lib\net45\Quartz.Unity.45.dll</HintPath>
     </Reference>
     <Reference Include="RestSharp, Version=105.2.3.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\RestSharp.105.2.3\lib\net45\RestSharp.dll</HintPath>
@@ -281,8 +290,8 @@
       <HintPath>..\packages\Twilio.4.7.2\lib\3.5\Twilio.Api.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Unity.WebApi">
-      <HintPath>..\packages\Unity.WebAPI.5.1\lib\net45\Unity.WebApi.dll</HintPath>
+    <Reference Include="Unity.WebApi, Version=5.2.3.0, Culture=neutral, PublicKeyToken=43da31bc42a85347, processorArchitecture=MSIL">
+      <HintPath>..\packages\Unity.WebAPI.5.2.3\lib\net45\Unity.WebApi.dll</HintPath>
     </Reference>
     <Reference Include="WebActivatorEx, Version=2.0.0.0, Culture=neutral, PublicKeyToken=7b26dc2a43f6a0d4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -308,6 +317,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\API\AccountController.cs" />
     <Compile Include="Controllers\API\AddressController.cs" />
+    <Compile Include="Controllers\API\CampaignController.cs" />
     <Compile Include="Controllers\API\CampController.cs" />
     <Compile Include="Controllers\API\ChildcareController.cs" />
     <Compile Include="Controllers\API\CongregationController.cs" />
@@ -316,6 +326,7 @@
     <Compile Include="Controllers\API\EventToolController.cs" />
     <Compile Include="Controllers\API\FormBuilderController.cs" />
     <Compile Include="Controllers\API\GoVolunteerController.cs" />
+    <Compile Include="Controllers\API\GroupLeaderController.cs" />
     <Compile Include="Controllers\API\InvitationController.cs" />
     <Compile Include="Controllers\API\GroupToolController.cs" />
     <Compile Include="Controllers\API\ParticipantController.cs" />
@@ -330,6 +341,7 @@
     <Compile Include="Exceptions\DuplicateChildcareEventsException.cs" />
     <Compile Include="Exceptions\DuplicateUserException.cs" />
     <Compile Include="Exceptions\EventMissingException.cs" />
+    <Compile Include="Exceptions\GatheringException.cs" />
     <Compile Include="Exceptions\GroupParticipantRemovalException.cs" />
     <Compile Include="Exceptions\InvalidAddressException.cs" />
     <Compile Include="Exceptions\InvoiceNotFoundException.cs" />
@@ -337,6 +349,7 @@
     <Compile Include="Exceptions\NotHeadOfHouseholdException.cs" />
     <Compile Include="Exceptions\PaymentTypeNotFoundException.cs" />
     <Compile Include="Exceptions\TripFullException.cs" />
+    <Compile Include="Models\Crossroads\Campaign\PledgeCampaignSummaryDto.cs" />
     <Compile Include="Models\Crossroads\GoVolunteer\DashboardDatum.cs" />
     <Compile Include="Models\AwsCloudsearch\AwsBoundingBox.cs" />
     <Compile Include="Models\AwsCloudsearch\AwsCloudsearchDto.cs" />
@@ -345,7 +358,13 @@
     <Compile Include="Models\Crossroads\GoVolunteer\AnywhereRegistration.cs" />
     <Compile Include="Models\Crossroads\GoVolunteer\CincinnatiRegistration.cs" />
     <Compile Include="Models\Crossroads\GoVolunteer\Project.cs" />
+    <Compile Include="Models\Crossroads\GroupLeader\GroupLeaderProfileDTO.cs" />
+    <Compile Include="Models\Crossroads\GroupLeader\GroupLeaderStatusDTO.cs" />
+    <Compile Include="Models\Crossroads\GroupLeader\SpiritualGrowthDTO.cs" />
+    <Compile Include="Models\Crossroads\InvoiceDetailDTO.cs" />
+    <Compile Include="Models\Finder\ConnectCommunicationDto.cs" />
     <Compile Include="Models\Finder\GeoCoordinates.cs" />
+    <Compile Include="Models\Finder\HostRequestDto.cs" />
     <Compile Include="Models\Finder\PinSearchResultsDto.cs" />
     <Compile Include="Models\Finder\PinDto.cs" />
     <Compile Include="Models\Crossroads\Events\EventParticipantDTO.cs" />
@@ -425,9 +444,11 @@
     <Compile Include="Models\MailChimp\BulkEmailSubscriberOptDTO.cs" />
     <Compile Include="Models\Crossroads\RsvpMember.cs" />
     <Compile Include="Processors\SendTextMessageJob.cs" />
+    <Compile Include="Security\ReactiveMPAuth.cs" />
     <Compile Include="Services\AddressService.cs" />
     <Compile Include="Services\AwsCloudsearchService.cs" />
     <Compile Include="Services\BulkEmailSyncService.cs" />
+    <Compile Include="Services\CampaignService.cs" />
     <Compile Include="Services\CampRules.cs" />
     <Compile Include="Services\CampService.cs" />
     <Compile Include="Services\CongregationService.cs" />
@@ -441,12 +462,15 @@
     <Compile Include="Services\GatewayLookupService.cs" />
     <Compile Include="Services\GoVolunteerService.cs" />
     <Compile Include="Services\GoSkillsService.cs" />
+    <Compile Include="Services\GroupLeaderService.cs" />
     <Compile Include="Services\GroupSearchService.cs" />
     <Compile Include="Services\FormBuilderService.cs" />
     <Compile Include="Services\Interfaces\GroupAttributeDTO.cs" />
+    <Compile Include="Services\Interfaces\IGroupLeaderService.cs" />
     <Compile Include="Services\Interfaces\IAddressGeocodingService.cs" />
     <Compile Include="Services\Interfaces\IAddressProximityService.cs" />
     <Compile Include="Services\Interfaces\IAwsCloudsearchService.cs" />
+    <Compile Include="Services\Interfaces\ICampaignService.cs" />
     <Compile Include="Services\Interfaces\ICampRules.cs" />
     <Compile Include="Services\Interfaces\ICampService.cs" />
     <Compile Include="Services\Interfaces\IFinderService.cs" />
@@ -676,6 +700,9 @@
   <ItemGroup>
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
+    <None Include="job_scheduling_data_2_0.xsd">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="MinistryPlatform.Debug.config">
       <DependentUpon>MinistryPlatform.config</DependentUpon>
       <IsTransformFile>True</IsTransformFile>
@@ -820,13 +847,13 @@
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
-    <Error Condition="!Exists('..\packages\Crossroads.Web.Common.1.0.13\build\Crossroads.Web.Common.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Crossroads.Web.Common.1.0.13\build\Crossroads.Web.Common.targets'))" />
-    <Error Condition="!Exists('..\packages\Crossroads.ClientApiKeys.1.0.7\build\Crossroads.ClientApiKeys.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Crossroads.ClientApiKeys.1.0.7\build\Crossroads.ClientApiKeys.targets'))" />
+    <Error Condition="!Exists('..\packages\Crossroads.Web.Common.1.0.16\build\Crossroads.Web.Common.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Crossroads.Web.Common.1.0.16\build\Crossroads.Web.Common.targets'))" />
+    <Error Condition="!Exists('..\packages\Crossroads.ClientApiKeys.1.0.9\build\Crossroads.ClientApiKeys.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Crossroads.ClientApiKeys.1.0.9\build\Crossroads.ClientApiKeys.targets'))" />
   </Target>
   <Import Project="$(SlowCheetahTargets)" Condition="Exists('$(SlowCheetahTargets)')" Label="SlowCheetah" />
   <Import Project="..\packages\AutoMapper.3.3.1\tools\AutoMapper.targets" Condition="Exists('..\packages\AutoMapper.3.3.1\tools\AutoMapper.targets')" />
-  <Import Project="..\packages\Crossroads.Web.Common.1.0.13\build\Crossroads.Web.Common.targets" Condition="Exists('..\packages\Crossroads.Web.Common.1.0.13\build\Crossroads.Web.Common.targets')" />
-  <Import Project="..\packages\Crossroads.ClientApiKeys.1.0.7\build\Crossroads.ClientApiKeys.targets" Condition="Exists('..\packages\Crossroads.ClientApiKeys.1.0.7\build\Crossroads.ClientApiKeys.targets')" />
+  <Import Project="..\packages\Crossroads.Web.Common.1.0.16\build\Crossroads.Web.Common.targets" Condition="Exists('..\packages\Crossroads.Web.Common.1.0.16\build\Crossroads.Web.Common.targets')" />
+  <Import Project="..\packages\Crossroads.ClientApiKeys.1.0.9\build\Crossroads.ClientApiKeys.targets" Condition="Exists('..\packages\Crossroads.ClientApiKeys.1.0.9\build\Crossroads.ClientApiKeys.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

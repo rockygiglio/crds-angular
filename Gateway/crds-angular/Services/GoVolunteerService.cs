@@ -425,11 +425,6 @@ namespace crds_angular.Services
             {
                 spouse.Add(BuildParagraph("Spouse Email: ", registration.Spouse.EmailAddress));
             }
-            if (registration.Spouse.DateOfBirth != null)
-            {
-                var birthDate = DateTime.Parse(registration.Spouse.DateOfBirth);
-                spouse.Add(BuildParagraph("Spouse Birthdate: ", birthDate.Month + "/" + birthDate.Day + "/" + birthDate.Year));
-            }
             if (registration.Spouse.MobilePhone != null)
             {
                 spouse.Add(BuildParagraph("Spouse Mobile Phone: ", registration.Spouse.MobilePhone));

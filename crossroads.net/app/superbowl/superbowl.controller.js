@@ -10,6 +10,7 @@
       var modalInstance = $modal.open({
         controller: ModalInstanceCtrl,
         templateUrl: 'styleModalContent.html',
+        openedClass: 'crds-legacy-styles',
         backdrop: "static",
         backdropClass: "blurred-background",
         size: size,

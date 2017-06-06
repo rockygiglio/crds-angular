@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Crossroads.Utilities.Interfaces;
+using System.Reactive.Threading.Tasks;
+using System.Threading.Tasks;
 using log4net;
-using Crossroads.Web.Common;
 using Crossroads.Web.Common.Configuration;
 using Crossroads.Web.Common.MinistryPlatform;
 using Crossroads.Web.Common.Security;
@@ -121,7 +121,6 @@ namespace MinistryPlatform.Translation.Repositories
             {
                 return null;
             }
-
             return ParseProfileRecord(pageViewRecords[0]);
         }
 
@@ -267,9 +266,7 @@ namespace MinistryPlatform.Translation.Repositories
             var staffContactAttribute = _configurationWrapper.GetConfigIntValue("StaffContactAttribute");
             const string columns = "Contact_ID_Table.*";
             string filter = $"Attribute_ID = {staffContactAttribute} AND Start_Date <= GETDATE() AND (end_date is null OR end_Date > GETDATE())";
-
             var records = _ministryPlatformRest.UsingAuthenticationToken(token).Search<MpContactAttribute, Dictionary<string, object>>(filter, columns, null, true);
-
             return records;
         }
 
@@ -327,43 +324,52 @@ namespace MinistryPlatform.Translation.Repositories
                     }
 
                     _ministryPlatformService.UpdateRecord(_configurationWrapper.GetConfigIntValue("Contacts"), profileDictionary, token);
+
                     UpdateHouseholdAddress(contactId, householdDictionary, addressDictionary);
                     return 1;
                 }
                 catch (Exception e)
                 {
-                    return 0;
+                    throw new ApplicationException("Error Saving mpContact: " + e.Message);
                 }
             });
         }
 
+        public void SetHouseholdAddress(int contactId, int householdId, int addressId)
+        {
+            var token = ApiLogin();
+            var household = new MpHousehold() { Address_ID = addressId, Household_ID = householdId };
+            _ministryPlatformRest.UsingAuthenticationToken(token).Update<MpHousehold>(household);
+        }
+
+        // This function will insert/update the Addresses table, and optionally update
+        // the Households table.  householdDictionary is optional when updating an
+        // existing address, but required when creating a new address.
         public void UpdateHouseholdAddress(int contactId,
                                   Dictionary<string, object> householdDictionary,
                                   Dictionary<string, object> addressDictionary)
         {
-            WithApiLogin<int>(token =>
+            // don't create orphaned address records
+            bool addressAlreadyExists = addressDictionary["Address_ID"] != null ? true : false;
+            if (!addressAlreadyExists && householdDictionary == null)
+                throw new ArgumentException("Household is required when adding a new address");
+
+            string apiToken = _apiUserRepository.GetToken();
+
+            if (addressAlreadyExists)
             {
-                try
-                {
-                    if (addressDictionary["Address_ID"] != null)
-                    {
-                        //address exists, update it
-                        _ministryPlatformService.UpdateRecord(_configurationWrapper.GetConfigIntValue("Addresses"), addressDictionary, token);
-                    }
-                    else
-                    {
-                        //address does not exist, create it, then attach to household
-                        var addressId = _ministryPlatformService.CreateRecord(_configurationWrapper.GetConfigIntValue("Addresses"), addressDictionary, token);
-                        householdDictionary.Add("Address_ID", addressId);
-                    }
-                    _ministryPlatformService.UpdateRecord(_configurationWrapper.GetConfigIntValue("Households"), householdDictionary, token);
-                    return 1;
-                }
-                catch (Exception e)
-                {
-                    return 0;
-                }
-            });
+                //address exists, update it
+                _ministryPlatformService.UpdateRecord(_configurationWrapper.GetConfigIntValue("Addresses"), addressDictionary, apiToken);
+            }
+            else
+            {
+                //address does not exist, create it, then attach to household
+                var addressId = _ministryPlatformService.CreateRecord(_configurationWrapper.GetConfigIntValue("Addresses"), addressDictionary, apiToken);
+                householdDictionary["Address_ID"] = addressId;
+            }
+
+            if (householdDictionary != null)
+                _ministryPlatformService.UpdateRecord(_configurationWrapper.GetConfigIntValue("Households"), householdDictionary, apiToken);
         }
 
         public List<MpRecordID> CreateContact(MpContact minorContact)
@@ -408,6 +414,14 @@ namespace MinistryPlatform.Translation.Repositories
             }
             return records.FirstOrDefault();
 
+        }
+
+        public IObservable<MpHousehold> UpdateHousehold(MpHousehold household)
+        {
+            var token = ApiLogin();            
+            var asyncresult = Task.Run(() => _ministryPlatformRest.UsingAuthenticationToken(token)
+                                                        .Update<MpHousehold>(household));
+            return asyncresult.ToObservable();
         }
 
         private static MpMyContact ParseProfileRecord(Dictionary<string, object> recordsDict)
@@ -470,15 +484,6 @@ namespace MinistryPlatform.Translation.Repositories
             if (date != null)
             {
                 return String.Format("{0:MM/dd/yyyy}", date);
-            }
-            return null;
-        }
-
-        private static string ParseAnniversaryDate(DateTime? anniversary)
-        {
-            if (anniversary != null)
-            {
-                return String.Format("{0:MM/yyyy}", anniversary);
             }
             return null;
         }
@@ -549,10 +554,7 @@ namespace MinistryPlatform.Translation.Repositories
             }
             catch (Exception e)
             {
-                var msg = string.Format("Error creating Contact, firstName: {0} lastName: {1} idCard: {2}",
-                                        contact.First_Name,
-                                        contact.Last_Name,
-                                        contact.ID_Number);
+                var msg = $"Error creating Contact, firstName: {contact.First_Name} lastName: {contact.Last_Name} idCard: {contact.ID_Number}";
                 _logger.Error(msg, e);
                 throw (new ApplicationException(msg, e));
             }

@@ -13,6 +13,10 @@
       <Query>
         <DataSourceName>MPReportsDS</DataSourceName>
         <QueryParameters>
+          <QueryParameter Name="UserID">
+            <Value>=Parameters!UserID.Value</Value>
+            <rd:UserDefined>true</rd:UserDefined>
+          </QueryParameter>
           <QueryParameter Name="FromDate">
             <Value>=Parameters!FromDate.Value</Value>
           </QueryParameter>
@@ -21,6 +25,22 @@
           </QueryParameter>
           <QueryParameter Name="AccountingCompanyID">
             <Value>=Parameters!AccountingCompanyID.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="Congregations">
+            <Value>=JOIN(Parameters!Congregations.Value,",")</Value>
+            <rd:UserDefined>true</rd:UserDefined>
+          </QueryParameter>
+          <QueryParameter Name="Campaigns">
+            <Value>=JOIN(Parameters!Campaigns.Value,",")</Value>
+            <rd:UserDefined>true</rd:UserDefined>
+          </QueryParameter>
+          <QueryParameter Name="PageID">
+            <Value>=Parameters!PageID.Value</Value>
+            <rd:UserDefined>true</rd:UserDefined>
+          </QueryParameter>
+          <QueryParameter Name="SelectionID">
+            <Value>=Parameters!SelectionID.Value</Value>
+            <rd:UserDefined>true</rd:UserDefined>
           </QueryParameter>
         </QueryParameters>
         <CommandType>StoredProcedure</CommandType>
@@ -92,8 +112,8 @@
           <DataField>Postal_Code</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="Pledge">
-          <DataField>Pledge</DataField>
+        <Field Name="Total_Pledge">
+          <DataField>Total_Pledge</DataField>
           <rd:TypeName>System.Decimal</rd:TypeName>
         </Field>
         <Field Name="Given_to_Pledge">
@@ -175,6 +195,59 @@
         </Field>
         <Field Name="Statement_Setting_ID">
           <DataField>Statement_Setting_ID</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
+    <DataSet Name="data_Lookup_Campaigns">
+      <Query>
+        <DataSourceName>MPReportsDS</DataSourceName>
+        <QueryParameters>
+          <QueryParameter Name="DomainID">
+            <Value>=Parameters!DomainID.Value</Value>
+          </QueryParameter>
+        </QueryParameters>
+        <CommandType>StoredProcedure</CommandType>
+        <CommandText>report_filter_campaigns</CommandText>
+      </Query>
+      <Fields>
+        <Field Name="Campaign_Name">
+          <DataField>Campaign_Name</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Pledge_Campaign_ID">
+          <DataField>Pledge_Campaign_ID</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
+    <DataSet Name="data_Lookup_Congregations">
+      <Query>
+        <DataSourceName>MPReportsDS</DataSourceName>
+        <QueryParameters>
+          <QueryParameter Name="DomainID">
+            <Value>=Parameters!DomainID.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="UserID">
+            <Value>=Parameters!UserID.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="PageID">
+            <Value>=Parameters!PageID.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="AccountingCompanyID">
+            <Value>=Parameters!AccountingCompanyID.Value</Value>
+          </QueryParameter>
+        </QueryParameters>
+        <CommandType>StoredProcedure</CommandType>
+        <CommandText>report_crds_filter_congregations</CommandText>
+      </Query>
+      <Fields>
+        <Field Name="Congregation_Name">
+          <DataField>Congregation_Name</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Congregation_ID">
+          <DataField>Congregation_ID</DataField>
           <rd:TypeName>System.Int32</rd:TypeName>
         </Field>
       </Fields>
@@ -471,7 +544,7 @@
                                                                 <Paragraph>
                                                                   <TextRuns>
                                                                     <TextRun>
-                                                                      <Value>=IIf(Fields!Section_Title.Value ="Trust and Foundation Giving", "Non Tax-Deductible Information through Crossroads: (You will receive a tax-deductible statement from the trust or foundation.)", "")</Value>
+                                                                      <Value>=Fields!Header_Title.Value</Value>
                                                                       <Style>
                                                                         <FontWeight>Bold</FontWeight>
                                                                       </Style>
@@ -601,7 +674,7 @@
                                                             <Paragraph>
                                                               <TextRuns>
                                                                 <TextRun>
-                                                                  <Value>=IIF(Fields!Section_Title.Value = "Stock Giving","","Amount")</Value>
+                                                                  <Value>=IIF(Fields!Section_Title.Value = "Stock Giving:","","Amount")</Value>
                                                                   <Style>
                                                                     <FontWeight>Bold</FontWeight>
                                                                   </Style>
@@ -707,7 +780,7 @@
                                                             <Paragraph>
                                                               <TextRuns>
                                                                 <TextRun>
-                                                                  <Value>Payment Type</Value>
+                                                                  <Value>=Switch(Fields!Section_Title.Value="Trust and Foundation Giving:", "Trust/Foundation", Fields!Section_Title.Value = "Stock Giving:" ,"Stock", Fields!Section_Title.Value = "Tax-Deductible Information:" , "Payment Type" )</Value>
                                                                   <Style>
                                                                     <FontWeight>Bold</FontWeight>
                                                                   </Style>
@@ -805,7 +878,7 @@
                                                                           <Paragraph>
                                                                             <TextRuns>
                                                                               <TextRun>
-                                                                                <Value>=IIF(Fields!Section_Title.Value = "Stock Giving","",Fields!Amount.Value)</Value>
+                                                                                <Value>=IIF(Fields!Section_Title.Value = "Stock Giving:","",Fields!Amount.Value)</Value>
                                                                                 <Style>
                                                                                   <Format>'$'#,0.00;('$'#,0.00)</Format>
                                                                                 </Style>
@@ -1090,7 +1163,7 @@
                                                                           <Paragraph>
                                                                             <TextRuns>
                                                                               <TextRun>
-                                                                                <Value>=IIF(Fields!Section_Title.Value = "Stock Giving","","Total:")</Value>
+                                                                                <Value>=IIF(Fields!Section_Title.Value = "Stock Giving:","","Total:")</Value>
                                                                                 <Style>
                                                                                   <FontWeight>Bold</FontWeight>
                                                                                 </Style>
@@ -1123,7 +1196,7 @@
                                                                           <Paragraph>
                                                                             <TextRuns>
                                                                               <TextRun>
-                                                                                <Value>=IIF(Fields!Section_Title.Value = "Stock Giving","",Sum(Fields!Amount.Value))</Value>
+                                                                                <Value>=IIF(Fields!Section_Title.Value = "Stock Giving:","",Sum(Fields!Amount.Value))</Value>
                                                                                 <Style>
                                                                                   <FontWeight>Bold</FontWeight>
                                                                                   <Format>'$'#,0.00;('$'#,0.00)</Format>
@@ -1568,6 +1641,11 @@
                                                             <TablixMembers>
                                                               <TablixMember>
                                                                 <Group Name="Donation_Description" />
+                                                                <SortExpressions>
+                                                                  <SortExpression>
+                                                                    <Value>=Fields!Donation_Date.Value</Value>
+                                                                  </SortExpression>
+                                                                </SortExpressions>
                                                               </TablixMember>
                                                               <TablixMember>
                                                                 <KeepWithGroup>Before</KeepWithGroup>
@@ -1633,6 +1711,15 @@
                                               </TablixMembers>
                                             </TablixRowHierarchy>
                                             <DataSetName>data_Main</DataSetName>
+                                            <Filters>
+                                              <Filter>
+                                                <FilterExpression>=Fields!Section_Sort.Value</FilterExpression>
+                                                <Operator>NotEqual</Operator>
+                                                <FilterValues>
+                                                  <FilterValue DataType="Integer">4</FilterValue>
+                                                </FilterValues>
+                                              </Filter>
+                                            </Filters>
                                             <Style>
                                               <Border>
                                                 <Style>None</Style>
@@ -1808,47 +1895,6 @@
                                       </TablixCell>
                                     </TablixCells>
                                   </TablixRow>
-                                  <TablixRow>
-                                    <Height>0.25in</Height>
-                                    <TablixCells>
-                                      <TablixCell>
-                                        <CellContents>
-                                          <Textbox Name="Textbox38">
-                                            <CanGrow>true</CanGrow>
-                                            <KeepTogether>true</KeepTogether>
-                                            <Paragraphs>
-                                              <Paragraph>
-                                                <TextRuns>
-                                                  <TextRun>
-                                                    <Value>="THIS IS CROSSROADS FOOTER"</Value>
-                                                    <Style />
-                                                  </TextRun>
-                                                </TextRuns>
-                                                <Style>
-                                                  <TextAlign>Center</TextAlign>
-                                                </Style>
-                                              </Paragraph>
-                                            </Paragraphs>
-                                            <rd:DefaultName>Textbox38</rd:DefaultName>
-                                            <Style>
-                                              <Border>
-                                                <Style>None</Style>
-                                              </Border>
-                                              <PaddingLeft>2pt</PaddingLeft>
-                                              <PaddingRight>2pt</PaddingRight>
-                                              <PaddingTop>2pt</PaddingTop>
-                                              <PaddingBottom>2pt</PaddingBottom>
-                                            </Style>
-                                          </Textbox>
-                                          <ColSpan>5</ColSpan>
-                                        </CellContents>
-                                      </TablixCell>
-                                      <TablixCell />
-                                      <TablixCell />
-                                      <TablixCell />
-                                      <TablixCell />
-                                    </TablixCells>
-                                  </TablixRow>
                                 </TablixRows>
                               </TablixBody>
                               <TablixColumnHierarchy>
@@ -1865,12 +1911,129 @@
                                   <TablixMember />
                                   <TablixMember />
                                   <TablixMember />
-                                  <TablixMember />
                                 </TablixMembers>
                               </TablixRowHierarchy>
                               <DataSetName>data_Main</DataSetName>
-                              <Height>5.42041in</Height>
+                              <Height>5.17041in</Height>
                               <Width>8.86459in</Width>
+                              <Style>
+                                <Border>
+                                  <Style>None</Style>
+                                </Border>
+                              </Style>
+                            </Tablix>
+                            <Tablix Name="CampaignContributions">
+                              <TablixBody>
+                                <TablixColumns>
+                                  <TablixColumn>
+                                    <Width>8.86459in</Width>
+                                  </TablixColumn>
+                                </TablixColumns>
+                                <TablixRows>
+                                  <TablixRow>
+                                    <Height>0.20139in</Height>
+                                    <TablixCells>
+                                      <TablixCell>
+                                        <CellContents>
+                                          <Textbox Name="Textbox16">
+                                            <CanGrow>true</CanGrow>
+                                            <KeepTogether>true</KeepTogether>
+                                            <Paragraphs>
+                                              <Paragraph>
+                                                <TextRuns>
+                                                  <TextRun>
+                                                    <Value />
+                                                    <Style />
+                                                  </TextRun>
+                                                </TextRuns>
+                                                <Style />
+                                              </Paragraph>
+                                            </Paragraphs>
+                                            <rd:DefaultName>Textbox16</rd:DefaultName>
+                                            <Style>
+                                              <Border>
+                                                <Color>LightGrey</Color>
+                                                <Style>None</Style>
+                                              </Border>
+                                              <PaddingLeft>2pt</PaddingLeft>
+                                              <PaddingRight>2pt</PaddingRight>
+                                              <PaddingTop>2pt</PaddingTop>
+                                              <PaddingBottom>2pt</PaddingBottom>
+                                            </Style>
+                                          </Textbox>
+                                        </CellContents>
+                                      </TablixCell>
+                                    </TablixCells>
+                                  </TablixRow>
+                                  <TablixRow>
+                                    <Height>0.25in</Height>
+                                    <TablixCells>
+                                      <TablixCell>
+                                        <CellContents>
+                                          <Textbox Name="Deductible_Amount1">
+                                            <CanGrow>true</CanGrow>
+                                            <KeepTogether>true</KeepTogether>
+                                            <Paragraphs>
+                                              <Paragraph>
+                                                <TextRuns>
+                                                  <TextRun>
+                                                    <Value>="&lt;b&gt;"+Fields!Campaign_Name.Value + "&lt;/b&gt;&lt;br&gt; You have contributed " + FormatPercent(Fields!Given_to_Pledge.Value/Fields!Total_Pledge.Value) + " of the "+ FormatCurrency(Fields!Total_Pledge.Value) + " commitment. &lt;br&gt; Total campaign contributions to date: " + FormatCurrency(Fields!Given_to_Pledge.Value)</Value>
+                                                    <MarkupType>HTML</MarkupType>
+                                                    <Style />
+                                                  </TextRun>
+                                                </TextRuns>
+                                                <Style>
+                                                  <TextAlign>Center</TextAlign>
+                                                </Style>
+                                              </Paragraph>
+                                            </Paragraphs>
+                                            <rd:DefaultName>Deductible_Amount1</rd:DefaultName>
+                                            <Style>
+                                              <Border>
+                                                <Color>LightGrey</Color>
+                                                <Style>None</Style>
+                                              </Border>
+                                              <PaddingLeft>2pt</PaddingLeft>
+                                              <PaddingRight>2pt</PaddingRight>
+                                              <PaddingTop>2pt</PaddingTop>
+                                              <PaddingBottom>2pt</PaddingBottom>
+                                            </Style>
+                                          </Textbox>
+                                        </CellContents>
+                                      </TablixCell>
+                                    </TablixCells>
+                                  </TablixRow>
+                                </TablixRows>
+                              </TablixBody>
+                              <TablixColumnHierarchy>
+                                <TablixMembers>
+                                  <TablixMember />
+                                </TablixMembers>
+                              </TablixColumnHierarchy>
+                              <TablixRowHierarchy>
+                                <TablixMembers>
+                                  <TablixMember>
+                                    <KeepWithGroup>After</KeepWithGroup>
+                                  </TablixMember>
+                                  <TablixMember>
+                                    <Group Name="Details" />
+                                  </TablixMember>
+                                </TablixMembers>
+                              </TablixRowHierarchy>
+                              <DataSetName>data_Main</DataSetName>
+                              <Filters>
+                                <Filter>
+                                  <FilterExpression>=Fields!Section_Sort.Value</FilterExpression>
+                                  <Operator>Equal</Operator>
+                                  <FilterValues>
+                                    <FilterValue DataType="Integer">4</FilterValue>
+                                  </FilterValues>
+                                </Filter>
+                              </Filters>
+                              <Top>5.68972in</Top>
+                              <Height>0.45139in</Height>
+                              <Width>8.86459in</Width>
+                              <ZIndex>1</ZIndex>
                               <Style>
                                 <Border>
                                   <Style>None</Style>
@@ -1923,9 +2086,40 @@
       <Width>10in</Width>
       <Page>
         <PageFooter>
-          <Height>0.25in</Height>
+          <Height>0.31944in</Height>
           <PrintOnFirstPage>true</PrintOnFirstPage>
           <PrintOnLastPage>true</PrintOnLastPage>
+          <ReportItems>
+            <Textbox Name="Deductible_Amount">
+              <CanGrow>true</CanGrow>
+              <KeepTogether>true</KeepTogether>
+              <Paragraphs>
+                <Paragraph>
+                  <TextRuns>
+                    <TextRun>
+                      <Value>="THIS IS CROSSROADS FOOTER"</Value>
+                      <Style />
+                    </TextRun>
+                  </TextRuns>
+                  <Style>
+                    <TextAlign>Center</TextAlign>
+                  </Style>
+                </Paragraph>
+              </Paragraphs>
+              <rd:DefaultName>Deductible_Amount</rd:DefaultName>
+              <Height>0.25in</Height>
+              <Width>8.86459in</Width>
+              <Style>
+                <Border>
+                  <Style>None</Style>
+                </Border>
+                <PaddingLeft>2pt</PaddingLeft>
+                <PaddingRight>2pt</PaddingRight>
+                <PaddingTop>2pt</PaddingTop>
+                <PaddingBottom>2pt</PaddingBottom>
+              </Style>
+            </Textbox>
+          </ReportItems>
           <Style>
             <Border>
               <Style>None</Style>
@@ -1948,7 +2142,7 @@
           <Value>0FDE7F32-37E3-4E0B-B020-622E0EBD6BF0</Value>
         </Values>
       </DefaultValue>
-      <Prompt>Domain ID</Prompt>
+      <Prompt>DomainID</Prompt>
       <Hidden>true</Hidden>
     </ReportParameter>
     <ReportParameter Name="UserID">
@@ -1958,7 +2152,7 @@
           <Value>0</Value>
         </Values>
       </DefaultValue>
-      <Prompt>User ID</Prompt>
+      <Prompt>UserID</Prompt>
       <Hidden>true</Hidden>
     </ReportParameter>
     <ReportParameter Name="PageID">
@@ -1968,34 +2162,19 @@
           <Value>0</Value>
         </Values>
       </DefaultValue>
-      <Prompt>Page ID</Prompt>
+      <Prompt>PageID</Prompt>
       <Hidden>true</Hidden>
     </ReportParameter>
     <ReportParameter Name="FromDate">
       <DataType>DateTime</DataType>
-      <DefaultValue>
-        <Values>
-          <Value>=IIF(Month(Today())&gt;6 , DateSerial(Year(Today()),01,01), DateSerial((Year(Today())-1),01,01))</Value>
-        </Values>
-      </DefaultValue>
       <Prompt>From Date</Prompt>
     </ReportParameter>
     <ReportParameter Name="ToDate">
       <DataType>DateTime</DataType>
-      <DefaultValue>
-        <Values>
-          <Value>=IIF(Month(Today())&gt;6 , DateSerial(Year(Today()),12,31), DateSerial((Year(Today())-1),12,31))</Value>
-        </Values>
-      </DefaultValue>
       <Prompt>To Date</Prompt>
     </ReportParameter>
     <ReportParameter Name="AccountingCompanyID">
       <DataType>Integer</DataType>
-      <DefaultValue>
-        <Values>
-          <Value>1</Value>
-        </Values>
-      </DefaultValue>
       <Prompt>Accounting Company</Prompt>
       <ValidValues>
         <DataSetReference>
@@ -2007,15 +2186,55 @@
     </ReportParameter>
     <ReportParameter Name="PrintDate">
       <DataType>DateTime</DataType>
+      <Prompt>Print Date</Prompt>
+    </ReportParameter>
+    <ReportParameter Name="IsMulti">
+      <DataType>Boolean</DataType>
       <DefaultValue>
         <Values>
-          <Value>=today()</Value>
+          <Value>true</Value>
         </Values>
       </DefaultValue>
-      <Prompt>Print Date</Prompt>
+      <Prompt>IsMulti</Prompt>
+      <Hidden>true</Hidden>
+    </ReportParameter>
+    <ReportParameter Name="Congregations">
+      <DataType>String</DataType>
+      <Prompt>Congregations</Prompt>
+      <ValidValues>
+        <DataSetReference>
+          <DataSetName>data_Lookup_Congregations</DataSetName>
+          <ValueField>Congregation_ID</ValueField>
+          <LabelField>Congregation_Name</LabelField>
+        </DataSetReference>
+      </ValidValues>
+      <MultiValue>true</MultiValue>
+    </ReportParameter>
+    <ReportParameter Name="Campaigns">
+      <DataType>String</DataType>
+      <Prompt>Campaigns</Prompt>
+      <ValidValues>
+        <DataSetReference>
+          <DataSetName>data_Lookup_Campaigns</DataSetName>
+          <ValueField>Pledge_Campaign_ID</ValueField>
+          <LabelField>Campaign_Name</LabelField>
+        </DataSetReference>
+      </ValidValues>
+      <MultiValue>true</MultiValue>
+    </ReportParameter>
+    <ReportParameter Name="SelectionID">
+      <DataType>Integer</DataType>
+      <Nullable>true</Nullable>
+      <DefaultValue>
+        <Values>
+          <Value>0</Value>
+        </Values>
+      </DefaultValue>
+      <Prompt>SelectionID</Prompt>
+      <Hidden>true</Hidden>
     </ReportParameter>
   </ReportParameters>
   <rd:ReportUnitType>Inch</rd:ReportUnitType>
-  <rd:ReportServerUrl>http://adminint.crossroads.net/ReportServer</rd:ReportServerUrl>
+  <rd:ReportServerUrl>http://localhost/ReportServer</rd:ReportServerUrl>
   <rd:ReportID>ac2ff723-85d4-47ef-8b30-4696e69d4216</rd:ReportID>
 </Report>

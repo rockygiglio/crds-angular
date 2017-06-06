@@ -132,7 +132,7 @@ describe('AdminRecurringGift', function() {
   describe('On initialization', function() {
     it('should set impersonation error when user not allowed to impersonate', function() {
       var error = {};
-      $httpBackend.expectGET(window.__env__['CRDS_API_ENDPOINT'] + 'api/donor/recurrence?impersonateDonorId=12')
+      $httpBackend.expectGET(window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api/donor/recurrence?impersonateDonorId=12')
         .respond(403, error);
       $httpBackend.flush();
 
@@ -142,7 +142,7 @@ describe('AdminRecurringGift', function() {
 
     it('should set impersonation error when user to impersonate is not found', function() {
       var error = {};
-      $httpBackend.expectGET(window.__env__['CRDS_API_ENDPOINT'] + 'api/donor/recurrence?impersonateDonorId=12')
+      $httpBackend.expectGET(window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api/donor/recurrence?impersonateDonorId=12')
         .respond(409, error);
       $httpBackend.flush();
 
@@ -151,7 +151,7 @@ describe('AdminRecurringGift', function() {
     });
 
     it('should retrieve recurring gifts for impersonated user', function() {
-      $httpBackend.expectGET(window.__env__['CRDS_API_ENDPOINT'] + 'api/donor/recurrence?impersonateDonorId=12')
+      $httpBackend.expectGET(window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api/donor/recurrence?impersonateDonorId=12')
                              .respond(mockRecurringGiftsResponse);
       $httpBackend.flush();
 
@@ -166,7 +166,7 @@ describe('AdminRecurringGift', function() {
     });
 
     it('should not have recurring gifts if there are no recurring gifts', function() {
-      $httpBackend.expectGET(window.__env__['CRDS_API_ENDPOINT'] + 'api/donor/recurrence?impersonateDonorId=12')
+      $httpBackend.expectGET(window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api/donor/recurrence?impersonateDonorId=12')
         .respond(404, {});
       $httpBackend.flush();
 
@@ -180,7 +180,7 @@ describe('AdminRecurringGift', function() {
   describe('scope.openEditGiftModal(selectedDonation)', function() {
     beforeEach(function() {
       vm.openCreateGiftModal();
-      $httpBackend.expectGET(window.__env__['CRDS_API_ENDPOINT'] + 'api/donor/recurrence?impersonateDonorId=12')
+      $httpBackend.expectGET(window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api/donor/recurrence?impersonateDonorId=12')
                              .respond(mockRecurringGiftsResponse);
       $httpBackend.flush();
 

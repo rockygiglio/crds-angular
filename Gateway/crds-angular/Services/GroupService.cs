@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Antlr.Runtime.Misc;
 using AutoMapper;
 using crds_angular.Models.Crossroads;
 using crds_angular.Models.Crossroads.Attribute;
 using crds_angular.Models.Crossroads.Groups;
+using crds_angular.Models.Crossroads.Profile;
 using crds_angular.Services.Interfaces;
-using Crossroads.Utilities.Interfaces;
 using log4net;
-using Crossroads.Web.Common;
 using Crossroads.Web.Common.Configuration;
 using Crossroads.Web.Common.MinistryPlatform;
 using MinistryPlatform.Translation.Exceptions;
@@ -20,7 +18,6 @@ using IAttributeRepository = MinistryPlatform.Translation.Repositories.Interface
 using IEventRepository = MinistryPlatform.Translation.Repositories.Interfaces.IEventRepository;
 using IGroupRepository = MinistryPlatform.Translation.Repositories.Interfaces.IGroupRepository;
 using IObjectAttributeService = crds_angular.Services.Interfaces.IObjectAttributeService;
-using Participant = MinistryPlatform.Translation.Models.MpParticipant;
 
 namespace crds_angular.Services
 {
@@ -213,26 +210,34 @@ namespace crds_angular.Services
             {
                 foreach (var participant in participants)
                 {
-                    int groupParticipantId;
-
                     var roleId = participant.groupRoleId ?? _groupRoleDefaultId;
 
                     var participantId = participant.particpantId.Value;
-                    groupParticipantId = _mpGroupRepository.addParticipantToGroup(participantId,
-                                                               Convert.ToInt32(groupId),
-                                                               roleId,
-                                                               participant.childCareNeeded,
-                                                               DateTime.Now);
 
-                    var configuration = MpObjectAttributeConfigurationFactory.GroupParticipant();
-                    _objectAttributeService.SaveObjectAttributes(groupParticipantId, participant.AttributeTypes, participant.SingleAttributes, configuration);                    
+                    int groupParticipantId = _mpGroupRepository.GetParticipantGroupMemberId(Convert.ToInt32(groupId), participantId);
 
-                    if (participant.capacityNeeded > 0)
+                    if (groupParticipantId < 0) 
                     {
-                        DecrementCapacity(participant.capacityNeeded, group);
-                    }
+                        groupParticipantId = _mpGroupRepository.addParticipantToGroup(participantId,
+                                                                                      Convert.ToInt32(groupId),
+                                                                                      roleId,
+                                                                                      participant.childCareNeeded,
+                                                                                      DateTime.Now);
 
-                    _logger.Debug("Added user - group/participant id = " + groupParticipantId);
+                        var configuration = MpObjectAttributeConfigurationFactory.GroupParticipant();
+                        _objectAttributeService.SaveObjectAttributes(groupParticipantId, participant.AttributeTypes, participant.SingleAttributes, configuration);
+
+                        if (participant.capacityNeeded > 0)
+                        {
+                            DecrementCapacity(participant.capacityNeeded, group);
+                        }
+
+                        _logger.Debug("Added user - group/participant id = " + groupParticipantId);
+                    }
+                    else
+                    {
+                        _logger.Debug("User "+participantId+ " was already a member of group "+groupId);
+                    }
 
                     // Now see what future events are scheduled for this group, and register the user for those
                     var events = _mpGroupRepository.getAllEventsForGroup(Convert.ToInt32(groupId));
@@ -241,7 +246,8 @@ namespace crds_angular.Services
                     {
                         foreach (var e in events.Where(x => x.EventType != (Convert.ToString(_childcareEventTypeId))))
                         {
-                            _eventService.RegisterParticipantForEvent(participantId, e.EventId, groupId, groupParticipantId);
+                            //SafeRegisterParticipant will not register again if they are already registered
+                            _eventService.SafeRegisterParticipant( e.EventId, participantId, groupId, groupParticipantId);
                             _logger.Debug("Added participant " + participant + " to group event " + e.EventId);
                         }
                     }
@@ -277,9 +283,9 @@ namespace crds_angular.Services
             _mpGroupRepository.UpdateGroupRemainingCapacity(group);
         }
 
-        public void addContactToGroup(int groupId, int contactId)
+        public int addContactToGroup(int groupId, int contactId)
         {
-            Participant participant;
+            MpParticipant participant;
 
             try
             {
@@ -294,7 +300,7 @@ namespace crds_angular.Services
 
             try
             {
-                _mpGroupRepository.addParticipantToGroup(participant.ParticipantId, groupId, _groupRoleDefaultId, false, DateTime.Now);
+                return _mpGroupRepository.addParticipantToGroup(participant.ParticipantId, groupId, _groupRoleDefaultId, false, DateTime.Now);
             }
             catch (Exception e)
             {
@@ -371,7 +377,7 @@ namespace crds_angular.Services
             return groups[0];
         }
 
-        public GroupDTO getGroupDetails(int groupId, int contactId, Participant participant, string authUserToken)
+        public GroupDTO getGroupDetails(int groupId, int contactId, MpParticipant participant, string authUserToken)
         {
             int participantId = participant.ParticipantId;
             MpGroup g = _mpGroupRepository.getGroupDetails(groupId);
@@ -403,7 +409,7 @@ namespace crds_angular.Services
                 detail.GroupDescription = g.GroupDescription;
                 detail.GroupId = g.GroupId;
                 detail.GroupFullInd = g.Full;
-                detail.WaitListInd = g.WaitList;
+                detail.WaitListInd = g.WaitList ?? false;
                 detail.ChildCareAvailable = g.ChildCareAvailable;
                 detail.WaitListGroupId = g.WaitListGroupId;
                 detail.OnlineRsvpMinimumAge = g.MinimumAge;
@@ -630,8 +636,22 @@ namespace crds_angular.Services
 
         public Participant GetParticipantRecord(string token) 
         {
-            var participant = _participantService.GetParticipantRecord(token);            
-            return participant;
+            var participant = _participantService.GetParticipantRecord(token);
+            return new Participant
+            {
+                Age = participant.Age,
+                ApprovedSmallGroupLeader = participant.ApprovedSmallGroupLeader,
+                AttendanceStart = participant.AttendanceStart,
+                ContactId = participant.ContactId,
+                DisplayName = participant.DisplayName,
+                EmailAddress = participant.EmailAddress,
+                GroupLeaderStatus = participant.GroupLeaderStatus,
+                GroupName = participant.GroupName,
+                Nickname = participant.Nickname,
+                ParticipantId = participant.ParticipantId,
+                PreferredName = participant.PreferredName,
+                Role = participant.Role
+            };
         }
 
         public void SendJourneyEmailInvite(EmailCommunicationDTO communication, string token)
@@ -655,14 +675,14 @@ namespace crds_angular.Services
         }
 
 
-        private MpCommunication CreateJourneyInvitation(EmailCommunicationDTO communication, Participant particpant)
+        private MinistryPlatform.Translation.Models.MpCommunication CreateJourneyInvitation(EmailCommunicationDTO communication, Participant particpant)
         {
             var template = _communicationService.GetTemplate(communication.TemplateId);
             var fromContact = _contactService.GetContactById(_configurationWrapper.GetConfigIntValue("DefaultContactEmailId"));
             var replyTo = _contactService.GetContactById(particpant.ContactId);
             var mergeData = SetupMergeData(particpant.PreferredName, communication.groupId.Value);
 
-            return new MpCommunication
+            return new MinistryPlatform.Translation.Models.MpCommunication
             {
                 AuthorUserId = 5,
                 DomainId = 1,
@@ -827,7 +847,7 @@ namespace crds_angular.Services
                 EmailAddress = p.Email
             }).ToList();
 
-            var email = new MpCommunication
+            var email = new MinistryPlatform.Translation.Models.MpCommunication
             {
                 EmailBody = body,
                 EmailSubject = subject,

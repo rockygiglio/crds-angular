@@ -5,8 +5,8 @@ class ChildcareDashboardService {
     this.session = Session;
     this.congregations = [];
     this.headOfHouseholdError = false;
-    this.dashboard = $resource(__API_ENDPOINT__ + `api/childcare/dashboard/:contactId`);
-    this.saveRsvp = $resource(__API_ENDPOINT__ + 'api/childcare/rsvp');
+    this.dashboard = $resource(__GATEWAY_CLIENT_ENDPOINT__ + `api/childcare/dashboard/:contactId`);
+    this.saveRsvp = $resource(__GATEWAY_CLIENT_ENDPOINT__ + 'api/childcare/rsvp');
   }
 
   fetchChildcareDates() {

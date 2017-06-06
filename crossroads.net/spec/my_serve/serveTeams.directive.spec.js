@@ -98,7 +98,7 @@ describe('Serve Teams Directive', function() {
 
   it("should set the current member to the loggedin user", function(){
     var isolated = element.isolateScope();
-    $httpBackend.when('GET', new RegExp(window.__env__['CRDS_API_ENDPOINT'] + 'api/serve/opp-capacity\\?id=.*')).respond(200, {});
+    $httpBackend.when('GET', new RegExp(window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api/serve/opp-capacity\\?id=.*')).respond(200, {});
     isolated.togglePanel(null);
 
     $httpBackend.flush();
@@ -107,7 +107,7 @@ describe('Serve Teams Directive', function() {
 
   it("should handle changing the tab", function(){
     var isolated = element.isolateScope();
-    $httpBackend.when('GET', new RegExp(window.__env__['CRDS_API_ENDPOINT'] + 'api/serve/opp-capacity\\?id=.*')).respond(200, {});
+    $httpBackend.when('GET', new RegExp(window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api/serve/opp-capacity\\?id=.*')).respond(200, {});
     isolated.togglePanel(mockTeam[0].members[1]);
 
     $httpBackend.flush();
@@ -117,8 +117,8 @@ describe('Serve Teams Directive', function() {
 
   it("should get the last serving date for an opportunity", function() {
     var isolated = element.isolateScope();
-    $httpBackend.when('GET', new RegExp(window.__env__['CRDS_API_ENDPOINT'] + 'api/serve/opp-capacity\\?id=.*')).respond(200, {});
-    $httpBackend.when('GET', window.__env__['CRDS_API_ENDPOINT'] + 'api/opportunity/getLastOpportunityDate/145').respond({'date': '1444552200'});
+    $httpBackend.when('GET', new RegExp(window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api/serve/opp-capacity\\?id=.*')).respond(200, {});
+    $httpBackend.when('GET', window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api/opportunity/getLastOpportunityDate/145').respond({'date': '1444552200'});
     isolated.togglePanel(null);
     expect(isolated.currentMember).toBe(mockTeam[0].members[0]);
 
@@ -133,8 +133,8 @@ describe('Serve Teams Directive', function() {
 
   it("should set the end date to the current opportunity when selecting 'once'", function(){
     var isolated = element.isolateScope();
-    $httpBackend.when('GET', new RegExp(window.__env__['CRDS_API_ENDPOINT'] + 'api/serve/opp-capacity\\?id=.*')).respond(200, {});
-    $httpBackend.when('GET', window.__env__['CRDS_API_ENDPOINT'] + 'api/opportunity/getLastOpportunityDate/145').respond({'date': '1444552200'});
+    $httpBackend.when('GET', new RegExp(window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api/serve/opp-capacity\\?id=.*')).respond(200, {});
+    $httpBackend.when('GET', window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api/opportunity/getLastOpportunityDate/145').respond({'date': '1444552200'});
     isolated.togglePanel(null);
 
     $httpBackend.flush();
@@ -147,9 +147,9 @@ describe('Serve Teams Directive', function() {
 
   it("should save the response of one time rsvping", function(){
     var isolated = element.isolateScope();
-    $httpBackend.when('GET', new RegExp(window.__env__['CRDS_API_ENDPOINT'] + 'api/serve/opp-capacity\\?id=.*')).respond(200, {});
-    $httpBackend.when('GET', window.__env__['CRDS_API_ENDPOINT'] + 'api/opportunity/getLastOpportunityDate/145').respond({'date': '1444552200'});
-    $httpBackend.when('POST', window.__env__['CRDS_API_ENDPOINT'] + 'api/serve/save-rsvp', rsvp ).respond(200, '');
+    $httpBackend.when('GET', new RegExp(window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api/serve/opp-capacity\\?id=.*')).respond(200, {});
+    $httpBackend.when('GET', window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api/opportunity/getLastOpportunityDate/145').respond({'date': '1444552200'});
+    $httpBackend.when('POST', window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api/serve/save-rsvp', rsvp ).respond(200, '');
     isolated.togglePanel(null);
 
     $httpBackend.flush();
@@ -185,8 +185,8 @@ describe('Serve Teams Directive', function() {
 
   it("should not allow a save if opportunity is not choosen", function(){
     var isolated = element.isolateScope();
-    $httpBackend.when('GET', new RegExp(window.__env__['CRDS_API_ENDPOINT'] + 'api/serve/opp-capacity\\?id=.*')).respond(200, {});
-    $httpBackend.when('GET', window.__env__['CRDS_API_ENDPOINT'] + 'api/opportunity/getLastOpportunityDate/145').respond({'date': '1444552200'});
+    $httpBackend.when('GET', new RegExp(window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api/serve/opp-capacity\\?id=.*')).respond(200, {});
+    $httpBackend.when('GET', window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api/opportunity/getLastOpportunityDate/145').respond({'date': '1444552200'});
     isolated.togglePanel(null);
 
     $httpBackend.flush();
@@ -198,8 +198,8 @@ describe('Serve Teams Directive', function() {
 
   it("should not allow a save if rsvp is not choosen", function(){
     var isolated = element.isolateScope();
-    $httpBackend.when('GET', new RegExp(window.__env__['CRDS_API_ENDPOINT'] + 'api/serve/opp-capacity\\?id=.*')).respond(200, {});
-    $httpBackend.when('GET', window.__env__['CRDS_API_ENDPOINT'] + 'api/opportunity/getLastOpportunityDate/145').respond({'date': '1444552200'});
+    $httpBackend.when('GET', new RegExp(window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api/serve/opp-capacity\\?id=.*')).respond(200, {});
+    $httpBackend.when('GET', window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api/opportunity/getLastOpportunityDate/145').respond({'date': '1444552200'});
     isolated.togglePanel(null);
 
     $httpBackend.flush();
@@ -211,8 +211,8 @@ describe('Serve Teams Directive', function() {
 
   it("should not allow a save if frequency is not choosen", function(){
     var isolated = element.isolateScope();
-    $httpBackend.when('GET', new RegExp(window.__env__['CRDS_API_ENDPOINT'] + 'api/serve/opp-capacity\\?id=.*')).respond(200, {});
-    $httpBackend.when('GET', window.__env__['CRDS_API_ENDPOINT'] + 'api/opportunity/getLastOpportunityDate/145').respond({'date': '1444552200'});
+    $httpBackend.when('GET', new RegExp(window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api/serve/opp-capacity\\?id=.*')).respond(200, {});
+    $httpBackend.when('GET', window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api/opportunity/getLastOpportunityDate/145').respond({'date': '1444552200'});
     isolated.togglePanel(null);
 
     $httpBackend.flush();
@@ -224,8 +224,8 @@ describe('Serve Teams Directive', function() {
 
   it("should not allow a save if to date is not choosen", function(){
     var isolated = element.isolateScope();
-    $httpBackend.when('GET', new RegExp(window.__env__['CRDS_API_ENDPOINT'] + 'api/serve/opp-capacity\\?id=.*')).respond(200, {});
-    $httpBackend.when('GET', window.__env__['CRDS_API_ENDPOINT'] + 'api/opportunity/getLastOpportunityDate/145').respond({'date': '1444552200'});
+    $httpBackend.when('GET', new RegExp(window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api/serve/opp-capacity\\?id=.*')).respond(200, {});
+    $httpBackend.when('GET', window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api/opportunity/getLastOpportunityDate/145').respond({'date': '1444552200'});
     isolated.togglePanel(null);
 
     $httpBackend.flush();
@@ -242,8 +242,8 @@ describe('Serve Teams Directive', function() {
 
   it("should not allow a save if from date is not choosen", function(){
     var isolated = element.isolateScope();
-    $httpBackend.when('GET', new RegExp(window.__env__['CRDS_API_ENDPOINT'] + 'api/serve/opp-capacity\\?id=.*')).respond(200, {});
-    $httpBackend.when('GET', window.__env__['CRDS_API_ENDPOINT'] + 'api/opportunity/getLastOpportunityDate/145').respond({'date': '1444552200'});
+    $httpBackend.when('GET', new RegExp(window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api/serve/opp-capacity\\?id=.*')).respond(200, {});
+    $httpBackend.when('GET', window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api/opportunity/getLastOpportunityDate/145').respond({'date': '1444552200'});
     isolated.togglePanel(null);
 
     $httpBackend.flush();
@@ -259,8 +259,8 @@ describe('Serve Teams Directive', function() {
 
   it("should not allow a save when the to date if before the from date", function(){
     var isolated = element.isolateScope();
-    $httpBackend.when('GET', new RegExp(window.__env__['CRDS_API_ENDPOINT'] + 'api/serve/opp-capacity\\?id=.*')).respond(200, {});
-    $httpBackend.when('GET', window.__env__['CRDS_API_ENDPOINT'] + 'api/opportunity/getLastOpportunityDate/145').respond({'date': '1444552200'});
+    $httpBackend.when('GET', new RegExp(window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api/serve/opp-capacity\\?id=.*')).respond(200, {});
+    $httpBackend.when('GET', window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api/opportunity/getLastOpportunityDate/145').respond({'date': '1444552200'});
     isolated.togglePanel(null);
 
     $httpBackend.flush();

@@ -37,6 +37,7 @@
       var changeProfileImage = $modal.open({
         templateUrl: 'picture/profileImageUpload.html',
         controller: 'ChangeProfileImageController as modal',
+        openedClass: 'crds-legacy-styles',
         backdrop: true,
         show: false
       });

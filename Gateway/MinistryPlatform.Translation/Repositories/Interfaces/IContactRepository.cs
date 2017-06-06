@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Models.MinistryPlatform.Translation.Models;
@@ -27,5 +28,7 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
         MpContact CreateSimpleContact(string firstName, string lastName, string email, string dob, string mobile);
         List<MpRecordID> CreateContact(MpContact minorContact);
         MpMyContact GetContactByUserRecordId(int userRecordId);
+        IObservable<MpHousehold> UpdateHousehold(MpHousehold household);
+        void SetHouseholdAddress(int contactId, int householdId, int addressId);
     }
 }

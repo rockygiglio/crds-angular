@@ -145,6 +145,7 @@ namespace crds_angular.Models.Crossroads.Profile
                 First_Name = FirstName,
                 Middle_Name = MiddleName,
                 Last_Name = LastName,
+                Display_Name = $"{this.LastName}, {this.NickName}",
                 Maiden_Name = MaidenName,
                 Nickname = NickName,
                 Mobile_Phone = MobilePhone,
@@ -175,6 +176,7 @@ namespace crds_angular.Models.Crossroads.Profile
         {
             return new MpHousehold
             {
+                Address_ID = AddressId,
                 Household_ID = HouseholdId,
                 Home_Phone = HomePhone,
                 Congregation_ID = CongregationId
@@ -199,15 +201,16 @@ namespace crds_angular.Models.Crossroads.Profile
         //Dictionary<string, object> userUpdateValues = new Dictionary<string, object>();
         public Dictionary<string, object> GetUserUpdateValues()
         {
-            Dictionary<string, object> userUpdateValues = new Dictionary<string, object>();
+            var userUpdateValues = new Dictionary<string, object>();
 
-            if (!String.IsNullOrEmpty(NewPassword))
+            if (!string.IsNullOrEmpty(NewPassword))
             {
                 userUpdateValues["Password"] = NewPassword;
             }
 
             userUpdateValues["User_Name"] = EmailAddress;
             userUpdateValues["User_Email"] = EmailAddress;
+            userUpdateValues["Display_Name"] = $"{this.LastName}, {this.NickName}";
 
             return userUpdateValues;
         }

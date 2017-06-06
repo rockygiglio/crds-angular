@@ -12,7 +12,7 @@ describe('Camps Emergency Contact Form', () => {
   let campsService;
 
   // eslint-disable-next-line no-underscore-dangle
-  const endpoint = `${window.__env__.CRDS_API_ENDPOINT}api`;
+  const endpoint = `${window.__env__.CRDS_GATEWAY_CLIENT_ENDPOINT}api`;
   const contactId = 1234;
   const campId = 4321;
 

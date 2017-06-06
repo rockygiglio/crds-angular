@@ -74,7 +74,7 @@ describe('Volunteer Contact Form Component', function() {
     isolated.contactForm.formData.event = helpers.group.events[0];
     isolated.contactForm.formData.recipients = 'current';
     isolated.contactForm.eventChanged();
-    $httpBackend.expectGET(window.__env__['CRDS_API_ENDPOINT'] +
+    $httpBackend.expectGET(window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] +
                            'api/group/' + helpers.group.groupId +
                            '/event/' + helpers.group.events[0].eventId +
                           '?recipients=current').respond(200);
@@ -85,7 +85,7 @@ describe('Volunteer Contact Form Component', function() {
     isolated.contactForm.formData.event = helpers.group.events[0];
     isolated.contactForm.formData.recipients = 'potential';
     isolated.contactForm.eventChanged();
-    $httpBackend.expectGET(window.__env__['CRDS_API_ENDPOINT'] +
+    $httpBackend.expectGET(window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] +
                            'api/group/' + helpers.group.groupId +
                            '/event/' + helpers.group.events[0].eventId +
                           '?recipients=potential').respond(200);

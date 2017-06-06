@@ -17,7 +17,6 @@ namespace crds_angular.Services.Interfaces
         void AcceptDenyGroupInvitation(string token, int groupId, string invitationGuid, bool approve);
 
         void SendGroupParticipantEmail(int groupId,
-                                       int? toGroupParticipantId,
                                        GroupDTO group,
                                        int emailTemplateId,
                                        MpParticipant toParticipant = null,
@@ -33,7 +32,7 @@ namespace crds_angular.Services.Interfaces
                                     string location = null, int? groupId = null, GeoCoordinate originCoords = null);
         void SubmitInquiry(string token, int groupId);
         void EndGroup(int groupId, int reasonEndedId);
-        void SendSingleGroupParticipantEmail(GroupParticipantDTO participant, int templateId, Dictionary<string, object> mergeData);
+        int SendSingleGroupParticipantEmail(GroupParticipantDTO participant, int templateId, Dictionary<string, object> mergeData);
         MyGroup GetMyGroupInfo(string token, int groupId);
         void SendSmallGroupPendingInquiryReminderEmails();
         List<AttributeCategoryDTO> GetGroupCategories();

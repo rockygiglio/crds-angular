@@ -11,7 +11,10 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
         bool SetMailPreferences(string token, Dictionary<string, object> prefs);
         int SendMessage(MpCommunication communication, bool isDraft = false);
         MpMessageTemplate GetTemplate(int templateId);
-
+        MpCommunication GetTemplateAsCommunication(int templateId,                                                 
+                                                 int toContactId,
+                                                 string toEmailAddress,
+                                                 Dictionary<string, object> mergeData);
         MpCommunication GetTemplateAsCommunication(int templateId,
                                                  int fromContactId,
                                                  string fromEmailAddress,

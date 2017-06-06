@@ -87,7 +87,9 @@
 
       scope.isTeamTab = isTeamTab;
       scope.isTeamLeader = isTeamLeader;
-      
+
+      scope.capacityReady = false;
+
       //////////////////////////////////////
 
       function isTeamTab() {
@@ -175,7 +177,7 @@
           templateUrl: 'profile/editProfile.html',
           backdrop: true,
           controller: 'ProfileModalController as modal',
-
+          openedClass: 'crds-legacy-styles',
           // This is needed in order to get our scope
           // into the modal - by default, it uses $rootScope
           scope: scope,
@@ -557,11 +559,16 @@
 
       function updateCapacity() {
         _.each(scope.currentMember.roles, function(r) {
-          r.capacity = Capacity.get({
+          Capacity.get({
             id: r.roleId,
             eventId: scope.team.eventId,
             min: r.minimum,
             max: r.maximum
+          })
+          .$promise
+          .then((result) => {
+            r.capacity = result;
+            scope.capacityReady = true;
           });
         });
       }

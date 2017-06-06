@@ -20,7 +20,7 @@ describe('Streaming Reminder Controller', () => {
       RootScope,
       Scope;
 
-  const reminderEndpoint = `${__API_ENDPOINT__}`;
+  const reminderEndpoint = `${__GATEWAY_CLIENT_ENDPOINT__}`;
   
   let baseTime = new Date(2016, 9, 1); // set to 10/1/2016 - month appears to be 0 based index however
 

@@ -7,8 +7,8 @@
 
   function GroupConnectorsService($resource) {
     return {
-      OpenOrgs: $resource(__API_ENDPOINT__ + 'api/group-connectors/open-orgs/:initiativeId'),
-      ByOrgId: $resource(__API_ENDPOINT__ + 'api/group-connectors/:orgId/:initiativeId')
+      OpenOrgs: $resource(__GATEWAY_CLIENT_ENDPOINT__ + 'api/group-connectors/open-orgs/:initiativeId'),
+      ByOrgId: $resource(__GATEWAY_CLIENT_ENDPOINT__ + 'api/group-connectors/:orgId/:initiativeId')
     };
   }
 

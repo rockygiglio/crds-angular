@@ -32,6 +32,8 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
 
         bool ParticipantGroupMember(int groupId, int participantId);
 
+        int GetParticipantGroupMemberId(int groupId, int participantId);
+
         List<MpGroup> GetGroupsForEvent(int eventId);
 
         void SendCommunityGroupConfirmationEmail(int participantId, int groupId, bool waitlist, bool childcareNeeded);
@@ -78,5 +80,7 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
         Result<MpGroupParticipant> GetGradeGroupForContact(int contactId, string apiToken);
 
         List<MpGroup> GetGroupsForParticipantByTypeOrID(int participantId, string token = null, int[] groupTypeIds = null, int? groupId = null);
+
+        List<MpGroup> GetGroupsByGroupType(int groupTypeId);
     }
 }

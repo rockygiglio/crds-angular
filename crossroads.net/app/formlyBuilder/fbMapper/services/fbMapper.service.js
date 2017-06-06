@@ -8,7 +8,7 @@ export default class fbMapperService {
     }
 
     saveFormlyFormData(model) {
-        let promise = this.resource(`${__API_ENDPOINT__}api/formbuilder/hugeEndPoint`)
+        let promise = this.resource(`${__GATEWAY_CLIENT_ENDPOINT__}api/formbuilder/hugeEndPoint`)
             .save({}, model).$promise;
         return promise.then(() => {
             this.log.debug("Formly Service save endpoint returned");

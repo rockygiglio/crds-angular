@@ -33,11 +33,25 @@ Param (
   [Parameter(Mandatory=$true)]
   [string] $EmailUserName,
   [Parameter(Mandatory=$true)]
-  [string] $RegisterApiPasswordHash
+  [string] $RegisterApiPasswordHash,
+  [Parameter(Mandatory=$true)]
+  [string] $BaseUri,
+  [Parameter(Mandatory=$true)]
+  [string] $ReportingServerAddress,
+  [Parameter(Mandatory=$true)]
+  [string] $SMTPServerName,
+  [Parameter(Mandatory=$true)]
+  [string] $SMTPServerPort,
+  [Parameter(Mandatory=$true)]
+  [string]$DpToolUriToBeReplaced,
+  [Parameter(Mandatory=$true)]
+  [string]$DpToolNewUri
 )
 
+$SourceDBName = "MinistryPlatform";
+
 $backupDateStamp = Get-Date -format 'yyyyMMdd';
-$BackupUrl = "$BackupUrl/$DBName-Backup-$backupDateStamp.trn";
+$BackupUrl = "$BackupUrl/$SourceDBName-Backup-$backupDateStamp.trn";
 
 $connectionString = "Server=$DBServer;uid=$DBUser;pwd=$DBPassword;Database=master;Integrated Security=False;";
 
@@ -132,6 +146,17 @@ DECLARE @scheduledTasksUser varchar(50) = '$InternalServerName\MPAdmin';
 -- DECLARE @domainGuid = NEWID();
 DECLARE @domainGuid UNIQUEIDENTIFIER = CAST('$DomainGuid' AS UNIQUEIDENTIFIER);
 
+DECLARE @baseUri nvarchar(128) = '$BaseUri';
+
+-- Reporting Server Address
+DECLARE @reportingServerAddress nvarchar(128) = '$ReportingServerAddress';
+
+-- SMTP Server Name
+DECLARE @SMTPServerName nvarchar(50) = '$SMTPServerName';
+
+DECLARE @SMTPServerPort int = $SMTPServerPort;
+
+
 USE [$DBName];
 
 SELECT * FROM dp_Domains;
@@ -145,7 +170,15 @@ UPDATE [dbo].[dp_Domains]
       --,[GMT_Offset] = -5 Removed by Andy Canterbury on 7/29/2016 to fix TeamCity build.
       ,[Company_Contact] = 5
       ,[Database_Name] = null
-      ,[Max_Secured_Users] = null;
+      ,[Max_Secured_Users] = null
+	  ,[Base_Uri] = @baseUri
+	  ,[Database_Server_Name] = null
+	  ,[Reporting_Server_Address] = @reportingServerAddress
+	  ,[SMTP_Server_Name] = @SMTPServerName
+	  ,[SMTP_Server_Port] = @SMTPServerPort
+      ,[SMTP_Server_Username] = null
+      ,[SMTP_Server_Password] = null
+      ,[SMTP_Enable_SSL] = 0;
 
 SELECT * FROM dp_Domains;
 
@@ -176,6 +209,9 @@ UPDATE s
 
 DROP TABLE #NewConfigSettings
 
+-- Update dp_Tools Launch_Page value
+UPDATE dp_Tools
+    SET Launch_Page = REPLACE(Launch_Page, '$DpToolUriToBeReplaced', '$DpToolNewUri')
 
 -- The following Scripts are necessary to enable the application to work with the database.
 -- Please don't adjust anything by the Database Name in these scripts.
@@ -274,7 +310,7 @@ ALTER ROLE [db_securityadmin] ADD MEMBER [$InternalDBServerName\MPUser];
 exec sp_change_users_login @Action='update_one', @UserNamePattern='ApiUser', @LoginName='ApiUser'
 exec sp_change_users_login @Action='update_one', @UserNamePattern='EcheckAgent', @LoginName='EcheckAgent'
 exec sp_change_users_login @Action='update_one', @UserNamePattern='MigrateUser', @LoginName='MigrateUser'
-
+exec sp_change_users_login @Action='update_one', @UserNamePattern='NewRelic', @LoginName='NewRelic'
 
 -- TODO: Review, Rework, and determine plan for mapping users
 USE [$DBName]

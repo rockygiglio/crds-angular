@@ -22,9 +22,9 @@ export default function MyServeRouter($httpProvider, $stateProvider) {
           return ServeTeamService.getIsLeader();
         },
         $cookies: '$cookies',
-        Groups: function (ServeOpportunities, $cookies) {
+        Groups: function (ServeOpportunities, $cookies) {     
           return ServeOpportunities.ServeDays.query({
-            id: $cookies.get('userId')
+            id:   $cookies.get('userId')
           }).$promise;
         }
       }

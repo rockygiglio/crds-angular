@@ -21,6 +21,7 @@ export default class AuthModalService {
 
   // Open the target modal since the user is authenticated
   showTargetModal(modal) {
+    modal['openedClass'] = 'crds-legacy-styles';
     this.$modal.open(modal);
   }
 
@@ -31,6 +32,7 @@ export default class AuthModalService {
       templateUrl: 'auth_modal/authModal.html',
       controller: 'AuthModalController',
       controllerAs: 'authModal',
+      openedClass: 'crds-legacy-styles',
       size: 'md',
       resolve: {
         // Pass the target modal options to the auth modal component

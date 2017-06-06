@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 using Crossroads.Utilities.Interfaces;
 using Crossroads.Web.Common;
 using Crossroads.Web.Common.Configuration;
+using Crossroads.Web.Common.MinistryPlatform;
 using Crossroads.Web.Common.Security;
 using MinistryPlatform.Translation.Extensions;
+using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.PlatformService;
 using MinistryPlatform.Translation.Repositories;
 using MinistryPlatform.Translation.Repositories.Interfaces;
@@ -23,6 +25,7 @@ namespace MinistryPlatform.Translation.Test.Services
         private Mock<IAuthenticationRepository> _authenticationService;
         private Mock<IConfigurationWrapper> _configurationWrapper;
         private Mock<IMinistryPlatformService> _ministryPlatformService;
+        private Mock<IMinistryPlatformRestRepository> _ministryPlatformRest;
 
         [SetUp]
         public void SetUp()
@@ -30,6 +33,7 @@ namespace MinistryPlatform.Translation.Test.Services
             _authenticationService = new Mock<IAuthenticationRepository>();
             _configurationWrapper = new Mock<IConfigurationWrapper>();
             _ministryPlatformService = new Mock<IMinistryPlatformService>(MockBehavior.Strict);
+            _ministryPlatformRest = new Mock<IMinistryPlatformRestRepository>(MockBehavior.Strict);
 
             _configurationWrapper.Setup(mocked => mocked.GetConfigIntValue("UsersApiLookupPageView")).Returns(102030);
             _authenticationService.Setup(m => m.Authenticate(It.IsAny<string>(), It.IsAny<string>())).Returns(new AuthToken
@@ -38,7 +42,7 @@ namespace MinistryPlatform.Translation.Test.Services
                 ExpiresIn = 123
             });
 
-            _fixture = new UserRepository(_authenticationService.Object, _configurationWrapper.Object, _ministryPlatformService.Object);
+            _fixture = new UserRepository(_authenticationService.Object, _configurationWrapper.Object, _ministryPlatformService.Object, _ministryPlatformRest.Object);
         }
 
         [Test]
@@ -98,28 +102,25 @@ namespace MinistryPlatform.Translation.Test.Services
         [Test]
         public void TestGetUserByAuthenticationToken()
         {
-            var mpResult = new List<Dictionary<string, object>>
-            {
-                new Dictionary<string, object>
+            _ministryPlatformService.Setup(mocked => mocked.GetContactInfo("logged in")).Returns(new PlatformService.UserInfo() { UserId = 123 });
+            _ministryPlatformRest.Setup(mocked => mocked.UsingAuthenticationToken("ABC")).Returns(_ministryPlatformRest.Object);
+            _ministryPlatformRest.Setup(mocked => mocked.Get<MpUser>(123, It.IsAny<string>())).Returns(
+                new MpUser()
                 {
-                    {"Can_Impersonate", true},
-                    {"User_GUID", Guid.NewGuid()},
-                    {"User_Name", "me@here.com"},
-                    {"User_Email", "me@here.com"},
-                    {"dp_RecordID", 1 }
-                        
+                    CanImpersonate = true,
+                    Guid = "123e4567-e89b-12d3-a456-426655440000",
+                    UserId = "me@here.com",
+                    UserEmail = "me@here.com",
+                    UserRecordId = 1
                 }
-            };
-
-            _ministryPlatformService.Setup(mocked => mocked.GetContactInfo("logged in")).Returns(new PlatformService.UserInfo() { ContactId = 123 });
-            _ministryPlatformService.Setup(mocked => mocked.GetPageViewRecords(102030, "ABC", ",\"123\"", string.Empty, 0)).Returns(mpResult);
+            );
 
             var user = _fixture.GetByAuthenticationToken("logged in");
             _authenticationService.VerifyAll();
             _ministryPlatformService.VerifyAll();
             Assert.IsNotNull(user);
             Assert.AreEqual("me@here.com", user.UserId);
-            Assert.AreEqual(mpResult[0]["User_GUID"].ToString(), user.Guid);
+            Assert.AreEqual("123e4567-e89b-12d3-a456-426655440000", user.Guid);
             Assert.IsTrue(user.CanImpersonate);
         }
 
