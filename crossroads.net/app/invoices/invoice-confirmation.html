@@ -5,25 +5,25 @@
     <ul class="list-unstyled">
       <li>
         <b class="col-xs-6">Description</b>
-        <span class="col-xs-6">{{invoiceConfirmation.invoiceDetails.product.productName}}</b>
+        <span id="Description" class="col-xs-6">{{invoiceConfirmation.invoiceDetails.product.productName}}</b>
       </li>
       <li>
         <b class="col-xs-6">Amount Paid</b>
-        <span class="col-xs-6">{{invoiceConfirmation.paymentDetails.recentPaymentAmount | currency}}</b>
+        <span id="AmountPaid" class="col-xs-6">{{invoiceConfirmation.paymentDetails.recentPaymentAmount | currency}}</b>
       </li>
       <li>
         <b class="col-xs-6">Account Number</b>
-        <span class="col-xs-6">XXXX - {{invoiceConfirmation.paymentDetails.recentPaymentLastFour}}</b>
+        <span id="AccountNumber" class="col-xs-6">XXXX - {{invoiceConfirmation.paymentDetails.recentPaymentLastFour}}</b>
       </li>
       <li>
         <b class="col-xs-6">Invoice Number</b>
-        <span class="col-xs-6">{{invoiceConfirmation.invoiceId}}</b>
+        <span id="InvoiceNumber" class="col-xs-6">{{invoiceConfirmation.invoiceId}}</b>
       </li>
     </ul>
   </div>
   <br>
   <div class="row">
-    <p>
+    <p id="EmailSentToMessage">
       A receipt has been sent to {{invoiceConfirmation.paymentDetails.recipientEmail}}
     </p>
   </div>
