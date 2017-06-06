@@ -448,7 +448,7 @@ namespace crds_angular.Services
                     break;
                 case PinType.SMALL_GROUP:
                     var groupName = pin.Gathering.GroupName.Trim().Length > 22
-                        ? RemoveSpecialCharacters(pin.Gathering.GroupName).Trim().Substring(0, 21)
+                        ? RemoveSpecialCharacters(pin.Gathering.GroupName).Trim().Substring(0, 22)
                         : RemoveSpecialCharacters(pin.Gathering.GroupName).Trim();
                     jsonData = $"{{ 'firstName': '{groupName}', 'lastInitial': '','isHost':  false,'isMe': false,'pinType': {(int)pin.PinType}}}";
                     break; 
