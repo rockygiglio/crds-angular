@@ -221,6 +221,27 @@ namespace crds_angular.Services
                 });
         }
 
+        public IObservable<string> GetUrlSegment()
+        {
+            string appCode = _configWrapper.GetConfigValue("GroupLeaderAppCode");
+            string paramName = _configWrapper.GetConfigValue("GroupLeaderApplicationUrlSegment");
+            return Observable.Create<string>(observer =>
+            {
+                try
+                {
+                    string urlSegment = _configWrapper.GetMpConfigValue(appCode, paramName, true);
+                    observer.OnNext(urlSegment);
+                }
+                catch (Exception e)
+                {
+                    observer.OnError(new ApplicationException("Failed to get redirect url segment: ", e));
+                }
+
+                observer.OnCompleted();
+                return Disposable.Empty;
+            });
+        }
+
         public IObservable<int> SendReferenceEmail(Dictionary<string, object> referenceData)
         {
             var templateId = _configWrapper.GetConfigIntValue("GroupLeaderReferenceEmailTemplate");           
