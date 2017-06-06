@@ -13,6 +13,10 @@
       <Query>
         <DataSourceName>MPReportsDS</DataSourceName>
         <QueryParameters>
+          <QueryParameter Name="UserID">
+            <Value>=Parameters!UserID.Value</Value>
+            <rd:UserDefined>true</rd:UserDefined>
+          </QueryParameter>
           <QueryParameter Name="FromDate">
             <Value>=Parameters!FromDate.Value</Value>
           </QueryParameter>
@@ -28,6 +32,14 @@
           </QueryParameter>
           <QueryParameter Name="Campaigns">
             <Value>=JOIN(Parameters!Campaigns.Value,",")</Value>
+            <rd:UserDefined>true</rd:UserDefined>
+          </QueryParameter>
+          <QueryParameter Name="PageID">
+            <Value>=Parameters!PageID.Value</Value>
+            <rd:UserDefined>true</rd:UserDefined>
+          </QueryParameter>
+          <QueryParameter Name="SelectionID">
+            <Value>=Parameters!SelectionID.Value</Value>
             <rd:UserDefined>true</rd:UserDefined>
           </QueryParameter>
         </QueryParameters>
@@ -2209,6 +2221,17 @@
         </DataSetReference>
       </ValidValues>
       <MultiValue>true</MultiValue>
+    </ReportParameter>
+    <ReportParameter Name="SelectionID">
+      <DataType>Integer</DataType>
+      <Nullable>true</Nullable>
+      <DefaultValue>
+        <Values>
+          <Value>0</Value>
+        </Values>
+      </DefaultValue>
+      <Prompt>SelectionID</Prompt>
+      <Hidden>true</Hidden>
     </ReportParameter>
   </ReportParameters>
   <rd:ReportUnitType>Inch</rd:ReportUnitType>
