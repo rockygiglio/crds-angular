@@ -1,4 +1,9 @@
 ----Insert new page view for My Serve Groups
+USE [MinistryPlatform]
+
+
+SET IDENTITY_INSERT dp_Page_Views ON
+
 INSERT INTO [MinistryPlatform].[dbo].[dp_Page_Views] 
 ([Page_View_ID],[View_Title],[Page_ID],[Description],[Field_List],[View_Clause],[Order_By])
 VALUES (1123, 'Current Groups', 536, 'Default filter to show all current "My Serve Groups" to exclude any past groups that have been end-dated'
@@ -9,7 +14,7 @@ AND Group_Type_ID_Table.[Group_Type_ID] = 9
  AND (Groups.End_Date IS NULL OR Groups.End_Date >= GetDate())',
 6);
 
-SET IDENTITY_INSERT dp_Page_Views ON
+
 
 GO
 
