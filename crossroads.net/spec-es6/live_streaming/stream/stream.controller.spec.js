@@ -167,7 +167,7 @@ describe('Stream Controller', () => {
     ];
   }));
 
-  fit('process Digital Program in Dont Miss and Be The Church', () => {
+  it('process Digital Program in Dont Miss and Be The Church', () => {
     fixture.sortDigitalProgram(results);
     expect(fixture.dontMiss.length).toBe(3);
     expect(_.first(fixture.dontMiss).title).toBe('dm1');
