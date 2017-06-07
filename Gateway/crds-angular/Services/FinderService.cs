@@ -416,7 +416,41 @@ namespace crds_angular.Services
             }
 
             this.AddPinMetaData(pins, originCoords, contactId);
+
             return pins;
+        }
+
+        private void MakeAllLatLongsUnique(List<PinDto> thePins)
+        {
+           
+                var groupedMatchingLatitude = thePins
+                .Where(w => w.Address.Latitude != null && w.Address.Longitude != null)
+                    .GroupBy(u => new {u.Address.Latitude, u.Address.Longitude})
+                    .Select(grp => grp.ToList())
+                    .ToList();
+
+            foreach (var grouping in groupedMatchingLatitude.Where(x => x.Count > 1))
+            {
+                // each of these groups matches latitude, so we need to create slight differences
+                double? newLat = 0.0;
+                double? newLong = 0.0;
+                foreach (var g in grouping)
+                {
+                    if (newLat.Equals(0.0))
+                    {
+                        newLat  = g.Address.Latitude;
+                        newLong = g.Address.Longitude;
+                    }
+                    else
+                    {
+                        newLat += .0001;
+                        newLong -= .0001;
+
+                        g.Address.Latitude = newLat;
+                        g.Address.Longitude = newLong;
+                    }
+                }
+            }
         }
 
         private Boolean isMyPin(PinDto pin, int contactId)
@@ -603,6 +637,8 @@ namespace crds_angular.Services
             }
 
             pins = this.AddPinMetaData(pins, originCoords, contactId);
+
+            MakeAllLatLongsUnique(pins);
 
             return pins;
         }
