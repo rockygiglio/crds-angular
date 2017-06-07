@@ -28,6 +28,6 @@ BEGIN
 	 FROM Group_Participants gp
 	 JOIN Groups g on gp.group_id = g.group_id
 	 JOIN  INSERTED ON INSERTED.Group_Participant_ID = gp.Group_Participant_ID
-	 WHERE g.End_Date IS NOT NULL AND gp.End_Date IS NOT NULL
+	 WHERE g.End_Date IS NOT NULL AND gp.End_Date IS NULL
 
  END
