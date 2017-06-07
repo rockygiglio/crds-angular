@@ -35,6 +35,8 @@
   require('ngstorage');
   require('angular-file-saver');
   require('angular-svg-base-fix');
+  require('lodash');
+  require('angular-google-maps');
 
   require('../node_modules/angularjs-slider/dist/rzslider.min.css');
   require('../node_modules/angular-toggle-switch/angular-toggle-switch-bootstrap.css');

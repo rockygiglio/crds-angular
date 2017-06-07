@@ -32,7 +32,8 @@
     'ngclipboard',
     'ngFileSaver',
     'ngStorage',
-    'svgBaseFix'
+    'svgBaseFix',
+    'uiGmapgoogle-maps'
   ])
     .constant('AUTH_EVENTS', {
       loginSuccess: 'auth-login-success',
