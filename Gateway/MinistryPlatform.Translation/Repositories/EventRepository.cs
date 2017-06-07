@@ -330,27 +330,31 @@ namespace MinistryPlatform.Translation.Repositories
             }).ToList();
         }
 
-        public List<MpEvent> GetEventsByTypeForRange(int eventTypeId, DateTime startDate, DateTime endDate, string token)
+        public List<MpEvent> GetEventsByTypeForRange(int eventTypeId, DateTime startDate, DateTime endDate, string token, bool includeCancelledEvents = true)
         {
-            const string viewKey = "EventsWithEventTypeId";
-            var search = ",," + eventTypeId;
-            var eventRecords = _ministryPlatformService.GetPageViewRecords(viewKey, token, search);
+            string columns = string.Join(", ",
+                "Event_ID",
+                "Event_Title",
+                "Event_Type_ID_Table.Event_Type AS Event_Type_ID",   // aliased to Event_Type_ID to match JsonProperty on MpEvent.Event_Type!
+                "Event_Start_Date",
+                "Event_End_Date",
+                "Congregation_ID",
+                "Cancelled"
+            );
 
-            var events = eventRecords.Select(record => new MpEvent
-            {
-                EventTitle = record.ToString("Event Title"),
-                EventType = record.ToString("Event Type"),
-                EventStartDate = record.ToDate("Event Start Date", true),
-                EventEndDate = record.ToDate("Event End Date", true),
-                EventId = record.ToInt("dp_RecordID"),
-                CongregationId = record.ToInt("Congregation_ID")
-            }).ToList();
+            string search = $"Events.Event_Type_ID = {eventTypeId}";
 
-            //now we have a list, filter by date range.
-            var filteredEvents =
-                events.Where(e => e.EventStartDate.Date >= startDate.Date && e.EventStartDate.Date <= endDate.Date)
-                    .ToList();
-            return filteredEvents;
+            string startDateString = startDate.Date.ToString("yyyy-MM-dd");
+            string endDateString = endDate.Date.AddDays(1).ToString("yyyy-MM-dd");
+            search += $" AND Events.Event_Start_Date >= '{startDateString}' AND Events.Event_End_Date < '{endDateString}'";
+
+            if (!includeCancelledEvents)
+                search += " AND Events.Cancelled = 0";
+
+            string orderBy = "Events.Event_ID";
+
+            List<MpEvent> eventList = _ministryPlatformRestRepository.UsingAuthenticationToken(token).Search<MpEvent>(search, columns, orderBy, false);
+            return eventList;
         }
 
         public List<MpEvent> GetEventsByParentEventId(int parentEventId)
