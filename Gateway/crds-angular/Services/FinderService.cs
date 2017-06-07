@@ -619,7 +619,7 @@ namespace crds_angular.Services
 
             int[] groupTypesToFetch = finderType == _finderConnect ? new int[] { _anywhereGroupType } : new int[] { _smallGroupType };
 
-            var groupPins = GetMyGroupPins(token, groupTypesToFetch, participantId);
+            var groupPins = GetMyGroupPins(token, groupTypesToFetch, participantId, finderType);
             var personPin = GetPinDetailsForPerson(participantId);
 
             pins.AddRange(groupPins);
@@ -643,7 +643,7 @@ namespace crds_angular.Services
             return pins;
         }
 
-        public List<PinDto> GetMyGroupPins(string token, int[] groupTypeIds, int participantId)
+        public List<PinDto> GetMyGroupPins(string token, int[] groupTypeIds, int participantId, string finderType)
         {
             var groupsByType = _groupRepository.GetGroupsForParticipantByTypeOrID(participantId, null, groupTypeIds);
 
@@ -655,7 +655,7 @@ namespace crds_angular.Services
             var groupDTOs = groupsByType.Select(Mapper.Map<MpGroup, GroupDTO>).ToList();
 
             // TODO when do MY STUFF for Group Tool, will need to account for changing this flag to _finderGroupTool
-            var pins = this.TransformGroupDtoToPinDto(groupDTOs, _finderConnect);
+            var pins = this.TransformGroupDtoToPinDto(groupDTOs, finderType);
 
             return pins;
         }
