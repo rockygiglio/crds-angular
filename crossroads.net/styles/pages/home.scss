@@ -2,7 +2,34 @@
 * Home
 ***************************************************************************************/
 
+.homepage-wrapper {
+  background: #fff url('//crds-cms-uploads.imgix.net/content/images/crossroads-church-home.jpg') no-repeat;
+  background-position: -170px top;
+  height: 100%;
+
+  @media only screen and (min-width:768px){
+    background-position: center top;
+  }
+
+
+  .header {
+    .navbar-brand.logo .icon-logo,
+    .navbar-brand.logo svg,
+    ul.cr-nav>li>a,
+    .nav>li>a:not(.cta) {
+      color: #fff;
+    }
+
+    .navbar-brand.logo {
+      fill: #fff;
+    }
+  }
+}
+
+
 .homepage {
+  background: transparent;
+
   .main {
     margin-bottom: 0;
   }
@@ -14,6 +41,25 @@
 
   footer {
     margin-top: 0;
+  }
+
+  .home-intro-text {
+    padding: 100px 0 200px 0;
+
+    .page-header {
+      color: #fff;
+      border-bottom: none;
+      font-family: "acumin-pro-extra-condensed", sans-serif;
+      font-weight: 600;
+      font-size: 5em;
+      text-transform: uppercase;
+      line-height: .9em;
+    }
+
+    .subheading {
+      background: transparent;
+      color: #fff;
+    }
   }
 
   .home-countdown {
