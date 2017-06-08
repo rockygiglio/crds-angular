@@ -18,7 +18,7 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
         void UpdateParticipantEndDate(int eventParticipantId, DateTime? endDate);
         int UnregisterParticipantForEvent(int participantId, int eventId);
         List<MpEvent> GetEvents(string eventType, string token);
-        List<MpEvent> GetEventsByTypeForRange(int eventTypeId, DateTime startDate, DateTime endDate, string token);
+        List<MpEvent> GetEventsByTypeForRange(int eventTypeId, DateTime startDate, DateTime endDate, string token, bool includeCancelledEvents = true);
         List<MpGroup> GetGroupsForEvent(int eventId);
         int GetEventParticipantRecordId(int eventId, int participantId);
         bool EventHasParticipant(int eventId, int participantId);
