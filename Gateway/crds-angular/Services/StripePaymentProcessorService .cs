@@ -69,7 +69,7 @@ namespace crds_angular.Services
             if (content == null || content.Error == null)
             {
                 throw(AddGlobalErrorMessage(new PaymentProcessorException(HttpStatusCode.InternalServerError, errorMessage, StripeNetworkErrorResponseCode,
-                    response.ErrorException.Message, null, null, null)));
+                    response.ErrorException?.Message, null, null, null)));
             }
             else
             {
