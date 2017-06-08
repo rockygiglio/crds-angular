@@ -762,16 +762,20 @@ namespace MinistryPlatform.Translation.Repositories
         {
             // this code sets the status of a pending message to donor to ready to send, once there's a successful donation
             // stripe webhook returned - JPC 2/25/2016
-            var donationCommunicationRecords = _ministryPlatformService.GetRecordsDict(_donationCommunicationsPageId, ApiLogin(), string.Format("\"{0}\"",donationId), "");
-            if (donationCommunicationRecords == null)
+            int communicationId, recordId;
+            try
             {
-                var msg = string.Format("DonationRepository: FinishSendMessageFromDonor - There is currently no communication records for donation {0}", donationId);
-                log.Error(msg);
+                var donationCommunicationRecords = _ministryPlatformService.GetRecordsDict(_donationCommunicationsPageId, ApiLogin(), string.Format("\"{0}\"", donationId), "");
+                var donationCommunicationRecord = donationCommunicationRecords.FirstOrDefault();
+                communicationId = Int32.Parse(donationCommunicationRecord["Communication_ID"].ToString());
+                recordId = Int32.Parse(donationCommunicationRecord["dp_RecordID"].ToString());
+            }
+            catch(Exception e)
+            {
+                var msg = string.Format("DonationRepository: FinishSendMessageFromDonor - There is currently no communication record for donation {0}", donationId);
+                log.Error(msg, e);
                 return ;
             }
-            var donationCommunicationRecord = donationCommunicationRecords.FirstOrDefault();
-            var communicationId = Int32.Parse(donationCommunicationRecord["Communication_ID"].ToString());
-            var recordId = Int32.Parse(donationCommunicationRecord["dp_RecordID"].ToString());
 
             Dictionary<string, object> communicationUpdateValues = new Dictionary<string, object>();
             communicationUpdateValues.Add("Communication_ID", communicationId);
