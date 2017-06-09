@@ -410,6 +410,38 @@ namespace crds_angular.Controllers.API
         }
 
         /// <summary>
+        /// Leader adds a user to their group
+        /// </summary>
+        [RequiresAuthorization]
+        [VersionedRoute(template: "finder/pin/addtogroup/{groupId}", minimumVersion: "1.0.0")]
+        [Route("finder/pin/addtogroup/{groupId}")]
+        [HttpPost]
+        public IHttpActionResult AddToGroup([FromUri] int groupId,  [FromBody] User person)
+        {
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState.Values.SelectMany(val => val.Errors).Aggregate("", (current, err) => current + err.Exception.Message);
+                var dataError = new ApiErrorDto("AddToGroup Data Invalid", new InvalidOperationException("Invalid AddToGroup Data " + errors));
+                throw new HttpResponseException(dataError.HttpResponseMessage);
+            }
+
+            return Authorized(token =>
+            {
+                try
+                {
+                    _finderService.AddUserDirectlyToGroup(person,groupId);
+                    return (Ok());
+                }
+                catch (Exception e)
+                {
+                    _logger.Error($"Could not add participant {person.firstName + " " + person.lastName} ({person.email}) to group {3}", e);
+                    var apiError = new ApiErrorDto("AddToGroup Failed", e, HttpStatusCode.InternalServerError);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+            });
+        }
+
+        /// <summary>
         /// Logged in user requests to join gathering
         /// </summary>
         [RequiresAuthorization]

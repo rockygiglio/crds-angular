@@ -45,6 +45,7 @@ namespace crds_angular.test.Services
         private Mock<IFinderService> _mpFinderServiceMock;
         private Mock<IAuthenticationRepository> _authenticationRepository;
         private Mock<ICommunicationRepository> _communicationRepository;
+        private Mock<IAccountService> _accoutService;
 
         private int _memberRoleId = 16;
         private int _anywhereGatheringInvitationTypeId = 3;
@@ -68,7 +69,7 @@ namespace crds_angular.test.Services
             _awsCloudsearchService = new Mock<IAwsCloudsearchService>();
             _authenticationRepository = new Mock<IAuthenticationRepository>();
             _communicationRepository = new Mock<ICommunicationRepository>();
-
+            _accoutService = new Mock<IAccountService>();
 
             _mpFinderServiceMock = new Mock<IFinderService>(MockBehavior.Strict);
 
@@ -94,7 +95,8 @@ namespace crds_angular.test.Services
                                          _invitationService.Object,
                                          _awsCloudsearchService.Object,
                                          _authenticationRepository.Object,
-                                         _communicationRepository.Object);
+                                         _communicationRepository.Object,
+                                         _accoutService.Object);
 
             //force AutoMapper to register
             AutoMapperConfig.RegisterMappings();
