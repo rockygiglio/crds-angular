@@ -105,10 +105,12 @@ namespace crds_angular.Services
                     e.GlobalMessage = GetContentBlock("paymentMethodDeclined");
                 }
             }
-            else
+
+            if (e.GlobalMessage == null)
             {
                 e.GlobalMessage = GetContentBlock("failedResponse");
             }
+
             return (e);
         }
 
