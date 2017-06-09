@@ -58,7 +58,7 @@
       vm.bodyClasses = {};
       $rootScope.bodyClasses = [];
 
-      $rootScope.renderLegacyStyles = (toState.data !== undefined && toState.data.renderLegacyStyles !== false);
+      $rootScope.renderLegacyStyles = toState.data !== undefined ? toState.data.renderLegacyStyles !== false : true;
 
       if ((toState.resolve !== undefined || (toState.data !== undefined && toState.data.resolve)) && !event.defaultPrevented) {
         vm.resolving = true;
