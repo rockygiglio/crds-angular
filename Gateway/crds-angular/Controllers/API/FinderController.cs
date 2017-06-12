@@ -299,23 +299,30 @@ namespace crds_angular.Controllers.API
         }
 
         [ResponseType(typeof(PinSearchResultsDto))]
-        [VersionedRoute(template: "finder/findpinsbyaddress/{userSearchAddress}/{finderFlag}/{contactId?}/{lat?}/{lng?}/{upperleftlat?}/{upperleftlng?}/{bottomrightlat?}/{bottomrightlng?}", minimumVersion: "1.0.0")]
-        [Route("finder/findpinsbyaddress/{userSearchAddress}/{finderFlag}/{contactId?}/{lat?}/{lng?}/{upperleftlat?}/{upperleftlng?}/{bottomrightlat?}/{bottomrightlng?}")]
-        [HttpGet]
-        public IHttpActionResult GetPinsByAddress([FromUri]string userSearchAddress, [FromUri]string finderFlag, [FromUri]int contactId = 0, [FromUri]string lat = "0", [FromUri]string lng = "0", [FromUri]string upperleftlat = "0", [FromUri]string upperleftlng = "0", [FromUri]string bottomrightlat = "0", [FromUri]string bottomrightlng = "0")
+        [VersionedRoute(template: "finder/findpinsbyaddress", minimumVersion: "1.0.0")]
+        [Route("finder/findpinsbyaddress/{userSearchAddress}")]
+        [HttpPost]
+        public IHttpActionResult GetPinsByAddress(PinSearchQueryParams queryParams)
         {
             try
             {
 
                 AwsBoundingBox boundingBox = null;
-                if (upperleftlat != "0" && upperleftlng != "0" && bottomrightlat != "0" && bottomrightlng != "0")
+                Boolean areAllBoundingBoxParamsPresent = _finderService.areAllBoundingBoxParamsPresent(queryParams.UpperLeftLat,
+                                                                                                       queryParams.UpperLeftLng,
+                                                                                                       queryParams.BottomRightLat,
+                                                                                                       queryParams.BottomRightLng); 
+                if (areAllBoundingBoxParamsPresent)
                 {
-                    boundingBox = _awsCloudsearchService.BuildBoundingBox(upperleftlat, upperleftlng, bottomrightlat, bottomrightlng);
+                    boundingBox = _awsCloudsearchService.BuildBoundingBox(queryParams.UpperLeftLat,
+                                                                          queryParams.UpperLeftLng,
+                                                                          queryParams.BottomRightLat,
+                                                                          queryParams.BottomRightLng);
                 }
                
-                var originCoords = _finderService.GetGeoCoordsFromAddressOrLatLang(userSearchAddress, lat, lng);
+                var originCoords = _finderService.GetGeoCoordsFromAddressOrLatLang(queryParams.UserSearchAddress, queryParams.Lat, queryParams.UpperLeftLng);
 
-                var pinsInRadius = _finderService.GetPinsInBoundingBox(originCoords, userSearchAddress, boundingBox, finderFlag, contactId);
+                var pinsInRadius = _finderService.GetPinsInBoundingBox(originCoords, queryParams.UserSearchAddress, boundingBox, queryParams.FinderType, queryParams.ContactId);
 
                 foreach (var pin in pinsInRadius)
                 {

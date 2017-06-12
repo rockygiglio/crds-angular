@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Device.Location;
 using crds_angular.Models.AwsCloudsearch;
 using crds_angular.Models.Finder;
@@ -21,6 +22,7 @@ namespace crds_angular.Services.Interfaces
         List<PinDto> GetPinsInBoundingBox(GeoCoordinate originCoords, string address, AwsBoundingBox boundingBox, string finderType, int contactId);
         AddressDTO RandomizeLatLong(AddressDTO address);
         GeoCoordinate GetGeoCoordsFromAddressOrLatLang(string address, string lat, string lng);
+        Boolean areAllBoundingBoxParamsPresent(string upperLeftLat, string upperLeftLng, string bottomRightLat, string bottomRightLng); 
         GeoCoordinate GetGeoCoordsFromLatLong(string lat, string lng);
         void GatheringJoinRequest(string token, int gatheringId);
         Invitation InviteToGroup(string token, int gatheringId, User person, string finderFlag);

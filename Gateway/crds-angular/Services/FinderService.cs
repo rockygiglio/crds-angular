@@ -973,6 +973,16 @@ namespace crds_angular.Services
             return pins;
         }
 
+        public Boolean areAllBoundingBoxParamsPresent(string upperLeftLat, string upperLeftLng, string bottomRightLat, string bottomRightLng)
+        {
+            var isUpperLeftLatNull = upperLeftLat == null;
+            var isUpperLeftLngNull = upperLeftLng == null;
+            var isBottomRightLatNull = bottomRightLat == null;
+            var isBottomRightLngNull = bottomRightLng == null;
+            Boolean areAllBoundingBoxParamsPresent = !isUpperLeftLatNull && !isUpperLeftLngNull && !isBottomRightLatNull && !isBottomRightLngNull;
+            return areAllBoundingBoxParamsPresent; 
+        }
+
     }
 }
 
