@@ -1,19 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using AutoMapper;
 using crds_angular.Exceptions;
+using crds_angular.Models.Crossroads;
+using crds_angular.Models.Crossroads.Camp;
 using crds_angular.Models.Crossroads.Payment;
 using crds_angular.Models.Crossroads.Stewardship;
 using crds_angular.Services.Interfaces;
 using Crossroads.Utilities;
-using Crossroads.Utilities.Interfaces;
 using log4net;
-using Crossroads.Web.Common;
 using Crossroads.Web.Common.Configuration;
 using Crossroads.Web.Common.MinistryPlatform;
 using MinistryPlatform.Translation.Exceptions;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Models.Payments;
+using MinistryPlatform.Translation.Models.Product;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 using PaymentType = MinistryPlatform.Translation.Enum.PaymentType;
 
@@ -31,6 +33,9 @@ namespace crds_angular.Services
         private readonly ICommunicationRepository _communicationRepository;
         private readonly IConfigurationWrapper _configWrapper;
         private readonly IApiUserRepository _apiUserRepository;
+        private readonly IProductRepository _productRepository;
+
+        private readonly IPaymentProcessorService _paymentProcessorService;
 
         private readonly int _paidinfullStatus;
         private readonly int _somepaidStatus;
@@ -46,7 +51,9 @@ namespace crds_angular.Services
             IPaymentTypeRepository paymentTypeRepository, 
             IEventRepository eventRepository,
             ICommunicationRepository communicationRepository,
-            IApiUserRepository apiUserRepository)
+            IApiUserRepository apiUserRepository,
+            IProductRepository productRepository,
+            IPaymentProcessorService paymentProcessorService)
         {
             _invoiceRepository = invoiceRepository;
             _paymentRepository = paymentRepository;
@@ -56,6 +63,9 @@ namespace crds_angular.Services
             _configWrapper = configurationWrapper;
             _eventPRepository = eventRepository;
             _apiUserRepository = apiUserRepository;
+            _productRepository = productRepository;
+
+            _paymentProcessorService = paymentProcessorService;
 
             _paidinfullStatus = configurationWrapper.GetConfigIntValue("PaidInFull");
             _somepaidStatus = configurationWrapper.GetConfigIntValue("SomePaid");
@@ -135,13 +145,23 @@ namespace crds_angular.Services
         public PaymentDetailDTO GetPaymentDetails(int invoiceId)
         {
             var apiToken = _apiUserRepository.GetToken();
-            return GetPaymentDetails(0, invoiceId, apiToken);
+            return GetPaymentDetails(0, invoiceId, apiToken, true);
         }
 
-        public PaymentDetailDTO GetPaymentDetails(int paymentId, int invoiceId, string token)
+        public PaymentDetailDTO GetPaymentDetails(int paymentId, int invoiceId, string token, bool useInvoiceContact = false)
         {
-            var me = _contactRepository.GetMyProfile(token);
+
             var invoice = _invoiceRepository.GetInvoice(invoiceId);
+            var me = new MpMyContact();
+             if (useInvoiceContact)
+            {
+                me = _contactRepository.GetContactById(invoice.PurchaserContactId);
+            }
+            else
+            {
+                me = _contactRepository.GetMyProfile(token);
+            }
+
             var payments = _paymentRepository.GetPaymentsForInvoice(invoiceId);
             
             var currentPayment = payments.Where(p => p.PaymentId == paymentId && p.ContactId == me.Contact_ID).ToList();
@@ -150,12 +170,20 @@ namespace crds_angular.Services
             {
                 var totalPaymentsMade = payments.Sum(p => p.PaymentTotal);
                 var leftToPay = invoice.InvoiceTotal - totalPaymentsMade;
+                StripeCharge charge = null;
+                if (payments.Count > 0)
+                {
+                    charge = _paymentProcessorService.GetCharge(payments.First().TransactionCode);
+                }
                 return new PaymentDetailDTO()
                 {
                     PaymentAmount = currentPayment.Any() ? currentPayment.First().PaymentTotal : 0M,
                     RecipientEmail = me.Email_Address,
                     TotalToPay = leftToPay,
-                    InvoiceTotal = invoice.InvoiceTotal
+                    InvoiceTotal = invoice.InvoiceTotal,
+                    RecentPaymentId = payments.Any() ? payments.First().PaymentId : 0,
+                    RecentPaymentAmount = payments.Any() ? payments.First().PaymentTotal : 0,
+                    RecentPaymentLastFour = charge != null ? charge.Source.AccountNumberLast4 : ""
                 };
             }
             throw new Exception("No Payment found for " + me.Email_Address + " with id " + paymentId);
@@ -193,7 +221,7 @@ namespace crds_angular.Services
                     BatchId = payment.BatchId
                 };
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 throw new PaymentNotFoundException(stripePaymentId);
             }
@@ -316,6 +344,45 @@ namespace crds_angular.Services
                                                                 mpEvent.PrimaryContact.EmailAddress,
                                                                 mpEvent.PrimaryContactId,
                                                                 mpEvent.PrimaryContact.EmailAddress,
+                                                                me.Contact_ID,
+                                                                me.Email_Address,
+                                                                mergeData);
+            _communicationRepository.SendMessage(comm);
+        }
+    
+        public InvoiceDetailDTO GetInvoiceDetail(int invoiceId)
+        {
+            var invoiceDetail = Mapper.Map<InvoiceDetailDTO>(_invoiceRepository.GetInvoiceDetailForInvoice(invoiceId));
+            invoiceDetail.Product = Mapper.Map<ProductDTO>(_productRepository.GetProduct(invoiceDetail.ProductId));
+
+            return invoiceDetail;
+        }
+
+        public void SendInvoicePaymentConfirmation(int paymentId, int invoiceId, string token)
+        {
+            var payment = _paymentRepository.GetPaymentById(paymentId);
+            var me = _contactRepository.GetMyProfile(token);
+            var invoiceDetail = Mapper.Map<MpInvoiceDetail, InvoiceDetailDTO>(_invoiceRepository.GetInvoiceDetailForInvoice(invoiceId));
+            invoiceDetail.Product = Mapper.Map<MpProduct, ProductDTO>(_productRepository.GetProduct(invoiceDetail.ProductId));
+            
+            var templateId = _configWrapper.GetConfigIntValue("DefaultInvoicePaymentEmailTemplate");
+
+            var primaryContactId = _configWrapper.GetConfigIntValue("CrossroadsFinanceClerkContactId");
+            var primaryContact = _contactRepository.GetContactById(primaryContactId);
+
+            var mergeData = new Dictionary<string, object>
+            {
+                {"Product_Name", invoiceDetail.Product.ProductName},
+                {"Payment_Total", payment.PaymentTotal.ToString(".00") },
+                {"Primary_Contact_Email", primaryContact.Email_Address },
+                {"Primary_Contact_Display_Name", primaryContact.Display_Name}
+            };
+
+            var comm = _communicationRepository.GetTemplateAsCommunication(templateId,
+                                                                primaryContactId,
+                                                                primaryContact.Email_Address,
+                                                                primaryContactId,
+                                                                primaryContact.Email_Address,
                                                                 me.Contact_ID,
                                                                 me.Email_Address,
                                                                 mergeData);

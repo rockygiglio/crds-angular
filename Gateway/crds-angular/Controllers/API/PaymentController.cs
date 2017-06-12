@@ -18,8 +18,23 @@ namespace crds_angular.Controllers.API
             _paymentService = paymentService;
         }
 
-        [RequiresAuthorization]
-        [VersionedRoute(template: "invoice/{invoiceId}", minimumVersion: "1.0.0")]
+        [VersionedRoute(template: "invoice/{invoiceId}/details", minimumVersion: "1.0.0")]
+        [AcceptVerbs("GET")]
+        public IHttpActionResult GetInvoiceDetail(int invoiceId)
+        {
+            try
+            {
+                var res = _paymentService.GetInvoiceDetail(invoiceId);
+                return Ok(res);
+            }
+            catch (Exception e)
+            {
+                var apiError = new ApiErrorDto("Unable to get invoice details", e);
+                throw new HttpResponseException(apiError.HttpResponseMessage);
+            }
+        }
+
+        [VersionedRoute(template: "invoice/{invoiceId}/payments", minimumVersion: "1.0.0")]
         [AcceptVerbs("GET")]
         public IHttpActionResult GetInvoicePaymentDetails(int invoiceId)
         {
@@ -91,6 +106,27 @@ namespace crds_angular.Controllers.API
                 try
                 {
                     _paymentService.SendPaymentConfirmation(paymentId, eventId, token);
+                    return Ok();
+                }
+                catch (Exception e)
+                {
+                    var apiError = new ApiErrorDto("Unable to send a confirmation email", e);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+
+            });
+        }
+
+        [RequiresAuthorization]
+        [VersionedRoute(template: "invoice/{invoiceId}/payment/{paymentId}/confirmation", minimumVersion: "1.0.0")]
+        [AcceptVerbs("POST")]
+        public IHttpActionResult InvoicePaymentConfirmation(int invoiceId, int paymentId)
+        {
+            return Authorized((token) =>
+            {
+                try
+                {
+                    _paymentService.SendInvoicePaymentConfirmation(paymentId, invoiceId, token);
                     return Ok();
                 }
                 catch (Exception e)

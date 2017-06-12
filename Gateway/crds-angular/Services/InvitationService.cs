@@ -81,8 +81,7 @@ namespace crds_angular.Services
                 var leaderParticipantRecord = _participantRepository.GetParticipantRecord(token);
 
                 try
-                {
-                    //SendEmail(invitation, leaderParticipantRecord.DisplayName, group.Name);
+                {                    
                     SendEmail(invitation, leaderParticipantRecord, group);
                 }
                 catch (Exception e)

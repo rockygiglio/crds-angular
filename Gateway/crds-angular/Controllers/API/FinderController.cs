@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Reflection;
@@ -298,10 +299,10 @@ namespace crds_angular.Controllers.API
         }
 
         [ResponseType(typeof(PinSearchResultsDto))]
-        [VersionedRoute(template: "finder/findpinsbyaddress/{userSearchAddress}/{finderFlag}/{lat?}/{lng?}/{upperleftlat?}/{upperleftlng?}/{bottomrightlat?}/{bottomrightlng?}", minimumVersion: "1.0.0")]
-        [Route("finder/findpinsbyaddress/{userSearchAddress}/{finderFlag}/{lat?}/{lng?}/{upperleftlat?}/{upperleftlng?}/{bottomrightlat?}/{bottomrightlng?}")]
+        [VersionedRoute(template: "finder/findpinsbyaddress/{userSearchAddress}/{finderFlag}/{contactId?}/{lat?}/{lng?}/{upperleftlat?}/{upperleftlng?}/{bottomrightlat?}/{bottomrightlng?}", minimumVersion: "1.0.0")]
+        [Route("finder/findpinsbyaddress/{userSearchAddress}/{finderFlag}/{contactId?}/{lat?}/{lng?}/{upperleftlat?}/{upperleftlng?}/{bottomrightlat?}/{bottomrightlng?}")]
         [HttpGet]
-        public IHttpActionResult GetPinsByAddress([FromUri]string userSearchAddress, [FromUri]string finderFlag, [FromUri]string lat = "0", [FromUri]string lng = "0", [FromUri]string upperleftlat = "0", [FromUri]string upperleftlng = "0", [FromUri]string bottomrightlat = "0", [FromUri]string bottomrightlng = "0")
+        public IHttpActionResult GetPinsByAddress([FromUri]string userSearchAddress, [FromUri]string finderFlag, [FromUri]int contactId = 0, [FromUri]string lat = "0", [FromUri]string lng = "0", [FromUri]string upperleftlat = "0", [FromUri]string upperleftlng = "0", [FromUri]string bottomrightlat = "0", [FromUri]string bottomrightlng = "0")
         {
             try
             {
@@ -314,7 +315,7 @@ namespace crds_angular.Controllers.API
                
                 var originCoords = _finderService.GetGeoCoordsFromAddressOrLatLang(userSearchAddress, lat, lng);
 
-                var pinsInRadius = _finderService.GetPinsInBoundingBox(originCoords, userSearchAddress, boundingBox, finderFlag);
+                var pinsInRadius = _finderService.GetPinsInBoundingBox(originCoords, userSearchAddress, boundingBox, finderFlag, contactId);
 
                 foreach (var pin in pinsInRadius)
                 {
@@ -337,10 +338,10 @@ namespace crds_angular.Controllers.API
 
         [RequiresAuthorization]
         [ResponseType(typeof(PinSearchResultsDto))]                                   
-        [VersionedRoute(template: "finder/findmypinsbycontactid/{contactId}/{lat}/{lng}", minimumVersion: "1.0.0")]
-        [Route("finder/findmypinsbycontactid/{contactId}/{lat}/{lng}")]
+        [VersionedRoute(template: "finder/findmypinsbycontactid/{contactId}/{lat}/{lng}/{finderType}", minimumVersion: "1.0.0")]
+        [Route("finder/findmypinsbycontactid/{contactId}/{lat}/{lng}/{finderType}")]
         [HttpGet]
-        public IHttpActionResult GetMyPinsByContactId([FromUri]int contactId, [FromUri]string lat, [FromUri]string lng)
+        public IHttpActionResult GetMyPinsByContactId([FromUri]int contactId, [FromUri]string lat, [FromUri]string lng, [FromUri]string finderType )
         {
             return Authorized(token =>
             {
@@ -350,7 +351,7 @@ namespace crds_angular.Controllers.API
                     var centerLatitude = originCoords.Latitude;
                     var centerLongitude = originCoords.Longitude;
 
-                    var pinsForContact = _finderService.GetMyPins(token, originCoords, contactId);
+                    var pinsForContact = _finderService.GetMyPins(token, originCoords, contactId, finderType);
 
                     if (pinsForContact.Count > 0)
                     {
@@ -372,13 +373,13 @@ namespace crds_angular.Controllers.API
             });
         }
         /// <summary>
-        /// Logged in user invites a participant to the gathering
+        /// Logged in user invites a participant to the group of types - gathering or small group
         /// </summary>
         [RequiresAuthorization]
-        [VersionedRoute(template: "finder/pin/invitetogathering/{gatheringId}", minimumVersion: "1.0.0")]
-        [Route("finder/pin/invitetogathering/{gatheringId}")]
+        [VersionedRoute(template: "finder/pin/invitetogroup/{groupId}/{finderFlag}", minimumVersion: "1.0.0")]
+        [Route("finder/pin/invitetogroup/{groupId}/{finderFlag}")]
         [HttpPost]
-        public IHttpActionResult InviteToGathering([FromUri] int gatheringId, [FromBody] User person)
+        public IHttpActionResult InviteToGroup([FromUri] int groupId, [FromUri]string finderFlag, [FromBody] User person)
         {
             if (!ModelState.IsValid)
             {
@@ -391,7 +392,7 @@ namespace crds_angular.Controllers.API
             {
                 try
                 {
-                    _finderService.InviteToGathering(token, gatheringId, person);
+                    _finderService.InviteToGroup(token, groupId, person, finderFlag);
                     return (Ok());
                 }
                 catch (ValidationException e)
