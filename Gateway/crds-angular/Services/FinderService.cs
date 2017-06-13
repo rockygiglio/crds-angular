@@ -481,11 +481,13 @@ namespace crds_angular.Services
                     jsonData = $"{{ 'firstName': '{RemoveSpecialCharacters(pin.FirstName)}', 'lastInitial': '{RemoveSpecialCharacters(lastname)}','isHost':  false,'isMe': {isMyPinAsString(pin, contactId)},'pinType': {(int) pin.PinType}}}";
                     break;
                 case PinType.SMALL_GROUP:
-                    var groupName = pin.Gathering.GroupName.Trim().Length > 23
-                        ? RemoveSpecialCharacters(pin.Gathering.GroupName).Trim().Substring(0, 22)
-                        : RemoveSpecialCharacters(pin.Gathering.GroupName).Trim();
+                    var groupName = RemoveSpecialCharacters(pin.Gathering.GroupName).Trim();
+                    if (groupName.Length > 22)
+                    {
+                        groupName = RemoveSpecialCharacters(pin.Gathering.GroupName).Trim().Substring(0, 22);
+                    }
                     jsonData = $"{{ 'firstName': '{groupName}', 'lastInitial': '','isHost':  false,'isMe': false,'pinType': {(int)pin.PinType}}}";
-                    break; 
+                    break;
             }
 
             return jsonData.Replace("'", "\"");
