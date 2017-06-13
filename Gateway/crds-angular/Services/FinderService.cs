@@ -429,7 +429,7 @@ namespace crds_angular.Services
             var contactId = _contactRepository.GetContactIdByEmail(user.email);
             if (contactId == 0)
             {
-                user.password = "generateaPWForTheUser";
+                user.password = System.Web.Security.Membership.GeneratePassword(25, 10);
                 _accountService.RegisterPerson(user);
                 contactId = _contactRepository.GetContactIdByEmail(user.email);
             }
