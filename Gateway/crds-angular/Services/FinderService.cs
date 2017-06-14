@@ -19,6 +19,7 @@ using Amazon.CloudSearchDomain.Model;
 using crds_angular.Exceptions;
 using crds_angular.Models.AwsCloudsearch;
 using crds_angular.Models.Crossroads.Groups;
+using crds_angular.Models.Crossroads.Profile;
 using Crossroads.Web.Common.Configuration;
 using MinistryPlatform.Translation.Models.Finder;
 using MpCommunication = MinistryPlatform.Translation.Models.MpCommunication;
@@ -990,6 +991,25 @@ namespace crds_angular.Services
             return pins;
         }
 
+        public List<User> GetMatches(User user)
+        {
+            var people = new List<User>();
+
+            var contacts = _contactRepository.GetPotentialMatchesContact(user.firstName, user.lastName, user.email);
+
+            foreach (var contact in contacts)
+            {
+                var newEntry = new User
+                {
+                    firstName = contact.First_Name,
+                    lastName = contact.Last_Name,
+                    email = contact.Email_Address
+                };
+                people.Add(newEntry);
+            }
+
+            return people;
+        }
     }
 }
 

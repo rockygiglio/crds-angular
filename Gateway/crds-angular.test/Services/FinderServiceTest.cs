@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Device.Location;
+using System.Linq;
 using crds_angular.App_Start;
 using crds_angular.Models.Crossroads;
 using crds_angular.Models.Finder;
@@ -619,6 +620,45 @@ namespace crds_angular.test.Services
             _mpContactRepository.Setup(x => x.GetContactId(It.IsAny<string>())).Returns(3);
            _fixture.InviteToGroup(token, gatheringId, person, "CONNECT");
             _invitationService.VerifyAll();
+        }
+
+        [Test]
+        public void ShouldFindPotentialMatches()
+        {
+            var searchUser = new User
+            {
+                firstName = "Andy",
+                lastName = "Smith",
+                email = "andy@smith.edu"
+            };
+            var list = new List<MpMyContact>();
+            var c1 = new MpMyContact
+            {
+                Email_Address = "andy@smith.edu",
+                First_Name = "Andy",
+                Last_Name = "Smith"
+            };
+            var c2 = new MpMyContact
+            {
+                Email_Address = "xmen@comicbooknerd.com",
+                First_Name = "Andy",
+                Last_Name = "Smith"
+            };
+            var c3 = new MpMyContact
+            {
+                Email_Address = "darthvader@startrek.com",
+                First_Name = "Andy",
+                Last_Name = "Smith"
+            };
+            list.Add(c1);
+            list.Add(c2);
+            list.Add(c3);
+
+            _mpContactRepository.Setup(x => x.GetPotentialMatchesContact(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns(list);
+
+            var results = _fixture.GetMatches(searchUser);
+            Assert.That(results.Count == 3);
+            Assert.That(results.Count(x => x.email == "andy@smith.edu") == 1);
         }
 
         [Test]

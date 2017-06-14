@@ -416,6 +416,21 @@ namespace MinistryPlatform.Translation.Repositories
 
         }
 
+        public List<MpMyContact> GetPotentialMatchesContact(string firstName, string lastName, string email)
+        {
+            var token = ApiLogin();
+            string filter = $"(First_Name = '{firstName}' AND Last_Name = '{lastName}') OR Email_Address = '{email}'";
+            var columns = new List<string>
+            {
+                "First_Name",
+                "Last_Name",
+                "Email_Address"
+            };
+            var records = _ministryPlatformRest.UsingAuthenticationToken(token).Search<MpMyContact>(filter, columns);
+
+            return records;
+        }
+
         public IObservable<MpHousehold> UpdateHousehold(MpHousehold household)
         {
             var token = ApiLogin();            
