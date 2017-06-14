@@ -19,7 +19,6 @@ using Amazon.CloudSearchDomain.Model;
 using crds_angular.Exceptions;
 using crds_angular.Models.AwsCloudsearch;
 using crds_angular.Models.Crossroads.Groups;
-using crds_angular.Models.Crossroads.Profile;
 using Crossroads.Web.Common.Configuration;
 using MinistryPlatform.Translation.Models.Finder;
 using MpCommunication = MinistryPlatform.Translation.Models.MpCommunication;

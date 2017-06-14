@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Reflection;
@@ -16,7 +15,6 @@ using System.ComponentModel.DataAnnotations;
 using crds_angular.Exceptions;
 using crds_angular.Models.AwsCloudsearch;
 using crds_angular.Models.Crossroads.Groups;
-using Crossroads.Web.Common.Configuration;
 using log4net;
 
 namespace crds_angular.Controllers.API
@@ -24,24 +22,17 @@ namespace crds_angular.Controllers.API
     public class FinderController : MPAuth
     {
         private readonly IAwsCloudsearchService _awsCloudsearchService;
-        private readonly IAddressService _addressService;
         private readonly IFinderService _finderService;
         private readonly IAuthenticationRepository _authenticationRepo;
-        private readonly IAddressGeocodingService _addressGeocodingService;
-        private readonly IConfigurationWrapper _configurationWrapper;
         private readonly ILog _logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        public FinderController(IAddressService addressService,
-                                IAddressGeocodingService addressGeocodingService, 
-                                IFinderService finderService,
+        public FinderController(IFinderService finderService,
                                 IUserImpersonationService userImpersonationService,
                                 IAuthenticationRepository authenticationRepository,
                                 IAwsCloudsearchService awsCloudsearchService)
             : base(userImpersonationService, authenticationRepository)
         {
-            _addressService = addressService;
             _finderService = finderService;
-            _addressGeocodingService = addressGeocodingService;
             _awsCloudsearchService = awsCloudsearchService;
             _authenticationRepo = authenticationRepository;
         }
@@ -97,6 +88,24 @@ namespace crds_angular.Controllers.API
             catch (Exception ex)
             {
                 var apiError = new ApiErrorDto("Get Group Participants Failed", ex);
+                throw new HttpResponseException(apiError.HttpResponseMessage);
+            }
+        }
+
+        [ResponseType(typeof(User[]))]
+        [VersionedRoute(template: "finder/getmatches", minimumVersion: "1.0.0")]
+        [Route("finder/getmatches")]
+        [HttpPost]
+        public IHttpActionResult GetPotentialMatches([FromBody]User searchUser)
+        {
+            try
+            {
+                var list = _finderService.GetMatches(new User {email= searchUser.email, firstName = searchUser.firstName, lastName = searchUser.lastName});
+                return Ok(list);
+            }
+            catch (Exception ex)
+            {
+                var apiError = new ApiErrorDto("GetPotentialMatches Failed", ex);
                 throw new HttpResponseException(apiError.HttpResponseMessage);
             }
         }
@@ -579,7 +588,7 @@ namespace crds_angular.Controllers.API
         //        API not to be included in the swagger output. We're doing it because there's a fail
         //        in the swagger code when the body has a boolean in it that breaks in the JS causing
         //        the GroopTool and all subsequent controller APIs not to show on the page. This is a
-        //        stupid fix for a bug that is out of our control.
+        //        stupid fix for a defect that is out of our control.
         [RequiresAuthorization]
         [VersionedRoute(template: "finder/group/{groupId}/invitation/{invitationKey}", minimumVersion: "1.0.0")]
         [Route("finder/group/{groupId:int}/invitation/{invitationKey}")]
@@ -593,11 +602,11 @@ namespace crds_angular.Controllers.API
                     _finderService.AcceptDenyGroupInvitation(token, groupId, invitationKey, accept);
                     return Ok();
                 }
-                catch (GroupParticipantRemovalException e)
+                catch (GroupParticipantRemovalException)
                 {
                     throw new HttpResponseException(HttpStatusCode.NotAcceptable);
                 }
-                catch (DuplicateGroupParticipantException e)
+                catch (DuplicateGroupParticipantException)
                 {
                     throw new HttpResponseException(HttpStatusCode.Conflict);
                 }

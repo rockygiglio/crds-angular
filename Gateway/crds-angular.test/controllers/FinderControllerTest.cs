@@ -32,8 +32,6 @@ namespace crds_angular.test.controllers
         [SetUp]
         public void SetUp()
         {
-            _addressService = new Mock<IAddressService>();
-            _addressGeocodingService = new Mock<IAddressGeocodingService>();
             _finderService = new Mock<IFinderService>();
             _userImpersonationService = new Mock<IUserImpersonationService>();
             _authenticationRepository = new Mock<IAuthenticationRepository>();
@@ -42,9 +40,7 @@ namespace crds_angular.test.controllers
             _authType = "authType";
             _authToken = "authToken";
 
-            _fixture = new FinderController(_addressService.Object,
-                                            _addressGeocodingService.Object,
-                                            _finderService.Object,
+            _fixture = new FinderController(_finderService.Object,
                                             _userImpersonationService.Object,
                                             _authenticationRepository.Object,
                                             _awsCloudsearchService.Object)

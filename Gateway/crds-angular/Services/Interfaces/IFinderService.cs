@@ -32,5 +32,6 @@ namespace crds_angular.Services.Interfaces
         void AcceptDenyGroupInvitation(string token, int groupId, string invitationGuid, bool accept);
         void SayHi(int fromContactId, int toContactId);
         void AddUserDirectlyToGroup(User user, int groupid);
+        List<User> GetMatches(User user);
     }
 }
