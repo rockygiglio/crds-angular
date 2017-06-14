@@ -110,22 +110,5 @@ namespace crds_angular.Services
 
             return person;
         }
-
-        public List<Person> FindPotentialMatches(User user)
-        {
-            var people = new List<Person>();
-
-            // what constitues a match?
-            // first look for exact match on email
-            var a = _contactRepository.GetContactIdByEmail(user.email);
-
-            
-
-            // second look for exact match on firstname and last name
-
-
-
-            return people;
-        }
     }
 }
