@@ -300,7 +300,7 @@ namespace crds_angular.Controllers.API
 
         [ResponseType(typeof(PinSearchResultsDto))]
         [VersionedRoute(template: "finder/findpinsbyaddress", minimumVersion: "1.0.0")]
-        [Route("finder/findpinsbyaddress/{userSearchAddress}")]
+        [Route("finder/findpinsbyaddress/")]
         [HttpPost]
         public IHttpActionResult GetPinsByAddress(PinSearchQueryParams queryParams)
         {
