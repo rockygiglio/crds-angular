@@ -670,11 +670,11 @@ namespace crds_angular.Services
             return pins;
         }
 
-        public GeoCoordinate GetGeoCoordsFromAddressOrLatLang(string address, string lat, string lng)
+        public GeoCoordinate GetGeoCoordsFromAddressOrLatLang(string address, GeoCoordinates centerCoords)
         {
 
-            double latitude = Convert.ToDouble(lat.Replace("$", "."));
-            double longitude = Convert.ToDouble(lng.Replace("$", "."));
+            double latitude = centerCoords.Lat.HasValue ? centerCoords.Lat.Value : 0;
+            double longitude = centerCoords.Lng.HasValue ? centerCoords.Lng.Value : 0;
 
             var geoCoordsPassedIn = latitude != 0 && longitude != 0;
 
@@ -973,13 +973,14 @@ namespace crds_angular.Services
             return pins;
         }
 
-        public Boolean areAllBoundingBoxParamsPresent(string upperLeftLat, string upperLeftLng, string bottomRightLat, string bottomRightLng)
+        public Boolean areAllBoundingBoxParamsPresent(MapBoundingBox boundingBox)
         {
-            var isUpperLeftLatNull = upperLeftLat == null;
-            var isUpperLeftLngNull = upperLeftLng == null;
-            var isBottomRightLatNull = bottomRightLat == null;
-            var isBottomRightLngNull = bottomRightLng == null;
+            var isUpperLeftLatNull = boundingBox.UpperLeftLat == null;
+            var isUpperLeftLngNull = boundingBox.UpperLeftLng == null;
+            var isBottomRightLatNull = boundingBox.BottomRightLat == null;
+            var isBottomRightLngNull = boundingBox.BottomRightLng == null;
             Boolean areAllBoundingBoxParamsPresent = !isUpperLeftLatNull && !isUpperLeftLngNull && !isBottomRightLatNull && !isBottomRightLngNull;
+
             return areAllBoundingBoxParamsPresent; 
         }
 

@@ -7,14 +7,18 @@ namespace crds_angular.Models.Finder
 {
     public class PinSearchQueryParams
     {
-        public string UserSearchAddress { get; set; }
+        public string UserSearchString { get; set; }
+
+        public bool IsAddressSearch { get; set; }
+
+        public bool IsMyStuff { get; set;  }
+
         public string FinderType { get; set; }
+
         public int ContactId { get; set; }
-        public string Lat { get; set; }
-        public string Lng { get; set; }
-        public string UpperLeftLat { get; set; }
-        public string UpperLeftLng { get; set; }
-        public string BottomRightLat { get; set; }
-        public string BottomRightLng { get; set; }
+
+        public GeoCoordinates CenterGeoCoords { get; set; }
+
+        public MapBoundingBox BoundingBox { get; set; }
     }
 }

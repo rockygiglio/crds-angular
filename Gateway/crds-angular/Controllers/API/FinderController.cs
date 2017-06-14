@@ -307,22 +307,16 @@ namespace crds_angular.Controllers.API
             try
             {
 
-                AwsBoundingBox boundingBox = null;
-                Boolean areAllBoundingBoxParamsPresent = _finderService.areAllBoundingBoxParamsPresent(queryParams.UpperLeftLat,
-                                                                                                       queryParams.UpperLeftLng,
-                                                                                                       queryParams.BottomRightLat,
-                                                                                                       queryParams.BottomRightLng); 
+                AwsBoundingBox awsBoundingBox = null;
+                Boolean areAllBoundingBoxParamsPresent = _finderService.areAllBoundingBoxParamsPresent(queryParams.BoundingBox); 
                 if (areAllBoundingBoxParamsPresent)
                 {
-                    boundingBox = _awsCloudsearchService.BuildBoundingBox(queryParams.UpperLeftLat,
-                                                                          queryParams.UpperLeftLng,
-                                                                          queryParams.BottomRightLat,
-                                                                          queryParams.BottomRightLng);
+                    awsBoundingBox = _awsCloudsearchService.BuildBoundingBox(queryParams.BoundingBox);
                 }
                
-                var originCoords = _finderService.GetGeoCoordsFromAddressOrLatLang(queryParams.UserSearchAddress, queryParams.Lat, queryParams.UpperLeftLng);
+                var originCoords = _finderService.GetGeoCoordsFromAddressOrLatLang(queryParams.UserSearchString, queryParams.CenterGeoCoords);
 
-                var pinsInRadius = _finderService.GetPinsInBoundingBox(originCoords, queryParams.UserSearchAddress, boundingBox, queryParams.FinderType, queryParams.ContactId);
+                var pinsInRadius = _finderService.GetPinsInBoundingBox(originCoords, queryParams.UserSearchString, awsBoundingBox, queryParams.FinderType, queryParams.ContactId);
 
                 foreach (var pin in pinsInRadius)
                 {
