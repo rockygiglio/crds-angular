@@ -131,7 +131,7 @@ namespace MinistryPlatform.Translation.Repositories
         public List<MpConnectAws> GetAllPinsForAws()
         {
             var apiToken = _apiUserRepository.GetToken();
-            const string spName = "api_crds_Get_Connect_AWS_Data";
+            const string spName = "api_crds_Get_Connect_AWS_Data_v2";
 
             try
             {
@@ -146,7 +146,7 @@ namespace MinistryPlatform.Translation.Repositories
                 return new List<MpConnectAws>();
             }
         }
-
+       
         public void RecordConnection(MpConnectCommunication connection)
         {
             var apiToken = _apiUserRepository.GetToken();

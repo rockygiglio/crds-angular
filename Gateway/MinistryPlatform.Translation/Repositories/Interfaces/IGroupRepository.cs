@@ -32,6 +32,8 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
 
         bool ParticipantGroupMember(int groupId, int participantId);
 
+        int GetParticipantGroupMemberId(int groupId, int participantId);
+
         List<MpGroup> GetGroupsForEvent(int eventId);
 
         void SendCommunityGroupConfirmationEmail(int participantId, int groupId, bool waitlist, bool childcareNeeded);

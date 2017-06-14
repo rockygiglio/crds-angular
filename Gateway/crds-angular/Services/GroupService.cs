@@ -210,26 +210,34 @@ namespace crds_angular.Services
             {
                 foreach (var participant in participants)
                 {
-                    int groupParticipantId;
-
                     var roleId = participant.groupRoleId ?? _groupRoleDefaultId;
 
                     var participantId = participant.particpantId.Value;
-                    groupParticipantId = _mpGroupRepository.addParticipantToGroup(participantId,
-                                                               Convert.ToInt32(groupId),
-                                                               roleId,
-                                                               participant.childCareNeeded,
-                                                               DateTime.Now);
 
-                    var configuration = MpObjectAttributeConfigurationFactory.GroupParticipant();
-                    _objectAttributeService.SaveObjectAttributes(groupParticipantId, participant.AttributeTypes, participant.SingleAttributes, configuration);                    
+                    int groupParticipantId = _mpGroupRepository.GetParticipantGroupMemberId(Convert.ToInt32(groupId), participantId);
 
-                    if (participant.capacityNeeded > 0)
+                    if (groupParticipantId < 0) 
                     {
-                        DecrementCapacity(participant.capacityNeeded, group);
-                    }
+                        groupParticipantId = _mpGroupRepository.addParticipantToGroup(participantId,
+                                                                                      Convert.ToInt32(groupId),
+                                                                                      roleId,
+                                                                                      participant.childCareNeeded,
+                                                                                      DateTime.Now);
 
-                    _logger.Debug("Added user - group/participant id = " + groupParticipantId);
+                        var configuration = MpObjectAttributeConfigurationFactory.GroupParticipant();
+                        _objectAttributeService.SaveObjectAttributes(groupParticipantId, participant.AttributeTypes, participant.SingleAttributes, configuration);
+
+                        if (participant.capacityNeeded > 0)
+                        {
+                            DecrementCapacity(participant.capacityNeeded, group);
+                        }
+
+                        _logger.Debug("Added user - group/participant id = " + groupParticipantId);
+                    }
+                    else
+                    {
+                        _logger.Debug("User "+participantId+ " was already a member of group "+groupId);
+                    }
 
                     // Now see what future events are scheduled for this group, and register the user for those
                     var events = _mpGroupRepository.getAllEventsForGroup(Convert.ToInt32(groupId));
@@ -238,7 +246,8 @@ namespace crds_angular.Services
                     {
                         foreach (var e in events.Where(x => x.EventType != (Convert.ToString(_childcareEventTypeId))))
                         {
-                            _eventService.RegisterParticipantForEvent(participantId, e.EventId, groupId, groupParticipantId);
+                            //SafeRegisterParticipant will not register again if they are already registered
+                            _eventService.SafeRegisterParticipant( e.EventId, participantId, groupId, groupParticipantId);
                             _logger.Debug("Added participant " + participant + " to group event " + e.EventId);
                         }
                     }
@@ -274,7 +283,7 @@ namespace crds_angular.Services
             _mpGroupRepository.UpdateGroupRemainingCapacity(group);
         }
 
-        public void addContactToGroup(int groupId, int contactId)
+        public int addContactToGroup(int groupId, int contactId)
         {
             MpParticipant participant;
 
@@ -291,7 +300,7 @@ namespace crds_angular.Services
 
             try
             {
-                _mpGroupRepository.addParticipantToGroup(participant.ParticipantId, groupId, _groupRoleDefaultId, false, DateTime.Now);
+                return _mpGroupRepository.addParticipantToGroup(participant.ParticipantId, groupId, _groupRoleDefaultId, false, DateTime.Now);
             }
             catch (Exception e)
             {

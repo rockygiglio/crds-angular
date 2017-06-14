@@ -124,7 +124,7 @@ namespace crds_angular.Services
                 ProductId = eventProduct.ProductId,
                 ProductName = eventProduct.ProductName,
                 BasePrice = eventProduct.BasePrice,
-                DepositPrice = eventProduct.DepositPrice,
+                DepositPrice = eventProduct.DepositPrice.Value,
                 Options = ConvertProductOptionPricetoDto(eventProductOptionPrices,eventProduct.BasePrice,campEvent.EventStartDate),
                 BasePriceEndDate = campEvent.EventStartDate,
                 FinancialAssistance = financialAssistance,

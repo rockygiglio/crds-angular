@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text.RegularExpressions;
-using System.Web.ClientServices.Providers;
 using AutoMapper;
-using crds_angular.Models;
 using crds_angular.Models.AwsCloudsearch;
 using crds_angular.Models.Finder;
 using crds_angular.Models.Crossroads;
 using crds_angular.Models.Crossroads.Attribute;
+using crds_angular.Models.Crossroads.Camp;
 using crds_angular.Models.Crossroads.Events;
 using crds_angular.Models.Crossroads.Groups;
 using crds_angular.Models.Crossroads.Opportunity;
@@ -20,8 +18,8 @@ using MinistryPlatform.Translation.Extensions;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Models.Finder;
 using MinistryPlatform.Translation.Models.DTO;
-using MinistryPlatform.Translation.Models.Opportunities;
-using MinistryPlatform.Translation.Repositories;
+using MinistryPlatform.Translation.Models.Payments;
+using MinistryPlatform.Translation.Models.Product;
 using MpAddress = MinistryPlatform.Translation.Models.MpAddress;
 using DonationStatus = crds_angular.Models.Crossroads.Stewardship.DonationStatus;
 using MpEvent = MinistryPlatform.Translation.Models.MpEvent;
@@ -314,7 +312,7 @@ namespace crds_angular.App_Start
             Mapper.CreateMap<MpDonorStatement, DonorStatementDTO>();
             Mapper.CreateMap<DonorStatementDTO, MpDonorStatement>();
 
-            Mapper.CreateMap<MpEvent, Models.Crossroads.Events.Event>()
+            Mapper.CreateMap<MpEvent, Event>()
                 .ForMember(dest => dest.EventId, opts => opts.MapFrom(src => src.EventId))
                 .ForMember(dest => dest.name, opts => opts.MapFrom(src => src.EventTitle))
                 .ForMember(dest => dest.location, opts => opts.MapFrom(src => src.Congregation))
@@ -399,9 +397,16 @@ namespace crds_angular.App_Start
             Mapper.CreateMap<PinDto, FinderPinDto>();
             Mapper.CreateMap<FinderPinDto, PinDto>();
             Mapper.CreateMap<AwsConnectDto,MpConnectAws>();
-            Mapper.CreateMap<MpConnectAws,AwsConnectDto>()
-                .ForMember(dest => dest.LatLong, opts => opts.MapFrom(
-                   src => (src.Latitude==null || src.Longitude==null) ? "0 , 0" : $"{src.Latitude} , {src.Longitude}"));
+            Mapper.CreateMap<MpConnectAws, AwsConnectDto>()
+                .ForMember(dest => dest.LatLong,
+                           opts => opts.MapFrom(
+                               src => (src.Latitude == null || src.Longitude == null) ? "0 , 0" : $"{src.Latitude} , {src.Longitude}"))
+                .ForMember(dest => dest.GroupAgeRange,
+                           opts => opts.MapFrom(
+                               src => src.GroupAgeRange.Split(',')))
+                .ForMember(dest => dest.GroupCategory,
+                           opts => opts.MapFrom(
+                               src => src.GroupCategory.Split(',')));
 
             Mapper.CreateMap<PinDto, AwsConnectDto>()
                 .ForMember(dest => dest.FirstName, opts => opts.MapFrom(src => src.FirstName))
@@ -428,8 +433,15 @@ namespace crds_angular.App_Start
             Mapper.CreateMap<ConnectCommunicationDto, MpConnectCommunication>();
             Mapper.CreateMap<MpConnectCommunication, ConnectCommunicationDto>();
 
+            Mapper.CreateMap<FinderGroupDto, GroupDTO>();
+            Mapper.CreateMap<GroupDTO, FinderGroupDto>();
+
             Mapper.CreateMap<MpSU2SOpportunity, ServeOpportunity>();
             Mapper.CreateMap<ServeOpportunity, MpSU2SOpportunity>();
+            Mapper.CreateMap<MpInvoiceDetail, InvoiceDetailDTO>();
+            Mapper.CreateMap<InvoiceDetailDTO, MpInvoiceDetail>();
+            Mapper.CreateMap<MpProduct, ProductDTO>();
+            Mapper.CreateMap<ProductDTO, MpProduct>();
             Mapper.CreateMap<MpAttributeCategory, AttributeCategoryDTO>()
                 .ForMember(dest => dest.CategoryId, opts => opts.MapFrom(src => src.Attribute_Category_ID))
                 .ForMember(dest => dest.AttributeCategory, opts => opts.MapFrom(src => src.Attribute_Category))

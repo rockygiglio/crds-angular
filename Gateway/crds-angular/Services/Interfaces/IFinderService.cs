@@ -15,14 +15,15 @@ namespace crds_angular.Services.Interfaces
         void DisablePin(int participantId);
         void UpdateHouseholdAddress(PinDto pin);
         AddressDTO GetAddressForIp(string ip);
-        List<PinDto> GetMyPins(string token, GeoCoordinate originCoords, int contactId);        
+        List<PinDto> GetMyPins(string token, GeoCoordinate originCoords, int contactId, string finderType);
+        List<PinDto> GetMyGroupPins(string token, int[] groupTypeIds, int participantId, string finderType);
         int GetParticipantIdFromContact(int contactId);
-        List<PinDto> GetPinsInBoundingBox(GeoCoordinate originCoords, string address, AwsBoundingBox boundingBox, string finderType);
+        List<PinDto> GetPinsInBoundingBox(GeoCoordinate originCoords, string address, AwsBoundingBox boundingBox, string finderType, int contactId);
         AddressDTO RandomizeLatLong(AddressDTO address);
         GeoCoordinate GetGeoCoordsFromAddressOrLatLang(string address, string lat, string lng);
         GeoCoordinate GetGeoCoordsFromLatLong(string lat, string lng);
         void GatheringJoinRequest(string token, int gatheringId);
-        Invitation InviteToGathering(string token, int gatheringId, User person);
+        Invitation InviteToGroup(string token, int gatheringId, User person, string finderFlag);
         List<GroupParticipantDTO> GetParticipantsForGroup(int groupId);
         AddressDTO GetGroupAddress(string token, int groupId);
         AddressDTO GetPersonAddress(string token, int participantId);

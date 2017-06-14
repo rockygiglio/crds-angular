@@ -1,10 +1,14 @@
+import CONSTANTS from 'crds-constants';
+
 export default class GroupToolCms {
   /*@ngInject*/
-  constructor(Page, ParticipantService, $state) {
+  constructor(Page, ParticipantService, $state, $window, GroupService) {
     this.page = Page;
     this.participantService = ParticipantService;
     this.state = $state;
     this.content = '';
+    this.window = $window;
+    this.groupService = GroupService;
   }
 
   $onInit() {
@@ -12,13 +16,17 @@ export default class GroupToolCms {
       if (_.get(data, 'ApprovedSmallGroupLeader', false)) {
         this.url = this.url || '/groups/leader/resources/';
 
-        this.page.get({ url: this.url }).$promise.then((data) => {
-          if(data.pages.length > 0) {
+        this.page.get({
+          url: this.url
+        }).$promise.then((data) => {
+          if (data.pages.length > 0) {
             this.content = data.pages[0].content;
           }
         });
       } else {
-        this.state.go("content", { "link": "/groups/leader" });
+        this.groupService.groupLeaderUrl().then((segment) => {
+          this.window.location.href = this.window.location.origin + segment;
+        });
       }
     });
   }

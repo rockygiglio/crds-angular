@@ -43,7 +43,7 @@ Param (
   [Parameter(Mandatory=$true)]
   [string] $SMTPServerPort,
   [Parameter(Mandatory=$true)]
-  [string]$DpToolUriToBeReplaced
+  [string]$DpToolUriToBeReplaced,
   [Parameter(Mandatory=$true)]
   [string]$DpToolNewUri
 )
@@ -310,7 +310,7 @@ ALTER ROLE [db_securityadmin] ADD MEMBER [$InternalDBServerName\MPUser];
 exec sp_change_users_login @Action='update_one', @UserNamePattern='ApiUser', @LoginName='ApiUser'
 exec sp_change_users_login @Action='update_one', @UserNamePattern='EcheckAgent', @LoginName='EcheckAgent'
 exec sp_change_users_login @Action='update_one', @UserNamePattern='MigrateUser', @LoginName='MigrateUser'
-
+exec sp_change_users_login @Action='update_one', @UserNamePattern='NewRelic', @LoginName='NewRelic'
 
 -- TODO: Review, Rework, and determine plan for mapping users
 USE [$DBName]
