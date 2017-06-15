@@ -411,8 +411,8 @@ namespace crds_angular.Services
             var cloudReturn = _awsCloudsearchService.SearchConnectAwsCloudsearch(queryString,
                                                                                     "_all_fields",
                                                                                     _configurationWrapper.GetConfigIntValue("ConnectDefaultNumberOfPins"),
-                                                                                    originCoords,
-                                                                                    boundingBox);
+                                                                                    originCoords/*,
+                                                                                    boundingBox*/);
             pins = ConvertFromAwsSearchResponse(cloudReturn);
 
             this.AddPinMetaData(pins, originCoords, contactId);

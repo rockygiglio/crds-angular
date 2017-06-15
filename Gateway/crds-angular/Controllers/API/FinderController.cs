@@ -339,20 +339,20 @@ namespace crds_angular.Controllers.API
 
         [RequiresAuthorization]
         [ResponseType(typeof(PinSearchResultsDto))]                                   
-        [VersionedRoute(template: "finder/findmypinsbycontactid/{contactId}/{lat}/{lng}/{finderType}", minimumVersion: "1.0.0")]
-        [Route("finder/findmypinsbycontactid/{contactId}/{lat}/{lng}/{finderType}")]
-        [HttpGet]
-        public IHttpActionResult GetMyPinsByContactId([FromUri]int contactId, [FromUri]string lat, [FromUri]string lng, [FromUri]string finderType )
+        [VersionedRoute(template: "finder/findmypinsbycontactid", minimumVersion: "1.0.0")]
+        [Route("finder/findmypinsbycontactid")]
+        [HttpPost]
+        public IHttpActionResult GetMyPinsByContactId(PinSearchQueryParams queryParams)
         {
             return Authorized(token =>
             {
                 try
                 {
-                    var originCoords = _finderService.GetGeoCoordsFromLatLong(lat, lng);
+                    var originCoords = _finderService.GetGeoCoordsFromAddressOrLatLang(queryParams.UserSearchString, queryParams.CenterGeoCoords);
                     var centerLatitude = originCoords.Latitude;
                     var centerLongitude = originCoords.Longitude;
 
-                    var pinsForContact = _finderService.GetMyPins(token, originCoords, contactId, finderType);
+                    var pinsForContact = _finderService.GetMyPins(token, originCoords, queryParams.ContactId, queryParams.FinderType);
 
                     if (pinsForContact.Count > 0)
                     {
