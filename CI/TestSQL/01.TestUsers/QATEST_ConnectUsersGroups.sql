@@ -1,6 +1,5 @@
 --Registered Account - Connect Users
---Manual delete call
---  EXEC [MinistryPlatform].[dbo].[cr_QADeleteData] 'mpcrds+ae@gmail.com' EXEC [MinistryPlatform].[dbo].[cr_QADeleteData] 'mpcrds+nt@gmail.com'
+
 USE [MinistryPlatform]
 GO
 
@@ -13,9 +12,7 @@ DECLARE @houseHoldID   AS INT
 SET @houseHoldID =    (SELECT Household_ID 
 					   FROM   Contacts 
 					   WHERE  Contact_ID = @contactID);
-
-    
-					  
+				  
  
  -- Update partcipant record.
 -- NOTE..For a test user that you only want to be in a group and not a connect user, change Host_Status_ID = 0
@@ -28,7 +25,7 @@ SET @participantID =  (SELECT Participant_ID
 
 UPDATE [dbo].Participants
 SET   Participant_Type_ID = 1, Domain_ID = 1, Show_On_Map = 1, Host_Status_ID = 3, Group_Leader_Status_ID = 4 
-WHERE Contact_ID = @ContactID 
+WHERE Participant_ID = @participantID 
 
 SET IDENTITY_INSERT [dbo].[Addresses] ON;
 DECLARE @addressID AS INT
@@ -49,7 +46,7 @@ VALUES
 -- Group_type_ID 1 = small group
 -- Ministry_ID 8 = spiritual growth. Run this query for all minitstries: select * from dbo.Ministries
 
-DECLARE @groupIdSG AS INT
+DECLARE @groupIdSG   AS INT
 SET IDENTITY_INSERT [dbo].[Groups] ON;
 SET @groupIdSG = (SELECT IDENT_CURRENT('Groups')) + 1 ;
 
@@ -62,15 +59,10 @@ VALUES
 
 SET IDENTITY_INSERT [dbo].[Groups] OFF;
 
-DECLARE @groupID AS INT
-SET @groupID =        (SELECT Group_ID 
-				       FROM   Groups 
-				       WHERE  Group_Name = '(t) Physics Group');
-
 INSERT INTO dbo.Group_Participants
 ( Group_ID, Participant_ID, Group_Role_ID, Domain_ID, Start_Date      , Employee_Role, Auto_Promote ) 
 VALUES
-( @groupId, @participantID, 22           , 1        , {d '2015-11-01'}, 0            , 1            );
+( @groupIdSG, @participantID, 22           , 1        , {d '2015-11-01'}, 0            , 1            );
 
 GO
 
@@ -102,7 +94,7 @@ SET @participantID =  (SELECT Participant_ID
 
 UPDATE [dbo].Participants
 SET   Participant_Type_ID = 1, Domain_ID = 1, Show_On_Map = 1, Host_Status_ID = 3, Group_Leader_Status_ID = 1 
-WHERE Contact_ID = @ContactID 
+WHERE Participant_ID = @participantID 
 
 SET IDENTITY_INSERT [dbo].[Addresses] ON;
 DECLARE @addressID AS INT
@@ -123,7 +115,7 @@ VALUES
 -- Group_type_ID 1 = small group
 -- Ministry_ID 8 = spiritual growth. Run this query for all minitstries: select * from dbo.Ministries
 
-DECLARE @groupID AS INT
+DECLARE @groupID       AS INT
 SET @groupID =        (SELECT Group_ID 
 				       FROM   Groups 
 				       WHERE  Group_Name = '(t) Physics Group');--Change to group you want the person inserted into
