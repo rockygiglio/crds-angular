@@ -1,0 +1,8 @@
+/* Fixing /live Hero padding in order to keep watch now above fold - Brian Miller */
+.crds-legacy-styles .crds-hero>div {
+  padding: 2em 1em !important;
+}
+
+.crds-legacy-styles landing .intro, .crds-legacy-styles streaming .intro {
+  padding: 0em 0 !important;
+}

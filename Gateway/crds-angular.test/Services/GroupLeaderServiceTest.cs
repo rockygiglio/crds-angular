@@ -402,6 +402,32 @@ namespace crds_angular.test.Services
 
 
         [Test]
+        public void ShouldGetURLSegment()
+        {
+            const string appCode = "appCode";
+            const string fieldName = "fieldName";
+            const string urlSegment = "/group-leader";
+
+
+            _configWrapper.Setup(m => m.GetConfigValue("GroupLeaderAppCode")).Returns(appCode);
+            _configWrapper.Setup(m => m.GetConfigValue("GroupLeaderApplicationUrlSegment")).Returns(fieldName);
+            _configWrapper.Setup(m => m.GetMpConfigValue(appCode, fieldName, true)).Returns(urlSegment);
+            
+            var response = _fixture.GetUrlSegment();
+
+            response.Subscribe((n) =>
+                               {
+                                   Assert.AreEqual(urlSegment, response);
+                               },
+                               (err) =>
+                               {
+                                   Assert.Fail(err.ToString());
+                               });
+        }
+
+
+
+        [Test]
         [ExpectedException(typeof(ApplicationException))]
         public void ShouldThrowExceptionWhenGettingStatusFails()
         {
