@@ -115,7 +115,7 @@ VALUES
 -- Group_type_ID 1 = small group
 -- Ministry_ID 8 = spiritual growth. Run this query for all minitstries: select * from dbo.Ministries
 
-DECLARE @groupID       AS INT
+DECLARE @groupID       AS INT 
 SET @groupID =        (SELECT Group_ID 
 				       FROM   Groups 
 				       WHERE  Group_Name = '(t) Physics Group');--Change to group you want the person inserted into
