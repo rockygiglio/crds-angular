@@ -781,16 +781,21 @@ namespace crds_angular.Services
             }
         }
 
-        public AddressDTO GetPersonAddress(string token, int participantId)
+        public AddressDTO GetPersonAddress(string token, int participantId, bool shouldGetFullAddress = true)
         {
             var user = _participantRepository.GetParticipantRecord(token);
 
-            if (user.ParticipantId == participantId)
+            if ((user.ParticipantId == participantId) || !shouldGetFullAddress)
             {
                 var address = _finderRepository.GetPinAddress(participantId);
 
                 if (address != null)
                 {
+                    if (!shouldGetFullAddress)
+                    {
+                        address.Address_Line_1 = null;
+                        address.Address_Line_2 = null;
+                    }
                     return Mapper.Map<AddressDTO>(address);
                 }
                 else
