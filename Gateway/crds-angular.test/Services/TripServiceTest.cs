@@ -20,6 +20,7 @@ using IDonationRepository = MinistryPlatform.Translation.Repositories.Interfaces
 using IEventRepository = MinistryPlatform.Translation.Repositories.Interfaces.IEventRepository;
 using IGroupRepository = MinistryPlatform.Translation.Repositories.Interfaces.IGroupRepository;
 using ICampaignRepository = MinistryPlatform.Translation.Repositories.Interfaces.ICampaignRepository;
+using MpCommunication = MinistryPlatform.Translation.Models.MpCommunication;
 
 namespace crds_angular.test.Services
 {

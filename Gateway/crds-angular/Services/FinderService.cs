@@ -21,6 +21,7 @@ using crds_angular.Models.AwsCloudsearch;
 using crds_angular.Models.Crossroads.Groups;
 using Crossroads.Web.Common.Configuration;
 using MinistryPlatform.Translation.Models.Finder;
+using MpCommunication = MinistryPlatform.Translation.Models.MpCommunication;
 
 namespace crds_angular.Services
 {
@@ -148,7 +149,8 @@ namespace crds_angular.Services
             var token = _apiUserRepository.GetToken();
 
             //get group details for the primary pin
-            pin.Gathering = _groupService.GetGroupsByTypeOrId(token, participantId, null, groupId, false, false).FirstOrDefault();
+            var groupdto = _groupService.GetGroupsByTypeOrId(token, participantId, null, groupId, false, false).FirstOrDefault();
+            pin.Gathering = Mapper.Map<FinderGroupDto>(groupdto) ;
 
             if (pin.Gathering?.GroupTypeId == _anywhereGroupType)
             {
@@ -389,33 +391,66 @@ namespace crds_angular.Services
         public List<PinDto> GetPinsInBoundingBox(GeoCoordinate originCoords, string address, AwsBoundingBox boundingBox, string finderType, int contactId)
         {
             List<PinDto> pins = null;
+            var queryString = "matchall";
 
-            int id = _anywhereGroupType; 
+            // new search string for AWS call based on the findertype, use pintype
 
             if (finderType.Equals(_finderConnect))
             {
-                var cloudReturn = _awsCloudsearchService.SearchConnectAwsCloudsearch("matchall",
-                                                                                     "_all_fields",
-                                                                                     _configurationWrapper.GetConfigIntValue("ConnectDefaultNumberOfPins"),
-                                                                                     originCoords,
-                                                                                     boundingBox);
-                pins = ConvertFromAwsSearchResponse(cloudReturn);
+                queryString = "(or pintype:3 pintype:2 pintype:1)";
             }
             else if (finderType.Equals(_finderGroupTool))
             {
-                
-                var groupTypeIds = new int[1] {_smallGroupType};
-                var groupDTOs = _groupToolService.SearchGroups(groupTypeIds);
-
-                pins = this.TransformGroupDtoToPinDto(groupDTOs, finderType);
+                queryString = "pintype: 4";
             }
             else
             {     
                 throw new Exception("No pin search performed - finder type not found");
             }
 
+            var cloudReturn = _awsCloudsearchService.SearchConnectAwsCloudsearch(queryString,
+                                                                                    "_all_fields",
+                                                                                    _configurationWrapper.GetConfigIntValue("ConnectDefaultNumberOfPins"),
+                                                                                    originCoords,
+                                                                                    boundingBox);
+            pins = ConvertFromAwsSearchResponse(cloudReturn);
+
             this.AddPinMetaData(pins, originCoords, contactId);
+
             return pins;
+        }
+
+        private void MakeAllLatLongsUnique(List<PinDto> thePins)
+        {
+           
+                var groupedMatchingLatitude = thePins
+                .Where(w => w.Address.Latitude != null && w.Address.Longitude != null)
+                    .GroupBy(u => new {u.Address.Latitude, u.Address.Longitude})
+                    .Select(grp => grp.ToList())
+                    .ToList();
+
+            foreach (var grouping in groupedMatchingLatitude.Where(x => x.Count > 1))
+            {
+                // each of these groups matches latitude, so we need to create slight differences
+                double? newLat = 0.0;
+                double? newLong = 0.0;
+                foreach (var g in grouping)
+                {
+                    if (newLat.Equals(0.0))
+                    {
+                        newLat  = g.Address.Latitude;
+                        newLong = g.Address.Longitude;
+                    }
+                    else
+                    {
+                        newLat += .0001;
+                        newLong -= .0001;
+
+                        g.Address.Latitude = newLat;
+                        g.Address.Longitude = newLong;
+                    }
+                }
+            }
         }
 
         private Boolean isMyPin(PinDto pin, int contactId)
@@ -446,8 +481,13 @@ namespace crds_angular.Services
                     jsonData = $"{{ 'firstName': '{RemoveSpecialCharacters(pin.FirstName)}', 'lastInitial': '{RemoveSpecialCharacters(lastname)}','isHost':  false,'isMe': {isMyPinAsString(pin, contactId)},'pinType': {(int) pin.PinType}}}";
                     break;
                 case PinType.SMALL_GROUP:
-                    jsonData = $"{{ 'firstName': '{RemoveSpecialCharacters(pin.Gathering.GroupName)}', 'lastInitial': '','isHost':  false,'isMe': false,'pinType': {(int)pin.PinType}}}";
-                    break; 
+                    var groupName = RemoveSpecialCharacters(pin.Gathering.GroupName).Trim();
+                    if (groupName.Length > 22)
+                    {
+                        groupName = RemoveSpecialCharacters(pin.Gathering.GroupName).Trim().Substring(0, 22);
+                    }
+                    jsonData = $"{{ 'firstName': '{groupName}', 'lastInitial': '','isHost':  false,'isMe': false,'pinType': {(int)pin.PinType}}}";
+                    break;
             }
 
             return jsonData.Replace("'", "\"");
@@ -458,7 +498,7 @@ namespace crds_angular.Services
             var sb = new StringBuilder();
             foreach (var c in str)
             {
-                if ((c >= '0' && c <= '9') || (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || c == '.' || c == '_')
+                if ((c >= '0' && c <= '9') || (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || c == '.' || c == '_' || c == ' ')
                 {
                     sb.Append(c);
                 }
@@ -518,10 +558,9 @@ namespace crds_angular.Services
                     pin.Address.Latitude = Convert.ToDouble(coordinates[0]);
                     pin.Address.Longitude = Convert.ToDouble(coordinates[1]);
                 }
-                if (pin.PinType == PinType.GATHERING)
+                if (pin.PinType == PinType.GATHERING || pin.PinType == PinType.SMALL_GROUP)
                 {
-
-                    pin.Gathering = new GroupDTO
+                    pin.Gathering = new FinderGroupDto
                     {
                         GroupId = hit.Fields.ContainsKey("groupid") ? Convert.ToInt32(hit.Fields["groupid"].FirstOrDefault()) : 0,
                         GroupName = hit.Fields.ContainsKey("groupname") ? hit.Fields["groupname"].FirstOrDefault() : null,
@@ -531,7 +570,18 @@ namespace crds_angular.Services
                         ContactId = pin.Contact_ID.Value,
                         GroupTypeId = _anywhereGroupType,
                         CongregationId = _anywhereCongregationId,
-                        MinistryId = _spritualGrowthMinistryId
+                        MinistryId = _spritualGrowthMinistryId,
+                        KidsWelcome = hit.Fields.ContainsKey("groupkidswelcome") && hit.Fields["groupkidswelcome"].FirstOrDefault() == "1",
+                        MeetingDay = hit.Fields.ContainsKey("groupmeetingday") ? hit.Fields["groupmeetingday"].FirstOrDefault() : null,
+                        MeetingTime = hit.Fields.ContainsKey("groupmeetingtime") ? hit.Fields["groupmeetingtime"].FirstOrDefault() : null,
+                        MeetingFrequency = hit.Fields.ContainsKey("groupmeetingfrequency") ? hit.Fields["groupmeetingfrequency"].FirstOrDefault() : null,
+                        GroupType = hit.Fields.ContainsKey("grouptype") ? hit.Fields["grouptype"].FirstOrDefault() : null,
+                        VirtualGroup = hit.Fields.ContainsKey("groupvirtual") && hit.Fields["groupvirtual"].FirstOrDefault()== "1",
+                        PrimaryContactFirstName = hit.Fields.ContainsKey("groupprimarycontactfirstname") ? hit.Fields["groupprimarycontactfirstname"].FirstOrDefault() : null,
+                        PrimaryContactLastName = hit.Fields.ContainsKey("groupprimarycontactlastname") ? hit.Fields["groupprimarycontactlastname"].FirstOrDefault() : null,
+                        PrimaryContactCongregation = hit.Fields.ContainsKey("groupprimarycontactcongregation") ? hit.Fields["groupprimarycontactcongregation"].FirstOrDefault() : null,
+                        GroupAgesRangeList = hit.Fields.ContainsKey("groupagerange") ? hit.Fields["groupagerange"].ToList() : null,
+                        GroupCategoriesList = hit.Fields.ContainsKey("groupcategory") ? hit.Fields["groupcategory"].ToList() : null
                     };
 
                     if (hit.Fields.ContainsKey("groupstartdate") && !String.IsNullOrWhiteSpace(hit.Fields["groupstartdate"].First()))
@@ -581,11 +631,12 @@ namespace crds_angular.Services
 
             int[] groupTypesToFetch = finderType == _finderConnect ? new int[] { _anywhereGroupType } : new int[] { _smallGroupType };
 
-            var groupPins = GetMyGroupPins(token, groupTypesToFetch, participantId);
+            var groupPins = GetMyGroupPins(token, groupTypesToFetch, participantId, finderType);
             var personPin = GetPinDetailsForPerson(participantId);
 
             pins.AddRange(groupPins);
-            if (personPin != null && personPin.ShowOnMap)
+
+            if (personPin != null && personPin.ShowOnMap && finderType == _finderConnect)
             {
                 pins.Add(personPin);
             }
@@ -599,10 +650,12 @@ namespace crds_angular.Services
 
             pins = this.AddPinMetaData(pins, originCoords, contactId);
 
+            MakeAllLatLongsUnique(pins);
+
             return pins;
         }
 
-        public List<PinDto> GetMyGroupPins(string token, int[] groupTypeIds, int participantId)
+        public List<PinDto> GetMyGroupPins(string token, int[] groupTypeIds, int participantId, string finderType)
         {
             var groupsByType = _groupRepository.GetGroupsForParticipantByTypeOrID(participantId, null, groupTypeIds);
 
@@ -614,7 +667,7 @@ namespace crds_angular.Services
             var groupDTOs = groupsByType.Select(Mapper.Map<MpGroup, GroupDTO>).ToList();
 
             // TODO when do MY STUFF for Group Tool, will need to account for changing this flag to _finderGroupTool
-            var pins = this.TransformGroupDtoToPinDto(groupDTOs, _finderConnect);
+            var pins = this.TransformGroupDtoToPinDto(groupDTOs, finderType);
 
             return pins;
         }
@@ -865,7 +918,7 @@ namespace crds_angular.Services
                 foreach (var group in groupDTOs)
                 {
                     var pin = Mapper.Map<PinDto>(group);
-                    pin.Gathering = group;
+                    pin.Gathering = Mapper.Map<FinderGroupDto>(group);
 
                     pin.Gathering.ContactId = group.ContactId;
                     pin.Participant_ID = group.ParticipantId;
@@ -882,7 +935,7 @@ namespace crds_angular.Services
                 foreach (var group in groupDTOs)
                 {
                     var pin = Mapper.Map<PinDto>(group);
-                    pin.Gathering = group;
+                    pin.Gathering = Mapper.Map<FinderGroupDto>(group);
                     pin.PinType = PinType.SMALL_GROUP;
 
                     pin.FirstName = "FirstNamePlaceHolder"; // TODO wait and add in with AWS Data returned  - also refactor line 825 above

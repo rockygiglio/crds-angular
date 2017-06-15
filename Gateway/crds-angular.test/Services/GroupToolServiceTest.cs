@@ -82,7 +82,7 @@ namespace crds_angular.test.Services
             var configuration = new Mock<IConfigurationWrapper>();
 
             configuration.Setup(mocked => mocked.GetConfigIntValue("GroupRoleLeader")).Returns(GroupRoleLeader);
-            configuration.Setup(mocked => mocked.GetConfigIntValue("RemoveParticipantFromGroupEmailTemplateId")).Returns(RemoveParticipantFromGroupEmailTemplateId);
+            configuration.Setup(mocked => mocked.GetConfigIntValue("GenericGroupForCMSMergeEmailTemplateId")).Returns(RemoveParticipantFromGroupEmailTemplateId);
             configuration.Setup(mocked => mocked.GetConfigIntValue("DomainId")).Returns(DomainId);
             configuration.Setup(mocked => mocked.GetConfigValue("BaseURL")).Returns(BaseUrl);
             configuration.Setup(mocked => mocked.GetConfigIntValue("DefaultContactEmailId")).Returns(DefaultEmailContactId);
@@ -278,7 +278,7 @@ namespace crds_angular.test.Services
             };
             _participantRepository.Setup(mocked => mocked.GetParticipant(123)).Returns(approveParticipant);
 
-            _groupService.Setup(mocked => mocked.addContactToGroup(2, 123)).Verifiable();
+            _groupService.Setup(mocked => mocked.addContactToGroup(2, 123)).Returns(It.IsAny<int>());
             _groupRepository.Setup(mocked => mocked.UpdateGroupInquiry(2, 456, true)).Verifiable();
 
             var template = new MpMessageTemplate
@@ -741,7 +741,8 @@ namespace crds_angular.test.Services
                         },
                         new GroupParticipantDTO
                         {
-                            ParticipantId = removeParticipantId
+                            ParticipantId = removeParticipantId,
+                            GroupParticipantId = removeParticipantId
                         }
                     }
                 }
@@ -790,6 +791,15 @@ namespace crds_angular.test.Services
                 }
             };
 
+            var participant = group.Participants.Find(p => p.GroupParticipantId == removeGroupParticipantId);
+            MpParticipant toParticipant = new MpParticipant
+            {
+                ContactId = participant.ContactId,
+                EmailAddress = participant.Email,
+                PreferredName = participant.NickName,
+                ParticipantId = participant.ParticipantId
+            };
+
             var template = new MpMessageTemplate
             {
                 Body = "body",
@@ -816,7 +826,7 @@ namespace crds_angular.test.Services
                                 c.MergeData["Group_Description"].Equals(group.GroupDescription)),
                         false)).Returns(5);
 
-            _fixture.SendGroupParticipantEmail(groupId, removeGroupParticipantId, group, templateId);
+            _fixture.SendGroupParticipantEmail(groupId, group, templateId, toParticipant);
             _communicationRepository.VerifyAll();
             _contentBlockService.VerifyAll();
         }
@@ -850,6 +860,15 @@ namespace crds_angular.test.Services
                         Email = "80"
                     }
                 }
+            };
+
+            var participant = group.Participants.Find(p => p.GroupParticipantId == removeGroupParticipantId);
+            MpParticipant toParticipant = new MpParticipant
+            {
+                ContactId = participant.ContactId,
+                EmailAddress = participant.Email,
+                PreferredName = participant.NickName,
+                ParticipantId = participant.ParticipantId
             };
 
             var template = new MpMessageTemplate
@@ -894,7 +913,7 @@ namespace crds_angular.test.Services
                                 c.MergeData["From_Preferred_Name"].Equals(fromParticipant.PreferredName)),
                         false)).Returns(5);
 
-            _fixture.SendGroupParticipantEmail(groupId, removeGroupParticipantId, group, templateId, null, contentBlockTitle, contentBlockTitle, "message", fromParticipant);
+            _fixture.SendGroupParticipantEmail(groupId, group, templateId, toParticipant, contentBlockTitle, contentBlockTitle, "message", fromParticipant);
             _communicationRepository.VerifyAll();
             _contentBlockService.VerifyAll();
         }
@@ -987,7 +1006,7 @@ namespace crds_angular.test.Services
                                 c.MergeData["From_Preferred_Name"].Equals(fromParticipant.PreferredName)),
                         false)).Returns(5);
 
-            _fixture.SendGroupParticipantEmail(groupId, removeGroupParticipantId, group, templateId, toGroupParticipant, subjectContentBlockTitle, bodyContentBlockTitle, "message", fromParticipant);
+            _fixture.SendGroupParticipantEmail(groupId, group, templateId, toGroupParticipant, subjectContentBlockTitle, bodyContentBlockTitle, "message", fromParticipant);
             _communicationRepository.VerifyAll();
             _contentBlockService.VerifyAll();
         }
