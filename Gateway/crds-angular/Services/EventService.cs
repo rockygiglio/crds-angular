@@ -612,8 +612,8 @@ namespace crds_angular.Services
 
             eventList.ForEach(evt =>
             {
-                var rooms = _roomService.GetRoomReservations(evt.EventId).Where(r => (!r.Cancelled && !r.Hidden)).Select(s => s.Name).ToList();
-                var roomsString = rooms.Count > 0 ? string.Join(", ", (object[]) rooms.ToArray()) : "No Room Reserved under the Date and Time";
+                var rooms = _roomService.GetRoomReservations(evt.EventId).Where(r => !r.Cancelled).Select(s => s.Name).ToList();
+                var roomsString = rooms.Count > 0 ? string.Join(", ", rooms.ToArray()) : "No Room Reserved under the Date and Time";
                 SendPrimaryContactReminderEmail(evt, roomsString, token);
             });
         }
