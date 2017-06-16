@@ -419,7 +419,7 @@ namespace MinistryPlatform.Translation.Repositories
         public List<MpMyContact> GetPotentialMatchesContact(string firstName, string lastName, string email)
         {
             var token = ApiLogin();
-            string filter = $"(First_Name = '{firstName}' AND Last_Name = '{lastName}') OR Email_Address = '{email}'";
+            string filter = $" Last_Name = '{lastName}'AND Email_Address = '{email}'";
             var columns = new List<string>
             {
                 "First_Name",

@@ -93,10 +93,10 @@ namespace crds_angular.Controllers.API
         }
 
         [ResponseType(typeof(User[]))]
-        [VersionedRoute(template: "finder/getmatches", minimumVersion: "1.0.0")]
-        [Route("finder/getmatches")]
+        [VersionedRoute(template: "finder/getmatch", minimumVersion: "1.0.0")]
+        [Route("finder/getmatch")]
         [HttpPost]
-        public IHttpActionResult GetPotentialMatches([FromBody]User searchUser)
+        public IHttpActionResult GetPotentialUserMatch([FromBody]User searchUser)
         {
             try
             {
