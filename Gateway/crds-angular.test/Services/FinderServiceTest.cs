@@ -101,6 +101,99 @@ namespace crds_angular.test.Services
         }
 
         [Test]
+        [ExpectedException(typeof(Exception), ExpectedMessage = "User does not have access to requested address")]
+        public void ShouldThrowExceptionIfParticipantIdsDontMatch()
+        {
+            const int participantId = 42;
+            const string token = "ABC";
+            const int addressParticipantId = 99;
+
+            _mpParticipantRepository.Setup(mock => mock.GetParticipantRecord(token)).Returns(new MpParticipant()
+            {
+                ParticipantId = participantId
+            });
+
+            _fixture.GetPersonAddress(token, addressParticipantId, true);
+        }
+
+        [Test]
+        [ExpectedException(typeof(Exception), ExpectedMessage = "User address not found")]
+        public void GetPersonShouldThrowWhenAddressNotFound()
+        {
+            const int participantId = 42;
+            const string token = "ABC";
+ 
+
+            _mpParticipantRepository.Setup(mock => mock.GetParticipantRecord(token)).Returns(new MpParticipant()
+            {
+                ParticipantId = participantId
+            });
+
+            _mpFinderRepository.Setup(mock => mock.GetPinAddress(participantId)).Returns((MpAddress) null);
+
+            _fixture.GetPersonAddress(token, participantId, true);
+        }
+
+        [Test]
+        public void ShouldGetFullPersonAddress()
+        {
+            const int participantId = 42;
+            const string token = "ABC";
+            _mpParticipantRepository.Setup(mock => mock.GetParticipantRecord(token)).Returns(new MpParticipant()
+            {
+                ParticipantId = participantId
+            });
+
+            _mpFinderRepository.Setup(mock => mock.GetPinAddress(participantId)).Returns(this.getAMpAddress());
+
+            var result = _fixture.GetPersonAddress(token, participantId, true);
+            Assert.AreEqual(result.AddressID, 1);
+            Assert.AreEqual(result.AddressLine1, "1 Street");
+
+        }
+
+        [Test]
+        public void ShouldGetPartialPersonAddress()
+        {
+            const int participantId = 42;
+            const string token = "ABC";
+            _mpParticipantRepository.Setup(mock => mock.GetParticipantRecord(token)).Returns(new MpParticipant()
+            {
+                ParticipantId = participantId
+            });
+
+            _mpFinderRepository.Setup(mock => mock.GetPinAddress(participantId)).Returns(this.getAMpAddress());
+
+            var result = _fixture.GetPersonAddress(token, participantId, false);
+            Assert.AreEqual(result.AddressID, 1);
+            Assert.AreEqual(result.AddressLine1, null);
+            Assert.AreEqual(result.AddressLine2, null);
+            Assert.AreEqual(result.City, "City!");
+
+        }
+
+        [Test]
+        public void ShouldGetPartialAddressDifferentParticipantId()
+        {
+            const int participantId = 42;
+            const int addressParticipantId = 33;
+            const string token = "ABC";
+            _mpParticipantRepository.Setup(mock => mock.GetParticipantRecord(token)).Returns(new MpParticipant()
+            {
+                ParticipantId = participantId
+            });
+
+            _mpFinderRepository.Setup(mock => mock.GetPinAddress(addressParticipantId)).Returns(this.getAMpAddress());
+
+            var result = _fixture.GetPersonAddress(token, addressParticipantId, false);
+            Assert.AreEqual(result.AddressID, 1);
+            Assert.AreEqual(result.AddressLine1, null);
+            Assert.AreEqual(result.AddressLine2, null);
+            Assert.AreEqual(result.City, "City!");
+
+        }
+
+        [Test]
         public void ShouldGetPersonPinDetails()
         {
             _apiUserRepository.Setup(ar => ar.GetToken()).Returns("abc123");
@@ -720,6 +813,23 @@ namespace crds_angular.test.Services
                 ShowOnMap = true,
                 SiteName = "Anywheres",
                 ShouldUpdateHomeAddress = false
+            };
+        }
+
+        private MpAddress getAMpAddress(int designator = 1)
+        {
+            return new MpAddress()
+            {
+                Address_ID = designator,
+                Address_Line_1 = $"{designator} Street",
+                Address_Line_2 = $"Apt {designator}",
+                City = "City!",
+                County = "County!",
+                Foreign_Country = "USA",
+                Latitude = 0,
+                Longitude = 0,
+                Postal_Code = "12345",
+                State = "Ohio"
             };
         }
 
