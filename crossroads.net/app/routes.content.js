@@ -21,7 +21,7 @@
     $stateProvider
       .state('content', {
         // This url will match a slash followed by anything (including additional slashes).
-        url: '{link:contentRouteType}',
+        url: '{link:contentRouteType}',       
         views: {
           '': {
             controller: 'ContentCtrl',
@@ -40,8 +40,13 @@
               $window) {
               var promise;
               var redirectFlag = false;
+              var link = $stateParams.link;
 
-              var link = addTrailingSlashIfNecessary($stateParams.link);
+              if(Session.isActive() && link === "/" ) {
+                link = getPersonalizedContentPath(link);
+              }
+              
+              link = addTrailingSlashIfNecessary(link);
 
               promise = Page.get({ url: link }).$promise;
 
@@ -213,6 +218,10 @@
     }
 
     return link;
+  }
+
+  function getPersonalizedContentPath(link) {
+    return "/personalized" + link;
   }
 
 })();
