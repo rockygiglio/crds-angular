@@ -481,11 +481,13 @@ namespace crds_angular.Services
                     jsonData = $"{{ 'firstName': '{RemoveSpecialCharacters(pin.FirstName)}', 'lastInitial': '{RemoveSpecialCharacters(lastname)}','isHost':  false,'isMe': {isMyPinAsString(pin, contactId)},'pinType': {(int) pin.PinType}}}";
                     break;
                 case PinType.SMALL_GROUP:
-                    var groupName = pin.Gathering.GroupName.Trim().Length > 23
-                        ? RemoveSpecialCharacters(pin.Gathering.GroupName).Trim().Substring(0, 22)
-                        : RemoveSpecialCharacters(pin.Gathering.GroupName).Trim();
+                    var groupName = RemoveSpecialCharacters(pin.Gathering.GroupName).Trim();
+                    if (groupName.Length > 22)
+                    {
+                        groupName = RemoveSpecialCharacters(pin.Gathering.GroupName).Trim().Substring(0, 22);
+                    }
                     jsonData = $"{{ 'firstName': '{groupName}', 'lastInitial': '','isHost':  false,'isMe': false,'pinType': {(int)pin.PinType}}}";
-                    break; 
+                    break;
             }
 
             return jsonData.Replace("'", "\"");
@@ -781,16 +783,21 @@ namespace crds_angular.Services
             }
         }
 
-        public AddressDTO GetPersonAddress(string token, int participantId)
+        public AddressDTO GetPersonAddress(string token, int participantId, bool shouldGetFullAddress = true)
         {
             var user = _participantRepository.GetParticipantRecord(token);
 
-            if (user.ParticipantId == participantId)
+            if ((user.ParticipantId == participantId) || !shouldGetFullAddress)
             {
                 var address = _finderRepository.GetPinAddress(participantId);
 
                 if (address != null)
                 {
+                    if (!shouldGetFullAddress)
+                    {
+                        address.Address_Line_1 = null;
+                        address.Address_Line_2 = null;
+                    }
                     return Mapper.Map<AddressDTO>(address);
                 }
                 else
