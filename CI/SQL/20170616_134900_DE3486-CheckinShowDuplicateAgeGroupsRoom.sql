@@ -1,7 +1,7 @@
 -- =============================================
--- Author:      Dustin Kocher
--- Create date: 2017-3-16
--- Description:	Keep the Capacity, Volunteer, and Allow Checkin Values when toggling on and off AC
+-- Author:      Tim Giblin
+-- Create date: 2017-6-16
+-- Description:	Catch Foreign Key Constraint and pass back up so that we can send back down to user
 -- =============================================
 
 USE [MinistryPlatform]
@@ -74,7 +74,7 @@ SELECT @InactiveEventRoomId = Event_Room_ID,
 	@Allow_Checkin = ISNULL(er.Allow_Checkin, @Allow_Checkin),
 	@Capacity = ISNULL(er.Capacity, @Capacity),
 	@Volunteers = ISNULL(er.Volunteers, @Volunteers)
-FROM Event_Rooms er 
+FROM Event_Rooms er
 WHERE er.Event_ID = (SELECT TOP(1) Event_ID FROM @Events WHERE Event_ID <> @EventId) AND Room_ID = @RoomID
 
 DELETE FROM Event_Groups WHERE Event_Room_ID = @InactiveEventRoomId
@@ -86,7 +86,7 @@ IF NOT EXISTS (SELECT * FROM Event_Rooms WHERE Event_ID IN (SELECT Event_ID FROM
 BEGIN
 	INSERT INTO Event_Rooms
 		([Event_ID], [Room_ID], [Domain_ID], [Hidden], [Allow_Checkin], [Capacity], [Volunteers])
-	VALUES 
+	VALUES
 		(@EventId, @RoomId, 1, 0, @Allow_Checkin, @Capacity, @Volunteers)
 
 	SELECT @EventRoomId = Event_Room_ID FROM Event_Rooms WHERE Event_Room_ID = SCOPE_IDENTITY()
@@ -111,7 +111,7 @@ DECLARE @ExtantGroupIds TABLE
 	GroupId INT
 )
 
-INSERT INTO @ExtantGroupIds 
+INSERT INTO @ExtantGroupIds
 SELECT Group_ID
 FROM Event_Groups WHERE Event_ID = @EventId AND Room_ID = @RoomId
 
@@ -130,7 +130,7 @@ SELECT DISTINCT
 	'Id' = x.v.value('Id[1]', 'int'),
 	'TypeId' = x.v.value('TypeId[1]', 'int'),
 	'Selected' = x.v.value('Selected[1]', 'bit')
-FROM 
+FROM
 	@GroupsXml.nodes('Groups/NurseryGroupXml/Attribute') x(v)
 
 -- Get the nursery group ids for selected groups that are not already on the event
@@ -157,7 +157,7 @@ SELECT DISTINCT
 	'MonthId' = x.v.value('MonthId[1]', 'int'),
 	'MonthTypeId' = x.v.value('MonthTypeId[1]', 'int'),
 	'Selected' = x.v.value('Selected[1]', 'bit')
-FROM 
+FROM
 	@GroupsXml.nodes('Groups/YearGroupXml/Attribute') x(v)
 
 -- Add the new event groups for all group types here
@@ -201,7 +201,7 @@ SELECT DISTINCT
 	'GradeYearId' = x.v.value('Id[1]', 'int'),
 	'GradeYearTypeId' = x.v.value('TypeId[1]', 'int'),
 	'GradeSelected' = x.v.value('Selected[1]', 'bit')
-FROM 
+FROM
 	@GroupsXml.nodes('Groups/GradeGroupXml/Attribute') x(v)
 
 -- Add the new event groups for all group types here
