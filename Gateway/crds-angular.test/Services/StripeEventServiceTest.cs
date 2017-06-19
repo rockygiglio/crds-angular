@@ -542,7 +542,7 @@ namespace crds_angular.test.Services
                 StripeCustomerId = processorId
             };
 
-            _mpDonorService.Setup(mocked => mocked.ProcessRecurringGiftDecline(subscriptionId));
+            _mpDonorService.Setup(mocked => mocked.ProcessRecurringGiftDecline(subscriptionId,"error message"));
             _mpDonorService.Setup(mocked => mocked.GetRecurringGiftForSubscription(subscriptionId, "")).Returns(gift);
            
             Assert.IsNull(_fixture.ProcessStripeEvent(e));
@@ -561,7 +561,7 @@ namespace crds_angular.test.Services
             const int donorId = 3421;
             const int frequency = 2;
             const string id = "9876";
-            const string charge = "ch_2468";
+            const string chargeId = "ch_2468";
             const string planId = "Donor ID #3421 weekly"; 
 
             var e = new StripeEvent
@@ -575,7 +575,7 @@ namespace crds_angular.test.Services
                     {
                         Id = id,
                         Customer = processorId,
-                        Charge = charge,
+                        Charge = chargeId,
                         Subscription = subscriptionId
                     })
                 }
@@ -601,11 +601,19 @@ namespace crds_angular.test.Services
                  Plan = plan
              };
 
-            _mpDonorService.Setup(mocked => mocked.ProcessRecurringGiftDecline(subscriptionId));
+            var charge = new StripeCharge
+            {
+                Id = chargeId,
+                FailureMessage = "Your card was declined.",
+                FailureCode = "card_declined"
+            };
+
+            _paymentProcessorService.Setup(mocked => mocked.GetCharge(chargeId)).Returns(charge);
             _mpDonorService.Setup(mocked => mocked.GetRecurringGiftForSubscription(subscriptionId, "")).Returns(gift);
             _paymentProcessorService.Setup(mocked => mocked.CancelSubscription(donorAccountProcessorId, subscriptionId)).Returns(subscription);
             _paymentProcessorService.Setup(mocked => mocked.CancelPlan(subscription.Plan.Id)).Returns(plan);
             _mpDonorService.Setup(mocked => mocked.CancelRecurringGift(recurringGiftId));
+            _mpDonorService.Setup(mocked => mocked.ProcessRecurringGiftDecline(subscriptionId, "card declined: Your card was declined."));
 
 
             Assert.IsNull(_fixture.ProcessStripeEvent(e));
