@@ -7,7 +7,9 @@
 
   function TripPrivateInviteController($rootScope, $scope, $window, $log, MPTools, Trip, AuthService, CRDS_TOOLS_CONSTANTS) {
 
-    $log.debug('TripPrivateInviteController');
+    if (!__CRDS_ENV__) {
+      $log.debug('TripPrivateInviteController');
+    }
     var vm = this;
 
     vm.allowAccess = allowAccess;

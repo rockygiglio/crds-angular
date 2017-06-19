@@ -57,7 +57,9 @@
           vm.inputType = 'password';
         }
 
-        $log.debug(vm.pwprocessing);
+        if (!__CRDS_ENV__) {
+          $log.debug(vm.pwprocessing);
+        }
       }
 
     }

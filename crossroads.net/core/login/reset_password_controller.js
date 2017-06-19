@@ -25,7 +25,9 @@ require('../services/auth_service');
       $timeout,
       TokenStatus) {
 
-    $log.debug('Inside Password Controller');
+    if (!__CRDS_ENV__) {
+      $log.debug('Inside Password Controller');
+    }
 
     var vm = this;
     vm.saving = false;

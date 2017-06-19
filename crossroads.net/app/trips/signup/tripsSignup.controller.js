@@ -226,11 +226,15 @@ var attributeTypes = require('crds-constants').ATTRIBUTE_TYPE_IDS;
       if (form !== null) {
         form.$setSubmitted(true);
         if (form.$valid) {
-          $log.debug('form valid');
+          if (!__CRDS_ENV__) {
+            $log.debug('form valid');
+          }
           route = 'tripsignup.application.page';
           $state.go(route, {stepId: pageId});
         } else {
-          $log.debug('form INVALID');
+          if (!__CRDS_ENV__) {
+            $log.debug('form INVALID');
+          }
           $rootScope.$emit('notify', $rootScope.MESSAGES.generalError);
           return false;
         }
@@ -339,7 +343,9 @@ var attributeTypes = require('crds-constants').ATTRIBUTE_TYPE_IDS;
     }
    
     function onBeforeUnload() {
-      $log.debug('onBeforeUnload start');
+      if (!__CRDS_ENV__) {
+        $log.debug('onBeforeUnload start');
+      }
       if (vm.tpForm.$dirty) {
         return '';
       }

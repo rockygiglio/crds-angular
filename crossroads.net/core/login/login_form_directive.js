@@ -9,7 +9,9 @@
       controller: 'LoginController',
       link: function(scope, elements, attrs) {
         var showForm = function() {
-          $log.debug('not logged in');
+          if (!__CRDS_ENV__) {
+            $log.debug('not logged in');
+          }
           scope.visible = true;
         };
 
@@ -41,7 +43,9 @@
           scope.showRegister = true;
         }
 
-        $log.debug(scope.passwordPrefix);
+        if (!__CRDS_ENV__) {
+          $log.debug(scope.passwordPrefix);
+        }
         scope.visible = false;
       }
     };

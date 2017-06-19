@@ -27,7 +27,9 @@
     };
 
     function activate() {
-      $log.debug('signup service activate');
+      if (!__CRDS_ENV__) {
+        $log.debug('signup service activate');
+      }
 
       if (signupService.page2 === undefined) {
         signupService.page2 = page2();

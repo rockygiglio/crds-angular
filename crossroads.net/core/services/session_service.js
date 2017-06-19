@@ -49,7 +49,9 @@
     const vm = this;
 
     vm.create = (refreshToken, sessionId, userTokenExp, userId, username) => {
-      $log.debug('creating cookies!');
+      if (!__CRDS_ENV__) {
+        $log.debug('creating cookies!');
+      }
       const expDate = new Date();
       expDate.setTime(expDate.getTime() + (userTokenExp * 1000));
       $cookies.put(cookieNames.SESSION_ID, sessionId, {
@@ -65,7 +67,9 @@
     };
 
     vm.refresh = (response) => {
-      $log.debug('updating cookies!');
+      if (!__CRDS_ENV__) {
+        $log.debug('updating cookies!');
+      }
       const expDate = new Date();
       // TODO: Consider how we could make this less hard coded,
       // put the timeout in the header also?
@@ -99,7 +103,9 @@
      * @param family - an array of participant ids
      */
     vm.addFamilyMembers = (family) => {
-      $log.debug(`Adding ${family} to family cookie`);
+      if (!__CRDS_ENV__) {
+        $log.debug(`Adding ${family} to family cookie`);
+      }
       $cookies.put('family', family.join(','));
     };
 

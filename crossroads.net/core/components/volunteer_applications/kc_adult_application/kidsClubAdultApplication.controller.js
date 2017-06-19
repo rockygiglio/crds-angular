@@ -9,7 +9,9 @@ var moment = require('moment');
   KidsClubAdultApplicationController.$inject = ['$rootScope', '$log', 'VolunteerService', 'adultFields', 'Lookup'];
 
   function KidsClubAdultApplicationController($rootScope, $log, VolunteerService, adultFields, Lookup) {
-    $log.debug('Inside Kids-Club-Adult-Application-Controller');
+    if (!__CRDS_ENV__) {
+      $log.debug('Inside Kids-Club-Adult-Application-Controller');
+    }
     var vm = this;
 
     if (vm.volunteer === undefined) {
@@ -93,11 +95,13 @@ var moment = require('moment');
       vm.saving = true;
       vm.submitButtonText = 'Submitting...';
 
-      $log.debug('you tried to save');
-      $log.debug('nameTag: ' + vm.volunteer.nameTag);
-      $log.debug('something from parent: ' + vm.volunteer.contactId);
+      if (!__CRDS_ENV__) {
+        $log.debug('you tried to save');
+        $log.debug('nameTag: ' + vm.volunteer.nameTag);
+        $log.debug('something from parent: ' + vm.volunteer.contactId);
 
-      $log.debug('saving');
+        $log.debug('saving');
+      }
       if(form.adult.$invalid){
         $log.error('please fill out all required fields correctly');
         $rootScope.$emit('notify',$rootScope.MESSAGES.generalError);
