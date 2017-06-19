@@ -15,7 +15,7 @@ require('../../app/routes.content');
       let result = getPersonalizedContentPath(link);
 
       expect(result).toEqual("/personalized/foobar/");
-    }
+    });
   });
 });
 
