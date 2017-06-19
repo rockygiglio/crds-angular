@@ -381,11 +381,13 @@
                                                     <TextRuns>
                                                       <TextRun>
                                                         <Value>="No goods or services were provided by Crossroads in exchange for the contributions recorded on this statement."</Value>
-                                                        <Style />
+                                                        <Style>
+                                                          <FontSize>8pt</FontSize>
+                                                        </Style>
                                                       </TextRun>
                                                     </TextRuns>
                                                     <Style>
-                                                      <TextAlign>General</TextAlign>
+                                                      <TextAlign>Right</TextAlign>
                                                     </Style>
                                                   </Paragraph>
                                                 </Paragraphs>
@@ -569,6 +571,7 @@
                                                             </Textbox>
                                                           </ReportItems>
                                                           <KeepTogether>true</KeepTogether>
+                                                          <RepeatWith>Tablix4</RepeatWith>
                                                           <Style>
                                                             <Border>
                                                               <Style>None</Style>
@@ -607,6 +610,7 @@
                                                             </Paragraph>
                                                           </Paragraphs>
                                                           <rd:DefaultName>Textbox135</rd:DefaultName>
+                                                          <RepeatWith>Tablix4</RepeatWith>
                                                           <Style>
                                                             <Border>
                                                               <Style>None</Style>
@@ -648,6 +652,7 @@
                                                             </Paragraph>
                                                           </Paragraphs>
                                                           <rd:DefaultName>Textbox22</rd:DefaultName>
+                                                          <RepeatWith>Tablix4</RepeatWith>
                                                           <Style>
                                                             <Border>
                                                               <Style>None</Style>
@@ -686,6 +691,7 @@
                                                             </Paragraph>
                                                           </Paragraphs>
                                                           <rd:DefaultName>Textbox23</rd:DefaultName>
+                                                          <RepeatWith>Tablix4</RepeatWith>
                                                           <Style>
                                                             <Border>
                                                               <Style>None</Style>
@@ -718,6 +724,7 @@
                                                             </Paragraph>
                                                           </Paragraphs>
                                                           <rd:DefaultName>Textbox24</rd:DefaultName>
+                                                          <RepeatWith>Tablix4</RepeatWith>
                                                           <Style>
                                                             <Border>
                                                               <Style>None</Style>
@@ -754,6 +761,7 @@
                                                             </Paragraph>
                                                           </Paragraphs>
                                                           <rd:DefaultName>Textbox25</rd:DefaultName>
+                                                          <RepeatWith>Tablix4</RepeatWith>
                                                           <Style>
                                                             <Border>
                                                               <Style>None</Style>
@@ -790,6 +798,7 @@
                                                             </Paragraph>
                                                           </Paragraphs>
                                                           <rd:DefaultName>Textbox26</rd:DefaultName>
+                                                          <RepeatWith>Tablix4</RepeatWith>
                                                           <Style>
                                                             <Border>
                                                               <Style>None</Style>
@@ -1053,7 +1062,9 @@
                                                 <TablixMember />
                                                 <TablixMember />
                                                 <TablixMember />
-                                                <TablixMember />
+                                                <TablixMember>
+                                                  <KeepTogether>true</KeepTogether>
+                                                </TablixMember>
                                                 <TablixMember />
                                               </TablixMembers>
                                             </TablixColumnHierarchy>
@@ -1071,14 +1082,22 @@
                                                     </SortExpression>
                                                   </SortExpressions>
                                                   <TablixMembers>
-                                                    <TablixMember />
-                                                    <TablixMember />
-                                                    <TablixMember />
+                                                    <TablixMember>
+                                                      <RepeatOnNewPage>true</RepeatOnNewPage>
+                                                    </TablixMember>
+                                                    <TablixMember>
+                                                      <RepeatOnNewPage>true</RepeatOnNewPage>
+                                                    </TablixMember>
+                                                    <TablixMember>
+                                                      <RepeatOnNewPage>true</RepeatOnNewPage>
+                                                    </TablixMember>
                                                     <TablixMember />
                                                   </TablixMembers>
                                                 </TablixMember>
                                               </TablixMembers>
                                             </TablixRowHierarchy>
+                                            <RepeatColumnHeaders>true</RepeatColumnHeaders>
+                                            <RepeatRowHeaders>true</RepeatRowHeaders>
                                             <DataSetName>data_Main</DataSetName>
                                             <Filters>
                                               <Filter>
@@ -1118,9 +1137,12 @@
                               <TablixRowHierarchy>
                                 <TablixMembers>
                                   <TablixMember />
-                                  <TablixMember />
+                                  <TablixMember>
+                                    <RepeatOnNewPage>true</RepeatOnNewPage>
+                                  </TablixMember>
                                 </TablixMembers>
                               </TablixRowHierarchy>
+                              <RepeatRowHeaders>true</RepeatRowHeaders>
                               <DataSetName>data_Main</DataSetName>
                               <Top>0.01389in</Top>
                               <Left>0.00001in</Left>
@@ -1330,7 +1352,6 @@
                             </Border>
                           </Style>
                         </Rectangle>
-                        <rd:Selected>true</rd:Selected>
                       </CellContents>
                     </TablixCell>
                   </TablixCells>
@@ -1356,6 +1377,10 @@
                 </TablixMember>
               </TablixMembers>
             </TablixRowHierarchy>
+            <RepeatColumnHeaders>true</RepeatColumnHeaders>
+            <RepeatRowHeaders>true</RepeatRowHeaders>
+            <FixedColumnHeaders>true</FixedColumnHeaders>
+            <FixedRowHeaders>true</FixedRowHeaders>
             <DataSetName>data_Main</DataSetName>
             <Height>5.8252in</Height>
             <Width>8.00001in</Width>
