@@ -187,6 +187,22 @@ namespace crds_angular.Services
             return newUserData;
         }
 
+        public User RegisterPersonWithoutUserAccount(User newUserData)
+        {
+            var token = _apiUserService.GetToken();
+            var exists = _lookupService.EmailSearch(newUserData.email, token);
+            if (exists != null && exists.Any())
+            {
+                throw (new DuplicateUserException(newUserData.email));
+            }
+            var householdRecordId = CreateHouseholdRecord(newUserData, token);
+            var contactRecordId = CreateContactRecord(newUserData, token, householdRecordId);
+           
+            _participantService.CreateParticipantRecord(contactRecordId);
+            
+            return newUserData;
+        }
+
         private void CreateNewUserSubscriptions(int contactRecordId, string token)
         {
             var newSubscription = new Dictionary<string, object>();
