@@ -924,9 +924,9 @@ namespace crds_angular.Services
                     pin.Participant_ID = group.ParticipantId;
 
                     // TODO need to get rid of this call to GetContactById if get name from AWS search instead
-                    var contact = _contactRepository.GetContactById((int)pin.Contact_ID);
-                    pin.FirstName = contact.First_Name;
-                    pin.LastName = contact.Last_Name;
+                    //var contact = _contactRepository.GetContactById((int)pin.Contact_ID);
+                    //pin.FirstName = contact.First_Name;
+                    //pin.LastName = contact.Last_Name;
                     pins.Add(pin);
                 }
             }
@@ -938,8 +938,6 @@ namespace crds_angular.Services
                     pin.Gathering = Mapper.Map<FinderGroupDto>(group);
                     pin.PinType = PinType.SMALL_GROUP;
 
-                    pin.FirstName = "FirstNamePlaceHolder"; // TODO wait and add in with AWS Data returned  - also refactor line 825 above
-                    pin.LastName = "LastNamePlaceHolder"; // TODO wait and add in with AWS Data returned  - also refactor line 825 above
                     pin.Gathering.ContactId = group.ContactId;
                     pin.Participant_ID = group.ParticipantId;
 
