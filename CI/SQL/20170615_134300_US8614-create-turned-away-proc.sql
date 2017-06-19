@@ -48,7 +48,9 @@ AS
 	AND NOT EXISTS 
 	(select * from Event_Participants s_ep where s_ep.Participant_ID = ep.Participant_ID
 	AND s_ep.Participation_Status_ID IN (3, 4, 5) AND s_ep.Event_ID = e.Event_ID)
-	AND E.Congregation_ID IN (SELECT * FROM dbo.fnSplitString(@EventCongregations,','))
+	AND e.Congregation_ID IN (SELECT * FROM dbo.fnSplitString(@EventCongregations,','))
+	AND CONVERT(date, e.Event_Start_Date) >= @StartDate
+	AND CONVERT(date, e.Event_Start_Date) <= @EndDate
 	ORDER BY e.Event_Start_Date
 GO
 
