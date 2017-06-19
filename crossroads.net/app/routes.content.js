@@ -21,7 +21,7 @@
     $stateProvider
       .state('content', {
         // This url will match a slash followed by anything (including additional slashes).
-        url: '{link:contentRouteType}',       
+        url: '{link:contentRouteType}',
         views: {
           '': {
             controller: 'ContentCtrl',
