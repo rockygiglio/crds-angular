@@ -249,14 +249,27 @@ DECLARE group_cursor CURSOR FOR SELECT Group_ID FROM @AllGroupIds
 OPEN group_cursor
 FETCH NEXT FROM group_cursor INTO @Group_ID
 
+DECLARE @IS_ERROR bit
+Set @IS_ERROR = 0
+DECLARE @Duplicate_Group_Ids VARCHAR(1000)
+Set @Duplicate_Group_Ids = ''
+
 WHILE @@FETCH_STATUS = 0
 BEGIN
-
-	INSERT INTO Event_Groups (Group_ID, Event_ID, Room_ID, Domain_ID, Event_Room_ID)
-	VALUES (@Group_ID, @EventId, @RoomId, 1, @EventRoomId)
-
+	BEGIN TRY
+		INSERT INTO Event_Groups (Group_ID, Event_ID, Room_ID, Domain_ID, Event_Room_ID)
+		VALUES (@Group_ID, @EventId, @RoomId, 1, @EventRoomId)
+	END TRY
+	BEGIN CATCH
+		IF ERROR_NUMBER() = 2627
+			SET @Is_Error = 1
+			SET @Duplicate_Group_Ids = CONCAT(@Duplicate_Group_Ids, CAST(@Group_ID AS VARCHAR(100)), ',')
+	END CATCH
 	FETCH NEXT FROM group_cursor INTO @Group_ID
 END
+
+IF @Is_Error = 1
+	RAISERROR('%s', 16, 1, @Duplicate_Group_Ids)
 
 CLOSE group_cursor
 DEALLOCATE group_cursor
