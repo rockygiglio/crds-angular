@@ -721,19 +721,25 @@ namespace MinistryPlatform.Translation.Repositories
             _ministryPlatformService.UpdateRecord(_donationDistributionPageId, distributionData, ApiLogin());
         }
 
-        public void SendMessageFromDonor(int pledgeId, int donationId, string message)
+        public void SendMessageFromDonor(int pledgeId, int donationId, string message, string fromDonor)
         {
             var toDonor = _pledgeService.GetDonorForPledge(pledgeId);
-            var donorContact = _donorService.GetEmailViaDonorId(toDonor);
+            var toContact = _donorService.GetEmailViaDonorId(toDonor);
             var template = _communicationService.GetTemplate(_tripDonationMessageTemplateId);
 
-            var toContacts = new List<MpContact> {new MpContact {ContactId = donorContact.ContactId, EmailAddress = donorContact.Email}};
+            var toContacts = new List<MpContact> {new MpContact {ContactId = toContact.ContactId, EmailAddress = toContact.Email}};
 
             var from = new MpContact()
             {
                 ContactId = 5,
                 EmailAddress = "updates@crossroads.net"
             };
+
+
+            var mergeData = new Dictionary<string, object>
+                {
+                    {"Donor_Name", fromDonor }
+                };
 
             var comm = new MpCommunication
             {
@@ -744,7 +750,7 @@ namespace MinistryPlatform.Translation.Repositories
                 FromContact = from,
                 ReplyToContact = from,
                 ToContacts = toContacts,
-                MergeData = new Dictionary<string, object>()
+                MergeData = mergeData
             };
             var communicationId = _communicationService.SendMessage(comm, true);
             AddDonationCommunication(donationId, communicationId);
