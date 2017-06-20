@@ -213,9 +213,7 @@
             vm.rejected = true;
             vm.requestPending = false;
             vm.showPublish = false;
-            if (!__CRDS_ENV__) {
-              $log.debug('An error occurred while publishing', error);
-            }
+            $log.debug('An error occurred while publishing', error);
           });
     }
 

@@ -5,10 +5,7 @@
   ProfileHouseholdDirective.$inject = ['$log'];
 
   function ProfileHouseholdDirective($log) {
-    // don't log anything in prod environment
-    if (!__CRDS_ENV__) {
-      $log.debug('ProfileHouseholdDirective');
-    }
+    $log.debug('ProfileHouseholdDirective');
     return {
       restrict: 'E',
       bindToController: true,

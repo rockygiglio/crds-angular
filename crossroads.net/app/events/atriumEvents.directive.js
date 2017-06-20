@@ -13,24 +13,18 @@
                 // consider moving the resource code to a service and calling it from in a controller
                 var loadEvents = function(){
 
-                    if (!__CRDS_ENV__) {
-                        $log.debug("In addEventsData directive");
-                    }
+                    $log.debug("In addEventsData directive");
 
                     var evts = $resource(__GATEWAY_CLIENT_ENDPOINT__ + 'api/events/:site').query({site:$stateParams.site}, function(response) {
                         
-                        if (!__CRDS_ENV__) {
-                            $log.debug("Response: " + response);
-                        }
+                        $log.debug("Response: " + response);
                         
                         evts = response;
 
                         var tbody = $('<tbody>');
                         for(var i = 0; i < evts.length; i++) {
                             
-                            if (!__CRDS_ENV__) {
-                                $log.debug("Event: " + evts[i]);
-                            }
+                            $log.debug("Event: " + evts[i]);
 
                             var row = $('<tr>');
                             var evtTime = $('<td class="first-cell">');
@@ -61,16 +55,12 @@
                         var marqueeHeight = $(marqueeElement).height();
                         var windowHeight = $(window).height();
 
-                        if (!__CRDS_ENV__) {
-                            $log.debug("Marquee Height: " + marqueeHeight);
-                            $log.debug("Window Height: " + windowHeight);
-                        }
+                        $log.debug("Marquee Height: " + marqueeHeight);
+                        $log.debug("Window Height: " + windowHeight);
 
                         if (marqueeHeight >= windowHeight) {
 
-                            if (!__CRDS_ENV__) {
-                                $log.debug("Appending clone of div to force scroll");
-                            }
+                            $log.debug("Appending clone of div to force scroll");
                             
                             element.append(atriumCycleCell.clone());
                             $('hr.atrium-border').show();

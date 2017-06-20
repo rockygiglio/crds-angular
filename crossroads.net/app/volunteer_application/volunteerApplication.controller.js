@@ -106,9 +106,7 @@
           vm.showContent = false;
           return vm.showError;
         default:
-          if (!__CRDS_ENV__) {
-            $log.debug('show block undefined: ' + blockName);
-          }
+          $log.debug('show block undefined: ' + blockName);
           return false;
       }
     }

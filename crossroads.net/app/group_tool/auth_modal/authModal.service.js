@@ -8,9 +8,7 @@ export default class AuthModalService {
 
   // This replaces the $modal.open(...) call and will determine if the user needs to be authenticated first
   open(options) {
-    if (!__CRDS_ENV__) {
-      this.$log.debug("Opening auth modal");
-    }
+    this.$log.debug("Opening auth modal");
 
     // If the user is logged in, open the modal to the desired location
     if (this.session.isActive()) {
@@ -29,9 +27,7 @@ export default class AuthModalService {
 
   // Open the login/register modal since the user does not have an active session
   showAuth(options) {
-    if (!__CRDS_ENV__) {
-      this.$log.debug("Showing auth modal login");
-    }
+    this.$log.debug("Showing auth modal login");
     var modalInstance = this.$modal.open({
       templateUrl: 'auth_modal/authModal.html',
       controller: 'AuthModalController',

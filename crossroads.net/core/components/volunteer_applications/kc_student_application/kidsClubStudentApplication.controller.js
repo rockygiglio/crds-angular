@@ -8,9 +8,7 @@ var moment = require('moment');
   KidsClubStudentApplicationController.$inject = ['$log', '$rootScope', 'VolunteerService', 'studentFields'];
 
   function KidsClubStudentApplicationController($log, $rootScope, VolunteerService, studentFields) {
-    if (!__CRDS_ENV__) {
-      $log.debug('Inside Kids-Club-Student-Application-Controller');
-    }
+    $log.debug('Inside Kids-Club-Student-Application-Controller');
     var vm = this;
 
     vm.availabilitySelected = availabilitySelected;
@@ -71,11 +69,9 @@ var moment = require('moment');
       vm.saving = true;
       vm.submitButtonText = 'Submitting...';
 
-      if (!__CRDS_ENV__) {
-        $log.debug('you tried to save');
-        $log.debug('school: ' + vm.school);
-        $log.debug('something from parent: ' + vm.contactId );
-      }
+      $log.debug('you tried to save');
+      $log.debug('school: ' + vm.school);
+      $log.debug('something from parent: ' + vm.contactId );
 
       if(form.student.$invalid){
         $log.error('please fill out all required fields correctly');

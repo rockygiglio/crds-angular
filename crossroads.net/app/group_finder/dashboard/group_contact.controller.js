@@ -61,15 +61,11 @@
 
       if (vm.errors.message === false && vm.errors.subject === false) {
         Email.GroupMail.save(toSend, function() {
-          if (!__CRDS_ENV__) {
-            $log.debug('GroupContactCtrl - message sent successfully');
-          }
+          $log.debug('GroupContactCtrl - message sent successfully');
           $modalInstance.close($scope.sent = true);
         }, function() {
           vm.sending = false;
-          if (!__CRDS_ENV__) {
-            $log.debug('GroupContactCtrl - error sending message');
-          }
+          $log.debug('GroupContactCtrl - error sending message');
           vm.errors.unknown = true;
         });
       } else {

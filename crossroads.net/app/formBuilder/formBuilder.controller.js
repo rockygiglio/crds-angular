@@ -201,9 +201,7 @@
               $rootScope.$emit('notify', $rootScope.MESSAGES.generalError);
             }
 
-            if (!__CRDS_ENV__) {
-              $log.debug('form builder save unsuccessful');
-            }
+            $log.debug('form builder save unsuccessful');
             vm.saving = false;
             vm.successfulSave = false;
           }

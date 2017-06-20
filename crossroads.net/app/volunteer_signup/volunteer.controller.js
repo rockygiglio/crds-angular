@@ -7,9 +7,7 @@
   VolunteerController.$inject = ['$rootScope', '$scope', '$log', '$filter', 'MESSAGES', 'Session', '$state', 'Opportunity', 'ServeOpportunities', 'CmsInfo', '$modal'];
 
   function VolunteerController($rootScope, $scope, $log, $filter, MESSAGES, Session, $state, Opportunity, ServeOpportunities, CmsInfo, $modal) {
-    if (!__CRDS_ENV__) {
-      $log.debug("Inside VolunteerController");
-    }
+    $log.debug("Inside VolunteerController");
     var vm = this;
 
     vm.allSignedUp = allSignedUp;
@@ -122,9 +120,7 @@
         add: true
       }), 'participantId');
 
-      if (!__CRDS_ENV__) {
-        $log.debug(save.participants.length);
-      }
+      $log.debug(save.participants.length);
       if (save.participants.length < 1) {
         $rootScope.$emit('notify', $rootScope.MESSAGES.noPeopleSelectedError);
         return;

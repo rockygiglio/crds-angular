@@ -20,9 +20,7 @@ require('../services/password_service');
     PasswordService,
     Validation) {
 
-    if (!__CRDS_ENV__) {
-      $log.debug('Inside Password Controller');
-    }
+    $log.debug('Inside Password Controller');
 
     var vm = this;
     vm.saving = false;
@@ -58,21 +56,15 @@ require('../services/password_service');
     }
 
     function submitPassword(form) {
-      if (!__CRDS_ENV__) {
-        $log.debug('submitPassword start');
-      }
+      $log.debug('submitPassword start');
 
       if (form !== null) {
         form.$setSubmitted(true);
         if (form.$valid) {
-          if (!__CRDS_ENV__) {
-            $log.debug('form valid');
-          }
+          $log.debug('form valid');
           resetRequest();
         } else {
-          if (!__CRDS_ENV__) {
-            $log.debug('form INVALID');
-          }
+          $log.debug('form INVALID');
           $rootScope.$emit('notify', $rootScope.MESSAGES.generalError);
         }
       }

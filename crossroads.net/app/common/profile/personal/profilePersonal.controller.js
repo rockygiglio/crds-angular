@@ -330,9 +330,7 @@
           vm.profileData.person.$save(function() {
                 vm.submitted = false;
                 $rootScope.$emit('notify', $rootScope.MESSAGES.profileUpdated);
-                if (!__CRDS_ENV__) {
-                  $log.debug('person save successful');
-                }
+                $log.debug('person save successful');
                 if (vm.profileParentForm) {
                   vm.profileParentForm.$setPristine();
 
@@ -366,9 +364,7 @@
 
               function() {
                 $rootScope.$emit('notify', $rootScope.MESSAGES.generalError);
-                if (!__CRDS_ENV__) {
-                  $log.debug('person save unsuccessful');
-                }
+                $log.debug('person save unsuccessful');
                 vm.submitted = false;
               });
         }

@@ -6,9 +6,7 @@
   LogoutController.$inject = ['$rootScope', '$scope', '$log', 'AuthService', 'Session'];
 
   function LogoutController($rootScope, $scope, $log, AuthService, Session) {
-    if (!__CRDS_ENV__) {
-      $log.debug('Inside Logout-Controller');
-    }
+    $log.debug('Inside Logout-Controller');
 
     logout();
 

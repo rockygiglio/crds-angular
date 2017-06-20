@@ -98,9 +98,7 @@
           throw new Error('Parse Date Failed Moment Validation');
         }
       }
-      if (!__CRDS_ENV__) {
-        $log.debug('date: ' + m.format('X'));
-      }
+      $log.debug('date: ' + m.format('X'));
       return m.format('X');
     }
 

@@ -15,10 +15,7 @@
         $state
     ) {
 
-        if (!__CRDS_ENV__) {
-            $log.debug('Inside The Daily Controller');
-        }
-
+        $log.debug('Inside The Daily Controller');
         var vm = this;
     }
 })();
