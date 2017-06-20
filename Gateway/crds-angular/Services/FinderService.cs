@@ -411,8 +411,8 @@ namespace crds_angular.Services
             var cloudReturn = _awsCloudsearchService.SearchConnectAwsCloudsearch(queryString,
                                                                                     "_all_fields",
                                                                                     _configurationWrapper.GetConfigIntValue("ConnectDefaultNumberOfPins"),
-                                                                                    originCoords,
-                                                                                    boundingBox);
+                                                                                    originCoords/*,
+                                                                                    boundingBox*/);
             pins = ConvertFromAwsSearchResponse(cloudReturn);
 
             this.AddPinMetaData(pins, originCoords, contactId);
@@ -672,11 +672,11 @@ namespace crds_angular.Services
             return pins;
         }
 
-        public GeoCoordinate GetGeoCoordsFromAddressOrLatLang(string address, string lat, string lng)
+        public GeoCoordinate GetGeoCoordsFromAddressOrLatLang(string address, GeoCoordinates centerCoords)
         {
 
-            double latitude = Convert.ToDouble(lat.Replace("$", "."));
-            double longitude = Convert.ToDouble(lng.Replace("$", "."));
+            double latitude = centerCoords.Lat.HasValue ? centerCoords.Lat.Value : 0;
+            double longitude = centerCoords.Lng.HasValue ? centerCoords.Lng.Value : 0;
 
             var geoCoordsPassedIn = latitude != 0 && longitude != 0;
 
@@ -783,16 +783,21 @@ namespace crds_angular.Services
             }
         }
 
-        public AddressDTO GetPersonAddress(string token, int participantId)
+        public AddressDTO GetPersonAddress(string token, int participantId, bool shouldGetFullAddress = true)
         {
             var user = _participantRepository.GetParticipantRecord(token);
 
-            if (user.ParticipantId == participantId)
+            if ((user.ParticipantId == participantId) || !shouldGetFullAddress)
             {
                 var address = _finderRepository.GetPinAddress(participantId);
 
                 if (address != null)
                 {
+                    if (!shouldGetFullAddress)
+                    {
+                        address.Address_Line_1 = null;
+                        address.Address_Line_2 = null;
+                    }
                     return Mapper.Map<AddressDTO>(address);
                 }
                 else
@@ -971,6 +976,17 @@ namespace crds_angular.Services
                 if (pin.Address.Longitude != null) pin.Proximity = GetProximity(originCoords, new GeoCoordinate(pin.Address.Latitude.Value, pin.Address.Longitude.Value));
             }
             return pins;
+        }
+
+        public Boolean areAllBoundingBoxParamsPresent(MapBoundingBox boundingBox)
+        {
+            var isUpperLeftLatNull = boundingBox.UpperLeftLat == null;
+            var isUpperLeftLngNull = boundingBox.UpperLeftLng == null;
+            var isBottomRightLatNull = boundingBox.BottomRightLat == null;
+            var isBottomRightLngNull = boundingBox.BottomRightLng == null;
+            Boolean areAllBoundingBoxParamsPresent = !isUpperLeftLatNull && !isUpperLeftLngNull && !isBottomRightLatNull && !isBottomRightLngNull;
+
+            return areAllBoundingBoxParamsPresent; 
         }
 
     }

@@ -173,16 +173,16 @@ namespace crds_angular.Controllers.API
 
         [RequiresAuthorization]
         [ResponseType(typeof(AddressDTO))]
-        [VersionedRoute(template: "finder/person/address/{participantId}", minimumVersion: "1.0.0")]
-        [Route("finder/person/address/{participantId}")]
+        [VersionedRoute(template: "finder/person/address/{participantId}/{shouldGetFullAddress}", minimumVersion: "1.0.0")]
+        [Route("finder/person/address/{participantId}/{getFullAddress}")]
         [HttpGet]
-        public IHttpActionResult GetPersonAddress([FromUri] int participantId)
+        public IHttpActionResult GetPersonAddress([FromUri] int participantId, [FromUri] bool shouldGetFullAddress)
         {
             return Authorized(token =>
             {
                 try
                 {
-                    var address = _finderService.GetPersonAddress(token, participantId);
+                    var address = _finderService.GetPersonAddress(token, participantId, shouldGetFullAddress);
                     return (Ok(address));
                 }
                 catch (Exception e)
@@ -299,23 +299,24 @@ namespace crds_angular.Controllers.API
         }
 
         [ResponseType(typeof(PinSearchResultsDto))]
-        [VersionedRoute(template: "finder/findpinsbyaddress/{userSearchAddress}/{finderFlag}/{contactId?}/{lat?}/{lng?}/{upperleftlat?}/{upperleftlng?}/{bottomrightlat?}/{bottomrightlng?}", minimumVersion: "1.0.0")]
-        [Route("finder/findpinsbyaddress/{userSearchAddress}/{finderFlag}/{contactId?}/{lat?}/{lng?}/{upperleftlat?}/{upperleftlng?}/{bottomrightlat?}/{bottomrightlng?}")]
-        [HttpGet]
-        public IHttpActionResult GetPinsByAddress([FromUri]string userSearchAddress, [FromUri]string finderFlag, [FromUri]int contactId = 0, [FromUri]string lat = "0", [FromUri]string lng = "0", [FromUri]string upperleftlat = "0", [FromUri]string upperleftlng = "0", [FromUri]string bottomrightlat = "0", [FromUri]string bottomrightlng = "0")
+        [VersionedRoute(template: "finder/findpinsbyaddress", minimumVersion: "1.0.0")]
+        [Route("finder/findpinsbyaddress/")]
+        [HttpPost]
+        public IHttpActionResult GetPinsByAddress(PinSearchQueryParams queryParams)
         {
             try
             {
 
-                AwsBoundingBox boundingBox = null;
-                if (upperleftlat != "0" && upperleftlng != "0" && bottomrightlat != "0" && bottomrightlng != "0")
+                AwsBoundingBox awsBoundingBox = null;
+                Boolean areAllBoundingBoxParamsPresent = _finderService.areAllBoundingBoxParamsPresent(queryParams.BoundingBox); 
+                if (areAllBoundingBoxParamsPresent)
                 {
-                    boundingBox = _awsCloudsearchService.BuildBoundingBox(upperleftlat, upperleftlng, bottomrightlat, bottomrightlng);
+                    awsBoundingBox = _awsCloudsearchService.BuildBoundingBox(queryParams.BoundingBox);
                 }
                
-                var originCoords = _finderService.GetGeoCoordsFromAddressOrLatLang(userSearchAddress, lat, lng);
+                var originCoords = _finderService.GetGeoCoordsFromAddressOrLatLang(queryParams.UserSearchString, queryParams.CenterGeoCoords);
 
-                var pinsInRadius = _finderService.GetPinsInBoundingBox(originCoords, userSearchAddress, boundingBox, finderFlag, contactId);
+                var pinsInRadius = _finderService.GetPinsInBoundingBox(originCoords, queryParams.UserSearchString, awsBoundingBox, queryParams.FinderType, queryParams.ContactId);
 
                 foreach (var pin in pinsInRadius)
                 {
@@ -338,20 +339,20 @@ namespace crds_angular.Controllers.API
 
         [RequiresAuthorization]
         [ResponseType(typeof(PinSearchResultsDto))]                                   
-        [VersionedRoute(template: "finder/findmypinsbycontactid/{contactId}/{lat}/{lng}/{finderType}", minimumVersion: "1.0.0")]
-        [Route("finder/findmypinsbycontactid/{contactId}/{lat}/{lng}/{finderType}")]
-        [HttpGet]
-        public IHttpActionResult GetMyPinsByContactId([FromUri]int contactId, [FromUri]string lat, [FromUri]string lng, [FromUri]string finderType )
+        [VersionedRoute(template: "finder/findmypinsbycontactid", minimumVersion: "1.0.0")]
+        [Route("finder/findmypinsbycontactid")]
+        [HttpPost]
+        public IHttpActionResult GetMyPinsByContactId(PinSearchQueryParams queryParams)
         {
             return Authorized(token =>
             {
                 try
                 {
-                    var originCoords = _finderService.GetGeoCoordsFromLatLong(lat, lng);
+                    var originCoords = _finderService.GetGeoCoordsFromAddressOrLatLang(queryParams.UserSearchString, queryParams.CenterGeoCoords);
                     var centerLatitude = originCoords.Latitude;
                     var centerLongitude = originCoords.Longitude;
 
-                    var pinsForContact = _finderService.GetMyPins(token, originCoords, contactId, finderType);
+                    var pinsForContact = _finderService.GetMyPins(token, originCoords, queryParams.ContactId, queryParams.FinderType);
 
                     if (pinsForContact.Count > 0)
                     {
