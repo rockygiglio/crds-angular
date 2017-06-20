@@ -998,7 +998,7 @@ namespace MinistryPlatform.Translation.Repositories
         }
 
 
-        public void ProcessRecurringGiftDecline(string subscriptionId)
+        public void ProcessRecurringGiftDecline(string subscriptionId, string error)
         {
             var recurringGift = GetRecurringGiftForSubscription(subscriptionId);
             UpdateRecurringGiftFailureCount(recurringGift.RecurringGiftId.Value, recurringGift.ConsecutiveFailureCount + 1);
@@ -1010,7 +1010,7 @@ namespace MinistryPlatform.Translation.Repositories
             var program = _programService.GetProgramById(Convert.ToInt32(recurringGift.ProgramId));
             var amt = decimal.Round(recurringGift.Amount, 2, MidpointRounding.AwayFromZero);
 
-            SendEmail(templateId, recurringGift.DonorId, amt, paymentType, DateTime.Now, program.Name, "fail", frequency);
+            SendEmail(templateId, recurringGift.DonorId, amt, paymentType, DateTime.Now, program.Name, error, frequency);
         }
 
         public int GetDonorAccountPymtType(int donorAccountId)

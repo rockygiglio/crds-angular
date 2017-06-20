@@ -173,16 +173,16 @@ namespace crds_angular.Controllers.API
 
         [RequiresAuthorization]
         [ResponseType(typeof(AddressDTO))]
-        [VersionedRoute(template: "finder/person/address/{participantId}", minimumVersion: "1.0.0")]
-        [Route("finder/person/address/{participantId}")]
+        [VersionedRoute(template: "finder/person/address/{participantId}/{shouldGetFullAddress}", minimumVersion: "1.0.0")]
+        [Route("finder/person/address/{participantId}/{getFullAddress}")]
         [HttpGet]
-        public IHttpActionResult GetPersonAddress([FromUri] int participantId)
+        public IHttpActionResult GetPersonAddress([FromUri] int participantId, [FromUri] bool shouldGetFullAddress)
         {
             return Authorized(token =>
             {
                 try
                 {
-                    var address = _finderService.GetPersonAddress(token, participantId);
+                    var address = _finderService.GetPersonAddress(token, participantId, shouldGetFullAddress);
                     return (Ok(address));
                 }
                 catch (Exception e)
