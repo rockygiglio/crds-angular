@@ -230,7 +230,12 @@ namespace crds_angular.test.controllers
                 StatementMethod = "2",
                 StatementType = "3",
                 ProcessorId = "cus_test1234567",
-                Email = "moc.tset@tset"
+                Email = "moc.tset@tset",
+                Details = new MpContactDetails
+                {
+                    FirstName = "Bart",
+                    LastName = "Simpson"
+                }
             };
 
             contactRepositoryMock.Setup(mocked => mocked.GetContactId(authType + " " + authToken)).Returns(contactId);
@@ -315,7 +320,12 @@ namespace crds_angular.test.controllers
                 StatementMethod = "2",
                 StatementType = "3",
                 ProcessorId = "cus_test1234567",
-                Email = "moc.tset@tset"
+                Email = "moc.tset@tset",
+                Details = new MpContactDetails
+                {
+                    FirstName = "Bart",
+                    LastName = "Simpson"
+                }
             };
 
             var pledgeId = 3456;
@@ -416,7 +426,12 @@ namespace crds_angular.test.controllers
                 StatementMethod = "2",
                 StatementType = "3",
                 ProcessorId = "cus_test1234567",
-                Email = "moc.tset@tset"
+                Email = "moc.tset@tset",
+                Details = new MpContactDetails
+                {
+                    FirstName = "Bart",
+                    LastName = "Simpson"
+                }
             };
 
             var pledgeId = 3456;
@@ -518,7 +533,12 @@ namespace crds_angular.test.controllers
                 StatementMethod = "2",
                 StatementType = "3",
                 ProcessorId = "cus_test1234567",
-                Email = "moc.tset@tset"
+                Email = "moc.tset@tset",
+                Details = new MpContactDetails
+                {
+                    FirstName = "Bart",
+                    LastName = "Simpson"
+                }
             };
 
             fixture.Request.Headers.Authorization = null;
