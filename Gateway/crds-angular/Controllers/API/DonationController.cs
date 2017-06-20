@@ -408,6 +408,7 @@ namespace crds_angular.Controllers.API
                 };
 
                 var from = dto.Anonymous ? "Anonymous Donor" : donor.Details.FirstName + " " + donor.Details.LastName;
+
                 var donationId = _mpDonorService.CreateDonationAndDistributionRecord(donationAndDistribution);
                 if (!dto.GiftMessage.IsNullOrWhiteSpace() && pledgeId != null)
                 {

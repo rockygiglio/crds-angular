@@ -411,7 +411,9 @@ namespace MinistryPlatform.Translation.Repositories
                         Details = new MpContactDetails
                         {
                             EmailAddress = record.ToString("Email"),
-                            HouseholdId = record.ToInt("Household_ID")
+                            HouseholdId = record.ToInt("Household_ID"),
+                            FirstName = record.ToString("First_Name"),
+                            LastName = record.ToString("Last_Name")
                         }
                     };
                 }
@@ -459,8 +461,8 @@ namespace MinistryPlatform.Translation.Repositories
                         RegisteredUser = false,
                         Details = new MpContactDetails
                         {
-                            FirstName = record.ToString("First_Name,"),
-                            LastName = record.ToString("Last_Name,")
+                            FirstName = record.ToString("First_Name"),
+                            LastName = record.ToString("Last_Name")
                         }
                     };
                 }
