@@ -456,7 +456,12 @@ namespace MinistryPlatform.Translation.Repositories
                         ProcessorId = record.ToString(DonorProcessorId),
                         ContactId = record.ToInt("Contact_ID"),
                         Email = record.ToString("Email_Address"),
-                        RegisteredUser = false
+                        RegisteredUser = false,
+                        Details = new MpContactDetails
+                        {
+                            FirstName = record.ToString("First_Name,"),
+                            LastName = record.ToString("Last_Name,")
+                        }
                     };
                 }
                 else
