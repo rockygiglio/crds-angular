@@ -309,22 +309,18 @@ namespace crds_angular.Controllers.API
 
                 AwsBoundingBox awsBoundingBox = null;
                 Boolean areAllBoundingBoxParamsPresent = _finderService.areAllBoundingBoxParamsPresent(queryParams.BoundingBox); 
+
                 if (areAllBoundingBoxParamsPresent)
                 {
                     awsBoundingBox = _awsCloudsearchService.BuildBoundingBox(queryParams.BoundingBox);
                 }
                
+
                 var originCoords = _finderService.GetGeoCoordsFromAddressOrLatLang(queryParams.UserSearchString, queryParams.CenterGeoCoords);
 
                 var pinsInRadius = _finderService.GetPinsInBoundingBox(originCoords, queryParams.UserSearchString, awsBoundingBox, queryParams.FinderType, queryParams.ContactId);
 
-                foreach (var pin in pinsInRadius)
-                {
-                    if (pin.PinType != PinType.SITE)
-                    {
-                        pin.Address = _finderService.RandomizeLatLong(pin.Address);
-                    }
-                }
+                pinsInRadius = _finderService.RandomizeLatLongForNonSitePins(pinsInRadius); 
 
                 var result = new PinSearchResultsDto(new GeoCoordinates(originCoords.Latitude, originCoords.Longitude), pinsInRadius);
 

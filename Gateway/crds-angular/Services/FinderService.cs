@@ -986,6 +986,19 @@ namespace crds_angular.Services
             return areAllBoundingBoxParamsPresent; 
         }
 
+        public List<PinDto> RandomizeLatLongForNonSitePins(List<PinDto> pins)
+        {
+            foreach (var pin in pins)
+            {
+                if (pin.PinType != PinType.SITE)
+                {
+                    pin.Address = RandomizeLatLong(pin.Address);
+                }
+            }
+
+            return pins; 
+        }
+
     }
 }
 
