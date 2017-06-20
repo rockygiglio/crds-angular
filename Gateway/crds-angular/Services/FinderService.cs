@@ -388,7 +388,7 @@ namespace crds_angular.Services
             return participantId;
         }
 
-        public List<PinDto> GetPinsInBoundingBox(GeoCoordinate originCoords, string address, AwsBoundingBox boundingBox, string finderType, int contactId)
+        public List<PinDto> GetPinsInBoundingBox(GeoCoordinate originCoords, string userSearchString, AwsBoundingBox boundingBox, string finderType, int contactId)
         {
             List<PinDto> pins = null;
             var queryString = "matchall";
@@ -401,7 +401,7 @@ namespace crds_angular.Services
             }
             else if (finderType.Equals(_finderGroupTool))
             {
-                queryString = "pintype: 4";
+                queryString = $"(and pintype:4 (or groupname:'{userSearchString}' groupdescription:'{userSearchString}' groupprimarycontactfirstname:'{userSearchString}' groupprimarycontactlastname:'{userSearchString}'))";
             }
             else
             {     
@@ -409,10 +409,10 @@ namespace crds_angular.Services
             }
 
             var cloudReturn = _awsCloudsearchService.SearchConnectAwsCloudsearch(queryString,
-                                                                                    "_all_fields",
-                                                                                    _configurationWrapper.GetConfigIntValue("ConnectDefaultNumberOfPins"),
-                                                                                    originCoords/*,
-                                                                                    boundingBox*/);
+                                                                                "_all_fields",
+                                                                                _configurationWrapper.GetConfigIntValue("ConnectDefaultNumberOfPins"),
+                                                                                originCoords/*,
+                                                                                 boundingBox*/);
             pins = ConvertFromAwsSearchResponse(cloudReturn);
 
             this.AddPinMetaData(pins, originCoords, contactId);
