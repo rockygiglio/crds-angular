@@ -366,6 +366,8 @@
     <Compile Include="Models\Finder\FinderGroupDto.cs" />
     <Compile Include="Models\Finder\GeoCoordinates.cs" />
     <Compile Include="Models\Finder\HostRequestDto.cs" />
+    <Compile Include="Models\Finder\MapBoundingBox.cs" />
+    <Compile Include="Models\Finder\PinSearchParams.cs" />
     <Compile Include="Models\Finder\PinSearchResultsDto.cs" />
     <Compile Include="Models\Finder\PinDto.cs" />
     <Compile Include="Models\Crossroads\Events\EventParticipantDTO.cs" />
