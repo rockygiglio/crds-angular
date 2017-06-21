@@ -827,6 +827,13 @@ namespace MinistryPlatform.Translation.Repositories
             donation.IncludeOnGivingHistory = status.DisplayOnGivingHistory;
             donation.IncludeOnPrintedStatement = status.DisplayOnStatement && donation.AccountingCompanyIncludeOnPrintedStatement;
 
+            // Determine whether this payment was processed by Forte (i.e., previous processor before Stripe).
+            // If it's legacy, clear out the transaction code so that we don't try to call stripe later with
+            // an invalid (from Stripe's perspective) payment ID.
+            object legacy;
+            if (record.TryGetValue("Is_Legacy", out legacy) && legacy.ToString() == "True")
+                donation.transactionCode = null;
+
             return donation;
         }
 
