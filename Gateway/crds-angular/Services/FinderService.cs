@@ -430,8 +430,7 @@ namespace crds_angular.Services
             if (contactId == 0)
             {
                 user.password = System.Web.Security.Membership.GeneratePassword(25, 10);
-                _accountService.RegisterPersonWithoutUserAccount(user);
-                contactId = _contactRepository.GetContactIdByEmail(user.email);
+                contactId = _accountService.RegisterPersonWithoutUserAccount(user);
             }
 
             _groupService.addContactToGroup(groupid, contactId);

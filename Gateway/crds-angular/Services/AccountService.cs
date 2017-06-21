@@ -5,13 +5,10 @@ using crds_angular.Exceptions;
 using crds_angular.Models.Crossroads;
 using crds_angular.Models.MP;
 using crds_angular.Services.Interfaces;
-using Crossroads.Utilities.Interfaces;
 using log4net;
-using Crossroads.Web.Common;
 using Crossroads.Web.Common.Configuration;
 using Crossroads.Web.Common.MinistryPlatform;
 using Crossroads.Web.Common.Security;
-using MinistryPlatform.Translation.Repositories;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 using ILookupRepository = MinistryPlatform.Translation.Repositories.Interfaces.ILookupRepository;
 
@@ -190,7 +187,7 @@ namespace crds_angular.Services
             return newUserData;
         }
 
-        public User RegisterPersonWithoutUserAccount(User newUserData)
+        public int RegisterPersonWithoutUserAccount(User newUserData)
         {
             var token = _apiUserService.GetToken();
             var contactId = _contactRepository.GetContactIdByEmail(newUserData.email);
@@ -203,8 +200,8 @@ namespace crds_angular.Services
             var contactRecordId = CreateContactRecord(newUserData, token, householdRecordId);
            
             _participantService.CreateParticipantRecord(contactRecordId);
-            
-            return newUserData;
+
+            return contactRecordId;
         }
 
         private void CreateNewUserSubscriptions(int contactRecordId, string token)
