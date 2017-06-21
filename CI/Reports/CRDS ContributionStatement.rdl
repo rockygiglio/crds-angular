@@ -54,7 +54,7 @@
         </Field>
         <Field Name="Row_No">
           <DataField>Row_No</DataField>
-          <rd:TypeName>System.Int64</rd:TypeName>
+          <rd:TypeName>System.Int32</rd:TypeName>
         </Field>
         <Field Name="Donation_ID">
           <DataField>Donation_ID</DataField>
@@ -305,7 +305,9 @@
                                                   <Paragraph>
                                                     <TextRuns>
                                                       <TextRun>
-                                                        <Value>=Fields!Mail_Name.Value</Value>
+                                                        <Value>= Fields!Mail_Name.Value &amp; VbCRLF &amp; 
+ First(Fields!Address_Line_1.Value) &amp; IIF(ISNOTHING(First(Fields!Apt_or_Suite.Value)),"",VBCRLF &amp; First(Fields!Apt_or_Suite.Value))&amp; VbCRLF &amp;
+ First(Fields!City.Value) &amp; IIF(ISNOTHING(First(Fields!State.Value)),"",", " &amp; First(Fields!State.Value)) &amp; " " &amp; First(Fields!Postal_Code.Value)</Value>
                                                         <Style />
                                                       </TextRun>
                                                     </TextRuns>
@@ -315,59 +317,8 @@
                                                 <rd:DefaultName>Mail_Name</rd:DefaultName>
                                                 <Top>1.46504in</Top>
                                                 <Left>0.63194in</Left>
-                                                <Height>0.21in</Height>
+                                                <Height>0.58906in</Height>
                                                 <Width>4.02083in</Width>
-                                                <Style>
-                                                  <Border>
-                                                    <Style>None</Style>
-                                                  </Border>
-                                                </Style>
-                                              </Textbox>
-                                              <Textbox Name="Address_Line_1">
-                                                <CanGrow>true</CanGrow>
-                                                <KeepTogether>true</KeepTogether>
-                                                <Paragraphs>
-                                                  <Paragraph>
-                                                    <TextRuns>
-                                                      <TextRun>
-                                                        <Value>=First(Fields!Address_Line_1.Value) &amp; IIF(ISNOTHING(First(Fields!Apt_or_Suite.Value)),"",VBCRLF &amp; First(Fields!Apt_or_Suite.Value))</Value>
-                                                        <Style />
-                                                      </TextRun>
-                                                    </TextRuns>
-                                                    <Style />
-                                                  </Paragraph>
-                                                </Paragraphs>
-                                                <rd:DefaultName>Address_Line_1</rd:DefaultName>
-                                                <Top>1.71671in</Top>
-                                                <Left>0.63194in</Left>
-                                                <Height>0.2in</Height>
-                                                <Width>4.02083in</Width>
-                                                <ZIndex>1</ZIndex>
-                                                <Style>
-                                                  <Border>
-                                                    <Style>None</Style>
-                                                  </Border>
-                                                </Style>
-                                              </Textbox>
-                                              <Textbox Name="City">
-                                                <KeepTogether>true</KeepTogether>
-                                                <Paragraphs>
-                                                  <Paragraph>
-                                                    <TextRuns>
-                                                      <TextRun>
-                                                        <Value>=First(Fields!City.Value) &amp; IIF(ISNOTHING(First(Fields!State.Value)),"",", " &amp; First(Fields!State.Value)) &amp; " " &amp; First(Fields!Postal_Code.Value)</Value>
-                                                        <Style />
-                                                      </TextRun>
-                                                    </TextRuns>
-                                                    <Style />
-                                                  </Paragraph>
-                                                </Paragraphs>
-                                                <rd:DefaultName>City</rd:DefaultName>
-                                                <Top>1.94449in</Top>
-                                                <Left>0.63194in</Left>
-                                                <Height>0.2in</Height>
-                                                <Width>4.02083in</Width>
-                                                <ZIndex>2</ZIndex>
                                                 <Style>
                                                   <Border>
                                                     <Style>None</Style>
@@ -395,7 +346,7 @@
                                                 <Left>4.78125in</Left>
                                                 <Height>0.49125in</Height>
                                                 <Width>3.21875in</Width>
-                                                <ZIndex>3</ZIndex>
+                                                <ZIndex>1</ZIndex>
                                                 <Style>
                                                   <Border>
                                                     <Style>None</Style>
@@ -424,7 +375,7 @@
                                                 <Left>0.00564in</Left>
                                                 <Height>0.335in</Height>
                                                 <Width>3.2188in</Width>
-                                                <ZIndex>4</ZIndex>
+                                                <ZIndex>2</ZIndex>
                                                 <Style>
                                                   <Border>
                                                     <Style>None</Style>
@@ -450,7 +401,7 @@
                                                 <Left>4.78125in</Left>
                                                 <Height>0.21in</Height>
                                                 <Width>3.21875in</Width>
-                                                <ZIndex>5</ZIndex>
+                                                <ZIndex>3</ZIndex>
                                                 <Style>
                                                   <Border>
                                                     <Style>None</Style>
@@ -481,7 +432,7 @@
                                                 <Left>4.78125in</Left>
                                                 <Height>0.25in</Height>
                                                 <Width>3.21875in</Width>
-                                                <ZIndex>6</ZIndex>
+                                                <ZIndex>4</ZIndex>
                                                 <Style>
                                                   <Border>
                                                     <Style>None</Style>
@@ -1282,7 +1233,7 @@
                                               <Paragraph>
                                                 <TextRuns>
                                                   <TextRun>
-                                                    <Value>="&lt;b&gt;"+Fields!Campaign_Name.Value + "&lt;/b&gt;&lt;br&gt; You have contributed " + FormatPercent(Fields!Given_to_Pledge.Value/Fields!Total_Pledge.Value) + " of the "+ FormatCurrency(Fields!Total_Pledge.Value) + " commitment. &lt;br&gt; Total campaign contributions to date: " + FormatCurrency(Fields!Given_to_Pledge.Value)</Value>
+                                                    <Value>="&lt;b&gt;"+Fields!Campaign_Name.Value &amp; " Campaign" + "&lt;/b&gt;&lt;br&gt; You have contributed " + FormatPercent(Fields!Given_to_Pledge.Value/Fields!Total_Pledge.Value) + " of the "+ FormatCurrency(Fields!Total_Pledge.Value) + " commitment. &lt;br&gt; Total campaign contributions to date: " + FormatCurrency(Fields!Given_to_Pledge.Value)</Value>
                                                     <MarkupType>HTML</MarkupType>
                                                     <Style />
                                                   </TextRun>
@@ -1353,6 +1304,7 @@
                             </Border>
                           </Style>
                         </Rectangle>
+                        <rd:Selected>true</rd:Selected>
                       </CellContents>
                     </TablixCell>
                   </TablixCells>
@@ -1372,11 +1324,6 @@
                       <GroupExpression>=Fields!Statement_ID.Value</GroupExpression>
                     </GroupExpressions>
                   </Group>
-                  <SortExpressions>
-                    <SortExpression>
-                      <Value>=Fields!Postal_Code.Value</Value>
-                    </SortExpression>
-                  </SortExpressions>
                   <TablixMembers>
                     <TablixMember />
                   </TablixMembers>
@@ -1472,6 +1419,11 @@
     </ReportParameter>
     <ReportParameter Name="PrintDate">
       <DataType>DateTime</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>=Today()</Value>
+        </Values>
+      </DefaultValue>
       <Prompt>Print Date</Prompt>
     </ReportParameter>
     <ReportParameter Name="IsMulti">
