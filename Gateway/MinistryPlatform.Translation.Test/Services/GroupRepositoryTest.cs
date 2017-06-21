@@ -193,11 +193,10 @@ namespace MinistryPlatform.Translation.Test.Services
         [Test]
         public void TestGetAllEventsForGroupNoGroupFound()
         {
-            const string pageKey = "GroupEventsSubPageView";
             const int groupId = 987654;
-            const string token = "ABC";
 
-            _ministryPlatformService.Setup(m => m.GetSubpageViewRecords(pageKey, groupId, token, "", "", 0)).Returns((List<Dictionary<string, object>>) null);
+            _ministryPlatformRestService.Setup(m => m.UsingAuthenticationToken(ApiToken)).Returns(_ministryPlatformRestService.Object);
+            _ministryPlatformRestService.Setup(m => m.GetFromStoredProc<MpEvent>("api_crds_Get_Events_For_Group", It.IsAny<Dictionary<string, object>>())).Returns((List<List<MpEvent>>)null);
 
             var groupEvents = _fixture.getAllEventsForGroup(groupId);
             Assert.IsNull(groupEvents);
@@ -208,31 +207,33 @@ namespace MinistryPlatform.Translation.Test.Services
         [Test]
         public void TestGetAllEventsForGroup()
         {
-            const string pageKey = "GroupEventsSubPageView";
             const int groupId = 987654;
-            const string token = "ABC";
 
-            var mock1 = new Dictionary<string, object>
+            var mockEvent1 = new MpEvent()
             {
-                {"Event_ID", 123},
-                {"Congregation_Name", "Katrina's House"},
-                {"Event_Start_Date", new DateTime(2014, 3, 4)},
-                {"Event_Title", "Katrina's House Party"},
-                {"Event_End_Date", new DateTime(2014, 4, 4)},
-                {"Event_Type_ID", "Childcare"}
+                EventId = 123,
+                Congregation = "Katrina's House",
+                EventStartDate = new DateTime(2014, 3, 4),
+                EventTitle = "Katrina's House Party",
+                EventEndDate = new DateTime(2014, 4, 4),
+                EventType = "Childcare"
             };
-            var mock2 = new Dictionary<string, object>
+            var mockEvent2 = new MpEvent()
             {
-                {"Event_ID", 456},
-                {"Congregation_Name", "Andy's House"},
-                {"Event_Start_Date", new DateTime(2014, 4, 4)},
-                {"Event_Title", "Andy's House Party"},
-                {"Event_End_Date", new DateTime(2014, 4, 4)},
-                {"Event_Type_ID", "Childcare"}
+                EventId = 456,
+                Congregation = "Andy's House",
+                EventStartDate = new DateTime(2014, 4, 4),
+                EventTitle = "Andy's House Party",
+                EventEndDate = new DateTime(2014, 4, 4),
+                EventType = "Childcare"
             };
-            var mockSubPageView = new List<Dictionary<string, object>> {mock1, mock2};
+            var mockResultSet = new List<List<MpEvent>>()
+            {
+                new List<MpEvent> {mockEvent1, mockEvent2}
+            };
 
-            _ministryPlatformService.Setup(m => m.GetSubpageViewRecords(pageKey, groupId, token, "", "", 0)).Returns(mockSubPageView);
+            _ministryPlatformRestService.Setup(m => m.UsingAuthenticationToken(ApiToken)).Returns(_ministryPlatformRestService.Object);
+            _ministryPlatformRestService.Setup(m => m.GetFromStoredProc<MpEvent>("api_crds_Get_Events_For_Group", It.IsAny<Dictionary<string, object>>())).Returns(mockResultSet);
 
             var events = _fixture.getAllEventsForGroup(groupId);
             _ministryPlatformService.VerifyAll();

@@ -53,6 +53,7 @@ namespace crds_angular.Services
         private readonly IAwsCloudsearchService _awsCloudsearchService;
         private readonly IAuthenticationRepository _authenticationRepository;
         private readonly ICommunicationRepository _communicationRepository;
+        private readonly IAccountService _accountService;
         private readonly int _approvedHost;
         private readonly int _pendingHost;
         private readonly int _anywhereGroupType;
@@ -95,7 +96,8 @@ namespace crds_angular.Services
             IInvitationService invitationService,
             IAwsCloudsearchService awsCloudsearchService,
             IAuthenticationRepository authenticationRepository,
-            ICommunicationRepository communicationRepository
+            ICommunicationRepository communicationRepository,
+            IAccountService accountService
         )
         {
             // services
@@ -113,6 +115,7 @@ namespace crds_angular.Services
             _invitationService = invitationService;
             _awsCloudsearchService = awsCloudsearchService;
             _communicationRepository = communicationRepository;
+            _accountService = accountService;
             // constants
             _anywhereCongregationId = _configurationWrapper.GetConfigIntValue("AnywhereCongregationId");
             _approvedHost = configurationWrapper.GetConfigIntValue("ApprovedHostStatus");
@@ -141,38 +144,16 @@ namespace crds_angular.Services
 
         public PinDto GetPinDetailsForGroup(int groupId)
         {
-            //get the groups Primary contact
-            var participantId = GetLeaderParticipantIdFromGroup(groupId);
-            //get the pin details for the primary contact
-            var pin = GetPinDetailsForPerson(participantId);
+            List<PinDto> pins = null;
+            var cloudReturn = _awsCloudsearchService.SearchByGroupId(groupId.ToString());
 
-            var token = _apiUserRepository.GetToken();
+            pins = ConvertFromAwsSearchResponse(cloudReturn);
+            // need originCoords to calculate proximity, but we do not need here
+            GeoCoordinate originCoords = null;
+            this.AddPinMetaData(pins, originCoords);
 
-            //get group details for the primary pin
-            var groupdto = _groupService.GetGroupsByTypeOrId(token, participantId, null, groupId, false, false).FirstOrDefault();
-            pin.Gathering = Mapper.Map<FinderGroupDto>(groupdto) ;
+            return pins.First();
 
-            if (pin.Gathering?.GroupTypeId == _anywhereGroupType)
-            {
-                pin.PinType = PinType.GATHERING;
-            }
-            else if (pin.Gathering?.GroupTypeId == _smallGroupType)
-            {
-                pin.PinType = PinType.SMALL_GROUP;
-            }
-            else
-            {
-                throw new Exception("Get Pin Details Failed, group type not valid");
-            }            
-            
-            if (pin.Gathering != null)
-            {
-                pin.Gathering.Address.AddressLine1 = "";
-                pin.Gathering.Address.AddressLine2 = "";
-                pin.Address = pin.Gathering.Address;
-
-            }
-            return pin;
         }
 
         public PinDto GetPinDetailsForPerson(int participantId)
@@ -409,15 +390,28 @@ namespace crds_angular.Services
             }
 
             var cloudReturn = _awsCloudsearchService.SearchConnectAwsCloudsearch(queryString,
-                                                                                "_all_fields",
-                                                                                _configurationWrapper.GetConfigIntValue("ConnectDefaultNumberOfPins"),
-                                                                                originCoords/*,
-                                                                                 boundingBox*/);
+                                                                                    "_all_fields",
+                                                                                    _configurationWrapper.GetConfigIntValue("ConnectDefaultNumberOfPins"),
+                                                                                    originCoords/*,
+                                                                                    boundingBox*/);
             pins = ConvertFromAwsSearchResponse(cloudReturn);
 
             this.AddPinMetaData(pins, originCoords, contactId);
 
             return pins;
+        }
+
+        public void AddUserDirectlyToGroup(User user, int groupid)
+        {
+            //check to see if user exists in MP.
+            var contactId = _contactRepository.GetContactIdByEmail(user.email);
+            if (contactId == 0)
+            {
+                user.password = System.Web.Security.Membership.GeneratePassword(25, 10);
+                contactId = _accountService.RegisterPersonWithoutUserAccount(user);
+            }
+
+            _groupService.addContactToGroup(groupid, contactId);
         }
 
         private void MakeAllLatLongsUnique(List<PinDto> thePins)
@@ -929,9 +923,9 @@ namespace crds_angular.Services
                     pin.Participant_ID = group.ParticipantId;
 
                     // TODO need to get rid of this call to GetContactById if get name from AWS search instead
-                    var contact = _contactRepository.GetContactById((int)pin.Contact_ID);
-                    pin.FirstName = contact.First_Name;
-                    pin.LastName = contact.Last_Name;
+                    //var contact = _contactRepository.GetContactById((int)pin.Contact_ID);
+                    //pin.FirstName = contact.First_Name;
+                    //pin.LastName = contact.Last_Name;
                     pins.Add(pin);
                 }
             }
@@ -975,7 +969,11 @@ namespace crds_angular.Services
 
                 //calculate proximity for all pins to origin
                 if (pin.Address.Latitude == null) continue;
-                if (pin.Address.Longitude != null) pin.Proximity = GetProximity(originCoords, new GeoCoordinate(pin.Address.Latitude.Value, pin.Address.Longitude.Value));
+                if (pin.Address.Longitude != null && originCoords != null)
+                {
+                    pin.Proximity = GetProximity(originCoords, new GeoCoordinate(pin.Address.Latitude.Value, pin.Address.Longitude.Value));
+                }
+
             }
             return pins;
         }
@@ -1001,7 +999,7 @@ namespace crds_angular.Services
                 }
             }
 
-            return pins; 
+            return pins;
         }
 
         public GeoCoordinate GetMapCenterForResults(string userSearchString, GeoCoordinates frontEndMapCenter, string finderType)
@@ -1024,9 +1022,28 @@ namespace crds_angular.Services
                 }
             }
 
-            return resultMapCenterCoords; 
+            return resultMapCenterCoords;
         }
 
+        public List<User> GetMatches(User user)
+        {
+            var people = new List<User>();
+
+            var contacts = _contactRepository.GetPotentialMatchesContact(user.firstName, user.lastName, user.email);
+
+            foreach (var contact in contacts)
+            {
+                var newEntry = new User
+                {
+                    firstName = contact.First_Name,
+                    lastName = contact.Last_Name,
+                    email = contact.Email_Address
+                };
+                people.Add(newEntry);
+            }
+
+            return people;
+        }
     }
 }
 
