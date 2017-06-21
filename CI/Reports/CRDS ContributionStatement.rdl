@@ -1142,6 +1142,7 @@
                                   </TablixMember>
                                 </TablixMembers>
                               </TablixRowHierarchy>
+                              <RepeatColumnHeaders>true</RepeatColumnHeaders>
                               <RepeatRowHeaders>true</RepeatRowHeaders>
                               <DataSetName>data_Main</DataSetName>
                               <Top>0.01389in</Top>
@@ -1371,6 +1372,11 @@
                       <GroupExpression>=Fields!Statement_ID.Value</GroupExpression>
                     </GroupExpressions>
                   </Group>
+                  <SortExpressions>
+                    <SortExpression>
+                      <Value>=Fields!Postal_Code.Value</Value>
+                    </SortExpression>
+                  </SortExpressions>
                   <TablixMembers>
                     <TablixMember />
                   </TablixMembers>

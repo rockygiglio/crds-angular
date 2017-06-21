@@ -24,7 +24,7 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
         void UpdateHouseholdAddress(int contactId, Dictionary<string, object> householdDictionary, Dictionary<string, object> addressDictionary);
         int GetContactIdByEmail(string email);
         MpMyContact GetContactByParticipantId(int participantId);
-        List<Dictionary<string, object>> StaffContacts();
+        List<Dictionary<string, object>> PrimaryContacts(bool staffOnly = false);
         MpContact CreateSimpleContact(string firstName, string lastName, string email, string dob, string mobile);
         List<MpRecordID> CreateContact(MpContact minorContact);
         MpMyContact GetContactByUserRecordId(int userRecordId);

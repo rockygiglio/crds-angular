@@ -348,7 +348,7 @@ namespace crds_angular.test.Services
 
             _addressGeocodingService.Setup(mocked => mocked.GetGeoCoordinates(address)).Returns(mockCoords);
 
-            GeoCoordinate geoCoords = _fixture.GetGeoCoordsFromAddressOrLatLang(address, "39.2844738", "-84.319614");
+            GeoCoordinate geoCoords = _fixture.GetGeoCoordsFromAddressOrLatLang(address, new GeoCoordinates(39.2844738, -84.319614));
             Assert.AreEqual(mockCoords, geoCoords);
         }
 
@@ -365,7 +365,7 @@ namespace crds_angular.test.Services
 
             _addressGeocodingService.Setup(mocked => mocked.GetGeoCoordinates(address)).Returns(mockCoords);
 
-            GeoCoordinate geoCoords = _fixture.GetGeoCoordsFromAddressOrLatLang(address, "0", "0");
+            GeoCoordinate geoCoords = _fixture.GetGeoCoordsFromAddressOrLatLang(address, new GeoCoordinates(0,0));
             Assert.AreEqual(mockCoords, geoCoords);
         }
 

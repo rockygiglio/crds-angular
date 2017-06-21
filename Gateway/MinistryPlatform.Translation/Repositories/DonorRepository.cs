@@ -411,7 +411,9 @@ namespace MinistryPlatform.Translation.Repositories
                         Details = new MpContactDetails
                         {
                             EmailAddress = record.ToString("Email"),
-                            HouseholdId = record.ToInt("Household_ID")
+                            HouseholdId = record.ToInt("Household_ID"),
+                            FirstName = record.ToString("First_Name"),
+                            LastName = record.ToString("Last_Name")
                         }
                     };
                 }
@@ -456,7 +458,12 @@ namespace MinistryPlatform.Translation.Repositories
                         ProcessorId = record.ToString(DonorProcessorId),
                         ContactId = record.ToInt("Contact_ID"),
                         Email = record.ToString("Email_Address"),
-                        RegisteredUser = false
+                        RegisteredUser = false,
+                        Details = new MpContactDetails
+                        {
+                            FirstName = record.ToString("First_Name"),
+                            LastName = record.ToString("Last_Name")
+                        }
                     };
                 }
                 else
@@ -998,7 +1005,7 @@ namespace MinistryPlatform.Translation.Repositories
         }
 
 
-        public void ProcessRecurringGiftDecline(string subscriptionId)
+        public void ProcessRecurringGiftDecline(string subscriptionId, string error)
         {
             var recurringGift = GetRecurringGiftForSubscription(subscriptionId);
             UpdateRecurringGiftFailureCount(recurringGift.RecurringGiftId.Value, recurringGift.ConsecutiveFailureCount + 1);
@@ -1010,7 +1017,7 @@ namespace MinistryPlatform.Translation.Repositories
             var program = _programService.GetProgramById(Convert.ToInt32(recurringGift.ProgramId));
             var amt = decimal.Round(recurringGift.Amount, 2, MidpointRounding.AwayFromZero);
 
-            SendEmail(templateId, recurringGift.DonorId, amt, paymentType, DateTime.Now, program.Name, "fail", frequency);
+            SendEmail(templateId, recurringGift.DonorId, amt, paymentType, DateTime.Now, program.Name, error, frequency);
         }
 
         public int GetDonorAccountPymtType(int donorAccountId)
