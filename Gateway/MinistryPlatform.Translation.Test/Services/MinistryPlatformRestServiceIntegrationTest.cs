@@ -54,6 +54,37 @@ namespace MinistryPlatform.Translation.Test.Services
                 Console.WriteLine("Result\t{0}", p.FirstOrDefault());
             }
         }
+
+        [Test]
+        public void TestGetPotentialMatches()
+        {
+            var firstName = "Philip";
+            var lastName = "Smith";
+            var email = "p.smith6590@gmail.com";
+
+            string filter3 = $"First_Name = '{firstName}' AND Last_Name = '{lastName}'";
+            string filter4 = $"(First_Name = '{firstName}' AND Last_Name = '{lastName}') OR Email_Address = '{email}'";
+            var columns = new List<string>
+            {
+                "First_Name",
+                "Last_Name",
+                "Email_Address"
+            };
+            try
+            {
+                var records2 = _fixture.UsingAuthenticationToken(_authToken).Search<MpMyContact>(filter4, columns);
+                foreach (var p in records2)
+                {
+                    Console.WriteLine("Result\t{0}", p.Contact_ID);
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+
         
         [Test]
         public void TestChildRsvpdProcedure()

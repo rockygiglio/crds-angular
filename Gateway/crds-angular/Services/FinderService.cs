@@ -53,6 +53,7 @@ namespace crds_angular.Services
         private readonly IAwsCloudsearchService _awsCloudsearchService;
         private readonly IAuthenticationRepository _authenticationRepository;
         private readonly ICommunicationRepository _communicationRepository;
+        private readonly IAccountService _accountService;
         private readonly int _approvedHost;
         private readonly int _pendingHost;
         private readonly int _anywhereGroupType;
@@ -95,7 +96,8 @@ namespace crds_angular.Services
             IInvitationService invitationService,
             IAwsCloudsearchService awsCloudsearchService,
             IAuthenticationRepository authenticationRepository,
-            ICommunicationRepository communicationRepository
+            ICommunicationRepository communicationRepository,
+            IAccountService accountService
         )
         {
             // services
@@ -113,6 +115,7 @@ namespace crds_angular.Services
             _invitationService = invitationService;
             _awsCloudsearchService = awsCloudsearchService;
             _communicationRepository = communicationRepository;
+            _accountService = accountService;
             // constants
             _anywhereCongregationId = _configurationWrapper.GetConfigIntValue("AnywhereCongregationId");
             _approvedHost = configurationWrapper.GetConfigIntValue("ApprovedHostStatus");
@@ -418,6 +421,19 @@ namespace crds_angular.Services
             this.AddPinMetaData(pins, originCoords, contactId);
 
             return pins;
+        }
+
+        public void AddUserDirectlyToGroup(User user, int groupid)
+        {
+            //check to see if user exists in MP.
+            var contactId = _contactRepository.GetContactIdByEmail(user.email);
+            if (contactId == 0)
+            {
+                user.password = System.Web.Security.Membership.GeneratePassword(25, 10);
+                contactId = _accountService.RegisterPersonWithoutUserAccount(user);
+            }
+
+            _groupService.addContactToGroup(groupid, contactId);
         }
 
         private void MakeAllLatLongsUnique(List<PinDto> thePins)
@@ -991,6 +1007,25 @@ namespace crds_angular.Services
             return areAllBoundingBoxParamsPresent; 
         }
 
+        public List<User> GetMatches(User user)
+        {
+            var people = new List<User>();
+
+            var contacts = _contactRepository.GetPotentialMatchesContact(user.firstName, user.lastName, user.email);
+
+            foreach (var contact in contacts)
+            {
+                var newEntry = new User
+                {
+                    firstName = contact.First_Name,
+                    lastName = contact.Last_Name,
+                    email = contact.Email_Address
+                };
+                people.Add(newEntry);
+            }
+
+            return people;
+        }
     }
 }
 
