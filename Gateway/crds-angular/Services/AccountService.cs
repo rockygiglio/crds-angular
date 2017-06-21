@@ -29,6 +29,7 @@ namespace crds_angular.Services
         private readonly ILookupRepository _lookupService;
         private readonly IApiUserRepository _apiUserService;
         private readonly IParticipantRepository _participantService;
+        private readonly IContactRepository _contactRepository;
 
         public AccountService(IConfigurationWrapper configurationWrapper, 
             ICommunicationRepository communicationService, 
@@ -37,7 +38,8 @@ namespace crds_angular.Services
             IMinistryPlatformService ministryPlatformService, 
             ILookupRepository lookupService,
             IApiUserRepository apiUserService,
-            IParticipantRepository participantService)
+            IParticipantRepository participantService,
+            IContactRepository contactRepository)
         {
             _configurationWrapper = configurationWrapper;
             _communicationService = communicationService;
@@ -47,6 +49,7 @@ namespace crds_angular.Services
             _lookupService = lookupService;
             _apiUserService = apiUserService;
             _participantService = participantService;
+            _contactRepository = contactRepository;
         }
         public bool ChangePassword(string token, string newPassword)
         {
@@ -190,8 +193,9 @@ namespace crds_angular.Services
         public User RegisterPersonWithoutUserAccount(User newUserData)
         {
             var token = _apiUserService.GetToken();
+            var contactId = _contactRepository.GetContactIdByEmail(newUserData.email);
             var exists = _lookupService.EmailSearch(newUserData.email, token);
-            if (exists != null && exists.Any())
+            if (contactId > 0)
             {
                 throw (new DuplicateUserException(newUserData.email));
             }
