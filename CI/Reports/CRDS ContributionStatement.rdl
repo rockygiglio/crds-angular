@@ -1233,7 +1233,7 @@
                                               <Paragraph>
                                                 <TextRuns>
                                                   <TextRun>
-                                                    <Value>="&lt;b&gt;" + IIf(InStr(Fields!Campaign_Name.Value, "Campaign") &gt; 0, "", " Campaign") +  "&lt;/b&gt;&lt;br&gt; You have contributed " + FormatPercent(Fields!Given_to_Pledge.Value/Fields!Total_Pledge.Value) + " of the "+ FormatCurrency(Fields!Total_Pledge.Value) + " commitment. &lt;br&gt; Total campaign contributions to date: " + FormatCurrency(Fields!Given_to_Pledge.Value)</Value>
+                                                    <Value>="&lt;b&gt;"+Fields!Campaign_Name.Value &amp; Iif(InStr(Fields!Campaign_Name.Value, "Campaign") &gt; 0, "", " Campaign") + "&lt;/b&gt;&lt;br&gt; You have contributed " + FormatPercent(Fields!Given_to_Pledge.Value/Fields!Total_Pledge.Value) + " of the "+ FormatCurrency(Fields!Total_Pledge.Value) + " commitment. &lt;br&gt; Total campaign contributions to date: " + FormatCurrency(Fields!Given_to_Pledge.Value)</Value>
                                                     <MarkupType>HTML</MarkupType>
                                                     <Style />
                                                   </TextRun>
