@@ -288,7 +288,7 @@ namespace crds_angular.Controllers.API
                         PredefinedAmount = dto.PredefinedAmount
                     };
 
-                    var from = dto.Anonymous ? "Anonymous Donor" : donor.Details.FirstName + " " + donor.Details.LastName;
+                    var from = dto.Anonymous ? "Anonymous" : donor.Details.FirstName + " " + donor.Details.LastName;
 
                     var donationId = _mpDonorService.CreateDonationAndDistributionRecord(donationAndDistribution, !dto.TripDeposit);
                     if (!dto.GiftMessage.IsNullOrWhiteSpace() && pledgeId != null)
@@ -407,7 +407,7 @@ namespace crds_angular.Controllers.API
                     SourceUrl = dto.SourceUrl
                 };
 
-                var from = dto.Anonymous ? "Anonymous Donor" : donor.Details.FirstName + " " + donor.Details.LastName;
+                var from = dto.Anonymous ? "Anonymous" : donor.Details.FirstName + " " + donor.Details.LastName;
 
                 var donationId = _mpDonorService.CreateDonationAndDistributionRecord(donationAndDistribution);
                 if (!dto.GiftMessage.IsNullOrWhiteSpace() && pledgeId != null)
