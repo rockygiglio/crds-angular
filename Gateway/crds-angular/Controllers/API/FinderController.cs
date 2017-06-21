@@ -315,8 +315,7 @@ namespace crds_angular.Controllers.API
                     awsBoundingBox = _awsCloudsearchService.BuildBoundingBox(queryParams.BoundingBox);
                 }
                
-
-                var originCoords = _finderService.GetGeoCoordsFromAddressOrLatLang(queryParams.UserSearchString, queryParams.CenterGeoCoords);
+                var originCoords = _finderService.GetMapCenterForResults(queryParams.UserSearchString, queryParams.CenterGeoCoords, queryParams.FinderType);
 
                 var pinsInRadius = _finderService.GetPinsInBoundingBox(originCoords, queryParams.UserSearchString, awsBoundingBox, queryParams.FinderType, queryParams.ContactId);
 

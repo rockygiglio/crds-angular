@@ -34,5 +34,6 @@ namespace crds_angular.Services.Interfaces
         void AcceptDenyGroupInvitation(string token, int groupId, string invitationGuid, bool accept);
         void SayHi(int fromContactId, int toContactId);
         List<PinDto> RandomizeLatLongForNonSitePins(List<PinDto> pins);
+        GeoCoordinate GetMapCenterForResults(string userSearchString, GeoCoordinates frontEndMapCenter, string finderType);
     }
 }

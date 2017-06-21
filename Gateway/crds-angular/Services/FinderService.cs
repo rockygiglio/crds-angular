@@ -1004,6 +1004,29 @@ namespace crds_angular.Services
             return pins; 
         }
 
+        public GeoCoordinate GetMapCenterForResults(string userSearchString, GeoCoordinates frontEndMapCenter, string finderType)
+        {
+            GeoCoordinate resultMapCenterCoords = new GeoCoordinate();
+
+            if (finderType == _finderConnect)
+            {
+                resultMapCenterCoords = GetGeoCoordsFromAddressOrLatLang(userSearchString, frontEndMapCenter);
+            }
+            else
+            {
+                if (frontEndMapCenter.Lat.HasValue && frontEndMapCenter.Lng.HasValue)
+                {
+                    resultMapCenterCoords  = new GeoCoordinate(frontEndMapCenter.Lat.Value, frontEndMapCenter.Lng.Value);
+                }
+                else
+                {
+                    resultMapCenterCoords = GetGeoCoordsFromAddressOrLatLang(userSearchString, frontEndMapCenter);
+                }
+            }
+
+            return resultMapCenterCoords; 
+        }
+
     }
 }
 
