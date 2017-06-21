@@ -144,38 +144,16 @@ namespace crds_angular.Services
 
         public PinDto GetPinDetailsForGroup(int groupId)
         {
-            //get the groups Primary contact
-            var participantId = GetLeaderParticipantIdFromGroup(groupId);
-            //get the pin details for the primary contact
-            var pin = GetPinDetailsForPerson(participantId);
+            List<PinDto> pins = null;
+            var cloudReturn = _awsCloudsearchService.SearchByGroupId(groupId.ToString());
 
-            var token = _apiUserRepository.GetToken();
+            pins = ConvertFromAwsSearchResponse(cloudReturn);
+            // need originCoords to calculate proximity, but we do not need here
+            GeoCoordinate originCoords = null;
+            this.AddPinMetaData(pins, originCoords);
 
-            //get group details for the primary pin
-            var groupdto = _groupService.GetGroupsByTypeOrId(token, participantId, null, groupId, false, false).FirstOrDefault();
-            pin.Gathering = Mapper.Map<FinderGroupDto>(groupdto) ;
+            return pins.First();
 
-            if (pin.Gathering?.GroupTypeId == _anywhereGroupType)
-            {
-                pin.PinType = PinType.GATHERING;
-            }
-            else if (pin.Gathering?.GroupTypeId == _smallGroupType)
-            {
-                pin.PinType = PinType.SMALL_GROUP;
-            }
-            else
-            {
-                throw new Exception("Get Pin Details Failed, group type not valid");
-            }            
-            
-            if (pin.Gathering != null)
-            {
-                pin.Gathering.Address.AddressLine1 = "";
-                pin.Gathering.Address.AddressLine2 = "";
-                pin.Address = pin.Gathering.Address;
-
-            }
-            return pin;
         }
 
         public PinDto GetPinDetailsForPerson(int participantId)
@@ -945,9 +923,9 @@ namespace crds_angular.Services
                     pin.Participant_ID = group.ParticipantId;
 
                     // TODO need to get rid of this call to GetContactById if get name from AWS search instead
-                    var contact = _contactRepository.GetContactById((int)pin.Contact_ID);
-                    pin.FirstName = contact.First_Name;
-                    pin.LastName = contact.Last_Name;
+                    //var contact = _contactRepository.GetContactById((int)pin.Contact_ID);
+                    //pin.FirstName = contact.First_Name;
+                    //pin.LastName = contact.Last_Name;
                     pins.Add(pin);
                 }
             }
@@ -959,8 +937,6 @@ namespace crds_angular.Services
                     pin.Gathering = Mapper.Map<FinderGroupDto>(group);
                     pin.PinType = PinType.SMALL_GROUP;
 
-                    pin.FirstName = "FirstNamePlaceHolder"; // TODO wait and add in with AWS Data returned  - also refactor line 825 above
-                    pin.LastName = "LastNamePlaceHolder"; // TODO wait and add in with AWS Data returned  - also refactor line 825 above
                     pin.Gathering.ContactId = group.ContactId;
                     pin.Participant_ID = group.ParticipantId;
 
@@ -991,7 +967,11 @@ namespace crds_angular.Services
 
                 //calculate proximity for all pins to origin
                 if (pin.Address.Latitude == null) continue;
-                if (pin.Address.Longitude != null) pin.Proximity = GetProximity(originCoords, new GeoCoordinate(pin.Address.Latitude.Value, pin.Address.Longitude.Value));
+                if (pin.Address.Longitude != null && originCoords != null)
+                {
+                    pin.Proximity = GetProximity(originCoords, new GeoCoordinate(pin.Address.Latitude.Value, pin.Address.Longitude.Value));
+                }
+                    
             }
             return pins;
         }

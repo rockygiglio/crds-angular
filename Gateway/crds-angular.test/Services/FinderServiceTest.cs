@@ -226,47 +226,34 @@ namespace crds_angular.test.Services
         [Test]
         public void ShouldGetGroupPinDetailsAnywhere()
         {
-            _groupService.Setup(g => g.GetPrimaryContactParticipantId(It.IsAny<int>())).Returns(986765);
-            _apiUserRepository.Setup(ar => ar.GetToken()).Returns("abc123");
-            _mpFinderRepository.Setup(m => m.GetPinDetails(986765))
-                .Returns(new FinderPinDto
-                {
-                    LastName = "Ker",
-                    FirstName = "Joe",
-                    Address = new MpAddress {Address_ID = 12, Postal_Code = "1234", Address_Line_1 = "123 street", City = "City", State = "OH"},
-                    Participant_ID = 123,
-                    EmailAddress = "joeker@gmail.com",
-                    Contact_ID = 22,
-                    Household_ID = 13,
-                    Host_Status_ID = 3
-                });
 
-            _groupService.Setup(gs => gs.GetGroupsByTypeOrId("abc123", 986765, null, 121212, false, false))
-                .Returns(new List<GroupDTO>
-                {
-                    new GroupDTO
-                    {
-                        GroupId = 121212,
-                        GroupTypeId = 30,
-                        Participants = new List<GroupParticipantDTO>
-                        {
-                            new GroupParticipantDTO
-                            {
-                                GroupRoleId = 22,
-                                ParticipantId = 222
-                            }
-                        },
-                        Address = new AddressDTO() {AddressID = 99, PostalCode = "98765", AddressLine1 = "345 road", City = "Town", State = "CA"}
-                    }
-                });
+            var searchresults = new SearchResponse();
+            searchresults.Hits = new Hits();
+            searchresults.Hits.Found = 1;
+            searchresults.Hits.Start = 0;
+            searchresults.Hits.Hit = new List<Hit>();
+            var hit = new Hit();
+            var fields = new Dictionary<string, List<string>>();
+            fields.Add("firstname", new List<string>() { "Sara" });
+            fields.Add("lastname", new List<string>() { "Smith" });
+            fields.Add("pintype", new List<string>() { "2" });
+            fields.Add("latlong", new List<string>() { "38.94526,-84.661275" });
+            fields.Add("groupid", new List<string>() { "121212" });
+            fields.Add("city", new List<string>() { "Union" });
+            fields.Add("zip", new List<string>() { "41091" });
+            fields.Add("contactid", new List<string>() { "111111" });
+
+            hit.Fields = fields;
+            searchresults.Hits.Hit.Add(hit);
+
+            _awsCloudsearchService.Setup(
+                mocked => mocked.SearchByGroupId(It.IsAny<string>())).Returns(searchresults);
 
             var result = _fixture.GetPinDetailsForGroup(121212);
 
-            _mpFinderRepository.VerifyAll();
+            Assert.IsInstanceOf<PinDto>(result);
 
-            Assert.AreEqual(result.LastName, "Ker");
-            Assert.AreEqual(result.Address.AddressID, 99);
-            Assert.AreEqual(result.Address.AddressLine1, "");
+            Assert.AreEqual(result.FirstName, "Sara");
             Assert.AreEqual(result.Gathering.GroupId, 121212);
             Assert.AreEqual(result.PinType, PinType.GATHERING);
         }
@@ -274,47 +261,34 @@ namespace crds_angular.test.Services
         [Test]
         public void ShouldGetGroupPinDetailsSmallGroup()
         {
-            _groupService.Setup(g => g.GetPrimaryContactParticipantId(It.IsAny<int>())).Returns(986765);
-            _apiUserRepository.Setup(ar => ar.GetToken()).Returns("abc123");
-            _mpFinderRepository.Setup(m => m.GetPinDetails(986765))
-                .Returns(new FinderPinDto
-                {
-                    LastName = "Ker",
-                    FirstName = "Joe",
-                    Address = new MpAddress { Address_ID = 12, Postal_Code = "1234", Address_Line_1 = "123 street", City = "City", State = "OH" },
-                    Participant_ID = 123,
-                    EmailAddress = "joeker@gmail.com",
-                    Contact_ID = 22,
-                    Household_ID = 13,
-                    Host_Status_ID = 3
-                });
+            var searchresults = new SearchResponse();
+            searchresults.Hits = new Hits();
+            searchresults.Hits.Found = 1;
+            searchresults.Hits.Start = 0;
+            searchresults.Hits.Hit = new List<Hit>();
+            var hit = new Hit();
+            var fields = new Dictionary<string, List<string>>();
+            fields.Add("firstname", new List<string>() { "Sara" });
+            fields.Add("lastname", new List<string>() { "Smith" });
+            fields.Add("pintype", new List<string>() { "4" });
+            fields.Add("latlong", new List<string>() { "38.94526,-84.661275" });
+            fields.Add("groupid", new List<string>() { "121212" });
+            fields.Add("groupname", new List<string>() { "Sara S." });
+            fields.Add("city", new List<string>() { "Union" });
+            fields.Add("zip", new List<string>() { "41091" });
+            fields.Add("contactid", new List<string>() { "111111" });
 
-            _groupService.Setup(gs => gs.GetGroupsByTypeOrId("abc123", 986765, null, 121212, false, false))
-                .Returns(new List<GroupDTO>
-                {
-                    new GroupDTO
-                    {
-                        GroupId = 121212,
-                        GroupTypeId = 1,
-                        Participants = new List<GroupParticipantDTO>
-                        {
-                            new GroupParticipantDTO
-                            {
-                                GroupRoleId = 22,
-                                ParticipantId = 222
-                            }
-                        },
-                        Address = new AddressDTO() {AddressID = 99, PostalCode = "98765", AddressLine1 = "345 road", City = "Town", State = "CA"}
-                    }
-                });
+            hit.Fields = fields;
+            searchresults.Hits.Hit.Add(hit);
+
+            _awsCloudsearchService.Setup(
+                mocked => mocked.SearchByGroupId(It.IsAny<string>())).Returns(searchresults);
 
             var result = _fixture.GetPinDetailsForGroup(121212);
 
-            _mpFinderRepository.VerifyAll();
+            Assert.IsInstanceOf<PinDto>(result);
 
-            Assert.AreEqual(result.LastName, "Ker");
-            Assert.AreEqual(result.Address.AddressID, 99);
-            Assert.AreEqual(result.Address.AddressLine1, "");
+            Assert.AreEqual(result.FirstName, "Sara");
             Assert.AreEqual(result.Gathering.GroupId, 121212);
             Assert.AreEqual(result.PinType, PinType.SMALL_GROUP);
         }

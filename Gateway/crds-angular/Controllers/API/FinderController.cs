@@ -60,12 +60,12 @@ namespace crds_angular.Controllers.API
         [VersionedRoute(template: "finder/pinByGroupID/{groupId}", minimumVersion: "1.0.0")]
         [Route("finder/pinByGroupID/{groupId}")]
         [HttpGet]
-        public IHttpActionResult GetPinDetailsByGroup([FromUri]int groupId)
+        public IHttpActionResult GetPinDetailsByGroupId([FromUri]int groupId)
         {
             try
             {
-                var list = _finderService.GetPinDetailsForGroup(groupId);
-                return Ok(list);
+                var group = _finderService.GetPinDetailsForGroup(groupId);
+                return Ok(group);
             }
             catch (Exception ex)
             {

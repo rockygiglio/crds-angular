@@ -170,6 +170,22 @@ namespace crds_angular.Services
             return (response);
         }
 
+        public SearchResponse SearchByGroupId(string groupId)
+        {
+            var cloudSearch = new AmazonCloudSearchDomainClient(AwsAccessKeyId, AwsSecretAccessKey, AmazonSearchUrl);
+            var searchRequest = new SearchRequest
+            {
+                Query = "groupid: " + groupId,
+                QueryParser = QueryParser.Structured,                
+                QueryOptions = "{'fields': ['groupid']}",
+                Size = 1,
+                Return = "_all_fields"
+            };
+
+            var response = cloudSearch.Search(searchRequest);
+            return (response);
+        }
+
         public void UploadNewPinToAws(PinDto pin)
         {
             var cloudSearch = new AmazonCloudSearchDomainClient(AwsAccessKeyId, AwsSecretAccessKey, AmazonSearchUrl);
