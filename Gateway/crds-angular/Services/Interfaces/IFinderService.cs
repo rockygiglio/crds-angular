@@ -33,6 +33,8 @@ namespace crds_angular.Services.Interfaces
         void RequestToBeHost(string token, HostRequestDto hostRequest);
         void AcceptDenyGroupInvitation(string token, int groupId, string invitationGuid, bool accept);
         void SayHi(int fromContactId, int toContactId);
+        List<PinDto> RandomizeLatLongForNonSitePins(List<PinDto> pins);
+        GeoCoordinate GetMapCenterForResults(string userSearchString, GeoCoordinates frontEndMapCenter, string finderType);
         void AddUserDirectlyToGroup(User user, int groupid);
         List<User> GetMatches(User user);
     }

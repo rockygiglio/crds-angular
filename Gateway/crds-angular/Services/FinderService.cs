@@ -369,7 +369,7 @@ namespace crds_angular.Services
             return participantId;
         }
 
-        public List<PinDto> GetPinsInBoundingBox(GeoCoordinate originCoords, string address, AwsBoundingBox boundingBox, string finderType, int contactId)
+        public List<PinDto> GetPinsInBoundingBox(GeoCoordinate originCoords, string userSearchString, AwsBoundingBox boundingBox, string finderType, int contactId)
         {
             List<PinDto> pins = null;
             var queryString = "matchall";
@@ -382,7 +382,7 @@ namespace crds_angular.Services
             }
             else if (finderType.Equals(_finderGroupTool))
             {
-                queryString = "pintype: 4";
+                queryString = $"(and pintype:4 (or groupname:'{userSearchString}' groupdescription:'{userSearchString}' groupprimarycontactfirstname:'{userSearchString}' groupprimarycontactlastname:'{userSearchString}'))";
             }
             else
             {     
@@ -971,7 +971,7 @@ namespace crds_angular.Services
                 {
                     pin.Proximity = GetProximity(originCoords, new GeoCoordinate(pin.Address.Latitude.Value, pin.Address.Longitude.Value));
                 }
-                    
+
             }
             return pins;
         }
@@ -985,6 +985,42 @@ namespace crds_angular.Services
             Boolean areAllBoundingBoxParamsPresent = !isUpperLeftLatNull && !isUpperLeftLngNull && !isBottomRightLatNull && !isBottomRightLngNull;
 
             return areAllBoundingBoxParamsPresent; 
+        }
+
+        public List<PinDto> RandomizeLatLongForNonSitePins(List<PinDto> pins)
+        {
+            foreach (var pin in pins)
+            {
+                if (pin.PinType != PinType.SITE)
+                {
+                    pin.Address = RandomizeLatLong(pin.Address);
+                }
+            }
+
+            return pins;
+        }
+
+        public GeoCoordinate GetMapCenterForResults(string userSearchString, GeoCoordinates frontEndMapCenter, string finderType)
+        {
+            GeoCoordinate resultMapCenterCoords = new GeoCoordinate();
+
+            if (finderType == _finderConnect)
+            {
+                resultMapCenterCoords = GetGeoCoordsFromAddressOrLatLang(userSearchString, frontEndMapCenter);
+            }
+            else
+            {
+                if (frontEndMapCenter.Lat.HasValue && frontEndMapCenter.Lng.HasValue)
+                {
+                    resultMapCenterCoords  = new GeoCoordinate(frontEndMapCenter.Lat.Value, frontEndMapCenter.Lng.Value);
+                }
+                else
+                {
+                    resultMapCenterCoords = GetGeoCoordsFromAddressOrLatLang(userSearchString, frontEndMapCenter);
+                }
+            }
+
+            return resultMapCenterCoords;
         }
 
         public List<User> GetMatches(User user)
