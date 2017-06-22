@@ -12,6 +12,7 @@ using crds_angular.Services.Interfaces;
 using Crossroads.ApiVersioning;
 using Crossroads.Web.Common.Security;
 using System.ComponentModel.DataAnnotations;
+using System.Device.Location;
 using crds_angular.Exceptions;
 using crds_angular.Models.AwsCloudsearch;
 using crds_angular.Models.Crossroads.Groups;
@@ -57,14 +58,20 @@ namespace crds_angular.Controllers.API
         }
 
         [ResponseType(typeof(PinDto))]
-        [VersionedRoute(template: "finder/pinByGroupID/{groupId}", minimumVersion: "1.0.0")]
-        [Route("finder/pinByGroupID/{groupId}")]
+        [VersionedRoute(template: "finder/pinByGroupID/{groupId}/{lat?}/{lng?}", minimumVersion: "1.0.0")]
+        [Route("finder/pinByGroupID/{groupId}/{lat?}/{lng?}")]
         [HttpGet]
-        public IHttpActionResult GetPinDetailsByGroupId([FromUri]int groupId)
+        public IHttpActionResult GetPinDetailsByGroupId([FromUri]int groupId, [FromUri]string lat = "0", [FromUri]string lng = "0")
         {
             try
             {
-                var group = _finderService.GetPinDetailsForGroup(groupId);
+                GeoCoordinate centerCoordinate = null;
+                if (!lat.Equals("0") && !lat.Equals("0"))
+                {
+                  centerCoordinate = new GeoCoordinate(double.Parse(lat.Replace('$', '.')), double.Parse(lng.Replace('$', '.')));
+                }
+                
+                var group = _finderService.GetPinDetailsForGroup(groupId, centerCoordinate);
                 return Ok(group);
             }
             catch (Exception ex)

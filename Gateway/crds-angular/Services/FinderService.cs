@@ -142,14 +142,12 @@ namespace crds_angular.Services
             _connectCommunicationTypeInviteToSmallGroup = _configurationWrapper.GetConfigIntValue("ConnectCommunicationTypeInviteToSmallGroup");
         }
 
-        public PinDto GetPinDetailsForGroup(int groupId)
+        public PinDto GetPinDetailsForGroup(int groupId, GeoCoordinate originCoords)
         {
             List<PinDto> pins = null;
             var cloudReturn = _awsCloudsearchService.SearchByGroupId(groupId.ToString());
 
             pins = ConvertFromAwsSearchResponse(cloudReturn);
-            // need originCoords to calculate proximity, but we do not need here
-            GeoCoordinate originCoords = null;
             this.AddPinMetaData(pins, originCoords);
 
             return pins.First();
