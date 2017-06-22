@@ -48,12 +48,6 @@
             videoId: scope.videoid,
 
             events: {
-              'onReady': function(){
-                  player.addEventListener('onStateChange', function(e) {
-                  console.log('State is:', e.data);
-                   });                
-              },
-
               'onStateChange': function(event) {
 
                 var message = {
