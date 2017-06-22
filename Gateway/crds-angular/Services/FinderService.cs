@@ -440,6 +440,10 @@ namespace crds_angular.Services
             {
                 _groupService.addContactToGroup(groupid, contactId);
             }
+            else
+            {
+                throw new DuplicateGroupParticipantException($"Participant {groupParticipant.ParticipantId} already in group.");
+            }
         }
 
         private void MakeAllLatLongsUnique(List<PinDto> thePins)
