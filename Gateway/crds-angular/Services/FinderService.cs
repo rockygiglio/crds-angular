@@ -433,7 +433,13 @@ namespace crds_angular.Services
                 contactId = _accountService.RegisterPersonWithoutUserAccount(user);
             }
 
-            _groupService.addContactToGroup(groupid, contactId);
+            var groupParticipant = _groupService.GetGroupParticipants(groupid, false).FirstOrDefault(p => p.ContactId == contactId);
+
+            // groupParticipant == null then participant not in group
+            if (groupParticipant == null)
+            {
+                _groupService.addContactToGroup(groupid, contactId);
+            }
         }
 
         private void MakeAllLatLongsUnique(List<PinDto> thePins)
