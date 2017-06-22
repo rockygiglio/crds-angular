@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Device.Location;
 using System.Linq;
 using crds_angular.Exceptions;
 using crds_angular.Models.Crossroads;
+using crds_angular.Models.Finder;
 using crds_angular.Services.Interfaces;
 using log4net;
 using MinistryPlatform.Translation.Models;
@@ -43,13 +45,64 @@ namespace crds_angular.Services
             address.AddressID = found ? UpdateAddress(mpAddress) : CreateAddress(mpAddress);
         }
 
-        private void SetGeoCoordinates(AddressDTO address)
+        public GeoCoordinate GetGeoLocationCascading(AddressDTO addressReal)
+        {
+            var address = new AddressDTO(addressReal);
+            var stateTemp = address.State;
+
+            var coords = new GeoCoordinate();
+            //get by the full address. If that fails get by city state. If that fails get by state only
+            try
+            {
+                coords = _addressGeocodingService.GetGeoCoordinates(address);
+            }
+            catch (InvalidAddressException )
+            {
+                address.AddressLine1 = "";
+                address.AddressLine2 = "";
+                try
+                {
+                    coords = _addressGeocodingService.GetGeoCoordinates(address);
+                }
+                catch (InvalidAddressException )
+                {
+                    try
+                    {
+                        // only zip
+                        address.City = "";
+                        address.State = "";
+                        coords = _addressGeocodingService.GetGeoCoordinates(address);
+                    }
+                    catch (InvalidAddressException )
+                    {
+                        try
+                        {
+                            // only state
+                            address.State = stateTemp;
+                            address.PostalCode = "";
+                            coords = _addressGeocodingService.GetGeoCoordinates(address);
+
+                            _logger.Debug("Address geocoded on state level.");
+                        }
+                        catch (InvalidAddressException)
+                        {
+                            _logger.Debug("Unable to geocode address.");
+                        }
+                    }
+                }
+            }
+            return coords;
+        }
+
+        public void SetGeoCoordinates(AddressDTO address)
         {
             try
             {
                 var coords = _addressGeocodingService.GetGeoCoordinates(address);
                 address.Longitude = coords.Longitude;
                 address.Latitude = coords.Latitude;
+                var mpAddress = AutoMapper.Mapper.Map<MpAddress>(address);
+                UpdateAddress(mpAddress);
             }
             catch (InvalidAddressException e)
             {
@@ -59,6 +112,37 @@ namespace crds_angular.Services
             {
                 _logger.Error($"Error getting GeoCoordinates for address '{address}'", e);
             }
+        }
+
+        public void SetGroupPinGeoCoordinates(PinDto pin)
+        {
+            try
+            {
+                var coordinates = this.GetGeoLocationCascading(pin.Gathering.Address);
+                pin.Address.Latitude = coordinates.Latitude;
+                pin.Address.Longitude = coordinates.Longitude;
+
+                var mpAddress = AutoMapper.Mapper.Map<MpAddress>(pin.Gathering.Address);
+                UpdateAddress(mpAddress);
+            }
+            catch (InvalidAddressException e)
+            {
+                _logger.Info($"Can't get GeoCoordinates for address '{pin.Gathering.Address}', address is invalid", e);
+            }
+            catch (Exception e)
+            {
+                _logger.Error($"Error getting GeoCoordinates for address '{pin.Gathering.Address}'", e);
+            }
+        }
+
+        public int CreateAddress(AddressDTO address)
+        {
+            var coords = _addressGeocodingService.GetGeoCoordinates(address);
+            address.Longitude = coords.Longitude;
+            address.Latitude = coords.Latitude;
+
+            var mpAddress = AutoMapper.Mapper.Map<MpAddress>(address);
+            return CreateAddress(mpAddress);
         }
 
         private int CreateAddress(MpAddress address)

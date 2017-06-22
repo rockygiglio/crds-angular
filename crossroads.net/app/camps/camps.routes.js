@@ -4,7 +4,9 @@ import { getCampInfo, getCamperFamily, getCamperPayment } from './camps.resolves
 
 import confirmationTemplate from './confirmation/confirmation.html';
 
-export default function CampRoutes($stateProvider) {
+export default function CampRoutes($stateProvider, $urlMatcherFactoryProvider) {
+  crds_utilities.preventRouteTypeUrlEncoding($urlMatcherFactoryProvider, 'campsRouteType', /\/camps\/.*$/);
+
   $stateProvider
     .state('camps-dashboard', {
       parent: 'noSideBar',
@@ -28,6 +30,18 @@ export default function CampRoutes($stateProvider) {
         dashboard: campsService => campsService.getCampDashboard()
       }
     })
+    .state('campscms', {
+      url: '/camps/',
+      controller: ($state) => {
+        $state.go('content', { link: '/camps' });
+      },
+      data: {
+        meta: {
+          title: 'Camps',
+          description: 'Join us for camp!'
+        }
+      }
+    })
     .state('campsignup', {
       parent: 'noSideBar',
       url: '/camps/:campId',
@@ -40,9 +54,9 @@ export default function CampRoutes($stateProvider) {
         }
       },
       resolve: {
-        loggedin: crds_utilities.checkLoggedin,
         campsService: 'CampsService',
         getCampInfo,
+        loggedin: crds_utilities.checkLoggedin,
         $stateParams: '$stateParams'
       }
     })
@@ -124,7 +138,7 @@ export default function CampRoutes($stateProvider) {
       url: '/:page/:contactId',
       template: '<camps-application-page></camps-application-page>',
       params: {
-        update: false,
+        update: undefined,
         redirectTo: undefined
       },
       resolve: {

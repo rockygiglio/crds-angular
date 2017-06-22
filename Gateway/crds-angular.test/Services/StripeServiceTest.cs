@@ -12,6 +12,8 @@ using Crossroads.Utilities;
 using Crossroads.Utilities.Interfaces;
 using Crossroads.Utilities.Models;
 using Crossroads.Utilities.Services;
+using Crossroads.Web.Common;
+using Crossroads.Web.Common.Configuration;
 using MinistryPlatform.Translation.Models;
 using Newtonsoft.Json;
 
@@ -43,7 +45,9 @@ namespace crds_angular.test.Services
             foreach (var e in _errors)
             {
                 var e1 = e;
+                var value = e1.Value;
                 _contentBlockService.SetupGet(mocked => mocked[e1.Key]).Returns(e1.Value);
+                _contentBlockService.Setup<bool>(mocked => mocked.TryGetValue(e1.Key, out value)).Returns(true);
             }
 
             _fixture = new StripePaymentProcessorService(_restClient.Object, _configuration.Object, _contentBlockService.Object);

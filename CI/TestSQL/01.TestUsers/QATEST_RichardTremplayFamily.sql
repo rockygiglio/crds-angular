@@ -97,7 +97,7 @@ SET Contact_ID = @fContactId WHERE USER_ID = @fatherUserAccount;
 UPDATE [dbo].dp_users
 SET Contact_ID = @mContactId WHERE USER_ID = @motherUserAccount;
 
---Just get rid of this so we can delete Cloud's old contact record
+--Just get rid of this so we can delete Rich's old contact record
 DELETE FROM Contact_Households WHERE Contact_ID = @fatherContactId;
 DELETE FROM Contact_Households WHERE Contact_ID = @motherContactId;
 
@@ -117,7 +117,7 @@ DELETE FROM [dbo].dp_communication_messages WHERE Communication_ID = @motherComm
 DELETE FROM [dbo].dp_Communications WHERE Communication_ID = @motherCommunicationId;
 DELETE FROM [dbo].Activity_Log WHERE Contact_iD = @motherContactId;
 
---Delete the old contact record for cloud
+--Delete the old contact record for Rich
 DELETE FROM [dbo].Contacts where Contact_ID = @fatherContactId;
 DELETE FROM [dbo].Contacts where Contact_ID = @motherContactId;
 -----------------------------------------------------------------------------------------------------------------------------
@@ -340,11 +340,11 @@ SET IDENTITY_INSERT [dbo].[Contact_Relationships] OFF;
 
 INSERT INTO [dbo].Donors 
 (Contact_ID      ,Statement_Frequency_ID,Statement_Type_ID,Statement_Method_ID,Setup_Date                ,Envelope_No,Cancel_Envelopes,Notes,First_Contact_Made,Domain_ID,__ExternalPersonID,_First_Donation_Date,_Last_Donation_Date,Processor_ID) VALUES
-(@fatherContactId,3                     ,1                ,4                  ,{ts '2015-07-06 12:03:37'},null       ,0               ,null ,null              ,1        ,null              ,null                ,null               ,null);
+(@fatherContactId,3                     ,2                ,4                  ,{ts '2015-07-06 12:03:37'},null       ,0               ,null ,null              ,1        ,null              ,null                ,null               ,null);
 
 INSERT INTO [dbo].Donors 
 (Contact_ID      ,Statement_Frequency_ID,Statement_Type_ID,Statement_Method_ID,Setup_Date                ,Envelope_No,Cancel_Envelopes,Notes,First_Contact_Made,Domain_ID,__ExternalPersonID,_First_Donation_Date,_Last_Donation_Date,Processor_ID) VALUES
-(@motherContactId,3                     ,1                ,4                  ,{ts '2015-07-06 12:03:37'},null       ,0               ,null ,null              ,1        ,null              ,null                ,null               ,null);
+(@motherContactId,3                     ,2                ,4                  ,{ts '2015-07-06 12:03:37'},null       ,0               ,null ,null              ,1        ,null              ,null                ,null               ,null);
 
 
 -------------------------------------------------------------------------------------------------------------------------------------------

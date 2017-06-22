@@ -10,6 +10,9 @@ using crds_angular.Models.Crossroads.Groups;
 using crds_angular.Models.Json;
 using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Interfaces;
+using Crossroads.Web.Common;
+using Crossroads.Web.Common.Configuration;
+using Crossroads.Web.Common.Security;
 using MinistryPlatform.Translation.Models;
 using Moq;
 using NUnit.Framework;
@@ -32,7 +35,7 @@ namespace crds_angular.test.controllers
             _groupToolService = new Mock<IGroupToolService>(MockBehavior.Strict);
             _configurationWrapper = new Mock<IConfigurationWrapper>();
             _configurationWrapper.Setup(mocked => mocked.GetConfigIntValue("SmallGroupTypeId")).Returns(1);
-            _fixture = new GroupToolController(_groupToolService.Object, _configurationWrapper.Object, new Mock<IUserImpersonationService>().Object);
+            _fixture = new GroupToolController(_groupToolService.Object, _configurationWrapper.Object, new Mock<IUserImpersonationService>().Object, new Mock<IAuthenticationRepository>().Object);
             _fixture.SetupAuthorization(AuthType, AuthToken);
 
         }
@@ -172,7 +175,7 @@ namespace crds_angular.test.controllers
             const string keywords = "kw1,kw2";
             const string location = "123 main st";
 
-            _groupToolService.Setup(mocked => mocked.SearchGroups(groupTypeId, keywords, location, null)).Returns(new List<GroupDTO>());
+            _groupToolService.Setup(mocked => mocked.SearchGroups(groupTypeId, keywords, location, null, null)).Returns(new List<GroupDTO>());
             var result = _fixture.SearchGroups(groupTypeId, keywords, location);
             _groupToolService.VerifyAll();
             Assert.IsNotNull(result);
@@ -190,7 +193,7 @@ namespace crds_angular.test.controllers
             const string location = "123 main st";
             var exception = new Exception("whoa nelly");
 
-            _groupToolService.Setup(mocked => mocked.SearchGroups(groupTypeId, keywords, location, null)).Throws(exception);
+            _groupToolService.Setup(mocked => mocked.SearchGroups(groupTypeId, keywords, location, null, null)).Throws(exception);
             _fixture.SearchGroups(groupTypeId, keywords, location);
         }
 
@@ -206,7 +209,7 @@ namespace crds_angular.test.controllers
                 new GroupDTO()
             };
 
-            _groupToolService.Setup(mocked => mocked.SearchGroups(groupTypeId, keywords, location, null)).Returns(searchResults);
+            _groupToolService.Setup(mocked => mocked.SearchGroups(groupTypeId, keywords, location, null, null)).Returns(searchResults);
             var result = _fixture.SearchGroups(groupTypeId, keywords, location);
             _groupToolService.VerifyAll();
             Assert.IsNotNull(result);
@@ -225,7 +228,7 @@ namespace crds_angular.test.controllers
                 new GroupDTO()
             };
 
-            _groupToolService.Setup(mocked => mocked.SearchGroups(groupTypeId, null, null, groupId)).Returns(searchResults);
+            _groupToolService.Setup(mocked => mocked.SearchGroups(groupTypeId, null, null, groupId, null)).Returns(searchResults);
             var result = _fixture.SearchGroups(groupTypeId, null, null, groupId);
             _groupToolService.VerifyAll();
             Assert.IsNotNull(result);

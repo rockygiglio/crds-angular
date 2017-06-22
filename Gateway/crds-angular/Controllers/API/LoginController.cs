@@ -9,6 +9,8 @@ using crds_angular.Services;
 using crds_angular.Services.Interfaces;
 using MinistryPlatform.Translation.Models.DTO;
 using Crossroads.ApiVersioning;
+using Crossroads.ClientApiKeys;
+using Crossroads.Web.Common.Security;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 
 namespace crds_angular.Controllers.API
@@ -20,7 +22,7 @@ namespace crds_angular.Controllers.API
         private readonly IUserRepository _userService;
         private readonly ILoginService _loginService;
 
-        public LoginController(ILoginService loginService, IPersonService personService, IUserRepository userService, IUserImpersonationService userImpersonationService) : base(userImpersonationService)
+        public LoginController(ILoginService loginService, IPersonService personService, IUserRepository userService, IUserImpersonationService userImpersonationService, IAuthenticationRepository authenticationRepository) : base(userImpersonationService, authenticationRepository)
         {
             _loginService = loginService;
             _personService = personService;
@@ -111,15 +113,17 @@ namespace crds_angular.Controllers.API
         [VersionedRoute(template: "login", minimumVersion: "1.0.0")]
         [Route("login")]
         [ResponseType(typeof (LoginReturn))]
+        // TODO - Once Ez-Scan has been updated to send a client API key (US7764), remove the IgnoreClientApiKey attribute
+        [IgnoreClientApiKey]
         public IHttpActionResult Post([FromBody] Credentials cred)
         {
             try
             {
                 // try to login
-                var authData = TranslationService.Login(cred.username, cred.password);
-                var token = authData["token"].ToString();
-                var exp = authData["exp"].ToString();
-                var refreshToken = authData["refreshToken"].ToString();
+                var authData = AuthenticationRepository.Authenticate(cred.username, cred.password);
+                var token = authData.AccessToken;
+                var exp = authData.ExpiresIn+"";
+                var refreshToken = authData.RefreshToken;
 
                 if (token == "")
                 {
@@ -163,7 +167,7 @@ namespace crds_angular.Controllers.API
             {
                 try
                 {
-                    var authData = TranslationService.Login(cred.username, cred.password);
+                    var authData = AuthenticationRepository.Authenticate(cred.username, cred.password);
 
                     // if the username or password is wrong, auth data will be null
                     if (authData == null)

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using MinistryPlatform.Translation.Models.Attributes;
+using Crossroads.Web.Common;
+using Crossroads.Web.Common.MinistryPlatform;
 using Newtonsoft.Json;
 
 namespace MinistryPlatform.Translation.Models
@@ -40,6 +41,7 @@ namespace MinistryPlatform.Translation.Models
 
         private IList<int> participants = new List<int>();
 
+        [JsonProperty(PropertyName = "Congregation_Name")]
         public string Congregation { get; set; }
 
         public string Site { get; set; }                      

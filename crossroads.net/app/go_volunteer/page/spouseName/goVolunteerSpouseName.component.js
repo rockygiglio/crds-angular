@@ -20,9 +20,9 @@
     };
 
     function GoVolunteerSpouseNameController() {
-      var now = new Date();
+      const now = new Date();
 
-      var vm = this;
+      const vm = this;
 
       vm.birthdateOpen = false;
       vm.initDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
@@ -30,7 +30,7 @@
       vm.oneHundredFiftyYearsAgo = new Date(now.getFullYear() - 150, now.getMonth(), now.getDate());
       vm.openBirthdatePicker = openBirthdatePicker;
       vm.spouse = GoVolunteerService.spouse;
-      vm.phoneFormat = /^\(?(\d{3})\)?[\s.-]?(\d{3})[\s.-]?(\d{4})$/;
+      vm.phoneFormat = Validation.phoneFormat();
       vm.submit = submit;
       vm.validate = validate;
 
@@ -44,7 +44,7 @@
       function submit() {
         vm.spouseForm.$setSubmitted();
         if (vm.spouseForm.$valid) {
-          vm.onSubmit({nextState: 'children'});
+          vm.onSubmit({ nextState: 'children' });
         } else {
           $rootScope.$emit('notify', $rootScope.MESSAGES.generalError);
         }

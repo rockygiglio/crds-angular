@@ -12,19 +12,20 @@
         backdrop: 'static',
         keyboard: false,
         show: false,
+        openedClass: 'crds-legacy-styles'
       });
 
       modal.result.then(
-      () => {
-        // login success
-      },
-      () => {
-        // TODO:Once we stop using rootScope we can remove this and the depenedency on Injector
-        AuthService.logout();
-        $state.go('content', {
-          link: '/'
+        () => {
+          // login success
+        },
+        () => {
+          // TODO:Once we stop using rootScope we can remove this and the depenedency on Injector
+          AuthService.logout();
+          $state.go('content', {
+            link: '/'
+          });
         });
-      });
     }
   }
 
@@ -35,6 +36,7 @@
     $log,
     $http,
     $state,
+    $location,
     $interval,
     $timeout,
     $cookies,
@@ -137,18 +139,27 @@
 
     vm.getUserRole = () => '';
 
-    // TODO: Get this working to DRY up login_controller and register_controller
-    vm.redirectIfNeeded = ($injectedState) => {
-      if (vm.hasRedirectionInfo()) {
-        const url = vm.exists('redirectUrl');
-        const params = vm.exists('params');
-        vm.removeRedirectRoute();
-        if (params === undefined) {
-          $injectedState.go(url);
-        } else {
-          $injectedState.go(url, JSON.parse(params));
+    vm.redirectIfNeeded = () => {
+      $timeout(() => {
+        if (vm.hasRedirectionInfo()) {
+          const url = vm.exists('redirectUrl');
+          const params = vm.exists('params');
+          vm.removeRedirectRoute();
+
+          const foundState = $state.get().filter(state => state.name === url);
+          if (foundState.length > 0) {
+            if (params === undefined) {
+              $state.go(url);
+            } else {
+              $state.go(url, JSON.parse(params));
+            }
+          } else if (params === undefined) {
+            $location.url(url);
+          } else {
+            $location.url(url).search(JSON.parse(params));
+          }
         }
-      }
+      });
     };
 
     vm.addRedirectRoute = (redirectUrl, params) => {
@@ -172,13 +183,14 @@
       if (vm.isActive()) {
         const promise = $http({
           method: 'GET',
-          url: `${__API_ENDPOINT__}api/authenticated`,
+          url: `${__GATEWAY_CLIENT_ENDPOINT__}api/authenticated`,
           withCredentials: true,
           headers: {
             Authorization: $cookies.get(cookieNames.SESSION_ID),
             RefreshToken: $cookies.get(cookieNames.REFRESH_TOKEN)
           }
-        }).success((user) => {
+        }).then((response) => {
+          var user = response.data;
           $rootScope.userid = user.userId;
           $rootScope.username = user.username;
           $rootScope.email = user.userEmail;
@@ -189,18 +201,13 @@
           }
           $cookies.put('userId', user.userId);
           $cookies.put('username', user.username);
-          if (stateName === 'login') {
-            $state.go('content', {
-              link: '/'
-            });
-            vm.enableReactiveSso(event, stateName, stateData, stateToParams);
-          } else {
+          vm.enableReactiveSso(event, stateName, stateData, stateToParams);
+          vm.restoreImpersonation();
+        }, (response) => {
+          if (response.status !== -1) {
+            vm.clearAndRedirect(event, stateName, stateToParams);
             vm.enableReactiveSso(event, stateName, stateData, stateToParams);
           }
-          vm.restoreImpersonation();
-        }).error(() => {
-          vm.clearAndRedirect(event, stateName, stateToParams);
-          vm.enableReactiveSso(event, stateName, stateData, stateToParams);
         });
         return promise;
       } else if (stateData !== undefined && stateData.isProtected) {
@@ -220,11 +227,11 @@
       const impersonationCookie = $cookies.get(cookieNames.IMPERSONATION_ID);
       if (impersonationCookie && !$rootScope.impersonation.active) {
         Impersonate.start(impersonationCookie)
-        .success((response) => {
-          Impersonate.storeCurrentUser();
-          Impersonate.storeDetails(true, response, impersonationCookie);
-          Impersonate.setCurrentUser(response);
-        });
+          .success((response) => {
+            Impersonate.storeCurrentUser();
+            Impersonate.storeDetails(true, response, impersonationCookie);
+            Impersonate.setCurrentUser(response);
+          });
       }
     };
 
@@ -291,7 +298,7 @@
       }
     };
 
-    vm.clearAndRedirect = (event, toState, toParams) => {                     
+    vm.clearAndRedirect = (event, toState, toParams) => {
       vm.clear();
       vm.resetCredentials();
       vm.addRedirectRoute(toState, toParams);
@@ -318,6 +325,7 @@
     '$log',
     '$http',
     '$state',
+    '$location',
     '$interval',
     '$timeout',
     '$cookies',

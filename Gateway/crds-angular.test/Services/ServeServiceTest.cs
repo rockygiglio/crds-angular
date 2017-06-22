@@ -11,6 +11,10 @@ using crds_angular.Services;
 using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Extensions;
 using Crossroads.Utilities.Interfaces;
+using Crossroads.Web.Common;
+using Crossroads.Web.Common.Configuration;
+using Crossroads.Web.Common.MinistryPlatform;
+using Crossroads.Web.Common.Security;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Models.Opportunities;
 using MinistryPlatform.Translation.Repositories.Interfaces;
@@ -120,7 +124,7 @@ namespace crds_angular.test.Services
             _configurationWrapper.Setup(m => m.GetConfigIntValue("RSVPYesId")).Returns(1);
 
 
-            _authenticationService.Setup(mocked => mocked.GetContactId(It.IsAny<string>())).Returns(123456);
+            _contactService.Setup(mocked => mocked.GetContactId(It.IsAny<string>())).Returns(123456);
             var myContact = new MpMyContact
             {
                 Contact_ID = 123456,
@@ -160,7 +164,7 @@ namespace crds_angular.test.Services
             _fixture = new ServeService(_contactService.Object, _contactRelationshipService.Object,
                 _opportunityService.Object, _eventService.Object,
                 _participantService.Object, _groupParticipantService.Object, _groupService.Object,
-                _communicationService.Object, _authenticationService.Object, _configurationWrapper.Object, _apiUserService.Object, _responseService.Object);
+                _communicationService.Object, _configurationWrapper.Object, _apiUserService.Object, _responseService.Object);
 
             //force AutoMapper to register
             AutoMapperConfig.RegisterMappings();
@@ -228,7 +232,7 @@ namespace crds_angular.test.Services
 
                 var contact = new MpContact() {ContactId = fakeGroupContact.Contact_ID, EmailAddress = fakeGroupContact.Email_Address};
                 var toContact = new MpContact() {ContactId = fakeMyContact.Contact_ID, EmailAddress = fakeMyContact.Email_Address};
-                var fakeCommunication = new MpCommunication()
+                var fakeCommunication = new MinistryPlatform.Translation.Models.MpCommunication()
                 {
                     AuthorUserId = fakeGroupContact.Contact_ID,
                     DomainId = 1,
@@ -477,7 +481,7 @@ namespace crds_angular.test.Services
                     Available = 10,
                     BadgeType = "label-info",
                     Display = true,
-                    Maximum = 10,
+                    Maximum = null,
                     Message = "10 Needed",
                     Minimum = 10,
                     Taken = 0
@@ -488,13 +492,9 @@ namespace crds_angular.test.Services
                 null, 20, new List<MinistryPlatform.Translation.Models.MpResponse>(),
                 new Capacity
                 {
-                    Available = 20,
-                    BadgeType = "label-info",
-                    Display = true,
+                    Display = false,
                     Maximum = 20,
-                    Message = "20 Needed",
-                    Minimum = 20,
-                    Taken = 0
+                    Minimum = null
                 }
             },
             new object[]
@@ -502,7 +502,7 @@ namespace crds_angular.test.Services
                 10, 20, MockFifteenResponses(),
                 new Capacity
                 {
-                    Display = true,
+                    Display = false,
                     Maximum = 20,
                     Minimum = 10,
                 }
@@ -512,13 +512,23 @@ namespace crds_angular.test.Services
                 10, 20, MockTwentyResponses(),
                 new Capacity
                 {
-                    Available = -10,
+                    Available = 0,
                     BadgeType = "label-default",
                     Display = true,
                     Maximum = 20,
                     Message = "Full",
                     Minimum = 10,
                     Taken = 20
+                }
+            }, 
+            new object[]
+            {
+                null, null, MockFifteenResponses(),
+                new Capacity()
+                {
+                    Display = false,
+                    Maximum = null,
+                    Minimum = null
                 }
             }
         };
@@ -594,7 +604,7 @@ namespace crds_angular.test.Services
             _eventService.Verify(
                 m =>
                     m.GetEventsByTypeForRange(eventTypeId, It.IsAny<DateTime>(), It.IsAny<DateTime>(),
-                        It.IsAny<string>()), Times.Exactly(1));
+                        It.IsAny<string>(), It.IsAny<bool>()), Times.Exactly(1));
             _eventService.Verify(m => m.RegisterParticipantForEvent(47, It.IsAny<int>(), 0, 0), Times.Exactly(5));
             _opportunityService.Verify(
                 (m => m.RespondToOpportunity(47, opportunityId, It.IsAny<string>(), It.IsAny<int>(), signUp)),
@@ -602,7 +612,7 @@ namespace crds_angular.test.Services
 
             _communicationService.Verify(m => m.GetTemplate(rsvpChangeId));
 
-            var comm = new MpCommunication
+            var comm = new MinistryPlatform.Translation.Models.MpCommunication
             {
                 AuthorUserId = 5,
                 DomainId = 1,
@@ -627,8 +637,8 @@ namespace crds_angular.test.Services
                 {"Previous_Opportunity_Name", It.IsAny<string>()}
             };
 
-            _communicationService.Setup(m => m.SendMessage(It.IsAny<MpCommunication>(), false));
-            _communicationService.Verify(m => m.SendMessage(It.IsAny<MpCommunication>(),false));
+            _communicationService.Setup(m => m.SendMessage(It.IsAny<MinistryPlatform.Translation.Models.MpCommunication>(), false));
+            _communicationService.Verify(m => m.SendMessage(It.IsAny<MinistryPlatform.Translation.Models.MpCommunication>(),false));
         }
 
         [Test]
@@ -672,7 +682,7 @@ namespace crds_angular.test.Services
             _eventService.Verify(
                 m =>
                     m.GetEventsByTypeForRange(eventTypeId, It.IsAny<DateTime>(), It.IsAny<DateTime>(),
-                        It.IsAny<string>()), Times.Exactly(1));
+                        It.IsAny<string>(), It.IsAny<bool>()), Times.Exactly(1));
             _eventService.Verify(m => m.RegisterParticipantForEvent(47, It.IsAny<int>(), 0, 0), Times.Exactly(5));
             _opportunityService.Verify(
                 (m => m.RespondToOpportunity(47, opportunityId, It.IsAny<string>(), It.IsAny<int>(), signUp)),
@@ -877,7 +887,7 @@ namespace crds_angular.test.Services
             _eventService.Verify(
                 m =>
                     m.GetEventsByTypeForRange(eventTypeId, It.IsAny<DateTime>(), It.IsAny<DateTime>(),
-                        It.IsAny<string>()), Times.Exactly(1));
+                        It.IsAny<string>(), It.IsAny<bool>()), Times.Exactly(1));
 
             _eventService.Verify(m => m.RegisterParticipantForEvent(47, It.IsIn<int>(expectedEventIds), 0, 0),
                 Times.Exactly(3));
@@ -1119,7 +1129,7 @@ namespace crds_angular.test.Services
             _eventService.Setup(
                 m =>
                     m.GetEventsByTypeForRange(eventTypeId, It.IsAny<DateTime>(), It.IsAny<DateTime>(),
-                        It.IsAny<string>())).Returns(mockEvents);
+                        It.IsAny<string>(), It.IsAny<bool>())).Returns(mockEvents);
 
             foreach (var mockEvent in mockEvents)
             {

@@ -6,7 +6,7 @@
  
 
     function UserService($resource, $log) {
-        var User = $resource(__API_ENDPOINT__ + 'api/user');
+        var User = $resource(__GATEWAY_CLIENT_ENDPOINT__ + 'api/user');
         var newuser = new User();
         return newuser;
     }

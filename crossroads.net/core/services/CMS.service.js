@@ -11,7 +11,7 @@
 
     vm.http = $http;
 
-    vm.url = `${__CMS_ENDPOINT__}api`;
+    vm.url = `${__CMS_CLIENT_ENDPOINT__}api`;
 
     vm.todaysDate = moment().format('YYYY-MM-DD');
     
@@ -42,13 +42,13 @@
     }
 
     vm.getNearestSeries = function() {
-      let nearestSeriesAPIAddress = `${this.url}/series?startDate__GreaterThanOrEqual=${vm.todaysDate}&startDate__sort=ASC&__limit[]=1`
+      let nearestSeriesAPIAddress = `${this.url}/series?startDate__GreaterThanOrEqual=${vm.todaysDate}&startDate__sort=ASC&__limit=1`
       return vm.http.get(nearestSeriesAPIAddress)
               .then(rsp => { return _.first(rsp.data.series) });
     }
 
     vm.getLastSeries = function() {
-      let nearestSeriesAPIAddress = `${this.url}/series?endDate__LessThanOrEqual=${vm.todaysDate}&endDate__sort=DESC&__limit[]=1`
+      let nearestSeriesAPIAddress = `${this.url}/series?endDate__LessThanOrEqual=${vm.todaysDate}&endDate__sort=DESC&__limit=1`
       return vm.http.get(nearestSeriesAPIAddress)
               .then(rsp => { return _.first(rsp.data.series) });
     }
@@ -59,7 +59,7 @@
     }
 
     vm.getRecentMessages = function(limit) {
-      return vm.http.get(`${this.url}/messages?date__LessThanOrEqual=${vm.todaysDate}&date__sort=DESC&ID__sort=DESC&SeriesID__GreaterThan=0&__limit[]=${limit}`)
+      return vm.http.get(`${this.url}/messages?date__LessThanOrEqual=${vm.todaysDate}&date__sort=DESC&ID__sort=DESC&SeriesID__GreaterThan=0&__limit=${limit}`)
                       .then(rsp => {return rsp.data.messages.slice(0,limit)});
     }
 
@@ -71,6 +71,11 @@
     vm.getDigitalProgram = function() {
       return vm.http.get(`${this.url}/features`)
               .then(rsp => {return rsp.data.features});
+    }
+
+    vm.getSections = function() {
+      return vm.http.get(`${this.url}/sections`)
+              .then(rsp => {return rsp.data.sections});
     }
 
     vm.getContentBlock = function(query) {

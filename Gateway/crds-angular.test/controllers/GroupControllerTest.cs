@@ -9,7 +9,9 @@ using System.Web.Http.Results;
 using crds_angular.Controllers.API;
 using crds_angular.Models.Crossroads;
 using crds_angular.Models.Crossroads.Groups;
+using crds_angular.Models.Crossroads.Profile;
 using crds_angular.Services.Interfaces;
+using Crossroads.Web.Common.Security;
 using MinistryPlatform.Translation.Exceptions;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Repositories.Interfaces;
@@ -25,6 +27,7 @@ namespace crds_angular.test.controllers
         private GroupController _fixture;
         private Mock<crds_angular.Services.Interfaces.IGroupService> _groupServiceMock;
         private Mock<IAuthenticationRepository> _authenticationServiceMock;
+        private Mock<IContactRepository> _contactRepositoryMock;
         private Mock<IParticipantRepository> _participantServiceMock;
         private Mock<crds_angular.Services.Interfaces.IAddressService> _addressServiceMock;        
         private Mock<IGroupSearchService> _groupSearchServiceMock;
@@ -37,12 +40,13 @@ namespace crds_angular.test.controllers
         {
             _groupServiceMock = new Mock<crds_angular.Services.Interfaces.IGroupService>();
             _authenticationServiceMock = new Mock<IAuthenticationRepository>();
+            _contactRepositoryMock = new Mock<IContactRepository>();
             _participantServiceMock = new Mock<IParticipantRepository>();
             _addressServiceMock = new Mock<crds_angular.Services.Interfaces.IAddressService>();            
             _groupSearchServiceMock = new Mock<IGroupSearchService>();
             _groupToolServiceMock = new Mock<IGroupToolService>();
 
-            _fixture = new GroupController(_groupServiceMock.Object, _authenticationServiceMock.Object, _participantServiceMock.Object, _addressServiceMock.Object, _groupSearchServiceMock.Object, _groupToolServiceMock.Object, new Mock<IUserImpersonationService>().Object);
+            _fixture = new GroupController(_groupServiceMock.Object, _authenticationServiceMock.Object, _contactRepositoryMock.Object, _participantServiceMock.Object, _addressServiceMock.Object, _groupSearchServiceMock.Object, _groupToolServiceMock.Object, new Mock<IUserImpersonationService>().Object);
 
             _authType = "auth_type";
             _authToken = "auth_token";
@@ -189,7 +193,7 @@ namespace crds_angular.test.controllers
                 mocked => mocked.GetParticipantRecord(_fixture.Request.Headers.Authorization.ToString()))
                 .Returns(participant);
 
-            _authenticationServiceMock.Setup(mocked => mocked.GetContactId(_fixture.Request.Headers.Authorization.ToString())).Returns(contactId);
+            _contactRepositoryMock.Setup(mocked => mocked.GetContactId(_fixture.Request.Headers.Authorization.ToString())).Returns(contactId);
 
             var relationRecord = new MpGroupSignupRelationships
             {
@@ -293,7 +297,7 @@ namespace crds_angular.test.controllers
             const string token = "1234frd32";
             const int groupTypeId = 19;
           
-            MpParticipant participant = new MpParticipant() 
+            var participant = new Participant() 
             { 
                 ParticipantId = 90210
             };
@@ -316,7 +320,7 @@ namespace crds_angular.test.controllers
         {
             const int groupTypeId = 19;
 
-            MpParticipant participant = new MpParticipant()
+            var participant = new Participant()
             {
                 ParticipantId = 90210
             };

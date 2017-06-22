@@ -47,7 +47,8 @@ function htmlReplace(devBuild) {
       govolunteer: { js: '/assets/govolunteer.js' },
       main: { js: '/assets/main.js', css: '/assets/main.css' },
       formbuilder: { js: '/assets/formbuilder.js' },
-      formlybuilder: { js: '/assets/formlybuilder.js' }
+      formlybuilder: { js: '/assets/formlybuilder.js' },
+      legacy: { css: '/assets/legacy.css' }
     };
   } else {
     assets = require('./webpack-assets.json');
@@ -69,7 +70,8 @@ function htmlReplace(devBuild) {
       govolunteerjs: {src: assets.govolunteer.js, tpl: '<script src="%s" type="text/javascript"  defer></script>'},
       formbuilderjs: {src: assets.formbuilder.js, tpl: '<script src="%s" type="text/javascript"  defer></script>'},
       formlybuilderjs: {src: assets.formlybuilder.js, tpl: '<script src="%s" type="text/javascript"  defer></script>'},
-      js: {src: assets.main.js, tpl: '<script src="%s" type="text/javascript"  defer></script>'}
+      js: {src: assets.main.js, tpl: '<script src="%s" type="text/javascript"  defer></script>'},
+      legacycss: assets.legacy.css
     })).pipe(gulp.dest('./'));
 
   gulp.src('./lib/load-image.all.min.js')
@@ -256,7 +258,7 @@ gulp.task('icons', ['svg-sprite'], function() {
 });
 
 // svg sprite
-gulp.task('svg-sprite', function() {
+gulp.task('svg-sprite',['ddk-svgs-prep', 'ddk-svgs-dist'], function() {
   var config = {
     log: 'info',
     mode: {
@@ -274,6 +276,16 @@ gulp.task('svg-sprite', function() {
   return gulp.src('./app/icons/*.svg')
       .pipe(svgSprite(config))
       .pipe(gulp.dest('./build/icons/generated'));
+});
+
+gulp.task('ddk-svgs-dist', function () {
+  return gulp.src('./node_modules/crds-styles/assets/svgs/*.svg')
+    .pipe(gulp.dest('./assets/svgs'));
+});
+
+gulp.task('ddk-svgs-prep', function () {
+  return gulp.src('./node_modules/crds-styles/assets/svgs/*.svg')
+    .pipe(gulp.dest('./styles/assets/svgs'));
 });
 
 // Renamed robots.txt for PROD vs NON-PROD environments

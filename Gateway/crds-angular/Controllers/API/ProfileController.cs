@@ -18,6 +18,11 @@ using MinistryPlatform.Translation.Repositories.Interfaces;
 using IPersonService = crds_angular.Services.Interfaces.IPersonService;
 using IDonorService = crds_angular.Services.Interfaces.IDonorService;
 using Crossroads.ApiVersioning;
+using Crossroads.Web.Common;
+using Crossroads.Web.Common.Configuration;
+using Crossroads.Web.Common.Security;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace crds_angular.Controllers.API
 {
@@ -33,7 +38,7 @@ namespace crds_angular.Controllers.API
         private readonly IContactRelationshipRepository _contactRelationshipService;
         private readonly List<int> _allowedAdminGetProfileRoles;
 
-        public ProfileController(IPersonService personService, IServeService serveService, IUserImpersonationService impersonationService, IDonorService donorService, IAuthenticationRepository authenticationService, IUserRepository userService, IContactRelationshipRepository contactRelationshipService, IConfigurationWrapper config, IUserImpersonationService userImpersonationService) : base(userImpersonationService)
+        public ProfileController(IPersonService personService, IServeService serveService, IUserImpersonationService impersonationService, IDonorService donorService, IAuthenticationRepository authenticationService, IUserRepository userService, IContactRelationshipRepository contactRelationshipService, IConfigurationWrapper config, IUserImpersonationService userImpersonationService) : base(userImpersonationService, authenticationService)
         {
             _personService = personService;
             _serveService = serveService;
@@ -191,6 +196,7 @@ namespace crds_angular.Controllers.API
                         }
                         catch (Exception ex)
                         {
+                            LogProfileError(ex, person);
                             var apiError = new ApiErrorDto("Profile update Failed", ex);
                             throw new HttpResponseException(apiError.HttpResponseMessage);
                         }
@@ -202,8 +208,39 @@ namespace crds_angular.Controllers.API
                 });
             }
             var errors = ModelState.Values.SelectMany(val => val.Errors).Aggregate("", (current, err) => current + err.Exception.Message);
-            var dataError = new ApiErrorDto("Save Trip Application Data Invalid", new InvalidOperationException("Invalid Save Data" + errors));
+            var dataError = new ApiErrorDto("Save Profile Data Invalid", new InvalidOperationException("Invalid Save Data" + errors));
             throw new HttpResponseException(dataError.HttpResponseMessage);
+        }
+
+        private void LogProfileError(Exception exception, Person person)
+        {
+            int contactId = person?.ContactId ?? 0;
+            _logger.Error($"Save Profile exception (ContactId = {contactId})", exception);
+
+            // include profile data in error log (serialized json); ignore exceptions during serialization
+            JsonSerializerSettings settings = new JsonSerializerSettings
+            {
+                Error = (serializer, err) => err.ErrorContext.Handled = true,
+                ContractResolver = new IgnoreAttributesContractResolver()
+            };
+            string json = JsonConvert.SerializeObject(person, settings);
+            _logger.Error($"Save Profile data {json}");
+        }
+
+        // Exclude "attributeTypes" property when logging errors because it adds ~1MB to the json!
+        protected class IgnoreAttributesContractResolver : DefaultContractResolver
+        {
+            protected override JsonProperty CreateProperty(MemberInfo member, MemberSerialization memberSerialization)
+            {
+                JsonProperty property = base.CreateProperty(member, memberSerialization);
+
+                if (property.PropertyName == "attributeTypes")
+                {
+                    property.ShouldSerialize = instance => false;
+                }
+
+                return property;
+            }
         }
     }
 }

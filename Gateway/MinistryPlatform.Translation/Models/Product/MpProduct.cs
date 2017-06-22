@@ -1,4 +1,5 @@
-﻿using MinistryPlatform.Translation.Models.Attributes;
+﻿using Crossroads.Web.Common;
+using Crossroads.Web.Common.MinistryPlatform;
 using Newtonsoft.Json;
 
 namespace MinistryPlatform.Translation.Models.Product
@@ -16,6 +17,6 @@ namespace MinistryPlatform.Translation.Models.Product
         public decimal BasePrice { get; set; }
 
         [JsonProperty(PropertyName = "Deposit_Price")]
-        public decimal DepositPrice { get; set; }
+        public decimal? DepositPrice { get; set; }
     }
 }

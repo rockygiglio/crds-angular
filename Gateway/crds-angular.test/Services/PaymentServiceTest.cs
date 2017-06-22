@@ -1,16 +1,19 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
+using crds_angular.App_Start;
 using crds_angular.Exceptions;
 using crds_angular.Models.Crossroads.Payment;
+using crds_angular.Models.Crossroads.Stewardship;
 using crds_angular.Services;
 using crds_angular.Services.Interfaces;
 using crds_angular.test.Helpers;
 using Crossroads.Utilities.FunctionalHelpers;
-using Crossroads.Utilities.Interfaces;
+using Crossroads.Web.Common.Configuration;
+using Crossroads.Web.Common.MinistryPlatform;
 using MinistryPlatform.Translation.Exceptions;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Models.Payments;
+using MinistryPlatform.Translation.Models.Product;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 using Moq;
 using NUnit.Framework;
@@ -28,6 +31,10 @@ namespace crds_angular.test.Services
         private readonly Mock<IEventRepository> _eventRepository;
         private readonly Mock<ICommunicationRepository> _communicationRepository;
         private readonly Mock<IConfigurationWrapper> _configWrapper;
+        private readonly Mock<IApiUserRepository> _apiUserRepository;
+        private readonly Mock<IProductRepository> _productRepository;
+        private readonly Mock<IPaymentProcessorService> _paymentProcessorService;
+
         private readonly IPaymentService _fixture;
 
         private readonly int paidInFull = 54;
@@ -35,9 +42,12 @@ namespace crds_angular.test.Services
         private readonly int nonePaid = 12;
         private readonly int defaultPaymentStatus = 15;
         private readonly int declinedPaymentStatus = 20;
+        private readonly int defaultCongregation = 5;
 
         public PaymentServiceTest()
         {
+            AutoMapperConfig.RegisterMappings();
+
             Factories.MpPayment();
             Factories.MpEvent();
             Factories.MpMyContact();
@@ -49,12 +59,16 @@ namespace crds_angular.test.Services
             _paymentTypeRepository = new Mock<IPaymentTypeRepository>();
             _communicationRepository = new Mock<ICommunicationRepository>();
             _configWrapper = new Mock<IConfigurationWrapper>();
+            _apiUserRepository = new Mock<IApiUserRepository>();
+            _productRepository = new Mock<IProductRepository>();
+            _paymentProcessorService = new Mock<IPaymentProcessorService>();
             _configWrapper.Setup(m => m.GetConfigIntValue("PaidInFull")).Returns(paidInFull);
             _configWrapper.Setup(m => m.GetConfigIntValue("SomePaid")).Returns(somePaid);
             _configWrapper.Setup(m => m.GetConfigIntValue("NonePaid")).Returns(nonePaid);
             _configWrapper.Setup(m => m.GetConfigIntValue("DonationStatusPending")).Returns(defaultPaymentStatus);
             _configWrapper.Setup(m => m.GetConfigIntValue("DonationStatusDeclined")).Returns(declinedPaymentStatus);
-            _fixture = new PaymentService(_invoiceRepository.Object, _paymentRepository.Object, _configWrapper.Object, _contactRepository.Object, _paymentTypeRepository.Object, _eventRepository.Object, _communicationRepository.Object );            
+
+            _fixture = new PaymentService(_invoiceRepository.Object, _paymentRepository.Object, _configWrapper.Object, _contactRepository.Object, _paymentTypeRepository.Object, _eventRepository.Object, _communicationRepository.Object, _apiUserRepository.Object, _productRepository.Object, _paymentProcessorService.Object);            
         }         
 
         [Test]
@@ -65,17 +79,24 @@ namespace crds_angular.test.Services
             const int contactId = 12323354;
             const string emailAddress = "help_me@usa.com";
             const string token = "NOOOOO";
-
+            StripeCharge charge = new StripeCharge()
+            {
+                Source = new StripeSource()
+                {
+                    AccountNumberLast4 = "2342"
+                }
+            };
 
             var me = fakeMyContact(contactId, emailAddress);
             var invoice = fakeInvoice(invoiceId, contactId, 500.00M);
             var payments = fakePayments(contactId, 24M, paymentId);
 
-            _contactRepository.Setup(m => m.GetMyProfile(token)).Returns(me);
             _invoiceRepository.Setup(m => m.GetInvoice(invoiceId)).Returns(invoice);
             _paymentRepository.Setup(m => m.GetPaymentsForInvoice(invoiceId)).Returns(payments);
+            _paymentProcessorService.Setup(m => m.GetCharge(It.IsAny<string>())).Returns(charge);
+            _contactRepository.Setup(m => m.GetMyProfile(token)).Returns(me);
 
-            PaymentDetailDTO ret = _fixture.GetPaymentDetails(paymentId, invoiceId, token);
+            PaymentDetailDTO ret = _fixture.GetPaymentDetails(paymentId, invoiceId, token, false);
             Assert.AreEqual(24M, ret.PaymentAmount);
             Assert.AreEqual(emailAddress, ret.RecipientEmail);
             Assert.AreEqual(452M, ret.TotalToPay);
@@ -93,7 +114,13 @@ namespace crds_angular.test.Services
             const int contactId = 12323354;
             const string emailAddress = "help_me@usa.com";
             const string token = "NOOOOO";
-
+            StripeCharge charge = new StripeCharge()
+            {
+                Source = new StripeSource()
+                {
+                    AccountNumberLast4 = "2342"
+                }
+            };
 
             var me = fakeMyContact(contactId, emailAddress);
             var invoice = fakeInvoice(invoiceId, contactId, 500.00M);
@@ -102,8 +129,9 @@ namespace crds_angular.test.Services
             _contactRepository.Setup(m => m.GetMyProfile(token)).Returns(me);
             _invoiceRepository.Setup(m => m.GetInvoice(invoiceId)).Returns(invoice);
             _paymentRepository.Setup(m => m.GetPaymentsForInvoice(invoiceId)).Returns(payments);
+            _paymentProcessorService.Setup(m => m.GetCharge(It.IsAny<string>())).Returns(charge);
 
-            PaymentDetailDTO ret = _fixture.GetPaymentDetails(paymentId, invoiceId, token);
+            PaymentDetailDTO ret = _fixture.GetPaymentDetails(paymentId, invoiceId, token, false);
             Assert.AreEqual(24M, ret.PaymentAmount);
             Assert.AreEqual(emailAddress, ret.RecipientEmail);
             Assert.AreEqual(452M, ret.TotalToPay);
@@ -198,12 +226,16 @@ namespace crds_angular.test.Services
         public void shouldFailToMakePayment()
         {
             var paymentDto = fakePaymentDto();
-            var invoiceDetail = falkeInvoiceDetail(paymentDto.InvoiceId);
+            var invoiceDetail = fakeInvoiceDetail(paymentDto.InvoiceId);
 
             _invoiceRepository.Setup(m => m.InvoiceExists(paymentDto.InvoiceId)).Returns(true);
             _contactRepository.Setup(m => m.GetContactById(paymentDto.ContactId)).Returns(new MpMyContact()
             {
                 Contact_ID = paymentDto.ContactId
+            });
+            _contactRepository.Setup(m => m.GetContactById(invoiceDetail.RecipientContactId)).Returns(new MpMyContact()
+            {
+                Congregation_ID = 1
             });
             _paymentTypeRepository.Setup(m => m.PaymentTypeExists(5)).Returns(true);
             _invoiceRepository.Setup(m => m.GetInvoiceDetailForInvoice(paymentDto.InvoiceId)).Returns(invoiceDetail);            
@@ -228,12 +260,16 @@ namespace crds_angular.test.Services
         public void shouldMakePaymentOfSomePaid()
         {
             var paymentDto = fakePaymentDto();
-            var invoiceDetail = falkeInvoiceDetail(paymentDto.InvoiceId);
+            var invoiceDetail = fakeInvoiceDetail(paymentDto.InvoiceId);
 
             _invoiceRepository.Setup(m => m.InvoiceExists(paymentDto.InvoiceId)).Returns(true);
             _contactRepository.Setup(m => m.GetContactById(paymentDto.ContactId)).Returns(new MpMyContact()
             {
                 Contact_ID = paymentDto.ContactId
+            });
+            _contactRepository.Setup(m => m.GetContactById(invoiceDetail.RecipientContactId)).Returns(new MpMyContact()
+            {
+                Congregation_ID = 1
             });
             _paymentTypeRepository.Setup(m => m.PaymentTypeExists(5)).Returns(true);
             _invoiceRepository.Setup(m => m.GetInvoiceDetailForInvoice(paymentDto.InvoiceId)).Returns(invoiceDetail);
@@ -285,12 +321,16 @@ namespace crds_angular.test.Services
         public void shouldMakePaymentOfFullPaid()
         {
             var paymentDto = fakePaymentDto();
-            var invoiceDetail = falkeInvoiceDetail(paymentDto.InvoiceId);
+            var invoiceDetail = fakeInvoiceDetail(paymentDto.InvoiceId);
 
             _invoiceRepository.Setup(m => m.InvoiceExists(paymentDto.InvoiceId)).Returns(true);
             _contactRepository.Setup(m => m.GetContactById(paymentDto.ContactId)).Returns(new MpMyContact()
             {
                 Contact_ID = paymentDto.ContactId
+            });
+            _contactRepository.Setup(m => m.GetContactById(invoiceDetail.RecipientContactId)).Returns(new MpMyContact()
+            {
+                Congregation_ID = 1
             });
             _paymentTypeRepository.Setup(m => m.PaymentTypeExists(5)).Returns(true);
             _invoiceRepository.Setup(m => m.GetInvoiceDetailForInvoice(paymentDto.InvoiceId)).Returns(invoiceDetail);
@@ -441,7 +481,7 @@ namespace crds_angular.test.Services
                                                  me.Contact_ID,
                                                  me.Email_Address,
                                                  mergeData));
-            _communicationRepository.Setup(m => m.SendMessage(It.IsAny<MpCommunication>(), false));
+            _communicationRepository.Setup(m => m.SendMessage(It.IsAny<MinistryPlatform.Translation.Models.MpCommunication>(), false));
             _fixture.SendPaymentConfirmation(paymentId, eventId, token);
 
             _paymentRepository.VerifyAll();
@@ -504,7 +544,7 @@ namespace crds_angular.test.Services
                                                  me.Contact_ID,
                                                  me.Email_Address,
                                                  mergeData));
-            _communicationRepository.Setup(m => m.SendMessage(It.IsAny<MpCommunication>(), false));
+            _communicationRepository.Setup(m => m.SendMessage(It.IsAny<MinistryPlatform.Translation.Models.MpCommunication>(), false));
             _fixture.SendPaymentConfirmation(paymentId, eventId, token);
 
             _paymentRepository.VerifyAll();
@@ -540,6 +580,86 @@ namespace crds_angular.test.Services
             _invoiceRepository.VerifyAll();
         }
 
+        [Test]
+        public void ShouldUseDefaultCongregationOnPayment()
+        {
+            var paymentDto = fakePaymentDto();
+            var invoiceDetail = fakeInvoiceDetail(paymentDto.InvoiceId);
+
+            _configWrapper.Setup(m => m.GetConfigIntValue("Congregation_Default_ID")).Returns(defaultCongregation);
+            _invoiceRepository.Setup(m => m.InvoiceExists(paymentDto.InvoiceId)).Returns(true);
+            _contactRepository.Setup(m => m.GetContactById(paymentDto.ContactId)).Returns(new MpMyContact()
+            {
+                Contact_ID = paymentDto.ContactId
+            });
+            _contactRepository.Setup(m => m.GetContactById(invoiceDetail.RecipientContactId)).Returns(new MpMyContact()
+            {
+                Congregation_ID = null
+            });
+            _paymentTypeRepository.Setup(m => m.PaymentTypeExists(5)).Returns(true);
+            _invoiceRepository.Setup(m => m.GetInvoiceDetailForInvoice(paymentDto.InvoiceId)).Returns(invoiceDetail);
+
+            var retVal = new MpPaymentDetailReturn()
+            {
+                InvoiceDetailId = invoiceDetail.InvoiceDetailId,
+                PaymentAmount = paymentDto.DonationAmt,
+                PaymentDetailId = 398457,
+                PaymentId = 2897234
+            };
+
+            _paymentRepository.Setup(m => m.CreatePaymentAndDetail(It.IsAny<MpPaymentDetail>())).Returns(new Result<MpPaymentDetailReturn>(true, retVal));
+
+            var invoice = new MpInvoice()
+            {
+                InvoiceId = paymentDto.InvoiceId,
+                InvoiceTotal = 500
+            };
+
+            var paymentsSoFar = new List<MpPayment>
+            {
+                new MpPayment()
+                {
+                    PaymentTotal = 20,
+                    PaymentStatus = 3
+                },
+                 new MpPayment()
+                {
+                    PaymentTotal = 200,
+                    PaymentStatus = 3
+                }
+            };
+
+            _invoiceRepository.Setup(m => m.GetInvoice(invoiceDetail.InvoiceId)).Returns(invoice);
+            _paymentRepository.Setup(m => m.GetPaymentsForInvoice(paymentDto.InvoiceId)).Returns(paymentsSoFar);
+            _invoiceRepository.Setup(m => m.SetInvoiceStatus(paymentDto.InvoiceId, somePaid));
+
+            var val = _fixture.PostPayment(paymentDto);
+            Assert.AreEqual(retVal, val);
+            _invoiceRepository.VerifyAll();
+            _contactRepository.VerifyAll();
+            _paymentTypeRepository.VerifyAll();
+            _paymentRepository.VerifyAll();
+            _configWrapper.VerifyAll();
+        }
+
+        [Test]
+        public void ShouldGetInvoiceDetailWithProductInfo()
+        {
+            const int invoiceId = 1234;
+            var invoiceDetail = fakeInvoiceDetail(invoiceId);
+            var product = fakeProduct(invoiceDetail.ProductId);
+
+            _invoiceRepository.Setup(m => m.GetInvoiceDetailForInvoice(invoiceId)).Returns(invoiceDetail);
+            _productRepository.Setup(m => m.GetProduct(invoiceDetail.ProductId)).Returns(product);
+
+
+            var val = _fixture.GetInvoiceDetail(invoiceId);
+            Assert.AreEqual(invoiceDetail.RecipientContactId, val.RecipientContactId);
+            Assert.AreEqual(product.ProductName, val.Product.ProductName);
+            _invoiceRepository.VerifyAll();
+            _productRepository.VerifyAll();
+        }
+
         private static List<MpPayment> fakePayments(int payerId, decimal paymentTotal, int paymentIdOfOne = 34525, int paymentStatus = 0)
         {
             return new List<MpPayment>
@@ -572,12 +692,14 @@ namespace crds_angular.test.Services
             };
         }
 
-        private static MpInvoiceDetail falkeInvoiceDetail(int invoiceId)
+        private static MpInvoiceDetail fakeInvoiceDetail(int invoiceId)
         {
             return new MpInvoiceDetail()
             {
                 InvoiceDetailId = 1346,
-                InvoiceId = invoiceId
+                InvoiceId = invoiceId,
+                RecipientContactId = 9428,
+                ProductId = 1231
             };
         }
 
@@ -599,6 +721,15 @@ namespace crds_angular.test.Services
             {
                 Contact_ID = contactId,
                 Email_Address = emailAddress
+            };
+        }
+
+        private static MpProduct fakeProduct(int productId)
+        {
+            return new MpProduct()
+            {
+                ProductId = productId,
+                ProductName = "Test Product",
             };
         }
 

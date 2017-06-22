@@ -40,21 +40,26 @@ Mac and Linux (replace the prefix value below with the path to your NodeJS insta
 ``` npm install -g gulp ```
 
 ###Configuration
-By default webpack inserts `http://localhost:49380` everywhere it finds `__API_ENDPOINT__` in the javascript. This can be changed by creating and setting an environment variable called **CRDS_API_ENDPOINT**. 
-By default webpack inserts `http://content.crossroads.net` everywhere it finds `__CMS_ENDPOINT__` in the javascript. This can be changed by creating and setting an environment variable called **CRDS_CMS_ENDPOINT**. By default webpack inserts Crossroads Stripe Publishable Key as `pk_test_TR1GulD113hGh2RgoLhFqO0M` everywhere it find `__STRIPE_PUBKEY__` in the javascript. This can be changed by creating and setting an environment variable called **CRDS_STRIPE_PUBKEY**.
+By default webpack inserts `http://localhost:49380` everywhere it finds `__GATEWAY_CLIENT_ENDPOINT__` in the javascript. This can be changed by creating and setting an environment variable called **CRDS_GATEWAY_CLIENT_ENDPOINT**. 
+By default webpack inserts `http://content.crossroads.net` everywhere it finds `__CMS_CLIENT_ENDPOINT__` in the javascript. This can be changed by creating and setting an environment variable called **CRDS_CMS_CLIENT_ENDPOINT**. 
+By default webpack inserts Crossroads Stripe Publishable Key as `pk_test_TR1GulD113hGh2RgoLhFqO0M` everywhere it find `__STRIPE_PUBKEY__` in the javascript. This can be changed by creating and setting an environment variable called **CRDS_STRIPE_PUBKEY**.
 By default webpack defaults to use the API Version of Stripe as configured in the account. This can be overridden by creating an environment variable named CRDS_STRIPE_API_VERSION and setting to a particular verion. (i.e. 2015-04-07) 
 
 For windows users:
-
-``` set CRDS_API_ENDPOINT = https://path-to-api-host/ ```
-``` set CRDS_CMS_ENDPOINT = https://path-to-content-host/ ```
-``` set CRDS_STRIPE_PUBKEY = <obtain from Stripe site>```
+```
+set CRDS_GATEWAY_CLIENT_ENDPOINT = https://path-to-api-host/
+set CRDS_CMS_CLIENT_ENDPOINT = https://path-to-content-host/
+set CRDS_STRIPE_PUBKEY = <obtain from Stripe site>
+set CROSSROADS_API_TOKEN = <obtain from Ministry Platform Client API Keys>
+```
 
 Mac and Linux:
-
-``` export CRDS_API_ENDPOINT = https://path-to-api-host/ ```
-``` export CRDS_CMS_ENDPOINT = https://path-to-content-host/ ```
-``` export CRDS_STRIPE_PUBKEY = <obtain from Stripe site>```
+```
+export CRDS_GATEWAY_CLIENT_ENDPOINT = https://path-to-api-host/
+export CRDS_CMS_CLIENT_ENDPOINT = https://path-to-content-host/
+export CRDS_STRIPE_PUBKEY = <obtain from Stripe site>
+export CROSSROADS_API_TOKEN = <obtain from Ministry Platform Client API Keys>
+```
 
 **Keep in mind that this way of setting environment variables will not be persistent, windows users will have to add this variable in system settings and linux/mac users will have to set it in their .bashrc/.zshrc files for persistence.**
 
@@ -91,25 +96,6 @@ Once karma-cli is installed, just run the commands below which will open chrome 
 * For the main application run `karma start crossroads.conf.js`
 * For the core folders run `karma start core.tests.conf.js`
  
-#### Functional Tests
-We use protractor to run the tests and Jasmine to write the specs. You will need to install protractor globally. 
-
-Functional Tests are kept in (e2e)[./e2e]
-
-Windows users can run:
-``` npm set prefix "C:\Program Files\nodejs" ```
-
-``` npm install -g protractor ```
-
-Mac and Linux users can run:
-``` npm install -g protractor ```
-
-Next, update the selenium drivers. `webdriver-manager update --out_dir=node_modules/protractor/selenium`. 
-
-To run tests in safari, you will need to download the safari plugin from (here)[http://selenium-release.storage.googleapis.com/index.html?path=2.45/] and install it.
-
-You will now be able to run protractor by typing `protractor protractor.conf.js`. 
-
 ###Run
 To run the project, run `gulp start` and point your browser to `http://localhost:8080`. If you want live reload, use `http://localhost:8080/webpack-dev-server` but keep in mind that the angular inspector will not work correctly and routes will not show up correctly with live reload. 
 
@@ -163,7 +149,7 @@ Follow these instructions in order to setup the application to call Gateway serv
 3. Click **Details...**
 4. Note the `IPv4 Address`, most likely `192.168.56.101`
 5. Back on OS X, create a entry in `/etc/hosts` using the VM name as the DNS name, e.g. `192.168.56.101  silbervm`
-6. As described above, add the **CRDS_API_ENDPOINT** environment variable to match the configuration, e.g. `export  CRDS_API_ENDPOINT=http://silbervm:49380/`
+6. As described above, add the **CRDS_GATEWAY_CLIENT_ENDPOINT** environment variable to match the configuration, e.g. `export  CRDS_GATEWAY_CLIENT_ENDPOINT=http://silbervm:49380/`
 
 ##Folder Naming Convention
 1. Use descriptive folder names

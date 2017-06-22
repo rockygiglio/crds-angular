@@ -1,6 +1,6 @@
 export default class AuthModalController {
   /*@ngInject*/
-  constructor($modal, $modalInstance, options) {
+  constructor($modal, $modalInstance, options, $timeout) {
     this.$modal = $modal;
     this.$modalInstance = $modalInstance;
 
@@ -13,6 +13,7 @@ export default class AuthModalController {
 
     // Target modal options for the originally requested modal
     this.modal = options.modal;
+    this.modal['openedClass'] = 'crds-legacy-styles';
 
     // Show or hide the login / register forms
     this.registerView = false;
@@ -25,7 +26,9 @@ export default class AuthModalController {
     // This callback is invoked after a successful login or registration by the target forms
     this.authCallback = () => {
       this.$modalInstance.dismiss();
-      this.$modal.open(this.modal);
+      $timeout(() => {
+        this.$modal.open(this.modal);
+      }, 100);
     };
 
     // This callback is invoked by the <register-form> directive in order to switch back to the Login form

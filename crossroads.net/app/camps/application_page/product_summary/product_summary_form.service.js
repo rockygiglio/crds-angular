@@ -17,7 +17,7 @@ class ProductSummaryForm {
       financialAssistance: false
     };
 
-    this.productSummaryResource = $resource(`${__API_ENDPOINT__}api/camps/product`);
+    this.productSummaryResource = $resource(`${__GATEWAY_CLIENT_ENDPOINT__}api/camps/product`);
   }
 
   save(eventId, contactId) {

@@ -6,6 +6,6 @@ export default function Person(fbMapperConfig, $resource) {
         elements: [
             "firstName", "lastName", "nickName", "gender", "site"
         ],
-        prePopulate: $resource(__API_ENDPOINT__ +  'api/profile')
+        prePopulate: $resource(__GATEWAY_CLIENT_ENDPOINT__ +  'api/profile')
     });
 }

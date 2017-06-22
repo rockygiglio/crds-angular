@@ -53,7 +53,7 @@ namespace crds_angular.Models.Crossroads.Groups
         public int? ReasonEndedId { get; set; }
 
         [JsonProperty(PropertyName = "availableOnline")]
-        public bool AvailableOnline { get; set; }
+        public bool? AvailableOnline { get; set; }
 
         [JsonProperty(PropertyName = "remainingCapacity")]
         public int RemainingCapacity { get; set; }
@@ -125,6 +125,9 @@ namespace crds_angular.Models.Crossroads.Groups
 
         [JsonProperty(PropertyName = "proximity")]
         public decimal? Proximity { get; set; }
+
+        [JsonProperty(PropertyName = "participantId")]
+        public int? ParticipantId { get; set; }
 
         public GroupDTO()
         {

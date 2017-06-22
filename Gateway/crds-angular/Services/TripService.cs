@@ -8,12 +8,16 @@ using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Extensions;
 using Crossroads.Utilities.Interfaces;
 using log4net;
+using Crossroads.Web.Common;
+using Crossroads.Web.Common.Configuration;
+using Crossroads.Web.Common.MinistryPlatform;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 using IDonationRepository = MinistryPlatform.Translation.Repositories.Interfaces.IDonationRepository;
 using IDonorRepository = MinistryPlatform.Translation.Repositories.Interfaces.IDonorRepository;
 using IGroupRepository = MinistryPlatform.Translation.Repositories.Interfaces.IGroupRepository;
 using PledgeCampaign = crds_angular.Models.Crossroads.Stewardship.PledgeCampaign;
+using Newtonsoft.Json;
 
 namespace crds_angular.Services
 {
@@ -468,7 +472,7 @@ namespace crds_angular.Services
             return invite.PrivateInvitationId;
         }
 
-        private MpCommunication PrivateInviteCommunication(MpPrivateInvite invite)
+        private MinistryPlatform.Translation.Models.MpCommunication PrivateInviteCommunication(MpPrivateInvite invite)
         {
             var templateId = _configurationWrapper.GetConfigIntValue("PrivateInviteTemplate");
             var template = _communicationService.GetTemplate(templateId);
@@ -476,7 +480,7 @@ namespace crds_angular.Services
             var replyToContact = _contactService.GetContactById(_configurationWrapper.GetConfigIntValue("GoTripsReplyToContactId"));
             var mergeData = SetMergeData(invite.PledgeCampaignIdText, invite.PledgeCampaignId, invite.InvitationGuid, invite.RecipientName);
 
-            return new MpCommunication
+            return new MinistryPlatform.Translation.Models.MpCommunication
             {
                 AuthorUserId = 5,
                 DomainId = 1,
@@ -536,11 +540,22 @@ namespace crds_angular.Services
                 {
                     SendTripApplicantDonationComboMessage(dto);
                 }
-                
+
+                _logger.Info($"SaveApplication success: ContactId = {dto.ContactId}, PledgeCampaignId = {dto.PledgeCampaignId}");
+
                 return formResponseId;
             }
             catch (Exception ex)
             {
+                // add exception to error log
+                _logger.Error($"SaveApplication exception: ContactId = {dto.ContactId}, PledgeCampaignId = {dto.PledgeCampaignId}", ex);
+
+                // include form data in error log (serialized json); ignore exceptions during serialization
+                JsonSerializerSettings settings = new JsonSerializerSettings();
+                settings.Error = (serializer, err) => err.ErrorContext.Handled = true;
+                string json = JsonConvert.SerializeObject(dto, settings);
+                _logger.Error($"SaveApplication data {json}");
+
                 // send applicant message
                 SendApplicantErrorMessage(dto.ContactId);
 

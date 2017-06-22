@@ -7,7 +7,7 @@
     return $resource(__AWS_SEARCH_ENDPOINT__+'search',{},{
       execute: {
         method : 'POST',
-        transformRequest: function(data, headers){
+        transformRequest: function(data, headers) {
           var str = [];
           for(var p in data) {
             if(data[p]){
@@ -16,7 +16,11 @@
           }
           return str.join('&');
         },
-        headers : {'Content-Type': 'application/x-www-form-urlencoded' }
+        headers : {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'ImpersonateUserId': undefined,
+          'Crds-Api-Key': undefined
+        }
       }
     });
   }

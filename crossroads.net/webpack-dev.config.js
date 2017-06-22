@@ -1,14 +1,9 @@
-var webpack = require('webpack');
-var ExtractTextPlugin = require('extract-text-webpack-plugin');
-var path = require('path');
+const webpack = require('webpack');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const path = require('path');
+const environmentVars = require('./environment.config.js');
 
-var endpoint = {
-  url: 'http://localhost:49380'
-};
-
-var environmentVars = require(path.resolve(__dirname, 'environment.config.js'));
-var definePlugin = new webpack.DefinePlugin(environmentVars.get());
-
+const definePlugin = new webpack.DefinePlugin(environmentVars.get());
 module.exports = {
   entry: {
     childcare: './app/childcare_dashboard/childcareDashboard.module.js',
@@ -22,6 +17,7 @@ module.exports = {
     ang: './core/ang.js',
     govolunteer: './app/go_volunteer/goVolunteer.module.js',
     core: ['./core/core.js'],
+    legacy: ['./styles/legacy.scss'],
     common: ['./app/common/common.module.js'],
     formbuilder: ['./app/formBuilder/formBuilder.module.js'],
     formlybuilder: ['./app/formlyBuilder/formlyBuilder.module.js']
@@ -38,7 +34,10 @@ module.exports = {
     filename: '[name].js',
   },
   resolve: {
-    extensions: ['', '.js', '.jsx']
+    extensions: ['', '.js', '.jsx'],
+    alias: {
+      constants: './app/constants.js'
+    }
   },
   devtool: 'sourcemap',
   debug: true,
@@ -84,13 +83,13 @@ module.exports = {
       },
       {
         test: /\.json$/,
-        loaders: ["json-loader"]
+        loaders: ['json-loader']
       },
     ],
     noParse: [
-      path.join(__dirname, "node_modules", "video.js", "dist", "video.js"),
+      path.join(__dirname, 'node_modules', 'video.js', 'dist', 'video.js'),
       /videojs5-hlsjs-source-handler/,
-      path.join(__dirname, "node_modules", "videojs-chromecast", "dist", "videojs-chromecast.js")
+      path.join(__dirname, 'node_modules', 'videojs-chromecast', 'dist', 'videojs-chromecast.js')
     ]
   },
   plugins: [

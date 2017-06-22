@@ -7,6 +7,13 @@
   function InterceptorFactory($injector) {
     return {
       request: function(config) {
+        // Make sure Crds-Api-Key is set on all requests using $http,
+        // even those that explicitly specify other headers
+        if(config.headers && (config.headers['Crds-Api-Key'] === undefined ||
+            config.headers['Crds-Api-Key'].length === 0) && 
+            __CROSSROADS_API_TOKEN__.length > 0) {
+          config.headers['Crds-Api-Key'] = __CROSSROADS_API_TOKEN__;
+        }
         return config;
       },
 

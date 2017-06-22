@@ -547,6 +547,18 @@
           url: '/thedaily',
           controller: 'TheDailyController as dailyCtrl',
           templateUrl: 'thedaily/thedaily.html'
+        })
+        .state('leaveyourmark', {
+          parent: 'screenWidth',
+          url: '/leaveyourmark',
+          controller: 'LeaveYourMarkController as leaveYourMarkCtrl',
+          templateUrl: 'leaveyourmark/leaveyourmark.html',
+          data: {
+            meta: {
+              title: 'Leave Your Mark',
+              description: ''
+            }
+          }
         });
 
     // Commented out for US2924, will be added back after Corkboard go-live
@@ -571,7 +583,7 @@
     //Leave the comment below.  Once we have a true 404 page hosted in the same domain, this is how we
     //will handle the routing.
     //.state('404', {
-    //    templateUrl: __CMS_ENDPOINT__ + '/page-not-found/'
+    //    templateUrl: __CMS_CLIENT_ENDPOINT__ + '/page-not-found/'
     //});
 
     $urlRouterProvider.otherwise('/');

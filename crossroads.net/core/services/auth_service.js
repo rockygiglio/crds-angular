@@ -12,7 +12,7 @@
 
     authService.login = (credentials) => {
       return $http
-        .post(__API_ENDPOINT__ + 'api/login', credentials).then((res) => {
+        .post(__GATEWAY_CLIENT_ENDPOINT__ + 'api/login', credentials).then((res) => {
           Session.create(
             res.data.refreshToken,
             res.data.userToken,

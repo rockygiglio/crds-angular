@@ -7,6 +7,10 @@ using System.Security.Cryptography;
 using System.Text;
 using Crossroads.Utilities;
 using Crossroads.Utilities.Interfaces;
+using Crossroads.Web.Common;
+using Crossroads.Web.Common.Configuration;
+using Crossroads.Web.Common.MinistryPlatform;
+using Crossroads.Web.Common.Security;
 using MinistryPlatform.Translation.Enum;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Repositories;
@@ -57,7 +61,11 @@ namespace MinistryPlatform.Translation.Test.Services
             _configuration.Setup(m => m.GetEnvironmentVarAsString("API_USER")).Returns("uid");
             _configuration.Setup(m => m.GetEnvironmentVarAsString("API_PASSWORD")).Returns("pwd");
 
-            _authService.Setup(m => m.Authenticate(It.IsAny<string>(), It.IsAny<string>())).Returns(new Dictionary<string, object> { { "token", "ABC" }, { "exp", "123" } });
+            _authService.Setup(m => m.Authenticate(It.IsAny<string>(), It.IsAny<string>())).Returns(new AuthToken
+            {
+                AccessToken = "ABC",
+                ExpiresIn = 123
+            });
 
             _fixture = new DonorRepository(_ministryPlatformService.Object, _ministryPlatformRestRepository.Object, _programService.Object, _communicationService.Object, _authService.Object, _contactService.Object, _configuration.Object, _crypto.Object);
         }
@@ -190,7 +198,7 @@ namespace MinistryPlatform.Translation.Test.Services
                 donationDistPageId, It.IsAny<Dictionary<string, object>>(),
                 It.IsAny<string>(), true)).Returns(expectedDonationDistributionId);
 
-            _communicationService.Setup(mocked => mocked.SendMessage(It.IsAny<MpCommunication>(), false));
+            _communicationService.Setup(mocked => mocked.SendMessage(It.IsAny<MinistryPlatform.Translation.Models.MpCommunication>(), false));
             _contactService.Setup(mocked => mocked.GetContactById(Convert.ToInt32(ConfigurationManager.AppSettings["DefaultGivingContactEmailId"]))).Returns(defaultContact);
 
             var expectedDonationValues = new Dictionary<string, object>
@@ -280,7 +288,7 @@ namespace MinistryPlatform.Translation.Test.Services
             var response = _fixture.CreateDonationAndDistributionRecord(donationAndDistribution);
 
             // Explicitly verify each expectation...
-            _communicationService.Verify(mocked => mocked.SendMessage(It.IsAny<MpCommunication>(), false));
+            _communicationService.Verify(mocked => mocked.SendMessage(It.IsAny<MinistryPlatform.Translation.Models.MpCommunication>(), false));
             _programService.Verify(mocked => mocked.GetProgramById(3));
             _ministryPlatformService.Verify(mocked => mocked.CreateRecord(donationPageId, It.IsAny<Dictionary<string, object>>(), It.IsAny<string>(), true));
             _ministryPlatformService.Verify(mocked => mocked.CreateRecord(donationDistPageId, expectedDistributionValues, It.IsAny<string>(), true));
@@ -472,7 +480,7 @@ namespace MinistryPlatform.Translation.Test.Services
                 donationDistPageId, It.IsAny<Dictionary<string, object>>(),
                 It.IsAny<string>(), true)).Returns(expectedDonationDistributionId);
             _contactService.Setup(mocked => mocked.GetContactById(Convert.ToInt32(ConfigurationManager.AppSettings["DefaultGivingContactEmailId"]))).Returns(defaultContact);
-            _communicationService.Setup(mocked => mocked.SendMessage(It.IsAny<MpCommunication>(), false));
+            _communicationService.Setup(mocked => mocked.SendMessage(It.IsAny<MinistryPlatform.Translation.Models.MpCommunication>(), false));
 
             var expectedDonationValues = new Dictionary<string, object>
             {
@@ -553,7 +561,7 @@ namespace MinistryPlatform.Translation.Test.Services
             var response = _fixture.CreateDonationAndDistributionRecord(donationAndDistribution);
 
             // Explicitly verify each expectation...
-            _communicationService.Verify(mocked => mocked.SendMessage(It.IsAny<MpCommunication>(), false));
+            _communicationService.Verify(mocked => mocked.SendMessage(It.IsAny<MinistryPlatform.Translation.Models.MpCommunication>(), false));
             _programService.Verify(mocked => mocked.GetProgramById(3));
             _ministryPlatformService.Verify(mocked => mocked.CreateRecord(donationPageId, It.IsAny<Dictionary<string, object>>(), It.IsAny<string>(), true));
             _ministryPlatformService.Verify(mocked => mocked.CreateRecord(donationDistPageId, expectedDistributionValues, It.IsAny<string>(), true));
@@ -607,13 +615,18 @@ namespace MinistryPlatform.Translation.Test.Services
             var contactId = 565656;
             var email = "cross@crossroads.net";
             var guestDonorPageViewId = "PossibleGuestDonorContact";
+            var firstName = "Homer";
+            var lastName = "Simpson";
+
             var expectedDonorValues = new List<Dictionary<string, object>>();
             expectedDonorValues.Add(new Dictionary<string, object>
             {
                 {"Donor_Record", donorId},
                 {"Processor_ID", processorId},
                 {"Contact_ID", contactId},
-                {"Email_Address", email}
+                {"Email_Address", email},
+                { "First_Name", firstName},
+                { "Last_Name", lastName}
             });
             var donor = new MpContactDonor()
             {
@@ -647,6 +660,9 @@ namespace MinistryPlatform.Translation.Test.Services
             var contactId = 565656;
             var email = "cross@crossroads.net";
             var guestDonorPageViewId = "DonorByContactId";
+            const string firstName = "Homer";
+            const string lastName = "Simpson";
+
             var expectedDonorValues = new List<Dictionary<string, object>>();
             expectedDonorValues.Add(new Dictionary<string, object>
             {
@@ -658,7 +674,9 @@ namespace MinistryPlatform.Translation.Test.Services
                 {"Statement_Type_ID", 1},
                 {"Statement_Frequency", "Quarterly"},
                 {"Statement_Method", "None"},
-                {"Household_ID", 1}
+                {"Household_ID", 1},
+                { "First_Name", firstName},
+                { "Last_Name", lastName}
             });
             var donor = new MpContactDonor()
             {
@@ -743,7 +761,7 @@ namespace MinistryPlatform.Translation.Test.Services
             const string frequency = "12th of the month";
 
             _ministryPlatformService.Setup(mocked => mocked.GetPageViewRecords("DonorByContactId", It.IsAny<string>(), It.IsAny<string>(), string.Empty, 0)).Returns(contactList);
-            var expectedCommunication = new MpCommunication
+            var expectedCommunication = new MinistryPlatform.Translation.Models.MpCommunication
             {
                 AuthorUserId = 5,
                 DomainId = 1,
@@ -777,7 +795,7 @@ namespace MinistryPlatform.Translation.Test.Services
             _communicationService.Setup(
                 mocked =>
                     mocked.SendMessage(
-                        It.Is<MpCommunication>(
+                        It.Is<MinistryPlatform.Translation.Models.MpCommunication>(
                             c =>
                                 c.EmailBody.Equals(expectedCommunication.EmailBody) && c.EmailSubject.Equals(expectedCommunication.EmailSubject) &&
                                 c.ToContacts[0].ContactId == expectedCommunication.ToContacts[0].ContactId && c.ToContacts[0].EmailAddress.Equals(expectedCommunication.ToContacts[0].EmailAddress) &&
@@ -839,7 +857,7 @@ namespace MinistryPlatform.Translation.Test.Services
             };
 
             _ministryPlatformService.Setup(mocked => mocked.GetPageViewRecords("DonorByContactId", It.IsAny<string>(), It.IsAny<string>(), string.Empty, 0)).Returns(contactList);
-            var expectedCommunication = new MpCommunication
+            var expectedCommunication = new MinistryPlatform.Translation.Models.MpCommunication
             {
                 AuthorUserId = 5,
                 DomainId = 1,
@@ -866,7 +884,7 @@ namespace MinistryPlatform.Translation.Test.Services
             _communicationService.Setup(
                 mocked =>
                     mocked.SendMessage(
-                        It.Is<MpCommunication>(
+                        It.Is<MinistryPlatform.Translation.Models.MpCommunication>(
                             c =>
                                 c.EmailBody.Equals(expectedCommunication.EmailBody) && c.EmailSubject.Equals(expectedCommunication.EmailSubject) &&
                                 c.ToContacts[0].ContactId == expectedCommunication.ToContacts[0].ContactId && c.ToContacts[0].EmailAddress.Equals(expectedCommunication.ToContacts[0].EmailAddress) &&
@@ -993,7 +1011,9 @@ namespace MinistryPlatform.Translation.Test.Services
             const string routingNumber = "042000314";
             const string processorAccountId = "bk_2985405871018";
             const string accountProcessorId = "sub_954859038710";
-          
+            const string firstName = "Homer";
+            const string lastName = "Simpson";
+
             var expectedEncAcct = _fixture.CreateHashedAccountAndRoutingNumber(accountNumber, routingNumber);
             var queryResults = new List<Dictionary<string, object>>
             {
@@ -1002,7 +1022,7 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Donor_Account_ID", donorAccountId},
                     { "Contact_ID", contactId },
                     {"Processor_Account_ID", processorAccountId},
-                    {"Processor_ID", accountProcessorId},
+                    {"Processor_ID", accountProcessorId}
                 }
             };
 
@@ -1021,6 +1041,8 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Statement_Frequency", "Quarterly"},
                     {"Statement_Method", "None"},
                     {"Household_ID", 1},
+                    {"First_Name", firstName},
+                    {"Last_Name", lastName}
                 }
             };
             var donor = new MpContactDonor()
@@ -1162,7 +1184,8 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Item_Number", null},
                     {"Is_Recurring_Gift", false },
                     {"Company_Name", "Company Name" },
-                    {"Show_Online", true }
+                    {"Show_Online", true },
+                    {"Notes", "1 share of stock" }
                 },
                 new Dictionary<string, object>
                 {
@@ -1180,7 +1203,8 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Item_Number", null},
                     {"Is_Recurring_Gift", false },
                     {"Company_Name", "Company Name" },
-                    {"Show_Online", true }
+                    {"Show_Online", true },
+                    {"Notes", "" }
                 },
                 new Dictionary<string, object>
                 {
@@ -1198,7 +1222,8 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Item_Number", null},
                     {"Is_Recurring_Gift", false },
                     {"Company_Name", "Company Name" },
-                    {"Show_Online", true }
+                    {"Show_Online", true },
+                    {"Notes", "" }
                 }
             };
 
@@ -1222,6 +1247,8 @@ namespace MinistryPlatform.Translation.Test.Services
             Assert.AreEqual(200000, result[1].donationAmt);
             Assert.AreEqual("Program 2", result[1].Distributions[0].donationDistributionProgram);
             Assert.AreEqual(200000, result[1].Distributions[0].donationDistributionAmt);
+
+            Assert.AreEqual("1 share of stock", result[0].donationNotes);
         }
 
         [Test]
@@ -1273,7 +1300,8 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Item_Number", null},
                     {"Is_Recurring_Gift", false },
                     {"Company_Name", "Company Name" },
-                    {"Show_Online", true }
+                    {"Show_Online", true },
+                    {"Notes","34 Shares of Stock" }
                 },
                 new Dictionary<string, object>
                 {
@@ -1291,7 +1319,8 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Item_Number", ""},
                     {"Is_Recurring_Gift", false },
                     {"Company_Name", "Company Name" },
-                    {"Show_Online", true }
+                    {"Show_Online", true },
+                    {"Notes","" }
                 },
                 new Dictionary<string, object>
                 {
@@ -1308,7 +1337,8 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Donor_Display_Name", "Test Name"},
                     {"Is_Recurring_Gift", false },
                     {"Company_Name", "Company Name" },
-                    {"Show_Online", true }
+                    {"Show_Online", true },
+                    {"Notes",null }
                 },
                 new Dictionary<string, object>
                 {
@@ -1326,7 +1356,8 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Item_Number", "1234"},
                     {"Is_Recurring_Gift", false },
                     {"Company_Name", "Company Name" },
-                    {"Show_Online", true }
+                    {"Show_Online", true },
+                    {"Notes","1 million Shares of Stock" }
                 },
             };
 
@@ -1352,7 +1383,8 @@ namespace MinistryPlatform.Translation.Test.Services
             Assert.AreEqual(200000, result[1].Distributions[0].donationDistributionAmt);
 
             Assert.AreEqual("1234", result[2].itemNumber);
-            
+            Assert.AreEqual("34 Shares of Stock", result[0].donationNotes);
+
         }
 
         [Test]
@@ -1404,7 +1436,8 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Item_Number", null},
                     {"Is_Recurring_Gift", false },
                     {"Company_Name", "Company Name3" },
-                    {"Show_Online", false }
+                    {"Show_Online", false },
+                    {"Notes","" }
                 },
                 new Dictionary<string, object>
                 {
@@ -1422,7 +1455,8 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Item_Number", ""},
                     {"Is_Recurring_Gift", false },
                     {"Company_Name", "Company Name2" },
-                    {"Show_Online", true }
+                    {"Show_Online", true },
+                    {"Notes","" }
                 },
                 new Dictionary<string, object>
                 {
@@ -1439,7 +1473,8 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Donor_Display_Name", "Test Name"},
                     {"Is_Recurring_Gift", false },
                     {"Company_Name", "Company Name3" },
-                    {"Show_Online", false }
+                    {"Show_Online", false },
+                    {"Notes","" }
                 },
                 new Dictionary<string, object>
                 {
@@ -1457,7 +1492,8 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Item_Number", "1234"},
                     {"Is_Recurring_Gift", false },
                     {"Company_Name", "Company Name4" },
-                    {"Show_Online", true }
+                    {"Show_Online", true },
+                    {"Notes","" }
                 },
             };
 
@@ -1508,7 +1544,8 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Item_Number", null},
                     {"Is_Recurring_Gift", true },
                     {"Company_Name", "Company Name" },
-                    {"Show_Online", true }
+                    {"Show_Online", true },
+                    {"Notes","" }
                 },
                 new Dictionary<string, object>
                 {
@@ -1526,7 +1563,8 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Item_Number", ""},
                     {"Is_Recurring_Gift", true },
                     {"Company_Name", "Company Name" },
-                    {"Show_Online", true }
+                    {"Show_Online", true },
+                    {"Notes","" }
                 },
                 new Dictionary<string, object>
                 {
@@ -1543,7 +1581,8 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Donor_Display_Name", "Test Name"},
                     {"Is_Recurring_Gift", false },
                     {"Company_Name", "Company Name" },
-                    {"Show_Online", true }
+                    {"Show_Online", true },
+                    {"Notes","" }
                 },
                 new Dictionary<string, object>
                 {
@@ -1561,7 +1600,8 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Item_Number", "1234"},
                     {"Is_Recurring_Gift", false },
                     {"Company_Name", "Company Name" },
-                    {"Show_Online", true }
+                    {"Show_Online", true },
+                    {"Notes","" }
                 },
             };
 
@@ -1618,7 +1658,8 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Item_Number", null},
                     {"Is_Recurring_Gift", false },
                     {"Company_Name", "Company Name" },
-                    {"Show_Online", true }
+                    {"Show_Online", true },
+                    {"Notes",null }
                 },
                 new Dictionary<string, object>
                 {
@@ -1636,7 +1677,8 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Item_Number", null},
                     {"Is_Recurring_Gift", false },
                     {"Company_Name", "Company Name" },
-                    {"Show_Online", true }
+                    {"Show_Online", true },
+                    {"Notes", "White Castle Stock" }
                 },
                 new Dictionary<string, object>
                 {
@@ -1654,7 +1696,8 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Item_Number", null},
                     {"Is_Recurring_Gift", false },
                     {"Company_Name", "Company Name" },
-                    {"Show_Online", true }
+                    {"Show_Online", true },
+                    {"Notes",null }
                 }
             };
 
@@ -1678,6 +1721,7 @@ namespace MinistryPlatform.Translation.Test.Services
             Assert.AreEqual(200000, result[1].donationAmt);
             Assert.AreEqual("Program 2", result[1].Distributions[0].donationDistributionProgram);
             Assert.AreEqual(200000, result[1].Distributions[0].donationDistributionAmt);
+            Assert.AreEqual("White Castle Stock", result[1].donationNotes);
         }
 
 
@@ -1722,7 +1766,8 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Item_Number", null},
                     {"Is_Recurring_Gift", false },
                     {"Company_Name", "Company Name" },
-                    {"Show_Online", true }
+                    {"Show_Online", true },
+                    {"Notes","" }
                 },
                 new Dictionary<string, object>
                 {
@@ -1740,7 +1785,8 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Item_Number", null},
                     {"Is_Recurring_Gift", false },
                     {"Company_Name", "Company Name" },
-                    {"Show_Online", true }
+                    {"Show_Online", true },
+                    {"Notes","" }
                 },
                 new Dictionary<string, object>
                 {
@@ -1757,7 +1803,8 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Donor_Display_Name", "Test Name"},
                     {"Is_Recurring_Gift", false },
                     {"Company_Name", "Company Name" },
-                    {"Show_Online", true }
+                    {"Show_Online", true },
+                    {"Notes","" }
                 }
             };
 

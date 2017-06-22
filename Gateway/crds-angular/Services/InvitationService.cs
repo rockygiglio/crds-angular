@@ -6,8 +6,8 @@ using System.Linq;
 using AutoMapper;
 using crds_angular.Models.Crossroads;
 using crds_angular.Services.Interfaces;
-using Crossroads.Utilities.Interfaces;
 using log4net;
+using Crossroads.Web.Common.Configuration;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 
@@ -27,6 +27,9 @@ namespace crds_angular.Services
         private readonly int _groupInvitationEmailTemplateCustom;
         private readonly int _tripInvitationType;
         private readonly int _tripInvitationEmailTemplate;
+
+        private readonly int _anywhereGatheringInvitationTypeId;
+        private readonly int _anywhereGatheringInvitationEmailTemplate;
 
         private readonly int _defaultInvitationEmailTemplate;
         private readonly int _domainId;
@@ -55,6 +58,8 @@ namespace crds_angular.Services
             _groupInvitationEmailTemplateCustom = configuration.GetConfigIntValue("GroupInvitationEmailTemplateCustom");
             _tripInvitationType = configuration.GetConfigIntValue("TripInvitationType");
             _tripInvitationEmailTemplate = configuration.GetConfigIntValue("PrivateInviteTemplate");
+            _anywhereGatheringInvitationEmailTemplate = configuration.GetConfigIntValue("AnywhereGatheringInvitationEmailTemplate");
+            _anywhereGatheringInvitationTypeId = configuration.GetConfigIntValue("AnywhereGatheringInvitationType");
 
             _defaultInvitationEmailTemplate = configuration.GetConfigIntValue("DefaultInvitationEmailTemplate");
 
@@ -76,13 +81,12 @@ namespace crds_angular.Services
                 var leaderParticipantRecord = _participantRepository.GetParticipantRecord(token);
 
                 try
-                {
-                    //SendEmail(invitation, leaderParticipantRecord.DisplayName, group.Name);
-                    SendEmail(invitation, leaderParticipantRecord, group.Name);
+                {                    
+                    SendEmail(invitation, leaderParticipantRecord, group);
                 }
                 catch (Exception e)
                 {
-                    _logger.Error(string.Format("Error sending email to {0} for invitation {1}", invitation.EmailAddress, invitation.InvitationGuid), e);
+                    _logger.Error($"Error sending email to {invitation.EmailAddress} for invitation {invitation.InvitationGuid}", e);
                 }
 
                 dto.InvitationGuid = invitation.InvitationGuid;
@@ -91,7 +95,7 @@ namespace crds_angular.Services
             }
             catch (Exception e)
             {
-                var message = string.Format("Exception creating invitation for {0}, SourceID = {1}.", dto.RecipientName, dto.SourceId);
+                var message = $"Exception creating invitation for {dto.RecipientName}, SourceID = {dto.SourceId}.";
                 _logger.Error(message, e);
                 throw new ApplicationException(message, e);
             }
@@ -105,9 +109,12 @@ namespace crds_angular.Services
             } else if (dto.InvitationType == _tripInvitationType)
             {
                 ValidateTripInvitation(dto, token);
+            } else if (dto.InvitationType == _anywhereGatheringInvitationTypeId)
+            {
+                ValidateGroupInvitation(dto, token);
             }
 
-        }
+        } 
 
         private void ValidateGroupInvitation(Invitation dto, string token)
         {
@@ -136,7 +143,7 @@ namespace crds_angular.Services
             // TODO Implement validation, make sure the token represents someone who is allowed to send this trip invitation
         }
 
-        private void SendEmail(MpInvitation invitation, MpParticipant leader, string groupName)
+        private void SendEmail(MpInvitation invitation, MpParticipant leader, MpGroup group)
         {
             var leaderContact = _contactRepository.GetContactById(leader.ContactId);
 
@@ -150,23 +157,25 @@ namespace crds_angular.Services
             int emailTemplateId;
             if (invitation.InvitationType == _groupInvitationType)
             {
-                if (invitation.CustomMessage != null)
-                {
+                if (invitation.CustomMessage != null) {
                     emailTemplateId = _groupInvitationEmailTemplateCustom;
                     mergeData.Add("Leader_Message", invitation.CustomMessage);
-                }
-                else
-                {
+                } else {
                     emailTemplateId = _groupInvitationEmailTemplate;
                 }
                 mergeData.Add("Leader_Name", leaderContact.Nickname + " " + leaderContact.Last_Name);
-                mergeData.Add("Group_Name", groupName);
-            } else if (invitation.InvitationType == _tripInvitationType)
-            {
+                mergeData.Add("Group_Name", group.Name);
+            } else if (invitation.InvitationType == _tripInvitationType) {
                 emailTemplateId = _tripInvitationEmailTemplate;
-            }
-            else
-            {
+            } else if (invitation.InvitationType == _anywhereGatheringInvitationTypeId) {
+                mergeData["Recipient_Name"] = invitation.RecipientName.Substring(0, 1).ToUpper() + invitation.RecipientName.Substring(1).ToLower();
+                mergeData.Add("Leader_Name", leaderContact.Nickname.Substring(0,1).ToUpper() + leaderContact.Nickname.Substring(1).ToLower() + " " + leaderContact.Last_Name.Substring(0,1).ToUpper() + ".");
+                mergeData.Add("City", group.Address.City);
+                mergeData.Add("State", group.Address.State);
+                mergeData.Add("Description", group.GroupDescription);
+                mergeData.Add("Group_ID", group.GroupId);
+                emailTemplateId = _anywhereGatheringInvitationEmailTemplate;
+            } else {
                 emailTemplateId = _defaultInvitationEmailTemplate;
             }
             var emailTemplate = _communicationService.GetTemplate(emailTemplateId);
@@ -206,7 +215,6 @@ namespace crds_angular.Services
                 MergeData = mergeData
             };
             _communicationService.SendMessage(confirmation);
-
         }
 
     }

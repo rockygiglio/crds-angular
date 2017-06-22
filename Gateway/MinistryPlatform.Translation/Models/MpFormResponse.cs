@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
-using MinistryPlatform.Translation.Models.Attributes;
+using Crossroads.Web.Common;
+using Crossroads.Web.Common.MinistryPlatform;
 using Newtonsoft.Json;
 
 namespace MinistryPlatform.Translation.Models
@@ -19,6 +20,8 @@ namespace MinistryPlatform.Translation.Models
         public int? OpportunityResponseId { get; set; }
         [JsonProperty(PropertyName = "Pledge_Campaign_ID")]
         public int? PledgeCampaignId { get; set; }
+        [JsonProperty(PropertyName = "Event_ID")]
+        public int? EventId { get; set; }
         public List<MpFormAnswer> FormAnswers { get; set; }
 
         public MpFormResponse()

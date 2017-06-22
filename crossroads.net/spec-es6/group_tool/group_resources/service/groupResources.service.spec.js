@@ -9,7 +9,7 @@ describe('GroupResourcesService', () => {
     resource,
     httpBackend;
 
-  const endpoint = `${window.__env__['CRDS_CMS_ENDPOINT']}api`;
+  const endpoint = `${window.__env__['CRDS_CMS_CLIENT_ENDPOINT']}api`;
 
   beforeEach(angular.mock.module(constants.MODULES.GROUP_TOOL));
 

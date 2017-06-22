@@ -17,7 +17,7 @@ describe('Group Tool Group Service', () => {
     ImageService,
     location;
 
-  const endpoint = `${window.__env__['CRDS_API_ENDPOINT']}api`;
+  const endpoint = `${window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT']}api`;
 
   beforeEach(angular.mock.module(CONSTANTS.MODULES.GROUP_TOOL));
 
@@ -536,6 +536,20 @@ describe('Group Tool Group Service', () => {
         expect(err.status).toEqual(500);
       });
     });
+  });
+
+  it('should removeParticipantFromMyGroup return 200', () => {
+    let groupId = 123;
+    let participant = { groupParticipantId: 4321, message: 'YourFired'};
+
+    httpBackend.expectDELETE(`${endpoint}/grouptool/group/${groupId}/participant/${participant.groupParticipantId}?removalMessage=${participant.message}`)
+      .respond(200, {});
+    let promise = fixture.removeGroupParticipant(groupId, participant);
+    httpBackend.flush();
+
+    promise.then((data) => {
+      console.log(data);
+    })
   });
 
   describe('getGroupType(groupId) function', () => {

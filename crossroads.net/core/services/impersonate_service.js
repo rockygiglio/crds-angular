@@ -10,7 +10,7 @@
   ) {
     this.start = (username) => {
       const thisUsername = encodeURI(username).replace(/\+/g, '%2B');
-      return $http.get(`${__API_ENDPOINT__}api/user?username=${thisUsername}`);
+      return $http.get(`${__GATEWAY_CLIENT_ENDPOINT__}api/user?username=${thisUsername}`);
     };
 
     this.stop = () => {

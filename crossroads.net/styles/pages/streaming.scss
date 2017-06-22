@@ -20,6 +20,10 @@ streaming, landing {
     font-weight: 300;
   }
 
+  .landing-connect h3 > a {
+    color: #FFF;
+  }
+
   .countdown {
     display: flex;
     flex-flow: row nowrap;
@@ -251,7 +255,7 @@ streaming, landing {
     background-repeat: no-repeat;
     background-position: center center;
     background-size: cover;
-    padding: 2em 0;
+    padding: 0;
 
     &, h1 {
       color: #FFF;
@@ -641,7 +645,8 @@ streaming, landing {
     }
   }
 
-  .group-host {
+  .group-host,
+  .landing-connect {
     .crds-hero {
       &, p, h1, h2 {
         color: $gray;
@@ -695,7 +700,37 @@ streaming, landing {
         padding: 2em 5em 0;
       }
     }
+  }
 
+  .landing-connect {
+    padding: 0 2em 4em;
+
+    p,
+    h3,
+    .crds-hero {
+      &, p, h1, h2 {
+        color: $white;
+      }
+    }
+
+    header {
+      p {
+        margin-bottom: 0;
+        text-transform: uppercase;
+      }
+      h2 {
+        margin-top: 0.25em;
+      }
+    }
+
+    .container {
+      padding-top: 0;
+    }
+
+    img {
+      max-width: 100%;
+      margin-bottom: 1em;
+    }
   }
 
 } // streaming

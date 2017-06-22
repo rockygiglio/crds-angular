@@ -4,6 +4,8 @@ using System.Linq;
 using crds_angular.Models.Crossroads.Attribute;
 using crds_angular.Models.Crossroads.Profile;
 using crds_angular.Services.Interfaces;
+using Crossroads.Web.Common;
+using Crossroads.Web.Common.MinistryPlatform;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Repositories;
 using MpAttribute = MinistryPlatform.Translation.Models.MpAttribute;
@@ -15,13 +17,13 @@ namespace crds_angular.Services
     {
         private readonly MPInterfaces.IObjectAttributeRepository _mpObjectAttributeService;
         private readonly IAttributeService _attributeService;
-        private readonly MPInterfaces.IApiUserRepository _apiUserService;
+        private readonly IApiUserRepository _apiUserService;
         private readonly MPInterfaces.IAttributeRepository _mpAttributeService;
 
         public ObjectAttributeService(
             MPInterfaces.IObjectAttributeRepository mpObjectAttributeService,
             IAttributeService attributeService,
-            MPInterfaces.IApiUserRepository apiUserService,
+            IApiUserRepository apiUserService,
             MPInterfaces.IAttributeRepository mpAttributeService)
         {
             _mpObjectAttributeService = mpObjectAttributeService;
@@ -38,7 +40,7 @@ namespace crds_angular.Services
 
         public ObjectAllAttributesDTO GetObjectAttributes(string token, int objectId, MpObjectAttributeConfiguration configuration, List<MpAttribute> mpAttributes)
         {
-            var mpObjectAttributes = _mpObjectAttributeService.GetCurrentObjectAttributes(token, objectId, configuration);
+            var mpObjectAttributes = _mpObjectAttributeService.GetCurrentObjectAttributes(_apiUserService.GetToken(), objectId, configuration);
 
             var allAttributes = new ObjectAllAttributesDTO();
 
@@ -171,7 +173,7 @@ namespace crds_angular.Services
             }
 
             var mpObjectAttribute = TranslateMultiToMPAttribute(objectAttribute, null);            
-            var persistedAttributes = _mpObjectAttributeService.GetCurrentObjectAttributes(token, objectId, configuration, objectAttribute.AttributeId);
+            var persistedAttributes = _mpObjectAttributeService.GetCurrentObjectAttributes(_apiUserService.GetToken(), objectId, configuration, objectAttribute.AttributeId);
 
             if (persistedAttributes.Count >= 1)
             {

@@ -18,7 +18,7 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
                                   Boolean? employeeRole = false,
                                   int? enrolledBy = null);
 
-        IList<MpEvent> getAllEventsForGroup(int groupId);
+        IList<MpEvent> getAllEventsForGroup(int groupId, DateTime? minEndDate = null, bool includeCancelledEvents = false);
 
         MpGroup getGroupDetails(int groupId);
 
@@ -31,6 +31,8 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
         bool ParticipantQualifiedServerGroupMember(int groupId, int participantId);
 
         bool ParticipantGroupMember(int groupId, int participantId);
+
+        int GetParticipantGroupMemberId(int groupId, int participantId);
 
         List<MpGroup> GetGroupsForEvent(int eventId);
 
@@ -65,6 +67,8 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
         int UpdateGroup(MpGroup mpGroup);
         int UpdateGroupParticipant(List<MpGroupParticipant> participants);
 
+        int GetParticipantIdFromGroup(int groupId, string apiToken);
+
         void CreateGroupInquiry(MpInquiry inquiry);
 
         MpGroupParticipant GetAuthenticatedUserParticipationByGroupID(string token, int groupId);
@@ -74,5 +78,9 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
         bool IsMemberOfEventGroup(int contactId, int eventId, string token);
 
         Result<MpGroupParticipant> GetGradeGroupForContact(int contactId, string apiToken);
+
+        List<MpGroup> GetGroupsForParticipantByTypeOrID(int participantId, string token = null, int[] groupTypeIds = null, int? groupId = null);
+
+        List<MpGroup> GetGroupsByGroupType(int groupTypeId);
     }
 }

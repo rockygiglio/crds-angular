@@ -4,6 +4,7 @@ using crds_angular.Exceptions.Models;
 using crds_angular.Security;
 using crds_angular.Services.Interfaces;
 using Crossroads.ApiVersioning;
+using Crossroads.Web.Common.Security;
 
 namespace crds_angular.Controllers.API
 {
@@ -11,7 +12,7 @@ namespace crds_angular.Controllers.API
     {
         private readonly IRoomService _roomService;
 
-        public RoomController(IRoomService roomService, IUserImpersonationService userImpersonationService) : base(userImpersonationService)
+        public RoomController(IRoomService roomService, IUserImpersonationService userImpersonationService, IAuthenticationRepository authenticationRepository) : base(userImpersonationService, authenticationRepository)
         {
             _roomService = roomService;
         }

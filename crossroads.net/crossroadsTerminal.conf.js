@@ -45,14 +45,19 @@ module.exports = function crdsTermConf(config) {
     },
 
     envPreprocessor: [
-      'CRDS_API_ENDPOINT',
-      'CRDS_CMS_ENDPOINT',
+      'CRDS_GATEWAY_CLIENT_ENDPOINT',
+      'CRDS_CMS_CLIENT_ENDPOINT',
     ],
 
     // test results reporter to use
     // possible values: 'dots', 'progress'
     // available reporters: https://npmjs.org/browse/keyword/karma-reporter
     reporters: ['mocha'],
+
+
+    mochaReporter: {
+      ignoreSkipped: true
+    },
 
     // web server port
     port: 9876,

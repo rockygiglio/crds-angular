@@ -2,6 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using Crossroads.Utilities.Interfaces;
+using Crossroads.Web.Common;
+using Crossroads.Web.Common.Configuration;
+using Crossroads.Web.Common.MinistryPlatform;
+using Crossroads.Web.Common.Security;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Repositories;
 using MinistryPlatform.Translation.Repositories.Interfaces;
@@ -15,19 +19,25 @@ namespace MinistryPlatform.Translation.Test.Services
     {
         private ObjectAttributeRepository _fixture;
         private Mock<IMinistryPlatformService> _ministryPlatformService;
+        private Mock<IMinistryPlatformRestRepository> _ministryPlatformRest;
         private Mock<IAuthenticationRepository> _authService;
         private Mock<IConfigurationWrapper> _configWrapper;
-        private Mock<Translation.Repositories.Interfaces.IApiUserRepository> _apiUserService;
+        private Mock<IApiUserRepository> _apiUserService;
 
         [SetUp]
         public void SetUp()
         {
             _ministryPlatformService = new Mock<IMinistryPlatformService>();
             _authService = new Mock<IAuthenticationRepository>();
-            _configWrapper = new Mock<IConfigurationWrapper>();            
+            _configWrapper = new Mock<IConfigurationWrapper>();
+            _ministryPlatformRest = new Mock<IMinistryPlatformRestRepository>();
 
-            _authService.Setup(m => m.Authenticate(It.IsAny<string>(), It.IsAny<string>())).Returns(new Dictionary<string, object> {{"token", "ABC"}, {"exp", "123"}});
-            _fixture = new ObjectAttributeRepository(_authService.Object, _configWrapper.Object, _ministryPlatformService.Object);
+            _authService.Setup(m => m.Authenticate(It.IsAny<string>(), It.IsAny<string>())).Returns(new AuthToken
+            {
+                AccessToken = "ABC",
+                ExpiresIn = 123
+            });
+            _fixture = new ObjectAttributeRepository(_authService.Object, _configWrapper.Object, _ministryPlatformService.Object, _ministryPlatformRest.Object);
         }
 
         [Test]
@@ -35,40 +45,42 @@ namespace MinistryPlatform.Translation.Test.Services
         {
             const int contactId = 123456;
 
-            //mock GetSubpageViewRecords
-            var getSubpageViewRecordsResponse = new List<Dictionary<string, object>>
+            //mock MpRestSearch
+            var mockResponse = new List<MpObjectAttribute>
             {
-                new Dictionary<string, object>()
+                new MpObjectAttribute()
                 {
-                    {"Contact_Attribute_ID", 1},
-                    {"Start_Date", "10/10/2014"},
-                    {"End_Date", null},
-                    {"Notes", "These are my notes"},
-                    {"Attribute_ID", 2},
-                    {"Attribute_Type_ID", 3},
-                    {"Attribute_Type", "AttributeType #1"}
+                    EndDate = null,
+                    Notes = "These are my notes",
+                    ObjectAttributeId = 1,
+                    StartDate = new DateTime(2014, 10, 10),
+                    AttributeId = 2,
+                    AttributeTypeId = 3,
+                    AttributeTypeName = "AttributeType #1"
                 },
-                new Dictionary<string, object>()
+                new MpObjectAttribute()
                 {
-                    {"Contact_Attribute_ID", 4},
-                    {"Start_Date", "11/11/2015"},
-                    {"End_Date", null},
-                    {"Notes", ""},
-                    {"Attribute_ID", 5},
-                    {"Attribute_Type_ID", 6},
-                    {"Attribute_Type", "AttributeType #2"}
+                    ObjectAttributeId = 4,
+                    StartDate = new DateTime(2015, 11, 11),
+                    EndDate = null,
+                    Notes = "",
+                    AttributeId = 5,
+                    AttributeTypeId = 6,
+                    AttributeTypeName = "AttributeType #2"
                 }
             };
 
-            _ministryPlatformService.Setup(
-                mocked =>
-                    mocked.GetSubpageViewRecords(It.IsAny<int>(), contactId, It.IsAny<string>(), "", "", 0))
-                .Returns(getSubpageViewRecordsResponse);
+            _ministryPlatformRest.Setup(m => m.UsingAuthenticationToken("fakeToken")).Returns(_ministryPlatformRest.Object);
+
+            _ministryPlatformRest.Setup(m => m.SearchTable<MpObjectAttribute>("Contact_Attributes", It.IsAny<String>(), It.IsAny<String>(), (string) null, false))
+                .Returns(mockResponse);
+
+
 
             var configuration = MpObjectAttributeConfigurationFactory.Contact();
-            var attributes = _fixture.GetCurrentObjectAttributes("fakeToken", contactId, configuration, null).ToList();
+            var attributes = _fixture.GetCurrentObjectAttributes("fakeToken", contactId, configuration, null);
 
-            _ministryPlatformService.VerifyAll();
+            _ministryPlatformRest.VerifyAll();
 
             Assert.IsNotNull(attributes);
             Assert.AreEqual(2, attributes.Count());

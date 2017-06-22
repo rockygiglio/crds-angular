@@ -5,6 +5,9 @@ using MinistryPlatform.Translation.Repositories.Interfaces;
 using Moq;
 using NUnit.Framework;
 using FsCheck;
+using Crossroads.Web.Common;
+using Crossroads.Web.Common.Configuration;
+using Crossroads.Web.Common.Security;
 using MinistryPlatform.Translation.Models;
 
 namespace MinistryPlatform.Translation.Test.Services

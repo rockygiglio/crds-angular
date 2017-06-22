@@ -7,7 +7,7 @@
 
   function VolunteerContact($resource) {
     return {
-      GroupMail: $resource(__API_ENDPOINT__ + 'api/sendgroupemail')
+      GroupMail: $resource(__GATEWAY_CLIENT_ENDPOINT__ + 'api/sendgroupemail')
     };
   }
 })();

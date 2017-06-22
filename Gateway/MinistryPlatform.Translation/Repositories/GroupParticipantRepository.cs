@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using Crossroads.Utilities.Extensions;
 using Crossroads.Utilities.Interfaces;
+using Crossroads.Web.Common;
+using Crossroads.Web.Common.Configuration;
+using Crossroads.Web.Common.MinistryPlatform;
 using MinistryPlatform.Translation.Extensions;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Repositories.Interfaces;
@@ -55,7 +58,7 @@ namespace MinistryPlatform.Translation.Repositories
             }
 
             var fromDate = from == 0 ? DateTime.Today : from.FromUnixTime();
-            var toDate = to == 0 ? DateTime.Today.AddDays(29) : to.FromUnixTime();
+            var toDate = to == 0 ? DateTime.Today.AddDays(43) : to.FromUnixTime();
 
             searchFilter += $") AND Event_Start_Date >= '{fromDate:yyyy-MM-dd}' AND Event_Start_Date <= '{toDate:yyyy-MM-dd}' " +
                             "AND Event_Start_Date >= Participant_Start_Date AND (Event_Start_Date <= Participant_End_Date OR Participant_End_Date IS NULL)";
@@ -73,11 +76,31 @@ namespace MinistryPlatform.Translation.Repositories
                     p.DeadlinePassedMessage = defaultDeadlinePassedMessage;
             });
 
-            return groupServingParticipants.OrderBy(g => g.EventStartDateTime)
+            var returnList =  groupServingParticipants.OrderBy(g => g.EventStartDateTime)
                 .ThenBy(g => g.GroupName)
                 .ThenBy(g => g.LoggedInUser == false)
                 .ThenBy(g => g.ParticipantNickname)
                 .ToList();
+
+            //KD
+            //If we are getting the defaults (from ==0), then we should try and send the least number of weeks 
+            //that we can that still has data. Up to 6 weeks
+            //if we don't have anything at all or just one result then don't bother filtering out the rest
+            if (to == 0 && returnList.Count > 1) 
+            {
+                int foundIndex = -1;
+                int checkDays = 8;
+                while (foundIndex == -1 && checkDays < 43)
+                {
+                    foundIndex = returnList.FindLastIndex(g => g.EventStartDateTime < DateTime.Today.AddDays(checkDays));
+                    if (foundIndex != -1 && ++foundIndex < returnList.Count) //if found index is last then do nothing
+                        returnList.RemoveRange(foundIndex, returnList.Count - foundIndex ); //keep the up to and including the found index, remove the rest
+                    else
+                        checkDays += 7; //check another week
+                }
+            }
+
+            return returnList;
         }
 
         public List<MpRsvpMember> GetRsvpMembers(int groupId, int eventId)
@@ -186,7 +209,8 @@ namespace MinistryPlatform.Translation.Repositories
                     " Participant_ID_table_contact_id_table.Display_Name, Group_Role_ID_table.Role_Title, Participant_ID_table_contact_id_table.Last_name," +
                     " Participant_ID_table_contact_id_table.email_address, Participant_ID_table.contact_id";
                 string search = $"group_participants.group_id in ({csvGroupIds})" +
-                                $" AND (Group_Participants.End_Date > '{DateTime.Now:yyyy-MM-dd H:mm:ss}' OR Group_Participants.End_Date Is Null)";
+                                $" AND (Group_Participants.End_Date > GetDate() OR Group_Participants.End_Date Is Null)";
+
                 string orderBy = "Participant_ID_table_contact_id_table.Last_name";
                 bool distinct = true;
 

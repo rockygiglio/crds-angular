@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Configuration;
 using System.Reflection;
+using Amazon.CloudSearchDomain.Model;
+using crds_angular.App_Start;
 using crds_angular.Services.Interfaces;
 using log4net;
 using Microsoft.Practices.Unity;
@@ -22,7 +24,7 @@ namespace Crossroads.ScheduledDataUpdate
 
             TlsHelper.AllowTls12();
 
-            var unitySections = new [] { "unity", "scheduledDataUnity" };
+            var unitySections = new [] { "crossroadsCommonUnity", "unity", "scheduledDataUnity" };
 
             var container = new UnityContainer();
             foreach (var sectionName in unitySections)
@@ -44,11 +46,13 @@ namespace Crossroads.ScheduledDataUpdate
 
         private readonly ITaskService _taskService;
         private readonly IGroupToolService _groupToolService;
+        private readonly IAwsCloudsearchService _awsService;
 
-        public Program(ITaskService taskService, IGroupToolService groupToolService)
+        public Program(ITaskService taskService, IGroupToolService groupToolService, IAwsCloudsearchService awsService)
         {
             _taskService = taskService;
             _groupToolService = groupToolService;
+            _awsService = awsService;
         }
 
         public int Run(string[] args)
@@ -106,6 +110,30 @@ namespace Crossroads.ScheduledDataUpdate
                 }
             }
 
+            if (options.ConnectAwsRefreshMode)
+            {
+                modeSelected = true;
+                try
+                {
+                    Log.Info("Starting Connect AWS Refresh");
+                    AutoMapperConfig.RegisterMappings();
+                    _awsService.DeleteAllConnectRecordsInAwsCloudsearch();
+                    _awsService.UploadAllConnectRecordsToAwsCloudsearch();
+
+                    Log.Info("Finished Connect AWS Refresh successfully");
+                }
+                catch (DocumentServiceException ex)
+                {
+                    Log.Error("Connect AWS error, nothing to delete, empty cloud. Still go ahead and refresh", ex);
+                    _awsService.UploadAllConnectRecordsToAwsCloudsearch();
+                }
+                catch (Exception ex)
+                {
+                    Log.Error("Connect AWS Refresh failed.", ex);
+                    exitCode = 9999;
+                }
+            }
+
             if (!modeSelected)
             {
                 Log.Error(options.GetUsage());
@@ -128,6 +156,10 @@ namespace Crossroads.ScheduledDataUpdate
             [Option("SmallGroupInquiryReminder", Required = false, DefaultValue = false, MutuallyExclusiveSet = "OpMode",
               HelpText = "Execute 'Small Group Inquiry Reminder' to send emails to group leaders who have pending inquiries on their groups")]
             public bool SmallGroupInquiryReminderMode { get; set; }
+
+            [Option("ConnectAwsRefreshMode", Required = false, DefaultValue = false, MutuallyExclusiveSet = "OpMode",
+              HelpText = "Execute 'Connect AWS Refresh' to refresh connect groups that have been approved by staff")]
+            public bool ConnectAwsRefreshMode { get; set; }
 
             [ParserState]
             public IParserState LastParserState { get; set; }

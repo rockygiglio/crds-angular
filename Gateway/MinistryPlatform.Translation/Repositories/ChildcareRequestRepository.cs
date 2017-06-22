@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using Crossroads.Utilities.Interfaces;
+using Crossroads.Web.Common;
+using Crossroads.Web.Common.Configuration;
+using Crossroads.Web.Common.MinistryPlatform;
 using MinistryPlatform.Translation.Extensions;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Models.Childcare;
@@ -218,7 +221,7 @@ namespace MinistryPlatform.Translation.Repositories
         public List<MpEvent> FindChildcareEvents(int childcareRequestId, List<MpChildcareRequestDate> requestedDates, MpChildcareRequest request)
         {
            var apiToken = _apiUserService.GetToken();
-           var events = _eventService.GetEventsByTypeForRange(_childcareEventType, request.StartDate, request.EndDate, apiToken);
+           var events = _eventService.GetEventsByTypeForRange(_childcareEventType, request.StartDate, request.EndDate, apiToken, false);
            return events;
         }
 

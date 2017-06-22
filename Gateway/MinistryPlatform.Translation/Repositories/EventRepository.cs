@@ -5,6 +5,10 @@ using System.Linq;
 using System.Text;
 using Crossroads.Utilities.FunctionalHelpers;
 using Crossroads.Utilities.Interfaces;
+using Crossroads.Web.Common;
+using Crossroads.Web.Common.Configuration;
+using Crossroads.Web.Common.MinistryPlatform;
+using Crossroads.Web.Common.Security;
 using MinistryPlatform.Translation.Extensions;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Models.EventReservations;
@@ -326,27 +330,31 @@ namespace MinistryPlatform.Translation.Repositories
             }).ToList();
         }
 
-        public List<MpEvent> GetEventsByTypeForRange(int eventTypeId, DateTime startDate, DateTime endDate, string token)
+        public List<MpEvent> GetEventsByTypeForRange(int eventTypeId, DateTime startDate, DateTime endDate, string token, bool includeCancelledEvents = true)
         {
-            const string viewKey = "EventsWithEventTypeId";
-            var search = ",," + eventTypeId;
-            var eventRecords = _ministryPlatformService.GetPageViewRecords(viewKey, token, search);
+            string columns = string.Join(", ",
+                "Event_ID",
+                "Event_Title",
+                "Event_Type_ID_Table.Event_Type AS Event_Type_ID",   // aliased to Event_Type_ID to match JsonProperty on MpEvent.Event_Type!
+                "Event_Start_Date",
+                "Event_End_Date",
+                "Congregation_ID",
+                "Cancelled"
+            );
 
-            var events = eventRecords.Select(record => new MpEvent
-            {
-                EventTitle = record.ToString("Event Title"),
-                EventType = record.ToString("Event Type"),
-                EventStartDate = record.ToDate("Event Start Date", true),
-                EventEndDate = record.ToDate("Event End Date", true),
-                EventId = record.ToInt("dp_RecordID"),
-                CongregationId = record.ToInt("Congregation_ID")
-            }).ToList();
+            string search = $"Events.Event_Type_ID = {eventTypeId}";
 
-            //now we have a list, filter by date range.
-            var filteredEvents =
-                events.Where(e => e.EventStartDate.Date >= startDate.Date && e.EventStartDate.Date <= endDate.Date)
-                    .ToList();
-            return filteredEvents;
+            string startDateString = startDate.Date.ToString("yyyy-MM-dd");
+            string endDateString = endDate.Date.AddDays(1).ToString("yyyy-MM-dd");
+            search += $" AND Events.Event_Start_Date >= '{startDateString}' AND Events.Event_End_Date < '{endDateString}'";
+
+            if (!includeCancelledEvents)
+                search += " AND Events.Cancelled = 0";
+
+            string orderBy = "Events.Event_ID";
+
+            List<MpEvent> eventList = _ministryPlatformRestRepository.UsingAuthenticationToken(token).Search<MpEvent>(search, columns, orderBy, false);
+            return eventList;
         }
 
         public List<MpEvent> GetEventsByParentEventId(int parentEventId)
@@ -358,7 +366,7 @@ namespace MinistryPlatform.Translation.Repositories
             var events = records.Select(record => new MpEvent
             {
                 EventTitle = record.ToString("Event_Title"),
-                EventType = record.ToString("Event_Type_ID"),
+                EventType = record.ToString("Event_Type"),
                 EventStartDate = record.ToDate("Event_Start_Date", true),
                 EventEndDate = record.ToDate("Event_End_Date", true),
                 EventId = record.ToInt("Event_ID"),
@@ -380,7 +388,7 @@ namespace MinistryPlatform.Translation.Repositories
                 EventTitle = (string) record["Event_Title"],
                 EventStartDate = (DateTime) record["Event_Start_Date"],
                 EventEndDate = (DateTime) record["Event_End_Date"],
-                EventType = record.ToString("Event_Type_ID"),
+                EventType = record.ToString("Event_Type"),
                 PrimaryContact = new MpContact()
                 {
                     ContactId = record.ToInt("Primary_Contact_ID"),
@@ -397,7 +405,7 @@ namespace MinistryPlatform.Translation.Repositories
                 EventTitle = (string) record["Event_Title"],
                 EventStartDate = (DateTime) record["Event_Start_Date"],
                 EventEndDate = (DateTime) record["Event_End_Date"],
-                EventType = record.ToString("Event_Type_ID"),
+                EventType = record.ToString("Event_Type"),
                 PrimaryContact = new MpContact()
                 {
                     ContactId = record.ToInt("Primary_Contact_ID"),
@@ -446,21 +454,16 @@ namespace MinistryPlatform.Translation.Repositories
             var searchString =  string.Format("\"{0}\",", eventId);
             var records = _ministryPlatformService.GetPageViewRecords(_eventGroupsPageViewId, token, searchString);
 
-            if (records == null)
-            {
-                return null;
-            }
-
-            return records.Select(record => new MpEventGroup
-            {
-                EventGroupId = record.ToInt("Event_Group_ID"),
-                EventId = record.ToInt("Event_ID"),
-                GroupId = record.ToInt("Group_ID"),
-                RoomId = record.ToNullableInt("Room_ID"),
-                Closed = record.ToBool("Closed"),
-                EventRoomId = record.ToNullableInt("Event_Room_ID"),
-                GroupTypeId = record.ToInt("Group_Type_ID")
-            }).ToList();
+            return records?.Select(record => new MpEventGroup
+                                   {
+                                       EventGroupId = record.ToInt("Event_Group_ID"),
+                                       EventId = record.ToInt("Event_ID"),
+                                       GroupId = record.ToInt("Group_ID"),
+                                       RoomId = record.ToNullableInt("Room_ID"),
+                                       Closed = record.ToBool("Closed"),
+                                       EventRoomId = record.ToNullableInt("Event_Room_ID"),
+                                       GroupTypeId = record.ToInt("Group_Type_ID")
+                                   }).ToList();
         } 
 
         public List<MpEventGroup> GetEventGroupsForGroup(int groupId, string token)
@@ -488,10 +491,12 @@ namespace MinistryPlatform.Translation.Repositories
             _ministryPlatformService.DeleteRecord(_eventGroupsPageId, eventGroup.EventGroupId, null, token);
         }
 
-        public void DeleteEventGroupsForEvent(int eventId, string token)
+        public void DeleteEventGroupsForEvent(int eventId, string token, int? groupTypeID = null)
         {
             // get event group ids
-            var discardedEventGroupIds = GetEventGroupsForEvent(eventId, token).Select(r => r.EventGroupId).ToArray();
+            var discardedEventGroupIds = groupTypeID == null 
+                ? GetEventGroupsForEvent(eventId, token).Select(r => r.EventGroupId).ToArray() 
+                : GetEventGroupsForEvent(eventId, token).Where(r => r.GroupTypeId == groupTypeID).Select(r => r.EventGroupId).ToArray();
 
             // MP will throw an error if there are no elements to delete, so we need to exit the function before then
             if (discardedEventGroupIds.Length == 0)
@@ -658,7 +663,7 @@ namespace MinistryPlatform.Translation.Repositories
             foreach (var waiver in waiverResponses)
             {
                 var searchString = $"Event_Participant_ID={waiver.EventParticipantId} AND Waiver_ID={waiver.WaiverId}";
-                waiver.EventParticipantWaiverId = _ministryPlatformRestRepository.UsingAuthenticationToken(apiToken).Search<int>("cr_Event_Participant_Waivers", searchString, "Event_Participant_Waiver_ID");
+                waiver.EventParticipantWaiverId = _ministryPlatformRestRepository.UsingAuthenticationToken(apiToken).Search<int>("cr_Event_Participant_Waivers", searchString, "Event_Participant_Waiver_ID", null, false);
             }
             
             _ministryPlatformRestRepository.UsingAuthenticationToken(apiToken).Post(waiverResponses.Where(w => w.EventParticipantWaiverId == 0).ToList());
@@ -682,7 +687,7 @@ namespace MinistryPlatform.Translation.Repositories
             const string column = "Online_Registration_Product_Table_Program_ID_Table_Communication_ID_Table.[Communication_ID]";
             try
             {
-                var result = _ministryPlatformRestRepository.UsingAuthenticationToken(apiToken).Search<int>("Events", filter, column);
+                var result = _ministryPlatformRestRepository.UsingAuthenticationToken(apiToken).Search<int>("Events", filter, column, null, false);
                 if (result == 0)
                 {
                     return new Err<int>("No Email Template Found");

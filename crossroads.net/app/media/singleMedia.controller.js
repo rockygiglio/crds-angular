@@ -56,7 +56,7 @@
     vm.showAudioDownloadLink = showAudioDownloadLink;
     vm.showProgramDownloadLink = showProgramDownloadLink;
     vm.shareUrl = $location.absUrl();
-    vm.sanitizedDescription = $sanitize(vm.media.description);
+    vm.sanitizedDescription = vm.media.description.replace(/<(?:.|\n)*?>/gm, '');
     vm.mediaTags = vm.media.tags;
 
     vm.weekendSummaryExists = weekendSummaryExists;

@@ -8,6 +8,8 @@ using crds_angular.Services.Interfaces;
 using log4net;
 using Crossroads.Utilities;
 using Crossroads.Utilities.Interfaces;
+using Crossroads.Web.Common;
+using Crossroads.Web.Common.Configuration;
 using MinistryPlatform.Translation.Exceptions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -73,7 +75,11 @@ namespace crds_angular.Services
 
         private void InvoicePaymentFailed(DateTime? created, StripeInvoice invoice)
         {
-            _mpDonorRepository.ProcessRecurringGiftDecline(invoice.Subscription);
+            var charge = _paymentProcessorService.GetCharge(invoice.Charge);
+            var notes = "No Stripe Failure Code";
+            if (charge != null)
+                notes = $"{charge.FailureCode ?? "No Stripe Failure Code"}: {charge.FailureMessage ?? "No Stripe Failure Message"}";
+            _mpDonorRepository.ProcessRecurringGiftDecline(invoice.Subscription, notes);
             var gift = _mpDonorRepository.GetRecurringGiftForSubscription(invoice.Subscription);
            
             if (gift.ConsecutiveFailureCount > 2)

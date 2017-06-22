@@ -9,12 +9,16 @@ using crds_angular.Services;
 using crds_angular.Services.Interfaces;
 using crds_angular.Util.Interfaces;
 using Crossroads.Utilities.Interfaces;
+using Crossroads.Web.Common;
+using Crossroads.Web.Common.Configuration;
+using Crossroads.Web.Common.MinistryPlatform;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Models.Childcare;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 using Moq;
 using NUnit.Framework;
 using IEventRepository = MinistryPlatform.Translation.Repositories.Interfaces.IEventRepository;
+using MpCommunication = MinistryPlatform.Translation.Models.MpCommunication;
 using Participant = MinistryPlatform.Translation.Models.MpParticipant;
 
 namespace crds_angular.test.Services
@@ -248,7 +252,7 @@ namespace crds_angular.test.Services
             _configurationWrapper.Setup(m => m.GetConfigIntValue("DefaultUserAuthorId")).Returns(defaultAuthorId);
             _communicationService.Setup(m => m.GetTemplate(notificationTemplateId)).Returns(template);
             _configurationWrapper.Setup(m => m.GetConfigValue("BaseMPUrl")).Returns("https://localhost:3000");
-            _communicationService.Setup(m => m.SendMessage(It.IsAny<MpCommunication>(), false)).Verifiable();
+            _communicationService.Setup(m => m.SendMessage(It.IsAny<MinistryPlatform.Translation.Models.MpCommunication>(), false)).Verifiable();
 
             _fixture.SendChildcareRequestNotification(request);
 

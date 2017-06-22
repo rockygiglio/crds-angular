@@ -1,6 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using Crossroads.Utilities.Interfaces;
+using Crossroads.Web.Common;
+using Crossroads.Web.Common.Configuration;
+using Crossroads.Web.Common.MinistryPlatform;
+using Crossroads.Web.Common.Security;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Models.DTO;
 using MinistryPlatform.Translation.Repositories;
@@ -36,7 +40,11 @@ namespace MinistryPlatform.Translation.Test.Services
             config.Setup(mocked => mocked.GetEnvironmentVarAsString("API_USER")).Returns("api_user");
             config.Setup(mocked => mocked.GetEnvironmentVarAsString("API_PASSWORD")).Returns("password");
 
-            auth.Setup(m => m.Authenticate(It.IsAny<string>(), It.IsAny<string>())).Returns(new Dictionary<string, object> {{"token", "ABC"}, {"exp", "123"}});
+            auth.Setup(m => m.Authenticate(It.IsAny<string>(), It.IsAny<string>())).Returns(new AuthToken
+            {
+                AccessToken = "ABC",
+                ExpiresIn = 123
+            });
 
             config.Setup(mocked => mocked.GetConfigIntValue("GroupRoleLeader")).Returns(GroupLeaderRole);
 
@@ -291,7 +299,7 @@ namespace MinistryPlatform.Translation.Test.Services
             };
             string csvGroupIds = "1,2,3";
             string search = $"group_participants.group_id in ({csvGroupIds})" +
-                            $" AND (Group_Participants.End_Date > '{DateTime.Now:yyyy-MM-dd H:mm:ss}' OR Group_Participants.End_Date Is Null)";
+                            $" AND (Group_Participants.End_Date > GetDate() OR Group_Participants.End_Date Is Null)";
 
             _apiUserRepository.Setup(mocked => mocked.GetToken()).Returns("yeah!");
             _ministryPlatformRestRepository.Setup(mocked => mocked.UsingAuthenticationToken("yeah!")).Returns(_ministryPlatformRestRepository.Object);
@@ -382,7 +390,7 @@ namespace MinistryPlatform.Translation.Test.Services
             };
             string csvGroupIds = "1,2,3";
             string search = $"group_participants.group_id in ({csvGroupIds})" +
-                            $" AND (Group_Participants.End_Date > '{DateTime.Now:yyyy-MM-dd H:mm:ss}' OR Group_Participants.End_Date Is Null)";
+                            $" AND (Group_Participants.End_Date > GetDate() OR Group_Participants.End_Date Is Null)";
 
             _apiUserRepository.Setup(mocked => mocked.GetToken()).Returns("yeah!");
             _ministryPlatformRestRepository.Setup(mocked => mocked.UsingAuthenticationToken("yeah!")).Returns(_ministryPlatformRestRepository.Object);
@@ -472,7 +480,7 @@ namespace MinistryPlatform.Translation.Test.Services
                 }
             };
             string search = $"group_participants.group_id in ({groupId})" +
-                            $" AND (Group_Participants.End_Date > '{DateTime.Now:yyyy-MM-dd H:mm:ss}' OR Group_Participants.End_Date Is Null)";
+                            $" AND (Group_Participants.End_Date > GetDate() OR Group_Participants.End_Date Is Null)";
 
             _apiUserRepository.Setup(mocked => mocked.GetToken()).Returns("yeah!");
             _ministryPlatformRestRepository.Setup(mocked => mocked.UsingAuthenticationToken("yeah!")).Returns(_ministryPlatformRestRepository.Object);

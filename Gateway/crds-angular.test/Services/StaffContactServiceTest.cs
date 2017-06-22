@@ -28,22 +28,26 @@ namespace crds_angular.test.Services
                     {"Contact_ID", 1},
                     {"Display_Name", "Nukem, Duke"},
                     {"Email_Address", "Duke.Nukem@compuserv.net"},
+                    {"First_Name", "Duke"},
+                    {"Last_Name", "Nukem" },
                     {"Extra_Data", 3 }
                 } ,
                 new Dictionary<string, object> {
                     {"Contact_ID", 2 },
                     {"Display_Name", "Croft, Lara"},
+                    {"First_Name", "Lara"},
+                    {"Last_Name", "Croft" },
                     {"Email_Address", "Lara.Croft@gmail.com"}
                 }
             };
 
-            _contactRepository.Setup(m => m.StaffContacts()).Returns(returnData);
+            _contactRepository.Setup(m => m.PrimaryContacts(true)).Returns(returnData);
 
             var result = _fixture.GetStaffContacts();
             _contactRepository.VerifyAll();
             Assert.AreEqual(result.Count, 2);
-            Assert.AreEqual(result[1].ContactId, 1);
-            Assert.AreEqual(result[0].DisplayName, "Croft, Lara");
+            Assert.AreEqual(result[0].ContactId, 1);
+            Assert.AreEqual(result[1].DisplayName, "Croft, Lara");
 
         }
     }

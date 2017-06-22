@@ -16,6 +16,9 @@ using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Interfaces;
 using log4net;
 using Crossroads.ApiVersioning;
+using Crossroads.Web.Common;
+using Crossroads.Web.Common.Configuration;
+using Crossroads.Web.Common.Security;
 
 namespace crds_angular.Controllers.API
 {
@@ -29,7 +32,7 @@ namespace crds_angular.Controllers.API
 
         public GroupToolController(Services.Interfaces.IGroupToolService groupToolService,
                                    IConfigurationWrapper configurationWrapper, 
-                                   IUserImpersonationService userImpersonationService) : base(userImpersonationService)
+                                   IUserImpersonationService userImpersonationService, IAuthenticationRepository authenticationRepository) : base(userImpersonationService, authenticationRepository)
         {
             _groupToolService = groupToolService;
             _configurationWrapper = configurationWrapper;
@@ -148,7 +151,7 @@ namespace crds_angular.Controllers.API
         /// <param name="removalMessage">An optional message to send to the participant when they are removed.  This is sent along with a boilerplate message.</param>
         /// <returns>An empty response with 200 status code if everything worked, 403 if the caller does not have permission to remove a participant, or another non-success status code on any other failure</returns>
         [RequiresAuthorization]
-        [VersionedRoute(template: "group-tool/group/{groupId}/participant/{groupParticipantId}", minimumVersion: "1.0.0")]
+        [VersionedRoute(template: "grouptool/group/{groupId}/participant/{groupParticipantId}", minimumVersion: "1.0.0")]
         [Route("grouptool/group/{groupId:int}/participant/{groupParticipantId:int}")]
         [HttpDelete]
         public IHttpActionResult RemoveParticipantFromMyGroup([FromUri] int groupId,
@@ -243,6 +246,7 @@ namespace crds_angular.Controllers.API
 
         /// <summary>
         /// Allows an invitee to accept or deny a group invitation.
+        /// DEPRICATED -- Use the function in the finder controller.
         /// </summary>
         /// <param name="groupId">An integer identifying the group that the invitation is associated to.</param>
         /// <param name="invitationKey">An string identifying the private invitation.</param>

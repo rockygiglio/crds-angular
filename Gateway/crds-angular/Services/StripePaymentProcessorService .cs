@@ -11,9 +11,13 @@ using crds_angular.Models.Json;
 using Crossroads.Utilities;
 using Crossroads.Utilities.Extensions;
 using Crossroads.Utilities.Interfaces;
+using Crossroads.Utilities.Models;
 using Crossroads.Utilities.Services;
+using Crossroads.Web.Common;
+using Crossroads.Web.Common.Configuration;
 using MinistryPlatform.Translation.Models;
 using RestSharp.Extensions;
+using log4net;
 
 namespace crds_angular.Services
 {
@@ -28,6 +32,8 @@ namespace crds_angular.Services
         private readonly int _maxQueryResultsPerPage;
 
         private readonly IContentBlockService _contentBlockService;
+
+        private readonly ILog _logger = LogManager.GetLogger(typeof(StripePaymentProcessorService));
 
         public StripePaymentProcessorService(IRestClient stripeRestClient, IConfigurationWrapper configuration, IContentBlockService contentBlockService)
         {
@@ -63,7 +69,7 @@ namespace crds_angular.Services
             if (content == null || content.Error == null)
             {
                 throw(AddGlobalErrorMessage(new PaymentProcessorException(HttpStatusCode.InternalServerError, errorMessage, StripeNetworkErrorResponseCode,
-                    response.ErrorException.Message, null, null, null)));
+                    response.ErrorException?.Message, null, null, null)));
             }
             else
             {
@@ -79,31 +85,51 @@ namespace crds_angular.Services
             // the underlying payment processor.
             if ("abort".Equals(e.Type) || "abort".Equals(e.Code))
             {
-                e.GlobalMessage = _contentBlockService["paymentMethodProcessingError"];
+                e.GlobalMessage = GetContentBlock("paymentMethodProcessingError");
             }
             else if ("card_error".Equals(e.Type))
             {
                 if (e.Code != null && ("card_declined".Equals(e.Code) || e.Code.Matches("^incorrect") || e.Code.Matches("^invalid")))
                 {
-                    e.GlobalMessage = _contentBlockService["paymentMethodDeclined"];
+                    e.GlobalMessage = GetContentBlock("paymentMethodDeclined");
                 }
                 else if ("processing_error".Equals(e.Code))
                 {
-                    e.GlobalMessage = _contentBlockService["paymentMethodProcessingError"];
+                    e.GlobalMessage = GetContentBlock("paymentMethodProcessingError");
                 }
             }
             else if ("bank_account".Equals(e.Param))
             {
                 if ("invalid_request_error".Equals(e.Type))
                 {
-                    e.GlobalMessage = _contentBlockService["paymentMethodDeclined"];
+                    e.GlobalMessage = GetContentBlock("paymentMethodDeclined");
                 }
             }
-            else
+
+            if (e.GlobalMessage == null)
             {
-                e.GlobalMessage = _contentBlockService["failedResponse"];
+                e.GlobalMessage = GetContentBlock("failedResponse");
             }
+
             return (e);
+        }
+
+        private ContentBlock GetContentBlock(string key)
+        {
+            ContentBlock contentBlock;
+            if (!_contentBlockService.TryGetValue(key, out contentBlock))
+            {
+                contentBlock = new ContentBlock()
+                {
+                    Id = 0,
+                    Title = key,
+                    Content = key,
+                    Type = ContentBlockType.Error,
+                    Category =  ""
+                };
+            }
+
+            return contentBlock;
         }
 
         public StripeCustomer CreateCustomer(string customerToken, string donorDescription = null)
@@ -340,22 +366,34 @@ namespace crds_angular.Services
             } while (nextPage.HasMore);
 
             //get the metadata for all of the charges
-            foreach (var charge in charges)
+            for (int i = charges.Count - 1; i >= 0; --i)
             {
-                if (charge.Type == "payment" || charge.Type == "charge")
+                StripeCharge charge = charges[i];
+
+                // don't let a failure to retrieve data for one charge stop the entire batch
+                try
                 {
-                    var singlecharge = GetCharge(charge.Id);
-                    charge.Metadata = singlecharge.Metadata;
+                    if (charge.Type == "payment" || charge.Type == "charge")
+                    {
+                        var singlecharge = GetCharge(charge.Id);
+                        charge.Metadata = singlecharge.Metadata;
+                    }
+                    else if (charge.Type == "payment_refund") //its a bank account refund
+                    {
+                        var singlerefund = GetRefund(charge.Id);
+                        charge.Metadata = singlerefund.Charge.Metadata;
+                    }
+                    else // if charge.Type == "refund", it's a credit card charge refund
+                    {
+                        var singlerefund = GetChargeRefund(charge.Id);
+                        charge.Metadata = singlerefund.Data[0].Charge.Metadata;
+                    }
                 }
-                else if (charge.Type == "payment_refund") //its a bank account refund
+                catch (Exception e)
                 {
-                    var singlerefund = GetRefund(charge.Id);
-                    charge.Metadata = singlerefund.Charge.Metadata;
-                }
-                else // if charge.Type == "refund", it's a credit card charge refund
-                {
-                    var singlerefund = GetChargeRefund(charge.Id);
-                    charge.Metadata = singlerefund.Data[0].Charge.Metadata;
+                    // remove from the batch and keep going; the batch will be out of balance, but thats Ok
+                    _logger.Error($"GetChargesForTransfer error retrieving metadata for {charge.Type} {charge.Id}", e);
+                    charges.RemoveAt(i);
                 }
             }
 

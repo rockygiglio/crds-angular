@@ -5,7 +5,7 @@ export default class ReminderService {
   constructor($http, $modal) {
     this.http = $http;
     this.modal = $modal;
-    this.url = __API_ENDPOINT__;
+    this.url = __GATEWAY_CLIENT_ENDPOINT__;
     this.headers = { 'Content-Type': 'application/json' };
   }
 
@@ -28,7 +28,7 @@ export default class ReminderService {
   }
 
   sendTextReminder(reminder) {
-    let body = JSON.stringify({ 
+    let body = JSON.stringify({
       "templateId": 0,
       "mergeData": {
         "Event_Date":       reminder.userTZDateShortFormat(reminder.startDate),
@@ -43,7 +43,7 @@ export default class ReminderService {
   }
 
   sendEmailReminder(reminder) {
-  
+
     let body = JSON.stringify({
       "emailAddress":   reminder.email,
       "startDate":      reminder.startDate,
@@ -62,7 +62,7 @@ export default class ReminderService {
       templateUrl: 'streaming_reminder/streamingReminder.html',
       controller: 'StreamingReminderController',
       controllerAs: 'reminder',
-      openedClass: 'crds-modal reminder-modal',
+      openedClass: 'crds-modal reminder-modal crds-legacy-styles',
       size: 'lg'
     });
   }

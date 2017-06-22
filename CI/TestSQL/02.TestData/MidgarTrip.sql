@@ -42,23 +42,26 @@ set @pledge_id = IDENT_CURRENT('Pledge_Campaigns');
 
 --Insert large ID so we always know the id for this trip. South Africa is the nickname as the data on the form is driven by nickname.
 --http://crossroads.knowledgeowl.com/help/create-edit-go-trip-pledge-campaign
---do we need a fundraising goal?
 DECLARE @formID as int
 SET @formID = (select form_id from Forms where form_title = 'GO Trip Application');
 
 INSERT INTO [dbo].Pledge_Campaigns 
 (Pledge_Campaign_ID,Campaign_Name,Nickname        ,Pledge_Campaign_Type_ID,[Description]                  ,Campaign_Goal,[Start_Date]                     ,End_Date                         ,Domain_ID,Event_ID,Program_ID,Destination_id,Registration_Details,Registration_Start               ,Registration_End                 ,Maximum_Registrants,Youngest_Age_Allowed,Registration_Deposit,Fundraising_Goal,Registration_Form ,Online_Pledge_Details,Allow_Online_Pledge,Online_Thank_You_Message,Pledge_Beyond_End_Date,Show_On_My_Pledges,__ExternalTripID,__ExternalFundID) VALUES
-(10000000          ,@tripName    ,'South Africa'  ,2                      ,'Church Mobilization - Midgar' ,5000.00      ,CAST(@startYear as smalldatetime),CAST(@tripStart as smalldatetime),1        ,null    ,null      ,2             ,null                ,CAST(@startYear as smalldatetime),CAST(@tripStart as smalldatetime),null               ,17                  ,300.0000            ,0.0000          ,@formID           ,null                 ,0                  ,null                    ,0                     ,0                 ,40              ,99              );
+(10000000          ,@tripName    ,'South Africa'  ,2                      ,'Church Mobilization - Midgar' ,5000.00      ,CAST(@startYear as smalldatetime),CAST(@tripStart as smalldatetime),1        ,null    ,null      ,2             ,null                ,CAST(@startYear as smalldatetime),CAST(@tripStart as smalldatetime),null               ,17                  ,100.0000            ,1000.0000       ,@formID           ,null                 ,0                  ,null                    ,0                     ,0                 ,40              ,99              );
 
 SET IDENTITY_INSERT [dbo].[Pledge_Campaigns] OFF;
 
 --This command resets the identity value so that if someone adds pledge_campaigns through the UI it won't use a big ID. 
 DBCC CHECKIDENT (Pledge_Campaigns, reseed, @pledge_id);
 
+-- This is the Communication_ID for the email related to giving to a trip.
+DECLARE @comm_ID as int
+SET @comm_ID = 121611
+
 --Program for (t) GO Midgar
 INSERT INTO [dbo].programs 
 (Program_Name,Congregation_ID,Ministry_ID,[Start_Date]                     ,End_Date                       ,Program_Type_ID,Leadership_Team,Primary_Contact,Priority_ID,On_Connection_Card,Stewardship_Information,Tax_Deductible_Donations,Statement_Title,Statement_Header_ID,Allow_Online_Giving,Online_Sort_Order,Pledge_Campaign_ID,Account_Number,Default_Target_Event,On_Donation_Batch_Tool,Domain_ID,Available_Online,__ExternalFundID,Communication_ID) VALUES
-(@tripname   ,5              ,20         ,CAST(@startYear as smalldatetime),CAST(@endYear as smalldatetime),3              ,null           ,2562378        ,null       ,null              ,null                   ,1                       ,@tripName      ,2                  ,1                  ,null             ,null              ,null          ,null                ,0                     ,1        ,null            ,null            ,null            );
+(@tripname   ,5              ,20         ,CAST(@startYear as smalldatetime),CAST(@endYear as smalldatetime),3              ,null           ,2562378        ,null       ,null              ,null                   ,1                       ,@tripName      ,2                  ,1                  ,null             ,null              ,null          ,null                ,0                     ,1        ,null            ,null            ,@comm_ID        );
 
 --Actual Event for (t) GO Midgar
 INSERT INTO [dbo].events 

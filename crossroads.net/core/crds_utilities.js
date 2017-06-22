@@ -56,7 +56,7 @@ var checkLoggedin = function ($q, $timeout, $http, $location, $rootScope, $cooki
   }
   $http({
     method: 'GET',
-    url: __API_ENDPOINT__ + 'api/authenticated',
+    url: __GATEWAY_CLIENT_ENDPOINT__ + 'api/authenticated',
     headers: {
       'Authorization': $cookies.get(cookieNames.SESSION_ID)
     }
@@ -91,7 +91,6 @@ var checkLoggedin = function ($q, $timeout, $http, $location, $rootScope, $cooki
 var optimisticallyCheckLoggedin = function ($q, $timeout, $http, $location, $rootScope, $cookies, Session) {
   if (Session.beOptimistic) {
     var deferred = $q.defer();
-    
     var sessionId = $cookies.get(cookieNames.SESSION_ID);
     if (_.isEmpty(sessionId) ) {
       Session.clear();
@@ -104,7 +103,6 @@ var optimisticallyCheckLoggedin = function ($q, $timeout, $http, $location, $roo
   }
 
   checkLoggedin($q, $timeout, $http, $location, $rootScope, $cookies, Session);
-  
 };
 
 /**

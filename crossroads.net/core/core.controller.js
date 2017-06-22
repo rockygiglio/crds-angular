@@ -55,8 +55,12 @@
     // State Change Listeners //
     ////////////////////////////
     $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
-      $rootScope.renderLegacyStyles = (toState.data.renderLegacyStyles !== false);
-      if ((toState.resolve || toState.data.resolve) && !event.defaultPrevented) {
+      vm.bodyClasses = {};
+      $rootScope.bodyClasses = [];
+
+      $rootScope.renderLegacyStyles = toState.data !== undefined ? toState.data.renderLegacyStyles !== false : true;
+
+      if ((toState.resolve !== undefined || (toState.data !== undefined && toState.data.resolve)) && !event.defaultPrevented) {
         vm.resolving = true;
       }
 
@@ -77,9 +81,6 @@
       if ($rootScope.renderLegacyStyles === false) {
         document.body.classList.remove('crds-legacy-styles');
       }
-      vm.bodyClasses['crds-legacy-styles'] = $rootScope.renderLegacyStyles;
-      vm.bodyClasses['crds-styles'] = !$rootScope.renderLegacyStyles;
-
       if (typeof $rootScope.bodyClasses !== 'undefined') {
         var bodyClasses = $rootScope.bodyClasses || fromParams.bodyClasses;
         bodyClasses.forEach(function(klass) {
@@ -207,7 +208,8 @@
       var stayLoggedInPrompt = $modal.open({
         templateUrl: 'stayLoggedInModal/stayLoggedInModal.html',
         controller: 'StayLoggedInController as StayLoggedIn',
-        backdrop: true
+        backdrop: true,
+        openedClass: 'crds-legacy-styles'
       });
     }
 

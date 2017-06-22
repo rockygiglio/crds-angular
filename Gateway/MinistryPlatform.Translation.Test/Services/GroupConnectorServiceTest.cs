@@ -1,6 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using Crossroads.Utilities.Interfaces;
+using Crossroads.Web.Common;
+using Crossroads.Web.Common.Configuration;
+using Crossroads.Web.Common.MinistryPlatform;
+using Crossroads.Web.Common.Security;
 using MinistryPlatform.Translation.Repositories.GoCincinnati;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 using Moq;
@@ -13,6 +17,7 @@ namespace MinistryPlatform.Translation.Test.Services
     class GroupConnectorServiceTest
     {
         private Mock<IMinistryPlatformService> _ministryPlatformService;
+        private Mock<IMinistryPlatformRestRepository> _ministryPlatformRestRepository;
         private Mock<IAuthenticationRepository> _authService;
         private GroupConnectorRepository _fixture;
         private Mock<IConfigurationWrapper> _configuration;
@@ -21,6 +26,7 @@ namespace MinistryPlatform.Translation.Test.Services
         public void SetUp()
         {
             _ministryPlatformService = new Mock<IMinistryPlatformService>();
+            _ministryPlatformRestRepository = new Mock<IMinistryPlatformRestRepository>();
             _authService = new Mock<IAuthenticationRepository>();
             _configuration = new Mock<IConfigurationWrapper>();
 
@@ -28,8 +34,12 @@ namespace MinistryPlatform.Translation.Test.Services
             _configuration.Setup(mocked => mocked.GetConfigValue("GroupConnectorRegistrationPageId")).Returns("GroupConnectorRegistrationPageId");
             _configuration.Setup(m => m.GetEnvironmentVarAsString("API_USER")).Returns("uid");
             _configuration.Setup(m => m.GetEnvironmentVarAsString("API_PASSWORD")).Returns("pwd");
-            _authService.Setup(m => m.Authenticate(It.IsAny<string>(), It.IsAny<string>())).Returns(new Dictionary<string, object> { { "token", "ABC" }, { "exp", "123" } });
-            _fixture = new GroupConnectorRepository(_ministryPlatformService.Object, _authService.Object, _configuration.Object);
+            _authService.Setup(m => m.Authenticate(It.IsAny<string>(), It.IsAny<string>())).Returns(new AuthToken
+            {
+                AccessToken = "ABC",
+                ExpiresIn = 123
+            });
+            _fixture = new GroupConnectorRepository(_ministryPlatformService.Object, _ministryPlatformRestRepository.Object, _authService.Object, _configuration.Object);
             
         }
 

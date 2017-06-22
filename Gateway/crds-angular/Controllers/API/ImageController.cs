@@ -9,10 +9,12 @@ using crds_angular.Models.Json;
 using crds_angular.Security;
 using crds_angular.Util;
 using log4net;
-using MinistryPlatform.Translation.PlatformService;
 using MPInterfaces = MinistryPlatform.Translation.Repositories.Interfaces;
 using Crossroads.ApiVersioning;
 using crds_angular.Services.Interfaces;
+using Crossroads.ClientApiKeys;
+using Crossroads.Web.Common.MinistryPlatform;
+using Crossroads.Web.Common.Security;
 
 namespace crds_angular.Controllers.API
 {
@@ -20,17 +22,15 @@ namespace crds_angular.Controllers.API
     {
         private readonly ILog _logger = LogManager.GetLogger(typeof (ImageController));
         private readonly MPInterfaces.IMinistryPlatformService _mpService;
-        private readonly MPInterfaces.IAuthenticationRepository _authenticationService;
-        private readonly MPInterfaces.IApiUserRepository _apiUserService;
+        private readonly IApiUserRepository _apiUserService;
 
-        public ImageController(MPInterfaces.IMinistryPlatformService mpService, MPInterfaces.IAuthenticationRepository authenticationService, MPInterfaces.IApiUserRepository apiUserService, IUserImpersonationService userImpersonationService) : base(userImpersonationService)
+        public ImageController(MPInterfaces.IMinistryPlatformService mpService, IAuthenticationRepository authenticationService, IApiUserRepository apiUserService, IUserImpersonationService userImpersonationService) : base(userImpersonationService, authenticationService)
         {
-            _authenticationService = authenticationService;
             _apiUserService = apiUserService;
             _mpService = mpService;
         }
 
-        private IHttpActionResult GetImage(Int32 fileId, String fileName, String token)
+        private IHttpActionResult GetImage(int fileId, string fileName, string token)
         {
             var imageStream = _mpService.GetFile(fileId, token);
             if (imageStream == null)
@@ -50,7 +50,8 @@ namespace crds_angular.Controllers.API
         [VersionedRoute(template: "image/{fileId}", minimumVersion: "1.0.0")]
         [Route("image/{fileId:int}")]
         [HttpGet]
-        public IHttpActionResult GetImage(Int32 fileId)
+        [IgnoreClientApiKey]
+        public IHttpActionResult GetImage(int fileId)
         {
             try
             {
@@ -67,7 +68,6 @@ namespace crds_angular.Controllers.API
             }
         }
 
-
         /// <summary>
         /// Retrieves a profile image given a contact ID.
         /// </summary>
@@ -76,7 +76,8 @@ namespace crds_angular.Controllers.API
         [VersionedRoute(template: "image/profile/{contactId}", minimumVersion: "1.0.0")]
         [Route("image/profile/{contactId:int}")]
         [HttpGet]
-        public IHttpActionResult GetProfileImage(Int32 contactId)
+        [IgnoreClientApiKey]
+        public IHttpActionResult GetProfileImage(int contactId)
         {
             var token = _apiUserService.GetToken();
             var files = _mpService.GetFileDescriptions("Contacts", contactId, token);
@@ -94,7 +95,8 @@ namespace crds_angular.Controllers.API
         [VersionedRoute(template: "image/pledge-campaign/{recordId}", minimumVersion: "1.0.0")]
         [Route("image/pledgecampaign/{recordId:int}")]
         [HttpGet]
-        public IHttpActionResult GetCampaignImage(Int32 recordId)
+        [IgnoreClientApiKey]
+        public IHttpActionResult GetCampaignImage(int recordId)
         {
             var token = _apiUserService.GetToken();
             var files = _mpService.GetFileDescriptions("Pledge_Campaigns", recordId, token);
@@ -111,9 +113,9 @@ namespace crds_angular.Controllers.API
         {
             return (Authorized(token =>
             {
-                const String fileName = "profile.png";
+                const string fileName = "profile.png";
 
-                var contactId = _authenticationService.GetContactId(token);
+                var contactId = _mpService.GetContactInfo(token).ContactId;
                 var files = _mpService.GetFileDescriptions("MyContact", contactId, token);
                 var file = files.FirstOrDefault(f => f.IsDefaultImage);
                 var base64String = Request.Content.ReadAsStringAsync().Result;

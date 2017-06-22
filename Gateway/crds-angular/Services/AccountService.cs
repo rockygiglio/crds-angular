@@ -5,9 +5,10 @@ using crds_angular.Exceptions;
 using crds_angular.Models.Crossroads;
 using crds_angular.Models.MP;
 using crds_angular.Services.Interfaces;
-using Crossroads.Utilities.Interfaces;
 using log4net;
-using MinistryPlatform.Translation.Repositories;
+using Crossroads.Web.Common.Configuration;
+using Crossroads.Web.Common.MinistryPlatform;
+using Crossroads.Web.Common.Security;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 using ILookupRepository = MinistryPlatform.Translation.Repositories.Interfaces.ILookupRepository;
 
@@ -25,6 +26,7 @@ namespace crds_angular.Services
         private readonly ILookupRepository _lookupService;
         private readonly IApiUserRepository _apiUserService;
         private readonly IParticipantRepository _participantService;
+        private readonly IContactRepository _contactRepository;
 
         public AccountService(IConfigurationWrapper configurationWrapper, 
             ICommunicationRepository communicationService, 
@@ -33,7 +35,8 @@ namespace crds_angular.Services
             IMinistryPlatformService ministryPlatformService, 
             ILookupRepository lookupService,
             IApiUserRepository apiUserService,
-            IParticipantRepository participantService)
+            IParticipantRepository participantService,
+            IContactRepository contactRepository)
         {
             _configurationWrapper = configurationWrapper;
             _communicationService = communicationService;
@@ -43,6 +46,7 @@ namespace crds_angular.Services
             _lookupService = lookupService;
             _apiUserService = apiUserService;
             _participantService = participantService;
+            _contactRepository = contactRepository;
         }
         public bool ChangePassword(string token, string newPassword)
         {
@@ -52,7 +56,7 @@ namespace crds_angular.Services
         //TODO: Put this logic in the Translation Layer?
         public bool SaveCommunicationPrefs(string token, AccountInfo accountInfo)
         {
-            var contactId = _authenticationService.GetContactId(token);
+            var contactId = _ministryPlatformService.GetContactInfo(token).ContactId;
             var contact = _ministryPlatformService.GetRecordDict(_configurationWrapper.GetConfigIntValue("MyContact"), contactId, token);
             try
             {                
@@ -81,7 +85,7 @@ namespace crds_angular.Services
 
         public AccountInfo getAccountInfo(string token)
         {
-            var contactId = _authenticationService.GetContactId(token);
+            var contactId = _ministryPlatformService.GetContactInfo(token).ContactId;
             var contact = _communicationService.GetPreferences(token, contactId);
             var accountInfo = new AccountInfo
             {
@@ -181,6 +185,23 @@ namespace crds_angular.Services
             //TODO Contingent on cascading delete via contact
             //TODO Conisder encrypting the password on the user model
             return newUserData;
+        }
+
+        public int RegisterPersonWithoutUserAccount(User newUserData)
+        {
+            var token = _apiUserService.GetToken();
+            var contactId = _contactRepository.GetContactIdByEmail(newUserData.email);
+            var exists = _lookupService.EmailSearch(newUserData.email, token);
+            if (contactId > 0)
+            {
+                throw (new DuplicateUserException(newUserData.email));
+            }
+            var householdRecordId = CreateHouseholdRecord(newUserData, token);
+            var contactRecordId = CreateContactRecord(newUserData, token, householdRecordId);
+           
+            _participantService.CreateParticipantRecord(contactRecordId);
+
+            return contactRecordId;
         }
 
         private void CreateNewUserSubscriptions(int contactRecordId, string token)

@@ -27,6 +27,7 @@
       SEARCH: 'crossroads.search',
       SIGNUP: 'crossroads.signup',
       TRIPS: 'crossroads.trips',
+      INVOICES: 'crossroads.invoices',
 
     },
     ATTRIBUTE_TYPE_IDS: {
@@ -173,7 +174,15 @@
     EVENTS: {
       ROOM_AVAILABLE: null,
       ROOM_PENDING: 0,
-      ROOM_BOOKED: 1
+      ROOM_BOOKED: 1,
+      EVENT_TYPES: {
+        CHILDCARE: 243
+      }
+    },
+    MICROCLIENTS: {
+      GROUP_LEADER_FORM: {
+        URL: '/group-leader'
+      }
     }
   };
 }());

@@ -147,7 +147,7 @@ describe('GivingHistoryController', function() {
       var error = {
         message: 'whoa there big fella!'
       };
-      httpBackend.expectGET(window.__env__['CRDS_API_ENDPOINT'] + 'api/profile?impersonateDonorId=123').respond(403, error);
+      httpBackend.expectGET(window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api/profile?impersonateDonorId=123').respond(403, error);
       httpBackend.flush();
 
       expect(sut.impersonation_error).toBeTruthy();
@@ -160,7 +160,7 @@ describe('GivingHistoryController', function() {
       var error = {
         message: 'whoa there big fella!'
       };
-      httpBackend.expectGET(window.__env__['CRDS_API_ENDPOINT'] + 'api/profile?impersonateDonorId=123').respond(409, error);
+      httpBackend.expectGET(window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api/profile?impersonateDonorId=123').respond(409, error);
       httpBackend.flush();
 
       expect(sut.impersonation_error).toBeTruthy();
@@ -178,12 +178,12 @@ describe('GivingHistoryController', function() {
 
     it('should retrieve most recent giving year donations for current user', function() {
       var profile = {foo: 'bar'};
-      httpBackend.expectGET(window.__env__['CRDS_API_ENDPOINT'] + 'api/profile').respond(profile);
-      httpBackend.expectGET(window.__env__['CRDS_API_ENDPOINT'] + 'api/donations/years')
+      httpBackend.expectGET(window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api/profile').respond(profile);
+      httpBackend.expectGET(window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api/donations/years')
                              .respond(mockDonationYearsResponse);
-      httpBackend.expectGET(window.__env__['CRDS_API_ENDPOINT'] + 'api/donations/2015?softCredit=false')
+      httpBackend.expectGET(window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api/donations/2015?softCredit=false')
                              .respond(mockDonationResponse);
-      httpBackend.expectGET(window.__env__['CRDS_API_ENDPOINT'] + 'api/donations/2015?softCredit=true')
+      httpBackend.expectGET(window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api/donations/2015?softCredit=true')
                              .respond(mockSoftCreditDonationResponse);
       httpBackend.flush();
 
@@ -206,7 +206,7 @@ describe('GivingHistoryController', function() {
     });
 
     it('should not have history if there is no profile', function() {
-      httpBackend.expectGET(window.__env__['CRDS_API_ENDPOINT'] + 'api/profile').respond(404, {});
+      httpBackend.expectGET(window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api/profile').respond(404, {});
       httpBackend.flush();
 
       expect(Object.keys(sut.profile).length).toEqual(0);
@@ -226,8 +226,8 @@ describe('GivingHistoryController', function() {
 
     it('should not have history if there are no giving years', function() {
       var profile = {foo: 'bar'};
-      httpBackend.expectGET(window.__env__['CRDS_API_ENDPOINT'] + 'api/profile').respond(profile);
-      httpBackend.expectGET(window.__env__['CRDS_API_ENDPOINT'] + 'api/donations/years').respond(404, {});
+      httpBackend.expectGET(window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api/profile').respond(profile);
+      httpBackend.expectGET(window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api/donations/years').respond(404, {});
       httpBackend.flush();
 
       expect(sut.profile.foo).toEqual('bar');
@@ -245,14 +245,14 @@ describe('GivingHistoryController', function() {
       expect(sut.donations.length).toBe(0);
     });
 
-    it('should not have history if there are no donations', function() {
+    it('should not have history for selected year if there are no donations', function() {
       var profile = {foo: 'bar'};
-      httpBackend.expectGET(window.__env__['CRDS_API_ENDPOINT'] + 'api/profile').respond(profile);
+      httpBackend.expectGET(window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api/profile').respond(profile);
       httpBackend
-          .expectGET(window.__env__['CRDS_API_ENDPOINT'] + 'api/donations/years')
+          .expectGET(window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api/donations/years')
           .respond(mockDonationYearsResponse);
-      httpBackend.expectGET(window.__env__['CRDS_API_ENDPOINT'] + 'api/donations/2015?softCredit=false').respond(404, {});
-      httpBackend.expectGET(window.__env__['CRDS_API_ENDPOINT'] + 'api/donations/2015?softCredit=true').respond(404, {});
+      httpBackend.expectGET(window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api/donations/2015?softCredit=false').respond(404, {});
+      httpBackend.expectGET(window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api/donations/2015?softCredit=true').respond(404, {});
       httpBackend.flush();
 
       expect(sut.profile.foo).toEqual('bar');
@@ -264,8 +264,9 @@ describe('GivingHistoryController', function() {
       expect(sut.beginning_donation_date).not.toBeDefined();
       expect(sut.ending_donation_date).not.toBeDefined();
 
-      expect(sut.donation_history).toBeFalsy();
+      expect(sut.donation_history).toBeTruthy();
       expect(sut.donation_view_ready).toBeTruthy();
+      expect(sut.non_soft_credit_donation_history).toBeFalsy();
       expect(sut.soft_credit_donation_history).toBeFalsy();
       expect(sut.soft_credit_donation_view_ready).toBeTruthy();
       expect(sut.overall_view_ready).toBeTruthy();

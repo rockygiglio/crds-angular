@@ -30,7 +30,7 @@ describe('KC Applicant Tool', function(){
     Profile = $injector.get('Profile');
     CmsInfo = $injector.get('CmsInfo');
     $httpBackend = $injector.get('$httpBackend');
-    $httpBackend.expectGET(window.__env__['CRDS_API_ENDPOINT'] + 'api/profile/' + controller.params.recordId + '/admin')
+    $httpBackend.expectGET(window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api/profile/' + controller.params.recordId + '/admin')
       .respond(200, mockVolunteer);
   }));
 
@@ -50,7 +50,7 @@ describe('KC Applicant Tool', function(){
   });
 
   it('should query for a response', function(){
-    $httpBackend.expectGET(window.__env__['CRDS_API_ENDPOINT'] +
+    $httpBackend.expectGET(window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] +
         'api/opportunity/getResponseForOpportunity/' + 115 + '/' + 12345678)
       .respond(200, mockResponse);
     $httpBackend.flush();
@@ -58,7 +58,7 @@ describe('KC Applicant Tool', function(){
   });
 
   it('should show error when no response if available', function(){
-    $httpBackend.expectGET(window.__env__['CRDS_API_ENDPOINT'] +
+    $httpBackend.expectGET(window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] +
         'api/opportunity/getResponseForOpportunity/' + 115 + '/' + 12345678)
       .respond(200, null);
 

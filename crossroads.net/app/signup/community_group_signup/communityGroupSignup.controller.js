@@ -1,6 +1,6 @@
 (function() {
   'use strict';
-
+  var CONSTANTS = require('../../constants');
   var moment = require('moment');
   var formatDate = crds_utilities.formatDate;
 
@@ -76,7 +76,7 @@
             vm.response = response.SignUpFamilyMembers;
             vm.groupEvents = response.events;
             vm.childCareEvents = _.find(vm.groupEvents, function(i) {
-            return (i.eventType === 'Childcare' && moment(i.startDate).isAfter(now));
+              return (i.eventType == CONSTANTS.EVENTS.EVENT_TYPES.CHILDCARE && moment(i.startDate).isAfter(now));
             });
 
             if(vm.childCareEvents !== undefined){
@@ -203,6 +203,7 @@
     function editProfile() {
       vm.modalInstance = $modal.open({
         templateUrl: 'editProfile.html',
+        openedClass: 'crds-legacy-styles',
         backdrop: true,
         scope: $scope
       });

@@ -1,8 +1,8 @@
-﻿using System;
-using crds_angular.Models.Crossroads;
+﻿using crds_angular.Models.Crossroads;
 using System.Collections.Generic;
 using Event = crds_angular.Models.Crossroads.Events.Event;
 using crds_angular.Models.Crossroads.Groups;
+using crds_angular.Models.Crossroads.Profile;
 using MinistryPlatform.Translation.Models;
 
 namespace crds_angular.Services.Interfaces
@@ -19,7 +19,7 @@ namespace crds_angular.Services.Interfaces
 
         void addParticipantsToGroup(int groupId, List<ParticipantSignup> participants);
 
-        void addContactToGroup(int groupId, int contactId);
+        int addContactToGroup(int groupId, int contactId);
 
         void endDateGroupParticipant(int groupId, int groupParticipantId);
 
@@ -33,7 +33,7 @@ namespace crds_angular.Services.Interfaces
 
         List<GroupDTO> GetGroupsByTypeForParticipant(string token, int participantId, int groupTypeId);
 
-        MpParticipant GetParticipantRecord(string token);
+        Participant GetParticipantRecord(string token);
 
         void SendJourneyEmailInvite(EmailCommunicationDTO email, string token);
 
@@ -54,5 +54,10 @@ namespace crds_angular.Services.Interfaces
         void SendParticipantsEmail(string token, List<GroupParticipantDTO> participants, string subject, string body);
 
         List<GroupDTO> RemoveOnsiteParticipantsIfNotLeader(List<GroupDTO> groups, string token);
+        List<GroupDTO> GetGroupsByTypeOrId(string token, int? participantId = null, int[] groupTypeIds = null, int? groupId = null, bool? withParticipants = true, bool? withAttributes = true);
+
+        int GetPrimaryContactParticipantId(int groupId);
+
+        List<GroupParticipantDTO> GetGroupParticipantsWithoutAttributes(int groupId);
     }
 }

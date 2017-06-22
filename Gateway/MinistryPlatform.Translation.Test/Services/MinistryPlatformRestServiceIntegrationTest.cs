@@ -1,12 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Crossroads.Web.Common.Configuration;
+using Crossroads.Web.Common.MinistryPlatform;
+using Crossroads.Web.Common.Security;
 using MinistryPlatform.Translation.Models;
-using MinistryPlatform.Translation.Models.Attributes;
 using MinistryPlatform.Translation.Models.Childcare;
+using MinistryPlatform.Translation.Models.GoCincinnati;
 using MinistryPlatform.Translation.Models.Payments;
 using MinistryPlatform.Translation.Models.Rules;
-using MinistryPlatform.Translation.Repositories;
 using Newtonsoft.Json;
 using NUnit.Framework;
 using RestSharp;
@@ -23,8 +25,11 @@ namespace MinistryPlatform.Translation.Test.Services
         [TestFixtureSetUp]
         public void SetupAll()
         {
-            var auth = AuthenticationRepository.authenticate(Environment.GetEnvironmentVariable("API_USER"), Environment.GetEnvironmentVariable("API_PASSWORD"));
-            _authToken = auth["token"].ToString();
+            var config = new ConfigurationWrapper();
+            var authenticationRepository = new AuthenticationRepository(new RestClient(config.GetEnvironmentVarAsString("MP_OAUTH_BASE_URL")),
+                                                                        new RestClient(config.GetEnvironmentVarAsString("MP_REST_API_ENDPOINT")));
+            var apiUserRepository = new ApiUserRepository(config, authenticationRepository);
+            _authToken = apiUserRepository.GetToken();
         }
 
         [SetUp]
@@ -49,6 +54,37 @@ namespace MinistryPlatform.Translation.Test.Services
                 Console.WriteLine("Result\t{0}", p.FirstOrDefault());
             }
         }
+
+        [Test]
+        public void TestGetPotentialMatches()
+        {
+            var firstName = "Philip";
+            var lastName = "Smith";
+            var email = "p.smith6590@gmail.com";
+
+            string filter3 = $"First_Name = '{firstName}' AND Last_Name = '{lastName}'";
+            string filter4 = $"(First_Name = '{firstName}' AND Last_Name = '{lastName}') OR Email_Address = '{email}'";
+            var columns = new List<string>
+            {
+                "First_Name",
+                "Last_Name",
+                "Email_Address"
+            };
+            try
+            {
+                var records2 = _fixture.UsingAuthenticationToken(_authToken).Search<MpMyContact>(filter4, columns);
+                foreach (var p in records2)
+                {
+                    Console.WriteLine("Result\t{0}", p.Contact_ID);
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+
         
         [Test]
         public void TestChildRsvpdProcedure()
@@ -56,10 +92,10 @@ namespace MinistryPlatform.Translation.Test.Services
             Console.WriteLine("TestCallingAStoredProcedure");
             var parms = new Dictionary<string, object>()
             {
-                {"@ContactId", 100030266},
-                {"@EventGroupID", 172309}
+                {"@ContactId", 7658083},
+                {"@EventGroupID", 175596}
             };
-            var results = _fixture.UsingAuthenticationToken(_authToken).GetFromStoredProc<MPRspvd>("api_crds_childrsvpd", parms);
+            var results = _fixture.UsingAuthenticationToken(_authToken).GetFromStoredProc<MPRspvd>("api_crds_ChildRsvpd", parms);
             foreach (var p in results)
             {
                 Console.WriteLine("Result\t{0}", p.FirstOrDefault().Rsvpd);
@@ -72,7 +108,7 @@ namespace MinistryPlatform.Translation.Test.Services
             Console.WriteLine("TestCallingAStoredProcedure");
             var parms = new Dictionary<string, object>()
             {                
-                {"@DaysOut", 4}
+                {"@DaysOut", 7}
             };
             var results = _fixture.UsingAuthenticationToken(_authToken).GetFromStoredProc<MpContact>("api_crds_ChildcareReminderEmails", parms);
             foreach (var p in results)
@@ -99,7 +135,7 @@ namespace MinistryPlatform.Translation.Test.Services
         public void TestEndDateGroup()
         {
             Console.WriteLine("TestEndDateGroup");
-            var groupId = 172501;
+            var groupId = 177074;
             var reasonEnded = 1;
             var fields = new Dictionary<string, object>
             {
@@ -126,7 +162,7 @@ namespace MinistryPlatform.Translation.Test.Services
         [Test]
         public void TestGetEvents()
         {
-            const int eventId = 4525285;
+            const int eventId = 4532768;
             Console.WriteLine("Getting Event");
             var results = _fixture.UsingAuthenticationToken(_authToken).Search<MpCamp>($"Event_ID={eventId}");
 
@@ -168,7 +204,7 @@ namespace MinistryPlatform.Translation.Test.Services
         [Test]
         public void TestGetGoTripsWithForms()
         {
-            var pledgeCampaignId = 10000000;
+            var pledgeCampaignId = 2502;
             var columnList = new List<string>
             {
                 "Pledge_Campaigns.Pledge_Campaign_ID",
@@ -207,8 +243,8 @@ namespace MinistryPlatform.Translation.Test.Services
         public void ShouldGetDataFromTableByName()
         {
             var contact = _fixture.UsingAuthenticationToken(_authToken).Get<MpContact>("Pledges", 656098, "Donor_ID_Table_Contact_ID_Table.Nickname, Donor_ID_Table_Contact_ID_Table.Last_Name");
-            Assert.AreEqual("Andy", contact.Nickname);
-            Assert.AreEqual("Canterbury", contact.LastName);
+            Assert.AreEqual("Connie", contact.Nickname);
+            Assert.AreEqual("McNerney", contact.LastName);
         }
 
         [Test]
@@ -305,19 +341,6 @@ namespace MinistryPlatform.Translation.Test.Services
         }
 
         [Test]
-        public void TestPaymentsForInvoiceProcedure()
-        {
-            Console.WriteLine(" TestPaymentsForInvoiceProcedure");
-            var invoiceId = 1;
-            var fields = new Dictionary<string, object>
-            {
-                {"@InvoiceId", invoiceId }
-            };
-            var results = _fixture.UsingAuthenticationToken(_authToken).GetFromStoredProc<MpPayment>("api_crds_PaymentsForInvoice", fields);
-            Console.WriteLine("Result\t" + results.ToString());
-        }
-
-        [Test]
         public void TestGetWithFilter()
         {
             Console.WriteLine(" TestGetWithFilter");
@@ -338,7 +361,7 @@ namespace MinistryPlatform.Translation.Test.Services
             var tableName = "Event_Participants";
             var searchString = $"Event_ID_Table.Event_ID={eventId} AND Participant_ID_Table_Contact_ID_Table.Contact_ID={contactId}";
             var column = "Event_Participant_ID";
-            var results = _fixture.UsingAuthenticationToken(_authToken).Search<int>(tableName, searchString, column);
+            var results = _fixture.UsingAuthenticationToken(_authToken).Search<int>(tableName, searchString, column, null, false);
         }
 
         [Test]
@@ -349,20 +372,20 @@ namespace MinistryPlatform.Translation.Test.Services
             var tableName = "Event_Participants";
             var searchString = $"Event_ID_Table.Event_ID={eventId} AND Participant_ID_Table_Contact_ID_Table.Contact_ID={contactId}";
             var column = "Event_ID_Table.Event_Title";
-            var results = _fixture.UsingAuthenticationToken(_authToken).Search<string>(tableName, searchString, column);
+            var results = _fixture.UsingAuthenticationToken(_authToken).Search<string>(tableName, searchString, column, null, false);
         }
 
         [Test]
         public void TestRegistrantMessage()
         {
             var searchString = $"Events.[Event_ID]={452345685}";
-            _fixture.UsingAuthenticationToken(_authToken).Search<int>("Events", searchString, "Registrant_Message");
+            _fixture.UsingAuthenticationToken(_authToken).Search<int>("Events", searchString, "Registrant_Message", null, false);
         }
 
         [Test]
         public void TestProcessingFeeProgramId()
         {
-            var res = _fixture.UsingAuthenticationToken(_authToken).Search<int>("GL_Account_Mapping", "GL_Account_Mapping.Program_ID=395 AND GL_Account_Mapping.Congregation_ID=5", "Processor_Fee_Mapping_ID_Table.Program_ID");
+            var res = _fixture.UsingAuthenticationToken(_authToken).Search<int>("GL_Account_Mapping", "GL_Account_Mapping.Program_ID=127 AND GL_Account_Mapping.Congregation_ID=5", "Processor_Fee_Mapping_ID_Table.Program_ID", null, false);
             Assert.AreEqual(127, res);
         }
 
@@ -371,7 +394,7 @@ namespace MinistryPlatform.Translation.Test.Services
         {
             var paymentDetail = new MpPaymentDetail()
             {
-                InvoiceDetailId = 18,
+                InvoiceDetailId = 154,
                 PaymentAmount = 2.0M,
                 Payment = new MpPayment()
                 {
@@ -381,7 +404,8 @@ namespace MinistryPlatform.Translation.Test.Services
                     TransactionCode = "23423598",
                     PaymentDate = DateTime.Now,
                     PaymentTotal = 2.0M,
-                    PaymentTypeId = 4
+                    PaymentTypeId = 4,
+                    PaymentStatus = 2 // Deposited
                 }
             };
             var paymentList = new List<MpPaymentDetail>
@@ -502,7 +526,7 @@ namespace MinistryPlatform.Translation.Test.Services
         [Test]
         public void GetProductRuleset()
         {
-            const string searchString = "Product_ID_Table.[Product_ID] = 4";
+            const string searchString = "Product_ID_Table.[Product_ID] = 8";
             const string columnList = "Product_ID_Table.[Product_ID],Ruleset_ID_Table.[Ruleset_ID],cr_Product_Ruleset.[Start_Date],cr_Product_Ruleset.[End_Date]";
             var res = _fixture.UsingAuthenticationToken(_authToken).Search<MPProductRuleSet>(searchString, columnList);
             Assert.IsNotEmpty(res);
@@ -517,13 +541,133 @@ namespace MinistryPlatform.Translation.Test.Services
         [Test]
         public void findProgramTemplateFromEvent()
         {
-            var filter = $"Events.[Event_ID] = 4525626";
+            var filter = $"Events.[Event_ID] = 4532768";
             const string column = "Online_Registration_Product_Table_Program_ID_Table_Communication_ID_Table.[Communication_ID]";
-            var result = _fixture.UsingAuthenticationToken(_authToken).Search<int>("Events", filter, column);
-            Assert.AreEqual(2006, result);
-            
+            var result = _fixture.UsingAuthenticationToken(_authToken).Search<int>("Events", filter, column, null, false);
+            Assert.AreEqual(2006, result);            
         }
 
+        [Test]
+        public void findOtherHouseholdMembers()
+        {
+            var filter = $"Contact_Households.Household_ID=1709940";
+            var columns = new List<string>
+            {
+                "Contact_Households.Contact_ID",
+                "Contact_Households.Household_ID",
+                "Contact_Households.Household_Position_ID",
+                "Household_Position_ID_Table.Household_Position",
+                "Contact_ID_Table.First_Name",
+                "Contact_ID_Table.Nickname",
+                "Contact_ID_Table.Last_Name",
+                "Contact_ID_Table.Date_of_Birth",
+                "Contact_ID_Table.__Age",
+                "Contact_Households.End_Date"
+            };
+            var result = _fixture.UsingAuthenticationToken(_authToken).Search<MpContactHousehold>(filter, columns);
+            Assert.AreEqual(1, result.Count);
+            Assert.IsNotNull(result.First().EndDate);
+        }
+        
+        [Test]
+        public void GetAllUncancelledInvoicesForEventParticipant()
+        {
+            var filter = new Dictionary<string, object> { { "Event_Participant_ID", 7720246 } };
+            var result =  _fixture.UsingAuthenticationToken(_authToken)
+                .Get<MpInvoiceDetail>("Invoice_Detail", filter);
+            Assert.IsFalse(result.Where(i => i.InvoiceStatusId != 7).ToList().Any());
+        }
+
+        [Test]
+        public void GetProject()
+        {
+            const string filter = "Project_ID=564 AND Initiative_ID_Table.[Volunteer_Signup_Start_Date]<=GetDate() AND Initiative_ID_Table.[Volunteer_Signup_End_Date]>=GetDate()";
+            var columns = new List<string>
+            {
+                "Project_ID",
+                "Project_Name",
+                "Project_Status_ID",
+                "Location_ID",
+                "Project_Type_ID",
+                "Organization_ID",
+                "cr_Projects.Initiative_ID",
+                "Address_ID_Table.Address_ID",
+                "Address_ID_Table.[City]",
+                "Address_ID_Table.[State/Region] AS [State]",
+
+            };
+            var result = _fixture.UsingAuthenticationToken(_authToken).Search<MpProject>(filter, columns, null, true);
+            Assert.NotNull(result);
+            Assert.AreEqual(1, result.Count);
+        }
+
+        [Test]
+        public void GetGroupConnectorWithProjectId()
+        {
+            const int projectId = 564;
+            var groupConnectors = _fixture.UsingAuthenticationToken(_authToken).Search<MpGroupConnector>($"Project_ID = {projectId}");
+
+            Assert.NotNull(groupConnectors);
+        }
+
+        [Test]
+        public void GetRegistrationsForProjectId()
+        {
+            var searchString = "Group_Connector_ID_Table_Project_ID_Table.[Project_ID] = 26";
+            var columnList =
+                "Group_Connector_ID_Table_Project_ID_Table.[Project_ID], Registration_ID_Table_Participant_ID_Table_Contact_ID_Table.[Nickname], Registration_ID_Table_Participant_ID_Table_Contact_ID_Table.[Last_Name], Registration_ID_Table_Participant_ID_Table_Contact_ID_Table.[Mobile_Phone], Registration_ID_Table_Participant_ID_Table_Contact_ID_Table.[Email_Address], Registration_ID_Table.[Spouse_Participation], Registration_ID_Table.[_Family_Count]";
+            var registrations = _fixture.UsingAuthenticationToken(_authToken).Search<MpProjectRegistration>(searchString, columnList);
+
+            Assert.NotNull(registrations);
+        }
+
+        [Test]
+        public void ShouldSetHouseholdCongregation()
+        {
+
+            var household = new MpHousehold
+            {
+                Household_ID = 1709940,
+                Congregation_ID = 21,
+                Address_ID = 2928137
+            };
+            var result = _fixture.UsingAuthenticationToken(_authToken).Update<MpHousehold>(household);
+            Assert.NotNull(result);
+        }
+
+        [Test]
+        public void ShouldGetParticpantByContactId()
+        {
+            const int id = 2186211;
+            var searchString = $"Contact_ID_Table.[Contact_ID]={id}";
+            var columnList = new List<string>
+            {
+                "Contact_ID_Table.Contact_ID",
+                "Participants.[Participant_ID]",
+                "Contact_ID_Table.Email_Address",
+                "Contact_ID_Table.Nickname as [NickName]",
+                "Contact_ID_Table.Display_Name",
+                "Contact_ID_Table.Nickname",
+                "Contact_ID_Table.__Age as [Age]",
+                "Participants.Attendance_Start_Date",
+                "Participant_Type_ID_Table.Participant_Type",
+                "Group_Leader_Status_ID_Table.Group_Leader_Status_ID"
+            };
+            var participant = _fixture.UsingAuthenticationToken(_authToken).Search<MpParticipant>(searchString, columnList);
+            Assert.IsNotNull(participant);
+            Assert.AreEqual(participant.Count, 1);
+            Assert.IsNotEmpty(participant.First().EmailAddress);
+            Assert.AreEqual(participant.First().ContactId, id);
+            Assert.AreNotEqual(0, participant.First().ParticipantId);
+            Assert.AreNotEqual(0, participant.First().Age);
+            Assert.IsNotEmpty(participant.First().PreferredName);
+            Assert.IsNotEmpty(participant.First().DisplayName);
+            Assert.IsNotEmpty(participant.First().Nickname);
+            Assert.IsNotNull(participant.First().AttendanceStart);
+            Assert.IsTrue(participant.First().ApprovedSmallGroupLeader);
+            Assert.AreEqual("Attendee", participant.First().Role);
+            Assert.AreEqual(2, participant.First().GroupLeaderStatus);
+        }
     }
 
     [MpRestApiTable(Name = "Payment_Types")]

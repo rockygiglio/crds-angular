@@ -8,6 +8,9 @@ using Crossroads.Utilities.FunctionalHelpers;
 using Crossroads.Utilities.Interfaces;
 using Crossroads.Utilities.Services;
 using log4net;
+using Crossroads.Web.Common;
+using Crossroads.Web.Common.Configuration;
+using Crossroads.Web.Common.MinistryPlatform;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Models.EventReservations;
 using MinistryPlatform.Translation.Repositories.Interfaces;
@@ -38,6 +41,7 @@ namespace crds_angular.Services
         private readonly IEquipmentRepository _equipmentService;
         private readonly IEventParticipantRepository _eventParticipantService;
         private readonly int childcareEventTypeID;
+        private readonly int childcareGroupTypeID;
 
         private readonly List<string> _tableHeaders = new List<string>()
         {
@@ -78,6 +82,7 @@ namespace crds_angular.Services
             _eventParticipantService = eventParticipantService;
 
             childcareEventTypeID = configurationWrapper.GetConfigIntValue("ChildcareEventType");
+            childcareGroupTypeID = configurationWrapper.GetConfigIntValue("ChildcareGroupType");
         }
 
         public EventToolDto GetEventRoomDetails(int eventId)
@@ -103,9 +108,9 @@ namespace crds_angular.Services
 
                 var groups = _eventService.GetEventGroupsForEventAPILogin(eventId);
 
-                if (groups.Count > 0)
+                if (groups.Any(childcareGroups => childcareGroups.GroupTypeId == childcareGroupTypeID))
                 {
-                    var group = _groupService.getGroupDetails(groups[0].GroupId);
+                    var group = _groupService.getGroupDetails(groups.First(childcareGroup => childcareGroup.GroupTypeId == childcareGroupTypeID).GroupId);
                     dto.Group = Mapper.Map<GroupDTO>(group);
                 }
 
@@ -181,7 +186,7 @@ namespace crds_angular.Services
                 {
                     if (!room.Cancelled)
                     {
-                        if (!eventReservation.Rooms.Any(r => r.RoomId == room.RoomId))
+                        if (!eventReservation.Rooms.Any(r => r.RoomId == room.RoomId) || oldEventDetails.StartDateTime != eventReservation.StartDateTime)
                         {
                             room.Cancelled = true;
                             foreach (var eq in room.Equipment)
@@ -219,7 +224,7 @@ namespace crds_angular.Services
             //if it use to be a childcare event, but isn't anymore, remove the group
             if (wasChildcare && !isChildcare)
             {
-                _eventService.DeleteEventGroupsForEvent(eventId, token);
+                _eventService.DeleteEventGroupsForEvent(eventId, token, childcareGroupTypeID);
                 _groupService.EndDateGroup(oldEventDetails.Group.GroupId, null, null);
             }
             //now is a childcare event but was not before so add a group
@@ -232,7 +237,7 @@ namespace crds_angular.Services
             //it was and still is a childcare event
             else if (wasChildcare && isChildcare)
             {
-                var group = _eventService.GetEventGroupsForEventAPILogin(eventId).FirstOrDefault();
+                var group = _eventService.GetEventGroupsForEventAPILogin(eventId).FirstOrDefault(i => i.GroupTypeId == childcareGroupTypeID);
 
                 eventReservation.Group.GroupId = group.GroupId;
                 eventReservation.Group.CongregationId = eventReservation.CongregationId;
@@ -605,7 +610,12 @@ namespace crds_angular.Services
             var token = _apiUserService.GetToken();
             var eventList = EventsReadyForPrimaryContactReminder(token);
 
-            eventList.ForEach(evt => { SendPrimaryContactReminderEmail(evt, token); });
+            eventList.ForEach(evt =>
+            {
+                var rooms = _roomService.GetRoomReservations(evt.EventId).Where(r => !r.Cancelled).Select(s => s.Name).ToList();
+                var roomsString = rooms.Count > 0 ? string.Join(", ", rooms.ToArray()) : "No Room Reserved under the Date and Time";
+                SendPrimaryContactReminderEmail(evt, roomsString, token);
+            });
         }
 
         private void SendEventReminderEmail(Models.Crossroads.Events.Event evt, Participant participant, MpEvent childcareEvent, IList<Participant> children, string token)
@@ -655,7 +665,7 @@ namespace crds_angular.Services
         }
 
         // ReSharper disable once UnusedParameter.Local
-        private void SendPrimaryContactReminderEmail(Models.Crossroads.Events.Event evt, string token)
+        private void SendPrimaryContactReminderEmail(Models.Crossroads.Events.Event evt, string rooms, string token)
         {
             try
             {
@@ -665,6 +675,7 @@ namespace crds_angular.Services
                     {"Event_Title", evt.name},
                     {"Event_Start_Date", evt.StartDate.ToShortDateString()},
                     {"Event_Start_Time", evt.StartDate.ToShortTimeString()},
+                    {"Room_Name", rooms },
                     {"Base_Url", _configurationWrapper.GetConfigValue("BaseMPUrl")}
                 };
 

@@ -6,18 +6,20 @@ using crds_angular.Services.Interfaces;
 using MPInterfaces = MinistryPlatform.Translation.Repositories.Interfaces;
 using crds_angular.Models.Crossroads.Subscription;
 using Crossroads.ApiVersioning;
+using Crossroads.Web.Common;
+using Crossroads.Web.Common.Security;
 
 namespace crds_angular.Controllers.API
 {
     public class SubscriptionsController : MPAuth
     {
-        private readonly MPInterfaces.IAuthenticationRepository _authenticationService;
+        private readonly MPInterfaces.IContactRepository _contactRepository;
         private readonly ISubscriptionsService _subscriptionService;
 
-        public SubscriptionsController(ISubscriptionsService subscriptionService, MPInterfaces.IAuthenticationRepository authenticationService, IUserImpersonationService userImpersonationService) : base(userImpersonationService)
+        public SubscriptionsController(ISubscriptionsService subscriptionService, IAuthenticationRepository authenticationService, IUserImpersonationService userImpersonationService, MPInterfaces.IContactRepository contactRepository) : base(userImpersonationService, authenticationService)
         {
             _subscriptionService = subscriptionService;
-            _authenticationService = authenticationService;
+            _contactRepository = contactRepository;
         }
 
         [ResponseType(typeof (List<Dictionary<string, object>>))]
@@ -28,7 +30,7 @@ namespace crds_angular.Controllers.API
         {
             return (Authorized(token =>
             {
-                var contactId = _authenticationService.GetContactId(token);
+                var contactId = _contactRepository.GetContactId(token);
                 return (Ok(_subscriptionService.GetSubscriptions(contactId, token)));
             }));
         }
@@ -40,7 +42,7 @@ namespace crds_angular.Controllers.API
         {
             return (Authorized(token =>
             {
-                var contactId = _authenticationService.GetContactId(token);
+                var contactId = _contactRepository.GetContactId(token);
                 var recordId = new {dp_RecordID = _subscriptionService.SetSubscriptions(subscription, contactId, token)};
                 return this.Ok(recordId);
             }));

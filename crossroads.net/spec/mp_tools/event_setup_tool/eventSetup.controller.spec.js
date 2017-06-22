@@ -74,10 +74,10 @@ describe('EventSetupController', function() {
       vm.startDate = new Date('2016-05-10T17:30:06.445Z');
       vm.endDate = new Date('2016-05-11T17:30:06.445Z');
       vm.loadEvents();
-      httpBackend.expectGET(window.__env__['CRDS_API_ENDPOINT'] + 'api/event/eventtemplatesbysite/1')
+      httpBackend.expectGET(window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api/event/eventtemplatesbysite/1')
                              .respond(mockEventTemplateResponse);
 
-      httpBackend.expectGET(window.__env__['CRDS_API_ENDPOINT'] + 'api/event/eventsbysite/1?endDate=2016-05-11T17:30:06.445Z&startDate=2016-05-10T17:30:06.445Z')
+      httpBackend.expectGET(window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api/event/eventsbysite/1?endDate=2016-05-11T17:30:06.445Z&startDate=2016-05-10T17:30:06.445Z')
                              .respond(mockEventResponse);
 
       httpBackend.flush();
@@ -104,7 +104,7 @@ describe('EventSetupController', function() {
       vm.event = {id: 1};
       var postData = {eventtemplateid: vm.template.id, eventid: vm.event.id};
       vm.setup();
-      httpBackend.expectPOST(window.__env__['CRDS_API_ENDPOINT'] + 'api/event/copyeventsetup', postData)
+      httpBackend.expectPOST(window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api/event/copyeventsetup', postData)
                              .respond({});
 
       httpBackend.flush();

@@ -15,14 +15,14 @@
     function postProcess(paymentsDisplayInput) {
       var paymentsDisplay = _.transform(paymentsDisplayInput, function (result, p) {
         var paymentsDisplay = _.cloneDeep(p);
-        setDisplayDetails(paymentsDisplay.source);
+        setDisplayDetails(paymentsDisplay.source, paymentsDisplay.notes);
         result.push(paymentsDisplay);
       });
 
       return paymentsDisplay;
     }
 
-    function setDisplayDetails(source) {
+    function setDisplayDetails(source, notes) {
       switch (source.type) {
         case 'SoftCredit':
           break;
@@ -57,7 +57,11 @@
           if (source.last4 !== undefined) {
             source.name = 'ending in ' + source.last4;
           }
-
+          break;
+        case 'NonCashAsset':
+          source.viewBox = '0 0 32 32';
+          source.icon = '';
+          source.name = notes;     
           break;
 
       }

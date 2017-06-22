@@ -1,16 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Web.Http;
 using System.Web.Http.Description;
+using crds_angular.Exceptions;
 using crds_angular.Exceptions.Models;
 using crds_angular.Models.Crossroads.Attribute;
 using crds_angular.Models.Crossroads.GoVolunteer;
 using crds_angular.Models.Crossroads.Lookups;
 using crds_angular.Security;
 using crds_angular.Services.Interfaces;
-using Crossroads.Utilities.Interfaces;
+using crds_angular.Util;
 using Crossroads.ApiVersioning;
+using Crossroads.Web.Common.Configuration;
+using Crossroads.Web.Common.Security;
 
 namespace crds_angular.Controllers.API
 {
@@ -30,8 +34,9 @@ namespace crds_angular.Controllers.API
                                      IGoSkillsService skillsService,
                                      IGoVolunteerService goVolunteerService,
                                      IAttributeService attributeService,
-                                     IConfigurationWrapper configurationWrapper, 
-                                     IUserImpersonationService userImpersonationService) : base(userImpersonationService)
+                                     IConfigurationWrapper configurationWrapper,
+                                     IUserImpersonationService userImpersonationService,
+                                     IAuthenticationRepository authenticationRepository) : base(userImpersonationService, authenticationRepository)
 
         {
             _organizationService = organizationService;
@@ -43,7 +48,7 @@ namespace crds_angular.Controllers.API
             _configurationWrapper = configurationWrapper;
         }
 
-        [ResponseType(typeof (List<ChildrenOptions>))]
+        [ResponseType(typeof(List<ChildrenOptions>))]
         [VersionedRoute(template: "go-volunteer/children", minimumVersion: "1.0.0")]
         [Route("govolunteer/children")]
         [HttpGet]
@@ -61,8 +66,42 @@ namespace crds_angular.Controllers.API
             }
         }
 
+        [ResponseType(typeof(List<DashboardDatum>))]
+        [VersionedRoute(template: "go-volunteer/dashboard/{projectId}", minimumVersion: "1.0.0")]
+        [Route("go-volunteer/dashboard/{projectId}")]
+        [HttpGet]
+        public IHttpActionResult GetDashboardData(int projectId)
+        {
+            try
+            {
+                return Ok(_goVolunteerService.GetRegistrationsForProject(projectId));
+            }
+            catch (Exception e)
+            {
+                var apiError = new ApiErrorDto("Get Dashboard Data failed: ", e);
+                throw new HttpResponseException(apiError.HttpResponseMessage);
+            }
+        }
+
+        [ResponseType(typeof(Project))]
+        [VersionedRoute(template: "go-volunteer/project/{projectId}", minimumVersion: "1.0.0")]
+        [Route("go-volunteer/project/{projectId}")]
+        [HttpGet]
+        public IHttpActionResult GetProject(int projectId)
+        {
+            try
+            {
+                return Ok(_goVolunteerService.GetProject(projectId));
+            }
+            catch (Exception e)
+            {
+                var apiError = new ApiErrorDto("Get Project failed: ", e);
+                throw new HttpResponseException(apiError.HttpResponseMessage);
+            }
+        }
+
         [VersionedRoute(template: "go-volunteer/prep-times", minimumVersion: "1.0.0")]
-        [ResponseType(typeof (List<AttributeDTO>))]
+        [ResponseType(typeof(List<AttributeDTO>))]
         [Route("govolunteer/prep-times")]
         [HttpGet]
         public IHttpActionResult GetPrepTimes()
@@ -78,7 +117,7 @@ namespace crds_angular.Controllers.API
             }
         }
 
-        [ResponseType(typeof (List<AttributeDTO>))]
+        [ResponseType(typeof(List<AttributeDTO>))]
         [VersionedRoute(template: "go-volunteer/equipment", minimumVersion: "1.0.0")]
         [Route("govolunteer/equipment")]
         [HttpGet]
@@ -102,7 +141,7 @@ namespace crds_angular.Controllers.API
             return attributeTypes.Single().Attributes;
         }
 
-        [ResponseType(typeof (List<GoSkills>))]
+        [ResponseType(typeof(List<GoSkills>))]
         [VersionedRoute(template: "go-volunteer/skills", minimumVersion: "1.0.0")]
         [Route("govolunteer/skills")]
         [HttpGet]
@@ -125,7 +164,7 @@ namespace crds_angular.Controllers.API
             }
         }
 
-        [ResponseType(typeof (List<GroupConnector>))]
+        [ResponseType(typeof(List<GroupConnector>))]
         [VersionedRoute(template: "group-connectors/open-orgs/{initiativeId}", minimumVersion: "1.0.0")]
         [Route("group-connectors/open-orgs/{initiativeId}")]
         [HttpGet]
@@ -150,7 +189,7 @@ namespace crds_angular.Controllers.API
             }
         }
 
-        [ResponseType(typeof (List<GroupConnector>))]
+        [ResponseType(typeof(List<GroupConnector>))]
         [VersionedRoute(template: "group-connectors/{organizationId}/{initiativeId}", minimumVersion: "1.0.0")]
         [Route("group-connectors/{organizationId}/{initiativeId}")]
         [HttpGet]
@@ -175,7 +214,7 @@ namespace crds_angular.Controllers.API
             }
         }
 
-        [ResponseType(typeof (Organization))]
+        [ResponseType(typeof(Organization))]
         [VersionedRoute(template: "organization/{organizationName}", minimumVersion: "1.0.0")]
         [Route("organization/{organizationName}")]
         [HttpGet]
@@ -197,7 +236,7 @@ namespace crds_angular.Controllers.API
             }
         }
 
-        [ResponseType(typeof (List<OtherOrganization>))]
+        [ResponseType(typeof(List<OtherOrganization>))]
         [VersionedRoute(template: "organizations/other", minimumVersion: "1.0.0")]
         [Route("organizations/other")]
         [HttpGet]
@@ -215,7 +254,7 @@ namespace crds_angular.Controllers.API
             }
         }
 
-        [ResponseType(typeof (List<OrgLocation>))]
+        [ResponseType(typeof(List<OrgLocation>))]
         [VersionedRoute(template: "organizations/{organizationId}/locations", minimumVersion: "1.0.0")]
         [Route("organizations/{organizationId}/locations")]
         [HttpGet]
@@ -233,7 +272,7 @@ namespace crds_angular.Controllers.API
             }
         }
 
-        [ResponseType(typeof (List<ProjectType>))]
+        [ResponseType(typeof(List<ProjectType>))]
         [VersionedRoute(template: "go-volunteer/project-types", minimumVersion: "1.0.0")]
         [Route("goVolunteer/projectTypes")]
         [HttpGet]
@@ -253,9 +292,9 @@ namespace crds_angular.Controllers.API
 
         [VersionedRoute(template: "go-volunteer/registration", minimumVersion: "1.0.0")]
         [Route("govolunteer/registration")]
-        [ResponseType(typeof (Registration))]
+        [ResponseType(typeof(Registration))]
         [HttpPost]
-        public IHttpActionResult Post([FromBody] Registration goVolunteerRegistration)
+        public IHttpActionResult Post([FromBody] CincinnatiRegistration goVolunteerRegistration)
         {
             if (ModelState.IsValid)
             {
@@ -267,11 +306,96 @@ namespace crds_angular.Controllers.API
             throw new HttpResponseException(dataError.HttpResponseMessage);
         }
 
-        private IHttpActionResult SaveRegistration(string token, Registration goVolunteerRegistration)
+        [VersionedRoute(template: "go-volunteer/registration/{projectId}", minimumVersion: "1.0.0")]
+        [Route("go-volunteer/registration/{projectId}")]
+        [ResponseType(typeof(AnywhereRegistration))]
+        [HttpPost]
+        public IHttpActionResult Post([FromBody] AnywhereRegistration goVolunteerRegistration, int projectId)
         {
             try
             {
-                goVolunteerRegistration.InitiativeId = _configurationWrapper.GetConfigIntValue("GoCincinnatiInitativeId");
+                if (ModelState.IsValid)
+                {
+                    return Authorized(token => Ok(_goVolunteerService.CreateAnywhereRegistration(goVolunteerRegistration, projectId, token)));
+                }
+                var errors = ModelState.Values.SelectMany(val => val.Errors).Aggregate("", (current, err) => current + err.ErrorMessage);
+                var dataError = new ApiErrorDto("Registration Data Invalid", new InvalidOperationException("Invalid Registration Data" + errors));
+                throw new HttpResponseException(dataError.HttpResponseMessage);
+            }
+            catch (DuplicateUserException e)
+            {
+                throw new HttpResponseException(HttpStatusCode.Conflict);
+            }
+            catch (Exception e)
+            {
+                var msg = "GoVolunteerRegistrationController: POST " + goVolunteerRegistration;
+                logger.Error(msg, e);
+                var apiError = new ApiErrorDto(msg, e);
+                throw new HttpResponseException(apiError.HttpResponseMessage);
+            }
+        }
+
+        [VersionedRoute(template: "go-volunteer/cities/{initiativeId}", minimumVersion: "1.0.0")]
+        [Route("go-volunteer/cities/{initiativeId}")]
+        [ResponseType(typeof (List<ProjectCity>))]
+        [HttpGet]
+        public IHttpActionResult GetParticipatingCities(int initiativeId)
+        {
+            try
+            {
+                var cities = _goVolunteerService.GetParticipatingCities(initiativeId);
+                return Ok(cities);
+            }
+            catch (Exception e)
+            {
+                var apiError = new ApiErrorDto("Unable to get cities", e);
+                throw new HttpResponseException(apiError.HttpResponseMessage);
+            }
+        }
+
+        [VersionedRoute(template: "go-volunteer/organizations", minimumVersion: "1.0.0")]
+        [Route("go-volunteer/organizations")]
+        [ResponseType(typeof(List<Organization>))]
+        [HttpGet]
+        public IHttpActionResult GetOrganizations()
+        {
+            try
+            {
+                var orgs = _organizationService.GetOrganizations();
+                return Ok(orgs);
+            }
+            catch (Exception e)
+            {
+                var apiError = new ApiErrorDto("Unable to get organizations", e);
+                throw new HttpResponseException(apiError.HttpResponseMessage);
+            }
+        }
+
+        [VersionedRoute(template: "go-volunteer/dashboard/export/{projectId}", minimumVersion: "1.0.0")]
+        [Route("go-volunteer/dashboard/export/{projectId}")]
+        [HttpGet]
+        public IHttpActionResult GetGroupLeaderExportFile(int projectId)
+        {
+            return Authorized(token =>
+            {
+                try
+                {
+                    string filename = "groupLeaderExport.csv";
+                    var stream = _goVolunteerService.CreateGroupLeaderExport(projectId);
+                    return new FileResult(stream, filename);
+                }
+                catch (Exception e)
+                {
+                    var apiError = new ApiErrorDto("Unable to get Group Leader Export File", e);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+            });
+        }
+
+        private IHttpActionResult SaveRegistration(string token, CincinnatiRegistration goVolunteerRegistration)
+        {
+            try
+            {                
                 var reg = _goVolunteerService.CreateRegistration(goVolunteerRegistration, token);
                 return Ok(reg);
             }

@@ -16,6 +16,9 @@ using Microsoft.Ajax.Utilities;
 using MinistryPlatform.Translation.Models;
 using MPInterfaces = MinistryPlatform.Translation.Repositories.Interfaces;
 using Crossroads.ApiVersioning;
+using Crossroads.Web.Common;
+using Crossroads.Web.Common.Security;
+using Newtonsoft.Json;
 
 namespace crds_angular.Controllers.API
 {
@@ -25,7 +28,8 @@ namespace crds_angular.Controllers.API
 
         private readonly MPInterfaces.IDonorRepository _mpDonorService;
         private readonly IPaymentProcessorService _stripeService;
-        private readonly MPInterfaces.IAuthenticationRepository _authenticationService;
+        private readonly IAuthenticationRepository _authenticationService;
+        private readonly MPInterfaces.IContactRepository _contactRepository; 
         private readonly IDonorService _gatewayDonorService;
         private readonly IDonationService _gatewayDonationService;
         private readonly IUserImpersonationService _impersonationService;
@@ -36,18 +40,20 @@ namespace crds_angular.Controllers.API
 
         public DonationController(MPInterfaces.IDonorRepository mpDonorService,
                                   IPaymentProcessorService stripeService,
-                                  MPInterfaces.IAuthenticationRepository authenticationService,
+                                  IAuthenticationRepository authenticationService,
+                                  MPInterfaces.IContactRepository contactRepository,
                                   IDonorService gatewayDonorService,
                                   IDonationService gatewayDonationService,
                                   MPInterfaces.IDonationRepository mpDonationService,
                                   MPInterfaces.IPledgeRepository mpPledgeService,
                                   IUserImpersonationService impersonationService,
                                   IPaymentService paymentService,
-                                  MPInterfaces.IInvoiceRepository invoiceRepository) : base(impersonationService)
+                                  MPInterfaces.IInvoiceRepository invoiceRepository) : base(impersonationService, authenticationService)
         {
             _mpDonorService = mpDonorService;
             _stripeService = stripeService;
             _authenticationService = authenticationService;
+            _contactRepository = contactRepository;
             _gatewayDonorService = gatewayDonorService;
             _gatewayDonationService = gatewayDonationService;
             _impersonationService = impersonationService;
@@ -103,6 +109,7 @@ namespace crds_angular.Controllers.API
                                                                   () =>
                                                                       _gatewayDonationService.GetDonationsForAuthenticatedUser(token, donationYear, limit, softCredit, includeRecurring))
                         : _gatewayDonationService.GetDonationsForAuthenticatedUser(token, donationYear, limit, softCredit, includeRecurring);
+
                     if (donations == null || !donations.HasDonations)
                     {
                         return (RestHttpActionResult<ApiErrorDto>.WithStatus(HttpStatusCode.NotFound, new ApiErrorDto("No matching donations found")));
@@ -113,6 +120,12 @@ namespace crds_angular.Controllers.API
                 catch (UserImpersonationException e)
                 {
                     return (e.GetRestHttpActionResult());
+                }
+                catch (Exception e)
+                {
+                    var msg = "DonationController: GetDonations " + donationYear + ", " + impersonateDonorId;
+                    _logger.Error(msg, e);
+                    return (RestHttpActionResult<ApiErrorDto>.WithStatus(HttpStatusCode.InternalServerError, new ApiErrorDto("Unexpected exception happens at server side")));
                 }
             }));
         }
@@ -147,6 +160,12 @@ namespace crds_angular.Controllers.API
                 {
                     return (e.GetRestHttpActionResult());
                 }
+                catch (Exception e)
+                {
+                    var msg = "DonationController: GetDonationYears " + impersonateDonorId;
+                    _logger.Error(msg, e);
+                    return (RestHttpActionResult<ApiErrorDto>.WithStatus(HttpStatusCode.InternalServerError, new ApiErrorDto("Unexpected exception happens at server side")));
+                }
             }));
         }
 
@@ -166,7 +185,7 @@ namespace crds_angular.Controllers.API
         {
             return (Authorized(token =>
             {
-                var contactId = _authenticationService.GetContactId(token);
+                var contactId = _contactRepository.GetContactId(token);
                 _gatewayDonationService.SendMessageToDonor(dto.DonorId, dto.DonationDistributionId, contactId, dto.Message, dto.TripName);
                 return Ok();
             }));
@@ -220,7 +239,8 @@ namespace crds_angular.Controllers.API
 
         private IHttpActionResult CreateDonationAndDistributionAuthenticated(String token, CreateDonationDTO dto)
         {
-            var isPayment = (dto.TransactionType != null && dto.TransactionType.Equals("PAYMENT"));
+            bool isPayment = (dto.TransactionType != null && dto.TransactionType.Equals("PAYMENT"));
+            MpContactDonor donor = null;
 
             try
             {
@@ -234,8 +254,8 @@ namespace crds_angular.Controllers.API
                     }
                 }
 
-                var contactId = _authenticationService.GetContactId(token);
-                var donor = _mpDonorService.GetContactDonor(contactId);
+                var contactId = _contactRepository.GetContactId(token);
+                donor = _mpDonorService.GetContactDonor(contactId);
                 var charge = _stripeService.ChargeCustomer(donor.ProcessorId, dto.Amount, donor.DonorId, isPayment);
                 var fee = charge.BalanceTransaction != null ? charge.BalanceTransaction.Fee : null;
 
@@ -268,10 +288,12 @@ namespace crds_angular.Controllers.API
                         PredefinedAmount = dto.PredefinedAmount
                     };
 
+                    var from = dto.Anonymous ? "Anonymous" : donor.Details.FirstName + " " + donor.Details.LastName;
+
                     var donationId = _mpDonorService.CreateDonationAndDistributionRecord(donationAndDistribution, !dto.TripDeposit);
                     if (!dto.GiftMessage.IsNullOrWhiteSpace() && pledgeId != null)
                     {
-                        SendMessageFromDonor(pledgeId.Value, donationId, dto.GiftMessage);
+                        SendMessageFromDonor(pledgeId.Value, donationId, dto.GiftMessage, from);
                     }
                     var response = new DonationDTO
                     {
@@ -337,10 +359,12 @@ namespace crds_angular.Controllers.API
             }
             catch (PaymentProcessorException stripeException)
             {
+                LogDonationError("CreateDonationAndDistributionAuthenticated", stripeException, dto, donor);
                 return (stripeException.GetStripeResult());
             }
             catch (Exception exception)
             {
+                LogDonationError("CreateDonationAndDistributionAuthenticated", exception, dto, donor);
                 var apiError = new ApiErrorDto("Donation/Payment Post Failed", exception);
                 throw new HttpResponseException(apiError.HttpResponseMessage);
             }
@@ -349,10 +373,11 @@ namespace crds_angular.Controllers.API
         private IHttpActionResult CreateDonationAndDistributionUnauthenticated(CreateDonationDTO dto)
         {
             bool isPayment = false;
+            MpContactDonor donor = null;
 
             try
             {
-                var donor = _gatewayDonorService.GetContactDonorForEmail(dto.EmailAddress);
+                donor = _gatewayDonorService.GetContactDonorForEmail(dto.EmailAddress);
                 var charge = _stripeService.ChargeCustomer(donor.ProcessorId, dto.Amount, donor.DonorId, isPayment);
                 var fee = charge.BalanceTransaction != null ? charge.BalanceTransaction.Fee : null;
                 int? pledgeId = null;
@@ -382,10 +407,12 @@ namespace crds_angular.Controllers.API
                     SourceUrl = dto.SourceUrl
                 };
 
+                var from = dto.Anonymous ? "Anonymous" : donor.Details.FirstName + " " + donor.Details.LastName;
+
                 var donationId = _mpDonorService.CreateDonationAndDistributionRecord(donationAndDistribution);
                 if (!dto.GiftMessage.IsNullOrWhiteSpace() && pledgeId != null)
                 {
-                    SendMessageFromDonor(pledgeId.Value, donationId, dto.GiftMessage);
+                    SendMessageFromDonor(pledgeId.Value, donationId, dto.GiftMessage, from);
                 }
 
                 var response = new DonationDTO()
@@ -400,24 +427,41 @@ namespace crds_angular.Controllers.API
             }
             catch (PaymentProcessorException stripeException)
             {
+                LogDonationError("CreateDonationAndDistributionUnauthenticated", stripeException, dto, donor);
                 return (stripeException.GetStripeResult());
             }
             catch (Exception exception)
             {
+                LogDonationError("CreateDonationAndDistributionUnauthenticated", exception, dto, donor);
                 var apiError = new ApiErrorDto("Donation Post Failed", exception);
                 throw new HttpResponseException(apiError.HttpResponseMessage);
             }
         }
 
-        private void SendMessageFromDonor(int pledgeId, int donationId, string message)
+        private void SendMessageFromDonor(int pledgeId, int donationId, string message, string from)
         {
             try
             {
-                _mpDonationService.SendMessageFromDonor(pledgeId, donationId, message);
+                _mpDonationService.SendMessageFromDonor(pledgeId, donationId, message, from);
             }
             catch (Exception ex) {
                 _logger.Error(string.Format("Send Message From Donor Failed, pledgeId ({0})", pledgeId),ex);
             }
+        }
+
+        private void LogDonationError(string methodName, Exception exception, CreateDonationDTO dto, MpContactDonor donor)
+        {
+            int donorId = donor?.DonorId ?? 0;
+            string processorId = donor?.ProcessorId ?? "";
+            _logger.Error($"{methodName} exception (DonorId = {donorId}, ProcessorId = {processorId})", exception);
+
+            // include donation in error log (serialized json); ignore exceptions during serialization
+            JsonSerializerSettings settings = new JsonSerializerSettings
+            {
+                Error = (serializer, err) => err.ErrorContext.Handled = true
+            };
+            string json = JsonConvert.SerializeObject(dto, settings);
+            _logger.Error($"{methodName} data {json}");
         }
     }
 }

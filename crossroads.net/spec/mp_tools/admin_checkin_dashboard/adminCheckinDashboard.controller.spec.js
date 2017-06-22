@@ -87,7 +87,7 @@ describe('AdminCheckinDashboard', function() {
     beforeEach(function() {
       vm.event = {id: 1};
       vm.loadRooms();
-      httpBackend.expectGET(window.__env__['CRDS_API_ENDPOINT'] + 'api/eventTool/1/rooms')
+      httpBackend.expectGET(window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 'api/eventTool/1/rooms')
                              .respond({rooms: mockRoomResponse});
       httpBackend.flush();
     });
@@ -110,7 +110,7 @@ describe('AdminCheckinDashboard', function() {
       vm.startDate = new Date('2016-05-10T17:30:06.445Z');
       vm.endDate = new Date('2016-05-11T17:30:06.445Z');
       vm.loadEvents();
-      httpBackend.expectGET(window.__env__['CRDS_API_ENDPOINT'] + 
+      httpBackend.expectGET(window.__env__['CRDS_GATEWAY_CLIENT_ENDPOINT'] + 
                             `api/event/eventsbysite/1?endDate=2016-05-11T17:30:06.445Z&startDate=2016-05-10T17:30:06.445Z`)
         .respond(mockEventResponse);
       httpBackend.flush();
