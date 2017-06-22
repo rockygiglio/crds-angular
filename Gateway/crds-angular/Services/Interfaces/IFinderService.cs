@@ -36,6 +36,6 @@ namespace crds_angular.Services.Interfaces
         List<PinDto> RandomizeLatLongForNonSitePins(List<PinDto> pins);
         GeoCoordinate GetMapCenterForResults(string userSearchString, GeoCoordinates frontEndMapCenter, string finderType);
         void AddUserDirectlyToGroup(User user, int groupid);
-        List<User> GetMatches(User user);
+        bool DoesContactExists(string email);
     }
 }

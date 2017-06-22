@@ -1033,24 +1033,10 @@ namespace crds_angular.Services
             return resultMapCenterCoords;
         }
 
-        public List<User> GetMatches(User user)
+        public bool DoesContactExists(string email)
         {
-            var people = new List<User>();
-
-            var contacts = _contactRepository.GetPotentialMatchesContact(user.firstName, user.lastName, user.email);
-
-            foreach (var contact in contacts)
-            {
-                var newEntry = new User
-                {
-                    firstName = contact.First_Name,
-                    lastName = contact.Last_Name,
-                    email = contact.Email_Address
-                };
-                people.Add(newEntry);
-            }
-
-            return people;
+            var contactId = _contactRepository.GetContactIdByEmail(email);
+            return contactId != 0;
         }
     }
 }
