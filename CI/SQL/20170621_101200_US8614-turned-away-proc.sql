@@ -54,7 +54,7 @@ AS
 		AND CONVERT(date, e.Event_Start_Date) >= @StartDate
 		AND CONVERT(date, e.Event_Start_Date) <= @EndDate) AS T
 	WHERE T.rn <= 1
-	ORDER BY t.Display_Name;
+	ORDER BY t.Event_Start_Date, t.[Group Name];
 
 GO
 
