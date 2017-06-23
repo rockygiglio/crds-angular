@@ -249,7 +249,7 @@ namespace crds_angular.test.Services
             _awsCloudsearchService.Setup(
                 mocked => mocked.SearchByGroupId(It.IsAny<string>())).Returns(searchresults);
 
-            var result = _fixture.GetPinDetailsForGroup(121212);
+            var result = _fixture.GetPinDetailsForGroup(121212, new GeoCoordinate(38.94526,-84.661275));
 
             Assert.IsInstanceOf<PinDto>(result);
 
@@ -284,7 +284,7 @@ namespace crds_angular.test.Services
             _awsCloudsearchService.Setup(
                 mocked => mocked.SearchByGroupId(It.IsAny<string>())).Returns(searchresults);
 
-            var result = _fixture.GetPinDetailsForGroup(121212);
+            var result = _fixture.GetPinDetailsForGroup(121212, new GeoCoordinate(38.94526, -84.661275));
 
             Assert.IsInstanceOf<PinDto>(result);
 
