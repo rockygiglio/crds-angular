@@ -24,16 +24,19 @@ namespace crds_angular.Controllers.API
     {
         private readonly IAwsCloudsearchService _awsCloudsearchService;
         private readonly IFinderService _finderService;
+        private readonly IGroupToolService _groupToolService;
         private readonly IAuthenticationRepository _authenticationRepo;
         private readonly ILog _logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         public FinderController(IFinderService finderService,
+                                IGroupToolService groupToolService,
                                 IUserImpersonationService userImpersonationService,
                                 IAuthenticationRepository authenticationRepository,
                                 IAwsCloudsearchService awsCloudsearchService)
             : base(userImpersonationService, authenticationRepository)
         {
             _finderService = finderService;
+            _groupToolService = groupToolService;
             _awsCloudsearchService = awsCloudsearchService;
             _authenticationRepo = authenticationRepository;
         }
@@ -182,6 +185,37 @@ namespace crds_angular.Controllers.API
                 {
                     _logger.Error("Could not get address", e);
                     var apiError = new ApiErrorDto("Get Address Failed", e);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+            });
+        }
+
+        /// <summary>
+        /// Remove a participant from my group.
+        /// </summary>
+        /// <param name="groupInformation"></param> Contains Group ID, Participant ID, and message
+        /// <returns>An empty response with 200 status code if everything worked, 403 if the caller does not have permission to remove a participant, or another non-success status code on any other failure</returns>
+        [RequiresAuthorization]
+        [VersionedRoute(template: "finder/group/participant/remove", minimumVersion: "1.0.0")]
+        [Route("finder/group/participant/remove")]
+        [HttpPost]
+        public IHttpActionResult RemoveParticipantFromMyGroup([FromBody] GroupParticipantRemovalDto groupInformation)
+        {
+            return Authorized(token =>
+            {
+                try
+                {
+                    _groupToolService.RemoveParticipantFromMyGroup(token, groupInformation.GroupId, groupInformation.GroupParticipantId, groupInformation.Message);
+                    return Ok();
+                }
+                catch (GroupParticipantRemovalException e)
+                {
+                    var apiError = new ApiErrorDto(e.Message, null, e.StatusCode);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+                catch (Exception ex)
+                {
+                    var apiError = new ApiErrorDto(string.Format("Error removing group participant {0} from group {1}", groupInformation.GroupParticipantId, groupInformation.GroupId), ex);
                     throw new HttpResponseException(apiError.HttpResponseMessage);
                 }
             });

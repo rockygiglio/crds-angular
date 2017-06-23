@@ -22,6 +22,7 @@ namespace crds_angular.test.controllers
 
         private Mock<IAddressService> _addressService;
         private Mock<IAddressGeocodingService> _addressGeocodingService;
+        private Mock<IGroupToolService> _groupToolService;
         private Mock<IFinderService> _finderService;
         private Mock<IUserImpersonationService> _userImpersonationService;
         private Mock<IAuthenticationRepository> _authenticationRepository;
@@ -36,11 +37,13 @@ namespace crds_angular.test.controllers
             _userImpersonationService = new Mock<IUserImpersonationService>();
             _authenticationRepository = new Mock<IAuthenticationRepository>();
             _awsCloudsearchService = new Mock<IAwsCloudsearchService>();
+            _groupToolService = new Mock<IGroupToolService>();
 
             _authType = "authType";
             _authToken = "authToken";
 
             _fixture = new FinderController(_finderService.Object,
+                                            _groupToolService.Object,
                                             _userImpersonationService.Object,
                                             _authenticationRepository.Object,
                                             _awsCloudsearchService.Object)
