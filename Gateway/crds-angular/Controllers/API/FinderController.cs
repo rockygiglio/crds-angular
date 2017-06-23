@@ -102,7 +102,7 @@ namespace crds_angular.Controllers.API
             }
         }
 
-        [ResponseType(typeof(User[]))]
+        [ResponseType(typeof(bool))]
         [VersionedRoute(template: "finder/getmatch", minimumVersion: "1.0.0")]
         [Route("finder/getmatch")]
         [HttpPost]
@@ -110,12 +110,12 @@ namespace crds_angular.Controllers.API
         {
             try
             {
-                var list = _finderService.GetMatches(new User {email= searchUser.email, firstName = searchUser.firstName, lastName = searchUser.lastName});
-                return Ok(list);
+                var rc = _finderService.DoesContactExists(searchUser.email);
+                return Ok(rc);
             }
             catch (Exception ex)
             {
-                var apiError = new ApiErrorDto("GetPotentialMatches Failed", ex);
+                var apiError = new ApiErrorDto("GetPotentialUserMatch Failed", ex);
                 throw new HttpResponseException(apiError.HttpResponseMessage);
             }
         }
