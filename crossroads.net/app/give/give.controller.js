@@ -11,7 +11,8 @@
                       'GiveTransferService',
                       'AUTH_EVENTS',
                       'OneTimeGiving',
-                      'RecurringGiving'
+                      'RecurringGiving',
+                      '$analytics'
                       ];
 
   function DonationException(message) {
@@ -28,7 +29,8 @@
     GiveTransferService,
     AUTH_EVENTS,
     OneTimeGiving,
-    RecurringGiving) {
+    RecurringGiving,
+    $analytics) {
 
     var vm = this;
     vm.activeSession = activeSession;
@@ -68,8 +70,10 @@
     $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams) {
       vm.dto.processing = false;
       if (toState.name === vm.service.stateName('thankYou')) {
+        $analytics.pageTrack('/give/thank-you');
         vm.dto.initialized = false;
       }
+
     });
 
     $rootScope.$on('$stateChangeError', function(event, toState, toParams) {

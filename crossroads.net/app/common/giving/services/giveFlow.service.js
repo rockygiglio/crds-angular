@@ -3,9 +3,9 @@
 
   module.exports = GiveFlowService;
 
-  GiveFlowService.$inject = ['Session', '$state', '$rootScope', 'GiveTransferService'];
+  GiveFlowService.$inject = ['Session', '$state', '$rootScope', 'GiveTransferService', '$analytics'];
 
-  function GiveFlowService(Session, $state, $rootScope, GiveTransferService) {
+  function GiveFlowService(Session, $state, $rootScope, GiveTransferService, $analytics) {
 
     var flowObject = {
       reset: function(object) {
@@ -27,12 +27,13 @@
 
           GiveTransferService.processing = true;
           if (!Session.isActive() && !GiveTransferService.processingChange) {
-            Session.addRedirectRoute(this.account, '');
-            $state.go(this.login);
+            this.goToLogin();
           } else {
+            $analytics.pageTrack('/give/account');
             $state.go(this.account);
           }
         } else {
+          $analytics.eventTrack('amountInvalid', { category: 'giveValidation' });
           GiveTransferService.processing = false;
           $rootScope.$emit('notify', $rootScope.MESSAGES.generalError);
         }
@@ -41,6 +42,7 @@
       goToLogin: function() {
         GiveTransferService.processing = true;
         Session.addRedirectRoute(this.account, '');
+        $analytics.pageTrack('/give/login');
         $state.go(this.login);
       },
 
@@ -58,6 +60,7 @@
         GiveTransferService.savedPayment = GiveTransferService.view;
         GiveTransferService.changeAccountInfo = true;
         GiveTransferService.amountSubmitted = false;
+        $analytics.pageTrack('/give/change');
         $state.go(this.change);
       }
     };
