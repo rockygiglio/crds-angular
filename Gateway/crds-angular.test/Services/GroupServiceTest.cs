@@ -387,7 +387,7 @@ namespace crds_angular.test.Services
                 new MpEvent {EventId = 555},
                 new MpEvent {EventId = 444}
             };
-            groupRepository.Setup(mocked => mocked.getAllEventsForGroup(456)).Returns(events);
+            groupRepository.Setup(mocked => mocked.getAllEventsForGroup(456, null, false)).Returns(events);
             groupRepository.Setup(mocked => mocked.GetParticipantGroupMemberId(456,999)).Returns(999456);
             groupRepository.Setup(mocked => mocked.GetParticipantGroupMemberId(456, 888)).Returns(-1);
             groupRepository.Setup(mocked => mocked.addParticipantToGroup(888, 456, GROUP_ROLE_DEFAULT_ID, false, It.IsAny<DateTime>(), null, false, null)).Returns(888456);
@@ -427,7 +427,7 @@ namespace crds_angular.test.Services
 
             groupRepository.Setup(mocked => mocked.getGroupDetails(456)).Returns(g);
 
-            groupRepository.Setup(mocked => mocked.getAllEventsForGroup(456)).Returns(eventList);
+            groupRepository.Setup(mocked => mocked.getAllEventsForGroup(456, null, false)).Returns(eventList);
 
             var relations = new List<MpGroupSignupRelationships>
             {
