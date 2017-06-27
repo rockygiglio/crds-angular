@@ -615,13 +615,18 @@ namespace MinistryPlatform.Translation.Test.Services
             var contactId = 565656;
             var email = "cross@crossroads.net";
             var guestDonorPageViewId = "PossibleGuestDonorContact";
+            var firstName = "Homer";
+            var lastName = "Simpson";
+
             var expectedDonorValues = new List<Dictionary<string, object>>();
             expectedDonorValues.Add(new Dictionary<string, object>
             {
                 {"Donor_Record", donorId},
                 {"Processor_ID", processorId},
                 {"Contact_ID", contactId},
-                {"Email_Address", email}
+                {"Email_Address", email},
+                { "First_Name", firstName},
+                { "Last_Name", lastName}
             });
             var donor = new MpContactDonor()
             {
@@ -655,6 +660,9 @@ namespace MinistryPlatform.Translation.Test.Services
             var contactId = 565656;
             var email = "cross@crossroads.net";
             var guestDonorPageViewId = "DonorByContactId";
+            const string firstName = "Homer";
+            const string lastName = "Simpson";
+
             var expectedDonorValues = new List<Dictionary<string, object>>();
             expectedDonorValues.Add(new Dictionary<string, object>
             {
@@ -666,7 +674,9 @@ namespace MinistryPlatform.Translation.Test.Services
                 {"Statement_Type_ID", 1},
                 {"Statement_Frequency", "Quarterly"},
                 {"Statement_Method", "None"},
-                {"Household_ID", 1}
+                {"Household_ID", 1},
+                { "First_Name", firstName},
+                { "Last_Name", lastName}
             });
             var donor = new MpContactDonor()
             {
@@ -1001,7 +1011,9 @@ namespace MinistryPlatform.Translation.Test.Services
             const string routingNumber = "042000314";
             const string processorAccountId = "bk_2985405871018";
             const string accountProcessorId = "sub_954859038710";
-          
+            const string firstName = "Homer";
+            const string lastName = "Simpson";
+
             var expectedEncAcct = _fixture.CreateHashedAccountAndRoutingNumber(accountNumber, routingNumber);
             var queryResults = new List<Dictionary<string, object>>
             {
@@ -1010,7 +1022,7 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Donor_Account_ID", donorAccountId},
                     { "Contact_ID", contactId },
                     {"Processor_Account_ID", processorAccountId},
-                    {"Processor_ID", accountProcessorId},
+                    {"Processor_ID", accountProcessorId}
                 }
             };
 
@@ -1029,6 +1041,8 @@ namespace MinistryPlatform.Translation.Test.Services
                     {"Statement_Frequency", "Quarterly"},
                     {"Statement_Method", "None"},
                     {"Household_ID", 1},
+                    {"First_Name", firstName},
+                    {"Last_Name", lastName}
                 }
             };
             var donor = new MpContactDonor()
