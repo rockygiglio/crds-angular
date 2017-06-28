@@ -56,6 +56,17 @@
           }
         }
       })
+      .state('give.one_time', {
+        url: '/one_time',
+        controller: 'GiveController as give',
+        resolve: {
+          OneTimeGiving: 'OneTimeGiving',
+          giveService: function(OneTimeGiving) {
+            OneTimeGiving.resetGiveTransferServiceGiveType();
+            return OneTimeGiving;
+          }
+        }
+      })
       .state('give.amount', {
         templateUrl: 'templates/amount.html'
       })
