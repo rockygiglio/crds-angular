@@ -288,10 +288,12 @@ namespace crds_angular.Controllers.API
                         PredefinedAmount = dto.PredefinedAmount
                     };
 
+                    var from = dto.Anonymous ? "Anonymous" : donor.Details.FirstName + " " + donor.Details.LastName;
+
                     var donationId = _mpDonorService.CreateDonationAndDistributionRecord(donationAndDistribution, !dto.TripDeposit);
                     if (!dto.GiftMessage.IsNullOrWhiteSpace() && pledgeId != null)
                     {
-                        SendMessageFromDonor(pledgeId.Value, donationId, dto.GiftMessage);
+                        SendMessageFromDonor(pledgeId.Value, donationId, dto.GiftMessage, from);
                     }
                     var response = new DonationDTO
                     {
@@ -405,10 +407,12 @@ namespace crds_angular.Controllers.API
                     SourceUrl = dto.SourceUrl
                 };
 
+                var from = dto.Anonymous ? "Anonymous" : donor.Details.FirstName + " " + donor.Details.LastName;
+
                 var donationId = _mpDonorService.CreateDonationAndDistributionRecord(donationAndDistribution);
                 if (!dto.GiftMessage.IsNullOrWhiteSpace() && pledgeId != null)
                 {
-                    SendMessageFromDonor(pledgeId.Value, donationId, dto.GiftMessage);
+                    SendMessageFromDonor(pledgeId.Value, donationId, dto.GiftMessage, from);
                 }
 
                 var response = new DonationDTO()
@@ -434,11 +438,11 @@ namespace crds_angular.Controllers.API
             }
         }
 
-        private void SendMessageFromDonor(int pledgeId, int donationId, string message)
+        private void SendMessageFromDonor(int pledgeId, int donationId, string message, string from)
         {
             try
             {
-                _mpDonationService.SendMessageFromDonor(pledgeId, donationId, message);
+                _mpDonationService.SendMessageFromDonor(pledgeId, donationId, message, from);
             }
             catch (Exception ex) {
                 _logger.Error(string.Format("Send Message From Donor Failed, pledgeId ({0})", pledgeId),ex);

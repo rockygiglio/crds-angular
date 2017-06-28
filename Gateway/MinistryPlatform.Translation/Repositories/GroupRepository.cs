@@ -569,23 +569,25 @@ namespace MinistryPlatform.Translation.Repositories
             return groupParticipants;
         }
 
-        public IList<MpEvent> getAllEventsForGroup(int groupId)
+        public IList<MpEvent> getAllEventsForGroup(int groupId, DateTime? minEndDate = null, bool includeCancelledEvents = false)
         {
-            var apiToken = ApiLogin();
-            var groupEvents = ministryPlatformService.GetSubpageViewRecords("GroupEventsSubPageView", groupId, apiToken);
-            if (groupEvents == null || groupEvents.Count == 0)
-            {
-                return null;
-            }
-            return groupEvents.Select(tmpEvent => new MpEvent
-            {
-                EventId = tmpEvent.ToInt("Event_ID"),
-                Congregation = tmpEvent.ToString("Congregation_Name"),
-                EventStartDate = tmpEvent.ToDate("Event_Start_Date"),
-                EventEndDate = tmpEvent.ToDate("Event_End_Date"),
-                EventTitle = tmpEvent.ToString("Event_Title"),
-                EventType = tmpEvent.ToString("Event_Type_ID")
-            }).ToList();
+            var parameters = new Dictionary<string, object>();
+            parameters.Add("Group_ID", groupId);
+
+            // optionally filter out events whose end date has passed
+            if (minEndDate != null)
+                parameters.Add("Min_End_Date", minEndDate.Value.Date);
+
+            // optionally filter out cancelled events
+            if (!includeCancelledEvents)
+                parameters.Add("Cancelled", 0);
+
+            string apiToken = ApiLogin();
+            var resultSet = _ministryPlatformRestRepository.UsingAuthenticationToken(apiToken)
+                        .GetFromStoredProc<MpEvent>("api_crds_Get_Events_For_Group", parameters);
+
+            List<MpEvent> eventList = (resultSet != null && resultSet.Count > 0) ? resultSet[0] : null;
+            return eventList;
         }
 
         public IList<string> GetEventTypesForGroup(int groupId, string token)
