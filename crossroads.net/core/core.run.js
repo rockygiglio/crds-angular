@@ -36,6 +36,7 @@
     }
 
     function setupHeader() {
+      $('html, body').removeClass('noscroll');
       // header options
       var options = {
         el: '[data-header]',
