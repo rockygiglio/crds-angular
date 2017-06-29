@@ -1,2 +1,22 @@
-<script src='//maps.googleapis.com/maps/api/js?sensor=false'></script>
+<div class="row">
+  <div map-lazy-load="https://maps.google.com/maps/api/js"
+    map-lazy-load-params="{{leaveYourMarkCtrl.googleMapsUrl}}" style="height: 600px;">
+    <ng-map
+      center="37.9241551,-27.1178309"
+      zoom="2"
+      styles="{{leaveYourMarkCtrl.mapStyles}}"
+      scrollwheel="false"
+      pan-control="false"
+      zoom-control="true"
+      scale-control="false"
+      map-type-control="false"
+      street-view-control="false"
+      zoom-control-options="{position:'TOP_LEFT'}"
+      style="height: 100%">
+      <marker position="3500 madison road, cincinnati, oh" animation="Animation.DROP" icon="{{leaveYourMarkCtrl.iconStyle}}"
+      ></marker>
+      <marker position="crossroads florence, florence, ky" animation="Animation.DROP" icon="{{leaveYourMarkCtrl.iconStyle}}"></marker>
+    </ng-map>
+  </div>
+</div>
 <div dynamic-content="$root.MESSAGES.imInLeaveyourmark.content | html"></div>

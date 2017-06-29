@@ -33,7 +33,7 @@
     'ngFileSaver',
     'ngStorage',
     'svgBaseFix',
-    'uiGmapgoogle-maps'
+    'ngMap'
   ])
     .constant('AUTH_EVENTS', {
       loginSuccess: 'auth-login-success',

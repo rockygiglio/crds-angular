@@ -59,7 +59,7 @@
   require('./services/CMS.service');
 
   // Here instead of ang.js because it requires lodash
-  require('angular-google-maps');
+  // require('angular-google-maps');
 
   require('./errors');
 
