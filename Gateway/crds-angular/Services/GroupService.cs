@@ -240,7 +240,8 @@ namespace crds_angular.Services
                     }
 
                     // Now see what future events are scheduled for this group, and register the user for those
-                    var events = _mpGroupRepository.getAllEventsForGroup(Convert.ToInt32(groupId));
+                    //DE2903: added the 'Today' parameter so no past events will show; cancelled events are also filtered
+                    var events = _mpGroupRepository.getAllEventsForGroup(Convert.ToInt32(groupId), DateTime.Today);
                     _logger.Debug("Scheduled events for this group: " + events);
                     if (events != null && events.Count > 0)
                     {
