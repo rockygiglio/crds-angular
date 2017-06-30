@@ -146,18 +146,12 @@
 
                 var metaDescription = ContentPageService.page.metaDescription;
                 if (!metaDescription) {
-                  // If a meta description is not provided we'll use the 1st sentence
-                  // and truncate at 140 chars for Twitter compatibilty.
                   var content = ContentPageService.page.content;
-                  // RegEx for first H1 tag and remove contents
-                  var hTagRE = /<h1.+?>.+?<\/h1>/;
-                  content = content.replace(hTagRE, '');
-                  // RegEx for opening and closing HTML tags
-                  var openTagRE = /<\w[^>]*>/gm;
-                  var closeTagRE = /<\/[^>]+>/gm;
-                  // Strip out HTML and add spaces after closing tags
-                  content = content.replace(openTagRE, '').replace(closeTagRE, ' ');
-                  // Get the cleaned up content up to the first period.
+                  var hTagRegEx = /<h1.+?>.+?<\/h1>/;
+                  content = content.replace(hTagRegEx, '');
+                  var openTagRegEx = /<\w[^>]*>/gm;
+                  var closeTagRegEx = /<\/[^>]+>/gm;
+                  content = content.replace(openTagRegEx, '').replace(closeTagRegEx, ' ');
                   var firstSentence = content.match(/[^.]*/)[0] + '.';
                   metaDescription = firstSentence;
                 }
