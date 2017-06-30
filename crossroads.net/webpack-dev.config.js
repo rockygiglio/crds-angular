@@ -7,6 +7,7 @@ const definePlugin = new webpack.DefinePlugin(environmentVars.get());
 module.exports = {
   entry: {
     main: './app/app.js',
+    misc: './app/misc.js',
     ang: './core/ang.js',
     core: ['./core/core.js'],
     legacy: ['./styles/legacy.scss']
