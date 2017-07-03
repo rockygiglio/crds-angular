@@ -105,7 +105,7 @@
                     title: ''
                   };
 
-                  $window.location.href = `${link}?${query_params_string}`;
+                  $window.location.replace(`${link}?${query_params_string}`)
                   return;
                 }
               });
