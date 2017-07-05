@@ -13,6 +13,7 @@ using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 
 
+
 namespace MinistryPlatform.Translation.Repositories
 {
     public class GroupRepository : BaseRepository, IGroupRepository
