@@ -43,6 +43,8 @@ namespace crds_angular.Services
         private readonly int _genericGroupForCMSMergeEmailTemplateId;
         private readonly int _gatheringHostAcceptTemplate;
         private readonly int _gatheringHostDenyTemplate;
+        private readonly int _connectCommunicationTypeEmailSmallGroupLeader; 
+        private readonly int _connectCommunicationStatusNA; 
         private readonly int _domainId;
         private readonly int _groupEndedParticipantEmailTemplate;
         private readonly string _baseUrl;
@@ -111,6 +113,8 @@ namespace crds_angular.Services
 
             _genericGroupForCMSMergeEmailTemplateId = configurationWrapper.GetConfigIntValue("GenericGroupForCMSMergeEmailTemplateId");
 
+            _connectCommunicationTypeEmailSmallGroupLeader = configurationWrapper.GetConfigIntValue("ConnectCommunicationTypeEmailSmallGroupLeader");
+            _connectCommunicationStatusNA = configurationWrapper.GetConfigIntValue("ConnectCommunicationStatusNA");
             _domainId = configurationWrapper.GetConfigIntValue("DomainId");
             _groupEndedParticipantEmailTemplate = configurationWrapper.GetConfigIntValue("GroupEndedParticipantEmailTemplate");
             _gatheringHostAcceptTemplate = configurationWrapper.GetConfigIntValue("GatheringHostAcceptTemplate");
@@ -529,9 +533,10 @@ namespace crds_angular.Services
 
             var toString = "<p><i>This email was sent to: ";
 
-            foreach (var item in leaders)
+            foreach (var leader in leaders)
             {
-                toString += item.Nickname + " " + item.LastName + " (" + item.EmailAddress + "), ";
+                toString += leader.Nickname + " " + leader.LastName + " (" + leader.EmailAddress + "), ";
+                RecordConnectInteraction(groupId, requestor.ContactId, leader.ContactId, _connectCommunicationTypeEmailSmallGroupLeader, _connectCommunicationStatusNA);
             }
 
             char[] trailingChars = { ',', ' ' };
