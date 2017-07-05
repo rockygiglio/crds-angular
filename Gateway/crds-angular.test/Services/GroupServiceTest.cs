@@ -392,7 +392,7 @@ namespace crds_angular.test.Services
             };
 
             
-            DateTime mockDateTime = new DateTime(2025, 4, 18);
+            DateTime mockDateTime = new DateTime(2025, 4, 18).Date;
             _dateTimeWrapper.Setup(m => m.Now).Returns(mockDateTime);
 
             groupRepository.Setup(mocked => mocked.getAllEventsForGroup(456, mockDateTime, false)).Returns(events);
