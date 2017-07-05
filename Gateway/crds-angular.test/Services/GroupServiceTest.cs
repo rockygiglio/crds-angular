@@ -387,7 +387,9 @@ namespace crds_angular.test.Services
                 new MpEvent {EventId = 555},
                 new MpEvent {EventId = 444}
             };
-            groupRepository.Setup(mocked => mocked.getAllEventsForGroup(456, null, false)).Returns(events);
+
+            //groupRepository.Setup(mocked => mocked.getAllEventsForGroup(456, null,false)).Returns(events); DE2903: changed to test current datetime
+            groupRepository.Setup(mocked => mocked.getAllEventsForGroup(456, DateTime.Today, false)).Returns(events);
             groupRepository.Setup(mocked => mocked.GetParticipantGroupMemberId(456,999)).Returns(999456);
             groupRepository.Setup(mocked => mocked.GetParticipantGroupMemberId(456, 888)).Returns(-1);
             groupRepository.Setup(mocked => mocked.addParticipantToGroup(888, 456, GROUP_ROLE_DEFAULT_ID, false, It.IsAny<DateTime>(), null, false, null)).Returns(888456);
