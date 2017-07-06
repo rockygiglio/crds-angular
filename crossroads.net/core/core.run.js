@@ -34,6 +34,7 @@
     }
 
     function setupHeader() {
+      svg4everybody();
       $('html, body').removeClass('noscroll');
       // header options
       var options = {
