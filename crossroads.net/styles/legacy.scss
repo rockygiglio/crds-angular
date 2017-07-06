@@ -114,6 +114,10 @@
 
 .noscroll {
   position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
   height: 100%;
   overflow: hidden;
 }
@@ -140,6 +144,14 @@
   .mobile-menu {
     position: fixed;
     top: 0;
+
+    &.modal {
+      overflow: hidden;
+    }
+
+    .modal-dialog .modal-content {
+      padding-bottom: 5em;
+    }
 
     &:not(.in) {
       .modal-dialog {
