@@ -1,6 +1,4 @@
-﻿import { SharedHeader } from 'crds-shared-header/dist/bundle';
-
-/* eslint-disable no-param-reassign */
+﻿/* eslint-disable no-param-reassign */
 (() => {
   function AppRun(Session,
     $rootScope,
