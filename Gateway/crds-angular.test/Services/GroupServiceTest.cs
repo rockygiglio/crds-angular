@@ -391,9 +391,9 @@ namespace crds_angular.test.Services
                 new MpEvent {EventId = 444}
             };
 
-
-            DateTime mockDateTime = DateTime.Today;
-            _dateTimeWrapper.Setup(m => m.Today).Returns(mockDateTime);
+            
+            DateTime mockDateTime = new DateTime(2025, 4, 18, 8, 23, 56);
+            _dateTimeWrapper.Setup(m => m.Today).Returns(mockDateTime.Date);
 
             groupRepository.Setup(mocked => mocked.getAllEventsForGroup(456, mockDateTime, false)).Returns(events);
             groupRepository.Setup(mocked => mocked.GetParticipantGroupMemberId(456,999)).Returns(999456);
