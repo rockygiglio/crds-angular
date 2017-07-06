@@ -367,7 +367,7 @@ namespace crds_angular.Services
             return participantId;
         }
 
-        public List<PinDto> GetPinsInBoundingBox(GeoCoordinate originCoords, string userSearchString, AwsBoundingBox boundingBox, string finderType, int contactId)
+        public List<PinDto> GetPinsInBoundingBox(GeoCoordinate originCoords, string userSearchString, AwsBoundingBox boundingBox, string finderType, int contactId, string filterSearchString)
         {
             List<PinDto> pins = null;
             var queryString = "matchall";
@@ -380,9 +380,8 @@ namespace crds_angular.Services
             }
             else if (finderType.Equals(_finderGroupTool))
             {
-                queryString = $"(and pintype:4 (or groupname:'{userSearchString}' groupdescription:'{userSearchString}' groupprimarycontactfirstname:'{userSearchString}' groupprimarycontactlastname:'{userSearchString}')" +
-                              $" (or groupkidswelcome: 1)" +
-                              $" (or groupagerange: '20s' groupagerange: '30s'))"; 
+                queryString =
+                    $"(and pintype:4 (or groupname:'{userSearchString}' groupdescription:'{userSearchString}' groupprimarycontactfirstname:'{userSearchString}' groupprimarycontactlastname:'{userSearchString}') {filterSearchString})";
             }
             else
             {     

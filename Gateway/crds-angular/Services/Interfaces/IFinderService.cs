@@ -19,7 +19,7 @@ namespace crds_angular.Services.Interfaces
         List<PinDto> GetMyPins(string token, GeoCoordinate originCoords, int contactId, string finderType);
         List<PinDto> GetMyGroupPins(string token, int[] groupTypeIds, int participantId, string finderType);
         int GetParticipantIdFromContact(int contactId);
-        List<PinDto> GetPinsInBoundingBox(GeoCoordinate originCoords, string address, AwsBoundingBox boundingBox, string finderType, int contactId);
+        List<PinDto> GetPinsInBoundingBox(GeoCoordinate originCoords, string address, AwsBoundingBox boundingBox, string finderType, int contactId, string filterSearchString);
         AddressDTO RandomizeLatLong(AddressDTO address);
         GeoCoordinate GetGeoCoordsFromAddressOrLatLang(string address, GeoCoordinates centerCoords);
         Boolean areAllBoundingBoxParamsPresent(MapBoundingBox boundingBox); 

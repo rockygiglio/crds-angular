@@ -9,6 +9,8 @@ namespace crds_angular.Models.Finder
     {
         public string UserSearchString { get; set; }
 
+        public string UserFilterString { get; set; }
+
         public bool IsAddressSearch { get; set; }
 
         public bool IsMyStuff { get; set;  }
