@@ -1,6 +1,4 @@
-﻿import { SharedHeader } from 'crds-shared-header/dist/bundle';
-
-/* eslint-disable no-param-reassign */
+﻿/* eslint-disable no-param-reassign */
 (() => {
   function AppRun(Session,
     $rootScope,
@@ -36,6 +34,7 @@
     }
 
     function setupHeader() {
+      svg4everybody();
       $('html, body').removeClass('noscroll');
       // header options
       var options = {

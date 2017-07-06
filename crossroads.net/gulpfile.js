@@ -36,6 +36,7 @@ function htmlReplace(devBuild) {
     assets = {
       ang: { js: '/assets/ang.js' },
       core: { js: '/assets/core.js', css: '/assets/core.css' },
+      misc: { js: '/assets/misc.js' },
       main: { js: '/assets/main.js', css: '/assets/main.css' },
       legacy: { css: '/assets/legacy.css' }
     };
@@ -48,6 +49,7 @@ function htmlReplace(devBuild) {
       angjs: assets.ang.js,
       corejs: {src: assets.core.js, tpl: '<script src="%s" type="text/javascript"  defer></script>'},
       corecss: assets.core.css,
+      miscjs: {src: assets.misc.js, tpl: '<script src="%s" type="text/javascript"  defer></script>'},
       js: {src: assets.main.js, tpl: '<script src="%s" type="text/javascript"  defer></script>'},
       legacycss: assets.legacy.css
     })).pipe(gulp.dest('./'));
