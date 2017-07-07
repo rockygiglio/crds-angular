@@ -1278,7 +1278,7 @@
                       <TextRuns>
                         <TextRun>
                           <Label>Page_Number</Label>
-                          <Value>="Page " &amp; Globals!PageNumber</Value>
+                          <Value>="Page " &amp; Globals!PageNumber &amp; " "</Value>
                           <Style>
                             <FontStyle>Italic</FontStyle>
                           </Style>
@@ -1291,17 +1291,13 @@
                   </Paragraphs>
                   <rd:DefaultName>Header_PageNumber_Textbox</rd:DefaultName>
                   <Top>0.2375in</Top>
-                  <Left>6.72in</Left>
+                  <Left>6.53334in</Left>
                   <Height>0.21in</Height>
-                  <Width>1in</Width>
+                  <Width>1.2in</Width>
                   <Style>
                     <Border>
                       <Style>None</Style>
                     </Border>
-                    <PaddingLeft>2pt</PaddingLeft>
-                    <PaddingRight>2pt</PaddingRight>
-                    <PaddingTop>2pt</PaddingTop>
-                    <PaddingBottom>2pt</PaddingBottom>
                   </Style>
                 </Textbox>
                 <Textbox Name="Header_Period_Textbox">
@@ -1312,7 +1308,7 @@
                       <TextRuns>
                         <TextRun>
                           <Label>Statement Period</Label>
-                          <Value>="Period: " &amp; CStr(Parameters!FromDate.Value) &amp; " - " &amp; CStr(Parameters!ToDate.Value)</Value>
+                          <Value>="Period: " &amp; CStr(Parameters!FromDate.Value) &amp; " - " &amp; CStr(Parameters!ToDate.Value) &amp; " "</Value>
                           <Style>
                             <FontStyle>Italic</FontStyle>
                           </Style>
@@ -1324,7 +1320,7 @@
                     </Paragraph>
                   </Paragraphs>
                   <rd:DefaultName>Header_Period_Textbox</rd:DefaultName>
-                  <Left>5.12917in</Left>
+                  <Left>5.14167in</Left>
                   <Height>0.21in</Height>
                   <Width>2.59167in</Width>
                   <ZIndex>1</ZIndex>
@@ -1332,10 +1328,6 @@
                     <Border>
                       <Style>None</Style>
                     </Border>
-                    <PaddingLeft>2pt</PaddingLeft>
-                    <PaddingRight>2pt</PaddingRight>
-                    <PaddingTop>2pt</PaddingTop>
-                    <PaddingBottom>2pt</PaddingBottom>
                   </Style>
                 </Textbox>
                 <Textbox Name="Header_Name_Text">
@@ -1365,10 +1357,6 @@
                     <Border>
                       <Style>None</Style>
                     </Border>
-                    <PaddingLeft>2pt</PaddingLeft>
-                    <PaddingRight>2pt</PaddingRight>
-                    <PaddingTop>2pt</PaddingTop>
-                    <PaddingBottom>2pt</PaddingBottom>
                   </Style>
                 </Textbox>
               </ReportItems>
