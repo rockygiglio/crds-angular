@@ -47,7 +47,8 @@
         contentBlockCategories: ['common']
       };
       setTimeout(() => {
-        if ($('[data-header]').length > 0) {
+        if ($('[data-header] [data-mobile-menu]').length == 0 &&
+            $('[data-header]').length > 0) {
           new CRDS.SharedHeader(options).render();
         }
       }, 100);
