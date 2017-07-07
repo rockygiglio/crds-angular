@@ -59,21 +59,6 @@ namespace crds_angular.Services
         private readonly int _groupAgeRangeAttributeTypeId;
         private readonly int _groupRoleLeader;
         private readonly int _domainId;
-        private IGroupRepository object1;
-        private IConfigurationWrapper object2;
-        private IEventRepository object3;
-        private IContactRelationshipRepository object4;
-        private IServeService object5;
-        private IParticipantRepository object6;
-        private ICommunicationRepository object7;
-        private IContactRepository object8;
-        private IObjectAttributeService object9;
-        private IApiUserRepository object10;
-        private IAttributeRepository object11;
-        private IEmailCommunication object12;
-        private IUserRepository object13;
-        private IInvitationRepository object14;
-        private IAttributeService object15;
 
         public GroupService(IGroupRepository mpGroupRepository,
                             IConfigurationWrapper configurationWrapper,
@@ -125,24 +110,6 @@ namespace crds_angular.Services
 
         }
 
-        public GroupService(IGroupRepository object1, IConfigurationWrapper object2, IEventRepository object3, IContactRelationshipRepository object4, IServeService object5, IParticipantRepository object6, ICommunicationRepository object7, IContactRepository object8, IObjectAttributeService object9, IApiUserRepository object10, IAttributeRepository object11, IEmailCommunication object12, IUserRepository object13, IInvitationRepository object14, IAttributeService object15)
-        {
-            this.object1 = object1;
-            this.object2 = object2;
-            this.object3 = object3;
-            this.object4 = object4;
-            this.object5 = object5;
-            this.object6 = object6;
-            this.object7 = object7;
-            this.object8 = object8;
-            this.object9 = object9;
-            this.object10 = object10;
-            this.object11 = object11;
-            this.object12 = object12;
-            this.object13 = object13;
-            this.object14 = object14;
-            this.object15 = object15;
-        }
 
         public GroupDTO CreateGroup(GroupDTO group)
         {
