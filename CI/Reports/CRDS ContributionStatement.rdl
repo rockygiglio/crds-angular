@@ -266,7 +266,7 @@
               </TablixColumns>
               <TablixRows>
                 <TablixRow>
-                  <Height>4.45in</Height>
+                  <Height>4.22361in</Height>
                   <TablixCells>
                     <TablixCell>
                       <CellContents>
@@ -281,7 +281,7 @@
                                 </TablixColumns>
                                 <TablixRows>
                                   <TablixRow>
-                                    <Height>2.3in</Height>
+                                    <Height>2in</Height>
                                     <TablixCells>
                                       <TablixCell>
                                         <CellContents>
@@ -305,7 +305,7 @@
                                                   </Paragraph>
                                                 </Paragraphs>
                                                 <rd:DefaultName>Mail_Name</rd:DefaultName>
-                                                <Top>1.3in</Top>
+                                                <Top>1in</Top>
                                                 <Left>0.375in</Left>
                                                 <Height>0.85573in</Height>
                                                 <Width>4.10861in</Width>
@@ -321,7 +321,7 @@
                                                   <Paragraph>
                                                     <TextRuns>
                                                       <TextRun>
-                                                        <Value>="No goods or services were provided by Crossroads in exchange for the contributions recorded on this statement."</Value>
+                                                        <Value EvaluationMode="Constant">No goods or services were provided by Crossroads in exchange for the contributions recorded on this statement.</Value>
                                                         <Style>
                                                           <FontSize>8pt</FontSize>
                                                         </Style>
@@ -332,10 +332,10 @@
                                                     </Style>
                                                   </Paragraph>
                                                 </Paragraphs>
-                                                <Top>0.66823in</Top>
-                                                <Left>4.4975in</Left>
+                                                <Top>0.59323in</Top>
+                                                <Left>4.7475in</Left>
                                                 <Height>0.49125in</Height>
-                                                <Width>3.21875in</Width>
+                                                <Width>2.96875in</Width>
                                                 <ZIndex>1</ZIndex>
                                                 <Style>
                                                   <Border>
@@ -350,7 +350,7 @@
                                                   <Paragraph>
                                                     <TextRuns>
                                                       <TextRun>
-                                                        <Value>="Contribution Statement"</Value>
+                                                        <Value EvaluationMode="Constant">Contribution Statement</Value>
                                                         <Style>
                                                           <FontSize>20pt</FontSize>
                                                         </Style>
@@ -361,7 +361,7 @@
                                                     </Style>
                                                   </Paragraph>
                                                 </Paragraphs>
-                                                <Top>0.1in</Top>
+                                                <Top>0.025in</Top>
                                                 <Left>0.00564in</Left>
                                                 <Height>0.335in</Height>
                                                 <Width>3.2188in</Width>
@@ -387,10 +387,10 @@
                                                     </Style>
                                                   </Paragraph>
                                                 </Paragraphs>
-                                                <Top>0.41656in</Top>
-                                                <Left>4.4975in</Left>
+                                                <Top>0.34156in</Top>
+                                                <Left>4.7475in</Left>
                                                 <Height>0.21in</Height>
-                                                <Width>3.21875in</Width>
+                                                <Width>2.96875in</Width>
                                                 <ZIndex>3</ZIndex>
                                                 <Style>
                                                   <Border>
@@ -418,16 +418,49 @@
                                                   </Paragraph>
                                                 </Paragraphs>
                                                 <rd:DefaultName>Statement_Period</rd:DefaultName>
-                                                <Top>0.11101in</Top>
-                                                <Left>4.4975in</Left>
+                                                <Top>0.03601in</Top>
+                                                <Left>4.7475in</Left>
                                                 <Height>0.25in</Height>
-                                                <Width>3.21875in</Width>
+                                                <Width>2.96875in</Width>
                                                 <ZIndex>4</ZIndex>
                                                 <Style>
                                                   <Border>
                                                     <Style>None</Style>
                                                   </Border>
                                                   <PaddingRight>2pt</PaddingRight>
+                                                </Style>
+                                              </Textbox>
+                                              <Textbox Name="Name_For_Page_Header">
+                                                <CanGrow>true</CanGrow>
+                                                <KeepTogether>true</KeepTogether>
+                                                <Paragraphs>
+                                                  <Paragraph>
+                                                    <TextRuns>
+                                                      <TextRun>
+                                                        <Label>Page_Header</Label>
+                                                        <Value>=Code.SetFullName(Fields!Mail_Name.Value)</Value>
+                                                        <Style>
+                                                          <FontSize>9pt</FontSize>
+                                                        </Style>
+                                                      </TextRun>
+                                                    </TextRuns>
+                                                    <Style />
+                                                  </Paragraph>
+                                                </Paragraphs>
+                                                <Top>0.41611in</Top>
+                                                <Left>0.05013in</Left>
+                                                <Height>0.19167in</Height>
+                                                <Width>1in</Width>
+                                                <ZIndex>5</ZIndex>
+                                                <ToolTip>This field exists only to set a variable used by Mail_Name in the page header</ToolTip>
+                                                <Style>
+                                                  <Border>
+                                                    <Style>None</Style>
+                                                  </Border>
+                                                  <PaddingLeft>2pt</PaddingLeft>
+                                                  <PaddingRight>2pt</PaddingRight>
+                                                  <PaddingTop>2pt</PaddingTop>
+                                                  <PaddingBottom>2pt</PaddingBottom>
                                                 </Style>
                                               </Textbox>
                                             </ReportItems>
@@ -444,7 +477,7 @@
                                     </TablixCells>
                                   </TablixRow>
                                   <TablixRow>
-                                    <Height>1.14045in</Height>
+                                    <Height>1.19045in</Height>
                                     <TablixCells>
                                       <TablixCell>
                                         <CellContents>
@@ -469,7 +502,7 @@
                                               </TablixColumns>
                                               <TablixRows>
                                                 <TablixRow>
-                                                  <Height>0.35in</Height>
+                                                  <Height>0.4in</Height>
                                                   <TablixCells>
                                                     <TablixCell>
                                                       <CellContents>
@@ -492,11 +525,12 @@
                                                             </Paragraph>
                                                           </Paragraphs>
                                                           <rd:DefaultName>HeaderTitle_Textbox</rd:DefaultName>
+                                                          <RepeatWith>Tablix4</RepeatWith>
                                                           <Style>
                                                             <Border>
                                                               <Style>None</Style>
                                                             </Border>
-                                                            <VerticalAlign>Middle</VerticalAlign>
+                                                            <VerticalAlign>Bottom</VerticalAlign>
                                                             <PaddingLeft>2pt</PaddingLeft>
                                                             <PaddingRight>2pt</PaddingRight>
                                                             <PaddingTop>2pt</PaddingTop>
@@ -535,6 +569,7 @@
                                                             </Paragraph>
                                                           </Paragraphs>
                                                           <rd:DefaultName>SectionTitle_Textbox</rd:DefaultName>
+                                                          <RepeatWith>Tablix4</RepeatWith>
                                                           <Style>
                                                             <Border>
                                                               <Style>None</Style>
@@ -577,6 +612,7 @@
                                                             </Paragraph>
                                                           </Paragraphs>
                                                           <rd:DefaultName>Date_Textbox</rd:DefaultName>
+                                                          <RepeatWith>Tablix4</RepeatWith>
                                                           <Style>
                                                             <Border>
                                                               <Style>None</Style>
@@ -615,6 +651,7 @@
                                                             </Paragraph>
                                                           </Paragraphs>
                                                           <rd:DefaultName>Amount_Textbox</rd:DefaultName>
+                                                          <RepeatWith>Tablix4</RepeatWith>
                                                           <Style>
                                                             <Border>
                                                               <Style>None</Style>
@@ -647,6 +684,7 @@
                                                             </Paragraph>
                                                           </Paragraphs>
                                                           <rd:DefaultName>EmptyColumn_Textbox</rd:DefaultName>
+                                                          <RepeatWith>Tablix4</RepeatWith>
                                                           <Style>
                                                             <Border>
                                                               <Style>None</Style>
@@ -683,6 +721,7 @@
                                                             </Paragraph>
                                                           </Paragraphs>
                                                           <rd:DefaultName>Description_Textbox</rd:DefaultName>
+                                                          <RepeatWith>Tablix4</RepeatWith>
                                                           <Style>
                                                             <Border>
                                                               <Style>None</Style>
@@ -719,6 +758,7 @@
                                                             </Paragraph>
                                                           </Paragraphs>
                                                           <rd:DefaultName>PaymentType_Textbox</rd:DefaultName>
+                                                          <RepeatWith>Tablix4</RepeatWith>
                                                           <Style>
                                                             <Border>
                                                               <Style>None</Style>
@@ -750,7 +790,7 @@
                                                             <Paragraph>
                                                               <TextRuns>
                                                                 <TextRun>
-                                                                  <Value>=CStr(FormatDateTime(Fields!Donation_Date.Value, DateFormat.ShortDate))</Value>
+                                                                  <Value>=Format(Fields!Donation_Date.Value, "MM/dd/yyyy")</Value>
                                                                   <Style>
                                                                     <FontSize>9pt</FontSize>
                                                                   </Style>
@@ -766,7 +806,7 @@
                                                             <Border>
                                                               <Style>None</Style>
                                                             </Border>
-                                                            <BackgroundColor>=IIF(ROWNUMBER(NOTHING) MOD 2, "WHITE", "GAINSBORO")</BackgroundColor>
+                                                            <BackgroundColor>=IIF(ROWNUMBER("Section_Title_Group") MOD 2, "WHITE", "GAINSBORO")</BackgroundColor>
                                                             <VerticalAlign>Middle</VerticalAlign>
                                                             <PaddingLeft>2pt</PaddingLeft>
                                                             <PaddingRight>2pt</PaddingRight>
@@ -802,7 +842,7 @@
                                                             <Border>
                                                               <Style>None</Style>
                                                             </Border>
-                                                            <BackgroundColor>=IIF(ROWNUMBER(NOTHING) MOD 2, "WHITE", "GAINSBORO")</BackgroundColor>
+                                                            <BackgroundColor>=IIF(ROWNUMBER("Section_Title_Group") MOD 2, "WHITE", "GAINSBORO")</BackgroundColor>
                                                             <VerticalAlign>Middle</VerticalAlign>
                                                             <PaddingLeft>2pt</PaddingLeft>
                                                             <PaddingRight>2pt</PaddingRight>
@@ -833,7 +873,7 @@
                                                             <Border>
                                                               <Style>None</Style>
                                                             </Border>
-                                                            <BackgroundColor>=IIF(ROWNUMBER(NOTHING) MOD 2, "WHITE", "GAINSBORO")</BackgroundColor>
+                                                            <BackgroundColor>=IIF(ROWNUMBER("Section_Title_Group") MOD 2, "WHITE", "GAINSBORO")</BackgroundColor>
                                                             <VerticalAlign>Middle</VerticalAlign>
                                                             <PaddingLeft>2pt</PaddingLeft>
                                                             <PaddingRight>2pt</PaddingRight>
@@ -866,7 +906,7 @@
                                                             <Border>
                                                               <Style>None</Style>
                                                             </Border>
-                                                            <BackgroundColor>=IIF(ROWNUMBER(NOTHING) MOD 2, "WHITE", "GAINSBORO")</BackgroundColor>
+                                                            <BackgroundColor>=IIF(ROWNUMBER("Section_Title_Group") MOD 2, "WHITE", "GAINSBORO")</BackgroundColor>
                                                             <VerticalAlign>Middle</VerticalAlign>
                                                             <PaddingLeft>2pt</PaddingLeft>
                                                             <PaddingRight>2pt</PaddingRight>
@@ -899,7 +939,7 @@
                                                             <Border>
                                                               <Style>None</Style>
                                                             </Border>
-                                                            <BackgroundColor>=IIF(ROWNUMBER(NOTHING) MOD 2, "WHITE", "GAINSBORO")</BackgroundColor>
+                                                            <BackgroundColor>=IIF(ROWNUMBER("Section_Title_Group") MOD 2, "WHITE", "GAINSBORO")</BackgroundColor>
                                                             <VerticalAlign>Middle</VerticalAlign>
                                                             <PaddingLeft>2pt</PaddingLeft>
                                                             <PaddingRight>2pt</PaddingRight>
@@ -927,19 +967,7 @@
                                             <TablixRowHierarchy>
                                               <TablixMembers>
                                                 <TablixMember>
-                                                  <KeepWithGroup>After</KeepWithGroup>
-                                                  <RepeatOnNewPage>true</RepeatOnNewPage>
-                                                </TablixMember>
-                                                <TablixMember>
-                                                  <KeepWithGroup>After</KeepWithGroup>
-                                                  <RepeatOnNewPage>true</RepeatOnNewPage>
-                                                </TablixMember>
-                                                <TablixMember>
-                                                  <KeepWithGroup>After</KeepWithGroup>
-                                                  <RepeatOnNewPage>true</RepeatOnNewPage>
-                                                </TablixMember>
-                                                <TablixMember>
-                                                  <Group Name="Section_Title">
+                                                  <Group Name="Section_Title_Group">
                                                     <GroupExpressions>
                                                       <GroupExpression>=Fields!Section_Title.Value</GroupExpression>
                                                     </GroupExpressions>
@@ -948,17 +976,27 @@
                                                     <SortExpression>
                                                       <Value>=Fields!Section_Sort.Value</Value>
                                                     </SortExpression>
-                                                    <SortExpression>
-                                                      <Value>=Fields!Donation_Date.Value</Value>
-                                                    </SortExpression>
                                                   </SortExpressions>
                                                   <TablixMembers>
                                                     <TablixMember>
-                                                      <TablixMembers>
-                                                        <TablixMember>
-                                                          <Group Name="Group1" />
-                                                        </TablixMember>
-                                                      </TablixMembers>
+                                                      <KeepWithGroup>After</KeepWithGroup>
+                                                      <RepeatOnNewPage>true</RepeatOnNewPage>
+                                                    </TablixMember>
+                                                    <TablixMember>
+                                                      <KeepWithGroup>After</KeepWithGroup>
+                                                      <RepeatOnNewPage>true</RepeatOnNewPage>
+                                                    </TablixMember>
+                                                    <TablixMember>
+                                                      <KeepWithGroup>After</KeepWithGroup>
+                                                      <RepeatOnNewPage>true</RepeatOnNewPage>
+                                                    </TablixMember>
+                                                    <TablixMember>
+                                                      <Group Name="Group1" />
+                                                      <SortExpressions>
+                                                        <SortExpression>
+                                                          <Value>=Fields!Donation_Date.Value</Value>
+                                                        </SortExpression>
+                                                      </SortExpressions>
                                                     </TablixMember>
                                                   </TablixMembers>
                                                 </TablixMember>
@@ -1006,7 +1044,7 @@
                               <DataSetName>data_Main</DataSetName>
                               <Top>0.01389in</Top>
                               <Left>0.02154in</Left>
-                              <Height>3.44045in</Height>
+                              <Height>3.19045in</Height>
                               <Width>7.72846in</Width>
                               <Style>
                                 <Border>
@@ -1033,7 +1071,7 @@
                                   </Style>
                                 </Paragraph>
                               </Paragraphs>
-                              <Top>3.65in</Top>
+                              <Top>3.475in</Top>
                               <Left>0.76399in</Left>
                               <Height>0.25in</Height>
                               <Width>1.33671in</Width>
@@ -1058,7 +1096,7 @@
                                     <TextRun>
                                       <Value EvaluationMode="Constant">Total:</Value>
                                       <Style>
-                                        <FontSize>8pt</FontSize>
+                                        <FontSize>9pt</FontSize>
                                         <FontWeight>Bold</FontWeight>
                                       </Style>
                                     </TextRun>
@@ -1069,7 +1107,7 @@
                                 </Paragraph>
                               </Paragraphs>
                               <rd:DefaultName>GrandTotal_Label</rd:DefaultName>
-                              <Top>3.65in</Top>
+                              <Top>3.475in</Top>
                               <Left>0.02718in</Left>
                               <Height>0.25in</Height>
                               <Width>0.68125in</Width>
@@ -1156,7 +1194,7 @@
                                   </FilterValues>
                                 </Filter>
                               </Filters>
-                              <Top>3.96944in</Top>
+                              <Top>3.75694in</Top>
                               <Height>0.46667in</Height>
                               <Width>7.75in</Width>
                               <ZIndex>3</ZIndex>
@@ -1211,7 +1249,7 @@
             <FixedColumnHeaders>true</FixedColumnHeaders>
             <FixedRowHeaders>true</FixedRowHeaders>
             <DataSetName>data_Main</DataSetName>
-            <Height>4.45in</Height>
+            <Height>4.22361in</Height>
             <Width>7.77in</Width>
             <Style>
               <Border>
@@ -1220,25 +1258,26 @@
             </Style>
           </Tablix>
         </ReportItems>
-        <Height>4.475in</Height>
+        <Height>4.22361in</Height>
         <Style />
       </Body>
       <Width>7.77986in</Width>
       <Page>
         <PageHeader>
-          <Height>0.3in</Height>
+          <Height>0.6in</Height>
           <PrintOnFirstPage>true</PrintOnFirstPage>
           <PrintOnLastPage>true</PrintOnLastPage>
           <ReportItems>
-            <Rectangle Name="Rectangle3">
+            <Rectangle Name="Header_Rectangle">
               <ReportItems>
-                <Textbox Name="Textbox1">
+                <Textbox Name="Header_PageNumber_Textbox">
                   <CanGrow>true</CanGrow>
                   <KeepTogether>true</KeepTogether>
                   <Paragraphs>
                     <Paragraph>
                       <TextRuns>
                         <TextRun>
+                          <Label>Page_Number</Label>
                           <Value>="Page " &amp; Globals!PageNumber</Value>
                           <Style>
                             <FontStyle>Italic</FontStyle>
@@ -1250,10 +1289,11 @@
                       </Style>
                     </Paragraph>
                   </Paragraphs>
-                  <rd:DefaultName>Textbox1</rd:DefaultName>
-                  <Left>6.7725in</Left>
+                  <rd:DefaultName>Header_PageNumber_Textbox</rd:DefaultName>
+                  <Top>0.2375in</Top>
+                  <Left>6.72in</Left>
                   <Height>0.21in</Height>
-                  <Width>0.93333in</Width>
+                  <Width>1in</Width>
                   <Style>
                     <Border>
                       <Style>None</Style>
@@ -1264,27 +1304,63 @@
                     <PaddingBottom>2pt</PaddingBottom>
                   </Style>
                 </Textbox>
-                <Textbox Name="Textbox2">
+                <Textbox Name="Header_Period_Textbox">
                   <CanGrow>true</CanGrow>
                   <KeepTogether>true</KeepTogether>
                   <Paragraphs>
                     <Paragraph>
                       <TextRuns>
                         <TextRun>
+                          <Label>Statement Period</Label>
                           <Value>="Period: " &amp; CStr(Parameters!FromDate.Value) &amp; " - " &amp; CStr(Parameters!ToDate.Value)</Value>
                           <Style>
                             <FontStyle>Italic</FontStyle>
                           </Style>
                         </TextRun>
                       </TextRuns>
-                      <Style />
+                      <Style>
+                        <TextAlign>Right</TextAlign>
+                      </Style>
                     </Paragraph>
                   </Paragraphs>
-                  <rd:DefaultName>Textbox2</rd:DefaultName>
-                  <Left>0.00833in</Left>
+                  <rd:DefaultName>Header_Period_Textbox</rd:DefaultName>
+                  <Left>5.12917in</Left>
                   <Height>0.21in</Height>
-                  <Width>4.34167in</Width>
+                  <Width>2.59167in</Width>
                   <ZIndex>1</ZIndex>
+                  <Style>
+                    <Border>
+                      <Style>None</Style>
+                    </Border>
+                    <PaddingLeft>2pt</PaddingLeft>
+                    <PaddingRight>2pt</PaddingRight>
+                    <PaddingTop>2pt</PaddingTop>
+                    <PaddingBottom>2pt</PaddingBottom>
+                  </Style>
+                </Textbox>
+                <Textbox Name="Header_Name_Text">
+                  <CanGrow>true</CanGrow>
+                  <KeepTogether>true</KeepTogether>
+                  <Paragraphs>
+                    <Paragraph>
+                      <TextRuns>
+                        <TextRun>
+                          <Label>Mail_Name</Label>
+                          <Value>=Code.FullName</Value>
+                          <Style>
+                            <FontStyle>Italic</FontStyle>
+                          </Style>
+                        </TextRun>
+                      </TextRuns>
+                      <Style>
+                        <TextAlign>Left</TextAlign>
+                      </Style>
+                    </Paragraph>
+                  </Paragraphs>
+                  <rd:DefaultName>Header_Name_Text</rd:DefaultName>
+                  <Height>0.21in</Height>
+                  <Width>4in</Width>
+                  <ZIndex>2</ZIndex>
                   <Style>
                     <Border>
                       <Style>None</Style>
@@ -1297,8 +1373,8 @@
                 </Textbox>
               </ReportItems>
               <KeepTogether>true</KeepTogether>
-              <Height>0.24667in</Height>
-              <Width>7.74in</Width>
+              <Height>0.5175in</Height>
+              <Width>7.75in</Width>
               <Visibility>
                 <Hidden>=Iif (Globals!PageNumber &gt; 1, false, true)</Hidden>
               </Visibility>
@@ -1428,6 +1504,10 @@
       <Hidden>true</Hidden>
     </ReportParameter>
   </ReportParameters>
+  <Code>Public Shared Dim FullName As String
+Public Function SetFullName(ByVal val As String)
+FullName = val
+End Function</Code>
   <rd:ReportUnitType>Inch</rd:ReportUnitType>
   <rd:ReportServerUrl>http://localhost/ReportServer</rd:ReportServerUrl>
   <rd:ReportID>ac2ff723-85d4-47ef-8b30-4696e69d4216</rd:ReportID>
