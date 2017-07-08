@@ -367,7 +367,7 @@ namespace crds_angular.Controllers.API
                
                 var originCoords = _finderService.GetMapCenterForResults(queryParams.UserSearchString, queryParams.CenterGeoCoords, queryParams.FinderType);
 
-                var pinsInRadius = _finderService.GetPinsInBoundingBox(originCoords, queryParams.UserSearchString, awsBoundingBox, queryParams.FinderType, queryParams.ContactId);
+                var pinsInRadius = _finderService.GetPinsInBoundingBox(originCoords, queryParams.UserSearchString, awsBoundingBox, queryParams.FinderType, queryParams.ContactId, queryParams.UserFilterString);
 
                 pinsInRadius = _finderService.RandomizeLatLongForNonSitePins(pinsInRadius); 
 
