@@ -123,6 +123,7 @@
     "ng-tags-input": "^3.1.1",
     "ngstorage": "^0.3.11",
     "plangular-3": "^3.1.2",
+    "script-loader": "^0.7.0",
     "ui-select": "^0.17.1",
     "video.js": "5.14.1",
     "videojs-chromecast": "^2.0.8",

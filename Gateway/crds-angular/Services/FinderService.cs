@@ -930,10 +930,14 @@ namespace crds_angular.Services
                     pin.Gathering.ContactId = group.ContactId;
                     pin.Participant_ID = group.ParticipantId;
 
-                    // TODO need to get rid of this call to GetContactById if get name from AWS search instead
-                    //var contact = _contactRepository.GetContactById((int)pin.Contact_ID);
-                    //pin.FirstName = contact.First_Name;
-                    //pin.LastName = contact.Last_Name;
+                    // Depends if input data is coming from AWS or MP
+                    if (pin.LastName == null)
+                    {
+                        var contact = _contactRepository.GetContactById((int)pin.Contact_ID);
+                        pin.FirstName = contact.First_Name;
+                        pin.LastName = contact.Last_Name;                        
+                    }
+
                     pins.Add(pin);
                 }
             }

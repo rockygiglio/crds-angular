@@ -25,6 +25,7 @@ using GroupService = crds_angular.Services.GroupService;
 using MPServices = MinistryPlatform.Translation.Repositories.Interfaces;
 using IGroupRepository = MinistryPlatform.Translation.Repositories.Interfaces.IGroupRepository;
 using Participant = MinistryPlatform.Translation.Models.MpParticipant;
+using crds_angular.Util.Interfaces;
 
 namespace crds_angular.test.Services
 {
@@ -48,6 +49,7 @@ namespace crds_angular.test.Services
         private Mock<MPServices.IUserRepository> _userRespository;
         private Mock<MPServices.IInvitationRepository> _invitationRepository;
         private Mock<IAttributeService> _attributeService;
+        private Mock<IDateTime> _dateTimeWrapper;
 
         private readonly List<ParticipantSignup> mockParticipantSignup = new List<ParticipantSignup>
         {
@@ -98,6 +100,7 @@ namespace crds_angular.test.Services
             _attributeRepository = new Mock<MPServices.IAttributeRepository>();
             _attributeService = new Mock<IAttributeService>();
 
+            _dateTimeWrapper = new Mock<IDateTime>();
 
             config = new Mock<IConfigurationWrapper>();
 
@@ -124,7 +127,9 @@ namespace crds_angular.test.Services
                                        _emailCommunicationService.Object,
                                        _userRespository.Object,
                                        _invitationRepository.Object,
-                                       _attributeService.Object);
+                                       _attributeService.Object,
+                                       _dateTimeWrapper.Object);
+                                    
         }
 
         [Test]
@@ -387,7 +392,12 @@ namespace crds_angular.test.Services
                 new MpEvent {EventId = 555},
                 new MpEvent {EventId = 444}
             };
-            groupRepository.Setup(mocked => mocked.getAllEventsForGroup(456, null, false)).Returns(events);
+
+            
+            DateTime mockDateTime = new DateTime(2025, 4, 18, 8, 23, 56);
+            _dateTimeWrapper.Setup(m => m.Today).Returns(mockDateTime.Date);
+
+            groupRepository.Setup(mocked => mocked.getAllEventsForGroup(456, mockDateTime.Date, false)).Returns(events);
             groupRepository.Setup(mocked => mocked.GetParticipantGroupMemberId(456,999)).Returns(999456);
             groupRepository.Setup(mocked => mocked.GetParticipantGroupMemberId(456, 888)).Returns(-1);
             groupRepository.Setup(mocked => mocked.addParticipantToGroup(888, 456, GROUP_ROLE_DEFAULT_ID, false, It.IsAny<DateTime>(), null, false, null)).Returns(888456);

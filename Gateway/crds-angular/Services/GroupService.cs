@@ -18,6 +18,7 @@ using IAttributeRepository = MinistryPlatform.Translation.Repositories.Interface
 using IEventRepository = MinistryPlatform.Translation.Repositories.Interfaces.IEventRepository;
 using IGroupRepository = MinistryPlatform.Translation.Repositories.Interfaces.IGroupRepository;
 using IObjectAttributeService = crds_angular.Services.Interfaces.IObjectAttributeService;
+using crds_angular.Util.Interfaces;
 
 namespace crds_angular.Services
 {
@@ -43,6 +44,7 @@ namespace crds_angular.Services
         private readonly int _smallGroupTypeId;
         private readonly int  _onsiteGroupTypeId;
         private readonly int _childcareEventTypeId;
+        private readonly IDateTime _dateTimeWrapper;
 
 
 
@@ -58,7 +60,6 @@ namespace crds_angular.Services
         private readonly int _groupRoleLeader;
         private readonly int _domainId;
 
-
         public GroupService(IGroupRepository mpGroupRepository,
                             IConfigurationWrapper configurationWrapper,
                             IEventRepository eventService,
@@ -73,7 +74,8 @@ namespace crds_angular.Services
                             IEmailCommunication emailCommunicationService,
                             IUserRepository userRepository,
                             IInvitationRepository invitationRepository,
-                            IAttributeService attributeService)
+                            IAttributeService attributeService,
+                            IDateTime dateTimeWrapper)
 
         {
             _mpGroupRepository = mpGroupRepository;
@@ -103,9 +105,11 @@ namespace crds_angular.Services
             _smallGroupTypeId = _configurationWrapper.GetConfigIntValue("SmallGroupTypeId");
             _onsiteGroupTypeId = _configurationWrapper.GetConfigIntValue("OnsiteGroupTypeId");
             _childcareEventTypeId = _configurationWrapper.GetConfigIntValue("ChildcareEventType");
+            _dateTimeWrapper = dateTimeWrapper;
 
 
         }
+
 
         public GroupDTO CreateGroup(GroupDTO group)
         {
@@ -239,8 +243,7 @@ namespace crds_angular.Services
                         _logger.Debug("User "+participantId+ " was already a member of group "+groupId);
                     }
 
-                    // Now see what future events are scheduled for this group, and register the user for those
-                    var events = _mpGroupRepository.getAllEventsForGroup(Convert.ToInt32(groupId));
+                    var events = _mpGroupRepository.getAllEventsForGroup(Convert.ToInt32(groupId), _dateTimeWrapper.Today);
                     _logger.Debug("Scheduled events for this group: " + events);
                     if (events != null && events.Count > 0)
                     {

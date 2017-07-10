@@ -11,11 +11,14 @@ using crds_angular.Security;
 using crds_angular.Services.Interfaces;
 using Crossroads.ApiVersioning;
 using Crossroads.Web.Common.Security;
+using log4net;
 
 namespace crds_angular.Controllers.API
 {
     public class TripController : MPAuth
     {
+        private readonly ILog _logger = LogManager.GetLogger(typeof(DonationController));
+
         private readonly ITripService _tripService;
 
         public TripController(ITripService tripService, IUserImpersonationService userImpersonationService, IAuthenticationRepository authenticationRepository) : base(userImpersonationService, authenticationRepository)
@@ -105,6 +108,7 @@ namespace crds_angular.Controllers.API
                 }
                 catch (Exception ex)
                 {
+                    _logger.Error("GetCampaigns failed", ex);
                     var apiError = new ApiErrorDto("Get Campaign Failed", ex);
                     throw new HttpResponseException(apiError.HttpResponseMessage);
                 }
