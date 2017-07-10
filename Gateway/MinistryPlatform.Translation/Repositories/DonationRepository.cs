@@ -393,7 +393,8 @@ namespace MinistryPlatform.Translation.Repositories
 
         public List<MpTripDistribution> GetMyTripDistributions(int contactId)
         {
-            var results = _ministryPlatformService.GetPageViewRecords(_tripDistributionsPageView, ApiLogin(), contactId.ToString());
+            string searchString = $"{contactId},";
+            var results = _ministryPlatformService.GetPageViewRecords(_tripDistributionsPageView, ApiLogin(), searchString);
             var trips = new List<MpTripDistribution>();
             foreach (var result in results)
             {
