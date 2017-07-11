@@ -393,7 +393,6 @@ namespace crds_angular.Controllers.API
             {
                 try
                 {
-                    // TODO make sure this still works!!!!
                     var originCoords = _finderService.GetGeoCoordsFromAddressOrLatLang(queryParams.UserLocationSearchString, queryParams.CenterGeoCoords);
                     var centerLatitude = originCoords.Latitude;
                     var centerLongitude = originCoords.Longitude;
