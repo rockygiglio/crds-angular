@@ -365,9 +365,9 @@ namespace crds_angular.Controllers.API
                     awsBoundingBox = _awsCloudsearchService.BuildBoundingBox(queryParams.BoundingBox);
                 }
                
-                var originCoords = _finderService.GetMapCenterForResults(queryParams.UserSearchString, queryParams.CenterGeoCoords, queryParams.FinderType);
+                var originCoords = _finderService.GetMapCenterForResults(queryParams.UserLocationSearchString, queryParams.CenterGeoCoords, queryParams.FinderType);
 
-                var pinsInRadius = _finderService.GetPinsInBoundingBox(originCoords, queryParams.UserSearchString, awsBoundingBox, queryParams.FinderType, queryParams.ContactId, queryParams.UserFilterString);
+                var pinsInRadius = _finderService.GetPinsInBoundingBox(originCoords, queryParams.UserKeywordSearchString, awsBoundingBox, queryParams.FinderType, queryParams.ContactId, queryParams.UserFilterString);
 
                 pinsInRadius = _finderService.RandomizeLatLongForNonSitePins(pinsInRadius); 
 
@@ -393,7 +393,7 @@ namespace crds_angular.Controllers.API
             {
                 try
                 {
-                    var originCoords = _finderService.GetGeoCoordsFromAddressOrLatLang(queryParams.UserSearchString, queryParams.CenterGeoCoords);
+                    var originCoords = _finderService.GetGeoCoordsFromAddressOrLatLang(queryParams.UserLocationSearchString, queryParams.CenterGeoCoords);
                     var centerLatitude = originCoords.Latitude;
                     var centerLongitude = originCoords.Longitude;
 

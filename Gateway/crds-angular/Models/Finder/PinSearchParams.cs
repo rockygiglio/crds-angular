@@ -7,7 +7,9 @@ namespace crds_angular.Models.Finder
 {
     public class PinSearchQueryParams
     {
-        public string UserSearchString { get; set; }
+        public string UserLocationSearchString { get; set; }
+
+        public string UserKeywordSearchString { get; set; }
 
         public string UserFilterString { get; set; }
 
