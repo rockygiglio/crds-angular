@@ -71,6 +71,10 @@ FROM
           <DataField>Participation_Status_ID</DataField>
           <rd:TypeName>System.Int32</rd:TypeName>
         </Field>
+        <Field Name="Group_ID">
+          <DataField>Group_ID</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
       </Fields>
     </DataSet>
   </DataSets>
@@ -584,7 +588,7 @@ FROM
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>="Total Turned Away: " &amp; Count(Fields!Group_Name.Value, "dsTurnedAwaySummaryData")</Value>
+                    <Value>="Total Turned Away: " &amp; Sum(Fields!Turned_Away_In_Group.Value, "dsTurnedAwaySummaryData")</Value>
                     <Style />
                   </TextRun>
                 </TextRuns>
