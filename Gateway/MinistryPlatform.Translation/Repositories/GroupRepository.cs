@@ -12,6 +12,8 @@ using MinistryPlatform.Translation.Extensions;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 
+
+
 namespace MinistryPlatform.Translation.Repositories
 {
     public class GroupRepository : BaseRepository, IGroupRepository
@@ -42,6 +44,7 @@ namespace MinistryPlatform.Translation.Repositories
         private readonly int NewStudentMinistryGroupAlertEmailTemplate = Convert.ToInt32(AppSettings("NewStudentMinistryGroupAlertEmailTemplate"));
         private readonly int GroupHasMiddleSchoolStudents = Convert.ToInt32(AppSettings("GroupHasMiddleSchoolStudents"));
         private readonly int GroupHasHighSchoolStudents = Convert.ToInt32(AppSettings("GroupHasHighSchoolStudents"));
+       
 
         private readonly int GroupParticipantQualifiedServerPageView =
             Convert.ToInt32(AppSettings("GroupsParticipantsQualifiedServerPageView"));
@@ -57,7 +60,8 @@ namespace MinistryPlatform.Translation.Repositories
                                IContactRepository contactService,
                                IContentBlockService contentBlockService,
                                IAddressRepository addressRepository,
-                               IObjectAttributeRepository objectAttributeRepository)
+                               IObjectAttributeRepository objectAttributeRepository
+                               )
             : base(authenticationService, configurationWrapper)
         {
             this.ministryPlatformService = ministryPlatformService;
@@ -569,6 +573,7 @@ namespace MinistryPlatform.Translation.Repositories
             return groupParticipants;
         }
 
+        //DE2903 : Added the date time parameter to filter out past events
         public IList<MpEvent> getAllEventsForGroup(int groupId, DateTime? minEndDate = null, bool includeCancelledEvents = false)
         {
             var parameters = new Dictionary<string, object>();

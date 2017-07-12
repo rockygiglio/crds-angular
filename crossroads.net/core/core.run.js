@@ -1,6 +1,4 @@
-﻿import { SharedHeader } from 'crds-shared-header/dist/bundle';
-
-/* eslint-disable no-param-reassign */
+﻿/* eslint-disable no-param-reassign */
 (() => {
   function AppRun(Session,
     $rootScope,
@@ -36,6 +34,7 @@
     }
 
     function setupHeader() {
+      svg4everybody();
       $('html, body').removeClass('noscroll');
       // header options
       var options = {
@@ -48,7 +47,8 @@
         contentBlockCategories: ['common']
       };
       setTimeout(() => {
-        if ($('[data-header]').length > 0) {
+        if ($('[data-header] [data-mobile-menu]').length == 0 &&
+            $('[data-header]').length > 0) {
           new CRDS.SharedHeader(options).render();
         }
       }, 100);
@@ -96,7 +96,8 @@
 
         return;
       }
-      if (toState.name === 'login' && fromState.name !== '') {
+
+      if (toState.name === 'login' && fromState.name !== '' && !Session.hasRedirectionInfo()) {
         Session.addRedirectRoute(fromState.name, fromParams);
       }
 
