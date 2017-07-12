@@ -25,16 +25,20 @@ namespace crds_angular.Controllers.API
     public class GroupToolController : MPAuth
     {
         private readonly ILog _logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-        private readonly Services.Interfaces.IGroupToolService _groupToolService;
+        private readonly IGroupToolService _groupToolService;
+        private readonly IGroupService _groupService;
 
         private readonly int _defaultGroupTypeId;
         private readonly IConfigurationWrapper _configurationWrapper;
 
         public GroupToolController(Services.Interfaces.IGroupToolService groupToolService,
                                    IConfigurationWrapper configurationWrapper, 
-                                   IUserImpersonationService userImpersonationService, IAuthenticationRepository authenticationRepository) : base(userImpersonationService, authenticationRepository)
+                                   IUserImpersonationService userImpersonationService, 
+                                   IAuthenticationRepository authenticationRepository,
+                                   IGroupService groupService) : base(userImpersonationService, authenticationRepository)
         {
             _groupToolService = groupToolService;
+            _groupService = groupService;
             _configurationWrapper = configurationWrapper;
             _defaultGroupTypeId = _configurationWrapper.GetConfigIntValue("SmallGroupTypeId");
         }
@@ -163,6 +167,38 @@ namespace crds_angular.Controllers.API
                 try
                 {
                     _groupToolService.RemoveParticipantFromMyGroup(token, groupId, groupParticipantId, removalMessage);
+                    return Ok();
+                }
+                catch (GroupParticipantRemovalException e)
+                {
+                    var apiError = new ApiErrorDto(e.Message, null, e.StatusCode);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+                catch (Exception ex)
+                {
+                    var apiError = new ApiErrorDto(string.Format("Error removing group participant {0} from group {1}", groupParticipantId, groupId), ex);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+            });
+        }
+
+        /// <summary>
+        /// Remove self (group participant) from group - end date group participant record and email leaders to inform.
+        /// </summary>
+        /// <param name="groupId">An integer identifying the group that the removal is associated to.</param>
+        /// <param name="groupParticipantId">The ID of the group participant to remove</param>
+        /// <returns>An empty response with 200 status code if everything worked, 403 if the caller does not have permission to remove a participant, or another non-success status code on any other failure</returns>
+        [RequiresAuthorization]
+        [VersionedRoute(template: "group-tool/group/{groupId}/participant/{groupParticipantId}/remove-participant", minimumVersion: "1.0.0")]
+        [Route("grouptool/group/{groupId:int}/participant/{groupParticipantId:int}/removeparticipant")]
+        [HttpPost]
+        public IHttpActionResult RemoveSelfFromGroup([FromUri] int groupId, [FromUri] int groupParticipantId)
+        {
+            return Authorized(token =>
+            {
+                try
+                {
+                    _groupService.RemoveParticipantFromGroup(token, groupId, groupParticipantId);
                     return Ok();
                 }
                 catch (GroupParticipantRemovalException e)
