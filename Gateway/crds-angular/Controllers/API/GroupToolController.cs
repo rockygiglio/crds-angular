@@ -10,6 +10,7 @@ using crds_angular.Exceptions.Models;
 using crds_angular.Models.Crossroads;
 using crds_angular.Models.Crossroads.Attribute;
 using crds_angular.Models.Crossroads.Groups;
+using crds_angular.Models.Finder;
 using crds_angular.Models.Json;
 using crds_angular.Security;
 using crds_angular.Services.Interfaces;
@@ -185,20 +186,19 @@ namespace crds_angular.Controllers.API
         /// <summary>
         /// Remove self (group participant) from group - end date group participant record and email leaders to inform.
         /// </summary>
-        /// <param name="groupId">An integer identifying the group that the removal is associated to.</param>
-        /// <param name="groupParticipantId">The ID of the group participant to remove</param>
+        /// <param name="groupInformation"></param> Contains Group ID, Participant ID, and message
         /// <returns>An empty response with 200 status code if everything worked, 403 if the caller does not have permission to remove a participant, or another non-success status code on any other failure</returns>
         [RequiresAuthorization]
-        [VersionedRoute(template: "group-tool/group/{groupId}/participant/{groupParticipantId}/remove-participant", minimumVersion: "1.0.0")]
-        [Route("grouptool/group/{groupId:int}/participant/{groupParticipantId:int}/removeparticipant")]
+        [VersionedRoute(template: "group-tool/group/participant/remove-self", minimumVersion: "1.0.0")]
+        [Route("group-tool/group/participant/removeself")]
         [HttpPost]
-        public IHttpActionResult RemoveSelfFromGroup([FromUri] int groupId, [FromUri] int groupParticipantId)
+        public IHttpActionResult RemoveSelfFromGroup([FromBody] GroupParticipantRemovalDto groupInformation)
         {
             return Authorized(token =>
             {
                 try
                 {
-                    _groupService.RemoveParticipantFromGroup(token, groupId, groupParticipantId);
+                    _groupService.RemoveParticipantFromGroup(token, groupInformation.GroupId, groupInformation.GroupParticipantId);
                     return Ok();
                 }
                 catch (GroupParticipantRemovalException e)
@@ -208,7 +208,7 @@ namespace crds_angular.Controllers.API
                 }
                 catch (Exception ex)
                 {
-                    var apiError = new ApiErrorDto(string.Format("Error removing group participant {0} from group {1}", groupParticipantId, groupId), ex);
+                    var apiError = new ApiErrorDto(string.Format("Error removing group participant {0} from group {1}", groupInformation.GroupParticipantId, groupInformation.GroupId), ex);
                     throw new HttpResponseException(apiError.HttpResponseMessage);
                 }
             });
