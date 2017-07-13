@@ -75,6 +75,10 @@ namespace crds_angular.test.Services
         private const int GroupCategoryAttributeTypeId = 10;
         private const int GroupTypeAttributeTypeId = 20;
         private const int GroupAgeRangeAttributeTypeId = 30;
+        private const int DefaultAuthorUser = 5;
+        private const int GroupRoleLeader = 16;
+        private const int RemoveSelfFromGroupTemplateId = 2024;
+
 
         [SetUp]
         public void SetUp()
@@ -112,6 +116,9 @@ namespace crds_angular.test.Services
             config.Setup(mocked => mocked.GetConfigIntValue("GroupCategoryAttributeTypeId")).Returns(GroupCategoryAttributeTypeId);
             config.Setup(mocked => mocked.GetConfigIntValue("GroupTypeAttributeTypeId")).Returns(GroupTypeAttributeTypeId);
             config.Setup(mocked => mocked.GetConfigIntValue("GroupAgeRangeAttributeTypeId")).Returns(GroupAgeRangeAttributeTypeId);
+            config.Setup(mocked => mocked.GetConfigIntValue("DefaultAuthorUser")).Returns(DefaultAuthorUser);
+            config.Setup(mocked => mocked.GetConfigIntValue("GroupRoleLeader")).Returns(GroupRoleLeader);
+            config.Setup(mocked => mocked.GetConfigIntValue("RemoveSelfFromGroupTemplateId")).Returns(RemoveSelfFromGroupTemplateId);
 
             fixture = new GroupService(groupRepository.Object,
                                        config.Object,
@@ -1491,5 +1498,6 @@ namespace crds_angular.test.Services
 
             return attributes;
         }
+
     }
 }
