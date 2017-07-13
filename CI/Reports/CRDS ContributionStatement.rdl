@@ -1271,16 +1271,15 @@
             <Rectangle Name="Header_Rectangle">
               <ReportItems>
                 <Textbox Name="Header_PageNumber_Textbox">
-                  <CanGrow>true</CanGrow>
                   <KeepTogether>true</KeepTogether>
                   <Paragraphs>
                     <Paragraph>
                       <TextRuns>
                         <TextRun>
                           <Label>Page_Number</Label>
-                          <Value>="Page " &amp; Globals!PageNumber &amp; " "</Value>
+                          <Value>="Page " &amp; Globals!PageNumber &amp; " of " &amp; Globals!TotalPages &amp; " "</Value>
                           <Style>
-                            <FontStyle>Italic</FontStyle>
+                            <FontStyle>Normal</FontStyle>
                           </Style>
                         </TextRun>
                       </TextRuns>
@@ -1290,10 +1289,9 @@
                     </Paragraph>
                   </Paragraphs>
                   <rd:DefaultName>Header_PageNumber_Textbox</rd:DefaultName>
-                  <Top>0.2375in</Top>
-                  <Left>6.53334in</Left>
+                  <Left>5.52501in</Left>
                   <Height>0.21in</Height>
-                  <Width>1.2in</Width>
+                  <Width>2.20833in</Width>
                   <Style>
                     <Border>
                       <Style>None</Style>
@@ -1310,7 +1308,7 @@
                           <Label>Statement Period</Label>
                           <Value>="Period: " &amp; CStr(Parameters!FromDate.Value) &amp; " - " &amp; CStr(Parameters!ToDate.Value) &amp; " "</Value>
                           <Style>
-                            <FontStyle>Italic</FontStyle>
+                            <FontStyle>Normal</FontStyle>
                           </Style>
                         </TextRun>
                       </TextRuns>
@@ -1320,10 +1318,14 @@
                     </Paragraph>
                   </Paragraphs>
                   <rd:DefaultName>Header_Period_Textbox</rd:DefaultName>
+                  <Top>0.2375in</Top>
                   <Left>5.14167in</Left>
                   <Height>0.21in</Height>
                   <Width>2.59167in</Width>
                   <ZIndex>1</ZIndex>
+                  <Visibility>
+                    <Hidden>=Iif (Globals!PageNumber &gt; 1, false, true)</Hidden>
+                  </Visibility>
                   <Style>
                     <Border>
                       <Style>None</Style>
@@ -1338,9 +1340,9 @@
                       <TextRuns>
                         <TextRun>
                           <Label>Mail_Name</Label>
-                          <Value>=Code.FullName</Value>
+                          <Value>=Iif (Globals!PageNumber &gt; 1, Code.FullName, "")</Value>
                           <Style>
-                            <FontStyle>Italic</FontStyle>
+                            <FontStyle>Normal</FontStyle>
                           </Style>
                         </TextRun>
                       </TextRuns>
@@ -1361,11 +1363,9 @@
                 </Textbox>
               </ReportItems>
               <KeepTogether>true</KeepTogether>
+              <Left>0.00445in</Left>
               <Height>0.5175in</Height>
               <Width>7.75in</Width>
-              <Visibility>
-                <Hidden>=Iif (Globals!PageNumber &gt; 1, false, true)</Hidden>
-              </Visibility>
               <Style>
                 <Border>
                   <Style>None</Style>
