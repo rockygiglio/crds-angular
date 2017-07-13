@@ -131,6 +131,26 @@
           }
         }
       })
+      .state('travelinformation', {
+        parent: 'noSideBar',
+        url: '/trips/mytrips/update',
+        template: '<travel-information></travel-information>',
+        data: {
+          isProtected: true,
+          meta: {
+            title: 'My Trips',
+            description: ''
+          }
+        },
+        resolve: {
+          loggedin: crds_utilities.checkLoggedin,
+          Trip: 'Trip',
+          $cookies: '$cookies',
+          MyTrips: function(Trip) {
+            return Trip.MyTrips.get().$promise;
+          }
+        }
+      })
       .state('tripsignup', {
         parent: 'noSideBar',
         url: '/trips/:campaignId?invite',
