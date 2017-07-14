@@ -3,14 +3,16 @@ var attributeIds = require('crds-constants').ATTRIBUTE_IDS;
 
 export default class TravelInformationController {
   /* @ngInject() */
-  constructor($rootScope) {
+  constructor($rootScope, Validation) {
     this.$rootScope = $rootScope;
+    this.validation = Validation;
 
     this.now = null;
     this.initDate = null;
 
     this.destination = null;
     this.person = {};
+    this.travelInfoForm = {};
     this.frequentFlyers = [];
     this.validPassport = false;
 
