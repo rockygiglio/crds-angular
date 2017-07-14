@@ -50,6 +50,7 @@ namespace crds_angular.Services.Interfaces
         void EndDateGroup(int groupId, int? reasonEndedId = null);
 
         void UpdateGroupParticipantRole(GroupParticipantDTO participant);
+        void UpdateGroupParticipantRole(int groupId, int participantId, int roleId);
 
         void SendParticipantsEmail(string token, List<GroupParticipantDTO> participants, string subject, string body);
 
