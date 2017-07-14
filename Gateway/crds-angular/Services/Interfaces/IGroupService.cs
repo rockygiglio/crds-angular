@@ -59,5 +59,9 @@ namespace crds_angular.Services.Interfaces
         int GetPrimaryContactParticipantId(int groupId);
 
         List<GroupParticipantDTO> GetGroupParticipantsWithoutAttributes(int groupId);
+
+        void RemoveParticipantFromGroup(string token, int groupId, int groupParticipantId);
+
+        void SendAllGroupLeadersMemberRemovedEmail(string token, int groupId);
     }
 }
