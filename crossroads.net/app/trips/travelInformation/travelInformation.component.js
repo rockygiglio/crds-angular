@@ -5,7 +5,6 @@ const TravelInformationComponent = {
   bindings: {},
   template,
   controller: TravelInformationController,
-  controllerAs: 'campWaivers',
   resolve: []
 };
 
