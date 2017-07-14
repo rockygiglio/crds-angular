@@ -1,7 +1,7 @@
 <h2>Travel Information</h2>
 
 <div >
-  <ng-form name="tripsSignup.tripAppPage6" role="form" novalidate>
+  <form name="travelInformation" role="form" novalidate ng-submit="$ctrl.submit()">
 
     <legend>
       Passport Information
@@ -9,61 +9,61 @@
 
     <div class="row">
       <div class="col-sm-12" dynamic-content="$root.MESSAGES.TripPassport.content | html"></div>
-      <div class="form-group col-sm-12" ng-class="{'has-error': tripsSignup.validation.showErrors(tripsSignup.tripAppPage6, 'passport') }">
+      <div class="form-group col-sm-12" ng-class="{'has-error': $ctrl.validation.showErrors($ctrl.tripAppPage6, 'passport') }">
         <label class="control-label block required">Do you have a valid passport?</label>
-        <label id="passport-yes" class="radio-inline">
-          <input ng-model="tripsSignup.signupService.page6.validPassport" type="radio" value="true"  name="passport" id="passport-yes" ng-required="true">Yes
+        <label class="radio-inline">
+          <input ng-model="$ctrl.validPassport" type="radio" value="true"  name="passport" id="passport-yes" ng-required="true">Yes
         </label>
-        <label id="passport-no" class="radio-inline">
-          <input ng-model="tripsSignup.signupService.page6.validPassport" type="radio" value="false" name="passport" id="passport-no" ng-required="true">No
+        <label class="radio-inline">
+          <input ng-model="$ctrl.validPassport" type="radio" value="false" name="passport" id="passport-no" ng-required="true">No
         </label>
-        <ng-messages for="tripsSignup.tripAppPage6.passport.$error" ng-if="tripsSignup.validation.showErrors(tripsSignup.tripAppPage6, 'passport')">
+        <ng-messages for="$ctrl.tripAppPage6.passport.$error" ng-if="$ctrl.validation.showErrors($ctrl.tripAppPage6, 'passport')">
             <span ng-message="required">
               <span dynamic-content="$root.MESSAGES.fieldCanNotBeBlank.content | html"></span>
             </span>
         </ng-messages>
       </div>
-      <div class="form-group col-sm-12" ng-show="tripsSignup.signupService.page6.validPassport === 'false'">
+      <div class="form-group col-sm-12" ng-show="$ctrl.validPassport === 'false'">
         <label>
-          <span dynamic-content="tripsSignup.passportInvalidContent() | html"></span>
+          <span dynamic-content="$ctrl.passportInvalidContent() | html"></span>
         </label>
       </div>
     </div>
 
-    <div class="row" ng-if="tripsSignup.signupService.page6.validPassport === 'true'">
-      <div class="form-group col-sm-6" ng-class="{'has-error': tripsSignup.validation.showErrors(tripsSignup.tripAppPage6, 'passportNumber') }">
+    <div class="row" ng-if="$ctrl.validPassport === 'true'">
+      <div class="form-group col-sm-6" ng-class="{'has-error': $ctrl.validation.showErrors($ctrl.tripAppPage6, 'passportNumber') }">
         <label for="passport-number" class="control-label required">Passport Number</label>
-        <input ng-model="signupStep.person.passportNumber" type="text" class="form-control" name="passportNumber" id="passport-number" required placeholder="Enter passport number" />
-        <ng-messages for="tripsSignup.tripAppPage6.passportNumber.$error" ng-if="tripsSignup.validation.showErrors(tripsSignup.tripAppPage6, 'passportNumber')">
+        <input ng-model="$ctrl.person.passportNumber" type="text" class="form-control" name="passportNumber" id="passport-number" required placeholder="Enter passport number" />
+        <ng-messages for="$ctrl.tripAppPage6.passportNumber.$error" ng-if="$ctrl.validation.showErrors($ctrl.tripAppPage6, 'passportNumber')">
                 <span ng-message="required">
                   <span dynamic-content="$root.MESSAGES.fieldCanNotBeBlank.content | html"></span>
                 </span>
         </ng-messages>
       </div>
 
-      <div class="form-group col-sm-6" ng-class="{'has-error': tripsSignup.validation.showErrors(tripsSignup.tripAppPage6, 'passportExpire') }">
+      <div class="form-group col-sm-6" ng-class="{'has-error': $ctrl.validation.showErrors($ctrl.tripAppPage6, 'passportExpire') }">
         <label for="passport-expire" class="control-label required">When does your passport expire?</label>
         <span class="input-group datepicker">
-            <input ng-model="signupStep.person.passportExpiration"
+            <input ng-model="$ctrl.person.passportExpiration"
                    type="text"
                    class="form-control"
                    name="passportExpire" id="passport-expire"
                    placeholder="mm/dd/yyyy"
                    datepicker-popup="MM/dd/yyyy"
-                   is-open='tripsSignup.passportExpireDateOpen'
+                   is-open='$ctrl.passportExpireDateOpen'
                    show-button-bar='false'
-                   max-date={{tripsSignup.maxPassportExpireDate}}
-                   min-date={{tripsSignup.minPassportExpireDate}}
-                   init-date=tripsSignup.initDate
+                   max-date={{$ctrl.maxPassportExpireDate}}
+                   min-date={{$ctrl.minPassportExpireDate}}
+                   init-date=$ctrl.initDate
                    ng-required="true"
                    datepicker-validator
                    required/>
             <span class="input-group-btn">
-             <button type="button" class="btn btn-default" ng-click="tripsSignup.openPassportExpireDatePicker($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+             <button type="button" class="btn btn-default" ng-click="$ctrl.openPassportExpireDatePicker($event)"><i class="glyphicon glyphicon-calendar"></i></button>
             </span>
           </span>
-        <ng-messages for="tripsSignup.tripAppPage6.passportExpire.$error"
-                     ng-if="tripsSignup.validation.showErrors(tripsSignup.tripAppPage6, 'passportExpire')">
+        <ng-messages for="$ctrl.tripAppPage6.passportExpire.$error"
+                     ng-if="$ctrl.validation.showErrors($ctrl.tripAppPage6, 'passportExpire')">
             <span ng-message="required">
                <span dynamic-content="$root.MESSAGES.fieldCanNotBeBlank.content | html"></span>
              </span>
@@ -77,14 +77,14 @@
       </div>
     </div><!--/row-->
 
-    <div class="row" ng-if="tripsSignup.signupService.page6.validPassport === 'true'">
+    <div class="row" ng-if="$ctrl.validPassport === 'true'">
       <div class="form-group col-sm-12">
         <span dynamic-content="$root.MESSAGES.TripPassportName.content | html"></span>
         <div class="row">
-          <div class="form-group col-sm-6" ng-class="{'has-error': tripsSignup.validation.showErrors(tripsSignup.tripAppPage6, 'passportFirstName') }">
+          <div class="form-group col-sm-6" ng-class="{'has-error': $ctrl.validation.showErrors($ctrl.tripAppPage6, 'passportFirstName') }">
             <label for="passport-firstname" class="control-label required">First Name</label>
-            <input ng-model="signupStep.person.passportFirstname" type="text" class="form-control" name="passportFirstName" id="passport-firstname" required placeholder="Enter first name">
-            <ng-messages for="tripsSignup.tripAppPage6.passportFirstName.$error" ng-if="tripsSignup.validation.showErrors(tripsSignup.tripAppPage6, 'passportFirstName')">
+            <input ng-model="$ctrl.person.passportFirstname" type="text" class="form-control" name="passportFirstName" id="passport-firstname" required placeholder="Enter first name">
+            <ng-messages for="$ctrl.tripAppPage6.passportFirstName.$error" ng-if="$ctrl.validation.showErrors($ctrl.tripAppPage6, 'passportFirstName')">
                   <span ng-message="required">
                     <span dynamic-content="$root.MESSAGES.fieldCanNotBeBlank.content | html"></span>
                   </span>
@@ -92,23 +92,23 @@
           </div>
           <div class="form-group col-sm-6">
             <label for="passport-middlename" class="control-label">Middle Name <small class="text-muted">Exactly as printed on your passport</small></label>
-            <input ng-model="signupStep.person.passportMiddlename" type="text" class="form-control" name="passportMiddlename" id="passport-middlename" placeholder="Enter middle name">
+            <input ng-model="$ctrl.person.passportMiddlename" type="text" class="form-control" name="passportMiddlename" id="passport-middlename" placeholder="Enter middle name">
           </div>
         </div>
         <div class="row">
-          <div class="form-group col-sm-6" ng-class="{'has-error': tripsSignup.validation.showErrors(tripsSignup.tripAppPage6, 'passportLastName') }">
+          <div class="form-group col-sm-6" ng-class="{'has-error': $ctrl.validation.showErrors($ctrl.tripAppPage6, 'passportLastName') }">
             <label for="passport-lastname" class="control-label required">Last Name</label>
-            <input ng-model="signupStep.person.passportLastname" type="text" class="form-control" name="passportLastName" id="passport-lastname" required placeholder="Enter last name">
-            <ng-messages for="tripsSignup.tripAppPage6.passportLastName.$error" ng-if="tripsSignup.validation.showErrors(tripsSignup.tripAppPage6, 'passportLastName')">
+            <input ng-model="$ctrl.person.passportLastname" type="text" class="form-control" name="passportLastName" id="passport-lastname" required placeholder="Enter last name">
+            <ng-messages for="$ctrl.tripAppPage6.passportLastName.$error" ng-if="$ctrl.validation.showErrors($ctrl.tripAppPage6, 'passportLastName')">
                   <span ng-message="required">
                     <span dynamic-content="$root.MESSAGES.fieldCanNotBeBlank.content | html"></span>
                   </span>
             </ng-messages>
           </div>
-          <div class="form-group col-sm-6" ng-class="{'has-error': tripsSignup.validation.showErrors(tripsSignup.tripAppPage6, 'passportCountry') }">
+          <div class="form-group col-sm-6" ng-class="{'has-error': $ctrl.validation.showErrors($ctrl.tripAppPage6, 'passportCountry') }">
             <label for="passport-country" class="control-label required">Country of Passport</label>
-            <input ng-model="signupStep.person.passportCountry" type="text" class="form-control" name="passportCountry" id="passport-country" required placeholder="Enter passport country">
-            <ng-messages for="tripsSignup.tripAppPage6.passportCountry.$error" ng-if="tripsSignup.validation.showErrors(tripsSignup.tripAppPage6, 'passportCountry')">
+            <input ng-model="$ctrl.person.passportCountry" type="text" class="form-control" name="passportCountry" id="passport-country" required placeholder="Enter passport country">
+            <ng-messages for="$ctrl.tripAppPage6.passportCountry.$error" ng-if="$ctrl.validation.showErrors($ctrl.tripAppPage6, 'passportCountry')">
                   <span ng-message="required">
                     <span dynamic-content="$root.MESSAGES.fieldCanNotBeBlank.content | html"></span>
                   </span>
@@ -118,7 +118,7 @@
       </div>
     </div><!--/row-->
 
-    <div class="row" ng-show="!tripsSignup.nolaRequired()">
+    <div class="row" ng-show="!$ctrl.nolaRequired()">
       <div class="col-sm-12">
         <legend>Frequent Flyer Information</legend>
       </div>
@@ -134,7 +134,7 @@
     </div>
 
     <div class="text-right push-half-top">
-      <button type="button" class="btn btn-standard btn-block-mobile">Cancel</button>
+      <button type="button" class="btn btn-standard btn-block-mobile" ng-click="$ctrl.cancel()">Cancel</button>
 
       <loading-button
         input-type='submit'
@@ -144,6 +144,6 @@
         loading-class='disabled'
         input-classes='btn btn-primary btn-block-mobile'></loading-button>
     </div>
-  </ng-form>
+  </form>
 </div>
 </div><!--/row-->

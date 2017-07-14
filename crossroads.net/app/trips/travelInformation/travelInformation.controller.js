@@ -3,12 +3,26 @@ var attributeIds = require('crds-constants').ATTRIBUTE_IDS;
 
 export default class TravelInformationController {
   /* @ngInject() */
-  constructor() {
+  constructor($rootScope) {
+    this.$rootScope = $rootScope;
+
+    this.now = null;
+    this.initDate = null;
+
     this.destination = null;
-    this.frequentFlyers = null;
+    this.person = {};
+    this.frequentFlyers = [];
+    this.validPassport = false;
+
+    this.maxPassportExpireDate = null;
+    this.minPassportExpireDate = null;
+    this.passportExpireDateOpen = false;
+
+    this.processing = false;
   }
 
   $onInit() {
+    this.destination = 'South Africa';
     this.frequentFlyers = [
       {
         "attributeId": 3958,
@@ -81,10 +95,14 @@ export default class TravelInformationController {
         "attributeTypeId": null
       }
     ];
+
+    this.now = new Date();
+    this.initDate = new Date(this.now.getFullYear(), this.now.getMonth(), this.now.getDate());
+    this.maxPassportExpireDate = new Date(this.now.getFullYear() + 150, this.now.getMonth(), this.now.getDate());
+    this.minPassportExpireDate = new Date(this.now.getFullYear(), this.now.getMonth(), this.now.getDate());
   }
 
   showFrequentFlyer(airline) {
-    console.log('SHOW FREQUENT FLYER', airline.attributeId);
     if (airline.attributeId === attributeIds.SOUTHAFRICA_FREQUENT_FLYER) {
       if (this.isSouthAfrica()) {
         return true;
@@ -117,5 +135,34 @@ export default class TravelInformationController {
     }
 
     return false;
+  }
+
+  passportInvalidContent() {
+    let message = this.$rootScope.MESSAGES.TripNoPassport.content;
+    switch (this.destination) {
+      case 'South Africa':
+        message = this.$rootScope.MESSAGES.TripNoPassportSouthAfrica.content;
+        break;
+      case 'India':
+        message = this.$rootScope.MESSAGES.TripNoPassportIndia.content;
+        break;
+      case 'Nicaragua':
+        message = this.$rootScope.MESSAGES.TripNoPassportNicaragua.content;
+        break;
+    }
+    return message;
+  }
+
+  openPassportExpireDatePicker($event) {
+    $event.preventDefault();
+    $event.stopPropagation();
+    this.passportExpireDateOpen = true;
+  }
+
+  submit() {
+    this.processing = true;
+  }
+
+  cancel() {
   }
 }
