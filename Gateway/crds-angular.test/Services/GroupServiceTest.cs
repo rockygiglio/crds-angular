@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Linq;
 using AutoMapper;
 using crds_angular.App_Start;
@@ -10,8 +9,6 @@ using crds_angular.Models.Crossroads.Events;
 using crds_angular.Models.Crossroads.Groups;
 using crds_angular.Services.Interfaces;
 using crds_angular.test.Models.Crossroads.Events;
-using Crossroads.Utilities.Interfaces;
-using Crossroads.Web.Common;
 using Crossroads.Web.Common.Configuration;
 using Crossroads.Web.Common.MinistryPlatform;
 using Crossroads.Web.Common.Security;
@@ -1226,6 +1223,35 @@ namespace crds_angular.test.Services
             fixture.UpdateGroupParticipantRole(participant);
             groupRepository.Verify();
 
+        }
+
+        [Test]
+        public void ShouldUpdateParticipant()
+        {
+            var participant1 = new MpGroupParticipant()
+            {
+                ParticipantId = 1,
+                GroupParticipantId = 1,
+                GroupRoleId = 22,
+                GroupRoleTitle = "Group Leader"
+            };
+            var participant2 = new MpGroupParticipant()
+            {
+                ParticipantId = 2,
+                GroupParticipantId = 2,
+                GroupRoleId = 66,
+                GroupRoleTitle = "Apprentice"
+            };
+            var participantList = new List<MpGroupParticipant> {participant1, participant2};
+
+            var groupId = 1;
+            var participantId = 2;
+            var roleId = 3;
+            
+            groupRepository.Setup(x => x.GetGroupParticipants(groupId, true)).Returns(participantList);
+
+            fixture.UpdateGroupParticipantRole(groupId,participantId,roleId);
+            groupRepository.Verify(x => x.UpdateGroupParticipant(It.IsAny<List<MpGroupParticipant>>()), Times.Once);
         }
 
         [Test]
