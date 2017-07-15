@@ -93,6 +93,9 @@ namespace crds_angular.Models.AwsCloudsearch
         [JsonProperty(PropertyName = "groupmeetingtime")]
         public string GroupMeetingTime { get; set; }
 
+        [JsonProperty(PropertyName = "groupvirtual")]
+        public int GroupVirtual { get; set; }
+
         [JsonProperty(PropertyName = "grouplocation")]
         public string GroupLocation { get; set; }
 

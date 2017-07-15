@@ -34,6 +34,7 @@ namespace MinistryPlatform.Translation.Models.Finder
         public string GroupAgeRange { get; set; }
         public string GroupMeetingDay { get; set; }
         public string GroupMeetingTime { get; set; }
+        public int? GroupVirtual { get; set; }
         public string GroupLocation { get; set; }
         public string GroupMeetingFrequency { get; set; }
         public int GroupKidsWelcome { get; set; }
