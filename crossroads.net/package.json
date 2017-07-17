@@ -106,6 +106,7 @@
     "angularjs-slider": "^2.9.0",
     "angulartics": "^0.20.1",
     "api-check": "~7.5.5",
+    "astronomer": "^2.0.4",
     "blueimp-load-image": "^1.14.0",
     "bootstrap": "^3.3.7",
     "crds-shared-header": "0.2.14",
