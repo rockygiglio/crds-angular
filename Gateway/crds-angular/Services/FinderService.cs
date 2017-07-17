@@ -1044,11 +1044,12 @@ namespace crds_angular.Services
             return resultMapCenterCoords;
         }
 
-        public bool DoesContactExists(string email)
+        public bool DoesActiveContactExists(string email)
         {
-            var contactId = _contactRepository.GetContactIdByEmail(email);
+            var contactId = _contactRepository.GetActiveContactIdByEmail(email);
             return contactId != 0;
         }
+
     }
 }
 

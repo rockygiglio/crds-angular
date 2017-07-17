@@ -110,7 +110,7 @@ namespace crds_angular.Controllers.API
         {
             try
             {
-                var rc = _finderService.DoesContactExists(searchUser.email);
+                var rc = _finderService.DoesActiveContactExists(searchUser.email);
                 return Ok(rc);
             }
             catch (Exception ex)
