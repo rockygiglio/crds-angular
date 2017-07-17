@@ -184,10 +184,10 @@ namespace MinistryPlatform.Translation.Test.Services
             const string sourceUrl = "";
             const decimal predefinedAmt = 676767; 
 
-            var defaultContact = new MpMyContact()
+            var defaultContact = new MpContact()
             {
-                Contact_ID = 1234556,
-                Email_Address = "giving@crossroads.net"
+                ContactId = 1234556,
+                EmailAddress = "giving@crossroads.net"
             };
 
             _ministryPlatformService.Setup(mocked => mocked.CreateRecord(
@@ -198,8 +198,11 @@ namespace MinistryPlatform.Translation.Test.Services
                 donationDistPageId, It.IsAny<Dictionary<string, object>>(),
                 It.IsAny<string>(), true)).Returns(expectedDonationDistributionId);
 
+            _contactService.Setup(mocked => mocked.GetEmailFromDonorId(donorId)).Returns(defaultContact);
+
             _communicationService.Setup(mocked => mocked.SendMessage(It.IsAny<MinistryPlatform.Translation.Models.MpCommunication>(), false));
-            _contactService.Setup(mocked => mocked.GetContactById(Convert.ToInt32(ConfigurationManager.AppSettings["DefaultGivingContactEmailId"]))).Returns(defaultContact);
+  
+            _contactService.Setup(mocked => mocked.GetContactEmail(Convert.ToInt32(ConfigurationManager.AppSettings["DefaultGivingContactEmailId"]))).Returns(defaultContact.EmailAddress);
 
             var expectedDonationValues = new Dictionary<string, object>
             {

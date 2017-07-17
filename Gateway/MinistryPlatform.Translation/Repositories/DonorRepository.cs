@@ -645,13 +645,15 @@ namespace MinistryPlatform.Translation.Repositories
             return donor;
         }
 
+  
+
         // TODO Made this virtual so could mock in a unit test.  Probably ought to refactor to a separate class - shouldn't have to mock the class we're testing...
         public virtual void SendEmail(int communicationTemplateId, int donorId, decimal donationAmount, string paymentType, DateTime setupDate, string program, string emailReason, string frequency = null, string pledgeName = null)
         {
             var template = _communicationService.GetTemplate(communicationTemplateId);
-            var defaultContact = _contactService.GetContactById(AppSetting("DefaultGivingContactEmailId"));
-            var contact = GetEmailViaDonorId(donorId);
-
+            var defaultContactId = AppSetting("DefaultGivingContactEmailId");
+            var defaultContactEmail = _contactService.GetContactEmail(defaultContactId);
+            MpContact contact = _contactService.GetEmailFromDonorId(donorId);
             var comm = new MpCommunication
             {
                 
@@ -659,9 +661,9 @@ namespace MinistryPlatform.Translation.Repositories
                 DomainId = 1,
                 EmailBody = template.Body,
                 EmailSubject = template.Subject,
-                FromContact =  new MpContact { ContactId = defaultContact.Contact_ID, EmailAddress = defaultContact.Email_Address },
-                ReplyToContact = new MpContact { ContactId = defaultContact.Contact_ID, EmailAddress = defaultContact.Email_Address },
-                ToContacts = new List<MpContact> {new MpContact{ContactId = contact.ContactId, EmailAddress = contact.Email}},
+                FromContact =  new MpContact { ContactId = defaultContactId, EmailAddress = defaultContactEmail },
+                ReplyToContact = new MpContact { ContactId = defaultContactId, EmailAddress = defaultContactEmail },
+                ToContacts = new List<MpContact> {new MpContact{ContactId = contact.ContactId, EmailAddress = contact.EmailAddress}},
                 MergeData = new Dictionary<string, object>
                 {
                     {"Program_Name", program},

@@ -8,6 +8,7 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
     public interface IContactRepository
     {
         string GetContactEmail(int contactId);
+        MpContact GetEmailFromDonorId(int donorId);
         int GetContactId(string token);
         MpMyContact GetContactById(int contactId);
         MpMyContact GetContactByIdCard(string idCard);
