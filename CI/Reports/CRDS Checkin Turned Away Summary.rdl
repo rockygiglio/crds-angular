@@ -51,10 +51,6 @@ FROM
           <DataField>Event_ID</DataField>
           <rd:TypeName>System.Int32</rd:TypeName>
         </Field>
-        <Field Name="Turned_Away_In_Group">
-          <DataField>Turned_Away_In_Group</DataField>
-          <rd:TypeName>System.Int32</rd:TypeName>
-        </Field>
         <Field Name="Event_Start_Date">
           <DataField>Event_Start_Date</DataField>
           <rd:TypeName>System.DateTime</rd:TypeName>
@@ -63,16 +59,16 @@ FROM
           <DataField>Event_Title</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="Group_Name">
-          <DataField>Group_Name</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
+        <Field Name="ParticipantAgeYear">
+          <DataField>ParticipantAgeYear</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="Total_In_Year">
+          <DataField>Total_In_Year</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
         </Field>
         <Field Name="Participation_Status_ID">
           <DataField>Participation_Status_ID</DataField>
-          <rd:TypeName>System.Int32</rd:TypeName>
-        </Field>
-        <Field Name="Group_ID">
-          <DataField>Group_ID</DataField>
           <rd:TypeName>System.Int32</rd:TypeName>
         </Field>
       </Fields>
@@ -186,7 +182,7 @@ FROM
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Group Name</Value>
+                                  <Value>Age In Years</Value>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>11pt</FontSize>
@@ -222,7 +218,7 @@ FROM
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Turned Away In Group</Value>
+                                  <Value>Total For Age</Value>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>11pt</FontSize>
@@ -365,7 +361,7 @@ FROM
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!Group_Name.Value</Value>
+                                  <Value>=Fields!ParticipantAgeYear.Value</Value>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <Color>#4d4d4d</Color>
@@ -398,7 +394,7 @@ FROM
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Sum(Fields!Turned_Away_In_Group.Value)</Value>
+                                  <Value>=Fields!Total_In_Year.Value</Value>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <Color>#4d4d4d</Color>
@@ -588,7 +584,7 @@ FROM
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>="Total Turned Away: " &amp; Sum(Fields!Turned_Away_In_Group.Value, "dsTurnedAwaySummaryData")</Value>
+                    <Value>="Total Turned Away: " &amp; Count(Fields!Total_In_Year.Value, "dsTurnedAwaySummaryData")</Value>
                     <Style />
                   </TextRun>
                 </TextRuns>

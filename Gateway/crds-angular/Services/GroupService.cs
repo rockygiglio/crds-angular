@@ -883,6 +883,28 @@ namespace crds_angular.Services
             }
         }
 
+        public void UpdateGroupParticipantRole(int groupId, int participantId, int roleId)
+        {
+            try
+            {
+                var apiToken = _apiUserService.GetToken();
+                var participantList = GetGroupParticipantsWithoutAttributes(groupId);
+                var groupParticipant = participantList.Single(s => s.ParticipantId == participantId);
+                var mpParticipant = Mapper.Map<MpGroupParticipant>(groupParticipant);
+                mpParticipant.GroupRoleId = roleId;
+
+
+                List<MpGroupParticipant> part = new List<MpGroupParticipant>();
+                part.Add(mpParticipant);
+                _mpGroupRepository.UpdateGroupParticipant(part);
+            }
+            catch (Exception e)
+            {
+                var message = $"Could not update group participant {participantId}";
+                _logger.Error(message, e);
+            }
+        }
+
         private void UpdateGroupParticipantStartDate(List<MpGroupParticipant> participants, DateTime groupStartDate)
         {
             foreach (var part in participants)
