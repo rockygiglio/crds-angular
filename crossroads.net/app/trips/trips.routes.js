@@ -131,6 +131,38 @@
           }
         }
       })
+      .state('travelinformation', {
+        parent: 'noSideBar',
+        url: '/trips/mytrips/update',
+        template: '<travel-information></travel-information>',
+        data: {
+          isProtected: true,
+          meta: {
+            title: 'My Trips',
+            description: ''
+          }
+        },
+        resolve: {
+          loggedin: crds_utilities.checkLoggedin,
+
+          $cookies: '$cookies',
+          $stateParams: '$stateParams',
+          Profile: 'Profile',
+          Person: function(Profile, $stateParams, $cookies) {
+            var cid = $cookies.get('userId');
+            if ($stateParams.contactId) {
+              cid = $stateParams.contactId;
+            }
+
+            return Profile.Person.get({ contactId: cid }).$promise;
+          },
+
+          Trip: 'Trip',
+          MyTrips: function(Trip) {
+            return Trip.MyTrips.get().$promise;
+          }
+        }
+      })
       .state('tripsignup', {
         parent: 'noSideBar',
         url: '/trips/:campaignId?invite',

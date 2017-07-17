@@ -7,6 +7,7 @@ angular.module(MODULE, ['crossroads.core', 'crossroads.common'])
   .factory('Trip', require('./trips.service'))
   ;
 require('./mytrips');
+require('./travelInformation');
 require('./tripsearch');
 require('./tripgiving');
 require('./signup');
