@@ -389,33 +389,17 @@ namespace MinistryPlatform.Translation.Repositories
             MpContactDonor donor;
             try
             {
-                var searchStr = string.Format("\"{0}\",", contactId);
-                var records =
-                    WithApiLogin(
-                        apiToken => (_ministryPlatformService.GetPageViewRecords("DonorByContactId", apiToken, searchStr)));
-                if (records != null && records.Count > 0)
+                var token = base.ApiLogin();
+                var parameters = new Dictionary<string, object>
                 {
-                    var record = records.First();
-                    donor = new MpContactDonor()
-                    {
-                        DonorId = record.ToInt("Donor_ID"),
-                        //we only want processorID from the donor if we are not processing a check
-                        ProcessorId = record.ToString(DonorProcessorId),
-                        ContactId = record.ToInt("Contact_ID"),
-                        RegisteredUser = true,
-                        Email = record.ToString("Email"),
-                        StatementType = record.ToString("Statement_Type"),
-                        StatementTypeId = record.ToInt("Statement_Type_ID"),
-                        StatementFreq = record.ToString("Statement_Frequency"),
-                        StatementMethod = record.ToString("Statement_Method"),
-                        Details = new MpContactDetails
-                        {
-                            EmailAddress = record.ToString("Email"),
-                            HouseholdId = record.ToInt("Household_ID"),
-                            FirstName = record.ToString("First_Name"),
-                            LastName = record.ToString("Last_Name")
-                        }
-                    };
+                    { "@Contact_ID", contactId }
+                };
+              
+                var storedProcReturn = _ministryPlatformRestRepository.UsingAuthenticationToken(token).GetFromStoredProc<MpContactDonor>("api_crds_Get_Contact_Donor", parameters);
+                
+                if (storedProcReturn != null && storedProcReturn.Count > 0)
+                {
+                    donor = storedProcReturn.FirstOrDefault()?.FirstOrDefault();
                 }
                 else
                 {
