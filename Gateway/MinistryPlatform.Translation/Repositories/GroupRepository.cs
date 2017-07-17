@@ -150,6 +150,24 @@ namespace MinistryPlatform.Translation.Repositories
             return (groupId);
         }
 
+        public bool GetDoesUserLeadSomeGroup(int userParticipantId)
+        {
+            bool doesUserLeadSomeGroup; 
+            var token = ApiLogin();
+            int groupLeaderRoleId = 22; 
+            string filter = $" Group_Role_ID != {groupLeaderRoleId} AND Participant_ID != {userParticipantId}";
+            var columns = new List<string>
+            {
+                "Group_ID"
+            };
+
+            var records = _ministryPlatformRestRepository.UsingAuthenticationToken(token).Search<MpGroupParticipant>(filter, columns);
+
+            doesUserLeadSomeGroup = records.Any(); 
+             
+            return doesUserLeadSomeGroup; 
+        }
+
         public int addParticipantToGroup(int participantId,
                                          int groupId,
                                          int groupRoleId,

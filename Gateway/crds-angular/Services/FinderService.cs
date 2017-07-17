@@ -367,6 +367,14 @@ namespace crds_angular.Services
             return participantId;
         }
 
+        public bool DoesUserLeadSomeGroup(int contactId)
+        {
+            int participantId = _participantRepository.GetParticipant(contactId).ParticipantId;
+            bool doesUserLeadSomeGroup = _groupRepository.GetDoesUserLeadSomeGroup(participantId);
+
+            return doesUserLeadSomeGroup;
+        }
+
         public List<PinDto> GetPinsInBoundingBox(GeoCoordinate originCoords, string userKeywordSearchString, AwsBoundingBox boundingBox, string finderType, int contactId, string filterSearchString)
         {
             List<PinDto> pins = null;

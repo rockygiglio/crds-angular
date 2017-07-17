@@ -37,5 +37,6 @@ namespace crds_angular.Services.Interfaces
         GeoCoordinate GetMapCenterForResults(string userSearchString, GeoCoordinates frontEndMapCenter, string finderType);
         void AddUserDirectlyToGroup(User user, int groupid);
         bool DoesContactExists(string email);
+        bool DoesUserLeadSomeGroup(int contactId);
     }
 }
