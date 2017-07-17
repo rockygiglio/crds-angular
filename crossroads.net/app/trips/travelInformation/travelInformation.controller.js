@@ -95,6 +95,20 @@ export default class TravelInformationController {
         "categoryId": null,
         "categoryDescription": null,
         "attributeTypeId": null
+      },
+      {
+        "attributeId": 5000,
+        "name": "American Airlines",
+        "description": null,
+        "selected": false,
+        "startDate": "0001-01-01T00:00:00",
+        "endDate": null,
+        "notes": null,
+        "sortOrder": 0,
+        "category": null,
+        "categoryId": null,
+        "categoryDescription": null,
+        "attributeTypeId": null
       }
     ];
 
@@ -102,41 +116,6 @@ export default class TravelInformationController {
     this.initDate = new Date(this.now.getFullYear(), this.now.getMonth(), this.now.getDate());
     this.maxPassportExpireDate = new Date(this.now.getFullYear() + 150, this.now.getMonth(), this.now.getDate());
     this.minPassportExpireDate = new Date(this.now.getFullYear(), this.now.getMonth(), this.now.getDate());
-  }
-
-  showFrequentFlyer(airline) {
-    if (airline.attributeId === attributeIds.SOUTHAFRICA_FREQUENT_FLYER) {
-      if (this.isSouthAfrica()) {
-        return true;
-      }
-      return false;
-    }
-
-    if (airline.attributeId === attributeIds.US_FREQUENT_FLYER) {
-      if (this.isNica()) {
-        return true;
-      }
-
-      return false;
-    }
-
-    return true;
-  }
-
-  isNica() {
-    if (this.destination === 'Nicaragua') {
-      return true;
-    }
-
-    return false;
-  }
-
-  isSouthAfrica() {
-    if (this.destination === 'South Africa') {
-      return true;
-    }
-
-    return false;
   }
 
   passportInvalidContent() {
