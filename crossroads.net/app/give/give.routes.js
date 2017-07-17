@@ -1,4 +1,4 @@
-(function() {
+/*(function() {
 
   'use strict';
 
@@ -9,7 +9,7 @@
   /**
    * This holds all of common Giving routes
    */
-  function GiveRoutes($httpProvider, $stateProvider) {
+  /*function GiveRoutes($httpProvider, $stateProvider) {
 
     $httpProvider.defaults.useXDomain = true;
 
@@ -82,4 +82,4 @@
       });
   }
 
-})();
+})();*/
