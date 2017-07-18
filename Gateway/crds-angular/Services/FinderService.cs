@@ -411,7 +411,7 @@ namespace crds_angular.Services
         public void AddUserDirectlyToGroup(User user, int groupid)
         {
             //check to see if user exists in MP.
-            var contactId = _contactRepository.GetContactIdByEmail(user.email);
+            var contactId = _contactRepository.GetActiveContactIdByEmail(user.email);
             if (contactId == 0)
             {
                 user.password = System.Web.Security.Membership.GeneratePassword(25, 10);
