@@ -164,6 +164,7 @@
     <Compile Include="Models\MpBatch.cs" />
     <Compile Include="Models\MpCamp.cs" />
     <Compile Include="Models\MpContactHousehold.cs" />
+    <Compile Include="Models\MpEventParticipantDocument.cs" />
     <Compile Include="Models\MpSequenceRecord.cs" />
     <Compile Include="Models\MPGLAccountMapping.cs" />
     <Compile Include="Models\MpContactAttribute.cs" />

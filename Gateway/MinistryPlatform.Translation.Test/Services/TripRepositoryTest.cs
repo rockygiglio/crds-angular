@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Crossroads.Utilities.Interfaces;
-using Crossroads.Web.Common;
 using Crossroads.Web.Common.Configuration;
 using Crossroads.Web.Common.MinistryPlatform;
 using MinistryPlatform.Translation.Models;
@@ -72,6 +70,35 @@ namespace MinistryPlatform.Translation.Test.Services
             Assert.AreEqual(false, returnVal.Status);
             Assert.IsNotEmpty(returnVal.ErrorMessage);
             _ministryPlatformRest.VerifyAll();
+        }
+
+        [Test]
+        public void ShouldGetTripDocuments()
+        {
+            var mockDocs = new List<MpEventParticipantDocument>
+            {
+                new MpEventParticipantDocument
+                {
+                    EventParticipantDocumentId = 1,
+                    DocumentId = 10,
+                    EventParticipantId = 1234,
+                    Received = true
+                },
+                new MpEventParticipantDocument
+                {
+                    EventParticipantDocumentId = 2,
+                    DocumentId = 12,
+                    EventParticipantId = 1234,
+                    Received = false
+                }
+            };
+            var eventParticipant = 1234;
+            var searchString = $"Event_Participant_ID = {eventParticipant}";
+
+            _ministryPlatformRest.Setup(m => m.Search<MpEventParticipantDocument>(searchString, null as string, null, false)).Returns(mockDocs);
+
+            var result = _fixture.GetTripDocuments(eventParticipant, token);
+            Assert.AreEqual(2, result.Count);
         }
 
         private static List<List<MpPledge>> ValidMpPledgeList()

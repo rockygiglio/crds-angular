@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Crossroads.Utilities.FunctionalHelpers;
-using Crossroads.Utilities.Interfaces;
 using log4net;
-using Crossroads.Web.Common;
 using Crossroads.Web.Common.Configuration;
 using Crossroads.Web.Common.MinistryPlatform;
 using MinistryPlatform.Translation.Models;
@@ -49,6 +47,21 @@ namespace MinistryPlatform.Translation.Repositories
                 _logger.Error(e.Message);
                 throw;
             }            
+        }
+
+        public List<MpEventParticipantDocument> GetTripDocuments(int eventParticipant, string token)
+        {
+            try
+            {
+                var searchString = $"Event_Participant_ID = {eventParticipant}";
+                return _ministryPlatformRestRepository.UsingAuthenticationToken(token).Search<MpEventParticipantDocument>(searchString);
+            }
+            catch (Exception e)
+            {
+                _logger.Error($"Failed to get documents for Event Participant #{eventParticipant}");
+                _logger.Error(e.Message);
+                throw;
+            }
         }
     }
 }

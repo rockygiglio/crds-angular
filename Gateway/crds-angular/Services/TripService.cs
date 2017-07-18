@@ -6,9 +6,7 @@ using crds_angular.Models.Crossroads;
 using crds_angular.Models.Crossroads.Trip;
 using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Extensions;
-using Crossroads.Utilities.Interfaces;
 using log4net;
-using Crossroads.Web.Common;
 using Crossroads.Web.Common.Configuration;
 using Crossroads.Web.Common.MinistryPlatform;
 using MinistryPlatform.Translation.Models;
@@ -350,6 +348,7 @@ namespace crds_angular.Services
                     t.EventParticipantId = tripParticipant.EventParticipantId;
                     t.EventParticipantFirstName = tripParticipant.Nickname;
                     t.EventParticipantLastName = tripParticipant.Lastname;
+                    t.IPromiseSigned = GetIPromise(tripParticipant.EventParticipantId);
 
                     events.Add(t);
                 }
@@ -736,6 +735,14 @@ namespace crds_angular.Services
             answers.Add(new MpFormAnswer {Response = page6.ValidPassport, FieldId = _configurationWrapper.GetConfigIntValue("TripForm.ValidPassport")});
 
             return answers;
+        }
+
+        public bool GetIPromise(int eventParticipantId)
+        {
+            var token = _apiUserRepository.GetToken();
+            var iPromiseDocId = _configurationWrapper.GetConfigIntValue("IPromiseDocumentId");
+            var docs = _tripRepository.GetTripDocuments(eventParticipantId, token);
+            return docs.Any(d => d.DocumentId == iPromiseDocId && d.Received);
         }
     }
 }
