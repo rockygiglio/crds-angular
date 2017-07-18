@@ -154,7 +154,7 @@ namespace MinistryPlatform.Translation.Repositories
         {
             bool doesUserLeadSomeGroup; 
             var token = ApiLogin();
-            string filter = $" Group_Role_ID != {GroupLeaderRoleId} AND Participant_ID != {userParticipantId}";
+            string filter = $" Group_Role_ID = {GroupLeaderRoleId} AND Participant_ID = {userParticipantId}";
             var columns = new List<string>
             {
                 "Group_ID"
