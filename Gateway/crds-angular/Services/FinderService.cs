@@ -669,7 +669,6 @@ namespace crds_angular.Services
 
             var groupDTOs = groupsByType.Select(Mapper.Map<MpGroup, GroupDTO>).ToList();
 
-            // TODO when do MY STUFF for Group Tool, will need to account for changing this flag to _finderGroupTool
             var pins = this.TransformGroupDtoToPinDto(groupDTOs, finderType);
 
             return pins;
@@ -952,6 +951,10 @@ namespace crds_angular.Services
 
                     pin.Gathering.ContactId = group.ContactId;
                     pin.Participant_ID = group.ParticipantId;
+
+                    var contact = _contactRepository.GetContactById((int)group.ContactId);
+                    pin.FirstName = contact.First_Name;
+                    pin.LastName = contact.Last_Name;
 
                     pins.Add(pin);
                 }
