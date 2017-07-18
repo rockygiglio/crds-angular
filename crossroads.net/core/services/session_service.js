@@ -51,6 +51,14 @@
     vm.create = (refreshToken, sessionId, userTokenExp, userId, username) => {
       $log.debug('creating cookies!');
       const expDate = new Date();
+      // DY Login Event Handler
+      DY.API('event', {
+        name: 'User_login',
+        properties: {
+          account: userId,
+          login: username
+        }
+      });
       expDate.setTime(expDate.getTime() + (userTokenExp * 1000));
       $cookies.put(cookieNames.SESSION_ID, sessionId, {
         expires: expDate

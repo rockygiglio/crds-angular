@@ -63,6 +63,7 @@ export default class VideojsPlayerController {
             window.SSTracker = window.SSTracker ? window.SSTracker : new window.Tracker(this.streamspot.ssid);
             window.SSTracker.start(broadcaster.live_src.cdn_hls, true, this.streamspot.ssid);
           }
+          
           if (this.angulartics !== undefined) {
             this.angulartics.eventTrack('Play', {
               category: 'Streaming',

@@ -59,6 +59,14 @@
                   case YT.PlayerState.PLAYING:
                     message.data = 'PLAYING';
                     $analytics.eventTrack('Play', {  category: 'video', label: scope.videoid });
+                    // Dynamic Yield YT Watch Event
+                    DY.API('event', {
+                      name: 'YT_video_view',
+                      properties:{
+                        video: PROP_VALUE,
+                        watched: true
+                      }
+                    });
                     break;
                   case YT.PlayerState.ENDED:
                     message.data = 'ENDED';
