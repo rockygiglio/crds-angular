@@ -8,6 +8,7 @@ export default class AnalyticsService {
   }
 
   trackForgotPassword() {
+    debugger;
     const analyticsPayload = {
       anonymousId: '123',
       event: 'ForgotPassword'
