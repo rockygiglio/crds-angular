@@ -1,0 +1,67 @@
+<form name="$ctrl.tripPromiseForm" role="form" novalidate ng-submit="$ctrl.submit()">
+  <h2>I Promise</h2>
+
+  <legend>{{$ctrl.trip.tripName}}</legend>
+
+  <div class="push-top">
+    <p>Dear trip participant,</p>
+
+    <p>By participating in a GO trip, you have the unique opportunity to spend time focused on serving others in another culture, while hanging out with people with the same goal. A GO trip can be a once-in-a-lifetime experience...if you engage as part of the team.</p>
+
+    <p>Over many years of organizing GO trips, we’ve identified some basic principles that, if followed, will give you the best opportunity to have a valuable experience and that will ensure your team accomplishes its mission.</p>
+
+    <p>We ask that you read these principles, study them and sign the sheet as a commitment that you are a member of the team and that you want to experience all the trip has to offer.</p>
+
+    <p>The best is yet to come.</p>
+  </div>
+
+  <div class="push-top">
+    <strong>AS A TEAM MEMBER, I PROMISE....</strong>
+  </div>
+
+  <div class="push-top">
+    <p>...To do all I can to ensure this trip is a blessing to me, my teammates, the organizations we are working under, our partners, and, most importantly, the people we serve.</p>
+
+    <p>...To be open to receive what this trip has to offer me, and in pursuit of that to consciously and continuously put myself in a position to best experience the people I work with, the people I serve, and the environment in which I will be working.</p>
+
+    <p>...To recognize that, while I may have the ability to bless others, the people I am serving and working with have much to offer; I will be a servant-learner.</p>
+
+    <p>...To always and diligently watch out for those around me—my roommate and fellow team
+      members—to ensure that everyone is safe and healthy at all times, and to take action if that is not the case.</p>
+
+    <p>...To avoid actions that will disrupt the team and our ability to accomplish our mission. This includes, but is not limited to: same sex and/or extra-marital sex, drug and alcohol abuse, violent actions, etc.</p>
+
+    <p>...To remember that my actions not only reflect on me, but also on all other members of the groups with whom I am associated. I will remember that one person’s positive or negative viewpoint of any of these groups can be forever altered by my actions.</p>
+
+    <p>...To accept that everyone will engage uniquely on this trip; To recognize that some team members will work harder than others, some team members will spend more time building relationships than others, and we will all approach different situations in different ways—all of which are critical to the success of our team.</p>
+
+    <p>...To solve problems by going directly to the person with whom I have a concern prior to enlisting support from other people. If, after the initial difficult conversation I still don’t feel right, I will ask someone who might feel the same way if they will go with me to resume the difficult conversation. If after that interaction I haven’t been satisfied, I will find a person in a position of leadership and seek their guidance.</p>
+
+    <p>...To put the team ahead of myself, understanding that the team’s mission is more important than my personal comfort; To stay flexible and accept change as it comes, regardless of my own feelings; and to follow the team plan even if it doesn’t t my specific wants.</p>
+
+    <p>...To trust those in authority over me. Even when a decision is made that I don’t understand, I will remember that I don’t have all the information nor the responsibility of those in leadership. I will commit to not being a burden to team leaders, so they can focus on the mission of our team and not my personal issues.</p>
+
+    <p>...To do my best to keep a positive attitude, knowing that this trip can be a once-in-a-lifetime opportunity for me, and to remain open-minded to all that I will see and experience.</p>
+  </div>
+
+  <div class="push-top">
+    <div class="checkbox required">
+      <label>
+        <input type="checkbox" value="promise" required>
+        I promise to live by these principles on this trip.
+      </label>
+    </div>
+  </div>
+
+  <div class="text-right push-top">
+    <button type="button" class="btn btn-standard btn-block-mobile" ng-click="$ctrl.cancel()">Cancel</button>
+
+    <loading-button
+      input-type='submit'
+      normal-text='Submit'
+      loading-text='Submitting...'
+      loading='$ctrl.processing'
+      loading-class='disabled'
+      input-classes='btn btn-primary btn-block-mobile'></loading-button>
+  </div>
+</form>

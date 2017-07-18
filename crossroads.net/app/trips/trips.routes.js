@@ -163,6 +163,21 @@
           }
         }
       })
+      .state('trippromise', {
+        parent: 'centeredContentPage',
+        url: '/trips/mytrips/promise',
+        template: '<trip-promise></trip-promise>',
+        data: {
+          isProtected: true,
+          meta: {
+            title: 'I Promise',
+            description: ''
+          }
+        },
+        resolve: {
+          loggedin: crds_utilities.checkLoggedin
+        }
+      })
       .state('tripsignup', {
         parent: 'noSideBar',
         url: '/trips/:campaignId?invite',
