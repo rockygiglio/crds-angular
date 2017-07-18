@@ -7,6 +7,12 @@
     <span class="text-muted">{{ cardName(trip.eventParticipantFirstName, trip.eventParticipantLastName) }}</span> <span class="hidden-xs">&middot;</span> <br class="visible-xs" /> <span class="text-muted trip-date">{{trip.tripStartDate}} - {{trip.tripEnd}}</span>
   </div><!-- /card-heading -->
 
+  <!-- Documents -->
+  <div class="col-xs-12 documents">
+    <h3>Sign Documents</h3>
+    <button type="button" class="btn btn-secondary" name="liabilityWaiverBtn"> Liability Waiver </button>
+  </div><!-- /documents -->
+
   <!-- Fund Progress Bar -->
   <div class="col-xs-12 col-top fund-progress">
     <p class="flush-bottom text-right trip-funding" style="width: 100%">${{trip.totalRaised}} Funded</p>
