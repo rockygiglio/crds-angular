@@ -396,11 +396,10 @@ namespace MinistryPlatform.Translation.Repositories
                 };
               
                 var storedProcReturn = _ministryPlatformRestRepository.UsingAuthenticationToken(token).GetFromStoredProc<MpContactDonor>("api_crds_Get_Contact_Donor", parameters);
-                
-                if (storedProcReturn != null && storedProcReturn.Count > 0)
-                {
-                    donor = storedProcReturn.FirstOrDefault()?.FirstOrDefault();
-                }
+
+
+                if (storedProcReturn != null && storedProcReturn.Count > 0 && storedProcReturn[0].Count > 0)
+                    donor = storedProcReturn[0].First();
                 else
                 {
                     donor = new MpContactDonor
