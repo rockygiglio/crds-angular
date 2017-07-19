@@ -8,8 +8,4 @@ export default class TripWaiverController {
   submit() {
 
   }
-
-  cancel() {
-
-  }
 }
