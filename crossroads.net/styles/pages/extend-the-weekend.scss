@@ -1,0 +1,63 @@
+/* Extend the Weekend */
+.extend-the-weekend {
+  font-family: "acumin-pro", sans-serif;
+}
+.extend-the-weekend h1, .extend-the-weekend h2 {
+  font-family: "acumin-pro", sans-serif;
+  font-weight: 100;
+}
+.extend-the-weekend h2 {
+  font-weight: 300;
+}
+.extend-the-weekend .intro h1 {
+  font-size: 238%;
+  line-height: 100%;
+}
+@media (min-width: 992px) {
+  .extend-the-weekend .intro h1 {
+    font-size: 338%;
+  }
+}
+.extend-the-weekend .intro p {
+  color: #979797;
+}
+
+.etw-connect article {
+  margin-bottom: 3em;
+  font-size: 90%;
+}
+.etw-connect article h3 {
+  font-size: 200%;
+}
+.etw-connect .btns > a {
+  display: table-cell;
+  vertical-align: middle;
+}
+.etw-connect .container h3 {
+  margin-top: 0;
+}
+@media (min-width: 768px) {
+  .etw-connect .container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+  .etw-connect .container > div {
+    flex: 1 0 auto;
+    display: flex;
+  }
+  .etw-connect .container article {
+    margin-bottom: 0;
+    width: 33%;
+    padding: 0 2em;
+    border-left: 1px solid #eee;
+  }
+  .etw-connect .container article:first-child {
+    border-left: none;
+  }
+}
+@media (min-width: 992px) {
+  .etw-connect .container {
+    padding: 2em 5em 0;
+  }
+}
