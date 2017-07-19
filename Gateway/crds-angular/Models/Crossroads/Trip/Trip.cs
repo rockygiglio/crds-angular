@@ -41,6 +41,15 @@ namespace crds_angular.Models.Crossroads.Trip
         [JsonProperty(PropertyName = "eventParticipantFirstName")]
         public string EventParticipantFirstName { get; set; }
 
+        [JsonProperty(PropertyName = "waiverId")]
+        public int WaiverId { get; set; }
+
+        [JsonProperty(PropertyName = "waiverSigned")]
+        public bool WaiverSigned { get; set; }
+
+        [JsonProperty(PropertyName = "contactId")]
+        public int ContactId { get; set; }
+
         public Trip()
         {
             TripGifts = new List<TripGift>();
