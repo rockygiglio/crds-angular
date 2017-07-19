@@ -9,15 +9,15 @@
 
     <div class="row">
       <div class="col-sm-12" dynamic-content="$root.MESSAGES.TripPassport.content | html"></div>
-      <div class="form-group col-sm-12" ng-class="{'has-error': $ctrl.validation.showErrors($ctrl.travelInfoForm, 'passport') }">
+      <div class="form-group col-sm-12" ng-class="{'has-error': $ctrl.validation.showErrors($ctrl.travelInfoForm, 'validPassport') }">
         <label class="control-label block required">Do you have a valid passport?</label>
         <label class="radio-inline">
-          <input ng-model="$ctrl.validPassport" type="radio" value="true"  name="passport" id="passport-yes" ng-required="true">Yes
+          <input ng-model="$ctrl.validPassport" type="radio" value="true"  name="validPassport" id="passport-yes" ng-required="true">Yes
         </label>
         <label class="radio-inline">
-          <input ng-model="$ctrl.validPassport" type="radio" value="false" name="passport" id="passport-no" ng-required="true">No
+          <input ng-model="$ctrl.validPassport" type="radio" value="false" name="validPassport" id="passport-no" ng-required="true">No
         </label>
-        <ng-messages for="$ctrl.travelInfoForm.passport.$error" ng-if="$ctrl.validation.showErrors($ctrl.travelInfoForm, 'passport')">
+        <ng-messages for="$ctrl.travelInfoForm.validPassport.$error" ng-if="$ctrl.validation.showErrors($ctrl.travelInfoForm, 'validPassport')">
             <span ng-message="required">
               <span dynamic-content="$root.MESSAGES.fieldCanNotBeBlank.content | html"></span>
             </span>
@@ -33,7 +33,13 @@
     <div class="row" ng-if="$ctrl.validPassport === 'true'">
       <div class="form-group col-sm-6" ng-class="{'has-error': $ctrl.validation.showErrors($ctrl.travelInfoForm, 'passportNumber') }">
         <label for="passport-number" class="control-label required">Passport Number</label>
-        <input ng-model="$ctrl.person.passportNumber" type="text" class="form-control" name="passportNumber" id="passport-number" required placeholder="Enter passport number" />
+        <input ng-model="$ctrl.person.passportNumber" 
+               type="text"
+               class="form-control"
+               name="passportNumber"
+               id="passport-number"
+               required
+               placeholder="Enter passport number" />
         <ng-messages for="$ctrl.travelInfoForm.passportNumber.$error" ng-if="$ctrl.validation.showErrors($ctrl.travelInfoForm, 'passportNumber')">
                 <span ng-message="required">
                   <span dynamic-content="$root.MESSAGES.fieldCanNotBeBlank.content | html"></span>
@@ -118,7 +124,7 @@
       </div>
     </div><!--/row-->
 
-    <div class="row" ng-show="!$ctrl.nolaRequired()">
+    <div class="row">
       <div class="col-sm-12">
         <legend>Frequent Flyer Information</legend>
       </div>
