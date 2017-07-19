@@ -64,7 +64,8 @@ BEGIN
 					-- soft credit donor is added or modified
 					WHEN dd.soft_credit_donor IS NOT NULL THEN COALESCE(h.Congregation_Id, 5)
 					-- soft credit donor is deleted (existed before)
-					WHEN (SELECT Soft_Credit_Donor FROM DELETED) IS NOT NULL THEN dd.HC_Donor_Congregation_ID
+					WHEN (SELECT Soft_Credit_Donor FROM DELETED WHERE DELETED.Donation_Distribution_ID = dd.Donation_Distribution_ID)
+					     IS NOT NULL THEN dd.HC_Donor_Congregation_ID
 					-- otherwise, no change
 					ELSE dd.Congregation_ID
 				END,
