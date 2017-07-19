@@ -57,12 +57,9 @@
     $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
       vm.bodyClasses = {};
       $rootScope.bodyClasses = [];
+      vm.resolving = true;
 
       $rootScope.renderLegacyStyles = toState.data !== undefined ? toState.data.renderLegacyStyles !== false : true;
-
-      if ((toState.resolve !== undefined || (toState.data !== undefined && toState.data.resolve)) && !event.defaultPrevented) {
-        vm.resolving = true;
-      }
 
       if (fromState.name == 'explore') {
         $('#fullpage').hide();
