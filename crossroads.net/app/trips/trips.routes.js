@@ -164,7 +164,22 @@
               deferred.reject();
             });
             return deferred.promise;
-          },
+          }
+        }
+      })
+      .state('tripwaiver', {
+        parent: 'centeredContentPage',
+        url: '/trips/mytrips/waiver',
+        template: '<trip-waiver></trip-waiver>',
+        data: {
+          isProtected: true,
+          meta: {
+            title: 'Trip Waiver',
+            description: ''
+          }
+        },
+        resolve: {
+          loggedin: crds_utilities.checkLoggedin
         }
       })
       .state('tripsignup', {

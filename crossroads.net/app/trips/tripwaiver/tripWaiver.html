@@ -1,0 +1,22 @@
+<form name="$ctrl.tripWaiverForm" role="form" novalidate ng-submit="$ctrl.submit()">
+
+
+  <div class="push-top">
+    <div class="checkbox require">
+      <label>
+        <input type="checkbox" value="waiver" required /> Checking this box comfirms your signature of the waiver agreement listed above.
+      </label>
+    </div>
+  </div>
+
+  <div class="text-right push-top">
+    <button type="button" class="btn btn-block-mobile" ng-click="$ctrl.cancel()">Cancel</button>
+
+    <loading-button input-type="submit"
+      normal-text="Submit"
+      loading-text="Submitting..."
+      loading="$ctrl.processing"
+      loading-class="disabled"
+      input-classes="btn btn-primary btn-block-mobile"></loading-button>
+  </div>
+</form>

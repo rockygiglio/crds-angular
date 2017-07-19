@@ -8,6 +8,7 @@ angular.module(MODULE, ['crossroads.core', 'crossroads.common'])
   ;
 require('./mytrips');
 require('./travelInformation');
+require('./tripwaiver');
 require('./tripsearch');
 require('./tripgiving');
 require('./signup');
