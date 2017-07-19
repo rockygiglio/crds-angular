@@ -41,8 +41,11 @@ namespace crds_angular.Models.Crossroads.Trip
         [JsonProperty(PropertyName = "eventParticipantFirstName")]
         public string EventParticipantFirstName { get; set; }
 
-        [JsonProperty(PropertyName = "ipromisesigned")]
+        [JsonProperty(PropertyName = "iPromiseSigned")]
         public bool IPromiseSigned { get; set; }
+
+        [JsonProperty(PropertyName = "contactId")]
+        public int ContactId { get; set; }
 
         public Trip()
         {

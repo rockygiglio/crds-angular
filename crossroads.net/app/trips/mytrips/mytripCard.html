@@ -42,6 +42,12 @@
     </sn-addthis-toolbox>
   </div><!--/trip-sharing-->
 
+  <!-- I-Promise -->
+  <div ng-if="showIPromise(trip.contactId)">
+    <input type="button" class="btn" value="Sign the I Promise" >
+  </div>
+  <!-- /I-Promise -->
+
   <!-- Donor List -->
   <div class="clearfix col-xs-12 card-content donor-list">
     <ul class="list-group">

@@ -349,6 +349,7 @@ namespace crds_angular.Services
                     t.EventParticipantFirstName = tripParticipant.Nickname;
                     t.EventParticipantLastName = tripParticipant.Lastname;
                     t.IPromiseSigned = GetIPromise(tripParticipant.EventParticipantId);
+                    t.ContactId = contactId;
 
                     events.Add(t);
                 }
