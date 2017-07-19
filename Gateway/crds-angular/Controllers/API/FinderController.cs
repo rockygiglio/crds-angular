@@ -174,7 +174,7 @@ namespace crds_angular.Controllers.API
         {
             try
             {
-                var address = _finderService.GetAddressForIp(ipAddress.Replace('$', '.'));
+                var address = _finderService.GetAddressForIp(ipAddress.Replace('$','.'));
                 return Ok(address);
             }
             catch (Exception ex)
