@@ -10,9 +10,9 @@
   <!-- Documents -->
   <div class="col-xs-12 documents">
     <h3>Sign Documents</h3>
-    <a ui-sref="tripwaiver" class="btn btn-default" name="liabilityWaiverBtn">
-      <span><!-- warning icon --></span>
-      <span><!-- checkmark --></span>
+    <a ui-sref="tripwaiver" class="btn btn-default" name="liabilityWaiverBtn" ng-show="showWaiver(trip.contactId)">
+      <span ng-hide="hasSignedWaiver(trip.signedWaiver)"><!-- warning icon -->!!!</span>
+      <span ng-show="hasSignedWaiver(trip.signedWaiver)"><!-- checkmark -->OK!</span>
       Liability Waiver
     </a>
   </div><!-- /documents -->
