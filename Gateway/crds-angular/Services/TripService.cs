@@ -352,6 +352,8 @@ namespace crds_angular.Services
                     t.EventParticipantId = tripParticipant.EventParticipantId;
                     t.EventParticipantFirstName = tripParticipant.Nickname;
                     t.EventParticipantLastName = tripParticipant.Lastname;
+                    t.WaiverId = _mpEventService.GetWaivers(trip.EventId, trip.ContactId).FirstOrDefault().WaiverId;
+                    t.ContactId = contactId;
 
                     events.Add(t);
                 }
