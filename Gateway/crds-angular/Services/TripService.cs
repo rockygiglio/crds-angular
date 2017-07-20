@@ -140,19 +140,17 @@ namespace crds_angular.Services
                 RegistrationDeposit = campaign.RegistrationDeposit,
                 AgeExceptions = campaign.AgeExceptions,
                 IsFull = false,
-                EventId = campaign.EventId
+                EventId = campaign.EventId,
+                EventStart = campaign.EventStart
             };
-            var pledges = new List<MpPledge>();
 
             if (campaign.MaximumRegistrants != null)
             {
-                pledges = _mpPledgeService.GetPledgesByCampaign(pledgeCampaignId, token);               
+                var pledges = _mpPledgeService.GetPledgesByCampaign(pledgeCampaignId, token);
+                if (pledges.Count >= campaign.MaximumRegistrants)
+                    response.IsFull = true;
             }
-            if (campaign.MaximumRegistrants == null || campaign.MaximumRegistrants > pledges.Count)
-            {
-                return response;
-            }
-            response.IsFull = true;
+
             return response;
         }
 
@@ -416,6 +414,9 @@ namespace crds_angular.Services
             var tripRecord = _campaignService.GetGoTripDetailsByCampaign(pledgeCampaignId).FirstOrDefault();
             var tripDonor = _mpDonorService.GetContactDonor(contactId);
             var campaign = _campaignService.GetPledgeCampaign(pledgeCampaignId);
+
+            if (campaign == null)
+                throw new ApplicationException($"Pledge campaign Id {pledgeCampaignId} not found or expired");
 
             tripParticipantPledgeInfo.PledgeAmount = tripRecord != null ? (int)tripRecord.CampaignFundRaisingGoal : 0;
             tripParticipantPledgeInfo.CampaignNickname = campaign.Nickname;

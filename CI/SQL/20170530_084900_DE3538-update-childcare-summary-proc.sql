@@ -10,7 +10,7 @@ GO
 
 -- ===============================================================
 -- Author: John Cleaver	
--- Create date: 5/26/2017
+-- Create date: 6/01/2017
 -- Description:	Refactor of [report_CRDS_Childcare_Summary] proc
 -- ===============================================================
 IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[report_CRDS_Childcare_Summary]') AND type in (N'P', N'PC'))
@@ -35,6 +35,7 @@ AS
 		
 		DECLARE @ChildcareSummary TABLE
 		(
+			Event_ID int,
 			Group_Name varchar(255),
 			EventDate datetime,
 			StartTime datetime, 
@@ -47,62 +48,66 @@ AS
 			RSVPOverride int
 		)
 
-		BEGIN		
-			INSERT INTO @ChildcareSummary
-				SELECT  g.Group_Name Group_Name,  
-					e.Event_Start_Date  EventDate, 
-					e.Event_Start_Date  StartTime, 
-					e.Event_End_Date EndTime, 
-					p.Participant_ID ParticipantID,
-					'' as Age,
-					1 AS 'RSVP',
-					IIF(ep.Event_Participant_ID IS NOT NULL AND ep.Participation_Status_ID = 4, 1, 0) AS 'Checkin',
-					CASE WHEN EXISTS (SELECT * FROM Groups s_g INNER JOIN Event_Groups s_eg ON s_g.Group_ID = s_eg.Group_ID LEFT OUTER JOIN 
-					Group_Participants s_gp on s_eg.Group_ID = s_gp.Group_ID
-					WHERE s_eg.Event_ID = e.Event_ID and s_g.Group_Type_ID=27 and s_gp.Participant_ID = p.Participant_ID) 
-					THEN 1 ELSE 0 END AS RSVPOnline,
-					CASE WHEN NOT EXISTS (SELECT * FROM Groups s_g INNER JOIN Event_Groups s_eg ON s_g.Group_ID = s_eg.Group_ID LEFT OUTER JOIN 
-					Group_Participants s_gp on s_eg.Group_ID = s_gp.Group_ID
-					WHERE s_eg.Event_ID = e.Event_ID and s_g.Group_Type_ID=27 and s_gp.Participant_ID = p.Participant_ID) 
-					THEN 1 ELSE 0 END AS RSVPOverride
-				FROM dbo.Events e
-				JOIN Event_Groups eg ON e.Event_ID = eg.Event_ID
-				JOIN Group_Participants childgp ON childgp.Group_ID = eg.Group_ID 
-				JOIN Group_Participants parentgp ON parentgp.Group_Participant_ID = childgp.Enrolled_By
-				JOIN Groups g ON g.Group_ID = parentgp.Group_ID
-				JOIN Participants p ON p.Participant_ID = childgp.Participant_ID
-				JOIN Contacts c on c.Contact_ID = p.Contact_ID		
-				LEFT JOIN Event_Participants ep on ep.Event_ID = e.Event_ID AND ep.Participant_ID = p.Participant_ID AND ep.Participation_Status_ID in (3, 4) 
-				WHERE e.Event_Type_ID = 243
-					AND e.Event_Start_Date >= @StartDate
-					AND e.Event_Start_Date <= @EndDate 
-					AND e.Congregation_ID = @CongregationId
-					AND childgp.End_Date is null
+		-- first case is children that had an rsvp
+	INSERT INTO @ChildcareSummary SELECT DISTINCT
+			e.Event_ID, -- Event_ID
+			(select top(1) s_g.Group_Name from groups s_g inner join event_groups s_eg on s_g.Group_ID = s_eg.Group_ID inner join Group_Participants s_gp
+				on s_g.Group_ID = s_gp.Group_ID where s_gp.Group_Participant_ID = gp.Enrolled_By), -- Group_Name    
+			e.Event_Start_Date as EventDate, -- EventDate
+			e.Event_Start_Date as StartTime, -- StartTime
+			e.Event_End_Date as EndTime, -- EndTime
+			p.Participant_ID, --- ParticipantID
+			(SELECT TOP(1) Group_Name from Groups s_g inner join Group_Participants s_gp on s_g.Group_ID = s_gp.Group_ID 
+				WHERE s_gp.Participant_ID = p.Participant_ID and s_gp.End_Date IS NULL and s_g.Group_Type_ID=4), -- Age
+			1,
+			IIF(ep.Event_Participant_ID IS NOT NULL AND ep.Participation_Status_ID IN (3, 4), 1, 0) AS 'Checkin',
+			1,
+			0
+		from Group_Participants gp
+		inner join event_groups eg on gp.Group_ID = eg.Group_ID
+		inner join events e on e.Event_ID = eg.Event_ID
+		inner join Groups g on gp.Group_ID = g.Group_ID
+		inner join Participants p on p.Participant_ID = gp.Participant_ID
+		inner join Contacts c on c.Contact_ID = p.Contact_ID
+		LEFT JOIN Event_Participants ep on ep.Event_ID = e.Event_ID AND ep.Participant_ID = p.Participant_ID AND ep.Participation_Status_ID in (3, 4)
+		where e.Event_Type_ID=243
+		and e.Event_Start_Date >= @StartDate
+		and e.Event_End_Date <= @EndDate
+		and g.Group_Type_ID = 27
+		and e.Congregation_ID = @CongregationId
+		and exists (select * from groups s_g inner join event_groups s_eg on s_g.Group_ID = s_eg.Group_ID where s_eg.Event_ID = e.Event_ID
+		and s_g.Group_Type_ID = 27)
 
-		END
-
-		DECLARE @participantid int
-		DECLARE cur CURSOR FOR SELECT ParticipantID FROM @ChildcareSummary
-		OPEN cur
-		FETCH NEXT FROM cur INTO @participantid
-		WHILE @@FETCH_STATUS = 0 BEGIN
-		   -- get age group for participant and update current row
-		   DECLARE @groupname nvarchar(200) = null;
-		   SELECT TOP 1 @groupname = g.Group_Name FROM Groups g
-		   JOIN Group_Participants gp on g.Group_ID = gp.Group_ID AND gp.Participant_ID = @participantid
-		   WHERE g.Group_Type_ID = @AGE_GROUP_TYPE_ID
-		   AND ( @StartDate between gp.Start_Date and gp.End_Date
-					OR 
-				 @StartDate >= gp.Start_Date )
-			ORDER BY gp.Start_Date ASC
-
-		   UPDATE @ChildcareSummary SET [Age] = @groupname where ParticipantID = @participantid
-
-		   FETCH NEXT FROM cur INTO @participantid
-		END
-
-		CLOSE cur    
-		DEALLOCATE cur
+	---- non RSVP'ed children
+	INSERT INTO @ChildcareSummary SELECT DISTINCT
+			e.Event_ID, -- Event_ID
+			(select top(1) s_g.Group_Name from groups s_g inner join event_groups s_eg on s_g.Group_ID = s_eg.Group_ID where s_eg.Event_ID =
+				e.Event_ID and s_g.Group_Type_ID NOT IN (4, 27)), -- Group_Name   
+			e.Event_Start_Date as EventDate, -- Event Date
+			e.Event_Start_Date as StartTime, -- Start Time
+			e.Event_End_Date as EndTime, -- End Time
+			p.Participant_ID, -- Participant ID
+			(SELECT TOP(1) Group_Name from Groups s_g inner join Group_Participants s_gp on s_g.Group_ID = s_gp.Group_ID 
+				WHERE s_gp.Participant_ID = p.Participant_ID and s_gp.End_Date IS NULL and s_g.Group_Type_ID=4), -- Age 
+			0,
+			IIF(ep.Event_Participant_ID IS NOT NULL AND ep.Participation_Status_ID IN (3, 4), 1, 0) AS 'Checkin',
+			0,
+			1
+		from Event_Participants ep 
+		inner join Events e on ep.Event_ID = e.Event_ID
+		inner join Event_Groups eg on eg.Event_ID = e.Event_ID
+		inner join Groups g on g.Group_ID = eg.Group_ID
+		inner join Participants p on p.Participant_ID = ep.Participant_ID
+		inner join Contacts c on c.Contact_ID = p.Contact_ID
+		where e.Event_Type_ID=243
+		and e.Event_Start_Date >= @StartDate
+		and e.Event_End_Date <= @EndDate
+		and e.Congregation_ID = @CongregationId
+		and ep.Participation_Status_ID IN (3, 4) -- KC codes
+		-- don't pull back a participant if they are part of the 27 group on the event
+		and not exists (select * from Group_Participants s_gp inner join Event_Groups s_eg on s_gp.Group_ID = 
+			s_eg.Group_ID inner join groups s_g on s_eg.Group_ID = s_g.Group_ID 
+				where s_g.Group_Type_ID = 27 and s_gp.Participant_ID = p.Participant_ID and s_eg.Event_ID = e.Event_Id)
 
 		SELECT Group_Name,
 			EventDate,

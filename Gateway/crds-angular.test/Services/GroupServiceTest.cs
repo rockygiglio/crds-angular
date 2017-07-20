@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Linq;
 using AutoMapper;
 using crds_angular.App_Start;
@@ -10,8 +9,6 @@ using crds_angular.Models.Crossroads.Events;
 using crds_angular.Models.Crossroads.Groups;
 using crds_angular.Services.Interfaces;
 using crds_angular.test.Models.Crossroads.Events;
-using Crossroads.Utilities.Interfaces;
-using Crossroads.Web.Common;
 using Crossroads.Web.Common.Configuration;
 using Crossroads.Web.Common.MinistryPlatform;
 using Crossroads.Web.Common.Security;
@@ -25,6 +22,7 @@ using GroupService = crds_angular.Services.GroupService;
 using MPServices = MinistryPlatform.Translation.Repositories.Interfaces;
 using IGroupRepository = MinistryPlatform.Translation.Repositories.Interfaces.IGroupRepository;
 using Participant = MinistryPlatform.Translation.Models.MpParticipant;
+using crds_angular.Util.Interfaces;
 
 namespace crds_angular.test.Services
 {
@@ -48,6 +46,7 @@ namespace crds_angular.test.Services
         private Mock<MPServices.IUserRepository> _userRespository;
         private Mock<MPServices.IInvitationRepository> _invitationRepository;
         private Mock<IAttributeService> _attributeService;
+        private Mock<IDateTime> _dateTimeWrapper;
 
         private readonly List<ParticipantSignup> mockParticipantSignup = new List<ParticipantSignup>
         {
@@ -73,6 +72,9 @@ namespace crds_angular.test.Services
         private const int GroupCategoryAttributeTypeId = 10;
         private const int GroupTypeAttributeTypeId = 20;
         private const int GroupAgeRangeAttributeTypeId = 30;
+        private const int DefaultAuthorUser = 5;
+        private const int RemoveSelfFromGroupTemplateId = 2024;
+
 
         [SetUp]
         public void SetUp()
@@ -98,6 +100,7 @@ namespace crds_angular.test.Services
             _attributeRepository = new Mock<MPServices.IAttributeRepository>();
             _attributeService = new Mock<IAttributeService>();
 
+            _dateTimeWrapper = new Mock<IDateTime>();
 
             config = new Mock<IConfigurationWrapper>();
 
@@ -109,6 +112,8 @@ namespace crds_angular.test.Services
             config.Setup(mocked => mocked.GetConfigIntValue("GroupCategoryAttributeTypeId")).Returns(GroupCategoryAttributeTypeId);
             config.Setup(mocked => mocked.GetConfigIntValue("GroupTypeAttributeTypeId")).Returns(GroupTypeAttributeTypeId);
             config.Setup(mocked => mocked.GetConfigIntValue("GroupAgeRangeAttributeTypeId")).Returns(GroupAgeRangeAttributeTypeId);
+            config.Setup(mocked => mocked.GetConfigIntValue("DefaultAuthorUser")).Returns(DefaultAuthorUser);
+            config.Setup(mocked => mocked.GetConfigIntValue("RemoveSelfFromGroupTemplateId")).Returns(RemoveSelfFromGroupTemplateId);
 
             fixture = new GroupService(groupRepository.Object,
                                        config.Object,
@@ -124,7 +129,9 @@ namespace crds_angular.test.Services
                                        _emailCommunicationService.Object,
                                        _userRespository.Object,
                                        _invitationRepository.Object,
-                                       _attributeService.Object);
+                                       _attributeService.Object,
+                                       _dateTimeWrapper.Object);
+                                    
         }
 
         [Test]
@@ -379,9 +386,6 @@ namespace crds_angular.test.Services
                 Participants = new List<MpGroupParticipant>()
             };
             groupRepository.Setup(mocked => mocked.getGroupDetails(456)).Returns(g);
-
-            groupRepository.Setup(mocked => mocked.addParticipantToGroup(999, 456, GROUP_ROLE_DEFAULT_ID, false, It.IsAny<DateTime>(), null, false, null)).Returns(999456);
-            groupRepository.Setup(mocked => mocked.addParticipantToGroup(888, 456, GROUP_ROLE_DEFAULT_ID, false, It.IsAny<DateTime>(), null, false, null)).Returns(888456);
             groupRepository.Setup(mocked => mocked.SendCommunityGroupConfirmationEmail(It.IsAny<int>(), 456, true, false));
 
             var events = new List<MpEvent>
@@ -390,15 +394,23 @@ namespace crds_angular.test.Services
                 new MpEvent {EventId = 555},
                 new MpEvent {EventId = 444}
             };
-            groupRepository.Setup(mocked => mocked.getAllEventsForGroup(456)).Returns(events);
 
-            eventService.Setup(mocked => mocked.RegisterParticipantForEvent(999, 777, 456, 999456)).Returns(999777);
-            eventService.Setup(mocked => mocked.RegisterParticipantForEvent(999, 555, 456, 999456)).Returns(999555);
-            eventService.Setup(mocked => mocked.RegisterParticipantForEvent(999, 444, 456, 999456)).Returns(999444);
+            
+            DateTime mockDateTime = new DateTime(2025, 4, 18, 8, 23, 56);
+            _dateTimeWrapper.Setup(m => m.Today).Returns(mockDateTime.Date);
 
-            eventService.Setup(mocked => mocked.RegisterParticipantForEvent(888, 777, 456, 888456)).Returns(888777);
-            eventService.Setup(mocked => mocked.RegisterParticipantForEvent(888, 555, 456, 888456)).Returns(888555);
-            eventService.Setup(mocked => mocked.RegisterParticipantForEvent(888, 444, 456, 888456)).Returns(888444);
+            groupRepository.Setup(mocked => mocked.getAllEventsForGroup(456, mockDateTime.Date, false)).Returns(events);
+            groupRepository.Setup(mocked => mocked.GetParticipantGroupMemberId(456,999)).Returns(999456);
+            groupRepository.Setup(mocked => mocked.GetParticipantGroupMemberId(456, 888)).Returns(-1);
+            groupRepository.Setup(mocked => mocked.addParticipantToGroup(888, 456, GROUP_ROLE_DEFAULT_ID, false, It.IsAny<DateTime>(), null, false, null)).Returns(888456);
+
+            eventService.Setup(mocked => mocked.SafeRegisterParticipant(777, 999, 456, 999456)).Returns(999777);
+            eventService.Setup(mocked => mocked.SafeRegisterParticipant(555, 999, 456, 999456)).Returns(999555);
+            eventService.Setup(mocked => mocked.SafeRegisterParticipant(444, 999, 456, 999456)).Returns(999444);
+
+            eventService.Setup(mocked => mocked.SafeRegisterParticipant(777, 888, 456, 888456)).Returns(888777);
+            eventService.Setup(mocked => mocked.SafeRegisterParticipant(555, 888, 456, 888456)).Returns(888555);
+            eventService.Setup(mocked => mocked.SafeRegisterParticipant(444, 888, 456, 888456)).Returns(888444);
 
             fixture.addParticipantsToGroup(456, mockParticipantSignup);
 
@@ -427,7 +439,7 @@ namespace crds_angular.test.Services
 
             groupRepository.Setup(mocked => mocked.getGroupDetails(456)).Returns(g);
 
-            groupRepository.Setup(mocked => mocked.getAllEventsForGroup(456)).Returns(eventList);
+            groupRepository.Setup(mocked => mocked.getAllEventsForGroup(456, null, false)).Returns(eventList);
 
             var relations = new List<MpGroupSignupRelationships>
             {
@@ -1219,6 +1231,35 @@ namespace crds_angular.test.Services
         }
 
         [Test]
+        public void ShouldUpdateParticipant()
+        {
+            var participant1 = new MpGroupParticipant()
+            {
+                ParticipantId = 1,
+                GroupParticipantId = 1,
+                GroupRoleId = 22,
+                GroupRoleTitle = "Group Leader"
+            };
+            var participant2 = new MpGroupParticipant()
+            {
+                ParticipantId = 2,
+                GroupParticipantId = 2,
+                GroupRoleId = 66,
+                GroupRoleTitle = "Apprentice"
+            };
+            var participantList = new List<MpGroupParticipant> {participant1, participant2};
+
+            var groupId = 1;
+            var participantId = 2;
+            var roleId = 3;
+            
+            groupRepository.Setup(x => x.GetGroupParticipants(groupId, true)).Returns(participantList);
+
+            fixture.UpdateGroupParticipantRole(groupId,participantId,roleId);
+            groupRepository.Verify(x => x.UpdateGroupParticipant(It.IsAny<List<MpGroupParticipant>>()), Times.Once);
+        }
+
+        [Test]
         public void ShouldSendEmailWhenLeaderAddedToGroupWithStudents()
         {
             var token = "123";
@@ -1481,5 +1522,6 @@ namespace crds_angular.test.Services
 
             return attributes;
         }
+
     }
 }

@@ -161,6 +161,25 @@ namespace MinistryPlatform.Translation.Repositories
             }
         }
 
+        public MpContact GetEmailFromDonorId(int donorId)
+        {
+            MpContact contact = new MpContact();
+            try
+            {
+                string searchFilter = $"Donor_Record={donorId}";
+                var foundEmails = _ministryPlatformRest.UsingAuthenticationToken(base.ApiLogin()).Search<MpContact>(searchFilter, "Contact_ID, Donor_Record, Email_Address");
+                if (foundEmails.Count == 1)
+                    contact = foundEmails.First();
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException(
+                    string.Format("GetEmailFromDonorId failed.  Donor Id: {0}", donorId), ex);
+            }
+
+            return contact;
+        }
+
         public int GetContactIdByEmail(string email)
         {
             var records = _ministryPlatformService.GetRecordsDict(_configurationWrapper.GetConfigIntValue("Contacts"), ApiLogin(), (email));
@@ -175,6 +194,32 @@ namespace MinistryPlatform.Translation.Repositories
 
             var record = records[0];
             return record.ToInt("dp_RecordID");
+        }
+
+
+        public int GetActiveContactIdByEmail(string email)
+        {
+            // filter out contact_status = deceased (id = 3)
+            var token = ApiLogin();
+            string filter = $" Display_Name != 'Guest Giver' AND Contact_Status_ID != 3 AND Email_Address = '{email}'";
+            var columns = new List<string>
+            {
+                "Email_Address",
+                "Contact_ID"
+            };
+
+            var records = _ministryPlatformRest.UsingAuthenticationToken(token).Search<MpMyContact>(filter, columns);
+
+            if (records.Count > 1)
+            {
+                throw new Exception("User email did not return exactly one user record");
+            }
+            if (records.Count < 1)
+            {
+                return 0;
+            }
+            
+            return records[0].Contact_ID;
         }
 
         public int GetContactIdByParticipantId(int participantId)
@@ -260,13 +305,32 @@ namespace MinistryPlatform.Translation.Repositories
             return contact;
         }
 
-        public List<Dictionary<string, object>> StaffContacts()
+        public List<Dictionary<string, object>> PrimaryContacts(bool staffOnly = false)
         {
-            var token = ApiLogin();
-            var staffContactAttribute = _configurationWrapper.GetConfigIntValue("StaffContactAttribute");
-            const string columns = "Contact_ID_Table.*";
-            string filter = $"Attribute_ID = {staffContactAttribute} AND Start_Date <= GETDATE() AND (end_date is null OR end_Date > GETDATE())";
-            var records = _ministryPlatformRest.UsingAuthenticationToken(token).Search<MpContactAttribute, Dictionary<string, object>>(filter, columns, null, true);
+            string columns = string.Join(", ",
+                "Contact_ID_Table.Contact_ID",
+                "Contact_ID_Table.Display_Name",
+                "Contact_ID_Table.Email_Address",
+                "Contact_ID_Table.First_Name",
+                "Contact_ID_Table.Last_Name"
+            );
+
+            // always include contacts with the "Staff" attribute
+            List<int> attributeIds = new List<int>()
+            {
+                _configurationWrapper.GetConfigIntValue("StaffContactAttribute")
+            };
+
+            // optionally include contacts with the "Event Tool Contact" attribute
+            if (!staffOnly)
+                attributeIds.Add(_configurationWrapper.GetConfigIntValue("EventToolContactAttribute"));
+
+            string filter = $"Attribute_ID IN ({string.Join(",", attributeIds)})";
+            filter += " AND Start_Date <= GETDATE() AND (End_Date IS NULL OR End_Date > GETDATE())";
+
+            string apiToken = ApiLogin();
+            var records = _ministryPlatformRest.UsingAuthenticationToken(apiToken)
+                            .Search<MpContactAttribute, Dictionary<string, object>>(filter, columns, "Display_Name", true);
             return records;
         }
 

@@ -40,8 +40,13 @@
               $window) {
               var promise;
               var redirectFlag = false;
+              var link = $stateParams.link;
 
-              var link = addTrailingSlashIfNecessary($stateParams.link);
+              if(Session.isActive() && link === "/" ) {
+                link = getPersonalizedContentPath(link);
+              }
+              
+              link = addTrailingSlashIfNecessary(link);
 
               promise = Page.get({ url: link }).$promise;
 
@@ -100,7 +105,7 @@
                     title: ''
                   };
 
-                  $window.location.href = `${link}?${query_params_string}`;
+                  $window.location.replace(`${link}?${query_params_string}`)
                   return;
                 }
               });
@@ -141,9 +146,14 @@
 
                 var metaDescription = ContentPageService.page.metaDescription;
                 if (!metaDescription) {
-                  //If a meta description is not provided we'll use the Content
-                  //The description gets html stripped and shortened to 155 characters
-                  metaDescription = ContentPageService.page.content;
+                  var content = ContentPageService.page.content;
+                  var hTagRegEx = /<h1.+?>.+?<\/h1>/;
+                  content = content.replace(hTagRegEx, '');
+                  var openTagRegEx = /<\w[^>]*>/gm;
+                  var closeTagRegEx = /<\/[^>]+>/gm;
+                  content = content.replace(openTagRegEx, '').replace(closeTagRegEx, ' ');
+                  var firstSentence = content.match(/[^.]*/)[0] + '.';
+                  metaDescription = firstSentence;
                 }
 
                 $rootScope.meta = {
@@ -213,6 +223,10 @@
     }
 
     return link;
+  }
+
+  function getPersonalizedContentPath(link) {
+    return "/personalized" + link;
   }
 
 })();

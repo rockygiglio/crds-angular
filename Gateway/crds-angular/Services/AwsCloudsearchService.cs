@@ -132,19 +132,15 @@ namespace crds_angular.Services
             return pinlist;
         }
 
-        public AwsBoundingBox BuildBoundingBox(string upperleftlat , string upperleftlng , string bottomrightlat , string bottomrightlng )
+        public AwsBoundingBox BuildBoundingBox(MapBoundingBox mapBox)
         {
-            var ulLat = Convert.ToDouble(upperleftlat.Replace("$", "."));
-            var ulLng = Convert.ToDouble(upperleftlng.Replace("$", "."));
-
-            var brLat = Convert.ToDouble(bottomrightlat.Replace("$", "."));
-            var brLng = Convert.ToDouble(bottomrightlng.Replace("$", "."));
-
-            return  new AwsBoundingBox
+            var awsMapBoundingBox = new AwsBoundingBox
             {
-                UpperLeftCoordinates = new GeoCoordinates(ulLat,ulLng),
-                BottomRightCoordinates = new GeoCoordinates(brLat,brLng)
+                UpperLeftCoordinates = new GeoCoordinates(mapBox.UpperLeftLat, mapBox.UpperLeftLng),
+                BottomRightCoordinates = new GeoCoordinates(mapBox.BottomRightLat, mapBox.BottomRightLng)
             };
+
+            return awsMapBoundingBox; 
         }
 
         public SearchResponse SearchConnectAwsCloudsearch(string querystring, string returnFields, int returnSize = 10000, GeoCoordinate originCoords = null, AwsBoundingBox boundingBox = null)
@@ -169,6 +165,22 @@ namespace crds_angular.Services
                 searchRequest.Sort = "distance asc";
                 searchRequest.Return += ",distance";
             }
+
+            var response = cloudSearch.Search(searchRequest);
+            return (response);
+        }
+
+        public SearchResponse SearchByGroupId(string groupId)
+        {
+            var cloudSearch = new AmazonCloudSearchDomainClient(AwsAccessKeyId, AwsSecretAccessKey, AmazonSearchUrl);
+            var searchRequest = new SearchRequest
+            {
+                Query = "groupid: " + groupId,
+                QueryParser = QueryParser.Structured,                
+                QueryOptions = "{'fields': ['groupid']}",
+                Size = 1,
+                Return = "_all_fields"
+            };
 
             var response = cloudSearch.Search(searchRequest);
             return (response);

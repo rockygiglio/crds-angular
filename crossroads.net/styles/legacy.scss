@@ -74,6 +74,7 @@
   @import 'pages/explore.scss';
   @import 'pages/give.scss';
   @import 'pages/go-volunteer.scss';
+  @import 'pages/go-anywhere.scss';
   @import 'pages/groups.scss';
   @import 'pages/group-resources.scss';
   @import 'pages/group-dashboard.scss';
@@ -102,16 +103,21 @@
   @import 'pages/search.scss';
   @import 'pages/streaming.scss';
   @import 'pages/create-event.scss';
+  @import 'pages/worship-training.scss';
   @import 'helpers/utilities.scss';
   @import 'lib/angular-aside.scss';
   @import 'lib/angular-growl.scss';
   @import 'lib/ng-img-crop.scss';
-  @import url('//crossroads-media.s3.amazonaws.com/documents/styles/hotfix-y1.css');
+  @import url('//crossroads-media.s3.amazonaws.com/documents/styles/hotfix-y2.css');
   @import '../node_modules/ng-table/dist/ng-table.css';
 }
 
 .noscroll {
-  position: relative;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
   height: 100%;
   overflow: hidden;
 }
@@ -138,6 +144,14 @@
   .mobile-menu {
     position: fixed;
     top: 0;
+
+    &.modal {
+      overflow: hidden;
+    }
+
+    .modal-dialog .modal-content {
+      padding-bottom: 5em;
+    }
 
     &:not(.in) {
       .modal-dialog {

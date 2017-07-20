@@ -17,7 +17,6 @@ namespace crds_angular.Services.Interfaces
         void AcceptDenyGroupInvitation(string token, int groupId, string invitationGuid, bool approve);
 
         void SendGroupParticipantEmail(int groupId,
-                                       int? toGroupParticipantId,
                                        GroupDTO group,
                                        int emailTemplateId,
                                        MpParticipant toParticipant = null,

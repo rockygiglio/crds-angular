@@ -57,8 +57,10 @@
     $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
       vm.bodyClasses = {};
       $rootScope.bodyClasses = [];
-      $rootScope.renderLegacyStyles = (toState.data.renderLegacyStyles !== false);
-      if ((toState.resolve || toState.data.resolve) && !event.defaultPrevented) {
+
+      $rootScope.renderLegacyStyles = toState.data !== undefined ? toState.data.renderLegacyStyles !== false : true;
+
+      if ((toState.resolve !== undefined || (toState.data !== undefined && toState.data.resolve)) && !event.defaultPrevented) {
         vm.resolving = true;
       }
 
@@ -68,7 +70,7 @@
       }
     });
 
-    $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {      
+    $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
       if (typeof fromParams.renderLegacyStyles !== 'undefined') {
         $rootScope.renderLegacyStyles = fromParams.renderLegacyStyles;
       }

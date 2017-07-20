@@ -14,13 +14,18 @@
                 var loadEvents = function(){
 
                     $log.debug("In addEventsData directive");
+
                     var evts = $resource(__GATEWAY_CLIENT_ENDPOINT__ + 'api/events/:site').query({site:$stateParams.site}, function(response) {
+                        
                         $log.debug("Response: " + response);
+                        
                         evts = response;
-                        debugger;
+
                         var tbody = $('<tbody>');
                         for(var i = 0; i < evts.length; i++) {
+                            
                             $log.debug("Event: " + evts[i]);
+
                             var row = $('<tr>');
                             var evtTime = $('<td class="first-cell">');
                             var evtMeridian = $('<span>');
@@ -49,10 +54,14 @@
                         var marqueeElement = $(".atrium-body");
                         var marqueeHeight = $(marqueeElement).height();
                         var windowHeight = $(window).height();
+
                         $log.debug("Marquee Height: " + marqueeHeight);
                         $log.debug("Window Height: " + windowHeight);
+
                         if (marqueeHeight >= windowHeight) {
+
                             $log.debug("Appending clone of div to force scroll");
+                            
                             element.append(atriumCycleCell.clone());
                             $('hr.atrium-border').show();
                         };

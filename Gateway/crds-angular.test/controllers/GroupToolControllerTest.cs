@@ -7,6 +7,7 @@ using crds_angular.Controllers.API;
 using crds_angular.Exceptions;
 using crds_angular.Models.Crossroads;
 using crds_angular.Models.Crossroads.Groups;
+using crds_angular.Models.Finder;
 using crds_angular.Models.Json;
 using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Interfaces;
@@ -24,6 +25,7 @@ namespace crds_angular.test.controllers
         private GroupToolController _fixture;
 
         private Mock<IGroupToolService> _groupToolService;
+        private Mock<IGroupService> _groupService;
         private Mock<IConfigurationWrapper> _configurationWrapper;
         private const string AuthType = "abc";
         private const string AuthToken = "123";
@@ -33,15 +35,30 @@ namespace crds_angular.test.controllers
         public void SetUp()
         {
             _groupToolService = new Mock<IGroupToolService>(MockBehavior.Strict);
+            _groupService = new Mock<IGroupService>(MockBehavior.Strict);
             _configurationWrapper = new Mock<IConfigurationWrapper>();
             _configurationWrapper.Setup(mocked => mocked.GetConfigIntValue("SmallGroupTypeId")).Returns(1);
-            _fixture = new GroupToolController(_groupToolService.Object, _configurationWrapper.Object, new Mock<IUserImpersonationService>().Object, new Mock<IAuthenticationRepository>().Object);
+            _fixture = new GroupToolController(_groupToolService.Object, _configurationWrapper.Object, new Mock<IUserImpersonationService>().Object, new Mock<IAuthenticationRepository>().Object, _groupService.Object);
             _fixture.SetupAuthorization(AuthType, AuthToken);
 
         }
 
         [Test]
         public void TestRemoveParticipantFromMyGroup()
+        {
+            _groupService.Setup(mocked => mocked.RemoveParticipantFromGroup(_auth, 2, 3));
+            var groupInfo = new GroupParticipantRemovalDto();
+            groupInfo.GroupId = 2;
+            groupInfo.GroupParticipantId = 3;
+            var result = _fixture.RemoveSelfFromGroup(groupInfo);
+            _groupService.VerifyAll();
+
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOf<OkResult>(result);
+        }
+
+        [Test]
+        public void TestRemoveSelfParticipantFromGroup()
         {
             _groupToolService.Setup(mocked => mocked.RemoveParticipantFromMyGroup(_auth, 2, 3, "test"));
             var result = _fixture.RemoveParticipantFromMyGroup(2, 3, "test");

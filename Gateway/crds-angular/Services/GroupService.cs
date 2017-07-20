@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
+using crds_angular.Exceptions;
 using crds_angular.Models.Crossroads;
 using crds_angular.Models.Crossroads.Attribute;
 using crds_angular.Models.Crossroads.Groups;
@@ -18,6 +19,7 @@ using IAttributeRepository = MinistryPlatform.Translation.Repositories.Interface
 using IEventRepository = MinistryPlatform.Translation.Repositories.Interfaces.IEventRepository;
 using IGroupRepository = MinistryPlatform.Translation.Repositories.Interfaces.IGroupRepository;
 using IObjectAttributeService = crds_angular.Services.Interfaces.IObjectAttributeService;
+using crds_angular.Util.Interfaces;
 
 namespace crds_angular.Services
 {
@@ -40,9 +42,9 @@ namespace crds_angular.Services
         private readonly IUserRepository _userRepository;
         private readonly IInvitationRepository _invitationRepository;
         private readonly IAttributeService _attributeService;
-        private readonly int _smallGroupTypeId;
         private readonly int  _onsiteGroupTypeId;
         private readonly int _childcareEventTypeId;
+        private readonly IDateTime _dateTimeWrapper;
 
 
 
@@ -51,13 +53,14 @@ namespace crds_angular.Services
         /// </summary>
         private readonly int _groupRoleDefaultId;
         private readonly int _defaultContactEmailId;
+        private readonly int _defaultAuthorUserId;
         private readonly int _journeyGroupTypeId;
         private readonly int _groupCategoryAttributeTypeId;
         private readonly int _groupTypeAttributeTypeId;
         private readonly int _groupAgeRangeAttributeTypeId;
-        private readonly int _groupRoleLeader;
+        private readonly int _groupRoleLeader;        
         private readonly int _domainId;
-
+        private readonly int _removeSelfFromGroupTemplateId;
 
         public GroupService(IGroupRepository mpGroupRepository,
                             IConfigurationWrapper configurationWrapper,
@@ -73,7 +76,8 @@ namespace crds_angular.Services
                             IEmailCommunication emailCommunicationService,
                             IUserRepository userRepository,
                             IInvitationRepository invitationRepository,
-                            IAttributeService attributeService)
+                            IAttributeService attributeService,
+                            IDateTime dateTimeWrapper)
 
         {
             _mpGroupRepository = mpGroupRepository;
@@ -94,18 +98,20 @@ namespace crds_angular.Services
             _domainId = configurationWrapper.GetConfigIntValue("DomainId");
 
             _groupRoleDefaultId = _configurationWrapper.GetConfigIntValue("Group_Role_Default_ID");
+            _defaultAuthorUserId = configurationWrapper.GetConfigIntValue("DefaultAuthorUser");
             _defaultContactEmailId = _configurationWrapper.GetConfigIntValue("DefaultContactEmailId");
             _journeyGroupTypeId = configurationWrapper.GetConfigIntValue("JourneyGroupTypeId");
             _groupCategoryAttributeTypeId = configurationWrapper.GetConfigIntValue("GroupCategoryAttributeTypeId");
             _groupTypeAttributeTypeId = configurationWrapper.GetConfigIntValue("GroupTypeAttributeTypeId");
             _groupAgeRangeAttributeTypeId = configurationWrapper.GetConfigIntValue("GroupAgeRangeAttributeTypeId");
-            _groupRoleLeader = configurationWrapper.GetConfigIntValue("GroupRoleLeader");
-            _smallGroupTypeId = _configurationWrapper.GetConfigIntValue("SmallGroupTypeId");
+            _groupRoleLeader = configurationWrapper.GetConfigIntValue("GroupRoleLeader");            
             _onsiteGroupTypeId = _configurationWrapper.GetConfigIntValue("OnsiteGroupTypeId");
             _childcareEventTypeId = _configurationWrapper.GetConfigIntValue("ChildcareEventType");
-
+            _removeSelfFromGroupTemplateId = _configurationWrapper.GetConfigIntValue("RemoveSelfFromGroupTemplateId");            
+            _dateTimeWrapper = dateTimeWrapper;
 
         }
+
 
         public GroupDTO CreateGroup(GroupDTO group)
         {
@@ -210,35 +216,43 @@ namespace crds_angular.Services
             {
                 foreach (var participant in participants)
                 {
-                    int groupParticipantId;
-
                     var roleId = participant.groupRoleId ?? _groupRoleDefaultId;
 
                     var participantId = participant.particpantId.Value;
-                    groupParticipantId = _mpGroupRepository.addParticipantToGroup(participantId,
-                                                               Convert.ToInt32(groupId),
-                                                               roleId,
-                                                               participant.childCareNeeded,
-                                                               DateTime.Now);
 
-                    var configuration = MpObjectAttributeConfigurationFactory.GroupParticipant();
-                    _objectAttributeService.SaveObjectAttributes(groupParticipantId, participant.AttributeTypes, participant.SingleAttributes, configuration);                    
+                    int groupParticipantId = _mpGroupRepository.GetParticipantGroupMemberId(Convert.ToInt32(groupId), participantId);
 
-                    if (participant.capacityNeeded > 0)
+                    if (groupParticipantId < 0) 
                     {
-                        DecrementCapacity(participant.capacityNeeded, group);
+                        groupParticipantId = _mpGroupRepository.addParticipantToGroup(participantId,
+                                                                                      Convert.ToInt32(groupId),
+                                                                                      roleId,
+                                                                                      participant.childCareNeeded,
+                                                                                      DateTime.Now);
+
+                        var configuration = MpObjectAttributeConfigurationFactory.GroupParticipant();
+                        _objectAttributeService.SaveObjectAttributes(groupParticipantId, participant.AttributeTypes, participant.SingleAttributes, configuration);
+
+                        if (participant.capacityNeeded > 0)
+                        {
+                            DecrementCapacity(participant.capacityNeeded, group);
+                        }
+
+                        _logger.Debug("Added user - group/participant id = " + groupParticipantId);
+                    }
+                    else
+                    {
+                        _logger.Debug("User "+participantId+ " was already a member of group "+groupId);
                     }
 
-                    _logger.Debug("Added user - group/participant id = " + groupParticipantId);
-
-                    // Now see what future events are scheduled for this group, and register the user for those
-                    var events = _mpGroupRepository.getAllEventsForGroup(Convert.ToInt32(groupId));
+                    var events = _mpGroupRepository.getAllEventsForGroup(Convert.ToInt32(groupId), _dateTimeWrapper.Today);
                     _logger.Debug("Scheduled events for this group: " + events);
                     if (events != null && events.Count > 0)
                     {
                         foreach (var e in events.Where(x => x.EventType != (Convert.ToString(_childcareEventTypeId))))
                         {
-                            _eventService.RegisterParticipantForEvent(participantId, e.EventId, groupId, groupParticipantId);
+                            //SafeRegisterParticipant will not register again if they are already registered
+                            _eventService.SafeRegisterParticipant( e.EventId, participantId, groupId, groupParticipantId);
                             _logger.Debug("Added participant " + participant + " to group event " + e.EventId);
                         }
                     }
@@ -274,7 +288,7 @@ namespace crds_angular.Services
             _mpGroupRepository.UpdateGroupRemainingCapacity(group);
         }
 
-        public void addContactToGroup(int groupId, int contactId)
+        public int addContactToGroup(int groupId, int contactId)
         {
             MpParticipant participant;
 
@@ -291,7 +305,7 @@ namespace crds_angular.Services
 
             try
             {
-                _mpGroupRepository.addParticipantToGroup(participant.ParticipantId, groupId, _groupRoleDefaultId, false, DateTime.Now);
+                return _mpGroupRepository.addParticipantToGroup(participant.ParticipantId, groupId, _groupRoleDefaultId, false, DateTime.Now);
             }
             catch (Exception e)
             {
@@ -736,6 +750,74 @@ namespace crds_angular.Services
             }
         }
 
+        public void RemoveParticipantFromGroup(string token, int groupId, int groupParticipantId)
+        {
+            try
+            {
+                this.endDateGroupParticipant(groupId, groupParticipantId);
+                this.SendAllGroupLeadersMemberRemovedEmail(token, groupId);
+            }
+            catch (GroupParticipantRemovalException e)
+            {
+                // ReSharper disable once PossibleIntendedRethrow
+                throw e;
+            }
+            catch (Exception e)
+            {
+                throw new GroupParticipantRemovalException($"Could not remove group participant {groupParticipantId} from group {groupId}", e);
+            }
+        }
+
+        public void SendAllGroupLeadersMemberRemovedEmail(string token, int groupId)
+        {
+            var requestorParticipant = _participantService.GetParticipantRecord(token);
+            var group = this.GetGroupDetails(groupId);
+
+            var leaders = @group.Participants.
+                Where(groupParticipant => groupParticipant.GroupRoleId == _groupRoleLeader).
+                Select(groupParticipant => new MpContact
+                {
+                    ContactId = groupParticipant.ContactId,
+                    EmailAddress = groupParticipant.Email,
+                    LastName = groupParticipant.LastName,
+                    Nickname = groupParticipant.NickName
+                }).ToList();
+
+            var mergeData = new Dictionary<string, object>
+                {
+                    {"Group_Participant_Name", requestorParticipant.DisplayName},
+                    {"Group_Name", group.GroupName},
+                };
+
+            int emailTemplateId = _removeSelfFromGroupTemplateId;            
+            var emailTemplate = _communicationService.GetTemplate(emailTemplateId);
+
+            var fromContact = new MpContact
+            {
+                ContactId = emailTemplate.FromContactId,
+                EmailAddress = emailTemplate.FromEmailAddress
+            };
+            var replyTo = new MpContact
+            {
+                ContactId = emailTemplate.ReplyToContactId,
+                EmailAddress = emailTemplate.ReplyToEmailAddress
+            };
+
+            var message = new MinistryPlatform.Translation.Models.MpCommunication
+            {
+                EmailBody = emailTemplate.Body,
+                EmailSubject = emailTemplate.Subject,
+                AuthorUserId = _defaultAuthorUserId,
+                DomainId = _domainId,
+                FromContact = fromContact,
+                ReplyToContact = replyTo,
+                TemplateId = emailTemplateId,
+                ToContacts = leaders,
+                MergeData = mergeData
+            };
+            _communicationService.SendMessage(message);
+        }
+
         public GroupDTO UpdateGroup(GroupDTO group)
         {
             try
@@ -797,6 +879,28 @@ namespace crds_angular.Services
             catch (Exception e)
             {
                 var message = String.Format("Could not update group participant {0}", participant.ParticipantId);
+                _logger.Error(message, e);
+            }
+        }
+
+        public void UpdateGroupParticipantRole(int groupId, int participantId, int roleId)
+        {
+            try
+            {
+                var apiToken = _apiUserService.GetToken();
+                var participantList = GetGroupParticipantsWithoutAttributes(groupId);
+                var groupParticipant = participantList.Single(s => s.ParticipantId == participantId);
+                var mpParticipant = Mapper.Map<MpGroupParticipant>(groupParticipant);
+                mpParticipant.GroupRoleId = roleId;
+
+
+                List<MpGroupParticipant> part = new List<MpGroupParticipant>();
+                part.Add(mpParticipant);
+                _mpGroupRepository.UpdateGroupParticipant(part);
+            }
+            catch (Exception e)
+            {
+                var message = $"Could not update group participant {participantId}";
                 _logger.Error(message, e);
             }
         }

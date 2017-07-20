@@ -17,8 +17,11 @@ export default class StreamingController {
     this.inlineGiving = [];
     this.sce = $sce;
 
+    this.dontMissID = 1;
+    this.beTheChurchID = 2;
+
     this.cmsService
-      .getDigitalProgram()
+      .getSections()
       .then((data) => {
         this.sortDigitalProgram(data);
       }
@@ -28,7 +31,15 @@ export default class StreamingController {
   }
 
   sortDigitalProgram(data) {
-    data.forEach((feature, i) => {
+    const dontMissSection = data.find(section => section.id == this.dontMissID);
+    this.dontMiss = this.getFeaturesForSection(dontMissSection);
+
+    const beTheChurchSection = data.find(section => section.id == this.beTheChurchID);
+    this.beTheChurch = this.getFeaturesForSection(beTheChurchSection);
+  }
+
+  getFeaturesForSection(section) {
+    section.features.forEach((feature, i) => {
       // null status indicates a published feature
       if (feature.status === null || feature.status.toLowerCase() !== 'draft') {
         feature.delay = i * 100;
@@ -45,14 +56,10 @@ export default class StreamingController {
           feature.image = `https://crds-cms-uploads.imgix.net/${filename}?ixjsv=2.2.3&w=225`;
         } else {
           feature.image = 'https://crds-cms-uploads.imgix.net/content/images/register-bg.jpg';
-        }
-        if (feature.section === 1) {
-          this.dontMiss.push(feature);
-        } else if (feature.section === 2) {
-          this.beTheChurch.push(feature);
-        }
+        }        
       }
     });
+    return section.features;
   }
 
   showGeolocationBanner() {

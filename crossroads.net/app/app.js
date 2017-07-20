@@ -34,7 +34,13 @@ require('./invoices/invoices.module');
 
   angular.module(constants.MODULES.CROSSROADS)
     .config(require('./routes'))
-    .config(require('./routes.content'));
+    .config(require('./routes.content'))
+    .config(['$logProvider', function($logProvider) {
+      // disable debug log in prod
+      if (!__CRDS_ENV__) {
+        $logProvider.debugEnabled(false);
+      }
+    }]);
 
   require('./corkboard');
   require('./events');
@@ -51,3 +57,5 @@ require('./invoices/invoices.module');
   require('./giving_history');
   require('./leaveyourmark');
 })();
+
+

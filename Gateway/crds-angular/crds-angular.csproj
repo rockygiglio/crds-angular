@@ -71,17 +71,21 @@
       <HintPath>..\packages\AWSSDK.Core.3.3.10.2\lib\net45\AWSSDK.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Common.Logging, Version=3.3.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
+      <HintPath>..\packages\Common.Logging.3.3.1\lib\net40\Common.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="Common.Logging.Core, Version=3.3.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
+      <HintPath>..\packages\Common.Logging.Core.3.3.1\lib\net40\Common.Logging.Core.dll</HintPath>
+    </Reference>
     <Reference Include="Crossroads.ApiVersioning, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Crossroads.ApiVersioning.1.0.4\lib\net45\Crossroads.ApiVersioning.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Crossroads.ClientApiKeys, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Crossroads.ClientApiKeys.1.0.9\lib\net45\Crossroads.ClientApiKeys.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="Crossroads.Web.Common, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Crossroads.Web.Common.1.0.16\lib\net45\Crossroads.Web.Common.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -154,39 +158,31 @@
     </Reference>
     <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\CommonServiceLocator.1.3\lib\portable-net4+sl5+netcore45+wpa81+wp8\Microsoft.Practices.ServiceLocation.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Practices.Unity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=6d32ff45e0ccc69f, processorArchitecture=MSIL">
       <HintPath>..\packages\Unity.4.0.1\lib\net45\Microsoft.Practices.Unity.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Practices.Unity.Configuration, Version=4.0.0.0, Culture=neutral, PublicKeyToken=6d32ff45e0ccc69f, processorArchitecture=MSIL">
       <HintPath>..\packages\Unity.4.0.1\lib\net45\Microsoft.Practices.Unity.Configuration.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Practices.Unity.Interception, Version=4.0.0.0, Culture=neutral, PublicKeyToken=6d32ff45e0ccc69f, processorArchitecture=MSIL">
       <HintPath>..\packages\Unity.Interception.4.0.1\lib\Net45\Microsoft.Practices.Unity.Interception.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Practices.Unity.Interception.Configuration, Version=4.0.0.0, Culture=neutral, PublicKeyToken=6d32ff45e0ccc69f, processorArchitecture=MSIL">
       <HintPath>..\packages\Unity.Interception.4.0.1\lib\Net45\Microsoft.Practices.Unity.Interception.Configuration.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Practices.Unity.RegistrationByConvention, Version=4.0.0.0, Culture=neutral, PublicKeyToken=6d32ff45e0ccc69f, processorArchitecture=MSIL">
       <HintPath>..\packages\Unity.4.0.1\lib\net45\Microsoft.Practices.Unity.RegistrationByConvention.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Quartz, Version=2.3.3.0, Culture=neutral, PublicKeyToken=f6b8c98a402cc8a4, processorArchitecture=MSIL">
-      <HintPath>..\packages\Quartz.2.3.3\lib\net40\Quartz.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Quartz, Version=2.5.0.0, Culture=neutral, PublicKeyToken=f6b8c98a402cc8a4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Quartz.2.5.0\lib\net40\Quartz.dll</HintPath>
     </Reference>
     <Reference Include="Quartz.Unity.45, Version=1.0.0.0, Culture=neutral, PublicKeyToken=5e6e0db19dcea0c2, processorArchitecture=MSIL">
-      <HintPath>..\packages\Quartz.Unity.1.3.2\lib\net45\Quartz.Unity.45.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\packages\Quartz.Unity.1.4.0\lib\net45\Quartz.Unity.45.dll</HintPath>
     </Reference>
     <Reference Include="RestSharp, Version=105.2.3.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\RestSharp.105.2.3\lib\net45\RestSharp.dll</HintPath>
@@ -296,7 +292,6 @@
     </Reference>
     <Reference Include="Unity.WebApi, Version=5.2.3.0, Culture=neutral, PublicKeyToken=43da31bc42a85347, processorArchitecture=MSIL">
       <HintPath>..\packages\Unity.WebAPI.5.2.3\lib\net45\Unity.WebApi.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="WebActivatorEx, Version=2.0.0.0, Culture=neutral, PublicKeyToken=7b26dc2a43f6a0d4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -366,9 +361,13 @@
     <Compile Include="Models\Crossroads\GroupLeader\GroupLeaderProfileDTO.cs" />
     <Compile Include="Models\Crossroads\GroupLeader\GroupLeaderStatusDTO.cs" />
     <Compile Include="Models\Crossroads\GroupLeader\SpiritualGrowthDTO.cs" />
+    <Compile Include="Models\Crossroads\InvoiceDetailDTO.cs" />
     <Compile Include="Models\Finder\ConnectCommunicationDto.cs" />
+    <Compile Include="Models\Finder\FinderGroupDto.cs" />
     <Compile Include="Models\Finder\GeoCoordinates.cs" />
     <Compile Include="Models\Finder\HostRequestDto.cs" />
+    <Compile Include="Models\Finder\MapBoundingBox.cs" />
+    <Compile Include="Models\Finder\PinSearchParams.cs" />
     <Compile Include="Models\Finder\PinSearchResultsDto.cs" />
     <Compile Include="Models\Finder\PinDto.cs" />
     <Compile Include="Models\Crossroads\Events\EventParticipantDTO.cs" />
@@ -441,6 +440,7 @@
     <Compile Include="Models\Crossroads\Invitation.cs" />
     <Compile Include="Models\Crossroads\TextCommunicationDTO.cs" />
     <Compile Include="Models\Crossroads\Trip\TripParticipantPledgeDto.cs" />
+    <Compile Include="Models\Finder\GroupParticipantRemovalDto.cs" />
     <Compile Include="Models\HouseHoldData.cs" />
     <Compile Include="Models\Json\EventCopyRequest.cs" />
     <Compile Include="Models\Json\PasswordReset.cs" />
@@ -706,6 +706,9 @@
   <ItemGroup>
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
+    <None Include="job_scheduling_data_2_0.xsd">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="MinistryPlatform.Debug.config">
       <DependentUpon>MinistryPlatform.config</DependentUpon>
       <IsTransformFile>True</IsTransformFile>
