@@ -701,7 +701,7 @@
     <Compile Include="Util\Interfaces\IDateTime.cs" />
     <Compile Include="Util\Interfaces\IEmailListHandler.cs" />
     <Compile Include="Util\HtmlHelper.cs" />
-    <Compile Include="WaiverController.cs" />
+    <Compile Include="Controllers\API\WaiverController.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="favicon.ico" />
