@@ -36,7 +36,7 @@
           </a>
       </div><!--/corkboard-submit-->
 
-      <div class="col-xs-12 corkboard-results" ng-repeat="item in corkboard.posts | filter:{ PostType: corkboard.params.type }">
+      <div class="col-xs-12 corkboard-results" ng-repeat="item in filtered = (corkboard.posts | filter:{ PostType: corkboard.params.type })">
         <div class="card-item clearfix row-same-height animated fadeIn" data-category="view">
           <div class="col-sm-2 col-xs-4 card-img card-dark mobile-hard-left col-xs-height">
               <corkboard-card item="item" show-text="true" post-types="corkboard.postTypes"></corkboard-card>
@@ -72,6 +72,12 @@
           </div><!--/card-img-->
         </div><!--/card-item-->
       </div><!--/corkboard-results-->
+
+      
+      <div class="col-xs-12" ng-if="filtered.length === 0" >
+        <br><br>
+        <h4 class="flush-top">We recently made this available...check back for postings or be the first to post something!</h4>
+      </div>
 
     </div><!--/row-->
 
