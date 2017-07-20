@@ -8,5 +8,4 @@ require('./templates/recurring_login.html');
 
 var app = angular.module(constants.MODULES.GIVE);
 
-app.config(require('./recurring.routes'));
 app.factory('RecurringGiving', require('./recurring_giving.service'));
