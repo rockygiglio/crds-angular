@@ -656,6 +656,13 @@ namespace MinistryPlatform.Translation.Repositories
             return campWaivers;
         }
 
+        public List<MpWaivers> GetWaivers(int eventId)
+        {            
+            var apiToken = ApiLogin();
+            const string columnList = "Waiver_ID_Table.[Waiver_ID], Waiver_ID_Table.[Waiver_Name], Waiver_ID_Table.[Waiver_Text], cr_Event_Waivers.[Required]";
+            return _ministryPlatformRestRepository.UsingAuthenticationToken(apiToken).Search<MpWaivers>($"Event_ID = {eventId} AND Active=1", columnList).ToList();
+        }
+
         public void SetWaivers(List<MpWaiverResponse> waiverResponses)
         {
             var apiToken = ApiLogin();

@@ -42,6 +42,7 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
         void DeleteEventGroupsForEvent(int eventId, string token, int? groupTypeID = null);
 
         List<MpWaivers> GetWaivers(int eventId, int contactId);
+        List<MpWaivers> GetWaivers(int eventId);
         void SetWaivers(List<MpWaiverResponse> waiverResponses);
 
         bool IsEventSeries(int eventId);
