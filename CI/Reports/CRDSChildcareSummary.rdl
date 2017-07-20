@@ -560,7 +560,12 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!ParticipantAge.Value</Value>
+                                  <Value>=Switch(Fields!ParticipantAge.Value = 0,"Kids Club 0 Yr",
+		Fields!ParticipantAge.Value = 1,"Kids Club 1 Yr",
+        Fields!ParticipantAge.Value = 2,"Kids Club 2 Yr",
+		Fields!ParticipantAge.Value = 3,"Kids Club 3 Yr",
+		Fields!ParticipantAge.Value = 4,"Kids Club 4 Yr", 
+		Fields!ParticipantAge.Value &gt;= 5,"Kids Club 5+ Yr")</Value>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <Color>#4d4d4d</Color>
@@ -582,6 +587,7 @@
                             <PaddingBottom>2pt</PaddingBottom>
                           </Style>
                         </Textbox>
+                        <rd:Selected>true</rd:Selected>
                       </CellContents>
                     </TablixCell>
                     <TablixCell>
