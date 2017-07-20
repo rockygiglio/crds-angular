@@ -11,7 +11,8 @@
       transclude: true,
       templateUrl: 'mytrips/mytripCard.html',
       scope: {
-        trip: '='
+        trip: '=',
+        waivers: '='
       },
       link: link
     };
@@ -22,7 +23,7 @@
       scope.goalMet = goalMet;
       scope.shareUrl = TripsUrlService.ShareUrl(scope.trip.eventParticipantId);
       scope.showWaiver = showWaiver;
-      scope.hasSignedWaiver = hasSignedWaiver;
+      scope.selectWaiver = selectWaiver;
 
       function goalMet(totalRaised, goal) {
         return (totalRaised >= goal);
@@ -33,12 +34,13 @@
       }
 
       function showWaiver(contactId) {
+        // TODO: need to check for event_waiver before showing button
         const loggedInContact = $cookies.get('userId');
-        return contactId === parseInt(loggedInContact);
+        return contactId === parseInt(loggedInContact, 10);
       }
 
-      function hasSignedWaiver(signed) {
-        return signed;
+      function selectWaiver(waiverId) {
+        $log.log(waiverId);
       }
     }
   }

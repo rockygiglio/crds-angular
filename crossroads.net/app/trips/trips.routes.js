@@ -128,6 +128,10 @@
           $cookies: '$cookies',
           MyTrips: function(Trip) {
             return Trip.MyTrips.get().$promise;
+          },
+          Waivers(Trip, $stateParams) {
+            // return Trip.Waiver.get({ eventParticipantId: $stateParams.eventParticipantId }).$promise;
+            return [];
           }
         }
       })
@@ -169,7 +173,7 @@
       })
       .state('tripwaiver', {
         parent: 'centeredContentPage',
-        url: '/trips/mytrips/waiver',
+        url: '/trips/mytrips/waiver/:eventParticipantId',
         template: '<trip-waiver></trip-waiver>',
         data: {
           isProtected: true,
@@ -179,7 +183,9 @@
           }
         },
         resolve: {
-          loggedin: crds_utilities.checkLoggedin
+          $stateParams: '$stateParams',
+          loggedin: crds_utilities.checkLoggedin,
+          Trip: 'Trip'
         }
       })
       .state('tripsignup', {

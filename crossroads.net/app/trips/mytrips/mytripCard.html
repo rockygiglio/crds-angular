@@ -3,24 +3,35 @@
 
   <!-- Card Header -->
   <div class="card-header card-background-dark clearfix">
-    <h3 class="card-row flush-bottom">{{trip.tripName}}</h3> 
+    <h3 class="card-row flush-bottom">{{trip.tripName}}</h3>
     <span class="text-muted">{{ cardName(trip.eventParticipantFirstName, trip.eventParticipantLastName) }}</span> <span class="hidden-xs">&middot;</span> <br class="visible-xs" /> <span class="text-muted trip-date">{{trip.tripStartDate}} - {{trip.tripEnd}}</span>
   </div><!-- /card-heading -->
 
   <!-- Documents -->
   <div class="col-xs-12 documents">
     <h3>Sign Documents</h3>
-    <a ui-sref="tripwaiver" class="btn btn-default" name="liabilityWaiverBtn" ng-show="showWaiver(trip.contactId)">
-      <span ng-hide="hasSignedWaiver(trip.signedWaiver)"><!-- warning icon -->!!!</span>
-      <span ng-show="hasSignedWaiver(trip.signedWaiver)"><!-- checkmark -->OK!</span>
-      Liability Waiver
-    </a>
+    <div ng-repeat="waiver in waivers" class="go-trip-document">
+      <button class="btn btn-default go-trip-document-btn" ng-show="showWaiver(trip.contactId)"> <!--ng-click="selectWaiver(waiver.waiverId)"-->
+        <span ng-hide="waiver.accepted">
+          <svg class="icon icon-2 text-warning" viewBox="0 0 256 256">
+            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/assets/svgs/icons.svg#exclamation-circle"></use>
+          </svg>
+        </span>
+        <span ng-show="waiver.accepted">
+          <svg class="icon icon-2 text-success" viewBox="0 0 256 256">
+            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/assets/svgs/icons.svg#check-circle"></use>
+          </svg>
+        </span>
+
+        {{waiver.waiverName}}
+      </button>
+    </div>
   </div><!-- /documents -->
 
   <!-- Fund Progress Bar -->
   <div class="col-xs-12 col-top fund-progress">
     <p class="flush-bottom text-right trip-funding" style="width: 100%">${{trip.totalRaised}} Funded</p>
-    <progressbar ng-class="{'progress-striped' : !goalMet(trip.totalRaised, trip.fundraisingGoal)}"type="success" max="trip.fundraisingGoal" value="trip.totalRaised"></progressbar>
+    <progressbar ng-class="{'progress-striped' : !goalMet(trip.totalRaised, trip.fundraisingGoal)}" type="success" max="trip.fundraisingGoal" value="trip.totalRaised"></progressbar>
     <p class="pull-right funding-goal">${{trip.fundraisingGoal}} Goal</p>
   </div><!-- /fund-progress -->
 

@@ -6,6 +6,6 @@ export default class TripWaiverController {
   }
 
   submit() {
-
+    // TODO: create invitation and redirect to dashboard
   }
 }
