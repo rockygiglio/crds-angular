@@ -367,6 +367,14 @@ namespace crds_angular.Services
             return participantId;
         }
 
+        public bool DoesUserLeadSomeGroup(int contactId)
+        {
+            int participantId = _participantRepository.GetParticipant(contactId).ParticipantId;
+            bool doesUserLeadSomeGroup = _groupRepository.GetDoesUserLeadSomeGroup(participantId);
+
+            return doesUserLeadSomeGroup;
+        }
+
         public List<PinDto> GetPinsInBoundingBox(GeoCoordinate originCoords, string userKeywordSearchString, AwsBoundingBox boundingBox, string finderType, int contactId, string filterSearchString)
         {
             List<PinDto> pins = null;
@@ -402,8 +410,8 @@ namespace crds_angular.Services
 
         public void AddUserDirectlyToGroup(User user, int groupid)
         {
-            //check to see if user exists in MP.
-            var contactId = _contactRepository.GetContactIdByEmail(user.email);
+            //check to see if user exists in MP. Exclude Guest Giver and Deceased status
+            var contactId = _contactRepository.GetActiveContactIdByEmail(user.email);
             if (contactId == 0)
             {
                 user.password = System.Web.Security.Membership.GeneratePassword(25, 10);
@@ -669,7 +677,6 @@ namespace crds_angular.Services
 
             var groupDTOs = groupsByType.Select(Mapper.Map<MpGroup, GroupDTO>).ToList();
 
-            // TODO when do MY STUFF for Group Tool, will need to account for changing this flag to _finderGroupTool
             var pins = this.TransformGroupDtoToPinDto(groupDTOs, finderType);
 
             return pins;
@@ -953,6 +960,10 @@ namespace crds_angular.Services
                     pin.Gathering.ContactId = group.ContactId;
                     pin.Participant_ID = group.ParticipantId;
 
+                    var contact = _contactRepository.GetContactById((int)group.ContactId);
+                    pin.FirstName = contact.First_Name;
+                    pin.LastName = contact.Last_Name;
+
                     pins.Add(pin);
                 }
             }
@@ -1036,11 +1047,12 @@ namespace crds_angular.Services
             return resultMapCenterCoords;
         }
 
-        public bool DoesContactExists(string email)
+        public bool DoesActiveContactExists(string email)
         {
-            var contactId = _contactRepository.GetContactIdByEmail(email);
+            var contactId = _contactRepository.GetActiveContactIdByEmail(email);
             return contactId != 0;
         }
+
     }
 }
 

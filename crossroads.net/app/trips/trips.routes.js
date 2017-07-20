@@ -131,6 +131,42 @@
           }
         }
       })
+      .state('travelinformation', {
+        parent: 'noSideBar',
+        url: '/trips/mytrips/update',
+        template: '<travel-information></travel-information>',
+        data: {
+          isProtected: true,
+          meta: {
+            title: 'My Trips',
+            description: ''
+          }
+        },
+        resolve: {
+          loggedin: crds_utilities.checkLoggedin,
+
+          $cookies: '$cookies',
+          $stateParams: '$stateParams',
+          Profile: 'Profile',
+          TravelInformationService: 'TravelInformationService',
+          $q: '$q',
+          Person: (Profile, $stateParams, $cookies, $q, TravelInformationService) => {
+            const deferred = $q.defer();
+            let cid = $cookies.get('userId');
+            if ($stateParams.contactId) {
+              cid = $stateParams.contactId;
+            }
+
+            Profile.Person.get({ contactId: cid }, (p) => {
+              TravelInformationService.setPerson(p);
+              deferred.resolve(p);
+            }, () => {
+              deferred.reject();
+            });
+            return deferred.promise;
+          },
+        }
+      })
       .state('tripsignup', {
         parent: 'noSideBar',
         url: '/trips/:campaignId?invite',

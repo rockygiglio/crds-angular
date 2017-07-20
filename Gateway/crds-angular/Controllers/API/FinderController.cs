@@ -110,7 +110,7 @@ namespace crds_angular.Controllers.API
         {
             try
             {
-                var rc = _finderService.DoesContactExists(searchUser.email);
+                var rc = _finderService.DoesActiveContactExists(searchUser.email);
                 return Ok(rc);
             }
             catch (Exception ex)
@@ -144,6 +144,24 @@ namespace crds_angular.Controllers.API
             catch (Exception ex)
             {
                 var apiError = new ApiErrorDto("Get Pin Details by Contact Failed", ex);
+                throw new HttpResponseException(apiError.HttpResponseMessage);
+            }
+        }
+
+        [ResponseType(typeof(bool))]
+        [VersionedRoute(template: "finder/doesuserleadsomegroup/{contactid}", minimumVersion: "1.0.0")]
+        [Route("finder/doesuserleadsomegroup/{contactid}")]
+        [HttpGet]
+        public IHttpActionResult GetDoesUserLeadSomeGroup([FromUri]int contactId)
+        {
+            try
+            {
+                bool doesUserLeadSomeGroup = _finderService.DoesUserLeadSomeGroup(contactId);
+                return Ok(doesUserLeadSomeGroup);
+            }
+            catch (Exception ex)
+            {
+                var apiError = new ApiErrorDto("Doesuserleadesomegroup call failed", ex);
                 throw new HttpResponseException(apiError.HttpResponseMessage);
             }
         }

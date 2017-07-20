@@ -48,7 +48,11 @@ FROM
       </Query>
       <Fields>
         <Field Name="Event_ID">
-          <DataField>Event_ID</DataField>
+          <DataField>Event_Id</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="Total_Turned_Away">
+          <DataField>Total_Turned_Away</DataField>
           <rd:TypeName>System.Int32</rd:TypeName>
         </Field>
         <Field Name="Event_Start_Date">
@@ -59,17 +63,17 @@ FROM
           <DataField>Event_Title</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="ParticipantAgeYear">
-          <DataField>ParticipantAgeYear</DataField>
-          <rd:TypeName>System.Int32</rd:TypeName>
-        </Field>
-        <Field Name="Total_In_Year">
-          <DataField>Total_In_Year</DataField>
+        <Field Name="Group_ID">
+          <DataField>Group_ID</DataField>
           <rd:TypeName>System.Int32</rd:TypeName>
         </Field>
         <Field Name="Participation_Status_ID">
           <DataField>Participation_Status_ID</DataField>
           <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="Group_Name">
+          <DataField>Group_Name</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
         </Field>
       </Fields>
     </DataSet>
@@ -146,7 +150,7 @@ FROM
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Event Title</Value>
+                                  <Value>Event</Value>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>11pt</FontSize>
@@ -182,7 +186,7 @@ FROM
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Age In Years</Value>
+                                  <Value>Age/Grade Group</Value>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>11pt</FontSize>
@@ -218,7 +222,7 @@ FROM
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Total For Age</Value>
+                                  <Value>Count</Value>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>11pt</FontSize>
@@ -361,7 +365,7 @@ FROM
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!ParticipantAgeYear.Value</Value>
+                                  <Value>=Fields!Group_Name.Value</Value>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <Color>#4d4d4d</Color>
@@ -394,7 +398,7 @@ FROM
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!Total_In_Year.Value</Value>
+                                  <Value>=Fields!Total_Turned_Away.Value</Value>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <Color>#4d4d4d</Color>
@@ -584,7 +588,7 @@ FROM
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>="Total Turned Away: " &amp; Count(Fields!Total_In_Year.Value, "dsTurnedAwaySummaryData")</Value>
+                    <Value>="Total Turned Away: " &amp; Count(Fields!Total_Turned_Away.Value, "dsTurnedAwaySummaryData")</Value>
                     <Style />
                   </TextRun>
                 </TextRuns>
