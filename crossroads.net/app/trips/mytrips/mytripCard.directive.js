@@ -42,6 +42,10 @@
       function selectWaiver(waiverId) {
         $log.log(waiverId);
       }
+
+      function hasDocuments(waivers, iPromise) {
+        return (waivers !== null && waivers.length) || iPromise;
+      }
     }
   }
 })();
