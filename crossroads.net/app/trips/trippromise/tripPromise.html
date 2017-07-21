@@ -13,11 +13,16 @@
 
 
   <div class="push-top">
-    <div class="checkbox required">
+    <div class="checkbox required" ng-class="{'has-error': $ctrl.validation.showErrors($ctrl.tripPromiseForm, 'promise') }">
       <label>
-        <input type="checkbox" value="promise" required>
+        <input type="checkbox" ng-model='$ctrl.promise' name="promise" value="promise" required>
         I promise to live by these principles on this trip.
       </label>
+      <ng-messages for="$ctrl.tripPromiseForm.promise.$error" ng-if="$ctrl.validation.showErrors($ctrl.tripPromiseForm, 'promise')">
+        <span ng-message="required">
+          <span dynamic-content="$root.MESSAGES.fieldCanNotBeBlank.content | html"></span>
+        </span>
+      </ng-messages>
     </div>
   </div>
 
