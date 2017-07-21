@@ -29,7 +29,7 @@
       }
 
       function cardName(first, last) {
-        return first + ' ' + last;
+        return `${first} ${last}`;
       }
 
       function showIPromise(contactId) {
@@ -37,9 +37,8 @@
         return Number(loggedInContact) === contactId;
       }
 
-      function signIPromise(eventId) {
-        console.log('sign the i promise');
-        $state.go('trippromise', { eventId });
+      function signIPromise(eventParticipantId) {
+        $state.go('trippromise', { eventParticipantId });
       }
     }
   }

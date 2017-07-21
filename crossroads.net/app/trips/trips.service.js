@@ -7,7 +7,7 @@
     return {
       Search: $resource(__GATEWAY_CLIENT_ENDPOINT__ + 'api/trip/search'),
       MyTrips: $resource(__GATEWAY_CLIENT_ENDPOINT__ + 'api/trip/mytrips'),
-      MyTripsPromise: $resource(__GATEWAY_CLIENT_ENDPOINT__ + 'api/trip/mytrips/:eventId/promise'),
+      MyTripsPromise: $resource(`${__GATEWAY_CLIENT_ENDPOINT__}api/v1.0.0/trip/ipromise/:eventParticipantId`),
       Email: $resource(__GATEWAY_CLIENT_ENDPOINT__ + 'api/donation/message'),
       TripFormResponses: $resource(__GATEWAY_CLIENT_ENDPOINT__ + 'api/trip/form-responses/:selectionId/:selectionCount/:recordId'),
       SaveParticipants: $resource(__GATEWAY_CLIENT_ENDPOINT__ + 'api/trip/participants'),
