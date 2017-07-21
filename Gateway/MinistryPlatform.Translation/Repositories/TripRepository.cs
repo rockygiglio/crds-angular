@@ -49,16 +49,32 @@ namespace MinistryPlatform.Translation.Repositories
             }            
         }
 
-        public List<MpEventParticipantDocument> GetTripDocuments(int eventParticipant, string token)
+        public List<MpEventParticipantDocument> GetTripDocuments(int eventParticipantId, string token)
         {
             try
             {
-                var searchString = $"Event_Participant_ID = {eventParticipant}";
-                return _ministryPlatformRestRepository.UsingAuthenticationToken(token).Search<MpEventParticipantDocument>(searchString);
+                var searchString = $"cr_EventParticipant_Documents.Event_Participant_ID = {eventParticipantId}";
+                var columns = "EventParticipant_Document_ID, cr_EventParticipant_Documents.Event_Participant_ID, Document_ID, Received, cr_EventParticipant_Documents.Notes, Event_Participant_ID_Table_Event_ID_Table.Event_Title";
+                return _ministryPlatformRestRepository.UsingAuthenticationToken(token).Search<MpEventParticipantDocument>(searchString, columns);
             }
             catch (Exception e)
             {
-                _logger.Error($"Failed to get documents for Event Participant #{eventParticipant}");
+                _logger.Error($"Failed to get documents for Event Participant #{eventParticipantId}");
+                _logger.Error(e.Message);
+                throw;
+            }
+        }
+
+        public bool ReceiveTripDocument(MpEventParticipantDocument tripDoc, string token)
+        {
+            try
+            {
+                _ministryPlatformRestRepository.UsingAuthenticationToken(token).Update(tripDoc);
+                return true;
+            }
+            catch (Exception e)
+            {
+                _logger.Error($"Failed to save trip document for {tripDoc.EventParticipantId}");
                 _logger.Error(e.Message);
                 throw;
             }

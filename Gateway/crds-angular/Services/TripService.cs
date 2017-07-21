@@ -745,5 +745,27 @@ namespace crds_angular.Services
             var docs = _tripRepository.GetTripDocuments(eventParticipantId, token);
             return docs.Any(d => d.DocumentId == iPromiseDocId && d.Received);
         }
+
+        public TripDocuments GetIPromiseDocument(int eventParticipantId)
+        {
+            var token = _apiUserRepository.GetToken();
+            var iPromiseDocId = _configurationWrapper.GetConfigIntValue("IPromiseDocumentId");
+            var docs = _tripRepository.GetTripDocuments(eventParticipantId, token);
+            return docs.Where(d => d.DocumentId == iPromiseDocId).Select(d => new TripDocuments{ DocumentId = d.DocumentId, EventParticipantId = d.EventParticipantId, EventParticipantDocumentId = d.EventParticipantDocumentId, Received = d.Received, Notes = d.Notes, TripName = d.EventTitle}).FirstOrDefault();
+        }
+
+        public void ReceiveIPromiseDocument(TripDocuments iPromiseDoc)
+        {
+            var token = _apiUserRepository.GetToken();
+            _tripRepository.ReceiveTripDocument(new MpEventParticipantDocument
+            {
+                DocumentId = iPromiseDoc.DocumentId,
+                EventParticipantId = iPromiseDoc.EventParticipantId,
+                EventParticipantDocumentId = iPromiseDoc.EventParticipantDocumentId,
+                EventTitle = iPromiseDoc.TripName,
+                Notes = iPromiseDoc.Notes,
+                Received = iPromiseDoc.Received
+            }, token);
+        }
     }
 }

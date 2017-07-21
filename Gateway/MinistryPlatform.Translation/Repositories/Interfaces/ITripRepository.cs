@@ -7,6 +7,7 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
     public interface ITripRepository
     {
         Result<MpPledge> AddAsTripParticipant(int ContactId, int PledgeCampaignID, string token);
-        List<MpEventParticipantDocument> GetTripDocuments(int eventParticipant, string token);
+        List<MpEventParticipantDocument> GetTripDocuments(int eventParticipantId, string token);
+        bool ReceiveTripDocument(MpEventParticipantDocument tripDoc, string token);
     }
 }

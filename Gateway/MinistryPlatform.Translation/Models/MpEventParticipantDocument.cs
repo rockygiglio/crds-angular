@@ -9,6 +9,9 @@ namespace MinistryPlatform.Translation.Models
         [JsonProperty(PropertyName = "EventParticipant_Document_ID")]
         public int EventParticipantDocumentId { get; set; }
 
+        [JsonProperty(PropertyName = "Event_Title")]
+        public string EventTitle { get; set; }
+
         [JsonProperty(PropertyName = "Event_Participant_ID")]
         public int EventParticipantId { get; set; }
 
@@ -17,5 +20,8 @@ namespace MinistryPlatform.Translation.Models
 
         [JsonProperty(PropertyName = "Received")]
         public bool Received { get; set; }
+
+        [JsonProperty(PropertyName = "Notes")]
+        public string Notes { get; set; }
     }
 }
