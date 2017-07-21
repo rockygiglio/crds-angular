@@ -3,11 +3,11 @@ using System.Reactive.Linq;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
+using crds_angular.Models.Crossroads.Waivers;
 using crds_angular.Security;
 using crds_angular.Services.Interfaces;
 using Crossroads.ApiVersioning;
 using Crossroads.Web.Common.Security;
-using MinistryPlatform.Translation.Models;
 
 namespace crds_angular.Controllers.API
 {
@@ -28,7 +28,7 @@ namespace crds_angular.Controllers.API
         }
 
         [VersionedRoute(template: "waivers/event/{eventId}", minimumVersion: "1.0.0")]
-        [ResponseType(typeof(List<MpWaivers>))]
+        [ResponseType(typeof(List<WaiverDTO>))]
         [HttpGet]
         public async Task<IHttpActionResult> GetEventWaivers(int eventId)
         {
@@ -40,14 +40,14 @@ namespace crds_angular.Controllers.API
         }
 
         [VersionedRoute(template: "waivers/{waiverId}", minimumVersion: "1.0.0")]
-        [ResponseType(typeof(MpWaivers))]
+        [ResponseType(typeof(WaiverDTO))]
         [HttpGet]
         public async Task<IHttpActionResult> GetWaiver(int waiverId)
         {
             return await Authorized(token =>
             {
-                var waiver = _waiverService.GetWaiver(waiverId).Wait();
-                return Ok(waiver);
+                //var waiver = _waiverService.GetWaiver(waiverId).Wait();
+                return Ok();
             });
         }
 
