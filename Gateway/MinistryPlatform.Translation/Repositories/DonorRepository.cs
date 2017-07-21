@@ -1008,7 +1008,7 @@ namespace MinistryPlatform.Translation.Repositories
             var templateId = recurringGift.ConsecutiveFailureCount >= 2 ? PaymentType.GetPaymentType(acctType).recurringGiftCancelEmailTemplateId : PaymentType.GetPaymentType(acctType).recurringGiftDeclineEmailTemplateId;
             var frequency = recurringGift.Frequency == 1 ? "Weekly" : "Monthly";
             var program = _programService.GetProgramById(Convert.ToInt32(recurringGift.ProgramId));
-            var startDate = (DateTime)(recurringGift.StartDate.HasValue ? recurringGift.StartDate : DateTime.Now);
+            var startDate = recurringGift.StartDate.HasValue ? recurringGift.StartDate.Value : DateTime.Now;
             var amt = decimal.Round(recurringGift.Amount, 2, MidpointRounding.AwayFromZero);
 
             SendEmail(templateId, recurringGift.DonorId, amt, paymentType, DateTime.Now, startDate, program.Name, error, frequency);

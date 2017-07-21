@@ -391,7 +391,7 @@ namespace crds_angular.test.Services
             _mpDonorService.Setup(mocked => mocked.GetDonorAccountPymtType(recurringGift.DonorAccountId.Value)).Returns(1);
             _mpDonorService.Setup(
                 mocked =>
-                    mocked.SendEmail(RecurringGiftSetupEmailTemplateId, recurringGift.DonorId, (int)(123.45M/100), "Bank", It.IsAny<DateTime>(), (DateTime) recurringGift.StartDate, "Crossroads", string.Empty, "12th of the month", null));
+                    mocked.SendEmail(RecurringGiftSetupEmailTemplateId, recurringGift.DonorId, (int)(123.45M/100), "Bank", It.IsAny<DateTime>(), recurringGift.StartDate.Value, "Crossroads", string.Empty, "12th of the month", null));
 
             var response = _fixture.CreateRecurringGift("auth", recurringGiftDto, contactDonor);
             _paymentService.VerifyAll();
@@ -770,7 +770,7 @@ namespace crds_angular.test.Services
             _mpDonorService.Setup(mocked => mocked.GetDonorAccountPymtType(gift.DonorAccountId.Value)).Returns(3);
             _mpDonorService.Setup(
                 mocked =>
-                    mocked.SendEmail(RecurringGiftCancelEmailTemplateId, gift.DonorId, (int)(123.45M / 100), "Credit Card", It.IsAny<DateTime>(), (DateTime) gift.StartDate, "Crossroads", string.Empty, "12th of the month", null));
+                    mocked.SendEmail(RecurringGiftCancelEmailTemplateId, gift.DonorId, (int)(123.45M / 100), "Credit Card", It.IsAny<DateTime>(), gift.StartDate.Value, "Crossroads", string.Empty, "12th of the month", null));
 
             _fixture.CancelRecurringGift(authUserToken, recurringGiftId);
             _mpDonorService.VerifyAll();

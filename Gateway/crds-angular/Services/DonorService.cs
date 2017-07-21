@@ -387,7 +387,7 @@ namespace crds_angular.Services
                 var acct = acctType != 3 ? 5 : acctType;
                 var paymentType = MinistryPlatform.Translation.Enum.PaymentType.GetPaymentType(acct).name;
                 var frequency = recurringGift.Recurrence;
-                var startDate = (DateTime)recurringGift.StartDate;
+                var startDate = recurringGift.StartDate.HasValue ? recurringGift.StartDate.Value : DateTime.Now;
                 var programName = recurringGift.ProgramName;
                 var amt = decimal.Round(recurringGift.Amount, 2, MidpointRounding.AwayFromZero) / Constants.StripeDecimalConversionValue;
 
