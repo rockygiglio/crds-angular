@@ -57,9 +57,13 @@
     $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
       vm.bodyClasses = {};
       $rootScope.bodyClasses = [];
-      vm.resolving = true;
 
       $rootScope.renderLegacyStyles = toState.data !== undefined ? toState.data.renderLegacyStyles !== false : true;
+
+      // This was removed to fix DE3879. When it was removed, it broke the ability to do a trip deposit. 
+      if ((toState.resolve !== undefined || (toState.data !== undefined && toState.data.resolve)) && !event.defaultPrevented) {
+        vm.resolving = true;
+      }
 
       if (fromState.name == 'explore') {
         $('#fullpage').hide();
