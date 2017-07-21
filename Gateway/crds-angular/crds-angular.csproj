@@ -483,6 +483,7 @@
     <Compile Include="Services\Interfaces\IInvitationService.cs" />
     <Compile Include="Services\Interfaces\IPaymentService.cs" />
     <Compile Include="Services\Interfaces\ITextCommunicationService.cs" />
+    <Compile Include="Services\Interfaces\IWaiverService.cs" />
     <Compile Include="Services\InvitationService.cs" />
     <Compile Include="Services\Interfaces\IAddressService.cs" />
     <Compile Include="Services\Interfaces\ICongregationService.cs" />

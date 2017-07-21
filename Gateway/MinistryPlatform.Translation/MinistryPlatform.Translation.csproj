@@ -309,6 +309,7 @@
     <Compile Include="Repositories\Interfaces\IChildcareRepository.cs" />
     <Compile Include="Repositories\GroupRepository.cs" />
     <Compile Include="Repositories\Interfaces\IInvitationRepository.cs" />
+    <Compile Include="Repositories\Interfaces\IWaiverRepository.cs" />
     <Compile Include="Repositories\Interfaces\Rules\IRule.cs" />
     <Compile Include="Repositories\InvitationlRepository.cs" />
     <Compile Include="Repositories\GroupToolRepository.cs" />
@@ -393,6 +394,7 @@
     <Compile Include="Repositories\TaskRepository.cs" />
     <Compile Include="Repositories\TripRepository.cs" />
     <Compile Include="Repositories\UserRepository.cs" />
+    <Compile Include="Repositories\WaiverRepository.cs" />
     <Compile Include="Utils\DbConnectionNameTypeConverter.cs" />
     <Compile Include="Utils\MPFormatConversion.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
