@@ -2,7 +2,9 @@ import TripPromiseController from './tripPromise.controller';
 import template from './tripPromise.html';
 
 const TripPromiseComponent = {
-  bindings: {},
+  bindings: {
+    myTripPromise: '<'
+  },
   template,
   controller: TripPromiseController,
   resolve: []

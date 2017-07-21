@@ -169,8 +169,11 @@
       })
       .state('trippromise', {
         parent: 'centeredContentPage',
-        url: '/trips/mytrips/promise',
-        template: '<trip-promise></trip-promise>',
+        url: '/trips/mytrips/:eventId/promise',
+        template: '<trip-promise my-trip-promise="MyTripsPromise"></trip-promise>',
+        controller: function($scope, MyTripsPromise) {
+          $scope.MyTripsPromise = MyTripsPromise;
+        },
         data: {
           isProtected: true,
           meta: {
@@ -179,7 +182,20 @@
           }
         },
         resolve: {
-          loggedin: crds_utilities.checkLoggedin
+          loggedin: crds_utilities.checkLoggedin,
+          $cookies: '$cookies',
+          $stateParams: '$stateParams',
+          Trip: 'Trip',
+          MyTripsPromise: function(Trip, $stateParams) {
+            //return Trip.MyTripsPromise.get({ eventId: $stateParams.eventId }).$promise;
+
+            return {
+              eventId: 1234,
+              eventParticipantDocumentId: 7875336,
+              documentId: 2345,
+              tripName: '2018 May BAHAMAS Angie Trip',
+            };
+          }
         }
       })
       .state('tripsignup', {
