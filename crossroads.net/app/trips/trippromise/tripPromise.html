@@ -1,7 +1,7 @@
 <form name="$ctrl.tripPromiseForm" role="form" novalidate ng-submit="$ctrl.submit()">
   <h2>I Promise</h2>
 
-  <legend>{{$ctrl.trip.tripName}}</legend>
+  <legend>{{$ctrl.tripPromise.tripName}}</legend>
 
   <div class="push-top">
     <div dynamic-content="$root.MESSAGES.myTripsPromiseHeader.content | html"></div>
@@ -30,6 +30,6 @@
       loading-text='Submitting...'
       loading='$ctrl.processing'
       loading-class='disabled'
-      input-classes='btn btn-primary btn-block-mobile'></loading-button>
+      input-classes='btn btn-primary btn-block-mobile mobile-push-half-top'></loading-button>
   </div>
 </form>
