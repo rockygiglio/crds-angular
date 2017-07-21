@@ -393,6 +393,11 @@ namespace crds_angular.Controllers.API
 
                 return Ok(result);
             }
+            catch (InvalidAddressException ex)
+            {
+                var apiError = new ApiErrorDto("Invalid Address", ex, HttpStatusCode.PreconditionFailed);
+                throw new HttpResponseException(apiError.HttpResponseMessage);
+            }
             catch (Exception ex)
             {
                 var apiError = new ApiErrorDto("Get Pin By Address Failed", ex);
