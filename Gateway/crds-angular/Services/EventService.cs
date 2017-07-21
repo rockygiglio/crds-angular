@@ -1,14 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using AutoMapper;
 using crds_angular.Models.Crossroads.Events;
 using crds_angular.Models.Crossroads.Groups;
+using crds_angular.Models.Crossroads.Waivers;
 using Crossroads.Utilities.FunctionalHelpers;
 using Crossroads.Utilities.Interfaces;
 using Crossroads.Utilities.Services;
 using log4net;
-using Crossroads.Web.Common;
 using Crossroads.Web.Common.Configuration;
 using Crossroads.Web.Common.MinistryPlatform;
 using MinistryPlatform.Translation.Models;
@@ -387,6 +389,30 @@ namespace crds_angular.Services
             };
 
             return _eventService.CreateEventGroup(eventGroup);
+        }
+
+        public IObservable<List<WaiverDTO>> EventWaivers(int eventId)
+        {
+            return Observable.Create<List<WaiverDTO>>(observer =>
+            {
+                try
+                {
+                    var waivers = _eventService.GetWaivers(eventId).Select(w => new WaiverDTO
+                    {
+                        WaiverId = w.WaiverId,
+                        Required = w.Required,
+                        WaiverName = w.WaiverName,
+                        WaiverText = w.WaiverText
+                    }).ToList();
+                    observer.OnNext(waivers);
+                    observer.OnCompleted();
+                }
+                catch (Exception e)
+                {
+                    observer.OnError(e);
+                }
+                return Disposable.Empty;
+            });
         }
 
         private void AddEquipment(EventRoomEquipmentDto equipment, int eventId, EventRoomDto room, string token)

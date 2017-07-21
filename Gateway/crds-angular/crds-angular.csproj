@@ -350,6 +350,7 @@
     <Compile Include="Exceptions\PaymentTypeNotFoundException.cs" />
     <Compile Include="Exceptions\TripFullException.cs" />
     <Compile Include="Models\Crossroads\Campaign\PledgeCampaignSummaryDto.cs" />
+    <Compile Include="Models\Crossroads\Waivers\WaiverDTO.cs" />
     <Compile Include="Models\Crossroads\GoVolunteer\DashboardDatum.cs" />
     <Compile Include="Models\AwsCloudsearch\AwsBoundingBox.cs" />
     <Compile Include="Models\AwsCloudsearch\AwsCloudsearchDto.cs" />
@@ -700,6 +701,9 @@
     <Compile Include="Util\Interfaces\IDateTime.cs" />
     <Compile Include="Util\Interfaces\IEmailListHandler.cs" />
     <Compile Include="Util\HtmlHelper.cs" />
+    <Compile Include="Controllers\API\WaiverController.cs" />
+    <Compile Include="Services\Interfaces\IWaiverService.cs" />
+    <Compile Include="Services\WaiverService.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="favicon.ico" />
