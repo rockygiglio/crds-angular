@@ -1,9 +1,9 @@
 (function() {
   'use strict';
   module.exports = MyTripsController;
-  MyTripsController.$inject = ['$log', 'MyTrips', 'TripsUrlService', 'Waivers'];
+  MyTripsController.$inject = ['$log', 'MyTrips', 'TripsUrlService', 'Trip'];
 
-  function MyTripsController($log, MyTrips, TripsUrlService, Waivers) {
+  function MyTripsController($log, MyTrips, TripsUrlService, Trip) {
     var vm = this;
 
     activate();
@@ -13,8 +13,11 @@
     /////////////////////////
     function activate() {
       vm.myTrips = MyTrips.myTrips;
-      vm.waivers = Waivers;
+
       _.each(vm.myTrips, function(trip) {
+        trip.waivers = Trip.Waivers.get({ eventId: trip.eventId }).$promise.then((res) => {
+          console.log(res);
+        }).catch(console.error);
         trip.shareUrl = TripsUrlService.ShareUrl(trip.eventParticipantId);
       });
     }
