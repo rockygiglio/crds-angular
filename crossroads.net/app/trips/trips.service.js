@@ -17,8 +17,8 @@
       ValidatePrivateInvite: $resource(__GATEWAY_CLIENT_ENDPOINT__ + 'api/trip/validate-private-invite/:pledgeCampaignId/:guid'),
       Family: $resource(__GATEWAY_CLIENT_ENDPOINT__ + 'api/trip/:pledgeCampaignId/family-members'),
       TripScholarship: $resource(__GATEWAY_CLIENT_ENDPOINT__ + 'api/trip/scholarship/:campaignId/:contactId'),
-      Waiver: $resource(`${__GATEWAY_CLIENT_ENDPOINT__}API/1.0.0/waivers/.../:waiverId`),
-      Waivers: $resource(`${__GATEWAY_CLIENT_ENDPOINT__}api/1.0.0/waivers/event/:eventId`)
+      Waiver: $resource(`${__GATEWAY_CLIENT_ENDPOINT__}api/v1.0.0/waivers/.../:waiverId`),
+      Waivers: $resource(`${__GATEWAY_CLIENT_ENDPOINT__}api/v1.0.0/waivers/event/:eventId`)
     };
   }
 })();
