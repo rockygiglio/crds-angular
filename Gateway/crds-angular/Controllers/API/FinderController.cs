@@ -148,6 +148,24 @@ namespace crds_angular.Controllers.API
             }
         }
 
+        [ResponseType(typeof(bool))]
+        [VersionedRoute(template: "finder/doesuserleadsomegroup/{contactid}", minimumVersion: "1.0.0")]
+        [Route("finder/doesuserleadsomegroup/{contactid}")]
+        [HttpGet]
+        public IHttpActionResult GetDoesUserLeadSomeGroup([FromUri]int contactId)
+        {
+            try
+            {
+                bool doesUserLeadSomeGroup = _finderService.DoesUserLeadSomeGroup(contactId);
+                return Ok(doesUserLeadSomeGroup);
+            }
+            catch (Exception ex)
+            {
+                var apiError = new ApiErrorDto("Doesuserleadesomegroup call failed", ex);
+                throw new HttpResponseException(apiError.HttpResponseMessage);
+            }
+        }
+
         [ResponseType(typeof(AddressDTO))]
         [VersionedRoute(template: "finder/pinbyip/{ipAddress}", minimumVersion: "1.0.0")]
         [Route("finder/pinbyip/{ipAddress}")]

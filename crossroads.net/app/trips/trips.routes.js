@@ -148,19 +148,23 @@
           $cookies: '$cookies',
           $stateParams: '$stateParams',
           Profile: 'Profile',
-          Person: function(Profile, $stateParams, $cookies) {
-            var cid = $cookies.get('userId');
+          TravelInformationService: 'TravelInformationService',
+          $q: '$q',
+          Person: (Profile, $stateParams, $cookies, $q, TravelInformationService) => {
+            const deferred = $q.defer();
+            let cid = $cookies.get('userId');
             if ($stateParams.contactId) {
               cid = $stateParams.contactId;
             }
 
-            return Profile.Person.get({ contactId: cid }).$promise;
+            Profile.Person.get({ contactId: cid }, (p) => {
+              TravelInformationService.setPerson(p);
+              deferred.resolve(p);
+            }, () => {
+              deferred.reject();
+            });
+            return deferred.promise;
           },
-
-          Trip: 'Trip',
-          MyTrips: function(Trip) {
-            return Trip.MyTrips.get().$promise;
-          }
         }
       })
       .state('trippromise', {

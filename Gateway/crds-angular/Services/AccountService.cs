@@ -190,12 +190,6 @@ namespace crds_angular.Services
         public int RegisterPersonWithoutUserAccount(User newUserData)
         {
             var token = _apiUserService.GetToken();
-            var contactId = _contactRepository.GetContactIdByEmail(newUserData.email);
-            var exists = _lookupService.EmailSearch(newUserData.email, token);
-            if (contactId > 0)
-            {
-                throw (new DuplicateUserException(newUserData.email));
-            }
             var householdRecordId = CreateHouseholdRecord(newUserData, token);
             var contactRecordId = CreateContactRecord(newUserData, token, householdRecordId);
            

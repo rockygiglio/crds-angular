@@ -46,7 +46,6 @@ require('./invoices/invoices.module');
   require('./styleguide');
   require('./superbowl');
   require('./thedaily');
-  require('./explore');
   require('./gotrips');
   require('./my_serve');
   require('./brave_at_home');
