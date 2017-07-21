@@ -144,8 +144,8 @@
               return childPromise.then(function (formBuilderServiceData) {
                 ContentPageService.resolvedData = formBuilderServiceData;
 
-                var metaDescription = ContentPageService.page.metaDescription;
-                if (!metaDescription) {
+                var metaDescription = ContentPageService.page.metaDescription || '';
+                if (!metaDescription && ContentPageService.page.content) {
                   var content = ContentPageService.page.content;
                   var hTagRegEx = /<h1.+?>.+?<\/h1>/;
                   content = content.replace(hTagRegEx, '');
