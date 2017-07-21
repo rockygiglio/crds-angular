@@ -675,9 +675,10 @@ namespace crds_angular.Services
                 return null;
             }
 
-            var groupDTOs = groupsByType.Select(Mapper.Map<MpGroup, GroupDTO>).ToList();
+            // use the groups found to get full dataset from AWS
+            var cloudReturn = _awsCloudsearchService.SearchConnectAwsCloudsearch("or groupid:178408 groupid:", "_all_fields");
 
-            var pins = this.TransformGroupDtoToPinDto(groupDTOs, finderType);
+            var pins = ConvertFromAwsSearchResponse(cloudReturn);
 
             return pins;
         }
