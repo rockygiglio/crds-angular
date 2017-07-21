@@ -126,7 +126,8 @@
           loggedin: crds_utilities.checkLoggedin,
           Trip: 'Trip',
           $cookies: '$cookies',
-          MyTrips: function(Trip) {
+          $state: '$state',
+          MyTrips(Trip) {
             return Trip.MyTrips.get().$promise;
           }
         }
@@ -171,7 +172,7 @@
         parent: 'centeredContentPage',
         url: '/trips/mytrips/:eventId/promise',
         template: '<trip-promise my-trip-promise="MyTripsPromise"></trip-promise>',
-        controller: function($scope, MyTripsPromise) {
+        controller($scope, MyTripsPromise) {
           $scope.MyTripsPromise = MyTripsPromise;
         },
         data: {
@@ -186,7 +187,7 @@
           $cookies: '$cookies',
           $stateParams: '$stateParams',
           Trip: 'Trip',
-          MyTripsPromise: function(Trip, $stateParams) {
+          MyTripsPromise(Trip, $stateParams) {
             //return Trip.MyTripsPromise.get({ eventId: $stateParams.eventId }).$promise;
 
             return {
