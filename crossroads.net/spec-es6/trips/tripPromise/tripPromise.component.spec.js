@@ -1,7 +1,7 @@
 import tripsModule from '../../../app/trips/trips.module';
 import helpers from '../trips.helpers';
 
-fdescribe('Trip I Promise Component', () => {
+describe('Trip I Promise Component', () => {
   let httpBackend;
   let ctrl;
   let rootScope;
