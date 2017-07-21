@@ -1,9 +1,9 @@
 export default class TripPromiseController {
   /* @ngInject() */
-  constructor($state, $stateParams, Validation, Trip) {
+  constructor($rootScope, $state, $log, Trip) {
+    this.$rootScope = $rootScope;
     this.$state = $state;
-    this.$stateParams = $stateParams;
-    this.validation = Validation;
+    this.$log = $log;
     this.Trip = Trip;
 
     this.promise = false;
@@ -16,18 +16,15 @@ export default class TripPromiseController {
     if (this.tripPromiseForm.$valid) {
       this.processing = true;
 
-      this.Trip.MyTripsPromise.post({
-        eventId: this.$stateParams.eventId,
-        eventParticipantId: this.myTripPromise.eventParticipantId,
-        eventParticipantDocumentId: this.myTripPromise.eventParticipantDocumentId
-      }).$promise.then(
-        () => {
-          this.$state.go('mytrips');
-        },
-        () => {
-          this.processing = false;
-        }
-      );
+      const signedDoc = Object.assign(this.myTripPromise, { documentReceived: true });
+
+      this.Trip.MyTripsPromise.save(signedDoc).$promise.then(() => {
+        this.$state.go('mytrips');
+      }).catch((err) => {
+        this.$log.error(err);
+        this.$rootScope.$emit('notify', this.$rootScope.MESSAGES.generalError);
+        this.processing = false;
+      });
     }
   }
 

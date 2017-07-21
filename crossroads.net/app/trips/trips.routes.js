@@ -184,8 +184,10 @@
         },
         resolve: {
           loggedin: crds_utilities.checkLoggedin,
-          $cookies: '$cookies',
+          $rootScope: '$rootScope',
+          $state: '$state',
           $stateParams: '$stateParams',
+          $log: '$log',
           Trip: 'Trip',
           MyTripsPromise(Trip, $stateParams) {
             return Trip.MyTripsPromise.get({ eventParticipantId: $stateParams.eventParticipantId }).$promise;
