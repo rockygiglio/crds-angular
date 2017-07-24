@@ -161,6 +161,25 @@ namespace MinistryPlatform.Translation.Repositories
             }
         }
 
+        public MpContact GetEmailFromDonorId(int donorId)
+        {
+            MpContact contact = new MpContact();
+            try
+            {
+                string searchFilter = $"Donor_Record={donorId}";
+                var foundEmails = _ministryPlatformRest.UsingAuthenticationToken(base.ApiLogin()).Search<MpContact>(searchFilter, "Contact_ID, Donor_Record, Email_Address");
+                if (foundEmails.Count == 1)
+                    contact = foundEmails.First();
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException(
+                    string.Format("GetEmailFromDonorId failed.  Donor Id: {0}", donorId), ex);
+            }
+
+            return contact;
+        }
+
         public int GetContactIdByEmail(string email)
         {
             var records = _ministryPlatformService.GetRecordsDict(_configurationWrapper.GetConfigIntValue("Contacts"), ApiLogin(), (email));
@@ -175,6 +194,32 @@ namespace MinistryPlatform.Translation.Repositories
 
             var record = records[0];
             return record.ToInt("dp_RecordID");
+        }
+
+
+        public int GetActiveContactIdByEmail(string email)
+        {
+            // filter out contact_status = deceased (id = 3)
+            var token = ApiLogin();
+            string filter = $" Display_Name != 'Guest Giver' AND Contact_Status_ID != 3 AND Email_Address = '{email}'";
+            var columns = new List<string>
+            {
+                "Email_Address",
+                "Contact_ID"
+            };
+
+            var records = _ministryPlatformRest.UsingAuthenticationToken(token).Search<MpMyContact>(filter, columns);
+
+            if (records.Count > 1)
+            {
+                throw new Exception("User email did not return exactly one user record");
+            }
+            if (records.Count < 1)
+            {
+                return 0;
+            }
+            
+            return records[0].Contact_ID;
         }
 
         public int GetContactIdByParticipantId(int participantId)

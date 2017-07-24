@@ -200,9 +200,9 @@ var attributeTypes = require('crds-constants').ATTRIBUTE_TYPE_IDS;
     }
 
     function openPassportExpireDatePicker($event) {
-        $event.preventDefault();
-       $event.stopPropagation();
-       vm.passportExpireDateOpen = true;
+      $event.preventDefault();
+      $event.stopPropagation();
+      vm.passportExpireDateOpen = true;
     }
 
     function page6ButtonText(){

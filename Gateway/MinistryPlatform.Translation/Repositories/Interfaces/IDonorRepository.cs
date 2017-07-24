@@ -21,7 +21,7 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
         int UpdatePaymentProcessorCustomerId(int donorId, string paymentProcessorCustomerId);
         void SetupConfirmationEmail(int programId, int donorId, decimal donationAmount, DateTime setupDate, string pymtType, int pledgeId);
         MpContactDonor GetEmailViaDonorId(int donorId);
-        void SendEmail(int emailTemplate, int donorId, decimal donationAmount, string donationType, DateTime donationDate, string programName, string emailReason, string frequency = null, string pledgeName = null);
+        void SendEmail(int emailTemplate, int donorId, decimal donationAmount, string donationType, DateTime donationDate, DateTime startDate, string programName, string emailReason, string frequency = null, string pledgeName = null);
         MpContactDonor GetContactDonorForCheckAccount(string encryptedKey);
         string CreateHashedAccountAndRoutingNumber(string accountNumber, string routingNumber);
         string DecryptCheckValue(string value);
