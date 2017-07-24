@@ -890,7 +890,7 @@ namespace crds_angular.Services
             }
         }
 
-        public void SaveGroupToAws(GroupDTO group)
+        private void SaveGroupToAws(GroupDTO group)
         {
             var pin = Mapper.Map<PinDto>(group);
             pin.Gathering = Mapper.Map<FinderGroupDto>(group);

@@ -47,7 +47,7 @@ namespace crds_angular.test.Services
         private Mock<MPServices.IInvitationRepository> _invitationRepository;
         private Mock<IAttributeService> _attributeService;
         private Mock<IDateTime> _dateTimeWrapper;
-        private Mock<IFinderService> _finderService;
+        private Mock<IAwsCloudsearchService> _awsCloudSearchService;
 
         private readonly List<ParticipantSignup> mockParticipantSignup = new List<ParticipantSignup>
         {
@@ -95,7 +95,7 @@ namespace crds_angular.test.Services
             _emailCommunicationService = new Mock<IEmailCommunication>();
             _userRespository = new Mock<MPServices.IUserRepository>();
             _invitationRepository = new Mock<MPServices.IInvitationRepository>();
-            _finderService = new Mock<IFinderService>();
+            _awsCloudSearchService = new Mock<IAwsCloudsearchService>();
 
             _objectAttributeService = new Mock<IObjectAttributeService>();
             _apiUserService = new Mock<IApiUserRepository>();
@@ -133,7 +133,7 @@ namespace crds_angular.test.Services
                                        _invitationRepository.Object,
                                        _attributeService.Object,
                                        _dateTimeWrapper.Object,
-                                       _finderService.Object);
+                                       _awsCloudSearchService.Object);
                                     
         }
 
