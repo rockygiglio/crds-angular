@@ -5,6 +5,7 @@
     'ngResource',
     'angulartics',
     'angulartics.google.tagmanager',
+    'angulartics.segment',
     'ngSanitize',
     'ngPayments',
     'duScroll',
@@ -74,5 +75,5 @@
     ;
 
     require('./validators');
-
+    require('./config/angulartics.config');
 })();
