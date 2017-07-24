@@ -7,7 +7,6 @@
     return {
       Search: $resource(__GATEWAY_CLIENT_ENDPOINT__ + 'api/trip/search'),
       MyTrips: $resource(__GATEWAY_CLIENT_ENDPOINT__ + 'api/trip/mytrips'),
-      MyTripsPromise: $resource(__GATEWAY_CLIENT_ENDPOINT__ + 'api/trip/mytrips/:eventId/promise'),
       Email: $resource(__GATEWAY_CLIENT_ENDPOINT__ + 'api/donation/message'),
       TripFormResponses: $resource(__GATEWAY_CLIENT_ENDPOINT__ + 'api/trip/form-responses/:selectionId/:selectionCount/:recordId'),
       SaveParticipants: $resource(__GATEWAY_CLIENT_ENDPOINT__ + 'api/trip/participants'),
@@ -17,7 +16,11 @@
       GeneratePrivateInvites: $resource(__GATEWAY_CLIENT_ENDPOINT__ + 'api/trip/generate-private-invite'),
       ValidatePrivateInvite: $resource(__GATEWAY_CLIENT_ENDPOINT__ + 'api/trip/validate-private-invite/:pledgeCampaignId/:guid'),
       Family: $resource(__GATEWAY_CLIENT_ENDPOINT__ + 'api/trip/:pledgeCampaignId/family-members'),
-      TripScholarship: $resource(__GATEWAY_CLIENT_ENDPOINT__ + 'api/trip/scholarship/:campaignId/:contactId')
+      TripScholarship: $resource(__GATEWAY_CLIENT_ENDPOINT__ + 'api/trip/scholarship/:campaignId/:contactId'),
+      MyTripsPromise: $resource(`${__GATEWAY_CLIENT_ENDPOINT__}api/v1.0.0/trip/ipromise/:eventParticipantId`, {}, {
+        get: { method: 'GET' },
+        save: { method: 'POST' }
+      }),
     };
   }
 })();

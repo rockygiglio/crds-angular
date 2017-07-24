@@ -126,7 +126,8 @@
           loggedin: crds_utilities.checkLoggedin,
           Trip: 'Trip',
           $cookies: '$cookies',
-          MyTrips: function(Trip) {
+          $state: '$state',
+          MyTrips(Trip) {
             return Trip.MyTrips.get().$promise;
           }
         }
@@ -169,9 +170,9 @@
       })
       .state('trippromise', {
         parent: 'centeredContentPage',
-        url: '/trips/mytrips/:eventId/promise',
+        url: '/trips/mytrips/promise/:eventParticipantId',
         template: '<trip-promise my-trip-promise="MyTripsPromise"></trip-promise>',
-        controller: function($scope, MyTripsPromise) {
+        controller($scope, MyTripsPromise) {
           $scope.MyTripsPromise = MyTripsPromise;
         },
         data: {
@@ -183,18 +184,13 @@
         },
         resolve: {
           loggedin: crds_utilities.checkLoggedin,
-          $cookies: '$cookies',
+          $rootScope: '$rootScope',
+          $state: '$state',
           $stateParams: '$stateParams',
+          $log: '$log',
           Trip: 'Trip',
-          MyTripsPromise: function(Trip, $stateParams) {
-            //return Trip.MyTripsPromise.get({ eventId: $stateParams.eventId }).$promise;
-
-            return {
-              eventId: 1234,
-              eventParticipantDocumentId: 7875336,
-              documentId: 2345,
-              tripName: '2018 May BAHAMAS Angie Trip',
-            };
+          MyTripsPromise(Trip, $stateParams) {
+            return Trip.MyTripsPromise.get({ eventParticipantId: $stateParams.eventParticipantId }).$promise;
           }
         }
       })

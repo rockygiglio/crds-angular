@@ -54,7 +54,7 @@ module.exports = {
               "category": null,
               "categoryId": null,
               "categoryDescription": null,
-              "attributeTypeId": null 
+              "attributeTypeId": null
             },
             {
               "attributeId": 3958,
@@ -446,5 +446,13 @@ module.exports = {
       donationDate: '1/1/2016',
       paymentMethod: 'Credit Card'
     }
+  },
+  promiseDocument: {
+    "eventParticipantDocumentId": 20465,
+    "tripName": "2018 May BAHAMAS Angie Trip",
+    "documentId": 12,
+    "eventParticipantId": 7872041,
+    "documentReceived": false,
+    "documentNotes": null
   }
 };

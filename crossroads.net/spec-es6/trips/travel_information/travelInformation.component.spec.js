@@ -1,7 +1,7 @@
 const helpers = require('../trips.helpers');
 
 
-fdescribe('Travel Information Component', () => {
+describe('Travel Information Component', () => {
   beforeEach(angular.mock.module('crossroads.trips'));
   // beforeEach(angular.mock.module(($provide) => {
     // any setup from the route goes here
