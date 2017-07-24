@@ -45,7 +45,7 @@
               if(Session.isActive() && link === "/" ) {
                 link = getPersonalizedContentPath(link);
               }
-              
+
               link = addTrailingSlashIfNecessary(link);
 
               promise = Page.get({ url: link }).$promise;
@@ -165,9 +165,10 @@
                   statusCode: ContentPageService.page.errorCode
                 };
 
-                $rootScope.renderLegacyStyles = (typeof ContentPageService.page.legacyStyles !== 'undefined'
+
+                $rootScope.doRenderLegacyStyles = (typeof ContentPageService.page.legacyStyles !== 'undefined'
                   ? Boolean(parseInt(ContentPageService.page.legacyStyles))
-                  : $rootScope.renderLegacyStyles); // revert to value set on route
+                  : $rootScope.doRenderLegacyStyles); // revert to value set on route
 
                 $rootScope.bodyClasses = [];
                 if (typeof ContentPageService.page.bodyClasses !== 'undefined' && ContentPageService.page.bodyClasses !== null) {
