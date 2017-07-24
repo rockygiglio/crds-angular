@@ -7,6 +7,7 @@ using crds_angular.Models.Crossroads;
 using crds_angular.Models.Crossroads.Attribute;
 using crds_angular.Models.Crossroads.Groups;
 using crds_angular.Models.Crossroads.Profile;
+using crds_angular.Models.Finder;
 using crds_angular.Services.Interfaces;
 using log4net;
 using Crossroads.Web.Common.Configuration;
@@ -45,6 +46,7 @@ namespace crds_angular.Services
         private readonly int  _onsiteGroupTypeId;
         private readonly int _childcareEventTypeId;
         private readonly IDateTime _dateTimeWrapper;
+        private readonly IAwsCloudsearchService _awsCloudSearchService;
 
 
 
@@ -77,7 +79,8 @@ namespace crds_angular.Services
                             IUserRepository userRepository,
                             IInvitationRepository invitationRepository,
                             IAttributeService attributeService,
-                            IDateTime dateTimeWrapper)
+                            IDateTime dateTimeWrapper,
+                            IAwsCloudsearchService awsCloudSearchService)
 
         {
             _mpGroupRepository = mpGroupRepository;
@@ -95,6 +98,7 @@ namespace crds_angular.Services
             _userRepository = userRepository;
             _invitationRepository = invitationRepository;
             _attributeService = attributeService;
+            _awsCloudSearchService = awsCloudSearchService;
             _domainId = configurationWrapper.GetConfigIntValue("DomainId");
 
             _groupRoleDefaultId = _configurationWrapper.GetConfigIntValue("Group_Role_Default_ID");
@@ -136,6 +140,9 @@ namespace crds_angular.Services
                 {
                     _mpGroupRepository.SendNewStudentMinistryGroupAlertEmail((List<MpGroupParticipant>) mpGroup.Participants);
                 }
+
+                //save group to AWS for Finder
+                SaveGroupToAws(group);
             }
             catch (Exception e)
             {
@@ -881,6 +888,13 @@ namespace crds_angular.Services
                 var message = String.Format("Could not update group participant {0}", participant.ParticipantId);
                 _logger.Error(message, e);
             }
+        }
+
+        public void SaveGroupToAws(GroupDTO group)
+        {
+            var pin = Mapper.Map<PinDto>(group);
+            pin.Gathering = Mapper.Map<FinderGroupDto>(group);
+            _awsCloudSearchService.UploadNewPinToAws(pin);
         }
 
         public void UpdateGroupParticipantRole(int groupId, int participantId, int roleId)
