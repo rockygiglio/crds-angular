@@ -26,7 +26,7 @@
           abstract: true,
           template: '<ui-view/>',
           resolve: {
-            Meta: ['SystemPage', '$state', function(SystemPage, $state) {
+            Meta: ['SystemPage', '$state', '$rootScope', function(SystemPage, $state, $rootScope) {
               return SystemPage.get({
                 state: $state.next.name
               }).$promise.then(
@@ -36,7 +36,7 @@
                         $state.next.data = {};
                       }
 
-                      $state.params.renderLegacyStyles = (typeof systemPage.systemPages[0].legacyStyles !== 'undefined'
+                      $rootScope.doRenderLegacyStyles = (typeof systemPage.systemPages[0].legacyStyles !== 'undefined'
                         ? Boolean(parseInt(systemPage.systemPages[0].legacyStyles))
                         : true); // revert to value set on route
 
