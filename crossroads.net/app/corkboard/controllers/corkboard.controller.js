@@ -26,8 +26,6 @@
     vm.params = $stateParams;
     vm.posts = CorkboardSession.posts;
     vm.postTypes = CorkboardPostTypes;
-    vm.posts = CorkboardSession.posts;
-    vm.postTypes = CorkboardPostTypes;
     // list of post types to be used to display the filter and create buttons on the corkboard home page
     // in the same order as the original design
     vm.postTypeList = _.sortBy(vm.postTypes, 'index');
@@ -57,12 +55,16 @@
 
     //END Datepicker STUFF
 
-    $rootScope.$on('$stateNotFound', function (event, unfoundState, fromState, fromParams) {
+    var unregisterStateNotFound = $rootScope.$on('$stateNotFound', function (event, unfoundState, fromState, fromParams) {
       if (unfoundState.toParams.link) {
         $window.location = addLeadingSlashIfNecessary(unfoundState.toParams.link);
       } else {
         $window.location = addLeadingSlashIfNecessary(unfoundState.to);
       }
+    });
+
+    $scope.$on('$destroy', function(event, data) {
+      unregisterStateNotFound();
     });
 
     $scope.$on(CORKBOARD_EVENTS.postAdded, function (event, data) {

@@ -30,6 +30,12 @@
           var promise = CorkboardListings.post().query().$promise;
 
           promise.then(function (posts) {
+            // ensure that Date does not remain undefined so that one-time data binding is possible 
+            _.each(posts, function(item) {
+              if (item.Date === undefined)
+                item.Date = null;
+            });
+
             CorkboardSession.posts = posts;
           }, function (error) {
 
