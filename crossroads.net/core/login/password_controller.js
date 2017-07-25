@@ -29,8 +29,6 @@ require('../services/password_service');
     vm.submitPassword = submitPassword;
     vm.validation = Validation;
 
-    AnalyticsService.trackForgotPassword();
-
     function resetRequest() {
       vm.saving = true;
       if (vm.forgotpasswordform.$valid) {
@@ -60,6 +58,7 @@ require('../services/password_service');
 
     function submitPassword(form) {
       $log.debug('submitPassword start');
+      AnalyticsService.trackForgotPassword();
 
       if (form !== null) {
         form.$setSubmitted(true);
