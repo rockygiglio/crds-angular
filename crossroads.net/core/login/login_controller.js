@@ -14,8 +14,7 @@
     'Session',
     '$timeout',
     'User',
-    'ImageService',
-    'AnalyticsService'
+    'ImageService'
   ];
 
   function LoginController(
@@ -29,10 +28,8 @@
     Session,
     $timeout,
     User,
-    ImageService,
-    AnalyticsService) {
+    ImageService) {
 
-    AnalyticsService.trackForgotPassword();
     var vm = this;
     vm.path = ImageService.ProfileImageBaseURL + vm.contactId;
     vm.defaultImage = ImageService.DefaultProfileImage;

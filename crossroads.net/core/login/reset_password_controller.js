@@ -13,8 +13,7 @@ require('../services/auth_service');
       '$state',
       'PasswordService',
       '$timeout',
-      'TokenStatus',
-      'AnalyticsService'
+      'TokenStatus'
   ];
 
   function ResetPasswordController(
@@ -24,8 +23,7 @@ require('../services/auth_service');
       $state,
       PasswordService,
       $timeout,
-      TokenStatus,
-      AnalyticsService) {
+      TokenStatus) {
 
     $log.debug('Inside Password Controller');
 
@@ -40,7 +38,6 @@ require('../services/auth_service');
     activate();
 
     function activate() {
-      AnalyticsService.trackForgotPassword();
       $timeout(function() {
         if (TokenStatus.TokenValid === false) {
           $rootScope.$emit('notify', $rootScope.MESSAGES.invalidPasswordResetKey);

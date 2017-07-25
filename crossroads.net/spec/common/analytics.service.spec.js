@@ -1,7 +1,7 @@
-require('../../../app/common/common.module');
-require('../../../app/app');
+require('../../app/common/common.module');
+require('../../app/app');
 
-describe('Common Giving Donation Service', () => {
+describe('Common Analytics Service', () => {
   let fixture;
 
   let analytics;
