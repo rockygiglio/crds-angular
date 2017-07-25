@@ -638,9 +638,29 @@ namespace crds_angular.Services
 
             eventList.ForEach(evt =>
             {
-                var rooms = _roomService.GetRoomReservations(evt.EventId).Where(r => !r.Cancelled).Select(s => s.Name).ToList();
-                var roomsString = rooms.Count > 0 ? string.Join(", ", rooms.ToArray()) : "No Room Reserved under the Date and Time";
-                SendPrimaryContactReminderEmail(evt, roomsString, token);
+                var actionNeeded = "";
+                var roomsString = "No Room Reserved under the Date and Time";
+                var rooms = _roomService.GetRoomReservations(evt.EventId).Where(r => !r.Cancelled).ToList();
+                if (rooms.Any()) //there are non-cancelled rooms
+                {
+                    //if there are approved rooms, show those
+                    var approvedRooms = rooms.Where(r => r.Approved).ToList();
+                    if (approvedRooms.Any())
+                        roomsString = string.Join(", ", approvedRooms.Select((s => s.Name)).ToArray());
+                    else //there aren't approved rooms - look for pending (not rejected) rooms
+                    {
+                        var pendingRooms = rooms.Where(r => !r.Rejected).ToList();
+                        if (pendingRooms.Any())
+                            roomsString = string.Join(", ", pendingRooms.Select((s => s.Name)).ToArray()) + " (Room Pending Approval)";
+                        else
+                        {
+                            roomsString = "NONE-Room Reservation was Rejected";
+                            actionNeeded = " - ACTION REQUIRED";
+                        }
+                    }
+                }
+
+                SendPrimaryContactReminderEmail(evt, roomsString, token, actionNeeded);
             });
         }
 
@@ -691,7 +711,7 @@ namespace crds_angular.Services
         }
 
         // ReSharper disable once UnusedParameter.Local
-        private void SendPrimaryContactReminderEmail(Models.Crossroads.Events.Event evt, string rooms, string token)
+        private void SendPrimaryContactReminderEmail(Models.Crossroads.Events.Event evt, string rooms, string token, string actionText)
         {
             try
             {
@@ -702,7 +722,8 @@ namespace crds_angular.Services
                     {"Event_Start_Date", evt.StartDate.ToShortDateString()},
                     {"Event_Start_Time", evt.StartDate.ToShortTimeString()},
                     {"Room_Name", rooms },
-                    {"Base_Url", _configurationWrapper.GetConfigValue("BaseMPUrl")}
+                    {"Base_Url", _configurationWrapper.GetConfigValue("BaseMPUrl")},
+                    {"Action_Needed", actionText}
                 };
 
                 var defaultContact = _contactService.GetContactById(AppSetting("DefaultContactEmailId"));

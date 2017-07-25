@@ -52,7 +52,9 @@ namespace MinistryPlatform.Translation.Repositories
                 Label = record.ToString("Label"),
                 Name = record.ToString("Room_Name"),
                 CheckinAllowed = record.ToNullableBool("Allow_Checkin") ?? false,
-                Volunteers = record.ToInt("Volunteers")
+                Volunteers = record.ToInt("Volunteers"),
+                Approved = record.ToNullableBool("_Approved") ?? false,
+                Rejected = record.ToNullableBool("Rejected") ?? false
             }).ToList();
         }
 

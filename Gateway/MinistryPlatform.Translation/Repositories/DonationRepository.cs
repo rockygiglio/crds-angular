@@ -326,7 +326,7 @@ namespace MinistryPlatform.Translation.Repositories
                 var paymentType = PaymentType.GetPaymentType(result.paymentTypeId).name;
                 var declineEmailTemplate = PaymentType.GetPaymentType(result.paymentTypeId).declineEmailTemplateId;
 
-                _donorService.SendEmail(declineEmailTemplate, result.donorId, result.donationAmt / Constants.StripeDecimalConversionValue, paymentType, result.donationDate,
+                _donorService.SendEmail(declineEmailTemplate, result.donorId, result.donationAmt / Constants.StripeDecimalConversionValue, paymentType, result.donationDate, DateTime.Now,
                     program, result.donationNotes);
             }
             catch (Exception ex)
