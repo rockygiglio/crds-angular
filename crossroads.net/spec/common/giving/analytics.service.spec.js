@@ -22,6 +22,6 @@ describe('Common Giving Donation Service', () => {
 
   it('should call eventTrack with "Forgot Password"', () => {
     fixture.trackForgotPassword();
-    expect(analytics.eventTrack).toHaveBeenCalledWith('Forgot Password');
+    expect(analytics.eventTrack).toHaveBeenCalledWith('ForgotPassword');
   });
 });

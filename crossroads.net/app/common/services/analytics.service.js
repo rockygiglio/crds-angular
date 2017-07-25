@@ -6,6 +6,6 @@ export default class AnalyticsService {
   }
 
   trackForgotPassword() {
-    this.analytics.eventTrack('Forgot Password');
+    this.analytics.eventTrack('ForgotPassword');
   }
 }
