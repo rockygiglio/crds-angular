@@ -40,11 +40,11 @@ namespace MinistryPlatform.Translation.Repositories
             });
         }
 
-        public IObservable<MpWaivers> GetEventWaivers(int eventId)
+        public IObservable<MpEventWaivers> GetEventWaivers(int eventId)
         {          
             var apiToken = ApiLogin();
             const string columnList = "Waiver_ID_Table.[Waiver_ID], Waiver_ID_Table.[Waiver_Name], Waiver_ID_Table.[Waiver_Text], cr_Event_Waivers.[Required]";
-            var result = _ministryPlatformRestRepository.UsingAuthenticationToken(apiToken).Search<MpWaivers>($"Event_ID = {eventId} AND Active=1", columnList).ToList();
+            var result = _ministryPlatformRestRepository.UsingAuthenticationToken(apiToken).Search<MpEventWaivers>($"Event_ID = {eventId} AND Active=1", columnList).ToList();
             return result.ToObservable();
         }
 

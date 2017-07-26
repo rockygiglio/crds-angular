@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using System;
+using Newtonsoft.Json;
 
 namespace crds_angular.Models.Crossroads.Waivers
 {
@@ -21,5 +22,11 @@ namespace crds_angular.Models.Crossroads.Waivers
 
         [JsonProperty(PropertyName = "signee")]
         public int SigneeContactId { get; set; }
+
+        [JsonProperty(PropertyName = "waiverStartDate")]
+        public DateTime? WaiverStartDate { get; set; }
+
+        [JsonProperty(PropertyName = "waiverEndDate")]
+        public DateTime? WaiverEndDate { get; set; }
     }
 }

@@ -7,7 +7,7 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
     public interface IWaiverRepository
     {
         IObservable<MpWaivers> GetWaiver(int waiverId);
-        IObservable<MpWaivers> GetEventWaivers(int eventId);
+        IObservable<MpEventWaivers> GetEventWaivers(int eventId);
 
         IObservable<MpEventParticipantWaiver> CreateEventParticipantWaiver(int waiverId, int eventParticipantId, int contactId);
     }

@@ -41,8 +41,8 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
         List<MpEvent> GetEventTemplatesBySite(string site, string token);
         void DeleteEventGroupsForEvent(int eventId, string token, int? groupTypeID = null);
 
-        List<MpWaivers> GetWaivers(int eventId, int contactId);
-        List<MpWaivers> GetWaivers(int eventId);
+        List<MpEventWaivers> GetWaivers(int eventId, int contactId);
+        List<MpEventWaivers> GetWaivers(int eventId);
         void SetWaivers(List<MpWaiverResponse> waiverResponses);
 
         bool IsEventSeries(int eventId);

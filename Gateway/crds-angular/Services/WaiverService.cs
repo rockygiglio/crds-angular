@@ -43,12 +43,11 @@ namespace crds_angular.Services
         {            
             return _waiverRepository.GetWaiver(waiverId).Select<MpWaivers, WaiverDTO>(w => new WaiverDTO
             {
-                Accepted = w.Accepted,
-                Required = w.Required,
-                SigneeContactId = w.SigneeContactId,
                 WaiverId = w.WaiverId,
                 WaiverName = w.WaiverName,
-                WaiverText = w.WaiverText
+                WaiverText = w.WaiverText,
+                WaiverStartDate = w.WaiverStartDate,
+                WaiverEndDate = w.WaiverEndDate
             });
         }
 

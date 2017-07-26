@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Crossroads.Web.Common;
 using Crossroads.Web.Common.MinistryPlatform;
 using Newtonsoft.Json;
 
 namespace MinistryPlatform.Translation.Models
 {
-    [MpRestApiTable(Name = "cr_Waivers")]
-    public class MpWaivers
+    [MpRestApiTable(Name = "cr_Event_Waivers")]
+    public class MpEventWaivers
     {
         [JsonProperty(PropertyName = "Waiver_ID")]
         public int WaiverId { get; set; }
@@ -20,10 +16,13 @@ namespace MinistryPlatform.Translation.Models
         [JsonProperty(PropertyName = "Waiver_Text")]
         public string WaiverText { get; set; }
 
-        [JsonProperty(PropertyName = "Waiver_Start_Date")]
-        public DateTime? WaiverStartDate { get; set; }
+        [JsonProperty(PropertyName = "Required")]
+        public bool Required { get; set; }
 
-        [JsonProperty(PropertyName = "Waiver_End_Date")]
-        public DateTime? WaiverEndDate { get; set; }
+        [JsonProperty(PropertyName = "Accepted")]
+        public bool Accepted { get; set; }
+
+        [JsonProperty(PropertyName = "Signee_Contact_ID")]
+        public int SigneeContactId { get; set; }
     }
 }

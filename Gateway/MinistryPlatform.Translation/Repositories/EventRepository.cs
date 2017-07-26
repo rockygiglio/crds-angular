@@ -628,7 +628,7 @@ namespace MinistryPlatform.Translation.Repositories
             }).ToList();
         }
 
-        public List<MpWaivers> GetWaivers(int eventId, int contactId)
+        public List<MpEventWaivers> GetWaivers(int eventId, int contactId)
         {
             var apiToken = ApiLogin();
             var eventParticipantId = _eventParticipantRepository.GetEventParticipantByContactId(eventId, contactId);
@@ -638,7 +638,7 @@ namespace MinistryPlatform.Translation.Repositories
             }
 
             const string columnList = "Waiver_ID_Table.[Waiver_ID], Waiver_ID_Table.[Waiver_Name], Waiver_ID_Table.[Waiver_Text], cr_Event_Waivers.[Required]";
-            var campWaivers = _ministryPlatformRestRepository.UsingAuthenticationToken(apiToken).Search<MpWaivers>($"Event_ID = {eventId} AND Active=1", columnList).ToList();
+            var campWaivers = _ministryPlatformRestRepository.UsingAuthenticationToken(apiToken).Search<MpEventWaivers>($"Event_ID = {eventId} AND Active=1", columnList).ToList();
             
             //for each event/waiver, see if someone has signed. 
             const string columns = "cr_Event_Participant_Waivers.Waiver_ID, cr_Event_Participant_Waivers.Event_Participant_ID, Accepted, Signee_Contact_ID";
@@ -656,11 +656,11 @@ namespace MinistryPlatform.Translation.Repositories
             return campWaivers;
         }
 
-        public List<MpWaivers> GetWaivers(int eventId)
+        public List<MpEventWaivers> GetWaivers(int eventId)
         {            
             var apiToken = ApiLogin();
             const string columnList = "Waiver_ID_Table.[Waiver_ID], Waiver_ID_Table.[Waiver_Name], Waiver_ID_Table.[Waiver_Text], cr_Event_Waivers.[Required]";
-            return _ministryPlatformRestRepository.UsingAuthenticationToken(apiToken).Search<MpWaivers>($"Event_ID = {eventId} AND Active=1", columnList).ToList();
+            return _ministryPlatformRestRepository.UsingAuthenticationToken(apiToken).Search<MpEventWaivers>($"Event_ID = {eventId} AND Active=1", columnList).ToList();
         }
 
         public void SetWaivers(List<MpWaiverResponse> waiverResponses)
