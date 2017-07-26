@@ -82,5 +82,6 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
         List<MpGroup> GetGroupsForParticipantByTypeOrID(int participantId, string token = null, int[] groupTypeIds = null, int? groupId = null);
 
         List<MpGroup> GetGroupsByGroupType(int groupTypeId);
+        bool GetDoesUserLeadSomeGroup(int participantId);
     }
 }

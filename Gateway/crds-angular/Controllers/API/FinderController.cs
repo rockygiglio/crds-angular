@@ -110,7 +110,7 @@ namespace crds_angular.Controllers.API
         {
             try
             {
-                var rc = _finderService.DoesContactExists(searchUser.email);
+                var rc = _finderService.DoesActiveContactExists(searchUser.email);
                 return Ok(rc);
             }
             catch (Exception ex)
@@ -144,6 +144,24 @@ namespace crds_angular.Controllers.API
             catch (Exception ex)
             {
                 var apiError = new ApiErrorDto("Get Pin Details by Contact Failed", ex);
+                throw new HttpResponseException(apiError.HttpResponseMessage);
+            }
+        }
+
+        [ResponseType(typeof(bool))]
+        [VersionedRoute(template: "finder/doesuserleadsomegroup/{contactid}", minimumVersion: "1.0.0")]
+        [Route("finder/doesuserleadsomegroup/{contactid}")]
+        [HttpGet]
+        public IHttpActionResult GetDoesUserLeadSomeGroup([FromUri]int contactId)
+        {
+            try
+            {
+                bool doesUserLeadSomeGroup = _finderService.DoesUserLeadSomeGroup(contactId);
+                return Ok(doesUserLeadSomeGroup);
+            }
+            catch (Exception ex)
+            {
+                var apiError = new ApiErrorDto("Doesuserleadesomegroup call failed", ex);
                 throw new HttpResponseException(apiError.HttpResponseMessage);
             }
         }
@@ -365,15 +383,20 @@ namespace crds_angular.Controllers.API
                     awsBoundingBox = _awsCloudsearchService.BuildBoundingBox(queryParams.BoundingBox);
                 }
                
-                var originCoords = _finderService.GetMapCenterForResults(queryParams.UserSearchString, queryParams.CenterGeoCoords, queryParams.FinderType);
+                var originCoords = _finderService.GetMapCenterForResults(queryParams.UserLocationSearchString, queryParams.CenterGeoCoords, queryParams.FinderType);
 
-                var pinsInRadius = _finderService.GetPinsInBoundingBox(originCoords, queryParams.UserSearchString, awsBoundingBox, queryParams.FinderType, queryParams.ContactId);
+                var pinsInRadius = _finderService.GetPinsInBoundingBox(originCoords, queryParams.UserKeywordSearchString, awsBoundingBox, queryParams.FinderType, queryParams.ContactId, queryParams.UserFilterString);
 
                 pinsInRadius = _finderService.RandomizeLatLongForNonSitePins(pinsInRadius); 
 
                 var result = new PinSearchResultsDto(new GeoCoordinates(originCoords.Latitude, originCoords.Longitude), pinsInRadius);
 
                 return Ok(result);
+            }
+            catch (InvalidAddressException ex)
+            {
+                var apiError = new ApiErrorDto("Invalid Address", ex, HttpStatusCode.PreconditionFailed);
+                throw new HttpResponseException(apiError.HttpResponseMessage);
             }
             catch (Exception ex)
             {
@@ -393,7 +416,7 @@ namespace crds_angular.Controllers.API
             {
                 try
                 {
-                    var originCoords = _finderService.GetGeoCoordsFromAddressOrLatLang(queryParams.UserSearchString, queryParams.CenterGeoCoords);
+                    var originCoords = _finderService.GetGeoCoordsFromAddressOrLatLang(queryParams.UserLocationSearchString, queryParams.CenterGeoCoords);
                     var centerLatitude = originCoords.Latitude;
                     var centerLongitude = originCoords.Longitude;
 

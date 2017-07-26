@@ -326,7 +326,7 @@ namespace MinistryPlatform.Translation.Repositories
                 var paymentType = PaymentType.GetPaymentType(result.paymentTypeId).name;
                 var declineEmailTemplate = PaymentType.GetPaymentType(result.paymentTypeId).declineEmailTemplateId;
 
-                _donorService.SendEmail(declineEmailTemplate, result.donorId, result.donationAmt / Constants.StripeDecimalConversionValue, paymentType, result.donationDate,
+                _donorService.SendEmail(declineEmailTemplate, result.donorId, result.donationAmt / Constants.StripeDecimalConversionValue, paymentType, result.donationDate, DateTime.Now,
                     program, result.donationNotes);
             }
             catch (Exception ex)
@@ -393,7 +393,8 @@ namespace MinistryPlatform.Translation.Repositories
 
         public List<MpTripDistribution> GetMyTripDistributions(int contactId)
         {
-            var results = _ministryPlatformService.GetPageViewRecords(_tripDistributionsPageView, ApiLogin(), contactId.ToString());
+            string searchString = $"{contactId},";
+            var results = _ministryPlatformService.GetPageViewRecords(_tripDistributionsPageView, ApiLogin(), searchString);
             var trips = new List<MpTripDistribution>();
             foreach (var result in results)
             {
