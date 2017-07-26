@@ -124,6 +124,26 @@
       </div>
     </div><!--/row-->
 
+    <div class="row" ng-if="$ctrl.validPassport === 'true'">
+      <div class="form-group col-sm-12">
+        <div class="row">
+          <div class="form-group col-sm-12" ng-class="{'has-error': $ctrl.validation.showErrors($ctrl.travelInfoForm, 'passportVerify') }">
+            <div class="checkbox">
+              <label>
+                <input type="checkbox" value="yes" ng-model="$ctrl.passportVerify"required name="passportVerify">
+                <span dynamic-content="$root.MESSAGES.passportInformationCorrectMessage.content | html"></span>
+              </label>
+            </div>
+            <ng-messages for="$ctrl.travelInfoForm.passportVerify.$error" ng-if="$ctrl.validation.showErrors($ctrl.travelInfoForm, 'passportVerify')">
+              <span ng-message="required">
+                <span> Please verify that the information you entered is correct. </span>
+              </span>
+            </ng-messages>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="row">
       <div class="col-sm-12">
         <legend>Frequent Flyer Information</legend>
