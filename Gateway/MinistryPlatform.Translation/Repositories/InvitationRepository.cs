@@ -1,14 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using Crossroads.Utilities.Interfaces;
+using System.Reactive.Linq;
 using log4net;
-using Crossroads.Web.Common;
 using Crossroads.Web.Common.Configuration;
+using Crossroads.Web.Common.MinistryPlatform;
 using Crossroads.Web.Common.Security;
 using MinistryPlatform.Translation.Extensions;
-using MinistryPlatform.Translation.Helpers;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 
@@ -21,14 +19,26 @@ namespace MinistryPlatform.Translation.Repositories
 
 
         private readonly IMinistryPlatformService _ministryPlatformService;
+        private readonly IMinistryPlatformRestRepository _ministryPlatformRestRepository;
 
         public InvitationRepository(IMinistryPlatformService ministryPlatformService,
+                               IMinistryPlatformRestRepository ministryPlatformRestRepository,
                                IConfigurationWrapper configurationWrapper,
                                IAuthenticationRepository authenticationService)
             : base(authenticationService, configurationWrapper)
         {
             _ministryPlatformService = ministryPlatformService;
+            _ministryPlatformRestRepository = ministryPlatformRestRepository;
             _invitationPageId = _configurationWrapper.GetConfigIntValue("InvitationPageID");
+        }
+
+        public IObservable<MpInvitation> CreateInvitationAsync(MpInvitation invite)
+        {
+            return Observable.Start<MpInvitation>(() =>
+            {
+                var token = ApiLogin();
+                return _ministryPlatformRestRepository.UsingAuthenticationToken(token).Create(invite);
+            });
         }
 
         public MpInvitation CreateInvitation(MpInvitation dto)

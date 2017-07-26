@@ -29,8 +29,5 @@ namespace crds_angular.Services.Interfaces
         List<MpEvent> GetEventsBySite(string site, string token, DateTime startDate, DateTime endDate);
         List<MpEvent> GetEventTemplatesBySite(string site, string token);
         int AddEventGroup(int eventId, int groupId, string token);
-
-
-        IObservable<List<WaiverDTO>> EventWaivers(int eventId);
     }
 }
