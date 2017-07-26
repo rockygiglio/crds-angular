@@ -27,13 +27,14 @@ export default class SignWaiverController {
 
     const { waiverId, eventParticipantId } = this.state.params;
 
-    this.waiversService.sendAcceptEmail(waiverId, eventParticipantId).then(() => {
+    this.waiversService.sendAcceptEmail(parseInt(waiverId, 10), eventParticipantId).then(() => {
       this.processing = false;
+      this.state.go('mytrips');
     }).catch((err) => {
       this.processing = false;
       this.log.error(err);
       this.rootScope.$emit('notify', this.rootScope.MESSAGES.generalError);
-    })
+    });
   }
 
   cancel() {
