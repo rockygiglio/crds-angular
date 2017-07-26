@@ -6,7 +6,7 @@ export default function WaiversRoutes($stateProvider) { /* , $urlMatcherFactoryP
   $stateProvider
     .state('sign-waiver', {
       parent: 'centeredContentPage',
-      url: '/waivers/send/:waiverId/:eventParticipantId',
+      url: '/waivers/sign/:waiverId/:eventParticipantId',
       template: '<sign-waiver></sign-waiver>',
       data: {
         isProtected: true,
@@ -17,11 +17,8 @@ export default function WaiversRoutes($stateProvider) { /* , $urlMatcherFactoryP
       },
       resolve: {
         $state: '$state',
-        loggedin: crds_utilies.checkLoggedin,
-        waiversService: 'WaiversService',
-        Waiver($state, waiversService) {
-          return waiversService.getWaiver($state.toParams.waiverId);
-        }
+        loggedin: crds_utilities.checkLoggedin,
+        waiversService: 'WaiversService'
       }
     })
     // .state('accept-waiver', {
