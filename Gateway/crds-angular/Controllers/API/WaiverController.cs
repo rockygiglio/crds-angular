@@ -17,17 +17,13 @@ namespace crds_angular.Controllers.API
 {
     public class WaiverController : ReactiveMPAuth
     {
-
-        public readonly IEventService _eventService;
         public readonly IWaiverService _waiverService;
 
         public WaiverController(
-            IEventService eventService,
             IWaiverService waiverService,
             IUserImpersonationService userImpersonationService, 
             IAuthenticationRepository authenticationRepository) : base(userImpersonationService, authenticationRepository)
         {
-            _eventService = eventService;
             _waiverService = waiverService;
         }
 
@@ -64,8 +60,7 @@ namespace crds_angular.Controllers.API
                 try
                 {
                     //TODO: make sure the event participant is the logged in user...
-                    var invite = _waiverService.CreateWaiverInvitation(waiverId, eventParticipantId, token).Wait();
-                    var email = _waiverService.SendAcceptanceEmail(invite).Wait();
+                    _waiverService.CreateWaiverInvitation(waiverId, eventParticipantId, token).Select(invite => _waiverService.SendAcceptanceEmail(invite).Subscribe()).Wait();                   
                     return Ok();
                 }
                 catch (Exception e)

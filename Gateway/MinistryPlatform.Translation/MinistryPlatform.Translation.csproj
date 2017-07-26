@@ -172,6 +172,8 @@
     <Compile Include="Models\MpMedicalAllergy.cs" />
     <Compile Include="Models\MpMedication.cs" />
     <Compile Include="Models\MpEventWaivers.cs" />
+    <Compile Include="Models\MpSimpleContact.cs" />
+    <Compile Include="Models\MpWaivers.cs" />
     <Compile Include="Models\MpMedicalInformation.cs" />
     <Compile Include="Models\MpRecordID.cs" />
     <Compile Include="Models\MpWaiverResponse.cs" />

@@ -41,7 +41,7 @@ namespace crds_angular.Services
 
         public IObservable<WaiverDTO> GetWaiver(int waiverId)
         {            
-            return _waiverRepository.GetWaiver(waiverId).Select<MpWaivers, WaiverDTO>(w => new WaiverDTO
+            return _waiverRepository.GetWaiver(waiverId).Select(w => new WaiverDTO
             {
                 WaiverId = w.WaiverId,
                 WaiverName = w.WaiverName,
@@ -81,8 +81,8 @@ namespace crds_angular.Services
                                                                                 template.FromEmailAddress,
                                                                                 template.ReplyToContactId,
                                                                                 template.ReplyToEmailAddress,
-                                                                                contactInvitation.Contact.Contact_ID,
-                                                                                contactInvitation.Contact.Email_Address,
+                                                                                contactInvitation.Contact.ContactId,
+                                                                                contactInvitation.Contact.EmailAddress,
                                                                                 mergeData);
                 return _communicationRepository.SendMessage(comm);
             });
@@ -91,26 +91,27 @@ namespace crds_angular.Services
         public IObservable<ContactInvitation> CreateWaiverInvitation(int waiverId, int eventParticipantId, string token)
         {           
             var contactId = _authenticationRepository.GetContactId(token);
-            var contact = _contactRepository.GetContactById(contactId);
-
-            return _waiverRepository.CreateEventParticipantWaiver(waiverId, eventParticipantId, contactId).SelectMany(eventParticipantWaiver =>
+            return _contactRepository.GetSimpleContact(contactId).SelectMany(con =>
             {
-                // create private invite
-                var mpInvitation = new MpInvitation
-                {
-                    SourceId = eventParticipantWaiver.EventParticipantId,
-                    EmailAddress = contact.Email_Address,
-                    InvitationType = _confiurationWrapper.GetConfigIntValue("WaiverInvitationType"),
-                    RecipientName = $"{contact.Nickname ?? contact.First_Name} {contact.Last_Name}",
-                    RequestDate = DateTime.Now
-                };
+               return _waiverRepository.CreateEventParticipantWaiver(waiverId, eventParticipantId, contactId).SelectMany(eventParticipantWaiver =>
+               {
+                   // create private invite
+                   var mpInvitation = new MpInvitation
+                   {
+                       SourceId = eventParticipantWaiver.EventParticipantId,
+                       EmailAddress = con.EmailAddress,
+                       InvitationType = _confiurationWrapper.GetConfigIntValue("WaiverInvitationType"),
+                       RecipientName = $"{con.Nickname ?? con.FirstName} {con.LastName}",
+                       RequestDate = DateTime.Now
+                   };
 
-                return _invitationRepository.CreateInvitationAsync(mpInvitation).Select(invite => new ContactInvitation
-                {
-                    Contact = contact,
-                    Invitation = invite
-                });
-            });            
+                   return _invitationRepository.CreateInvitationAsync(mpInvitation).Select(invite => new ContactInvitation
+                   {
+                       Contact = con,
+                       Invitation = invite
+                   });
+               });
+           });
         }
     }
 
