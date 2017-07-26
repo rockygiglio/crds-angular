@@ -2,7 +2,7 @@
 
 namespace crds_angular.Models.Crossroads.Trip
 {
-    public class TripDocuments
+    public class TripDocument
     {
         [JsonProperty(PropertyName = "eventParticipantDocumentId")]
         public int EventParticipantDocumentId { get; set; }

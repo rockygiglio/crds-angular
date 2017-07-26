@@ -222,9 +222,8 @@ namespace crds_angular.Controllers.API
             });
         }
 
-        [ResponseType(typeof(TripDocuments))]
+        [ResponseType(typeof(TripDocument))]
         [VersionedRoute(template: "trip/ipromise/{tripEventParticipantId}", minimumVersion: "1.0.0")]
-        [Route("trip/ipromise/{tripEventParticipantId}")]
         [HttpGet]
         public IHttpActionResult GetIPromiseDocument(int tripEventParticipantId)
         {
@@ -244,9 +243,8 @@ namespace crds_angular.Controllers.API
         }
 
         [VersionedRoute(template: "trip/ipromise", minimumVersion: "1.0.0")]
-        [Route("trip/ipromise")]
         [HttpPost]
-        public IHttpActionResult ReceiveIPromiseDocument([FromBody] TripDocuments iPromiseDoc)
+        public IHttpActionResult ReceiveIPromiseDocument([FromBody] TripDocument iPromiseDoc)
         {
             return Authorized(token =>
             {
