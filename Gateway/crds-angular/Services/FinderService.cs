@@ -675,6 +675,11 @@ namespace crds_angular.Services
                 return null;
             }
 
+            if (groupsByType.Count == 0)
+            {
+                return new List<PinDto>();
+            }
+
             var cloudsearchQueryString = groupsByType.Aggregate("(or ", (current, @group) => current + ("groupid:" + @group.GroupId + " ")) +")";
             // use the groups found to get full dataset from AWS
             var cloudReturn = _awsCloudsearchService.SearchConnectAwsCloudsearch(cloudsearchQueryString, "_all_fields");
