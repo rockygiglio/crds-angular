@@ -12,6 +12,7 @@
      *** Implementations ***
      **********************/
     function activate() {
+
       vm.myTrips = MyTrips.myTrips;
 
       _.each(vm.myTrips, (trip) => {
