@@ -24,6 +24,7 @@
       scope.shareUrl = TripsUrlService.ShareUrl(scope.trip.eventParticipantId);
       scope.showWaiver = showWaiver;
       scope.selectWaiver = selectWaiver;
+      scope.hasDocuments = hasDocuments;
 
       function goalMet(totalRaised, goal) {
         return (totalRaised >= goal);
@@ -43,8 +44,8 @@
         // TODO: navigate to waiver
       }
 
-      function hasDocuments(waivers, iPromise) {
-        return (waivers !== null && waivers.length) || iPromise;
+      function hasDocuments(waivers) {
+        return waivers !== null && waivers.length;
       }
     }
   }
