@@ -4,20 +4,21 @@
   MyTripsController.$inject = ['$log', 'MyTrips', 'TripsUrlService', 'Trip'];
 
   function MyTripsController($log, MyTrips, TripsUrlService, Trip) {
-    var vm = this;
+    let vm = this;
 
     activate();
 
-    /////////////////////////
-    //// Implementations ////
-    /////////////////////////
+    /***********************
+     *** Implementations ***
+     **********************/
     function activate() {
       vm.myTrips = MyTrips.myTrips;
 
-      _.each(vm.myTrips, function(trip) {
-        trip.waivers = Trip.Waivers.get({ eventId: trip.eventId }).$promise.then((res) => {
-          console.log(res);
-        }).catch(console.error);
+      _.each(vm.myTrips, (trip) => {
+        Trip.Waivers.get({ eventId: trip.eventId }).$promise.then((res) => {
+          trip.waivers = res;
+        }).catch($log.error);
+
         trip.shareUrl = TripsUrlService.ShareUrl(trip.eventParticipantId);
       });
     }

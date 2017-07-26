@@ -30,7 +30,7 @@
       }
 
       function cardName(first, last) {
-        return first + ' ' + last;
+        return `${first} ${last}`;
       }
 
       function showWaiver(contactId) {
@@ -40,7 +40,7 @@
       }
 
       function selectWaiver(waiverId) {
-        $log.log(waiverId);
+        // TODO: navigate to waiver
       }
 
       function hasDocuments(waivers, iPromise) {

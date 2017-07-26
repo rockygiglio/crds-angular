@@ -8,7 +8,7 @@
     <div ng-show="tripsController.myTrips.length === 0" dynamic-content="$root.MESSAGES.noActiveTrips.content | html"></div>
 
     <div ng-repeat="trip in tripsController.myTrips">
-      <my-trip-card trip="trip" waivers="tripsController.waivers"></my-trip-card>
+      <my-trip-card trip="trip" waivers="trip.waivers"></my-trip-card>
     </div>
 
   </div><!--/my-trip, col-->
