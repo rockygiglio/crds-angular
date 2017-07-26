@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Crossroads.Web.Common.Configuration;
@@ -36,6 +38,37 @@ namespace MinistryPlatform.Translation.Repositories
                 }               
                 return Disposable.Empty;
             });
+        }
+
+        public IObservable<MpWaivers> GetEventWaivers(int eventId)
+        {          
+            var apiToken = ApiLogin();
+            const string columnList = "Waiver_ID_Table.[Waiver_ID], Waiver_ID_Table.[Waiver_Name], Waiver_ID_Table.[Waiver_Text], cr_Event_Waivers.[Required]";
+            var result = _ministryPlatformRestRepository.UsingAuthenticationToken(apiToken).Search<MpWaivers>($"Event_ID = {eventId} AND Active=1", columnList).ToList();
+            return result.ToObservable();
+        }
+
+        public IObservable<MpEventParticipantWaiver> CreateEventParticipantWaiver(int waiverId, int eventParticipantId, int contactId)
+        {
+            return Observable.Start<MpEventParticipantWaiver>(() =>
+            {
+                var apiToken = ApiLogin();
+                var eventParticipantWaiver = new MpEventParticipantWaiver
+                {
+                    Accepted = false,
+                    EventParticipantId = eventParticipantId,
+                    WaiverId = waiverId,
+                    SignerId = contactId
+                };
+                var exists = _ministryPlatformRestRepository.UsingAuthenticationToken(apiToken).Search<MpEventParticipantWaiver>(
+                    $"Event_Participant_ID_Table.[Event_Participant_ID] = {eventParticipantId} AND Waiver_ID_Table.[Waiver_ID] = {waiverId}");
+                if (exists.Count > 0)
+                {
+                    return exists.First();
+                }
+                return _ministryPlatformRestRepository.UsingAuthenticationToken(apiToken).Create(eventParticipantWaiver);
+
+            });           
         }
     }
 }

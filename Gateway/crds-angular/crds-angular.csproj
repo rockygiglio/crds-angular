@@ -349,7 +349,8 @@
     <Compile Include="Exceptions\NotHeadOfHouseholdException.cs" />
     <Compile Include="Exceptions\PaymentTypeNotFoundException.cs" />
     <Compile Include="Exceptions\TripFullException.cs" />
-    <Compile Include="Models\Crossroads\Campaign\PledgeCampaignSummaryDto.cs" />
+    <Compile Include="Models\Crossroads\Events\Campaign\PledgeCampaignSummaryDto.cs" />
+    <Compile Include="Models\Crossroads\Waivers\ContactInvitation.cs" />
     <Compile Include="Models\Crossroads\Waivers\WaiverDTO.cs" />
     <Compile Include="Models\Crossroads\GoVolunteer\DashboardDatum.cs" />
     <Compile Include="Models\AwsCloudsearch\AwsBoundingBox.cs" />

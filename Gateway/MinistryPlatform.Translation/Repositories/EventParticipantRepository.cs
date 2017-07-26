@@ -1,9 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive.Linq;
 using Crossroads.Utilities.FunctionalHelpers;
-using Crossroads.Utilities.Interfaces;
-using Crossroads.Web.Common;
 using Crossroads.Web.Common.Configuration;
 using Crossroads.Web.Common.MinistryPlatform;
 using Crossroads.Web.Common.Security;
@@ -141,6 +140,22 @@ namespace MinistryPlatform.Translation.Repositories
             catch (Exception e)
             {
                 throw new ApplicationException("GetEventParticipants failed", e);
+            }
+        }
+
+        public IObservable<MpEventParticipant> GetEventParticpant(int eventParticipantId)
+        {
+            try
+            {
+                return Observable.Start(() =>
+                {
+                    var columns = "Event_Participants.[Event_Participant_ID],Event_ID_Table.[Event_Title],Participant_ID_Table.[Participant_ID],Participant_ID_Table_Contact_ID_Table.[Contact_ID],Event_ID_Table.[Event_ID],Event_ID_Table.[Event_Start_Date],Participation_Status_ID_Table.[Participation_Status_ID]";
+                    return _ministryPlatformRestRepository.UsingAuthenticationToken(ApiLogin()).Get<MpEventParticipant>(eventParticipantId, columns);
+                });
+            }
+            catch (Exception e)
+            {
+                return Observable.Throw<MpEventParticipant>(new Exception("Unable to get the event particpant"));
             }
         }
 

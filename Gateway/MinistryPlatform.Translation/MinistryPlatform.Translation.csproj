@@ -310,7 +310,7 @@
     <Compile Include="Repositories\GroupRepository.cs" />
     <Compile Include="Repositories\Interfaces\IInvitationRepository.cs" />
     <Compile Include="Repositories\Interfaces\Rules\IRule.cs" />
-    <Compile Include="Repositories\InvitationlRepository.cs" />
+    <Compile Include="Repositories\InvitationRepository.cs" />
     <Compile Include="Repositories\GroupToolRepository.cs" />
     <Compile Include="Repositories\Interfaces\GoCincinnati\IGroupConnectorRepository.cs" />
     <Compile Include="Repositories\Interfaces\GoCincinnati\IRegistrationRepository.cs" />

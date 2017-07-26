@@ -1,8 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Reactive;
+using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
+using crds_angular.Exceptions.Models;
 using crds_angular.Models.Crossroads.Waivers;
 using crds_angular.Security;
 using crds_angular.Services.Interfaces;
@@ -34,7 +38,7 @@ namespace crds_angular.Controllers.API
         {
             return await Authorized(token =>
             {
-                var waivers = _eventService.EventWaivers(eventId).Wait();
+                var waivers = _waiverService.EventWaivers(eventId).ToList().Wait();
                 return Ok(waivers);
             });
         }
@@ -46,11 +50,31 @@ namespace crds_angular.Controllers.API
         {
             return await Authorized(token =>
             {
-                //var waiver = _waiverService.GetWaiver(waiverId).Wait();
-                return Ok();
+                var waiver = _waiverService.GetWaiver(waiverId).Wait();
+                return Ok(waiver);
             });
         }
 
+        [VersionedRoute(template: "waivers/{waiverId}/send/{eventParticipantId}", minimumVersion: "1.0.0")]
+        [HttpPost]
+        public async Task<IHttpActionResult> SendAcceptWaiverEmail(int waiverId, int eventParticipantId)
+        {
+            return await Authorized(token =>
+            {
+                try
+                {
+                    //TODO: make sure the event participant is the logged in user...
+                    var invite = _waiverService.CreateWaiverInvitation(waiverId, eventParticipantId, token).Wait();
+                    var email = _waiverService.SendAcceptanceEmail(invite).Wait();
+                    return Ok();
+                }
+                catch (Exception e)
+                {
+                    var apiError = new ApiErrorDto("Failure to create Invitation", e);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+            });
+        }
 
     }
 }

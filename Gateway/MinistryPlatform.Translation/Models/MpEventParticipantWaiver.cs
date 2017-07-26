@@ -10,7 +10,7 @@ using Newtonsoft.Json.Serialization;
 namespace MinistryPlatform.Translation.Models
 {
     [MpRestApiTable(Name = "cr_Event_Participant_Waivers")]
-    class MpEventParticipantWaiver
+    public class MpEventParticipantWaiver
     {
         [JsonProperty(PropertyName = "Event_Participant_Waiver_ID")]
         public int EventParticipantWaiverId { get; set; }
@@ -24,7 +24,7 @@ namespace MinistryPlatform.Translation.Models
         [JsonProperty(PropertyName = "Accepted")]
         public bool Accepted { get; set; }
 
-        [JsonProperty(PropertyName = "Contact_ID")]
+        [JsonProperty(PropertyName = "Signee_Contact_ID")]
         public int SignerId { get; set; }
     }
 }

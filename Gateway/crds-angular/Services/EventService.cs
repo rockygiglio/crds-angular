@@ -391,30 +391,6 @@ namespace crds_angular.Services
             return _eventService.CreateEventGroup(eventGroup);
         }
 
-        public IObservable<List<WaiverDTO>> EventWaivers(int eventId)
-        {
-            return Observable.Create<List<WaiverDTO>>(observer =>
-            {
-                try
-                {
-                    var waivers = _eventService.GetWaivers(eventId).Select(w => new WaiverDTO
-                    {
-                        WaiverId = w.WaiverId,
-                        Required = w.Required,
-                        WaiverName = w.WaiverName,
-                        WaiverText = w.WaiverText
-                    }).ToList();
-                    observer.OnNext(waivers);
-                    observer.OnCompleted();
-                }
-                catch (Exception e)
-                {
-                    observer.OnError(e);
-                }
-                return Disposable.Empty;
-            });
-        }
-
         private void AddEquipment(EventRoomEquipmentDto equipment, int eventId, EventRoomDto room, string token)
         {
             var equipmentReservation = new MpEquipmentReservationDto();
