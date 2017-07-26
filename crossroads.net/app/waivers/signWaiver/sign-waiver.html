@@ -1,0 +1,26 @@
+<div class="text-right push-top">
+  <a ui-sref="mytrips" class="btn btn-default btn-block-mobile">Cancel</a>
+
+  <loading-button input-type="button"
+    normal-text="Send Email"
+    loading-text="Sending..."
+    loading="$ctrl.processing"
+    loading-class="disabled"
+    input-classes="btn btn-primary btn-block-mobile"
+    data-target="#confirmModal"></loading-button>
+</div>
+
+<div class="modal fade" id="confirmModal" role="dialog" tabindex="-1" aria-hidden="true" aria-labelledby="confirmModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header"><h5 class="modal-title" id="confirmModalLabel">@ViewData["Title"]</h5></div>
+      <div class="modal-body">
+        <p>@ViewBag.TransferMessage</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn" data-dismiss="modal">No</button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="$ctrl.submit()">Yes</button>
+      </div>
+    </div>
+  </div>
+</div>

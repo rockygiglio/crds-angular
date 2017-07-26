@@ -3,9 +3,9 @@
 
   module.exports = MyTripCard;
 
-  MyTripCard.$inject = ['$log', '$cookies', 'TripsUrlService'];
+  MyTripCard.$inject = ['$log', 'TripsUrlService', '$cookies', '$state'];
 
-  function MyTripCard($log, $cookies, TripsUrlService) {
+  function MyTripCard($log, TripsUrlService, $cookies, $state) {
     return {
       restrict: 'EA',
       transclude: true,
@@ -23,7 +23,7 @@
       scope.goalMet = goalMet;
       scope.shareUrl = TripsUrlService.ShareUrl(scope.trip.eventParticipantId);
       scope.showWaiver = showWaiver;
-      scope.selectWaiver = selectWaiver;
+      scope.signWaiver = signWaiver;
       scope.hasDocuments = hasDocuments;
 
       function goalMet(totalRaised, goal) {
@@ -40,8 +40,8 @@
         return contactId === parseInt(loggedInContact, 10);
       }
 
-      function selectWaiver(waiverId) {
-        // TODO: navigate to waiver
+      function signWaiver(waiverId, eventParticipantId) {
+        $state.go('sign-waiver', { waiverId, eventParticipantId });
       }
 
       function hasDocuments(waivers) {

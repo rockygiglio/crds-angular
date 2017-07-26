@@ -28,7 +28,7 @@
       SIGNUP: 'crossroads.signup',
       TRIPS: 'crossroads.trips',
       INVOICES: 'crossroads.invoices',
-
+      WAIVERS: 'crossroads.waivers'
     },
     ATTRIBUTE_TYPE_IDS: {
       ABUSE_HISTORY: 69,
