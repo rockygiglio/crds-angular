@@ -26,7 +26,7 @@
           abstract: true,
           template: '<ui-view/>',
           resolve: {
-            Meta: ['SystemPage', '$state', function(SystemPage, $state) {
+            Meta: ['SystemPage', '$state', '$rootScope', function(SystemPage, $state, $rootScope) {
               return SystemPage.get({
                 state: $state.next.name
               }).$promise.then(
@@ -36,7 +36,7 @@
                         $state.next.data = {};
                       }
 
-                      $state.params.renderLegacyStyles = (typeof systemPage.systemPages[0].legacyStyles !== 'undefined'
+                      $rootScope.doRenderLegacyStyles = (typeof systemPage.systemPages[0].legacyStyles !== 'undefined'
                         ? Boolean(parseInt(systemPage.systemPages[0].legacyStyles))
                         : true); // revert to value set on route
 
@@ -375,39 +375,6 @@
             isProtected: true
           }
         })
-        .state('explore', {
-          parent: 'noHeaderOrFooter',
-          url: '/explore',
-          templateUrl: 'explore/explore.html',
-          data: {
-            meta: {
-              title: 'Explore',
-              description: ''
-            }
-          }
-        })
-        .state('ng2test', {
-          parent: 'noHeaderOrFooter',
-          url: '/ng2test',
-          template: '<ng2-test></ng2-test>',
-          data: {
-            meta: {
-              title: 'Ng2Test',
-              description: ''
-            }
-          }
-        })
-        .state('ng2testcmsdata', {
-          parent: 'noHeaderOrFooter',
-          url: '/ng2testcmsdata',
-          template: '<ng2-test-cms-data></ng2-test-cms-data>',
-          data: {
-            meta: {
-              title: 'Ng2TestCMSData',
-              description: ''
-            }
-          }
-        })
         .state('superbowl', {
           parent: 'screenWidth',
           url: '/superbowl',
@@ -527,18 +494,6 @@
               return Volunteer.Family.query({
                 contactId: crds_utilities.getCookie('userId')
               }).$promise;
-            }
-          }
-        })
-        .state('crdsStylesTest', {
-          parent: 'noSideBar',
-          url: '/stylesTest',
-          template: '/stylesTest',
-          data: {
-            renderLegacyStyles: false,
-            meta: {
-              title: 'Styles Test',
-              description: ''
             }
           }
         })

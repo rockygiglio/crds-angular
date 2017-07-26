@@ -7,6 +7,29 @@
     <span class="text-muted">{{ cardName(trip.eventParticipantFirstName, trip.eventParticipantLastName) }}</span> <span class="hidden-xs">&middot;</span> <br class="visible-xs" /> <span class="text-muted trip-date">{{trip.tripStartDate}} - {{trip.tripEnd}}</span>
   </div><!-- /card-heading -->
 
+  <!-- Documents -->
+  <div class="col-xs-12 documents" ng-show="showIPromise(trip.contactId)">
+    <h5 class="flush-bottom">Sign Documents</h5>
+
+    <!-- I Promise -->
+    <div class="go-trip-document" ng-show="showIPromise(trip.contactId)">
+      <button class="btn btn-default go-trip-document-btn" ng-disabled="trip.iPromiseSigned" ng-click="signIPromise(trip.eventParticipantId)">
+        <span ng-hide="trip.iPromiseSigned">
+          <svg class="icon icon-2 text-warning" viewBox="0 0 256 256">
+            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/assets/svgs/icons.svg#exclamation-circle"></use>
+          </svg>
+        </span>
+        <span ng-show="trip.iPromiseSigned">
+          <svg class="icon icon-2 text-success" viewBox="0 0 256 256">
+            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/assets/svgs/icons.svg#check-circle"></use>
+          </svg>
+        </span>
+
+        Sign the I Promise
+      </button>
+    </div><!-- /i-promise -->
+  </div><!-- /documents -->
+
   <!-- Fund Progress Bar -->
   <div class="col-xs-12 col-top fund-progress">
     <p class="flush-bottom text-right trip-funding" style="width: 100%">${{trip.totalRaised}} Funded</p>

@@ -34,10 +34,8 @@
   @import 'modules/grid.scss';
   @import 'modules/growl.scss';
   @import 'modules/menu-icon.scss';
-  @import 'modules/jquery.fullPage.scss';
   @import 'modules/mock-controls.scss';
   @import 'modules/modal.scss';
-  @import 'modules/modal-ng2.scss';
   @import 'modules/password.scss';
   @import 'modules/roll-call.scss';
   @import 'modules/sprites.scss';
@@ -71,7 +69,6 @@
   @import 'pages/corkboard.scss';
   @import 'pages/dashboard.scss';
   @import 'pages/easter.scss';
-  @import 'pages/explore.scss';
   @import 'pages/give.scss';
   @import 'pages/go-volunteer.scss';
   @import 'pages/go-anywhere.scss';
@@ -94,7 +91,9 @@
   @import 'pages/superbowl.scss';
   @import 'pages/thefeed.scss';
   @import 'pages/errorpage.scss';
+  @import 'pages/extend-the-weekend.scss';
   @import 'pages/go_trip_giving.scss';
+  @import 'pages/go-trip-mytrips.scss';
   @import 'pages/group_finder.scss';
   @import 'pages/group-search-results.scss';
   @import 'pages/profile.scss';
@@ -108,12 +107,12 @@
   @import 'lib/angular-aside.scss';
   @import 'lib/angular-growl.scss';
   @import 'lib/ng-img-crop.scss';
-  @import url('//crossroads-media.s3.amazonaws.com/documents/styles/hotfix-y2.css');
+  @import url('//crossroads-media.s3.amazonaws.com/documents/styles/hotfix-y5.css');
   @import '../node_modules/ng-table/dist/ng-table.css';
 }
 
 .noscroll {
-  position: fixed;
+  position: fixed !important;
   top: 0;
   right: 0;
   bottom: 0;

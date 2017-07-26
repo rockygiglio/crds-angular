@@ -174,7 +174,7 @@ namespace crds_angular.Controllers.API
         {
             try
             {
-                var address = _finderService.GetAddressForIp(ipAddress.Replace('$', '.'));
+                var address = _finderService.GetAddressForIp(ipAddress.Replace('$','.'));
                 return Ok(address);
             }
             catch (Exception ex)
@@ -392,6 +392,11 @@ namespace crds_angular.Controllers.API
                 var result = new PinSearchResultsDto(new GeoCoordinates(originCoords.Latitude, originCoords.Longitude), pinsInRadius);
 
                 return Ok(result);
+            }
+            catch (InvalidAddressException ex)
+            {
+                var apiError = new ApiErrorDto("Invalid Address", ex, HttpStatusCode.PreconditionFailed);
+                throw new HttpResponseException(apiError.HttpResponseMessage);
             }
             catch (Exception ex)
             {

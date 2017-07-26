@@ -161,6 +161,25 @@ namespace MinistryPlatform.Translation.Repositories
             }
         }
 
+        public MpContact GetEmailFromDonorId(int donorId)
+        {
+            MpContact contact = new MpContact();
+            try
+            {
+                string searchFilter = $"Donor_Record={donorId}";
+                var foundEmails = _ministryPlatformRest.UsingAuthenticationToken(base.ApiLogin()).Search<MpContact>(searchFilter, "Contact_ID, Donor_Record, Email_Address");
+                if (foundEmails.Count == 1)
+                    contact = foundEmails.First();
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException(
+                    string.Format("GetEmailFromDonorId failed.  Donor Id: {0}", donorId), ex);
+            }
+
+            return contact;
+        }
+
         public int GetContactIdByEmail(string email)
         {
             var records = _ministryPlatformService.GetRecordsDict(_configurationWrapper.GetConfigIntValue("Contacts"), ApiLogin(), (email));

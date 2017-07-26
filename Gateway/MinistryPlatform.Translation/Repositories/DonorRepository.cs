@@ -396,11 +396,10 @@ namespace MinistryPlatform.Translation.Repositories
                 };
               
                 var storedProcReturn = _ministryPlatformRestRepository.UsingAuthenticationToken(token).GetFromStoredProc<MpContactDonor>("api_crds_Get_Contact_Donor", parameters);
-                
-                if (storedProcReturn != null && storedProcReturn.Count > 0)
-                {
-                    donor = storedProcReturn.FirstOrDefault()?.FirstOrDefault();
-                }
+
+
+                if (storedProcReturn != null && storedProcReturn.Count > 0 && storedProcReturn[0].Count > 0)
+                    donor = storedProcReturn[0].First();
                 else
                 {
                     donor = new MpContactDonor
@@ -604,7 +603,7 @@ namespace MinistryPlatform.Translation.Repositories
                 ? program.CommunicationTemplateId.Value
                 : _configurationWrapper.GetConfigIntValue("DefaultGiveConfirmationEmailTemplate");
 
-            SendEmail(communicationTemplateId, donorId, donationAmount, pymtType, setupDate, program.Name, EmailReason, null, pledgeName);
+            SendEmail(communicationTemplateId, donorId, donationAmount, pymtType, setupDate, setupDate, program.Name, EmailReason, null, pledgeName);
         }
 
         public MpContactDonor GetEmailViaDonorId(int donorId)
@@ -645,13 +644,15 @@ namespace MinistryPlatform.Translation.Repositories
             return donor;
         }
 
+  
+
         // TODO Made this virtual so could mock in a unit test.  Probably ought to refactor to a separate class - shouldn't have to mock the class we're testing...
-        public virtual void SendEmail(int communicationTemplateId, int donorId, decimal donationAmount, string paymentType, DateTime setupDate, string program, string emailReason, string frequency = null, string pledgeName = null)
+        public virtual void SendEmail(int communicationTemplateId, int donorId, decimal donationAmount, string paymentType, DateTime setupDate, DateTime startDate, string program, string emailReason, string frequency = null, string pledgeName = null)
         {
             var template = _communicationService.GetTemplate(communicationTemplateId);
-            var defaultContact = _contactService.GetContactById(AppSetting("DefaultGivingContactEmailId"));
-            var contact = GetEmailViaDonorId(donorId);
-
+            var defaultContactId = AppSetting("DefaultGivingContactEmailId");
+            var defaultContactEmail = _contactService.GetContactEmail(defaultContactId);
+            MpContact contact = _contactService.GetEmailFromDonorId(donorId);
             var comm = new MpCommunication
             {
                 
@@ -659,16 +660,17 @@ namespace MinistryPlatform.Translation.Repositories
                 DomainId = 1,
                 EmailBody = template.Body,
                 EmailSubject = template.Subject,
-                FromContact =  new MpContact { ContactId = defaultContact.Contact_ID, EmailAddress = defaultContact.Email_Address },
-                ReplyToContact = new MpContact { ContactId = defaultContact.Contact_ID, EmailAddress = defaultContact.Email_Address },
-                ToContacts = new List<MpContact> {new MpContact{ContactId = contact.ContactId, EmailAddress = contact.Email}},
+                FromContact =  new MpContact { ContactId = defaultContactId, EmailAddress = defaultContactEmail },
+                ReplyToContact = new MpContact { ContactId = defaultContactId, EmailAddress = defaultContactEmail },
+                ToContacts = new List<MpContact> {new MpContact{ContactId = contact.ContactId, EmailAddress = contact.EmailAddress}},
                 MergeData = new Dictionary<string, object>
                 {
                     {"Program_Name", program},
                     {"Donation_Amount", donationAmount.ToString("N2")},
                     {"Donation_Date", setupDate.ToString("MM/dd/yyyy h:mmtt", _dateTimeFormat)},
                     {"Payment_Method", paymentType},
-                    {"Decline_Reason", emailReason}
+                    {"Decline_Reason", emailReason},
+                    {"Start_Date",  startDate.ToString("MM/dd/yyyy", _dateTimeFormat)}
                 }
             };
 
@@ -1006,9 +1008,10 @@ namespace MinistryPlatform.Translation.Repositories
             var templateId = recurringGift.ConsecutiveFailureCount >= 2 ? PaymentType.GetPaymentType(acctType).recurringGiftCancelEmailTemplateId : PaymentType.GetPaymentType(acctType).recurringGiftDeclineEmailTemplateId;
             var frequency = recurringGift.Frequency == 1 ? "Weekly" : "Monthly";
             var program = _programService.GetProgramById(Convert.ToInt32(recurringGift.ProgramId));
+            var startDate = recurringGift.StartDate.HasValue ? recurringGift.StartDate.Value : DateTime.Now;
             var amt = decimal.Round(recurringGift.Amount, 2, MidpointRounding.AwayFromZero);
 
-            SendEmail(templateId, recurringGift.DonorId, amt, paymentType, DateTime.Now, program.Name, error, frequency);
+            SendEmail(templateId, recurringGift.DonorId, amt, paymentType, DateTime.Now, startDate, program.Name, error, frequency);
         }
 
         public int GetDonorAccountPymtType(int donorAccountId)

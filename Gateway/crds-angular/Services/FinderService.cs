@@ -410,8 +410,8 @@ namespace crds_angular.Services
 
         public void AddUserDirectlyToGroup(User user, int groupid)
         {
-            //check to see if user exists in MP.
-            var contactId = _contactRepository.GetContactIdByEmail(user.email);
+            //check to see if user exists in MP. Exclude Guest Giver and Deceased status
+            var contactId = _contactRepository.GetActiveContactIdByEmail(user.email);
             if (contactId == 0)
             {
                 user.password = System.Web.Security.Membership.GeneratePassword(25, 10);
@@ -675,9 +675,16 @@ namespace crds_angular.Services
                 return null;
             }
 
-            var groupDTOs = groupsByType.Select(Mapper.Map<MpGroup, GroupDTO>).ToList();
+            if (groupsByType.Count == 0)
+            {
+                return new List<PinDto>();
+            }
 
-            var pins = this.TransformGroupDtoToPinDto(groupDTOs, finderType);
+            var cloudsearchQueryString = groupsByType.Aggregate("(or ", (current, @group) => current + ("groupid:" + @group.GroupId + " ")) +")";
+            // use the groups found to get full dataset from AWS
+            var cloudReturn = _awsCloudsearchService.SearchConnectAwsCloudsearch(cloudsearchQueryString, "_all_fields");
+
+            var pins = ConvertFromAwsSearchResponse(cloudReturn);
 
             return pins;
         }
