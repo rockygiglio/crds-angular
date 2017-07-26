@@ -19,8 +19,8 @@ export default function WaiversRoutes($stateProvider) { /* , $urlMatcherFactoryP
         $state: '$state',
         loggedin: crds_utilies.checkLoggedin,
         waiversService: 'WaiversService',
-        Waiver() {
-          return true;
+        Waiver($state, waiversService) {
+          return waiversService.getWaiver($state.toParams.waiverId);
         }
       }
     })
