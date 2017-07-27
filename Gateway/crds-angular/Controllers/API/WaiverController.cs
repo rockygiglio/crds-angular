@@ -71,5 +71,25 @@ namespace crds_angular.Controllers.API
             });
         }
 
+        [VersionedRoute(template: "waivers/accept/{guid}", minimumVersion: "1.0.0")]
+        [HttpPost]
+        public async Task<IHttpActionResult> AcceptWaiver(int guid)
+        {
+            return await Authorized(token =>
+            {
+                try
+                {
+                    //TODO: make sure the event participant is the logged in user...
+                    //TODO: accept waiver
+
+                    return Ok();
+                }
+                catch (Exception e)
+                {
+                    var apiError = new ApiErrorDto("Failure to accept waiver", e);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+            });
+        }
     }
 }
