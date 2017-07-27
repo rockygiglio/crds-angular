@@ -54,22 +54,23 @@ namespace crds_angular.Services
         public IObservable<WaiverDTO> EventWaivers(int eventId, string token)
         {
             var contactId = _authenticationRepository.GetContactId(token);
-            return _waiverRepository.GetEventWaivers(eventId)
-                .Zip(_waiverRepository.GetEventParticipantWaiversByContact(eventId, contactId),
-                     (eventWaivers, eventParticipantWaivers) =>
-                     {
-                         if (eventWaivers.WaiverId == eventParticipantWaivers.WaiverId)
-                         {
-                             eventWaivers.Accepted = eventParticipantWaivers.Accepted;
-                         }
-                          return eventWaivers;
-                     }).DistinctUntilChanged().Select(w => new WaiverDTO
-                     {
-                         WaiverId = w.WaiverId,
-                         Required = w.Required,
-                         WaiverName = w.WaiverName,
-                         WaiverText = w.WaiverText
-                     });
+            var waivers = _waiverRepository.GetEventWaivers(eventId);
+            var evtParWaivers = _waiverRepository.GetEventParticipantWaiversByContact(eventId, contactId);
+
+            var activeWaivers = waivers.SelectMany(w =>
+            {
+                return evtParWaivers.Where(ep => ep.WaiverId == w.WaiverId).Select(x => new WaiverDTO
+                {
+                    WaiverId = w.WaiverId,
+                    Required = w.Required,
+                    WaiverName = w.WaiverName,
+                    WaiverText = w.WaiverText,
+                    Accepted = x.Accepted
+                });
+            });
+            
+            // now get the waivers from waivers that aren't in activeWaivers, combine them and return 
+            return activeWaivers;
         }
 
         public IObservable<int> SendAcceptanceEmail(ContactInvitation contactInvitation)

@@ -31,7 +31,7 @@ namespace crds_angular.test.controllers
         public TripControllerTest()
         {
             _tripService = new Mock<ITripService>();
-            _fixture = new TripController(_tripService.Object, new Mock<IUserImpersonationService>().Object, new Mock<IAuthenticationRepository>().Object);
+            //_fixture = new TripController(_tripService.Object, new Mock<IUserImpersonationService>().Object, new Mock<IAuthenticationRepository>().Object);
             authType = "auth_type";
             authToken = "auth_token";
             _fixture.Request = new HttpRequestMessage();
