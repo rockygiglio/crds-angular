@@ -70,5 +70,10 @@ namespace MinistryPlatform.Translation.Repositories
 
             });           
         }
+
+        public IObservable<MpEventParticipantWaiver> GetEventParticipantWaiversByContact(int eventId, int contactId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

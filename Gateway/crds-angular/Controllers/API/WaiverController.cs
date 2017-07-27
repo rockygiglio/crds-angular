@@ -34,8 +34,16 @@ namespace crds_angular.Controllers.API
         {
             return await Authorized(token =>
             {
-                var waivers = _waiverService.EventWaivers(eventId).ToList().Wait();
-                return Ok(waivers);
+                try
+                {
+                    var waivers = _waiverService.EventWaivers(eventId, token).ToList().Wait();
+                    return Ok(waivers);
+                }
+                catch (Exception e)
+                {
+                    var apiError = new ApiErrorDto("Failed to get Event Waivers", e);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
             });
         }
 
@@ -46,8 +54,16 @@ namespace crds_angular.Controllers.API
         {
             return await Authorized(token =>
             {
-                var waiver = _waiverService.GetWaiver(waiverId).Wait();
-                return Ok(waiver);
+                try
+                {
+                    var waiver = _waiverService.GetWaiver(waiverId).Wait();
+                    return Ok(waiver);
+                }
+                catch (Exception e)
+                {
+                    var apiError = new ApiErrorDto("Failed to get waiver with id {waiverId}", e);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
             });
         }
 

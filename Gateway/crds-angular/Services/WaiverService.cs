@@ -51,15 +51,25 @@ namespace crds_angular.Services
             });
         }
 
-        public IObservable<WaiverDTO> EventWaivers(int eventId)
+        public IObservable<WaiverDTO> EventWaivers(int eventId, string token)
         {
-            return _waiverRepository.GetEventWaivers(eventId).Select(w => new WaiverDTO
-            {
-                WaiverId = w.WaiverId,
-                Required = w.Required,
-                WaiverName = w.WaiverName,
-                WaiverText = w.WaiverText
-            });
+            var contactId = _authenticationRepository.GetContactId(token);
+            return _waiverRepository.GetEventWaivers(eventId)
+                .Zip(_waiverRepository.GetEventParticipantWaiversByContact(eventId, contactId),
+                     (eventWaivers, eventParticipantWaivers) =>
+                     {
+                         if (eventWaivers.WaiverId == eventParticipantWaivers.WaiverId)
+                         {
+                             eventWaivers.Accepted = eventParticipantWaivers.Accepted;
+                         }
+                          return eventWaivers;
+                     }).DistinctUntilChanged().Select(w => new WaiverDTO
+                     {
+                         WaiverId = w.WaiverId,
+                         Required = w.Required,
+                         WaiverName = w.WaiverName,
+                         WaiverText = w.WaiverText
+                     });
         }
 
         public IObservable<int> SendAcceptanceEmail(ContactInvitation contactInvitation)

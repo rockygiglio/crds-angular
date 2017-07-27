@@ -10,5 +10,6 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
         IObservable<MpEventWaivers> GetEventWaivers(int eventId);
 
         IObservable<MpEventParticipantWaiver> CreateEventParticipantWaiver(int waiverId, int eventParticipantId, int contactId);
+        IObservable<MpEventParticipantWaiver> GetEventParticipantWaiversByContact(int eventId, int contactId);
     }
 }

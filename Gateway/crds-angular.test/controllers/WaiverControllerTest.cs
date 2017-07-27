@@ -70,7 +70,7 @@ namespace crds_angular.test.controllers
                 WaiverText = "You agree to give some of your stuff"
             };
 
-            _waiverService.Setup(m => m.EventWaivers(eventId)).Returns(Observable.Create<WaiverDTO>(observer =>
+            _waiverService.Setup(m => m.EventWaivers(eventId, authToken)).Returns(Observable.Create<WaiverDTO>(observer =>
             {
                 observer.OnNext(waiverDto1);
                 observer.OnNext(waiverDto2);
@@ -103,7 +103,7 @@ namespace crds_angular.test.controllers
                 WaiverText = "You agree to give some of your stuff"
             };
 
-            _waiverService.Setup(m => m.EventWaivers(eventId)).Returns(Observable.Create<WaiverDTO>(observer =>
+            _waiverService.Setup(m => m.EventWaivers(eventId, authToken)).Returns(Observable.Create<WaiverDTO>(observer =>
             {
                 observer.OnNext(waiverDto1);
                 observer.OnNext(waiverDto2);
@@ -117,5 +117,50 @@ namespace crds_angular.test.controllers
                 await _fixture.GetEventWaivers(eventId);
             });       
         }
+
+        [Test]
+        public async Task ShouldGetWaiver()
+        {
+            const int waiverId = 23;
+
+            var waiverDto1 = new WaiverDTO
+            {
+                WaiverId = 23,
+                WaiverName = "You won't read it anyways",
+                WaiverText = "You agree to give me everything you own"
+            };
+
+            _waiverService.Setup(m => m.EventWaivers(waiverId, authToken)).Returns(Observable.Create<WaiverDTO>(observer =>
+            {
+                observer.OnNext(waiverDto1);
+                observer.OnCompleted();
+                return Disposable.Empty;
+            }));
+            var response = await _fixture.GetEventWaivers(waiverId);
+            Assert.IsNotNull(response);
+            Assert.IsInstanceOf<OkNegotiatedContentResult<IList<WaiverDTO>>>(response);
+            var r = (OkNegotiatedContentResult<IList<WaiverDTO>>)response;
+            Assert.IsNotNull(r.Content);
+        }
+
+        [Test]
+        public void ShouldHandleGetWaiverFailure()
+        {
+            const int waiverId = 23;
+            
+            _waiverService.Setup(m => m.GetWaiver(waiverId)).Returns(Observable.Create<WaiverDTO>(observer =>
+            {                
+                observer.OnError(new Exception("Something bad happened"));
+                return Disposable.Empty;
+            }));
+
+
+            Assert.Throws<HttpResponseException>(async () =>
+            {
+                await _fixture.GetWaiver(waiverId);
+            });
+        }
+
+
     }
 }

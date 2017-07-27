@@ -10,7 +10,7 @@ namespace crds_angular.Services.Interfaces
     {
 
         IObservable<WaiverDTO> GetWaiver(int waiverId);
-        IObservable<WaiverDTO> EventWaivers(int eventId);
+        IObservable<WaiverDTO> EventWaivers(int eventId, string token);
         IObservable<int> SendAcceptanceEmail(ContactInvitation contactInvitation);
         IObservable<ContactInvitation> CreateWaiverInvitation(int waiverId, int eventParticipantId, string token);
     }
