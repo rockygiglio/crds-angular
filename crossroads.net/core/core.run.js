@@ -36,6 +36,8 @@
     function setupHeader() {
       svg4everybody();
       $('html, body').removeClass('noscroll');
+      $('.collapse.in').removeClass('in');
+      $('.modal-backdrop.fade.in').remove();
       // header options
       var options = {
         el: '[data-header]',
