@@ -1,4 +1,5 @@
-﻿using Crossroads.Web.Common.MinistryPlatform;
+﻿using System;
+using Crossroads.Web.Common.MinistryPlatform;
 using Newtonsoft.Json;
 
 
@@ -21,5 +22,8 @@ namespace MinistryPlatform.Translation.Models
 
         [JsonProperty(PropertyName = "Nickname")]
         public string Nickname { get; set; }
+
+        [JsonProperty(PropertyName = "Date_of_Birth")]
+        public DateTime DateOfBirth { get; set; }
     }
 }

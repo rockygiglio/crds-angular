@@ -73,7 +73,7 @@ namespace crds_angular.Services
                 var mergeData = new Dictionary<string, object>
                 {
                     {"Event_Name", ep.EventTitle },
-                    {"Confirmation_Url", $"https://{_confiurationWrapper.GetConfigValue("BaseUrl")}/waivers/accept-waiver/{contactInvitation.Invitation.InvitationGuid}" }
+                    {"Confirmation_Url", $"https://{_confiurationWrapper.GetConfigValue("BaseUrl")}/waivers/accept/{contactInvitation.Invitation.InvitationGuid}" }
                 };
 
                 var comm = _communicationRepository.GetTemplateAsCommunication(templateId,

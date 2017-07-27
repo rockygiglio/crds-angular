@@ -109,27 +109,15 @@ namespace MinistryPlatform.Translation.Repositories
             return ParseProfileRecord(pageViewRecords[0]);
         }
 
-        //public IObservable<MpSimpleContact> GetSimpleContact(int contactId)
-        //{
-        //    try
-        //    {
-        //        return Observable.Start(() => _ministryPlatformRest.UsingAuthenticationToken(ApiLogin()).Get<MpSimpleContact>(contactId));
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        return Observable.Throw<MpSimpleContact>(new Exception($"Can't find a contact with ID = {contactId}"));
-        //    }
-        //}
-
-        public IObservable<MpContact> GetSimpleContact(int contactId)
+        public IObservable<MpSimpleContact> GetSimpleContact(int contactId)
         {
             try
             {
-                return Observable.Start(() => _ministryPlatformRest.UsingAuthenticationToken(ApiLogin()).Get<MpContact>(contactId));
+                return Observable.Start(() => _ministryPlatformRest.UsingAuthenticationToken(ApiLogin()).Get<MpSimpleContact>(contactId));
             }
             catch (Exception e)
             {
-                return Observable.Throw<MpContact>(new Exception($"Can't find a contact with ID = {contactId}"));
+                return Observable.Throw<MpSimpleContact>(new Exception($"Can't find a contact with ID = {contactId}"));
             }
         }
 

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Reactive.Linq;
 using System.Web.Http;
 using System.Web.Http.Description;
 using System.Web.Http.Results;
@@ -12,6 +13,8 @@ using crds_angular.Services.Interfaces;
 using Crossroads.ApiVersioning;
 using Crossroads.Web.Common.Security;
 using log4net;
+using MinistryPlatform.Translation.Models;
+using MinistryPlatform.Translation.Repositories.Interfaces;
 
 namespace crds_angular.Controllers.API
 {
@@ -20,10 +23,14 @@ namespace crds_angular.Controllers.API
         private readonly ILog _logger = LogManager.GetLogger(typeof(DonationController));
 
         private readonly ITripService _tripService;
+        private readonly IUserRepository _userRepository;
+        private readonly IContactRepository _contactRepository;
 
-        public TripController(ITripService tripService, IUserImpersonationService userImpersonationService, IAuthenticationRepository authenticationRepository) : base(userImpersonationService, authenticationRepository)
+        public TripController(ITripService tripService, IUserImpersonationService userImpersonationService, IAuthenticationRepository authenticationRepository, IUserRepository userRepository, IContactRepository contactRepository) : base(userImpersonationService, authenticationRepository)
         {
             _tripService = tripService;
+            _userRepository = userRepository;
+            _contactRepository = contactRepository;
         }
 
         [ResponseType(typeof (List<FamilyMemberTripDto>))]
@@ -217,6 +224,29 @@ namespace crds_angular.Controllers.API
                 catch (Exception exception)
                 {
                     var apiError = new ApiErrorDto("ValidatePrivateInvite Failed", exception);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+            });
+        }
+
+        [ResponseType(typeof(MpSimpleContact))]
+        [VersionedRoute(template: "trip/user", minimumVersion: "1.0.0")]
+        [HttpGet]
+        public IHttpActionResult GetLoggedInContact()
+        {
+            return Authorized(token =>
+            {
+                try
+                {
+                    var user = _userRepository.GetByAuthenticationToken(token);
+                    var userId = _userRepository.GetUserIdByUsername(user.UserId);
+                    var contactId = _userRepository.GetContactIdByUserId(userId);
+                    var contact = _contactRepository.GetSimpleContact(contactId).Wait();
+                    return Ok(contact);
+                }
+                catch (Exception e)
+                {
+                    var apiError = new ApiErrorDto("Get Logged in Contact Failed", e);
                     throw new HttpResponseException(apiError.HttpResponseMessage);
                 }
             });

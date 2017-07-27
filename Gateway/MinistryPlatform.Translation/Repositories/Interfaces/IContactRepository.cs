@@ -11,7 +11,7 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
         MpContact GetEmailFromDonorId(int donorId);
         int GetContactId(string token);
         MpMyContact GetContactById(int contactId);
-        IObservable<MpContact> GetSimpleContact(int contactId);
+        IObservable<MpSimpleContact> GetSimpleContact(int contactId);
         MpMyContact GetContactByIdCard(string idCard);
         int GetContactIdByParticipantId(int participantId);
         List<MpHouseholdMember> GetHouseholdFamilyMembers(int householdId);
