@@ -178,7 +178,6 @@
     <Compile Include="Models\MpRecordID.cs" />
     <Compile Include="Models\MpWaiverResponse.cs" />
     <Compile Include="Models\MpStoredProcBool.cs" />
-    <Compile Include="Models\MpWaivers.cs" />
     <Compile Include="Models\Payments\MpInvoice.cs" />
     <Compile Include="Models\Payments\MpNestedInvoiceDetail.cs" />
     <Compile Include="Models\Payments\MpInvoiceDetail.cs" />
