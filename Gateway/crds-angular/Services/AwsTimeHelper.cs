@@ -24,6 +24,7 @@ namespace crds_angular.Services
             bool isAmTime = isAM(time);
 
             hourString = isAmTime ? time.Substring(0, 2) : GetPmTimeHours(time);
+            hourString = Convert24To00(hourString); 
             minuteString = time.Substring(3, 2);
 
             string dateAsUtcString = date.ToUniversalTime().ToString("yyyy'-'MM'-'dd'T'" + hourString + "':'" + minuteString + "':'ss'.'fff'Z'");
@@ -57,5 +58,15 @@ namespace crds_angular.Services
             string hourStringInMilitaryTime = (Int32.Parse(hourStringBeforeConversion) + 12).ToString();
             return hourStringInMilitaryTime;
         }
+
+        //Convert hour value of "24" to "00" - 24 is not an acceptable hour figure, clock resets after 23
+        private string Convert24To00(string timeHourPortion)
+        {
+            string midnightHourMilitaryTime = "00";
+            string hourStringBeforeConversion = timeHourPortion;
+            string adjustedHour = (Int32.Parse(hourStringBeforeConversion)) == 24 ? midnightHourMilitaryTime : hourStringBeforeConversion;
+            return adjustedHour;
+        }
+
     }
 }
