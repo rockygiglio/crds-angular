@@ -1,9 +1,5 @@
-﻿using AutoMapper;
-using crds_angular.Models.Crossroads.Events;
-using crds_angular.Services;
+﻿using crds_angular.Services;
 using NUnit.Framework;
-using MPServices = MinistryPlatform.Translation.Repositories.Interfaces;
-using Participant = MinistryPlatform.Translation.Models.MpParticipant;
 
 namespace crds_angular.test.Services
 {
@@ -14,8 +10,6 @@ namespace crds_angular.test.Services
         [SetUp]
         public void SetUp()
         {
-            Mapper.Initialize(cfg => cfg.AddProfile<EventProfile>());
-
             fixture = new AwsTimeHelper();
         }
 

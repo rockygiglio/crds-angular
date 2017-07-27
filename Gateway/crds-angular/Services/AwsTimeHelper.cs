@@ -11,6 +11,7 @@ namespace crds_angular.Services
 		 * Convert 12-hour time to UTC DateTime string for AWS
 		 * E.g. input: "5:12AM", output "0001-01-01T05:12:00.000Z"
 		 * The method only sets hours and minutes, everything else is default
+         * It is NOT possible to just set a time field in AWS, so we work around that
 		 */
         public string ConvertTimeToUtcString(string time)
         {
