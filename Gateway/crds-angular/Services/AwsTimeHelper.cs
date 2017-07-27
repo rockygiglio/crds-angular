@@ -33,7 +33,7 @@ namespace crds_angular.Services
         }
 
         //The UTC standard specifies a leading zero, e.g. "05:55PM" instead of "5:55PM" - add it if missing
-        private string AddLeadingZeroIfMissing(string time)
+        public string AddLeadingZeroIfMissing(string time)
         {
             if (time.ToCharArray().Length <= 6)
             {
@@ -52,15 +52,15 @@ namespace crds_angular.Services
         }
 
         //Add 12 hours to PM time hours to get accurate military time
-        private string GetPmTimeHours(string time)
+        public string GetPmTimeHours(string time)
         {
             string hourStringBeforeConversion = time.Substring(0, 2);
             string hourStringInMilitaryTime = (Int32.Parse(hourStringBeforeConversion) + 12).ToString();
             return hourStringInMilitaryTime;
         }
 
-        //Convert hour value of "24" to "00" - 24 is not an acceptable hour figure, clock resets after 23
-        private string Convert24To00(string timeHourPortion)
+        //Convert hour value of "24" to "00" - 24 is not an acceptable hour figure, clock resets after 23:59
+        public string Convert24To00(string timeHourPortion)
         {
             string midnightHourMilitaryTime = "00";
             string hourStringBeforeConversion = timeHourPortion;
