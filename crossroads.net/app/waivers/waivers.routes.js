@@ -32,7 +32,7 @@ export default function WaiversRoutes($stateProvider) {
         }).catch((err) => {
           $log.error(err);
           $rootScope.$emit('notify', $rootScope.MESSAGES.generalError);
-
+          $state.go('oops');
           // TODO: Show something on the screen
         });
       },

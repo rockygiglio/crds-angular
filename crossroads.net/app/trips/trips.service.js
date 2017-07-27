@@ -22,7 +22,8 @@
           method: 'GET',
           isArray: true
         }
-      })
+      }),
+      User: $resource(`${__GATEWAY_CLIENT_ENDPOINT__}api/v1.0.0/trip/user`)
     };
   }
 })();
