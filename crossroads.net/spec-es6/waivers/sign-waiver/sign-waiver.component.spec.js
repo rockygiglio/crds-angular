@@ -21,11 +21,9 @@ fdescribe('Waivers', () => {
   }));
 
   describe('Sign Waiver Component', () => {
-    let waiversServiceSpy;
-
     beforeEach(() => {
-      spyOn(log, 'error').and.callThrough();
-      spyOn(rootScope, '$emit').and.callThrough();
+      spyOn(log, 'error');
+      spyOn(rootScope, '$emit');
       spyOn(waiversService, 'getWaiver');
     });
 
@@ -62,6 +60,42 @@ fdescribe('Waivers', () => {
     });
 
     it('Should log an error on failed Send', () => {
+
+    });
+  });
+
+  describe('Accept Waiver', () => {
+    beforeEach(() => {
+      spyOn(log, 'error');
+      spyOn(rootScope, '$emit');
+      spyOn(waiversService, 'getWaiver');
+    });
+
+    beforeEach(inject((_$componentController_) => {
+      ctrl = _$componentController_('acceptWaiver', null, {});
+    }));
+
+    it('Should attempt to accept waiver', () => {
+
+    });
+
+    it('Should display a message on successful accept', () => {
+
+    });
+
+    it('Should navigate to ... on successful accept', () => {
+
+    });
+
+    it('Should display an error on failed accept', () => {
+
+    });
+
+    it('Should log an error on failed accept', () => {
+
+    });
+
+    it('Should navigate to the home page on failed accept', () => {
 
     });
   });

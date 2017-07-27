@@ -25,12 +25,15 @@ export default function WaiversRoutes($stateProvider) {
       template: '<accept-waiver></accept-waiver>',
       controller: ($log, $rootScope, $state, waiversService) => {
         const { guid } = $state.params;
+
         waiversService.acceptWaiver(guid).then(() => {
           // growl message?
           $state.go('mytrips');
         }).catch((err) => {
           $log.error(err);
           $rootScope.$emit('notify', $rootScope.MESSAGES.generalError);
+
+          // TODO: Show something on the screen
         });
       },
       data: {
