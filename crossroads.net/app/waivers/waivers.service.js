@@ -16,7 +16,7 @@ export default class WaiversService {
     return this.sendInviteResource.save({ waiverId, eventParticipantId }, {}).$promise;
   }
 
-  acceptWaiver(eventParticipantId) {
-    return this.acceptResource.save({ eventParticipantId }, {}).$promise;
+  acceptWaiver(guid) {
+    return this.acceptResource.save({ guid }, {}).$promise;
   }
 }

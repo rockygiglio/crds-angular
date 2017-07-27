@@ -1,8 +1,4 @@
-
-
-export default function WaiversRoutes($stateProvider) { /* , $urlMatcherFactoryProvider */
-  // $urlMatcherFactoryProvider.caseInsensitive(true);
-
+export default function WaiversRoutes($stateProvider) {
   $stateProvider
     .state('sign-waiver', {
       parent: 'centeredContentPage',
@@ -25,12 +21,12 @@ export default function WaiversRoutes($stateProvider) { /* , $urlMatcherFactoryP
     })
     .state('accept-waiver', {
       parent: 'noHeaderOrFooter',
-      url: '/waivers/accept/:waiverId/:eventParticipantId',
+      url: '/waivers/accept/:guid',
       template: '<accept-waiver></accept-waiver>',
       controller: ($log, $rootScope, $state, waiversService) => {
-        const { waiverId, eventParticipantId } = $state.params;
-
-        waiversService.acceptWaiver(waiverId, eventParticipantId).then(() => {
+        const { guid } = $state.params;
+        waiversService.acceptWaiver(guid).then(() => {
+          // growl message?
           $state.go('mytrips');
         }).catch((err) => {
           $log.error(err);
