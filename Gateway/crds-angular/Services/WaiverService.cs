@@ -62,7 +62,7 @@ namespace crds_angular.Services
                 WaiverName = w.WaiverName,
                 WaiverText = w.WaiverText,
             });
-            var evtParWaivers = _waiverRepository.GetEventParticipantWaiversByContact(eventId, contactId);
+            var evtParWaivers = _waiverRepository.GetEventParticipantWaiversByContact(eventId, contactId);         
 
             var activeWaiversDto = waivers.SelectMany(w =>
             {
@@ -76,11 +76,8 @@ namespace crds_angular.Services
                 });
             });
 
-            var inactiveWaiversDto = waivers.Where(w => evtParWaivers.Any(ep => ep.WaiverId != w.WaiverId).Wait()).Wait(); 
-            
-            
-            // now get the waivers from waivers that aren't in activeWaivers, combine them and return 
-            return activeWaiversDto;
+            var inactiveWaiversDto = waivers.Where(w =>!evtParWaivers.Any(ep => ep.WaiverId == w.WaiverId).Wait());
+            return activeWaiversDto.Merge(inactiveWaiversDto);
         }
 
         public IObservable<int> SendAcceptanceEmail(ContactInvitation contactInvitation)
