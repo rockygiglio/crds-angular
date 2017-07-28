@@ -1,11 +1,13 @@
+import confirmationModal from './confirmationModal.html';
 
 /* @ngInject */
 export default class SignWaiverController {
-  constructor($log, $state, $rootScope, WaiversService) {
+  constructor($log, $state, $rootScope, WaiversService, $uibModal) {
     this.log = $log;
     this.state = $state;
     this.rootScope = $rootScope;
     this.waiversService = WaiversService;
+    this.uibModal = $uibModal;
   }
 
   $onInit() {
@@ -39,5 +41,18 @@ export default class SignWaiverController {
 
   cancel() {
     this.state.go('mytrips');
+  }
+
+  open() {
+    const modal = this.uibModal.open({
+      animation: true,
+      ariaLabelledBy: 'modal-title',
+      ariaDescribedBy: 'modal-body',
+      template: confirmationModal,
+      size: undefined,
+      appendTo: undefined
+    });
+
+    modal.result.then(() => console.log('yes'), () => console.error('no'));
   }
 }
