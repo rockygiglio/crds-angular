@@ -22,7 +22,6 @@ export default function WaiversRoutes($stateProvider) {
     .state('accept-waiver', {
       parent: 'noHeaderOrFooter',
       url: '/waivers/accept/:guid',
-      template: '<accept-waiver></accept-waiver>',
       controller: ($log, $rootScope, $state, waiversService) => {
         const { guid } = $state.params;
 
@@ -37,7 +36,7 @@ export default function WaiversRoutes($stateProvider) {
         });
       },
       data: {
-        isProtected: true,
+        isProtected: false,
         meta: {
           title: 'Accept Waiver',
           description: ''
@@ -47,7 +46,6 @@ export default function WaiversRoutes($stateProvider) {
         $log: '$log',
         $rootScope: '$rootScope',
         $state: '$state',
-        loggedin: crds_utilities.checkLoggedin,
         waiversService: 'WaiversService'
       }
     });
