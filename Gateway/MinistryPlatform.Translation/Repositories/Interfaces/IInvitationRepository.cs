@@ -8,6 +8,7 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
     {
         IObservable<MpInvitation> CreateInvitationAsync(MpInvitation invite);
         MpInvitation CreateInvitation(MpInvitation dto);
+        IObservable<MpInvitation> GetOpenInvitationAsync(string invitationGuid);
         MpInvitation GetOpenInvitation(string invitationGuid);
         void MarkInvitationAsUsed(string invitationGuid);
     }

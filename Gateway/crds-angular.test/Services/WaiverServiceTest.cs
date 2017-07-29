@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
@@ -8,7 +9,6 @@ using crds_angular.Services;
 using Crossroads.Web.Common.Configuration;
 using Crossroads.Web.Common.Security;
 using MinistryPlatform.Translation.Models;
-using MinistryPlatform.Translation.Repositories;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 using Moq;
 using NUnit.Framework;
@@ -111,8 +111,85 @@ namespace crds_angular.test.Services
             var waiverResult3 = result.Single(ew => ew.WaiverId == 33);
             Assert.IsNotNull(waiverResult3);
             Assert.IsFalse(waiverResult3.Accepted);
+        }
 
+        [Test]
+        public async Task ShouldSendAcceptanceEmail()
+        {
+            var contactInvitation = ContactInvitation();
+            var eventParticipant = MpEventParticipant();
+            var template = Template();
+            var mpCommunication = MpCommunication(template, contactInvitation.Contact);
 
+            _eventParticipantRepository.Setup(m => m.GetEventParticpant(contactInvitation.Invitation.SourceId)).Returns(Observable.Return(eventParticipant));
+
+            _configurationWrapper.Setup(m => m.GetConfigIntValue("WaiverEmailTemplateId")).Returns(23);
+            _configurationWrapper.Setup(m => m.GetConfigValue("BaseUrl")).Returns("localhost:3000");
+            _communicationRepository.Setup(m => m.GetTemplate(23)).Returns(template);
+            _communicationRepository.Setup(m => m.GetTemplateAsCommunication(23,
+                                                                             template.FromContactId,
+                                                                             template.FromEmailAddress,
+                                                                             template.ReplyToContactId,
+                                                                             template.ReplyToEmailAddress,
+                                                                             contactInvitation.Contact.ContactId,
+                                                                             contactInvitation.Contact.EmailAddress,
+                                                                             It.IsAny<Dictionary<string, object>>())).Returns(mpCommunication);
+            _communicationRepository.Setup(m => m.SendMessage(mpCommunication, false)).Returns(2990);
+
+            var result = await _fixture.SendAcceptanceEmail(contactInvitation);
+            Assert.AreEqual(2990, result);
+        }
+
+        [Test]
+        public async Task ShouldCreateWaiverInvitation()
+        {
+            const string token = "mytoken";
+            const int myContactId = 56778;
+            const int eventParticipantId = 9908;
+            const int waiverId = 888;
+            const int waiverInvitiationTypeId = 4343;
+            _configurationWrapper.Setup(m => m.GetConfigIntValue("WaiverInvitationType")).Returns(waiverInvitiationTypeId);
+            _authenticationRepository.Setup(m => m.GetContactId(token)).Returns(myContactId);
+            _contactRepository.Setup(m => m.GetSimpleContact(myContactId)).Returns(Observable.Return(new MpSimpleContact
+            {
+                ContactId = myContactId, 
+                DateOfBirth = DateTime.Now.AddDays(-1000),
+                EmailAddress = "andy@pi.com",
+                FirstName = "Andy",
+                LastName = "Pi",
+                Nickname = "Andi"
+            }));
+
+            _waiverRepository.Setup(m => m.CreateEventParticipantWaiver(waiverId, eventParticipantId, myContactId)).Returns(Observable.Return(new MpEventParticipantWaiver
+            {
+                EventParticipantId = eventParticipantId,
+                EventParticipantWaiverId = 89,
+                SignerId = myContactId,
+                Accepted = false,
+                WaiverId = waiverId
+            }));
+
+            _invitationRepository.Setup(m => m.CreateInvitationAsync(It.IsAny<MpInvitation>())).Returns((MpInvitation mp) =>
+            {
+                Assert.AreEqual(mp.SourceId, eventParticipantId);
+                Assert.AreEqual(mp.EmailAddress, "andy@pi.com");
+                mp.InvitationGuid = new Guid().ToString();
+                mp.InvitationId = 999999;
+                return Observable.Return(mp);
+            });
+            
+            
+
+            var result = await _fixture.CreateWaiverInvitation(waiverId, eventParticipantId, token);
+            Assert.AreEqual(999999, result.Invitation.InvitationId);
+        }
+
+        private static MpEventParticipant MpEventParticipant()
+        {
+            return new MpEventParticipant
+            {
+                EventTitle = "blah"
+            };
         }
 
         private static MpEventParticipantWaiver MpEventParticpantWaiver(bool accepted, int signeeId, int waiverId )
@@ -124,6 +201,61 @@ namespace crds_angular.test.Services
                 EventParticipantWaiverId = 13,
                 SignerId = signeeId,
                 WaiverId = waiverId
+            };
+        }
+
+        private static MpCommunication MpCommunication(MpMessageTemplate template, MpSimpleContact to)
+        {
+            return new MpCommunication
+            {
+                AuthorUserId = 1,
+                DomainId = 1,
+                EmailBody = template.Body,
+                EmailSubject = template.Subject,
+                FromContact = new MpContact {EmailAddress = template.FromEmailAddress, ContactId = template.FromContactId},
+                MergeData = It.IsAny<Dictionary<string, object>>(),
+                ReplyToContact = new MpContact {EmailAddress = template.ReplyToEmailAddress, ContactId = template.ReplyToContactId},
+                StartDate = DateTime.Now,
+                TemplateId = 23,
+                ToContacts = new List<MpContact> {new MpContact { ContactId = to.ContactId, EmailAddress = to.EmailAddress }}
+            };
+        }
+
+        private static MpMessageTemplate Template()
+        {
+            return new MpMessageTemplate
+            {
+                Body = "words and things",
+                FromContactId = 24,
+                FromEmailAddress = "",
+                ReplyToEmailAddress = "",
+                ReplyToContactId = 1123,
+                Subject = "Sub"
+            };
+        }
+
+        private static ContactInvitation ContactInvitation()
+        {
+            return new ContactInvitation
+            {
+                Contact = new MpSimpleContact
+                {
+                    ContactId = 12234,
+                    DateOfBirth = DateTime.Now.AddDays(-1000),
+                    EmailAddress = "blah@Halb.com",
+                    FirstName = "Blah",
+                    LastName = "Halb",
+                    Nickname = "b"
+                },
+                Invitation = new MpInvitation
+                {
+                    EmailAddress = "blah@Halb.com",
+                    InvitationGuid = new Guid().ToString(),
+                    InvitationType = 23,
+                    RecipientName = "Blah Halb",
+                    InvitationId = 34,
+                    SourceId = 999
+                }
             };
         }
 

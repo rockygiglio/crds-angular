@@ -73,7 +73,44 @@ namespace MinistryPlatform.Translation.Repositories
 
         public IObservable<MpEventParticipantWaiver> GetEventParticipantWaiversByContact(int eventId, int contactId)
         {
-            throw new NotImplementedException();
+            return Observable.Create<MpEventParticipantWaiver>(observer =>
+            {
+                try
+                {
+                    var apiToken = ApiLogin();
+                    var filter =
+                        $"Event_Participant_ID_Table_Participant_ID_Table_Contact_ID_Table.[Contact_ID] = {contactId} AND Event_Participant_ID_Table_Event_ID_Table.[Event_ID] = {eventId}";
+                    var result = _ministryPlatformRestRepository.UsingAuthenticationToken(apiToken).Search<MpEventParticipantWaiver>(filter);
+                    result.ForEach(observer.OnNext);
+                    observer.OnCompleted();
+                }
+                catch (Exception e)
+                {
+                    observer.OnError(e);
+                }
+                return Disposable.Empty;
+            });
+        }
+
+        public IObservable<MpEventParticipantWaiver> AcceptEventParticpantWaiver(int eventParticipantWaiverId)
+        {
+            return Observable.Create<MpEventParticipantWaiver>(observer =>
+            {
+                try
+                {
+                    var token = ApiLogin();
+                    var epwaiver = _ministryPlatformRestRepository.UsingAuthenticationToken(token).Get<MpEventParticipantWaiver>(eventParticipantWaiverId);
+                    epwaiver.Accepted = true;
+                    _ministryPlatformRestRepository.UsingAuthenticationToken(token).Update(epwaiver);
+                    observer.OnNext(epwaiver);
+                    observer.OnCompleted();
+                }
+                catch (Exception e)
+                {
+                    observer.OnError(e);
+                }
+                return Disposable.Empty;
+            });
         }
     }
 }

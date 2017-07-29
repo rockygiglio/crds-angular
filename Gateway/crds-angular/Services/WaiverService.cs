@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Reactive;
 using System.Reactive.Linq;
 using crds_angular.Models.Crossroads.Waivers;
 using crds_angular.Services.Interfaces;
@@ -86,7 +85,7 @@ namespace crds_angular.Services
             var template = _communicationRepository.GetTemplate(templateId);               
 
             // get the event name for the waiver...
-            return _eventParticipantRepository.GetEventParticpant(contactInvitation.Invitation.SourceId).Select(ep =>
+            return _eventParticipantRepository.GetEventParticpantByEventParticipantWaiver(contactInvitation.Invitation.SourceId).Select(ep =>
             {
                 var mergeData = new Dictionary<string, object>
                 {
@@ -116,7 +115,7 @@ namespace crds_angular.Services
                    // create private invite
                    var mpInvitation = new MpInvitation
                    {
-                       SourceId = eventParticipantWaiver.EventParticipantId,
+                       SourceId = eventParticipantWaiver.EventParticipantWaiverId,
                        EmailAddress = con.EmailAddress,
                        InvitationType = _confiurationWrapper.GetConfigIntValue("WaiverInvitationType"),
                        RecipientName = $"{con.Nickname ?? con.FirstName} {con.LastName}",
@@ -130,6 +129,26 @@ namespace crds_angular.Services
                    });
                });
            });
+        }
+
+        public IObservable<WaiverDTO> AcceptWaiver(string guid)
+        {
+            return _invitationRepository.GetOpenInvitationAsync(guid).SelectMany(invitation =>
+            {
+                return _waiverRepository.AcceptEventParticpantWaiver(invitation.SourceId).SelectMany(w =>
+                {
+                    _invitationRepository.MarkInvitationAsUsed(guid);
+                    return _waiverRepository.GetWaiver(w.WaiverId).Select(w2 => new WaiverDTO
+                        {
+                            Accepted = w.Accepted,
+                            SigneeContactId = w.SignerId,
+                            WaiverId = w.WaiverId,
+                            WaiverName = w2.WaiverName,
+                            WaiverText = w2.WaiverText,
+                            WaiverStartDate = w2.WaiverStartDate
+                        });
+                });
+            });
         }
     }
 

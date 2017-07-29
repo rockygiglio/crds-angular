@@ -73,6 +73,22 @@ namespace MinistryPlatform.Translation.Repositories
             }
         }
 
+        public IObservable<MpInvitation> GetOpenInvitationAsync(string invitationGuid)
+        {
+            return Observable.Start(() =>
+            {
+                var token = ApiLogin();
+                var filter = $"Invitation_GUID = '{invitationGuid}' AND Invitation_Used = 0";
+                var result = _ministryPlatformRestRepository.UsingAuthenticationToken(token).Search<MpInvitation>(filter);
+                if (result.Count > 0)
+                {
+                    return result.First();
+                }
+                throw new Exception("Invitation has already been used!");
+                
+            });
+        }
+
         public MpInvitation GetOpenInvitation(string invitationGuid)
         {
             // override the user login to avoid granting rights to all users
@@ -113,11 +129,13 @@ namespace MinistryPlatform.Translation.Repositories
             {
                 string token = ApiLogin();
                 var invitation = GetOpenInvitation(invitationGuid);
-            
-                var dictionary = new Dictionary<string, object>();
-                dictionary.Add("Invitation_ID", invitation.InvitationId);
-                dictionary.Add("Invitation_GUID", new Guid(invitationGuid));
-                dictionary.Add("Invitation_Used", true);
+
+                var dictionary = new Dictionary<string, object>
+                {
+                    {"Invitation_ID", invitation.InvitationId},
+                    {"Invitation_GUID", new Guid(invitationGuid)},
+                    {"Invitation_Used", true}
+                };
 
                 _ministryPlatformService.UpdateRecord(_invitationPageId, dictionary, token);
             }
