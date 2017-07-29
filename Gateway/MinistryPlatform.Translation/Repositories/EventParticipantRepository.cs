@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Crossroads.Utilities.FunctionalHelpers;
 using Crossroads.Web.Common.Configuration;
@@ -230,6 +231,36 @@ namespace MinistryPlatform.Translation.Repositories
             const string columnName = "Count(*)";
 
             return _ministryPlatformRestRepository.UsingAuthenticationToken(apiToken).Search<int>(tableName, searchString, columnName, null, false);
+        }
+
+        public IObservable<MpEventParticipant> GetEventParticpantByEventParticipantWaiver(int eventParticipantWaiverId)
+        {
+            return Observable.Create<MpEventParticipant>(observer =>
+            {
+                try
+                {
+                    var columns = "Event_Participant_ID_Table.[Event_Participant_ID], Event_Participant_ID_Table_Event_ID_Table.[Event_Title] AS [Event_Title]";
+                    var filter = $"cr_Event_Participant_Waivers.[Event_Participant_Waiver_ID] = {eventParticipantWaiverId}";
+
+                    var result = _ministryPlatformRestRepository.UsingAuthenticationToken(ApiLogin())
+                        .Search<MpEventParticipantWaiver, MpEventParticipant>(filter, columns);
+                    if (result.Count > 0)
+                    {
+                        observer.OnNext(result.First());
+                        observer.OnCompleted();
+                    }
+                    else
+                    {
+                        observer.OnError(new Exception($"Unable to find event participant waiver with id {eventParticipantWaiverId}"));
+                    }
+                   
+                }
+                catch (Exception e)
+                {
+                    observer.OnError(e);
+                }
+                return Disposable.Empty;
+            });
         }
     }
 }
