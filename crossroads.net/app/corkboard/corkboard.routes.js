@@ -30,6 +30,12 @@
           var promise = CorkboardListings.post().query().$promise;
 
           promise.then(function (posts) {
+            // ensure that Date does not remain undefined so that one-time data binding is possible 
+            _.each(posts, function(item) {
+              if (item.Date === undefined)
+                item.Date = null;
+            });
+
             CorkboardSession.posts = posts;
           }, function (error) {
 
@@ -50,7 +56,7 @@
       controller: 'CorkboardController as corkboard',
     })
     .state('corkboard.root', {
-      url: '/corkboard',
+      url: '/corkboard?page',
       templateUrl: 'templates/corkboard-listings.html',
       data: {
         meta: {
@@ -116,7 +122,7 @@
       }
     })
     .state('corkboard.filtered', {
-      url: '/corkboard/:type',
+      url: '/corkboard/:type?page',
       templateUrl: 'templates/corkboard-listings.html',
       //This controller has to be here, if it's not stateparams won't be picked up
       controller: 'CorkboardController as corkboard'

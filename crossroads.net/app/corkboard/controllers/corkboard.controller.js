@@ -24,10 +24,8 @@
     vm.flagPost = flagPost;
     vm.flagState = vm.flagAsInappropriate;
     vm.params = $stateParams;
-    vm.posts = CorkboardSession.posts;
     vm.postTypes = CorkboardPostTypes;
-    vm.posts = CorkboardSession.posts;
-    vm.postTypes = CorkboardPostTypes;
+    vm.filteredPosts = getFilteredList(CorkboardSession.posts);
     // list of post types to be used to display the filter and create buttons on the corkboard home page
     // in the same order as the original design
     vm.postTypeList = _.sortBy(vm.postTypes, 'index');
@@ -41,6 +39,50 @@
     vm.selectedItem = selectedItem;
     vm.showReply = showReply;
     vm.showReplySection = $stateParams.showReplySection ? true : false;
+
+    // paging stuff
+    vm.itemsPerPage = 25;
+    vm.maxPageNumber = calculateMaxPages(vm.itemsPerPage, vm.filteredPosts.length);
+    vm.pageNumber = 0;
+
+    var currentPage = parseInt($state.params.page) || 0;
+    setCurrentPage(currentPage)
+
+    if (vm.pageNumber > 0 && currentPage > vm.pageNumber) {
+      // requested page number is too high, redirect to a valid page
+      $state.go($state.current, { page: vm.pageNumber }, { reload: true });
+      return;
+    }
+
+    function calculateMaxPages(itemsPerPage, totalItems) {
+      return Math.ceil(totalItems / itemsPerPage);
+    }
+
+    function setCurrentPage(pageNumber) {
+      var oldNumber = vm.pageNumber;
+      vm.pageNumber = Math.max(1, Math.min(vm.maxPageNumber, pageNumber));
+
+      return oldNumber != vm.pageNumber ? true : false;
+    }
+
+    $scope.isFirstPage = function() {
+      return vm.pageNumber <= 1 ? true : false;
+    };
+
+    $scope.isLastPage = function() {
+      return vm.pageNumber >= vm.maxPageNumber ? true : false;
+    };
+    
+    $scope.gotoPrevPage = function() {
+      vm.pageNumber -= 1;
+      $state.go($state.current, { page: vm.pageNumber  });
+    };
+
+    $scope.gotoNextPage = function() {
+      vm.pageNumber += 1;
+      $state.go($state.current, { page: vm.pageNumber  });
+    };
+
 
     //Datepicker STUFF
     vm.hstep = 1;
@@ -57,7 +99,8 @@
 
     //END Datepicker STUFF
 
-    $rootScope.$on('$stateNotFound', function (event, unfoundState, fromState, fromParams) {
+
+    var unregisterStateNotFound = $rootScope.$on('$stateNotFound', function (event, unfoundState, fromState, fromParams) {
       if (unfoundState.toParams.link) {
         $window.location = addLeadingSlashIfNecessary(unfoundState.toParams.link);
       } else {
@@ -65,16 +108,45 @@
       }
     });
 
+    $scope.$on('$destroy', function(event, data) {
+      unregisterStateNotFound();
+    });
+
+    $scope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
+      // This is a workaround.  Sometimes ui-router will reload the controller on state change
+      // and sometimes not (e.g., browser Back button).  Ensure that vm.pageNumber is updated
+      // properly even when the controller is not reloaded.
+      if (toState.name == 'corkboard.root' || toState.name == 'corkboard.filtered') {
+        var pageNumber = parseInt(toParams.page) || 0;
+        setCurrentPage(pageNumber);
+      }
+    });
+
     $scope.$on(CORKBOARD_EVENTS.postAdded, function (event, data) {
       CorkboardListings.InvalidateCache();
       CorkboardSession.posts.unshift(data);
-      $state.go('corkboard.root');
+      $state.go('corkboard.root', null, { inherit: false, reload: true });
     }
     );
 
     $scope.$on(CORKBOARD_EVENTS.postCanceled, function (event, data) {
-      $state.go('corkboard.root');
+      $state.go('corkboard.root', null, { inherit: false, reload: true });
     });
+
+    $scope.getStartIndex = function() {
+      return (vm.pageNumber - 1) * vm.itemsPerPage;
+    };
+
+    function getFilteredList(posts) {
+      var searchType = vm.params.type ? vm.params.type.toUpperCase() : null;
+
+      var result = _.filter(posts, function(item) {
+        if (!searchType || item.PostType.toUpperCase() === searchType)
+          return true;
+      });
+      
+      return result;
+    }
 
     function flagConfirm() {
       if (confirm('Are you sure you want to flag this post?')) {
@@ -132,9 +204,10 @@
           return (item._id.$oid === vm.selectedItem._id.$oid);
         });
 
+        CorkboardListings.InvalidateCache();
         CorkboardSession.posts.splice(CorkboardSession.posts.indexOf(itemToRemove), 1);
 
-        $state.go('corkboard.root');
+        $state.go('corkboard.root', null, { inherit: false, reload: true });
         $rootScope.$emit('notify', $rootScope.MESSAGES.corkboardRemoveSuccess);
         vm.removing = false;
       }, function (error) {
@@ -179,7 +252,7 @@
         promise.then(function () {
           vm.showReplySection = true;
           $rootScope.$emit('notify', $rootScope.MESSAGES.corkboardReplySuccess);
-          $state.go('corkboard.root');
+          $state.go('corkboard.root', null, { inherit: false, reload: true });
           vm.sending = false;
         }, function (error) {
 
