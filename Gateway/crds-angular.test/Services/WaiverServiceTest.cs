@@ -121,7 +121,7 @@ namespace crds_angular.test.Services
             var template = Template();
             var mpCommunication = MpCommunication(template, contactInvitation.Contact);
 
-            _eventParticipantRepository.Setup(m => m.GetEventParticpant(contactInvitation.Invitation.SourceId)).Returns(Observable.Return(eventParticipant));
+            _eventParticipantRepository.Setup(m => m.GetEventParticpantByEventParticipantWaiver(contactInvitation.Invitation.SourceId)).Returns(Observable.Return(eventParticipant));
 
             _configurationWrapper.Setup(m => m.GetConfigIntValue("WaiverEmailTemplateId")).Returns(23);
             _configurationWrapper.Setup(m => m.GetConfigValue("BaseUrl")).Returns("localhost:3000");
@@ -146,6 +146,7 @@ namespace crds_angular.test.Services
             const string token = "mytoken";
             const int myContactId = 56778;
             const int eventParticipantId = 9908;
+            const int eventParticipantWaiverId = 89;
             const int waiverId = 888;
             const int waiverInvitiationTypeId = 4343;
             _configurationWrapper.Setup(m => m.GetConfigIntValue("WaiverInvitationType")).Returns(waiverInvitiationTypeId);
@@ -163,7 +164,7 @@ namespace crds_angular.test.Services
             _waiverRepository.Setup(m => m.CreateEventParticipantWaiver(waiverId, eventParticipantId, myContactId)).Returns(Observable.Return(new MpEventParticipantWaiver
             {
                 EventParticipantId = eventParticipantId,
-                EventParticipantWaiverId = 89,
+                EventParticipantWaiverId = eventParticipantWaiverId,
                 SignerId = myContactId,
                 Accepted = false,
                 WaiverId = waiverId
@@ -171,7 +172,7 @@ namespace crds_angular.test.Services
 
             _invitationRepository.Setup(m => m.CreateInvitationAsync(It.IsAny<MpInvitation>())).Returns((MpInvitation mp) =>
             {
-                Assert.AreEqual(mp.SourceId, eventParticipantId);
+                Assert.AreEqual(mp.SourceId, eventParticipantWaiverId);
                 Assert.AreEqual(mp.EmailAddress, "andy@pi.com");
                 mp.InvitationGuid = new Guid().ToString();
                 mp.InvitationId = 999999;
