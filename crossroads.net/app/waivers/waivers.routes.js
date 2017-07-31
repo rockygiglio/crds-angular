@@ -26,13 +26,12 @@ export default function WaiversRoutes($stateProvider) {
         const { guid } = $state.params;
 
         waiversService.acceptWaiver(guid).then(() => {
-          // growl message?
+          $rootScope.$emit('notify', $rootScope.MESSAGES.waiverSuccess);
           $state.go('mytrips');
         }).catch((err) => {
           $log.error(err);
           $rootScope.$emit('notify', $rootScope.MESSAGES.generalError);
-          $state.go('oops');
-          // TODO: Show something on the screen
+          $state.go('content', { link: '/servererror/' });
         });
       },
       data: {
