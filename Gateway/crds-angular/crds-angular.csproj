@@ -453,6 +453,7 @@
     <Compile Include="Security\ReactiveMPAuth.cs" />
     <Compile Include="Services\AddressService.cs" />
     <Compile Include="Services\AwsCloudsearchService.cs" />
+    <Compile Include="Services\AwsTimeHelper.cs" />
     <Compile Include="Services\BulkEmailSyncService.cs" />
     <Compile Include="Services\CampaignService.cs" />
     <Compile Include="Services\CampRules.cs" />
@@ -631,7 +632,7 @@
     <Compile Include="Models\Crossroads\Trip\TripApplicationDto.cs" />
     <Compile Include="Models\Crossroads\Trip\TripApplicationResponseDto.cs" />
     <Compile Include="Models\Crossroads\Trip\TripCampaignDto.cs" />
-    <Compile Include="Models\Crossroads\Trip\TripDocuments.cs" />
+    <Compile Include="Models\Crossroads\Trip\TripDocument.cs" />
     <Compile Include="Models\Crossroads\Trip\TripFormResponseDto.cs" />
     <Compile Include="Models\Crossroads\Trip\TripGift.cs" />
     <Compile Include="Models\Crossroads\Trip\TripGroupDto.cs" />

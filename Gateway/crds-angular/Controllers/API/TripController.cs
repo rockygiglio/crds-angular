@@ -251,5 +251,44 @@ namespace crds_angular.Controllers.API
                 }
             });
         }
+
+        [ResponseType(typeof(TripDocument))]
+        [VersionedRoute(template: "trip/ipromise/{tripEventParticipantId}", minimumVersion: "1.0.0")]
+        [HttpGet]
+        public IHttpActionResult GetIPromiseDocument(int tripEventParticipantId)
+        {
+            return Authorized(token =>
+            {
+                try
+                {
+                    var doc = _tripService.GetIPromiseDocument(tripEventParticipantId);
+                    return Ok(doc);
+                }
+                catch (Exception e)
+                {
+                    var apiError = new ApiErrorDto("Get I Promise Document Failed", e);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+            });
+        }
+
+        [VersionedRoute(template: "trip/ipromise", minimumVersion: "1.0.0")]
+        [HttpPost]
+        public IHttpActionResult ReceiveIPromiseDocument([FromBody] TripDocument iPromiseDoc)
+        {
+            return Authorized(token =>
+            {
+                try
+                {
+                    _tripService.ReceiveIPromiseDocument(iPromiseDoc);
+                    return Ok();
+                }
+                catch (Exception e)
+                {
+                    var apiError = new ApiErrorDto("Save I Promise Document Failed", e);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+            });
+        }
     }
 }

@@ -126,6 +126,7 @@
           loggedin: crds_utilities.checkLoggedin,
           Trip: 'Trip',
           $cookies: '$cookies',
+          $state: '$state',
           MyTrips(Trip) {
             return Trip.MyTrips.get().$promise;
           }
@@ -184,6 +185,32 @@
           Trip: 'Trip',
           Waiver($stateParams, Trip) {
             return Trip.Waiver.get({ waiverId: $stateParams.waiverId }).$promise;
+          }
+        }
+      })
+      .state('trippromise', {
+        parent: 'centeredContentPage',
+        url: '/trips/mytrips/promise/:eventParticipantId',
+        template: '<trip-promise my-trip-promise="MyTripsPromise"></trip-promise>',
+        controller($scope, MyTripsPromise) {
+          $scope.MyTripsPromise = MyTripsPromise;
+        },
+        data: {
+          isProtected: true,
+          meta: {
+            title: 'I Promise',
+            description: ''
+          }
+        },
+        resolve: {
+          loggedin: crds_utilities.checkLoggedin,
+          $rootScope: '$rootScope',
+          $state: '$state',
+          $stateParams: '$stateParams',
+          $log: '$log',
+          Trip: 'Trip',
+          MyTripsPromise(Trip, $stateParams) {
+            return Trip.MyTripsPromise.get({ eventParticipantId: $stateParams.eventParticipantId }).$promise;
           }
         }
       })

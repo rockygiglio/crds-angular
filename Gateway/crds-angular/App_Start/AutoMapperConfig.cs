@@ -26,6 +26,7 @@ using MpEvent = MinistryPlatform.Translation.Models.MpEvent;
 using MpGroup = MinistryPlatform.Translation.Models.MpGroup;
 using MpInvitation = MinistryPlatform.Translation.Models.MpInvitation;
 using MpResponse = MinistryPlatform.Translation.Models.MpResponse;
+using crds_angular.Services;
 
 namespace crds_angular.App_Start
 {
@@ -406,7 +407,10 @@ namespace crds_angular.App_Start
                                src => src.GroupAgeRange.Split(',')))
                 .ForMember(dest => dest.GroupCategory,
                            opts => opts.MapFrom(
-                               src => src.GroupCategory.Split(',')));
+                               src => src.GroupCategory.Split(',')))
+                .ForMember(dest => dest.GroupMeetingTime,
+                           opts => opts.MapFrom(
+                               src => new AwsTimeHelper().ConvertTimeToUtcString(src.GroupMeetingTime)));
 
             Mapper.CreateMap<PinDto, AwsConnectDto>()
                 .ForMember(dest => dest.FirstName, opts => opts.MapFrom(src => src.FirstName))
