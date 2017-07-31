@@ -23,13 +23,11 @@ namespace crds_angular.Controllers.API
         private readonly ILog _logger = LogManager.GetLogger(typeof(DonationController));
 
         private readonly ITripService _tripService;
-        private readonly IUserRepository _userRepository;
         private readonly IContactRepository _contactRepository;
 
-        public TripController(ITripService tripService, IUserImpersonationService userImpersonationService, IAuthenticationRepository authenticationRepository, IUserRepository userRepository, IContactRepository contactRepository) : base(userImpersonationService, authenticationRepository)
+        public TripController(ITripService tripService, IUserImpersonationService userImpersonationService, IAuthenticationRepository authenticationRepository, IContactRepository contactRepository) : base(userImpersonationService, authenticationRepository)
         {
             _tripService = tripService;
-            _userRepository = userRepository;
             _contactRepository = contactRepository;
         }
 
@@ -238,9 +236,7 @@ namespace crds_angular.Controllers.API
             {
                 try
                 {
-                    var user = _userRepository.GetByAuthenticationToken(token);
-                    var userId = _userRepository.GetUserIdByUsername(user.UserId);
-                    var contactId = _userRepository.GetContactIdByUserId(userId);
+                    var contactId = _contactRepository.GetContactId(token);
                     var contact = _contactRepository.GetSimpleContact(contactId).Wait();
                     return Ok(contact);
                 }

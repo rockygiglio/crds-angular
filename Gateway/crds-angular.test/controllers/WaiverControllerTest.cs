@@ -60,7 +60,7 @@ namespace crds_angular.test.controllers
             {
                 WaiverId = 23,
                 WaiverName = "You won't read it anyways",
-                WaiverText = "You agree to give me everything you own"
+                WaiverText = "You agree to give me everything you own",            
             };
 
             var waiverDto2 = new WaiverDTO
@@ -70,7 +70,7 @@ namespace crds_angular.test.controllers
                 WaiverText = "You agree to give some of your stuff"
             };
 
-            _waiverService.Setup(m => m.EventWaivers(eventId, authToken)).Returns(Observable.Create<WaiverDTO>(observer =>
+            _waiverService.Setup(m => m.EventWaivers(eventId, $"{authType} {authToken}")).Returns(Observable.Create<WaiverDTO>(observer =>
             {
                 observer.OnNext(waiverDto1);
                 observer.OnNext(waiverDto2);
@@ -103,7 +103,7 @@ namespace crds_angular.test.controllers
                 WaiverText = "You agree to give some of your stuff"
             };
 
-            _waiverService.Setup(m => m.EventWaivers(eventId, authToken)).Returns(Observable.Create<WaiverDTO>(observer =>
+            _waiverService.Setup(m => m.EventWaivers(eventId, $"{authType} {authToken}")).Returns(Observable.Create<WaiverDTO>(observer =>
             {
                 observer.OnNext(waiverDto1);
                 observer.OnNext(waiverDto2);
@@ -130,7 +130,7 @@ namespace crds_angular.test.controllers
                 WaiverText = "You agree to give me everything you own"
             };
 
-            _waiverService.Setup(m => m.EventWaivers(waiverId, authToken)).Returns(Observable.Create<WaiverDTO>(observer =>
+            _waiverService.Setup(m => m.EventWaivers(waiverId, $"{authType} {authToken}")).Returns(Observable.Create<WaiverDTO>(observer =>
             {
                 observer.OnNext(waiverDto1);
                 observer.OnCompleted();
