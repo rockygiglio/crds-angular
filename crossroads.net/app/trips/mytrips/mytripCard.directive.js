@@ -14,8 +14,8 @@ function MyTripCard($log, TripsUrlService, $cookies, $state) {
       return contactId === parseInt(loggedInContact, 10);
     }
 
-    function signWaiver(waiverId, eventParticipantId) {
-      $state.go('sign-waiver', { waiverId, eventParticipantId });
+    function signWaiver(waiverId, eventParticipantId, eventName) {
+      $state.go('sign-waiver', { waiverId, eventParticipantId, title: 'Trip Waiver', eventName });
     }
 
     function hasDocuments(waivers) {

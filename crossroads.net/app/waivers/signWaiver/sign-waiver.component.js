@@ -3,7 +3,8 @@ import SignWaiverTemplate from './sign-waiver.html';
 
 const SignWaivers = {
   bindings: {
-
+    title: '<',
+    eventName: '<'
   },
   template: SignWaiverTemplate,
   controller: SignWaiverController,

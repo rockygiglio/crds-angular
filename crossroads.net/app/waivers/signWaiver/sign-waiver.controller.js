@@ -8,6 +8,8 @@ export default class SignWaiverController {
     this.rootScope = $rootScope;
     this.waiversService = WaiversService;
     this.modal = $modal;
+    this.title = this.state.params.title || 'Trips Waiver';
+    this.eventName = this.state.params.eventName || '';
   }
 
   $onInit() {
@@ -30,9 +32,22 @@ export default class SignWaiverController {
     const { waiverId, eventParticipantId } = this.state.params;
 
     this.waiversService.sendAcceptEmail(parseInt(waiverId, 10), eventParticipantId).then(() => {
-      this.processing = false;
-      this.rootScope.$emit('notify', this.rootScope.MESSAGES.waiverEmailSent);
-      this.state.go('mytrips');
+      const modal = this.modal.open({
+        animation: true,
+        template: confirmationModal,
+        backdrop: 'static',
+        openedClass: 'crds-legacy-styles',
+        controller: ($scope, $modalInstance) => {
+          // eslint-disable-next-line
+          $scope.ok = () => {
+            $modalInstance.close();
+          };
+        },
+      });
+      modal.result.then(() => {
+        this.processing = false;
+        this.state.go('mytrips');
+      });
     }).catch((err) => {
       this.processing = false;
       this.log.error(err);
@@ -42,18 +57,5 @@ export default class SignWaiverController {
 
   cancel() {
     this.state.go('mytrips');
-  }
-
-  open() {
-    const modal = this.modal.open({
-      animation: true,
-      ariaLabelledBy: 'modal-title',
-      ariaDescribedBy: 'modal-body',
-      template: confirmationModal,
-      size: undefined,
-      appendTo: undefined
-    });
-
-    modal.result.then(() => console.log('yes'), () => console.error('no'));
   }
 }

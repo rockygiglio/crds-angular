@@ -2,7 +2,7 @@ export default function WaiversRoutes($stateProvider) {
   $stateProvider
     .state('sign-waiver', {
       parent: 'centeredContentPage',
-      url: '/waivers/sign/:waiverId/:eventParticipantId',
+      url: '/waivers/sign/:waiverId/:eventParticipantId?title&eventName',
       template: '<sign-waiver></sign-waiver>',
       data: {
         isProtected: true,
