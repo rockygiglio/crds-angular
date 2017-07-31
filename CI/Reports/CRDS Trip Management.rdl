@@ -540,6 +540,9 @@
                 <TablixColumn>
                   <Width>1in</Width>
                 </TablixColumn>
+                <TablixColumn>
+                  <Width>1in</Width>
+                </TablixColumn>
               </TablixColumns>
               <TablixRows>
                 <TablixRow>
@@ -652,6 +655,36 @@
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>Textbox16</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox4">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>Nickname</Value>
+                                  <Style />
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox4</rd:DefaultName>
                           <Style>
                             <Border>
                               <Color>LightGrey</Color>
@@ -794,7 +827,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Passport First name</Value>
+                                  <Value>Passport First Name</Value>
                                   <Style />
                                 </TextRun>
                               </TextRuns>
@@ -824,7 +857,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Passport Middlename</Value>
+                                  <Value>Passport Middle Name</Value>
                                   <Style />
                                 </TextRun>
                               </TextRuns>
@@ -854,7 +887,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Passport Lastname</Value>
+                                  <Value>Passport Last Name</Value>
                                   <Style />
                                 </TextRun>
                               </TextRuns>
@@ -974,7 +1007,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Requested Roommate1</Value>
+                                  <Value>Requested Roommate 1</Value>
                                   <Style />
                                 </TextRun>
                               </TextRuns>
@@ -1004,7 +1037,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Requested Roommate2</Value>
+                                  <Value>Requested Roommate 2</Value>
                                   <Style />
                                 </TextRun>
                               </TextRuns>
@@ -1034,7 +1067,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>medicationrestrictions</Value>
+                                  <Value>Medication Restrictions</Value>
                                   <Style />
                                 </TextRun>
                               </TextRuns>
@@ -1364,7 +1397,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>ff americanair</Value>
+                                  <Value>FF American Airlines</Value>
                                   <Style />
                                 </TextRun>
                               </TextRuns>
@@ -1394,7 +1427,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>FF Delta</Value>
+                                  <Value>FF Delta Airlines</Value>
                                   <Style />
                                 </TextRun>
                               </TextRuns>
@@ -1454,7 +1487,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>ff southwest</Value>
+                                  <Value>FF Southwest Airlines</Value>
                                   <Style />
                                 </TextRun>
                               </TextRuns>
@@ -1484,7 +1517,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>FF United</Value>
+                                  <Value>FF United Airlines</Value>
                                   <Style />
                                 </TextRun>
                               </TextRuns>
@@ -1514,7 +1547,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>FF USAir</Value>
+                                  <Value>FF US Airways</Value>
                                   <Style />
                                 </TextRun>
                               </TextRuns>
@@ -1604,7 +1637,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>IPromise</Value>
+                                  <Value>I Promise</Value>
                                   <Style />
                                 </TextRun>
                               </TextRuns>
@@ -1634,7 +1667,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>TShirt Size</Value>
+                                  <Value>T-Shirt Size</Value>
                                   <Style />
                                 </TextRun>
                               </TextRuns>
@@ -1767,6 +1800,36 @@
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>Profession1</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Nickname">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=Fields!Nickname.Value</Value>
+                                  <Style />
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Nickname</rd:DefaultName>
                           <Style>
                             <Border>
                               <Color>LightGrey</Color>
@@ -2813,6 +2876,7 @@
                 <TablixMember />
                 <TablixMember />
                 <TablixMember />
+                <TablixMember />
               </TablixMembers>
             </TablixColumnHierarchy>
             <TablixRowHierarchy>
@@ -2829,7 +2893,7 @@
             <Top>0.85in</Top>
             <Left>0.1in</Left>
             <Height>0.5in</Height>
-            <Width>37in</Width>
+            <Width>38in</Width>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -2876,7 +2940,7 @@
           </Border>
         </Style>
       </Body>
-      <Width>37.5in</Width>
+      <Width>38.1in</Width>
       <Page>
         <PageFooter>
           <Height>0.45in</Height>
