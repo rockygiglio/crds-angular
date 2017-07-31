@@ -4,7 +4,7 @@
     module.exports = CorkboardListings;
 
     CorkboardListings.$inject = ['$resource', '$http', '$cacheFactory'];
-    var postEndpoint = __SERVICES_CLIENT_ENDPOINT__ + '/corkboard/api/v1.0.0/posts/';
+    var postEndpoint = __SERVICES_CLIENT_ENDPOINT__ + '/corkboard/api/v1.0.0/posts';
 
     function CorkboardListings($resource, $http, $cacheFactory, $log) {
         return {
@@ -23,7 +23,7 @@
             },
 
             flag: function () {
-                return $resource(postEndpoint + 'flag/:id',
+                return $resource(postEndpoint + '/flag/:id',
                     { id: '@id' },
                     {
                         post: { method: 'POST', params: { id: '@id' } }

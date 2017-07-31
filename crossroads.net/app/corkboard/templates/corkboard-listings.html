@@ -12,6 +12,7 @@
         <a ng-repeat="postType in ::corkboard.postTypeList"
            ui-sref="{{::corkboard.params.type === postType.filterName
                        ? 'corkboard.root' : 'corkboard.filtered(::{type: postType.filterName})'}}"
+           ui-sref-opts="{inherit: false}"
            class="btn btn-standard-dark block btn-labeled push-half-bottom"
            ng-class="::{active: corkboard.params.type == postType.filterName}">
           {{::postType.filterButtonText}}
@@ -35,7 +36,7 @@
           </a>
       </div><!--/corkboard-submit-->
 
-      <div class="col-xs-12 corkboard-results" ng-repeat="item in ::filtered = (corkboard.posts | filter:{ PostType: corkboard.params.type })">
+      <div class="col-xs-12 corkboard-results" ng-repeat="item in corkboard.filteredPosts | limitTo: corkboard.itemsPerPage : getStartIndex()">
         <div class="card-item clearfix row-same-height animated fadeIn" data-category="view">
           <div class="col-sm-2 col-xs-4 card-img card-dark mobile-hard-left col-xs-height">
               <corkboard-card item="::item" show-text="true" post-types="::corkboard.postTypes"></corkboard-card>
@@ -71,12 +72,31 @@
           </div><!--/card-img-->
         </div><!--/card-item-->
       </div><!--/corkboard-results-->
+    </div><!--/row-->
 
-      <div class="col-xs-12" ng-if="::filtered.length === 0" >
+    <div class="row" ng-if="corkboard.filteredPosts.length === 0">
+      <div class="col-xs-12">
         <br><br>
         <h4 class="flush-top">We recently made this available...check back for postings or be the first to post something!</h4>
       </div>
-    </div><!--/row-->
+    </div>
+    
+    <div class="row" ng-if="corkboard.filteredPosts.length > 0">
+      <div class="col-xs-12">
+        <button class="btn btn-primary btn-block-mobile mobile-push-bottom pull-left" ng-click="gotoPrevPage()" ng-disabled="isFirstPage()">
+          <svg viewBox="0 0 32 32" class="icon icon-arrow-left9">
+            <use xlink:href="#arrow-left9"></use>
+          </svg>
+          Previous
+        </button>
+        <span class="center">Page {{corkboard.pageNumber}} of {{corkboard.maxPageNumber}}</span>
+        <button class="btn btn-primary btn-block-mobile mobile-push-top pull-right" ng-click="gotoNextPage()" ng-disabled="isLastPage()">Next
+          <svg viewBox="0 0 32 32" class="icon icon-arrow-right9">
+            <use xlink:href="#arrow-right9"></use>
+          </svg>
+        </button>
+      </div>
+    </div>
 
   </div><!--/col-sm-10-->
 </div><!--/row-->

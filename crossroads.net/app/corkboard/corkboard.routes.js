@@ -56,7 +56,7 @@
       controller: 'CorkboardController as corkboard',
     })
     .state('corkboard.root', {
-      url: '/corkboard',
+      url: '/corkboard?page',
       templateUrl: 'templates/corkboard-listings.html',
       data: {
         meta: {
@@ -122,7 +122,7 @@
       }
     })
     .state('corkboard.filtered', {
-      url: '/corkboard/:type',
+      url: '/corkboard/:type?page',
       templateUrl: 'templates/corkboard-listings.html',
       //This controller has to be here, if it's not stateparams won't be picked up
       controller: 'CorkboardController as corkboard'
