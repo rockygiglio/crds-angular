@@ -19,6 +19,7 @@ namespace crds_angular.Services.Analytics
             Properties segProps = mapProps(props);
             Segment.Analytics.Initialize(ASTRONOMER_APPLICATION_ID, new Config().SetAsync(false));
             Segment.Analytics.Client.Track(userId, eventName, segProps);
+            Segment.Analytics.Client.Flush();
 
         }
 
