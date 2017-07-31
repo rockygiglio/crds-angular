@@ -458,6 +458,7 @@
     <Compile Include="Services\Analytics\EventProperties.cs" />
     <Compile Include="Services\Analytics\IAnalyticsService.cs" />
     <Compile Include="Services\AwsCloudsearchService.cs" />
+    <Compile Include="Services\AwsTimeHelper.cs" />
     <Compile Include="Services\BulkEmailSyncService.cs" />
     <Compile Include="Services\CampaignService.cs" />
     <Compile Include="Services\CampRules.cs" />
