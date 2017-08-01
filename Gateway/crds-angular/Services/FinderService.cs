@@ -425,7 +425,7 @@ namespace crds_angular.Services
             // groupParticipant == null then participant not in group
             if (groupParticipant == null)
             {
-                SendEmailToAddedUser(token, user, groupid); //I added this janky
+                SendEmailToAddedUser(token, user, groupid);
                 _groupService.addContactToGroup(groupid, contactId);
 
             }
