@@ -15,6 +15,7 @@ using Crossroads.Web.Common.MinistryPlatform;
 using System.Linq;
 using System.Device.Location;
 using System.Text;
+using System.Text.RegularExpressions;
 using Amazon.CloudSearchDomain.Model;
 using crds_angular.Exceptions;
 using crds_angular.Models.AwsCloudsearch;
@@ -408,8 +409,9 @@ namespace crds_angular.Services
             return pins;
         }
 
-        public void AddUserDirectlyToGroup(User user, int groupid)
+        public void AddUserDirectlyToGroup(string token, User user, int groupid)
         {
+            
             //check to see if user exists in MP. Exclude Guest Giver and Deceased status
             var contactId = _contactRepository.GetActiveContactIdByEmail(user.email);
             if (contactId == 0)
@@ -417,18 +419,21 @@ namespace crds_angular.Services
                 user.password = System.Web.Security.Membership.GeneratePassword(25, 10);
                 contactId = _accountService.RegisterPersonWithoutUserAccount(user);
             }
-
+            
             var groupParticipant = _groupService.GetGroupParticipants(groupid, false).FirstOrDefault(p => p.ContactId == contactId);
 
             // groupParticipant == null then participant not in group
             if (groupParticipant == null)
             {
+                SendEmailToAddedUser(token, user, groupid);
                 _groupService.addContactToGroup(groupid, contactId);
+
             }
             else
             {
                 throw new DuplicateGroupParticipantException($"Participant {groupParticipant.ParticipantId} already in group.");
             }
+           
         }
 
         private void MakeAllLatLongsUnique(List<PinDto> thePins)
@@ -931,6 +936,68 @@ namespace crds_angular.Services
             }
         }
 
+        public void SendEmailToAddedUser(string token, User user, int groupid)
+        {
+            var emailTemplateId = _configurationWrapper.GetConfigIntValue("GroupsAddParticipantEmailNotificationTemplateId");
+            var emailTemplate = _communicationRepository.GetTemplate(emailTemplateId);
+            var leaderContactId = _contactRepository.GetContactId(token);
+            var leaderContact = _contactRepository.GetContactById(leaderContactId);
+            var leaderEmail = leaderContact.Email_Address;
+            var userEmail = user.email;
+            var group = _groupService.GetGroupDetails(groupid);
+            var newMemberContactId = _contactRepository.GetContactIdByEmail(user.email);
+           
+            var mergeData = new Dictionary<string, object>
+            {
+                {"Participant_Name", user.firstName},
+                {"Leader_Name", leaderContact.First_Name},
+                {"Leader_Full_Name", $"{leaderContact.First_Name} {leaderContact.Last_Name}" },
+                {"Leader_Email", leaderEmail},
+                {"Group_Name", group.GroupName}
+            };
+
+            var fromContact = new MpContact
+            {
+                ContactId = emailTemplate.FromContactId,
+                EmailAddress = emailTemplate.FromEmailAddress
+            };
+
+            var replyTo = new MpContact
+            {
+                ContactId = emailTemplate.ReplyToContactId,
+                EmailAddress = emailTemplate.ReplyToEmailAddress
+            };
+
+            var to = new List<MpContact>
+                {
+                    new MpContact
+                    {
+                        // Just need a contact ID here, doesn't have to be for the recipient
+                        ContactId = leaderContactId,
+                        EmailAddress = leaderEmail
+                    },
+                    new MpContact
+                    {
+                      ContactId = newMemberContactId,
+                      EmailAddress = userEmail
+                    }
+                };
+
+            var confirmation = new MpCommunication
+            {
+                EmailBody = emailTemplate.Body,
+                EmailSubject = emailTemplate.Subject,
+                AuthorUserId = 5,
+                DomainId = _domainId,
+                FromContact = fromContact,
+                ReplyToContact = replyTo,
+                TemplateId = emailTemplateId,
+                ToContacts = to,
+                MergeData = mergeData
+            };
+            _communicationRepository.SendMessage(confirmation);
+        }
+        
         private List<PinDto> TransformGroupDtoToPinDto(List<GroupDTO> groupDTOs, string finderType)
         {
             var pins = new List<PinDto>();

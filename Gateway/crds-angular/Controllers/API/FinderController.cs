@@ -498,7 +498,7 @@ namespace crds_angular.Controllers.API
             {
                 try
                 {
-                    _finderService.AddUserDirectlyToGroup(person, groupId);
+                    _finderService.AddUserDirectlyToGroup(token, person, groupId);
                     return (Ok());
                 }
                 catch (DuplicateGroupParticipantException dup)
