@@ -37,17 +37,7 @@ namespace MinistryPlatform.Translation.Test.Services
         {
             var restClient = new RestClient(Environment.GetEnvironmentVariable("MP_REST_API_ENDPOINT"));
             _fixture = new MinistryPlatformRestRepository(restClient);
-        }
-
-        [Test]
-        public void TestInvitiationSearchGuid()
-        {
-            var results = _fixture.UsingAuthenticationToken(_authToken).Search<MpInvitation>($"Invitation_GUID = 'ce31795f-e085-44cb-8ae7-3085d685c0ac'");
-            foreach (var p in results)
-            {
-                Console.WriteLine("Result\t{0}", p.InvitationGuid);
-            }
-        }
+        }       
 
         [Test]
         public void TestChildcareDashboardProcedure()
