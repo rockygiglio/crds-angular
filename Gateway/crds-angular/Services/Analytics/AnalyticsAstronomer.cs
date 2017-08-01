@@ -12,12 +12,16 @@ namespace crds_angular.Services.Analytics
 {
     public class AnalyticsAstronomer
     {
-        private string ASTRONOMER_APPLICATION_ID = "sZQew9P77arhJe3Qx";
+        private string applicationId = Environment.GetEnvironmentVariable("ASTRONOMER_APPLICATION_ID");
+
+        public AnalyticsAstronomer()
+        {
+            Segment.Analytics.Initialize(applicationId, new Config().SetAsync(true));
+        }
 
         public  void Track(string userId, string eventName, EventProperties props)
         {
             Properties segProps = mapProps(props);
-            Segment.Analytics.Initialize(ASTRONOMER_APPLICATION_ID, new Config().SetAsync(false));
             Segment.Analytics.Client.Track(userId, eventName, segProps);
             Segment.Analytics.Client.Flush();
 

@@ -16,5 +16,12 @@ namespace crds_angular.Services.Analytics
             var astronomer = new AnalyticsAstronomer();
             astronomer.Track(userId, eventName, props);
         }
+
+        public void Track(string userId, string eventName, EventProperties props)
+        {
+            props.Add("Source", "CrossroadsNet");
+            var astronomer = new AnalyticsAstronomer();
+            astronomer.Track(userId, eventName, props);
+        }
     }
 }
