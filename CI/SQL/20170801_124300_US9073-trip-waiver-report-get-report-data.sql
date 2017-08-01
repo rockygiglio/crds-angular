@@ -50,6 +50,6 @@ BEGIN
 		AND pw.Accepted = 1
 		AND ep.Event_ID = @EventIdIn
 		AND ep.Participation_Status_ID = 2 -- Registered
-		AND ep.Participant_ID = ISNULL(@ParticipantIdIn, ep.Participant_ID)
-	ORDER BY c.Display_Name
+		AND (@ParticipantIdIn = 0 OR ep.Participant_ID = @ParticipantIdIn)
+	ORDER BY Display_Name
 END

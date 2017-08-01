@@ -23,6 +23,8 @@ BEGIN
 
     DECLARE @DomainId int = (SELECT Domain_ID FROM dp_Domains WHERE CAST(Domain_GUID AS varchar(40)) = @DomainIdIn)
 
+	SELECT 0 AS Participant_ID, '<All Participants>' AS Display_Name
+	UNION
 	SELECT p.Participant_ID
 		, c.Display_Name
 	FROM Event_Participants ep
@@ -33,5 +35,5 @@ BEGIN
 		AND ep.Participation_Status_ID = 2 -- Registered
 		AND c.Contact_ID = p.Contact_ID
 		AND p.Domain_ID = @DomainId
-	ORDER BY c.Display_Name
+	ORDER BY Display_Name
 END
