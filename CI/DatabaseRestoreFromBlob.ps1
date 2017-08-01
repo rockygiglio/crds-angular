@@ -211,8 +211,8 @@ DROP TABLE #NewConfigSettings
 
 -- Delete the processor id for all donors
 UPDATE Donors
-	SET Processor_ID = ''
-
+    SET Processor_ID = ''
+ 
 -- Update dp_Tools Launch_Page value
 UPDATE dp_Tools
     SET Launch_Page = REPLACE(Launch_Page, '$DpToolUriToBeReplaced', '$DpToolNewUri')
