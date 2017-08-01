@@ -10,16 +10,16 @@ using Segment.Model;
 
 namespace crds_angular.Services.Analytics
 {
-    public class AnalyticsAstronomer
+    public static class AnalyticsAstronomer
     {
-        private string applicationId = Environment.GetEnvironmentVariable("ASTRONOMER_APPLICATION_ID");
+        private static string applicationId = Environment.GetEnvironmentVariable("ASTRONOMER_APPLICATION_ID");
 
-        public AnalyticsAstronomer()
+        static AnalyticsAstronomer()
         {
             Segment.Analytics.Initialize(applicationId, new Config().SetAsync(true));
         }
 
-        public  void Track(string userId, string eventName, EventProperties props)
+        public static void Track(string userId, string eventName, EventProperties props)
         {
             Properties segProps = mapProps(props);
             Segment.Analytics.Client.Track(userId, eventName, segProps);
@@ -27,7 +27,7 @@ namespace crds_angular.Services.Analytics
 
         }
 
-        private Properties mapProps(EventProperties eventProps)
+        private  static Properties mapProps(EventProperties eventProps)
         {
             var props = new Properties();
             foreach (KeyValuePair<string, object> p in eventProps)
