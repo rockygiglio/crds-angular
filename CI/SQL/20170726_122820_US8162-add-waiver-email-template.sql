@@ -19,7 +19,7 @@ BEGIN
 			   ,[Active])
 		 VALUES
 			   (@TemplateID
-			   ,7582299 -- Crossroads Church
+			   ,3009216 -- Crossroads Church
 			   ,N'Action Required: Follow the instructions to finish signing your waiver.'
 			   ,N'To finish the process of signing your waiver for [Event_Name] click <a href="[Confirmation_Url]">this confirmation</a>. <div><br /></div><div>If you received this email by mistake, simply delete it.<br /><br /></div><div>Thanks,</div><div>Crossroads Reachout</div>'
 			   ,1
