@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using crds_angular.Models.Crossroads.Events;
-using crds_angular.Models.Crossroads.Waivers;
 using MinistryPlatform.Translation.Models;
 using MpEvent = MinistryPlatform.Translation.Models.MpEvent;
 
