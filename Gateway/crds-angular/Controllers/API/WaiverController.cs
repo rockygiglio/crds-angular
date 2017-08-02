@@ -75,7 +75,6 @@ namespace crds_angular.Controllers.API
             {
                 try
                 {
-                    //TODO: make sure the event participant is the logged in user...
                     _waiverService.CreateWaiverInvitation(waiverId, eventParticipantId, token).Select(invite => _waiverService.SendAcceptanceEmail(invite).Subscribe()).Wait();                   
                     return Ok();
                 }
@@ -93,7 +92,6 @@ namespace crds_angular.Controllers.API
         {
             try
             {
-                //TODO: make sure the event participant is the logged in user...
                 var waiverDto = await _waiverService.AcceptWaiver(guid);
                 return Ok(waiverDto);
             }
