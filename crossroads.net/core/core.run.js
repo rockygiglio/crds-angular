@@ -37,7 +37,7 @@
       svg4everybody();
       $('html, body').removeClass('noscroll');
       $('.collapse.in').removeClass('in');
-      $('.modal-backdrop.fade.in').remove();
+      $('body:not(.modal-open) .modal-backdrop.fade').remove();
       // header options
       var options = {
         el: '[data-header]',
