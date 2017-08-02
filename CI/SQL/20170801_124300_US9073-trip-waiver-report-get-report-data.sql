@@ -50,6 +50,6 @@ BEGIN
 		AND pw.Accepted = 1
 		AND ep.Event_ID = @EventIdIn
 		AND ep.Participation_Status_ID = 2 -- Registered
-		AND (@ParticipantIdIn = 0 OR ep.Participant_ID = @ParticipantIdIn)
+		AND (@ParticipantIdIn = 0 OR ep.Participant_ID = @ParticipantIdIn) -- 0 means <All Participants> was selected in the report
 	ORDER BY Display_Name
 END
