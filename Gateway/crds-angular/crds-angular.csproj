@@ -352,7 +352,9 @@
     <Compile Include="Exceptions\NotHeadOfHouseholdException.cs" />
     <Compile Include="Exceptions\PaymentTypeNotFoundException.cs" />
     <Compile Include="Exceptions\TripFullException.cs" />
-    <Compile Include="Models\Crossroads\Campaign\PledgeCampaignSummaryDto.cs" />
+    <Compile Include="Models\Crossroads\Events\Campaign\PledgeCampaignSummaryDto.cs" />
+    <Compile Include="Models\Crossroads\Waivers\ContactInvitation.cs" />
+    <Compile Include="Models\Crossroads\Waivers\WaiverDTO.cs" />
     <Compile Include="Models\Crossroads\GoVolunteer\DashboardDatum.cs" />
     <Compile Include="Models\AwsCloudsearch\AwsBoundingBox.cs" />
     <Compile Include="Models\AwsCloudsearch\AwsCloudsearchDto.cs" />
@@ -490,6 +492,7 @@
     <Compile Include="Services\Interfaces\IInvitationService.cs" />
     <Compile Include="Services\Interfaces\IPaymentService.cs" />
     <Compile Include="Services\Interfaces\ITextCommunicationService.cs" />
+    <Compile Include="Services\Interfaces\IWaiverService.cs" />
     <Compile Include="Services\InvitationService.cs" />
     <Compile Include="Services\Interfaces\IAddressService.cs" />
     <Compile Include="Services\Interfaces\ICongregationService.cs" />
@@ -527,6 +530,7 @@
     <Compile Include="Services\TaskService.cs" />
     <Compile Include="Services\GroupToolService.cs" />
     <Compile Include="Services\TwilioService.cs" />
+    <Compile Include="Services\WaiverService.cs" />
     <Compile Include="Util\MailchimpListHandler.cs" />
     <Compile Include="Util\HttpAuthResult.cs" />
     <Compile Include="Util\FileResult.cs" />
@@ -708,6 +712,7 @@
     <Compile Include="Util\Interfaces\IDateTime.cs" />
     <Compile Include="Util\Interfaces\IEmailListHandler.cs" />
     <Compile Include="Util\HtmlHelper.cs" />
+    <Compile Include="Controllers\API\WaiverController.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="favicon.ico" />
