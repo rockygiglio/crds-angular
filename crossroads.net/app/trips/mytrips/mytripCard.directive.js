@@ -9,9 +9,9 @@ function MyTripCard($log, TripsUrlService, $cookies, $state) {
     }
 
     function showWaiver(contactId) {
-      // TODO: need to check for event_waiver before showing button
       const loggedInContact = $cookies.get('userId');
-      return contactId === parseInt(loggedInContact, 10);
+      const age = scope.trip.userAge;
+      return age >= 18 && contactId === parseInt(loggedInContact, 10);
     }
 
     function signWaiver(waiverId, eventParticipantId, eventName) {
@@ -19,7 +19,7 @@ function MyTripCard($log, TripsUrlService, $cookies, $state) {
     }
 
     function hasDocuments(waivers) {
-      return waivers !== null && waivers.length;
+      return waivers && waivers.length;
     }
 
     function showIPromise(contactId) {
@@ -36,7 +36,7 @@ function MyTripCard($log, TripsUrlService, $cookies, $state) {
     scope.goalMet = goalMet;
     scope.showIPromise = showIPromise;
     scope.signIPromise = signIPromise;
-    scope.shareUrl = TripsUrlService.ShareUrl(scope.trip.eventParticipantId);
+    scope.shareUrl = TripsUrlService.ShareUrl(scope.trip.eventParticipantId); // eslint-disable-line new-cap
     scope.showWaiver = showWaiver;
     scope.signWaiver = signWaiver;
     scope.hasDocuments = hasDocuments;
