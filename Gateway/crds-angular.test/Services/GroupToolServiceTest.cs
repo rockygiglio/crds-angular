@@ -43,7 +43,7 @@ namespace crds_angular.test.Services
         private Mock<IAnalyticsService> _mockAnalyticService;
 
 
-        private const int GroupRoleLeader = 987;
+        private const int GroupRoleLeader = 22;
         private const int RemoveParticipantFromGroupEmailTemplateId = 654;
         private const int GroupEndedParticipantEmailTemplate = 88876;
         private const int DomainId = 321;
@@ -1286,6 +1286,7 @@ namespace crds_angular.test.Services
             _groupService.Setup(m => m.GetGroupDetails(It.IsAny<int>())).Returns(group);
 
             _fixture.SendAllGroupLeadersEmail(token, 1, message);
+            _mockAnalyticService.Verify(x => x.Track(It.IsAny<string>(), "GroupLeaderContacted", It.IsAny<EventProperties>()), Times.Once);
             _communicationRepository.VerifyAll();
         }
 
@@ -1571,6 +1572,8 @@ namespace crds_angular.test.Services
 
 
             _fixture.SubmitInquiry(token, groupId);
+            _mockAnalyticService.Verify(x => x.Track(It.IsAny<string>(), "RequestedToJoinGroup"), Times.Once);
+
             _groupRepository.VerifyAll();
             _groupToolRepository.VerifyAll();
 
@@ -1640,6 +1643,8 @@ namespace crds_angular.test.Services
             _communicationRepository.Setup(mocked => mocked.SendMessage(It.IsAny<MpCommunication>(), false)).Returns(1);
 
             _fixture.SubmitInquiry(token, groupId);
+            _mockAnalyticService.Verify(x => x.Track(It.IsAny<string>(), "RequestedToJoinGroup"), Times.Once);
+
             _groupRepository.VerifyAll();
             _groupToolRepository.VerifyAll();
 
@@ -1720,7 +1725,8 @@ namespace crds_angular.test.Services
                 Assert.AreSame(typeof(ExistingRequestException), e.GetType());
             }
 
-            
+
+            _mockAnalyticService.Verify(x => x.Track(It.IsAny<string>(), "RequestedToJoinGroup"), Times.Never);
 
             _groupRepository.VerifyAll();
             _groupToolRepository.VerifyAll();

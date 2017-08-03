@@ -358,7 +358,7 @@ namespace crds_angular.Services
                     ApproveInquiry(groupId, myGroup.Group, inquiry, myGroup.Me, message);
                     var props = new EventProperties();
                     props.Add("GroupName", myGroup.Me.GroupName);
-                    _analyticsService.Track(myGroup.Me.EmailAddress, "AcceptedIntoGroup", props);
+                    _analyticsService.Track(inquiry.ContactId.ToString(), "AcceptedIntoGroup", props);
                 }
                 else
                 {
@@ -562,7 +562,13 @@ namespace crds_angular.Services
                 ToContacts = leaders
             };
 
+     
             _communicationRepository.SendMessage(email);
+            var props = new EventProperties();
+            props.Add("GroupName", group.GroupName);
+            props.Add("GroupLeaderName", leaders[0].Nickname);
+            _analyticsService.Track(requestor.ContactId.ToString(), "GroupLeaderContacted", props);
+
         }
 
         public void SendAllGroupParticipantsEmail(string token, int groupId, int groupTypeId, string subject, string body)
@@ -800,6 +806,8 @@ namespace crds_angular.Services
             };
 
             _groupRepository.CreateGroupInquiry(mpInquiry);
+
+            _analyticsService.Track(contact.Contact_ID.ToString(), "RequestedToJoinGroup");
 
             var group = _groupService.GetGroupDetails(groupId);
             var leaders = group.Participants.

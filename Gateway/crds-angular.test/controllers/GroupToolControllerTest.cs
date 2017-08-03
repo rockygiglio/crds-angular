@@ -121,6 +121,7 @@ namespace crds_angular.test.controllers
             
             var result = _fixture.ApproveDenyInquiryFromMyGroup(groupTypeId, groupId, approve, inquiry);
             _groupToolService.VerifyAll();
+            _mockAnalyticsService.Verify(x => x.Track(It.IsAny<string>(), "SearchedForGroups", It.IsAny<EventProperties>()), Times.Never);
 
             Assert.IsNotNull(result);
             Assert.IsInstanceOf<OkResult>(result);

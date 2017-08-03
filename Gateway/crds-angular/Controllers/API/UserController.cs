@@ -46,7 +46,7 @@ namespace crds_angular.Controllers.API
             try
             {
                 var userRecord = _accountService.RegisterPerson(user);
-                _analyticsService.Track(user.email, "SignedUp");
+                _analyticsService.Track(userRecord.email, "SignedUp");
                 return Ok(userRecord);
             }
             catch (DuplicateUserException e)
