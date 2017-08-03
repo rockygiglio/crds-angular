@@ -296,6 +296,7 @@
     <Compile Include="controllers\TextCommunicationControllerTest.cs" />
     <Compile Include="controllers\TripControllerTest.cs" />
     <Compile Include="controllers\UserControllerTest.cs" />
+    <Compile Include="controllers\WaiverControllerTest.cs" />
     <Compile Include="DataAccess\EzScanCheckScannerDaoTest.cs" />
     <Compile Include="Exceptions\GroupParticipantRemovalExceptionTest.cs" />
     <Compile Include="Services\AwsCloudsearchServiceTest.cs" />
@@ -353,6 +354,7 @@
     <Compile Include="Services\TwilioServiceTest.cs" />
     <Compile Include="Services\UserImpersonationServiceTest.cs" />
     <Compile Include="Services\VolunteerApplicationServiceTest.cs" />
+    <Compile Include="Services\WaiverServiceTest.cs" />
     <Compile Include="TestHelpers.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -410,11 +412,11 @@
     <Folder Include="IntegrationTests\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="FsCheckAddin.fs" />
-  </ItemGroup>
-  <ItemGroup>
     <Analyzer Include="..\packages\AWSSDK.CloudSearch.3.3.0.10\analyzers\dotnet\cs\AWSSDK.CloudSearch.CodeAnalysis.dll" />
     <Analyzer Include="..\packages\AWSSDK.CloudSearchDomain.3.3.0.10\analyzers\dotnet\cs\AWSSDK.CloudSearchDomain.CodeAnalysis.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="FsCheckAddin.fs" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
