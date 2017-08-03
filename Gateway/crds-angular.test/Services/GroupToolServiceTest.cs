@@ -1161,7 +1161,7 @@ namespace crds_angular.test.Services
             GroupParticipantDTO groupParticipant = new GroupParticipantDTO
             {
                 ContactId = 123,
-                GroupRoleId = 987,
+                GroupRoleId = 22,
                 ParticipantId = 456
             };
 
@@ -1202,7 +1202,7 @@ namespace crds_angular.test.Services
                     ContactId = 123,
                     Email = "leader@test.com",
                     ParticipantId = 456,
-                    GroupRoleId = 987,
+                    GroupRoleId = 22,
                 },
                 new GroupParticipantDTO()
                 {
