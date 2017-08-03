@@ -462,11 +462,10 @@ namespace crds_angular.Services
                                           GroupToolDenyInquiryEmailTemplateText,
                                           message,
                                           me);
-
             }
             catch (Exception e)
             {
-                _logger.Error($"Could not send email to Inquirier {inquiry.InquiryId} notifying of being approved to group {groupId}", e);
+                _logger.Error($"Could not send email to Inquirer {inquiry.InquiryId} notifying of being approved to group {groupId}", e);
             }
         }
 

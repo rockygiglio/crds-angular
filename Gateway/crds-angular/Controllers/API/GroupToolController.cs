@@ -8,20 +8,17 @@ using System.Web.Http.Description;
 using crds_angular.Exceptions;
 using crds_angular.Exceptions.Models;
 using crds_angular.Models.Crossroads;
-using crds_angular.Models.Crossroads.Attribute;
 using crds_angular.Models.Crossroads.Groups;
 using crds_angular.Models.Finder;
 using crds_angular.Models.Json;
 using crds_angular.Security;
 using crds_angular.Services.Analytics;
 using crds_angular.Services.Interfaces;
-using Crossroads.Utilities.Interfaces;
 using log4net;
 using Crossroads.ApiVersioning;
 using Crossroads.Web.Common;
 using Crossroads.Web.Common.Configuration;
 using Crossroads.Web.Common.Security;
-using Segment.Model;
 
 namespace crds_angular.Controllers.API
 {

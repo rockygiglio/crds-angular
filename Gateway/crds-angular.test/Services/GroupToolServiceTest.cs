@@ -1725,12 +1725,10 @@ namespace crds_angular.test.Services
                 Assert.AreSame(typeof(ExistingRequestException), e.GetType());
             }
 
-
             _mockAnalyticService.Verify(x => x.Track(It.IsAny<string>(), "RequestedToJoinGroup"), Times.Never);
 
             _groupRepository.VerifyAll();
             _groupToolRepository.VerifyAll();
-
         }
 
         [Test]
