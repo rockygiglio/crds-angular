@@ -347,13 +347,12 @@ namespace crds_angular.Services
                     t.FundraisingGoal = Convert.ToInt32(pledge.PledgeTotal);
                     t.EventParticipantId = tripParticipant.EventParticipantId;
                     t.EventParticipantFirstName = tripParticipant.Nickname;
-                    t.EventParticipantLastName = tripParticipant.Lastname;
+                    t.EventParticipantLastName = tripParticipant.Lastname;                    
                     t.IPromiseSigned = GetIPromise(tripParticipant.EventParticipantId);
                     t.ContactId = contactId;
 
                     events.Add(t);
                 }
-               
             }
 
             foreach (var e in events)

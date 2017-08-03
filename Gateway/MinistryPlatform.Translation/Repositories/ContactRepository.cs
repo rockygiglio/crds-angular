@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive.Linq;
 using System.Reactive.Threading.Tasks;
 using System.Threading.Tasks;
 using log4net;
@@ -106,6 +107,18 @@ namespace MinistryPlatform.Translation.Repositories
             }
 
             return ParseProfileRecord(pageViewRecords[0]);
+        }
+
+        public IObservable<MpSimpleContact> GetSimpleContact(int contactId)
+        {
+            try
+            {
+                return Observable.Start(() => _ministryPlatformRest.UsingAuthenticationToken(ApiLogin()).Get<MpSimpleContact>(contactId));
+            }
+            catch (Exception e)
+            {
+                return Observable.Throw<MpSimpleContact>(new Exception($"Can't find a contact with ID = {contactId}"));
+            }
         }
 
         public MpMyContact GetContactByIdCard(string idCard)

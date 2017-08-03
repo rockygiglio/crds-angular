@@ -1,14 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using Crossroads.Utilities.Interfaces;
+using System.Reactive.Linq;
 using log4net;
-using Crossroads.Web.Common;
 using Crossroads.Web.Common.Configuration;
+using Crossroads.Web.Common.MinistryPlatform;
 using Crossroads.Web.Common.Security;
 using MinistryPlatform.Translation.Extensions;
-using MinistryPlatform.Translation.Helpers;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 
@@ -21,14 +19,26 @@ namespace MinistryPlatform.Translation.Repositories
 
 
         private readonly IMinistryPlatformService _ministryPlatformService;
+        private readonly IMinistryPlatformRestRepository _ministryPlatformRestRepository;
 
         public InvitationRepository(IMinistryPlatformService ministryPlatformService,
+                               IMinistryPlatformRestRepository ministryPlatformRestRepository,
                                IConfigurationWrapper configurationWrapper,
                                IAuthenticationRepository authenticationService)
             : base(authenticationService, configurationWrapper)
         {
             _ministryPlatformService = ministryPlatformService;
+            _ministryPlatformRestRepository = ministryPlatformRestRepository;
             _invitationPageId = _configurationWrapper.GetConfigIntValue("InvitationPageID");
+        }
+
+        public IObservable<MpInvitation> CreateInvitationAsync(MpInvitation invite)
+        {
+            return Observable.Start<MpInvitation>(() =>
+            {
+                var token = ApiLogin();
+                return _ministryPlatformRestRepository.UsingAuthenticationToken(token).Create(invite);
+            });
         }
 
         public MpInvitation CreateInvitation(MpInvitation dto)
@@ -61,6 +71,22 @@ namespace MinistryPlatform.Translation.Repositories
             {
                 throw new ApplicationException(string.Format("Create Invitation failed.  Invitation Type: {0}, Source Id: {1}", dto.InvitationType, dto.SourceId), e);
             }
+        }
+
+        public IObservable<MpInvitation> GetOpenInvitationAsync(string invitationGuid)
+        {
+            return Observable.Start(() =>
+            {
+                var token = ApiLogin();
+                var filter = $"Invitation_GUID = '{invitationGuid}' AND Invitation_Used = 0";
+                var result = _ministryPlatformRestRepository.UsingAuthenticationToken(token).Search<MpInvitation>(filter);
+                if (result.Count > 0)
+                {
+                    return result.First();
+                }
+                throw new Exception("Invitation has already been used!");
+                
+            });
         }
 
         public MpInvitation GetOpenInvitation(string invitationGuid)
@@ -103,11 +129,13 @@ namespace MinistryPlatform.Translation.Repositories
             {
                 string token = ApiLogin();
                 var invitation = GetOpenInvitation(invitationGuid);
-            
-                var dictionary = new Dictionary<string, object>();
-                dictionary.Add("Invitation_ID", invitation.InvitationId);
-                dictionary.Add("Invitation_GUID", new Guid(invitationGuid));
-                dictionary.Add("Invitation_Used", true);
+
+                var dictionary = new Dictionary<string, object>
+                {
+                    {"Invitation_ID", invitation.InvitationId},
+                    {"Invitation_GUID", new Guid(invitationGuid)},
+                    {"Invitation_Used", true}
+                };
 
                 _ministryPlatformService.UpdateRecord(_invitationPageId, dictionary, token);
             }

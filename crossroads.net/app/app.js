@@ -12,24 +12,25 @@ require('./invoices/invoices.module');
 
   var constants = require('./constants');
   angular.module(constants.MODULES.CROSSROADS, [
-      constants.MODULES.CHILDCARE_DASHBOARD,
-      constants.MODULES.CORE,
-      constants.MODULES.COMMON,
-      constants.MODULES.FORM_BUILDER,
-      constants.MODULES.GIVE,
-      constants.MODULES.GO_VOLUNTEER,
-      constants.MODULES.MEDIA,
-      constants.MODULES.LIVE_STREAM,
-      constants.MODULES.MPTOOLS,
-      constants.MODULES.MY_SERVE,
-      constants.MODULES.GROUP_TOOL,
-      constants.MODULES.PROFILE,
-      constants.MODULES.SEARCH,
-      constants.MODULES.SIGNUP,
-      constants.MODULES.TRIPS,
-      constants.MODULES.CAMPS,
-      constants.MODULES.INVOICES,
-   ]);
+    constants.MODULES.CHILDCARE_DASHBOARD,
+    constants.MODULES.CORE,
+    constants.MODULES.COMMON,
+    constants.MODULES.FORM_BUILDER,
+    constants.MODULES.GIVE,
+    constants.MODULES.GO_VOLUNTEER,
+    constants.MODULES.MEDIA,
+    constants.MODULES.LIVE_STREAM,
+    constants.MODULES.MPTOOLS,
+    constants.MODULES.MY_SERVE,
+    constants.MODULES.GROUP_TOOL,
+    constants.MODULES.PROFILE,
+    constants.MODULES.SEARCH,
+    constants.MODULES.SIGNUP,
+    constants.MODULES.TRIPS,
+    constants.MODULES.CAMPS,
+    constants.MODULES.INVOICES,
+    constants.MODULES.WAIVERS
+  ]);
 
   angular.module(constants.MODULES.CROSSROADS)
     .config(require('./routes'))
@@ -54,5 +55,3 @@ require('./invoices/invoices.module');
   require('./giving_history');
   require('./leaveyourmark');
 })();
-
-
