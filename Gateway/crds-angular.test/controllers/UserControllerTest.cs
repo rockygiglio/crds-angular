@@ -53,11 +53,10 @@ namespace crds_angular.test.controllers
         {
             var user = new User();
             _accountService.Setup(mocked => mocked.RegisterPerson(user)).Returns(user);
-            //_mockAnalyticService.Setup(mocked => mocked.Track("test@email.com", "SignedUp"));
 
             var response = _fixture.Post(user);
             _accountService.VerifyAll();
-            _mockAnalyticService.Verify(x => x.Track(It.IsAny<string>(), It.IsAny<string>()), Times.Once);
+            _mockAnalyticService.Verify(x => x.Track(It.IsAny<string>(), "SignedUp"), Times.Once);
 
             
             Assert.IsNotNull(response);
