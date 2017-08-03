@@ -20,6 +20,7 @@ using Rhino.Mocks;
 using Amazon.CloudSearchDomain.Model;
 using crds_angular.Exceptions;
 using crds_angular.Models.AwsCloudsearch;
+using crds_angular.Services.Analytics;
 using Crossroads.Web.Common.Security;
 using MvcContrib.TestHelper;
 
@@ -46,7 +47,8 @@ namespace crds_angular.test.Services
         private Mock<IFinderService> _mpFinderServiceMock;
         private Mock<IAuthenticationRepository> _authenticationRepository;
         private Mock<ICommunicationRepository> _communicationRepository;
-        private Mock<IAccountService> _accoutService;
+        private Mock<IAccountService> _accountService;
+        private Mock<IAnalyticsService> _analyticsService;
 
         private int _memberRoleId = 16;
         private int _anywhereGatheringInvitationTypeId = 3;
@@ -70,7 +72,9 @@ namespace crds_angular.test.Services
             _awsCloudsearchService = new Mock<IAwsCloudsearchService>();
             _authenticationRepository = new Mock<IAuthenticationRepository>();
             _communicationRepository = new Mock<ICommunicationRepository>();
-            _accoutService = new Mock<IAccountService>();
+            _accountService = new Mock<IAccountService>();
+            _analyticsService = new Mock<IAnalyticsService>();
+            
 
             _mpFinderServiceMock = new Mock<IFinderService>(MockBehavior.Strict);
 
@@ -97,7 +101,8 @@ namespace crds_angular.test.Services
                                          _awsCloudsearchService.Object,
                                          _authenticationRepository.Object,
                                          _communicationRepository.Object,
-                                         _accoutService.Object);
+                                         _accountService.Object,
+                                         _analyticsService.Object);
 
             //force AutoMapper to register
             AutoMapperConfig.RegisterMappings();
@@ -153,6 +158,52 @@ namespace crds_angular.test.Services
             Assert.AreEqual(result.AddressID, 1);
             Assert.AreEqual(result.AddressLine1, "1 Street");
 
+        }
+
+        [Test]
+        public void ShouldCallAnalyticsWhenAcceptingAnInvite()
+        {
+            var hostPin = GetAPin(2);
+            var invitedContact = new MpMyContact()
+            {
+                Contact_ID = 42,
+                Email_Address = "invited@email.com"
+            };
+            const int groupId = 42;
+            const string invitationGuid = "ILIKEICECREAM";
+            const string token = "IAMAUTHENTICATEDMAN";
+
+            _mpGroupToolService.Setup(m => m.AcceptDenyGroupInvitation(
+                                          It.Is<string>(toke => toke.Equals(token)),
+                                          It.Is<int>(GroupID => GroupID == groupId),
+                                          It.Is<string>(invite => invite.Equals(invitationGuid)),
+                                          It.Is<Boolean>(t => t == true)
+                                      ));
+
+            _groupService.Setup(m => m.GetPrimaryContactParticipantId(It.Is<int>(GroupID => GroupID == groupId))).Returns(42);
+            _mpFinderRepository.Setup(m => m.GetPinDetails(It.Is<int>(partId => partId == 42))).Returns(convertPinDtoToFinderPinDto(hostPin));
+            _mpContactRepository.Setup(m => m.GetContactById(It.Is<int>(id => id == invitedContact.Contact_ID))).Returns(invitedContact);
+            _authenticationRepository.Setup(m => m.GetContactId(It.Is<string>(Token => Token.Equals(token)))).Returns(invitedContact.Contact_ID);
+            _mpFinderRepository.Setup(m => m.RecordConnection(It.IsAny<MpConnectCommunication>()));
+            _communicationRepository.Setup(m => m.GetTemplate(It.IsAny<int>())).Returns(new MpMessageTemplate());
+            _communicationRepository.Setup(m => m.SendMessage(It.IsAny<MinistryPlatform.Translation.Models.MpCommunication>(), false));
+            _analyticsService.Setup(m => m.Track(
+                                        It.Is<string>(hostId => hostId.Equals(hostPin.Contact_ID.ToString())),
+                                        It.Is<string>(eventName => eventName.Equals("HostInvitationAccepted")),
+                                        It.Is<EventProperties>(props => props["InvitationTo"].Equals(invitedContact.Contact_ID)
+                                                                        && props["InvitationToEmail"].Equals(invitedContact.Email_Address))
+                                    ));
+
+            _analyticsService.Setup(m => m.Track(
+                                        It.Is<string>(invitedId => invitedId.Equals(invitedContact.Contact_ID.ToString())),
+                                        It.Is<string>(eventName => eventName.Equals("InviteeAcceptedInvitation")),
+                                        It.Is<EventProperties>(props => props["InvitationFrom"].Equals(hostPin.Contact_ID)
+                                                                        && props["InvitationFromEmail"].Equals(hostPin.EmailAddress))
+                                    ));
+
+            _fixture.AcceptDenyGroupInvitation(token, groupId, invitationGuid, true);
+            _analyticsService.VerifyAll();
+            _groupService.VerifyAll();
         }
 
         [Test]
@@ -733,6 +784,11 @@ namespace crds_angular.test.Services
             _mpContactRepository.Setup(x => x.GetContactId(It.IsAny<string>())).Returns(3);
             _fixture.InviteToGroup(token, gatheringId, person, "SMALL_GROUP");
             _invitationService.VerifyAll();
+        }
+
+        private FinderPinDto convertPinDtoToFinderPinDto(PinDto pinDto)
+        {
+            return Mapper.Map<FinderPinDto>(pinDto);
         }
 
         private PinDto GetAPin(int designator = 1)
