@@ -8,6 +8,7 @@ using crds_angular.Models.Crossroads;
 using crds_angular.Models.Crossroads.Attribute;
 using crds_angular.Models.Crossroads.Groups;
 using crds_angular.Services;
+using crds_angular.Services.Analytics;
 using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Interfaces;
 using Crossroads.Utilities.Models;
@@ -39,6 +40,8 @@ namespace crds_angular.test.Services
         private Mock<IAttributeService> _attributeService;
         private Mock<IAddressService> _addressService;
         private Mock<MPServices.IFinderRepository> _finderRepository;
+        private Mock<IAnalyticsService> _mockAnalyticService;
+
 
         private const int GroupRoleLeader = 987;
         private const int RemoveParticipantFromGroupEmailTemplateId = 654;
@@ -78,6 +81,8 @@ namespace crds_angular.test.Services
             _attributeService = new Mock<IAttributeService>(MockBehavior.Strict);
             _addressService = new Mock<IAddressService>(MockBehavior.Strict);
             _finderRepository = new Mock<MPServices.IFinderRepository>();
+            _mockAnalyticService = new Mock<IAnalyticsService>();
+
 
             var configuration = new Mock<IConfigurationWrapper>();
 
@@ -113,6 +118,7 @@ namespace crds_angular.test.Services
                                             _emailCommunicationService.Object,
                                             _attributeService.Object,
                                             _addressService.Object,
+                                            _mockAnalyticService.Object,
                                             _finderRepository.Object);
         }
 
@@ -237,6 +243,7 @@ namespace crds_angular.test.Services
             {
                 ParticipantId = myParticipantId
             };
+
             _participantRepository.Setup(mocked => mocked.GetParticipantRecord("abc")).Returns(myParticipant);
 
             var groups = new List<GroupDTO>
@@ -264,7 +271,7 @@ namespace crds_angular.test.Services
             var mygroup = new GroupDTO {GroupTypeId = 5};
 
             _groupService.Setup(mocked => mocked.GetGroupByIdForAuthenticatedUser("abc", 2)).Returns(groups);
-
+            
             var inquiry = new Inquiry
             {
                 ContactId = 123,
@@ -306,13 +313,14 @@ namespace crds_angular.test.Services
             _groupService.Setup(mocked => mocked.GetGroupDetails(It.IsAny<int>())).Returns(mygroup);
 
 
-
             _fixture.ApproveDenyInquiryFromMyGroup("abc", 1, 2, true, inquiry, message);
 
             _participantRepository.VerifyAll();
             _groupService.VerifyAll();
             _groupRepository.VerifyAll();
             _communicationRepository.VerifyAll();
+            _mockAnalyticService.Verify(x => x.Track(It.IsAny<string>(), "AcceptedIntoGroup", It.IsAny<EventProperties>()), Times.Once);
+
 
         }
 

@@ -6,7 +6,6 @@ using System.Web.Http.Controllers;
 using System.Web.Http.Results;
 using crds_angular.Controllers.API;
 using crds_angular.Models.Json;
-using crds_angular.Services.Analytics;
 using Moq;
 using NUnit.Framework;
 using ILoginService = crds_angular.Services.Interfaces.ILoginService;

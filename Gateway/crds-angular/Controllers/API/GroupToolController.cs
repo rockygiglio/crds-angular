@@ -13,6 +13,7 @@ using crds_angular.Models.Crossroads.Groups;
 using crds_angular.Models.Finder;
 using crds_angular.Models.Json;
 using crds_angular.Security;
+using crds_angular.Services.Analytics;
 using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Interfaces;
 using log4net;
@@ -20,6 +21,7 @@ using Crossroads.ApiVersioning;
 using Crossroads.Web.Common;
 using Crossroads.Web.Common.Configuration;
 using Crossroads.Web.Common.Security;
+using Segment.Model;
 
 namespace crds_angular.Controllers.API
 {
@@ -31,16 +33,20 @@ namespace crds_angular.Controllers.API
 
         private readonly int _defaultGroupTypeId;
         private readonly IConfigurationWrapper _configurationWrapper;
+        private readonly IAnalyticsService _analyticsService;
+
 
         public GroupToolController(Services.Interfaces.IGroupToolService groupToolService,
                                    IConfigurationWrapper configurationWrapper, 
                                    IUserImpersonationService userImpersonationService, 
                                    IAuthenticationRepository authenticationRepository,
+                                   IAnalyticsService analyticsService,
                                    IGroupService groupService) : base(userImpersonationService, authenticationRepository)
         {
             _groupToolService = groupToolService;
             _groupService = groupService;
             _configurationWrapper = configurationWrapper;
+            _analyticsService = analyticsService;
             _defaultGroupTypeId = _configurationWrapper.GetConfigIntValue("SmallGroupTypeId");
         }
 
@@ -237,6 +243,11 @@ namespace crds_angular.Controllers.API
                 {
                     return RestHttpActionResult<List<GroupDTO>>.WithStatus(HttpStatusCode.NotFound, new List<GroupDTO>());
                 }
+                // Analytics call
+                var props = new EventProperties();
+                props.Add("Keywords", keywords);
+                props.Add("Location", location);
+                _analyticsService.Track("Anonymous", "SearchedForGroup", props);
 
                 return Ok(result);
             }
