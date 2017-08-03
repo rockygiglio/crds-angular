@@ -16,6 +16,7 @@ require('./invoices/invoices.module');
     constants.MODULES.CORE,
     constants.MODULES.COMMON,
     constants.MODULES.FORM_BUILDER,
+    constants.MODULES.FORMIO,
     constants.MODULES.GIVE,
     constants.MODULES.GO_VOLUNTEER,
     constants.MODULES.MEDIA,

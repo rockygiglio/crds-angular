@@ -8,5 +8,6 @@ require('./profile/profile.module.js');
 require('./go_volunteer/goVolunteer.module.js');
 require('./common/common.module.js');
 require('./formBuilder/formBuilder.module.js');
+require('./formio/formio.module.js');
 require('./formlyBuilder/formlyBuilder.module.js');
 require('./waivers/waivers.module');

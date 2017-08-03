@@ -6,6 +6,7 @@
   require('expose?moment!moment');
   require('expose?imgix!../lib/imgix.min');
   require('expose?fastclick!fastclick');
+  require('expose?formio!ng-formio/dist/formio-full.min.js');
 
   require('../lib/angular-growl');
 

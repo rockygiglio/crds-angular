@@ -13,6 +13,7 @@
       COMMUNITY_GROUPS: 'crossroads.community',
       CROSSROADS: 'crossroads',
       FORM_BUILDER: 'crossroads.form_builder',
+      FORMIO: 'crossroads.formio',
       FORMLY_BUILDER: 'crossroads.formly_builder',
       GIVE: 'crossroads.give',
       GO_VOLUNTEER: 'crossroads.go_volunteer',

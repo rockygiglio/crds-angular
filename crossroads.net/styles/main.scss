@@ -1,3 +1,5 @@
+@import './formio';
+
 .crds-styles {
   @import '~crds-styles/assets/stylesheets/bootstrap';
 }
@@ -6,4 +8,3 @@
 body:not(.modal-open) .modal-backdrop.fade:not(.in) {
   display: none;
 }
-
