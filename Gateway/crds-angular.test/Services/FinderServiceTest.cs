@@ -48,7 +48,7 @@ namespace crds_angular.test.Services
         private Mock<IAuthenticationRepository> _authenticationRepository;
         private Mock<ICommunicationRepository> _communicationRepository;
       
-        private Mock<IAccountService> _accoutService;
+        private Mock<IAccountService> _accountService;
         private Mock<ILookupService> _lookupService;
         private Mock<IAnalyticsService> _analyticsService;
 
@@ -104,9 +104,8 @@ namespace crds_angular.test.Services
                                          _awsCloudsearchService.Object,
                                          _authenticationRepository.Object,
                                          _communicationRepository.Object,
-                                         
-                                         _accoutService.Object,
-                                         _lookupService.Object;
+                                         _accountService.Object,
+                                         _lookupService.Object,
                                          _analyticsService.Object);
 
             //force AutoMapper to register
