@@ -22,8 +22,17 @@ namespace crds_angular.Services {
         {
             var dayString = "";
             var token = _apiUserRepository.GetToken();
-            var days = _lookupRepository.ReminderDays(token);
-            days.First( x => x.FirstOrDefault().Key == meetingDayId);
+            var days = _lookupRepository.MeetingDays(token);
+
+            var dictionary = days.FirstOrDefault();
+
+            foreach (KeyValuePair<string, object> pair in dictionary)
+                if (meetingDayId.Equals(pair.Value))
+                {
+                    dayString = pair.Key;
+                }
+
+            return dayString;
         }
 
         public string GetMeetingFrequencyFromId(int meetingFrequencyId)
