@@ -24,6 +24,7 @@ using DonationStatus = crds_angular.Models.Crossroads.Stewardship.DonationStatus
 using IDonationService = crds_angular.Services.Interfaces.IDonationService;
 using IDonorService = crds_angular.Services.Interfaces.IDonorService;
 using MPInterfaces = MinistryPlatform.Translation.Repositories.Interfaces;
+using crds_angular.Services.Interfaces;
 
 namespace crds_angular.test.controllers
 {
@@ -36,6 +37,7 @@ namespace crds_angular.test.controllers
         private Mock<IAuthenticationRepository> _authenticationService;
         private Mock<MPInterfaces.IDonorRepository> _mpDonorService;
         private Mock<IUserImpersonationService> _impersonationService;
+        private Mock<IAnalyticsService> _analyticsService;
         private string _authType;
         private string _authToken;
         private const int ContactId = 8675309;
@@ -62,7 +64,8 @@ namespace crds_angular.test.controllers
             _authenticationService = new Mock<IAuthenticationRepository>();
             _mpDonorService = new Mock<MPInterfaces.IDonorRepository>();
             _impersonationService = new Mock<IUserImpersonationService>();
-            _fixture = new DonorController(_donorService.Object, _paymentService.Object, _donationService.Object, _mpDonorService.Object, _authenticationService.Object, _impersonationService.Object);
+            _analyticsService = new Mock<IAnalyticsService>();
+            _fixture = new DonorController(_donorService.Object, _paymentService.Object, _donationService.Object, _mpDonorService.Object, _authenticationService.Object, _impersonationService.Object, _analyticsService.Object);
 
             _authType = "auth_type";
             _authToken = "auth_token";
