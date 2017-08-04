@@ -25,7 +25,8 @@ namespace crds_angular.Services {
 
             foreach (var day in days)
             {
-                if ((int) day["dp_RecordID"] == meetingDayId) ;
+                var dayid = Convert.ToInt32(day["dp_RecordID"]);
+                if (dayid == meetingDayId)
                 {
                     dayString = day["dp_RecordName"].ToString();
                 }
