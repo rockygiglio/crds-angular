@@ -1,11 +1,14 @@
-var attributeTypes = require('crds-constants').ATTRIBUTE_TYPE_IDS;
-var attributeIds = require('crds-constants').ATTRIBUTE_IDS;
+// eslint-disable-next-line import/no-extraneous-dependencies,import/no-unresolved
+const attributeType = require('crds-constants').ATTRIBUTE_TYPE_IDS.FREQUENT_FLYERS;
 
 export default class TravelInformationController {
   /* @ngInject() */
-  constructor($rootScope, Validation) {
+  constructor($rootScope, Validation, AttributeTypeService, TravelInformationService, $state) {
     this.$rootScope = $rootScope;
     this.validation = Validation;
+    this.travelInformation = TravelInformationService;
+    this.attributeTypeService = AttributeTypeService;
+    this.state = $state;
 
     this.now = null;
     this.initDate = null;
@@ -14,7 +17,7 @@ export default class TravelInformationController {
     this.person = {};
     this.travelInfoForm = {};
     this.frequentFlyers = [];
-    this.validPassport = false;
+    this.validPassport = null;
 
     this.maxPassportExpireDate = null;
     this.minPassportExpireDate = null;
@@ -24,113 +27,33 @@ export default class TravelInformationController {
   }
 
   $onInit() {
-    this.destination = 'South Africa';
-    this.frequentFlyers = [
-      {
-        "attributeId": 3958,
-        "name": "Delta Airlines",
-        "description": null,
-        "selected": false,
-        "startDate": "0001-01-01T00:00:00",
-        "endDate": null,
-        "notes": null,
-        "sortOrder": 0,
-        "category": null,
-        "categoryId": null,
-        "categoryDescription": null,
-        "attributeTypeId": null
-      },
-      {
-        "attributeId": 3959,
-        "name": "South Africa Airlines",
-        "description": null,
-        "selected": false,
-        "startDate": "0001-01-01T00:00:00",
-        "endDate": null,
-        "notes": null,
-        "sortOrder": 0,
-        "category": null,
-        "categoryId": null,
-        "categoryDescription": null,
-        "attributeTypeId": null
-      },
-      {
-        "attributeId": 4623,
-        "name": "Southwest",
-        "description": null,
-        "selected": false,
-        "startDate": "0001-01-01T00:00:00",
-        "endDate": null,
-        "notes": null,
-        "sortOrder": 0,
-        "category": null,
-        "categoryId": null,
-        "categoryDescription": null,
-        "attributeTypeId": null
-      },
-      {
-        "attributeId": 3960,
-        "name": "United Airlines",
-        "description": null,
-        "selected": false,
-        "startDate": "0001-01-01T00:00:00",
-        "endDate": null,
-        "notes": null,
-        "sortOrder": 0,
-        "category": null,
-        "categoryId": null,
-        "categoryDescription": null,
-        "attributeTypeId": null
-      },
-      {
-        "attributeId": 3980,
-        "name": "US Airways",
-        "description": null,
-        "selected": false,
-        "startDate": "0001-01-01T00:00:00",
-        "endDate": null,
-        "notes": null,
-        "sortOrder": 0,
-        "category": null,
-        "categoryId": null,
-        "categoryDescription": null,
-        "attributeTypeId": null
-      },
-      {
-        "attributeId": 5000,
-        "name": "American Airlines",
-        "description": null,
-        "selected": false,
-        "startDate": "0001-01-01T00:00:00",
-        "endDate": null,
-        "notes": null,
-        "sortOrder": 0,
-        "category": null,
-        "categoryId": null,
-        "categoryDescription": null,
-        "attributeTypeId": null
-      }
-    ];
-
     this.now = new Date();
     this.initDate = new Date(this.now.getFullYear(), this.now.getMonth(), this.now.getDate());
     this.maxPassportExpireDate = new Date(this.now.getFullYear() + 150, this.now.getMonth(), this.now.getDate());
     this.minPassportExpireDate = new Date(this.now.getFullYear(), this.now.getMonth(), this.now.getDate());
+
+    this.person = this.travelInformation.getPerson();
+
+    if (this.person.passportNumber) {
+      this.validPassport = 'true';
+    }
+
+    this.attributeTypeService.AttributeTypes().get({ id: attributeType }, (data) => {
+      this.frequentFlyers = data.attributes.map((ff) => {
+        const exists = this.frequentFlyerValue(ff.attributeId);
+        if (exists) {
+          const newFF = Object.assign({}, ff, { selected: true, notes: exists, startDate: new Date() });
+          return newFF;
+        }
+        return ff;
+      });
+    }, (err) => {
+      this.error = err;
+    });
   }
 
   passportInvalidContent() {
-    let message = this.$rootScope.MESSAGES.TripNoPassport.content;
-    switch (this.destination) {
-      case 'South Africa':
-        message = this.$rootScope.MESSAGES.TripNoPassportSouthAfrica.content;
-        break;
-      case 'India':
-        message = this.$rootScope.MESSAGES.TripNoPassportIndia.content;
-        break;
-      case 'Nicaragua':
-        message = this.$rootScope.MESSAGES.TripNoPassportNicaragua.content;
-        break;
-    }
+    const message = this.$rootScope.MESSAGES.TripNoPassport.content;
     return message;
   }
 
@@ -140,10 +63,53 @@ export default class TravelInformationController {
     this.passportExpireDateOpen = true;
   }
 
+  frequentFlyerValue(id) {
+    const frequentFlyerTypes = this.person.attributeTypes[attributeType];
+    if (frequentFlyerTypes !== null && frequentFlyerTypes.attributes) {
+      const currff = frequentFlyerTypes.attributes.find(ff => ff.attributeId === id);
+      if (currff.selected) {
+        return currff.notes;
+      }
+    }
+    return null;
+  }
+
+  buildFrequentFlyers() {
+    return this.frequentFlyers.map((ff) => {
+      if (ff.notes) {
+        return Object.assign({}, ff, { selected: true, startDate: new Date() });
+      }
+      return Object.assign({}, ff, { selected: false, startDate: new Date() });
+    });
+  }
+
   submit() {
     this.processing = true;
+    if (this.travelInfoForm.$valid) {
+      // set the selected attribute on frequent flyer..
+      const flyers = this.buildFrequentFlyers();
+      this.person.attributeTypes[attributeType] = {
+        attributes: flyers
+      };
+      // save the info
+      this.travelInformation.profile.save(this.person, () => {
+        // clear the current user from TravelInformationService
+        this.processing = false;
+        this.travelInformation.resetPerson();
+        this.state.go('mytrips');
+        this.$rootScope.$emit('notify', this.$rootScope.MESSAGES.profileUpdated);
+      }, () => {
+        this.$rootScope.$emit('notify', this.$rootScope.MESSAGES.generalError);
+        this.processing = false;
+      });
+    } else {
+      // show error message on page
+      this.$rootScope.$emit('notify', this.$rootScope.MESSAGES.generalError);
+      this.processing = false;
+    }
   }
 
   cancel() {
+    this.state.go('mytrips');
   }
 }

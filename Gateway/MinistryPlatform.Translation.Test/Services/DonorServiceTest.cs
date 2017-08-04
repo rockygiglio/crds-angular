@@ -819,7 +819,7 @@ namespace MinistryPlatform.Translation.Test.Services
                                 c.MergeData["Frequency"].Equals(expectedCommunication.MergeData["Frequency"])
                             ), false));
 
-            _fixture.SendEmail(declineEmailTemplate, donorId, donationAmt, paymentType, donationDate, program,
+            _fixture.SendEmail(declineEmailTemplate, donorId, donationAmt, paymentType, donationDate, DateTime.Now, program,
                 emailReason, frequency);
 
             _ministryPlatformService.VerifyAll();
@@ -899,7 +899,7 @@ namespace MinistryPlatform.Translation.Test.Services
                                 !c.MergeData.ContainsKey("Frequency")
                             ), false));
 
-            _fixture.SendEmail(declineEmailTemplate, donorId, donationAmt, paymentType, donationDate, program,
+            _fixture.SendEmail(declineEmailTemplate, donorId, donationAmt, paymentType, donationDate, DateTime.Now, program, 
                 emailReason, null);
 
             _ministryPlatformService.VerifyAll();
@@ -928,7 +928,7 @@ namespace MinistryPlatform.Translation.Test.Services
             {
                 CallBase = true
             };
-            donorService.Setup(mocked => mocked.SendEmail(program.CommunicationTemplateId.Value, donorId, amount, accountType, setupDate, program.Name, "None", null, null));
+            donorService.Setup(mocked => mocked.SendEmail(program.CommunicationTemplateId.Value, donorId, amount, accountType, setupDate, setupDate, program.Name, "None", null, null));
 
             _programService.Setup(mocked => mocked.GetProgramById(programId)).Returns(program);
 
@@ -960,7 +960,7 @@ namespace MinistryPlatform.Translation.Test.Services
             {
                 CallBase = true
             };
-            donorService.Setup(mocked => mocked.SendEmail(templateId, donorId, amount, accountType, setupDate, program.Name, "None", null, null));
+            donorService.Setup(mocked => mocked.SendEmail(templateId, donorId, amount, accountType, setupDate, setupDate, program.Name, "None", null, null));
 
             _programService.Setup(mocked => mocked.GetProgramById(programId)).Returns(program);
 
@@ -992,7 +992,7 @@ namespace MinistryPlatform.Translation.Test.Services
             {
                 CallBase = true
             };
-            donorService.Setup(mocked => mocked.SendEmail(templateId, donorId, amount, accountType, setupDate, program.Name, "None", null, null));
+            donorService.Setup(mocked => mocked.SendEmail(templateId, donorId, amount, accountType, setupDate, setupDate, program.Name, "None", null, null));
 
             _programService.Setup(mocked => mocked.GetProgramById(programId)).Returns(program);
 
