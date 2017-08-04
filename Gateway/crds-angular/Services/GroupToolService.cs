@@ -356,8 +356,13 @@ namespace crds_angular.Services
                 if (approve)
                 {
                     ApproveInquiry(groupId, myGroup.Group, inquiry, myGroup.Me, message);
-                    var props = new EventProperties();
-                    props.Add("GroupName", myGroup.Me.GroupName);
+                    var props = new EventProperties
+                    {
+                        {"GroupName", myGroup.Group.GroupName},
+                        {"City", myGroup.Group?.Address?.City},
+                        {"State", myGroup.Group?.Address?.State},
+                        {"Zip", myGroup.Group?.Address?.PostalCode}
+                    };
                     _analyticsService.Track(inquiry.ContactId.ToString(), "AcceptedIntoGroup", props);
                 }
                 else
