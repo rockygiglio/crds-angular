@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using crds_angular.Services.Interfaces;
 using Crossroads.Web.Common.MinistryPlatform;
 using MinistryPlatform.Translation.Repositories.Interfaces;
@@ -20,7 +17,7 @@ namespace crds_angular.Services {
 
         public string GetMeetingDayFromId(int meetingDayId)
         {
-            var dayString = "";
+            string dayString = null;
             var days = _lookupRepository.MeetingDays(_apiUserRepository.GetToken());
 
             foreach (var day in days)
@@ -32,11 +29,6 @@ namespace crds_angular.Services {
                 }
             }
             return dayString;
-        }
-
-        public string GetMeetingFrequencyFromId(int meetingFrequencyId)
-        {
-            throw new NotImplementedException();
         }
     }
 }
