@@ -15,6 +15,7 @@ require('./invoices/invoices.module');
     constants.MODULES.CHILDCARE_DASHBOARD,
     constants.MODULES.CORE,
     constants.MODULES.COMMON,
+    constants.MODULES.CORKBOARD,
     constants.MODULES.FORM_BUILDER,
     constants.MODULES.GIVE,
     constants.MODULES.GO_VOLUNTEER,
@@ -42,6 +43,7 @@ require('./invoices/invoices.module');
       }
     }]);
 
+  require('./corkboard');
   require('./events');
   require('./signup');
   require('./styleguide');

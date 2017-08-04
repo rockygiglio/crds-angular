@@ -18,9 +18,6 @@
 
     crds_utilities.preventRouteTypeUrlEncoding($urlMatcherFactory, 'volunteerRouteType', /\/volunteer-sign-up\/.*$/);
 
-    // Commented out for US2924, will be added back after Corkboard go-live
-    //crds_utilities.preventRouteTypeUrlEncoding($urlMatcherFactory, 'corkboardRouteType', /\/corkboard\/?.*$/);
-
     $stateProvider
         .state('root', {
           abstract: true,
@@ -515,25 +512,6 @@
             }
           }
         });
-
-    // Commented out for US2924, will be added back after Corkboard go-live
-    //
-    //.state('corkboard', {
-    //  url: '{link:corkboardRouteType}',
-    //  resolve: {
-    //    RedirectToSubSite: function($window, $location) {
-    //      // Force browser to do a full reload to load corkboard's index.html
-    //      $window.location.href = $location.path();
-    //    }
-    //  },
-    //  data: {
-    //    preventRouteAuthentication: true,
-    //    meta: {
-    //      title: 'Corkboard',
-    //      description: ''
-    //    }
-    //  }
-    //})
 
     //Leave the comment below.  Once we have a true 404 page hosted in the same domain, this is how we
     //will handle the routing.

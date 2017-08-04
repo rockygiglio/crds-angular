@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Device.Location;
-using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Web.Http;
@@ -9,6 +8,7 @@ using System.Web.Http.Results;
 using crds_angular.Controllers.API;
 using crds_angular.Models.Crossroads;
 using crds_angular.Models.Finder;
+using crds_angular.Services.Analytics;
 using crds_angular.Services.Interfaces;
 using Crossroads.Web.Common.Security;
 using Moq;
@@ -27,6 +27,7 @@ namespace crds_angular.test.controllers
         private Mock<IUserImpersonationService> _userImpersonationService;
         private Mock<IAuthenticationRepository> _authenticationRepository;
         private Mock<IAwsCloudsearchService> _awsCloudsearchService;
+        private Mock<IAnalyticsService> _analyticsService;
         private string _authToken;
         private string _authType;
 
@@ -38,6 +39,7 @@ namespace crds_angular.test.controllers
             _authenticationRepository = new Mock<IAuthenticationRepository>();
             _awsCloudsearchService = new Mock<IAwsCloudsearchService>();
             _groupToolService = new Mock<IGroupToolService>();
+            _analyticsService = new Mock<IAnalyticsService>();
 
             _authType = "authType";
             _authToken = "authToken";
@@ -46,7 +48,8 @@ namespace crds_angular.test.controllers
                                             _groupToolService.Object,
                                             _userImpersonationService.Object,
                                             _authenticationRepository.Object,
-                                            _awsCloudsearchService.Object)
+                                            _awsCloudsearchService.Object,
+                                            _analyticsService.Object)
             {
                 Request = new HttpRequestMessage(),
                 RequestContext = new HttpRequestContext()
@@ -80,6 +83,75 @@ namespace crds_angular.test.controllers
 
             Assert.IsNotNull(response);
             Assert.IsInstanceOf<OkNegotiatedContentResult<PinSearchResultsDto>>(response);
+        }
+
+        [Test]
+        public void InviteToGroupShouldCallAnalytics()
+        {   var token = "good ABC";
+            var groupId = 1;
+            var fakeInvite = new User()
+            {
+                email = "email@email.com"
+            };
+            _fixture.SetupAuthorization("good", "ABC");
+ 
+            _finderService.Setup(m => m.InviteToGroup(
+                It.Is<string>(toke => toke.Equals(token)), 
+                It.Is<int>(id => id.Equals(groupId)),
+                It.Is<User>(user => user.email == fakeInvite.email),
+                It.Is<string>(connectType => connectType.Equals("connect"))
+            ));
+
+            _authenticationRepository.Setup(m => m.GetContactId(It.IsAny<string>())).Returns(12345);
+
+            _analyticsService.Setup(m => m.Track(
+                                        It.Is<string>(contactId => contactId.Equals("12345")),
+                                        It.Is<string>(eventName => eventName.Equals("HostInvitationSent")),
+                                        It.Is<EventProperties>(props => props["InvitationToEmail"].Equals(fakeInvite.email))
+                                    ));
+
+            _fixture.InviteToGroup(groupId, "connect", fakeInvite);
+            
+            _analyticsService.VerifyAll();
+            _finderService.VerifyAll();
+        }
+
+        [Test]
+        public void RequestToBeAHostShouldCallAnalytics()
+        {
+            var token = "good ABC";
+            _fixture.SetupAuthorization("good", "ABC");
+            var fakeRequest = new HostRequestDto()
+            {
+                Address = new AddressDTO()
+                {
+                    City = "City!",
+                    State = "OH",
+                    PostalCode = "12345"
+                },
+                ContactId = 42
+            };
+
+            _finderService.Setup(m => m.RequestToBeHost(
+                It.Is<string>(toke => toke.Equals(token)),
+                It.Is<HostRequestDto>(dto => 
+                        dto.Address.City.Equals(fakeRequest.Address.City)
+                        && dto.Address.State.Equals(fakeRequest.Address.State)
+                        && dto.Address.PostalCode.Equals(fakeRequest.Address.PostalCode)
+                        && dto.ContactId.Equals(fakeRequest.ContactId))
+                ));
+
+            _analyticsService.Setup(m => m.Track(
+                                        It.Is<string>(contactId => contactId.Equals(fakeRequest.ContactId.ToString())),
+                                        It.Is<string>(eventName => eventName.Equals("RegisteredAsHost")),
+                                        It.Is<EventProperties>(props =>
+                                                              props["City"].Equals(fakeRequest.Address.City)
+                                                              && props["State"].Equals(fakeRequest.Address.State)
+                                                              && props["Zip"].Equals(fakeRequest.Address.PostalCode))                                                                
+                                        ));
+            _fixture.RequestToBeHost(fakeRequest);
+            _finderService.VerifyAll();
+            _analyticsService.VerifyAll();
         }
 
         [Test]
@@ -145,3 +217,4 @@ namespace crds_angular.test.controllers
 
     }
 }
+

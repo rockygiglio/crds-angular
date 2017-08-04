@@ -13,6 +13,7 @@ using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 using System.Text.RegularExpressions;
 using crds_angular.Models.Finder;
+using crds_angular.Services.Analytics;
 using Crossroads.Utilities.Extensions;
 using Crossroads.Web.Common.Configuration;
 using MinistryPlatform.Translation.Models.Finder;
@@ -35,6 +36,8 @@ namespace crds_angular.Services
         private readonly IAttributeService _attributeService;
         private readonly IAddressService _addressService;
         private readonly IFinderRepository _finderRepository;
+        private readonly IAnalyticsService _analyticsService;
+
 
         private readonly int _defaultGroupContactEmailId;
         private readonly int _defaultAuthorUserId;
@@ -86,6 +89,7 @@ namespace crds_angular.Services
             IEmailCommunication emailCommunicationService,
             IAttributeService attributeService,
             IAddressService addressService,
+            IAnalyticsService analyticsService,
             IFinderRepository finderRepository
             )
         {
@@ -102,6 +106,7 @@ namespace crds_angular.Services
             _emailCommunicationService = emailCommunicationService;
             _attributeService = attributeService;
             _addressService = addressService;
+            _analyticsService = analyticsService;
             _finderRepository = finderRepository;
 
             _defaultGroupContactEmailId = configurationWrapper.GetConfigIntValue("DefaultGroupContactEmailId");
@@ -351,6 +356,9 @@ namespace crds_angular.Services
                 if (approve)
                 {
                     ApproveInquiry(groupId, myGroup.Group, inquiry, myGroup.Me, message);
+                    var props = new EventProperties();
+                    props.Add("GroupName", myGroup.Me.GroupName);
+                    _analyticsService.Track(inquiry.ContactId.ToString(), "AcceptedIntoGroup", props);
                 }
                 else
                 {
@@ -364,7 +372,7 @@ namespace crds_angular.Services
             }
             catch (Exception e)
             {
-                throw new GroupParticipantRemovalException($"Could not add Inquirier {inquiry.InquiryId} from group {groupId}", e);
+                throw new GroupParticipantRemovalException($"Could not add Inquirer {inquiry.InquiryId} from group {groupId}", e);
             }
         }
 
@@ -421,7 +429,7 @@ namespace crds_angular.Services
             }
             catch (Exception e)
             {
-                _logger.Error($"Could not send email to Inquirier {inquiry.InquiryId} notifying of being approved to group {groupId}", e);
+                _logger.Error($"Could not send email to Inquirer {inquiry.InquiryId} notifying of being approved to group {groupId}", e);
                 throw;
             }
         }
@@ -454,11 +462,10 @@ namespace crds_angular.Services
                                           GroupToolDenyInquiryEmailTemplateText,
                                           message,
                                           me);
-
             }
             catch (Exception e)
             {
-                _logger.Error($"Could not send email to Inquirier {inquiry.InquiryId} notifying of being approved to group {groupId}", e);
+                _logger.Error($"Could not send email to Inquirer {inquiry.InquiryId} notifying of being approved to group {groupId}", e);
             }
         }
 
@@ -554,7 +561,13 @@ namespace crds_angular.Services
                 ToContacts = leaders
             };
 
+     
             _communicationRepository.SendMessage(email);
+            var props = new EventProperties();
+            props.Add("GroupName", group.GroupName);
+            props.Add("GroupLeaderName", leaders[0].Nickname);
+            _analyticsService.Track(requestor.ContactId.ToString(), "GroupLeaderContacted", props);
+
         }
 
         public void SendAllGroupParticipantsEmail(string token, int groupId, int groupTypeId, string subject, string body)
@@ -796,6 +809,10 @@ namespace crds_angular.Services
             var group = _groupService.GetGroupDetails(groupId);
             var leaders = group.Participants.
                 Where(groupParticipant => groupParticipant.GroupRoleId == _groupRoleLeaderId).ToList();
+
+            // Call Analytics
+            var props = new EventProperties {{"Name", group.GroupName}, {"City", group?.Address?.City}, {"State", group?.Address?.State}, {"Zip", group?.Address?.PostalCode}};
+            _analyticsService.Track(contact.Contact_ID.ToString(), "RequestedToJoinGroup", props);
 
             foreach (var leader in leaders)
             {

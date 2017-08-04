@@ -20,6 +20,7 @@ using Amazon.CloudSearchDomain.Model;
 using crds_angular.Exceptions;
 using crds_angular.Models.AwsCloudsearch;
 using crds_angular.Models.Crossroads.Groups;
+using crds_angular.Services.Analytics;
 using Crossroads.Web.Common.Configuration;
 using MinistryPlatform.Translation.Models.Finder;
 using MpCommunication = MinistryPlatform.Translation.Models.MpCommunication;
@@ -56,6 +57,7 @@ namespace crds_angular.Services
         private readonly IAuthenticationRepository _authenticationRepository;
         private readonly ICommunicationRepository _communicationRepository;
         private readonly IAccountService _accountService;
+        private readonly IAnalyticsService _analyticsService;
         private readonly int _approvedHost;
         private readonly int _pendingHost;
         private readonly int _anywhereGroupType;
@@ -101,8 +103,8 @@ namespace crds_angular.Services
             IAuthenticationRepository authenticationRepository,
             ICommunicationRepository communicationRepository,
             IAccountService accountService,
-            ILookupService lookupService
-
+            ILookupService lookupService,
+            IAnalyticsService analyticsService
         )
         {
             // services
@@ -122,6 +124,7 @@ namespace crds_angular.Services
             _communicationRepository = communicationRepository;
             _accountService = accountService;
             _lookupService = lookupService;
+            _analyticsService = analyticsService;
             // constants
             _anywhereCongregationId = _configurationWrapper.GetConfigIntValue("AnywhereCongregationId");
             _approvedHost = configurationWrapper.GetConfigIntValue("ApprovedHostStatus");
@@ -879,6 +882,17 @@ namespace crds_angular.Services
                 RecordCommunication(connection);
 
                 SendGatheringInviteResponseEmail(accept, host, cm);
+
+                if (accept)
+                {
+                    // Call Analytics
+                    var props = new EventProperties {{"InvitationTo", cm.Contact_ID}, {"InvitationToEmail", cm.Email_Address}};
+                    _analyticsService.Track(host.Contact_ID.ToString(), "HostInvitationAccepted", props);
+
+                    props = new EventProperties {{"InvitationFrom", host.Contact_ID}, {"InvitationFromEmail", host.EmailAddress}};
+                    _analyticsService.Track(cm.Contact_ID.ToString(), "InviteeAcceptedInvitation", props);
+                }
+
             }
             catch (Exception e)
             {
