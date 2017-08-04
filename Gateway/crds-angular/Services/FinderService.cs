@@ -79,7 +79,7 @@ namespace crds_angular.Services
         private readonly int _connectCommunicationTypeInviteToSmallGroup;
         private readonly int _connectCommunicationTypeRequestToJoinSmallGroup;
         private readonly int _connectCommunicationTypeRequestToJoinGathering;
-        private readonly ILookupRepository _lookupRepository;
+        private readonly ILookupService _lookupService;
 
         private readonly Random _random = new Random(DateTime.Now.Millisecond);
         private const double MinutesInDegree = 60;
@@ -101,7 +101,7 @@ namespace crds_angular.Services
             IAuthenticationRepository authenticationRepository,
             ICommunicationRepository communicationRepository,
             IAccountService accountService,
-            ILookupRepository lookupRepository
+            ILookupService lookupService
 
         )
         {
@@ -121,7 +121,7 @@ namespace crds_angular.Services
             _awsCloudsearchService = awsCloudsearchService;
             _communicationRepository = communicationRepository;
             _accountService = accountService;
-            _lookupRepository = lookupRepository;
+            _lookupService = lookupService;
             // constants
             _anywhereCongregationId = _configurationWrapper.GetConfigIntValue("AnywhereCongregationId");
             _approvedHost = configurationWrapper.GetConfigIntValue("ApprovedHostStatus");
@@ -941,6 +941,20 @@ namespace crds_angular.Services
             }
         }
 
+        private string getMeetingFrequency(int meetingFrequencyId)
+        {
+
+            switch (meetingFrequencyId)
+            {
+                case 1:
+                    return "Weekly";
+                case 2:
+                    return "Bi-Weekly";
+                default:
+                    return "Monthly";
+            }
+        }
+
         public void SendEmailToAddedUser(string token, User user, int groupid)
         {
             var emailTemplateId = _configurationWrapper.GetConfigIntValue("GroupsAddParticipantEmailNotificationTemplateId");
@@ -950,11 +964,12 @@ namespace crds_angular.Services
             var leaderEmail = leaderContact.Email_Address;
             var userEmail = user.email;
             GroupDTO group = _groupService.GetGroupDetails(groupid);
+            var meetingDay = _lookupService.GetMeetingDayFromId(group.MeetingDayId);
             var newMemberContactId = _contactRepository.GetContactIdByEmail(user.email);
             var groupLocation = GetGroupAddress(token, groupid);
             var formatedMeetingTime = group.MeetingTime == null ? "Flexible time" : String.Format("{0:t}", DateTimeOffset.Parse(group.MeetingTime).LocalDateTime);
-            var formatedMeetingDay = group.MeetingDay == null ? "Flexible day" : group.MeetingDay;
-            var formatedMeetingFrequency = group.MeetingTime == null ? "Flexible frequency" : group.MeetingFrequency;
+            var formatedMeetingDay = meetingDay == null ? "Flexible day" : meetingDay;
+            var formatedMeetingFrequency = group.MeetingFrequencyID == null ? "Flexible frequency" : getMeetingFrequency((int)group.MeetingFrequencyID);
             var mergeData = new Dictionary<string, object>
             {
                 {"Participant_Name", user.firstName},
@@ -967,7 +982,6 @@ namespace crds_angular.Services
                 {"Group_Meeting_Frequency", formatedMeetingFrequency},
                 {"Group_Meeting_Location", groupLocation.AddressLine1 == null ? "Online" : $"{groupLocation.AddressLine1}\n{groupLocation.AddressLine2}\n{groupLocation.City}\n{groupLocation.State}\n{groupLocation.PostalCode}" },
                 {"Leader_Phone", $"{leaderContact.Home_Phone}\n{leaderContact.Mobile_Phone}" }
-                
             };
 
             var fromContact = new MpContact
