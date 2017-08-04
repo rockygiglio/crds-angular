@@ -15,8 +15,13 @@ namespace crds_angular.Services {
             _apiUserRepository = apiUserRepository;
         }
 
-        public string GetMeetingDayFromId(int meetingDayId)
+        public string GetMeetingDayFromId(int? meetingDayId)
         {
+            if (meetingDayId == null)
+            {
+                return null;
+            }
+
             string dayString = null;
             var days = _lookupRepository.MeetingDays(_apiUserRepository.GetToken());
 
