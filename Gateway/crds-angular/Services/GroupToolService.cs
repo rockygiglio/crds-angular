@@ -806,11 +806,13 @@ namespace crds_angular.Services
 
             _groupRepository.CreateGroupInquiry(mpInquiry);
 
-            _analyticsService.Track(contact.Contact_ID.ToString(), "RequestedToJoinGroup");
-
             var group = _groupService.GetGroupDetails(groupId);
             var leaders = group.Participants.
                 Where(groupParticipant => groupParticipant.GroupRoleId == _groupRoleLeaderId).ToList();
+
+            // Call Analytics
+            var props = new EventProperties {{"Name", group.GroupName}, {"City", group?.Address?.City}, {"State", group?.Address?.State}, {"Zip", group?.Address?.PostalCode}};
+            _analyticsService.Track(contact.Contact_ID.ToString(), "RequestedToJoinGroup", props);
 
             foreach (var leader in leaders)
             {
