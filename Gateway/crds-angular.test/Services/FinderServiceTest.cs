@@ -47,6 +47,7 @@ namespace crds_angular.test.Services
         private Mock<IAuthenticationRepository> _authenticationRepository;
         private Mock<ICommunicationRepository> _communicationRepository;
         private Mock<IAccountService> _accoutService;
+        private Mock<ILookupService> _lookupService;
 
         private int _memberRoleId = 16;
         private int _anywhereGatheringInvitationTypeId = 3;
@@ -73,6 +74,7 @@ namespace crds_angular.test.Services
             _accoutService = new Mock<IAccountService>();
 
             _mpFinderServiceMock = new Mock<IFinderService>(MockBehavior.Strict);
+            _lookupService = new Mock<ILookupService>();
 
             _mpConfigurationWrapper.Setup(mocked => mocked.GetConfigIntValue("GroupRoleLeader")).Returns(22);
             _mpConfigurationWrapper.Setup(mocked => mocked.GetConfigIntValue("ApprovedHostStatus")).Returns(3);
@@ -97,7 +99,8 @@ namespace crds_angular.test.Services
                                          _awsCloudsearchService.Object,
                                          _authenticationRepository.Object,
                                          _communicationRepository.Object,
-                                         _accoutService.Object);
+                                         _accoutService.Object,
+                                         _lookupService.Object);
 
             //force AutoMapper to register
             AutoMapperConfig.RegisterMappings();
