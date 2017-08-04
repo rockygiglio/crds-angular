@@ -23,6 +23,7 @@ using crds_angular.Models.Crossroads.Groups;
 using Crossroads.Web.Common.Configuration;
 using MinistryPlatform.Translation.Models.Finder;
 using MpCommunication = MinistryPlatform.Translation.Models.MpCommunication;
+using ILookupRepository = MinistryPlatform.Translation.Repositories.Interfaces.ILookupRepository;
 
 namespace crds_angular.Services
 {
@@ -78,6 +79,7 @@ namespace crds_angular.Services
         private readonly int _connectCommunicationTypeInviteToSmallGroup;
         private readonly int _connectCommunicationTypeRequestToJoinSmallGroup;
         private readonly int _connectCommunicationTypeRequestToJoinGathering;
+        private readonly ILookupRepository _lookupRepository;
 
         private readonly Random _random = new Random(DateTime.Now.Millisecond);
         private const double MinutesInDegree = 60;
@@ -98,7 +100,9 @@ namespace crds_angular.Services
             IAwsCloudsearchService awsCloudsearchService,
             IAuthenticationRepository authenticationRepository,
             ICommunicationRepository communicationRepository,
-            IAccountService accountService
+            IAccountService accountService,
+            ILookupRepository lookupRepository
+
         )
         {
             // services
@@ -117,6 +121,7 @@ namespace crds_angular.Services
             _awsCloudsearchService = awsCloudsearchService;
             _communicationRepository = communicationRepository;
             _accountService = accountService;
+            _lookupRepository = lookupRepository;
             // constants
             _anywhereCongregationId = _configurationWrapper.GetConfigIntValue("AnywhereCongregationId");
             _approvedHost = configurationWrapper.GetConfigIntValue("ApprovedHostStatus");
@@ -944,16 +949,25 @@ namespace crds_angular.Services
             var leaderContact = _contactRepository.GetContactById(leaderContactId);
             var leaderEmail = leaderContact.Email_Address;
             var userEmail = user.email;
-            var group = _groupService.GetGroupDetails(groupid);
+            GroupDTO group = _groupService.GetGroupDetails(groupid);
             var newMemberContactId = _contactRepository.GetContactIdByEmail(user.email);
-           
+            var groupLocation = GetGroupAddress(token, groupid);
+            var formatedMeetingTime = group.MeetingTime == null ? "Flexible time" : String.Format("{0:t}", DateTimeOffset.Parse(group.MeetingTime).LocalDateTime);
+            var formatedMeetingDay = group.MeetingDay == null ? "Flexible day" : group.MeetingDay;
+            var formatedMeetingFrequency = group.MeetingTime == null ? "Flexible frequency" : group.MeetingFrequency;
             var mergeData = new Dictionary<string, object>
             {
                 {"Participant_Name", user.firstName},
                 {"Leader_Name", leaderContact.First_Name},
                 {"Leader_Full_Name", $"{leaderContact.First_Name} {leaderContact.Last_Name}" },
                 {"Leader_Email", leaderEmail},
-                {"Group_Name", group.GroupName}
+                {"Group_Name", group.GroupName},
+                {"Group_Meeting_Day",  formatedMeetingDay},
+                {"Group_Meeting_Time", formatedMeetingTime},
+                {"Group_Meeting_Frequency", formatedMeetingFrequency},
+                {"Group_Meeting_Location", groupLocation.AddressLine1 == null ? "Online" : $"{groupLocation.AddressLine1}\n{groupLocation.AddressLine2}\n{groupLocation.City}\n{groupLocation.State}\n{groupLocation.PostalCode}" },
+                {"Leader_Phone", $"{leaderContact.Home_Phone}\n{leaderContact.Mobile_Phone}" }
+                
             };
 
             var fromContact = new MpContact
@@ -996,8 +1010,19 @@ namespace crds_angular.Services
                 MergeData = mergeData
             };
             _communicationRepository.SendMessage(confirmation);
+            var connection = new ConnectCommunicationDto
+            {
+                CommunicationTypeId = _connectCommunicationTypeInviteToSmallGroup,
+                ToContactId = newMemberContactId,
+                FromContactId = _contactRepository.GetContactId(token),
+                CommunicationStatusId = _configurationWrapper.GetConfigIntValue("ConnectCommunicationStatusNA"),
+                GroupId = groupid,
+              
+            };
+
+            RecordCommunication(connection);
         }
-        
+       
         private List<PinDto> TransformGroupDtoToPinDto(List<GroupDTO> groupDTOs, string finderType)
         {
             var pins = new List<PinDto>();
