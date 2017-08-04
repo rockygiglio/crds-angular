@@ -858,8 +858,27 @@ namespace crds_angular.test.Services
                 Last_Name = "Einstein"
             };
 
+            var groupAddress = new AddressDTO();
+            groupAddress.AddressLine1 = "333";
+            groupAddress.AddressLine2 = "vine";
+            groupAddress.City = "Cin";
+            groupAddress.State = "OH";
+            groupAddress.PostalCode = "3455";
+
             var group = new GroupDTO();
             group.GroupName = "Physics";
+            group.ContactId = 1;
+            group.MeetingDayId = 1;
+            group.MeetingFrequencyID = 1;
+            group.MeetingTime = "0001-01-01T05:25:00.000Z";
+            group.Address = groupAddress;
+
+            var mpParticpant = new MpParticipant();
+            mpParticpant.ContactId = 1;
+            mpParticpant.ParticipantId = 3;
+
+            var groupList = new List<GroupDTO>();
+            groupList.Add(group);
 
             _mpConfigurationWrapper.Setup(x => x.GetConfigIntValue("GroupsAddParticipantEmailNotificationTemplateId")).Returns(1);
             _communicationRepository.Setup(x => x.GetTemplate(1)).Returns(emailTemplate);
@@ -867,8 +886,12 @@ namespace crds_angular.test.Services
             _mpContactRepository.Setup(x => x.GetContactById(3)).Returns(leaderContact);
             _mpContactRepository.Setup(x => x.GetContactIdByEmail(It.IsAny<string>())).Returns(2);
             _groupService.Setup(x => x.GetGroupDetails(It.IsAny<int>())).Returns(group);
+            _lookupService.Setup(x => x.GetMeetingDayFromId(It.IsAny<int>())).Returns("Friday");
+            _mpParticipantRepository.Setup(x => x.GetParticipantRecord(It.IsAny<string>())).Returns(mpParticpant);
+            _groupService.Setup(x => x.GetGroupsByTypeOrId(It.IsAny<string>(), It.IsAny<int>(), null, It.IsAny<int>(),true, false)).Returns(groupList);
             _fixture.SendEmailToAddedUser( token, person, gatheringId );
             _communicationRepository.Verify(x => x.SendMessage(It.IsAny<MinistryPlatform.Translation.Models.MpCommunication>(), false), Times.Once);
+            
         }
     }
 }
