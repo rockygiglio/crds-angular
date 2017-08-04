@@ -1572,7 +1572,7 @@ namespace crds_angular.test.Services
 
 
             _fixture.SubmitInquiry(token, groupId);
-            _mockAnalyticService.Verify(x => x.Track(It.IsAny<string>(), "RequestedToJoinGroup"), Times.Once);
+            _mockAnalyticService.Verify(x => x.Track(It.IsAny<string>(), "RequestedToJoinGroup", It.IsAny<EventProperties>()), Times.Once);
 
             _groupRepository.VerifyAll();
             _groupToolRepository.VerifyAll();
@@ -1583,9 +1583,29 @@ namespace crds_angular.test.Services
         public void TestCreateAnywhereGroupInquiryValid()
         {
             var token = "123ABC";
-            var groupId = 123;
             var syncedTime = System.DateTime.Now;
             var active = true;
+            var group = new GroupDTO()
+            {
+                GroupId = 123,
+                GroupTypeId = anywhereGroupTypeId,
+                GroupName = "Group Name",
+                Address = new AddressDTO()
+                {
+                    City = "city!",
+                    State = "OH",
+                    PostalCode = "12345"
+                },
+                Participants = new List<GroupParticipantDTO>()
+                {
+                    new GroupParticipantDTO
+                    {
+                        ContactId = 42,
+                        NickName = "nickName",
+                        GroupRoleId = GroupRoleLeader
+                    }
+                }
+            };
 
             MpParticipant contactParticipant = new MpParticipant
             {
@@ -1607,11 +1627,11 @@ namespace crds_angular.test.Services
 
             List<MpInquiry> mpInquiries = new List<MpInquiry>();
 
-            _groupToolRepository.Setup(mocked => mocked.GetInquiries(groupId)).Returns(mpInquiries);
+            _groupToolRepository.Setup(mocked => mocked.GetInquiries(group.GroupId)).Returns(mpInquiries);
 
             List<MpGroupParticipant> participants = new List<MpGroupParticipant>();
 
-            _groupRepository.Setup(mocked => mocked.GetGroupParticipants(groupId, active)).Returns(participants);
+            _groupRepository.Setup(mocked => mocked.GetGroupParticipants(group.GroupId, active)).Returns(participants);
 
             _communicationRepository.Setup(mocked => mocked.GetTemplate(RequestToJoinAnywhereEmailTemplateId)).Returns(new MpMessageTemplate()
             {
@@ -1625,25 +1645,16 @@ namespace crds_angular.test.Services
 
 
             _groupRepository.Setup(mocked => mocked.CreateGroupInquiry(It.IsAny<MpInquiry>()));
-            _groupService.Setup(mocked => mocked.GetGroupDetails(123)).Returns(new GroupDTO()
-            {
-                GroupId = 1,
-                GroupTypeId = anywhereGroupTypeId,
-                Participants = new List<GroupParticipantDTO>()
-                                                                                   {
-                                                                                       new GroupParticipantDTO
-                                                                                       {
-                                                                                           ContactId = 42,
-                                                                                           NickName = "nickName",
-                                                                                           GroupRoleId = GroupRoleLeader
-                                                                                       }
-                                                                                   }
-            });
+            _groupService.Setup(mocked => mocked.GetGroupDetails(123)).Returns(group);
 
             _communicationRepository.Setup(mocked => mocked.SendMessage(It.IsAny<MpCommunication>(), false)).Returns(1);
 
-            _fixture.SubmitInquiry(token, groupId);
-            _mockAnalyticService.Verify(x => x.Track(It.IsAny<string>(), "RequestedToJoinGroup"), Times.Once);
+            _fixture.SubmitInquiry(token, group.GroupId);
+            _mockAnalyticService.Verify(x => x.Track(It.IsAny<string>(), "RequestedToJoinGroup", It.Is<EventProperties>(props => 
+                                    props["Name"].Equals(group.GroupName) 
+                                    && props["State"].Equals(group.Address.State)
+                                    && props["City"].Equals(group.Address.City)
+                                    && props["Zip"].Equals(group.Address.PostalCode))), Times.Once);
 
             _groupRepository.VerifyAll();
             _groupToolRepository.VerifyAll();
@@ -1725,7 +1736,7 @@ namespace crds_angular.test.Services
                 Assert.AreSame(typeof(ExistingRequestException), e.GetType());
             }
 
-            _mockAnalyticService.Verify(x => x.Track(It.IsAny<string>(), "RequestedToJoinGroup"), Times.Never);
+            _mockAnalyticService.Verify(x => x.Track(It.IsAny<string>(), "RequestedToJoinGroup", It.IsAny<EventProperties>()), Times.Never);
 
             _groupRepository.VerifyAll();
             _groupToolRepository.VerifyAll();
