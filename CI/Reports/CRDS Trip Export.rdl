@@ -176,7 +176,7 @@
         </Field>
         <Field Name="medicalconditions">
           <DataField>medicalconditions</DataField>
-          <rd:UserDefined>true</rd:UserDefined>
+          <rd:TypeName>System.string</rd:TypeName>
         </Field>
         <Field Name="WhyGoOnTrip">
           <DataField>whygoontrip</DataField>
