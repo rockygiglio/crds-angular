@@ -37,7 +37,7 @@ namespace MinistryPlatform.Translation.Test.Services
         {
             var restClient = new RestClient(Environment.GetEnvironmentVariable("MP_REST_API_ENDPOINT"));
             _fixture = new MinistryPlatformRestRepository(restClient);
-        }
+        }       
 
         [Test]
         public void TestChildcareDashboardProcedure()

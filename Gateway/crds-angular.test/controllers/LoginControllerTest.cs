@@ -25,6 +25,7 @@ namespace crds_angular.test.controllers
         private Mock<ILoginService> _loginServiceMock;
         private Mock<IPersonService> _personServiceMock;
         private Mock<IUserRepository> _userServiceMock;
+        private Mock<IAnalyticsService> _mockAnalyticService;
 
         private string _authType;
         private string _authToken;
@@ -35,8 +36,9 @@ namespace crds_angular.test.controllers
             _loginServiceMock = new Mock<ILoginService>();
             _personServiceMock = new Mock<IPersonService>();
             _userServiceMock = new Mock<IUserRepository>();
+            _mockAnalyticService = new Mock<IAnalyticsService>();
 
-            _fixture = new LoginController(_loginServiceMock.Object, _personServiceMock.Object, _userServiceMock.Object, new Mock<IUserImpersonationService>().Object, new Mock<IAuthenticationRepository>().Object);
+            _fixture = new LoginController(_loginServiceMock.Object, _personServiceMock.Object, _userServiceMock.Object, _mockAnalyticService.Object,  new Mock<IUserImpersonationService>().Object, new Mock<IAuthenticationRepository>().Object);
 
             _authType = "auth_type";
             _authToken = "auth_token";

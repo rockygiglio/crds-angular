@@ -164,12 +164,16 @@
     <Compile Include="Models\MpBatch.cs" />
     <Compile Include="Models\MpCamp.cs" />
     <Compile Include="Models\MpContactHousehold.cs" />
+    <Compile Include="Models\MpEventParticipantWaiver.cs" />
+    <Compile Include="Models\MpEventParticipantDocument.cs" />
     <Compile Include="Models\MpSequenceRecord.cs" />
     <Compile Include="Models\MPGLAccountMapping.cs" />
     <Compile Include="Models\MpContactAttribute.cs" />
     <Compile Include="Models\MpMedical.cs" />
     <Compile Include="Models\MpMedicalAllergy.cs" />
     <Compile Include="Models\MpMedication.cs" />
+    <Compile Include="Models\MpEventWaivers.cs" />
+    <Compile Include="Models\MpSimpleContact.cs" />
     <Compile Include="Models\MpWaivers.cs" />
     <Compile Include="Models\MpMedicalInformation.cs" />
     <Compile Include="Models\MpRecordID.cs" />
@@ -309,7 +313,7 @@
     <Compile Include="Repositories\GroupRepository.cs" />
     <Compile Include="Repositories\Interfaces\IInvitationRepository.cs" />
     <Compile Include="Repositories\Interfaces\Rules\IRule.cs" />
-    <Compile Include="Repositories\InvitationlRepository.cs" />
+    <Compile Include="Repositories\InvitationRepository.cs" />
     <Compile Include="Repositories\GroupToolRepository.cs" />
     <Compile Include="Repositories\Interfaces\GoCincinnati\IGroupConnectorRepository.cs" />
     <Compile Include="Repositories\Interfaces\GoCincinnati\IRegistrationRepository.cs" />
@@ -395,6 +399,8 @@
     <Compile Include="Utils\DbConnectionNameTypeConverter.cs" />
     <Compile Include="Utils\MPFormatConversion.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\Interfaces\IWaiverRepository.cs" />
+    <Compile Include="Repositories\WaiverRepository.cs" />
     <Compile Include="Service References\PlatformService\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
