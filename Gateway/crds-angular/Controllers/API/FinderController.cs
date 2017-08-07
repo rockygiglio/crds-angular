@@ -16,6 +16,7 @@ using System.Device.Location;
 using crds_angular.Exceptions;
 using crds_angular.Models.AwsCloudsearch;
 using crds_angular.Models.Crossroads.Groups;
+using crds_angular.Services.Analytics;
 using log4net;
 
 namespace crds_angular.Controllers.API
@@ -26,19 +27,22 @@ namespace crds_angular.Controllers.API
         private readonly IFinderService _finderService;
         private readonly IGroupToolService _groupToolService;
         private readonly IAuthenticationRepository _authenticationRepo;
+        private readonly IAnalyticsService _analyticsService;
         private readonly ILog _logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         public FinderController(IFinderService finderService,
                                 IGroupToolService groupToolService,
                                 IUserImpersonationService userImpersonationService,
                                 IAuthenticationRepository authenticationRepository,
-                                IAwsCloudsearchService awsCloudsearchService)
+                                IAwsCloudsearchService awsCloudsearchService,
+                                IAnalyticsService analyticsService)
             : base(userImpersonationService, authenticationRepository)
         {
             _finderService = finderService;
             _groupToolService = groupToolService;
             _awsCloudsearchService = awsCloudsearchService;
             _authenticationRepo = authenticationRepository;
+            _analyticsService = analyticsService;
         }
 
         [ResponseType(typeof(PinDto))]
@@ -293,6 +297,10 @@ namespace crds_angular.Controllers.API
                     //Ensure that address id is available
                     var personPin = _finderService.GetPinDetailsForPerson((int)pin.Participant_ID);
 
+                    //Call  analytics
+                    var props = new EventProperties {{"City", pin?.Address?.City}, {"State", pin?.Address?.State}, {"Zip", pin?.Address?.PostalCode}};
+                    _analyticsService.Track(pin.Contact_ID.ToString(), "AddedtoMap", props);
+
                     _awsCloudsearchService.UploadNewPinToAws(personPin); 
 
                     return (Ok(pin));
@@ -321,6 +329,10 @@ namespace crds_angular.Controllers.API
                 {
                     _finderService.DisablePin(participantId);
                     _awsCloudsearchService.DeleteSingleConnectRecordInAwsCloudsearch(participantId, 1);
+
+                    // Call  analytics
+                    _analyticsService.Track(AuthenticationRepository.GetContactId(token).ToString(), "RemovedFromMap");
+
                     return Ok();
 
                 }
@@ -462,6 +474,11 @@ namespace crds_angular.Controllers.API
                 try
                 {
                     _finderService.InviteToGroup(token, groupId, person, finderFlag);
+
+                    // Call Analytics
+                    var props = new EventProperties {{"InvitationToEmail", person.email}};
+                    _analyticsService.Track(AuthenticationRepository.GetContactId(token).ToString(), "HostInvitationSent", props);
+
                     return (Ok());
                 }
                 catch (ValidationException e)
@@ -498,7 +515,7 @@ namespace crds_angular.Controllers.API
             {
                 try
                 {
-                    _finderService.AddUserDirectlyToGroup(person, groupId);
+                    _finderService.AddUserDirectlyToGroup(token, person, groupId);
                     return (Ok());
                 }
                 catch (DuplicateGroupParticipantException dup)
@@ -588,6 +605,11 @@ namespace crds_angular.Controllers.API
                 try
                 {
                     _finderService.RequestToBeHost(token, hostRequest);
+
+                    // Call Analytics
+                    var props = new EventProperties {{"City", hostRequest.Address.City}, {"State", hostRequest.Address.State}, {"Zip", hostRequest.Address.PostalCode}};
+                    _analyticsService.Track(hostRequest.ContactId.ToString(), "RegisteredAsHost", props);
+
                     return Ok();
                 }
                 catch (GatheringException e)

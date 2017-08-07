@@ -47,6 +47,9 @@
     <DocumentationFile>bin\crds-angular.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Analytics.NET, Version=2.0.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Astronomer.NET.1.0.1\lib\Analytics.NET.dll</HintPath>
+    </Reference>
     <Reference Include="Antlr3.Runtime, Version=3.5.0.2, Culture=neutral, PublicKeyToken=eb42632606e9261f, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
@@ -349,7 +352,9 @@
     <Compile Include="Exceptions\NotHeadOfHouseholdException.cs" />
     <Compile Include="Exceptions\PaymentTypeNotFoundException.cs" />
     <Compile Include="Exceptions\TripFullException.cs" />
-    <Compile Include="Models\Crossroads\Campaign\PledgeCampaignSummaryDto.cs" />
+    <Compile Include="Models\Crossroads\Events\Campaign\PledgeCampaignSummaryDto.cs" />
+    <Compile Include="Models\Crossroads\Waivers\ContactInvitation.cs" />
+    <Compile Include="Models\Crossroads\Waivers\WaiverDTO.cs" />
     <Compile Include="Models\Crossroads\GoVolunteer\DashboardDatum.cs" />
     <Compile Include="Models\AwsCloudsearch\AwsBoundingBox.cs" />
     <Compile Include="Models\AwsCloudsearch\AwsCloudsearchDto.cs" />
@@ -450,6 +455,10 @@
     <Compile Include="Processors\SendTextMessageJob.cs" />
     <Compile Include="Security\ReactiveMPAuth.cs" />
     <Compile Include="Services\AddressService.cs" />
+    <Compile Include="Services\Analytics\AnalyticsAstronomer.cs" />
+    <Compile Include="Services\Analytics\AnalyticsService.cs" />
+    <Compile Include="Services\Analytics\EventProperties.cs" />
+    <Compile Include="Services\Analytics\IAnalyticsService.cs" />
     <Compile Include="Services\AwsCloudsearchService.cs" />
     <Compile Include="Services\AwsTimeHelper.cs" />
     <Compile Include="Services\BulkEmailSyncService.cs" />
@@ -457,6 +466,7 @@
     <Compile Include="Services\CampRules.cs" />
     <Compile Include="Services\CampService.cs" />
     <Compile Include="Services\CongregationService.cs" />
+    <Compile Include="Services\CorkboardService.cs" />
     <Compile Include="Services\FinderService.cs" />
     <Compile Include="Services\EquipmentService.cs" />
     <Compile Include="Services\EventParticipantService.cs" />
@@ -471,6 +481,7 @@
     <Compile Include="Services\GroupSearchService.cs" />
     <Compile Include="Services\FormBuilderService.cs" />
     <Compile Include="Services\Interfaces\GroupAttributeDTO.cs" />
+    <Compile Include="Services\Interfaces\ICorkboardService.cs" />
     <Compile Include="Services\Interfaces\IGroupLeaderService.cs" />
     <Compile Include="Services\Interfaces\IAddressGeocodingService.cs" />
     <Compile Include="Services\Interfaces\IAddressProximityService.cs" />
@@ -483,6 +494,7 @@
     <Compile Include="Services\Interfaces\IInvitationService.cs" />
     <Compile Include="Services\Interfaces\IPaymentService.cs" />
     <Compile Include="Services\Interfaces\ITextCommunicationService.cs" />
+    <Compile Include="Services\Interfaces\IWaiverService.cs" />
     <Compile Include="Services\InvitationService.cs" />
     <Compile Include="Services\Interfaces\IAddressService.cs" />
     <Compile Include="Services\Interfaces\ICongregationService.cs" />
@@ -520,6 +532,7 @@
     <Compile Include="Services\TaskService.cs" />
     <Compile Include="Services\GroupToolService.cs" />
     <Compile Include="Services\TwilioService.cs" />
+    <Compile Include="Services\WaiverService.cs" />
     <Compile Include="Util\MailchimpListHandler.cs" />
     <Compile Include="Util\HttpAuthResult.cs" />
     <Compile Include="Util\FileResult.cs" />
@@ -701,6 +714,7 @@
     <Compile Include="Util\Interfaces\IDateTime.cs" />
     <Compile Include="Util\Interfaces\IEmailListHandler.cs" />
     <Compile Include="Util\HtmlHelper.cs" />
+    <Compile Include="Controllers\API\WaiverController.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="favicon.ico" />

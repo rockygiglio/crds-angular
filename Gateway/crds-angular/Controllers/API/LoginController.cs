@@ -6,6 +6,7 @@ using crds_angular.Exceptions.Models;
 using crds_angular.Models.Json;
 using crds_angular.Security;
 using crds_angular.Services;
+using crds_angular.Services.Analytics;
 using crds_angular.Services.Interfaces;
 using MinistryPlatform.Translation.Models.DTO;
 using Crossroads.ApiVersioning;
@@ -13,6 +14,7 @@ using Crossroads.ClientApiKeys;
 using Crossroads.Web.Common.Security;
 using MinistryPlatform.Translation.Repositories;
 using MinistryPlatform.Translation.Repositories.Interfaces;
+
 
 namespace crds_angular.Controllers.API
 {
@@ -22,19 +24,26 @@ namespace crds_angular.Controllers.API
         private readonly IPersonService _personService;
         private readonly IUserRepository _userService;
         private readonly ILoginService _loginService;
-        private readonly IContactRepository _contactRepository;
 
-        public LoginController(ILoginService loginService,
-                               IPersonService personService,
-                               IUserRepository userService,
-                               IUserImpersonationService userImpersonationService,
-                               IAuthenticationRepository authenticationRepository,
-                               IContactRepository contactRepository) : base(userImpersonationService, authenticationRepository)
+        private readonly IContactRepository _contactRepository;
+        private readonly IAnalyticsService _analyticsService;
+
+        public LoginController(ILoginService loginService, 
+                                IPersonService personService, 
+                                IUserRepository userService, 
+                                IAnalyticsService analyticsService,
+                                IUserImpersonationService userImpersonationService, 
+                                IAuthenticationRepository authenticationRepository,
+                                IContactRepository contactRepository) : base(userImpersonationService, authenticationRepository)
+
         {
             _loginService = loginService;
             _personService = personService;
             _userService = userService;
+
             _contactRepository = contactRepository;
+            _analyticsService = analyticsService;
+
         }
 
         [VersionedRoute(template: "request-password-reset", minimumVersion: "1.0.0")]
@@ -158,6 +167,8 @@ namespace crds_angular.Controllers.API
 
                 _loginService.ClearResetToken(cred.username);
                 _contactRepository.UpdateUsertoActive(p.ContactId);
+                _analyticsService.Track(cred.username, "SignedIn"); 
+
 
                 return this.Ok(r);
             }

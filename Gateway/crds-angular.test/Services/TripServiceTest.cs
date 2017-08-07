@@ -10,6 +10,7 @@ using Crossroads.Utilities.FunctionalHelpers;
 using Crossroads.Web.Common.Configuration;
 using Crossroads.Web.Common.MinistryPlatform;
 using MinistryPlatform.Translation.Models;
+using MpCommunication = MinistryPlatform.Translation.Models.MpCommunication;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 using Moq;
 using NUnit.Framework;
@@ -17,7 +18,6 @@ using IDonationRepository = MinistryPlatform.Translation.Repositories.Interfaces
 using IEventRepository = MinistryPlatform.Translation.Repositories.Interfaces.IEventRepository;
 using IGroupRepository = MinistryPlatform.Translation.Repositories.Interfaces.IGroupRepository;
 using ICampaignRepository = MinistryPlatform.Translation.Repositories.Interfaces.ICampaignRepository;
-using MpCommunication = MinistryPlatform.Translation.Models.MpCommunication;
 
 namespace crds_angular.test.Services
 {

@@ -1,5 +1,4 @@
-'use strict';
-var MODULE = 'crossroads.trips';
+const MODULE = 'crossroads.trips';
 
 angular.module(MODULE, ['crossroads.core', 'crossroads.common'])
   .config(require('./trips.routes'))
@@ -8,7 +7,7 @@ angular.module(MODULE, ['crossroads.core', 'crossroads.common'])
   ;
 require('./mytrips');
 require('./travelInformation');
-require('./tripPromise');
+require('./trippromise');
 require('./tripsearch');
 require('./tripgiving');
 require('./signup');

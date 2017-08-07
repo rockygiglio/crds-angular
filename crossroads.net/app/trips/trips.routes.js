@@ -165,7 +165,27 @@
               deferred.reject();
             });
             return deferred.promise;
-          },
+          }
+        }
+      })
+      .state('tripwaiver', {
+        parent: 'centeredContentPage',
+        url: '/trips/mytrips/waiver/:waiverId',
+        template: '<trip-waiver></trip-waiver>',
+        data: {
+          isProtected: true,
+          meta: {
+            title: 'Trip Waiver',
+            description: ''
+          }
+        },
+        resolve: {
+          $stateParams: '$stateParams',
+          loggedin: crds_utilities.checkLoggedin,
+          Trip: 'Trip',
+          Waiver($stateParams, Trip) {
+            return Trip.Waiver.get({ waiverId: $stateParams.waiverId }).$promise;
+          }
         }
       })
       .state('trippromise', {

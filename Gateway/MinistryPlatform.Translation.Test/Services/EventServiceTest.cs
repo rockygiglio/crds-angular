@@ -411,7 +411,7 @@ namespace MinistryPlatform.Translation.Test.Services
                 }
             };
 
-            _ministryPlatformRestService.Setup(m => m.Search<MpWaivers>($"Event_ID = {eventId} AND Active=1", columnList, null, false)).Returns(mockWaiver);           
+            _ministryPlatformRestService.Setup(m => m.Search<MpEventWaivers>($"Event_ID = {eventId} AND Active=1", columnList, null, false)).Returns(mockWaiver);           
             _ministryPlatformRestService.Setup(m => m.Search<MpWaiverResponse>($"Waiver_ID_Table.Waiver_ID = 123 AND Event_Participant_ID_Table_Event_ID_Table.Event_ID = {eventId} AND cr_Event_Participant_Waivers.Event_Participant_ID = {eventParticipantId}", columns, null, false)).Returns(mockWaiverResponse);
             _ministryPlatformRestService.Setup(m => m.Search<MpWaiverResponse>($"Waiver_ID_Table.Waiver_ID = 456 AND Event_Participant_ID_Table_Event_ID_Table.Event_ID = {eventId} AND cr_Event_Participant_Waivers.Event_Participant_ID = {eventParticipantId}", columns, null, false)).Returns(mockWaiverResponse2);
             _ministryPlatformRestService.Setup(m => m.UsingAuthenticationToken("ABC")).Returns(_ministryPlatformRestService.Object);
@@ -468,11 +468,11 @@ namespace MinistryPlatform.Translation.Test.Services
         }
 
 
-        private static List<MpWaivers> mockWaivers()
+        private static List<MpEventWaivers> mockWaivers()
         {
-            return new List<MpWaivers>
+            return new List<MpEventWaivers>
             {
-                new MpWaivers
+                new MpEventWaivers
                 {
                     Accepted = false,
                     Required = true,
@@ -481,7 +481,7 @@ namespace MinistryPlatform.Translation.Test.Services
                     WaiverId = 123,
                     WaiverText = "I waive ALL my rights."
                 },
-                new MpWaivers
+                new MpEventWaivers
                 {
                     Accepted = false,
                     Required = true,
