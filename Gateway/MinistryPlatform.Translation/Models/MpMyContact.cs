@@ -43,5 +43,6 @@ namespace MinistryPlatform.Translation.Models
         public string Passport_Expiration { get; set; }
         public DateTime Participant_Start_Date { get; set; }
         public DateTime? Attendance_Start_Date { get; set; }
+        public int? Contact_Status_ID { get; set; }
     }
 }

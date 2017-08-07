@@ -12,6 +12,7 @@ using MinistryPlatform.Translation.Models.DTO;
 using Crossroads.ApiVersioning;
 using Crossroads.ClientApiKeys;
 using Crossroads.Web.Common.Security;
+using MinistryPlatform.Translation.Repositories;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 
 
@@ -23,6 +24,8 @@ namespace crds_angular.Controllers.API
         private readonly IPersonService _personService;
         private readonly IUserRepository _userService;
         private readonly ILoginService _loginService;
+
+        private readonly IContactRepository _contactRepository;
         private readonly IAnalyticsService _analyticsService;
 
         public LoginController(ILoginService loginService, 
@@ -30,12 +33,17 @@ namespace crds_angular.Controllers.API
                                 IUserRepository userService, 
                                 IAnalyticsService analyticsService,
                                 IUserImpersonationService userImpersonationService, 
-                                IAuthenticationRepository authenticationRepository) : base(userImpersonationService, authenticationRepository)
+                                IAuthenticationRepository authenticationRepository,
+                                IContactRepository contactRepository) : base(userImpersonationService, authenticationRepository)
+
         {
             _loginService = loginService;
             _personService = personService;
             _userService = userService;
+
+            _contactRepository = contactRepository;
             _analyticsService = analyticsService;
+
         }
 
         [VersionedRoute(template: "request-password-reset", minimumVersion: "1.0.0")]
@@ -153,11 +161,14 @@ namespace crds_angular.Controllers.API
                     roles = userRoles,
                     age = p.Age,
                     userPhone = p.MobilePhone,
-                    canImpersonate = user.CanImpersonate
+                    canImpersonate = user.CanImpersonate 
                 };
 
+
                 _loginService.ClearResetToken(cred.username);
+                _contactRepository.UpdateUsertoActive(p.ContactId);
                 _analyticsService.Track(cred.username, "SignedIn"); 
+
 
                 return this.Ok(r);
             }
