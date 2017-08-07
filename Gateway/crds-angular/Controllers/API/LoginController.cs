@@ -11,6 +11,7 @@ using MinistryPlatform.Translation.Models.DTO;
 using Crossroads.ApiVersioning;
 using Crossroads.ClientApiKeys;
 using Crossroads.Web.Common.Security;
+using MinistryPlatform.Translation.Repositories;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 
 namespace crds_angular.Controllers.API
@@ -21,12 +22,19 @@ namespace crds_angular.Controllers.API
         private readonly IPersonService _personService;
         private readonly IUserRepository _userService;
         private readonly ILoginService _loginService;
+        private readonly IContactRepository _contactRepository;
 
-        public LoginController(ILoginService loginService, IPersonService personService, IUserRepository userService, IUserImpersonationService userImpersonationService, IAuthenticationRepository authenticationRepository) : base(userImpersonationService, authenticationRepository)
+        public LoginController(ILoginService loginService,
+                               IPersonService personService,
+                               IUserRepository userService,
+                               IUserImpersonationService userImpersonationService,
+                               IAuthenticationRepository authenticationRepository,
+                               IContactRepository contactRepository) : base(userImpersonationService, authenticationRepository)
         {
             _loginService = loginService;
             _personService = personService;
             _userService = userService;
+            _contactRepository = contactRepository;
         }
 
         [VersionedRoute(template: "request-password-reset", minimumVersion: "1.0.0")]
@@ -144,10 +152,12 @@ namespace crds_angular.Controllers.API
                     roles = userRoles,
                     age = p.Age,
                     userPhone = p.MobilePhone,
-                    canImpersonate = user.CanImpersonate
+                    canImpersonate = user.CanImpersonate 
                 };
 
+
                 _loginService.ClearResetToken(cred.username);
+                _contactRepository.UpdateUsertoActive(p.ContactId);
 
                 return this.Ok(r);
             }
