@@ -24,6 +24,7 @@ using crds_angular.Services.Analytics;
 using Crossroads.Web.Common.Configuration;
 using MinistryPlatform.Translation.Models.Finder;
 using MpCommunication = MinistryPlatform.Translation.Models.MpCommunication;
+using ILookupRepository = MinistryPlatform.Translation.Repositories.Interfaces.ILookupRepository;
 
 namespace crds_angular.Services
 {
@@ -80,6 +81,7 @@ namespace crds_angular.Services
         private readonly int _connectCommunicationTypeInviteToSmallGroup;
         private readonly int _connectCommunicationTypeRequestToJoinSmallGroup;
         private readonly int _connectCommunicationTypeRequestToJoinGathering;
+        private readonly ILookupService _lookupService;
 
         private readonly Random _random = new Random(DateTime.Now.Millisecond);
         private const double MinutesInDegree = 60;
@@ -101,6 +103,7 @@ namespace crds_angular.Services
             IAuthenticationRepository authenticationRepository,
             ICommunicationRepository communicationRepository,
             IAccountService accountService,
+            ILookupService lookupService,
             IAnalyticsService analyticsService
         )
         {
@@ -120,6 +123,7 @@ namespace crds_angular.Services
             _awsCloudsearchService = awsCloudsearchService;
             _communicationRepository = communicationRepository;
             _accountService = accountService;
+            _lookupService = lookupService;
             _analyticsService = analyticsService;
             // constants
             _anywhereCongregationId = _configurationWrapper.GetConfigIntValue("AnywhereCongregationId");
@@ -951,6 +955,20 @@ namespace crds_angular.Services
             }
         }
 
+        private string getMeetingFrequency(int meetingFrequencyId)
+        {
+
+            switch (meetingFrequencyId)
+            {
+                case 1:
+                    return "Weekly";
+                case 2:
+                    return "Bi-Weekly";
+                default:
+                    return "Monthly";
+            }
+        }
+
         public void SendEmailToAddedUser(string token, User user, int groupid)
         {
             var emailTemplateId = _configurationWrapper.GetConfigIntValue("GroupsAddParticipantEmailNotificationTemplateId");
@@ -959,16 +977,25 @@ namespace crds_angular.Services
             var leaderContact = _contactRepository.GetContactById(leaderContactId);
             var leaderEmail = leaderContact.Email_Address;
             var userEmail = user.email;
-            var group = _groupService.GetGroupDetails(groupid);
+            GroupDTO group = _groupService.GetGroupDetails(groupid);
+            var meetingDay = _lookupService.GetMeetingDayFromId(group.MeetingDayId);
             var newMemberContactId = _contactRepository.GetContactIdByEmail(user.email);
-           
+            var groupLocation = GetGroupAddress(token, groupid);
+            var formatedMeetingTime = group.MeetingTime == null ? "Flexible time" : String.Format("{0:t}", DateTimeOffset.Parse(group.MeetingTime).LocalDateTime);
+            var formatedMeetingDay = meetingDay == null ? "Flexible day" : meetingDay;
+            var formatedMeetingFrequency = group.MeetingFrequencyID == null ? "Flexible frequency" : getMeetingFrequency((int)group.MeetingFrequencyID);
             var mergeData = new Dictionary<string, object>
             {
                 {"Participant_Name", user.firstName},
                 {"Leader_Name", leaderContact.First_Name},
                 {"Leader_Full_Name", $"{leaderContact.First_Name} {leaderContact.Last_Name}" },
                 {"Leader_Email", leaderEmail},
-                {"Group_Name", group.GroupName}
+                {"Group_Name", group.GroupName},
+                {"Group_Meeting_Day",  formatedMeetingDay},
+                {"Group_Meeting_Time", formatedMeetingTime},
+                {"Group_Meeting_Frequency", formatedMeetingFrequency},
+                {"Group_Meeting_Location", groupLocation.AddressLine1 == null ? "Online" : $"{groupLocation.AddressLine1}\n{groupLocation.AddressLine2}\n{groupLocation.City}\n{groupLocation.State}\n{groupLocation.PostalCode}" },
+                {"Leader_Phone", $"{leaderContact.Home_Phone}\n{leaderContact.Mobile_Phone}" }
             };
 
             var fromContact = new MpContact
@@ -1011,8 +1038,19 @@ namespace crds_angular.Services
                 MergeData = mergeData
             };
             _communicationRepository.SendMessage(confirmation);
+            var connection = new ConnectCommunicationDto
+            {
+                CommunicationTypeId = _connectCommunicationTypeInviteToSmallGroup,
+                ToContactId = newMemberContactId,
+                FromContactId = _contactRepository.GetContactId(token),
+                CommunicationStatusId = _configurationWrapper.GetConfigIntValue("ConnectCommunicationStatusNA"),
+                GroupId = groupid,
+              
+            };
+
+            RecordCommunication(connection);
         }
-        
+       
         private List<PinDto> TransformGroupDtoToPinDto(List<GroupDTO> groupDTOs, string finderType)
         {
             var pins = new List<PinDto>();
