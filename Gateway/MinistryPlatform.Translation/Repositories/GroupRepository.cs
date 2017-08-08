@@ -504,7 +504,8 @@ namespace MinistryPlatform.Translation.Repositories
         public List<MpGroup> GetGroupsByGroupType(int groupTypeId)
         {
             var token = ApiLogin();
-            const string columns = "Group_ID, Group_Name, Group_Type_ID, Description, Ministry_ID, Congregation_ID, Start_Date, End_Date, Available_Online, Meeting_Time, Meeting_Day_ID, Meeting_Frequency_ID, Kids_Welcome, Offsite_Meeting_Address, Target_Size, Group_Is_Full, Enable_Waiting_List, Child_Care_Available, Maximum_Age, Remaining_Capacity, Minimum_Participants, Primary_Contact ";
+
+            const string columns = "Group_ID, Group_Name, Group_Type_ID, Offsite_Meeting_Address";
             string filter = $"Group_Type_ID = {groupTypeId} ";
 
             var groups = _ministryPlatformRestRepository.UsingAuthenticationToken(token).Search<MpGroup>(filter, columns);
