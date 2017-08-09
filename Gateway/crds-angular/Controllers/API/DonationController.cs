@@ -19,6 +19,7 @@ using Crossroads.ApiVersioning;
 using Crossroads.Web.Common;
 using Crossroads.Web.Common.Security;
 using Newtonsoft.Json;
+using crds_angular.Services.Analytics;
 
 namespace crds_angular.Controllers.API
 {
@@ -37,6 +38,7 @@ namespace crds_angular.Controllers.API
         private readonly MPInterfaces.IPledgeRepository _mpPledgeService;
         private readonly IPaymentService _paymentService;
         private readonly MPInterfaces.IInvoiceRepository _invoiceRepository;
+        private readonly IAnalyticsService _analyticsService;
 
         public DonationController(MPInterfaces.IDonorRepository mpDonorService,
                                   IPaymentProcessorService stripeService,
@@ -48,7 +50,8 @@ namespace crds_angular.Controllers.API
                                   MPInterfaces.IPledgeRepository mpPledgeService,
                                   IUserImpersonationService impersonationService,
                                   IPaymentService paymentService,
-                                  MPInterfaces.IInvoiceRepository invoiceRepository) : base(impersonationService, authenticationService)
+                                  MPInterfaces.IInvoiceRepository invoiceRepository,
+                                  IAnalyticsService analyticsService) : base(impersonationService, authenticationService)
         {
             _mpDonorService = mpDonorService;
             _stripeService = stripeService;
@@ -61,6 +64,7 @@ namespace crds_angular.Controllers.API
             _mpDonationService = mpDonationService;
             _mpPledgeService = mpPledgeService;
             _paymentService = paymentService;
+            _analyticsService = analyticsService;
         }
 
         /// <summary>
@@ -303,6 +307,9 @@ namespace crds_angular.Controllers.API
                         Email = donor.Email
                     };
 
+                    _analyticsService.Track(donor.ContactId.ToString(), "PaymentSucceededServerSide", new EventProperties() { { "Url", dto.SourceUrl }, { "FundingMethod", dto.PaymentType }, { "Email",  "" }, { "CheckoutType", "Registered" }, { "Amount", dto.Amount } });
+
+
                     return Ok(response);
                 }
                 else //Payment flow (non-contribution transaction)
@@ -423,6 +430,7 @@ namespace crds_angular.Controllers.API
                     Email = donor.Email
                 };
 
+                _analyticsService.Track(donor.ContactId.ToString(), "PaymentSucceededServerSide", new EventProperties() { {"Url", dto.SourceUrl }, { "FundingMethod", dto.PaymentType }, { "Email", donor.Email }, { "CheckoutType", "Guest" }, { "Amount", dto.Amount } });
                 return Ok(response);
             }
             catch (PaymentProcessorException stripeException)

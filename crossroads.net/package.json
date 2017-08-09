@@ -105,6 +105,7 @@
     "angular-ui-tinymce": "0.0.17",
     "angularjs-slider": "^2.9.0",
     "angulartics": "^0.20.1",
+    "angulartics-segment": "^0.1.5",
     "api-check": "~7.5.5",
     "blueimp-load-image": "^1.14.0",
     "bootstrap": "^3.3.7",

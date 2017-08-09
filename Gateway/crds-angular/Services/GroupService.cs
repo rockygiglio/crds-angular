@@ -20,6 +20,7 @@ using IEventRepository = MinistryPlatform.Translation.Repositories.Interfaces.IE
 using IGroupRepository = MinistryPlatform.Translation.Repositories.Interfaces.IGroupRepository;
 using IObjectAttributeService = crds_angular.Services.Interfaces.IObjectAttributeService;
 using crds_angular.Util.Interfaces;
+using Segment.Model;
 
 namespace crds_angular.Services
 {
@@ -192,8 +193,7 @@ namespace crds_angular.Services
 
         public void endDateGroupParticipant(int groupId, int groupParticipantId)
         {
-            
-           _mpGroupRepository.endDateGroupParticipant(groupParticipantId,groupId, DateTime.Now);
+            _mpGroupRepository.endDateGroupParticipant(groupParticipantId,groupId, DateTime.Now);
         }
 
         public void addParticipantsToGroup(int groupId, List<ParticipantSignup> participants)
