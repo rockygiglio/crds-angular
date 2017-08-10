@@ -218,54 +218,24 @@ namespace MinistryPlatform.Translation.Repositories
             try
             {
                 var token = ApiLogin();
-                var contactstatus = _ministryPlatformRest.UsingAuthenticationToken(token).Get<MpMyContact>("Contacts", contactId, "Contact_Status_ID");
+                var searchString = $"Contact_ID = {contactId}";
+                const string column = "Contact_Status_ID";
+                var contactstatus = _ministryPlatformRest.UsingAuthenticationToken(token).Search<int>("Contacts", searchString, column, null);
 
-                if (contactstatus.Contact_Status_ID == 2)
+                if (contactstatus == 2)
                 {
-                    contactstatus.Contact_Status_ID = 1;
+                    contactstatus = 1;
                     Dictionary<string, object> activestatus = new Dictionary<string, object>()
                     {
                         {"Contact_ID",contactId },
-                        {"Contact_Status_ID", contactstatus.Contact_Status_ID}
+                        {"Contact_Status_ID", contactstatus}
                     };
                     _ministryPlatformRest.UsingAuthenticationToken(token).UpdateRecord("Contacts", -1, activestatus);
-                    CreateActiveUserAuditLog(contactId);
-                }
-
-                else
-                {
-                    //Do nothing
                 }
             }
             catch (Exception e)
             {
                 throw new ApplicationException("Error Changing User to Active Status: " + e.Message);
-            }
-        }
-
-        public void CreateActiveUserAuditLog(int contactid)
-        {
-            try
-            {
-                //var storedProc = _configurationWrapper.GetConfigValue("crds_Add_Audit");
-                var apiToken = _apiUserRepository.GetToken();
-                var fields = new Dictionary<string, object>
-                {
-                    {"@TableName", "Contacts"},
-                    {"@Record_ID", contactid},
-                    {"@Audit_Description", "Updated"},
-                    {"@UserName", "Svc Mngr"},
-                    {"@UserID", 0},
-                    {"@FieldName", "Contact_Status_ID"},
-                    {"@FieldLabel", "Contact_Status_ID"},
-                    {"@PreviousValue", "2"},
-                    {"@NewValue", "1"},
-                };
-                _ministryPlatformRest.UsingAuthenticationToken(apiToken).PostStoredProc("crds_Add_Audit", fields);
-            }
-            catch (Exception e)
-            {
-                throw new ApplicationException("Error Adding User Active Status Change to the Audit Log: " + e.Message);
             }
         }
 
