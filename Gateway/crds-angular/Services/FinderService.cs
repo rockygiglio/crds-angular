@@ -979,7 +979,7 @@ namespace crds_angular.Services
             var userEmail = user.email;
             GroupDTO group = _groupService.GetGroupDetails(groupid);
             var meetingDay = _lookupService.GetMeetingDayFromId(group.MeetingDayId);
-            var newMemberContactId = _contactRepository.GetContactIdByEmail(user.email);
+            var newMemberContactId = _contactRepository.GetActiveContactIdByEmail(user.email);
             var groupLocation = GetGroupAddress(token, groupid);
             var formatedMeetingTime = group.MeetingTime == null ? "Flexible time" : String.Format("{0:t}", DateTimeOffset.Parse(group.MeetingTime).LocalDateTime);
             var formatedMeetingDay = meetingDay == null ? "Flexible day" : meetingDay;
