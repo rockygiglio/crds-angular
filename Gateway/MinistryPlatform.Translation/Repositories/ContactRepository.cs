@@ -457,23 +457,26 @@ namespace MinistryPlatform.Translation.Repositories
                                   Dictionary<string, object> householdDictionary,
                                   Dictionary<string, object> addressDictionary)
         {
-            // don't create orphaned address records
-            bool addressAlreadyExists = addressDictionary["Address_ID"] != null ? true : false;
-            if (!addressAlreadyExists && householdDictionary == null)
-                throw new ArgumentException("Household is required when adding a new address");
-
             string apiToken = _apiUserRepository.GetToken();
 
-            if (addressAlreadyExists)
+            if (addressDictionary != null)
             {
-                //address exists, update it
-                _ministryPlatformService.UpdateRecord(_configurationWrapper.GetConfigIntValue("Addresses"), addressDictionary, apiToken);
-            }
-            else
-            {
-                //address does not exist, create it, then attach to household
-                var addressId = _ministryPlatformService.CreateRecord(_configurationWrapper.GetConfigIntValue("Addresses"), addressDictionary, apiToken);
-                householdDictionary["Address_ID"] = addressId;
+                // don't create orphaned address records
+                bool addressAlreadyExists = addressDictionary["Address_ID"] != null ? true : false;
+                if (!addressAlreadyExists && householdDictionary == null)
+                    throw new ArgumentException("Household is required when adding a new address");
+
+                if (addressAlreadyExists)
+                {
+                    //address exists, update it
+                    _ministryPlatformService.UpdateRecord(_configurationWrapper.GetConfigIntValue("Addresses"), addressDictionary, apiToken);
+                }
+                else
+                {
+                    //address does not exist, create it, then attach to household
+                    var addressId = _ministryPlatformService.CreateRecord(_configurationWrapper.GetConfigIntValue("Addresses"), addressDictionary, apiToken);
+                    householdDictionary["Address_ID"] = addressId;
+                }
             }
 
             if (householdDictionary != null)
