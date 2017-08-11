@@ -398,7 +398,7 @@ namespace crds_angular.Services
             else if (finderType.Equals(_finderGroupTool))
             {
                 queryString =
-                    $"(and pintype:4 (or groupname:'{userKeywordSearchString}' groupdescription:'{userKeywordSearchString}' groupprimarycontactfirstname:'{userKeywordSearchString}' groupprimarycontactlastname:'{userKeywordSearchString}') {filterSearchString})";
+                    $"(and pintype:4 groupavailableonline:1 (or groupname:'{userKeywordSearchString}' groupdescription:'{userKeywordSearchString}' groupprimarycontactfirstname:'{userKeywordSearchString}' groupprimarycontactlastname:'{userKeywordSearchString}') {filterSearchString})";
             }
             else
             {     

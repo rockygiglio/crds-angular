@@ -62,7 +62,8 @@ SELECT
 	0    AS groupKidsWelcome,
 	null AS groupPrimaryContactFirstName,
 	null AS groupPrimaryContactLastName,
-	null AS groupPrimaryContactCongregation
+	null AS groupPrimaryContactCongregation,
+	1    AS groupavailableonline
 FROM Participants P 
 JOIN Contacts C ON C.Contact_ID = P.Contact_ID
 LEFT JOIN Households H ON H.Household_ID = C.Household_ID
@@ -100,13 +101,13 @@ SELECT
 	(SELECT dbo.crds_GetAtrributeStringForAWS(G.Group_Id,@ageRangeAttributeTypeId,1)) AS groupAgeRange, --function
 	MD.Meeting_Day AS groupMeetingDay,
 	CONVERT(VARCHAR(10), G.Meeting_Time, 100) AS groupMeetingTime,
-	-- CAST(G.Meeting_Time AS VARCHAR(16)) AS groupMeetingTime,
 	(IIF(G.Offsite_Meeting_Address IS NULL, 1, 0)) AS groupVirtual,     -- sub select
 	MF.Meeting_Frequency AS groupMeetingFrequency,
 	(IIF(G.Kids_Welcome IS NULL, 0, G.Kids_Welcome)) AS groupKidsWelcome,
 	C.Nickname AS groupPrimaryContactFirstName,
 	C.Last_Name AS groupPrimaryContactLastName,
-	CON.Congregation_Name AS groupPrimaryContactCongregation
+	CON.Congregation_Name AS groupPrimaryContactCongregation,
+	(IIF(G.Available_Online IS NULL, 0, G.Available_Online)) AS groupavailableonline
 	--function to return attribute properly as string for cloudsearch array
 FROM Groups G
 LEFT JOIN Addresses A ON A.Address_ID = G.Offsite_Meeting_Address
@@ -117,7 +118,7 @@ LEFT JOIN Meeting_Frequencies MF ON MF.Meeting_Frequency_ID = G.Meeting_Frequenc
 LEFT JOIN Households H ON H.Household_ID = C.Household_ID
   LEFT JOIN Congregations CON ON CON.Congregation_ID = H.Congregation_ID
 WHERE (G.Group_Type_ID IN (@anywhereGroupTypeId) AND G.Available_Online = 1 AND P.Host_Status_ID = @approvedStatusId AND (G.End_Date IS NULL OR G.END_DATE > GETDATE())) OR --ANYWHERE GATHERINGS
-      (G.Group_Type_ID IN (@smallGroupTypeId) AND G.Available_Online = 1 AND G.Group_Is_Full = 0 AND (G.End_Date IS NULL OR G.END_DATE > GETDATE()))                            --SMALL GROUPS
+      (G.Group_Type_ID IN (@smallGroupTypeId) AND G.Group_Is_Full = 0 AND (G.End_Date IS NULL OR G.END_DATE > GETDATE()))                            --SMALL GROUPS
 UNION
 --SITES
 SELECT
@@ -155,7 +156,8 @@ SELECT
 	0    AS groupKidsWelcome,
 	null AS groupPrimaryContactFirstName,
 	null AS groupPrimaryContactLastName,
-	null AS groupPrimaryContactCongregation
+	null AS groupPrimaryContactCongregation,
+	1    AS groupavailableonline
 FROM Congregations C
 JOIN Locations L ON L.Location_ID = C.Location_ID
 LEFT JOIN Addresses A ON A.Address_ID = L.Address_ID
