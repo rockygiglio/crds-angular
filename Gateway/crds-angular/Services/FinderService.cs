@@ -310,6 +310,8 @@ namespace crds_angular.Services
             group.CongregationId = _anywhereCongregationId;
             group.GroupTypeId = _anywhereGroupType;
             group.MinistryId = _spritualGrowthMinistryId;
+            group.MeetingTime = null;
+
             _groupService.CreateGroup(group);
 
             //add our contact to the group as a leader
