@@ -197,6 +197,7 @@ namespace crds_angular.Services
             pin.Gathering.Address.Latitude = coordinates.Latitude;
             pin.Gathering.Address.Longitude = coordinates.Longitude;
             pin.Gathering.GroupTypeId = _anywhereGroupType;
+            pin.Gathering.MeetingTime = null;
 
             if (pin.ShouldUpdateHomeAddress)
             {
