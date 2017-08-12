@@ -197,6 +197,10 @@ namespace crds_angular.Services
             pin.Gathering.Address.Latitude = coordinates.Latitude;
             pin.Gathering.Address.Longitude = coordinates.Longitude;
             pin.Gathering.GroupTypeId = _anywhereGroupType;
+            // When staff manually updates the gathering group in MP to be public/available online (or any other edit),
+            // the meeting_time in MP console is forced to a value (midnight)
+            // then on gathering group edits in the app, the meeting_time pre-populated and getting a sql datetime overflow
+            // Gatherings do not have meeting time, so set back to null
             pin.Gathering.MeetingTime = null;
 
             if (pin.ShouldUpdateHomeAddress)
