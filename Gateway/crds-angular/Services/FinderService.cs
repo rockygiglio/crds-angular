@@ -197,6 +197,11 @@ namespace crds_angular.Services
             pin.Gathering.Address.Latitude = coordinates.Latitude;
             pin.Gathering.Address.Longitude = coordinates.Longitude;
             pin.Gathering.GroupTypeId = _anywhereGroupType;
+            // When staff manually updates the gathering group in MP to be public/available online (or any other edit),
+            // the meeting_time in MP console is forced to a value (midnight)
+            // then on gathering group edits in the app, the meeting_time pre-populated and getting a sql datetime overflow
+            // Gatherings do not have meeting time, so set back to null
+            pin.Gathering.MeetingTime = null;
 
             if (pin.ShouldUpdateHomeAddress)
             {
@@ -310,6 +315,8 @@ namespace crds_angular.Services
             group.CongregationId = _anywhereCongregationId;
             group.GroupTypeId = _anywhereGroupType;
             group.MinistryId = _spritualGrowthMinistryId;
+            group.MeetingTime = null;
+
             _groupService.CreateGroup(group);
 
             //add our contact to the group as a leader
@@ -605,7 +612,8 @@ namespace crds_angular.Services
                         PrimaryContactLastName = hit.Fields.ContainsKey("groupprimarycontactlastname") ? hit.Fields["groupprimarycontactlastname"].FirstOrDefault() : null,
                         PrimaryContactCongregation = hit.Fields.ContainsKey("groupprimarycontactcongregation") ? hit.Fields["groupprimarycontactcongregation"].FirstOrDefault() : null,
                         GroupAgesRangeList = hit.Fields.ContainsKey("groupagerange") ? hit.Fields["groupagerange"].ToList() : null,
-                        GroupCategoriesList = hit.Fields.ContainsKey("groupcategory") ? hit.Fields["groupcategory"].ToList() : null
+                        GroupCategoriesList = hit.Fields.ContainsKey("groupcategory") ? hit.Fields["groupcategory"].ToList() : null,
+                        AvailableOnline = hit.Fields.ContainsKey("groupavailableonline") && hit.Fields["groupavailableonline"].FirstOrDefault() == "1",                            
                     };
 
                     if (hit.Fields.ContainsKey("groupstartdate") && !String.IsNullOrWhiteSpace(hit.Fields["groupstartdate"].First()))
