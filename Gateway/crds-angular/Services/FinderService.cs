@@ -15,7 +15,6 @@ using Crossroads.Web.Common.MinistryPlatform;
 using System.Linq;
 using System.Device.Location;
 using System.Text;
-using System.Text.RegularExpressions;
 using Amazon.CloudSearchDomain.Model;
 using crds_angular.Exceptions;
 using crds_angular.Models.AwsCloudsearch;
@@ -359,12 +358,10 @@ namespace crds_angular.Services
                 CommunicationStatusId = _configurationWrapper.GetConfigIntValue("ConnectCommunicationStatusUnanswered"),
                 GroupId = groupId
             };
-            RecordCommunication(connection);
-
+            
             _groupToolService.SubmitInquiry(token, groupId);
-
-            // TODO: send an email
-
+            RecordCommunication(connection);
+            SendTryAGroupEmailToLeader(token, groupId);
         }
 
         public AddressDTO GetAddressForIp(string ip)
@@ -819,19 +816,9 @@ namespace crds_angular.Services
             return invitation;
         }
 
-        public AddressDTO GetGroupAddress(string token, int groupId)
+        public AddressDTO GetGroupAddress(int groupId)
         {
-            var user = _participantRepository.GetParticipantRecord(token);
-            var group = _groupService.GetGroupsByTypeOrId(token, user.ParticipantId, null, groupId, true, false).FirstOrDefault();
-
-            if (user.ContactId == group.ContactId || group.Participants.Any(p => p.ParticipantId == user.ParticipantId))
-            {
-                return group.Address;
-            }
-            else
-            {
-                throw new Exception("User does not have access to requested address");
-            }
+            return _groupService.GetGroupDetails(groupId).Address;
         }
 
         public AddressDTO GetPersonAddress(string token, int participantId, bool shouldGetFullAddress = true)
@@ -994,24 +981,31 @@ namespace crds_angular.Services
         {
             // group
             var group = _groupService.GetGroupDetails(groupId);
-            var groupLocation = GetGroupAddress(token, groupId);
+            var groupLocation = GetGroupAddress(groupId);
             var meetingDay = _lookupService.GetMeetingDayFromId(group.MeetingDayId);
-            var formatedMeetingTime = group.MeetingTime == null ? "Flexible time" : String.Format("{0:t}", DateTimeOffset.Parse(group.MeetingTime).LocalDateTime);
-            var formatedMeetingDay = meetingDay == null ? "Flexible day" : meetingDay;
+            var formatedMeetingTime = group.MeetingTime == null ? "Flexible time" : $"{DateTimeOffset.Parse(@group.MeetingTime).LocalDateTime:t}";
+            var formatedMeetingDay = meetingDay ?? "Flexible day";
             var formatedMeetingFrequency = group.MeetingFrequencyID == null ? "Flexible frequency" : getMeetingFrequency((int)group.MeetingFrequencyID);
 
             //leader
-            var leaderContactId = _contactRepository.GetContactIdByEmail(group.PrimaryContactEmail);
-            var leaderContact = _contactRepository.GetContactById(leaderContactId);
-            
+            var leaderContact = _contactRepository.GetContactByParticipantId(GetLeaderParticipantIdFromGroup(groupId));
+
             //participant
             var user = _participantRepository.GetParticipantRecord(token);
-            var newMemberContactId = user.ContactId;
-            
-             var mergeData = new Dictionary<string, object>
+            var newMember = _contactRepository.GetContactById(user.ContactId);
+
+            var mergeData = new Dictionary<string, object>
             {
-                {"Participant_Name", user.Nickname},
+                {"Participant_Name",  newMember.Nickname},
+                {"Nickname", newMember.Nickname },
+                {"Last_Name", newMember.Last_Name },
+                {"Email_Address", newMember.Email_Address },
+                {"Phone_Number", newMember.Mobile_Phone },
                 {"Leader_Name", leaderContact.First_Name},
+                {"Primary_First_Name", leaderContact.First_Name},
+                {"Primary_Last_Name", leaderContact.Last_Name},
+                {"Primary_Email", leaderContact.Email_Address},
+                {"Primary_Phone", leaderContact.Mobile_Phone},
                 {"Leader_Full_Name", $"{leaderContact.First_Name} {leaderContact.Last_Name}" },
                 {"Leader_Email", leaderContact.Email_Address},
                 {"Group_Name", group.GroupName},
@@ -1044,13 +1038,15 @@ namespace crds_angular.Services
                     EmailAddress = emailTemplate.ReplyToEmailAddress
                 };
 
+                var primary = _contactRepository.GetContactById(_contactRepository.GetContactIdByParticipantId(_groupService.GetPrimaryContactParticipantId(groupid)));
+
                 var to = new List<MpContact>
                 {
                     new MpContact
                     {
                         // Just need a contact ID here, doesn't have to be for the recipient
-                        //ContactId = host.Contact_ID.Value,
-                        //EmailAddress = host.EmailAddress
+                        ContactId = primary.Contact_ID,
+                        EmailAddress = primary.Email_Address
                     }
                 };
 
@@ -1085,7 +1081,7 @@ namespace crds_angular.Services
             GroupDTO group = _groupService.GetGroupDetails(groupid);
             var meetingDay = _lookupService.GetMeetingDayFromId(group.MeetingDayId);
             var newMemberContactId = _contactRepository.GetActiveContactIdByEmail(user.email);
-            var groupLocation = GetGroupAddress(token, groupid);
+            var groupLocation = GetGroupAddress(groupid);
             var formatedMeetingTime = group.MeetingTime == null ? "Flexible time" : String.Format("{0:t}", DateTimeOffset.Parse(group.MeetingTime).LocalDateTime);
             var formatedMeetingDay = meetingDay == null ? "Flexible day" : meetingDay;
             var formatedMeetingFrequency = group.MeetingFrequencyID == null ? "Flexible frequency" : getMeetingFrequency((int)group.MeetingFrequencyID);

@@ -27,7 +27,7 @@ namespace crds_angular.Services.Interfaces
         void GatheringJoinRequest(string token, int gatheringId);
         Invitation InviteToGroup(string token, int gatheringId, User person, string finderFlag);
         List<GroupParticipantDTO> GetParticipantsForGroup(int groupId);
-        AddressDTO GetGroupAddress(string token, int groupId);
+        AddressDTO GetGroupAddress(int groupId);
         AddressDTO GetPersonAddress(string token, int participantId, bool shouldGetFullAddress);
         PinDto UpdateGathering(PinDto pin);
         void RequestToBeHost(string token, HostRequestDto hostRequest);

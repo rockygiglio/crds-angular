@@ -200,7 +200,7 @@ namespace crds_angular.Controllers.API
             {
                 try
                 {
-                    var address = _finderService.GetGroupAddress(token, groupId);
+                    var address = _finderService.GetGroupAddress(groupId);
                     return (Ok(address));
                 }
                 catch (Exception e)
@@ -566,6 +566,8 @@ namespace crds_angular.Controllers.API
                 }
             });
         }
+
+
 
         /// <summary>
         /// Logged in user requests to "try a group"
