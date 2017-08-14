@@ -387,10 +387,11 @@ namespace crds_angular.Services
                 var acct = acctType != 3 ? 5 : acctType;
                 var paymentType = MinistryPlatform.Translation.Enum.PaymentType.GetPaymentType(acct).name;
                 var frequency = recurringGift.Recurrence;
+                var startDate = recurringGift.StartDate.HasValue ? recurringGift.StartDate.Value : DateTime.Now;
                 var programName = recurringGift.ProgramName;
                 var amt = decimal.Round(recurringGift.Amount, 2, MidpointRounding.AwayFromZero) / Constants.StripeDecimalConversionValue;
 
-                _mpDonorService.SendEmail(templateId, recurringGift.DonorId, (int)amt, paymentType, DateTime.Now, programName, string.Empty, frequency);
+                _mpDonorService.SendEmail(templateId, recurringGift.DonorId, (int)amt, paymentType, DateTime.Now, startDate, programName, string.Empty, frequency);
             }
             catch (Exception e)
             {

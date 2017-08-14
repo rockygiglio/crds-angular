@@ -8,12 +8,12 @@ using System.Web.Http.Description;
 using crds_angular.Exceptions;
 using crds_angular.Exceptions.Models;
 using crds_angular.Models.Crossroads;
-using crds_angular.Models.Crossroads.Attribute;
 using crds_angular.Models.Crossroads.Groups;
+using crds_angular.Models.Finder;
 using crds_angular.Models.Json;
 using crds_angular.Security;
+using crds_angular.Services.Analytics;
 using crds_angular.Services.Interfaces;
-using Crossroads.Utilities.Interfaces;
 using log4net;
 using Crossroads.ApiVersioning;
 using Crossroads.Web.Common;
@@ -25,17 +25,25 @@ namespace crds_angular.Controllers.API
     public class GroupToolController : MPAuth
     {
         private readonly ILog _logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-        private readonly Services.Interfaces.IGroupToolService _groupToolService;
+        private readonly IGroupToolService _groupToolService;
+        private readonly IGroupService _groupService;
 
         private readonly int _defaultGroupTypeId;
         private readonly IConfigurationWrapper _configurationWrapper;
+        private readonly IAnalyticsService _analyticsService;
+
 
         public GroupToolController(Services.Interfaces.IGroupToolService groupToolService,
                                    IConfigurationWrapper configurationWrapper, 
-                                   IUserImpersonationService userImpersonationService, IAuthenticationRepository authenticationRepository) : base(userImpersonationService, authenticationRepository)
+                                   IUserImpersonationService userImpersonationService, 
+                                   IAuthenticationRepository authenticationRepository,
+                                   IAnalyticsService analyticsService,
+                                   IGroupService groupService) : base(userImpersonationService, authenticationRepository)
         {
             _groupToolService = groupToolService;
+            _groupService = groupService;
             _configurationWrapper = configurationWrapper;
+            _analyticsService = analyticsService;
             _defaultGroupTypeId = _configurationWrapper.GetConfigIntValue("SmallGroupTypeId");
         }
 
@@ -179,6 +187,37 @@ namespace crds_angular.Controllers.API
         }
 
         /// <summary>
+        /// Remove self (group participant) from group - end date group participant record and email leaders to inform.
+        /// </summary>
+        /// <param name="groupInformation"></param> Contains Group ID, Participant ID, and message
+        /// <returns>An empty response with 200 status code if everything worked, 403 if the caller does not have permission to remove a participant, or another non-success status code on any other failure</returns>
+        [RequiresAuthorization]
+        [VersionedRoute(template: "group-tool/group/participant/remove-self", minimumVersion: "1.0.0")]
+        [Route("group-tool/group/participant/removeself")]
+        [HttpPost]
+        public IHttpActionResult RemoveSelfFromGroup([FromBody] GroupParticipantRemovalDto groupInformation)
+        {
+            return Authorized(token =>
+            {
+                try
+                {
+                    _groupService.RemoveParticipantFromGroup(token, groupInformation.GroupId, groupInformation.GroupParticipantId);
+                    return Ok();
+                }
+                catch (GroupParticipantRemovalException e)
+                {
+                    var apiError = new ApiErrorDto(e.Message, null, e.StatusCode);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+                catch (Exception ex)
+                {
+                    var apiError = new ApiErrorDto(string.Format("Error removing group participant {0} from group {1}", groupInformation.GroupParticipantId, groupInformation.GroupId), ex);
+                    throw new HttpResponseException(apiError.HttpResponseMessage);
+                }
+            });
+        }
+
+        /// <summary>
         /// Search for a group matching the requested type and search terms.
         /// </summary>
         /// <param name="groupTypeId">An integer identifying the type of group to search for</param>
@@ -201,6 +240,11 @@ namespace crds_angular.Controllers.API
                 {
                     return RestHttpActionResult<List<GroupDTO>>.WithStatus(HttpStatusCode.NotFound, new List<GroupDTO>());
                 }
+                // Analytics call
+                var props = new EventProperties();
+                props.Add("Keywords", keywords);
+                props.Add("Location", location);
+                _analyticsService.Track("Anonymous", "SearchedForGroup", props);
 
                 return Ok(result);
             }

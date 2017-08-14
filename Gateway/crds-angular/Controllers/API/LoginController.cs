@@ -6,11 +6,15 @@ using crds_angular.Exceptions.Models;
 using crds_angular.Models.Json;
 using crds_angular.Security;
 using crds_angular.Services;
+using crds_angular.Services.Analytics;
 using crds_angular.Services.Interfaces;
 using MinistryPlatform.Translation.Models.DTO;
 using Crossroads.ApiVersioning;
+using Crossroads.ClientApiKeys;
 using Crossroads.Web.Common.Security;
+using MinistryPlatform.Translation.Repositories;
 using MinistryPlatform.Translation.Repositories.Interfaces;
+
 
 namespace crds_angular.Controllers.API
 {
@@ -21,11 +25,25 @@ namespace crds_angular.Controllers.API
         private readonly IUserRepository _userService;
         private readonly ILoginService _loginService;
 
-        public LoginController(ILoginService loginService, IPersonService personService, IUserRepository userService, IUserImpersonationService userImpersonationService, IAuthenticationRepository authenticationRepository) : base(userImpersonationService, authenticationRepository)
+        private readonly IContactRepository _contactRepository;
+        private readonly IAnalyticsService _analyticsService;
+
+        public LoginController(ILoginService loginService, 
+                                IPersonService personService, 
+                                IUserRepository userService, 
+                                IAnalyticsService analyticsService,
+                                IUserImpersonationService userImpersonationService, 
+                                IAuthenticationRepository authenticationRepository,
+                                IContactRepository contactRepository) : base(userImpersonationService, authenticationRepository)
+
         {
             _loginService = loginService;
             _personService = personService;
             _userService = userService;
+
+            _contactRepository = contactRepository;
+            _analyticsService = analyticsService;
+
         }
 
         [VersionedRoute(template: "request-password-reset", minimumVersion: "1.0.0")]
@@ -112,6 +130,8 @@ namespace crds_angular.Controllers.API
         [VersionedRoute(template: "login", minimumVersion: "1.0.0")]
         [Route("login")]
         [ResponseType(typeof (LoginReturn))]
+        // TODO - Once Ez-Scan has been updated to send a client API key (US7764), remove the IgnoreClientApiKey attribute
+        [IgnoreClientApiKey]
         public IHttpActionResult Post([FromBody] Credentials cred)
         {
             try
@@ -141,10 +161,14 @@ namespace crds_angular.Controllers.API
                     roles = userRoles,
                     age = p.Age,
                     userPhone = p.MobilePhone,
-                    canImpersonate = user.CanImpersonate
+                    canImpersonate = user.CanImpersonate 
                 };
 
+
                 _loginService.ClearResetToken(cred.username);
+                _contactRepository.UpdateUsertoActive(p.ContactId);
+                _analyticsService.Track(cred.username, "SignedIn"); 
+
 
                 return this.Ok(r);
             }

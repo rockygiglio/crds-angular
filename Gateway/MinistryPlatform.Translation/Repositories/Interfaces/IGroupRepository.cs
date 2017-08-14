@@ -18,7 +18,7 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
                                   Boolean? employeeRole = false,
                                   int? enrolledBy = null);
 
-        IList<MpEvent> getAllEventsForGroup(int groupId);
+        IList<MpEvent> getAllEventsForGroup(int groupId, DateTime? minEndDate = null, bool includeCancelledEvents = false);
 
         MpGroup getGroupDetails(int groupId);
 
@@ -82,5 +82,6 @@ namespace MinistryPlatform.Translation.Repositories.Interfaces
         List<MpGroup> GetGroupsForParticipantByTypeOrID(int participantId, string token = null, int[] groupTypeIds = null, int? groupId = null);
 
         List<MpGroup> GetGroupsByGroupType(int groupTypeId);
+        bool GetDoesUserLeadSomeGroup(int participantId);
     }
 }

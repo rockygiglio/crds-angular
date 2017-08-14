@@ -183,7 +183,7 @@ namespace crds_angular.Services
                     InvoiceTotal = invoice.InvoiceTotal,
                     RecentPaymentId = payments.Any() ? payments.First().PaymentId : 0,
                     RecentPaymentAmount = payments.Any() ? payments.First().PaymentTotal : 0,
-                    RecentPaymentLastFour = charge != null ? charge.Source.AccountNumberLast4 : ""
+                    RecentPaymentLastFour = charge != null ? charge.Source?.AccountNumberLast4 : ""
                 };
             }
             throw new Exception("No Payment found for " + me.Email_Address + " with id " + paymentId);

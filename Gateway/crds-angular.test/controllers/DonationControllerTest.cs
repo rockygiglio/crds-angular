@@ -23,6 +23,7 @@ using NUnit.Framework;
 using DonationStatus = crds_angular.Models.Crossroads.Stewardship.DonationStatus;
 using IDonorService = crds_angular.Services.Interfaces.IDonorService;
 using IDonationService = crds_angular.Services.Interfaces.IDonationService;
+using IAnalyticsService = crds_angular.Services.Interfaces.IAnalyticsService;
 
 namespace crds_angular.test.controllers
 {
@@ -40,6 +41,7 @@ namespace crds_angular.test.controllers
         private Mock<IPaymentService> paymentServiceMock;
         private Mock<MinistryPlatform.Translation.Repositories.Interfaces.IDonationRepository> mpDonationService; 
         private Mock<IPledgeRepository> mpPledgeService;
+        private Mock<IAnalyticsService> analyticsService;
         private string authToken;
         private string authType;
 
@@ -57,10 +59,11 @@ namespace crds_angular.test.controllers
             impersonationService = new Mock<IUserImpersonationService>();
             paymentServiceMock = new Mock<IPaymentService>();
             mpDonationService = new Mock<MinistryPlatform.Translation.Repositories.Interfaces.IDonationRepository>();
+            analyticsService = new Mock<IAnalyticsService>();
 
             fixture = new DonationController(donorServiceMock.Object, stripeServiceMock.Object
                 , authenticationServiceMock.Object, contactRepositoryMock.Object, gatewayDonorServiceMock.Object, gatewayDonationServiceMock.Object
-                , mpDonationService.Object, mpPledgeService.Object, impersonationService.Object, paymentServiceMock.Object, invoiceServiceMock.Object);
+                , mpDonationService.Object, mpPledgeService.Object, impersonationService.Object, paymentServiceMock.Object, invoiceServiceMock.Object, analyticsService.Object);
 
             authType = "auth_type";
             authToken = "auth_token";
@@ -230,7 +233,12 @@ namespace crds_angular.test.controllers
                 StatementMethod = "2",
                 StatementType = "3",
                 ProcessorId = "cus_test1234567",
-                Email = "moc.tset@tset"
+                Email = "moc.tset@tset",
+                Details = new MpContactDetails
+                {
+                    FirstName = "Bart",
+                    LastName = "Simpson"
+                }
             };
 
             contactRepositoryMock.Setup(mocked => mocked.GetContactId(authType + " " + authToken)).Returns(contactId);
@@ -315,7 +323,12 @@ namespace crds_angular.test.controllers
                 StatementMethod = "2",
                 StatementType = "3",
                 ProcessorId = "cus_test1234567",
-                Email = "moc.tset@tset"
+                Email = "moc.tset@tset",
+                Details = new MpContactDetails
+                {
+                    FirstName = "Bart",
+                    LastName = "Simpson"
+                }
             };
 
             var pledgeId = 3456;
@@ -335,7 +348,7 @@ namespace crds_angular.test.controllers
             mpPledgeService.Setup(mocked => mocked.GetPledgeByCampaignAndDonor(createDonationDTO.PledgeCampaignId.Value, createDonationDTO.PledgeDonorId.Value)).Returns(pledge);
 
             // it doesn't seem right to have donationId passed into this, but it's in the function now
-            mpDonationService.Setup(mocked => mocked.SendMessageFromDonor(pledgeId, donationId, createDonationDTO.GiftMessage));
+            mpDonationService.Setup(mocked => mocked.SendMessageFromDonor(pledgeId, donationId, createDonationDTO.GiftMessage, "Daddy Warbucks"));
 
             stripeServiceMock.Setup(
                 mocked => mocked.ChargeCustomer(donor.ProcessorId, createDonationDTO.Amount, donor.DonorId, false))
@@ -416,7 +429,12 @@ namespace crds_angular.test.controllers
                 StatementMethod = "2",
                 StatementType = "3",
                 ProcessorId = "cus_test1234567",
-                Email = "moc.tset@tset"
+                Email = "moc.tset@tset",
+                Details = new MpContactDetails
+                {
+                    FirstName = "Bart",
+                    LastName = "Simpson"
+                }
             };
 
             var pledgeId = 3456;
@@ -435,7 +453,7 @@ namespace crds_angular.test.controllers
             mpPledgeService.Setup(mocked => mocked.GetPledgeByCampaignAndDonor(createDonationDTO.PledgeCampaignId.Value, createDonationDTO.PledgeDonorId.Value)).Returns(pledge);
 
             // it doesn't seem right to have donationId passed into this, but it's in the function now
-            mpDonationService.Setup(mocked => mocked.SendMessageFromDonor(pledgeId, donationId, createDonationDTO.GiftMessage));
+            mpDonationService.Setup(mocked => mocked.SendMessageFromDonor(pledgeId, donationId, createDonationDTO.GiftMessage, "Daddy Warbucks"));
 
             stripeServiceMock.Setup(mocked => mocked.ChargeCustomer(donor.ProcessorId, createDonationDTO.Amount, donor.DonorId, false)).
                 Returns(charge);
@@ -518,7 +536,12 @@ namespace crds_angular.test.controllers
                 StatementMethod = "2",
                 StatementType = "3",
                 ProcessorId = "cus_test1234567",
-                Email = "moc.tset@tset"
+                Email = "moc.tset@tset",
+                Details = new MpContactDetails
+                {
+                    FirstName = "Bart",
+                    LastName = "Simpson"
+                }
             };
 
             fixture.Request.Headers.Authorization = null;

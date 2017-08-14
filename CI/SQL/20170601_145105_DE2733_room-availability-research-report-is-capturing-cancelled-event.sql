@@ -32,7 +32,7 @@ DECLARE @Hrs Table (HrStart DateTime,HrEnd DateTime)
 
 SELECT @StartDate AS StartDate
 , Booked = ISNULL((
-		SELECT TOP 1 (Convert(Int, ER._Approved))
+		SELECT SUM(Convert(Int, ER._Approved))
 		FROM Event_Rooms ER
 			INNER JOIN Events E
 				ON E.Event_ID = ER.Event_ID

@@ -31,6 +31,7 @@
     vm.registerShow = false;
     vm.showRegisterButton = true;
     vm.validation = Validation;
+    vm.redirectToGetStarted = redirectToGetStarted;
 
     function register() {
       vm.showRegisterButton = false;
@@ -91,9 +92,13 @@
         } else if (Session.hasRedirectionInfo()) {
           Session.redirectIfNeeded();
         } else {
-          $state.go('content', {link:'/getstarted'});
+          redirectToGetStarted();
         }
       }, 500);
+    }
+
+    function redirectToGetStarted() {
+      $state.go('content', {link:'/getstarted'});
     }
   }
 })();

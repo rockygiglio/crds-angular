@@ -19,7 +19,7 @@ BEGIN
 	) VALUES (
 		 @Template_ID
 		,5
-		,N'[Payment_Name] Payment Received'
+		,N'[Product_Name] Payment Received'
 		,N'Thanks for submitting your payment of $[Payment_Total].<div><br /></div><div>Please note that these payments are <b>NOT</b> tax deductible.</div><div><br /></div><div>If you have any questions, email [Primary_Contact_Email].</div><div><br /></div><div>Thanks,</div><div>[Primary_Contact_Display_Name]</div>'
 		,1
 		,@From_Contact_ID

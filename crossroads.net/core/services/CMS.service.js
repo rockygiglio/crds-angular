@@ -73,6 +73,11 @@
               .then(rsp => {return rsp.data.features});
     }
 
+    vm.getSections = function() {
+      return vm.http.get(`${this.url}/sections`)
+              .then(rsp => {return rsp.data.sections});
+    }
+
     vm.getContentBlock = function(query) {
       return vm.http.get(`${this.url}/contentblock?${query}`)
               .then(rsp => {return _.first(rsp.data.contentblocks)});

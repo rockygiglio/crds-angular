@@ -209,6 +209,10 @@ UPDATE s
 
 DROP TABLE #NewConfigSettings
 
+-- Delete the processor id for all donors
+UPDATE Donors
+    SET Processor_ID = ''
+ 
 -- Update dp_Tools Launch_Page value
 UPDATE dp_Tools
     SET Launch_Page = REPLACE(Launch_Page, '$DpToolUriToBeReplaced', '$DpToolNewUri')
@@ -310,7 +314,7 @@ ALTER ROLE [db_securityadmin] ADD MEMBER [$InternalDBServerName\MPUser];
 exec sp_change_users_login @Action='update_one', @UserNamePattern='ApiUser', @LoginName='ApiUser'
 exec sp_change_users_login @Action='update_one', @UserNamePattern='EcheckAgent', @LoginName='EcheckAgent'
 exec sp_change_users_login @Action='update_one', @UserNamePattern='MigrateUser', @LoginName='MigrateUser'
-
+exec sp_change_users_login @Action='update_one', @UserNamePattern='NewRelic', @LoginName='NewRelic'
 
 -- TODO: Review, Rework, and determine plan for mapping users
 USE [$DBName]
