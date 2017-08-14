@@ -38,5 +38,6 @@ namespace crds_angular.Services.Interfaces
         void AddUserDirectlyToGroup(string token, User user, int groupid);
         bool DoesActiveContactExists(string email);
         bool DoesUserLeadSomeGroup(int contactId);
+        void TryAGroup(string token, int groupId);
     }
 }

@@ -24,7 +24,6 @@ using crds_angular.Services.Analytics;
 using Crossroads.Web.Common.Configuration;
 using MinistryPlatform.Translation.Models.Finder;
 using MpCommunication = MinistryPlatform.Translation.Models.MpCommunication;
-using ILookupRepository = MinistryPlatform.Translation.Repositories.Interfaces.ILookupRepository;
 
 namespace crds_angular.Services
 {
@@ -344,6 +343,28 @@ namespace crds_angular.Services
             RecordCommunication(connection);
 
             _groupToolService.SubmitInquiry(token, gatheringId);
+        }
+
+        public void TryAGroup(string token, int groupId)
+        {
+            var group = _groupService.GetGroupDetails(groupId);
+
+            var commType = group.GroupTypeId == _smallGroupType ? _connectCommunicationTypeRequestToJoinSmallGroup : _connectCommunicationTypeRequestToJoinGathering;
+
+            var connection = new ConnectCommunicationDto
+            {
+                CommunicationTypeId = commType,
+                ToContactId = group.ContactId,
+                FromContactId = _contactRepository.GetContactId(token),
+                CommunicationStatusId = _configurationWrapper.GetConfigIntValue("ConnectCommunicationStatusUnanswered"),
+                GroupId = groupId
+            };
+            RecordCommunication(connection);
+
+            _groupToolService.SubmitInquiry(token, groupId);
+
+            // TODO: send an email
+
         }
 
         public AddressDTO GetAddressForIp(string ip)
@@ -966,6 +987,90 @@ namespace crds_angular.Services
                     return "Bi-Weekly";
                 default:
                     return "Monthly";
+            }
+        }
+
+        private Dictionary<string, object> GetEmailMergeData(string token,int groupId)
+        {
+            // group
+            var group = _groupService.GetGroupDetails(groupId);
+            var groupLocation = GetGroupAddress(token, groupId);
+            var meetingDay = _lookupService.GetMeetingDayFromId(group.MeetingDayId);
+            var formatedMeetingTime = group.MeetingTime == null ? "Flexible time" : String.Format("{0:t}", DateTimeOffset.Parse(group.MeetingTime).LocalDateTime);
+            var formatedMeetingDay = meetingDay == null ? "Flexible day" : meetingDay;
+            var formatedMeetingFrequency = group.MeetingFrequencyID == null ? "Flexible frequency" : getMeetingFrequency((int)group.MeetingFrequencyID);
+
+            //leader
+            var leaderContactId = _contactRepository.GetContactIdByEmail(group.PrimaryContactEmail);
+            var leaderContact = _contactRepository.GetContactById(leaderContactId);
+            
+            //participant
+            var user = _participantRepository.GetParticipantRecord(token);
+            var newMemberContactId = user.ContactId;
+            
+             var mergeData = new Dictionary<string, object>
+            {
+                {"Participant_Name", user.Nickname},
+                {"Leader_Name", leaderContact.First_Name},
+                {"Leader_Full_Name", $"{leaderContact.First_Name} {leaderContact.Last_Name}" },
+                {"Leader_Email", leaderContact.Email_Address},
+                {"Group_Name", group.GroupName},
+                {"Group_Meeting_Day",  formatedMeetingDay},
+                {"Group_Meeting_Time", formatedMeetingTime},
+                {"Group_Meeting_Frequency", formatedMeetingFrequency},
+                {"Group_Meeting_Location", groupLocation.AddressLine1 == null ? "Online" : $"{groupLocation.AddressLine1}\n{groupLocation.AddressLine2}\n{groupLocation.City}\n{groupLocation.State}\n{groupLocation.PostalCode}" },
+                {"Leader_Phone", $"{leaderContact.Home_Phone}\n{leaderContact.Mobile_Phone}" }
+            };
+            return mergeData;
+        }
+
+        private void SendTryAGroupEmailToLeader(string token, int groupid)
+        {
+            try
+            {
+                var mergeData = GetEmailMergeData(token, groupid);
+
+                var emailTemplateId = _configurationWrapper.GetConfigIntValue("GroupsTryAGroupLeaderNotificationTemplateId");
+
+                var emailTemplate = _communicationRepository.GetTemplate(emailTemplateId);
+                var fromContact = new MpContact
+                {
+                    ContactId = emailTemplate.FromContactId,
+                    EmailAddress = emailTemplate.FromEmailAddress
+                };
+                var replyTo = new MpContact
+                {
+                    ContactId = emailTemplate.ReplyToContactId,
+                    EmailAddress = emailTemplate.ReplyToEmailAddress
+                };
+
+                var to = new List<MpContact>
+                {
+                    new MpContact
+                    {
+                        // Just need a contact ID here, doesn't have to be for the recipient
+                        //ContactId = host.Contact_ID.Value,
+                        //EmailAddress = host.EmailAddress
+                    }
+                };
+
+                var confirmation = new MpCommunication
+                {
+                    EmailBody = emailTemplate.Body,
+                    EmailSubject = emailTemplate.Subject,
+                    AuthorUserId = 5,
+                    DomainId = _domainId,
+                    FromContact = fromContact,
+                    ReplyToContact = replyTo,
+                    TemplateId = emailTemplateId,
+                    ToContacts = to,
+                    MergeData = mergeData
+                };
+                _communicationRepository.SendMessage(confirmation);
+            }
+            catch (Exception e)
+            {
+                return;
             }
         }
 

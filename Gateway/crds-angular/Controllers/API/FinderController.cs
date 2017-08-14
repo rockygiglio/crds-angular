@@ -568,6 +568,42 @@ namespace crds_angular.Controllers.API
         }
 
         /// <summary>
+        /// Logged in user requests to "try a group"
+        /// </summary>
+        [RequiresAuthorization]
+        [VersionedRoute(template: "finder/pin/tryagroup", minimumVersion: "1.0.0")]
+        [Route("finder/pin/tryagroup")]
+        [HttpPost]
+        public IHttpActionResult TryAGroup([FromBody]int groupId)
+        {
+            return Authorized(token =>
+            {
+                try
+                {
+                    _finderService.TryAGroup(token, groupId);
+                    return (Ok());
+                }
+                catch (Exception e)
+                {
+                    _logger.Error("Could not generate request", e);
+                    if (e.Message == "User already has request")
+                    {
+                        throw new HttpResponseException(HttpStatusCode.Conflict);
+                    }
+                    else if (e.Message == "User already a member")
+                    {
+                        throw new HttpResponseException(HttpStatusCode.NotAcceptable);
+                    }
+                    else
+                    {
+                        throw new HttpResponseException(new ApiErrorDto("Try a group request failed", e).HttpResponseMessage);
+                    }
+
+                }
+            });
+        }
+
+        /// <summary>
         /// Logged in user requests to join gathering
         /// </summary>
         [RequiresAuthorization]
