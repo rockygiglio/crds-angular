@@ -74,7 +74,7 @@ namespace crds_angular.test.Services
         private const int GroupAgeRangeAttributeTypeId = 30;
         private const int DefaultAuthorUser = 5;
         private const int RemoveSelfFromGroupTemplateId = 2024;
-
+        private const int _memberRoleId = 16;
 
         [SetUp]
         public void SetUp()
@@ -149,7 +149,7 @@ namespace crds_angular.test.Services
             groupRepository.Setup(mocked => mocked.addParticipantToGroup(participant.ParticipantId, groupId, GROUP_ROLE_DEFAULT_ID, false, It.IsAny<DateTime>(), null, false, null))
                 .Returns(groupParticipantId);
 
-            fixture.addContactToGroup(groupId, contactId);
+            fixture.addContactToGroup(groupId, contactId, GROUP_ROLE_DEFAULT_ID);
             participantService.VerifyAll();
             groupRepository.VerifyAll();
         }
@@ -166,7 +166,7 @@ namespace crds_angular.test.Services
 
             try
             {
-                fixture.addContactToGroup(groupId, contactId);
+                fixture.addContactToGroup(groupId, contactId, _memberRoleId);
                 Assert.Fail("expected exception was not thrown");
             }
             catch (ApplicationException e)
@@ -196,7 +196,7 @@ namespace crds_angular.test.Services
 
             try
             {
-                fixture.addContactToGroup(groupId, contactId);
+                fixture.addContactToGroup(groupId, contactId, GROUP_ROLE_DEFAULT_ID);
                 Assert.Fail("expected exception was not thrown");
             }
             catch (ApplicationException e)
