@@ -21,6 +21,7 @@ namespace crds_angular.Controllers.API
 {
     public class GroupController : MPAuth
     {
+        private readonly IAwsCloudsearchService _awsCloudsearchService;
         private readonly ILog _logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         private readonly IGroupService _groupService;
         private readonly IContactRepository _contactRepository;
@@ -31,6 +32,7 @@ namespace crds_angular.Controllers.API
 
         public GroupController(IGroupService groupService,
                                IAuthenticationRepository authenticationService,
+                               IAwsCloudsearchService awsCloudsearchService,
                                IContactRepository contactRepository,
                                IParticipantRepository participantService,
                                IAddressService addressService,
@@ -38,6 +40,7 @@ namespace crds_angular.Controllers.API
                                IGroupToolService groupToolService, 
                                IUserImpersonationService userImpersonationService) : base(userImpersonationService, authenticationService)
         {
+            _awsCloudsearchService = awsCloudsearchService;
             _groupService = groupService;
             _contactRepository = contactRepository;
             _participantService = participantService;
@@ -80,13 +83,14 @@ namespace crds_angular.Controllers.API
         /// Edit a group for the authenticated user.
         /// </summary>
         /// <param name="group">The data required to edit the group, GroupDTO</param>
+        /// <param name="isConnect">if inside the connect application and requires update to aws cloudserach, bool</param>
         /// <returns>The input GroupDTO</returns>
         [RequiresAuthorization]
         [ResponseType(typeof(GroupDTO))]
         [VersionedRoute(template: "group/edit", minimumVersion: "1.0.0")]
         [Route("group/edit")]
         [HttpPost]
-        public IHttpActionResult EditGroup([FromBody] GroupDTO group)
+        public IHttpActionResult EditGroup([FromBody] GroupDTO group, [FromUri] bool isConnect = true)
         {
             return Authorized(token =>
             {
@@ -100,6 +104,14 @@ namespace crds_angular.Controllers.API
 
                     group = _groupService.UpdateGroup(group);
                     _logger.DebugFormat("Successfully updated group {0} ", group.GroupId);
+
+                    // TODO this call needs to be asynch - 35-39 seconds to complete
+                    // currently being run every 5 minutes from scheduled task
+                    if (isConnect)
+                    {
+                        _awsCloudsearchService.UploadAllConnectRecordsToAwsCloudsearch();
+                    }
+
                     return (Created(string.Format("api/group/{0}", group.GroupId), group));
 
                 }

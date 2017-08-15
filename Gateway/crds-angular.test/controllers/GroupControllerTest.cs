@@ -32,6 +32,7 @@ namespace crds_angular.test.controllers
         private Mock<crds_angular.Services.Interfaces.IAddressService> _addressServiceMock;        
         private Mock<IGroupSearchService> _groupSearchServiceMock;
         private Mock<IGroupToolService> _groupToolServiceMock;
+        private Mock<IAwsCloudsearchService> _awsCloudsearchServiceMock;
         private string _authType;
         private string _authToken;
 
@@ -45,8 +46,9 @@ namespace crds_angular.test.controllers
             _addressServiceMock = new Mock<crds_angular.Services.Interfaces.IAddressService>();            
             _groupSearchServiceMock = new Mock<IGroupSearchService>();
             _groupToolServiceMock = new Mock<IGroupToolService>();
+            _awsCloudsearchServiceMock = new Mock<IAwsCloudsearchService>();
 
-            _fixture = new GroupController(_groupServiceMock.Object, _authenticationServiceMock.Object, _contactRepositoryMock.Object, _participantServiceMock.Object, _addressServiceMock.Object, _groupSearchServiceMock.Object, _groupToolServiceMock.Object, new Mock<IUserImpersonationService>().Object);
+            _fixture = new GroupController(_groupServiceMock.Object, _authenticationServiceMock.Object, _awsCloudsearchServiceMock.Object, _contactRepositoryMock.Object, _participantServiceMock.Object, _addressServiceMock.Object, _groupSearchServiceMock.Object, _groupToolServiceMock.Object, new Mock<IUserImpersonationService>().Object);
 
             _authType = "auth_type";
             _authToken = "auth_token";
