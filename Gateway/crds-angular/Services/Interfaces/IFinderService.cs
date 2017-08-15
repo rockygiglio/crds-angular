@@ -39,6 +39,6 @@ namespace crds_angular.Services.Interfaces
         bool DoesActiveContactExists(string email);
         bool DoesUserLeadSomeGroup(int contactId);
         void TryAGroup(string token, int groupId);
-        void TryAGroupAccept(string token, int groupId, int participantId, bool accept);
+        void TryAGroupAcceptDeny(string token, int groupId, int participantId, bool accept);
     }
 }

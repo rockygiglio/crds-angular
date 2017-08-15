@@ -1074,14 +1074,14 @@ namespace crds_angular.Services
             }
         }
 
-        private void SendTryAGroupAcceptanceEmail(string token, int groupid, int toContactId)
+        private void SendTryAGroupAcceptDenyEmail(string token, int groupid, int toContactId,bool accept)
         {
             try
             {
                 var mergeData = GetEmailMergeData(token, groupid);
-
-                var emailTemplateId = _configurationWrapper.GetConfigIntValue("GroupsTryAGroupParticipantAcceptedNotificationTemplateId");
-
+               
+                var emailTemplateId = _configurationWrapper.GetConfigIntValue(accept ? "GroupsTryAGroupParticipantAcceptedNotificationTemplateId" : "GroupsTryAGroupParticipantDeclinedNotificationTemplateId");
+                
                 var emailTemplate = _communicationRepository.GetTemplate(emailTemplateId);
                 var fromContact = new MpContact
                 {
@@ -1335,17 +1335,16 @@ namespace crds_angular.Services
             return contactId != 0;
         }
 
-        public void TryAGroupAccept(string token, int groupId, int participantId, bool accept)
+        public void TryAGroupAcceptDeny(string token, int groupId, int participantId, bool accept)
         {
             var contactId = _contactRepository.GetContactIdByParticipantId(participantId);
             var inquiry = _groupToolService.GetGroupInquiryForContactId(groupId, contactId);
 
-            //accept the inquiry
-            _groupToolService.ApproveDenyInquiryFromMyGroup(token,groupId,true,inquiry,"approved", _trialMemberRoleId);
-            // add the new person as a 'trial member'
+            //accept or deny the inquiry
+            _groupToolService.ApproveDenyInquiryFromMyGroup(token, groupId, accept, inquiry, "approved", _trialMemberRoleId);
 
             //send the email
-            SendTryAGroupAcceptanceEmail(token, groupId, contactId);
+            SendTryAGroupAcceptDenyEmail(token, groupId, contactId, accept);
         }
     }
 }
