@@ -158,6 +158,23 @@ namespace crds_angular.Services
             return invitations;
         }
 
+        public Inquiry GetGroupInquiriesForContactId(int groupId, int contactId)
+        {
+            Inquiry request;
+            try
+            {
+                var mpRequests = _groupToolRepository.GetInquiries(groupId);
+                request = Mapper.Map<Inquiry>(mpRequests.Find(x => x.ContactId == contactId));
+            }
+            catch (Exception e)
+            {
+                var message = $"Exception retrieving inquiries for group and user = {groupId}.";
+                _logger.Error(message, e);
+                throw;
+            }
+            return request;
+        }
+
         public List<Inquiry> GetInquiries(int groupId, string token)
         {
             var requests = new List<Inquiry>();

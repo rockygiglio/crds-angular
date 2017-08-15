@@ -606,6 +606,76 @@ namespace crds_angular.Controllers.API
         }
 
         /// <summary>
+        /// Leader accepts user requests to "try a group"
+        /// </summary>
+        [RequiresAuthorization]
+        [VersionedRoute(template: "finder/pin/tryagroup/{groupId}/true/{participantId}", minimumVersion: "1.0.0")]
+        [Route("finder/pin/tryagroup/{groupId}/true/{participantId}")]
+        [HttpPost]
+        public IHttpActionResult TryAGroupAccept([FromUri]int groupId, [FromUri]int participantId)
+        {
+            return Authorized(token =>
+            {
+                try
+                {
+                    return Ok();
+                }
+                catch (Exception e)
+                {
+                    _logger.Error("Could not generate request", e);
+                    if (e.Message == "User already has request")
+                    {
+                        throw new HttpResponseException(HttpStatusCode.Conflict);
+                    }
+                    else if (e.Message == "User already a member")
+                    {
+                        throw new HttpResponseException(HttpStatusCode.NotAcceptable);
+                    }
+                    else
+                    {
+                        throw new HttpResponseException(new ApiErrorDto("Try a group request failed", e).HttpResponseMessage);
+                    }
+
+                }
+            });
+        }
+
+        /// <summary>
+        /// Leader declines user requests to "try a group"
+        /// </summary>
+        [RequiresAuthorization]
+        [VersionedRoute(template: "finder/pin/tryagroup/{groupId}/false/{participantId}", minimumVersion: "1.0.0")]
+        [Route("finder/pin/tryagroup/{groupId}/false/{participantId}")]
+        [HttpPost]
+        public IHttpActionResult TryAGroupDecline([FromUri]int groupId, [FromUri]int participantId)
+        {
+            return Authorized(token =>
+            {
+                try
+                {
+                    return Ok();
+                }
+                catch (Exception e)
+                {
+                    _logger.Error("Could not generate request", e);
+                    if (e.Message == "User already has request")
+                    {
+                        throw new HttpResponseException(HttpStatusCode.Conflict);
+                    }
+                    else if (e.Message == "User already a member")
+                    {
+                        throw new HttpResponseException(HttpStatusCode.NotAcceptable);
+                    }
+                    else
+                    {
+                        throw new HttpResponseException(new ApiErrorDto("Try a group request failed", e).HttpResponseMessage);
+                    }
+
+                }
+            });
+        }
+
+        /// <summary>
         /// Logged in user requests to join gathering
         /// </summary>
         [RequiresAuthorization]

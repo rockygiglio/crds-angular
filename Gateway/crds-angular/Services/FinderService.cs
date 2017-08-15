@@ -59,7 +59,7 @@ namespace crds_angular.Services
         private readonly int _approvedHost;
         private readonly int _pendingHost;
         private readonly int _anywhereGroupType;
-        private readonly int _leaderRoleId;
+        private readonly int _trialMemberRoleId;
         private readonly int _memberRoleId;
         private readonly int _anywhereGatheringInvitationTypeId;
         private readonly int _groupInvitationTypeId;
@@ -128,8 +128,7 @@ namespace crds_angular.Services
             _approvedHost = configurationWrapper.GetConfigIntValue("ApprovedHostStatus");
             _pendingHost = configurationWrapper.GetConfigIntValue("PendingHostStatus");
             _anywhereGroupType = configurationWrapper.GetConfigIntValue("AnywhereGroupTypeId");
-            _leaderRoleId = configurationWrapper.GetConfigIntValue("GroupRoleLeader");
-            _memberRoleId = configurationWrapper.GetConfigIntValue("Group_Role_Default_ID");
+            _trialMemberRoleId = configurationWrapper.GetConfigIntValue("GroupsTrialMemberRoleId");
             _memberRoleId = configurationWrapper.GetConfigIntValue("Group_Role_Default_ID");
             _anywhereGatheringInvitationTypeId = configurationWrapper.GetConfigIntValue("AnywhereGatheringInvitationType");
             _groupInvitationTypeId = configurationWrapper.GetConfigIntValue("GroupInvitationType");
@@ -996,6 +995,8 @@ namespace crds_angular.Services
 
             var mergeData = new Dictionary<string, object>
             {
+                {"YesURL", "https://www.amazon.com/" },
+                {"NoURL", "https://www.google.com/" },
                 {"Participant_Name",  newMember.Nickname},
                 {"Nickname", newMember.Nickname },
                 {"Last_Name", newMember.Last_Name },
@@ -1281,6 +1282,19 @@ namespace crds_angular.Services
             return contactId != 0;
         }
 
+        public void TryAGroupAccept(string token, int groupId, int participantId, bool accept)
+        {
+            _groupToolService.GetInquiries(groupId, token);
+
+            var contactid = _authenticationRepository.GetContactId(token);
+
+            //accept the inquiry
+            //_groupToolService.AcceptDenyGroupInvitation(token, groupId, invitationGuid, accept, _trialMemberRoleId);
+            // add the new person as a 'trial member'
+
+            //send the email
+            throw new NotImplementedException();
+        }
     }
 }
 
