@@ -1071,7 +1071,7 @@ namespace crds_angular.Services
             }
         }
 
-        private void SendTryAGroupAcceptanceEmail(string token, int groupid)
+        private void SendTryAGroupAcceptanceEmail(string token, int groupid, int toContactId)
         {
             try
             {
@@ -1091,15 +1091,13 @@ namespace crds_angular.Services
                     EmailAddress = emailTemplate.ReplyToEmailAddress
                 };
 
-                var primary = _contactRepository.GetContactById(_contactRepository.GetContactIdByParticipantId(_groupService.GetPrimaryContactParticipantId(groupid)));
-
+                var toContact = _contactRepository.GetContactById(toContactId);
                 var to = new List<MpContact>
                 {
                     new MpContact
                     {
-                        // Just need a contact ID here, doesn't have to be for the recipient
-                        ContactId = primary.Contact_ID,
-                        EmailAddress = primary.Email_Address
+                        ContactId = toContact.Contact_ID,
+                        EmailAddress = toContact.Email_Address
                     }
                 };
 
@@ -1344,7 +1342,7 @@ namespace crds_angular.Services
             // add the new person as a 'trial member'
 
             //send the email
-            SendTryAGroupAcceptanceEmail(token, groupId);
+            SendTryAGroupAcceptanceEmail(token, groupId, contactId);
         }
     }
 }
