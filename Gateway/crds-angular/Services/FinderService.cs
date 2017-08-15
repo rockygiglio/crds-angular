@@ -990,13 +990,16 @@ namespace crds_angular.Services
             var leaderContact = _contactRepository.GetContactByParticipantId(GetLeaderParticipantIdFromGroup(groupId));
 
             //participant
-            var user = _participantRepository.GetParticipantRecord(token);
-            var newMember = _contactRepository.GetContactById(user.ContactId);
+            var participant = _participantRepository.GetParticipantRecord(token);
+            var newMember = _contactRepository.GetContactById(participant.ContactId);
+
+            //URL
+            var baseUrl = _configurationWrapper.GetConfigValue("BaseUrl");
 
             var mergeData = new Dictionary<string, object>
             {
-                {"YesURL", "https://www.amazon.com/" },
-                {"NoURL", "https://www.google.com/" },
+                {"YesURL", $"{baseUrl}/small-group/{groupId}/true/{participant.ParticipantId}" },
+                {"NoURL" , $"{baseUrl}/small-group/{groupId}/false/{participant.ParticipantId}" },
                 {"Participant_Name",  newMember.Nickname},
                 {"Nickname", newMember.Nickname },
                 {"Last_Name", newMember.Last_Name },
