@@ -12,7 +12,6 @@ using log4net;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Repositories.Interfaces;
 using System.Text.RegularExpressions;
-using crds_angular.Models.Finder;
 using crds_angular.Services.Analytics;
 using Crossroads.Utilities.Extensions;
 using Crossroads.Web.Common.Configuration;
@@ -158,7 +157,7 @@ namespace crds_angular.Services
             return invitations;
         }
 
-        public Inquiry GetGroupInquiriesForContactId(int groupId, int contactId)
+        public Inquiry GetGroupInquiryForContactId(int groupId, int contactId)
         {
             Inquiry request;
             try
@@ -168,7 +167,7 @@ namespace crds_angular.Services
             }
             catch (Exception e)
             {
-                var message = $"Exception retrieving inquiries for group and user = {groupId}.";
+                var message = $"Exception retrieving inquiries for group = {groupId} and user = {contactId}.";
                 _logger.Error(message, e);
                 throw;
             }
@@ -364,27 +363,29 @@ namespace crds_angular.Services
             };
         }
 
-        public void ApproveDenyInquiryFromMyGroup(string token, int groupTypeId, int groupId, bool approve, Inquiry inquiry, string message = null)
+        public void ApproveDenyInquiryFromMyGroup(string token, int groupId, bool approve, Inquiry inquiry, string message, int roleId)
         {
             try
             {
-                var myGroup = GetMyGroupInfo(token, groupId);
+                // var myGroup = GetMyGroupInfo(token, groupId);
+                var group = _groupService.GetGroupDetails(groupId);
+                var participant = _participantRepository.GetParticipantRecord(token);
 
                 if (approve)
                 {
-                    ApproveInquiry(groupId, myGroup.Group, inquiry, myGroup.Me, message);
+                    ApproveInquiry(groupId, group, inquiry, participant, message, roleId);
                     var props = new EventProperties
                     {
-                        {"GroupName", myGroup.Group.GroupName},
-                        {"City", myGroup.Group?.Address?.City},
-                        {"State", myGroup.Group?.Address?.State},
-                        {"Zip", myGroup.Group?.Address?.PostalCode}
+                        {"GroupName", group.GroupName},
+                        {"City", group?.Address?.City},
+                        {"State", group?.Address?.State},
+                        {"Zip", group?.Address?.PostalCode}
                     };
                     _analyticsService.Track(inquiry.ContactId.ToString(), "AcceptedIntoGroup", props);
                 }
                 else
                 {
-                    DenyInquiry(groupId, myGroup.Group, inquiry, myGroup.Me, message);
+                    DenyInquiry(groupId, group, inquiry, participant, message);
                 }
             }
             catch (GroupParticipantRemovalException e)
@@ -418,9 +419,9 @@ namespace crds_angular.Services
             _finderRepository.RecordConnection(connection);
         }
 
-        private void ApproveInquiry(int groupId, GroupDTO group, Inquiry inquiry, MpParticipant me, string message)
+        private void ApproveInquiry(int groupId, GroupDTO group, Inquiry inquiry, MpParticipant me, string message, int roleId)
         {
-            _groupService.addContactToGroup(groupId, inquiry.ContactId);
+            _groupService.addContactToGroup(groupId, inquiry.ContactId, roleId);
             _groupRepository.UpdateGroupInquiry(groupId, inquiry.InquiryId, true);
 
             int commType = group.GroupTypeId == _smallGroupTypeId ? _connectCommunicationTypeRequestToJoinSmallGroup : _connectGatheringRequestToJoin;

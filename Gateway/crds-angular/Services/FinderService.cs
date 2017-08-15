@@ -434,7 +434,7 @@ namespace crds_angular.Services
             return pins;
         }
 
-        public void AddUserDirectlyToGroup(string token, User user, int groupid)
+        public void AddUserDirectlyToGroup(string token, User user, int groupid, int roleId)
         {
             
             //check to see if user exists in MP. Exclude Guest Giver and Deceased status
@@ -451,7 +451,7 @@ namespace crds_angular.Services
             if (groupParticipant == null)
             {
                 SendEmailToAddedUser(token, user, groupid);
-                _groupService.addContactToGroup(groupid, contactId);
+                _groupService.addContactToGroup(groupid, contactId, roleId);
 
             }
             else
@@ -1071,6 +1071,58 @@ namespace crds_angular.Services
             }
         }
 
+        private void SendTryAGroupAcceptanceEmail(string token, int groupid)
+        {
+            try
+            {
+                var mergeData = GetEmailMergeData(token, groupid);
+
+                var emailTemplateId = _configurationWrapper.GetConfigIntValue("GroupsTryAGroupParticipantAcceptedNotificationTemplateId");
+
+                var emailTemplate = _communicationRepository.GetTemplate(emailTemplateId);
+                var fromContact = new MpContact
+                {
+                    ContactId = emailTemplate.FromContactId,
+                    EmailAddress = emailTemplate.FromEmailAddress
+                };
+                var replyTo = new MpContact
+                {
+                    ContactId = emailTemplate.ReplyToContactId,
+                    EmailAddress = emailTemplate.ReplyToEmailAddress
+                };
+
+                var primary = _contactRepository.GetContactById(_contactRepository.GetContactIdByParticipantId(_groupService.GetPrimaryContactParticipantId(groupid)));
+
+                var to = new List<MpContact>
+                {
+                    new MpContact
+                    {
+                        // Just need a contact ID here, doesn't have to be for the recipient
+                        ContactId = primary.Contact_ID,
+                        EmailAddress = primary.Email_Address
+                    }
+                };
+
+                var confirmation = new MpCommunication
+                {
+                    EmailBody = emailTemplate.Body,
+                    EmailSubject = emailTemplate.Subject,
+                    AuthorUserId = 5,
+                    DomainId = _domainId,
+                    FromContact = fromContact,
+                    ReplyToContact = replyTo,
+                    TemplateId = emailTemplateId,
+                    ToContacts = to,
+                    MergeData = mergeData
+                };
+                _communicationRepository.SendMessage(confirmation);
+            }
+            catch (Exception e)
+            {
+                return;
+            }
+        }
+
         public void SendEmailToAddedUser(string token, User user, int groupid)
         {
             var emailTemplateId = _configurationWrapper.GetConfigIntValue("GroupsAddParticipantEmailNotificationTemplateId");
@@ -1284,16 +1336,15 @@ namespace crds_angular.Services
 
         public void TryAGroupAccept(string token, int groupId, int participantId, bool accept)
         {
-            _groupToolService.GetInquiries(groupId, token);
-
-            var contactid = _authenticationRepository.GetContactId(token);
+            var contactId = _contactRepository.GetContactIdByParticipantId(participantId);
+            var inquiry = _groupToolService.GetGroupInquiryForContactId(groupId, contactId);
 
             //accept the inquiry
-            //_groupToolService.AcceptDenyGroupInvitation(token, groupId, invitationGuid, accept, _trialMemberRoleId);
+            _groupToolService.ApproveDenyInquiryFromMyGroup(token,groupId,true,inquiry,"approved", _trialMemberRoleId);
             // add the new person as a 'trial member'
 
             //send the email
-            throw new NotImplementedException();
+            SendTryAGroupAcceptanceEmail(token, groupId);
         }
     }
 }

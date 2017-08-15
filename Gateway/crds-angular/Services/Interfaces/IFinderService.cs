@@ -35,7 +35,7 @@ namespace crds_angular.Services.Interfaces
         void SayHi(int fromContactId, int toContactId);
         List<PinDto> RandomizeLatLongForNonSitePins(List<PinDto> pins);
         GeoCoordinate GetMapCenterForResults(string userSearchString, GeoCoordinates frontEndMapCenter, string finderType);
-        void AddUserDirectlyToGroup(string token, User user, int groupid);
+        void AddUserDirectlyToGroup(string token, User user, int groupid, int roleId);
         bool DoesActiveContactExists(string email);
         bool DoesUserLeadSomeGroup(int contactId);
         void TryAGroup(string token, int groupId);

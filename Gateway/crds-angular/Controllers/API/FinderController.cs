@@ -29,6 +29,7 @@ namespace crds_angular.Controllers.API
         private readonly IAuthenticationRepository _authenticationRepo;
         private readonly IAnalyticsService _analyticsService;
         private readonly ILog _logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private const int _trialMemberRoleId = 67;
 
         public FinderController(IFinderService finderService,
                                 IGroupToolService groupToolService,
@@ -515,7 +516,7 @@ namespace crds_angular.Controllers.API
             {
                 try
                 {
-                    _finderService.AddUserDirectlyToGroup(token, person, groupId);
+                    _finderService.AddUserDirectlyToGroup(token, person, groupId, _trialMemberRoleId);
                     return (Ok());
                 }
                 catch (DuplicateGroupParticipantException dup)
@@ -588,19 +589,15 @@ namespace crds_angular.Controllers.API
                 catch (Exception e)
                 {
                     _logger.Error("Could not generate request", e);
-                    if (e.Message == "User already has request")
+                    switch (e.Message)
                     {
-                        throw new HttpResponseException(HttpStatusCode.Conflict);
+                        case "User already has request":
+                            throw new HttpResponseException(HttpStatusCode.Conflict);
+                        case "User already a member":
+                            throw new HttpResponseException(HttpStatusCode.NotAcceptable);
+                        default:
+                            throw new HttpResponseException(new ApiErrorDto("Try a group request failed", e).HttpResponseMessage);
                     }
-                    else if (e.Message == "User already a member")
-                    {
-                        throw new HttpResponseException(HttpStatusCode.NotAcceptable);
-                    }
-                    else
-                    {
-                        throw new HttpResponseException(new ApiErrorDto("Try a group request failed", e).HttpResponseMessage);
-                    }
-
                 }
             });
         }
@@ -618,24 +615,21 @@ namespace crds_angular.Controllers.API
             {
                 try
                 {
+                    _finderService.TryAGroupAccept(token, groupId, participantId, true);
                     return Ok();
                 }
                 catch (Exception e)
                 {
                     _logger.Error("Could not generate request", e);
-                    if (e.Message == "User already has request")
+                    switch (e.Message)
                     {
-                        throw new HttpResponseException(HttpStatusCode.Conflict);
+                        case "User already has request":
+                            throw new HttpResponseException(HttpStatusCode.Conflict);
+                        case "User already a member":
+                            throw new HttpResponseException(HttpStatusCode.NotAcceptable);
+                        default:
+                            throw new HttpResponseException(new ApiErrorDto("Try a group accept request failed", e).HttpResponseMessage);
                     }
-                    else if (e.Message == "User already a member")
-                    {
-                        throw new HttpResponseException(HttpStatusCode.NotAcceptable);
-                    }
-                    else
-                    {
-                        throw new HttpResponseException(new ApiErrorDto("Try a group request failed", e).HttpResponseMessage);
-                    }
-
                 }
             });
         }
@@ -658,19 +652,15 @@ namespace crds_angular.Controllers.API
                 catch (Exception e)
                 {
                     _logger.Error("Could not generate request", e);
-                    if (e.Message == "User already has request")
+                    switch (e.Message)
                     {
-                        throw new HttpResponseException(HttpStatusCode.Conflict);
+                        case "User already has request":
+                            throw new HttpResponseException(HttpStatusCode.Conflict);
+                        case "User already a member":
+                            throw new HttpResponseException(HttpStatusCode.NotAcceptable);
+                        default:
+                            throw new HttpResponseException(new ApiErrorDto("Try a group request failed", e).HttpResponseMessage);
                     }
-                    else if (e.Message == "User already a member")
-                    {
-                        throw new HttpResponseException(HttpStatusCode.NotAcceptable);
-                    }
-                    else
-                    {
-                        throw new HttpResponseException(new ApiErrorDto("Try a group request failed", e).HttpResponseMessage);
-                    }
-
                 }
             });
         }
