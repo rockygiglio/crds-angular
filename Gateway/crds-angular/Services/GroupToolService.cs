@@ -367,7 +367,6 @@ namespace crds_angular.Services
         {
             try
             {
-                // var myGroup = GetMyGroupInfo(token, groupId);
                 var group = _groupService.GetGroupDetails(groupId);
                 var participant = _participantRepository.GetParticipantRecord(token);
 
