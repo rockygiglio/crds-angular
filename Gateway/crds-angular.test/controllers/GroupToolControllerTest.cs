@@ -34,6 +34,9 @@ namespace crds_angular.test.controllers
         private const string AuthToken = "123";
         private readonly string _auth = string.Format("{0} {1}", AuthType, AuthToken);
 
+        private const int _trialMemberRoleId = 67;
+        private const int _memberRoleId = 16;
+
         [SetUp]
         public void SetUp()
         {
@@ -117,7 +120,7 @@ namespace crds_angular.test.controllers
             var inquiry = new Inquiry();
             inquiry.Message = "message";
 
-            _groupToolService.Setup(mocked => mocked.ApproveDenyInquiryFromMyGroup(_auth, groupTypeId, groupId, approve, inquiry, inquiry.Message)).Verifiable();
+            _groupToolService.Setup(mocked => mocked.ApproveDenyInquiryFromMyGroup(_auth, groupId, approve, inquiry, inquiry.Message, It.IsAny<int>())).Verifiable();
             
             var result = _fixture.ApproveDenyInquiryFromMyGroup(groupTypeId, groupId, approve, inquiry);
             _groupToolService.VerifyAll();
@@ -137,7 +140,7 @@ namespace crds_angular.test.controllers
             var inquiry = new Inquiry();
             inquiry.Message = "message";
 
-            _groupToolService.Setup(mocked => mocked.ApproveDenyInquiryFromMyGroup(_auth, groupTypeId, groupId, approve, inquiry, inquiry.Message)).Throws(ex);
+            _groupToolService.Setup(mocked => mocked.ApproveDenyInquiryFromMyGroup(_auth, groupId, approve, inquiry, inquiry.Message, It.IsAny<int>())).Throws(ex);
             try
             {
                 _fixture.ApproveDenyInquiryFromMyGroup(groupTypeId, groupId, approve, inquiry);
@@ -161,7 +164,7 @@ namespace crds_angular.test.controllers
             var inquiry = new Inquiry();
             inquiry.Message = "message";
 
-            _groupToolService.Setup(mocked => mocked.ApproveDenyInquiryFromMyGroup(_auth, groupTypeId, groupId, approve, inquiry, inquiry.Message)).Throws(ex);
+            _groupToolService.Setup(mocked => mocked.ApproveDenyInquiryFromMyGroup(_auth, groupId, approve, inquiry, inquiry.Message, It.IsAny<int>())).Throws(ex);
             try
             {
                 _fixture.ApproveDenyInquiryFromMyGroup(groupTypeId, groupId, approve, inquiry);
