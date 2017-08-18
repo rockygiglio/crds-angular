@@ -647,7 +647,7 @@ namespace crds_angular.Controllers.API
             {
                 try
                 {
-                    _finderService.TryAGroupAcceptDeny(token, groupId, participantId, true);
+                    _finderService.TryAGroupAcceptDeny(token, groupId, participantId, false);
                     return Ok();
                 }
                 catch (Exception e)
