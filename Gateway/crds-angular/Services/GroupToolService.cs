@@ -42,6 +42,7 @@ namespace crds_angular.Services
         private readonly int _defaultAuthorUserId;
         private readonly int _defaultGroupRoleId;
         private readonly int _groupRoleLeaderId;
+        private readonly int _groupRoleTrialMemberId;
         private readonly int _genericGroupForCMSMergeEmailTemplateId;
         private readonly int _gatheringHostAcceptTemplate;
         private readonly int _gatheringHostDenyTemplate;
@@ -111,6 +112,7 @@ namespace crds_angular.Services
             _defaultGroupContactEmailId = configurationWrapper.GetConfigIntValue("DefaultGroupContactEmailId");
             _defaultAuthorUserId = configurationWrapper.GetConfigIntValue("DefaultAuthorUser");
             _groupRoleLeaderId = configurationWrapper.GetConfigIntValue("GroupRoleLeader");
+            _groupRoleTrialMemberId = configurationWrapper.GetConfigIntValue("GroupsTrialMemberRoleId");
             _defaultGroupRoleId = configurationWrapper.GetConfigIntValue("Group_Role_Default_ID");
             _groupRequestPendingReminderEmailTemplateId = configurationWrapper.GetConfigIntValue("GroupRequestPendingReminderEmailTemplateId");
             _attributeTypeGroupCategory = configurationWrapper.GetConfigIntValue("GroupCategoryAttributeTypeId");
@@ -439,15 +441,14 @@ namespace crds_angular.Services
 
             try
             {
-                SendGroupParticipantEmail(groupId,
-                                          group,
-                                          emailTemplateId,
-                                          participant,
-                                          subject,
-                                          GroupToolApproveInquiryEmailTemplateText,
-                                          message,
-                                          me);
-
+                    SendGroupParticipantEmail(groupId,
+                                         group,
+                                         emailTemplateId,
+                                         participant,
+                                         subject,
+                                         GroupToolApproveInquiryEmailTemplateText,
+                                         message,
+                                         me);
             }
             catch (Exception e)
             {
@@ -844,12 +845,6 @@ namespace crds_angular.Services
                     var RequestorSub = contact.Nickname + " " + contact.Last_Name.Substring(0,1) + ".";
                     var mergeData = new Dictionary<string, object> { { "Name", leader.NickName }, { "Requestor", Requestor }, { "RequestorSub", RequestorSub } };
                     SendSingleGroupParticipantEmail(leader, _anywhereGroupRequestToJoinEmailTemplate, mergeData);
-                }
-                else
-                {
-                    var Requestor = "<i>" + contact.Nickname + " " + contact.Last_Name + "</i> ";
-                    var mergeData = new Dictionary<string, object> { { "Name", leader.NickName }, { "Requestor", Requestor } };
-                    SendSingleGroupParticipantEmail(leader, _groupRequestToJoinEmailTemplate, mergeData);
                 }
             }
         }
