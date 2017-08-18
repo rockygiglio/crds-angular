@@ -1349,6 +1349,12 @@ namespace crds_angular.Services
             var contactId = _contactRepository.GetContactIdByParticipantId(participantId);
             var inquiry = _groupToolService.GetGroupInquiryForContactId(groupId, contactId);
 
+            if (_groupRepository.ParticipantGroupMember(groupId, participantId))
+            {
+               var e = new Exception("User is already a group member");
+               throw e;
+            }
+
             //accept or deny the inquiry
             _groupToolService.ApproveDenyInquiryFromMyGroup(token, groupId, accept, inquiry, "approved", _trialMemberRoleId);
 
