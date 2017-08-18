@@ -1003,11 +1003,12 @@ namespace crds_angular.Services
 
             //URL
             var baseUrl = _configurationWrapper.GetConfigValue("BaseUrl");
+            var groupToolPath = _configurationWrapper.GetConfigValue("GroupsTryAGroupPathFragment");
 
             var mergeData = new Dictionary<string, object>
             {
-                {"YesURL", $"{baseUrl}/small-group/{groupId}/true/{participant.ParticipantId}" },
-                {"NoURL" , $"{baseUrl}/small-group/{groupId}/false/{participant.ParticipantId}" },
+                {"YesURL", $"{baseUrl}{groupToolPath}/small-group/{groupId}/true/{participant.ParticipantId}" },
+                {"NoURL" , $"{baseUrl}{groupToolPath}/small-group/{groupId}/false/{participant.ParticipantId}" },
                 {"Participant_Name",  newMember.Nickname},
                 {"Nickname", newMember.Nickname },
                 {"Last_Name", newMember.Last_Name },
