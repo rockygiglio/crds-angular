@@ -439,15 +439,14 @@ namespace crds_angular.Services
 
             try
             {
-                SendGroupParticipantEmail(groupId,
-                                          group,
-                                          emailTemplateId,
-                                          participant,
-                                          subject,
-                                          GroupToolApproveInquiryEmailTemplateText,
-                                          message,
-                                          me);
-
+                    SendGroupParticipantEmail(groupId,
+                                         group,
+                                         emailTemplateId,
+                                         participant,
+                                         subject,
+                                         GroupToolApproveInquiryEmailTemplateText,
+                                         message,
+                                         me);
             }
             catch (Exception e)
             {
@@ -844,12 +843,6 @@ namespace crds_angular.Services
                     var RequestorSub = contact.Nickname + " " + contact.Last_Name.Substring(0,1) + ".";
                     var mergeData = new Dictionary<string, object> { { "Name", leader.NickName }, { "Requestor", Requestor }, { "RequestorSub", RequestorSub } };
                     SendSingleGroupParticipantEmail(leader, _anywhereGroupRequestToJoinEmailTemplate, mergeData);
-                }
-                else
-                {
-                    var Requestor = "<i>" + contact.Nickname + " " + contact.Last_Name + "</i> ";
-                    var mergeData = new Dictionary<string, object> { { "Name", leader.NickName }, { "Requestor", Requestor } };
-                    SendSingleGroupParticipantEmail(leader, _groupRequestToJoinEmailTemplate, mergeData);
                 }
             }
         }
