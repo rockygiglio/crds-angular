@@ -288,7 +288,7 @@ namespace crds_angular.Services
             _mpGroupRepository.UpdateGroupRemainingCapacity(group);
         }
 
-        public int addContactToGroup(int groupId, int contactId)
+        public int addContactToGroup(int groupId, int contactId, int roleId)
         {
             MpParticipant participant;
 
@@ -298,14 +298,14 @@ namespace crds_angular.Services
             }
             catch (Exception e)
             {
-                var message = string.Format("Could not retrieve particpant for contact {0}: {1}", contactId, e.Message);
+                var message = $"Could not retrieve particpant for contact {contactId}: {e.Message}";
                 _logger.Error(message, e);
                 throw (new ApplicationException(message, e));
             }
 
             try
             {
-                return _mpGroupRepository.addParticipantToGroup(participant.ParticipantId, groupId, _groupRoleDefaultId, false, DateTime.Now);
+                return _mpGroupRepository.addParticipantToGroup(participant.ParticipantId, groupId, roleId, false, DateTime.Now);
             }
             catch (Exception e)
             {
