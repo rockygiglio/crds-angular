@@ -347,7 +347,7 @@ namespace crds_angular.Services
             };
             RecordCommunication(connection);
 
-            _groupToolService.SubmitInquiry(token, gatheringId);
+            _groupToolService.SubmitInquiry(token, gatheringId, true);
         }
 
         public void TryAGroup(string token, int groupId)
@@ -365,7 +365,7 @@ namespace crds_angular.Services
                 GroupId = groupId
             };
             
-            _groupToolService.SubmitInquiry(token, groupId);
+            _groupToolService.SubmitInquiry(token, groupId, false);
             RecordCommunication(connection);
             SendTryAGroupEmailToLeader(token, groupId);
         }

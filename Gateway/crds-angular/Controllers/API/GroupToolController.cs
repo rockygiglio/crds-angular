@@ -445,7 +445,7 @@ namespace crds_angular.Controllers.API
             {
                 try
                 {
-                    _groupToolService.SubmitInquiry(token, groupId);
+                    _groupToolService.SubmitInquiry(token, groupId, true);
                     return Ok();
                 }
                 catch (ExistingRequestException)

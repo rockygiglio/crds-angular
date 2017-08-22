@@ -30,7 +30,7 @@ namespace crds_angular.Services.Interfaces
         void SendAllGroupLeadersEmail(string token, int groupId, GroupMessageDTO message);
         List<GroupDTO> SearchGroups(int[] groupTypeIds, string keywords = null, 
                                     string location = null, int? groupId = null, GeoCoordinate originCoords = null);
-        void SubmitInquiry(string token, int groupId);
+        void SubmitInquiry(string token, int groupId, bool sendEmail);
         void EndGroup(int groupId, int reasonEndedId);
         int SendSingleGroupParticipantEmail(GroupParticipantDTO participant, int templateId, Dictionary<string, object> mergeData);
         MyGroup GetMyGroupInfo(string token, int groupId);
