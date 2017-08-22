@@ -13,8 +13,8 @@
 
 
   <div class="push-top">
-    <div class="checkbox required" ng-class="{'has-error': $ctrl.validation.showErrors($ctrl.tripPromiseForm, 'promise') }">
-      <label>
+    <div class="checkbox" ng-class="{'has-error': $ctrl.validation.showErrors($ctrl.tripPromiseForm, 'promise') }">
+      <label class="required">
         <input type="checkbox" ng-model='$ctrl.promise' name="promise" value="promise" required>
         I promise to live by these principles on this trip.
       </label>
