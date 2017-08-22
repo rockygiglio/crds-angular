@@ -420,7 +420,7 @@ namespace crds_angular.Services
             _finderRepository.RecordConnection(connection);
         }
 
-        private void ApproveInquiry(int groupId, GroupDTO group, Inquiry inquiry, MpParticipant me, string message, int roleId, bool sendEmail)
+        private void ApproveInquiry(int groupId, GroupDTO group, Inquiry inquiry, MpParticipant me, string message, int roleId, bool doSendEmail)
         {
             _groupService.addContactToGroup(groupId, inquiry.ContactId, roleId);
             _groupRepository.UpdateGroupInquiry(groupId, inquiry.InquiryId, true);
@@ -441,7 +441,7 @@ namespace crds_angular.Services
 
             try
             {
-                if (sendEmail)
+                if (doSendEmail)
                 {
                     SendGroupParticipantEmail(groupId,
                                               group,
@@ -461,7 +461,7 @@ namespace crds_angular.Services
             }
         }
 
-        private void DenyInquiry(int groupId, GroupDTO group, Inquiry inquiry, MpParticipant me, string message, bool sendEmail)
+        private void DenyInquiry(int groupId, GroupDTO group, Inquiry inquiry, MpParticipant me, string message, bool doSendEmail)
         {
             _groupRepository.UpdateGroupInquiry(groupId, inquiry.InquiryId, false);
 
@@ -481,7 +481,7 @@ namespace crds_angular.Services
 
             try
             {
-                if (sendEmail)
+                if (doSendEmail)
                 {
                     SendGroupParticipantEmail(groupId,
                                               group,
@@ -804,7 +804,7 @@ namespace crds_angular.Services
             return _groupService.RemoveOnsiteParticipantsIfNotLeader(groups, token);
         }
 
-        public void SubmitInquiry(string token, int groupId, bool sendEmail)
+        public void SubmitInquiry(string token, int groupId, bool doSendEmail)
         {
             var participant = _participantRepository.GetParticipantRecord(token);
             var contact = _contactRepository.GetContactById(participant.ContactId);
@@ -844,7 +844,7 @@ namespace crds_angular.Services
             var props = new EventProperties {{"Name", group.GroupName}, {"City", group?.Address?.City}, {"State", group?.Address?.State}, {"Zip", group?.Address?.PostalCode}};
             _analyticsService.Track(contact.Contact_ID.ToString(), "RequestedToJoinGroup", props);
 
-            if (sendEmail)
+            if (doSendEmail)
             {
                 foreach (var leader in leaders)
                 {
