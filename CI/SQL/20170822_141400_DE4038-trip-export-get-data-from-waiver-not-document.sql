@@ -124,8 +124,6 @@ DECLARE @copyofpassport INT = 10;
 
 DECLARE @ipromise INT = 12;
 
-DECLARE @waiver INT = 7; -- GO Trip Waiver
-
 DECLARE @proofofguardianship INT = 16;
 
 DECLARE @countrydocumentation INT = 17;
@@ -509,16 +507,14 @@ SELECT 	c.first_name,
 
   (SELECT TOP 1 (CASE w.Accepted WHEN 1 THEN 'Yes' ELSE 'No' END) AS docreceived
    FROM dbo.cr_event_participant_waivers w
-   WHERE w.Event_Participant_ID = ep.Event_Participant_ID
-		AND w.Waiver_ID = @waiver
+   WHERE w.Event_Participant_ID = ep.Event_Participant_ID		
    UNION ALL
    SELECT 'No' AS docreceived
    WHERE NOT EXISTS
    (
        SELECT 1
 	   FROM dbo.cr_event_participant_waivers w
-	   WHERE w.Event_Participant_ID = ep.Event_Participant_ID
-		   AND w.Waiver_ID = @waiver
+	   WHERE w.Event_Participant_ID = ep.Event_Participant_ID		   
    )) AS waiver,
 
   (SELECT top 1 (CASE d.received WHEN 0 THEN 'No' WHEN 1 THEN 'Yes' END) AS docreceived
