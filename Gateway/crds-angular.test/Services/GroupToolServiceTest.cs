@@ -1568,7 +1568,7 @@ namespace crds_angular.test.Services
             _communicationRepository.Setup(mocked => mocked.SendMessage(It.IsAny<MpCommunication>(), false)).Returns(1);
 
 
-            _fixture.SubmitInquiry(token, groupId);
+            _fixture.SubmitInquiry(token, groupId,true);
             _mockAnalyticService.Verify(x => x.Track(It.IsAny<string>(), "RequestedToJoinGroup", It.IsAny<EventProperties>()), Times.Once);
 
             _groupRepository.VerifyAll();
@@ -1646,7 +1646,7 @@ namespace crds_angular.test.Services
 
             _communicationRepository.Setup(mocked => mocked.SendMessage(It.IsAny<MpCommunication>(), false)).Returns(1);
 
-            _fixture.SubmitInquiry(token, group.GroupId);
+            _fixture.SubmitInquiry(token, group.GroupId, true);
             _mockAnalyticService.Verify(x => x.Track(It.IsAny<string>(), "RequestedToJoinGroup", It.Is<EventProperties>(props => 
                                     props["Name"].Equals(group.GroupName) 
                                     && props["State"].Equals(group.Address.State)
@@ -1725,7 +1725,7 @@ namespace crds_angular.test.Services
 
             try
             {
-                _fixture.SubmitInquiry(token, groupId);
+                _fixture.SubmitInquiry(token, groupId, true);
                 Assert.Fail("expected exception was not thrown");
             }
             catch (ExistingRequestException e)
