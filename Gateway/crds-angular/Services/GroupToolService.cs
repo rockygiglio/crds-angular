@@ -371,7 +371,7 @@ namespace crds_angular.Services
             {
                 var group = _groupService.GetGroupDetails(groupId);
                 var participant = _participantRepository.GetParticipantRecord(token);
-                var sendEmail = (roleId == _groupRoleTrialMemberId);
+                var sendEmail = (roleId != _groupRoleTrialMemberId);
                 if (approve)
                 {
                     ApproveInquiry(groupId, group, inquiry, participant, message, roleId, sendEmail);
