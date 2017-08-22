@@ -1,7 +1,8 @@
 export default class TripPromiseController {
   /* @ngInject() */
-  constructor($rootScope, $state, $log, Trip) {
+  constructor($rootScope, Validation, $state, $log, Trip) {
     this.$rootScope = $rootScope;
+    this.validation = Validation;
     this.$state = $state;
     this.$log = $log;
     this.Trip = Trip;
