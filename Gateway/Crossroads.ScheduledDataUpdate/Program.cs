@@ -152,7 +152,7 @@ namespace Crossroads.ScheduledDataUpdate
                 }
             }
 
-            if (options.SmallGroupInquiryReminderMode)
+            if (options.ArchivePendingGroupInquiriesMode)
             {
                 modeSelected = true;
                 try
