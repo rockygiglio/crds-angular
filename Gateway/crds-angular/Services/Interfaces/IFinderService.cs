@@ -27,7 +27,7 @@ namespace crds_angular.Services.Interfaces
         void GatheringJoinRequest(string token, int gatheringId);
         Invitation InviteToGroup(string token, int gatheringId, User person, string finderFlag);
         List<GroupParticipantDTO> GetParticipantsForGroup(int groupId);
-        AddressDTO GetGroupAddress(string token, int groupId);
+        AddressDTO GetGroupAddress(int groupId);
         AddressDTO GetPersonAddress(string token, int participantId, bool shouldGetFullAddress);
         PinDto UpdateGathering(PinDto pin);
         void RequestToBeHost(string token, HostRequestDto hostRequest);
@@ -35,8 +35,10 @@ namespace crds_angular.Services.Interfaces
         void SayHi(int fromContactId, int toContactId);
         List<PinDto> RandomizeLatLongForNonSitePins(List<PinDto> pins);
         GeoCoordinate GetMapCenterForResults(string userSearchString, GeoCoordinates frontEndMapCenter, string finderType);
-        void AddUserDirectlyToGroup(string token, User user, int groupid);
+        void AddUserDirectlyToGroup(string token, User user, int groupid, int roleId);
         bool DoesActiveContactExists(string email);
         bool DoesUserLeadSomeGroup(int contactId);
+        void TryAGroup(string token, int groupId);
+        void TryAGroupAcceptDeny(string token, int groupId, int participantId, bool accept);
     }
 }

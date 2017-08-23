@@ -13,7 +13,7 @@ namespace crds_angular.Services.Interfaces
         List<Inquiry> GetInquiries(int groupId, string token);
 
         void RemoveParticipantFromMyGroup(string token, int groupId, int groupParticipantId, string message = null);
-        void ApproveDenyInquiryFromMyGroup(string token, int groupTypeId, int groupId, bool approve, Inquiry inquiry, string message = null);
+        void ApproveDenyInquiryFromMyGroup(string token, int groupId, bool approve, Inquiry inquiry, string message, int roleId);
         void AcceptDenyGroupInvitation(string token, int groupId, string invitationGuid, bool approve);
 
         void SendGroupParticipantEmail(int groupId,
@@ -37,5 +37,6 @@ namespace crds_angular.Services.Interfaces
         void SendSmallGroupPendingInquiryReminderEmails();
         List<AttributeCategoryDTO> GetGroupCategories();
         List<GroupDTO> GetGroupToolGroups(string token);
+        Inquiry GetGroupInquiryForContactId(int groupId, int contactId);
     }
 }

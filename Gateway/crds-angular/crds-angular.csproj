@@ -492,6 +492,7 @@
     <Compile Include="Services\Interfaces\IFinderService.cs" />
     <Compile Include="Services\Interfaces\IEventParticipantService.cs" />
     <Compile Include="Services\Interfaces\IInvitationService.cs" />
+    <Compile Include="Services\Interfaces\ILookupService.cs" />
     <Compile Include="Services\Interfaces\IPaymentService.cs" />
     <Compile Include="Services\Interfaces\ITextCommunicationService.cs" />
     <Compile Include="Services\Interfaces\IWaiverService.cs" />
@@ -509,6 +510,7 @@
     <Compile Include="Services\Interfaces\IOrganizationService.cs" />
     <Compile Include="Services\Interfaces\IRoomService.cs" />
     <Compile Include="Services\Interfaces\ITaskService.cs" />
+    <Compile Include="Services\LookupService.cs" />
     <Compile Include="Services\OrganizationService.cs" />
     <Compile Include="Services\PaymentService.cs" />
     <Compile Include="Services\RoomService.cs" />

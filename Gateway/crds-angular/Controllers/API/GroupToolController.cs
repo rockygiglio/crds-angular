@@ -29,6 +29,7 @@ namespace crds_angular.Controllers.API
         private readonly IGroupService _groupService;
 
         private readonly int _defaultGroupTypeId;
+        private readonly int _defaultRoleId;
         private readonly IConfigurationWrapper _configurationWrapper;
         private readonly IAnalyticsService _analyticsService;
 
@@ -45,6 +46,7 @@ namespace crds_angular.Controllers.API
             _configurationWrapper = configurationWrapper;
             _analyticsService = analyticsService;
             _defaultGroupTypeId = _configurationWrapper.GetConfigIntValue("SmallGroupTypeId");
+            _defaultRoleId = _configurationWrapper.GetConfigIntValue("Group_Role_Default_ID");
         }
 
         /// <summary>
@@ -272,7 +274,7 @@ namespace crds_angular.Controllers.API
             {
                 try
                 {
-                    _groupToolService.ApproveDenyInquiryFromMyGroup(token, groupTypeId, groupId, approve, inquiry, inquiry.Message);
+                    _groupToolService.ApproveDenyInquiryFromMyGroup(token, groupId, approve, inquiry, inquiry.Message, _defaultRoleId);
                     return Ok();
                 }
                 catch (GroupParticipantRemovalException e)
