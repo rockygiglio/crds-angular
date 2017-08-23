@@ -20,7 +20,7 @@
       </label>
       <ng-messages for="$ctrl.tripPromiseForm.promise.$error" ng-if="$ctrl.validation.showErrors($ctrl.tripPromiseForm, 'promise')">
         <span ng-message="required">
-          <span dynamic-content="$root.MESSAGES.fieldCanNotBeBlank.content | html"></span>
+          <span dynamic-content="$root.MESSAGES.TripIPromiseRequiredMessage.content | html"></span>
         </span>
       </ng-messages>
     </div>
