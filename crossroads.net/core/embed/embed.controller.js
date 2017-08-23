@@ -42,7 +42,7 @@ export default class EmbedController {
     if (this.attrs.map === 'true') {
       path = '/add-me-to-the-map?type=donation';
     } else {
-      path = this.attrs.href || '/?type=donation';
+      path = this.attrs.href || '/give/?type=donation';
     }
     return this.sce.trustAsResourceUrl(`${this.baseUrl}${path}`);
   }

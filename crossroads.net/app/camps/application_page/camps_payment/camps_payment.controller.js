@@ -32,19 +32,19 @@ export default class CampPaymentController {
 
     switch (__CRDS_ENV__) {
       case 'local':
-        this.baseUrl = 'http://local.crossroads.net:8080';
+        this.baseUrl = 'http://local.crossroads.net:8080/give';
         this.returnUrl = 'http://local.crossroads.net:3000/camps';
         break;
       case 'int':
-        this.baseUrl = 'https://embedint.crossroads.net';
+        this.baseUrl = 'https://embedint.crossroads.net/give';
         this.returnUrl = 'https://int.crossroads.net/camps';
         break;
       case 'demo':
-        this.baseUrl = 'https://embeddemo.crossroads.net';
+        this.baseUrl = 'https://embeddemo.crossroads.net/give';
         this.returnUrl = 'https://demo.crossroads.net/camps';
         break;
       default:
-        this.baseUrl = 'https://embed.crossroads.net';
+        this.baseUrl = 'https://embed.crossroads.net/give';
         this.returnUrl = 'https://crossroads.net/camps';
         break;
     }
