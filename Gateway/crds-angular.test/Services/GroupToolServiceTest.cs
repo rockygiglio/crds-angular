@@ -60,7 +60,7 @@ namespace crds_angular.test.Services
         private readonly int smallGroupTypeId = 434;
         private readonly int onsiteGroupTypeId = 435;
         private readonly int anywhereGroupTypeId = 436;
-
+        private const int _memberRoleId = 16;
 
         [SetUp]
         public void SetUp()
@@ -269,8 +269,6 @@ namespace crds_angular.test.Services
             };
 
             var mygroup = new GroupDTO {GroupTypeId = 5};
-
-            _groupService.Setup(mocked => mocked.GetGroupByIdForAuthenticatedUser("abc", 2)).Returns(groups);
             
             var inquiry = new Inquiry
             {
@@ -285,7 +283,7 @@ namespace crds_angular.test.Services
             };
             _participantRepository.Setup(mocked => mocked.GetParticipant(123)).Returns(approveParticipant);
 
-            _groupService.Setup(mocked => mocked.addContactToGroup(2, 123)).Returns(It.IsAny<int>());
+            _groupService.Setup(mocked => mocked.addContactToGroup(2, 123, _memberRoleId)).Returns(It.IsAny<int>());
             _groupRepository.Setup(mocked => mocked.UpdateGroupInquiry(2, 456, true)).Verifiable();
 
             var template = new MpMessageTemplate
@@ -313,7 +311,7 @@ namespace crds_angular.test.Services
             _groupService.Setup(mocked => mocked.GetGroupDetails(It.IsAny<int>())).Returns(mygroup);
 
 
-            _fixture.ApproveDenyInquiryFromMyGroup("abc", 1, 2, true, inquiry, message);
+            _fixture.ApproveDenyInquiryFromMyGroup("abc", 2, true, inquiry, message, _memberRoleId);
 
             _participantRepository.VerifyAll();
             _groupService.VerifyAll();
@@ -356,7 +354,6 @@ namespace crds_angular.test.Services
                 }
             };
             var mygroup = new GroupDTO { GroupTypeId = 5 };
-            _groupService.Setup(mocked => mocked.GetGroupByIdForAuthenticatedUser("abc", 2)).Returns(groups);
 
             var inquiry = new Inquiry
             {
@@ -397,7 +394,7 @@ namespace crds_angular.test.Services
             _contentBlockService.SetupGet(mocked => mocked["groupToolDenyInquiryEmailTemplateText"]).Returns(new ContentBlock());
             _groupService.Setup(mocked => mocked.GetGroupDetails(It.IsAny<int>())).Returns(mygroup);
 
-            _fixture.ApproveDenyInquiryFromMyGroup("abc", 1, 2, false, inquiry, message);
+            _fixture.ApproveDenyInquiryFromMyGroup("abc", 2, false, inquiry, message, _memberRoleId);
 
             _participantRepository.VerifyAll();
             _groupService.VerifyAll();
@@ -1571,7 +1568,7 @@ namespace crds_angular.test.Services
             _communicationRepository.Setup(mocked => mocked.SendMessage(It.IsAny<MpCommunication>(), false)).Returns(1);
 
 
-            _fixture.SubmitInquiry(token, groupId);
+            _fixture.SubmitInquiry(token, groupId,true);
             _mockAnalyticService.Verify(x => x.Track(It.IsAny<string>(), "RequestedToJoinGroup", It.IsAny<EventProperties>()), Times.Once);
 
             _groupRepository.VerifyAll();
@@ -1649,7 +1646,7 @@ namespace crds_angular.test.Services
 
             _communicationRepository.Setup(mocked => mocked.SendMessage(It.IsAny<MpCommunication>(), false)).Returns(1);
 
-            _fixture.SubmitInquiry(token, group.GroupId);
+            _fixture.SubmitInquiry(token, group.GroupId, true);
             _mockAnalyticService.Verify(x => x.Track(It.IsAny<string>(), "RequestedToJoinGroup", It.Is<EventProperties>(props => 
                                     props["Name"].Equals(group.GroupName) 
                                     && props["State"].Equals(group.Address.State)
@@ -1728,7 +1725,7 @@ namespace crds_angular.test.Services
 
             try
             {
-                _fixture.SubmitInquiry(token, groupId);
+                _fixture.SubmitInquiry(token, groupId, true);
                 Assert.Fail("expected exception was not thrown");
             }
             catch (ExistingRequestException e)

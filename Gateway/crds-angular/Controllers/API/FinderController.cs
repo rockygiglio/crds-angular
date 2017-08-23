@@ -29,6 +29,7 @@ namespace crds_angular.Controllers.API
         private readonly IAuthenticationRepository _authenticationRepo;
         private readonly IAnalyticsService _analyticsService;
         private readonly ILog _logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private const int _trialMemberRoleId = 67;
 
         public FinderController(IFinderService finderService,
                                 IGroupToolService groupToolService,
@@ -200,7 +201,7 @@ namespace crds_angular.Controllers.API
             {
                 try
                 {
-                    var address = _finderService.GetGroupAddress(token, groupId);
+                    var address = _finderService.GetGroupAddress(groupId);
                     return (Ok(address));
                 }
                 catch (Exception e)
@@ -515,7 +516,7 @@ namespace crds_angular.Controllers.API
             {
                 try
                 {
-                    _finderService.AddUserDirectlyToGroup(token, person, groupId);
+                    _finderService.AddUserDirectlyToGroup(token, person, groupId, _trialMemberRoleId);
                     return (Ok());
                 }
                 catch (DuplicateGroupParticipantException dup)
@@ -563,6 +564,100 @@ namespace crds_angular.Controllers.API
                         throw new HttpResponseException(new ApiErrorDto("Gathering request failed", e).HttpResponseMessage);
                     }
 
+                }
+            });
+        }
+
+
+
+        /// <summary>
+        /// Logged in user requests to "try a group"
+        /// </summary>
+        [RequiresAuthorization]
+        [VersionedRoute(template: "finder/pin/tryagroup", minimumVersion: "1.0.0")]
+        [Route("finder/pin/tryagroup")]
+        [HttpPost]
+        public IHttpActionResult TryAGroup([FromBody]int groupId)
+        {
+            return Authorized(token =>
+            {
+                try
+                {
+                    _finderService.TryAGroup(token, groupId);
+                    return (Ok());
+                }
+                catch (Exception e)
+                {
+                    _logger.Error("Could not generate request", e);
+                    switch (e.Message)
+                    {
+                        case "User already has request":
+                            throw new HttpResponseException(HttpStatusCode.Conflict);
+                        case "User already a member":
+                            throw new HttpResponseException(HttpStatusCode.NotAcceptable);
+                        default:
+                            throw new HttpResponseException(new ApiErrorDto("Try a group request failed", e).HttpResponseMessage);
+                    }
+                }
+            });
+        }
+
+        /// <summary>
+        /// Leader accepts user requests to "try a group"
+        /// </summary>
+        [RequiresAuthorization]
+        [VersionedRoute(template: "finder/pin/tryagroup/{groupId}/true/{participantId}", minimumVersion: "1.0.0")]
+        [Route("finder/pin/tryagroup/{groupId}/true/{participantId}")]
+        [HttpPost]
+        public IHttpActionResult TryAGroupAccept([FromUri]int groupId, [FromUri]int participantId)
+        {
+            return Authorized(token =>
+            {
+                try
+                {
+                    _finderService.TryAGroupAcceptDeny(token, groupId, participantId, true);
+                    return Ok();
+                }
+                catch (Exception e)
+                {
+                    _logger.Error("Could not accept request", e);
+                    switch (e.Message)
+                    {
+                        case "User is already a group member":
+                            throw new HttpResponseException(HttpStatusCode.Conflict);
+                        default:
+                            throw new HttpResponseException(new ApiErrorDto("Try a group accept request failed", e).HttpResponseMessage);
+                    }
+                }
+            });
+        }
+
+        /// <summary>
+        /// Leader declines user requests to "try a group"
+        /// </summary>
+        [RequiresAuthorization]
+        [VersionedRoute(template: "finder/pin/tryagroup/{groupId}/false/{participantId}", minimumVersion: "1.0.0")]
+        [Route("finder/pin/tryagroup/{groupId}/false/{participantId}")]
+        [HttpPost]
+        public IHttpActionResult TryAGroupDecline([FromUri]int groupId, [FromUri]int participantId)
+        {
+            return Authorized(token =>
+            {
+                try
+                {
+                    _finderService.TryAGroupAcceptDeny(token, groupId, participantId, false);
+                    return Ok();
+                }
+                catch (Exception e)
+                {
+                    _logger.Error("Could not deny request", e);
+                    switch (e.Message)
+                    {
+                        case "User is already a group member":
+                            throw new HttpResponseException(HttpStatusCode.Conflict);
+                        default:
+                            throw new HttpResponseException(new ApiErrorDto("Try a group deny request failed", e).HttpResponseMessage);
+                    }
                 }
             });
         }
