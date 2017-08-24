@@ -44,7 +44,6 @@ require('./invoices/invoices.module');
     }]);
 
   require('./corkboard');
-  require('./events');
   require('./signup');
   require('./styleguide');
   require('./superbowl');
