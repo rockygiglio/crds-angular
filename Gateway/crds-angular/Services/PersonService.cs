@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using AutoMapper;
 using crds_angular.Models.Crossroads;
 using crds_angular.Models.Crossroads.Profile;
@@ -44,6 +45,15 @@ namespace crds_angular.Services
             var householdDictionary = getDictionary(person.GetHousehold());
             var addressDictionary = getDictionary(person.GetAddress());
             addressDictionary.Add("State/Region", addressDictionary["State"]);
+
+            // Some front-end consumers require an Address (e.g., /profile/personal), and
+            // some do not (e.g., /undivided/facilitator).  Don't attempt to create/update
+            // an Address record if we have no data.
+            if (addressDictionary.Values.All(i => i == null))
+            {
+                addressDictionary = null;
+            }
+
             _contactRepository.UpdateContact(person.ContactId, contactDictionary, householdDictionary, addressDictionary);
             var configuration = MpObjectAttributeConfigurationFactory.Contact();            
             _objectAttributeService.SaveObjectAttributes(person.ContactId, person.AttributeTypes, person.SingleAttributes, configuration);

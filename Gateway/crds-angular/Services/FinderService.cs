@@ -15,7 +15,6 @@ using Crossroads.Web.Common.MinistryPlatform;
 using System.Linq;
 using System.Device.Location;
 using System.Text;
-using System.Text.RegularExpressions;
 using Amazon.CloudSearchDomain.Model;
 using crds_angular.Exceptions;
 using crds_angular.Models.AwsCloudsearch;
@@ -60,7 +59,7 @@ namespace crds_angular.Services
         private readonly int _approvedHost;
         private readonly int _pendingHost;
         private readonly int _anywhereGroupType;
-        private readonly int _leaderRoleId;
+        private readonly int _trialMemberRoleId;
         private readonly int _memberRoleId;
         private readonly int _anywhereGatheringInvitationTypeId;
         private readonly int _groupInvitationTypeId;
@@ -80,6 +79,7 @@ namespace crds_angular.Services
         private readonly int _connectCommunicationTypeInviteToSmallGroup;
         private readonly int _connectCommunicationTypeRequestToJoinSmallGroup;
         private readonly int _connectCommunicationTypeRequestToJoinGathering;
+        private readonly ILookupService _lookupService;
 
         private readonly Random _random = new Random(DateTime.Now.Millisecond);
         private const double MinutesInDegree = 60;
@@ -101,6 +101,7 @@ namespace crds_angular.Services
             IAuthenticationRepository authenticationRepository,
             ICommunicationRepository communicationRepository,
             IAccountService accountService,
+            ILookupService lookupService,
             IAnalyticsService analyticsService
         )
         {
@@ -120,14 +121,14 @@ namespace crds_angular.Services
             _awsCloudsearchService = awsCloudsearchService;
             _communicationRepository = communicationRepository;
             _accountService = accountService;
+            _lookupService = lookupService;
             _analyticsService = analyticsService;
             // constants
             _anywhereCongregationId = _configurationWrapper.GetConfigIntValue("AnywhereCongregationId");
             _approvedHost = configurationWrapper.GetConfigIntValue("ApprovedHostStatus");
             _pendingHost = configurationWrapper.GetConfigIntValue("PendingHostStatus");
             _anywhereGroupType = configurationWrapper.GetConfigIntValue("AnywhereGroupTypeId");
-            _leaderRoleId = configurationWrapper.GetConfigIntValue("GroupRoleLeader");
-            _memberRoleId = configurationWrapper.GetConfigIntValue("Group_Role_Default_ID");
+            _trialMemberRoleId = configurationWrapper.GetConfigIntValue("GroupsTrialMemberRoleId");
             _memberRoleId = configurationWrapper.GetConfigIntValue("Group_Role_Default_ID");
             _anywhereGatheringInvitationTypeId = configurationWrapper.GetConfigIntValue("AnywhereGatheringInvitationType");
             _groupInvitationTypeId = configurationWrapper.GetConfigIntValue("GroupInvitationType");
@@ -193,6 +194,11 @@ namespace crds_angular.Services
             pin.Gathering.Address.Latitude = coordinates.Latitude;
             pin.Gathering.Address.Longitude = coordinates.Longitude;
             pin.Gathering.GroupTypeId = _anywhereGroupType;
+            // When staff manually updates the gathering group in MP to be public/available online (or any other edit),
+            // the meeting_time in MP console is forced to a value (midnight)
+            // then on gathering group edits in the app, the meeting_time pre-populated and getting a sql datetime overflow
+            // Gatherings do not have meeting time, so set back to null
+            pin.Gathering.MeetingTime = null;
 
             if (pin.ShouldUpdateHomeAddress)
             {
@@ -306,6 +312,8 @@ namespace crds_angular.Services
             group.CongregationId = _anywhereCongregationId;
             group.GroupTypeId = _anywhereGroupType;
             group.MinistryId = _spritualGrowthMinistryId;
+            group.MeetingTime = null;
+
             _groupService.CreateGroup(group);
 
             //add our contact to the group as a leader
@@ -339,7 +347,27 @@ namespace crds_angular.Services
             };
             RecordCommunication(connection);
 
-            _groupToolService.SubmitInquiry(token, gatheringId);
+            _groupToolService.SubmitInquiry(token, gatheringId, true);
+        }
+
+        public void TryAGroup(string token, int groupId)
+        {
+            var group = _groupService.GetGroupDetails(groupId);
+
+            var commType = group.GroupTypeId == _smallGroupType ? _connectCommunicationTypeRequestToJoinSmallGroup : _connectCommunicationTypeRequestToJoinGathering;
+
+            var connection = new ConnectCommunicationDto
+            {
+                CommunicationTypeId = commType,
+                ToContactId = group.ContactId,
+                FromContactId = _contactRepository.GetContactId(token),
+                CommunicationStatusId = _configurationWrapper.GetConfigIntValue("ConnectCommunicationStatusUnanswered"),
+                GroupId = groupId
+            };
+            
+            _groupToolService.SubmitInquiry(token, groupId, false);
+            RecordCommunication(connection);
+            SendTryAGroupEmailToLeader(token, groupId);
         }
 
         public AddressDTO GetAddressForIp(string ip)
@@ -394,7 +422,7 @@ namespace crds_angular.Services
             else if (finderType.Equals(_finderGroupTool))
             {
                 queryString =
-                    $"(and pintype:4 (or groupname:'{userKeywordSearchString}' groupdescription:'{userKeywordSearchString}' groupprimarycontactfirstname:'{userKeywordSearchString}' groupprimarycontactlastname:'{userKeywordSearchString}') {filterSearchString})";
+                    $"(and pintype:4 groupavailableonline:1 (or groupname:'{userKeywordSearchString}' groupdescription:'{userKeywordSearchString}' groupprimarycontactfirstname:'{userKeywordSearchString}' groupprimarycontactlastname:'{userKeywordSearchString}') {filterSearchString})";
             }
             else
             {     
@@ -413,7 +441,7 @@ namespace crds_angular.Services
             return pins;
         }
 
-        public void AddUserDirectlyToGroup(string token, User user, int groupid)
+        public void AddUserDirectlyToGroup(string token, User user, int groupid, int roleId)
         {
             
             //check to see if user exists in MP. Exclude Guest Giver and Deceased status
@@ -430,7 +458,7 @@ namespace crds_angular.Services
             if (groupParticipant == null)
             {
                 SendEmailToAddedUser(token, user, groupid);
-                _groupService.addContactToGroup(groupid, contactId);
+                _groupService.addContactToGroup(groupid, contactId, roleId);
 
             }
             else
@@ -601,7 +629,8 @@ namespace crds_angular.Services
                         PrimaryContactLastName = hit.Fields.ContainsKey("groupprimarycontactlastname") ? hit.Fields["groupprimarycontactlastname"].FirstOrDefault() : null,
                         PrimaryContactCongregation = hit.Fields.ContainsKey("groupprimarycontactcongregation") ? hit.Fields["groupprimarycontactcongregation"].FirstOrDefault() : null,
                         GroupAgesRangeList = hit.Fields.ContainsKey("groupagerange") ? hit.Fields["groupagerange"].ToList() : null,
-                        GroupCategoriesList = hit.Fields.ContainsKey("groupcategory") ? hit.Fields["groupcategory"].ToList() : null
+                        GroupCategoriesList = hit.Fields.ContainsKey("groupcategory") ? hit.Fields["groupcategory"].ToList() : null,
+                        AvailableOnline = hit.Fields.ContainsKey("groupavailableonline") && hit.Fields["groupavailableonline"].FirstOrDefault() == "1",                            
                     };
 
                     if (hit.Fields.ContainsKey("groupstartdate") && !String.IsNullOrWhiteSpace(hit.Fields["groupstartdate"].First()))
@@ -794,19 +823,9 @@ namespace crds_angular.Services
             return invitation;
         }
 
-        public AddressDTO GetGroupAddress(string token, int groupId)
+        public AddressDTO GetGroupAddress(int groupId)
         {
-            var user = _participantRepository.GetParticipantRecord(token);
-            var group = _groupService.GetGroupsByTypeOrId(token, user.ParticipantId, null, groupId, true, false).FirstOrDefault();
-
-            if (user.ContactId == group.ContactId || group.Participants.Any(p => p.ParticipantId == user.ParticipantId))
-            {
-                return group.Address;
-            }
-            else
-            {
-                throw new Exception("User does not have access to requested address");
-            }
+            return _groupService.GetGroupDetails(groupId).Address;
         }
 
         public AddressDTO GetPersonAddress(string token, int participantId, bool shouldGetFullAddress = true)
@@ -951,6 +970,169 @@ namespace crds_angular.Services
             }
         }
 
+        private string getMeetingFrequency(int meetingFrequencyId)
+        {
+
+            switch (meetingFrequencyId)
+            {
+                case 1:
+                    return "Weekly";
+                case 2:
+                    return "Bi-Weekly";
+                default:
+                    return "Monthly";
+            }
+        }
+
+        private Dictionary<string, object> GetEmailMergeData(string token,int groupId)
+        {
+            // group
+            var group = _groupService.GetGroupDetails(groupId);
+            var groupLocation = GetGroupAddress(groupId);
+            var meetingDay = _lookupService.GetMeetingDayFromId(group.MeetingDayId);
+            var formatedMeetingTime = group.MeetingTime == null ? "Flexible time" : $"{DateTimeOffset.Parse(@group.MeetingTime).LocalDateTime:t}";
+            var formatedMeetingDay = meetingDay ?? "Flexible day";
+            var formatedMeetingFrequency = group.MeetingFrequencyID == null ? "Flexible frequency" : getMeetingFrequency((int)group.MeetingFrequencyID);
+
+            //leader
+            var leaderContact = _contactRepository.GetContactByParticipantId(GetLeaderParticipantIdFromGroup(groupId));
+
+            //participant
+            var participant = _participantRepository.GetParticipantRecord(token);
+            var newMember = _contactRepository.GetContactById(participant.ContactId);
+
+            //URL
+            var baseUrl = _configurationWrapper.GetConfigValue("BaseUrl");
+            var groupToolPath = _configurationWrapper.GetConfigValue("GroupsTryAGroupPathFragment");
+
+            var mergeData = new Dictionary<string, object>
+            {
+                {"YesURL", $"{baseUrl}{groupToolPath}/small-group/{groupId}/true/{participant.ParticipantId}" },
+                {"NoURL" , $"{baseUrl}{groupToolPath}/small-group/{groupId}/false/{participant.ParticipantId}" },
+                {"Participant_Name",  newMember.Nickname},
+                {"Nickname", newMember.Nickname },
+                {"Last_Name", newMember.Last_Name },
+                {"Email_Address", newMember.Email_Address },
+                {"Phone_Number", newMember.Mobile_Phone },
+                {"Leader_Name", leaderContact.First_Name},
+                {"Primary_First_Name", leaderContact.First_Name},
+                {"Primary_Last_Name", leaderContact.Last_Name},
+                {"Primary_Email", leaderContact.Email_Address},
+                {"Primary_Phone", leaderContact.Mobile_Phone},
+                {"Leader_Full_Name", $"{leaderContact.First_Name} {leaderContact.Last_Name}" },
+                {"Leader_Email", leaderContact.Email_Address},
+                {"Group_Name", group.GroupName},
+                {"Group_Meeting_Day",  formatedMeetingDay},
+                {"Group_Meeting_Time", formatedMeetingTime},
+                {"Group_Meeting_Frequency", formatedMeetingFrequency},
+                {"Group_Meeting_Location", groupLocation.AddressLine1 == null ? "Online" : $"{groupLocation.AddressLine1}\n{groupLocation.AddressLine2}\n{groupLocation.City}\n{groupLocation.State}\n{groupLocation.PostalCode}" },
+                {"Leader_Phone", $"{leaderContact.Home_Phone}\n{leaderContact.Mobile_Phone}" }
+            };
+            return mergeData;
+        }
+
+        private void SendTryAGroupEmailToLeader(string token, int groupid)
+        {
+            try
+            {
+                var mergeData = GetEmailMergeData(token, groupid);
+
+                var emailTemplateId = _configurationWrapper.GetConfigIntValue("GroupsTryAGroupLeaderNotificationTemplateId");
+
+                var emailTemplate = _communicationRepository.GetTemplate(emailTemplateId);
+                var fromContact = new MpContact
+                {
+                    ContactId = emailTemplate.FromContactId,
+                    EmailAddress = emailTemplate.FromEmailAddress
+                };
+                var replyTo = new MpContact
+                {
+                    ContactId = emailTemplate.ReplyToContactId,
+                    EmailAddress = emailTemplate.ReplyToEmailAddress
+                };
+
+                var primary = _contactRepository.GetContactById(_contactRepository.GetContactIdByParticipantId(_groupService.GetPrimaryContactParticipantId(groupid)));
+
+                var to = new List<MpContact>
+                {
+                    new MpContact
+                    {
+                        // Just need a contact ID here, doesn't have to be for the recipient
+                        ContactId = primary.Contact_ID,
+                        EmailAddress = primary.Email_Address
+                    }
+                };
+
+                var confirmation = new MpCommunication
+                {
+                    EmailBody = emailTemplate.Body,
+                    EmailSubject = emailTemplate.Subject,
+                    AuthorUserId = 5,
+                    DomainId = _domainId,
+                    FromContact = fromContact,
+                    ReplyToContact = replyTo,
+                    TemplateId = emailTemplateId,
+                    ToContacts = to,
+                    MergeData = mergeData
+                };
+                _communicationRepository.SendMessage(confirmation);
+            }
+            catch (Exception e)
+            {
+                return;
+            }
+        }
+
+        private void SendTryAGroupAcceptDenyEmail(string token, int groupid, int toContactId,bool accept)
+        {
+            try
+            {
+                var mergeData = GetEmailMergeData(token, groupid);
+               
+                var emailTemplateId = _configurationWrapper.GetConfigIntValue(accept ? "GroupsTryAGroupParticipantAcceptedNotificationTemplateId" : "GroupsTryAGroupParticipantDeclinedNotificationTemplateId");
+                
+                var emailTemplate = _communicationRepository.GetTemplate(emailTemplateId);
+                var fromContact = new MpContact
+                {
+                    ContactId = emailTemplate.FromContactId,
+                    EmailAddress = emailTemplate.FromEmailAddress
+                };
+                var replyTo = new MpContact
+                {
+                    ContactId = emailTemplate.ReplyToContactId,
+                    EmailAddress = emailTemplate.ReplyToEmailAddress
+                };
+
+                var toContact = _contactRepository.GetContactById(toContactId);
+                var to = new List<MpContact>
+                {
+                    new MpContact
+                    {
+                        ContactId = toContact.Contact_ID,
+                        EmailAddress = toContact.Email_Address
+                    }
+                };
+
+                var confirmation = new MpCommunication
+                {
+                    EmailBody = emailTemplate.Body,
+                    EmailSubject = emailTemplate.Subject,
+                    AuthorUserId = 5,
+                    DomainId = _domainId,
+                    FromContact = fromContact,
+                    ReplyToContact = replyTo,
+                    TemplateId = emailTemplateId,
+                    ToContacts = to,
+                    MergeData = mergeData
+                };
+                _communicationRepository.SendMessage(confirmation);
+            }
+            catch (Exception e)
+            {
+                return;
+            }
+        }
+
         public void SendEmailToAddedUser(string token, User user, int groupid)
         {
             var emailTemplateId = _configurationWrapper.GetConfigIntValue("GroupsAddParticipantEmailNotificationTemplateId");
@@ -959,16 +1141,25 @@ namespace crds_angular.Services
             var leaderContact = _contactRepository.GetContactById(leaderContactId);
             var leaderEmail = leaderContact.Email_Address;
             var userEmail = user.email;
-            var group = _groupService.GetGroupDetails(groupid);
-            var newMemberContactId = _contactRepository.GetContactIdByEmail(user.email);
-           
+            GroupDTO group = _groupService.GetGroupDetails(groupid);
+            var meetingDay = _lookupService.GetMeetingDayFromId(group.MeetingDayId);
+            var newMemberContactId = _contactRepository.GetActiveContactIdByEmail(user.email);
+            var groupLocation = GetGroupAddress(groupid);
+            var formatedMeetingTime = group.MeetingTime == null ? "Flexible time" : String.Format("{0:t}", DateTimeOffset.Parse(group.MeetingTime).LocalDateTime);
+            var formatedMeetingDay = meetingDay == null ? "Flexible day" : meetingDay;
+            var formatedMeetingFrequency = group.MeetingFrequencyID == null ? "Flexible frequency" : getMeetingFrequency((int)group.MeetingFrequencyID);
             var mergeData = new Dictionary<string, object>
             {
                 {"Participant_Name", user.firstName},
                 {"Leader_Name", leaderContact.First_Name},
                 {"Leader_Full_Name", $"{leaderContact.First_Name} {leaderContact.Last_Name}" },
                 {"Leader_Email", leaderEmail},
-                {"Group_Name", group.GroupName}
+                {"Group_Name", group.GroupName},
+                {"Group_Meeting_Day",  formatedMeetingDay},
+                {"Group_Meeting_Time", formatedMeetingTime},
+                {"Group_Meeting_Frequency", formatedMeetingFrequency},
+                {"Group_Meeting_Location", groupLocation.AddressLine1 == null ? "Online" : $"{groupLocation.AddressLine1}\n{groupLocation.AddressLine2}\n{groupLocation.City}\n{groupLocation.State}\n{groupLocation.PostalCode}" },
+                {"Leader_Phone", $"{leaderContact.Home_Phone}\n{leaderContact.Mobile_Phone}" }
             };
 
             var fromContact = new MpContact
@@ -1011,8 +1202,19 @@ namespace crds_angular.Services
                 MergeData = mergeData
             };
             _communicationRepository.SendMessage(confirmation);
+            var connection = new ConnectCommunicationDto
+            {
+                CommunicationTypeId = _connectCommunicationTypeInviteToSmallGroup,
+                ToContactId = newMemberContactId,
+                FromContactId = _contactRepository.GetContactId(token),
+                CommunicationStatusId = _configurationWrapper.GetConfigIntValue("ConnectCommunicationStatusNA"),
+                GroupId = groupid,
+              
+            };
+
+            RecordCommunication(connection);
         }
-        
+       
         private List<PinDto> TransformGroupDtoToPinDto(List<GroupDTO> groupDTOs, string finderType)
         {
             var pins = new List<PinDto>();
@@ -1142,6 +1344,23 @@ namespace crds_angular.Services
             return contactId != 0;
         }
 
+        public void TryAGroupAcceptDeny(string token, int groupId, int participantId, bool accept)
+        {
+            var contactId = _contactRepository.GetContactIdByParticipantId(participantId);
+            var inquiry = _groupToolService.GetGroupInquiryForContactId(groupId, contactId);
+
+            if(_groupRepository.GetGroupParticipants(groupId, true).Exists(p =>p.ParticipantId == participantId) || inquiry.Placed != null)
+            {
+               var e = new Exception("User is already a group member");
+               throw e;
+            }
+
+            //accept or deny the inquiry
+            _groupToolService.ApproveDenyInquiryFromMyGroup(token, groupId, accept, inquiry, "approved", _trialMemberRoleId);
+
+            //send the email
+            SendTryAGroupAcceptDenyEmail(token, groupId, contactId, accept);
+        }
     }
 }
 

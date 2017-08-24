@@ -41,5 +41,6 @@ namespace MinistryPlatform.Translation.Models.Finder
         public string GroupPrimaryContactFirstName { get; set; }
         public string GroupPrimaryContactLastName { get; set; }
         public string GroupPrimaryContactCongregation { get; set; }
+        public int GroupAvailableOnline { get; set; }
     }
 }

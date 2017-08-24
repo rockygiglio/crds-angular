@@ -114,5 +114,7 @@ namespace crds_angular.Models.AwsCloudsearch
         [JsonProperty(PropertyName = "groupprimarycontactcongregation")]
         public string GroupPrimaryContactCongregation { get; set; }
 
+        [JsonProperty(PropertyName = "groupavailableonline")]
+        public int GroupAvailableOnline { get; set; }
     }
 }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reactive.Linq;
 using System.Reactive.Threading.Tasks;
 using System.Threading.Tasks;
+using System.Web.UI.WebControls;
 using log4net;
 using Crossroads.Web.Common.Configuration;
 using Crossroads.Web.Common.MinistryPlatform;
@@ -30,6 +31,7 @@ namespace MinistryPlatform.Translation.Repositories
         private readonly IApiUserRepository _apiUserRepository;
         private readonly int _participantsPageId;
         private readonly int _securityRolesSubPageId;
+        
 
         public ContactRepository(IMinistryPlatformService ministryPlatformService, IAuthenticationRepository authenticationService, IConfigurationWrapper configuration, IMinistryPlatformRestRepository ministryPlatformRest, IApiUserRepository apiUserRepository)
             : base(authenticationService, configuration)
@@ -209,6 +211,35 @@ namespace MinistryPlatform.Translation.Repositories
             return record.ToInt("dp_RecordID");
         }
 
+
+        #region changes inactive users to active and records in the audit log
+        public void UpdateUsertoActive(int contactId)
+        {
+            try
+            {
+                var token = ApiLogin();
+                var searchString = $"Contact_ID = {contactId}";
+                const string column = "Contact_Status_ID";
+                var contactstatus = _ministryPlatformRest.UsingAuthenticationToken(token).Search<int>("Contacts", searchString, column, null);
+
+                if (contactstatus == 2)
+                {
+                    contactstatus = 1;
+                    Dictionary<string, object> activestatus = new Dictionary<string, object>()
+                    {
+                        {"Contact_ID",contactId },
+                        {"Contact_Status_ID", contactstatus}
+                    };
+                    _ministryPlatformRest.UsingAuthenticationToken(token).UpdateRecord("Contacts", -1, activestatus);
+                }
+            }
+            catch (Exception e)
+            {
+                throw new ApplicationException("Error Changing User to Active Status: " + e.Message);
+            }
+        }
+
+    #endregion
 
         public int GetActiveContactIdByEmail(string email)
         {
@@ -426,23 +457,26 @@ namespace MinistryPlatform.Translation.Repositories
                                   Dictionary<string, object> householdDictionary,
                                   Dictionary<string, object> addressDictionary)
         {
-            // don't create orphaned address records
-            bool addressAlreadyExists = addressDictionary["Address_ID"] != null ? true : false;
-            if (!addressAlreadyExists && householdDictionary == null)
-                throw new ArgumentException("Household is required when adding a new address");
-
             string apiToken = _apiUserRepository.GetToken();
 
-            if (addressAlreadyExists)
+            if (addressDictionary != null)
             {
-                //address exists, update it
-                _ministryPlatformService.UpdateRecord(_configurationWrapper.GetConfigIntValue("Addresses"), addressDictionary, apiToken);
-            }
-            else
-            {
-                //address does not exist, create it, then attach to household
-                var addressId = _ministryPlatformService.CreateRecord(_configurationWrapper.GetConfigIntValue("Addresses"), addressDictionary, apiToken);
-                householdDictionary["Address_ID"] = addressId;
+                // don't create orphaned address records
+                bool addressAlreadyExists = addressDictionary["Address_ID"] != null ? true : false;
+                if (!addressAlreadyExists && householdDictionary == null)
+                    throw new ArgumentException("Household is required when adding a new address");
+
+                if (addressAlreadyExists)
+                {
+                    //address exists, update it
+                    _ministryPlatformService.UpdateRecord(_configurationWrapper.GetConfigIntValue("Addresses"), addressDictionary, apiToken);
+                }
+                else
+                {
+                    //address does not exist, create it, then attach to household
+                    var addressId = _ministryPlatformService.CreateRecord(_configurationWrapper.GetConfigIntValue("Addresses"), addressDictionary, apiToken);
+                    householdDictionary["Address_ID"] = addressId;
+                }
             }
 
             if (householdDictionary != null)
@@ -496,8 +530,7 @@ namespace MinistryPlatform.Translation.Repositories
         public IObservable<MpHousehold> UpdateHousehold(MpHousehold household)
         {
             var token = ApiLogin();            
-            var asyncresult = Task.Run(() => _ministryPlatformRest.UsingAuthenticationToken(token)
-                                                        .Update<MpHousehold>(household));
+            var asyncresult = Task.Run(() => _ministryPlatformRest.UsingAuthenticationToken(token).Update<MpHousehold>(household));
             return asyncresult.ToObservable();
         }
 
