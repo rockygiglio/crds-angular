@@ -1009,6 +1009,8 @@ namespace crds_angular.Services
             {
                 {"YesURL", $"{baseUrl}{groupToolPath}/small-group/{groupId}/true/{participant.ParticipantId}" },
                 {"NoURL" , $"{baseUrl}{groupToolPath}/small-group/{groupId}/false/{participant.ParticipantId}" },
+                {"StartURL",   $"{baseUrl}{groupToolPath}/create-group" },
+                {"SearchURL",   $"{baseUrl}{groupToolPath}" },
                 {"Participant_Name",  newMember.Nickname},
                 {"Nickname", newMember.Nickname },
                 {"Last_Name", newMember.Last_Name },
