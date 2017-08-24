@@ -865,6 +865,19 @@ namespace crds_angular.Services
             }
         }
 
+        public void ArchivePendingGroupInquiriesOlderThan90Days()
+        {
+            try
+            {
+                _groupToolRepository.ArchivePendingGroupInquiriesOlderThan90Days();
+            }
+            catch (Exception e)
+            {
+                _logger.Error("Error archiving old pending group inquiries", e);
+                throw;
+            }
+        }
+
         public void SendSmallGroupPendingInquiryReminderEmails()
         {
             try
