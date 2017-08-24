@@ -34,13 +34,7 @@
         vm.completedPercent = undefined
         vm.viewReady = false;
         vm.googleMapsUrl="https://maps.googleapis.com/maps/api/js?key=AIzaSyArKsBK97N0Wi-69x10OL7Sx57Fwlmu6Cs";
-
-        vm.cities = {
-          chicago: {population:2714856, position: [41.878113, -87.629798]},
-          newyork: {population:8405837, position: [40.714352, -74.005973]},
-          losangeles: {population:3857799, position: [34.052234, -118.243684]},
-          vancouver: {population:603502, position: [49.25, -123.1]},
-        }
+        vm.dynMarkers = [];
 
         vm.mapStyles =  [{
           'elementType': 'geometry',
@@ -226,7 +220,23 @@
           return Math.sqrt(num) * 100;
         }
 
+        vm.projects = [
+          {id:'foo', name: 'FOO project', position:[41,-87]},
+          {id:'bar', name: 'BAR project', position:[42,-86]}
+        ];
+        vm.project = vm.projects[0];
+
+        vm.showDetail = function(e, project) {
+          vm.project = project;
+          vm.map.showInfoWindow('project-iw', project.id);
+        };
+
+        vm.hideDetail = function() {
+          vm.map.hideInfoWindow('project-iw');
+        };
+
         NgMap.getMap().then(function(map) {
+          vm.map = map;
           vm.showCustomMarker= function(evt) {
             map.customMarkers.foo.setVisible(true);
             map.customMarkers.foo.setPosition(this.getPosition());
@@ -235,6 +245,14 @@
             this.style.display = 'none';
           };
         });
+
+        vm.currentIndex = 0;
+        vm.selectNextCustomMarker = function() {
+          vm.map.customMarkers[vm.currentIndex].removeClass('selected');
+          vm.currentIndex = (vm.currentIndex+1) % vm.positions.length;
+          vm.map.customMarkers[vm.currentIndex].addClass('selected');
+          vm.currentPosition = vm.positions[vm.currentIndex];
+        }
 
         activate();
 
