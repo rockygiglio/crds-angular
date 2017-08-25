@@ -410,6 +410,10 @@ namespace crds_angular.Services
 
         public List<PinDto> GetPinsInBoundingBox(GeoCoordinate originCoords, string userKeywordSearchString, AwsBoundingBox boundingBox, string finderType, int contactId, string filterSearchString)
         {
+            if(userKeywordSearchString != null)
+            {
+                userKeywordSearchString = userKeywordSearchString.Replace("%27", "\\'");
+            }
             List<PinDto> pins = null;
             var queryString = "matchall";
 
