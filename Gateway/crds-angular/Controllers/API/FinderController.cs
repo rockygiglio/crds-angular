@@ -623,10 +623,8 @@ namespace crds_angular.Controllers.API
                     _logger.Error("Could not accept request", e);
                     switch (e.Message)
                     {
-                        case "User already has request":
+                        case "User is already a group member":
                             throw new HttpResponseException(HttpStatusCode.Conflict);
-                        case "User already a member":
-                            throw new HttpResponseException(HttpStatusCode.NotAcceptable);
                         default:
                             throw new HttpResponseException(new ApiErrorDto("Try a group accept request failed", e).HttpResponseMessage);
                     }
@@ -647,7 +645,7 @@ namespace crds_angular.Controllers.API
             {
                 try
                 {
-                    _finderService.TryAGroupAcceptDeny(token, groupId, participantId, true);
+                    _finderService.TryAGroupAcceptDeny(token, groupId, participantId, false);
                     return Ok();
                 }
                 catch (Exception e)
@@ -655,10 +653,8 @@ namespace crds_angular.Controllers.API
                     _logger.Error("Could not deny request", e);
                     switch (e.Message)
                     {
-                        case "User already has request":
+                        case "User is already a group member":
                             throw new HttpResponseException(HttpStatusCode.Conflict);
-                        case "User already a member":
-                            throw new HttpResponseException(HttpStatusCode.NotAcceptable);
                         default:
                             throw new HttpResponseException(new ApiErrorDto("Try a group deny request failed", e).HttpResponseMessage);
                     }

@@ -7,7 +7,7 @@
   </div><!-- /card-heading -->
 
   <!-- Documents -->
-  <div class="col-xs-12 documents" ng-show="hasDocuments(waivers) || showIPromise(trip.contactId)">
+  <div class="col-xs-12 documents" ng-show="showWaiver(trip.contactId) || showIPromise(trip.contactId)">
     <h5 class="flush-bottom">Sign These Documents</h5>
 
     <!-- I Promise -->

@@ -347,7 +347,7 @@ namespace crds_angular.Services
             };
             RecordCommunication(connection);
 
-            _groupToolService.SubmitInquiry(token, gatheringId);
+            _groupToolService.SubmitInquiry(token, gatheringId, true);
         }
 
         public void TryAGroup(string token, int groupId)
@@ -365,7 +365,7 @@ namespace crds_angular.Services
                 GroupId = groupId
             };
             
-            _groupToolService.SubmitInquiry(token, groupId);
+            _groupToolService.SubmitInquiry(token, groupId, false);
             RecordCommunication(connection);
             SendTryAGroupEmailToLeader(token, groupId);
         }
@@ -1013,6 +1013,8 @@ namespace crds_angular.Services
             {
                 {"YesURL", $"{baseUrl}{groupToolPath}/small-group/{groupId}/true/{participant.ParticipantId}" },
                 {"NoURL" , $"{baseUrl}{groupToolPath}/small-group/{groupId}/false/{participant.ParticipantId}" },
+                {"StartURL",   $"{baseUrl}{groupToolPath}/create-group" },
+                {"SearchURL",   $"{baseUrl}{groupToolPath}" },
                 {"Participant_Name",  newMember.Nickname},
                 {"Nickname", newMember.Nickname },
                 {"Last_Name", newMember.Last_Name },
@@ -1352,6 +1354,12 @@ namespace crds_angular.Services
         {
             var contactId = _contactRepository.GetContactIdByParticipantId(participantId);
             var inquiry = _groupToolService.GetGroupInquiryForContactId(groupId, contactId);
+
+            if(_groupRepository.GetGroupParticipants(groupId, true).Exists(p =>p.ParticipantId == participantId) || inquiry.Placed != null)
+            {
+               var e = new Exception("User is already a group member");
+               throw e;
+            }
 
             //accept or deny the inquiry
             _groupToolService.ApproveDenyInquiryFromMyGroup(token, groupId, accept, inquiry, "approved", _trialMemberRoleId);
