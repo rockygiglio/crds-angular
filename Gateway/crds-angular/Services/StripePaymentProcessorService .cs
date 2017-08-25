@@ -132,7 +132,7 @@ namespace crds_angular.Services
             return contentBlock;
         }
 
-        public StripeCustomer CreateCustomer(string customerToken, string donorDescription = null)
+        public StripeCustomer CreateCustomer(string customerToken, string donorDescription = null, string Email = null, string DisplayName = null)
         {
             var request = new RestRequest("customers", Method.POST);
             request.AddParameter("description", string.Format(StripeCustomerDescription, string.IsNullOrWhiteSpace(donorDescription) ? "pending" : donorDescription));
@@ -140,6 +140,13 @@ namespace crds_angular.Services
             {
                 request.AddParameter("source", customerToken);
             }
+
+            //US8990
+            var contactDetails = new MpContactDetails();
+            Email = contactDetails.EmailAddress;
+            DisplayName = contactDetails.DisplayName;
+            request.AddParameter("metadata[Email]", Email);
+            request.AddParameter("metadata[DisplayName]", DisplayName);
 
             var response = _stripeRestClient.Execute<StripeCustomer>(request);
             CheckStripeResponse("Customer creation failed", response);
@@ -310,7 +317,7 @@ namespace crds_angular.Services
             return defaultSource;
         }
 
-        public StripeCharge ChargeCustomer(string customerToken, decimal amount, int donorId, bool isPayment)
+        public StripeCharge ChargeCustomer(string customerToken, decimal amount, int donorId, bool isPayment, string Email= null, string DisplayName = null)
         {
             var request = new RestRequest("charges", Method.POST);
             request.AddParameter("amount", (int)(amount * Constants.StripeDecimalConversionValue));
@@ -320,6 +327,12 @@ namespace crds_angular.Services
             request.AddParameter("expand[]", "balance_transaction");
 
             request.AddParameter("metadata[crossroads_transaction_type]", isPayment ? "payment" : "donation");
+            //US8990
+            var contactDetails = new MpContactDetails();
+            Email = contactDetails.EmailAddress;
+            DisplayName = contactDetails.DisplayName;
+            request.AddParameter("metadata[Email]", Email);
+            request.AddParameter("metadata[DisplayName]", DisplayName);
 
             var response = _stripeRestClient.Execute<StripeCharge>(request);
             CheckStripeResponse("Invalid charge request", response, true);
@@ -327,7 +340,7 @@ namespace crds_angular.Services
             return response.Data;
         }
 
-        public StripeCharge ChargeCustomer(string customerToken, string customerSourceId, decimal amount, int donorId, string checkNumber)
+        public StripeCharge ChargeCustomer(string customerToken, string customerSourceId, decimal amount, int donorId, string checkNumber, string Email = null, string DisplayName = null)
         {
             var request = new RestRequest("charges", Method.POST);
             request.AddParameter("amount",(int)(amount * Constants.StripeDecimalConversionValue));
@@ -337,6 +350,13 @@ namespace crds_angular.Services
             request.AddParameter("description", "Donor ID #" + donorId);
             request.AddParameter("expand[]", "balance_transaction");
             request.AddParameter("statement_descriptor", string.Format("CK{0} CONVERTED", (checkNumber ?? string.Empty).TrimStart(' ', '0').Right(5)));
+
+            //US8990
+            var contactDetails = new MpContactDetails();
+            Email = contactDetails.EmailAddress;
+            DisplayName = contactDetails.DisplayName;
+            request.AddParameter("metadata[Email]", Email);
+            request.AddParameter("metadata[DisplayName]", DisplayName);
 
             var response = _stripeRestClient.Execute<StripeCharge>(request);
             CheckStripeResponse("Invalid charge request", response, true);
@@ -448,7 +468,7 @@ namespace crds_angular.Services
             return refund;
         }
 
-        public StripePlan CreatePlan(RecurringGiftDto recurringGiftDto, MpContactDonor mpContactDonor)
+        public StripePlan CreatePlan(RecurringGiftDto recurringGiftDto, MpContactDonor mpContactDonor, string Email = null, string DisplayName = null)
         {
             var request = new RestRequest("plans", Method.POST);
 
@@ -459,6 +479,12 @@ namespace crds_angular.Services
             request.AddParameter("name", string.Format("Donor ID #{0} {1}ly", mpContactDonor.DonorId, interval));
             request.AddParameter("currency", "usd");
             request.AddParameter("id", mpContactDonor.DonorId + " " + DateTime.Now);
+            //US8990
+            var contactDetails = new MpContactDetails();
+            Email = contactDetails.EmailAddress;
+            DisplayName = contactDetails.DisplayName;
+            request.AddParameter("metadata[Email]", Email);
+            request.AddParameter("metadata[DisplayName]", DisplayName);
 
             var response = _stripeRestClient.Execute<StripePlan>(request);
             CheckStripeResponse("Invalid plan creation request", response);
@@ -466,7 +492,7 @@ namespace crds_angular.Services
             return response.Data;
         }
 
-        public StripeSubscription CreateSubscription(string planName, string customer, DateTime trialEndDate)
+        public StripeSubscription CreateSubscription(string planName, string customer, DateTime trialEndDate, string Email = null, string DisplayName = null)
         {
             var request = new RestRequest("customers/" + customer +"/subscriptions", Method.POST);
             request.AddParameter("plan", planName);
@@ -474,6 +500,13 @@ namespace crds_angular.Services
             {
                 request.AddParameter("trial_end", trialEndDate.ToUniversalTime().Date.AddHours(12).ConvertDateTimeToEpoch());
             }
+            //US8990
+            var contactDetails = new MpContactDetails();
+            Email = contactDetails.EmailAddress;
+            DisplayName = contactDetails.DisplayName;
+            request.AddParameter("metadata[Email]", Email);
+            request.AddParameter("metadata[DisplayName]", DisplayName);
+
 
             var response = _stripeRestClient.Execute<StripeSubscription>(request);
             CheckStripeResponse("Invalid subscription creation request", response);

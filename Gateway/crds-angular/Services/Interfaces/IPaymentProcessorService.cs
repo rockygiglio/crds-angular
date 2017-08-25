@@ -7,12 +7,12 @@ namespace crds_angular.Services.Interfaces
 {
     public interface IPaymentProcessorService
     {
-        StripeCustomer CreateCustomer(string customerToken, string donorDescription = null);
+        StripeCustomer CreateCustomer(string customerToken, string donorDescription = null, string Email =null, string DisplayName = null);  //US8990
         StripeCustomer GetCustomer(string customerId);
         StripeCustomer DeleteCustomer(string customerId);
         StripeToken CreateToken(string accountNumber, string routingNumber, string accountHolderName);
-        StripeCharge ChargeCustomer(string customerToken, decimal amount, int donorId, bool isPayment);
-        StripeCharge ChargeCustomer(string customerToken, string customerSourceId, decimal amount, int donorId, string checkNumber);
+        StripeCharge ChargeCustomer(string customerToken, decimal amount, int donorId, bool isPayment, string Email = null, string DisplayName = null);  //US8990
+        StripeCharge ChargeCustomer(string customerToken, string customerSourceId, decimal amount, int donorId, string checkNumber, string Email = null, string DisplayName = null);  //US8990
         string UpdateCustomerDescription(string customerToken, int donorId);
         SourceData UpdateCustomerSource(string customerToken, string cardToken);
         SourceData GetDefaultSource(string customerToken);
@@ -21,9 +21,9 @@ namespace crds_angular.Services.Interfaces
         List<StripeCharge> GetChargesForTransfer(string transferId);
         StripeRefund GetChargeRefund(string chargeId);
         StripeRefundData GetRefund(string refundId);
-        StripeCharge GetCharge(string chargeId);
-        StripePlan CreatePlan(RecurringGiftDto recurringGiftDto, MpContactDonor mpContactDonor);
-        StripeSubscription CreateSubscription(string planName, string customer, DateTime trialEndDate);
+        StripeCharge GetCharge(string chargeId);        
+        StripePlan CreatePlan(RecurringGiftDto recurringGiftDto, MpContactDonor mpContactDonor, string Email = null, string DisplayName = null); //US8990
+        StripeSubscription CreateSubscription(string planName, string customer, DateTime trialEndDate, string Email = null, string DisplayName = null); //US8990
         StripeSubscription UpdateSubscriptionPlan(string customerId, string subscriptionId, string planId, DateTime? trialEndDate = null);
         StripeSubscription UpdateSubscriptionTrialEnd(string customerId, string subscriptionId, DateTime? trialEndDate);
         StripeSubscription GetSubscription(string customerId, string subscriptionId);

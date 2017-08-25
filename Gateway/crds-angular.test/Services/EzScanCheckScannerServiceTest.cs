@@ -132,13 +132,20 @@ namespace crds_angular.test.Services
                 }
             };
 
+
+            var contactDetails = new MpContactDetails
+            {
+                EmailAddress = "bart_simpson@crossroads.net",
+                DisplayName = "Barty Simpson"
+            }; //US8990
+
             _checkScannerDao.Setup(mocked => mocked.GetChecksForBatch("batch123")).Returns(checks);
             _checkScannerDao.Setup(mocked => mocked.UpdateBatchStatus("batch123", BatchStatus.Exported)).Returns(new CheckScannerBatch());
             _checkScannerDao.Setup(mocked => mocked.UpdateCheckStatus(11111, true, null));
 
             _donorService.Setup(mocked => mocked.GetContactDonorForDonorAccount(checks[0].AccountNumber, checks[0].RoutingNumber)).Returns(contactDonorExisting);
 
-            _paymentService.Setup(mocked => mocked.ChargeCustomer(contactDonorExisting.Account.ProcessorId, contactDonorExisting.Account.ProcessorAccountId, checks[0].Amount, contactDonorExisting.DonorId, checks[0].CheckNumber)).Returns(new StripeCharge
+            _paymentService.Setup(mocked => mocked.ChargeCustomer(contactDonorExisting.Account.ProcessorId, contactDonorExisting.Account.ProcessorAccountId, checks[0].Amount, contactDonorExisting.DonorId, checks[0].CheckNumber, contactDetails.EmailAddress, contactDetails.DisplayName)).Returns(new StripeCharge
             {
                 Id = "1020304",
                 Source = new StripeSource()
@@ -272,12 +279,18 @@ namespace crds_angular.test.Services
                 }
             };
 
+            var contactDetails = new MpContactDetails
+            {
+                EmailAddress = "bart_simpson@crossroads.net",
+                DisplayName = "Barty Simpson"
+            }; //US8990
+
             _donorService.Setup(mocked => mocked.GetContactDonorForDonorAccount(checks[0].AccountNumber, checks[0].RoutingNumber)).Returns((MpContactDonor)null);
             _donorService.Setup(mocked => mocked.GetContactDonorForDonorId(444444)).Returns(contactDonorNonExistingStripeCustomerWithoutAccount);
             _mpDonorService.Setup(mocked => mocked.DecryptCheckValue(checks[0].AccountNumber)).Returns(decrypAcct + "88");
             _mpDonorService.Setup(mocked => mocked.DecryptCheckValue(checks[0].RoutingNumber)).Returns(decryptRout + "88");
             _paymentService.Setup(mocked => mocked.CreateToken(decrypAcct + "88", decryptRout + "88", checks[0].Name1)).Returns(new StripeToken { Id = "tok986" });
-            _paymentService.Setup(mocked => mocked.CreateCustomer(null, contactDonorNonExistingStripeCustomer.ContactId.ToString() + " Scanned Checks")).Returns(stripeCustomer);
+            _paymentService.Setup(mocked => mocked.CreateCustomer(null, contactDonorNonExistingStripeCustomer.ContactId.ToString() + " Scanned Checks", contactDetails.EmailAddress, contactDetails.DisplayName)).Returns(stripeCustomer); //US8990
             _paymentService.Setup(mocked => mocked.AddSourceToCustomer(stripeCustomer.id, "tok986")).Returns(nonAccountStripeCustomer);
 
             _mpDonorService.Setup(
@@ -310,7 +323,7 @@ namespace crds_angular.test.Services
                                           stripeCustomer.default_source,
                                           checks[0].Amount,
                                           contactDonorNonExistingStripeCustomer.DonorId,
-                                          checks[0].CheckNumber)).Returns(mockChargeNonExistingStripeCustomer);
+                                          checks[0].CheckNumber, contactDetails.EmailAddress, contactDetails.DisplayName)).Returns(mockChargeNonExistingStripeCustomer);
 
             _mpDonorService.Setup(mocked => mocked.CreateHashedAccountAndRoutingNumber(decrypAcct + "88", decryptRout + "88")).Returns(encryptedKey + "88");
             
