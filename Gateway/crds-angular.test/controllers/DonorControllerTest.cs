@@ -43,6 +43,7 @@ namespace crds_angular.test.controllers
         private const int ContactId = 8675309;
         private const string ProcessorId = "cus_test123456";
         private const string Email = "automatedtest@crossroads.net";
+        private const string DisplayName = 'Bart Simpson';
         private const int DonorId = 394256;
         private const string Last4 = "1234";
         private const string Brand = "Visa";
@@ -581,7 +582,7 @@ namespace crds_angular.test.controllers
 
             _donorService.Setup(mocked => mocked.GetContactDonorForAuthenticatedUser(_authType + " " + _authToken)).Returns(contactDonor);
             _donorService.Setup(mocked => mocked.CreateOrUpdateContactDonor(contactDonor, string.Empty, string.Empty, string.Empty, string.Empty, null, null)).Returns(contactDonorUpdated);
-            _donorService.Setup(mocked => mocked.CreateRecurringGift(_authType + " " + _authToken, recurringGiftDto, contactDonorUpdated, "bart_simpson@crossroads.net", "Bart Simpson")).Returns(123);
+            _donorService.Setup(mocked => mocked.CreateRecurringGift(_authType + " " + _authToken, recurringGiftDto, contactDonorUpdated, contactDonorUpdated.Email, "Bart Simpson")).Returns(123);
 
             var response = _fixture.CreateRecurringGift(recurringGiftDto);
             _donorService.VerifyAll();

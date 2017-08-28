@@ -246,6 +246,7 @@ namespace crds_angular.Controllers.API
             bool isPayment = (dto.TransactionType != null && dto.TransactionType.Equals("PAYMENT"));
             MpContactDonor donor = null;
             MpContactDetails contactDetails = null;
+            
             try
             {
                 if (isPayment)
