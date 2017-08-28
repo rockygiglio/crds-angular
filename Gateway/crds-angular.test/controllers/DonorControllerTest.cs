@@ -43,7 +43,6 @@ namespace crds_angular.test.controllers
         private const int ContactId = 8675309;
         private const string ProcessorId = "cus_test123456";
         private const string Email = "automatedtest@crossroads.net";
-        private const string DisplayName = 'Bart Simpson';
         private const int DonorId = 394256;
         private const string Last4 = "1234";
         private const string Brand = "Visa";
