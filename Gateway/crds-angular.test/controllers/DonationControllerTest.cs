@@ -245,7 +245,7 @@ namespace crds_angular.test.controllers
             {
                 EmailAddress = "bart_simpson@crossroads.net",
                 DisplayName = "Barty Simpson"
-            }; //US8990
+            };
 
             contactRepositoryMock.Setup(mocked => mocked.GetContactId(authType + " " + authToken)).Returns(contactId);
 
@@ -350,7 +350,7 @@ namespace crds_angular.test.controllers
             {
                 EmailAddress = "bart_simpson@crossroads.net",
                 DisplayName = "Barty Simpson"
-            }; //US8990
+            };
 
             contactRepositoryMock.Setup(mocked => mocked.GetContactId(authType + " " + authToken)).Returns(contactId);
 
@@ -462,7 +462,7 @@ namespace crds_angular.test.controllers
             {
                 EmailAddress = "bart_simpson@crossroads.net",
                 DisplayName = "Barty Simpson"
-            }; //US8990
+            };
 
 
             fixture.Request.Headers.Authorization = null;
@@ -566,13 +566,13 @@ namespace crds_angular.test.controllers
             {
                 EmailAddress = "bart_simpson@crossroads.net",
                 DisplayName = "Barty Simpson"
-            }; //US8990
+            };
 
             fixture.Request.Headers.Authorization = null;
             gatewayDonorServiceMock.Setup(mocked => mocked.GetContactDonorForEmail(createDonationDTO.EmailAddress)).Returns(donor);
 
             stripeServiceMock.Setup(mocked => mocked.ChargeCustomer(donor.ProcessorId, createDonationDTO.Amount, donor.DonorId,false, contactDetails.EmailAddress, contactDetails.DisplayName)).
-                Returns(charge); //US8990
+                Returns(charge); 
 
             donorServiceMock.Setup(mocked => mocked.
                                        CreateDonationAndDistributionRecord(It.Is<MpDonationAndDistributionRecord>(
@@ -652,7 +652,7 @@ namespace crds_angular.test.controllers
             var contactDetails = new MpContactDetails
             {               
                 DisplayName = "Barty Simpson"
-            }; //US8990
+            };
 
             contactRepositoryMock.Setup(mocked => mocked.GetContactId(authType + " " + authToken)).Returns(contactId);
 
@@ -661,7 +661,7 @@ namespace crds_angular.test.controllers
 
             stripeServiceMock.Setup(
                 mocked => mocked.ChargeCustomer(donor.ProcessorId, createDonationDTO.Amount, donor.DonorId, true, donor.Email, contactDetails.DisplayName)) 
-                .Returns(charge); //US8990
+                .Returns(charge);
 
             invoiceServiceMock.Setup(mocked => mocked.InvoiceExists(It.IsAny<int>()))
                 .Returns(true);

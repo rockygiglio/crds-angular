@@ -68,12 +68,13 @@ namespace crds_angular.Services
                     var account = _mpDonorService.DecryptCheckValue(check.AccountNumber);
                     var routing = _mpDonorService.DecryptCheckValue(check.RoutingNumber);
                     var encryptedKey = _mpDonorService.CreateHashedAccountAndRoutingNumber(account, routing);
+                    var contactDetaails = new MpContactDetails();
 
                     string donorAccountId = "";
 
                     if (contactDonor.Account.HasPaymentProcessorInfo() == false)
                     {
-                        var stripeCustomer = _paymentService.CreateCustomer(null, contactDonor.DonorId + " Scanned Checks",string.Empty, string.Empty); //US8990
+                        var stripeCustomer = _paymentService.CreateCustomer(null, contactDonor.DonorId + " Scanned Checks",contactDetaails.EmailAddress, contactDetaails.DisplayName);
 
                         var stripeCustomerSource = _paymentService.AddSourceToCustomer(stripeCustomer.id, contactDonor.Account.Token);
 
@@ -92,9 +93,6 @@ namespace crds_angular.Services
                             ProcessorAccountId = stripeCustomerSource.id
                             
                         };
-
-                        contactDonor.Details = new MpContactDetails();//US8990
-
                     }
                     else
                     {
@@ -102,7 +100,7 @@ namespace crds_angular.Services
                     }
 
                     //Always use the customer ID and source ID from the Donor Account, if it exists
-                    var charge = _paymentService.ChargeCustomer(contactDonor.Account.ProcessorId, contactDonor.Account.ProcessorAccountId, check.Amount, contactDonor.DonorId, check.CheckNumber, contactDonor.Details.EmailAddress, contactDonor.Details.DisplayName);//US8990
+                    var charge = _paymentService.ChargeCustomer(contactDonor.Account.ProcessorId, contactDonor.Account.ProcessorAccountId, check.Amount, contactDonor.DonorId, check.CheckNumber, contactDonor.Details.EmailAddress, contactDonor.Details.DisplayName);
 
 
                     var fee = charge.BalanceTransaction != null ? charge.BalanceTransaction.Fee : null;

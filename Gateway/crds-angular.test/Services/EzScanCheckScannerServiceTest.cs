@@ -137,7 +137,7 @@ namespace crds_angular.test.Services
             {
                 EmailAddress = "bart_simpson@crossroads.net",
                 DisplayName = "Barty Simpson"
-            }; //US8990
+            };
 
             _checkScannerDao.Setup(mocked => mocked.GetChecksForBatch("batch123")).Returns(checks);
             _checkScannerDao.Setup(mocked => mocked.UpdateBatchStatus("batch123", BatchStatus.Exported)).Returns(new CheckScannerBatch());
@@ -283,14 +283,14 @@ namespace crds_angular.test.Services
             {
                 EmailAddress = "bart_simpson@crossroads.net",
                 DisplayName = "Barty Simpson"
-            }; //US8990
+            };
 
             _donorService.Setup(mocked => mocked.GetContactDonorForDonorAccount(checks[0].AccountNumber, checks[0].RoutingNumber)).Returns((MpContactDonor)null);
             _donorService.Setup(mocked => mocked.GetContactDonorForDonorId(444444)).Returns(contactDonorNonExistingStripeCustomerWithoutAccount);
             _mpDonorService.Setup(mocked => mocked.DecryptCheckValue(checks[0].AccountNumber)).Returns(decrypAcct + "88");
             _mpDonorService.Setup(mocked => mocked.DecryptCheckValue(checks[0].RoutingNumber)).Returns(decryptRout + "88");
             _paymentService.Setup(mocked => mocked.CreateToken(decrypAcct + "88", decryptRout + "88", checks[0].Name1)).Returns(new StripeToken { Id = "tok986" });
-            _paymentService.Setup(mocked => mocked.CreateCustomer(null, contactDonorNonExistingStripeCustomer.ContactId.ToString() + " Scanned Checks", contactDetails.EmailAddress, contactDetails.DisplayName)).Returns(stripeCustomer); //US8990
+            _paymentService.Setup(mocked => mocked.CreateCustomer(null, contactDonorNonExistingStripeCustomer.ContactId.ToString() + " Scanned Checks", contactDetails.EmailAddress, contactDetails.DisplayName)).Returns(stripeCustomer);
             _paymentService.Setup(mocked => mocked.AddSourceToCustomer(stripeCustomer.id, "tok986")).Returns(nonAccountStripeCustomer);
 
             _mpDonorService.Setup(

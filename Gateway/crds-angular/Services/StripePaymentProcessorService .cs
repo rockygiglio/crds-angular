@@ -14,6 +14,7 @@ using Crossroads.Utilities.Interfaces;
 using Crossroads.Utilities.Models;
 using Crossroads.Utilities.Services;
 using Crossroads.Web.Common;
+using Crossroads.Web.Common.Extensions;
 using Crossroads.Web.Common.Configuration;
 using MinistryPlatform.Translation.Models;
 using RestSharp.Extensions;
@@ -141,11 +142,9 @@ namespace crds_angular.Services
                 request.AddParameter("source", customerToken);
             }
 
-            //US8990
-            var contactDetails = new MpContactDetails();
-            Email = contactDetails.EmailAddress;
-            DisplayName = contactDetails.DisplayName;
-            request.AddParameter("metadata[Email]", Email);
+            
+            //request.AddQueryParameterIfSpecified("metadata[Email]", Email);
+            request.AddQueryParameterIfSpecified("email", Email);
             request.AddParameter("metadata[DisplayName]", DisplayName);
 
             var response = _stripeRestClient.Execute<StripeCustomer>(request);
@@ -327,10 +326,7 @@ namespace crds_angular.Services
             request.AddParameter("expand[]", "balance_transaction");
 
             request.AddParameter("metadata[crossroads_transaction_type]", isPayment ? "payment" : "donation");
-            //US8990
-            var contactDetails = new MpContactDetails();
-            Email = contactDetails.EmailAddress;
-            DisplayName = contactDetails.DisplayName;
+           
             request.AddParameter("metadata[Email]", Email);
             request.AddParameter("metadata[DisplayName]", DisplayName);
 
@@ -351,10 +347,6 @@ namespace crds_angular.Services
             request.AddParameter("expand[]", "balance_transaction");
             request.AddParameter("statement_descriptor", string.Format("CK{0} CONVERTED", (checkNumber ?? string.Empty).TrimStart(' ', '0').Right(5)));
 
-            //US8990
-            var contactDetails = new MpContactDetails();
-            Email = contactDetails.EmailAddress;
-            DisplayName = contactDetails.DisplayName;
             request.AddParameter("metadata[Email]", Email);
             request.AddParameter("metadata[DisplayName]", DisplayName);
 
@@ -479,10 +471,7 @@ namespace crds_angular.Services
             request.AddParameter("name", string.Format("Donor ID #{0} {1}ly", mpContactDonor.DonorId, interval));
             request.AddParameter("currency", "usd");
             request.AddParameter("id", mpContactDonor.DonorId + " " + DateTime.Now);
-            //US8990
-            var contactDetails = new MpContactDetails();
-            Email = contactDetails.EmailAddress;
-            DisplayName = contactDetails.DisplayName;
+           
             request.AddParameter("metadata[Email]", Email);
             request.AddParameter("metadata[DisplayName]", DisplayName);
 
@@ -500,10 +489,7 @@ namespace crds_angular.Services
             {
                 request.AddParameter("trial_end", trialEndDate.ToUniversalTime().Date.AddHours(12).ConvertDateTimeToEpoch());
             }
-            //US8990
-            var contactDetails = new MpContactDetails();
-            Email = contactDetails.EmailAddress;
-            DisplayName = contactDetails.DisplayName;
+           
             request.AddParameter("metadata[Email]", Email);
             request.AddParameter("metadata[DisplayName]", DisplayName);
 
