@@ -196,7 +196,7 @@ namespace crds_angular.Services
             var encryptedKey = _mpDonorService.CreateHashedAccountAndRoutingNumber(account, routing);
 
             contactDonor.Details = new MpContactDetails
-            {
+            {                
                 DisplayName = checkDetails.Name1,
                 Address = new MpPostalAddress
                 {
