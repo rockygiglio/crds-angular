@@ -255,7 +255,7 @@ namespace crds_angular.Services
             return (_mpDonorService.DecryptCheckValue(value));
         }
 
-        public int CreateRecurringGift(string authorizedUserToken, RecurringGiftDto recurringGiftDto, MpContactDonor mpContactDonor)
+        public int CreateRecurringGift(string authorizedUserToken, RecurringGiftDto recurringGiftDto, MpContactDonor mpContactDonor, string email, string displayName)
         {
             StripeCustomer customer = null;
             StripePlan plan = null;
@@ -266,7 +266,7 @@ namespace crds_angular.Services
             try
             {
 
-                customer = _paymentService.CreateCustomer(recurringGiftDto.StripeTokenId, string.Format("{0}, Recurring Gift Subscription", mpContactDonor.DonorId));
+                customer = _paymentService.CreateCustomer(recurringGiftDto.StripeTokenId, string.Format("{0}, Recurring Gift Subscription", mpContactDonor.DonorId),email, displayName);
 
                 var source = customer.sources.data.Find(s => s.id == customer.default_source);
 
@@ -278,7 +278,7 @@ namespace crds_angular.Services
                                                                         source.id,
                                                                         customer.id);
 
-                plan = _paymentService.CreatePlan(recurringGiftDto, mpContactDonor);
+                plan = _paymentService.CreatePlan(recurringGiftDto, mpContactDonor, email, displayName);
 
                 stripeSubscription = _paymentService.CreateSubscription(plan.Id, customer.id, recurringGiftDto.StartDate);
 

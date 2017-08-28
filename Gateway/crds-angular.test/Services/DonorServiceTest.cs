@@ -395,7 +395,7 @@ namespace crds_angular.test.Services
                 mocked =>
                     mocked.SendEmail(RecurringGiftSetupEmailTemplateId, recurringGift.DonorId, (int)(123.45M/100), "Bank", It.IsAny<DateTime>(), recurringGift.StartDate.Value, "Crossroads", string.Empty, "12th of the month", null));
 
-            var response = _fixture.CreateRecurringGift("auth", recurringGiftDto, contactDonor);
+            var response = _fixture.CreateRecurringGift("auth", recurringGiftDto, contactDonor, "bart_simpson@crossroads.net", "Bart Simpson");
             _paymentService.VerifyAll();
             _mpDonorService.VerifyAll();
             Assert.AreEqual(recurringGiftId, response);
@@ -499,7 +499,7 @@ namespace crds_angular.test.Services
 
             try
             {
-                _fixture.CreateRecurringGift("auth", recurringGiftDto, contactDonor);
+                _fixture.CreateRecurringGift("auth", recurringGiftDto, contactDonor, "bart_simpson@crossroads.net", "Bart Simpson");
                 Assert.Fail("Expected exception was not thrown");
             }
             catch (ApplicationException e)
@@ -579,7 +579,7 @@ namespace crds_angular.test.Services
                                                      stripeSubscription.Id, NotSiteSpecificCongregation, 
                                                      null, 
                                                      null)).Returns(recurringGiftId);
-            var response = _fixture.CreateRecurringGift("auth", recurringGiftDto, contactDonor);
+            var response = _fixture.CreateRecurringGift("auth", recurringGiftDto, contactDonor, "bart_simpson@crossroads.net", "Bart Simpson");
             _paymentService.VerifyAll();
             _mpDonorService.VerifyAll();
             _mpContactService.VerifyAll();

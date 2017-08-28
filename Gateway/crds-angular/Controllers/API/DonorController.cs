@@ -322,8 +322,8 @@ namespace crds_angular.Controllers.API
                         ? _impersonationService.WithImpersonation(token,
                                                                   impersonateUserId,
                                                                   () =>
-                                                                      _donorService.CreateRecurringGift(token, recurringGiftDto, donor))
-                        : _donorService.CreateRecurringGift(token, recurringGiftDto, donor);
+                                                                      _donorService.CreateRecurringGift(token, recurringGiftDto, donor, string.Empty, string.Empty))
+                        : _donorService.CreateRecurringGift(token, recurringGiftDto, donor, string.Empty, string.Empty);
 
                     recurringGiftDto.EmailAddress = donor.Email;
                     recurringGiftDto.RecurringGiftId = recurringGift;

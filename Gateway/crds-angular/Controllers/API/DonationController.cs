@@ -259,7 +259,7 @@ namespace crds_angular.Controllers.API
                 }
 
                 var contactId = _contactRepository.GetContactId(token);
-                donor = _mpDonorService.GetContactDonor(contactId);
+                donor = _mpDonorService.GetContactDonor(contactId);                
                 var charge = _stripeService.ChargeCustomer(donor.ProcessorId, dto.Amount, donor.DonorId, isPayment,donor.Email, contactDetails.DisplayName);
                 var fee = charge.BalanceTransaction != null ? charge.BalanceTransaction.Fee : null;
 
