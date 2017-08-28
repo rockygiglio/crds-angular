@@ -7,7 +7,7 @@ namespace crds_angular.Services.Interfaces
 {
     public interface IPaymentProcessorService
     {
-        StripeCustomer CreateCustomer(string customerToken, string donorDescription = null, string Email =null, string DisplayName = null);  
+        StripeCustomer CreateCustomer(string customerToken, string donorDescription = null, string Email = null, string DisplayName = null);  
         StripeCustomer GetCustomer(string customerId);
         StripeCustomer DeleteCustomer(string customerId);
         StripeToken CreateToken(string accountNumber, string routingNumber, string accountHolderName);

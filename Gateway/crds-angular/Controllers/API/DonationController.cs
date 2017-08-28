@@ -245,7 +245,7 @@ namespace crds_angular.Controllers.API
         {
             bool isPayment = (dto.TransactionType != null && dto.TransactionType.Equals("PAYMENT"));
             MpContactDonor donor = null;
-
+            MpContactDetails contactDetails = null;
             try
             {
                 if (isPayment)
@@ -260,7 +260,7 @@ namespace crds_angular.Controllers.API
 
                 var contactId = _contactRepository.GetContactId(token);
                 donor = _mpDonorService.GetContactDonor(contactId);
-                var charge = _stripeService.ChargeCustomer(donor.ProcessorId, dto.Amount, donor.DonorId, isPayment);
+                var charge = _stripeService.ChargeCustomer(donor.ProcessorId, dto.Amount, donor.DonorId, isPayment,donor.Email, contactDetails.DisplayName);
                 var fee = charge.BalanceTransaction != null ? charge.BalanceTransaction.Fee : null;
 
                 int? pledgeId = null;
@@ -381,11 +381,12 @@ namespace crds_angular.Controllers.API
         {
             bool isPayment = false;
             MpContactDonor donor = null;
+            MpContactDetails contactDetails = null;
 
             try
             {
                 donor = _gatewayDonorService.GetContactDonorForEmail(dto.EmailAddress);
-                var charge = _stripeService.ChargeCustomer(donor.ProcessorId, dto.Amount, donor.DonorId, isPayment);
+                var charge = _stripeService.ChargeCustomer(donor.ProcessorId, dto.Amount, donor.DonorId, isPayment, donor.Email, contactDetails.DisplayName);
                 var fee = charge.BalanceTransaction != null ? charge.BalanceTransaction.Fee : null;
                 int? pledgeId = null;
                 if (dto.PledgeCampaignId != null && dto.PledgeDonorId != null)
