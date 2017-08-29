@@ -280,7 +280,7 @@ namespace crds_angular.Services
 
                 plan = _paymentService.CreatePlan(recurringGiftDto, mpContactDonor, email, displayName);
 
-                stripeSubscription = _paymentService.CreateSubscription(plan.Id, customer.id, recurringGiftDto.StartDate);
+                stripeSubscription = _paymentService.CreateSubscription(plan.Id, customer.id, recurringGiftDto.StartDate, email, displayName);
 
                 var contact = _mpContactService.GetContactById(mpContactDonor.ContactId);
                 var congregation = contact.Congregation_ID ?? _notSiteSpecificCongregation;
@@ -472,13 +472,13 @@ namespace crds_angular.Services
 
             // Initialize a StripeSubscription, as we need the ID later on
             var stripeSubscription = new StripeSubscription {Id = existingGift.SubscriptionId};
-
+            var contactDetails = new MpContactDetails();
             if (needsNewMpRecurringGift)
             {
                 if (needsNewStripePlan)
                 {
                     // Create the new Stripe Plan
-                    var plan = _paymentService.CreatePlan(editGift, donor);
+                    var plan = _paymentService.CreatePlan(editGift, donor, contactDetails.EmailAddress, contactDetails.DisplayName);
                     StripeSubscription oldSubscription;
                     if (needsUpdatedStripeSubscription)
                     {
@@ -493,7 +493,7 @@ namespace crds_angular.Services
                     {
                         // Otherwise, we need to cancel the old Subscription and create a new one
                         oldSubscription = _paymentService.CancelSubscription(existingGift.StripeCustomerId, stripeSubscription.Id);
-                        stripeSubscription = _paymentService.CreateSubscription(plan.Id, existingGift.StripeCustomerId, editGift.StartDate);
+                        stripeSubscription = _paymentService.CreateSubscription(plan.Id, existingGift.StripeCustomerId, editGift.StartDate, contactDetails.EmailAddress, contactDetails.DisplayName);
                     }
 
                     // In either case, we created a new Stripe Plan above, so cancel the old one

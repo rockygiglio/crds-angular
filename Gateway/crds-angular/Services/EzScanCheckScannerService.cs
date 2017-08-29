@@ -68,13 +68,13 @@ namespace crds_angular.Services
                     var account = _mpDonorService.DecryptCheckValue(check.AccountNumber);
                     var routing = _mpDonorService.DecryptCheckValue(check.RoutingNumber);
                     var encryptedKey = _mpDonorService.CreateHashedAccountAndRoutingNumber(account, routing);
-                    var contactDetaails = new MpContactDetails();
+                    var contactDetails = new MpContactDetails();
 
                     string donorAccountId = "";
 
                     if (contactDonor.Account.HasPaymentProcessorInfo() == false)
                     {
-                        var stripeCustomer = _paymentService.CreateCustomer(null, contactDonor.DonorId + " Scanned Checks",contactDetaails.EmailAddress, contactDetaails.DisplayName);
+                        var stripeCustomer = _paymentService.CreateCustomer(null, contactDonor.DonorId + " Scanned Checks",contactDetails.EmailAddress, contactDetails.DisplayName);
 
                         var stripeCustomerSource = _paymentService.AddSourceToCustomer(stripeCustomer.id, contactDonor.Account.Token);
 
