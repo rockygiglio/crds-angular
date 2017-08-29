@@ -126,6 +126,7 @@ namespace crds_angular.Services
             setupDate = setupDate ?? DateTime.Now;
 
             var contactDonorResponse = new MpContactDonor();
+            var contactDetails = new MpContactDetails();
             if (mpContactDonor == null || !mpContactDonor.ExistingContact)
             {
                 var statementMethod = _statementMethodNone;
@@ -149,7 +150,7 @@ namespace crds_angular.Services
                 var donorAccount = mpContactDonor != null ? mpContactDonor.Account : null;
                 if (!string.IsNullOrWhiteSpace(paymentProcessorToken))
                 {
-                    var stripeCustomer = _paymentService.CreateCustomer(paymentProcessorToken, String.Empty, String.Empty, String.Empty);
+                    var stripeCustomer = _paymentService.CreateCustomer(paymentProcessorToken, String.Empty, emailAddress, displayName);
 
                     if (donorAccount != null)
                     {
@@ -181,7 +182,7 @@ namespace crds_angular.Services
                 contactDonorResponse.ContactId = mpContactDonor.ContactId;
                 if (!string.IsNullOrWhiteSpace(paymentProcessorToken))
                 {
-                    var stripeCustomer = _paymentService.CreateCustomer(paymentProcessorToken, String.Empty, String.Empty, String.Empty);
+                    var stripeCustomer = _paymentService.CreateCustomer(paymentProcessorToken, String.Empty, emailAddress, displayName);
                     contactDonorResponse.ProcessorId = stripeCustomer.id;
                     if (mpContactDonor.HasAccount)
                     {
