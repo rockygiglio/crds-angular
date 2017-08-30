@@ -127,6 +127,7 @@ namespace crds_angular.Services
 
             var contactDonorResponse = new MpContactDonor();
             var contactDetails = new MpContactDetails();
+
             if (mpContactDonor == null || !mpContactDonor.ExistingContact)
             {
                 var statementMethod = _statementMethodNone;
@@ -150,7 +151,7 @@ namespace crds_angular.Services
                 var donorAccount = mpContactDonor != null ? mpContactDonor.Account : null;
                 if (!string.IsNullOrWhiteSpace(paymentProcessorToken))
                 {
-                    var stripeCustomer = _paymentService.CreateCustomer(paymentProcessorToken, String.Empty, emailAddress, contactDetails.DisplayName);
+                    var stripeCustomer = _paymentService.CreateCustomer(paymentProcessorToken, String.Empty, emailAddress, contactDonorResponse.Details.DisplayName);
 
                     if (donorAccount != null)
                     {
@@ -182,7 +183,7 @@ namespace crds_angular.Services
                 contactDonorResponse.ContactId = mpContactDonor.ContactId;
                 if (!string.IsNullOrWhiteSpace(paymentProcessorToken))
                 {
-                    var stripeCustomer = _paymentService.CreateCustomer(paymentProcessorToken, String.Empty, emailAddress, contactDetails.DisplayName);
+                    var stripeCustomer = _paymentService.CreateCustomer(paymentProcessorToken, String.Empty, emailAddress, contactDonorResponse.Details.DisplayName);
                     contactDonorResponse.ProcessorId = stripeCustomer.id;
                     if (mpContactDonor.HasAccount)
                     {
@@ -473,13 +474,13 @@ namespace crds_angular.Services
 
             // Initialize a StripeSubscription, as we need the ID later on
             var stripeSubscription = new StripeSubscription {Id = existingGift.SubscriptionId};
-            var contactDetails = new MpContactDetails();
+            //var contactDetails = new MpContactDetails();
             if (needsNewMpRecurringGift)
             {
                 if (needsNewStripePlan)
                 {
                     // Create the new Stripe Plan
-                    var plan = _paymentService.CreatePlan(editGift, donor, contactDetails.EmailAddress, contactDetails.DisplayName);
+                    var plan = _paymentService.CreatePlan(editGift, donor, donor.Details.EmailAddress, donor.Details.DisplayName);
                     StripeSubscription oldSubscription;
                     if (needsUpdatedStripeSubscription)
                     {
@@ -494,7 +495,7 @@ namespace crds_angular.Services
                     {
                         // Otherwise, we need to cancel the old Subscription and create a new one
                         oldSubscription = _paymentService.CancelSubscription(existingGift.StripeCustomerId, stripeSubscription.Id);
-                        stripeSubscription = _paymentService.CreateSubscription(plan.Id, existingGift.StripeCustomerId, editGift.StartDate, contactDetails.EmailAddress, contactDetails.DisplayName);
+                        stripeSubscription = _paymentService.CreateSubscription(plan.Id, existingGift.StripeCustomerId, editGift.StartDate,donor.Details.EmailAddress, donor.Details.DisplayName);
                     }
 
                     // In either case, we created a new Stripe Plan above, so cancel the old one
