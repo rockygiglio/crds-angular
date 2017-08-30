@@ -129,7 +129,13 @@ namespace crds_angular.test.Services
                     DonorAccountId = Int32.Parse(donorAcctId),
                     ProcessorId = "cus_aeirhsjidhriuewiwq",
                     ProcessorAccountId = "py_dgsttety6737hjjhweiu3"
+                },
+                Details = new MpContactDetails
+                {
+                    EmailAddress = "me@here.com",
+                    DisplayName = "Bart Simpson"
                 }
+
             };
 
 
@@ -140,7 +146,7 @@ namespace crds_angular.test.Services
 
             _donorService.Setup(mocked => mocked.GetContactDonorForDonorAccount(checks[0].AccountNumber, checks[0].RoutingNumber)).Returns(contactDonorExisting);
 
-            _paymentService.Setup(mocked => mocked.ChargeCustomer(contactDonorExisting.Account.ProcessorId, contactDonorExisting.Account.ProcessorAccountId, checks[0].Amount, contactDonorExisting.DonorId, checks[0].CheckNumber, It.IsAny<string>(), It.IsAny<string>())).Returns(new StripeCharge
+            _paymentService.Setup(mocked => mocked.ChargeCustomer(contactDonorExisting.Account.ProcessorId, contactDonorExisting.Account.ProcessorAccountId, checks[0].Amount, contactDonorExisting.DonorId, checks[0].CheckNumber, "me@here.com", "Bart Simpson")).Returns(new StripeCharge
             {
                 Id = "1020304",
                 Source = new StripeSource()
