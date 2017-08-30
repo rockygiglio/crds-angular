@@ -229,10 +229,19 @@ $imin-blue: #008CBA;
     bottom: 0;
 
     .details {
-      height: 600px;
+
 
       .crds-card {
         background: white;
+        height: 600px;
+        max-width: 585px;
+        margin: 0 auto;
+        float: none;
+
+        .im-in-logo {
+          max-width: 120px;
+          margin-top: $line-height-computed/4;
+        }
       }
     }
   }

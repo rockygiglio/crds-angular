@@ -2,8 +2,8 @@
   <div map-lazy-load="https://maps.google.com/maps/api/js"
     map-lazy-load-params="{{leaveYourMarkCtrl.googleMapsUrl}}" class="lym-map">
     <ng-map
-      center="37.9241551,-27.1178309"
-      zoom="4"
+      center="9.2726189,-20.4123311"
+      zoom="3"
       styles="{{leaveYourMarkCtrl.mapStyles}}"
       scrollwheel="false"
       pan-control="false"
@@ -27,29 +27,43 @@
         icon="{{leaveYourMarkCtrl.iconStyle}}">
       </marker>
 
-      <info-window id="project-iw" class="container">
+      <!-- <info-window id="project-iw" class="container">
         <div ng-non-bindable="">
           id: {{leaveYourMarkCtrl.project.id}}<br/>
           name: {{leaveYourMarkCtrl.project.name}}<br/>
           Position 1: {{leaveYourMarkCtrl.project.position}}<br/>
           <a href="#" ng-click="leaveYourMarkCtrl.clicked()">Click Here</a>
         </div>
-      </info-window>
-      <div class="info-window">
-        <div class="container">
-          <div class="row details">
-            <article class="crds-card col-sm-8 col-sm-offset-2">
-              <figure class="push-top soft-top">
-                <img src="http://crds-cms-uploads.imgix.net/content/images/imin-ws2.jpg" class="img-responsive imgix-fluid" alt="" title="">
-                <figcaption> West Side Expansion </figcaption>
+      </info-window> -->
+
+      <div class="info-window" ng-if="leaveYourMarkCtrl.showInfoWindow">
+        <div class="container-fluid">
+
+          <div class="details">
+            <article class="crds-card col-sm-6">
+              <img src="https://crossroads-media.s3.amazonaws.com/images/imin-blue.png" class="im-in-logo pull-left" />
+              <button class="btn btn-link push-half-bottom pull-right" ng-click="leaveYourMarkCtrl.hideDetail()">
+                <svg viewBox="0 0 32 32" class="icon icon-close">
+                	<use xlink:href="#close"></use>
+                </svg>
+              </button>
+              <figure>
+                <img src="{{leaveYourMarkCtrl.project.img}}" class="img-responsive imgix-fluid" alt="" title="">
+                <figcaption> {{leaveYourMarkCtrl.project.name}} </figcaption>
               </figure>
               <section>
-                <p>In 2017, we used I'M IN Campaign dollars to expand Crossroads West Side. The seats were so packed that some had to sit in overflow and watch a video feed, and there was never enough parking. So $5.3 million went into doubling the size of the auditorium, expanding the atrium and paving a brand new parking lot. The renovations were complete for Easter weekend and the space is incredible. Most importantly, we now have room to invite more of our friends and neighbors in to meet a God who loves them.</p>
+                <p class="campaign-details">
+                  {{leaveYourMarkCtrl.project.description}}
+                </p>
+                <p class="campaign-status">
+                  {{leaveYourMarkCtrl.project.status}}
+                </p>
               </section>
             </article>
           </div>
         </div>
       </div>
+
     </ng-map>
   </div>
 </div>
