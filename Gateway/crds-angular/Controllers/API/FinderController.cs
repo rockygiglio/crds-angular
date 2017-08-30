@@ -438,10 +438,10 @@ namespace crds_angular.Controllers.API
                     if (pinsForContact.Count > 0)
                     {
                         var addressLatitude = pinsForContact[0].Address.Latitude;
-                        if (addressLatitude != null) centerLatitude = (double)addressLatitude;
+                        if (addressLatitude != null) centerLatitude = (double)addressLatitude != 0.0 ? (double)addressLatitude : originCoords.Latitude;
 
                         var addressLongitude = pinsForContact[0].Address.Longitude;
-                        if (addressLongitude != null) centerLongitude = (double)addressLongitude;
+                        if (addressLongitude != null) centerLongitude = (double)addressLongitude != 0.0 ? (double)addressLongitude : originCoords.Longitude;
                     }
 
                     var result = new PinSearchResultsDto(new GeoCoordinates(centerLatitude, centerLongitude), pinsForContact);
