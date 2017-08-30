@@ -382,12 +382,11 @@ namespace crds_angular.Controllers.API
         {
             bool isPayment = false;
             MpContactDonor donor = null;
-            MpContactDetails contactDetails = null;
-
+            
             try
             {
                 donor = _gatewayDonorService.GetContactDonorForEmail(dto.EmailAddress);
-                var charge = _stripeService.ChargeCustomer(donor.ProcessorId, dto.Amount, donor.DonorId, isPayment, donor.Email, contactDetails.DisplayName);
+                var charge = _stripeService.ChargeCustomer(donor.ProcessorId, dto.Amount, donor.DonorId, isPayment, donor.Email, donor.Details.DisplayName);
                 var fee = charge.BalanceTransaction != null ? charge.BalanceTransaction.Fee : null;
                 int? pledgeId = null;
                 if (dto.PledgeCampaignId != null && dto.PledgeDonorId != null)
