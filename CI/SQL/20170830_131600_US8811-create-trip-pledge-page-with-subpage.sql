@@ -34,7 +34,7 @@ BEGIN
 		   ,NULL
            ,'Donor_ID_Table_Contact_ID_Table.Display_Name ,Donor_ID_Table_Contact_ID_Table.Nickname ,Donor_ID_Table_Contact_ID_Table.First_Name ,Pledges.Total_Pledge ,Pledge_Campaign_ID_Table.Campaign_Name ,Pledges.Beneficiary ,Pledge_Status_ID_Table.Pledge_Status ,Pledges.First_Installment_Date'
            ,'Donor_ID_Table_Contact_ID_Table.Display_Name'
-           ,'Pledge_Campaign_ID_Table.Campaign_Name LIKE ''%Trip%'''
+           ,'Pledge_Campaign_ID_Table.Pledge_Campaign_Type_ID = 2'
            ,1)
 	SET IDENTITY_INSERT [dbo].[dp_Pages] OFF
 END
