@@ -158,7 +158,11 @@ namespace crds_angular.test.Services
             {
                 ContactId = 12345,
                 DonorId = 0,
-                Email = "me@here.com"
+                Email = "me@here.com",
+                Details = new MpContactDetails
+                {
+                    DisplayName = "Bart Simpson"
+                }
             };
 
             var stripeCust = new StripeCustomer
@@ -167,7 +171,7 @@ namespace crds_angular.test.Services
                 default_source = "123",
             };
 
-            _paymentService.Setup(mocked => mocked.CreateCustomer("stripe_token", It.IsAny<string>(), "me@here.com",  It.IsAny<string>())).Returns(stripeCust);
+            _paymentService.Setup(mocked => mocked.CreateCustomer("stripe_token", It.IsAny<string>(), "me@here.com", "Bart Simpson")).Returns(stripeCust);
             _mpDonorService.Setup(mocked => mocked.CreateDonorRecord(12345, stripeCust.id, It.IsAny<DateTime>(), StatementFrequencyNever, StatementTypeIndividual, StatementMethodNone, null)).Returns(456);
             _paymentService.Setup(mocked => mocked.UpdateCustomerDescription(stripeCust.id, 456)).Returns("456");
 
@@ -915,6 +919,7 @@ namespace crds_angular.test.Services
                 Email = "me@here.com",
                 Details = new MpContactDetails
                 {
+                    EmailAddress = "me@here.com",
                     DisplayName = "Bart Simpson"
                 }
             };
@@ -1054,6 +1059,7 @@ namespace crds_angular.test.Services
                 Email = "me@here.com",
                 Details = new MpContactDetails
                 {
+                    EmailAddress = "me@here.com",
                     DisplayName = "Bart Simpson"
                 }
             };

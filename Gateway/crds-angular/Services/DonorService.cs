@@ -126,22 +126,22 @@ namespace crds_angular.Services
             setupDate = setupDate ?? DateTime.Now;
 
             var contactDonorResponse = new MpContactDonor();
-            var contactDetails = new MpContactDetails();
-            var displayName = _guestGiverDisplayName;
-
+            
             if (mpContactDonor == null || !mpContactDonor.ExistingContact)
             {
+                string displayName;
                 var statementMethod = _statementMethodNone;
                 var statementFrequency = _statementFrequencyNever;
                 if (mpContactDonor != null && mpContactDonor.HasDetails)
                 {
+                    displayName = mpContactDonor.Details.DisplayName;
                     contactDonorResponse.ContactId = _mpContactService.CreateContactForNewDonor(mpContactDonor);
                     statementMethod = _statementMethodPostalMail;
                     statementFrequency = _statementFrequencyQuarterly;
                 }
                 else
                 {
-                    //var displayName = _guestGiverDisplayName;
+                    displayName = _guestGiverDisplayName;
                     if (!string.IsNullOrEmpty(firstName) && !string.IsNullOrEmpty(lastName))
                     {
                         displayName = firstName;
@@ -184,7 +184,7 @@ namespace crds_angular.Services
                 contactDonorResponse.ContactId = mpContactDonor.ContactId;
                 if (!string.IsNullOrWhiteSpace(paymentProcessorToken))
                 {
-                    var stripeCustomer = _paymentService.CreateCustomer(paymentProcessorToken, string.Empty, emailAddress, displayName);
+                    var stripeCustomer = _paymentService.CreateCustomer(paymentProcessorToken, string.Empty, emailAddress, mpContactDonor.Details.DisplayName);
                     contactDonorResponse.ProcessorId = stripeCustomer.id;
                     if (mpContactDonor.HasAccount)
                     {
