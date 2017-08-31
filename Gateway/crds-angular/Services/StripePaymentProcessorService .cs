@@ -145,7 +145,7 @@ namespace crds_angular.Services
             
             //request.AddQueryParameterIfSpecified("metadata[Email]", Email);
             request.AddQueryParameterIfSpecified("email", Email);
-            request.AddParameter("metadata[DisplayName]", DisplayName);
+            request.AddQueryParameterIfSpecified("metadata[DisplayName]", DisplayName);
 
             var response = _stripeRestClient.Execute<StripeCustomer>(request);
             CheckStripeResponse("Customer creation failed", response);
@@ -327,8 +327,8 @@ namespace crds_angular.Services
 
             request.AddParameter("metadata[crossroads_transaction_type]", isPayment ? "payment" : "donation");
            
-            request.AddParameter("metadata[Email]", Email);
-            request.AddParameter("metadata[DisplayName]", DisplayName);
+            request.AddQueryParameterIfSpecified("metadata[Email]", Email);
+            request.AddQueryParameterIfSpecified("metadata[DisplayName]", DisplayName);
 
             var response = _stripeRestClient.Execute<StripeCharge>(request);
             CheckStripeResponse("Invalid charge request", response, true);
@@ -347,8 +347,8 @@ namespace crds_angular.Services
             request.AddParameter("expand[]", "balance_transaction");
             request.AddParameter("statement_descriptor", string.Format("CK{0} CONVERTED", (checkNumber ?? string.Empty).TrimStart(' ', '0').Right(5)));
 
-            request.AddParameter("metadata[Email]", Email);
-            request.AddParameter("metadata[DisplayName]", DisplayName);
+            request.AddQueryParameterIfSpecified("metadata[Email]", Email);
+            request.AddQueryParameterIfSpecified("metadata[DisplayName]", DisplayName);
 
             var response = _stripeRestClient.Execute<StripeCharge>(request);
             CheckStripeResponse("Invalid charge request", response, true);
@@ -472,8 +472,8 @@ namespace crds_angular.Services
             request.AddParameter("currency", "usd");
             request.AddParameter("id", mpContactDonor.DonorId + " " + DateTime.Now);
            
-            request.AddParameter("metadata[Email]", Email);
-            request.AddParameter("metadata[DisplayName]", DisplayName);
+            request.AddQueryParameterIfSpecified("metadata[Email]", Email);
+            request.AddQueryParameterIfSpecified("metadata[DisplayName]", DisplayName);
 
             var response = _stripeRestClient.Execute<StripePlan>(request);
             CheckStripeResponse("Invalid plan creation request", response);
@@ -490,8 +490,8 @@ namespace crds_angular.Services
                 request.AddParameter("trial_end", trialEndDate.ToUniversalTime().Date.AddHours(12).ConvertDateTimeToEpoch());
             }
            
-            request.AddParameter("metadata[Email]", Email);
-            request.AddParameter("metadata[DisplayName]", DisplayName);
+            request.AddQueryParameterIfSpecified("metadata[Email]", Email);
+            request.AddQueryParameterIfSpecified("metadata[DisplayName]", DisplayName);
 
 
             var response = _stripeRestClient.Execute<StripeSubscription>(request);
