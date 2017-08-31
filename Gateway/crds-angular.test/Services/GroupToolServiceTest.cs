@@ -12,7 +12,6 @@ using crds_angular.Services.Analytics;
 using crds_angular.Services.Interfaces;
 using Crossroads.Utilities.Interfaces;
 using Crossroads.Utilities.Models;
-using Crossroads.Web.Common;
 using Crossroads.Web.Common.Configuration;
 using MinistryPlatform.Translation.Models;
 using MinistryPlatform.Translation.Models.DTO;
@@ -263,12 +262,12 @@ namespace crds_angular.test.Services
                             GroupParticipantId = 19090,
                             GroupRoleId = GroupRoleLeader
                         }
-                    }
-
+                    },
+                    Address = new AddressDTO() {City = "cityname", State = "CA" }
                 }
             };
 
-            var mygroup = new GroupDTO {GroupTypeId = 5};
+            var mygroup = new GroupDTO {GroupTypeId = 5, Address = new AddressDTO() { City = "cityname", State = "CA" } };
             
             var inquiry = new Inquiry
             {
@@ -310,6 +309,13 @@ namespace crds_angular.test.Services
             _contentBlockService.SetupGet(mocked => mocked["groupToolApproveInquiryEmailTemplateText"]).Returns(new ContentBlock());
             _groupService.Setup(mocked => mocked.GetGroupDetails(It.IsAny<int>())).Returns(mygroup);
 
+            var leader = new MpMyContact
+            {
+                Last_Name = "last",
+                Nickname = "Nick"
+            };
+            _contactRepository.Setup(mocked => mocked.GetContactById(It.IsAny<int>())).Returns(leader);
+            
 
             _fixture.ApproveDenyInquiryFromMyGroup("abc", 2, true, inquiry, message, _memberRoleId);
 
@@ -349,11 +355,11 @@ namespace crds_angular.test.Services
                             GroupParticipantId = 19090,
                             GroupRoleId = GroupRoleLeader
                         }
-                    }
-
+                    },
+                    Address = new AddressDTO() {City = "cityname", State = "CA" }
                 }
             };
-            var mygroup = new GroupDTO { GroupTypeId = 5 };
+            var mygroup = new GroupDTO { GroupTypeId = 5, Address = new AddressDTO() { City = "cityname", State = "CA" } };
 
             var inquiry = new Inquiry
             {
@@ -393,6 +399,13 @@ namespace crds_angular.test.Services
             _contentBlockService.SetupGet(mocked => mocked["groupToolDenyInquirySubjectTemplateText"]).Returns(new ContentBlock());
             _contentBlockService.SetupGet(mocked => mocked["groupToolDenyInquiryEmailTemplateText"]).Returns(new ContentBlock());
             _groupService.Setup(mocked => mocked.GetGroupDetails(It.IsAny<int>())).Returns(mygroup);
+
+            var leader = new MpMyContact
+            {
+                Last_Name = "last",
+                Nickname = "Nick"
+            };
+            _contactRepository.Setup(mocked => mocked.GetContactById(It.IsAny<int>())).Returns(leader);
 
             _fixture.ApproveDenyInquiryFromMyGroup("abc", 2, false, inquiry, message, _memberRoleId);
 
@@ -793,7 +806,8 @@ namespace crds_angular.test.Services
                         ContactId = 90,
                         Email = "80"
                     }
-                }
+                },
+                Address = new AddressDTO() { City = "cityname", State = "CA" }
             };
 
             var participant = group.Participants.Find(p => p.GroupParticipantId == removeGroupParticipantId);
@@ -831,6 +845,13 @@ namespace crds_angular.test.Services
                                 c.MergeData["Group_Description"].Equals(group.GroupDescription)),
                         false)).Returns(5);
 
+            var leader = new MpMyContact
+            {
+                Last_Name = "last",
+                Nickname = "Nick"
+            };
+            _contactRepository.Setup(mocked => mocked.GetContactById(It.IsAny<int>())).Returns(leader);
+
             _fixture.SendGroupParticipantEmail(groupId, group, templateId, toParticipant);
             _communicationRepository.VerifyAll();
             _contentBlockService.VerifyAll();
@@ -864,7 +885,8 @@ namespace crds_angular.test.Services
                         ContactId = 90,
                         Email = "80"
                     }
-                }
+                },
+                Address = new AddressDTO() { City = "cityname", State = "CA" }
             };
 
             var participant = group.Participants.Find(p => p.GroupParticipantId == removeGroupParticipantId);
@@ -918,6 +940,13 @@ namespace crds_angular.test.Services
                                 c.MergeData["From_Preferred_Name"].Equals(fromParticipant.PreferredName)),
                         false)).Returns(5);
 
+            var leader = new MpMyContact
+            {
+                Last_Name = "last",
+                Nickname = "Nick"
+            };
+            _contactRepository.Setup(mocked => mocked.GetContactById(It.IsAny<int>())).Returns(leader);
+
             _fixture.SendGroupParticipantEmail(groupId, group, templateId, toParticipant, contentBlockTitle, contentBlockTitle, "message", fromParticipant);
             _communicationRepository.VerifyAll();
             _contentBlockService.VerifyAll();
@@ -951,7 +980,8 @@ namespace crds_angular.test.Services
                         ContactId = 91,
                         Email = "80"
                     }
-                }
+                },
+                Address = new AddressDTO() { City = "cityname", State = "CA" }
             };
 
             var toGroupParticipant = new MpParticipant
@@ -1010,6 +1040,13 @@ namespace crds_angular.test.Services
                                 c.MergeData["Group_Description"].Equals(group.GroupDescription) && c.MergeData["From_Display_Name"].Equals(fromParticipant.DisplayName) &&
                                 c.MergeData["From_Preferred_Name"].Equals(fromParticipant.PreferredName)),
                         false)).Returns(5);
+
+            var leader = new MpMyContact
+            {
+                Last_Name = "last",
+                Nickname = "Nick"
+            };
+            _contactRepository.Setup(mocked => mocked.GetContactById(It.IsAny<int>())).Returns(leader);
 
             _fixture.SendGroupParticipantEmail(groupId, group, templateId, toGroupParticipant, subjectContentBlockTitle, bodyContentBlockTitle, "message", fromParticipant);
             _communicationRepository.VerifyAll();
