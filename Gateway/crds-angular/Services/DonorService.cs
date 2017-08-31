@@ -127,6 +127,7 @@ namespace crds_angular.Services
 
             var contactDonorResponse = new MpContactDonor();
             var contactDetails = new MpContactDetails();
+            var displayName = _guestGiverDisplayName;
 
             if (mpContactDonor == null || !mpContactDonor.ExistingContact)
             {
@@ -140,7 +141,7 @@ namespace crds_angular.Services
                 }
                 else
                 {
-                    var displayName = _guestGiverDisplayName;
+                    //var displayName = _guestGiverDisplayName;
                     if (!string.IsNullOrEmpty(firstName) && !string.IsNullOrEmpty(lastName))
                     {
                         displayName = firstName;
@@ -151,7 +152,7 @@ namespace crds_angular.Services
                 var donorAccount = mpContactDonor != null ? mpContactDonor.Account : null;
                 if (!string.IsNullOrWhiteSpace(paymentProcessorToken))
                 {
-                    var stripeCustomer = _paymentService.CreateCustomer(paymentProcessorToken, String.Empty, emailAddress, contactDonorResponse.Details.DisplayName);
+                    var stripeCustomer = _paymentService.CreateCustomer(paymentProcessorToken, string.Empty, emailAddress, displayName);
 
                     if (donorAccount != null)
                     {
@@ -183,7 +184,7 @@ namespace crds_angular.Services
                 contactDonorResponse.ContactId = mpContactDonor.ContactId;
                 if (!string.IsNullOrWhiteSpace(paymentProcessorToken))
                 {
-                    var stripeCustomer = _paymentService.CreateCustomer(paymentProcessorToken, String.Empty, emailAddress, contactDonorResponse.Details.DisplayName);
+                    var stripeCustomer = _paymentService.CreateCustomer(paymentProcessorToken, string.Empty, emailAddress, displayName);
                     contactDonorResponse.ProcessorId = stripeCustomer.id;
                     if (mpContactDonor.HasAccount)
                     {
@@ -422,7 +423,7 @@ namespace crds_angular.Services
         /// </summary>
         /// <param name="authorizedUserToken">An OAuth token for the user who is logged in to cr.net/MP</param>
         /// <param name="editGift">The edited values for the Recurring Gift</param>
-        /// <param name="donor>The donor performing the edits</param>
+        /// <param name="donor">The donor performing the edits</param>
         /// <returns>A RecurringGiftDto, populated with any new/updated values after any edits</returns>
         public RecurringGiftDto EditRecurringGift(string authorizedUserToken, RecurringGiftDto editGift, MpContactDonor donor)
         {
