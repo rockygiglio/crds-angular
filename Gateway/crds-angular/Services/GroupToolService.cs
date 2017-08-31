@@ -270,6 +270,8 @@ namespace crds_angular.Services
                 EmailAddress = fromParticipant == null ? emailTemplate.ReplyToEmailAddress : fromParticipant.EmailAddress
             };
 
+            var leader = _contactRepository.GetContactById(replyTo.ContactId);
+
             var to = new List<MpContact>
             {
                 new MpContact
@@ -289,6 +291,9 @@ namespace crds_angular.Services
             mergeData["Email_Custom_Message"] = string.IsNullOrWhiteSpace(message) ? string.Empty : message;
             mergeData["Group_Name"] = group.GroupName;
             mergeData["Group_Description"] = group.GroupDescription;
+            mergeData["Leader_Name"] = leader.Nickname != null && leader.Last_Name != null ? leader.Nickname + " " + leader.Last_Name : replyTo.EmailAddress;
+            mergeData["City"] = group.Address.City;
+            mergeData["State"] = group.Address.State;
             if (fromParticipant != null)
             {
                 mergeData["From_Display_Name"] = fromParticipant.DisplayName;
