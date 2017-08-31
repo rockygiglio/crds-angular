@@ -475,7 +475,7 @@ namespace crds_angular.Services
 
             // Initialize a StripeSubscription, as we need the ID later on
             var stripeSubscription = new StripeSubscription {Id = existingGift.SubscriptionId};
-            //var contactDetails = new MpContactDetails();
+    
             if (needsNewMpRecurringGift)
             {
                 if (needsNewStripePlan)
