@@ -25,6 +25,11 @@ namespace Crossroads.ScheduledDataUpdate
           HelpText = "Execute 'Corkboard AWS Refresh' to refresh corkboard items in mongo with AWS")]
         public bool CorkboardAwsRefreshMode { get; set; }
 
+        [Option("ArchivePendingGroupInquiriesMode", Required = false, DefaultValue = false, MutuallyExclusiveSet = "OpMode",
+            HelpText = "Execute 'api_crds_Archive_Pending_Group_Inquiries_Older_Than_90_Days'")]
+        public bool ArchivePendingGroupInquiriesMode { get; set; }
+
+
         [ParserState]
         public IParserState LastParserState { get; set; }
 
