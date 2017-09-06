@@ -74,7 +74,7 @@ namespace crds_angular.Services
 
                     if (contactDonor.Account.HasPaymentProcessorInfo() == false)
                     {
-                        var stripeCustomer = _paymentService.CreateCustomer(null, contactDonor.DonorId + " Scanned Checks", contactDonor.Details.EmailAddress, contactDonor.Details.DisplayName);
+                        var stripeCustomer = _paymentService.CreateCustomer(null, contactDonor.DonorId + " Scanned Checks", contactDonor.Details?.EmailAddress, contactDonor.Details?.DisplayName);
 
                         var stripeCustomerSource = _paymentService.AddSourceToCustomer(stripeCustomer.id, contactDonor.Account.Token);
 
@@ -100,7 +100,7 @@ namespace crds_angular.Services
                     }
 
                     //Always use the customer ID and source ID from the Donor Account, if it exists
-                    var charge = _paymentService.ChargeCustomer(contactDonor.Account.ProcessorId, contactDonor.Account.ProcessorAccountId, check.Amount, contactDonor.DonorId, check.CheckNumber, contactDonor.Details.EmailAddress, contactDonor.Details.DisplayName);
+                    var charge = _paymentService.ChargeCustomer(contactDonor.Account.ProcessorId, contactDonor.Account.ProcessorAccountId, check.Amount, contactDonor.DonorId, check.CheckNumber, contactDonor.Details?.EmailAddress, contactDonor.Details?.DisplayName);
 
 
                     var fee = charge.BalanceTransaction != null ? charge.BalanceTransaction.Fee : null;

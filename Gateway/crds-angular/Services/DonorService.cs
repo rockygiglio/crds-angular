@@ -134,7 +134,7 @@ namespace crds_angular.Services
                 var statementFrequency = _statementFrequencyNever;
                 if (mpContactDonor != null && mpContactDonor.HasDetails)
                 {
-                    displayName = mpContactDonor.Details.DisplayName;
+                    displayName = mpContactDonor.Details?.DisplayName;
                     contactDonorResponse.ContactId = _mpContactService.CreateContactForNewDonor(mpContactDonor);
                     statementMethod = _statementMethodPostalMail;
                     statementFrequency = _statementFrequencyQuarterly;
@@ -184,7 +184,7 @@ namespace crds_angular.Services
                 contactDonorResponse.ContactId = mpContactDonor.ContactId;
                 if (!string.IsNullOrWhiteSpace(paymentProcessorToken))
                 {
-                    var stripeCustomer = _paymentService.CreateCustomer(paymentProcessorToken, string.Empty, emailAddress, mpContactDonor.Details.DisplayName);
+                    var stripeCustomer = _paymentService.CreateCustomer(paymentProcessorToken, string.Empty, emailAddress, mpContactDonor.Details?.DisplayName);
                     contactDonorResponse.ProcessorId = stripeCustomer.id;
                     if (mpContactDonor.HasAccount)
                     {
@@ -481,7 +481,7 @@ namespace crds_angular.Services
                 if (needsNewStripePlan)
                 {
                     // Create the new Stripe Plan
-                    var plan = _paymentService.CreatePlan(editGift, donor, donor.Details.EmailAddress, donor.Details.DisplayName);
+                    var plan = _paymentService.CreatePlan(editGift, donor, donor.Details.EmailAddress, donor.Details?.DisplayName);
                     StripeSubscription oldSubscription;
                     if (needsUpdatedStripeSubscription)
                     {
@@ -496,7 +496,7 @@ namespace crds_angular.Services
                     {
                         // Otherwise, we need to cancel the old Subscription and create a new one
                         oldSubscription = _paymentService.CancelSubscription(existingGift.StripeCustomerId, stripeSubscription.Id);
-                        stripeSubscription = _paymentService.CreateSubscription(plan.Id, existingGift.StripeCustomerId, editGift.StartDate,donor.Details.EmailAddress, donor.Details.DisplayName);
+                        stripeSubscription = _paymentService.CreateSubscription(plan.Id, existingGift.StripeCustomerId, editGift.StartDate,donor.Details.EmailAddress, donor.Details?.DisplayName);
                     }
 
                     // In either case, we created a new Stripe Plan above, so cancel the old one

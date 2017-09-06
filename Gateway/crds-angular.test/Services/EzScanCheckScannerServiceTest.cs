@@ -404,8 +404,8 @@ namespace crds_angular.test.Services
 
             _donorService.VerifyAll();
             Assert.IsNotNull(contactDonor);
-            Assert.AreEqual(result.DisplayName, contactDonor.Details.DisplayName);
-            Assert.AreEqual(result.Address, contactDonor.Details.Address);
+            Assert.AreEqual(result.DisplayName, contactDonor.Details?.DisplayName);
+            Assert.AreEqual(result.Address, contactDonor.Details?.Address);
         }
 
         [Test]
