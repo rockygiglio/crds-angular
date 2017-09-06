@@ -25,6 +25,7 @@ namespace crds_angular.test.Services
     public class GroupToolServiceTest
     {
         private GroupToolService _fixture;
+        private Mock<IAwsCloudsearchService> _awsCloudsearchService;
         private Mock<MPServices.IGroupToolRepository> _groupToolRepository;
         private Mock<MPServices.ICommunicationRepository> _communicationRepository;
         private Mock<IGroupService> _groupService;
@@ -66,6 +67,7 @@ namespace crds_angular.test.Services
         {
             AutoMapperConfig.RegisterMappings();
 
+            _awsCloudsearchService = new Mock<IAwsCloudsearchService>(MockBehavior.Strict);
             _communicationRepository = new Mock<MPServices.ICommunicationRepository>(MockBehavior.Strict);
             _groupToolRepository = new Mock<MPServices.IGroupToolRepository>(MockBehavior.Strict);
             _groupService = new Mock<IGroupService>(MockBehavior.Strict);
@@ -103,7 +105,8 @@ namespace crds_angular.test.Services
             configuration.Setup(mocked => mocked.GetConfigIntValue("GatheringHostAcceptTemplate")).Returns(GatheringHostAcceptTemplate);
             configuration.Setup(mocked => mocked.GetConfigIntValue("GatheringHostDenyTemplate")).Returns(GatheringHostDenyTemplate);
 
-            _fixture = new GroupToolService(_groupToolRepository.Object,
+            _fixture = new GroupToolService(_awsCloudsearchService.Object, 
+                                            _groupToolRepository.Object,
                                             _groupRepository.Object,
                                             _groupService.Object,
                                             _participantRepository.Object,
