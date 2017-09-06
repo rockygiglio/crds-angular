@@ -134,7 +134,7 @@ namespace crds_angular.Controllers.API
         [VersionedRoute(template: "group-tool/{groupId}/end-small-group", minimumVersion: "1.0.0")]
         [Route("grouptool/{groupId:int}/endsmallgroup")]
         [HttpPost]
-        public IHttpActionResult EndSmallGroup([FromUri] int groupId, [FromUri] int groupReasonEndedId)
+        public IHttpActionResult EndSmallGroup([FromUri] int groupId, [FromUri] int groupReasonEndedId, [FromUri] bool isDeletingFromAws = false)
         {
             return Authorized(token =>
             {
