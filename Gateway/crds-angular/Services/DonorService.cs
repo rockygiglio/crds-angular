@@ -496,7 +496,7 @@ namespace crds_angular.Services
                     {
                         // Otherwise, we need to cancel the old Subscription and create a new one
                         oldSubscription = _paymentService.CancelSubscription(existingGift.StripeCustomerId, stripeSubscription.Id);
-                        stripeSubscription = _paymentService.CreateSubscription(plan.Id, existingGift.StripeCustomerId, editGift.StartDate,donor.Details.EmailAddress, donor.Details?.DisplayName);
+                        stripeSubscription = _paymentService.CreateSubscription(plan.Id, existingGift.StripeCustomerId, editGift.StartDate,donor.Details?.EmailAddress, donor.Details?.DisplayName);
                     }
 
                     // In either case, we created a new Stripe Plan above, so cancel the old one
