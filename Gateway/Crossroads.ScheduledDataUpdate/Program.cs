@@ -152,6 +152,23 @@ namespace Crossroads.ScheduledDataUpdate
                 }
             }
 
+            if (options.ArchivePendingGroupInquiriesMode)
+            {
+                modeSelected = true;
+                try
+                {
+                    Log.Info("Starting group inquiry archival process...");
+                    _groupToolService.ArchivePendingGroupInquiriesOlderThan90Days();
+
+                    Log.Info("Groups archival stored proc successful...");
+                }
+                catch (Exception ex)
+                {
+                    Log.Error("Group archival stored proc failed.", ex);
+                    exitCode = 9999;
+                }
+            }
+
             if (!modeSelected)
             {
                 Log.Error(options.GetUsage());

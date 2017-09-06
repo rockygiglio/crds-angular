@@ -159,18 +159,40 @@
           </QueryParameter>
         </QueryParameters>
         <CommandType>StoredProcedure</CommandType>
-        <CommandText>report_filter_campaigns</CommandText>
+        <CommandText>api_CRDS_MPP_GetPledgeCampaigns</CommandText>
       </Query>
       <Fields>
-        <Field Name="Campaign_Name">
-          <DataField>Campaign_Name</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
         <Field Name="Pledge_Campaign_ID">
           <DataField>Pledge_Campaign_ID</DataField>
           <rd:TypeName>System.Int32</rd:TypeName>
         </Field>
+        <Field Name="Campaign_Name">
+          <DataField>Display_Name</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Pledge_Campaign_Type_ID">
+          <DataField>Pledge_Campaign_Type_ID</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="Pledge_Beyond_End_Date">
+          <DataField>Pledge_Beyond_End_Date</DataField>
+          <rd:TypeName>System.Boolean</rd:TypeName>
+        </Field>
+        <Field Name="Is_Current">
+          <DataField>Is_Current</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
       </Fields>
+      <Filters>
+        <Filter>
+          <FilterExpression>=Fields!Pledge_Campaign_Type_ID.Value</FilterExpression>
+          <Operator>In</Operator>
+          <FilterValues>
+            <FilterValue DataType="Integer">1</FilterValue>
+            <FilterValue DataType="Integer">-1</FilterValue>
+          </FilterValues>
+        </Filter>
+      </Filters>
     </DataSet>
     <DataSet Name="data_Lookup_Congregations">
       <Query>
@@ -1701,6 +1723,7 @@
             <RepeatRowHeaders>true</RepeatRowHeaders>
             <FixedColumnHeaders>true</FixedColumnHeaders>
             <FixedRowHeaders>true</FixedRowHeaders>
+            <NoRowsMessage>There are no statements that meet your criteria.</NoRowsMessage>
             <DataSetName>data_Main</DataSetName>
             <Height>5.49444in</Height>
             <Width>7.77in</Width>
@@ -1819,6 +1842,9 @@
               <Left>0.00445in</Left>
               <Height>0.5175in</Height>
               <Width>7.75in</Width>
+              <Visibility>
+                <Hidden>=CountRows("data_Main") &lt; 1</Hidden>
+              </Visibility>
               <Style>
                 <Border>
                   <Style>None</Style>

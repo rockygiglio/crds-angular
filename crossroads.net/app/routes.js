@@ -281,11 +281,6 @@
             }
           }
         })
-        .state('atriumEvents', {
-          parent: 'noHeaderOrFooter',
-          url: '/atriumevents?site',
-          templateUrl: 'events/atriumevents.html',
-        })
         .state('giving_history', {
           parent: 'noSideBar',
           url: '/givinghistory',

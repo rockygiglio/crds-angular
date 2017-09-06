@@ -18,10 +18,6 @@ function MyTripCard($log, TripsUrlService, $cookies, $state) {
       $state.go('sign-waiver', { waiverId, eventParticipantId, title: 'Trip Waiver', eventName });
     }
 
-    function hasDocuments(waivers) {
-      return waivers && waivers.length;
-    }
-
     function showIPromise(contactId) {
       const loggedInContact = $cookies.get('userId');
       return Number(loggedInContact) === contactId;
@@ -39,7 +35,6 @@ function MyTripCard($log, TripsUrlService, $cookies, $state) {
     scope.shareUrl = TripsUrlService.ShareUrl(scope.trip.eventParticipantId); // eslint-disable-line new-cap
     scope.showWaiver = showWaiver;
     scope.signWaiver = signWaiver;
-    scope.hasDocuments = hasDocuments;
     /* eslint-enable */
   }
 
