@@ -141,7 +141,7 @@ namespace crds_angular.Controllers.API
                 try
                 {
                     _groupToolService.VerifyCurrentUserIsGroupLeader(token, groupId);
-                    _groupToolService.EndGroup(groupId, groupReasonEndedId);
+                    _groupToolService.EndGroup(groupId, groupReasonEndedId, isDeletingFromAws);
                     return Ok();
                 }
                 catch (Exception e)

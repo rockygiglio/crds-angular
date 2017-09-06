@@ -676,7 +676,7 @@ namespace crds_angular.Services
             return isLeader;
         }
 
-        public void EndGroup(int groupId, int reasonEndedId)
+        public void EndGroup(int groupId, int reasonEndedId, bool isDeletingFromAws = false)
         {
             //get all participants before we end the group so they are not endDated and still
             //available from this call.
