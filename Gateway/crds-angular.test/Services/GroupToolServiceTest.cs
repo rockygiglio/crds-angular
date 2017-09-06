@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Amazon.CloudSearchDomain.Model;
 using AutoMapper;
 using crds_angular.App_Start;
 using crds_angular.Exceptions;
@@ -1069,6 +1070,18 @@ namespace crds_angular.test.Services
             var invitations = _fixture.GetInvitations(sourceId, invitationTypeId, token);
 
             Assert.AreEqual(4, invitations.Count);
+        }
+
+        [Test]
+        public void EndGroupCallsAws()
+        {
+            _awsCloudsearchService.Setup(aws => aws.DeleteGroupFromAws(It.IsAny<int>())).Returns(new UploadDocumentsResponse());
+            _groupService.Setup(gs => gs.GetGroupParticipants(It.IsAny<int>(), It.IsAny<bool>())).Returns(new List<GroupParticipantDTO>());
+            _groupService.Setup(gs => gs.EndDateGroup(It.IsAny<int>(), null));
+
+            _fixture.EndGroup(123);
+
+            _awsCloudsearchService.Verify(aws => aws.DeleteGroupFromAws(It.IsAny<int>()), Times.Once);
         }
 
         private List<MpInvitation> getMpInvations()
